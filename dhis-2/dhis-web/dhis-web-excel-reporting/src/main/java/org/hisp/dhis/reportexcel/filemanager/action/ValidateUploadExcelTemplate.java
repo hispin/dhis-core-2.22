@@ -1,4 +1,10 @@
-package org.hisp.dhis.datamart.action;
+package org.hisp.dhis.reportexcel.filemanager.action;
+
+import java.io.File;
+
+import org.hisp.dhis.i18n.I18n;
+
+import com.opensymphony.xwork2.Action;
 
 /*
  * Copyright (c) 2004-2007, University of Oslo
@@ -26,83 +32,75 @@ package org.hisp.dhis.datamart.action;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import static org.hisp.dhis.datamart.DataMartInternalProcess.PROCESS_TYPE;
-import static org.hisp.dhis.util.InternalProcessUtil.PROCESS_KEY_DATAMART;
-import static org.hisp.dhis.util.InternalProcessUtil.setCurrentRunningProcess;
-
-import org.amplecode.cave.process.ProcessCoordinator;
-import org.amplecode.cave.process.ProcessExecutor;
-import org.hisp.dhis.datamart.DataMartExport;
-import org.hisp.dhis.datamart.DataMartInternalProcess;
-import org.hisp.dhis.datamart.DataMartService;
-import org.hisp.dhis.user.CurrentUserService;
-
-import com.opensymphony.xwork2.Action;
-
 /**
- * @author Lars Helge Overland
- * @version $Id$
+ * @author Tran Thanh Tri
+ * @version $Id
  */
-public class ExportDataMartExportAction
+public class ValidateUploadExcelTemplate
     implements Action
 {
+    private static final String TEMPLATE_TYPE = "application/vnd.ms-excel";
+
     // -------------------------------------------------------------------------
-    // Dependencies
+    // Input & Output
     // -------------------------------------------------------------------------
 
-    private ProcessCoordinator processCoordinator;
+    private File upload;// The actual file
 
-    public void setProcessCoordinator( ProcessCoordinator processCoordinator )
+    private String uploadContentType; // The content type of the file
+
+//    private String uploadFileName; // The uploaded file name
+//
+//    private String fileCaption;// The caption of the file entered by user
+
+    private String message;
+
+    private I18n i18n;
+
+    // -------------------------------------------------------------------------
+    // Getter & Setter
+    // -------------------------------------------------------------------------
+
+    public void setUpload( File upload )
     {
-        this.processCoordinator = processCoordinator;
+        this.upload = upload;
     }
-    
-    private CurrentUserService currentUserService;
 
-    public void setCurrentUserService( CurrentUserService currentUserService )
+    public void setUploadContentType( String uploadContentType )
     {
-        this.currentUserService = currentUserService;
+        this.uploadContentType = uploadContentType;
     }
 
-    private DataMartService dataMartService;
-
-    public void setDataMartService( DataMartService dataMartService )
+    public String getMessage()
     {
-        this.dataMartService = dataMartService;
+        return message;
     }
 
-    // -------------------------------------------------------------------------
-    // Input
-    // -------------------------------------------------------------------------
-
-    private Integer id;
-
-    public void setId( Integer id )
+    public void setI18n( I18n i18n )
     {
-        this.id = id;
+        this.i18n = i18n;
     }
 
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
 
+    @Override
     public String execute()
+        throws Exception
     {
-        String owner = currentUserService.getCurrentUsername();
-
-        ProcessExecutor executor = processCoordinator.newProcess( PROCESS_TYPE, owner );
-
-        DataMartInternalProcess process = (DataMartInternalProcess) executor.getProcess();
-                
-        DataMartExport export = dataMartService.getDataMartExport( id );
+        if ( upload == null || !upload.exists() )
+        {
+            message = i18n.getString( "upload_file_null" );
+            return ERROR;
+        }
         
-        process.setProperties( export );
+        if ( !TEMPLATE_TYPE.contains( uploadContentType ) )
+        {
+            message = i18n.getString( "file_type_not_supported" );
+            return ERROR;
+        }
 
-        processCoordinator.requestProcessExecution( executor );        
-
-        setCurrentRunningProcess( PROCESS_KEY_DATAMART, executor.getId() );
-        
         return SUCCESS;
     }
 }
