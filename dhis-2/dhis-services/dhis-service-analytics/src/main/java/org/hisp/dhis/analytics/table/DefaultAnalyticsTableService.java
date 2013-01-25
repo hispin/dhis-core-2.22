@@ -84,7 +84,7 @@ public class DefaultAnalyticsTableService
         final Date latest = tableManager.getLatestData();
         final String tableName = tableManager.getTableName();
         final List<String> tables = PartitionUtils.getTempTableNames( earliest, latest, tableName );        
-        clock.logTime( "Checked data timespan and got tables: " + tables );
+        clock.logTime( "Got partition tables: " + tables + ", earliest: " + earliest + ", latest: " + latest );
         
         //dropTables( tables );
         
@@ -130,10 +130,12 @@ public class DefaultAnalyticsTableService
     {
         List<List<String>> tablePages = new PaginatedList<String>( tables ).setPageSize( getProcessNo() ).getPages();
         
-        log.info( "No of pages: " + tablePages.size() );
+        log.info( "No of table pages: " + tablePages.size() );
         
         for ( List<String> tablePage : tablePages )
         {
+            log.info( "Table page: " + tablePage );
+            
             List<Future<?>> futures = new ArrayList<Future<?>>();
             
             for ( String table : tablePage )
