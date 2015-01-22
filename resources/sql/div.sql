@@ -182,6 +182,14 @@ inner join categorycombos_optioncombos ccoc on coc.categoryoptioncomboid=ccoc.ca
 inner join categorycombo cc on ccoc.categorycomboid=cc.categorycomboid
 where coc.categoryoptioncomboid=2118430;
 
+-- Get category option combos linked to category option
+
+select coc.categoryoptioncomboid as coc_id, coc.uid as coc_uid, co.categoryoptionid as co_id, co.name as co_name
+from categoryoptioncombo coc 
+inner join categoryoptioncombos_categoryoptions coo on coc.categoryoptioncomboid=coo.categoryoptioncomboid
+inner join dataelementcategoryoption co on coo.categoryoptionid=co.categoryoptionid
+where co.uid='LPeJEUjotaB';
+
 -- Display data out of reasonable time range
 
 select *
@@ -228,6 +236,15 @@ select cc.categoryoptioncomboid from categoryoptioncombo cc
 join categorycombos_optioncombos co
 on (cc.categoryoptioncomboid=co.categoryoptioncomboid)
 where categorycomboid=12414 );
+
+-- (Write) Delete all data values for an attribute category option
+
+delete from datavalue dv
+where dv.attributeoptioncomboid in (
+  select coc.categoryoptioncomboid from categoryoptioncombo coc
+  inner join categoryoptioncombos_categoryoptions coo on coc.categoryoptioncomboid=coo.categoryoptioncomboid
+  inner join dataelementcategoryoption co on coo.categoryoptionid=co.categoryoptionid
+  where co.uid='LPeJEUjotaB');
 
 -- (Write) MD5 set password to "district" for admin user
 
@@ -312,3 +329,18 @@ where dataelementid not in (
   inner join section s on (ds.sectionid=s.sectionid)
   where s.datasetid=dsm.datasetid)
 and dsm.datasetid=1979200;
+
+-- (Write) Remove orphaned dashboard items
+
+delete from dashboarditem di 
+where di.dashboarditemid not in (
+  select dashboarditemid from dashboard_items)
+and di.dashboarditemid not in (
+  select dashboarditemid from dashboarditem_reports)
+and di.dashboarditemid not in (
+  select dashboarditemid from dashboarditem_reporttables)
+and di.dashboarditemid not in (
+  select dashboarditemid from dashboarditem_resources)
+and di.dashboarditemid not in (
+  select dashboarditemid from dashboarditem_users);
+
