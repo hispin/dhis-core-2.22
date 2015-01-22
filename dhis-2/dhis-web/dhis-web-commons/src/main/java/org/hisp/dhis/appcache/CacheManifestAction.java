@@ -49,7 +49,7 @@ import com.opensymphony.xwork2.Action;
  * @author Abyot Asalefew Gizaw <abyota@gmail.com>
  *
  */
-public class CacheManifest
+public class CacheManifestAction
     implements Action
 {
 
@@ -97,7 +97,7 @@ public class CacheManifest
         File cacheManifest = null;
         File i18nFolder = null;
         StringBuffer stringBuffer = null;
-
+        
         String locale = userSettingService.getUserSetting( UserSettingService.KEY_UI_LOCALE ).toString();
         SystemInfo info = systemService.getSystemInfo();
         String revisionTag = "#Revision:" + info.getRevision();
