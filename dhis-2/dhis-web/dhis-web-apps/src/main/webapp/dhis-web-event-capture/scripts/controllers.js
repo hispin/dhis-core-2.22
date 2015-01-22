@@ -9,6 +9,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $modal,
                 $timeout,
                 $translate,
+                $anchorScroll,
                 storage,
                 Paginator,
                 OptionSetService,
@@ -559,6 +560,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 //decide whether to stay in the current screen or not.
                 if(addingAnotherEvent){
                     $scope.showEventRegistration();
+                    $anchorScroll();
                 }
             }
         });
