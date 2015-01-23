@@ -2660,7 +2660,7 @@ Ext.onReady( function() {
 						layers = gis.util.map.getRenderedVectorLayers(),
                         centerPoint = function() {
                             var lonlat = gis.olmap.getCenter();
-                            return new OpenLayers.Geometry.Point(v.lon, v.lat).transform('EPSG:900913', 'EPSG:4326');
+                            return new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat).transform('EPSG:900913', 'EPSG:4326');
                         }(),
 						layer,
 						views = [],
