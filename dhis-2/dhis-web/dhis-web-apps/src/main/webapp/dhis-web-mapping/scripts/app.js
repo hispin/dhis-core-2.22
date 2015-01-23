@@ -2658,8 +2658,11 @@ Ext.onReady( function() {
 				handler: function() {
 					var name = nameTextfield.getValue(),
 						layers = gis.util.map.getRenderedVectorLayers(),
+                        centerPoint = function() {
+                            var lonlat = gis.olmap.getCenter();
+                            return new OpenLayers.Geometry.Point(v.lon, v.lat).transform('EPSG:900913', 'EPSG:4326');
+                        }(),
 						layer,
-						lonlat = gis.olmap.getCenter(),
 						views = [],
 						view,
 						map;
@@ -2681,7 +2684,7 @@ Ext.onReady( function() {
 
                         view.hidden = !layer.visibility;
 
-						// Operand
+						// operand
 						if (Ext.isArray(view.columns) && view.columns.length) {
 							for (var j = 0; j < view.columns.length; j++) {
 								for (var k = 0, item; k < view.columns[j].items.length; k++) {
@@ -2702,8 +2705,8 @@ Ext.onReady( function() {
 
 					map = {
 						name: name,
-						longitude: lonlat.lon,
-						latitude: lonlat.lat,
+						longitude: centerPoint.x,
+						latitude: centerPoint.y,
 						zoom: gis.olmap.getZoom(),
 						mapViews: views,
 						user: {
