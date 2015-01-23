@@ -1156,19 +1156,26 @@ Ext.onReady( function() {
 		};
 
 		afterLoad = function() {
+            var lon = parseFloat(gis.map.longitude) || 0,
+                lat = parseFloat(gis.map.latitude) || 20,
+                zoom = gis.map.zoom || 3;
+
 			register = [];
+
+            // validate, transform
+            if ((lon >= -180 && lon <= 180) && (lat >= -90 && lat <= 90)) {
+                var p = new OpenLayers.Geometry.Point(lon, lat).transform('EPSG:4326', 'EPSG:900913');
+
+                lon = p.x;
+                lat = p.y;
+            }
 
 			if (gis.el) {
 				gis.olmap.zoomToVisibleExtent();
 			}
 			else {
-				if (gis.map.longitude && gis.map.latitude && gis.map.zoom) {
-					gis.olmap.setCenter(new OpenLayers.LonLat(gis.map.longitude, gis.map.latitude), gis.map.zoom);
-				}
-				else {
-					gis.olmap.zoomToVisibleExtent();
-				}
-			}
+                gis.olmap.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+            }
 
 			// interpretation button
 			if (gis.viewport.shareButton) {
