@@ -162,6 +162,14 @@ select * from categorycombo where categorycomboid not in (select distinct catego
 
 select categoryid, categoryoptionid, count(*) from categories_categoryoptions group by categoryid, categoryoptionid having count(*) > 1;
 
+-- Get category combos with categories which share the same category options
+
+select cc.name as cc_name, co.name as co_name from categorycombo cc 
+inner join categorycombos_categories ccc on cc.categorycomboid=ccc.categorycomboid
+inner join categories_categoryoptions cco on ccc.categoryid=cco.categoryid
+inner join dataelementcategoryoption co on cco.categoryoptionid=co.categoryoptionid
+group by cc_name, co_name having count(*) > 1;
+
 -- Get categories with more than one membership for a category combination
 
 select categorycomboid, categoryid, count(*) from categorycombos_categories group by categorycomboid, categoryid having count(*) > 1;
