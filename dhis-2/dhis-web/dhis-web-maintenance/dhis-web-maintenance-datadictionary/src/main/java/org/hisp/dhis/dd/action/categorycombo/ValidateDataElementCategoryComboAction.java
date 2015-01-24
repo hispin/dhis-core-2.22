@@ -130,6 +130,8 @@ public class ValidateDataElementCategoryComboAction
             }
         }
 
+        //TODO validateCategoryCombo
+        
         return SUCCESS;
     }
 }

@@ -342,6 +342,22 @@ public interface DataElementCategoryService
      * @return a collection of DataElementCategoryCombos.
      */
     Collection<DataElementCategoryCombo> getAttributeCategoryCombos();
+    
+    /**
+     * Validates the category combo. Possible return values are:
+     * 
+     * <ul>
+     * <li>category_combo_is_null</li>
+     * <li>category_combo_must_have_at_least_one_category</li>
+     * <li>category_combo_cannot_have_duplicate_categories</li>
+     * <li>categories_must_have_at_least_one_category_option</li>
+     * <li>categories_cannot_share_category_options</li>
+     * </ul>
+     * 
+     * @param categoryCombo the category combo to validate.
+     * @return null if valid, non-empty string if invalid.
+     */
+    String validateCategoryCombo( DataElementCategoryCombo categoryCombo );
 
     // -------------------------------------------------------------------------
     // CategoryOptionCombo
