@@ -47,6 +47,8 @@ import org.hisp.dhis.system.util.Filter;
 import org.hisp.dhis.system.util.FilterUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Sets;
+
 /**
  * @author Abyot Asalefew
  */
@@ -488,6 +490,42 @@ public class DefaultDataElementCategoryService
             categoryComboStore.getCategoryCombosByDimensionType( DataElementCategoryCombo.DIMENSION_TYPE_ATTTRIBUTE ) );
     }
 
+    @Override
+    public String validateCategoryCombo( DataElementCategoryCombo categoryCombo )
+    {
+        if ( categoryCombo == null )
+        {
+            return "category_combo_is_null";
+        }
+        
+        if ( categoryCombo.getCategories() == null || categoryCombo.getCategories().isEmpty() )
+        {
+            return "category_combo_must_have_at_least_one_category";
+        }
+        
+        if ( Sets.newHashSet( categoryCombo.getCategories() ).size() < categoryCombo.getCategories().size() )
+        {
+            return "category_combo_cannot_have_duplicate_categories";
+        }
+        
+        Set<DataElementCategoryOption> categoryOptions = new HashSet<DataElementCategoryOption>();
+        
+        for ( DataElementCategory category: categoryCombo.getCategories() )
+        {
+            if ( category == null || category.getCategoryOptions().isEmpty() )
+            {
+                return "categories_must_have_at_least_one_category_option";
+            }
+            
+            if ( !Sets.intersection( categoryOptions, Sets.newHashSet( category.getCategoryOptions() ) ).isEmpty() )
+            {
+                return "categories_cannot_share_category_options";
+            }
+        }
+        
+        return null;
+    }
+    
     // -------------------------------------------------------------------------
     // CategoryOptionCombo
     // -------------------------------------------------------------------------
