@@ -28,7 +28,14 @@
         <table>
             <tr>
                 <td><label>{{'registering_unit'| translate}}</label></td>
-                <td><input type="text" class="fixed-width-text" selected-org-unit ng-model="selectedOrgUnit.name" value="{{selectedOrgUnit.name|| 'please_select'| translate}}" disabled="" style="height:14px"></td>                        	                            
+                <td><input type="text" 
+                           class="fixed-width-text" 
+                           selected-org-unit 
+                           ng-model="selectedOrgUnit.name"
+                           value="{{selectedOrgUnit.name|| 'please_select'| translate}}" 
+                           disabled="" 
+                           style="height:14px">
+                </td>                        	                            
             </tr>
             <tr>
                 <td><label>{{'program'| translate}}</label></td>
