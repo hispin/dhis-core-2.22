@@ -133,7 +133,10 @@ public class DefaultProgramExpressionService
             while ( matcher.find() )
             {
                 String key = matcher.group().replaceAll( "[\\[\\]]", "" ).split( SEPARATOR_OBJECT )[1];
+
+System.err.println("\n\n\n ==== key : " + key );
                 String dataValue = dataValueMap.get( key );
+System.err.println("\n\n\n ==== dataValue : " + dataValue );
                 if ( dataValue == null )
                 {
                     return null;
@@ -165,11 +168,8 @@ public class DefaultProgramExpressionService
             String[] info = match.split( SEPARATOR_OBJECT );
             String[] ids = info[1].split( SEPARATOR_ID );
 
-            String programStageId = ids[0];
-            ProgramStage programStage = programStageService.getProgramStage( Integer.parseInt( programStageId ) );
-
-            int dataElementId = Integer.parseInt( ids[1] );
-            DataElement dataElement = dataElementService.getDataElement( dataElementId );
+            ProgramStage programStage = programStageService.getProgramStage( ids[0] );
+            DataElement dataElement = dataElementService.getDataElement( ids[1] );
 
             if ( programStage == null || dataElement == null )
             {
@@ -200,9 +200,8 @@ public class DefaultProgramExpressionService
 
             String[] info = match.split( SEPARATOR_OBJECT );
             String[] ids = info[1].split( SEPARATOR_ID );
-
-            int dataElementId = Integer.parseInt( ids[1] );
-            DataElement dataElement = dataElementService.getDataElement( dataElementId );
+            
+            DataElement dataElement = dataElementService.getDataElement( ids[1] );
             dataElements.add( dataElement );
         }
 
