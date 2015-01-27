@@ -136,11 +136,12 @@ public class DefaultProgramValidationService
         Map<String, String> entityInstanceDataValueMap = new HashMap<>( entityInstanceDataValues.size() );
         for ( TrackedEntityDataValue entityInstanceDataValue : entityInstanceDataValues )
         {
-            String key = entityInstanceDataValue.getProgramStageInstance().getProgramStage().getId() + "."
-                + entityInstanceDataValue.getDataElement().getId();
+            String key = entityInstanceDataValue.getProgramStageInstance().getProgramStage().getUid() + "."
+                + entityInstanceDataValue.getDataElement().getUid();
             entityInstanceDataValueMap.put( key, entityInstanceDataValue.getValue() );
         }
-
+System.err.println("\n\n\n ==== entityInstanceDataValueMap : " + entityInstanceDataValueMap );
+System.err.println("\n validation : " + validation );
         // ---------------------------------------------------------------------
         // Validate rules
         // ---------------------------------------------------------------------
@@ -220,9 +221,9 @@ public class DefaultProgramValidationService
                 String[] info = match.split( SEPARATOR_OBJECT );
                 String[] ids = info[1].split( SEPARATOR_ID );
 
-                int programStageId = Integer.parseInt( ids[0] );
+                String programStageUid = ids[0];
 
-                if ( programStageId == programStage.getId() )
+                if ( programStageUid.equals( programStage.getUid() ) )
                 {
                     flag = true;
                     break;

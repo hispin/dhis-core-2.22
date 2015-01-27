@@ -97,11 +97,14 @@ public class ProgramExpressionServiceTest
 
     private ProgramStageInstance stageInstance;
 
-    private int stageAId;
+    private DataElement dataElementA;
+    
+    private DataElement dataElementB;
+    
+    private ProgramStage stageA;
+    
+    private ProgramStage stageB;
 
-    private int deAId;
-
-    private int deBId;
 
     @Override
     public void setUpTest()
@@ -112,11 +115,11 @@ public class ProgramExpressionServiceTest
         Program program = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnit );
         programService.addProgram( program );
 
-        ProgramStage stageA = new ProgramStage( "StageA", program );
+        stageA = new ProgramStage( "StageA", program );
         stageA.setSortOrder( 1 );
-        stageAId = programStageService.saveProgramStage( stageA );
+        programStageService.saveProgramStage( stageA );
 
-        ProgramStage stageB = new ProgramStage( "StageB", program );
+        stageB = new ProgramStage( "StageB", program );
         stageB.setSortOrder( 2 );
         programStageService.saveProgramStage( stageB );
 
@@ -126,11 +129,11 @@ public class ProgramExpressionServiceTest
         program.setProgramStages( programStages );
         programService.updateProgram( program );
 
-        DataElement dataElementA = createDataElement( 'A' );
-        DataElement dataElementB = createDataElement( 'B' );
+        dataElementA = createDataElement( 'A' );
+        dataElementB = createDataElement( 'B' );
 
-        deAId = dataElementService.addDataElement( dataElementA );
-        deBId = dataElementService.addDataElement( dataElementB );
+        dataElementService.addDataElement( dataElementA );
+        dataElementService.addDataElement( dataElementB );
 
         TrackedEntityInstance entityInstance = createTrackedEntityInstance( 'A', organisationUnit );
         entityInstanceService.addTrackedEntityInstance( entityInstance );
@@ -146,9 +149,9 @@ public class ProgramExpressionServiceTest
         dataValueService.saveTrackedEntityDataValue( dataValueB );
 
         programExpressionA = new ProgramExpression( "[" + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT
-            + ProgramExpression.SEPARATOR_OBJECT + stageAId + "." + deAId + "]", "A" );
+            + ProgramExpression.SEPARATOR_OBJECT + stageA.getUid() + "." + dataElementA.getUid() + "]", "A" );
         programExpressionB = new ProgramExpression( "[" + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT
-            + ProgramExpression.SEPARATOR_OBJECT + stageAId + "." + deBId + "]", "B" );
+            + ProgramExpression.SEPARATOR_OBJECT + stageA.getUid() + "." + dataElementB.getUid() + "]", "B" );
     }
 
     @Test
@@ -210,8 +213,8 @@ public class ProgramExpressionServiceTest
         programExpressionService.addProgramExpression( programExpressionA );
 
         Map<String, String> dataValueMap = new HashMap<>();
-        dataValueMap.put( stageAId + "." + deAId, "1" );
-        dataValueMap.put( stageAId + "." + deBId, "2" );
+        dataValueMap.put( stageA.getUid() + "." + dataElementA.getUid(), "1" );
+        dataValueMap.put( stageA.getUid() + "." + dataElementB.getUid(), "2" );
 
         String value = programExpressionService.getProgramExpressionValue( programExpressionA, stageInstance,
             dataValueMap );
