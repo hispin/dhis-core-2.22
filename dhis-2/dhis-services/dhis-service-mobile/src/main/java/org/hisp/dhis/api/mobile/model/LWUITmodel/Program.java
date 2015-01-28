@@ -64,6 +64,12 @@ public class Program
 
     private List<PatientAttribute> programAttributes = new ArrayList<>();
 
+    private String relationshipText;
+
+    private int relatedProgramId;
+
+    private int relationshipType;
+
     public List<ProgramStage> getProgramStages()
     {
         return programStages;
@@ -146,6 +152,36 @@ public class Program
         this.programAttributes = programAttributes;
     }
 
+    public String getRelationshipText()
+    {
+        return relationshipText;
+    }
+
+    public void setRelationshipText( String relationshipText )
+    {
+        this.relationshipText = relationshipText;
+    }
+
+    public int getRelatedProgramId()
+    {
+        return relatedProgramId;
+    }
+
+    public void setRelatedProgramId( int relatedProgramId )
+    {
+        this.relatedProgramId = relatedProgramId;
+    }
+
+    public int getRelationshipType()
+    {
+        return relationshipType;
+    }
+    
+    public void setRelationshipType( int relationshipType )
+    {
+        this.relationshipType = relationshipType;
+    }
+
     @Override
     public void serialize( DataOutputStream dout )
         throws IOException
@@ -170,6 +206,18 @@ public class Program
         {
             pa.serialize( dout );
         }
+        
+        String relationshipText = getRelationshipText();
+        if(relationshipText == null)
+        {
+            dout.writeUTF( "" );
+        }
+        else
+        {
+            dout.writeUTF( getRelationshipText() );
+        }
+        dout.writeInt( getRelatedProgramId() );
+        dout.writeInt( relationshipType );
 
     }
 
@@ -207,5 +255,9 @@ public class Program
                 programAttributes.add( pa );
             }
         }
+
+        this.setRelationshipText( dataInputStream.readUTF() );
+        this.setRelatedProgramId( dataInputStream.readInt() );
+        this.setRelationshipType( dataInputStream.readInt() );
     }
 }

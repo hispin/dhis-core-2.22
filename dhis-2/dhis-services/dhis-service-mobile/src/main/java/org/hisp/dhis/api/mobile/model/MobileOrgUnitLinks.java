@@ -116,6 +116,8 @@ public class MobileOrgUnitLinks
     private String uploadSingleEventWithoutRegistration;
 
     private String completeProgramInstanceUrl;
+    
+    private String registerRelativeUrl;
 
     @XmlAttribute
     public int getId()
@@ -501,6 +503,16 @@ public class MobileOrgUnitLinks
         this.completeProgramInstanceUrl = completeProgramInstanceUrl;
     }
 
+    public String getRegisterRelativeUrl()
+    {
+        return registerRelativeUrl;
+    }
+
+    public void setRegisterRelativeUrl( String registerRelativeUrl )
+    {
+        this.registerRelativeUrl = registerRelativeUrl;
+    }
+
     @Override
     public void serialize( DataOutputStream dataOutputStream )
         throws IOException
@@ -542,6 +554,7 @@ public class MobileOrgUnitLinks
         dataOutputStream.writeUTF( generateRepeatableEventUrl );
         dataOutputStream.writeUTF( uploadSingleEventWithoutRegistration );
         dataOutputStream.writeUTF( completeProgramInstanceUrl );
+        dataOutputStream.writeUTF( registerRelativeUrl );
 
     }
 
@@ -586,6 +599,7 @@ public class MobileOrgUnitLinks
         generateRepeatableEventUrl = dataInputStream.readUTF();
         uploadSingleEventWithoutRegistration = dataInputStream.readUTF();
         completeProgramInstanceUrl = dataInputStream.readUTF();
+        registerRelativeUrl = dataInputStream.readUTF();
 
     }
 
@@ -673,5 +687,6 @@ public class MobileOrgUnitLinks
         dataOutputStream.writeUTF( generateRepeatableEventUrl );
         dataOutputStream.writeUTF( uploadSingleEventWithoutRegistration );
         dataOutputStream.writeUTF( completeProgramInstanceUrl );
+        dataOutputStream.writeUTF( registerRelativeUrl );
     }
 }

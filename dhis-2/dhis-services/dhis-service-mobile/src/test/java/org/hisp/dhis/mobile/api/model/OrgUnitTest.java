@@ -84,6 +84,7 @@ public class OrgUnitTest
         unit.setGenerateRepeatableEventUrl( "generateRepeatableEventUrl" );
         unit.setUploadSingleEventWithoutRegistration( "uploadSingleEventWithoutRegistration" );
         unit.setCompleteProgramInstanceUrl( "completeProgramInstance" );
+        unit.setRegisterRelativeUrl( "registerRelativeUrl" );
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream( baos );
