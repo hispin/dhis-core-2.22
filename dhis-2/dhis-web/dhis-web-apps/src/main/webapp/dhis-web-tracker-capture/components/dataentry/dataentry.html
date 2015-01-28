@@ -32,10 +32,10 @@
                 <tbody>
                     <tr>
                         <td class="inline-block" ng-repeat="dhis2Event in dhis2Events | orderBy:'sortingDate':reverse">
-                            <span class="stage-container" ng-class='getEventStyle(dhis2Event, false)' ng-click="showDataEntry(dhis2Event, false)">
+                            <div class="stage-container" ng-class='getEventStyle(dhis2Event, false)' ng-click="showDataEntry(dhis2Event, false)">
                                 {{dhis2Event.name}}<br/>
                                 {{dhis2Event.sortingDate}}         
-                            </span>
+                            </div>
                             <i class="fa fa-arrow-right" ng-if="$index < dhis2Events.length - 1"></i>
                         </td>                        
                     </tr>
