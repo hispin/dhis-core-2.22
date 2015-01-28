@@ -109,6 +109,7 @@ public class OrgUnitsTest
         orgUnit.setGenerateRepeatableEventUrl( "generateRepeatableEvent" );
         orgUnit.setUploadSingleEventWithoutRegistration( "uploadSingleEventWithoutRegistration" );
         orgUnit.setCompleteProgramInstanceUrl( "completeProgramInstance" );
+        orgUnit.setRegisterRelativeUrl( "registerRelative" );
 
         return orgUnit;
     }

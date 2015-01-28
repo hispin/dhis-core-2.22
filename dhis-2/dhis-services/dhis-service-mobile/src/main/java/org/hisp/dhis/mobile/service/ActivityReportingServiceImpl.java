@@ -60,6 +60,7 @@ import org.hisp.dhis.api.mobile.model.LWUITmodel.Patient;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.PatientList;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.Section;
 import org.hisp.dhis.api.mobile.model.comparator.ActivityComparator;
+import org.hisp.dhis.api.mobile.model.comparator.TrackedEntityAttributeValueSortOrderComparator;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.Grid;
@@ -106,6 +107,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService;
+import org.hisp.dhis.trackedentity.TrackedEntityInstanceStore;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
@@ -529,6 +531,16 @@ public class ActivityReportingServiceImpl
             List<org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement> dataElements = mobileProgramStage
                 .getDataElements();
 
+            try
+            {
+                OrganisationUnit organisationUnit = organisationUnitService.getOrganisationUnit( orgUnitId );
+                programStageInstance.setOrganisationUnit( organisationUnit );
+            }
+            catch ( Exception e )
+            {
+                programStageInstance.setOrganisationUnit( null );
+            }
+
             for ( org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement dataElement1 : dataElements )
             {
                 DataElement dataElement = dataElementService.getDataElement( dataElement1.getId() );
@@ -578,8 +590,10 @@ public class ActivityReportingServiceImpl
             }
             else
             {
-                // programStageInstance.setCompleted(
-                // mobileProgramStage.isCompleted() );
+                if ( mobileProgramStage.isCompleted() )
+                {
+                    programStageInstance.setStatus( EventStatus.COMPLETED );
+                }
                 programStageInstanceService.updateProgramStageInstance( programStageInstance );
 
                 // check if all belonged program stage are completed
@@ -686,7 +700,14 @@ public class ActivityReportingServiceImpl
                     if ( mobileProgramStage != null && mobileProgramStage.getDataElements().size() > 0 )
                     {
                         mobileProgramStage.setId( programStageInstanceId );
-                        this.saveProgramStage( mobileProgramStage, patientId, patient.getOrganisationUnit().getId() );
+                        if ( mobileProgramStage.isSingleEvent() )
+                        {
+                            this.saveProgramStage( mobileProgramStage, patientId, patient.getOrganisationUnit().getId() );
+                        }
+                        else
+                        {
+                            this.saveProgramStage( mobileProgramStage, patientId, 0 );
+                        }
                     }
                 }
 
@@ -856,9 +877,20 @@ public class ActivityReportingServiceImpl
                 .getPersonBId() );
             List<TrackedEntityAttributeValue> attributes = new ArrayList<TrackedEntityAttributeValue>(
                 relative.getAttributeValues() );
+            List<TrackedEntityAttributeValue> attributesInList = new ArrayList<TrackedEntityAttributeValue>();
+            
+            for ( TrackedEntityAttributeValue value : attributes )
+            {
+                if ( value != null && value.getAttribute().getDisplayInListNoProgram() )
+                {
+                    attributesInList.add( value );
+                }
+            }
+
+            Collections.sort( attributesInList, new TrackedEntityAttributeValueSortOrderComparator() );
 
             String relativeName = "";
-            for ( TrackedEntityAttributeValue value : attributes )
+            for ( TrackedEntityAttributeValue value : attributesInList )
             {
                 if ( value != null && value.getAttribute().getDisplayInListNoProgram() )
                 {
@@ -894,8 +926,12 @@ public class ActivityReportingServiceImpl
         ProgramInstance programInstance )
     {
         List<org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStage> mobileProgramStages = new ArrayList<>();
+        List<ProgramStageInstance> proStageInstanceList = new ArrayList<ProgramStageInstance>(
+            programInstance.getProgramStageInstances() );
 
-        for ( ProgramStageInstance eachProgramStageInstance : programInstance.getProgramStageInstances() )
+        Collections.sort( proStageInstanceList, new ProgramStageInstanceVisitDateComparator() );
+
+        for ( ProgramStageInstance eachProgramStageInstance : proStageInstanceList )
         {
             // only for Mujhu database, because there is null program stage
             // instance. This condition should be removed in the future
@@ -1097,8 +1133,7 @@ public class ActivityReportingServiceImpl
         }
         else
         {
-            String instanceInfo = findPatientInAdvanced( enrollmentRelationship.getPersonBName(), orgUnitId,
-                0 );
+            String instanceInfo = findPatientInAdvanced( enrollmentRelationship.getPersonBName(), orgUnitId, 0 );
             if ( instanceInfo == null || instanceInfo.trim().length() == 0 )
             {
                 throw NotAllowedException.NO_BENEFICIARY_FOUND;
@@ -1430,10 +1465,24 @@ public class ActivityReportingServiceImpl
         this.programStageService = programStageService;
     }
 
+    private TrackedEntityInstanceStore instanceStore;
+
+    public void setInstanceStore( TrackedEntityInstanceStore instanceStore )
+    {
+        this.instanceStore = instanceStore;
+    }
+
+    private I18nFormat format;
+
+    public void setFormat( I18nFormat format )
+    {
+        this.format = format;
+    }
+
     @Override
     public Patient savePatient( org.hisp.dhis.api.mobile.model.LWUITmodel.Patient patient, int orgUnitId,
         String programIdText )
-        throws NotAllowedException
+    throws NotAllowedException
     {
         TrackedEntityInstance patientWeb = new TrackedEntityInstance();
         patientWeb.setOrganisationUnit( organisationUnitService.getOrganisationUnit( orgUnitId ) );
@@ -1463,10 +1512,11 @@ public class ActivityReportingServiceImpl
             }
         }
 
-        patientWeb.setTrackedEntity( trackedEntityService.getTrackedEntityByName( "Person" ) );
+        patientWeb.setTrackedEntity( trackedEntityService.getTrackedEntityByName( patient.getTrackedEntityName() ) );
         patientId = entityInstanceService.createTrackedEntityInstance( patientWeb, null, null, patientAttributeValues );
         TrackedEntityInstance newTrackedEntityInstance = entityInstanceService
             .getTrackedEntityInstance( this.patientId );
+        String errorMsg = null;
         try
         {
             for ( org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramInstance mobileProgramInstance : patient
@@ -1476,14 +1526,134 @@ public class ActivityReportingServiceImpl
                 enrollProgram( patientId + "-" + mobileProgramInstance.getProgramId(),
                     mobileProgramInstance.getProgramStageInstances(), incidentDate );
             }
+            
+            Program program = programService.getProgram( Integer.parseInt( programIdText ) );
+            String[] errorCode = entityInstanceService.validateTrackedEntityInstance( newTrackedEntityInstance,
+                program, format ).split( "_" );
+            int code = Integer.parseInt( errorCode[0] );
+
+            if ( code >= 1 )
+            {
+                entityInstanceService.deleteTrackedEntityInstance( newTrackedEntityInstance );
+                if ( code == TrackedEntityInstanceService.ERROR_DUPLICATE_IDENTIFIER )
+                {
+                    errorMsg = "Duplicate value of " + attributeService.getTrackedEntityAttribute( Integer.parseInt( errorCode[1] ) ).getDisplayName();
+                }
+                else
+                {
+                    errorMsg = "Validation error";
+                }
+            }
         }
         catch ( Exception e )
         {
-            throw new NotAllowedException( e.getMessage() );
+            e.printStackTrace();
+        }
+        
+        if(errorMsg!=null)
+        {
+            throw new NotAllowedException( errorMsg );
         }
 
         return getPatientModel( newTrackedEntityInstance );
 
+    }
+
+    @Override
+    public Patient updatePatient( org.hisp.dhis.api.mobile.model.LWUITmodel.Patient patient, int orgUnitId,
+        String programIdText )
+        throws NotAllowedException
+    {
+        TrackedEntityInstance entityInstance = entityInstanceService.getTrackedEntityInstance( patient.getId() );
+        TrackedEntityInstance tempTEI = entityInstance;
+        TrackedEntity trackedEntity = null;
+
+        Program program = programService.getProgram( Integer.parseInt( programIdText ) );
+        trackedEntity = program.getTrackedEntity();
+
+        entityInstance.setTrackedEntity( trackedEntity );
+
+        // get attributes to be saved/updated/deleted
+        Collection<TrackedEntityAttribute> attributes = attributeService.getAllTrackedEntityAttributes();
+
+        List<TrackedEntityAttributeValue> valuesForSave = new ArrayList<TrackedEntityAttributeValue>();
+        List<TrackedEntityAttributeValue> valuesForUpdate = new ArrayList<TrackedEntityAttributeValue>();
+        Collection<TrackedEntityAttributeValue> valuesForDelete = null;
+
+        TrackedEntityAttributeValue attributeValue = null;
+
+        Collection<org.hisp.dhis.api.mobile.model.PatientAttribute> attributesMobile = patient.getAttributes();
+
+        if ( attributes != null && attributes.size() > 0 )
+        {
+            valuesForDelete = attValueService.getTrackedEntityAttributeValues( entityInstance );
+            tempTEI.getAttributeValues().clear();
+
+            for ( TrackedEntityAttribute attribute : attributes )
+            {
+                String value = getAttributeValue( attributesMobile, attribute.getName() );
+
+                if ( value != null )
+                {
+                    attributeValue = attValueService.getTrackedEntityAttributeValue( entityInstance, attribute );
+
+                    if ( attributeValue == null )
+                    {
+                        attributeValue = new TrackedEntityAttributeValue();
+                        attributeValue.setEntityInstance( entityInstance );
+                        attributeValue.setAttribute( attribute );
+                        attributeValue.setValue( value.trim() );
+                        valuesForSave.add( attributeValue );
+                    }
+                    else
+                    {
+                        attributeValue.setValue( value.trim() );
+                        valuesForUpdate.add( attributeValue );
+                        valuesForDelete.remove( attributeValue );
+                    }
+                    tempTEI.getAttributeValues().add( attributeValue );
+                }
+            }
+        }
+
+        // validate
+        String[] errorCode = entityInstanceService.validateTrackedEntityInstance( tempTEI, program, format )
+            .split( "_" );
+        int code = Integer.parseInt( errorCode[0] );
+
+        if ( code >= 1 )
+        {
+            if ( code == TrackedEntityInstanceService.ERROR_DUPLICATE_IDENTIFIER )
+            {
+                throw new NotAllowedException( "Duplicate value of "
+                    + attributeService.getTrackedEntityAttribute( Integer.parseInt( errorCode[1] ) ).getDisplayName() );
+            }
+            else
+            {
+                throw new NotAllowedException( "Validation error" );
+            }
+        }
+
+        entityInstanceService.updateTrackedEntityInstance( entityInstance, null, null, valuesForSave, valuesForUpdate,
+            valuesForDelete );
+        enrollProgram( patient.getId() + "-" + programIdText, null, new Date() );
+        entityInstance = entityInstanceService.getTrackedEntityInstance( patient.getId() );
+        entityInstance.setTrackedEntity( trackedEntity );
+
+        return getPatientModel( entityInstance );
+    }
+
+    public String getAttributeValue( Collection<org.hisp.dhis.api.mobile.model.PatientAttribute> attributesMobile,
+        String attributeName )
+    {
+        for ( org.hisp.dhis.api.mobile.model.PatientAttribute attributeMobile : attributesMobile )
+        {
+            if ( attributeMobile.getName().equals( attributeName ) )
+            {
+                return attributeMobile.getValue();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -1633,10 +1803,11 @@ public class ActivityReportingServiceImpl
             // NOTE: this line should be here but because the mobile client uses
             // the int TEI id, we will temprarily get the int id for now.
             // instanceInfo += (String) row.get( instanceIndex ) + "/";
-                        
-            TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( (String) row.get( instanceIndex ) );
+
+            TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( (String) row
+                .get( instanceIndex ) );
             instanceInfo += tei.getId() + "/";
-            //end of temproary fix
+            // end of temproary fix
 
             String attText = "";
             for ( Integer attIndex : attributesIndex )
@@ -1799,23 +1970,44 @@ public class ActivityReportingServiceImpl
     public org.hisp.dhis.api.mobile.model.LWUITmodel.Patient generateRepeatableEvent( int orgUnitId, String eventInfo )
         throws NotAllowedException
     {
-        OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( orgUnitId );
+      //OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( orgUnitId );
 
-        String mobileProgramStageId = eventInfo.substring( 0, eventInfo.indexOf( "$" ) );
+        String[] keys = eventInfo.split( "_" );
+        ProgramStage programStage = programStageService.getProgramStage( Integer.parseInt( keys[4] ) );
+        int mobileProgramStageId = Integer.parseInt( keys[3] );
+        String nextDueDate = keys[2];
+        Program program = programService.getProgram( Integer.parseInt( keys[1] ) );
+        TrackedEntityInstance trackedEntityInstance = entityInstanceService.getTrackedEntityInstance( Integer
+            .parseInt( keys[0] ) );
 
-        String nextDueDate = eventInfo.substring( eventInfo.indexOf( "$" ) + 1, eventInfo.length() );
+        ProgramInstance programInstance = null;
+        ProgramStageInstance newProgramStageInstance = null;
+        if ( mobileProgramStageId != 0 )
+        {
+            ProgramStageInstance oldProgramStageIntance = programStageInstanceService
+                .getProgramStageInstance( mobileProgramStageId );
 
-        ProgramStageInstance oldProgramStageIntance = programStageInstanceService.getProgramStageInstance( Integer
-            .valueOf( mobileProgramStageId ) );
+            programInstance = oldProgramStageIntance.getProgramInstance();
 
-        ProgramInstance programInstance = oldProgramStageIntance.getProgramInstance();
+            newProgramStageInstance = new ProgramStageInstance( programInstance,
+                oldProgramStageIntance.getProgramStage() );
 
-        ProgramStageInstance newProgramStageInstance = new ProgramStageInstance( programInstance,
-            oldProgramStageIntance.getProgramStage() );
+            newProgramStageInstance.setDueDate( PeriodUtil.stringToDate( nextDueDate ) );
 
-        newProgramStageInstance.setDueDate( PeriodUtil.stringToDate( nextDueDate ) );
+            //newProgramStageInstance.setOrganisationUnit( orgUnit );
+        }
+        else
+        {
+            programInstance = programInstanceService.getProgramInstances( trackedEntityInstance, program ).iterator()
+                .next();
 
-        newProgramStageInstance.setOrganisationUnit( orgUnit );
+            newProgramStageInstance = new ProgramStageInstance();
+            newProgramStageInstance.setProgramInstance( programInstance );
+            newProgramStageInstance.setProgramStage( programStage );
+            newProgramStageInstance.setDueDate( PeriodUtil.stringToDate( nextDueDate ) );
+            newProgramStageInstance.setExecutionDate( PeriodUtil.stringToDate( nextDueDate ) );
+            //newProgramStageInstance.setOrganisationUnit( orgUnit );
+        }
 
         programInstance.getProgramStageInstances().add( newProgramStageInstance );
 
@@ -1831,9 +2023,9 @@ public class ActivityReportingServiceImpl
 
         programInstanceService.updateProgramInstance( programInstance );
 
-        org.hisp.dhis.api.mobile.model.LWUITmodel.Patient mobilePatient = getPatientModel( entityInstanceService
-            .getTrackedEntityInstance( programInstance.getEntityInstance().getId() ) ); // TODO:
-                                                                                        // SHERIE
+        TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( programInstance.getEntityInstance()
+            .getId() );
+        org.hisp.dhis.api.mobile.model.LWUITmodel.Patient mobilePatient = getPatientModel( tei );
 
         return mobilePatient;
     }
@@ -2315,6 +2507,115 @@ public class ActivityReportingServiceImpl
     public void setTrackedEntityService( TrackedEntityService trackedEntityService )
     {
         this.trackedEntityService = trackedEntityService;
+    }
+
+    @Override
+    public Patient registerRelative( Patient patient, int orgUnitId, String programId )
+        throws NotAllowedException
+    {
+        TrackedEntityInstance patientWeb = new TrackedEntityInstance();
+        patientWeb.setOrganisationUnit( organisationUnitService.getOrganisationUnit( orgUnitId ) );
+
+        Set<TrackedEntityAttribute> patientAttributeSet = new HashSet<TrackedEntityAttribute>();
+        Set<TrackedEntityAttributeValue> patientAttributeValues = new HashSet<TrackedEntityAttributeValue>();
+
+        Collection<org.hisp.dhis.api.mobile.model.PatientAttribute> attributesMobile = patient.getAttributes();
+
+        if ( attributesMobile != null )
+        {
+            for ( org.hisp.dhis.api.mobile.model.PatientAttribute paAtt : attributesMobile )
+            {
+
+                TrackedEntityAttribute patientAttribute = attributeService.getTrackedEntityAttributeByName( paAtt
+                    .getName() );
+
+                patientAttributeSet.add( patientAttribute );
+
+                TrackedEntityAttributeValue patientAttributeValue = new TrackedEntityAttributeValue();
+
+                patientAttributeValue.setEntityInstance( patientWeb );
+                patientAttributeValue.setAttribute( patientAttribute );
+                patientAttributeValue.setValue( paAtt.getValue() );
+                patientAttributeValues.add( patientAttributeValue );
+
+            }
+        }
+
+        patientWeb.setTrackedEntity( trackedEntityService.getTrackedEntityByName( patient.getTrackedEntityName() ) );
+
+        if ( patient.getIdToAddRelative() != 0 )
+        {
+            TrackedEntityInstance relative = entityInstanceService.getTrackedEntityInstance( patient
+                .getIdToAddRelative() );
+            if ( relative == null )
+            {
+                throw new NotAllowedException( "relative does not exist" );
+            }
+            patientId = entityInstanceService.createTrackedEntityInstance( patientWeb, relative.getUid(),
+                patient.getRelTypeIdToAdd(), patientAttributeValues );
+        }
+        else
+        {
+            patientId = entityInstanceService.createTrackedEntityInstance( patientWeb, null, null,
+                patientAttributeValues );
+        }
+        TrackedEntityInstance newTrackedEntityInstance = entityInstanceService
+            .getTrackedEntityInstance( this.patientId );
+
+        String errorMsg = null;
+
+        try
+        {
+
+            for ( org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramInstance mobileProgramInstance : patient
+                .getEnrollmentPrograms() )
+            {
+                Date incidentDate = PeriodUtil.stringToDate( mobileProgramInstance.getDateOfIncident() );
+                enrollProgram( patientId + "-" + mobileProgramInstance.getProgramId(),
+                    mobileProgramInstance.getProgramStageInstances(), incidentDate );
+            }
+
+            Program program = programService.getProgram( Integer.parseInt( programId ) );
+            String[] errorCode = entityInstanceService.validateTrackedEntityInstance( newTrackedEntityInstance,
+                program, format ).split( "_" );
+            int code = Integer.parseInt( errorCode[0] );
+
+            if ( code >= 1 )
+            {
+                entityInstanceService.deleteTrackedEntityInstance( newTrackedEntityInstance );
+                if ( code == TrackedEntityInstanceService.ERROR_DUPLICATE_IDENTIFIER )
+                {
+                    errorMsg = "Duplicate value of "
+                        + attributeService.getTrackedEntityAttribute( Integer.parseInt( errorCode[1] ) )
+                            .getDisplayName();
+                }
+                else
+                {
+                    errorMsg = "Validation error";
+                }
+            }
+
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+
+        if ( errorMsg != null )
+        {
+            throw new NotAllowedException( errorMsg );
+        }
+
+        if ( patient.getEnrollmentRelationship() != null )
+        {
+            org.hisp.dhis.api.mobile.model.LWUITmodel.Relationship enrollmentRelationship = patient
+                .getEnrollmentRelationship();
+            enrollmentRelationship.setPersonBId( newTrackedEntityInstance.getId() );
+            addRelationship( enrollmentRelationship, orgUnitId );
+        }
+
+        return getPatientModel( newTrackedEntityInstance );
+
     }
 
 }

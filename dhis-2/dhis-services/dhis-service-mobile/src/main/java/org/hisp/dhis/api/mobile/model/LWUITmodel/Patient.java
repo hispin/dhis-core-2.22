@@ -60,6 +60,12 @@ public class Patient
 
     private List<Relationship> relationships = new ArrayList<>();
 
+    private int idToAddRelative;
+    
+    private int relTypeIdToAdd;
+    
+    private Relationship enrollmentRelationship;
+
 
     // -------------------------------------------------------------------------
     // Getters and setters
@@ -145,6 +151,36 @@ public class Patient
         this.completedPrograms = completedPrograms;
     }
 
+    public int getIdToAddRelative()
+    {
+        return idToAddRelative;
+    }
+
+    public void setIdToAddRelative( int idToAddRelative )
+    {
+        this.idToAddRelative = idToAddRelative;
+    }
+    
+    public int getRelTypeIdToAdd()
+    {
+        return relTypeIdToAdd;
+    }
+    
+    public void setRelTypeIdToAdd( int relTypeIdToAdd )
+    {
+        this.relTypeIdToAdd = relTypeIdToAdd;
+    }
+    
+    public Relationship getEnrollmentRelationship()
+    {
+        return enrollmentRelationship;
+    }
+    
+    public void setEnrollmentRelationship( Relationship enrollmentRelationship )
+    {
+        this.enrollmentRelationship = enrollmentRelationship;
+    }
+
     // -------------------------------------------------------------------------
     // Override Methods
     // -------------------------------------------------------------------------
@@ -186,6 +222,17 @@ public class Patient
         for ( Relationship each : relationships )
         {
             each.serialize( dout );
+        }
+        dout.writeInt( this.getIdToAddRelative() );
+        dout.writeInt( this.getRelTypeIdToAdd() );
+        if(enrollmentRelationship!=null)
+        {
+            dout.writeInt( 1 );
+            enrollmentRelationship.serialize( dout );
+        }
+        else
+        {
+            dout.writeInt( 0 );
         }
 
 //        bout.flush();
@@ -250,6 +297,16 @@ public class Patient
                 relationship.deSerialize( din );
                 this.relationships.add( relationship );
             }
+        }
+        this.setIdToAddRelative( din.readInt() );
+        this.setRelTypeIdToAdd( din.readInt() );
+        
+        int numEnrollmentRelationships = din.readInt();
+        if(numEnrollmentRelationships > 0)
+        {
+            Relationship enrollmentRelationship = new Relationship();
+            enrollmentRelationship.deSerialize( din );
+            this.setEnrollmentRelationship( enrollmentRelationship );
         }
     }
 
