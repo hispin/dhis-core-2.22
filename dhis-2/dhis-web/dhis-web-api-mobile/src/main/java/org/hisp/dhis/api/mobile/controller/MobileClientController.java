@@ -174,6 +174,7 @@ public class MobileClientController
         orgUnit.setUploadSingleEventWithoutRegistration( getUrl( request, unit.getId(),
             "uploadSingleEventWithoutRegistration" ) );
         orgUnit.setCompleteProgramInstanceUrl(getUrl( request, unit.getId(), "completeProgramInstance" ) );
+        orgUnit.setRegisterRelativeUrl(getUrl( request, unit.getId(), "registerRelative" ));
 
         // generate URL for download new version
         String full = UrlUtils.buildFullRequestUrl( request );

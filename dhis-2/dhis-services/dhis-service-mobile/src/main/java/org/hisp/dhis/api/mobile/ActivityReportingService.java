@@ -94,6 +94,9 @@ public interface ActivityReportingService
     Patient savePatient( Patient patient, int orgUnitId, String programId )
         throws NotAllowedException;
 
+    Patient updatePatient( Patient patient, int orgUnitId, String programId )
+        throws NotAllowedException;
+
     String findLostToFollowUp( int orgUnitId, String programId )
         throws NotAllowedException;
 
@@ -134,5 +137,8 @@ public interface ActivityReportingService
         throws NotAllowedException;
 
     String postInterpretationComment( String data )
+        throws NotAllowedException;
+    
+    Patient registerRelative( Patient patient, int orgUnitId, String programId )
         throws NotAllowedException;
 }

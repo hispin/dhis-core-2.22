@@ -61,7 +61,8 @@ import com.google.common.collect.Lists;
 
 @Controller
 @RequestMapping( value = DimensionController.RESOURCE_PATH )
-public class DimensionController extends AbstractCrudController<DimensionalObject>
+public class DimensionController 
+    extends AbstractCrudController<DimensionalObject>
 {
     public static final String RESOURCE_PATH = "/dimensions";
 
@@ -131,6 +132,8 @@ public class DimensionController extends AbstractCrudController<DimensionalObjec
         return "items";
     }
 
+    //TODO Why do we have two versions of get items?
+    
     @RequestMapping( value = "/{uid}/items", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
     public void getItemsJson( @PathVariable String uid, @RequestParam Map<String, String> parameters,
         Model model, HttpServletRequest request, HttpServletResponse response ) throws IOException

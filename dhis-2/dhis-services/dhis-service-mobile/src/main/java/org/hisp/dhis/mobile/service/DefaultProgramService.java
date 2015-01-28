@@ -298,6 +298,13 @@ public class DefaultProgramService
             pr.getProgramAttributes().add( this.getPatientAttributeForMobile( ppa ) );
         }
 
+        if ( program.getRelatedProgram() != null )
+        {
+            pr.setRelationshipText( program.getRelationshipText() );
+            pr.setRelatedProgramId( program.getRelatedProgram().getId() );
+            pr.setRelationshipType( program.getRelationshipType().getId() );
+        }
+
         return pr;
     }
 
@@ -319,6 +326,8 @@ public class DefaultProgramService
         {
             mobileAttribute.setDisplayedInList( false );
         }
+        
+        mobileAttribute.setMandatory( ppa.isMandatory() );
 
         if ( pa.getValueType().equals( TrackedEntityAttribute.TYPE_OPTION_SET ) )
         {
