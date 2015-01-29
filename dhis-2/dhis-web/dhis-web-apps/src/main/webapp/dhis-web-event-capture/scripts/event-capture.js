@@ -29,7 +29,7 @@ if( dhis2.ec.memoryOnly ) {
 dhis2.ec.store = new dhis2.storage.Store({
     name: 'dhis2ec',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events']       
+    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations']
 });
 
 (function($) {
@@ -149,6 +149,8 @@ function downloadMetaData(){
     promise = promise.then( getPrograms );     
     promise = promise.then( getProgramStages );
     promise = promise.then( getOptionSets );
+    promise = promise.then( getMetaProgramValidations );
+    promise = promise.then( getProgramValidations );
     promise.done( function() {    
         //Enable ou selection after meta-data has downloaded
         $( "#orgUnitTree" ).removeClass( "disable-clicks" );
@@ -491,6 +493,117 @@ function getOptionSet( id )
         }).done( function( response ){            
             _.each( _.values( response.optionSets ), function( optionSet ) {                
                 dhis2.ec.store.set( 'optionSets', optionSet );
+            });
+        });
+    };
+}
+
+
+function getMetaProgramValidations( programs )
+{
+    if( !programs ){
+        return;
+    }
+    
+    var def = $.Deferred();
+    
+    var programIds = [];
+    _.each( _.values( programs ), function ( program ) { 
+        if( program.id ) {
+            programIds.push( program.id );
+        }
+    });
+    
+    $.ajax({
+        url: '../api/programValidations.json',
+        type: 'GET',
+        data:'paging=false&fields=id,program[id]'
+    }).done( function(response) {          
+        var programValidations = [];
+        _.each( _.values( response.programValidations ), function ( programValidation ) { 
+            if( programValidation &&
+                programValidation.id &&
+                programValidation.program &&
+                programValidation.program.id &&
+                programIds.indexOf( programValidation.program.id ) !== -1) {
+            
+                programValidations.push( programValidation );
+            }  
+            
+        });
+        
+        def.resolve( programValidations );
+        
+    }).fail(function(){
+        def.resolve( null );
+    });
+    
+    return def.promise();    
+}
+
+function getProgramValidations( programValidations )
+{
+    if( !programValidations ){
+        return;
+    }
+    
+    var mainDef = $.Deferred();
+    var mainPromise = mainDef.promise();
+
+    var def = $.Deferred();
+    var promise = def.promise();
+
+    var builder = $.Deferred();
+    var build = builder.promise();
+
+    _.each( _.values( programValidations ), function ( programValidation ) {
+        build = build.then(function() {
+            var d = $.Deferred();
+            var p = d.promise();
+            dhis2.ec.store.get('programValidations', programValidation.id).done(function(obj) {
+                if(!obj) {
+                    promise = promise.then( getProgramValidation( programValidation.id ) );
+                }
+                d.resolve();
+            });
+
+            return p;
+        });
+    });
+
+    build.done(function() {
+        def.resolve();
+
+        promise = promise.done( function () {
+            mainDef.resolve();
+        } );
+    }).fail(function(){
+        mainDef.resolve();
+    });
+
+    builder.resolve();
+
+    return mainPromise;
+}
+
+function getProgramValidation( id )
+{
+    return function() {
+        return $.ajax( {
+            url: '../api/programValidations.json',
+            type: 'GET',
+            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,operator,displayName,rightSide,leftSide,program[id]'
+        }).done( function( response ){
+            
+            _.each( _.values( response.programValidations ), function ( programValidation ) { 
+                
+                if( programValidation &&
+                    programValidation.id &&
+                    programValidation.program &&
+                    programValidation.program.id ) {
+                
+                    dhis2.ec.store.set( 'programValidations', programValidation );
+                }
             });
         });
     };

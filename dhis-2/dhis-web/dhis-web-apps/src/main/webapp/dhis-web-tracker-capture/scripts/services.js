@@ -8,7 +8,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     var store = new dhis2.storage.Store({
         name: "dhis2tc",
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets']
+        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations']
     });
     return{
         currentStore: store
@@ -211,6 +211,44 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return def.promise;
         }
     };    
+})
+
+/* Factory to fetch programValidations */
+.factory('ProgramValidationFactory', function($q, $rootScope, ECStorageService) {  
+    
+    return {        
+        get: function(uid){
+            
+            var def = $q.defer();
+            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.get('programValidations', uid).done(function(pv){                    
+                    $rootScope.$apply(function(){
+                        def.resolve(pv);
+                    });
+                });
+            });                        
+            return def.promise;
+        },
+        getByProgram: function(program){
+            var def = $q.defer();
+            var programValidations = [];
+            
+            TCStorageService.currentStore.open().done(function(){
+                TCStorageService.currentStore.getAll('programValidations').done(function(pvs){   
+                    angular.forEach(pvs, function(pv){
+                        if(pv.program.id === program){                            
+                            programValidations.push(pv);                               
+                        }                        
+                    });
+                    $rootScope.$apply(function(){
+                        def.resolve(programValidations);
+                    });
+                });                
+            });            
+            return def.promise;
+        }
+    };        
 })
 
 /*Orgunit service for local db */

@@ -13,6 +13,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 storage,
                 Paginator,
                 OptionSetService,
+                ProgramValidationService,
                 ProgramFactory,
                 ProgramStageFactory,                
                 DHIS2EventFactory,
@@ -85,6 +86,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.resetOu = false;
         $scope.selectedProgram = null;
         $scope.selectedProgramStage = null;
+        $scope.programValidations = [];
         $scope.dhis2Events = [];
         $scope.currentEvent = {};
         $scope.currentEventOriginialValue = {};
@@ -109,14 +111,13 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 
                 if(angular.isObject($scope.programs) && $scope.programs.length === 1){
                     $scope.selectedProgram = $scope.programs[0];
-                    //$scope.loadEvents();
-                    $scope.getPrograms();
+                    $scope.getProgramDetails();
                 }                
             });
         }    
     };
     
-    $scope.getPrograms = function(){        
+    $scope.getProgramDetails = function(){        
         
         $scope.selectedProgramStage = null;
         
@@ -128,7 +129,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         if( $scope.selectedProgram && 
                 $scope.selectedProgram.programStages && 
                 $scope.selectedProgram.programStages[0] && 
-                $scope.selectedProgram.programStages[0].id){                               
+                $scope.selectedProgram.programStages[0].id){ 
                 
             //because this is single event, take the first program stage
             ProgramStageFactory.get($scope.selectedProgram.programStages[0].id).then(function (programStage){
@@ -138,7 +139,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 angular.forEach($scope.selectedProgramStage.programStageSections, function(section){
                     section.open = true;
                 });
-                
+
                 $scope.customForm = CustomFormService.getForProgramStage($scope.selectedProgramStage);
 
                 $scope.prStDes = [];  
@@ -185,18 +186,24 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                         $scope.filterText[prStDe.dataElement.id]= {};
                     }
                 });
-                
+
                 if($scope.selectedProgramStage.captureCoordinates){
                     $scope.newDhis2Event.coordinate = {};
                 }
                 $scope.newDhis2Event.eventDate = '';
-                
+
 
                 ErrorMessageService.setErrorMessages(errorMessages);
-                
-                $scope.loadEvents();
-                
-            });            
+
+                ProgramValidationService.getByProgram($scope.selectedProgram.id).then(function(pvs){
+
+                    $scope.programValidations = pvs;
+
+                    console.log('the validations:  ', $scope.programValidations);
+
+                    $scope.loadEvents();
+                });
+            });
         }
     };
         

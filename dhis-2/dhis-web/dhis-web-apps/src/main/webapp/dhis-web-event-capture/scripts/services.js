@@ -8,7 +8,7 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
     var store = new dhis2.storage.Store({
         name: 'dhis2ec',
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events']
+        objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations']
     });
     return{
         currentStore: store
@@ -188,6 +188,55 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
             });                        
             return def.promise;            
         }        
+    };        
+})
+
+/* Service to fetch and process programValidations */
+.service('ProgramValidationService', function($q, $rootScope, ECStorageService) {  
+    
+    return {        
+        get: function(uid){
+            
+            var def = $q.defer();
+            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.get('programValidations', uid).done(function(pv){                    
+                    $rootScope.$apply(function(){
+                        def.resolve(pv);
+                    });
+                });
+            });                        
+            return def.promise;
+        },
+        getByProgram: function(program){
+            var def = $q.defer();
+            var programValidations = [];
+            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.getAll('programValidations').done(function(pvs){   
+                    angular.forEach(pvs, function(pv){
+                        if(pv.program.id === program){                            
+                            programValidations.push(pv);                               
+                        }                        
+                    });
+                    $rootScope.$apply(function(){
+                        def.resolve(programValidations);
+                    });
+                });                
+            });            
+            return def.promise;
+        },
+        getExpression: function(str){
+            if( !str ){
+                return null;
+            }
+            
+            var expression = str.substring(1, str.length-1);
+            
+            if(expression){
+                
+            }
+        }
     };        
 })
 
