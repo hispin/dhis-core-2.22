@@ -26,7 +26,7 @@ if( dhis2.tc.memoryOnly ) {
 dhis2.tc.store = new dhis2.storage.Store({
     name: 'dhis2tc',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets']      
+    objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations']      
 });
 
 (function($) {
@@ -165,6 +165,8 @@ function downloadMetaData()
     promise = promise.then( getOptionSetsForDataElements );
     promise = promise.then( getTrackedEntityAttributes );
     promise = promise.then( getOptionSetsForAttributes );
+    promise = promise.then( getMetaProgramValidations );
+    promise = promise.then( getProgramValidations );
     promise = promise.then( getMetaTrackedEntityForms );
     promise = promise.then( getTrackedEntityForms );        
     promise.done(function() {
@@ -608,10 +610,131 @@ function getOptionSet( id )
     };
 }
 
-
-function getMetaTrackedEntityForms()
+function getMetaProgramValidations( programs )
 {
+    if( !programs ){
+        return;
+    }
+    
     var def = $.Deferred();
+    
+    var programIds = [];
+    _.each( _.values( programs ), function ( program ) { 
+        if( program.id ) {
+            programIds.push( program.id );
+        }
+    });
+    
+    $.ajax({
+        url: '../api/programValidations.json',
+        type: 'GET',
+        data:'paging=false&fields=id,program[id]'
+    }).done( function(response) {          
+        var programValidations = [];
+        _.each( _.values( response.programValidations ), function ( programValidation ) { 
+            if( programValidation &&
+                programValidation.id &&
+                programValidation.program &&
+                programValidation.program.id &&
+                programIds.indexOf( programValidation.program.id ) !== -1) {
+            
+                programValidations.push( programValidation );
+            }  
+            
+        });
+        
+        def.resolve( {programValidations: programValidations, programs: programs} );
+        
+    }).fail(function(){
+        def.resolve( null );
+    });
+    
+    return def.promise();    
+}
+
+function getProgramValidations( data )
+{
+    if( !data || !data.programValidations ){
+        return;
+    }
+    
+    var mainDef = $.Deferred();
+    var mainPromise = mainDef.promise();
+
+    var def = $.Deferred();
+    var promise = def.promise();
+
+    var builder = $.Deferred();
+    var build = builder.promise();
+
+    _.each( _.values( data.programValidations ), function ( programValidation ) {
+        build = build.then(function() {
+            var d = $.Deferred();
+            var p = d.promise();
+            dhis2.tc.store.get('programValidations', programValidation.id).done(function(obj) {
+                if(!obj) {
+                    promise = promise.then( getProgramValidation( programValidation.id ) );
+                }
+                d.resolve();
+            });
+
+            return p;
+        });
+    });
+
+    build.done(function() {
+        def.resolve();
+
+        promise = promise.done( function () {
+            mainDef.resolve( data.programs );
+        } );
+    }).fail(function(){
+        mainDef.resolve( null );
+    });
+
+    builder.resolve();
+
+    return mainPromise;
+}
+
+function getProgramValidation( id )
+{
+    return function() {
+        return $.ajax( {
+            url: '../api/programValidations.json',
+            type: 'GET',
+            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,operator,displayName,rightSide,leftSide,program[id]'
+        }).done( function( response ){
+            
+            _.each( _.values( response.programValidations ), function ( programValidation ) { 
+                
+                if( programValidation &&
+                    programValidation.id &&
+                    programValidation.program &&
+                    programValidation.program.id ) {
+                
+                    dhis2.tc.store.set( 'programValidations', programValidation );
+                }
+            });
+        });
+    };
+}
+
+function getMetaTrackedEntityForms( programs )
+{
+	
+    if( !programs ){
+        return;
+    }
+    
+    var def = $.Deferred();
+    
+    var programIds = [];
+    _.each( _.values( programs ), function ( program ) { 
+        if( program.id ) {
+            programIds.push( program.id );
+        }
+    });
 
     $.ajax({
         url: '../api/trackedEntityForms.json',
@@ -623,7 +746,8 @@ function getMetaTrackedEntityForms()
             if( trackedEntityForm &&
                 trackedEntityForm.id &&
                 trackedEntityForm.program &&
-                trackedEntityForm.program.id ) {
+                trackedEntityForm.program.id && 
+                programIds.indexOf( trackedEntityForm.program.id ) !== -1) {
             
                 trackedEntityForms.push( trackedEntityForm );
             }  
