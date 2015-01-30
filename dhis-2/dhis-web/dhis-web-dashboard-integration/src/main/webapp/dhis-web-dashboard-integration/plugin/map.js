@@ -1553,7 +1553,7 @@ Ext.onReady(function() {
                     else if (!window) {
                         var layers = gis.util.map.getRenderedVectorLayers().reverse(),
                             html = '<div id="legendWrapper">';
-                            
+
                         for (var i = 0, layer; i < layers.length; i++) {
                             layer = layers[i];
 
@@ -1575,10 +1575,10 @@ Ext.onReady(function() {
                                 show: function() {
                                     var el = this.getEl(),
                                         legendEl = el.first().first(),
-                                        xy = Ext.get(olmap.buttonControls[0].div).getAnchorXY();                                        
+                                        xy = Ext.get(olmap.buttonControls[0].div).getAnchorXY();
 
                                     el.setStyle('opacity', 0.92);
-                                    
+
                                     this.setHeight(legendEl.getHeight() + 8 + 9);
 
                                     this.setPosition(xy[0] - this.getWidth(), xy[1] - 1);
@@ -7064,6 +7064,8 @@ Ext.onReady(function() {
                 centerRegion,
                 eastRegion,
                 el = Ext.get(gis.el),
+                elWidth = el ? el.getWidth() : 0,
+                elHeight = el ? el.getHeight() : 0,
                 eastWidth = gis.map.hideLegend ? 0 : (gis.plugin ? 120 : 200),
                 trash = [];
 
@@ -7071,7 +7073,7 @@ Ext.onReady(function() {
             if (gis.dashboard) {
                 items.push(northRegion = Ext.create('Ext.panel.Panel', {
                     region: 'north',
-                    width: el.getWidth(),
+                    width: elWidth,
                     height: 19,
                     bodyStyle: 'background-color: #fff; border: 0 none; font: bold 12px LiberationSans, arial, sans-serif; color: #333; text-align: center; line-height: 14px; letter-spacing: -0.1px',
                     html: ''
@@ -7083,7 +7085,7 @@ Ext.onReady(function() {
                 region: 'center',
                 map: gis.olmap,
                 bodyStyle: 'border: 1px solid #d0d0d0',
-                width: el.getWidth() - eastWidth
+                width: elWidth - eastWidth
             }));
 
             // east
@@ -7163,8 +7165,8 @@ Ext.onReady(function() {
 
             viewport = Ext.create('Ext.panel.Panel', {
                 renderTo: el,
-                width: el.getWidth(),
-                height: el.getHeight(),
+                width: elWidth,
+                height: elHeight,
                 cls: 'gis-plugin',
                 layout: 'border',
                 bodyStyle: 'border: 0 none',
