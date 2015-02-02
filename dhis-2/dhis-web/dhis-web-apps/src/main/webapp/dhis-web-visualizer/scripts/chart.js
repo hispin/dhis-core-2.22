@@ -2997,7 +2997,8 @@ Ext.onReady(function() {
                         position = 'top',
                         padding = 0,
                         positions = ['top', 'right', 'bottom', 'left'],
-                        series = chartConfig.series;
+                        series = chartConfig.series,
+                        labelMarkerSize = xLayout.legendStyle ? xLayout.legendStyle.labelMarkerSize : null;
 
                     for (var i = 0, title; i < series.length; i++) {
                         title = series[i].title;
@@ -3052,7 +3053,7 @@ Ext.onReady(function() {
                         itemSpacing: 3,
                         labelFont: labelFont,
                         labelColor: labelColor,
-                        labelMarkerSize: xLayout.legendStyle.labelMarkerSize
+                        labelMarkerSize: labelMarkerSize
                     });
                 };
 
@@ -3352,7 +3353,7 @@ Ext.onReady(function() {
                         colors = conf.chart.theme.dv1.slice(0, store.rangeFields.length),
                         seriesTitles = getDefaultSeriesTitle(store);
 
-                    // Series
+                    // series
                     for (var i = 0, line; i < store.rangeFields.length; i++) {
                         line = {
                             type: 'line',
@@ -3381,7 +3382,7 @@ Ext.onReady(function() {
                         series.push(line);
                     }
 
-                    // Options, theme colors
+                    // options, theme colors
                     if (xLayout.showTrendLine) {
                         series = getDefaultTrendLines(store).concat(series);
 
@@ -3400,7 +3401,7 @@ Ext.onReady(function() {
                         colors.push('#051a2e');
                     }
 
-                    // Theme
+                    // theme
                     Ext.chart.theme.dv1 = Ext.extend(Ext.chart.theme.Base, {
                         constructor: function(config) {
                             Ext.chart.theme.Base.prototype.constructor.call(this, Ext.apply({
@@ -4203,6 +4204,7 @@ Ext.onReady(function() {
             };
 
             // init
+            DV.instances.push(ns);
 			ns.core = DV.getCore(Ext.clone(init));
 			extendInstance(ns);
 
