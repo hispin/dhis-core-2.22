@@ -7,6 +7,8 @@ trackerCapture.controller('RegistrationController',
                 DHIS2EventFactory,
                 TEService,
                 TEIService,
+                TEFormService,
+                CustomFormService,
                 EnrollmentService,
                 DialogService,
                 CurrentSelection,
@@ -16,7 +18,8 @@ trackerCapture.controller('RegistrationController',
                 storage) {
     
     $scope.today = DateUtils.getToday();
-    
+    $scope.trackedEntityForm = null;
+    $scope.customForm = null;
     $scope.optionSets = CurrentSelection.getOptionSets();
             
     if(!$scope.optionSets){
@@ -45,19 +48,30 @@ trackerCapture.controller('RegistrationController',
     
     //watch for selection of program
     $scope.$watch('selectedProgram', function() {        
+        $scope.trackedEntityForm = null;
+        $scope.customForm = null;
         $scope.getAttributes();
     });    
         
     $scope.getAttributes = function(){
-
-        if($scope.selectedProgram){
+        if($scope.selectedProgram && $scope.selectedProgram.id){            
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
                 $scope.attributes = atts;
                 $scope.attributesById = [];
                 angular.forEach(atts, function(att){
                     $scope.attributesById[att.id] = att;
                 });
-            });           
+
+                $scope.selectedProgram.hasCustomForm = false;               
+                TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){                    
+                    if(angular.isObject(teForm)){                        
+                        $scope.selectedProgram.hasCustomForm = true;
+                        $scope.selectedProgram.displayCustomForm = $scope.selectedProgram.hasCustomForm ? true:false;                        
+                        $scope.trackedEntityForm = teForm;                      
+                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
+                    }                    
+                });  
+            });                
         }
         else{            
             AttributesFactory.getWithoutProgram().then(function(atts){
@@ -70,8 +84,7 @@ trackerCapture.controller('RegistrationController',
         }
     };
     
-    $scope.registerEntity = function(destination){
-        
+    $scope.registerEntity = function(destination){        
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
