@@ -28,40 +28,40 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.node.AbstractNode;
+import org.hisp.dhis.node.Node;
+import org.hisp.dhis.node.types.CollectionNode;
+import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping( value = DimensionController.RESOURCE_PATH )
-public class DimensionController 
+public class DimensionController
     extends AbstractCrudController<DimensionalObject>
 {
     public static final String RESOURCE_PATH = "/dimensions";
@@ -93,92 +93,35 @@ public class DimensionController
     }
 
     @RequestMapping( value = "/{uid}/items", method = RequestMethod.GET )
-    public String getItems( @PathVariable String uid, @RequestParam Map<String, String> parameters,
+    public @ResponseBody RootNode getItems( @PathVariable String uid, @RequestParam Map<String, String> parameters,
         Model model, HttpServletRequest request, HttpServletResponse response )
     {
-        WebOptions options = new WebOptions( parameters );
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+        List<String> filters = Lists.newArrayList( contextService.getParameterValues( "filter" ) );
+
+        if ( fields.isEmpty() )
+        {
+            fields.add( ":identifiable" );
+        }
+
         List<NameableObject> items = dimensionService.getCanReadDimensionItems( uid );
 
-        if ( parameters.containsKey( "filter" ) )
-        {
-            String filter = parameters.get( "filter" );
-
-            if ( filter.startsWith( "name:like:" ) )
-            {
-                filter = filter.substring( "name:like:".length() );
-
-                Iterator<NameableObject> iterator = items.iterator();
-
-                while ( iterator.hasNext() )
-                {
-                    NameableObject nameableObject = iterator.next();
-
-                    if ( !nameableObject.getName().toLowerCase().contains( filter.toLowerCase() ) )
-                    {
-                        iterator.remove();
-                    }
-                }
-            }
-        }
-
+        items = objectFilterService.filter( items, filters );
         Collections.sort( items, IdentifiableObjectNameComparator.INSTANCE );
 
-        WebMetaData metaData = new WebMetaData();
-        metaData.setItems( items );
+        RootNode rootNode = new RootNode( "metadata" );
+        rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
+        rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
 
-        model.addAttribute( "model", metaData );
-        model.addAttribute( "viewClass", options.getViewClass( "basic" ) );
+        CollectionNode collectionNode = rootNode.addChild( fieldFilterService.filter( getEntityClass(), items, fields ) );
+        collectionNode.setName( "items" );
 
-        return "items";
-    }
-
-    //TODO Why do we have two versions of get items?
-    
-    @RequestMapping( value = "/{uid}/items", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
-    public void getItemsJson( @PathVariable String uid, @RequestParam Map<String, String> parameters,
-        Model model, HttpServletRequest request, HttpServletResponse response ) throws IOException
-    {
-        List<NameableObject> items = dimensionService.getCanReadDimensionItems( uid );
-
-        if ( parameters.containsKey( "filter" ) )
+        for ( Node node : collectionNode.getChildren() )
         {
-            String filter = parameters.get( "filter" );
-
-            if ( filter.startsWith( "name:like:" ) )
-            {
-                filter = filter.substring( "name:like:".length() );
-
-                Iterator<NameableObject> iterator = items.iterator();
-
-                while ( iterator.hasNext() )
-                {
-                    NameableObject nameableObject = iterator.next();
-
-                    if ( !nameableObject.getName().toLowerCase().contains( filter.toLowerCase() ) )
-                    {
-                        iterator.remove();
-                    }
-                }
-            }
+            ((AbstractNode) node).setName( "item" );
         }
 
-        Collections.sort( items, IdentifiableObjectNameComparator.INSTANCE );
-
-        Map<String, List<?>> output = new HashMap<>();
-        List<Map<?, ?>> itemCollection = new ArrayList<>();
-        output.put( "items", itemCollection );
-
-        for ( NameableObject item : items )
-        {
-            Map<String, Object> o = new HashMap<>();
-            o.put( "id", item.getUid() );
-            o.put( "name", item.getName() );
-
-            itemCollection.add( o );
-        }
-
-        response.setContentType( MediaType.APPLICATION_JSON_VALUE );
-        renderService.toJson( response.getOutputStream(), output );
+        return rootNode;
     }
 
     @RequestMapping( value = "/constraints", method = RequestMethod.GET )
