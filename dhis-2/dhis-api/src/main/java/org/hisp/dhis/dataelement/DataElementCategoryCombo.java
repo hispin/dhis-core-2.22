@@ -147,7 +147,7 @@ public class DataElementCategoryCombo
 
         return arrays;
     }
-
+    
     public List<DataElementCategoryOptionCombo> generateOptionCombosList()
     {
         List<DataElementCategoryOptionCombo> list = new ArrayList<>();
@@ -215,10 +215,16 @@ public class DataElementCategoryCombo
         return name.toString();
     }
 
-    //TODO update category option -> category option combo association
     public void generateOptionCombos()
     {
         this.optionCombos = new HashSet<>( generateOptionCombosList() );
+        for (DataElementCategoryOptionCombo optionCombo : optionCombos)
+        {
+            for (DataElementCategoryOption categoryOption : optionCombo.getCategoryOptions())
+            {
+                categoryOption.addCategoryOptionCombo(optionCombo);
+            }
+        }
     }
 
     public boolean hasOptionCombos()
