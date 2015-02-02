@@ -390,13 +390,17 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 .factory('TEFormService', function(TCStorageService, $q, $rootScope) {
 
     return {
-        getByProgram: function(programUid){            
+        getByProgram: function(program, attributes){            
             var def = $q.defer();
             
             TCStorageService.currentStore.open().done(function(){
-                TCStorageService.currentStore.get('trackedEntityForms', programUid).done(function(te){                    
+                TCStorageService.currentStore.get('trackedEntityForms', program.id).done(function(teForm){                    
                     $rootScope.$apply(function(){
-                        def.resolve(te);
+                        var trackedEntityForm = teForm;
+                        trackedEntityForm.attributes = attributes;
+                        trackedEntityForm.selectIncidentDatesInFuture = program.selectIncidentDatesInFuture;
+                        trackedEntityForm.selectEnrollmentDatesInFuture = program.selectEnrollmentDatesInFuture;                        
+                        def.resolve(trackedEntityForm);
                     });
                 });
             });                        

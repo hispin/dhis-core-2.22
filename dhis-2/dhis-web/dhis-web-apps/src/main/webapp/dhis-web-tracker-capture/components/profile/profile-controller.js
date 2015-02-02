@@ -2,7 +2,8 @@ trackerCapture.controller('ProfileController',
         function($rootScope,
                 $scope,     
                 CurrentSelection,
-                DateUtils,
+                CustomFormService,
+                TEFormService,
                 TEIService,
                 DialogService,
                 AttributesFactory) {
@@ -31,6 +32,24 @@ trackerCapture.controller('ProfileController',
         //if no program, display attributesInNoProgram
         TEIService.processAttributes($scope.selectedTei, $scope.selectedProgram, $scope.selectedEnrollment).then(function(tei){
             $scope.selectedTei = tei;
+            if($scope.selectedProgram && $scope.selectedProgram.id){            
+                AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
+                    $scope.attributesById = [];
+                    angular.forEach(atts, function(att){
+                        $scope.attributesById[att.id] = att;
+                    });
+
+                    $scope.selectedProgram.hasCustomForm = false;               
+                    TEFormService.getByProgram($scope.selectedProgram, atts).then(function(teForm){                    
+                        if(angular.isObject(teForm)){                        
+                            $scope.selectedProgram.hasCustomForm = true;
+                            $scope.selectedProgram.displayCustomForm = $scope.selectedProgram.hasCustomForm ? true:false;
+                            $scope.trackedEntityForm = teForm;
+                            $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'PROFILE');
+                        }                    
+                    });  
+                });                
+            }
         });
     });
     
