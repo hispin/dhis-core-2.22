@@ -39,6 +39,10 @@ styles/style.css
 ../dhis-web-commons/javascripts/angular/plugins/angular-translate.min.js
 ../dhis-web-commons/javascripts/angular/plugins/angular-translate-loader-static-files.min.js
 ../dhis-web-commons/javascripts/angular/plugins/angular-translate-loader-url.min.js
+../dhis-web-commons/javascripts/dhis2/angular.directives.js
+../dhis-web-commons/javascripts/dhis2/angular.filters.js
+../dhis-web-commons/javascripts/dhis2/angular.services.js
+../dhis-web-commons/javascripts/dhis2/angular.controllers.js
 
 ../dhis-web-commons/javascripts/moment/moment-with-langs.min.js       
 

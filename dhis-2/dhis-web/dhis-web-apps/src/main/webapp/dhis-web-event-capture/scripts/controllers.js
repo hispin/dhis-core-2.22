@@ -196,11 +196,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 ErrorMessageService.setErrorMessages(errorMessages);
 
                 ProgramValidationService.getByProgram($scope.selectedProgram.id).then(function(pvs){
-
                     $scope.programValidations = pvs;
-
-                    console.log('the validations:  ', $scope.programValidations);
-
                     $scope.loadEvents();
                 });
             });
