@@ -132,19 +132,30 @@ function editRightExpression() {
 
 function insertText( inputAreaName, inputText ) {
   insertTextCommon(inputAreaName, inputText);
-
   getExpressionText();
 }
 
 
 function getExpressionText() {
-  $.postUTF8("getProgramExpressionDescription.action",
-    {
-      programExpression: $('#expression').val()
-    },
-    function( data ) {
-      setInnerHTML("formulaText", data);
-    }, 'html');
+	$.ajax({
+		url: "getProgramExpressionDescription.action",
+		type: "POST",
+		data:{ programExpression: $('#expression').val() },
+		dataType: "json",
+		success: function( json ){
+			setInnerHTML("formulaText", json.message);
+			  if( json.response == "error" ){
+				$("#formulaText").css("color","red");
+				$("#formulaText").addClass("validateError");
+			  }
+			  else{
+				$("#formulaText").css("color","black");
+				$("#formulaText").removeClass("error");
+			  }
+		}
+	});
+
+
 }
 
 var left = true;
@@ -168,20 +179,25 @@ function insertExpression() {
   dialog.dialog("close");
 }
 
-function validateExpression() {
-  if( checkNotEmpty(jQuery("#expression-container [id=description]"), i18n_description_not_null) == false )
+function validateExpression() {	
+  getExpressionText();
+  if( checkValidationRule(jQuery("#expression-container [id=description]"), i18n_description_not_null) == false )
     return;
-  if( checkNotEmpty(jQuery("#expression-container [id=expression]"), i18n_expression_not_null) == false )
+  if( checkValidationRule(jQuery("#expression-container [id=expression]"), i18n_expression_not_null) == false )
     return;
   insertExpression();
 }
 
-function checkNotEmpty( field, message ) {
+function checkValidationRule( field, message ) {
   if( field.val().length == 0 ) {
     setInnerHTML("exp-" + field.attr("name") + "Info", message);
     $('#expression-container [id=' + field.attr("name") + "]").css("background-color", "#ffc5c5");
     return false;
-  } else {
+  } 
+  else if( $("#formulaText").attr("class") == "validateError" ){
+	return false;
+  }
+  else {
     setInnerHTML("exp-" + field.attr("name") + "Info", '');
     $('#expression-container [id=' + field.attr("name") + "]").css("background-color", "#ffffff");
   }

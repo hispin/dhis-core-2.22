@@ -959,7 +959,9 @@
     <action name="getProgramExpressionDescription"
       class="org.hisp.dhis.trackedentity.action.validation.GetProgramExpressionDescriptionAction">
       <result name="success" type="velocity">
-        /dhis-web-maintenance-program/responseCaseAggDescription.vm
+         /dhis-web-commons/ajax/jsonResponseSuccess.vm
+      </result>  <result name="error" type="velocity">
+         /dhis-web-commons/ajax/jsonResponseError.vm
       </result>
       <param name="onExceptionReturn">plainTextError</param>
     </action>
