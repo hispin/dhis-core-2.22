@@ -3381,7 +3381,7 @@ Ext.onReady(function() {
                         series.push(line);
                     }
 
-                    // Options, theme colors
+                    // options, theme colors
                     if (xLayout.showTrendLine) {
                         series = getDefaultTrendLines(store).concat(series);
 
@@ -3400,7 +3400,7 @@ Ext.onReady(function() {
                         colors.push('#051a2e');
                     }
 
-                    // Theme
+                    // theme
                     Ext.chart.theme.dv1 = Ext.extend(Ext.chart.theme.Base, {
                         constructor: function(config) {
                             Ext.chart.theme.Base.prototype.constructor.call(this, Ext.apply({
@@ -4106,6 +4106,7 @@ Ext.onReady(function() {
                     }
 
                     if (DV.isDebug) {
+                        console.log('chart', ns.app.chart);
                         console.log('layout', ns.app.layout);
                         console.log('xLayout', ns.app.xLayout);
                         console.log('response', ns.app.response);
