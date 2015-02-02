@@ -62,11 +62,16 @@ public class GetProgramExpressionDescriptionAction
         this.programExpression = programExpression;
     }
 
-    private String description;
+    private String message;
 
-    public String getDescription()
+    public String getMessage()
     {
-        return description;
+        return message;
+    }
+
+    public void setMessage( String message )
+    {
+        this.message = message;
     }
 
     // -------------------------------------------------------------------------
@@ -77,7 +82,12 @@ public class GetProgramExpressionDescriptionAction
     public String execute()
         throws Exception
     {
-        description = programExpressionService.getExpressionDescription( programExpression );
+        message = programExpressionService.getExpressionDescription( programExpression );
+
+        if ( message.equals( ProgramExpressionService.INVALID_CONDITION ) )
+        {
+            return ERROR;
+        }
 
         return SUCCESS;
     }

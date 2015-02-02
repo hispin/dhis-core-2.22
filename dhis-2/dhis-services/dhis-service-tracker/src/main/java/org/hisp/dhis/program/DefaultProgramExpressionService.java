@@ -29,6 +29,9 @@ package org.hisp.dhis.program;
  */
 
 import static org.hisp.dhis.program.ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT;
+import static org.hisp.dhis.program.ProgramExpression.OBJECT_PROGRAM_STAGE;
+import static org.hisp.dhis.program.ProgramExpression.REPORT_DATE;
+import static org.hisp.dhis.program.ProgramExpression.DUE_DATE;
 import static org.hisp.dhis.program.ProgramExpression.SEPARATOR_ID;
 import static org.hisp.dhis.program.ProgramExpression.SEPARATOR_OBJECT;
 
@@ -53,10 +56,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class DefaultProgramExpressionService
     implements ProgramExpressionService
 {
-    private static final String regExp = "\\[" + OBJECT_PROGRAM_STAGE_DATAELEMENT + SEPARATOR_OBJECT
-        + "([a-zA-Z0-9\\- ]+[" + SEPARATOR_ID + "[a-zA-Z0-9\\- ]+]*)" + "\\]";
-
-    private static final String INVALID_CONDITION = "Invalid condition";
+    private static final String regExp = "\\[(" + OBJECT_PROGRAM_STAGE_DATAELEMENT + "|" + OBJECT_PROGRAM_STAGE + ")"
+        + SEPARATOR_OBJECT + "([a-zA-Z0-9\\- ]+[" + SEPARATOR_ID + "([a-zA-Z0-9\\- ]|" + DUE_DATE + "|" + REPORT_DATE
+        + ")+]*)\\]";
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -134,9 +136,7 @@ public class DefaultProgramExpressionService
             {
                 String key = matcher.group().replaceAll( "[\\[\\]]", "" ).split( SEPARATOR_OBJECT )[1];
 
-System.err.println("\n\n\n ==== key : " + key );
                 String dataValue = dataValueMap.get( key );
-System.err.println("\n\n\n ==== dataValue : " + dataValue );
                 if ( dataValue == null )
                 {
                     return null;
@@ -160,28 +160,51 @@ System.err.println("\n\n\n ==== dataValue : " + dataValue );
 
         Pattern pattern = Pattern.compile( regExp );
         Matcher matcher = pattern.matcher( programExpression );
+        int countFormula = 0;
         while ( matcher.find() )
         {
+            countFormula++;
+            
             String match = matcher.group();
+            String key = matcher.group(1);
             match = match.replaceAll( "[\\[\\]]", "" );
 
             String[] info = match.split( SEPARATOR_OBJECT );
             String[] ids = info[1].split( SEPARATOR_ID );
 
             ProgramStage programStage = programStageService.getProgramStage( ids[0] );
-            DataElement dataElement = dataElementService.getDataElement( ids[1] );
-
-            if ( programStage == null || dataElement == null )
+            String name = ids[1];
+            
+            if ( programStage == null )
             {
                 return INVALID_CONDITION;
             }
+            else if ( !name.equals( DUE_DATE ) && !name.equals( REPORT_DATE )  )
+            {
+                DataElement dataElement = dataElementService.getDataElement( name );
+                if( dataElement == null )
+                {
+                    return INVALID_CONDITION;
+                }
+                else
+                {
+                    name = dataElement.getDisplayName();
+                }
+            }
 
             matcher.appendReplacement( description,
-                "[" + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT
-                    + programStage.getDisplayName() + SEPARATOR_ID + dataElement.getName() + "]" );
+                "[" + key + ProgramExpression.SEPARATOR_OBJECT
+                    + programStage.getDisplayName() + SEPARATOR_ID + name + "]" );
         }
 
-        matcher.appendTail( description );
+        StringBuffer tail = new StringBuffer();
+        matcher.appendTail( tail );
+        
+        if( countFormula > 1 || !tail.toString().isEmpty() || ( countFormula == 0 && !tail.toString().isEmpty() ) )
+        {
+            return INVALID_CONDITION;
+        }
+        
 
         return description.toString();
     }
