@@ -443,8 +443,10 @@ var d2Directives = angular.module('d2Directives', [])
         restrict: 'E',
         link: function(scope, elm, attrs){
             scope.$watch('customForm', function(){
-                elm.html(scope.customForm.htmlCode);
-                $compile(elm.contents())(scope);
+                if(angular.isObject(scope.customForm)){
+                    elm.html(scope.customForm.htmlCode);
+                    $compile(elm.contents())(scope);
+                }                
             });
         }
     };

@@ -87,11 +87,14 @@ trackerCapture.controller('EnrollmentController',
     
     $scope.loadEnrollmentDetails = function(enrollment) {
         
+        $scope.attributesForEnrollment = [];
+        $scope.attributes = [];
         $scope.showEnrollmentHistoryDiv = false;
         $scope.selectedEnrollment = enrollment;
         
         if(!$scope.selectedEnrollment){//prepare for possible enrollment
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
+                $scope.attributes = atts;
                 $scope.attributesForEnrollment = [];
                 for(var i=0; i<atts.length; i++){
                     var exists = false;
@@ -116,6 +119,7 @@ trackerCapture.controller('EnrollmentController',
         }
        
         $scope.showEnrollmentDiv = !$scope.showEnrollmentDiv;
+        $rootScope.$broadcast('enrollmentEditing', {enrollmentEditing: $scope.showEnrollmentDiv});
         
         if($scope.showEnrollmentDiv){            
             $scope.showEnrollmentHistoryDiv = false;
@@ -127,7 +131,7 @@ trackerCapture.controller('EnrollmentController',
             //check custom form for enrollment
             $scope.selectedProgram.hasCustomForm = false;
             $scope.registrationForm = '';
-            TEFormService.getByProgram($scope.selectedProgram.id).then(function(teForm){
+            TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){
                 if(angular.isObject(teForm)){
                     $scope.selectedProgram.hasCustomForm = true;
                     $scope.registrationForm = teForm;
