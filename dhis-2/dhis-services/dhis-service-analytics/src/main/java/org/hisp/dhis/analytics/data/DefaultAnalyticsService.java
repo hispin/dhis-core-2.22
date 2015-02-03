@@ -1084,6 +1084,10 @@ public class DefaultAnalyticsService
                 orgUnits.addAll( organisationUnitService.getOrganisationUnits( groups, ousList ) );
             }
 
+            // -----------------------------------------------------------------
+            // When levels / groups are present, OUs are considered boundaries
+            // -----------------------------------------------------------------
+
             if ( levels.isEmpty() && groups.isEmpty() )
             {
                 orgUnits.addAll( ous );
