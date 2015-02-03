@@ -705,7 +705,7 @@ Ext.onReady( function() {
 						console.log('Response: no valid headers');
 						return;
 					}
-
+                    
 					if (!(Ext.isArray(config.rows) && config.rows.length > 0)) {
                         if (!NS.plugin) {
                             alert('No values found');
@@ -1188,13 +1188,13 @@ Ext.onReady( function() {
 					ou = dimConf.organisationUnit.objectName,
 					layout;
 
-				// Set items from init/metaData/xLayout
+				// set items from init/metaData/xLayout
 				for (var i = 0, dim, metaDataDim, items; i < dimensions.length; i++) {
 					dim = dimensions[i];
 					dim.items = [];
 					metaDataDim = response.metaData[dim.objectName];
 
-					// If ou and children
+					// if ou and children
 					if (dim.dimensionName === ou) {
 						if (isUserOrgunit || isUserOrgunitChildren || isUserOrgunitGrandChildren) {
 							var userOu,
@@ -1279,7 +1279,7 @@ Ext.onReady( function() {
 					}
 				}
 
-				// Re-layout
+				// re-layout
 				layout = api.layout.Layout(xLayout);
 
 				if (layout) {
