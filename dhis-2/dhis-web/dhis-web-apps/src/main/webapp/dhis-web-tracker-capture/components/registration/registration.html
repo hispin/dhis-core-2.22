@@ -1,5 +1,9 @@
 <div class="bordered-div col-md-12" ng-controller="RegistrationController">
+    
+    <!--registration form starts -->
     <form name="outerForm" novalidate>        
+        
+        <!--custom registration form begins-->
         <div class="row col-sm-12 vertical-spacing" ng-if="selectedProgram && selectedProgram.displayCustomForm">
             <div ng-if="!customForm.hasProgramDate">
                 <table class="dhis2-list-table-striped dhis2-table-hover">
@@ -39,6 +43,9 @@
             </div>
             <div ng-include="'../dhis-web-commons/customform/custom-form.html'"></div>
         </div>
+        <!-- custom registration form ends -->
+        
+        <!-- default registration form begins -->
         <div class="row col-sm-12 vertical-spacing" ng-if="!selectedProgram.displayCustomForm">
             <div ng-if='!selectedProgram'>
                 <h3>{{'category'| translate}}</h3>
@@ -58,11 +65,12 @@
             <div ng-if="selectedProgram" ng-include="'views/enrollment-dates-form.html'"></div>            
             <div ng-include="'views/default-registration-form.html'"></div>
         </div>
-
+        <!-- default registration form ends -->
+        
         <div ng-if="formEmpty && outerForm.submitted">
             <div class="alert alert-warning">{{'form_is_empty_fill_at_least_one'| translate}}</div> 
         </div>
-
+        
         <div class="vertical-spacing">                
             <button type="button" class="btn btn-primary" ng-click="registerEntity('DASHBOARD')">{{'save_and_continue'| translate}}</button>
             <button type="button" class="btn btn-success small-horizonal-spacing" ng-click="registerEntity('SELF')">{{'save_and_add_new'| translate}}</button>
