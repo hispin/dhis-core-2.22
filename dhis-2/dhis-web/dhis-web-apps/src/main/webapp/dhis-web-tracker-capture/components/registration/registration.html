@@ -3,6 +3,11 @@
     <!--registration form starts -->
     <form name="outerForm" novalidate>        
         
+        <div ng-if="customForm">
+            <a href ng-click="switchRegistrationForm()" title="{{selectedProgram.displayCustomForm ? 'default_form' : 'custom_form'| translate}}">
+                <span class="primary pull-right"><i class="fa fa-file-text fa-2x"></i></span>
+            </a>
+        </div>
         <!--custom registration form begins-->
         <div class="row col-sm-12 vertical-spacing" ng-if="selectedProgram && selectedProgram.displayCustomForm">
             <div ng-if="!customForm.hasProgramDate">

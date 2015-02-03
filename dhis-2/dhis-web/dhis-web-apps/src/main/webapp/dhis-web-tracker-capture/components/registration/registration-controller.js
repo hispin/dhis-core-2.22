@@ -221,5 +221,9 @@ trackerCapture.controller('RegistrationController',
                 });
             }
         }
-    };    
+    };
+    
+    $scope.switchRegistrationForm = function(){
+        $scope.selectedProgram.displayCustomForm = !$scope.selectedProgram.displayCustomForm;
+    };
 });
