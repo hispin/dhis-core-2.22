@@ -397,10 +397,16 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 TCStorageService.currentStore.get('trackedEntityForms', program.id).done(function(teForm){                    
                     $rootScope.$apply(function(){
                         var trackedEntityForm = teForm;
-                        trackedEntityForm.attributes = attributes;
-                        trackedEntityForm.selectIncidentDatesInFuture = program.selectIncidentDatesInFuture;
-                        trackedEntityForm.selectEnrollmentDatesInFuture = program.selectEnrollmentDatesInFuture;                        
-                        def.resolve(trackedEntityForm);
+                        if(angular.isObject(trackedEntityForm)){
+                            trackedEntityForm.attributes = attributes;
+                            trackedEntityForm.selectIncidentDatesInFuture = program.selectIncidentDatesInFuture;
+                            trackedEntityForm.selectEnrollmentDatesInFuture = program.selectEnrollmentDatesInFuture;
+                            trackedEntityForm.displayIncidentDate = program.displayIncidentDate;
+                            def.resolve(trackedEntityForm);
+                        }
+                        else{
+                            def.resolve(null);
+                        }
                     });
                 });
             });                        

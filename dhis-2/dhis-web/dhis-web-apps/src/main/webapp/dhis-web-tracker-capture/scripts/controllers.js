@@ -22,7 +22,8 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     //Selection
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
     $scope.selectedOuMode = $scope.ouModes[0];
-    $scope.dashboardProgramId = ($location.search()).program; 
+    $scope.dashboardProgramId = ($location.search()).program;
+    $scope.selectedOrgUnitId = ($location.search()).ou;
     $scope.treeLoaded = false;
     
     //Paging
@@ -48,7 +49,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     
     //Reporting
     $scope.showReportDiv = false;
-   
+    
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {           
 
@@ -70,13 +71,12 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                     CurrentSelection.setOptionSets($scope.optionSets);
                 });
             }
-            $scope.loadPrograms($scope.selectedOrgUnit);                                
+            $scope.loadPrograms($scope.selectedOrgUnit);
         }
     });
     
     //watch for changes in ou mode - mode could be selected without notifcation to grid column generator
-    $scope.$watch('selectedOuMode.name', function() {           
-
+    $scope.$watch('selectedOuMode.name', function() {
         if( $scope.selectedOuMode.name && angular.isObject($scope.gridColumns)){
             var continueLoop = true;
             for(var i=0; i<$scope.gridColumns.length && continueLoop; i++){
@@ -89,8 +89,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     });
         
     //watch for program feedback (this is when coming back from dashboard)
-    if($scope.dashboardProgramId && $scope.dashboardProgramId !== 'null'){
-        $scope.selectedOrgUnit = storage.get('SELECTED_OU');            
+    if($scope.dashboardProgramId && $scope.dashboardProgramId !== 'null'){        
         ProgramFactory.get($scope.dashboardProgramId).then(function(program){
             $scope.selectedProgram = program;        
         });

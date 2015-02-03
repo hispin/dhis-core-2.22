@@ -376,13 +376,13 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             newInputField = '<input type="text" ' +
                                             ' name="' + fieldName + '"' +                          
                                             ' element-id="' + i + '"' +
-                                            ' element-code="' + trackedEntityFormAttributes[attId].code + '"' +
                                             this.getAttributesAsString(attributes) +
                                             ' d2-validation ' +
                                             ' d2-number-validation ' +
                                             ' d2-focus-next-on-enter' + 
-                                            ' ng-model="registeredTei.' + attId + '" ' +                                             
-                                            ' ng-blur="validationAndSkipLogic(registeredTei,\'' + attId + '\')" ' +
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                             ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
                         }                                               
                         else if(trackedEntityFormAttributes[attId].valueType === "optionSet"){
@@ -390,10 +390,10 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             newInputField = '<input type="text" ' +
                                             ' name="' + fieldName + '"' +
                                             ' element-id="' + i + '"' +
-                                            ' element-code="' + trackedEntityFormAttributes[attId].code + '"' +                                            
                                             this.getAttributesAsString(attributes) +
                                             ' d2-focus-next-on-enter' + 
-                                            ' ng-model="registeredTei.' + attId + '" ' +   
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
                                             ' d2-validation ' +
                                             ' d2-typeahead-validation ' +
                                             ' class="typeahead" ' +
@@ -401,18 +401,18 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             ' typeahead-editable="false" ' + 
                                             ' typeahead="option.name as option.name for option in optionSets.' + optionSetId + '.options | filter:$viewValue | limitTo:50"' +
                                             ' typeahead-open-on-focus ' +
-                                            ' ng-blur="validationAndSkipLogic(registeredTei,\'' + attId + '\')" ' +
+                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                             ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';                            
                         }
                         else if(trackedEntityFormAttributes[attId].valueType === "bool"){
                             newInputField = '<select ' +
                                             ' name="' + fieldName + '"' +
-                                            ' element-id="' + i + '"' + 
-                                            ' element-code="' + trackedEntityFormAttributes[attId].code + '"' +                                            
+                                            ' element-id="' + i + '"' +
                                             this.getAttributesAsString(attributes) +
                                             ' d2-focus-next-on-enter' + 
-                                            ' ng-model="registeredTei.' + attId + '" ' +                                            
-                                            ' ng-change="validationAndSkipLogic(registeredTei,\'' + attId + '\')" ' +
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                             ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ' +
                                             ' <option value="">{{\'please_select\'| translate}}</option>' +
                                             ' <option value="false">{{\'no\'| translate}}</option>' + 
@@ -422,57 +422,57 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         else if(trackedEntityFormAttributes[attId].valueType === "date"){
                             newInputField = '<input type="text" ' +
                                             ' name="' + fieldName + '"' +
-                                            ' element-id="' + i + '"' + 
-                                            ' element-code="' + trackedEntityFormAttributes[attId].code + '"' +
+                                            ' element-id="' + i + '"' +
                                             this.getAttributesAsString(attributes) +
                                             ' d2-focus-next-on-enter' + 
                                             ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
-                                            ' ng-model="registeredTei.' + attId + '" ' +                                            
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
                                             ' max-date="' + attMaxDate + '"' + '\'' +
                                             ' d2-date' +
                                             ' d2-validation ' +
-                                            ' blur-or-change="validationAndSkipLogic(registeredTei,\'' + attId + '\')" ' +
+                                            ' blur-or-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                             ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
                         }
                         else if(trackedEntityFormAttributes[attId].valueType === "trueOnly"){
                             newInputField = '<input type="checkbox" ' +  
                                             ' name="' + fieldName + '"' +
-                                            ' element-id="' + i + '"' + 
-                                            ' element-code="' + trackedEntityFormAttributes[attId].code + '"' +
+                                            ' element-id="' + i + '"' +
                                             this.getAttributesAsString(attributes) + 
                                             ' d2-validation ' +
                                             ' d2-focus-next-on-enter' + 
-                                            ' ng-model="registeredTei.' + attId + '" ' +                                            
-                                            ' ng-change="validationAndSkipLogic(registeredTei,\'' + attId + '\')" ' +
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                             ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
                         }
                         else if(trackedEntityFormAttributes[attId].valueType === "email"){
                             newInputField = '<input type="email" ' +    
                                             ' name="' + fieldName + '"' +                                              
-                                            ' element-id="' + i + '"' + 
-                                            ' element-code="' + trackedEntityFormAttributes[attId].code + '"' +
+                                            ' element-id="' + i + '"' +
                                             this.getAttributesAsString(attributes) +
                                             ' d2-validation ' +
                                             ' d2-focus-next-on-enter' + 
-                                            ' ng-model="registeredTei.' + attId + '" ' +                                            
-                                            ' ng-blur="validationAndSkipLogic(registeredTei,\'' + attId + '\')" ' +
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                             ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
                         }
                         else {
                             newInputField = '<input type="text" ' +
                                             ' name="' + fieldName + '"' +
-                                            ' element-id="' + i + '"' + 
-                                            ' element-code="' + trackedEntityFormAttributes[attId].code + '"' +                                            
+                                            ' element-id="' + i + '"' +                                             
                                             this.getAttributesAsString(attributes) +
                                             ' d2-validation ' +
                                             ' d2-focus-next-on-enter' + 
-                                            ' ng-model="registeredTei.' + attId + '" ' +                                            
-                                            ' ng-blur="validationAndSkipLogic(registeredTei,\'' + attId + '\')" ' +
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                             ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
                         } 
                     }                        
                  
-                    if(target === 'ENROLLMENT' && attributes.hasOwnProperty('programid')){
+                    if(attributes.hasOwnProperty('programid')){
                         hasProgramDate = true;
                         programId = attributes['programid'];                        
                         if(programId === 'enrollmentDate'){
@@ -484,13 +484,14 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             this.getAttributesAsString(attributes) +
                                             ' d2-focus-next-on-enter' + 
                                             ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
-                                            ' ng-model="enrollment.dateOfEnrollment" ' +
+                                            ' ng-model="selectedEnrollment.dateOfEnrollment" ' +
+                                            ' ng-disabled="\'' + target + '\' === \'PROFILE\'"' +
                                             ' d2-date' +
-                                            ' max-date="' + enMaxDate + '"' + '\'' +
+                                            ' max-date="' + enMaxDate + '"' +
                                             ' ng-required="true"> ';
                         }
-                        if(programId === 'dateOfIncident'){
-                            fieldName = 'dateOfEnrollment';
+                        if(programId === 'dateOfIncident' && trackedEntity.displayIncidentDate){
+                            fieldName = 'dateOfIncident';
                             var inMaxDate = trackedEntity.selectIncidentDatesInFuture ? '' : 0;                            
                             newInputField = '<input type="text" ' +
                                             ' name="' + fieldName + '"' +
@@ -498,17 +499,16 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             this.getAttributesAsString(attributes) +
                                             ' d2-focus-next-on-enter' + 
                                             ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
-                                            ' ng-model="enrollment.dateOfIncident" ' +
+                                            ' ng-model="selectedEnrollment.dateOfIncident" ' +
+                                            ' ng-disabled="\'' + target + '\' === \'PROFILE\'"' +
                                             ' d2-date ' +
-                                            ' max-date="' + inMaxDate + '"' + + '\'' +
-                                            ' ng-required="true"> ';
+                                            ' max-date="' + inMaxDate + '"> ';
                         }
                     }
                     
                     newInputField = //'<ng-form name="innerForm">' + 
                                         newInputField + 
-                                        ' <span ng-show="outerForm.submitted && outerForm.'+ fieldName +'.$invalid" class="required">{{required}}</span> ' + 
-                                        ' <span ng-show="invalidInputs.' + fieldName + '"" class="required">{{invalidInputLabel}}</span> ';
+                                        ' <span ng-show="outerForm.submitted && outerForm.'+ fieldName +'.$invalid" class="required">{{\'required\' | translate}}</span> ';
                                     //'</ng-form>';
                                     
                     htmlCode = htmlCode.replace(inputField, newInputField);                    

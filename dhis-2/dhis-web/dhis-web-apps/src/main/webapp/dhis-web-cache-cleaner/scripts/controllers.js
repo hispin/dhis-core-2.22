@@ -59,10 +59,10 @@ var cacheCleanerControllers = angular.module('cacheCleanerControllers', [])
                 if(dbKey.remove){
                     idbStorageService.deleteDb(dbKey.id).then(function(res){
                         if(res){
-                            console.log('removed from local indexeddb:  ', dbKey.id);
+                            console.log('removed from indexeddb:  ', dbKey.id);
                         }
                         else{
-                            console.log('failed to remove from local indexeddb:  ', dbKey.id);
+                            console.log('failed to remove from indexeddb:  ', dbKey.id);
                         }
                         
                     });
