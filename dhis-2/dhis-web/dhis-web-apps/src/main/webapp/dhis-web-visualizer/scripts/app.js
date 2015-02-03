@@ -2396,7 +2396,6 @@ Ext.onReady( function() {
 						xLayout = service.layout.getSyncronizedXLayout(xLayout, response);
 
 						if (!xLayout) {
-                            onFailure();
 							return;
 						}
 
