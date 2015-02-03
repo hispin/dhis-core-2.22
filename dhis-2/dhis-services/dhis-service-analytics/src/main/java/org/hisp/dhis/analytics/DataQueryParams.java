@@ -817,11 +817,11 @@ public class DataQueryParams
         
         if ( index != -1 )
         {
-            dimensions.set( index, new BaseDimensionalObject( dimension, type, dimensionName, options ) );
+            dimensions.set( index, new BaseDimensionalObject( dimension, type, dimensionName, null, options ) );
         }
         else
         {
-            dimensions.add( new BaseDimensionalObject( dimension, type, dimensionName, options ) );
+            dimensions.add( new BaseDimensionalObject( dimension, type, dimensionName, null, options ) );
         }
         
         return this;
@@ -856,11 +856,11 @@ public class DataQueryParams
         
         if ( index != -1 )
         {
-            filters.set( index, new BaseDimensionalObject( filter, type, dimensionName, options ) );
+            filters.set( index, new BaseDimensionalObject( filter, type, dimensionName, null, options ) );
         }
         else
         {
-            filters.add( new BaseDimensionalObject( filter, type, dimensionName, options ) );
+            filters.add( new BaseDimensionalObject( filter, type, dimensionName, null, options ) );
         }
         
         return this;
@@ -877,7 +877,8 @@ public class DataQueryParams
         {
             DimensionalObject existing = filters.get( index );
             
-            filters.set( index, new BaseDimensionalObject( existing.getDimension(), existing.getDimensionType(), existing.getDimensionName(), options ) );
+            filters.set( index, new BaseDimensionalObject( existing.getDimension(), 
+                existing.getDimensionType(), existing.getDimensionName(), existing.getDisplayName(), options ) );
         }
         
         return this;
