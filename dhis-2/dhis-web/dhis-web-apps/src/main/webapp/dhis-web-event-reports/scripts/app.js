@@ -6367,8 +6367,8 @@ Ext.onReady( function() {
 				});
 			};
 
-			web.report.getData = function(view, isUpdateGui) {
-				var paramString = web.analytics.getParamString(view);
+			web.report.getData = function(layout, isUpdateGui) {
+				var paramString = web.analytics.getParamString(layout);
 
 				// show mask
 				web.mask.show(ns.app.centerRegion);
@@ -6412,7 +6412,7 @@ Ext.onReady( function() {
 
                         ns.app.paramString = paramString;
 
-                        web.report.createReport(view, response, isUpdateGui);
+                        web.report.createReport(layout, response, isUpdateGui);
 					}
 				});
 			};
