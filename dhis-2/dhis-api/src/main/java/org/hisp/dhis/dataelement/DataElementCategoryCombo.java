@@ -218,11 +218,12 @@ public class DataElementCategoryCombo
     public void generateOptionCombos()
     {
         this.optionCombos = new HashSet<>( generateOptionCombosList() );
-        for (DataElementCategoryOptionCombo optionCombo : optionCombos)
+
+        for ( DataElementCategoryOptionCombo optionCombo : optionCombos )
         {
-            for (DataElementCategoryOption categoryOption : optionCombo.getCategoryOptions())
+            for ( DataElementCategoryOption categoryOption : optionCombo.getCategoryOptions() )
             {
-                categoryOption.addCategoryOptionCombo(optionCombo);
+                categoryOption.addCategoryOptionCombo( optionCombo );
             }
         }
     }
