@@ -21,6 +21,12 @@ trackerCapture.controller('RegistrationController',
     $scope.trackedEntityForm = null;
     $scope.customForm = null;
     $scope.optionSets = CurrentSelection.getOptionSets();
+    $scope.attributesById = [];    
+    AttributesFactory.getAll().then(function(atts){
+        angular.forEach(atts, function(att){
+            $scope.attributesById[att.id] = att;
+        });
+    });
             
     if(!$scope.optionSets){
         $scope.optionSets = [];
@@ -34,11 +40,7 @@ trackerCapture.controller('RegistrationController',
     }
     
     $scope.selectedOrgUnit = storage.get('SELECTED_OU');
-    $scope.enrollment = {dateOfEnrollment: '', dateOfIncident: ''};   
-    
-    /*AttributesFactory.getWithoutProgram().then(function(atts){
-        $scope.attributes = atts;
-    });*/
+    $scope.selectedEnrollment = {dateOfEnrollment: '', dateOfIncident: ''};   
             
     $scope.trackedEntities = {available: []};
     TEService.getAll().then(function(entities){
@@ -57,11 +59,6 @@ trackerCapture.controller('RegistrationController',
         if($scope.selectedProgram && $scope.selectedProgram.id){            
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
                 $scope.attributes = atts;
-                $scope.attributesById = [];
-                angular.forEach(atts, function(att){
-                    $scope.attributesById[att.id] = att;
-                });
-
                 $scope.selectedProgram.hasCustomForm = false;               
                 TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){                    
                     if(angular.isObject(teForm)){                        
@@ -76,10 +73,6 @@ trackerCapture.controller('RegistrationController',
         else{            
             AttributesFactory.getWithoutProgram().then(function(atts){
                 $scope.attributes = atts;
-                $scope.attributesById = [];
-                angular.forEach(atts, function(att){
-                    $scope.attributesById[att.id] = att;
-                });
             });
         }
     };
@@ -124,8 +117,8 @@ trackerCapture.controller('RegistrationController',
                     var enrollment = {trackedEntityInstance: teiId,
                                 program: $scope.selectedProgram.id,
                                 status: 'ACTIVE',
-                                dateOfEnrollment: DateUtils.formatFromUserToApi($scope.enrollment.dateOfEnrollment),
-                                dateOfIncident: $scope.enrollment.dateOfIncident === '' ? DateUtils.formatFromUserToApi($scope.enrollment.dateOfEnrollment) : DateUtils.formatFromUserToApi($scope.enrollment.dateOfIncident)
+                                dateOfEnrollment: DateUtils.formatFromUserToApi($scope.selectedEnrollment.dateOfEnrollment),
+                                dateOfIncident: $scope.selectedEnrollment.dateOfIncident === '' ? DateUtils.formatFromUserToApi($scope.selectedEnrollment.dateOfEnrollment) : DateUtils.formatFromUserToApi($scope.selectedEnrollment.dateOfIncident)
                             };                           
                     EnrollmentService.enroll(enrollment).then(function(data){
                         if(data.status !== 'SUCCESS'){
@@ -139,7 +132,7 @@ trackerCapture.controller('RegistrationController',
                         }
                         else{
                             enrollment.enrollment = data.reference;
-                            $scope.autoGenerateEvents(teiId,$scope.selectedProgram, $scope.selectedOrgUnit, $scope.enrollment);                          
+                            $scope.autoGenerateEvents(teiId,$scope.selectedProgram, $scope.selectedOrgUnit, $scope.selectedEnrollment);                          
                         }
                     });
                 }
@@ -160,8 +153,8 @@ trackerCapture.controller('RegistrationController',
                     delete attribute.value;                
                 });            
 
-                $scope.enrollment.dateOfEnrollment = '';
-                $scope.enrollment.dateOfIncident =  '';
+                $scope.selectedEnrollment.dateOfEnrollment = '';
+                $scope.selectedEnrollment.dateOfIncident =  '';
                 $scope.outerForm.submitted = false; 
 
 
