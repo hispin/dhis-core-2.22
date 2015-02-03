@@ -131,6 +131,10 @@ public class AnalyticsServiceTest
         ouGroupB.setGroupSet( ouGroupSetA );
         ouGroupC.setGroupSet( ouGroupSetA );
         
+        ouGroupA.addOrganisationUnit( ouA );
+        ouGroupA.addOrganisationUnit( ouB );
+        ouGroupA.addOrganisationUnit( ouC );
+        
         organisationUnitGroupService.addOrganisationUnitGroup( ouGroupA );
         organisationUnitGroupService.addOrganisationUnitGroup( ouGroupB );
         organisationUnitGroupService.addOrganisationUnitGroup( ouGroupC );
@@ -218,12 +222,27 @@ public class AnalyticsServiceTest
         assertEquals( 2, params.getDataElements().size() );
         assertEquals( 2, params.getPeriods().size() );      
     }
-    
+
+    @Test
+    public void testGetFromUrlOrgUnitGroup()
+    {
+        Set<String> dimensionParams = new HashSet<>();
+        dimensionParams.add( "ou:OU_GROUP-" + ouGroupA.getUid() );
+        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() );
+        dimensionParams.add( "pe:2011;2012" );
+        
+        DataQueryParams params = analyticsService.getFromUrl( dimensionParams, null, null, null, false, false, false, false, false, false, null, null );
+        
+        assertEquals( 3, params.getOrganisationUnits().size() );  
+        assertEquals( 2, params.getDataElements().size() );
+        assertEquals( 2, params.getPeriods().size() ); 
+    }
+
     @Test
     public void testGetFromUrlOrgUnitLevel()
     {
         Set<String> dimensionParams = new HashSet<>();
-        dimensionParams.add( "ou:LEVEL-2-" + ouA.getUid() );
+        dimensionParams.add( "ou:LEVEL-2" );
         dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() );
         dimensionParams.add( "pe:2011;2012" );
         
