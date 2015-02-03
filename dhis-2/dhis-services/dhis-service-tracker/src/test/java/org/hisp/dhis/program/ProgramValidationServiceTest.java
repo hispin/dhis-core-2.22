@@ -117,10 +117,10 @@ public class ProgramValidationServiceTest
         programService.addProgram( program );
 
         stageA = new ProgramStage( "A", program );
-        int psIdA = programStageService.saveProgramStage( stageA );
+        programStageService.saveProgramStage( stageA );
 
         stageB = new ProgramStage( "B", program );
-        int psIdB = programStageService.saveProgramStage( stageB );
+        programStageService.saveProgramStage( stageB );
 
         Set<ProgramStage> programStages = new HashSet<>();
         programStages.add( stageA );
@@ -131,8 +131,8 @@ public class ProgramValidationServiceTest
         DataElement dataElementA = createDataElement( 'A' );
         DataElement dataElementB = createDataElement( 'B' );
 
-        int deIdA = dataElementService.addDataElement( dataElementA );
-        int deIdB = dataElementService.addDataElement( dataElementB );
+        dataElementService.addDataElement( dataElementA );
+        dataElementService.addDataElement( dataElementB );
 
         stageDataElementA = new ProgramStageDataElement( stageA, dataElementA, false, 1 );
         ProgramStageDataElement stageDataElementB = new ProgramStageDataElement( stageA, dataElementB, false, 2 );
