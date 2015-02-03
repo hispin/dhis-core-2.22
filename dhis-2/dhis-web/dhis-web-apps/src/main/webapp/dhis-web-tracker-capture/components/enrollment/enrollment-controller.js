@@ -11,6 +11,7 @@ trackerCapture.controller('EnrollmentController',
                 CurrentSelection,
                 TEIService,
                 TEFormService,
+                CustomFormService,
                 EnrollmentService,
                 ModalService,
                 DialogService) {
@@ -18,8 +19,18 @@ trackerCapture.controller('EnrollmentController',
     $scope.today = DateUtils.getToday();
     $scope.selectedOrgUnit = storage.get('SELECTED_OU');
     
+    $scope.attributes = [];
+    $scope.attributesById = [];
+    AttributesFactory.getAll().then(function(atts){
+        angular.forEach(atts, function(att){
+            $scope.attributesById[att.id] = att;
+        });
+    });
+    
     //listen for the selected items
+    var selections = {};
     $scope.$on('selectedItems', function(event, args) {   
+        $scope.attributes = [];
         $scope.enrollments = [];
         $scope.historicalEnrollments = [];
         $scope.showEnrollmentDiv = false;
@@ -30,8 +41,14 @@ trackerCapture.controller('EnrollmentController',
         var selectedEnrollment = null;
         $scope.newEnrollment = {};
         
-        var selections = CurrentSelection.get();
+        selections = CurrentSelection.get();
+        
         $scope.selectedTei = angular.copy(selections.tei); 
+        angular.forEach($scope.selectedTei.attributes, function(att){
+            $scope.selectedTei[att.attribute] = att.value;
+        });
+        delete $scope.selectedTei.attributes;
+        
         $scope.selectedEntity = selections.te;
         $scope.selectedProgram = selections.pr;
         $scope.optionSets = selections.optionSets;
@@ -94,19 +111,16 @@ trackerCapture.controller('EnrollmentController',
         
         if(!$scope.selectedEnrollment){//prepare for possible enrollment
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
-                $scope.attributes = atts;
-                $scope.attributesForEnrollment = [];
-                for(var i=0; i<atts.length; i++){
-                    var exists = false;
-                    for(var j=0; j<$scope.selectedTei.attributes.length && !exists; j++){
-                        if(atts[i].id === $scope.selectedTei.attributes[j].attribute){
-                            exists = true;                                
-                        }
-                    }
-                    if(!exists){
-                        $scope.attributesForEnrollment.push(atts[i]);
-                    }
-                }
+                $scope.attributes = atts;                
+                $scope.selectedProgram.hasCustomForm = false;               
+                TEFormService.getByProgram($scope.selectedProgram, atts).then(function(teForm){                    
+                    if(angular.isObject(teForm)){                        
+                        $scope.selectedProgram.hasCustomForm = true;
+                        $scope.selectedProgram.displayCustomForm = $scope.selectedProgram.hasCustomForm ? true:false;
+                        $scope.trackedEntityForm = teForm;
+                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
+                    }                    
+                });
             });                
         }
         
@@ -221,8 +235,17 @@ trackerCapture.controller('EnrollmentController',
         });
     };
     
-    $scope.broadCastSelections = function(listeners){        
-        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedEntity, prs: $scope.programs, pr: $scope.selectedProgram, enrollments: $scope.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: $scope.optionSets});
+    $scope.broadCastSelections = function(listeners){
+        
+        var tei = angular.copy(selections.tei);
+        tei.attributes = [];
+        for(var k in $scope.attributesById){
+            if( $scope.selectedTei[k] ){
+                tei.attributes.push({attribute: $scope.attributesById[k].id, value: $scope.selectedTei[k], type: $scope.attributesById[k].valueType});
+            }
+        }
+        
+        CurrentSelection.set({tei: tei, te: $scope.selectedEntity, prs: $scope.programs, pr: $scope.selectedProgram, enrollments: $scope.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: $scope.optionSets});
         $timeout(function(){
             $rootScope.$broadcast(listeners, {});
         }, 100);
@@ -312,5 +335,9 @@ trackerCapture.controller('EnrollmentController',
         $scope.selectedEnrollment.followup = !$scope.selectedEnrollment.followup; 
         EnrollmentService.update($scope.selectedEnrollment).then(function(data){         
         });
+    };
+    
+    $scope.switchRegistrationForm = function(){
+        $scope.selectedProgram.displayCustomForm = !$scope.selectedProgram.displayCustomForm;
     };
 });
