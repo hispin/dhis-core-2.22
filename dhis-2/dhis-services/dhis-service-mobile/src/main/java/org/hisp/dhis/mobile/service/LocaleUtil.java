@@ -32,7 +32,6 @@ import java.util.Locale;
 
 public class LocaleUtil
 {
-
     public static Locale getLocale( String localeString )
     {
         Locale locale;
