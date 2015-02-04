@@ -26,8 +26,17 @@
                         ng-click="showDashboard(trackedEntity)"
                         title="{{'go_to_dashboard'| translate}}">
                         <td ng-show="gridColumn.show"                                            
-                            ng-repeat="gridColumn in gridColumns">                                                
-                            {{trackedEntity[gridColumn.id]}}                                                
+                            ng-repeat="gridColumn in gridColumns">
+                            <span ng-switch="gridColumn.valueType">
+                                <span ng-switch-when="bool">
+                                    <span ng-if="trackedEntity[gridColumn.id] === 'true'">{{'yes' | translate}}</span>
+                                    <span ng-if="trackedEntity[gridColumn.id] === 'false'">{{ 'no' | translate}}</span>
+                                </span>
+                                <span ng-switch-when="trueOnly">
+                                    <span ng-if="trackedEntity[gridColumn.id] === 'true'"><i class="fa fa-check"></i></span>
+                                </span>
+                                <span ng-switch-default>{{trackedEntity[gridColumn.id]}}</span>
+                            </span>                            
                         </td>
                     </tr>
                 </tbody>        

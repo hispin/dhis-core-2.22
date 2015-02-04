@@ -21,7 +21,8 @@ trackerCapture.controller('RegistrationController',
     $scope.trackedEntityForm = null;
     $scope.customForm = null;
     $scope.optionSets = CurrentSelection.getOptionSets();
-    $scope.attributesById = [];    
+    $scope.attributesById = [];
+    $scope.selectedTei = {};
     AttributesFactory.getAll().then(function(atts){
         angular.forEach(atts, function(att){
             $scope.attributesById[att.id] = att;
@@ -94,22 +95,26 @@ trackerCapture.controller('RegistrationController',
         //get tei attributes and their values
         //but there could be a case where attributes are non-mandatory and
         //registration form comes empty, in this case enforce at least one value        
-        var result = TEIService.reconstructForWebApi($scope.attributes, $scope.attributesById, $scope.optionSets);        
-        $scope.formEmpty = result.formEmpty;
+        $scope.formEmpty = true;        
+        $scope.tei = {trackedEntity: selectedTrackedEntity, orgUnit: $scope.selectedOrgUnit.id, attributes: [] };
+        for(var k in $scope.attributesById){
+            if( $scope.selectedTei.hasOwnProperty(k) && $scope.selectedTei[k] ){
+                var val = $scope.selectedTei[k];
+                $scope.tei.attributes.push({attribute: $scope.attributesById[k].id, value: val, type: $scope.attributesById[k].valueType});
+                $scope.formEmpty = false;
+            }
+        }
         
-        if($scope.formEmpty){
-            //registration form is empty
+        if($scope.formEmpty){//registration form is empty
             return false;
         }
         
-        //prepare tei model and do registration
-        $scope.tei = {trackedEntity: selectedTrackedEntity, orgUnit: $scope.selectedOrgUnit.id, attributes: result.attributes };   
         var teiId = '';
-        TEIService.register($scope.tei).then(function(tei){
+        TEIService.register($scope.tei, $scope.optionSets).then(function(response){
             
-            if(tei.status === 'SUCCESS'){
+            if(response.status === 'SUCCESS'){
                 
-                teiId = tei.reference;
+                teiId = response.reference;
                 
                 //registration is successful and check for enrollment
                 if($scope.selectedProgram){    
@@ -132,7 +137,7 @@ trackerCapture.controller('RegistrationController',
                         }
                         else{
                             enrollment.enrollment = data.reference;
-                            $scope.autoGenerateEvents(teiId,$scope.selectedProgram, $scope.selectedOrgUnit, $scope.selectedEnrollment);                          
+                            $scope.autoGenerateEvents(teiId,$scope.selectedProgram, $scope.selectedOrgUnit, enrollment);                          
                         }
                     });
                 }
@@ -141,7 +146,7 @@ trackerCapture.controller('RegistrationController',
                 //registration has failed
                 var dialogOptions = {
                         headerText: 'registration_error',
-                        bodyText: tei.description
+                        bodyText: response.description
                     };
                 DialogService.showDialog({}, dialogOptions);
                 return;
@@ -149,14 +154,9 @@ trackerCapture.controller('RegistrationController',
             
             $timeout(function() { 
                 //reset form
-                angular.forEach($scope.attributes, function(attribute){
-                    delete attribute.value;                
-                });            
-
-                $scope.selectedEnrollment.dateOfEnrollment = '';
-                $scope.selectedEnrollment.dateOfIncident =  '';
-                $scope.outerForm.submitted = false; 
-
+                $scope.selectedTei = {};
+                $scope.selectedEnrollment = {};
+                $scope.outerForm.submitted = false;
 
                 if(destination === 'DASHBOARD') {
                     $location.path('/dashboard').search({tei: teiId,                                            
