@@ -14,6 +14,7 @@ trackerCapture.controller('TeiReportController',
     $scope.programs = [];  
     $scope.programNames = [];  
     $scope.programStageNames = [];
+    $scope.enrollmentsByProgram = [];
     ProgramFactory.getAll().then(function(programs){     
         $scope.programs = programs;
         angular.forEach($scope.programs, function(pr){
@@ -27,17 +28,20 @@ trackerCapture.controller('TeiReportController',
         
     $scope.$on('dashboardWidgets', function(event, args) {
         $scope.showProgramReportDetailsDiv = false;
-        var selections = CurrentSelection.get();
+        var selections = CurrentSelection.get();        
         $scope.selectedOrgUnit = storage.get('SELECTED_OU');
         $scope.selectedTei = selections.tei;  
         $scope.selectedEntity = selections.te;
-        $scope.selectedProgram = selections.pr;        
-        $scope.selectedEnrollment = selections.selectedEnrollment;
+        $scope.selectedProgram = selections.pr;
         $scope.optionSets = selections.optionSets;
     
         if($scope.selectedTei && $scope.selectedOrgUnit){            
             $scope.getEvents();
-        }       
+        }
+        
+        angular.forEach(selections.enrollments, function(en){            
+            $scope.enrollmentsByProgram[en.program] = en;
+        });
     });
     
     $scope.getEvents = function(){
@@ -97,6 +101,9 @@ trackerCapture.controller('TeiReportController',
     
     $scope.showProgramReportDetails = function(pr){
         
+        var selections = CurrentSelection.get();
+        $scope.selectedTei = selections.tei;
+        
         $scope.showProgramReportDetailsDiv = !$scope.showProgramReportDetailsDiv;
         $scope.selectedProgram = pr;
         $scope.selectedReport = $scope.report[pr.id];
@@ -106,8 +113,8 @@ trackerCapture.controller('TeiReportController',
 
         //process tei attributes, this is to have consistent display so that the tei 
         //contains program attributes whether it has value or not
-        TEIService.processAttributes($scope.selectedTei, $scope.selectedProgram, null).then(function(tei){
-            $scope.tei = tei;  
+        TEIService.processAttributes($scope.selectedTei, $scope.selectedProgram, $scope.enrollmentsByProgram[pr.id]).then(function(tei){
+            $scope.tei = tei;
         });
         
         //get program stage for the selected program
