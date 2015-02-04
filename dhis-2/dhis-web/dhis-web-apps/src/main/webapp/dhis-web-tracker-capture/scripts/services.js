@@ -742,12 +742,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             
             //first reset teiAttributes
             for(var j=0; j<teiAttributes.length; j++){
-                teiAttributes[j].show = false;                
-                if(teiAttributes[j].value){                    
-                    if(teiAttributes[j].type === 'number' && !isNaN(parseInt(teiAttributes[j].value))){
-                        teiAttributes[j].value = parseInt(teiAttributes[j].value);                        
-                    }                    
-                }               
+                teiAttributes[j].show = false;
             }
 
             //identify which ones to show
@@ -760,6 +755,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                         teiAttributes[j].order = i;
                         teiAttributes[j].mandatory = requiredAttributes[i].mandatory ? requiredAttributes[i].mandatory : false;
                         teiAttributes[j].allowFutureDate = requiredAttributes[i].allowFutureDate ? requiredAttributes[i].allowFutureDate : false;
+                        teiAttributes[j].displayName = requiredAttributes[i].name;
                     }
                 }
 
