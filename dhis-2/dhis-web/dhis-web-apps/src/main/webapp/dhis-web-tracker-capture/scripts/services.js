@@ -549,16 +549,18 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 });
             });
             
-            return def.promise;       
+            return def.promise;
         },
-        register: function(tei){
-            
+        register: function(tei, optionSets){            
             var url = '../api/trackedEntityInstances';
+            var def = $q.defer();
             
-            var promise = $http.post(url, tei).then(function(response){
-                return response.data;
+            this.convertFromUserToApi(tei, optionSets).then(function(formattedTei){
+                $http.post(url, formattedTei).then(function(response){
+                    def.resolve( response.data );
+                });
             });
-            return promise;
+            return def.promise;
         },
         processAttributes: function(selectedTei, selectedProgram, selectedEnrollment){
             var def = $q.defer();            

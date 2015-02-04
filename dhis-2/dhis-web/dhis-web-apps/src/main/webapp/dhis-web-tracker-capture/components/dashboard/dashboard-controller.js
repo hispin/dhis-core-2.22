@@ -61,7 +61,7 @@ trackerCapture.controller('DashboardController',
                     EnrollmentService.getByEntity($scope.selectedTeiId).then(function(response){                    
 
                         var selectedEnrollment = null;
-                        if(response.enrollments.length === 1 && response.enrollments[0].status === 'ACTIVE'){
+                        if(angular.isObject(response) && response.enrollments && response.enrollments.length === 1 && response.enrollments[0].status === 'ACTIVE'){
                             selectedEnrollment = response.enrollments[0];
                         }
                         
