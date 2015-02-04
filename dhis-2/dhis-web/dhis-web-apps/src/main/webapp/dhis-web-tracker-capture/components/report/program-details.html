@@ -15,7 +15,18 @@
                             {{attribute.displayName}}
                         </td>
                         <td>
-                            {{attribute.value}}
+                            <span ng-switch="attribute.type">
+                                <span ng-switch-when="bool">
+                                    <span ng-if="attribute.value === 'true'">{{'yes' | translate}}</span>
+                                    <span ng-if="attribute.value === 'false'">{{ 'no' | translate}}</span>
+                                </span>
+                                <span ng-switch-when="trueOnly">
+                                    <span ng-if="attribute.value">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                </span>
+                                <span ng-switch-default>{{attribute.value}}</span>
+                            </span>
                         </td>                
                     </tr>
                 </table>
@@ -91,8 +102,8 @@
                         </tr>
                     </table>
                 </div>
-                <div class="alert alert-warning visit-details col-sm-6" ng-if="!dhis2Event.visited">{{'visit_not_made'| translate}}</div>
-                <div class="alert alert-warning visit-details col-sm-6" ng-if="dhis2Event.visited && !dhis2Event.dataValues">{{'no_data'| translate}}</div>
+                <div class="alert alert-warning visit-details" ng-if="!dhis2Event.visited">{{'visit_not_made'| translate}}</div>
+                <div class="alert alert-warning visit-details" ng-if="dhis2Event.visited && !dhis2Event.dataValues">{{'no_data'| translate}}</div>
                 <div class='row vertical-spacing'></div>
                 <div ng-if="dhis2Event.notes">
                     <h4 class='col-sm-12'>{{'notes'| translate}}</h4>
