@@ -10,6 +10,7 @@ trackerCapture.controller('ProfileController',
     
     $scope.editingDisabled = true;
     $scope.enrollmentEditing = false;
+    $scope.widget = 'PROFILE';
     
     //attributes for profile    
     $scope.attributes = []; 
@@ -22,7 +23,8 @@ trackerCapture.controller('ProfileController',
     
     //listen for the selected entity
     var selections = {};
-    $scope.$on('dashboardWidgets', function(event, args) { 
+    $scope.$on('dashboardWidgets', function(event, args) {
+        $scope.enrollmentEditing = args.enrollmentEditing;
         selections = CurrentSelection.get();
         $scope.selectedTei = angular.copy(selections.tei);
         $scope.trackedEntity = selections.te;
@@ -50,7 +52,7 @@ trackerCapture.controller('ProfileController',
                         $scope.selectedProgram.hasCustomForm = true;
                         $scope.selectedProgram.displayCustomForm = $scope.selectedProgram.hasCustomForm ? true:false;
                         $scope.trackedEntityForm = teForm;
-                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'PROFILE');
+                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, $scope.widget);
                     }                    
                 });
             });                
@@ -88,7 +90,7 @@ trackerCapture.controller('ProfileController',
         var tei = angular.copy(selections.tei);
         tei.attributes = [];
         for(var k in $scope.attributesById){
-            if( $scope.selectedTei[k] ){
+            if( $scope.selectedTei.hasOwnProperty(k) && $scope.selectedTei[k] ){
                 tei.attributes.push({attribute: $scope.attributesById[k].id, value: $scope.selectedTei[k], type: $scope.attributesById[k].valueType});
                 $scope.formEmpty = false;
             }

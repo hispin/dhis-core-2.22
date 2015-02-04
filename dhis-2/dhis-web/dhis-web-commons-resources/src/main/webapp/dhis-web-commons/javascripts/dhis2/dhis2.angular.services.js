@@ -14,10 +14,10 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             url = 'i18n/i18n_app_' + locale + '.properties';
         }
 
-        var tx = {locale: locale};
+        var tx = {};
 
         var promise = $http.get(url).then(function(response){
-            tx= {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
+            tx = {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
             return tx;
         }, function(){
             var dialogOptions = {
@@ -27,7 +27,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
             DialogService.showDialog({}, dialogOptions);
             var p = $http.get(defaultUrl).then(function(response){
-                tx= {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
+                tx = {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
                 return tx;
             });
             return p;

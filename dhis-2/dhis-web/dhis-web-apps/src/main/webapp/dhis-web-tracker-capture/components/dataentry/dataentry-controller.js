@@ -50,7 +50,7 @@ trackerCapture.controller('DataEntryController',
             
         $scope.allowEventCreation = false;
         $scope.repeatableStages = [];        
-        $scope.dhis2Events = null;
+        $scope.dhis2Events = [];
         
         var selections = CurrentSelection.get();          
         $scope.selectedOrgUnit = storage.get('SELECTED_OU');
@@ -77,8 +77,8 @@ trackerCapture.controller('DataEntryController',
     });
     
     $scope.getEvents = function(){
-        $scope.dhis2Events = [];
         DHIS2EventFactory.getEventsByProgram($scope.selectedEntity.trackedEntityInstance, $scope.selectedOrgUnit.id, $scope.selectedProgram.id).then(function(events){
+            $scope.dhis2Events = [];
             if(angular.isObject(events)){
                 angular.forEach(events, function(dhis2Event){                    
                     if(dhis2Event.enrollment === $scope.selectedEnrollment.enrollment){

@@ -8,6 +8,7 @@
                 <span class="primary pull-right"><i class="fa fa-file-text fa-2x"></i></span>
             </a>
         </div>
+        
         <!--custom registration form begins-->
         <div class="row col-sm-12 vertical-spacing" ng-if="selectedProgram && selectedProgram.displayCustomForm">
             <div ng-if="!customForm.hasProgramDate">
@@ -22,7 +23,7 @@
                                    name="dateOfEnrollment" 
                                    class="form-control" 
                                    d2-date 
-                                   ng-model="enrollment.dateOfEnrollment" 
+                                   ng-model="selectedEnrollment.dateOfEnrollment" 
                                    max-date="selectedProgram.selectEnrollmentDatesInFuture ? '' : 0"
                                    min-date=""
                                    ng-required="true"/>
@@ -41,7 +42,7 @@
                                    d2-date 
                                    max-date="selectedProgram.selectIncidentDatesInFuture ? '' : 0"
                                    min-date=""
-                                   ng-model="enrollment.dateOfIncident"/>
+                                   ng-model="selectedEnrollment.dateOfIncident"/>
                         </td>
                     </tr>
                 </table>
