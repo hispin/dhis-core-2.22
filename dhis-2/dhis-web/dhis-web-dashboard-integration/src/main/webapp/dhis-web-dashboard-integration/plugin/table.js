@@ -3262,7 +3262,9 @@ Ext.onReady( function() {
                     var response = api.response.Response((r.responseText ? Ext.decode(r.responseText) : r));
 
                     if (!response) {
-                        web.mask.hide(ns.app.centerRegion);
+                        if (!ns.skipMask) {
+                            web.mask.hide(ns.app.centerRegion);
+                        }
                         return;
                     }
 
