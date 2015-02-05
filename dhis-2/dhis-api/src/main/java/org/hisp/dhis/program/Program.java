@@ -38,6 +38,7 @@ import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -561,30 +562,52 @@ public class Program
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             Program program = (Program) other;
 
-            description = program.getDescription();
-            version = program.getVersion();
-            dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription();
-            dateOfIncidentDescription = program.getDateOfIncidentDescription();
-            type = program.getType();
-            displayIncidentDate = program.getDisplayIncidentDate();
-            ignoreOverdueEvents = program.getIgnoreOverdueEvents();
-            onlyEnrollOnce = program.getOnlyEnrollOnce();
-            selectEnrollmentDatesInFuture = program.getSelectEnrollmentDatesInFuture();
-            selectIncidentDatesInFuture = program.getSelectIncidentDatesInFuture();
-            relationshipText = program.getRelationshipText();
-            relationshipType = program.getRelationshipType();
-            relationshipFromA = program.getRelationshipFromA();
-            relatedProgram = program.getRelatedProgram();
-            dataEntryMethod = program.getDataEntryMethod();
-            trackedEntity = program.getTrackedEntity();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                description = program.getDescription();
+                version = program.getVersion();
+                dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription();
+                dateOfIncidentDescription = program.getDateOfIncidentDescription();
+                type = program.getType();
+                displayIncidentDate = program.getDisplayIncidentDate();
+                ignoreOverdueEvents = program.getIgnoreOverdueEvents();
+                onlyEnrollOnce = program.getOnlyEnrollOnce();
+                selectEnrollmentDatesInFuture = program.getSelectEnrollmentDatesInFuture();
+                selectIncidentDatesInFuture = program.getSelectIncidentDatesInFuture();
+                relationshipText = program.getRelationshipText();
+                relationshipType = program.getRelationshipType();
+                relationshipFromA = program.getRelationshipFromA();
+                relatedProgram = program.getRelatedProgram();
+                dataEntryMethod = program.getDataEntryMethod();
+                trackedEntity = program.getTrackedEntity();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                description = program.getDescription() == null ? description : program.getDescription();
+                version = program.getVersion() == null ? version : program.getVersion();
+                dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription() == null ? dateOfEnrollmentDescription : program.getDateOfEnrollmentDescription();
+                dateOfIncidentDescription = program.getDateOfIncidentDescription() == null ? dateOfIncidentDescription : program.getDateOfIncidentDescription();
+                type = program.getType() == null ? type : program.getType();
+                displayIncidentDate = program.getDisplayIncidentDate() == null ? displayIncidentDate : program.getDisplayIncidentDate();
+                ignoreOverdueEvents = program.getIgnoreOverdueEvents() == null ? ignoreOverdueEvents : program.getIgnoreOverdueEvents();
+                onlyEnrollOnce = program.getOnlyEnrollOnce() == null ? onlyEnrollOnce : program.getOnlyEnrollOnce();
+                selectEnrollmentDatesInFuture = program.getSelectEnrollmentDatesInFuture() == null ? selectEnrollmentDatesInFuture : program.getSelectEnrollmentDatesInFuture();
+                selectIncidentDatesInFuture = program.getSelectIncidentDatesInFuture() == null ? selectIncidentDatesInFuture : program.getSelectIncidentDatesInFuture();
+                relationshipText = program.getRelationshipText() == null ? relationshipText : program.getRelationshipText();
+                relationshipType = program.getRelationshipType() == null ? relationshipType : program.getRelationshipType();
+                relationshipFromA = program.getRelationshipFromA() == null ? relationshipFromA : program.getRelationshipFromA();
+                relatedProgram = program.getRelatedProgram() == null ? relatedProgram : program.getRelatedProgram();
+                dataEntryMethod = program.getDataEntryMethod() == null ? dataEntryMethod : program.getDataEntryMethod();
+                trackedEntity = program.getTrackedEntity() == null ? trackedEntity : program.getTrackedEntity();
+            }
 
             organisationUnits.clear();
             organisationUnits.addAll( program.getOrganisationUnits() );

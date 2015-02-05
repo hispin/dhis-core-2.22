@@ -39,6 +39,7 @@ import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataset.DataSet;
@@ -363,6 +364,7 @@ public class DataElement
     /**
      * Indicates whether collecting data for future periods should be allowed for
      * this data element.
+     *
      * @return true if all the associated data sets allow future periods, false otherwise.
      */
     public boolean isAllowFuturePeriods()
@@ -727,25 +729,40 @@ public class DataElement
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             DataElement dataElement = (DataElement) other;
 
-            formName = dataElement.getFormName() == null ? formName : dataElement.getFormName();
             zeroIsSignificant = dataElement.isZeroIsSignificant();
-            domainType = dataElement.getDomainType() == null ? domainType : dataElement.getDomainType();
-            type = dataElement.getType() == null ? type : dataElement.getType();
-            numberType = dataElement.getNumberType() == null ? numberType : dataElement.getNumberType();
-            textType = dataElement.getTextType() == null ? textType : dataElement.getTextType();
-            aggregationOperator = dataElement.getAggregationOperator() == null ? aggregationOperator : dataElement
-                .getAggregationOperator();
-            categoryCombo = dataElement.getCategoryCombo() == null ? categoryCombo : dataElement.getCategoryCombo();
-            url = dataElement.getUrl() == null ? url : dataElement.getUrl();
-            optionSet = dataElement.getOptionSet() == null ? optionSet : dataElement.getOptionSet();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                formName = dataElement.getFormName();
+                domainType = dataElement.getDomainType();
+                type = dataElement.getType();
+                numberType = dataElement.getNumberType();
+                textType = dataElement.getTextType();
+                aggregationOperator = dataElement.getAggregationOperator();
+                categoryCombo = dataElement.getCategoryCombo();
+                url = dataElement.getUrl();
+                optionSet = dataElement.getOptionSet();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                formName = dataElement.getFormName() == null ? formName : dataElement.getFormName();
+                domainType = dataElement.getDomainType() == null ? domainType : dataElement.getDomainType();
+                type = dataElement.getType() == null ? type : dataElement.getType();
+                numberType = dataElement.getNumberType() == null ? numberType : dataElement.getNumberType();
+                textType = dataElement.getTextType() == null ? textType : dataElement.getTextType();
+                aggregationOperator = dataElement.getAggregationOperator() == null ? aggregationOperator : dataElement.getAggregationOperator();
+                categoryCombo = dataElement.getCategoryCombo() == null ? categoryCombo : dataElement.getCategoryCombo();
+                url = dataElement.getUrl() == null ? url : dataElement.getUrl();
+                optionSet = dataElement.getOptionSet() == null ? optionSet : dataElement.getOptionSet();
+            }
 
             groups.clear();
             dataSets.clear();

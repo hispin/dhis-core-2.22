@@ -39,6 +39,7 @@ import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.adapter.JacksonOrganisationUnitGroupSymbolSerializer;
 import org.hisp.dhis.common.annotation.Scanned;
@@ -274,17 +275,25 @@ public class OrganisationUnitGroupSet
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             OrganisationUnitGroupSet organisationUnitGroupSet = (OrganisationUnitGroupSet) other;
 
             compulsory = organisationUnitGroupSet.isCompulsory();
-            description = organisationUnitGroupSet.getDescription() == null ? description : organisationUnitGroupSet.getDescription();
             dataDimension = organisationUnitGroupSet.isDataDimension();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                description = organisationUnitGroupSet.getDescription();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                description = organisationUnitGroupSet.getDescription() == null ? description : organisationUnitGroupSet.getDescription();
+            }
 
             removeAllOrganisationUnitGroups();
 

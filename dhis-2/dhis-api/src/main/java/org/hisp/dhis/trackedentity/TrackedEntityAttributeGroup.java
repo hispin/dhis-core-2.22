@@ -37,6 +37,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -116,15 +117,22 @@ public class TrackedEntityAttributeGroup
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             TrackedEntityAttributeGroup trackedEntityAttributeGroup = (TrackedEntityAttributeGroup) other;
 
-            description = trackedEntityAttributeGroup.getDescription();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                description = trackedEntityAttributeGroup.getDescription();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                description = trackedEntityAttributeGroup.getDescription() == null ? description : trackedEntityAttributeGroup.getDescription();
+            }
 
             attributes.clear();
             attributes.addAll( trackedEntityAttributeGroup.getAttributes() );

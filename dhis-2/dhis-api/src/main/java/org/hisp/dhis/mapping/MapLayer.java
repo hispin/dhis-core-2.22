@@ -35,6 +35,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.schema.PropertyType;
@@ -193,22 +194,35 @@ public class MapLayer
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             MapLayer mapLayer = (MapLayer) other;
 
-            type = mapLayer.getType() == null ? type : mapLayer.getType();
-            url = mapLayer.getUrl() == null ? url : mapLayer.getUrl();
-            layers = mapLayer.getLayers() == null ? layers : mapLayer.getLayers();
-            time = mapLayer.getTime() == null ? time : mapLayer.getTime();
-            fillColor = mapLayer.getFillColor() == null ? fillColor : mapLayer.getFillColor();
-            fillOpacity = mapLayer.getFillOpacity();
-            strokeColor = mapLayer.getStrokeColor() == null ? strokeColor : mapLayer.getStrokeColor();
             strokeWidth = mapLayer.getStrokeWidth();
+            fillOpacity = mapLayer.getFillOpacity();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                type = mapLayer.getType();
+                url = mapLayer.getUrl();
+                layers = mapLayer.getLayers();
+                time = mapLayer.getTime();
+                fillColor = mapLayer.getFillColor();
+                strokeColor = mapLayer.getStrokeColor();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                type = mapLayer.getType() == null ? type : mapLayer.getType();
+                url = mapLayer.getUrl() == null ? url : mapLayer.getUrl();
+                layers = mapLayer.getLayers() == null ? layers : mapLayer.getLayers();
+                time = mapLayer.getTime() == null ? time : mapLayer.getTime();
+                fillColor = mapLayer.getFillColor() == null ? fillColor : mapLayer.getFillColor();
+                strokeColor = mapLayer.getStrokeColor() == null ? strokeColor : mapLayer.getStrokeColor();
+            }
         }
     }
 }

@@ -35,6 +35,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.schema.annotation.PropertyRange;
@@ -42,7 +43,7 @@ import org.hisp.dhis.schema.annotation.PropertyRange;
 /**
  * @author Abyot Asalefew
  */
-@JacksonXmlRootElement(localName = "relationshipType", namespace = DxfNamespaces.DXF_2_0)
+@JacksonXmlRootElement( localName = "relationshipType", namespace = DxfNamespaces.DXF_2_0 )
 public class RelationshipType
     extends BaseIdentifiableObject
 {
@@ -76,8 +77,8 @@ public class RelationshipType
     // -------------------------------------------------------------------------
 
     @JsonProperty
-    @JsonView({ DetailedView.class, ExportView.class })
-    @JacksonXmlProperty(namespace = DxfNamespaces.DXF_2_0)
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     @PropertyRange( min = 2 )
     public String getaIsToB()
     {
@@ -90,8 +91,8 @@ public class RelationshipType
     }
 
     @JsonProperty
-    @JsonView({ DetailedView.class, ExportView.class })
-    @JacksonXmlProperty(namespace = DxfNamespaces.DXF_2_0)
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     @PropertyRange( min = 2 )
     public String getbIsToA()
     {
@@ -113,16 +114,24 @@ public class RelationshipType
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             RelationshipType relationshipType = (RelationshipType) other;
 
-            this.aIsToB = relationshipType.getaIsToB();
-            this.bIsToA = relationshipType.getbIsToA();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                aIsToB = relationshipType.getaIsToB();
+                bIsToA = relationshipType.getbIsToA();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                aIsToB = relationshipType.getaIsToB() == null ? aIsToB : relationshipType.getaIsToB();
+                bIsToA = relationshipType.getbIsToA() == null ? bIsToA : relationshipType.getbIsToA();
+            }
         }
     }
 }

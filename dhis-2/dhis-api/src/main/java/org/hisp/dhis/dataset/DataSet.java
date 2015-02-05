@@ -40,6 +40,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.adapter.JacksonPeriodTypeDeserializer;
 import org.hisp.dhis.common.adapter.JacksonPeriodTypeSerializer;
 import org.hisp.dhis.common.annotation.Scanned;
@@ -796,30 +797,41 @@ public class DataSet
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             DataSet dataSet = (DataSet) other;
 
-            periodType = dataSet.getPeriodType() == null ? periodType : dataSet.getPeriodType();
-            mobile = dataSet.isMobile();
-            dataEntryForm = dataSet.getDataEntryForm() == null ? dataEntryForm : dataSet.getDataEntryForm();
-            version = dataSet.getVersion() == null ? version : dataSet.getVersion();
+            dataElementDecoration = dataSet.isDataElementDecoration();
+            skipOffline = dataSet.isSkipOffline();
+            renderAsTabs = dataSet.isRenderAsTabs();
+            renderHorizontally = dataSet.isRenderHorizontally();
             expiryDays = dataSet.getExpiryDays();
             skipAggregation = dataSet.isSkipAggregation();
             allowFuturePeriods = dataSet.isAllowFuturePeriods();
             fieldCombinationRequired = dataSet.isFieldCombinationRequired();
+            mobile = dataSet.isMobile();
             validCompleteOnly = dataSet.isValidCompleteOnly();
-            skipOffline = dataSet.isSkipOffline();
-            renderAsTabs = dataSet.isRenderAsTabs();
-            renderHorizontally = dataSet.isRenderHorizontally();
-            legendSet = dataSet.getLegendSet() == null ? legendSet : dataSet.getLegendSet();
 
-            dataElementDecoration = dataSet.isDataElementDecoration();
-            notificationRecipients = dataSet.getNotificationRecipients();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                periodType = dataSet.getPeriodType();
+                dataEntryForm = dataSet.getDataEntryForm();
+                version = dataSet.getVersion();
+                legendSet = dataSet.getLegendSet();
+                notificationRecipients = dataSet.getNotificationRecipients();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                periodType = dataSet.getPeriodType() == null ? periodType : dataSet.getPeriodType();
+                dataEntryForm = dataSet.getDataEntryForm() == null ? dataEntryForm : dataSet.getDataEntryForm();
+                version = dataSet.getVersion() == null ? version : dataSet.getVersion();
+                legendSet = dataSet.getLegendSet() == null ? legendSet : dataSet.getLegendSet();
+                notificationRecipients = dataSet.getNotificationRecipients() == null ? notificationRecipients : dataSet.getNotificationRecipients();
+            }
 
             dataElements.clear();
 

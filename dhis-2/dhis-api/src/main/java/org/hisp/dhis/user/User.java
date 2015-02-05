@@ -40,6 +40,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -248,19 +249,19 @@ public class User
     {
         return userCredentials != null && userCredentials.isSuper();
     }
-    
+
     public Set<UserGroup> getManagedGroups()
     {
         Set<UserGroup> managedGroups = new HashSet<>();
-        
+
         for ( UserGroup group : groups )
         {
             managedGroups.addAll( group.getManagedGroups() );
         }
-        
+
         return managedGroups;
     }
-    
+
     public boolean hasManagedGroups()
     {
         for ( UserGroup group : groups )
@@ -270,13 +271,13 @@ public class User
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Indicates whether this user can manage the given user group.
-     * 
+     *
      * @param userGroup the user group to test.
      * @return true if the given user group can be managed by this user, false if not.
      */
@@ -284,10 +285,10 @@ public class User
     {
         return userGroup != null && CollectionUtils.containsAny( groups, userGroup.getManagedByGroups() );
     }
-    
+
     /**
      * Indicates whether this user can manage the given user.
-     * 
+     *
      * @param user the user to test.
      * @return true if the given user can be managed by this user, false if not.
      */
@@ -297,7 +298,7 @@ public class User
         {
             return false;
         }
-        
+
         for ( UserGroup group : user.getGroups() )
         {
             if ( canManage( group ) )
@@ -305,13 +306,13 @@ public class User
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Indicates whether this user is managed by the given user group.
-     * 
+     *
      * @param userGroup the user group to test.
      * @return true if the given user group is managed by this user, false if not.
      */
@@ -322,7 +323,7 @@ public class User
 
     /**
      * Indicates whether this user is managed by the given user.
-     * 
+     *
      * @param userGroup the user  to test.
      * @return true if the given user is managed by this user, false if not.
      */
@@ -332,7 +333,7 @@ public class User
         {
             return false;
         }
-        
+
         for ( UserGroup group : user.getGroups() )
         {
             if ( isManagedBy( group ) )
@@ -340,7 +341,7 @@ public class User
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -621,37 +622,57 @@ public class User
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             User user = (User) other;
 
-            surname = user.getSurname();
-            firstName = user.getFirstName();
-            email = user.getEmail();
-            phoneNumber = user.getPhoneNumber();
-            jobTitle = user.getJobTitle();
-            introduction = user.getIntroduction();
-            gender = user.getGender();
-            birthday = user.getBirthday();
-            nationality = user.getNationality();
-            employer = user.getEmployer();
-            education = user.getEducation();
-            interests = user.getInterests();
-            languages = user.getLanguages();
-            lastCheckedInterpretations = user.getLastCheckedInterpretations();
-
-            userCredentials = user.getUserCredentials() == null ? userCredentials : user.getUserCredentials();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                surname = user.getSurname();
+                firstName = user.getFirstName();
+                email = user.getEmail();
+                phoneNumber = user.getPhoneNumber();
+                jobTitle = user.getJobTitle();
+                introduction = user.getIntroduction();
+                gender = user.getGender();
+                birthday = user.getBirthday();
+                nationality = user.getNationality();
+                employer = user.getEmployer();
+                education = user.getEducation();
+                interests = user.getInterests();
+                languages = user.getLanguages();
+                lastCheckedInterpretations = user.getLastCheckedInterpretations();
+                userCredentials = user.getUserCredentials();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                surname = user.getSurname() == null ? surname : user.getSurname();
+                firstName = user.getFirstName() == null ? firstName : user.getFirstName();
+                email = user.getEmail() == null ? email : user.getEmail();
+                phoneNumber = user.getPhoneNumber() == null ? phoneNumber : user.getPhoneNumber();
+                jobTitle = user.getJobTitle() == null ? jobTitle : user.getJobTitle();
+                introduction = user.getIntroduction() == null ? introduction : user.getIntroduction();
+                gender = user.getGender() == null ? gender : user.getGender();
+                birthday = user.getBirthday() == null ? birthday : user.getBirthday();
+                nationality = user.getNationality() == null ? nationality : user.getNationality();
+                employer = user.getEmployer() == null ? employer : user.getEmployer();
+                education = user.getEducation() == null ? education : user.getEducation();
+                interests = user.getInterests() == null ? interests : user.getInterests();
+                languages = user.getLanguages() == null ? languages : user.getLanguages();
+                lastCheckedInterpretations = user.getLastCheckedInterpretations() == null ? lastCheckedInterpretations : user.getLastCheckedInterpretations();
+                userCredentials = user.getUserCredentials() == null ? userCredentials : user.getUserCredentials();
+            }
 
             attributeValues.clear();
             attributeValues.addAll( user.getAttributeValues() );
 
             organisationUnits.clear();
             organisationUnits.addAll( user.getOrganisationUnits() );
-            
+
             dataViewOrganisationUnits.clear();
             dataViewOrganisationUnits.addAll( user.getDataViewOrganisationUnits() );
         }

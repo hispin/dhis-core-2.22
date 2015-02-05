@@ -40,6 +40,7 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -188,7 +189,7 @@ public class UserCredentials
 
         return authorities;
     }
-    
+
     /**
      * Indicates whether this user credentials has at least one authority through
      * its user authority groups.
@@ -202,7 +203,7 @@ public class UserCredentials
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -424,7 +425,7 @@ public class UserCredentials
     {
         return userAuthorityGroups != null && !userAuthorityGroups.isEmpty();
     }
-    
+
     /**
      * Indicates whether this user credentials has dimension constraints.
      */
@@ -668,18 +669,32 @@ public class UserCredentials
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             UserCredentials userCredentials = (UserCredentials) other;
 
             username = userCredentials.getUsername();
-            openId = userCredentials.getOpenId();
             password = StringUtils.isEmpty( userCredentials.getPassword() ) ? password : userCredentials.getPassword();
             passwordLastUpdated = userCredentials.getPasswordLastUpdated();
+
+            lastLogin = userCredentials.getLastLogin();
+            restoreToken = userCredentials.getRestoreToken();
+            restoreExpiry = userCredentials.getRestoreExpiry();
+            selfRegistered = userCredentials.isSelfRegistered();
+            disabled = userCredentials.isDisabled();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                openId = userCredentials.getOpenId();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                openId = userCredentials.getOpenId() == null ? openId : userCredentials.getOpenId();
+            }
 
             userAuthorityGroups.clear();
             userAuthorityGroups.addAll( userCredentials.getUserAuthorityGroups() );
@@ -689,12 +704,6 @@ public class UserCredentials
 
             cogsDimensionConstraints.clear();
             cogsDimensionConstraints.addAll( userCredentials.getCogsDimensionConstraints() );
-
-            lastLogin = userCredentials.getLastLogin();
-            restoreToken = userCredentials.getRestoreToken();
-            restoreExpiry = userCredentials.getRestoreExpiry();
-            selfRegistered = userCredentials.isSelfRegistered();
-            disabled = userCredentials.isDisabled();
         }
     }
 

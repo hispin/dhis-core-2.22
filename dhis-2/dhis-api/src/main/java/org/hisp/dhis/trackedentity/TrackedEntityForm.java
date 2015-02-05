@@ -35,6 +35,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataentryform.DataEntryForm;
@@ -130,5 +132,27 @@ public class TrackedEntityForm
         final TrackedEntityForm other = (TrackedEntityForm) obj;
 
         return Objects.equals( this.program, other.program ) && Objects.equals( this.dataEntryForm, other.dataEntryForm );
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            TrackedEntityForm trackedEntityForm = (TrackedEntityForm) other;
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                program = trackedEntityForm.getProgram();
+                dataEntryForm = trackedEntityForm.getDataEntryForm();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                program = trackedEntityForm.getProgram() == null ? program : trackedEntityForm.getProgram();
+                dataEntryForm = trackedEntityForm.getDataEntryForm() == null ? dataEntryForm : trackedEntityForm.getDataEntryForm();
+            }
+        }
     }
 }

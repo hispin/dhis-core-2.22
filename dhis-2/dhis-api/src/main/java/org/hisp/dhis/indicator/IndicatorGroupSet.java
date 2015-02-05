@@ -37,6 +37,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.common.view.DetailedView;
@@ -234,16 +235,24 @@ public class IndicatorGroupSet
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             IndicatorGroupSet indicatorGroupSet = (IndicatorGroupSet) other;
 
-            compulsory = indicatorGroupSet.isCompulsory() == null ? compulsory : indicatorGroupSet.isCompulsory();
-            description = indicatorGroupSet.getDescription() == null ? description : indicatorGroupSet.getDescription();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                compulsory = indicatorGroupSet.isCompulsory();
+                description = indicatorGroupSet.getDescription();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                compulsory = indicatorGroupSet.isCompulsory() == null ? compulsory : indicatorGroupSet.isCompulsory();
+                description = indicatorGroupSet.getDescription() == null ? description : indicatorGroupSet.getDescription();
+            }
 
             removeAllIndicatorGroups();
 

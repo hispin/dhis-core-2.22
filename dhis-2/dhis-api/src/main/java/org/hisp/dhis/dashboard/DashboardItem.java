@@ -34,11 +34,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -80,7 +80,7 @@ public class DashboardItem
     public static final String SHAPE_NORMAL = "normal";
     public static final String SHAPE_DOUBLE_WIDTH = "double_width";
     public static final String SHAPE_FULL_WIDTH = "full_width";
-    
+
     private Chart chart;
 
     private EventChart eventChart;
@@ -88,9 +88,9 @@ public class DashboardItem
     private Map map;
 
     private ReportTable reportTable;
-    
+
     private EventReport eventReport;
-    
+
     @Scanned
     private List<User> users = new ArrayList<>();
 
@@ -424,22 +424,36 @@ public class DashboardItem
     // -------------------------------------------------------------------------
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
-            DashboardItem item = (DashboardItem) other;
+            DashboardItem dashboardItem = (DashboardItem) other;
 
-            chart = item.getChart() == null ? chart : item.getChart();
-            map = item.getMap() == null ? map : item.getMap();
-            reportTable = item.getReportTable() == null ? reportTable : item.getReportTable();
-            users = item.getUsers() == null ? users : item.getUsers();
-            reports = item.getReports() == null ? reports : item.getReports();
-            resources = item.getResources() == null ? resources : item.getResources();
-            messages = item.getMessages() == null ? messages : item.getMessages();
-            shape = item.getShape() == null ? shape : item.getShape();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                chart = dashboardItem.getChart();
+                map = dashboardItem.getMap();
+                reportTable = dashboardItem.getReportTable();
+                users = dashboardItem.getUsers();
+                reports = dashboardItem.getReports();
+                resources = dashboardItem.getResources();
+                messages = dashboardItem.getMessages();
+                shape = dashboardItem.getShape();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                chart = dashboardItem.getChart() == null ? chart : dashboardItem.getChart();
+                map = dashboardItem.getMap() == null ? map : dashboardItem.getMap();
+                reportTable = dashboardItem.getReportTable() == null ? reportTable : dashboardItem.getReportTable();
+                users = dashboardItem.getUsers() == null ? users : dashboardItem.getUsers();
+                reports = dashboardItem.getReports() == null ? reports : dashboardItem.getReports();
+                resources = dashboardItem.getResources() == null ? resources : dashboardItem.getResources();
+                messages = dashboardItem.getMessages() == null ? messages : dashboardItem.getMessages();
+                shape = dashboardItem.getShape() == null ? shape : dashboardItem.getShape();
+            }
         }
     }
 }

@@ -28,25 +28,25 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hisp.dhis.common.BaseDimensionalObject;
-import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.NameableObject;
-import org.hisp.dhis.common.annotation.Scanned;
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.DimensionalView;
-import org.hisp.dhis.common.view.ExportView;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.BaseDimensionalObject;
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.common.annotation.Scanned;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.DimensionalView;
+import org.hisp.dhis.common.view.ExportView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Category is a dimension of a data element. DataElements can have sets of
@@ -110,7 +110,7 @@ public class DataElementCategory
         categoryOptions.remove( dataElementCategoryOption );
         dataElementCategoryOption.getCategories().remove( this );
     }
-    
+
     public void removeAllCategoryOptions()
     {
         for ( DataElementCategoryOption categoryOption : categoryOptions )
@@ -223,17 +223,26 @@ public class DataElementCategory
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
-            DataElementCategory dataElementCategory = (DataElementCategory) other;
+            DataElementCategory category = (DataElementCategory) other;
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                dataDimensionType = category.getDataDimensionType();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                dataDimensionType = category.getDataDimensionType() == null ? dataDimensionType : category.getDataDimensionType();
+            }
 
             removeAllCategoryOptions();
 
-            for ( DataElementCategoryOption dataElementCategoryOption : dataElementCategory.getCategoryOptions() )
+            for ( DataElementCategoryOption dataElementCategoryOption : category.getCategoryOptions() )
             {
                 addDataElementCategoryOption( dataElementCategoryOption );
             }

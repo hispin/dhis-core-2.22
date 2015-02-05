@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.common.DimensionService;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.eventreport.EventReport;
 import org.hisp.dhis.eventreport.EventReportService;
@@ -110,7 +111,7 @@ public class EventReportController
 
         mergeEventReport( newReport );
 
-        report.mergeWith( newReport );
+        report.mergeWith( newReport, MergeStrategy.MERGE_IF_NOT_NULL );
 
         eventReportService.updateEventReport( report );
     }

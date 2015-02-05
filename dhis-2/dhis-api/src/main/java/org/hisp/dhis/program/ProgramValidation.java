@@ -36,6 +36,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.expression.Operator;
@@ -144,18 +145,28 @@ public class ProgramValidation
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             ProgramValidation programValidation = (ProgramValidation) other;
 
-            leftSide = programValidation.getLeftSide();
-            operator = programValidation.getOperator();
-            rightSide = programValidation.getRightSide();
-            program = programValidation.getProgram();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                leftSide = programValidation.getLeftSide();
+                operator = programValidation.getOperator();
+                rightSide = programValidation.getRightSide();
+                program = programValidation.getProgram();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                leftSide = programValidation.getLeftSide() == null ? leftSide : programValidation.getLeftSide();
+                rightSide = programValidation.getRightSide() == null ? rightSide : programValidation.getRightSide();
+                operator = programValidation.getOperator() == null ? operator : programValidation.getOperator();
+                program = programValidation.getProgram() == null ? program : programValidation.getProgram();
+            }
         }
     }
 }
