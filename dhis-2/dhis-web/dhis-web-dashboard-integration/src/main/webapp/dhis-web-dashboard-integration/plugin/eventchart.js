@@ -4600,8 +4600,10 @@ Ext.onReady( function() {
                 success = function(r) {
                     var response = api.response.Response((r.responseText ? Ext.decode(r.responseText) : r));
 
-                    if (!response && !ns.skipMask) {
-                        web.mask.hide(ns.app.centerRegion);
+                    if (!response) {
+                        if (!ns.skipMask) {
+                            web.mask.hide(ns.app.centerRegion);
+                        }
                         return;
                     }
 
