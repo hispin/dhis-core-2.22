@@ -37,6 +37,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -115,20 +116,6 @@ public class OptionSet
         return matcher.find() && matcher.groupCount() > 0 ? matcher.group( 1 ).replaceAll( "_", " " ) : null;
     }
 
-    @Override
-    public void mergeWith( IdentifiableObject other )
-    {
-        super.mergeWith( other );
-
-        if ( other.getClass().isInstance( this ) )
-        {
-            OptionSet optionSet = (OptionSet) other;
-
-            removeAllOptions();
-            options.addAll( optionSet.getOptions() );
-        }
-    }
-
     public List<String> getOptionValues()
     {
         List<String> result = new ArrayList<>();
@@ -139,5 +126,28 @@ public class OptionSet
         }
 
         return result;
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            OptionSet optionSet = (OptionSet) other;
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                version = optionSet.getVersion();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                version = optionSet.getVersion() == null ? version : optionSet.getVersion();
+            }
+
+            removeAllOptions();
+            options.addAll( optionSet.getOptions() );
+        }
     }
 }

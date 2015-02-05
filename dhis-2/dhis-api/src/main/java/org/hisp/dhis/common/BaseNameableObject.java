@@ -28,14 +28,13 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.common.view.ShortNameView;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.common.view.ShortNameView;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 
 /**
@@ -93,7 +92,7 @@ public class BaseNameableObject
         this.code = code;
         this.description = description;
     }
-    
+
     public BaseNameableObject( NameableObject object )
     {
         super( object.getId(), object.getUid(), object.getName() );
@@ -214,16 +213,25 @@ public class BaseNameableObject
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             NameableObject nameableObject = (NameableObject) other;
 
-            this.shortName = nameableObject.getShortName() == null ? this.shortName : nameableObject.getShortName();
-            this.description = nameableObject.getDescription() == null ? this.description : nameableObject.getDescription();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                this.shortName = nameableObject.getShortName();
+                this.description = nameableObject.getDescription();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                this.shortName = nameableObject.getShortName() == null ? this.shortName : nameableObject.getShortName();
+                this.description = nameableObject.getDescription() == null ? this.description : nameableObject.getDescription();
+            }
+
         }
     }
 }

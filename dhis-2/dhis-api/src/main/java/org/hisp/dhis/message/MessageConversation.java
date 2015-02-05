@@ -28,28 +28,28 @@ package org.hisp.dhis.message;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.annotation.Scanned;
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.schema.annotation.PropertyRange;
-import org.hisp.dhis.user.User;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.annotation.Scanned;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.schema.annotation.PropertyRange;
+import org.hisp.dhis.user.User;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -446,17 +446,26 @@ public class MessageConversation
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             MessageConversation messageConversation = (MessageConversation) other;
 
-            subject = messageConversation.getSubject() == null ? subject : messageConversation.getSubject();
-            lastSender = messageConversation.getLastSender() == null ? lastSender : messageConversation.getLastSender();
-            lastMessage = messageConversation.getLastMessage() == null ? lastMessage : messageConversation.getLastMessage();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                subject = messageConversation.getSubject();
+                lastSender = messageConversation.getLastSender();
+                lastMessage = messageConversation.getLastMessage();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                subject = messageConversation.getSubject() == null ? subject : messageConversation.getSubject();
+                lastSender = messageConversation.getLastSender() == null ? lastSender : messageConversation.getLastSender();
+                lastMessage = messageConversation.getLastMessage() == null ? lastMessage : messageConversation.getLastMessage();
+            }
 
             removeAllUserMessages();
             userMessages.addAll( messageConversation.getUserMessages() );

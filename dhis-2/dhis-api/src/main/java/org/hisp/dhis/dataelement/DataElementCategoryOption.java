@@ -38,6 +38,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -260,26 +261,34 @@ public class DataElementCategoryOption
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
-            DataElementCategoryOption dataElementCategoryOption = (DataElementCategoryOption) other;
+            DataElementCategoryOption categoryOption = (DataElementCategoryOption) other;
 
-            startDate = dataElementCategoryOption.getStartDate();
-            endDate = dataElementCategoryOption.getEndDate();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                startDate = categoryOption.getStartDate();
+                endDate = categoryOption.getEndDate();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                startDate = categoryOption.getStartDate() == null ? startDate : categoryOption.getStartDate();
+                endDate = categoryOption.getEndDate() == null ? endDate : categoryOption.getEndDate();
+            }
 
             organisationUnits.clear();
             categories.clear();
             groups.clear();
             categoryOptionCombos.clear();
 
-            organisationUnits.addAll( dataElementCategoryOption.getOrganisationUnits() );
-            categories.addAll( dataElementCategoryOption.getCategories() );
-            groups.addAll( dataElementCategoryOption.getGroups() );
-            categoryOptionCombos.addAll( dataElementCategoryOption.getCategoryOptionCombos() );
+            organisationUnits.addAll( categoryOption.getOrganisationUnits() );
+            categories.addAll( categoryOption.getCategories() );
+            groups.addAll( categoryOption.getGroups() );
+            categoryOptionCombos.addAll( categoryOption.getCategoryOptionCombos() );
         }
     }
 }

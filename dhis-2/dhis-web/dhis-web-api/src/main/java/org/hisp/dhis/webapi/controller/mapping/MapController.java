@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.common.DimensionService;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
@@ -160,7 +161,7 @@ public class MapController
             mappingService.addMapView( view );
         }
 
-        map.mergeWith( newMap );
+        map.mergeWith( newMap, MergeStrategy.MERGE_IF_NOT_NULL );
 
         if ( newMap.getUser() == null )
         {

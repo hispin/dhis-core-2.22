@@ -42,6 +42,7 @@ import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
@@ -505,32 +506,51 @@ public abstract class BaseChart
     // -------------------------------------------------------------------------
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             BaseChart chart = (BaseChart) other;
 
-            domainAxisLabel = chart.getDomainAxisLabel();
-            rangeAxisLabel = chart.getRangeAxisLabel();
-            type = chart.getType();
             hideLegend = chart.isHideLegend();
             regression = chart.isRegression();
             hideTitle = chart.isHideTitle();
             hideSubtitle = chart.isHideSubtitle();
-            title = chart.getTitle();
-            targetLineValue = chart.getTargetLineValue();
-            targetLineLabel = chart.getTargetLineLabel();
-            baseLineValue = chart.getBaseLineValue();
-            baseLineLabel = chart.getBaseLineLabel();
             showData = chart.isShowData();
             hideEmptyRows = chart.isHideEmptyRows();
-            rangeAxisMaxValue = chart.getRangeAxisMaxValue();
-            rangeAxisMinValue = chart.getRangeAxisMinValue();
-            rangeAxisSteps = chart.getRangeAxisSteps();
-            rangeAxisDecimals = chart.getRangeAxisDecimals();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                domainAxisLabel = chart.getDomainAxisLabel();
+                rangeAxisLabel = chart.getRangeAxisLabel();
+                type = chart.getType();
+                title = chart.getTitle();
+                targetLineValue = chart.getTargetLineValue();
+                targetLineLabel = chart.getTargetLineLabel();
+                baseLineValue = chart.getBaseLineValue();
+                baseLineLabel = chart.getBaseLineLabel();
+                rangeAxisMaxValue = chart.getRangeAxisMaxValue();
+                rangeAxisMinValue = chart.getRangeAxisMinValue();
+                rangeAxisSteps = chart.getRangeAxisSteps();
+                rangeAxisDecimals = chart.getRangeAxisDecimals();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                domainAxisLabel = chart.getDomainAxisLabel() == null ? domainAxisLabel : chart.getDomainAxisLabel();
+                rangeAxisLabel = chart.getRangeAxisLabel() == null ? rangeAxisLabel : chart.getRangeAxisLabel();
+                type = chart.getType() == null ? type : chart.getType();
+                title = chart.getTitle() == null ? title : chart.getTitle();
+                targetLineValue = chart.getTargetLineValue() == null ? targetLineValue : chart.getTargetLineValue();
+                targetLineLabel = chart.getTargetLineLabel() == null ? targetLineLabel : chart.getTargetLineLabel();
+                baseLineValue = chart.getBaseLineValue() == null ? baseLineValue : chart.getBaseLineValue();
+                baseLineLabel = chart.getBaseLineLabel() == null ? baseLineLabel : chart.getBaseLineLabel();
+                rangeAxisMaxValue = chart.getRangeAxisMaxValue() == null ? rangeAxisMaxValue : chart.getRangeAxisMaxValue();
+                rangeAxisMinValue = chart.getRangeAxisMinValue() == null ? rangeAxisMinValue : chart.getRangeAxisMinValue();
+                rangeAxisSteps = chart.getRangeAxisSteps() == null ? rangeAxisSteps : chart.getRangeAxisSteps();
+                rangeAxisDecimals = chart.getRangeAxisDecimals() == null ? rangeAxisDecimals : chart.getRangeAxisDecimals();
+            }
 
             filterDimensions.clear();
             filterDimensions.addAll( chart.getFilterDimensions() );

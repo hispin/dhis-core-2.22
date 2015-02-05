@@ -38,6 +38,7 @@ import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
@@ -268,17 +269,26 @@ public class DataElementGroupSet
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             DataElementGroupSet dataElementGroupSet = (DataElementGroupSet) other;
 
-            description = dataElementGroupSet.getDescription() == null ? description : dataElementGroupSet.getDescription();
-            compulsory = dataElementGroupSet.isCompulsory() == null ? compulsory : dataElementGroupSet.isCompulsory();
             dataDimension = dataElementGroupSet.isDataDimension();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                description = dataElementGroupSet.getDescription();
+                compulsory = dataElementGroupSet.isCompulsory();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                description = dataElementGroupSet.getDescription() == null ? description : dataElementGroupSet.getDescription();
+                compulsory = dataElementGroupSet.isCompulsory() == null ? compulsory : dataElementGroupSet.isCompulsory();
+            }
 
             removeAllDataElementGroups();
 

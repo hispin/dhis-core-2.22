@@ -28,10 +28,12 @@ package org.hisp.dhis.eventchart;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.chart.BaseChart;
 import org.hisp.dhis.common.AnalyticsType;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -40,6 +42,7 @@ import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.EventAnalyticalObject;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
@@ -50,12 +53,9 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.user.User;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Jan Henrik Overland
@@ -131,12 +131,12 @@ public class EventChart
     public List<NameableObject> series()
     {
         String series = columnDimensions.get( 0 );
-        
+
         DimensionalObject object = getDimensionalObject( series, relativePeriodDate, user, true,
             organisationUnitsAtLevel, organisationUnitsInGroups, format );
 
         DimensionalObjectUtils.setDimensionItemsForFilters( object, dataItemGrid, true );
-        
+
         return object != null ? object.getItems() : null;
     }
 
@@ -144,15 +144,15 @@ public class EventChart
     public List<NameableObject> category()
     {
         String category = rowDimensions.get( 0 );
-        
+
         DimensionalObject object = getDimensionalObject( category, relativePeriodDate, user, true,
             organisationUnitsAtLevel, organisationUnitsInGroups, format );
 
         DimensionalObjectUtils.setDimensionItemsForFilters( object, dataItemGrid, true );
-        
+
         return object != null ? object.getItems() : null;
     }
-    
+
     @Override
     public AnalyticsType getAnalyticsType()
     {
@@ -267,26 +267,36 @@ public class EventChart
     // -------------------------------------------------------------------------
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             EventChart eventChart = (EventChart) other;
 
-            program = eventChart.getProgram();
-            programStage = eventChart.getProgramStage();
-            startDate = eventChart.getStartDate();
-            endDate = eventChart.getEndDate();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                program = eventChart.getProgram();
+                programStage = eventChart.getProgramStage();
+                startDate = eventChart.getStartDate();
+                endDate = eventChart.getEndDate();
+                countType = eventChart.getCountType();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                program = eventChart.getProgram() == null ? program : eventChart.getProgram();
+                programStage = eventChart.getProgramStage() == null ? programStage : eventChart.getProgramStage();
+                startDate = eventChart.getStartDate() == null ? startDate : eventChart.getStartDate();
+                endDate = eventChart.getEndDate() == null ? endDate : eventChart.getEndDate();
+                countType = eventChart.getCountType() == null ? countType : eventChart.getCountType();
+            }
 
             columnDimensions.clear();
             columnDimensions.addAll( eventChart.getColumnDimensions() );
 
             rowDimensions.clear();
             rowDimensions.addAll( eventChart.getRowDimensions() );
-
-            countType = eventChart.getCountType();
         }
     }
 }

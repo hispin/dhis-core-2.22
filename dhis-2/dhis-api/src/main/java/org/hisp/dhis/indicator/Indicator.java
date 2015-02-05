@@ -40,6 +40,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataset.DataSet;
@@ -366,23 +367,38 @@ public class Indicator
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             Indicator indicator = (Indicator) other;
 
             annualized = indicator.isAnnualized();
-            denominator = indicator.getDenominator() == null ? denominator : indicator.getDenominator();
-            denominatorDescription = indicator.getDenominatorDescription() == null ? denominatorDescription : indicator.getDenominatorDescription();
-            numerator = indicator.getNumerator() == null ? numerator : indicator.getNumerator();
-            numeratorDescription = indicator.getNumeratorDescription() == null ? numeratorDescription : indicator.getNumeratorDescription();
-            explodedNumerator = indicator.getExplodedNumerator() == null ? explodedNumerator : indicator.getExplodedNumerator();
-            explodedDenominator = indicator.getExplodedDenominator() == null ? explodedDenominator : indicator.getExplodedDenominator();
-            indicatorType = indicator.getIndicatorType() == null ? indicatorType : indicator.getIndicatorType();
-            legendSet = indicator.getLegendSet() == null ? legendSet : indicator.getLegendSet();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                denominator = indicator.getDenominator();
+                denominatorDescription = indicator.getDenominatorDescription();
+                numerator = indicator.getNumerator();
+                numeratorDescription = indicator.getNumeratorDescription();
+                explodedNumerator = indicator.getExplodedNumerator();
+                explodedDenominator = indicator.getExplodedDenominator();
+                indicatorType = indicator.getIndicatorType();
+                legendSet = indicator.getLegendSet();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                denominator = indicator.getDenominator() == null ? denominator : indicator.getDenominator();
+                denominatorDescription = indicator.getDenominatorDescription() == null ? denominatorDescription : indicator.getDenominatorDescription();
+                numerator = indicator.getNumerator() == null ? numerator : indicator.getNumerator();
+                numeratorDescription = indicator.getNumeratorDescription() == null ? numeratorDescription : indicator.getNumeratorDescription();
+                explodedNumerator = indicator.getExplodedNumerator() == null ? explodedNumerator : indicator.getExplodedNumerator();
+                explodedDenominator = indicator.getExplodedDenominator() == null ? explodedDenominator : indicator.getExplodedDenominator();
+                indicatorType = indicator.getIndicatorType() == null ? indicatorType : indicator.getIndicatorType();
+                legendSet = indicator.getLegendSet() == null ? legendSet : indicator.getLegendSet();
+            }
 
             dataSets.clear();
             groups.clear();

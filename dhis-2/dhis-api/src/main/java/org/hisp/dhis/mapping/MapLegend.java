@@ -35,6 +35,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
@@ -129,18 +130,28 @@ public class MapLegend
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             MapLegend mapLegend = (MapLegend) other;
 
-            startValue = mapLegend.getStartValue() == null ? startValue : mapLegend.getStartValue();
-            endValue = mapLegend.getEndValue() == null ? endValue : mapLegend.getEndValue();
-            color = mapLegend.getColor() == null ? color : mapLegend.getColor();
-            image = mapLegend.getImage() == null ? image : mapLegend.getImage();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                startValue = mapLegend.getStartValue();
+                endValue = mapLegend.getEndValue();
+                color = mapLegend.getColor();
+                image = mapLegend.getImage();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                startValue = mapLegend.getStartValue() == null ? startValue : mapLegend.getStartValue();
+                endValue = mapLegend.getEndValue() == null ? endValue : mapLegend.getEndValue();
+                color = mapLegend.getColor() == null ? color : mapLegend.getColor();
+                image = mapLegend.getImage() == null ? image : mapLegend.getImage();
+            }
         }
     }
 }

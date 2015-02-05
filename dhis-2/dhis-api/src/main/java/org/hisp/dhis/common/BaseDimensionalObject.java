@@ -28,12 +28,6 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.hisp.dhis.common.view.DimensionalView;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -41,6 +35,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.view.DimensionalView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @JacksonXmlRootElement( localName = "dimension", namespace = DxfNamespaces.DXF_2_0 )
 public class BaseDimensionalObject
@@ -139,16 +138,16 @@ public class BaseDimensionalObject
     {
         return dimensionName != null ? dimensionName : uid;
     }
-    
+
     @Override
     public AnalyticsType getAnalyticsType()
     {
-        return 
+        return
             DimensionType.TRACKED_ENTITY_ATTRIBUTE.equals( dimensionType ) ||
-            DimensionType.TRACKED_ENTITY_DATAELEMENT.equals( dimensionType ) ?
-            AnalyticsType.EVENT : AnalyticsType.AGGREGATE;
+                DimensionType.TRACKED_ENTITY_DATAELEMENT.equals( dimensionType ) ?
+                AnalyticsType.EVENT : AnalyticsType.AGGREGATE;
     }
-    
+
     /**
      * Returns the items in the filter as a list. Order of items are preserved.
      * Requires that the filter has the IN operator and that at least one item
@@ -158,17 +157,17 @@ public class BaseDimensionalObject
     {
         final String inOp = QueryOperator.IN.getValue().toLowerCase();
         final int opLen = inOp.length() + 1;
-        
+
         if ( filter == null || !filter.toLowerCase().startsWith( inOp ) || filter.length() < opLen )
         {
             return null;
         }
-        
+
         String filterItems = filter.substring( opLen, filter.length() );
-        
+
         return new ArrayList<>( Arrays.asList( filterItems.split( DimensionalObjectUtils.OPTION_SEP ) ) );
     }
-    
+
     //--------------------------------------------------------------------------
     // Getters and setters
     //--------------------------------------------------------------------------
@@ -231,29 +230,38 @@ public class BaseDimensionalObject
     {
         this.filter = filter;
     }
-    
+
     //--------------------------------------------------------------------------
     // Supportive methods
     //--------------------------------------------------------------------------
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             DimensionalObject dimensionalObject = (DimensionalObject) other;
-            
-            dimensionType = dimensionalObject.getDimensionType() == null ? dimensionType : dimensionalObject.getDimensionType();
-            dimensionName = dimensionalObject.getDimensionName() == null ? dimensionName : dimensionalObject.getDimensionName();
-            filter = dimensionalObject.getFilter() == null ? filter : dimensionalObject.getFilter();
-            
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                dimensionType = dimensionalObject.getDimensionType();
+                dimensionName = dimensionalObject.getDimensionName();
+                filter = dimensionalObject.getFilter();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                dimensionType = dimensionalObject.getDimensionType() == null ? dimensionType : dimensionalObject.getDimensionType();
+                dimensionName = dimensionalObject.getDimensionName() == null ? dimensionName : dimensionalObject.getDimensionName();
+                filter = dimensionalObject.getFilter() == null ? filter : dimensionalObject.getFilter();
+            }
+
             items.clear();
             items.addAll( dimensionalObject.getItems() );
         }
     }
-    
+
     @Override
     public String toString()
     {

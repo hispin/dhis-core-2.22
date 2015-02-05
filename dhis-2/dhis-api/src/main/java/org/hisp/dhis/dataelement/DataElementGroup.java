@@ -39,6 +39,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -125,7 +126,7 @@ public class DataElementGroup
             addDataElement( dataElement );
         }
     }
-    
+
     /**
      * Returns the value type of the data elements in this group. Uses an arbitrary
      * member to determine the value type.
@@ -134,7 +135,7 @@ public class DataElementGroup
     {
         return members != null && !members.isEmpty() ? members.iterator().next().getType() : null;
     }
-    
+
     /**
      * Returns the aggregation operator of the data elements in this group. Uses
      * an arbitrary member to determine the aggregation operator.
@@ -145,7 +146,7 @@ public class DataElementGroup
     }
 
     /**
-     * Returns the period type of the data elements in this group. Uses an 
+     * Returns the period type of the data elements in this group. Uses an
      * arbitrary member to determine the period type.
      */
     public PeriodType getPeriodType()
@@ -160,8 +161,8 @@ public class DataElementGroup
     @JsonProperty( "dataElements" )
     @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "dataElements", namespace = DxfNamespaces.DXF_2_0)
-    @JacksonXmlProperty( localName = "dataElement", namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlElementWrapper( localName = "dataElements", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "dataElement", namespace = DxfNamespaces.DXF_2_0 )
     public Set<DataElement> getMembers()
     {
         return members;
@@ -175,7 +176,7 @@ public class DataElementGroup
     @JsonProperty( "dataElementGroupSet" )
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public DataElementGroupSet getGroupSet()
     {
         return groupSet;
@@ -188,8 +189,8 @@ public class DataElementGroup
 
     @JsonProperty( "attributeValues" )
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0)
-    @JacksonXmlProperty( localName = "attributeValue", namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "attributeValue", namespace = DxfNamespaces.DXF_2_0 )
     public Set<AttributeValue> getAttributeValues()
     {
         return attributeValues;
@@ -201,15 +202,22 @@ public class DataElementGroup
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             DataElementGroup dataElementGroup = (DataElementGroup) other;
 
-            groupSet = null;
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                groupSet = dataElementGroup.getGroupSet();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                groupSet = dataElementGroup.getGroupSet() == null ? groupSet : dataElementGroup.getGroupSet();
+            }
 
             removeAllDataElements();
 

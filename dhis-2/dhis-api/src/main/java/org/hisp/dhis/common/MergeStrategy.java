@@ -29,14 +29,9 @@ package org.hisp.dhis.common;
  */
 
 /**
- * This interface is for merging one object into another, this is to be used by code supporting
- * hibernate which means that for merging associations, only the owning side will be updated.
- *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface Mergeable<T>
+public enum MergeStrategy
 {
-    void mergeWith( T other, MergeStrategy strategy );
-
-    void mergeSharingWith( T other );
+    MERGE_ALWAYS, MERGE_IF_NOT_NULL
 }

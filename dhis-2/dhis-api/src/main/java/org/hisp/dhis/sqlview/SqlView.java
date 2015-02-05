@@ -36,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.schema.annotation.PropertyRange;
@@ -158,16 +159,24 @@ public class SqlView
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             SqlView sqlView = (SqlView) other;
 
-            description = sqlView.getDescription() == null ? description : sqlView.getDescription();
-            sqlQuery = sqlView.getSqlQuery() == null ? sqlQuery : sqlView.getSqlQuery();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                description = sqlView.getDescription();
+                sqlQuery = sqlView.getSqlQuery();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                description = sqlView.getDescription() == null ? description : sqlView.getDescription();
+                sqlQuery = sqlView.getSqlQuery() == null ? sqlQuery : sqlView.getSqlQuery();
+            }
         }
     }
 }

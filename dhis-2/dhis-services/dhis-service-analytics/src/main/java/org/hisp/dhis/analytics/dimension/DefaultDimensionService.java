@@ -37,6 +37,7 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -348,7 +349,7 @@ public class DefaultDimensionService
         DimensionalObject dimension = getDimension( uid );
         
         BaseDimensionalObject copy = new BaseDimensionalObject();
-        copy.mergeWith( dimension );
+        copy.mergeWith( dimension, MergeStrategy.MERGE_IF_NOT_NULL );
         
         if ( filterCanRead )
         {

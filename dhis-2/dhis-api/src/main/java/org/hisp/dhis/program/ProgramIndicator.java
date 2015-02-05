@@ -36,6 +36,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
@@ -139,5 +141,31 @@ public class ProgramIndicator
     public void setProgram( Program program )
     {
         this.program = program;
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            ProgramIndicator programIndicator = (ProgramIndicator) other;
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                valueType = programIndicator.getValueType();
+                expression = programIndicator.getExpression();
+                rootDate = programIndicator.getRootDate();
+                program = programIndicator.getProgram();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                valueType = programIndicator.getValueType() == null ? valueType : programIndicator.getValueType();
+                expression = programIndicator.getExpression() == null ? expression : programIndicator.getExpression();
+                rootDate = programIndicator.getRootDate() == null ? rootDate : programIndicator.getRootDate();
+                program = programIndicator.getProgram() == null ? program : programIndicator.getProgram();
+            }
+        }
     }
 }

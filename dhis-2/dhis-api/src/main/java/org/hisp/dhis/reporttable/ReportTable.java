@@ -44,6 +44,7 @@ import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
@@ -1078,9 +1079,9 @@ public class ReportTable
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
@@ -1088,21 +1089,33 @@ public class ReportTable
 
             regression = reportTable.isRegression();
             cumulative = reportTable.isCumulative();
-            reportParams = reportTable.getReportParams() == null ? reportParams : reportTable.getReportParams();
-            sortOrder = reportTable.getSortOrder();
-            topLimit = reportTable.getTopLimit();
             rowTotals = reportTable.isRowTotals();
             colTotals = reportTable.isColTotals();
             rowSubTotals = reportTable.isRowSubTotals();
             colSubTotals = reportTable.isColSubTotals();
             hideEmptyRows = reportTable.isHideEmptyRows();
             showHierarchy = reportTable.isShowHierarchy();
-            aggregationType = reportTable.getAggregationType();
-            displayDensity = reportTable.getDisplayDensity();
-            fontSize = reportTable.getFontSize();
-            legendSet = reportTable.getLegendSet();
             showDimensionLabels = reportTable.isShowDimensionLabels();
             hideEmptyRows = reportTable.isHideEmptyRows();
+            topLimit = reportTable.getTopLimit();
+            sortOrder = reportTable.getSortOrder();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                reportParams = reportTable.getReportParams();
+                aggregationType = reportTable.getAggregationType();
+                displayDensity = reportTable.getDisplayDensity();
+                fontSize = reportTable.getFontSize();
+                legendSet = reportTable.getLegendSet();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                reportParams = reportTable.getReportParams() == null ? reportParams : reportTable.getReportParams();
+                aggregationType = reportTable.getAggregationType() == null ? aggregationType : reportTable.getAggregationType();
+                displayDensity = reportTable.getDisplayDensity() == null ? displayDensity : reportTable.getDisplayDensity();
+                fontSize = reportTable.getFontSize() == null ? fontSize : reportTable.getFontSize();
+                legendSet = reportTable.getLegendSet() == null ? legendSet : reportTable.getLegendSet();
+            }
 
             columnDimensions.clear();
             columnDimensions.addAll( reportTable.getColumnDimensions() );

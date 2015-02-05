@@ -40,6 +40,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.adapter.JacksonOrganisationUnitChildrenSerializer;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.common.view.DetailedView;
@@ -1095,25 +1096,42 @@ public class OrganisationUnit
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             OrganisationUnit organisationUnit = (OrganisationUnit) other;
 
-            openingDate = organisationUnit.getOpeningDate() == null ? openingDate : organisationUnit.getOpeningDate();
-            closedDate = organisationUnit.getClosedDate() == null ? closedDate : organisationUnit.getClosedDate();
-            comment = organisationUnit.getComment() == null ? comment : organisationUnit.getComment();
-            featureType = organisationUnit.getFeatureType() == null ? featureType : organisationUnit.getFeatureType();
-            coordinates = organisationUnit.getCoordinates() == null ? coordinates : organisationUnit.getCoordinates();
-            url = organisationUnit.getUrl() == null ? url : organisationUnit.getUrl();
-            contactPerson = organisationUnit.getContactPerson() == null ? contactPerson : organisationUnit.getContactPerson();
-            address = organisationUnit.getAddress() == null ? address : organisationUnit.getAddress();
-            email = organisationUnit.getEmail() == null ? email : organisationUnit.getEmail();
-            phoneNumber = organisationUnit.getPhoneNumber() == null ? phoneNumber : organisationUnit.getPhoneNumber();
-            parent = organisationUnit.getParent();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                openingDate = organisationUnit.getOpeningDate();
+                closedDate = organisationUnit.getClosedDate();
+                comment = organisationUnit.getComment();
+                featureType = organisationUnit.getFeatureType();
+                coordinates = organisationUnit.getCoordinates();
+                url = organisationUnit.getUrl();
+                contactPerson = organisationUnit.getContactPerson();
+                address = organisationUnit.getAddress();
+                email = organisationUnit.getEmail();
+                phoneNumber = organisationUnit.getPhoneNumber();
+                parent = organisationUnit.getParent();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                openingDate = organisationUnit.getOpeningDate() == null ? openingDate : organisationUnit.getOpeningDate();
+                closedDate = organisationUnit.getClosedDate() == null ? closedDate : organisationUnit.getClosedDate();
+                comment = organisationUnit.getComment() == null ? comment : organisationUnit.getComment();
+                featureType = organisationUnit.getFeatureType() == null ? featureType : organisationUnit.getFeatureType();
+                coordinates = organisationUnit.getCoordinates() == null ? coordinates : organisationUnit.getCoordinates();
+                url = organisationUnit.getUrl() == null ? url : organisationUnit.getUrl();
+                contactPerson = organisationUnit.getContactPerson() == null ? contactPerson : organisationUnit.getContactPerson();
+                address = organisationUnit.getAddress() == null ? address : organisationUnit.getAddress();
+                email = organisationUnit.getEmail() == null ? email : organisationUnit.getEmail();
+                phoneNumber = organisationUnit.getPhoneNumber() == null ? phoneNumber : organisationUnit.getPhoneNumber();
+                parent = organisationUnit.getParent();
+            }
 
             groups.clear();
             users.clear();
