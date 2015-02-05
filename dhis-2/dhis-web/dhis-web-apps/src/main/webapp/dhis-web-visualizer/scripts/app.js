@@ -6541,7 +6541,7 @@ Ext.onReady( function() {
 
                                         // dimensions
                                         requests.push({
-                                            url: contextPath + '/api/dimensions.json?links=false&paging=false',
+                                            url: contextPath + '/api/dimensions.json?fields=id,name&paging=false',
                                             success: function(r) {
                                                 init.dimensions = Ext.decode(r.responseText).dimensions || [];
                                                 fn();
