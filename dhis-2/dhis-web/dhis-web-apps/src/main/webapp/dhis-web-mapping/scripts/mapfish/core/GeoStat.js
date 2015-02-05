@@ -170,7 +170,8 @@ mapfish.GeoStat.Distribution = OpenLayers.Class({
             if (sortedValues[0] < bounds[k + 1]) {
                 binCount[k] = binCount[k] + 1;
                 sortedValues.shift();
-            } else {
+            }
+            else {
                 k++;
             }
         }
