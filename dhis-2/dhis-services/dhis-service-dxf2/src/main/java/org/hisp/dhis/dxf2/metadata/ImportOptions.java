@@ -29,22 +29,23 @@ package org.hisp.dhis.dxf2.metadata;
  */
 
 import org.hisp.dhis.common.IdentifiableProperty;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.importexport.ImportStrategy;
 
 /**
  * The idScheme is a general setting which will apply to all objects. The idSchemes
  * can also be defined for specific objects such as dataElementIdScheme. The
  * general setting will override specific settings.
- * 
+ *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class ImportOptions
 {
-    private static final ImportOptions DEFAULT_OPTIONS = new ImportOptions( 
+    private static final ImportOptions DEFAULT_OPTIONS = new ImportOptions(
         IdentifiableProperty.UID, IdentifiableProperty.UID, false, true, ImportStrategy.NEW_AND_UPDATES, false );
 
     private IdentifiableProperty idScheme;
-    
+
     private IdentifiableProperty dataElementIdScheme;
 
     private IdentifiableProperty orgUnitIdScheme;
@@ -56,6 +57,8 @@ public class ImportOptions
     private boolean async;
 
     private ImportStrategy importStrategy;
+
+    private MergeStrategy mergeStrategy = MergeStrategy.MERGE_IF_NOT_NULL;
 
     private boolean skipExistingCheck;
 
@@ -74,7 +77,7 @@ public class ImportOptions
         this.importStrategy = importStrategy;
     }
 
-    public ImportOptions( IdentifiableProperty dataElementIdScheme, IdentifiableProperty orgUnitIdScheme, 
+    public ImportOptions( IdentifiableProperty dataElementIdScheme, IdentifiableProperty orgUnitIdScheme,
         boolean dryRun, boolean preheatCache, ImportStrategy importStrategy, boolean skipExistingCheck )
     {
         this.dataElementIdScheme = dataElementIdScheme;
@@ -85,7 +88,7 @@ public class ImportOptions
         this.skipExistingCheck = skipExistingCheck;
     }
 
-    public ImportOptions( IdentifiableProperty idScheme, IdentifiableProperty dataElementIdScheme, IdentifiableProperty orgUnitIdScheme, 
+    public ImportOptions( IdentifiableProperty idScheme, IdentifiableProperty dataElementIdScheme, IdentifiableProperty orgUnitIdScheme,
         boolean dryRun, boolean preheatCache, ImportStrategy importStrategy, boolean skipExistingCheck )
     {
         this.idScheme = idScheme;
@@ -117,14 +120,14 @@ public class ImportOptions
 
     public IdentifiableProperty getDataElementIdScheme()
     {
-        return dataElementIdScheme != null ? dataElementIdScheme : ( idScheme != null ? idScheme : IdentifiableProperty.UID );
+        return dataElementIdScheme != null ? dataElementIdScheme : (idScheme != null ? idScheme : IdentifiableProperty.UID);
     }
 
     public IdentifiableProperty getOrgUnitIdScheme()
     {
-        return orgUnitIdScheme != null ? orgUnitIdScheme : ( idScheme != null ? idScheme : IdentifiableProperty.UID );
+        return orgUnitIdScheme != null ? orgUnitIdScheme : (idScheme != null ? idScheme : IdentifiableProperty.UID);
     }
-    
+
     public boolean isDryRun()
     {
         return dryRun;
@@ -138,6 +141,11 @@ public class ImportOptions
     public ImportStrategy getImportStrategy()
     {
         return importStrategy != null ? importStrategy : ImportStrategy.NEW_AND_UPDATES;
+    }
+
+    public MergeStrategy getMergeStrategy()
+    {
+        return mergeStrategy;
     }
 
     public boolean isSkipExistingCheck()
