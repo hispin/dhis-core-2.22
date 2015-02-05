@@ -315,7 +315,8 @@ Ext.onReady(function() {
                     label.setAttributes({
                         opacity: 0.5
                     }, true);
-                } else {
+                }
+                else {
                     series.showAll();
                     label.setAttributes({
                         opacity: 1
