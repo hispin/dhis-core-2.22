@@ -35,6 +35,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.schema.PropertyType;
@@ -127,17 +128,26 @@ public class Document
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             Document document = (Document) other;
 
-            url = document.getUrl() == null ? url : document.getUrl();
-            contentType = document.getContentType() == null ? contentType : document.getContentType();
             external = document.isExternal();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                url = document.getUrl();
+                contentType = document.getContentType();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                url = document.getUrl() == null ? url : document.getUrl();
+                contentType = document.getContentType() == null ? contentType : document.getContentType();
+            }
         }
     }
 }

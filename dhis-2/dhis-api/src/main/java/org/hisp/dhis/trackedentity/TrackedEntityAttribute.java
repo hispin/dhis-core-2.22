@@ -37,6 +37,7 @@ import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.common.view.WithoutOrganisationUnitsView;
@@ -340,36 +341,6 @@ public class TrackedEntityAttribute
         this.confidential = confidential;
     }
 
-    // -------------------------------------------------------------------------
-    // Static methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void mergeWith( IdentifiableObject other )
-    {
-        super.mergeWith( other );
-
-        if ( other.getClass().isInstance( this ) )
-        {
-            TrackedEntityAttribute trackedEntityAttribute = (TrackedEntityAttribute) other;
-
-            description = trackedEntityAttribute.getDescription();
-            valueType = trackedEntityAttribute.getValueType();
-            inherit = trackedEntityAttribute.getInherit();
-            attributeGroup = trackedEntityAttribute.getAttributeGroup();
-
-            expression = trackedEntityAttribute.getExpression();
-            displayOnVisitSchedule = trackedEntityAttribute.getDisplayOnVisitSchedule();
-            sortOrderInVisitSchedule = trackedEntityAttribute.getSortOrderInVisitSchedule();
-            displayInListNoProgram = trackedEntityAttribute.getDisplayInListNoProgram();
-            sortOrderInListNoProgram = trackedEntityAttribute.getSortOrderInListNoProgram();
-            unique = trackedEntityAttribute.isUnique();
-            orgunitScope = trackedEntityAttribute.getOrgunitScope();
-            programScope = trackedEntityAttribute.getProgramScope();
-            confidential = trackedEntityAttribute.getConfidential();
-        }
-    }
-
     public Boolean isValidOptionValue( String value )
     {
         for ( Option option : this.getOptionSet().getOptions() )
@@ -381,5 +352,49 @@ public class TrackedEntityAttribute
         }
 
         return false;
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            TrackedEntityAttribute trackedEntityAttribute = (TrackedEntityAttribute) other;
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                description = trackedEntityAttribute.getDescription();
+                valueType = trackedEntityAttribute.getValueType();
+                inherit = trackedEntityAttribute.getInherit();
+                attributeGroup = trackedEntityAttribute.getAttributeGroup();
+                expression = trackedEntityAttribute.getExpression();
+                displayOnVisitSchedule = trackedEntityAttribute.getDisplayOnVisitSchedule();
+                sortOrderInVisitSchedule = trackedEntityAttribute.getSortOrderInVisitSchedule();
+                displayInListNoProgram = trackedEntityAttribute.getDisplayInListNoProgram();
+                sortOrderInListNoProgram = trackedEntityAttribute.getSortOrderInListNoProgram();
+                unique = trackedEntityAttribute.isUnique();
+                orgunitScope = trackedEntityAttribute.getOrgunitScope();
+                programScope = trackedEntityAttribute.getProgramScope();
+                confidential = trackedEntityAttribute.getConfidential();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                description = trackedEntityAttribute.getDescription() == null ? description : trackedEntityAttribute.getDescription();
+                valueType = trackedEntityAttribute.getValueType() == null ? valueType : trackedEntityAttribute.getValueType();
+                inherit = trackedEntityAttribute.getInherit() == null ? inherit : trackedEntityAttribute.getInherit();
+                attributeGroup = trackedEntityAttribute.getAttributeGroup() == null ? attributeGroup : trackedEntityAttribute.getAttributeGroup();
+                expression = trackedEntityAttribute.getExpression() == null ? expression : trackedEntityAttribute.getExpression();
+                displayOnVisitSchedule = trackedEntityAttribute.getDisplayOnVisitSchedule() == null ? displayOnVisitSchedule : trackedEntityAttribute.getDisplayOnVisitSchedule();
+                sortOrderInVisitSchedule = trackedEntityAttribute.getSortOrderInVisitSchedule() == null ? sortOrderInVisitSchedule : trackedEntityAttribute.getSortOrderInVisitSchedule();
+                displayInListNoProgram = trackedEntityAttribute.getDisplayInListNoProgram() == null ? displayInListNoProgram : trackedEntityAttribute.getDisplayInListNoProgram();
+                sortOrderInListNoProgram = trackedEntityAttribute.getSortOrderInListNoProgram() == null ? sortOrderInListNoProgram : trackedEntityAttribute.getSortOrderInListNoProgram();
+                unique = trackedEntityAttribute.isUnique() == null ? unique : trackedEntityAttribute.isUnique();
+                orgunitScope = trackedEntityAttribute.getOrgunitScope() == null ? orgunitScope : trackedEntityAttribute.getOrgunitScope();
+                programScope = trackedEntityAttribute.getProgramScope() == null ? programScope : trackedEntityAttribute.getProgramScope();
+                confidential = trackedEntityAttribute.getConfidential() == null ? confidential : trackedEntityAttribute.getConfidential();
+            }
+        }
     }
 }

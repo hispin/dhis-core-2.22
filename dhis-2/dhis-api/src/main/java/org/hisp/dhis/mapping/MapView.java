@@ -28,18 +28,17 @@ package org.hisp.dhis.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
@@ -51,19 +50,20 @@ import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.user.User;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 
 /**
  * For analytical data, organisation units and indicators/data elements are
  * dimensions, and period is filter.
- * 
+ *
  * @author Jan Henrik Overland
  */
-@JacksonXmlRootElement( localName = "mapView", namespace = DxfNamespaces.DXF_2_0)
+@JacksonXmlRootElement( localName = "mapView", namespace = DxfNamespaces.DXF_2_0 )
 public class MapView
     extends BaseAnalyticalObject
 {
@@ -74,13 +74,13 @@ public class MapView
     public static final String LAYER_THEMATIC2 = "thematic2";
     public static final String LAYER_THEMATIC3 = "thematic3";
     public static final String LAYER_THEMATIC4 = "thematic4";
-    
+
     public static final Integer METHOD_EQUAL_INTERVALS = 2;
     public static final Integer METHOD_EQUAL_COUNTS = 3;
 
-    public static final List<String> DATA_LAYERS = Arrays.asList( 
+    public static final List<String> DATA_LAYERS = Arrays.asList(
         LAYER_THEMATIC1, LAYER_THEMATIC2, LAYER_THEMATIC3, LAYER_THEMATIC4 );
-    
+
     private String layer;
 
     private Integer method;
@@ -102,17 +102,17 @@ public class MapView
     private OrganisationUnitGroupSet organisationUnitGroupSet;
 
     private Integer areaRadius;
-    
+
     private Boolean hidden;
-    
+
     private Boolean labels;
-    
+
     private String labelFontSize;
-    
+
     private String labelFontWeight;
-    
+
     private String labelFontStyle;
-    
+
     private String labelFontColor;
 
     // -------------------------------------------------------------------------
@@ -147,7 +147,7 @@ public class MapView
         this.organisationUnitsAtLevel = organisationUnitsAtLevel;
         this.organisationUnitsInGroups = organisationUnitsInGroups;
     }
-    
+
     @Override
     public void populateAnalyticalProperties()
     {
@@ -155,24 +155,24 @@ public class MapView
         rows.addAll( getDimensionalObjectList( DimensionalObject.ORGUNIT_DIM_ID ) );
         filters.addAll( getDimensionalObjectList( DimensionalObject.PERIOD_DIM_ID ) );
     }
-    
+
     public List<OrganisationUnit> getAllOrganisationUnits()
     {
         DimensionalObject object = getDimensionalObject( ORGUNIT_DIM_ID, relativePeriodDate, user, true, organisationUnitsAtLevel, organisationUnitsInGroups, format );
 
         return object != null ? NameableObjectUtils.asTypedList( object.getItems(), OrganisationUnit.class ) : null;
     }
-    
+
     public boolean hasLegendSet()
     {
         return legendSet != null;
     }
-    
+
     public boolean hasColors()
     {
         return colorLow != null && !colorLow.trim().isEmpty() && colorHigh != null && !colorHigh.trim().isEmpty();
     }
-    
+
     public boolean isDataLayer()
     {
         return DATA_LAYERS.contains( layer );
@@ -203,17 +203,17 @@ public class MapView
         {
             return dataSets.get( 0 ).getName();
         }
-        
+
         return uid;
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getLayer()
     {
         return layer;
@@ -226,7 +226,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getMethod()
     {
         return method;
@@ -239,7 +239,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getClasses()
     {
         return classes;
@@ -252,7 +252,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     @Property( PropertyType.COLOR )
     public String getColorLow()
     {
@@ -266,7 +266,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     @Property( PropertyType.COLOR )
     public String getColorHigh()
     {
@@ -281,7 +281,7 @@ public class MapView
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public MapLegendSet getLegendSet()
     {
         return legendSet;
@@ -294,7 +294,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getRadiusLow()
     {
         return radiusLow;
@@ -307,7 +307,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getRadiusHigh()
     {
         return radiusHigh;
@@ -320,7 +320,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Double getOpacity()
     {
         return opacity;
@@ -334,7 +334,7 @@ public class MapView
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public OrganisationUnitGroupSet getOrganisationUnitGroupSet()
     {
         return organisationUnitGroupSet;
@@ -347,7 +347,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getAreaRadius()
     {
         return areaRadius;
@@ -360,7 +360,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Boolean getHidden()
     {
         return hidden;
@@ -373,7 +373,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Boolean getLabels()
     {
         return labels;
@@ -386,7 +386,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getLabelFontSize()
     {
         return labelFontSize;
@@ -399,7 +399,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getLabelFontWeight()
     {
         return labelFontWeight;
@@ -412,7 +412,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getLabelFontStyle()
     {
         return labelFontStyle;
@@ -425,7 +425,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getLabelFontColor()
     {
         return labelFontColor;
@@ -438,7 +438,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getParentGraph()
     {
         return parentGraph;
@@ -451,7 +451,7 @@ public class MapView
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public int getParentLevel()
     {
         return parentLevel;
@@ -463,31 +463,54 @@ public class MapView
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             MapView mapView = (MapView) other;
 
-            layer = mapView.getLayer();
-            method = mapView.getMethod();
-            classes = mapView.getClasses();
-            colorLow = mapView.getColorLow();
-            colorHigh = mapView.getColorHigh();
-            legendSet = mapView.getLegendSet();
-            radiusLow = mapView.getRadiusLow();
-            radiusHigh = mapView.getRadiusHigh();
-            opacity = mapView.getOpacity();
-            organisationUnitGroupSet = mapView.getOrganisationUnitGroupSet();
-            areaRadius = mapView.getAreaRadius();
-            hidden = mapView.getHidden();
-            labels = mapView.getLabels();
-            labelFontSize = mapView.getLabelFontSize();
-            labelFontWeight = mapView.getLabelFontWeight();
-            labelFontStyle = mapView.getLabelFontStyle();
-            labelFontColor = mapView.getLabelFontColor();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                layer = mapView.getLayer();
+                method = mapView.getMethod();
+                classes = mapView.getClasses();
+                colorLow = mapView.getColorLow();
+                colorHigh = mapView.getColorHigh();
+                legendSet = mapView.getLegendSet();
+                radiusLow = mapView.getRadiusLow();
+                radiusHigh = mapView.getRadiusHigh();
+                opacity = mapView.getOpacity();
+                organisationUnitGroupSet = mapView.getOrganisationUnitGroupSet();
+                areaRadius = mapView.getAreaRadius();
+                hidden = mapView.getHidden();
+                labels = mapView.getLabels();
+                labelFontSize = mapView.getLabelFontSize();
+                labelFontWeight = mapView.getLabelFontWeight();
+                labelFontStyle = mapView.getLabelFontStyle();
+                labelFontColor = mapView.getLabelFontColor();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                layer = mapView.getLayer() == null ? layer : mapView.getLayer();
+                method = mapView.getMethod() == null ? method : mapView.getMethod();
+                classes = mapView.getClasses() == null ? classes : mapView.getClasses();
+                colorLow = mapView.getColorLow() == null ? colorLow : mapView.getColorLow();
+                colorHigh = mapView.getColorHigh() == null ? colorHigh : mapView.getColorHigh();
+                legendSet = mapView.getLegendSet() == null ? legendSet : mapView.getLegendSet();
+                radiusLow = mapView.getRadiusLow() == null ? radiusLow : mapView.getRadiusLow();
+                radiusHigh = mapView.getRadiusHigh() == null ? radiusHigh : mapView.getRadiusHigh();
+                opacity = mapView.getOpacity() == null ? opacity : mapView.getOpacity();
+                organisationUnitGroupSet = mapView.getOrganisationUnitGroupSet() == null ? organisationUnitGroupSet : mapView.getOrganisationUnitGroupSet();
+                areaRadius = mapView.getAreaRadius() == null ? areaRadius : mapView.getAreaRadius();
+                hidden = mapView.getHidden() == null ? hidden : mapView.getHidden();
+                labels = mapView.getLabels() == null ? labels : mapView.getLabels();
+                labelFontSize = mapView.getLabelFontSize() == null ? labelFontSize : mapView.getLabelFontSize();
+                labelFontWeight = mapView.getLabelFontWeight() == null ? labelFontWeight : mapView.getLabelFontWeight();
+                labelFontStyle = mapView.getLabelFontStyle() == null ? labelFontStyle : mapView.getLabelFontStyle();
+                labelFontColor = mapView.getLabelFontColor() == null ? labelFontColor : mapView.getLabelFontColor();
+            }
         }
     }
 }

@@ -540,18 +540,28 @@ public class BaseIdentifiableObject
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
         Validate.notNull( other );
 
-        uid = other.getUid() == null ? uid : other.getUid();
-        name = other.getName() == null ? name : other.getName();
-        code = other.getCode() == null ? code : other.getCode();
-        lastUpdated = other.getLastUpdated() == null ? lastUpdated : other.getLastUpdated();
-        created = other.getCreated() == null ? created : other.getCreated();
-
-        // TODO leave this in? we might have sub-classes that have user which is not sharing related
-        user = other.getUser() == null ? user : other.getUser();
+        if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+        {
+            uid = other.getUid();
+            name = other.getName();
+            code = other.getCode();
+            lastUpdated = other.getLastUpdated();
+            created = other.getCreated();
+            user = other.getUser();
+        }
+        else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+        {
+            uid = other.getUid() == null ? uid : other.getUid();
+            name = other.getName() == null ? name : other.getName();
+            code = other.getCode() == null ? code : other.getCode();
+            lastUpdated = other.getLastUpdated() == null ? lastUpdated : other.getLastUpdated();
+            created = other.getCreated() == null ? created : other.getCreated();
+            user = other.getUser() == null ? user : other.getUser();
+        }
     }
 
     @Override

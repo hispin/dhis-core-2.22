@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.gml;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.metadata.ImportOptions;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
@@ -113,7 +114,7 @@ public class DefaultGmlImportService
             String coordinates = unit.getCoordinates(),
                    featureType = unit.getFeatureType();
 
-            unit.mergeWith( persisted );
+            unit.mergeWith( persisted, MergeStrategy.MERGE_IF_NOT_NULL );
 
             unit.setCoordinates( coordinates );
             unit.setFeatureType( featureType );

@@ -753,9 +753,9 @@ public abstract class BaseAnalyticalObject
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
@@ -763,12 +763,20 @@ public abstract class BaseAnalyticalObject
 
             this.clear();
 
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                relatives = object.getRelatives();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                relatives = object.getRelatives() == null ? relatives : object.getRelatives();
+            }
+
             indicators.addAll( object.getIndicators() );
             dataElements.addAll( object.getDataElements() );
             dataElementOperands.addAll( object.getDataElementOperands() );
             dataSets.addAll( object.getDataSets() );
             periods.addAll( object.getPeriods() );
-            relatives = object.getRelatives() == null ? relatives : object.getRelatives();
             organisationUnits.addAll( object.getOrganisationUnits() );
             dataElementGroups.addAll( object.getDataElementGroups() );
             organisationUnitGroups.addAll( object.getOrganisationUnitGroups() );
@@ -777,12 +785,12 @@ public abstract class BaseAnalyticalObject
             categoryOptionGroups.addAll( object.getCategoryOptionGroups() );
             attributeDimensions.addAll( object.getAttributeDimensions() );
             dataElementDimensions.addAll( object.getDataElementDimensions() );
-            userOrganisationUnit = object.isUserOrganisationUnit();
             userOrganisationUnitChildren = object.isUserOrganisationUnitChildren();
             userOrganisationUnitGrandChildren = object.isUserOrganisationUnitGrandChildren();
             itemOrganisationUnitGroups = object.getItemOrganisationUnitGroups();
             rewindRelativePeriods = object.isRewindRelativePeriods();
             digitGroupSeparator = object.getDigitGroupSeparator();
+            userOrganisationUnit = object.isUserOrganisationUnit();
             sortOrder = object.getSortOrder();
             topLimit = object.getTopLimit();
         }

@@ -37,6 +37,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
@@ -46,7 +47,7 @@ import java.util.List;
 /**
  * @author Chau Thu Tran
  */
-@JacksonXmlRootElement(localName = "programStageSection", namespace = DxfNamespaces.DXF_2_0)
+@JacksonXmlRootElement( localName = "programStageSection", namespace = DxfNamespaces.DXF_2_0 )
 public class ProgramStageSection
     extends BaseIdentifiableObject
 {
@@ -128,16 +129,24 @@ public class ProgramStageSection
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             ProgramStageSection programStageSection = (ProgramStageSection) other;
 
-            programStage = programStageSection.getProgramStage();
-            sortOrder = programStageSection.getSortOrder();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                programStage = programStageSection.getProgramStage();
+                sortOrder = programStageSection.getSortOrder();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                programStage = programStageSection.getProgramStage() == null ? programStage : programStageSection.getProgramStage();
+                sortOrder = programStageSection.getSortOrder() == null ? sortOrder : programStageSection.getSortOrder();
+            }
 
             programStageDataElements.clear();
             programStageDataElements.addAll( programStageSection.getProgramStageDataElements() );

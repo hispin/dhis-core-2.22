@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.DimensionService;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.eventchart.EventChart;
 import org.hisp.dhis.eventchart.EventChartService;
@@ -130,7 +131,7 @@ public class EventChartController
 
         mergeEventChart( newEventChart );
 
-        eventChart.mergeWith( newEventChart );
+        eventChart.mergeWith( newEventChart, MergeStrategy.MERGE_IF_NOT_NULL );
 
         eventChartService.updateEventChart( eventChart );
     }

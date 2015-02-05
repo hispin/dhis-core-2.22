@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.Grid;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
@@ -123,7 +124,7 @@ public class ReportTableController
 
         mergeReportTable( newReportTable );
 
-        reportTable.mergeWith( newReportTable );
+        reportTable.mergeWith( newReportTable, MergeStrategy.MERGE_IF_NOT_NULL );
 
         reportTableService.updateReportTable( reportTable );
     }

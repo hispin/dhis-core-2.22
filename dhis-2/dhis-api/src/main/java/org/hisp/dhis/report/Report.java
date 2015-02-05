@@ -36,6 +36,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.period.RelativePeriods;
@@ -207,16 +208,24 @@ public class Report
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             Report report = (Report) other;
 
-            designContent = report.getDesignContent() == null ? designContent : report.getDesignContent();
-            reportTable = report.getReportTable() == null ? reportTable : report.getReportTable();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                designContent = report.getDesignContent();
+                reportTable = report.getReportTable();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                designContent = report.getDesignContent() == null ? designContent : report.getDesignContent();
+                reportTable = report.getReportTable() == null ? reportTable : report.getReportTable();
+            }
         }
     }
 }

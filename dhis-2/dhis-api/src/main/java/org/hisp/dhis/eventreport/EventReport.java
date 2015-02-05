@@ -34,12 +34,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.EventAnalyticalObject;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
@@ -320,8 +320,8 @@ public class EventReport
     }
 
     @JsonProperty
-    @JsonView( {DetailedView.class, ExportView.class, DimensionalView.class} )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public boolean isRowTotals()
     {
         return rowTotals;
@@ -333,8 +333,8 @@ public class EventReport
     }
 
     @JsonProperty
-    @JsonView( {DetailedView.class, ExportView.class, DimensionalView.class} )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public boolean isColTotals()
     {
         return colTotals;
@@ -346,8 +346,8 @@ public class EventReport
     }
 
     @JsonProperty
-    @JsonView( {DetailedView.class, ExportView.class, DimensionalView.class} )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public boolean isRowSubTotals()
     {
         return rowSubTotals;
@@ -356,11 +356,11 @@ public class EventReport
     public void setRowSubTotals( boolean rowSubTotals )
     {
         this.rowSubTotals = rowSubTotals;
-    }    
+    }
 
     @JsonProperty
-    @JsonView( {DetailedView.class, ExportView.class, DimensionalView.class} )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public boolean isColSubTotals()
     {
         return colSubTotals;
@@ -435,7 +435,7 @@ public class EventReport
     {
         this.fontSize = fontSize;
     }
-    
+
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -447,32 +447,47 @@ public class EventReport
     public void setShowDimensionLabels( boolean showDimensionLabels )
     {
         this.showDimensionLabels = showDimensionLabels;
-    }    
+    }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             EventReport eventReport = (EventReport) other;
 
-            dataType = eventReport.getDataType();
-            program = eventReport.getProgram();
-            programStage = eventReport.getProgramStage();
-            startDate = eventReport.getStartDate();
-            endDate = eventReport.getEndDate();
-            rowTotals = eventReport.isRowTotals();
-            colTotals = eventReport.isColTotals();
             rowSubTotals = eventReport.isRowSubTotals();
             colSubTotals = eventReport.isColSubTotals();
             hideEmptyRows = eventReport.isHideEmptyRows();
-            countType = eventReport.getCountType();
+            rowTotals = eventReport.isRowTotals();
+            colTotals = eventReport.isColTotals();
             showHierarchy = eventReport.isShowHierarchy();
             showDimensionLabels = eventReport.isShowDimensionLabels();
-            displayDensity = eventReport.getDisplayDensity();
-            fontSize = eventReport.getFontSize();
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                dataType = eventReport.getDataType();
+                program = eventReport.getProgram();
+                programStage = eventReport.getProgramStage();
+                startDate = eventReport.getStartDate();
+                endDate = eventReport.getEndDate();
+                countType = eventReport.getCountType();
+                displayDensity = eventReport.getDisplayDensity();
+                fontSize = eventReport.getFontSize();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                dataType = eventReport.getDataType() == null ? dataType : eventReport.getDataType();
+                program = eventReport.getProgram() == null ? program : eventReport.getProgram();
+                programStage = eventReport.getProgramStage() == null ? programStage : eventReport.getProgramStage();
+                startDate = eventReport.getStartDate() == null ? startDate : eventReport.getStartDate();
+                endDate = eventReport.getEndDate() == null ? endDate : eventReport.getEndDate();
+                countType = eventReport.getCountType() == null ? countType : eventReport.getCountType();
+                displayDensity = eventReport.getDisplayDensity() == null ? displayDensity : eventReport.getDisplayDensity();
+                fontSize = eventReport.getFontSize() == null ? fontSize : eventReport.getFontSize();
+            }
 
             columnDimensions.clear();
             columnDimensions.addAll( eventReport.getColumnDimensions() );

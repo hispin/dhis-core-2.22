@@ -41,6 +41,7 @@ import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -448,12 +449,12 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         if ( !options.isSharing() )
         {
             User persistedObjectUser = persistedObject.getUser();
-            persistedObject.mergeWith( object );
+            persistedObject.mergeWith( object, MergeStrategy.MERGE_IF_NOT_NULL );
             persistedObject.setUser( persistedObjectUser );
         }
         else
         {
-            persistedObject.mergeWith( object );
+            persistedObject.mergeWith( object, MergeStrategy.MERGE_IF_NOT_NULL );
             persistedObject.mergeSharingWith( object );
         }
 
@@ -477,7 +478,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                     userService.encodeAndSetPassword( userCredentials, userCredentials.getPassword() );
                 }
 
-                ((User) persistedObject).getUserCredentials().mergeWith( userCredentials );
+                ((User) persistedObject).getUserCredentials().mergeWith( userCredentials, MergeStrategy.MERGE_IF_NOT_NULL );
                 reattachCollectionFields( ((User) persistedObject).getUserCredentials(), collectionFieldsUserCredentials, user );
 
                 sessionFactory.getCurrentSession().saveOrUpdate( ((User) persistedObject).getUserCredentials() );

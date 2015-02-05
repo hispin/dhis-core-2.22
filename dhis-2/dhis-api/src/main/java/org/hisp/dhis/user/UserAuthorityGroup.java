@@ -39,6 +39,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -192,25 +193,6 @@ public class UserAuthorityGroup
         this.dataSets = dataSets;
     }
 
-    @Override
-    public void mergeWith( IdentifiableObject other )
-    {
-        super.mergeWith( other );
-
-        if ( other.getClass().isInstance( this ) )
-        {
-            UserAuthorityGroup userAuthorityGroup = (UserAuthorityGroup) other;
-
-            description = userAuthorityGroup.getDescription() == null ? description : userAuthorityGroup.getDescription();
-
-            removeAllAuthorities();
-            authorities.addAll( ((UserAuthorityGroup) other).getAuthorities() );
-
-            removeAllDataSets();
-            dataSets.addAll( userAuthorityGroup.getDataSets() );
-        }
-    }
-
     public void removeAllDataSets()
     {
         dataSets.clear();
@@ -219,5 +201,31 @@ public class UserAuthorityGroup
     private void removeAllAuthorities()
     {
         authorities.clear();
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            UserAuthorityGroup userAuthorityGroup = (UserAuthorityGroup) other;
+
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                description = userAuthorityGroup.getDescription();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                description = userAuthorityGroup.getDescription() == null ? description : userAuthorityGroup.getDescription();
+            }
+
+            removeAllAuthorities();
+            authorities.addAll( ((UserAuthorityGroup) other).getAuthorities() );
+
+            removeAllDataSets();
+            dataSets.addAll( userAuthorityGroup.getDataSets() );
+        }
     }
 }

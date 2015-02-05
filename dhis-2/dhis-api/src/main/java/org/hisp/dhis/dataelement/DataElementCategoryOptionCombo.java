@@ -39,6 +39,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -393,22 +394,28 @@ public class DataElementCategoryOptionCombo
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
-            DataElementCategoryOptionCombo dataElementCategoryOptionCombo = (DataElementCategoryOptionCombo) other;
+            DataElementCategoryOptionCombo categoryOptionCombo = (DataElementCategoryOptionCombo) other;
 
-            categoryCombo = dataElementCategoryOptionCombo.getCategoryCombo() == null ? categoryCombo : dataElementCategoryOptionCombo
-                .getCategoryCombo();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                categoryCombo = categoryOptionCombo.getCategoryCombo();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                categoryCombo = categoryOptionCombo.getCategoryCombo() == null ? categoryCombo : categoryOptionCombo.getCategoryCombo();
+            }
 
             removeAllCategoryOptions();
 
-            for ( DataElementCategoryOption dataElementCategoryOption : dataElementCategoryOptionCombo.getCategoryOptions() )
+            for ( DataElementCategoryOption categoryOption : categoryOptionCombo.getCategoryOptions() )
             {
-                addDataElementCategoryOption( dataElementCategoryOption );
+                addDataElementCategoryOption( categoryOption );
             }
         }
     }

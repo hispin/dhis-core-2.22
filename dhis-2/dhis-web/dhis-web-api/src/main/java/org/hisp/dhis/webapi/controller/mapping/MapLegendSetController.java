@@ -28,6 +28,7 @@ package org.hisp.dhis.webapi.controller.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.mapping.MapLegend;
 import org.hisp.dhis.mapping.MapLegendSet;
@@ -103,7 +104,7 @@ public class MapLegendSetController
             mappingService.addMapLegend( legend );
         }
 
-        legendSet.mergeWith( newLegendSet );
+        legendSet.mergeWith( newLegendSet, MergeStrategy.MERGE_IF_NOT_NULL );
 
         mappingService.updateMapLegendSet( legendSet );
     }

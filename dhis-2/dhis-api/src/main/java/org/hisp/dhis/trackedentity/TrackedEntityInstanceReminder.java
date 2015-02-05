@@ -28,21 +28,21 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.common.view.WithoutOrganisationUnitsView;
 import org.hisp.dhis.user.UserGroup;
+
+import java.util.regex.Pattern;
 
 /**
  * @author Chau Thu Tran
@@ -54,9 +54,9 @@ public class TrackedEntityInstanceReminder
     private static final long serialVersionUID = 3101502417481903219L;
 
     public static final String ATTRIBUTE = "attributeid";
-     
+
     public static final Pattern ATTRIBUTE_PATTERN = Pattern.compile( "\\{(" + ATTRIBUTE + ")=(\\w+)\\}" );
-    
+
     public static final String DUE_DATE_TO_COMPARE = "duedate";
 
     public static final String ENROLLEMENT_DATE_TO_COMPARE = "enrollmentdate";
@@ -244,21 +244,34 @@ public class TrackedEntityInstanceReminder
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             TrackedEntityInstanceReminder trackedEntityInstanceReminder = (TrackedEntityInstanceReminder) other;
 
-            daysAllowedSendMessage = trackedEntityInstanceReminder.getDaysAllowedSendMessage();
-            templateMessage = trackedEntityInstanceReminder.getTemplateMessage();
-            dateToCompare = trackedEntityInstanceReminder.getDateToCompare();
-            sendTo = trackedEntityInstanceReminder.getSendTo();
-            whenToSend = trackedEntityInstanceReminder.getWhenToSend();
-            messageType = trackedEntityInstanceReminder.getMessageType();
-            userGroup = trackedEntityInstanceReminder.getUserGroup();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                daysAllowedSendMessage = trackedEntityInstanceReminder.getDaysAllowedSendMessage();
+                templateMessage = trackedEntityInstanceReminder.getTemplateMessage();
+                dateToCompare = trackedEntityInstanceReminder.getDateToCompare();
+                sendTo = trackedEntityInstanceReminder.getSendTo();
+                whenToSend = trackedEntityInstanceReminder.getWhenToSend();
+                messageType = trackedEntityInstanceReminder.getMessageType();
+                userGroup = trackedEntityInstanceReminder.getUserGroup();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                daysAllowedSendMessage = trackedEntityInstanceReminder.getDaysAllowedSendMessage() == null ? daysAllowedSendMessage : trackedEntityInstanceReminder.getDaysAllowedSendMessage();
+                templateMessage = trackedEntityInstanceReminder.getTemplateMessage() == null ? templateMessage : trackedEntityInstanceReminder.getTemplateMessage();
+                dateToCompare = trackedEntityInstanceReminder.getDateToCompare() == null ? dateToCompare : trackedEntityInstanceReminder.getDateToCompare();
+                sendTo = trackedEntityInstanceReminder.getSendTo() == null ? sendTo : trackedEntityInstanceReminder.getSendTo();
+                whenToSend = trackedEntityInstanceReminder.getWhenToSend() == null ? whenToSend : trackedEntityInstanceReminder.getWhenToSend();
+                messageType = trackedEntityInstanceReminder.getMessageType() == null ? messageType : trackedEntityInstanceReminder.getMessageType();
+                userGroup = trackedEntityInstanceReminder.getUserGroup() == null ? userGroup : trackedEntityInstanceReminder.getUserGroup();
+            }
         }
     }
 }

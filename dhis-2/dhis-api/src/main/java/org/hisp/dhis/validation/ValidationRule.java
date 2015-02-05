@@ -38,6 +38,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.adapter.JacksonPeriodTypeDeserializer;
 import org.hisp.dhis.common.adapter.JacksonPeriodTypeSerializer;
 import org.hisp.dhis.common.view.DetailedView;
@@ -478,17 +479,26 @@ public class ValidationRule
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             ValidationRule validationRule = (ValidationRule) other;
 
-            description = validationRule.getDescription() == null ? description : validationRule.getDescription();
-            operator = validationRule.getOperator() == null ? operator : validationRule.getOperator();
-            periodType = validationRule.getPeriodType() == null ? periodType : validationRule.getPeriodType();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                description = validationRule.getDescription();
+                operator = validationRule.getOperator();
+                periodType = validationRule.getPeriodType();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                description = validationRule.getDescription() == null ? description : validationRule.getDescription();
+                operator = validationRule.getOperator() == null ? operator : validationRule.getOperator();
+                periodType = validationRule.getPeriodType() == null ? periodType : validationRule.getPeriodType();
+            }
 
             if ( leftSide != null && validationRule.getLeftSide() != null )
             {

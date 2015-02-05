@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
@@ -310,12 +311,12 @@ public class UserController
         }
         
         User userReplica = new User();
-        userReplica.mergeWith( existingUser );
+        userReplica.mergeWith( existingUser, MergeStrategy.MERGE_IF_NOT_NULL );
         userReplica.setUid( CodeGenerator.generateCode() );
         userReplica.setCreated( new Date() );
         
         UserCredentials credentialsReplica = new UserCredentials();
-        credentialsReplica.mergeWith( existingUser.getUserCredentials() );
+        credentialsReplica.mergeWith( existingUser.getUserCredentials(), MergeStrategy.MERGE_IF_NOT_NULL );
         
         credentialsReplica.setUsername( username );
         userService.encodeAndSetPassword( credentialsReplica, password );

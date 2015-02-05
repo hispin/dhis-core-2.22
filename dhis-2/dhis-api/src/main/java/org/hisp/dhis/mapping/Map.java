@@ -36,6 +36,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
@@ -139,18 +140,28 @@ public class Map
     }
 
     @Override
-    public void mergeWith( IdentifiableObject other )
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
-        super.mergeWith( other );
+        super.mergeWith( other, strategy );
 
         if ( other.getClass().isInstance( this ) )
         {
             Map map = (Map) other;
 
-            user = map.getUser();
-            longitude = map.getLongitude();
-            latitude = map.getLatitude();
-            zoom = map.getZoom();
+            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            {
+                user = map.getUser();
+                longitude = map.getLongitude();
+                latitude = map.getLatitude();
+                zoom = map.getZoom();
+            }
+            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            {
+                user = map.getUser() == null ? user : map.getUser();
+                longitude = map.getLongitude() == null ? longitude : map.getLongitude();
+                latitude = map.getLatitude() == null ? latitude : map.getLatitude();
+                zoom = map.getZoom() == null ? zoom : map.getZoom();
+            }
 
             mapViews.clear();
             mapViews.addAll( map.getMapViews() );
