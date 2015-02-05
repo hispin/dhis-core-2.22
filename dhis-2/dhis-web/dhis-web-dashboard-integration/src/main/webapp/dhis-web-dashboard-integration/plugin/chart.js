@@ -3866,6 +3866,7 @@ Ext.onReady(function() {
 			}
 		});
 
+        // dimensions
 		requests.push({
 			url: init.contextPath + '/api/dimensions.' + type + '?fields=id,name&paging=false',
             disableCaching: false,
