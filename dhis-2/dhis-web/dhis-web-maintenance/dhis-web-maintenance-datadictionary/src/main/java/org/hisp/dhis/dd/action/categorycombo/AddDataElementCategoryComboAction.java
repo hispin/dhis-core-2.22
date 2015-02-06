@@ -29,6 +29,7 @@ package org.hisp.dhis.dd.action.categorycombo;
  */
 
 import com.opensymphony.xwork2.Action;
+
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -64,6 +65,13 @@ public class AddDataElementCategoryComboAction
         this.name = name;
     }
 
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+    
     private String dimensionType;
 
     public void setDimensionType( String dimensionType )
@@ -94,6 +102,7 @@ public class AddDataElementCategoryComboAction
     {
         DataElementCategoryCombo categoryCombo = new DataElementCategoryCombo();
         categoryCombo.setName( name );
+        categoryCombo.setCode( code );
         categoryCombo.setDimensionType( dimensionType );
         categoryCombo.setSkipTotal( skipTotal );
 
