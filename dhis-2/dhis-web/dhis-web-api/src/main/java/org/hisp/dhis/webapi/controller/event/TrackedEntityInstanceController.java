@@ -43,6 +43,7 @@ import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
+import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.schema.descriptors.TrackedEntityInstanceSchemaDescriptor;
@@ -241,10 +242,10 @@ public class TrackedEntityInstanceController
 
     @RequestMapping( value = "/{id}", method = RequestMethod.GET )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_INSTANCE_SEARCH')" )
-    public @ResponseBody RootNode getTrackedEntityInstanceById( @PathVariable( "id" ) String pvId )
+    public @ResponseBody RootNode getTrackedEntityInstanceById( @PathVariable( "id" ) String pvId,
+        @RequestParam( value = "realObject", required = false, defaultValue = "false" ) boolean realObject )
         throws NotFoundException
     {
-        List<TrackedEntityInstance> trackedEntityInstances = Lists.newArrayList( getTrackedEntityInstance( pvId ) );
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
 
         if ( fields.isEmpty() )
@@ -252,11 +253,22 @@ public class TrackedEntityInstanceController
             fields.add( ":all" );
         }
 
-        RootNode rootNode = new RootNode( "metadata" );
+        CollectionNode collectionNode;
+
+        if ( !realObject )
+        {
+            collectionNode = fieldFilterService.filter( TrackedEntityInstance.class,
+                Lists.newArrayList( getTrackedEntityInstance( pvId ) ), fields );
+        }
+        else
+        {
+            collectionNode = fieldFilterService.filter( org.hisp.dhis.trackedentity.TrackedEntityInstance.class,
+                Lists.newArrayList( instanceService.getTrackedEntityInstance( pvId ) ), fields );
+        }
+
+        RootNode rootNode = new RootNode( collectionNode.getChildren().get( 0 ) );
         rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
         rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
-
-        rootNode.addChild( fieldFilterService.filter( TrackedEntityInstance.class, trackedEntityInstances, fields ) );
 
         return rootNode;
     }
