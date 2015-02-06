@@ -84,6 +84,13 @@ public class AddGroupSetAction
         this.description = description;
     }
 
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+    
     private boolean compulsory;
 
     public void setCompulsory( boolean compulsory )
@@ -122,6 +129,8 @@ public class AddGroupSetAction
     {
         OrganisationUnitGroupSet groupSet = new OrganisationUnitGroupSet( name, description, compulsory, dataDimension );
 
+        groupSet.setCode( code );
+        
         Set<OrganisationUnitGroup> selectedMembers = new HashSet<>();
 
         if ( ougSelected != null )

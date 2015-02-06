@@ -72,6 +72,13 @@ public class UpdateDataElementCategoryAction
         this.name = name;
     }
 
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+    
     private boolean dataDimension;
 
     public void setDataDimension( boolean dataDimension )
@@ -95,6 +102,7 @@ public class UpdateDataElementCategoryAction
     {
         DataElementCategory dataElementCategory = dataElementCategoryService.getDataElementCategory( id );
         dataElementCategory.setName( name );
+        dataElementCategory.setCode( code );
         dataElementCategory.setDataDimension( dataDimension );
 
         dataElementCategory.getCategoryOptions().clear();

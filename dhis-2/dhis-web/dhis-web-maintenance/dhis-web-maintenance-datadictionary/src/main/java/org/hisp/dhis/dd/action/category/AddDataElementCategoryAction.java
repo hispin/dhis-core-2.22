@@ -65,6 +65,13 @@ public class AddDataElementCategoryAction
         this.name = name;
     }
 
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+
     private boolean dataDimension;
 
     public void setDataDimension( boolean dataDimension )
@@ -95,6 +102,7 @@ public class AddDataElementCategoryAction
     {
         DataElementCategory dataElementCategory = new DataElementCategory();
         dataElementCategory.setName( name );
+        dataElementCategory.setCode( code );
         dataElementCategory.setDataDimension( dataDimension );
         dataElementCategory.setDataDimensionType( dimensionType );
 
