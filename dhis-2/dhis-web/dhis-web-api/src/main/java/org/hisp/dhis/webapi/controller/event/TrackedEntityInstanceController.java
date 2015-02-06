@@ -28,25 +28,30 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
+import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
+import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
+import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.schema.descriptors.TrackedEntityInstanceSchemaDescriptor;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
+import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
-import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -59,13 +64,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -84,6 +90,15 @@ public class TrackedEntityInstanceController
 
     @Autowired
     private ContextUtils contextUtils;
+
+    @Autowired
+    private FieldFilterService fieldFilterService;
+
+    @Autowired
+    private ObjectFilterService objectFilterService;
+
+    @Autowired
+    private ContextService contextService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -226,16 +241,24 @@ public class TrackedEntityInstanceController
 
     @RequestMapping( value = "/{id}", method = RequestMethod.GET )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_INSTANCE_SEARCH')" )
-    public String getTrackedEntityInstance( @PathVariable String id, @RequestParam Map<String, String> parameters, Model model )
+    public @ResponseBody RootNode getTrackedEntityInstanceById( @PathVariable( "id" ) String pvId )
         throws NotFoundException
     {
-        WebOptions options = new WebOptions( parameters );
-        TrackedEntityInstance trackedEntityInstance = getTrackedEntityInstance( id );
+        List<TrackedEntityInstance> trackedEntityInstances = Lists.newArrayList( getTrackedEntityInstance( pvId ) );
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
 
-        model.addAttribute( "model", trackedEntityInstance );
-        model.addAttribute( "viewClass", options.getViewClass( "detailed" ) );
+        if ( fields.isEmpty() )
+        {
+            fields.add( ":all" );
+        }
 
-        return "trackedEntityInstance";
+        RootNode rootNode = new RootNode( "metadata" );
+        rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
+        rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
+
+        rootNode.addChild( fieldFilterService.filter( TrackedEntityInstance.class, trackedEntityInstances, fields ) );
+
+        return rootNode;
     }
 
     // -------------------------------------------------------------------------
@@ -282,7 +305,7 @@ public class TrackedEntityInstanceController
 
     @RequestMapping( value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_INSTANCE_ADD')" )
-    public void postTrackedEntityInstanceJson( @RequestParam( defaultValue = "CREATE" ) ImportStrategy strategy,HttpServletRequest request, HttpServletResponse response )
+    public void postTrackedEntityInstanceJson( @RequestParam( defaultValue = "CREATE" ) ImportStrategy strategy, HttpServletRequest request, HttpServletResponse response )
         throws IOException
     {
         ImportSummaries importSummaries = trackedEntityInstanceService.addTrackedEntityInstanceJson( request.getInputStream(), strategy );
