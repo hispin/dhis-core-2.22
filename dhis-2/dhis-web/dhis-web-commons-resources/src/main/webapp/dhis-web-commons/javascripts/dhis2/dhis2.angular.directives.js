@@ -253,7 +253,7 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('sortable', function() {        
+/*.directive('d2Sortable', function() {        
 
     return {        
         restrict: 'A',        
@@ -264,6 +264,57 @@ var d2Directives = angular.module('d2Directives', [])
                 tolerance: "pointer",
                 handle: '.handle'
             });
+        }  
+    };
+})*/
+
+.directive('d2Sortable', function($timeout) {        
+
+    return {        
+        restrict: 'A',        
+        link: function(scope, element, attrs){
+            element.sortable({
+                connectWith: ".connectedSortable",
+                placeholder: "ui-state-highlight",
+                tolerance: "pointer",
+                handle: '.handle',
+                change: function(event, ui){
+                    $timeout(function() {
+                        scope.widgetsOrder = getSortedItems(ui);
+                        scope.$apply();
+                    });
+                    
+                },
+                receive: function(event, ui){
+                    $timeout(function() {
+                        scope.widgetsOrder = getSortedItems(ui);
+                        scope.$apply();
+                    });
+                }
+            });
+            
+            var getSortedItems = function(ui){
+                var biggerWidgets = $("#biggerWidget").sortable( "toArray");
+                var smallerWidgets = $("#smallerWidget").sortable( "toArray");
+                var movedIsIdentifeid = false;
+
+                //look for the moved item in the bigger block
+                for(var i=0; i<biggerWidgets.length && !movedIsIdentifeid; i++){
+                    if(biggerWidgets[i] === ""){
+                        biggerWidgets[i] = ui.item[0].id;
+                        movedIsIdentifeid = true;
+                    }
+                }
+
+                //look for the moved item in the smaller block
+                for(var i=0; i<smallerWidgets.length && !movedIsIdentifeid; i++){
+                    if(smallerWidgets[i] === ""){
+                        smallerWidgets[i] = ui.item[0].id;
+                        movedIsIdentifeid = true;
+                    }
+                }
+                return {smallerWidgets: smallerWidgets, biggerWidgets: biggerWidgets};
+            };
         }  
     };
 })
@@ -438,14 +489,16 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('d2CustomForm', function($compile, $parse, CustomFormService) {
+.directive('d2CustomForm', function($compile) {
     return{ 
         restrict: 'E',
-        link: function(scope, elm, attrs){            
-             scope.$watch('customForm', function(){
-                 elm.html(scope.customForm.htmlCode);
-                 $compile(elm.contents())(scope);
-             });
+        link: function(scope, elm, attrs){
+            scope.$watch('customForm', function(){
+                if(angular.isObject(scope.customForm)){
+                    elm.html(scope.customForm.htmlCode);
+                    $compile(elm.contents())(scope);
+                }                
+            });
         }
     };
 })

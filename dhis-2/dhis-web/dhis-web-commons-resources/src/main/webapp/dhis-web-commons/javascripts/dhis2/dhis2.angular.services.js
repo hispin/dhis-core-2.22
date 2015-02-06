@@ -14,10 +14,10 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             url = 'i18n/i18n_app_' + locale + '.properties';
         }
 
-        var tx = {};
+        var tx = {locale: locale};
 
         var promise = $http.get(url).then(function(response){
-            tx = {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
+            tx= {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
             return tx;
         }, function(){
             var dialogOptions = {
@@ -27,7 +27,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
             DialogService.showDialog({}, dialogOptions);
             var p = $http.get(defaultUrl).then(function(response){
-                tx = {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
+                tx= {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
                 return tx;
             });
             return p;
@@ -188,7 +188,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                 var inputRegex = /<input.*?\/>/g,
                     match,
-                    inputFields = [];                
+                    inputFields = [],
+                    hasEventDate = false;                
 
                 while (match = inputRegex.exec(htmlCode)) {                
                     inputFields.push(match[0]);
@@ -203,7 +204,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         attributes[this.nodeName] = this.value;                       
                     });
                     
-                    var fieldId = '', errorMessageId = '', newInputField, hasEventDate = false;     
+                    var fieldId = '', errorMessageId = '', newInputField;   
                     if(attributes.hasOwnProperty('id')){
                         
                         if(attributes['id'] === 'executionDate'){
@@ -332,6 +333,188 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 }
                 return {htmlCode: htmlCode, hasEventDate: hasEventDate};
             }
+            return null;
+        },
+        getForTrackedEntity: function(trackedEntity, target){
+            if(!trackedEntity ){
+                return null;
+            }
+
+            var htmlCode = trackedEntity.dataEntryForm ? trackedEntity.dataEntryForm.htmlCode : null;
+            if(htmlCode){                
+            
+                var trackedEntityFormAttributes = [];
+                angular.forEach(trackedEntity.attributes, function(att){                    
+                    trackedEntityFormAttributes[att.id] = att;
+                });
+
+                
+                var inputRegex = /<input.*?\/>/g, match, inputFields = [];
+                var hasProgramDate = false;
+                while (match = inputRegex.exec(htmlCode)) {                
+                    inputFields.push(match[0]);                    
+                }
+
+                for(var i=0; i<inputFields.length; i++){                    
+                    var inputField = inputFields[i];                    
+                    var inputElement = $.parseHTML( inputField );
+                    var attributes = {};
+                                       
+                    $(inputElement[0].attributes).each(function() {
+                        attributes[this.nodeName] = this.value;                       
+                    });
+                    
+                    var attId = '', newInputField, programId;     
+                    if(attributes.hasOwnProperty('attributeid')){
+                        attId = attributes['attributeid'];
+
+                        var fieldName = attId;                        
+                        var attMaxDate = trackedEntityFormAttributes[attId].allowFutureDate ? '' : 0;
+                        
+                        //check attribute type and generate corresponding angular input field
+                        if(trackedEntityFormAttributes[attId].valueType === "number"){
+                            newInputField = '<input type="text" ' +
+                                            ' name="' + fieldName + '"' +                          
+                                            ' element-id="' + i + '"' +
+                                            this.getAttributesAsString(attributes) +
+                                            ' d2-validation ' +
+                                            ' d2-number-validation ' +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
+                        }                                               
+                        else if(trackedEntityFormAttributes[attId].valueType === "optionSet"){
+                            var optionSetId = trackedEntityFormAttributes[attId].optionSet.id;                            
+                            newInputField = '<input type="text" ' +
+                                            ' name="' + fieldName + '"' +
+                                            ' element-id="' + i + '"' +
+                                            this.getAttributesAsString(attributes) +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' d2-validation ' +
+                                            ' d2-typeahead-validation ' +
+                                            ' class="typeahead" ' +
+                                            ' placeholder="&#xf0d7;&nbsp;&nbsp;" ' +
+                                            ' typeahead-editable="false" ' + 
+                                            ' typeahead="option.name as option.name for option in optionSets.' + optionSetId + '.options | filter:$viewValue | limitTo:50"' +
+                                            ' typeahead-open-on-focus ' +
+                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';                            
+                        }
+                        else if(trackedEntityFormAttributes[attId].valueType === "bool"){
+                            newInputField = '<select ' +
+                                            ' name="' + fieldName + '"' +
+                                            ' element-id="' + i + '"' +
+                                            this.getAttributesAsString(attributes) +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ' +
+                                            ' <option value="">{{\'please_select\'| translate}}</option>' +
+                                            ' <option value="false">{{\'no\'| translate}}</option>' + 
+                                            ' <option value="true">{{\'yes\'| translate}}</option>' +
+                                            '</select> ';
+                        }
+                        else if(trackedEntityFormAttributes[attId].valueType === "date"){
+                            newInputField = '<input type="text" ' +
+                                            ' name="' + fieldName + '"' +
+                                            ' element-id="' + i + '"' +
+                                            this.getAttributesAsString(attributes) +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' max-date="' + attMaxDate + '"' + '\'' +
+                                            ' d2-date' +
+                                            ' d2-validation ' +
+                                            ' blur-or-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
+                        }
+                        else if(trackedEntityFormAttributes[attId].valueType === "trueOnly"){
+                            newInputField = '<input type="checkbox" ' +  
+                                            ' name="' + fieldName + '"' +
+                                            ' element-id="' + i + '"' +
+                                            this.getAttributesAsString(attributes) + 
+                                            ' d2-validation ' +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
+                        }
+                        else if(trackedEntityFormAttributes[attId].valueType === "email"){
+                            newInputField = '<input type="email" ' +    
+                                            ' name="' + fieldName + '"' +                                              
+                                            ' element-id="' + i + '"' +
+                                            this.getAttributesAsString(attributes) +
+                                            ' d2-validation ' +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
+                        }
+                        else {
+                            newInputField = '<input type="text" ' +
+                                            ' name="' + fieldName + '"' +
+                                            ' element-id="' + i + '"' +                                             
+                                            this.getAttributesAsString(attributes) +
+                                            ' d2-validation ' +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' ng-model="selectedTei.' + attId + '" ' +
+                                            ' ng-disabled="editingDisabled"' +
+                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-required=" ' + trackedEntityFormAttributes[attId].mandatory + '"> ';
+                        } 
+                    }                        
+                 
+                    if(attributes.hasOwnProperty('programid')){
+                        hasProgramDate = true;
+                        programId = attributes['programid'];                        
+                        if(programId === 'enrollmentDate'){
+                            fieldName = 'dateOfEnrollment';
+                            var enMaxDate = trackedEntity.selectEnrollmentDatesInFuture ? '' : 0;
+                            newInputField = '<input type="text" ' +
+                                            ' name="' + fieldName + '"' +
+                                            ' element-id="' + i + '"' +       
+                                            this.getAttributesAsString(attributes) +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
+                                            ' ng-model="selectedEnrollment.dateOfEnrollment" ' +
+                                            ' ng-disabled="\'' + target + '\' === \'PROFILE\'"' +
+                                            ' d2-date' +
+                                            ' max-date="' + enMaxDate + '"' +
+                                            ' ng-required="true"> ';
+                        }
+                        if(programId === 'dateOfIncident' && trackedEntity.displayIncidentDate){
+                            fieldName = 'dateOfIncident';
+                            var inMaxDate = trackedEntity.selectIncidentDatesInFuture ? '' : 0;                            
+                            newInputField = '<input type="text" ' +
+                                            ' name="' + fieldName + '"' +
+                                            ' element-id="' + i + '"' +    
+                                            this.getAttributesAsString(attributes) +
+                                            ' d2-focus-next-on-enter' + 
+                                            ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
+                                            ' ng-model="selectedEnrollment.dateOfIncident" ' +
+                                            ' ng-disabled="\'' + target + '\' === \'PROFILE\'"' +
+                                            ' d2-date ' +
+                                            ' max-date="' + inMaxDate + '"> ';
+                        }
+                    }
+                    
+                    newInputField = //'<ng-form name="innerForm">' + 
+                                        newInputField + 
+                                        ' <span ng-show="outerForm.submitted && outerForm.'+ fieldName +'.$invalid" class="required">{{\'required\' | translate}}</span> ';
+                                    //'</ng-form>';
+                                    
+                    htmlCode = htmlCode.replace(inputField, newInputField);                    
+                }                
+                return {htmlCode: htmlCode, hasProgramDate: hasProgramDate};
+            }            
             return null;
         },
         getAttributesAsString: function(attributes){

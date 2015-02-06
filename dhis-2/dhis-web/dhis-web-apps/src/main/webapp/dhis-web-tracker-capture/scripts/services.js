@@ -429,6 +429,10 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     });
 
                     angular.forEach(tei.attributes, function(att){
+                        if(attsById[att.attribute]){
+                            att.displayName = attsById[att.attribute].name;
+                        }
+                        
                         if(att.type === 'trueOnly'){
                             if(att.value === 'true'){
                                 att.value = true;

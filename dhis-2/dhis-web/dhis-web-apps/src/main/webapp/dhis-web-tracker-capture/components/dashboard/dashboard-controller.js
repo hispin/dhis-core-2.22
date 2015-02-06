@@ -13,25 +13,37 @@ trackerCapture.controller('DashboardController',
                 ProgramFactory,
                 CurrentSelection) {
     //dashboard items   
-    $rootScope.biggerDashboardWidgets = [];
-    $rootScope.smallerDashboardWidgets = [];
-    $rootScope.enrollmentWidget = {title: 'enrollment', view: "components/enrollment/enrollment.html", show: true, expand: true};
-    $rootScope.dataentryWidget = {title: 'dataentry', view: "components/dataentry/dataentry.html", show: true, expand: true};
-    $rootScope.reportWidget = {title: 'report', view: "components/report/tei-report.html", show: true, expand: true};
-    $rootScope.selectedWidget = {title: 'current_selections', view: "components/selected/selected.html", show: false, expand: true};
-    $rootScope.profileWidget = {title: 'profile', view: "components/profile/profile.html", show: true, expand: true};
-    $rootScope.relationshipWidget = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true};
-    $rootScope.notesWidget = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true};    
-   
-    $rootScope.biggerDashboardWidgets.push($rootScope.enrollmentWidget);
-    $rootScope.biggerDashboardWidgets.push($rootScope.dataentryWidget);
-    $rootScope.biggerDashboardWidgets.push($rootScope.reportWidget);
-    $rootScope.smallerDashboardWidgets.push($rootScope.selectedWidget);
-    $rootScope.smallerDashboardWidgets.push($rootScope.profileWidget);
-    $rootScope.smallerDashboardWidgets.push($rootScope.relationshipWidget);
-    $rootScope.smallerDashboardWidgets.push($rootScope.notesWidget);
+    $rootScope.dashboardWidgets = [];
+    $rootScope.dashboardStatus = [];
+    $scope.widgetsChanged = [];
     
-    //selections  
+    $rootScope.enrollmentWidget = {title: 'enrollment', view: "components/enrollment/enrollment.html", show: true, expand: true, parent: 'biggerWidget', order: 0};
+    $rootScope.dataentryWidget = {title: 'dataentry', view: "components/dataentry/dataentry.html", show: true, expand: true, parent: 'biggerWidget', order: 1};
+    $rootScope.reportWidget = {title: 'report', view: "components/report/tei-report.html", show: true, expand: true, parent: 'biggerWidget', order: 2};
+    $rootScope.selectedWidget = {title: 'current_selections', view: "components/selected/selected.html", show: false, expand: true, parent: 'smallerWidget', order: 0};
+    $rootScope.profileWidget = {title: 'profile', view: "components/profile/profile.html", show: true, expand: true, parent: 'smallerWidget', order: 1};
+    $rootScope.relationshipWidget = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true, parent: 'smallerWidget', order: 2};
+    $rootScope.notesWidget = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true, parent: 'smallerWidget', order: 3};  
+    
+    $scope.dashboardStatus['enrollment'] = {title: 'enrollment', view: "components/enrollment/enrollment.html", show: true, expand: true, parent: 'biggerWidget', order: 0};
+    $scope.dashboardStatus['dataentry'] = {title: 'dataentry', view: "components/dataentry/dataentry.html", show: true, expand: true, parent: 'biggerWidget', order: 1};
+    $scope.dashboardStatus['report'] = {title: 'report', view: "components/report/tei-report.html", show: true, expand: true, parent: 'biggerWidget', order: 2};
+    $scope.dashboardStatus['current_selections'] = {title: 'current_selections', view: "components/selected/selected.html", show: false, expand: true, parent: 'smallerWidget', order: 0};
+    $scope.dashboardStatus['profile'] = {title: 'profile', view: "components/profile/profile.html", show: true, expand: true, parent: 'smallerWidget', order: 1};
+    $scope.dashboardStatus['relationships'] = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true, parent: 'smallerWidget', order: 2};
+    $scope.dashboardStatus['notes'] = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true, parent: 'smallerWidget', order: 3};  
+    
+    $scope.dashboardWidgetsOrder = {biggerWidgets: ['enrollment', 'dataentry', 'report'], smallerWidgets: ['current_selections', 'profile', 'relationships', 'notes']};
+    
+    $rootScope.dashboardWidgets.push($rootScope.enrollmentWidget);
+    $rootScope.dashboardWidgets.push($rootScope.dataentryWidget);
+    $rootScope.dashboardWidgets.push($rootScope.reportWidget);
+    $rootScope.dashboardWidgets.push($rootScope.selectedWidget);
+    $rootScope.dashboardWidgets.push($rootScope.profileWidget);
+    $rootScope.dashboardWidgets.push($rootScope.relationshipWidget);
+    $rootScope.dashboardWidgets.push($rootScope.notesWidget);
+    
+    //selections
     $scope.selectedTeiId = ($location.search()).tei; 
     $scope.selectedProgramId = ($location.search()).program; 
     $scope.selectedOrgUnit = storage.get('SELECTED_OU');
@@ -103,6 +115,32 @@ trackerCapture.controller('DashboardController',
         $scope.broadCastSelections(); 
     }); 
     
+    //watch for widget sorting    
+    $scope.$watch('widgetsOrder', function() {        
+        if(angular.isObject($scope.widgetsOrder)){
+            $scope.orderChanged = false;
+            for(var i=0; i<$scope.widgetsOrder.smallerWidgets.length; i++){
+                if($scope.widgetsOrder.smallerWidgets.length === $scope.dashboardWidgetsOrder.smallerWidgets.length && $scope.widgetsOrder.smallerWidgets[i] !== $scope.dashboardWidgetsOrder.smallerWidgets[i]){
+                    $scope.orderChanged = true;
+                }
+                
+                if($scope.widgetsOrder.smallerWidgets.length !== $scope.dashboardWidgetsOrder.smallerWidgets.length){
+                    $scope.orderChanged = true;
+                }
+            }
+            
+            for(var i=0; i<$scope.widgetsOrder.biggerWidgets.length; i++){
+                if($scope.widgetsOrder.biggerWidgets.length === $scope.dashboardWidgetsOrder.biggerWidgets.length && $scope.widgetsOrder.biggerWidgets[i] !== $scope.dashboardWidgetsOrder.biggerWidgets[i]){
+                    $scope.orderChanged = true;
+                }
+                
+                if($scope.widgetsOrder.biggerWidgets.length !== $scope.dashboardWidgetsOrder.biggerWidgets.length){
+                    $scope.orderChanged = true;
+                }
+            }
+        }
+    });
+    
     $scope.broadCastSelections = function(){
         
         var selections = CurrentSelection.get();
@@ -127,10 +165,34 @@ trackerCapture.controller('DashboardController',
     
     $scope.removeWidget = function(widget){        
         widget.show = false;
+        trackWidgetStatusChange(widget);
     };
     
     $scope.expandCollapse = function(widget){
         widget.expand = !widget.expand;
+        trackWidgetStatusChange(widget);
+    };
+    
+    var trackWidgetStatusChange = function(widget){
+        var w = $scope.dashboardStatus[widget.title];
+        
+        if(!angular.equals(w, widget) && $scope.widgetsChanged.indexOf(widget.title) === -1){
+            $scope.widgetsChanged.push(widget.title);
+        }        
+        if(angular.equals(w, widget) && $scope.widgetsChanged.indexOf(widget.title) !== -1){
+            var idx = $scope.widgetsChanged.indexOf(widget.title);
+            $scope.widgetsChanged.splice(idx,1);
+        }
+    };
+    
+    $scope.saveDashboardLayout = function(){
+        if($scope.widgetsChanged.length > 0){
+            console.log('dashboardWidgets:  ', $rootScope.dashboardWidgets);
+        }
+        
+        if($scope.orderChanged){
+            console.log('order:  ', $scope.widgetsOrder);
+        }
     };
     
     $scope.showHideWidgets = function(){
@@ -141,5 +203,9 @@ trackerCapture.controller('DashboardController',
 
         modalInstance.result.then(function () {
         });
+    };
+    
+    $rootScope.closeOpenWidget = function(widget){
+        trackWidgetStatusChange(widget);
     };
 });

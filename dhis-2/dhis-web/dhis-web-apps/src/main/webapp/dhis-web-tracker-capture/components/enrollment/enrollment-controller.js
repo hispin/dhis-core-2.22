@@ -239,7 +239,7 @@ trackerCapture.controller('EnrollmentController',
         var formEmpty = true;
         for(var k in $scope.attributesById){
             if( $scope.selectedTei[k] ){
-                tei.attributes.push({attribute: $scope.attributesById[k].id, value: $scope.selectedTei[k], type: $scope.attributesById[k].valueType});
+                tei.attributes.push({attribute: $scope.attributesById[k].id, value: $scope.selectedTei[k], displayName: $scope.attributesById[k].name, type: $scope.attributesById[k].valueType});
                 formEmpty = false;
             }
         }
