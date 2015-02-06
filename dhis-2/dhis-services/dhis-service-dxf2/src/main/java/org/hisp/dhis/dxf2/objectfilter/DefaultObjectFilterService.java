@@ -29,8 +29,6 @@ package org.hisp.dhis.dxf2.objectfilter;
  */
 
 import com.google.common.collect.Lists;
-
-import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.dxf2.objectfilter.ops.Op;
 import org.hisp.dhis.dxf2.objectfilter.ops.OpStatus;
 import org.hisp.dhis.dxf2.parser.ParserService;
@@ -56,7 +54,7 @@ public class DefaultObjectFilterService implements ObjectFilterService
     private SchemaService schemaService;
 
     @Override
-    public <T extends IdentifiableObject> List<T> filter( List<T> objects, List<String> filters )
+    public <T> List<T> filter( List<T> objects, List<String> filters )
     {
         if ( objects == null || objects.isEmpty() )
         {
@@ -78,7 +76,7 @@ public class DefaultObjectFilterService implements ObjectFilterService
         return list;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private <T> boolean evaluateWithFilters( T object, Filters filters )
     {
         if ( object == null )
@@ -180,7 +178,7 @@ public class DefaultObjectFilterService implements ObjectFilterService
             for ( Op op : ops )
             {
                 OpStatus status = op.evaluate( value );
-                
+
                 if ( OpStatus.INCLUDE.equals( status ) )
                 {
                     include = true;

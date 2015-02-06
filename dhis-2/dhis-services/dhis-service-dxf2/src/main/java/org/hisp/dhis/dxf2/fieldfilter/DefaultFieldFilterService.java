@@ -32,7 +32,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.PresetProvider;
 import org.hisp.dhis.dxf2.parser.ParserService;
 import org.hisp.dhis.node.AbstractNode;
@@ -48,6 +47,7 @@ import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.system.util.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
@@ -114,7 +114,7 @@ public class DefaultFieldFilterService implements FieldFilterService
     }
 
     @Override
-    public <T extends IdentifiableObject> CollectionNode filter( Class<?> klass, List<T> objects, List<String> fieldList )
+    public CollectionNode filter( Class<?> klass, List<?> objects, List<String> fieldList )
     {
         String fields = fieldList == null ? "" : Joiner.on( "," ).join( fieldList );
 
@@ -131,7 +131,7 @@ public class DefaultFieldFilterService implements FieldFilterService
         FieldMap fieldMap = new FieldMap();
         Schema schema = schemaService.getDynamicSchema( objects.get( 0 ).getClass() );
 
-        if ( fields == null )
+        if ( StringUtils.isEmpty( fields ) )
         {
             for ( Property property : schema.getProperties() )
             {

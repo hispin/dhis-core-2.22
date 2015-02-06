@@ -28,8 +28,6 @@ package org.hisp.dhis.dxf2.objectfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.IdentifiableObject;
-
 import java.util.List;
 
 /**
@@ -45,5 +43,5 @@ public interface ObjectFilterService
      * @param filters Filter string
      * @return Filtered object list
      */
-    <T extends IdentifiableObject> List<T> filter( List<T> objects, List<String> filters );
+    <T extends Object> List<T> filter( List<T> objects, List<String> filters );
 }
