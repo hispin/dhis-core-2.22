@@ -29,6 +29,7 @@ package org.hisp.dhis.dd.action.categorycombo;
  */
 
 import com.opensymphony.xwork2.Action;
+
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -71,6 +72,13 @@ public class UpdateDataElementCategoryComboAction
         this.name = name;
     }
 
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+    
     private boolean skipTotal;
 
     public void setSkipTotal( boolean skipTotal )
@@ -96,6 +104,7 @@ public class UpdateDataElementCategoryComboAction
             .getDataElementCategoryCombo( id );
 
         categoryCombo.setName( name );
+        categoryCombo.setCode( code );
         categoryCombo.setSkipTotal( skipTotal );
 
         List<DataElementCategory> updatedCategories = new ArrayList<>();

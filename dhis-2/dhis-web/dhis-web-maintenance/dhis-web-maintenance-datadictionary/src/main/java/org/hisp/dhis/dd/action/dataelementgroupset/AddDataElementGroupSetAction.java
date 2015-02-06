@@ -29,6 +29,7 @@ package org.hisp.dhis.dd.action.dataelementgroupset;
  */
 
 import com.opensymphony.xwork2.Action;
+
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -73,6 +74,13 @@ public class AddDataElementGroupSetAction
         this.description = description;
     }
 
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+    
     private boolean compulsory;
 
     public void setCompulsory( boolean compulsory )
@@ -104,6 +112,12 @@ public class AddDataElementGroupSetAction
     {
         DataElementGroupSet dataElementGroupSet = new DataElementGroupSet( name, description, compulsory, dataDimension );
 
+        dataElementGroupSet.setName( name );
+        dataElementGroupSet.setDescription( description );
+        dataElementGroupSet.setCode( code );
+        dataElementGroupSet.setCompulsory( compulsory );
+        dataElementGroupSet.setDataDimension( dataDimension );
+        
         List<DataElementGroup> dataElementGroups = new ArrayList<>();
 
         for ( String id : degSelected )

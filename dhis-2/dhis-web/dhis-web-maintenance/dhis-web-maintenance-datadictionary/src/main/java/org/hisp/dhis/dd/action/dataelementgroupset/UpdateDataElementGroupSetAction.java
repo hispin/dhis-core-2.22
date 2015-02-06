@@ -29,6 +29,7 @@ package org.hisp.dhis.dd.action.dataelementgroupset;
  */
 
 import com.opensymphony.xwork2.Action;
+
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementService;
 
@@ -77,6 +78,13 @@ public class UpdateDataElementGroupSetAction
         this.description = description;
     }
 
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+    
     private boolean compulsory;
 
     public void setCompulsory( boolean compulsory )
@@ -110,6 +118,7 @@ public class UpdateDataElementGroupSetAction
 
         dataElementGroupSet.setName( name );
         dataElementGroupSet.setDescription( description );
+        dataElementGroupSet.setCode( code );
         dataElementGroupSet.setCompulsory( compulsory );
         dataElementGroupSet.setDataDimension( dataDimension );
 

@@ -49,6 +49,11 @@
 	</tr>
 	
 	<tr>
+		<td><label for="code">$i18n.getString( "code" )</label></td>
+		<td><input type="text" id="code" name="code" value="$!encoder.htmlEncode( $organisationUnitGroupSet.code )"></td>
+	</tr>
+	
+	<tr>
 		<td><label for="compulsory">$i18n.getString( "compulsory" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td>
 			<select id="compulsory" name="compulsory" onchange="changeCompulsory( this.value )">
