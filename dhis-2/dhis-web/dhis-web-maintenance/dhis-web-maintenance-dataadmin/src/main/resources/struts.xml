@@ -713,5 +713,9 @@
 		<param name="anyAuthorities">F_OPTIONSET_MANAGEMENT</param>
 	</action>
 	
+    <action name="getOption" class="org.hisp.dhis.dataadmin.action.option.GetOptionAction">
+      <result name="success" type="velocity-json">/dhis-web-commons/ajax/jsonOption.vm</result>
+    </action>
+    
   </package>
 </struts>

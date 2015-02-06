@@ -44,3 +44,17 @@ function updateOption() {
   setFieldValue('option', '');
   $("#option").focus();
 }
+
+// -----------------------------------------------------------------------------
+// Add options constant
+// -----------------------------------------------------------------------------
+
+function showOptionDetails( context ) {
+  jQuery.get('getOption.action', { optionId: context.id },
+    function( json ) {
+      setInnerHTML('nameField', json.option.name);
+      setInnerHTML('codeField', json.option.code);
+      setInnerHTML('idField', json.option.uid);
+      showDetails();
+    });
+}
