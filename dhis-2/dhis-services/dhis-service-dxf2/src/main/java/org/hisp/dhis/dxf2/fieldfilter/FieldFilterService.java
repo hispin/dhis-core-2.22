@@ -28,7 +28,6 @@ package org.hisp.dhis.dxf2.fieldfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.node.types.CollectionNode;
 
 import java.util.List;
@@ -45,5 +44,5 @@ public interface FieldFilterService
      * @param fieldList Field filter
      * @return List of objects with only wanted properties
      */
-    <T extends IdentifiableObject> CollectionNode filter( Class<?> klass, List<T> objects, List<String> fieldList );
+    CollectionNode filter( Class<?> klass, List<?> objects, List<String> fieldList );
 }
