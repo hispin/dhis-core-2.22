@@ -1,4 +1,4 @@
-<div class="container-1-1">    
+<!--<div class="container-1-1">    
     <div class="col-sm-12 vertical-spacing  not-printable">
 
         <button type="button" class="btn btn-default" ng-click="back()">{{'back'| translate}}</button>
@@ -12,6 +12,9 @@
         </select>
 
         <div class="pull-right">
+            <span ng-if="widgetsChanged.length > 0">
+                <span class="trimmed-alert alert-danger">{{'dashboard_layout_not_saved'| translate}}</span><button type="button" class="btn btn-primary small-horizonal-spacing" ng-click="saveDashboardLayout()">{{'save'| translate}}</button>
+            </span>
             <div class="btn-group" dropdown is-open="status.isopen">
                 <button type="button" class="btn btn-default dropdown-toggle">
                     <i class="fa fa-cog" title="{{'settings'| translate}}"></i>
@@ -28,14 +31,14 @@
     <div class="col-sm-12">
         <div class="row">            
             <div class="col-sm-6 col-md-8">
-                <div sortable class="row connectedSortable empty-dashboard-container">
-                    <div ng-repeat="biggerWidget in biggerDashboardWidgets">
-                        <div class="col-sm-12" ng-show="biggerWidget.show" ng-include="biggerWidget.view" ng-class="{true: 'not-printable'} [biggerWidget.title != 'report']"></div>
+                <div d2-sortable class="row connectedSortable empty-dashboard-container">
+                    <div class="col-sm-12" ng-repeat="biggerWidget in biggerDashboardWidgets">
+                        <div ng-show="biggerWidget.show" ng-include="biggerWidget.view" ng-class="{true: 'not-printable'} [biggerWidget.title != 'report']"></div>
                     </div>                                       
                 </div>                
             </div>            
             <div class="col-sm-6 col-md-4">
-                <div sortable class="row connectedSortable empty-dashboard-container">                   
+                <div d2-sortable class="row connectedSortable empty-dashboard-container">                   
                     <div class="col-sm-12" ng-repeat="smallerWidget in smallerDashboardWidgets">                        
                         <div ng-show="smallerWidget.show" ng-include="smallerWidget.view" ng-class="{true: 'not-printable'} [smallerWidget.title != 'report']"></div>
                     </div>                   
@@ -43,6 +46,63 @@
             </div>
         </div>
     </div>    
-</div>
+</div>-->
 
+<div class="container-1-1">    
+    <div class="col-sm-12 vertical-spacing  not-printable">
+
+        <button type="button" class="btn btn-default" ng-click="back()">{{'back'| translate}}</button>
+        
+        <select ng-model="selectedProgram"
+                class="form-control-program"
+                ng-options="program as program.name for program in programs | orderBy: 'name'" 
+                ng-disabled="programs.length < 1"
+                ng-change="broadCastSelections()">
+            <option value="">{{programs.length > 0 ? 'please_select_a_program' : 'no_program_exists' | translate}}</option>
+        </select>
+
+        <div class="pull-right">
+            <span ng-if="widgetsChanged.length > 0 || orderChanged">
+                <span class="trimmed-alert alert-danger">{{'dashboard_layout_not_saved'| translate}}</span><button type="button" class="btn btn-primary small-horizonal-spacing" ng-click="saveDashboardLayout()">{{'save'| translate}}</button>
+            </span>            
+            <div class="btn-group" dropdown is-open="status.isopen">
+                <button type="button" class="btn btn-default dropdown-toggle">
+                    <i class="fa fa-cog" title="{{'settings'| translate}}"></i>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li><a href ng-click="showHideWidgets()">{{'show_hide_widgets'| translate}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class='separator'></div>
+    
+    <div class="col-sm-12">
+        <div class="row">            
+            <div class="col-sm-6 col-md-8">
+                <div id="biggerWidget"
+                    d2-sortable  
+                    bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
+                    smaller-widgets={{ dashboardWidgets  | filter: {parent: 'smallerWidget'} }} 
+                    class="row connectedSortable empty-dashboard-container">
+                    <div class="col-sm-12" id={{biggerWidget.title}} ng-repeat="biggerWidget in dashboardWidgets | orderBy:'order' | filter: {parent: 'biggerWidget'}"">
+                        <div ng-show="biggerWidget.show" ng-include="biggerWidget.view" ng-class="{true: 'not-printable'} [biggerWidget.title != 'report']"></div>
+                    </div>                                       
+                </div>                
+            </div>            
+            <div class="col-sm-6 col-md-4">
+                <div id="smallerWidget" 
+                    d2-sortable 
+                    bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
+                    smaller-widgets={{ dashboardWidgets  | filter: {parent: 'smallerWidget'} }} 
+                    class="row connectedSortable empty-dashboard-container">                   
+                    <div class="col-sm-12" id={{smallerWidget.title}} ng-repeat="smallerWidget in dashboardWidgets  | orderBy:'order' | filter: {parent: 'smallerWidget'}">                        
+                        <div ng-show="smallerWidget.show" ng-include="smallerWidget.view" ng-class="{true: 'not-printable'} [smallerWidget.title != 'report']"></div>
+                    </div>                   
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
 

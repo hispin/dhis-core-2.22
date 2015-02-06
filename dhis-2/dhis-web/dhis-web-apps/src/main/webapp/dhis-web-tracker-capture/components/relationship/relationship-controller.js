@@ -24,7 +24,8 @@ trackerCapture.controller('RelationshipController',
         $scope.relatedTeis = [];
         $scope.selections = CurrentSelection.get();
         $scope.optionSets = $scope.selections.optionSets;
-        $scope.selectedTei = angular.copy($scope.selections.tei);        
+        $scope.selectedTei = angular.copy($scope.selections.tei);
+        
         $scope.trackedEntity = $scope.selections.te;
         $scope.selectedEnrollment = $scope.selections.selectedEnrollment;
         $scope.selectedProgram = $scope.selections.pr;
@@ -133,13 +134,13 @@ trackerCapture.controller('RelationshipController',
     $scope.programs = selections.prs;
 
     $scope.relationshipSources = ['search_from_existing','register_new'];
-    $scope.selectedRelationshipSource = {};   
+    $scope.selectedRelationshipSource = {};
     $scope.relationship = {};
     
     //Selection
     $scope.selectedOrgUnit = storage.get('SELECTED_OU');
     $scope.optionSets = selections.optionSets;
-    $scope.selectedTeiForDisplay = angular.copy($scope.selectedTei);       
+    $scope.selectedTeiForDisplay = angular.copy($scope.selectedTei);
     
     if(angular.isObject($scope.programs) && $scope.programs.length === 1){
         $scope.selectedProgramForRelative = $scope.programs[0];        
@@ -351,7 +352,7 @@ trackerCapture.controller('RelationshipController',
             }           
            
             if(column.type === 'date'){
-                 $scope.filterText[column.id]= {start: '', end: ''};
+                $scope.filterText[column.id]= {start: '', end: ''};
             }
         });        
         return columns;        
