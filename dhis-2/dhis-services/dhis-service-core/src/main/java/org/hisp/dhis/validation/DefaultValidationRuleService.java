@@ -442,7 +442,7 @@ public class DefaultValidationRuleService
                     {
                         for ( User user : userGroup.getMembers() )
                         {
-                            if ( !ruleGroup.isAlertByOrgUnits() || canUserAccessSource( user, result.getSource() ) )
+                            if ( !ruleGroup.isAlertByOrgUnits() || canUserAccessSource( user, result.getOrgUnit() ) )
                             {
                                 SortedSet<ValidationResult> resultSet = userResults.get ( user );
 
@@ -511,7 +511,7 @@ public class DefaultValidationRuleService
         {
             ValidationRule rule = result.getValidationRule();
             
-            builder.append( result.getSource().getName() ).append( " " ).append( result.getPeriod().getName() ).
+            builder.append( result.getOrgUnit().getName() ).append( " " ).append( result.getPeriod().getName() ).
             append( result.getAttributeOptionCombo().isDefault() ? "" : " " + result.getAttributeOptionCombo().getName() ).append( LN ).
             append( rule.getName() ).append( " (" ).append( rule.getImportance() ).append( ") " ).append( LN ).
             append( rule.getLeftSide().getDescription() ).append( ": " ).append( result.getLeftsideValue() ).append( LN ).

@@ -45,7 +45,7 @@ public class ValidationResult
      */
     private static final long serialVersionUID = -4118317796752962296L;
 
-    private OrganisationUnit source;
+    private OrganisationUnit orgUnit;
 
     private Period period;
 
@@ -65,11 +65,11 @@ public class ValidationResult
     {
     }
 
-    public ValidationResult( Period period, OrganisationUnit source,
+    public ValidationResult( Period period, OrganisationUnit orgUnit,
         DataElementCategoryOptionCombo attributeOptionCombo, ValidationRule validationRule,
         Double leftsideValue, Double rightsideValue )
     {
-        this.source = source;
+        this.orgUnit = orgUnit;
         this.period = period;
         this.attributeOptionCombo = attributeOptionCombo;
         this.validationRule = validationRule;
@@ -89,7 +89,7 @@ public class ValidationResult
         int result = 1;
 
         result = PRIME * result + ((period == null) ? 0 : period.hashCode());
-        result = PRIME * result + ((source == null) ? 0 : source.hashCode());
+        result = PRIME * result + ((orgUnit == null) ? 0 : orgUnit.hashCode());
         result = PRIME * result + ((validationRule == null) ? 0 : validationRule.hashCode());
 
         return result;
@@ -144,14 +144,14 @@ public class ValidationResult
             return false;
         }
 
-        if ( source == null )
+        if ( orgUnit == null )
         {
-            if ( other.source != null )
+            if ( other.orgUnit != null )
             {
                 return false;
             }
         }
-        else if ( !source.equals( other.source ) )
+        else if ( !orgUnit.equals( other.orgUnit ) )
         {
             return false;
         }
@@ -211,7 +211,7 @@ public class ValidationResult
     @Override
     public int compareTo( ValidationResult other )
     {
-    	int result = source.getName().compareTo( other.source.getName() );
+    	int result = orgUnit.getName().compareTo( other.orgUnit.getName() );
     	
     	if ( result != 0 )
     	{
@@ -292,7 +292,7 @@ public class ValidationResult
     @Override
     public String toString()
     {
-        return "[Source: " + source + 
+        return "[Org unit: " + orgUnit + 
             ", period: " + period + 
             ", validation rule: " + validationRule + 
             ", left side value: " + leftsideValue + 
@@ -303,14 +303,14 @@ public class ValidationResult
     // Set and get methods
     // -------------------------------------------------------------------------     
 
-    public OrganisationUnit getSource()
+    public OrganisationUnit getOrgUnit()
     {
-        return source;
+        return orgUnit;
     }
 
-    public void setSource( OrganisationUnit source )
+    public void setOrgUnit( OrganisationUnit orgUnit )
     {
-        this.source = source;
+        this.orgUnit = orgUnit;
     }
 
     public Period getPeriod()
