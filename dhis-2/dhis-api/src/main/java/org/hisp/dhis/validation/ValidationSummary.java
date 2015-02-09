@@ -47,7 +47,7 @@ public class ValidationSummary
 {
     private List<ValidationResult> validationRuleViolations = new ArrayList<>();
     
-    private List<DataElementOperand> outlierViolations = new ArrayList<>();
+    private List<DataElementOperand> commentRequiredViolations = new ArrayList<DataElementOperand>();
     
     public ValidationSummary()
     {
@@ -67,15 +67,15 @@ public class ValidationSummary
     }
 
     @JsonProperty
-    @JacksonXmlElementWrapper( localName = "outlierViolations", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "outlierViolation", namespace = DxfNamespaces.DXF_2_0 )
-    public List<DataElementOperand> getOutlierViolations()
+    @JacksonXmlElementWrapper( localName = "commentRequiredViolations", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "commentRequiredViolation", namespace = DxfNamespaces.DXF_2_0 )
+    public List<DataElementOperand> getCommentRequiredViolations()
     {
-        return outlierViolations;
+        return commentRequiredViolations;
     }
 
-    public void setOutlierViolations( List<DataElementOperand> outlierViolations )
+    public void setCommentRequiredViolations( List<DataElementOperand> commentRequiredViolations )
     {
-        this.outlierViolations = outlierViolations;
+        this.commentRequiredViolations = commentRequiredViolations;
     }
 }
