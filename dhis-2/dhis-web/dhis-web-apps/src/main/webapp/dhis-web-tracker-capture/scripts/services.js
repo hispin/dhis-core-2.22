@@ -48,6 +48,40 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
 })
 
+/* Service to fetch/store dasboard widgets */
+.service('DashboardLayoutService', function($http) {
+    
+    var w = {};
+    w.enrollmentWidget = {title: 'enrollment', view: "components/enrollment/enrollment.html", show: true, expand: true, parent: 'biggerWidget', order: 0};
+    w.dataentryWidget = {title: 'dataentry', view: "components/dataentry/dataentry.html", show: true, expand: true, parent: 'biggerWidget', order: 1};
+    w.reportWidget = {title: 'report', view: "components/report/tei-report.html", show: true, expand: true, parent: 'biggerWidget', order: 2};
+    w.selectedWidget = {title: 'current_selections', view: "components/selected/selected.html", show: false, expand: true, parent: 'smallerWidget', order: 0};
+    w.profileWidget = {title: 'profile', view: "components/profile/profile.html", show: true, expand: true, parent: 'smallerWidget', order: 1};
+    w.relationshipWidget = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true, parent: 'smallerWidget', order: 2};
+    w.notesWidget = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true, parent: 'smallerWidget', order: 3};            
+    var defaultLayout = new Object();
+    defaultLayout['DEFAULT'] = {widgets: w, program: 'DEFAULT'};
+    
+    return {
+        saveLayout: function(dashboardLayout){
+            var layout = JSON.stringify(dashboardLayout);
+            var promise = $http.post( '../api/userSettings/dhis2-tracker-dashboard?value=' + layout, '', {headers: {'Content-Type': 'text/plain;charset=utf-8'}}).then(function(response){
+                return response.data;
+            });
+            return promise;            
+        },
+        get: function(){            
+            var promise = $http.get(  '../api/userSettings/dhis2-tracker-dashboard' ).then(function(response){                
+                return response.data === "" ? defaultLayout: response.data;
+            }, function(){
+                console.log('has failed....');
+                return defaultLayout;
+            });
+            return promise;
+        }
+    };
+})
+
 /* Factory to fetch optionSets */
 .factory('OptionSetService', function($q, $rootScope, TCStorageService) { 
     return {
@@ -684,25 +718,36 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return def.promise;            
         }, 
         getByProgram: function(program){
-            
-            var attributes = [];
-            var programAttributes = [];
-
             var def = $q.defer();
-            this.getAll().then(function(atts){
-                angular.forEach(atts, function(attribute){
-                    attributes[attribute.id] = attribute;
-                });
+            this.getAll().then(function(atts){                
+                
+                if(program && program.id){
+                    var attributes = [];
+                    var programAttributes = [];
+                    angular.forEach(atts, function(attribute){
+                        attributes[attribute.id] = attribute;
+                    });
 
-                angular.forEach(program.programTrackedEntityAttributes, function(pAttribute){
-                    var att = attributes[pAttribute.trackedEntityAttribute.id];
-                    att.mandatory = pAttribute.mandatory;
-                    if(pAttribute.displayInList){
-                        att.displayInListNoProgram = true;
-                    }                    
-                    programAttributes.push(att);                
-                });
-                def.resolve(programAttributes);
+                    angular.forEach(program.programTrackedEntityAttributes, function(pAttribute){
+                        var att = attributes[pAttribute.trackedEntityAttribute.id];
+                        att.mandatory = pAttribute.mandatory;
+                        if(pAttribute.displayInList){
+                            att.displayInListNoProgram = true;
+                        }                    
+                        programAttributes.push(att);                
+                    });
+                    
+                    def.resolve(programAttributes);
+                }                
+                else{
+                    var attributes = [];
+                    angular.forEach(atts, function(attribute){
+                        if (attribute.displayInListNoProgram) {
+                            attributes.push(attribute);
+                        }
+                    });     
+                    def.resolve(attributes);
+                }                
             });
             return def.promise;    
         },
@@ -1018,6 +1063,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.currentSelection = '';
     this.relationshipInfo = '';
     this.optionSets = null;
+    this.attributesById = null;
     
     this.set = function(currentSelection){  
         this.currentSelection = currentSelection;        
@@ -1039,6 +1085,13 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.getOptionSets = function(){
         return this.optionSets;
     };    
+    
+    this.setAttributesById = function(attributesById){
+        this.attributesById = attributesById;
+    };
+    this.getAttributesById = function(){
+        return this.attributesById;
+    };  
 })
 
 .service('TEIGridService', function(OrgUnitService, OptionSetService, DateUtils, $translate, AttributesFactory){

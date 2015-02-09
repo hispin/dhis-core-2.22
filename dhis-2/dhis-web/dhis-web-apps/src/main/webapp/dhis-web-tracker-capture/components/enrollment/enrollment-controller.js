@@ -17,14 +17,16 @@ trackerCapture.controller('EnrollmentController',
                 DialogService) {
     
     $scope.today = DateUtils.getToday();
-    $scope.selectedOrgUnit = storage.get('SELECTED_OU');
-    
-    $scope.attributes = [];
-    $scope.attributesById = [];
+    $scope.selectedOrgUnit = storage.get('SELECTED_OU');    
+      
     AttributesFactory.getAll().then(function(atts){
+        $scope.attributes = [];  
+        $scope.attributesById = [];
         angular.forEach(atts, function(att){
             $scope.attributesById[att.id] = att;
         });
+        
+        CurrentSelection.setAttributesById($scope.attributesById);
     });
     
     //listen for the selected items
@@ -233,7 +235,8 @@ trackerCapture.controller('EnrollmentController',
         }, 200);
     };    
     
-    var getProcessedForm = function(){
+    var getProcessedForm = function(){        
+        $scope.attributesById = CurrentSelection.getAttributesById();
         var tei = angular.copy(selections.tei);
         tei.attributes = [];
         var formEmpty = true;
@@ -249,7 +252,7 @@ trackerCapture.controller('EnrollmentController',
     
     var processSelectedTei = function(){
         $scope.selectedTei = null;
-        $scope.selectedTei = angular.copy(selections.tei); 
+        $scope.selectedTei = angular.copy(selections.tei);
         angular.forEach($scope.selectedTei.attributes, function(att){
             $scope.selectedTei[att.attribute] = att.value;
         });
