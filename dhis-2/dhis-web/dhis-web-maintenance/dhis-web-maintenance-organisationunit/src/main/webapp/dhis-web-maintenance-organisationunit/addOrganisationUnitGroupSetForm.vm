@@ -40,13 +40,13 @@
 	</tr>
 	
 	<tr>
-		<td><label for="description" style="width:100%">$i18n.getString( "description" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
-		<td><input type="text" id="description" name="description"></td>
+		<td><label for="code">$i18n.getString( "code" )</label></td>
+		<td><input type="text" id="code" name="code" ></td>
 	</tr>
 	
 	<tr>
-		<td><label for="code">$i18n.getString( "code" )</label></td>
-		<td><input type="text" id="code" name="code" ></td>
+		<td><label for="description" style="width:100%">$i18n.getString( "description" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+		<td><textarea id="description" name="description"></textarea></td>
 	</tr>
 	
 	<tr>
