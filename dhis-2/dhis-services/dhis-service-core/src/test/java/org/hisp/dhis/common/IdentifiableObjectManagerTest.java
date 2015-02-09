@@ -37,7 +37,6 @@ import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
-import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
@@ -47,6 +46,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -541,5 +541,32 @@ public class IdentifiableObjectManagerTest
 
         assertEquals( 2, identifiableObjectManager.getCountByLastUpdated( DataElement.class, new GregorianCalendar( 2012, 5, 1 ).getTime() ) );
         assertEquals( 2, identifiableObjectManager.getByLastUpdated( DataElement.class, new GregorianCalendar( 2012, 5, 1 ).getTime() ).size() );
+    }
+
+    @Test
+    public void getByUidTest()
+    {
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+        DataElement dataElementC = createDataElement( 'C' );
+        DataElement dataElementD = createDataElement( 'D' );
+
+        identifiableObjectManager.save( dataElementA );
+        identifiableObjectManager.save( dataElementB );
+        identifiableObjectManager.save( dataElementC );
+        identifiableObjectManager.save( dataElementD );
+
+        List<DataElement> ab = identifiableObjectManager.getByUid( DataElement.class, Arrays.asList( dataElementA.getUid(), dataElementB.getUid() ) );
+        List<DataElement> cd = identifiableObjectManager.getByUid( DataElement.class, Arrays.asList( dataElementC.getUid(), dataElementD.getUid() ) );
+
+        assertTrue( ab.contains( dataElementA ) );
+        assertTrue( ab.contains( dataElementB ) );
+        assertFalse( ab.contains( dataElementC ) );
+        assertFalse( ab.contains( dataElementD ) );
+
+        assertFalse( cd.contains( dataElementA ) );
+        assertFalse( cd.contains( dataElementB ) );
+        assertTrue( cd.contains( dataElementC ) );
+        assertTrue( cd.contains( dataElementD ) );
     }
 }
