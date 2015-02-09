@@ -152,7 +152,7 @@ public class ExportValidationResultAction
 
         for ( ValidationResult validationResult : results )
         {
-            OrganisationUnit unit = validationResult.getSource();
+            OrganisationUnit unit = validationResult.getOrgUnit();
             Period period = validationResult.getPeriod();
 
             grid.addRow();
