@@ -178,7 +178,13 @@ public class DefaultCaseAggregationConditionService
     {
         return i18n( i18nService, aggregationConditionStore.getByName( name ) );
     }
-    
+
+    @Override
+    public CaseAggregationCondition getCaseAggregationConditionByUid( String uid )
+    {
+        return i18n( i18nService, aggregationConditionStore.getByUid( uid ) );
+    }
+
     @Override
     public void updateCaseAggregationCondition( CaseAggregationCondition caseAggregationCondition )
     {
