@@ -168,7 +168,7 @@ function downloadMetaData()
     promise = promise.then( getMetaProgramValidations );
     promise = promise.then( getProgramValidations );
     promise = promise.then( getMetaTrackedEntityForms );
-    promise = promise.then( getTrackedEntityForms );        
+    promise = promise.then( getTrackedEntityForms );
     promise.done(function() {
         
         //Enable ou selection after meta-data has downloaded
