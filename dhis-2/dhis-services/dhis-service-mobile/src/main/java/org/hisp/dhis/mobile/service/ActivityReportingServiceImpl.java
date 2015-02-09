@@ -107,7 +107,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService;
-import org.hisp.dhis.trackedentity.TrackedEntityInstanceStore;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
@@ -1465,13 +1464,6 @@ public class ActivityReportingServiceImpl
         this.programStageService = programStageService;
     }
 
-    private TrackedEntityInstanceStore instanceStore;
-
-    public void setInstanceStore( TrackedEntityInstanceStore instanceStore )
-    {
-        this.instanceStore = instanceStore;
-    }
-
     private I18nFormat format;
 
     public void setFormat( I18nFormat format )
@@ -1480,9 +1472,8 @@ public class ActivityReportingServiceImpl
     }
 
     @Override
-    public Patient savePatient( org.hisp.dhis.api.mobile.model.LWUITmodel.Patient patient, int orgUnitId,
-        String programIdText )
-    throws NotAllowedException
+    public Patient savePatient( org.hisp.dhis.api.mobile.model.LWUITmodel.Patient patient, int orgUnitId, String programIdText )
+        throws NotAllowedException
     {
         TrackedEntityInstance patientWeb = new TrackedEntityInstance();
         patientWeb.setOrganisationUnit( organisationUnitService.getOrganisationUnit( orgUnitId ) );
@@ -1508,7 +1499,6 @@ public class ActivityReportingServiceImpl
                 patientAttributeValue.setAttribute( patientAttribute );
                 patientAttributeValue.setValue( paAtt.getValue() );
                 patientAttributeValues.add( patientAttributeValue );
-
             }
         }
 
@@ -1517,6 +1507,7 @@ public class ActivityReportingServiceImpl
         TrackedEntityInstance newTrackedEntityInstance = entityInstanceService
             .getTrackedEntityInstance( this.patientId );
         String errorMsg = null;
+        
         try
         {
             for ( org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramInstance mobileProgramInstance : patient
@@ -2566,9 +2557,7 @@ public class ActivityReportingServiceImpl
 
         try
         {
-
-            for ( org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramInstance mobileProgramInstance : patient
-                .getEnrollmentPrograms() )
+            for ( org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramInstance mobileProgramInstance : patient.getEnrollmentPrograms() )
             {
                 Date incidentDate = PeriodUtil.stringToDate( mobileProgramInstance.getDateOfIncident() );
                 enrollProgram( patientId + "-" + mobileProgramInstance.getProgramId(),
