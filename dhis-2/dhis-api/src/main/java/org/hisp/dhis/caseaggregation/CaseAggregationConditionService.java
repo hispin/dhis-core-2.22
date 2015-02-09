@@ -92,6 +92,16 @@ public interface CaseAggregationConditionService
      *         match.
      */
     CaseAggregationCondition getCaseAggregationCondition( String name );
+
+    /**
+     * Returns a {@link CaseAggregationCondition} with a given name.
+     *
+     * @param id the uid of the CaseAggregationCondition to return.
+     *
+     * @return the CaseAggregationCondition with the given uid, or null if no
+     *         match.
+     */
+    CaseAggregationCondition getCaseAggregationConditionByUid( String id );
     
     /**
      * Returns all {@link CaseAggregationCondition}
@@ -274,4 +284,5 @@ public interface CaseAggregationConditionService
      */
     List<Grid> getAggregateValue( Collection<CaseAggregationCondition> caseAggregationConditions, Collection<Integer> orgunitIds,
         Collection<Period> periods, I18nFormat format, I18n i18n );
+
 }
