@@ -31,71 +31,82 @@ package org.hisp.dhis.dataelement;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.hisp.dhis.common.IdentifiableProperty;
 
 /**
- * CategoryComboMap is used to lookup categoryoptioncombos
- * by identifiers of the categoryoptions. Identifiers must be trimmed
- * of whitespace and be concatenated in the order given by the categories
- * property in object of this class.
+ * CategoryComboMap is used to lookup categoryoptioncombos by identifiers of the
+ * categoryoptions. Identifiers must be trimmed of whitespace and be
+ * concatenated in the order given by the categories property in object of this
+ * class.
  * 
  * @author bobj
  */
-public class CategoryComboMap {
-    
+public class CategoryComboMap
+{
     private final IdentifiableProperty idScheme;
 
     private final List<DataElementCategory> categories;
 
     private DataElementCategoryCombo categoryCombo;
 
-    private HashMap ccMap;
+    private Map<String, DataElementCategoryOptionCombo> ccMap;
 
-    public List<DataElementCategory> getCategories() {
+    public List<DataElementCategory> getCategories()
+    {
         return categories;
     }
 
-    public IdentifiableProperty getIdScheme() {
+    public IdentifiableProperty getIdScheme()
+    {
         return idScheme;
     }
 
-    public DataElementCategoryCombo getCategoryCombo() {
+    public DataElementCategoryCombo getCategoryCombo()
+    {
         return categoryCombo;
     }
 
-    public class CategoryComboMapException extends Exception {
-      public CategoryComboMapException(String msg) { super (msg); } 
+    public class CategoryComboMapException
+        extends Exception
+    {
+        public CategoryComboMapException( String msg )
+        {
+            super( msg );
+        }
     }
 
-    public CategoryComboMap(DataElementCategoryCombo cc, IdentifiableProperty idScheme) 
-            throws CategoryComboMapException 
+    public CategoryComboMap( DataElementCategoryCombo cc, IdentifiableProperty idScheme )
+        throws CategoryComboMapException
     {
         this.categoryCombo = cc;
         this.idScheme = idScheme;
         ccMap = new HashMap<>();
 
         categories = categoryCombo.getCategories();
-        
+
         Collection<DataElementCategoryOptionCombo> optionCombos = categoryCombo.getOptionCombos();
 
-        for (DataElementCategoryOptionCombo optionCombo : optionCombos) 
+        for ( DataElementCategoryOptionCombo optionCombo : optionCombos )
         {
-   
-            Collection<DataElementCategoryOption> catopts = optionCombo.getCategoryOptions();
-            
-            String compositeIdentifier ="";
-            
-            for (DataElementCategory category : categories) 
+            String compositeIdentifier = "";
+
+            for ( DataElementCategory category : categories )
             {
-                DataElementCategoryOption catopt = category.getCategoryOption(optionCombo);
-                if (catopt == null) {
-                    throw new CategoryComboMapException(
-                            "No categoryOption in " + category.getName() + " matching " + optionCombo.getName());
-                }  else
+                DataElementCategoryOption catopt = category.getCategoryOption( optionCombo );
+                
+                if ( catopt == null )
+                {
+                    throw new CategoryComboMapException( "No categoryOption in " + category.getName() + " matching "
+                        + optionCombo.getName() );
+                }
+                else
                 {
                     String identifier;
-                    
-                    switch (idScheme) {
+
+                    switch ( idScheme )
+                    {
                         case UID:
                             identifier = catopt.getUid().trim();
                             break;
@@ -106,31 +117,32 @@ public class CategoryComboMap {
                             identifier = catopt.getName().trim();
                             break;
                         default:
-                            throw new CategoryComboMapException("Unsupported ID Scheme: " + idScheme.toString());
+                            throw new CategoryComboMapException( "Unsupported ID Scheme: " + idScheme.toString() );
                     }
-                    
-                    if (identifier == null) 
-                        throw new CategoryComboMapException(
-                            "No " + idScheme.toString() + " identifier for CategoryOption: " + catopt.getName());
-                    
+
+                    if ( identifier == null )
+                        throw new CategoryComboMapException( "No " + idScheme.toString()
+                            + " identifier for CategoryOption: " + catopt.getName() );
+
                     compositeIdentifier += "\"" + identifier + "\"";
                 }
             }
-            this.ccMap.put(compositeIdentifier, optionCombo);
+            
+            this.ccMap.put( compositeIdentifier, optionCombo );
         }
     }
-    
+
     /**
      * Look up the categoryoptioncombo based on a composite identifier
      * 
      * @param compositeIdentifier
      * @return
      */
-    public DataElementCategoryOptionCombo getCategoryOptionCombo(String compositeIdentifier)
+    public DataElementCategoryOptionCombo getCategoryOptionCombo( String compositeIdentifier )
     {
-        return (DataElementCategoryOptionCombo) ccMap.get(compositeIdentifier);
+        return (DataElementCategoryOptionCombo) ccMap.get( compositeIdentifier );
     }
-    
+
     /**
      * Create a composite identifier from a list of identifiers
      * 
@@ -139,13 +151,15 @@ public class CategoryComboMap {
      * @param identifiers
      * @return
      */
-    public String getKey (List<String> identifiers)
+    public String getKey( List<String> identifiers )
     {
         String key = "";
-        for (String identifier : identifiers)
+        
+        for ( String identifier : identifiers )
         {
-           key += "\"" + identifier + "\"";
+            key += "\"" + identifier + "\"";
         }
+        
         return key;
     }
 }
