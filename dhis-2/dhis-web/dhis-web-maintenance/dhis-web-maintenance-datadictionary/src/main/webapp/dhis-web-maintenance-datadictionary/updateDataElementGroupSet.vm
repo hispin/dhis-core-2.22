@@ -29,15 +29,15 @@
 	</tr>
 
 	<tr>
-		<td><label for="description">$i18n.getString( "description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-		<td><input type="text" id="description" name="description" value="#if( $dataElementGroupSet.description)$encoder.htmlEncode( $dataElementGroupSet.description )#end"></td>
-	</tr>
-
-	<tr>
 		<td><label for="code">$i18n.getString( "code" )</label></td>
 		<td><input type="text" id="code" name="code" value="$!encoder.htmlEncode( $dataElementGroupSet.code )"></td>
 	</tr>	
 	 
+	<tr>
+		<td><label for="description">$i18n.getString( "description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+		<td><textarea id="description" name="description">$!encoder.htmlEncode( $!dataElementGroupSet.description )</textarea></td>
+	</tr>
+
 	<tr>
 		<td><label for="compulsory">$i18n.getString( "compulsory" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td>
