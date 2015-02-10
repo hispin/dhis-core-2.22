@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.ComplexNode;
 import org.hisp.dhis.node.types.RootNode;
@@ -86,10 +87,7 @@ public class IndexController
 
     private RootNode createRootNode()
     {
-        RootNode rootNode = new RootNode( "metadata" );
-        rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
-        rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
-
+        RootNode rootNode = NodeUtils.createMetadata();
         CollectionNode collectionNode = rootNode.addChild( new CollectionNode( "resources" ) );
 
         for ( Schema schema : schemaService.getSchemas() )

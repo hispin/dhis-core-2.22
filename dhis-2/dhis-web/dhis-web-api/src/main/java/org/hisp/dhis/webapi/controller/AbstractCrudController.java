@@ -34,7 +34,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.acl.AclService;
 import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.Pager;
@@ -50,9 +49,9 @@ import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.node.Node;
+import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.config.InclusionStrategy;
 import org.hisp.dhis.node.types.CollectionNode;
-import org.hisp.dhis.node.types.ComplexNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.node.types.SimpleNode;
 import org.hisp.dhis.schema.Property;
@@ -234,20 +233,12 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         linkService.generatePagerLinks( pager, getEntityClass() );
 
-        RootNode rootNode = new RootNode( "metadata" );
-        rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
-        rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
-
+        RootNode rootNode = NodeUtils.createMetadata();
         rootNode.getConfig().setInclusionStrategy( getInclusionStrategy( rpParameters.get( "inclusionStrategy" ) ) );
 
         if ( pager != null )
         {
-            ComplexNode pagerNode = rootNode.addChild( new ComplexNode( "pager" ) );
-            pagerNode.addChild( new SimpleNode( "page", pager.getPage() ) );
-            pagerNode.addChild( new SimpleNode( "pageCount", pager.getPageCount() ) );
-            pagerNode.addChild( new SimpleNode( "total", pager.getTotal() ) );
-            pagerNode.addChild( new SimpleNode( "nextPage", pager.getNextPage() ) );
-            pagerNode.addChild( new SimpleNode( "prevPage", pager.getPrevPage() ) );
+            rootNode.addChild( NodeUtils.createPager( pager ) );
         }
 
         rootNode.addChild( fieldFilterService.filter( getEntityClass(), entityList, fields ) );
@@ -370,21 +361,14 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( options.isTrue( "useWrapper" ) || entities.size() > 1 )
         {
-            RootNode rootNode = new RootNode( "metadata" );
-            rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
-            rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
-            rootNode.addChild( collectionNode );
-
+            RootNode rootNode = NodeUtils.createMetadata( collectionNode );
             rootNode.getConfig().setInclusionStrategy( getInclusionStrategy( parameters.get( "inclusionStrategy" ) ) );
 
             return rootNode;
         }
         else
         {
-            RootNode rootNode = new RootNode( collectionNode.getChildren().get( 0 ) );
-            rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
-            rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
-
+            RootNode rootNode = NodeUtils.createRootNode( collectionNode.getChildren().get( 0 ) );
             rootNode.getConfig().setInclusionStrategy( getInclusionStrategy( parameters.get( "inclusionStrategy" ) ) );
 
             return rootNode;
