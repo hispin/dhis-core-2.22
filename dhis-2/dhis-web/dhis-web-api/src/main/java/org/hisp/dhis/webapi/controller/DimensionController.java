@@ -38,6 +38,7 @@ import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.node.AbstractNode;
 import org.hisp.dhis.node.Node;
+import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -109,9 +110,7 @@ public class DimensionController
         items = objectFilterService.filter( items, filters );
         Collections.sort( items, IdentifiableObjectNameComparator.INSTANCE );
 
-        RootNode rootNode = new RootNode( "metadata" );
-        rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
-        rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
+        RootNode rootNode = NodeUtils.createMetadata();
 
         CollectionNode collectionNode = rootNode.addChild( fieldFilterService.filter( getEntityClass(), items, fields ) );
         collectionNode.setName( "items" );
