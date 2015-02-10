@@ -1738,7 +1738,7 @@ public class ActivityReportingServiceImpl
             else
             {
                 TrackedEntityAttribute at = attributeService.getTrackedEntityAttributeByName( split[0] );
-                QueryItem queryItem = new QueryItem( at, at.isNumericType(), null );
+                QueryItem queryItem = new QueryItem( at, at.getValueType(), null );
                 QueryOperator operator = QueryOperator.fromString( split[1] );
                 queryItem.getFilters().add( new QueryFilter( operator, split[2] ) );
                 param.getFilters().add( queryItem );

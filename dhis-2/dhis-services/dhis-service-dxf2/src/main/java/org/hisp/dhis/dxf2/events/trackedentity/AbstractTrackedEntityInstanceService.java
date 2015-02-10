@@ -353,7 +353,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
 
-        QueryItem queryItem = new QueryItem( attribute, QueryOperator.EQ, value, attribute.isNumericType(), null );
+        QueryItem queryItem = new QueryItem( attribute, QueryOperator.EQ, value, attribute.getValueType(), null );
         params.addAttribute( queryItem );
 
         if ( attribute.getOrgunitScope() )
