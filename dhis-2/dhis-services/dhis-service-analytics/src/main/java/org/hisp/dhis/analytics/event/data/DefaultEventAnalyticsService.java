@@ -649,14 +649,14 @@ public class DefaultEventAnalyticsService
 
         if ( de != null ) //TODO check if part of program
         {
-            return new QueryItem( de, de.isNumericType(), de.hasOptionSet() ? de.getOptionSet().getUid() : null );
+            return new QueryItem( de, de.getType(), de.hasOptionSet() ? de.getOptionSet().getUid() : null );
         }
 
         TrackedEntityAttribute at = attributeService.getTrackedEntityAttribute( item );
 
         if ( at != null )
         {
-            return new QueryItem( at, at.isNumericType(), at.hasOptionSet() ? at.getOptionSet().getUid() : null );
+            return new QueryItem( at, at.getValueType(), at.hasOptionSet() ? at.getOptionSet().getUid() : null );
         }
 
         throw new IllegalQueryException( "Item identifier does not reference any item part of the program: " + item );
