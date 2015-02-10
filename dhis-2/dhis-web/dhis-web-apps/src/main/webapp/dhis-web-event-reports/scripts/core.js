@@ -974,7 +974,7 @@ Ext.onReady( function() {
 					return name;
 				}
 
-				name += metaData.optionNames[id] || metaData.names[id];
+				name += metaData.booleanNames[id] || metaData.optionNames[id] || metaData.names[id] || id;
 
 				return name;
 			};
@@ -1255,12 +1255,13 @@ Ext.onReady( function() {
                     optionMap = {};
 
                     if (header) {
-                        for (var j = 0, id; j < header.ids.length; j++) {
+                        for (var j = 0, id, name; j < header.ids.length; j++) {
                             id = header.ids[j];
+                            name = xResponse.metaData.booleanNames[id] || xResponse.metaData.optionNames[id] || xResponse.metaData.names[id] || id;
 // TODO, items used?
                             dim.items.push({
                                 id: id,
-                                name: xResponse.metaData.optionNames[id] || xResponse.metaData.names[id] || id
+                                name: name
                             });
                         }
                     }
@@ -1750,7 +1751,11 @@ Ext.onReady( function() {
                     meta = ['ou', 'pe'],
                     ouHierarchy,
                     names,
-					headers;
+					headers,
+                    booleanNameMap = {
+                        'true': ER.i18n.yes || 'Yes',
+                        'false': ER.i18n.no || 'No'
+                    };
 
 				response = Ext.clone(response);
 				headers = response.headers;
@@ -1759,6 +1764,7 @@ Ext.onReady( function() {
                 names[emptyId] = emptyId;
 
                 response.metaData.optionNames = {};
+                response.metaData.booleanNames = {};
 				response.nameHeaderMap = {};
 				response.idValueMap = {};
 
@@ -1799,8 +1805,8 @@ Ext.onReady( function() {
                         else {
 							var objects = [];
 
-                            for (var j = 0, id, fullId, name, isHierarchy; j < response.rows.length; j++) {
-                                id = response.rows[j][i] || emptyId;
+                            for (var k = 0, id, fullId, name, isHierarchy; k < response.rows.length; k++) {
+                                id = response.rows[k][i] || emptyId;
                                 fullId = header.name + id;
                                 isHierarchy = service.layout.isHierarchy(xLayout, response, id);
 
@@ -1813,12 +1819,20 @@ Ext.onReady( function() {
                                 names[fullId] = name;
 
                                 // update rows
-                                response.rows[j][i] = fullId;
+                                response.rows[k][i] = fullId;
 
                                 // update ou hierarchy
                                 if (isHierarchy) {
 									ouHierarchy[fullId] = ouHierarchy[id];
 								}
+
+                                // update boolean metadata
+                                if (header.type === 'java.lang.Boolean') {
+console.log(id, booleanNameMap[id]);
+console.log(fullId, booleanNameMap[id]);
+                                    response.metaData.booleanNames[id] = booleanNameMap[id];
+                                    response.metaData.booleanNames[fullId] = booleanNameMap[id];
+                                }
 
 								objects.push({
 									id: fullId,
@@ -1830,7 +1844,7 @@ Ext.onReady( function() {
                             if (!header.optionSet) {
                                 support.prototype.array.sort(objects, 'ASC', 'sortingId');
                             }
-                            
+
                             header.ids = Ext.Array.pluck(objects, 'id');
                         }
                     }
@@ -2359,7 +2373,7 @@ Ext.onReady( function() {
 
                             a.push(getEmptyNameTdConfig({
                                 cls: 'pivot-dim-label',
-                                htmlValue: (xRowAxis ? dimConf.objectNameMap[xLayout.rowObjectNames[j]].name : '') + (xColAxis && xRowAxis ? '&nbsp;/&nbsp;' : '') + (xColAxis ? dimConf.objectNameMap[xLayout.columnObjectNames[i]].name : '')
+                                htmlValue: (xRowAxis ? dimConf.objectNameMap[xLayout.rowObjectNames[j]].name : '') + (xColAxis && xRowAxis ? '&nbsp;//&nbsp;' : '') + (xColAxis ? dimConf.objectNameMap[xLayout.columnObjectNames[i]].name : '')
                             }));
                         }
 
@@ -2415,7 +2429,7 @@ Ext.onReady( function() {
 
 							// sortable column headers. last dim only.
 							if (i === xColAxis.dims - 1 && doSortableColumnHeaders()) {
-                                
+
 								//condoId = xColAxis.ids[j].split('-').join('');
 								condoId = xColAxis.ids[j];
 							}
@@ -2524,7 +2538,7 @@ Ext.onReady( function() {
                             }]);
                         }
                     }
-                    
+
 	//axisAllObjects = [ [ dim, dim ]
 	//				     [ dim, dim ]
 	//				     [ dim, dim ]

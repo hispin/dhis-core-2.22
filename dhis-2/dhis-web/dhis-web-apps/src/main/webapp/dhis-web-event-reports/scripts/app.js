@@ -395,7 +395,9 @@ Ext.onReady( function() {
 				return record;
             },
             setRecord: function(record) {
-                this.valueCmp.setValue(record.filter);
+				if (record.filter) {
+					this.valueCmp.setValue(record.filter.split(':')[1]);
+                }
             },
             initComponent: function() {
                 var container = this;
@@ -413,12 +415,12 @@ Ext.onReady( function() {
                     editable: false,
                     width: operatorCmpWidth + valueCmpWidth,
                     style: 'margin-bottom:0',
-                    value: 'false',
+                    value: 'true',
                     store: {
                         fields: ['id', 'name'],
                         data: [
-                            {id: 'true', name: 'Yes'},
-                            {id: 'false', name: 'No'}
+                            {id: 'true', name: ER.i18n.yes},
+                            {id: 'false', name: ER.i18n.no}
                         ]
                     }
                 });
@@ -3816,6 +3818,7 @@ Ext.onReady( function() {
 			index = index || dataElementSelected.items.items.length;
 
 			getUxType = function(element) {
+
 				if (Ext.isObject(element.optionSet) && Ext.isString(element.optionSet.id)) {
 					return 'Ext.ux.panel.OrganisationUnitGroupSetContainer';
 				}
@@ -3830,6 +3833,10 @@ Ext.onReady( function() {
 
 				if (element.type === 'date') {
 					return 'Ext.ux.panel.DataElementDateContainer';
+				}
+
+				if (element.type === 'bool' || element.type === 'trueOnly') {
+					return 'Ext.ux.panel.DataElementBooleanContainer';
 				}
 
 				return 'Ext.ux.panel.DataElementIntegerContainer';
@@ -3870,7 +3877,7 @@ Ext.onReady( function() {
                 fixedFilterElementIds = [],
                 aggWindow = ns.app.aggregateLayoutWindow,
                 queryWindow = ns.app.queryLayoutWindow,
-                includeKeys = ['int', 'number', 'boolean', 'bool'],
+                includeKeys = ['int', 'number', 'bool', 'boolean', 'trueOnly'],
                 ignoreKeys = ['pe', 'ou'],
                 recordMap = {
 					'pe': {id: 'pe', name: 'Periods'},
@@ -5737,7 +5744,7 @@ Ext.onReady( function() {
 			if (filters.length) {
 				view.filters = filters;
 			}
-
+console.log(view);
 			return view;
 		};
 
