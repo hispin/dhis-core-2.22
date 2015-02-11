@@ -156,7 +156,7 @@ public class ValidateAddUpdateSqlViewAction
 
             if ( !s.matches( REGEX_SELECT_QUERY ) || tmp.contains( INTO ) )
             {
-                message = i18n.getString( "sqlquery_is_invalid" ) + "<br/>" + i18n.getString( "sqlquery_is_welformed" );
+                message = i18n.getString( "sqlquery_is_invalid" ) + "<br/>" + i18n.getString( "sqlquery_invalid_note" );
 
                 return INPUT;
             }
