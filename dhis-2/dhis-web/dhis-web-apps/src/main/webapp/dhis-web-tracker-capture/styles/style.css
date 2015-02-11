@@ -813,6 +813,11 @@ a:active {
 	z-index: 2000; //has to be greater than bootsrap's modal z-index
 }
 
+//Necessary to override the .panel-group .panel { overflow: hidden; } in bootstrap.
+.panel-group .panel {
+    overflow: visible;
+}
+
 input.typeahead::-webkit-input-placeholder {
     font-family: fontAwesome;
     content: "\f0d7";
