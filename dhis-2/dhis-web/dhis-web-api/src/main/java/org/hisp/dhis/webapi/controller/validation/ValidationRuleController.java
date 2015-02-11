@@ -28,11 +28,21 @@ package org.hisp.dhis.webapi.controller.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.schema.descriptors.ValidationRuleSchemaDescriptor;
 import org.hisp.dhis.validation.ValidationRule;
+import org.hisp.dhis.validation.ValidationRuleService;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
+import org.hisp.dhis.webapi.webdomain.WebMetaData;
+import org.hisp.dhis.webapi.webdomain.WebOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -42,4 +52,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ValidationRuleController
     extends AbstractCrudController<ValidationRule>
 {
+    @Autowired
+    private DataSetService dataSetService;
+    
+    @Autowired
+    private ValidationRuleService validationRuleService;
+    
+    @Override
+    protected List<ValidationRule> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    {
+        if ( options.contains( "dataSet" ) )
+        {            
+            DataSet ds = dataSetService.getDataSet( options.get( "dataSet" ) );
+            
+            if ( ds == null )
+            {
+                return null;
+            }
+            
+            return Lists.newArrayList( validationRuleService.getValidationRulesByDataElements( ds.getDataElements() ) );
+        }
+        
+        return super.getEntityList( metaData, options, filters );
+    }
 }

@@ -284,7 +284,8 @@ public class DefaultValidationRuleService
         
         systemSettingManager.saveSystemSetting( SystemSettingManager.KEY_LAST_MONITORING_RUN, thisRun );
     }
-    
+
+    @Override
     public List<DataElementOperand> validateRequiredComments( DataSet dataSet, Period period, OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo )
     {
         List<DataElementOperand> violations = new ArrayList<>();
@@ -311,6 +312,29 @@ public class DefaultValidationRuleService
         return violations;
     }
 
+    @Override
+    public Collection<ValidationRule> getValidationTypeRulesForDataElements( Set<DataElement> dataElements )
+    {
+        Set<ValidationRule> rulesForDataElements = new HashSet<>();
+
+        for ( ValidationRule validationRule : getAllValidationRules() )
+        {
+            if ( validationRule.getRuleType().equals( ValidationRule.RULE_TYPE_VALIDATION ) )
+            {
+                Set<DataElement> validationRuleElements = new HashSet<>();
+                validationRuleElements.addAll( validationRule.getLeftSide().getDataElementsInExpression() );
+                validationRuleElements.addAll( validationRule.getRightSide().getDataElementsInExpression() );
+
+                if ( dataElements.containsAll( validationRuleElements ) )
+                {
+                    rulesForDataElements.add( validationRule );
+                }
+            }
+        }
+
+        return rulesForDataElements;
+    }
+    
     // -------------------------------------------------------------------------
     // Supportive methods - scheduled run
     // -------------------------------------------------------------------------
@@ -580,40 +604,9 @@ public class DefaultValidationRuleService
     }
     
     /**
-     * Returns all validation-type rules which have specified data elements
-     * assigned to them.
-     * 
-     * @param dataElements the data elements to look for
-     * @return all validation rules which have the data elements assigned.
-     */
-    private Collection<ValidationRule> getValidationTypeRulesForDataElements( Set<DataElement> dataElements )
-    {
-        Set<ValidationRule> rulesForDataElements = new HashSet<>();
-
-        Set<DataElement> validationRuleElements = new HashSet<>();
-
-        for ( ValidationRule validationRule : getAllValidationRules() )
-        {
-            if ( validationRule.getRuleType().equals( ValidationRule.RULE_TYPE_VALIDATION ) )
-            {
-                validationRuleElements.clear();
-                validationRuleElements.addAll( validationRule.getLeftSide().getDataElementsInExpression() );
-                validationRuleElements.addAll( validationRule.getRightSide().getDataElementsInExpression() );
-
-                if ( dataElements.containsAll( validationRuleElements ) )
-                {
-                    rulesForDataElements.add( validationRule );
-                }
-            }
-        }
-
-        return rulesForDataElements;
-    }
-    
-    /**
      * Formats and sets name on the period of each result.
      * 
-     * @param results the collecion of validation results.
+     * @param results the collection of validation results.
      * @param format the i18n format.
      */
     private void formatPeriods( Collection<ValidationResult> results, I18nFormat format )
