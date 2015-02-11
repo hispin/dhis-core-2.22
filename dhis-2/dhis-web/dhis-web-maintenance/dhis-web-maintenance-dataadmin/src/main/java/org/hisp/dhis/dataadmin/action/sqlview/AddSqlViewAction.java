@@ -76,6 +76,13 @@ public class AddSqlViewAction
     {
         this.sqlquery = sqlquery;
     }
+    
+    private boolean query;
+
+    public void setQuery( boolean query )
+    {
+        this.query = query;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -84,21 +91,12 @@ public class AddSqlViewAction
     @Override
     public String execute()
     {
-        if ( (name == null) || (name.trim().isEmpty()) )
-        {
-            return ERROR;
-        }
-
-        if ( (sqlquery == null) || (sqlquery.trim().isEmpty()) )
-        {
-            return ERROR;
-        }
-
         SqlView sqlView = new SqlView();
 
         sqlView.setName( reduceWhiteSpaces( name ) );
         sqlView.setDescription( reduceWhiteSpaces( description ) );
         sqlView.setSqlQuery( sqlViewService.makeUpForQueryStatement( sqlquery ) );
+        sqlView.setQuery( query );
 
         sqlViewService.saveSqlView( sqlView );
 

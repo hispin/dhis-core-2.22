@@ -31,6 +31,7 @@ package org.hisp.dhis.sqlview;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.system.grid.ListGrid;
@@ -163,14 +164,48 @@ public class DefaultSqlViewService
     }
 
     @Override
-    public Grid getSqlViewGrid( SqlView sqlView, Map<String, String> criteria )
+    public Grid getSqlViewGrid( SqlView sqlView, Map<String, String> criteria, Map<String, String> variables )
     {
         Grid grid = new ListGrid();
         grid.setTitle( sqlView.getName() );
 
-        sqlViewExpandStore.setUpDataSqlViewTable( grid, sqlView.getViewName(), criteria );
-
+        if ( sqlView.isQuery() )
+        {
+            final String sql = substituteSql( sqlView.getSqlQuery(), variables );
+            
+            sqlViewExpandStore.executeQuery( grid, sql );
+        }
+        else
+        {
+            sqlViewExpandStore.setUpDataSqlViewTable( grid, sqlView.getViewName(), criteria );
+        }
+        
         return grid;
+    }
+    
+    @Override
+    public String substituteSql( String sql, Map<String, String> variables )
+    {
+        String sqlQuery = sql;
+     
+        if ( variables != null )
+        {
+            for ( String key : variables.keySet() )
+            {
+                if ( key != null && StringUtils.isAlphanumericSpace( key ) )
+                {
+                    final String regex = "\\$\\{(" + key + ")\\}";
+                    final String var = variables.get( key );
+                    
+                    if ( var != null && StringUtils.isAlphanumericSpace( var ) )
+                    {
+                        sqlQuery = sqlQuery.replaceAll( regex, var );
+                    }
+                }
+            }
+        }
+        
+        return sqlQuery;
     }
 
     @Override
