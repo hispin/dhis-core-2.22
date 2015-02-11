@@ -28,19 +28,17 @@ package org.hisp.dhis.dataadmin.action.sqlview;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewService;
 
+import com.opensymphony.xwork2.Action;
+
 /**
  * @author Dang Duy Hieu
- * @version $Id AddSqlViewAction.java July 06, 2010$
  */
 public class AddSqlViewAction
     implements Action
 {
-    private static final String REGEX = "\\s+";
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -93,22 +91,13 @@ public class AddSqlViewAction
     {
         SqlView sqlView = new SqlView();
 
-        sqlView.setName( reduceWhiteSpaces( name ) );
-        sqlView.setDescription( reduceWhiteSpaces( description ) );
+        sqlView.setName( name );
+        sqlView.setDescription( description );
         sqlView.setSqlQuery( sqlquery );
         sqlView.setQuery( query );
 
         sqlViewService.saveSqlView( sqlView.cleanSqlQuery() );
 
         return SUCCESS;
-    }
-
-    // -------------------------------------------------------------------------
-    // Supporting methods
-    // -------------------------------------------------------------------------
-
-    private String reduceWhiteSpaces( String input )
-    {
-        return input.replaceAll( REGEX, " " ).trim();
     }
 }
