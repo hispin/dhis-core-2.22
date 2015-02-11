@@ -93,10 +93,10 @@ public class UpdateSqlViewAction
         SqlView sqlView = sqlViewService.getSqlView( id );
 
         sqlView.setDescription( description.replaceAll( "\\s+", " " ).trim() );
-        sqlView.setSqlQuery( sqlViewService.makeUpForQueryStatement( sqlquery ) );
+        sqlView.setSqlQuery( sqlquery );
         sqlView.setQuery( query );
 
-        sqlViewService.updateSqlView( sqlView );
+        sqlViewService.updateSqlView( sqlView.cleanSqlQuery() );
 
         return SUCCESS;
     }

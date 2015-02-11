@@ -154,8 +154,8 @@ public class SqlViewServiceTest
     {
         SqlView sqlViewA = createSqlView( 'A', SQL1 );
 
-        sqlViewA.setSqlQuery( sqlViewService.makeUpForQueryStatement( sqlViewA.getSqlQuery() ) );
-
+        sqlViewA.cleanSqlQuery();
+        
         int idA = sqlViewService.saveSqlView( sqlViewA );
 
         assertEquals( sqlViewService.getSqlView( "SqlViewA" ).getId(), idA );
