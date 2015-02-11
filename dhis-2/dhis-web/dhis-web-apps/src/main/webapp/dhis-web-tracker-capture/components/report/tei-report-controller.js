@@ -11,10 +11,12 @@ trackerCapture.controller('TeiReportController',
                 EnrollmentService,
                 DHIS2EventFactory) {  
     $scope.showProgramReportDetailsDiv = false;
-    $scope.programs = [];  
+    $scope.enrollmentsByProgram = [];
+    
+    /*$scope.programs = [];  
     $scope.programNames = [];  
     $scope.programStageNames = [];
-    $scope.enrollmentsByProgram = [];
+    
     ProgramFactory.getAll().then(function(programs){     
         $scope.programs = programs;
         angular.forEach($scope.programs, function(pr){
@@ -24,7 +26,7 @@ trackerCapture.controller('TeiReportController',
                 $scope.programStageNames[stage.id] = {id: stage.id, name: stage.name};
             });
         });
-    });
+    });*/
         
     $scope.$on('dashboardWidgets', function(event, args) {
         $scope.showProgramReportDetailsDiv = false;
@@ -34,6 +36,9 @@ trackerCapture.controller('TeiReportController',
         $scope.selectedEntity = selections.te;
         $scope.selectedProgram = selections.pr;
         $scope.optionSets = selections.optionSets;
+        $scope.programs = selections.prs;
+        $scope.programNames = selections.prNames;  
+        $scope.programStageNames = selections.prStNames;
     
         if($scope.selectedTei && $scope.selectedOrgUnit){            
             $scope.getEvents();
