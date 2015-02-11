@@ -129,6 +129,16 @@ public class SqlView
 
         return map;
     }
+    
+    public SqlView cleanSqlQuery()
+    {
+        sqlQuery = sqlQuery.
+            replaceAll( "\\s*;\\s+", ";" ).
+            replaceAll( ";+", ";" ).
+            replaceAll( "\\s+", " " ).trim();
+        
+        return this;
+    }
 
     // -------------------------------------------------------------------------
     // Getters and setters

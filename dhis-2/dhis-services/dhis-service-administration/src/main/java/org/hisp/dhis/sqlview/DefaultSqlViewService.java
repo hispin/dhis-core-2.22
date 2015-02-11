@@ -136,12 +136,6 @@ public class DefaultSqlViewService
     }
 
     @Override
-    public String makeUpForQueryStatement( String query )
-    {
-        return query.replaceAll( "\\s*;\\s+", ";" ).replaceAll( ";+", ";" ).replaceAll( "\\s+", " " ).trim();
-    }
-
-    @Override
     public int getSqlViewCountByName( String name )
     {
         return sqlViewStore.getCountLikeName( name );

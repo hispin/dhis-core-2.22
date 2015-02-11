@@ -67,8 +67,6 @@ public interface SqlViewService
     
     Collection<SqlView> getAllSqlViewsNoAcl();
 
-    String makeUpForQueryStatement( String query );
-
     int getSqlViewCountByName( String name );
     
     // -------------------------------------------------------------------------
