@@ -61,9 +61,8 @@ trackerCapture.controller('DataEntryController',
         
         $scope.selectedProgramWithStage = [];        
         if($scope.selectedOrgUnit && $scope.selectedProgram && $scope.selectedEntity && $scope.selectedEnrollment){
-            
-            ProgramStageFactory.getByProgram($scope.selectedProgram).then(function(stages){
-                
+
+            ProgramStageFactory.getByProgram($scope.selectedProgram).then(function(stages){                
                 angular.forEach(stages, function(stage){
                     if(stage.openAfterEnrollment){
                         $scope.currentStage = stage;

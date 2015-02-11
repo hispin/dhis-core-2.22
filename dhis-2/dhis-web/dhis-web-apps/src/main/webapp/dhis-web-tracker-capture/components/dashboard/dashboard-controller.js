@@ -118,11 +118,17 @@ trackerCapture.controller('DashboardController',
                         ProgramFactory.getAll().then(function(programs){
                             $scope.programs = [];
 
+                            $scope.programNames = [];  
+                            $scope.programStageNames = [];                            
                             //get programs valid for the selected ou and tei
                             angular.forEach(programs, function(program){
                                 if(program.organisationUnits.hasOwnProperty($scope.selectedOrgUnit.id) &&
                                    program.trackedEntity.id === $scope.selectedTei.trackedEntity){
                                     $scope.programs.push(program);
+                                    $scope.programNames[program.id] = {id: program.id, name: program.name};
+                                    angular.forEach(program.programStages, function(stage){                
+                                        $scope.programStageNames[stage.id] = {id: stage.id, name: stage.name};
+                                    });
                                 }
 
                                 if($scope.selectedProgramId && program.id === $scope.selectedProgramId || selectedEnrollment && selectedEnrollment.program === program.id){
@@ -133,7 +139,7 @@ trackerCapture.controller('DashboardController',
                             getDashboardLayout();                            
 
                             //broadcast selected items for dashboard controllers
-                            CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, enrollments: response.enrollments, selectedEnrollment: selectedEnrollment, optionSets: $scope.optionSets});
+                            CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: response.enrollments, selectedEnrollment: selectedEnrollment, optionSets: $scope.optionSets});
                             $scope.broadCastSelections();                        
                         });
                     });
@@ -192,7 +198,7 @@ trackerCapture.controller('DashboardController',
         $scope.trackedEntity = selections.te;
         $scope.optionSets = selections.optionSets;
         
-        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, enrollments: selections.enrollments, selectedEnrollment: null, optionSets: $scope.optionSets});
+        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: selections.enrollments, selectedEnrollment: null, optionSets: $scope.optionSets});
         $timeout(function() { 
             $rootScope.$broadcast('selectedItems', {programExists: $scope.programs.length > 0});            
         }, 100); 

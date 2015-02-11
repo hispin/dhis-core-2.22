@@ -24,7 +24,6 @@ trackerCapture.controller('ProfileController',
     //listen for the selected entity
     var selections = {};
     $scope.$on('dashboardWidgets', function(event, args) {
-        $scope.enrollmentEditing = args.enrollmentEditing;
         selections = CurrentSelection.get();
         $scope.selectedTei = angular.copy(selections.tei);
         $scope.trackedEntity = selections.te;
@@ -62,6 +61,7 @@ trackerCapture.controller('ProfileController',
     
     //listen for enrollment editing
     $scope.$on('enrollmentEditing', function(event, args) { 
+        console.log('the editing:  ', args.enrollmentEditing);
         $scope.enrollmentEditing = args.enrollmentEditing;
     });
     
