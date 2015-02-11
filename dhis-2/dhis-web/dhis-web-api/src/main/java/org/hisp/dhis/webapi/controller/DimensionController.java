@@ -28,10 +28,16 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionalObject;
-import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
@@ -53,12 +59,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Lists;
 
 @Controller
 @RequestMapping( value = DimensionController.RESOURCE_PATH )

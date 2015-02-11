@@ -31,6 +31,7 @@ package org.hisp.dhis.validation;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -107,6 +108,16 @@ public interface ValidationRuleService
      * @return a list of operands representing missing comments.
      */
     List<DataElementOperand> validateRequiredComments( DataSet dataSet, Period period, OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo );
+    
+
+    /**
+     * Returns all validation-type rules which have specified data elements
+     * assigned to them.
+     * 
+     * @param dataElements the data elements to look for.
+     * @return all validation rules which have the data elements assigned.
+     */
+    Collection<ValidationRule> getValidationTypeRulesForDataElements( Set<DataElement> dataElements );
     
     // -------------------------------------------------------------------------
     // ValidationRule
