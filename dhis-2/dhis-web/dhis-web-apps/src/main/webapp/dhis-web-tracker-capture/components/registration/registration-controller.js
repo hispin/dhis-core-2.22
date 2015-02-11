@@ -122,8 +122,8 @@ trackerCapture.controller('RegistrationController',
                     var enrollment = {trackedEntityInstance: teiId,
                                 program: $scope.selectedProgram.id,
                                 status: 'ACTIVE',
-                                dateOfEnrollment: DateUtils.formatFromUserToApi($scope.selectedEnrollment.dateOfEnrollment),
-                                dateOfIncident: $scope.selectedEnrollment.dateOfIncident === '' ? DateUtils.formatFromUserToApi($scope.selectedEnrollment.dateOfEnrollment) : DateUtils.formatFromUserToApi($scope.selectedEnrollment.dateOfIncident)
+                                dateOfEnrollment: $scope.selectedEnrollment.dateOfEnrollment,
+                                dateOfIncident: $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident
                             };                           
                     EnrollmentService.enroll(enrollment).then(function(data){
                         if(data.status !== 'SUCCESS'){
@@ -137,9 +137,12 @@ trackerCapture.controller('RegistrationController',
                         }
                         else{
                             enrollment.enrollment = data.reference;
-                            $scope.autoGenerateEvents(teiId,$scope.selectedProgram, $scope.selectedOrgUnit, enrollment);                          
+                            $scope.autoGenerateEvents(teiId,$scope.selectedProgram, $scope.selectedOrgUnit, enrollment, destination);                          
                         }
                     });
+                }
+                else{
+                    goToDashboard(destination, teiId);
                 }
             }
             else{
@@ -150,24 +153,7 @@ trackerCapture.controller('RegistrationController',
                     };
                 DialogService.showDialog({}, dialogOptions);
                 return;
-            }
-            
-            $timeout(function() { 
-                //reset form
-                $scope.selectedTei = {};
-                $scope.selectedEnrollment = {};
-                $scope.outerForm.submitted = false;
-
-                if(destination === 'DASHBOARD') {
-                    $location.path('/dashboard').search({tei: teiId,                                            
-                                            program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
-                }            
-                else if(destination === 'RELATIONSHIP' ){
-                    $scope.tei.trackedEntityInstance = teiId;
-                    $scope.broadCastSelections();
-                }
-            }, 100);
-            
+            }            
         });
     };
     
@@ -188,7 +174,7 @@ trackerCapture.controller('RegistrationController',
         }, 100);
     };
     
-    $scope.autoGenerateEvents = function(teiId, program, orgUnit, enrollment){            
+    $scope.autoGenerateEvents = function(teiId, program, orgUnit, enrollment, destination){            
             
         if(teiId && program && orgUnit && enrollment){            
             var dhis2Events = {events: []};
@@ -218,8 +204,27 @@ trackerCapture.controller('RegistrationController',
 
             if(dhis2Events.events.length > 0){
                 DHIS2EventFactory.create(dhis2Events).then(function(data){
+                    goToDashboard(destination, teiId);
                 });
+            }else{
+                goToDashboard(destination, teiId);
             }
+        }
+    };
+    
+    var goToDashboard = function(destination, teiId){
+        //reset form
+        $scope.selectedTei = {};
+        $scope.selectedEnrollment = {};
+        $scope.outerForm.submitted = false;
+
+        if(destination === 'DASHBOARD') {
+            $location.path('/dashboard').search({tei: teiId,                                            
+                                    program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
+        }            
+        else if(destination === 'RELATIONSHIP' ){
+            $scope.tei.trackedEntityInstance = teiId;
+            $scope.broadCastSelections();
         }
     };
     

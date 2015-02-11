@@ -334,41 +334,62 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Service to deal with enrollment */
-.service('EnrollmentService', function($http) {
+.service('EnrollmentService', function($http, DateUtils) {
     
+    var convertFromApiToUser = function(enrollment){
+        if(enrollment.enrollments){
+            angular.forEach(enrollment.enrollments, function(enrollment){
+                enrollment.dateOfIncident = DateUtils.formatFromApiToUser(enrollment.dateOfIncident);
+                enrollment.dateOfEnrollment = DateUtils.formatFromApiToUser(enrollment.dateOfEnrollment);                
+            });
+        }
+        else{
+            enrollment.dateOfIncident = DateUtils.formatFromApiToUser(enrollment.dateOfIncident);
+            enrollment.dateOfEnrollment = DateUtils.formatFromApiToUser(enrollment.dateOfEnrollment);
+        }
+        
+        return enrollment;
+    };
+    var convertFromUserToApi = function(enrollment){
+        enrollment.dateOfIncident = DateUtils.formatFromUserToApi(enrollment.dateOfIncident);
+        enrollment.dateOfEnrollment = DateUtils.formatFromUserToApi(enrollment.dateOfEnrollment);
+        return enrollment;
+    };
     return {        
         get: function( enrollmentUid ){
             var promise = $http.get(  '../api/enrollments/' + enrollmentUid ).then(function(response){
-                return response.data;
+                return convertFromApiToUser(response.data);
             });
             return promise;
         },
         getByEntity: function( entity ){
             var promise = $http.get(  '../api/enrollments?trackedEntityInstance=' + entity ).then(function(response){
-                return response.data;
+                return convertFromApiToUser(response.data);
             });
             return promise;
         },
         getByEntityAndProgram: function( entity, program ){
             var promise = $http.get(  '../api/enrollments?trackedEntityInstance=' + entity + '&program=' + program ).then(function(response){
-                return response.data;
+                return convertFromApiToUser(response.data);
             });
             return promise;
         },
         getByStartAndEndDate: function( program, orgUnit, ouMode, startDate, endDate ){
             var promise = $http.get(  '../api/enrollments.json?program=' + program + '&orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&startDate=' + startDate + '&endDate=' + endDate + '&paging=false').then(function(response){
-                return response.data;
+                return convertFromApiToUser(response.data);
             });
             return promise;
         },
         enroll: function( enrollment ){
-            var promise = $http.post(  '../api/enrollments', enrollment ).then(function(response){
+            var en = convertFromUserToApi(angular.copy(enrollment));
+            var promise = $http.post(  '../api/enrollments', en ).then(function(response){
                 return response.data;
             });
             return promise;
         },
         update: function( enrollment ){
-            var promise = $http.put( '../api/enrollments/' + enrollment.enrollment , enrollment).then(function(response){
+            var en = convertFromUserToApi(angular.copy(enrollment));
+            var promise = $http.put( '../api/enrollments/' + en.enrollment , en ).then(function(response){
                 return response.data;
             });
             return promise;
