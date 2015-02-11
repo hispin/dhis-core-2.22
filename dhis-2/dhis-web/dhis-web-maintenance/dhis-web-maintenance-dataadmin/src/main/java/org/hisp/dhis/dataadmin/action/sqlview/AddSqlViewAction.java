@@ -95,10 +95,10 @@ public class AddSqlViewAction
 
         sqlView.setName( reduceWhiteSpaces( name ) );
         sqlView.setDescription( reduceWhiteSpaces( description ) );
-        sqlView.setSqlQuery( sqlViewService.makeUpForQueryStatement( sqlquery ) );
+        sqlView.setSqlQuery( sqlquery );
         sqlView.setQuery( query );
 
-        sqlViewService.saveSqlView( sqlView );
+        sqlViewService.saveSqlView( sqlView.cleanSqlQuery() );
 
         return SUCCESS;
     }

@@ -148,11 +148,9 @@ public class ValidateAddUpdateSqlViewAction
 
         final String ignoredRegex = this.setUpIgnoredRegex();
 
-        sqlquery = sqlViewService.makeUpForQueryStatement( sqlquery );
-
         for ( String s : sqlquery.split( SEMICOLON ) )
         {
-            String tmp = new String( s.toLowerCase() );
+            String tmp = new String( s.toLowerCase() ).trim();
 
             if ( !s.matches( REGEX_SELECT_QUERY ) || tmp.contains( INTO ) )
             {
