@@ -1306,7 +1306,7 @@ Ext.onReady( function() {
                     }
                 }
 
-                // Re-layout
+                // re-layout
                 layout = api.layout.Layout(xLayout);
 
                 if (layout) {
@@ -1828,8 +1828,6 @@ Ext.onReady( function() {
 
                                 // update boolean metadata
                                 if (header.type === 'java.lang.Boolean') {
-console.log(id, booleanNameMap[id]);
-console.log(fullId, booleanNameMap[id]);
                                     response.metaData.booleanNames[id] = booleanNameMap[id];
                                     response.metaData.booleanNames[fullId] = booleanNameMap[id];
                                 }
