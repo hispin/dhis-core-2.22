@@ -5744,7 +5744,7 @@ Ext.onReady( function() {
 			if (filters.length) {
 				view.filters = filters;
 			}
-console.log(view);
+
 			return view;
 		};
 

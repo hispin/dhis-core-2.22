@@ -656,7 +656,7 @@ Ext.onReady( function() {
 						console.log('Response: no valid headers');
 						return;
 					}
-                    
+
 					if (!(Ext.isArray(config.rows) && config.rows.length > 0)) {
 						alert('No values found');
 						return;
@@ -1286,80 +1286,78 @@ Ext.onReady( function() {
                     return xLayout;
                 };
 
-				return function() {
+                // items
+                for (var i = 0, dim, header; i < dimensions.length; i++) {
+                    dim = dimensions[i];
+                    dim.items = [];
+                    header = xResponse.nameHeaderMap[dim.dimension];
 
-					// items
-					for (var i = 0, dim, header; i < dimensions.length; i++) {
-						dim = dimensions[i];
-						dim.items = [];
-						header = xResponse.nameHeaderMap[dim.dimension];
+                    if (header) {
+                        for (var j = 0, id, name; j < header.ids.length; j++) {
+                            id = header.ids[j];
+                            name = xResponse.metaData.booleanNames[id] || xResponse.metaData.optionNames[id] || xResponse.metaData.names[id] || id;
 
-						if (header) {
-							for (var j = 0, id; j < header.ids.length; j++) {
-								id = header.ids[j];
+                            dim.items.push({
+                                id: id,
+                                name: name
+                            });
+                        }
+                    }
+                }
 
-								dim.items.push({
-									id: id,
-									name: xResponse.metaData.names[id] || id
-								});
-							}
-						}
-					}
+                // restore order for options
+                for (var i = 0, orgDim; i < originalDimensions.length; i++) {
+                    orgDim = originalDimensions[i];
 
-                    // restore order for options
-                    for (var i = 0, orgDim; i < originalDimensions.length; i++) {
-                        orgDim = originalDimensions[i];
+                    if (Ext.isString(orgDim.filter)) {
+                        var a = orgDim.filter.split(':');
 
-                        if (Ext.isString(orgDim.filter)) {
-                            var a = orgDim.filter.split(':');
+                        if (a[0] === 'IN' && a.length > 1 && Ext.isString(a[1])) {
+                            var options = a[1].split(';'),
+                                items = [];
 
-                            if (a[0] === 'IN' && a.length > 1 && Ext.isString(a[1])) {
-                                var options = a[1].split(';'),
-                                    items = [];
+                            for (var j = 0, dim; j < dimensions.length; j++) {
+                                dim = dimensions[j];
 
-                                for (var j = 0, dim; j < dimensions.length; j++) {
-                                    dim = dimensions[j];
+                                if (dim.dimension === orgDim.dimension && dim.items && dim.items.length) {
+                                    var items = [];
 
-                                    if (dim.dimension === orgDim.dimension && dim.items && dim.items.length) {
-                                        var items = [];
+                                    for (var k = 0, option; k < options.length; k++) {
+                                        option = options[k];
 
-                                        for (var k = 0, option; k < options.length; k++) {
-                                            option = options[k];
+                                        for (var l = 0, item; l < dim.items.length; l++) {
+                                            item = dim.items[l];
 
-                                            for (var l = 0, item; l < dim.items.length; l++) {
-                                                item = dim.items[l];
-
-                                                if (item.name === option) {
-                                                    items.push(item);
-                                                }
+                                            if (item.name === option) {
+                                                items.push(item);
                                             }
                                         }
-
-                                        dim.items = items;
                                     }
+
+                                    dim.items = items;
                                 }
                             }
                         }
                     }
+                }
 
-					// Re-layout
-					layout = api.layout.Layout(xLayout);
+                // re-layout
+                layout = api.layout.Layout(xLayout);
 
-                    if (!layout) {
-                        return null;
-                    }
+                if (!layout) {
+                    return null;
+                }
 
-                    xLayout = service.layout.getExtendedLayout(layout);
+                xLayout = service.layout.getExtendedLayout(layout);
 
-                    // validate number of series
-                    xLayout = getSeriesValidatedLayout(xLayout);
+                // validate number of series
+                xLayout = getSeriesValidatedLayout(xLayout);
 
-                    if (!xLayout) {
-                        return null;
-                    }
+                if (!xLayout) {
+                    return null;
+                }
 
-                    return xLayout;
-				}();
+                return xLayout;
 			};
 
 			service.layout.getExtendedAxis = function(xLayout, type) {
@@ -1784,7 +1782,11 @@ Ext.onReady( function() {
                     meta = ['ou', 'pe'],
                     ouHierarchy,
                     names,
-					headers;
+					headers,
+                    booleanNameMap = {
+                        'true': EV.i18n.yes || 'Yes',
+                        'false': EV.i18n.no || 'No'
+                    };
 
 				response = Ext.clone(response);
 				headers = response.headers;
@@ -1792,6 +1794,7 @@ Ext.onReady( function() {
                 names = response.metaData.names;
                 names[emptyId] = emptyId;
 
+                response.metaData.booleanNames = {};
                 response.metaData.optionNames = {};
 				response.nameHeaderMap = {};
 				response.idValueMap = {};
@@ -1832,8 +1835,8 @@ Ext.onReady( function() {
                         else {
 							var objects = [];
 
-                            for (var j = 0, id, fullId, name, isHierarchy; j < response.rows.length; j++) {
-                                id = response.rows[j][i] || emptyId;
+                            for (var k = 0, id, fullId, name, isHierarchy; k < response.rows.length; k++) {
+                                id = response.rows[k][i] || emptyId;
                                 fullId = header.name + id;
                                 isHierarchy = service.layout.isHierarchy(xLayout, response, id);
 
@@ -1846,12 +1849,18 @@ Ext.onReady( function() {
                                 names[fullId] = name;
 
                                 // update rows
-                                response.rows[j][i] = fullId;
+                                response.rows[k][i] = fullId;
 
                                 // update ou hierarchy
                                 if (isHierarchy) {
 									ouHierarchy[fullId] = ouHierarchy[id];
 								}
+
+                                // update boolean metadata
+                                if (header.type === 'java.lang.Boolean') {
+                                    response.metaData.booleanNames[id] = booleanNameMap[id];
+                                    response.metaData.booleanNames[fullId] = booleanNameMap[id];
+                                }
 
 								objects.push({
 									id: fullId,
@@ -1863,7 +1872,7 @@ Ext.onReady( function() {
                             if (!header.optionSet) {
                                 support.prototype.array.sort(objects, 'ASC', 'sortingId');
                             }
-                            
+
                             header.ids = Ext.Array.pluck(objects, 'id');
                         }
                     }
@@ -2468,7 +2477,8 @@ Ext.onReady( function() {
                 };
 
                 getDefaultSeriesTitle = function(store) {
-                    var a = [];
+                    var a = [],
+                        md = xResponse.metaData;
 
                     if (Ext.isObject(xLayout.legend) && Ext.isArray(xLayout.legend.seriesNames)) {
                         return xLayout.legend.seriesNames;
@@ -2476,7 +2486,7 @@ Ext.onReady( function() {
                     else {
                         for (var i = 0, id, name, mxl, ids; i < store.rangeFields.length; i++) {
                             id = failSafeColumnIdMap[store.rangeFields[i]];
-                            name = xResponse.metaData.optionNames[id] || xResponse.metaData.names[id];
+                            name = md.booleanNames[id] || md.optionNames[id] || md.names[id];
 
                             if (Ext.isObject(xLayout.legend) && xLayout.legend.maxLength) {
                                 var mxl = parseInt(xLayout.legend.maxLength);
@@ -2687,7 +2697,7 @@ Ext.onReady( function() {
                     var a = [],
                         text = '',
                         fontSize,
-                        names = xResponse.metaData.names,
+                        md = xResponse.metaData,
                         operatorMap = {
                             'EQ': '=',
                             'GT': '>',
@@ -2709,7 +2719,7 @@ Ext.onReady( function() {
 
                         if (Ext.isArray(ids) && ids.length) {
                             for (var i = 0; i < ids.length; i++) {
-                                text += xResponse.metaData.names[ids[i]];
+                                text += md.names[ids[i]];
                                 text += i < ids.length - 1 ? ', ' : '';
                             }
                         }
@@ -2727,7 +2737,7 @@ Ext.onReady( function() {
                                     tmpText = '';
 
                                     for (var ii = 0; ii < ids.length; ii++) {
-                                        tmpText += (tmpText.length ? ', ' : '') + names[ids[ii]];
+                                        tmpText += (tmpText.length ? ', ' : '') + md.names[ids[ii]];
                                     }
 
                                     text += tmpText;
@@ -2738,7 +2748,8 @@ Ext.onReady( function() {
 
                                         if (a.length === 2) {
                                             var operator = a[0],
-                                                valueArray = a[1].split(';'),
+                                                value = a[1],
+                                                valueArray = value.split(';'),
                                                 tmpText = '';
 
                                             if (operator === 'IN') {
@@ -2749,7 +2760,7 @@ Ext.onReady( function() {
                                                 text += tmpText;
                                             }
                                             else {
-                                                text += names[dim.dimension] + ' ' + operatorMap[operator] + ' ' + a[1];
+                                                text += md.names[dim.dimension] + ' ' + operatorMap[operator] + ' ' + (md.booleanNames[value] || md.optionNames[value] || md.names[value] || value);
                                             }
                                         }
                                         else {
@@ -2767,14 +2778,14 @@ Ext.onReady( function() {
                                             }
 
                                             for (var ii = 0; ii < operators.length; ii++) {
-                                                tmpText += (tmpText.length ? ', ' : '') + names[dim.dimension] + ' ' + (operatorMap[operators[ii]] || '') + ' ' + values[ii];
+                                                tmpText += (tmpText.length ? ', ' : '') + md.names[dim.dimension] + ' ' + (operatorMap[operators[ii]] || '') + ' ' + values[ii];
                                             }
 
                                             text += tmpText;
                                         }
                                     }
                                     else {
-                                        text += names[dim.dimension];
+                                        text += md.names[dim.dimension];
                                     }
                                 }
                             }
