@@ -200,14 +200,12 @@ public class DefaultTrackedEntityInstanceService
         {
             if ( params.hasProgram() )
             {
-                params.addAttributesIfNotExist( QueryItem.getQueryItems( params.getProgram()
-                    .getTrackedEntityAttributes() ) );
+                params.addAttributesIfNotExist( QueryItem.getQueryItems( params.getProgram().getTrackedEntityAttributes() ) );
             }
             else
             {
                 Collection<TrackedEntityAttribute> filters = attributeService.getAllTrackedEntityAttributes();
-                Collection<TrackedEntityAttribute> attributes = attributeService
-                    .getTrackedEntityAttributesDisplayInList();
+                Collection<TrackedEntityAttribute> attributes = attributeService.getTrackedEntityAttributesDisplayInList();
                 filters.removeAll( attributes );
 
                 params.addAttributesIfNotExist( QueryItem.getQueryItems( attributes ) );
