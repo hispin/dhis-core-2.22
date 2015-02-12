@@ -484,8 +484,6 @@ public class DataValueSMSListener
                 String targetDataElementId = formula.substring( 1, formula.length() );
                 String operation = String.valueOf( formula.charAt( 0 ) );
 
-                System.out.println( "Operation: " + operation );
-
                 DataElement targetDataElement = dataElementService.getDataElement( Integer
                     .parseInt( targetDataElementId ) );
 
