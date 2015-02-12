@@ -40,23 +40,30 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- *
  * @author bobj
  */
-public class CategoryComboMapTest {
+public class CategoryComboMapTest
+{
     private DataElementCategoryOption categoryOptionA;
+
     private DataElementCategoryOption categoryOptionB;
+
     private DataElementCategoryOption categoryOptionC;
+
     private DataElementCategoryOption categoryOptionD;
+
     private DataElementCategoryOption categoryOptionE;
+
     private DataElementCategoryOption categoryOptionF;
-    
+
     private DataElementCategory categoryA;
+
     private DataElementCategory categoryB;
+
     private DataElementCategory categoryC;
-    
+
     private DataElementCategoryCombo categoryCombo;
-    
+
     // -------------------------------------------------------------------------
     // Fixture
     // -------------------------------------------------------------------------
@@ -70,73 +77,75 @@ public class CategoryComboMapTest {
         categoryOptionD = new DataElementCategoryOption( "OptionD" );
         categoryOptionE = new DataElementCategoryOption( "OptionE" );
         categoryOptionF = new DataElementCategoryOption( "OptionF" );
-        
+
         categoryA = new DataElementCategory( "CategoryA" );
         categoryB = new DataElementCategory( "CategoryB" );
         categoryC = new DataElementCategory( "CategoryC" );
-        
+
         categoryA.getCategoryOptions().add( categoryOptionA );
         categoryA.getCategoryOptions().add( categoryOptionB );
         categoryB.getCategoryOptions().add( categoryOptionC );
         categoryB.getCategoryOptions().add( categoryOptionD );
         categoryC.getCategoryOptions().add( categoryOptionE );
         categoryC.getCategoryOptions().add( categoryOptionF );
-        
+
         categoryCombo = new DataElementCategoryCombo( "CategoryCombo" );
-        
-        categoryCombo.addDataElementCategory(categoryA);
-        categoryCombo.addDataElementCategory(categoryB);
-        categoryCombo.addDataElementCategory(categoryC);
-        
+
+        categoryCombo.addDataElementCategory( categoryA );
+        categoryCombo.addDataElementCategory( categoryB );
+        categoryCombo.addDataElementCategory( categoryC );
+
         categoryCombo.generateOptionCombos();
     }
 
     @Test
     public void testMapRetrievalByName()
     {
-        try {
-            CategoryComboMap map = new CategoryComboMap(categoryCombo, NAME);
-            
+        try
+        {
+            CategoryComboMap map = new CategoryComboMap( categoryCombo, NAME );
+
             List<DataElementCategoryOption> catopts = new LinkedList<>();
-            catopts.add(categoryOptionA);
-            catopts.add(categoryOptionC);
-            catopts.add(categoryOptionE);
-            
-            String key = "\"" + categoryOptionA.getName() + "\"" 
-                    + "\"" + categoryOptionC.getName() + "\""
-                    + "\"" + categoryOptionE.getName() + "\"";
-            DataElementCategoryOptionCombo catoptcombo = map.getCategoryOptionCombo(key);
-            
+            catopts.add( categoryOptionA );
+            catopts.add( categoryOptionC );
+            catopts.add( categoryOptionE );
+
+            String key = "\"" + categoryOptionA.getName() + "\"" + "\"" + categoryOptionC.getName() + "\"" + "\""
+                + categoryOptionE.getName() + "\"";
+            DataElementCategoryOptionCombo catoptcombo = map.getCategoryOptionCombo( key );
+
             assertNotNull( catoptcombo );
-            assertTrue(catoptcombo.getCategoryOptions().containsAll(catopts));
-        } catch (CategoryComboMap.CategoryComboMapException ex) {
-            System.out.println(ex.getMessage());
-            assertTrue(ex.getMessage(),false);
+            assertTrue( catoptcombo.getCategoryOptions().containsAll( catopts ) );
+        }
+        catch ( CategoryComboMap.CategoryComboMapException ex )
+        {
+            assertTrue( ex.getMessage(), false );
         }
     }
 
     @Test
     public void testMapRetrievalByUid()
     {
-        try {
-            CategoryComboMap map = new CategoryComboMap(categoryCombo, IdentifiableProperty.UID);
-            
+        try
+        {
+            CategoryComboMap map = new CategoryComboMap( categoryCombo, IdentifiableProperty.UID );
+
             List<DataElementCategoryOption> catopts = new LinkedList<>();
-            catopts.add(categoryOptionA);
-            catopts.add(categoryOptionC);
-            catopts.add(categoryOptionE);
-            
-            String key = "\"" + categoryOptionA.getUid() + "\"" 
-                    + "\"" + categoryOptionC.getUid() + "\""
-                    + "\"" + categoryOptionE.getUid() + "\"";
-            
-            DataElementCategoryOptionCombo catoptcombo = map.getCategoryOptionCombo(key);
-            
+            catopts.add( categoryOptionA );
+            catopts.add( categoryOptionC );
+            catopts.add( categoryOptionE );
+
+            String key = "\"" + categoryOptionA.getUid() + "\"" + "\"" + categoryOptionC.getUid() + "\"" + "\""
+                + categoryOptionE.getUid() + "\"";
+
+            DataElementCategoryOptionCombo catoptcombo = map.getCategoryOptionCombo( key );
+
             assertNotNull( catoptcombo );
-            assertTrue(catoptcombo.getCategoryOptions().containsAll(catopts));
-        } catch (CategoryComboMap.CategoryComboMapException ex) {
-            System.out.println(ex.getMessage());
-            assertTrue(ex.getMessage(),false);
+            assertTrue( catoptcombo.getCategoryOptions().containsAll( catopts ) );
+        }
+        catch ( CategoryComboMap.CategoryComboMapException ex )
+        {
+            assertTrue( ex.getMessage(), false );
         }
     }
 }
