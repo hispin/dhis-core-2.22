@@ -333,6 +333,38 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };    
 })
 
+/* Factory for fetching OrgUnit */
+.factory('OrgUnitFactory', function($http) {    
+    var orgUnit, orgUnitPromise, rootOrgUnitPromise, myOrgUnitsPromise;    
+    return {
+        get: function(uid){            
+            if( orgUnit !== uid ){
+                orgUnitPromise = $http.get( '../api/organisationUnits.json?filter=id:eq:' + uid + '&fields=id,name,children[id,name,children[id,name]]&paging=false' ).then(function(response){
+                    orgUnit = response.data.id;
+                    return response.data;
+                });
+            }
+            return orgUnitPromise;
+        },        
+        getRoot: function(){
+            if(!rootOrgUnitPromise){
+                rootOrgUnitPromise = $http.get( '../api/organisationUnits.json?filter=level:eq:1&fields=id,name,children[id,name,children[id,name]]&paging=false' ).then(function(response){
+                    return response.data;
+                });
+            }
+            return rootOrgUnitPromise;
+        },
+        getMine: function(){
+            if(!myOrgUnitsPromise){
+                myOrgUnitsPromise = $http.get('../api/me/organisationUnits').then(function(response){
+                    return response.data;
+                });
+            }
+            return myOrgUnitsPromise;
+        }
+    }; 
+})
+
 /* Service to deal with enrollment */
 .service('EnrollmentService', function($http, DateUtils) {
     
