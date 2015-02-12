@@ -581,7 +581,15 @@ public abstract class AbstractEventService
         {
             programStageInstance.setStatus( EventStatus.VISITED );
         }
+        
+        OrganisationUnit organisationUnit = getOrganisationUnit( null, event.getOrgUnit() );
 
+        if ( organisationUnit == null )
+        {
+            organisationUnit = programStageInstance.getOrganisationUnit();
+        }
+
+        programStageInstance.setOrganisationUnit( organisationUnit );
         programStageInstance.setExecutionDate( executionDate );
         programStageInstanceService.updateProgramStageInstance( programStageInstance );
     }
