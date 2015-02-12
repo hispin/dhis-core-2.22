@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.util.ObjectUtils;
 
 /**
@@ -110,13 +111,13 @@ public class QueryItem
         return filters != null && !filters.isEmpty();
     }
 
-    public static List<QueryItem> getQueryItems( Collection<? extends NameableObject> objects )
+    public static List<QueryItem> getQueryItems( Collection<TrackedEntityAttribute> attributes )
     {
         List<QueryItem> queryItems = new ArrayList<>();
         
-        for ( NameableObject object : objects )
+        for ( TrackedEntityAttribute attribute : attributes )
         {
-            queryItems.add( new QueryItem( object, null, null ) );
+            queryItems.add( new QueryItem( attribute, attribute.getValueType(), attribute.hasOptionSet() ? attribute.getOptionSet().getUid() : null ) );
         }
         
         return queryItems;

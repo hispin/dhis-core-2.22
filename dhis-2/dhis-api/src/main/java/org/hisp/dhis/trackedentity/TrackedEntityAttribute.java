@@ -52,11 +52,6 @@ import org.hisp.dhis.schema.annotation.PropertyRange;
 public class TrackedEntityAttribute
     extends BaseDimensionalObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 3026922158464592390L;
-
     public static final String TYPE_DATE = "date";
     public static final String TYPE_STRING = "string";
     public static final String TYPE_NUMBER = "number";    
@@ -138,6 +133,23 @@ public class TrackedEntityAttribute
     public boolean hasOptionSet()
     {
         return optionSet != null;
+    }
+
+    /**
+     * Checks whether the given value is present among the options in the option
+     * set of this attribute, matching on code.
+     */
+    public Boolean isValidOptionValue( String value )
+    {
+        for ( Option option : this.getOptionSet().getOptions() )
+        {
+            if ( option.getCode().equals( value ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // -------------------------------------------------------------------------
@@ -329,19 +341,6 @@ public class TrackedEntityAttribute
     public void setConfidential( Boolean confidential )
     {
         this.confidential = confidential;
-    }
-
-    public Boolean isValidOptionValue( String value )
-    {
-        for ( Option option : this.getOptionSet().getOptions() )
-        {
-            if ( option.getCode().equals( value ) )
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     @Override
