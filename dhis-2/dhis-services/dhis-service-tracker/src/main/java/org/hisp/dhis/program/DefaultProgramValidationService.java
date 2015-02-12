@@ -140,8 +140,7 @@ public class DefaultProgramValidationService
                 + entityInstanceDataValue.getDataElement().getUid();
             entityInstanceDataValueMap.put( key, entityInstanceDataValue.getValue() );
         }
-System.err.println("\n\n\n ==== entityInstanceDataValueMap : " + entityInstanceDataValueMap );
-System.err.println("\n validation : " + validation );
+        
         // ---------------------------------------------------------------------
         // Validate rules
         // ---------------------------------------------------------------------
