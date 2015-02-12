@@ -47,6 +47,10 @@ public class ImportMetaDataGmlTask
 {
     private static final Log log = LogFactory.getLog( ImportMetaDataGmlTask.class );
 
+    private TaskId taskId;
+
+    private String userUid;
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -56,10 +60,6 @@ public class ImportMetaDataGmlTask
     private ImportOptions importOptions;
 
     private InputStream inputStream;
-
-    private TaskId taskId;
-
-    private String userUid;
 
     // -------------------------------------------------------------------------
     // Constructors
