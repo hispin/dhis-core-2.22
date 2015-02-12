@@ -1,13 +1,16 @@
-<div class="search-container-main">                                
-    <div class="search-container">    
-        <table data-stop-propagation="true" class="table-borderless table-striped">
+<div class="advanced-search-container-main">                                
+    <div data-stop-propagation="true" class="advanced-search-container">    
+        <table class="table-borderless table-striped">
             <tr>
-                <td>{{'org_unit'| translate}}</td>
+                <div ng-include="'views/search-ou-tree.html'"></div>
+            </tr>
+            <tr>
+                <td>{{'ou_search_scope'| translate}}</td>
                 <td>                    
                     <label><input type="radio" ng-model="selectedOuMode.name" name="selected" value="SELECTED"> {{'SELECTED'| translate}}</label><br/>
                     <label><input type="radio" ng-model="selectedOuMode.name" name="children" value="CHILDREN"> {{'CHILDREN'| translate}}</label><br/>
                     <label><input type="radio" ng-model="selectedOuMode.name" name="descendants" value="DESCENDANTS"> {{'DESCENDANTS'| translate}}</label><br/>
-                    <label><input type="radio" ng-model="selectedOuMode.name" name="accessible" value="ACCESSIBLE"> {{'ACCESSIBLE'| translate}}</label>
+                    <!--<label><input type="radio" ng-model="selectedOuMode.name" name="accessible" value="ACCESSIBLE"> {{'ACCESSIBLE'| translate}}</label>-->
                 </td>
             </tr>
             <tr ng-if="selectedProgram">
@@ -101,10 +104,10 @@
                 ng-click="search(searchMode.attributeBased)">
             {{'search'| translate}}
         </button>
-        <button type="button" 
+        <!--<button type="button" 
                 class="btn btn-success small-horizonal-spacing" 
                 ng-click="search(searchMode.listAll)">
             {{'list_all'| translate}}
-        </button>        
+        </button>-->        
     </div>
 </div>

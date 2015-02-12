@@ -11,6 +11,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 Paginator,
                 storage,
                 OptionSetService,
+                OrgUnitFactory,
                 OperatorFactory,
                 ProgramFactory,
                 AttributesFactory,
@@ -25,6 +26,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.dashboardProgramId = ($location.search()).program;
     $scope.selectedOrgUnitId = ($location.search()).ou;
     $scope.treeLoaded = false;
+    $scope.searchOuTree = false;
     
     //Paging
     $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};   
@@ -86,8 +88,8 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 }
             }           
         }
-    });
-        
+    });    
+    
     //watch for program feedback (this is when coming back from dashboard)
     if($scope.dashboardProgramId && $scope.dashboardProgramId !== 'null'){        
         ProgramFactory.get($scope.dashboardProgramId).then(function(program){
@@ -151,29 +153,11 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     };
     
     $scope.processAttributes = function(){
-
-        if($scope.selectedProgram){
-            AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
-                $scope.attributes = atts;
-                setTimeout(function () {
-                    $scope.$apply(function () {                        
-                        $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
-                        $scope.gridColumns = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);
-                    });
-                }, 100);
-            });           
-        }
-        else{            
-            AttributesFactory.getWithoutProgram().then(function(atts){
-                $scope.attributes = atts;
-                setTimeout(function () {
-                    $scope.$apply(function () {                        
-                        $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
-                        $scope.gridColumns = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);
-                    });
-                }, 100);
-            });
-        }
+        
+        AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
+            $scope.attributes = $scope.generateAttributeFilters(atts);
+            $scope.gridColumns = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);            
+        });
     };
    
     //$scope.searchParam = {bools: []};
@@ -182,7 +166,6 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         $scope.selectedSearchMode = mode;
         $scope.emptySearchText = false;
         $scope.emptySearchAttribute = false;
-        //$scope.showSearchDiv = false;
         $scope.showRegistrationDiv = false;  
         $scope.showReportDiv = false;
         $scope.showTrackedEntityDiv = false;
@@ -206,9 +189,10 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 $scope.teiCount = null;
                 return;
             }       
- 
+            
             $scope.queryUrl = 'query=' + $scope.searchText;            
             $scope.attributes = EntityQueryFactory.resetAttributesQuery($scope.attributes, $scope.enrollment);
+            $scope.searchingOrgUnit = $scope.selectedOrgUnit;
         }
         
         if( $scope.selectedSearchMode === $scope.searchMode.attributeBased ){
@@ -223,21 +207,22 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 $scope.teiCount = null;
                 return;
             }
+            
+            $scope.searchingOrgUnit = $scope.selectedSearchingOrgUnit && $scope.selectedSearchingOrgUnit.id ? $scope.selectedSearchingOrgUnit : $scope.selectedOrgUnit;
         }
         
         if( $scope.selectedSearchMode === $scope.searchMode.listAll ){
-            $scope.searchText = '';
-            
+            $scope.searchText = '';            
             $scope.attributes = EntityQueryFactory.resetAttributesQuery($scope.attributes, $scope.enrollment);
+            $scope.searchingOrgUnit = $scope.selectedOrgUnit;
         }
         
         $scope.fetchTeis();
     };
     
     $scope.fetchTeis = function(){
-        
-        //get events for the specified parameters
-        TEIService.search($scope.selectedOrgUnit.id, 
+        //get events for the specified parameters        
+        TEIService.search($scope.searchingOrgUnit.id, 
                                             $scope.selectedOuMode.name,
                                             $scope.queryUrl,
                                             $scope.programUrl,
@@ -363,5 +348,40 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
        
     $scope.getHelpContent = function(){
         console.log('I will get help content');
-    };    
+    };   
+    
+    //Get orgunits for the logged in user
+    OrgUnitFactory.getRoot().then(function(response) {  
+        $scope.orgUnits = response.organisationUnits;
+        $scope.selectedSearchingOrgUnit = $scope.orgUnits && $scope.orgUnits.length && $scope.orgUnits[0] ? $scope.orgUnits[0] : null;
+        angular.forEach($scope.orgUnits, function(ou){
+            ou.show = true;
+            angular.forEach(ou.children, function(o){                    
+                o.hasChildren = o.children && o.children.length > 0 ? true : false;
+            });            
+        });
+    });
+    
+    //expand/collapse of search orgunit tree
+    $scope.expandCollapse = function(orgUnit) {
+        if( orgUnit.hasChildren ){            
+            //Get children for the selected orgUnit
+            OrgUnitFactory.get(orgUnit.id).then(function(ou) {                
+                orgUnit.show = !orgUnit.show;
+                orgUnit.hasChildren = false;
+                orgUnit.children = ou.organisationUnits[0].children;                
+                angular.forEach(orgUnit.children, function(ou){                    
+                    ou.hasChildren = ou.children && ou.children.length > 0 ? true : false;
+                });                
+            });           
+        }
+        else{
+            orgUnit.show = !orgUnit.show;   
+        }        
+    };
+    
+    //load programs for the selected orgunit (from tree)
+    $scope.setSelectedSearchingOrgUnit = function(orgUnit){    
+        $scope.selectedSearchingOrgUnit = orgUnit;
+    };
 });

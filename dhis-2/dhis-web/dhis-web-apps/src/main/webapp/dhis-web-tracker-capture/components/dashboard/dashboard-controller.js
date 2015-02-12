@@ -21,7 +21,7 @@ trackerCapture.controller('DashboardController',
     $scope.selectedProgramId = ($location.search()).program; 
     $scope.selectedOrgUnit = storage.get('SELECTED_OU');
     $scope.selectedProgram;    
-    $scope.selectedTei;   
+    $scope.selectedTei;
     
     //dashboard items   
     var getDashboardLayout = function(){        

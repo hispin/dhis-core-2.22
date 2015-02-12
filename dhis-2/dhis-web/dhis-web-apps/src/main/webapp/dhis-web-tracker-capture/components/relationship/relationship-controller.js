@@ -7,20 +7,13 @@ trackerCapture.controller('RelationshipController',
                 CurrentSelection,
                 TEIService,
                 RelationshipFactory) {
-    $rootScope.showAddRelationshipDiv = false;
-    $scope.relationshipTypes = []; 
-    $scope.relationships = [];
-    $scope.addRelationshipLabel = $translate('add');   
-            
-    RelationshipFactory.getAll().then(function(rels){
-        $scope.relationshipTypes = rels;    
-        angular.forEach(rels, function(rel){
-            $scope.relationships[rel.id] = rel;
-        });
-    });    
+    $rootScope.showAddRelationshipDiv = false;    
+    $scope.addRelationshipLabel = $translate('add');
     
     //listen for the selected entity       
     $scope.$on('dashboardWidgets', function(event, args) { 
+        $scope.relationshipTypes = []; 
+        $scope.relationships = [];
         $scope.relatedTeis = [];
         $scope.selections = CurrentSelection.get();
         $scope.optionSets = $scope.selections.optionSets;
@@ -38,8 +31,15 @@ trackerCapture.controller('RelationshipController',
             $scope.addRelationshipLabel = $translate('add');
         }
         
-        setRelationships();
-        
+        RelationshipFactory.getAll().then(function(rels){
+            $scope.relationshipTypes = rels;    
+            angular.forEach(rels, function(rel){
+                $scope.relationships[rel.id] = rel;
+            });
+            
+            setRelationships();
+            
+        });
     });
     
     $scope.showAddRelationship = function() {
