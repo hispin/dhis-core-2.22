@@ -364,13 +364,13 @@ Ext.onReady( function() {
                     html += '<div style="font-weight: bold; color: #333; padding-bottom: 5px">' + r.metaData.names[period.iso] + '</div>';
 
                     for (var i = 0; i < records.length; i++) {
-                        html += records[i].name + ': ' + '<span style="color:#333">' + records[i].value + '</span>' + (i < records.length - 1 ? '<br/>' : '');
+                        html += records[i].name + ': ' + '<span style="color: #005aa5">' + records[i].value + '</span>' + (i < records.length - 1 ? '<br/>' : '');
                     }
                 }
                 else {
-                    html = 'No data found for<br/><br/><span style="color:#333">Indicators in group: </span>' + iig.name +
-                           '<br/><span style="color:#333">Data elements in group: </span>' + ideg.name +
-                           '<br/><span style="color:#333">Period: </span>' + period.name +
+                    html = 'No data found for<br/><br/>Indicators in group: <span style="color:#005aa5">' + iig.name + '</span>' +
+                           '<br/>Data elements in group: <span style="color:#005aa5">' + ideg.name + '</span>' +
+                           '<br/>Period: <span style="color:#005aa5">' + period.name + '</span>' +
                            '<br/><br/>To change groups, please go to general settings.';
                 }
 
