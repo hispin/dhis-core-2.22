@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -65,7 +67,6 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.system.util.SqlHelper;
-import org.hisp.dhis.util.Timer;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
@@ -82,6 +83,8 @@ public class HibernateTrackedEntityInstanceStore
     extends HibernateIdentifiableObjectStore<TrackedEntityInstance>
     implements TrackedEntityInstanceStore
 {
+    private static final Log log = LogFactory.getLog( HibernateTrackedEntityInstanceStore.class );
+    
     private static final Map<ProgramStatus, Integer> PROGRAM_STATUS_MAP = new HashMap<ProgramStatus, Integer>()
     {
         {
@@ -147,11 +150,9 @@ public class HibernateTrackedEntityInstanceStore
         // Query
         // ---------------------------------------------------------------------
 
-        Timer t = new Timer().start();
-
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
 
-        t.getTime( "Tracked entity instance query SQL: " + sql );
+        log.debug( "Tracked entity instance query SQL: " + sql );
 
         List<Map<String, String>> list = new ArrayList<>();
 
@@ -197,11 +198,9 @@ public class HibernateTrackedEntityInstanceStore
         // Query
         // ---------------------------------------------------------------------
 
-        Timer t = new Timer().start();
-
         Integer count = jdbcTemplate.queryForObject( sql, Integer.class );
 
-        t.getTime( "Tracked entity instance count SQL: " + sql );
+        log.debug( "Tracked entity instance count SQL: " + sql );
 
         return count;
     }
@@ -388,9 +387,9 @@ public class HibernateTrackedEntityInstanceStore
     public String validate( TrackedEntityInstance instance, TrackedEntityAttributeValue attributeValue, Program program )
     {
         TrackedEntityAttribute attribute = attributeValue.getAttribute();
+        
         try
         {
-
             if ( attribute.isUnique() )
             {
                 Criteria criteria = getCriteria();
