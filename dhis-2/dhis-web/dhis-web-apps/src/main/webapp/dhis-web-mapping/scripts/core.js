@@ -1273,13 +1273,17 @@ Ext.onReady( function() {
                     latIndex,
                     optionSetIndex,
                     optionSetHeader,
-                    map = Ext.clone(r.metaData.names),
+                    names = Ext.clone(r.metaData.names),
+                    booleanNames = {
+                        'true': GIS.i18n.yes || 'Yes',
+                        'false': GIS.i18n.no || 'No'
+                    },
                     updateFeatures;
 
                 updateFeatures = function() {
                     for (var i = 0, header; i < r.headers.length; i++) {
                         header = r.headers[i];
-                        map[header.name] = header.column;
+                        names[header.name] = header.column;
                     }
 
                     // events
@@ -1287,14 +1291,15 @@ Ext.onReady( function() {
                         row = rows[i];
                         obj = {};
 
-                        for (var j = 0; j < row.length; j++) {
-                            obj[r.headers[j].name] = j === optionSetIndex ? r.metaData.optionNames[row[j]] || map[row[j]] : row[j];
+                        for (var j = 0, value; j < row.length; j++) {
+                            value = row[j];
+                            obj[r.headers[j].name] = booleanNames[value] || r.metaData.optionNames[value] || names[value] || value;
                         }
 
                         obj[gis.conf.finals.widget.value] = 0;
                         obj.label = obj.ouname;
                         obj.popupText = obj.ouname;
-                        obj.nameColumnMap = map;
+                        obj.nameColumnMap = Ext.apply(names, r.metaData.optionNames, r.metaData.booleanNames);
 
                         events.push(obj);
                     }
@@ -1318,11 +1323,12 @@ Ext.onReady( function() {
                     if (!optionSetHeader) {
                         updateFeatures();
                     }
-
-                    dhis2.gis.store.get('optionSets', optionSetHeader.optionSet).done( function(obj) {
-                        Ext.apply(r.metaData.optionNames, gis.util.array.getObjectMap(obj.options, 'code', 'name'));
-                        updateFeatures();
-                    });
+                    else {
+                        dhis2.gis.store.get('optionSets', optionSetHeader.optionSet).done( function(obj) {
+                            Ext.apply(r.metaData.optionNames, gis.util.array.getObjectMap(obj.options, 'code', 'name'));
+                            updateFeatures();
+                        });
+                    }
                 };
 
                 r.metaData.optionNames = {};
@@ -1331,7 +1337,7 @@ Ext.onReady( function() {
                 for (var i = 0, header; i < r.headers.length; i++) {
                     header = r.headers[i];
 
-                    map[header.name] = header.column;
+                    names[header.name] = header.column;
 
                     if (header.name === 'longitude') {
                         lonIndex = i;
