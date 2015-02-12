@@ -273,6 +273,11 @@ public class ReflectionUtils
 
     public static Method findSetterMethod( String fieldName, Object target )
     {
+        if ( target == null || StringUtils.isEmpty( fieldName ) )
+        {
+            return null;
+        }
+
         String[] setterNames = new String[]{
             "set"
         };
@@ -412,7 +417,7 @@ public class ReflectionUtils
         return methods;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public static <T> T invokeMethod( Object target, Method method, Object... args )
     {
         if ( target == null || method == null )
@@ -435,7 +440,7 @@ public class ReflectionUtils
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public static <T> T getFieldObject( Field field, T target )
     {
         return (T) invokeGetterMethod( field.getName(), target );
