@@ -248,7 +248,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' ng-model="currentEvent.' + fieldId + '"' +
                                                 ' input-field-id="' + fieldId + '"' +
                                                 ' ng-class="getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id,true)"' +
-                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\'"' +
+                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent.editingNotAllowed"' +
                                                 ' ng-blur="saveDatavalue(prStDes.'+ fieldId + ')"' + 
                                                 ' ng-required="{{prStDes.' + fieldId + '.compulsory}}">';
                             }
@@ -260,7 +260,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' d2-validation ' +
                                                 ' ng-model="currentEvent.' + fieldId + '" ' +
                                                 ' input-field-id="' + fieldId + '"' +
-                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\'"' +
+                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
                                                 ' ng-required="{{prStDes.' + fieldId + '.compulsory}}"' +
                                                 ' typeahead="option.name as option.name for option in optionSets.'+optionSetId+'.options | filter:$viewValue | limitTo:20"' +
                                                 ' typeahead-editable="false" ' +
@@ -277,7 +277,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' d2-validation ' +
                                                 ' ng-model="currentEvent.' + fieldId + '" ' +
                                                 ' input-field-id="' + fieldId + '"' +
-                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\'"' +
+                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
                                                 ' ng-class="getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id,true)"' +
                                                 ' ng-blur="saveDatavalue(prStDes.'+ fieldId + ')"' +
                                                 ' ng-required="prStDes.' + fieldId + '.compulsory"> ';                                     
@@ -290,7 +290,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' ng-model="currentEvent.' + fieldId + '" ' +
                                                 ' input-field-id="' + fieldId + '"' +
                                                 ' ng-class="getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id,true)"' +
-                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\'"' +
+                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent.editingNotAllowed"' +
                                                 ' ng-change="saveDatavalue(prStDes.'+ fieldId + ')"' + 
                                                 ' ng-required="{{prStDes.' + fieldId + '.compulsory}}">' + 
                                                 '<option value="">{{\'please_select\'| translate}}</option>' +
@@ -309,7 +309,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' d2-date ' +
                                                 ' max-date="' + maxDate + '"' +
                                                 ' ng-class="getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id,true)"' +
-                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\'"' +
+                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent.editingNotAllowed"' +
                                                 ' blur-or-change="saveDatavalue(prStDes.'+ fieldId + ')"' + 
                                                 ' ng-required="{{prStDes.' + fieldId + '.compulsory}}"> '; 
                             }
@@ -320,7 +320,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' ng-model="currentEvent.' + fieldId + '"' +
                                                 ' input-field-id="' + fieldId + '"' +
                                                 ' ng-class="getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id,true)"' +
-                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\'"' +
+                                                ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent.editingNotAllowed"' +
                                                 ' ng-change="saveDatavalue(prStDes.'+ fieldId + ')"' +
                                                 ' ng-required="{{prStDes.' + fieldId + '.compulsory}}"> ';
                             }                            
