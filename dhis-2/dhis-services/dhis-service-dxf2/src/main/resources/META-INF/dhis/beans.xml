@@ -58,6 +58,10 @@
 
   <!-- register importers -->
 
+  <bean id="translationImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.translation.Translation" />
+  </bean>
+
   <bean id="attributeTypeImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.attribute.Attribute" />
   </bean>
