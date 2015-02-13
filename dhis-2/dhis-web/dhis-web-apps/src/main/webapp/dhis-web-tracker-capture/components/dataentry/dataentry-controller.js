@@ -112,8 +112,6 @@ trackerCapture.controller('DataEntryController',
                         $scope.dhis2Events.push(dhis2Event);
                     }
                 });
-                
-                console.log('the events:  ', $scope.dhis2Events);
             }
             
             $scope.dhis2Events = orderByFilter($scope.dhis2Events, '-sortingDate');            
