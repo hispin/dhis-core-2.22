@@ -28,9 +28,9 @@ package org.hisp.dhis.schema.descriptors;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaDescriptor;
+import org.hisp.dhis.translation.Translation;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,7 +48,7 @@ public class TranslationSchemaDescriptor implements SchemaDescriptor
     @Override
     public Schema getSchema()
     {
-        Schema schema = new Schema( Constant.class, SINGULAR, PLURAL );
+        Schema schema = new Schema( Translation.class, SINGULAR, PLURAL );
         schema.setApiEndpoint( API_ENDPOINT );
         schema.setOrder( 3000 );
 
