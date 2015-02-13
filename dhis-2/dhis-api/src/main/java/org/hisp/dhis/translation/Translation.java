@@ -35,6 +35,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 
+import java.util.Objects;
+
 /**
  * @author Oyvind Brucker
  */
@@ -58,7 +60,7 @@ public class Translation
 
     public Translation()
     {
-       setAutoFields();
+        setAutoFields();
     }
 
     public Translation( String className, String locale, String property, String value, String objectUid )
@@ -132,10 +134,6 @@ public class Translation
         this.value = value;
     }
 
-    // -------------------------------------------------------------------------
-    // hashCode, equals and toString
-    // -------------------------------------------------------------------------
-
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getObjectUid()
@@ -148,47 +146,53 @@ public class Translation
         this.objectUid = objectUid;
     }
 
+    // -------------------------------------------------------------------------
+    // hashCode, equals and toString
+    // -------------------------------------------------------------------------
+
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-
-        result = result * prime + className.hashCode();
-        result = result * prime + objectUid.hashCode();
-        result = result * prime + locale.hashCode();
-        result = result * prime + property.hashCode();
-
-        return result;
+        return 31 * super.hashCode() + Objects.hash( objectUid, className, locale, property, value );
     }
 
     @Override
-    public boolean equals( Object o )
+    public boolean equals( Object obj )
     {
-        if ( this == o )
+        if ( this == obj )
         {
             return true;
         }
-
-        if ( o == null )
+        if ( obj == null || getClass() != obj.getClass() )
+        {
+            return false;
+        }
+        if ( !super.equals( obj ) )
         {
             return false;
         }
 
-        if ( !( o instanceof Translation ) )
-        {
-            return false;
-        }
+        final Translation other = (Translation) obj;
 
-        Translation translation = (Translation) o;
-
-        return className.equals( translation.getClassName() ) &&  objectUid == translation.getObjectUid() &&
-            locale.equals( translation.getLocale() ) && property.equals( translation.getProperty());
+        return Objects.equals( this.objectUid, other.objectUid )
+            && Objects.equals( this.className, other.className )
+            && Objects.equals( this.locale, other.locale )
+            && Objects.equals( this.property, other.property )
+            && Objects.equals( this.value, other.value );
     }
 
     @Override
     public String toString()
     {
-        return "[Class name: " + className + " objectUid: " + objectUid + " uid: " + uid + " locale: " + locale + " property: " + property + " value: " + value + "]";
+        final StringBuilder sb = new StringBuilder( "Translation{" );
+
+        sb.append( "objectUid='" ).append( objectUid ).append( '\'' );
+        sb.append( ", className='" ).append( className ).append( '\'' );
+        sb.append( ", locale='" ).append( locale ).append( '\'' );
+        sb.append( ", property='" ).append( property ).append( '\'' );
+        sb.append( ", value='" ).append( value ).append( '\'' );
+        sb.append( '}' );
+
+        return sb.toString();
     }
 }
