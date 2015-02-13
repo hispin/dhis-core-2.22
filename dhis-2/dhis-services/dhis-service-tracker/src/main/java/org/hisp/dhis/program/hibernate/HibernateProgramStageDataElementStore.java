@@ -118,5 +118,4 @@ public class HibernateProgramStageDataElementStore
         criteria.setProjection( Projections.property( "dataElement" ) );
         return criteria.list();
     }
-
 }
