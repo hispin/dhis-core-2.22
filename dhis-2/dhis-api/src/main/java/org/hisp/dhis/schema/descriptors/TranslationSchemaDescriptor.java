@@ -1,4 +1,4 @@
-package org.hisp.dhis.webapi.controller;
+package org.hisp.dhis.schema.descriptors;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,43 +28,30 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import org.hisp.dhis.common.Pager;
-import org.hisp.dhis.schema.descriptors.TranslationSchemaDescriptor;
-import org.hisp.dhis.translation.Translation;
-import org.hisp.dhis.webapi.webdomain.WebMetaData;
-import org.hisp.dhis.webapi.webdomain.WebOptions;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import org.hisp.dhis.constant.Constant;
+import org.hisp.dhis.schema.Schema;
+import org.hisp.dhis.schema.SchemaDescriptor;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-@Controller
-@RequestMapping( value = TranslationSchemaDescriptor.API_ENDPOINT )
-public class TranslationController extends AbstractCrudController<Translation>
+@Component
+public class TranslationSchemaDescriptor implements SchemaDescriptor
 {
+    public static final String SINGULAR = "translation";
+
+    public static final String PLURAL = "translations";
+
+    public static final String API_ENDPOINT = "/" + PLURAL;
+
     @Override
-    protected List<Translation> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    public Schema getSchema()
     {
-        List<Translation> entityList;
+        Schema schema = new Schema( Constant.class, SINGULAR, PLURAL );
+        schema.setApiEndpoint( API_ENDPOINT );
+        schema.setOrder( 3000 );
 
-        if ( options.hasPaging() )
-        {
-            int count = manager.getCount( getEntityClass() );
-
-            Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
-            metaData.setPager( pager );
-
-            entityList = Lists.newArrayList( manager.getBetween( getEntityClass(), pager.getOffset(), pager.getPageSize() ) );
-        }
-        else
-        {
-            entityList = Lists.newArrayList( manager.getAll( getEntityClass() ) );
-        }
-
-        return entityList;
+        return schema;
     }
 }
