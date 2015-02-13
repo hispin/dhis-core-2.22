@@ -39,45 +39,45 @@ trackerCapture.controller('DashboardController',
                 selectedLayout = $scope.dashboardLayouts [$scope.selectedProgram.id] ? $scope.dashboardLayouts [$scope.selectedProgram.id] : selectedLayout;
             }
 
-            for(var widget in selectedLayout.widgets){
-                switch(selectedLayout.widgets[widget].title){
+            angular.forEach(selectedLayout.widgets, function(widget){
+                switch(widget.title){
                     case 'enrollment':
-                        $rootScope.enrollmentWidget = selectedLayout.widgets[widget];
+                        $rootScope.enrollmentWidget = widget;
                         $rootScope.dashboardWidgets.push($rootScope.enrollmentWidget);
-                        $scope.dashboardStatus[widget] = selectedLayout.widgets[widget];
+                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
                         break;
                     case 'dataentry':
-                        $rootScope.dataentryWidget = selectedLayout.widgets[widget];
+                        $rootScope.dataentryWidget = widget;
                         $rootScope.dashboardWidgets.push($rootScope.dataentryWidget);
-                        $scope.dashboardStatus[widget] = selectedLayout.widgets[widget];
+                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
                         break;
                     case 'report':
-                        $rootScope.reportWidget = selectedLayout.widgets[widget];
+                        $rootScope.reportWidget = widget;
                         $rootScope.dashboardWidgets.push($rootScope.reportWidget);
-                        $scope.dashboardStatus[widget] = selectedLayout.widgets[widget];
+                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
                         break;
                     case 'current_selections':
-                        $rootScope.selectedWidget = selectedLayout.widgets[widget];
+                        $rootScope.selectedWidget = widget;
                         $rootScope.dashboardWidgets.push($rootScope.selectedWidget);
-                        $scope.dashboardStatus[widget] = selectedLayout.widgets[widget];
+                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
                         break;
                     case 'profile':
-                        $rootScope.profileWidget = selectedLayout.widgets[widget];
+                        $rootScope.profileWidget = widget;
                         $rootScope.dashboardWidgets.push($rootScope.profileWidget);
-                        $scope.dashboardStatus[widget] = selectedLayout.widgets[widget];
+                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
                         break;
                     case 'relationships':
-                        $rootScope.relationshipWidget = selectedLayout.widgets[widget];
+                        $rootScope.relationshipWidget = widget;
                         $rootScope.dashboardWidgets.push($rootScope.relationshipWidget);
-                        $scope.dashboardStatus[widget] = selectedLayout.widgets[widget];
+                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
                         break;    
                     case 'notes':
-                        $rootScope.notesWidget = selectedLayout.widgets[widget];
+                        $rootScope.notesWidget = widget;
                         $rootScope.dashboardWidgets.push($rootScope.notesWidget);
-                        $scope.dashboardStatus[widget] = selectedLayout.widgets[widget];
+                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
                         break;    
                 }
-            }
+            });
 
             angular.forEach(orderByFilter($filter('filter')($scope.dashboardWidgets, {parent: "biggerWidget"}), 'order'), function(w){
                 $scope.dashboardWidgetsOrder.biggerWidgets.push(w.title);
@@ -235,7 +235,7 @@ trackerCapture.controller('DashboardController',
         }
     };
     
-    $scope.saveDashboardLayout = function(){        
+    $scope.saveDashboardLayout = function(){
         var widgets = [];
         angular.forEach($rootScope.dashboardWidgets, function(widget){
             var w = angular.copy(widget);            
@@ -252,8 +252,6 @@ trackerCapture.controller('DashboardController',
             }            
             widgets.push(w);
         });
-        
-        //$scope.dashboardLayouts 
             
         if($scope.selectedProgram && $scope.selectedProgram.id){
             $scope.dashboardLayouts[$scope.selectedProgram.id] = {widgets: widgets, program: $scope.selectedProgram.id};
