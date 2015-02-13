@@ -37,7 +37,11 @@ import java.util.Set;
 
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.system.util.CollectionUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
+import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.user.UserAuthorityGroup;
+import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +69,20 @@ public class DefaultProgramService
     public void setI18nService( I18nService service )
     {
         i18nService = service;
+    }
+
+    private CurrentUserService currentUserService;
+
+    public void setCurrentUserService( CurrentUserService currentUserService )
+    {
+        this.currentUserService = currentUserService;
+    }
+
+    private UserService userService;
+
+    public void setUserService( UserService userService )
+    {
+        this.userService = userService;
     }
 
     // -------------------------------------------------------------------------
@@ -144,13 +162,13 @@ public class DefaultProgramService
     @Override
     public Collection<Program> getProgramsByCurrentUser()
     {
-        return i18n( i18nService, programStore.getByCurrentUser() );
+        return i18n( i18nService, getByCurrentUser() );
     }
 
     @Override
     public Collection<Program> getProgramsByCurrentUser( int type )
     {
-        return i18n( i18nService, programStore.getByCurrentUser( type ) );
+        return i18n( i18nService, getByCurrentUser( type ) );
     }
 
     @Override
@@ -197,5 +215,56 @@ public class DefaultProgramService
     {
         return i18n( i18nService, programStore.getAllOrderedName( min, max ) );
     }
+    
+    @Override
+    public Collection<Program> getByCurrentUser()
+    {
+        Collection<Program> programs = new HashSet<>();
 
+        if ( currentUserService.getCurrentUser() != null && !currentUserService.currentUserIsSuper() )
+        {
+            Set<UserAuthorityGroup> userRoles = userService.getUserCredentials( currentUserService.getCurrentUser() )
+                .getUserAuthorityGroups();
+
+            for ( Program program : programStore.getAll() )
+            {
+                if ( CollectionUtils.intersection( program.getUserRoles(), userRoles ).size() > 0 )
+                {
+                    programs.add( program );
+                }
+            }
+        }
+        else
+        {
+            programs = programStore.getAll();
+        }
+
+        return programs;
+    }
+
+    @Override
+    public Collection<Program> getByCurrentUser( int type )
+    {
+        Collection<Program> programs = new HashSet<>();
+
+        if ( currentUserService.getCurrentUser() != null && !currentUserService.currentUserIsSuper() )
+        {
+            Set<UserAuthorityGroup> userRoles = userService.getUserCredentials( currentUserService.getCurrentUser() )
+                .getUserAuthorityGroups();
+
+            for ( Program program : programStore.getByType( type ) )
+            {
+                if ( CollectionUtils.intersection( program.getUserRoles(), userRoles ).size() > 0 )
+                {
+                    programs.add( program );
+                }
+            }
+        }
+        else
+        {
+            programs = programStore.getByType( type );
+        }
+
+        return programs;
+    }
 }

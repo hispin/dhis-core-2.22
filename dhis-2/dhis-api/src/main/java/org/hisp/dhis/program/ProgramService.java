@@ -200,4 +200,21 @@ public interface ProgramService
      * there are no Program.
      */
     Collection<Program> getProgramsBetween( int min, int max );
+
+    /**
+     * Get {@link Program} by the current user.
+     *
+     * @return The program list the current user
+     */
+    Collection<Program> getByCurrentUser();
+
+    /**
+     * Get {@link Program} by the current user and a certain type
+     *
+     * @param type The type of program. There are three types, include Multi
+     *             events with registration, Single event with registration and
+     *             Single event without registration.
+     * @return Program list by a type specified
+     */
+    Collection<Program> getByCurrentUser( int type );
 }
