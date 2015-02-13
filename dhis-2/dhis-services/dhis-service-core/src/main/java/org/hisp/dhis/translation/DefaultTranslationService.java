@@ -60,7 +60,7 @@ public class DefaultTranslationService
     @Override
     public void addTranslation( Translation translation )
     {
-        translationStore.addTranslation( translation );
+        translationStore.save( translation );
     }
 
     @Override
@@ -75,7 +75,7 @@ public class DefaultTranslationService
     @Override
     public void updateTranslation( Translation translation )
     {
-        translationStore.updateTranslation( translation );
+        translationStore.update( translation );
     }
 
     @Override
@@ -117,13 +117,13 @@ public class DefaultTranslationService
     @Override
     public Collection<Translation> getAllTranslations()
     {
-        return translationStore.getAllTranslations();
+        return translationStore.getAll();
     }
 
     @Override
     public void deleteTranslation( Translation translation )
     {
-        translationStore.deleteTranslation( translation );
+        translationStore.delete( translation );
     }
 
     @Override

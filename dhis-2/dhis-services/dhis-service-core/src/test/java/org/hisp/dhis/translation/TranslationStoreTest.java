@@ -28,19 +28,16 @@ package org.hisp.dhis.translation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Locale;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Locale;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Oyvind Brucker
@@ -80,48 +77,48 @@ public class TranslationStoreTest
     public void testAddGet()
     {
         translation1a = new Translation( className1, locale1, "name", "cheers", className1 + uid1 );
-        translation1b = new Translation( className1, locale1, "shortName", "goodbye",className1 + uid1 );
-        translation2a = new Translation( className1, locale2, "name", "hello",className1 + uid1 );
-        translation2b = new Translation( className2, locale2, "name", "hey",className1 + uid1 );
-        translation2c = new Translation( className2, locale3, "name", "bonjour",className1 + uid2 );
-        
-        translationStore.addTranslation( translation1a );
-        translationStore.addTranslation( translation1b );
-        
+        translation1b = new Translation( className1, locale1, "shortName", "goodbye", className1 + uid1 );
+        translation2a = new Translation( className1, locale2, "name", "hello", className1 + uid1 );
+        translation2b = new Translation( className2, locale2, "name", "hey", className1 + uid1 );
+        translation2c = new Translation( className2, locale3, "name", "bonjour", className1 + uid2 );
+
+        translationStore.save( translation1a );
+        translationStore.save( translation1b );
+
         assertEquals( translation1a, translationStore.getTranslation( className1, Locale.UK, "name", uid1 ) );
         assertEquals( translation1b, translationStore.getTranslation( className1, Locale.UK, "shortName", uid1 ) );
     }
-    
+
     @Test
     public void delete()
     {
-        translationStore.addTranslation( translation1a );
-        translationStore.addTranslation( translation1b );
-        
+        translationStore.save( translation1a );
+        translationStore.save( translation1b );
+
         assertNotNull( translationStore.getTranslation( className1, Locale.UK, "name", uid1 ) );
         assertNotNull( translationStore.getTranslation( className1, Locale.UK, "shortName", uid1 ) );
-        
-        translationStore.deleteTranslation( translation1a );
-        
+
+        translationStore.delete( translation1a );
+
         assertNull( translationStore.getTranslation( className1, Locale.UK, "name", uid1 ) );
         assertNotNull( translationStore.getTranslation( className1, Locale.UK, "shortName", uid1 ) );
 
-        translationStore.deleteTranslation( translation1b );
+        translationStore.delete( translation1b );
 
         assertNull( translationStore.getTranslation( className1, Locale.UK, "name", uid1 ) );
         assertNull( translationStore.getTranslation( className1, Locale.UK, "shortName", uid1 ) );
     }
-    
+
     @Test
     public void testUpdateTranslation()
     {
-        translationStore.addTranslation( translation1a );
-        
+        translationStore.save( translation1a );
+
         assertEquals( translation1a, translationStore.getTranslation( className1, Locale.UK, "name", uid1 ) );
-        
+
         translation1a.setValue( "regards" );
-        
-        translationStore.updateTranslation( translation1a );
+
+        translationStore.update( translation1a );
 
         assertEquals( "regards", translationStore.getTranslation( className1, Locale.UK, "name", uid1 ).getValue() );
     }
@@ -129,12 +126,12 @@ public class TranslationStoreTest
     @Test
     public void testGetTranslations1()
     {
-        translationStore.addTranslation( translation1a );
-        translationStore.addTranslation( translation1b );
-        translationStore.addTranslation( translation2a );
-        translationStore.addTranslation( translation2b );
-        translationStore.addTranslation( translation2c );
-        
+        translationStore.save( translation1a );
+        translationStore.save( translation1b );
+        translationStore.save( translation2a );
+        translationStore.save( translation2b );
+        translationStore.save( translation2c );
+
         assertEquals( 2, translationStore.getTranslations( className1, Locale.UK, uid1 ).size() );
         assertTrue( translationStore.getTranslations( className1, Locale.UK, uid1 ).contains( translation1a ) );
         assertTrue( translationStore.getTranslations( className1, Locale.UK, uid1 ).contains( translation1b ) );
@@ -143,27 +140,27 @@ public class TranslationStoreTest
     @Test
     public void testGetTranslations2()
     {
-        translationStore.addTranslation( translation1a );
-        translationStore.addTranslation( translation1b );
-        translationStore.addTranslation( translation2a );
-        translationStore.addTranslation( translation2b );
-        translationStore.addTranslation( translation2c );
-        
+        translationStore.save( translation1a );
+        translationStore.save( translation1b );
+        translationStore.save( translation2a );
+        translationStore.save( translation2b );
+        translationStore.save( translation2c );
+
         assertEquals( 2, translationStore.getTranslations( className1, Locale.UK ).size() );
         assertTrue( translationStore.getTranslations( className1, Locale.UK, uid1 ).contains( translation1a ) );
         assertTrue( translationStore.getTranslations( className1, Locale.UK, uid1 ).contains( translation1b ) );
     }
-    
+
     @Test
     @Ignore
     public void testGetAllTranslations()
     {
-        translationStore.addTranslation( translation1a );
-        translationStore.addTranslation( translation1b );
-        translationStore.addTranslation( translation2a );
-        translationStore.addTranslation( translation2b );
-        translationStore.addTranslation( translation2c );
-        
-        assertEquals( 5, translationStore.getAllTranslations().size() );
+        translationStore.save( translation1a );
+        translationStore.save( translation1b );
+        translationStore.save( translation2a );
+        translationStore.save( translation2b );
+        translationStore.save( translation2c );
+
+        assertEquals( 5, translationStore.getAll().size() );
     }
 }

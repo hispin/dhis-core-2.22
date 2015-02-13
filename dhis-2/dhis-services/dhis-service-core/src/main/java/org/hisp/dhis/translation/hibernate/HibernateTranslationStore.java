@@ -28,56 +28,26 @@ package org.hisp.dhis.translation.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.system.util.LocaleUtils;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.translation.TranslationStore;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Oyvind Brucker
  */
 public class HibernateTranslationStore
+    extends HibernateIdentifiableObjectStore<Translation>
     implements TranslationStore
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
-    private SessionFactory sessionFactory;
-
-    public void setSessionFactory( SessionFactory sessionFactory )
-    {
-        this.sessionFactory = sessionFactory;
-    }
-
-    // -------------------------------------------------------------------------
-    // Translation
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void addTranslation( Translation translation )
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        session.save( translation );
-    }
-
-    @Override
-    public void updateTranslation( Translation translation )
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        session.update( translation );
-    }
-
     @Override
     @SuppressWarnings( "unchecked" )
     public Translation getTranslation( String className, Locale locale, String property, String objectUid )
@@ -94,9 +64,9 @@ public class HibernateTranslationStore
         criteria.setCacheable( true );
 
         List<Translation> list = criteria.list();
-        
+
         List<Translation> translations = LocaleUtils.getTranslationsHighestSpecifity( list );
-        
+
         return !translations.isEmpty() ? translations.get( 0 ) : null;
     }
 
@@ -115,11 +85,11 @@ public class HibernateTranslationStore
 
         criteria.setCacheable( true );
 
-        List<Translation> translations = criteria.list();     
-               
+        List<Translation> translations = criteria.list();
+
         return !translations.isEmpty() ? translations.get( 0 ) : null;
     }
-    
+
     @Override
     @SuppressWarnings( "unchecked" )
     public Collection<Translation> getTranslations( String className, Locale locale, String objectUid )
@@ -135,7 +105,7 @@ public class HibernateTranslationStore
         criteria.setCacheable( true );
 
         List<Translation> translations = criteria.list();
-        
+
         return LocaleUtils.getTranslationsHighestSpecifity( translations );
     }
 
@@ -170,7 +140,7 @@ public class HibernateTranslationStore
         criteria.setCacheable( true );
 
         List<Translation> translations = criteria.list();
-        
+
         return LocaleUtils.getTranslationsHighestSpecifity( translations );
     }
 
@@ -185,29 +155,8 @@ public class HibernateTranslationStore
         criteria.add( Restrictions.eq( "locale", locale.toString() ) );
 
         criteria.setCacheable( true );
-        
-        return criteria.list();
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public Collection<Translation> getAllTranslations()
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        Criteria criteria = session.createCriteria( Translation.class );
-
-        criteria.setCacheable( true );
 
         return criteria.list();
-    }
-
-    @Override
-    public void deleteTranslation( Translation translation )
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        session.delete( translation );
     }
 
     @Override

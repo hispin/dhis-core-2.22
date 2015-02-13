@@ -28,38 +28,25 @@ package org.hisp.dhis.translation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Locale;
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * @author Oyvind Brucker
  */
 public interface TranslationStore
+    extends GenericIdentifiableObjectStore<Translation>
 {
     String ID = TranslationStore.class.getName();
 
     /**
-     * Adds a Translation.
-     * 
-     * @param translation the Translation.
-     */
-    void addTranslation( Translation translation );
-
-    /**
-     * Updates a Translation.
-     * 
-     * @param translation the Translation.
-     */
-    void updateTranslation( Translation translation );
-
-    /**
      * Retrieves a Translation.
-     * 
-     *
      *
      * @param className the class name.
-     * @param locale the locale.
-     * @param property the property.
+     * @param locale    the locale.
+     * @param property  the property.
      * @param objectUid
      * @return a Translation.
      */
@@ -68,12 +55,10 @@ public interface TranslationStore
     /**
      * Retrieves a Translation. Only exact matches on the given
      * Locale will be returned.
-     * 
-     *
      *
      * @param className the class name.
-     * @param locale the locale.
-     * @param property the property.
+     * @param locale    the locale.
+     * @param property  the property.
      * @param objectUid
      * @return a Translation.
      */
@@ -81,11 +66,9 @@ public interface TranslationStore
 
     /**
      * Retrieves a Collection of Translations.
-     * 
-     *
      *
      * @param className the class name.
-     * @param locale the locale.
+     * @param locale    the locale.
      * @param objectUid the id.
      * @return a Collection of Translations.
      */
@@ -94,45 +77,30 @@ public interface TranslationStore
     /**
      * Retrieves a Collection of Translations. Only exact matches on the given
      * Locale will be returned.
-     * 
      *
      * @param className the class name.
      * @param objectUid the id.
-     * @param locale the locale.
+     * @param locale    the locale.
      * @return a Collection of Translations.
      */
     Collection<Translation> getTranslationsNoFallback( String className, String objectUid, Locale locale );
-    
+
     /**
      * Retrieves a Collection of Translations.
-     * 
+     *
      * @param className the class name.
-     * @param locale the locale.
+     * @param locale    the locale.
      * @return a Collection of Translations.
      */
     Collection<Translation> getTranslations( String className, Locale locale );
 
     /**
      * Retrieves a Collection of Translations.
-     * 
+     *
      * @param locale the locale.
      * @return a Collection of Translations.
      */
     Collection<Translation> getTranslations( Locale locale );
-
-    /**
-     * Retrieves a Collection of all Translations.
-     * 
-     * @return a Collection of all Translations.
-     */
-    Collection<Translation> getAllTranslations();
-
-    /**
-     * Deletes a Translation.
-     * 
-     * @param translation the Translation.
-     */
-    void deleteTranslation( Translation translation );
 
     /**
      * Deletes Translations.
