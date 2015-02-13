@@ -29,8 +29,6 @@ package org.hisp.dhis.program.hibernate;
  */
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -38,11 +36,7 @@ import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStore;
-import org.hisp.dhis.system.util.CollectionUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
-import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.user.UserAuthorityGroup;
-import org.hisp.dhis.user.UserService;
 
 /**
  * @author Chau Thu Tran
@@ -51,24 +45,6 @@ public class HibernateProgramStore
     extends HibernateIdentifiableObjectStore<Program>
     implements ProgramStore
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
-    private CurrentUserService currentUserService;
-
-    public void setCurrentUserService( CurrentUserService currentUserService )
-    {
-        this.currentUserService = currentUserService;
-    }
-
-    private UserService userService;
-
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-
     // -------------------------------------------------------------------------
     // Implemented methods
     // -------------------------------------------------------------------------
@@ -102,62 +78,9 @@ public class HibernateProgramStore
     }
 
     @Override
-    public Collection<Program> getByCurrentUser()
-    {
-        Collection<Program> programs = new HashSet<>();
-
-        if ( currentUserService.getCurrentUser() != null && !currentUserService.currentUserIsSuper() )
-        {
-            Set<UserAuthorityGroup> userRoles = userService.getUserCredentials( currentUserService.getCurrentUser() )
-                .getUserAuthorityGroups();
-
-            for ( Program program : getAll() )
-            {
-                if ( CollectionUtils.intersection( program.getUserRoles(), userRoles ).size() > 0 )
-                {
-                    programs.add( program );
-                }
-            }
-        }
-        else
-        {
-            programs = getAll();
-        }
-
-        return programs;
-    }
-
-    @Override
-    public Collection<Program> getByCurrentUser( int type )
-    {
-        Collection<Program> programs = new HashSet<>();
-
-        if ( currentUserService.getCurrentUser() != null && !currentUserService.currentUserIsSuper() )
-        {
-            Set<UserAuthorityGroup> userRoles = userService.getUserCredentials( currentUserService.getCurrentUser() )
-                .getUserAuthorityGroups();
-
-            for ( Program program : getByType( type ) )
-            {
-                if ( CollectionUtils.intersection( program.getUserRoles(), userRoles ).size() > 0 )
-                {
-                    programs.add( program );
-                }
-            }
-        }
-        else
-        {
-            programs = getByType( type );
-        }
-
-        return programs;
-    }
-
-    @Override
     @SuppressWarnings( "unchecked" )
     public Collection<Program> getByTrackedEntity( TrackedEntity trackedEntity )
     {
         return getCriteria( Restrictions.eq( "trackedEntity", trackedEntity ) ).list();
     }
-
 }

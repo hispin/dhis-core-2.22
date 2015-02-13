@@ -73,23 +73,6 @@ public interface ProgramStore
     Collection<Program> get( int type, OrganisationUnit orgunit );
 
     /**
-     * Get {@link Program} by the current user.
-     *
-     * @return The program list the current user
-     */
-    Collection<Program> getByCurrentUser();
-
-    /**
-     * Get {@link Program} by the current user and a certain type
-     *
-     * @param type The type of program. There are three types, include Multi
-     *             events with registration, Single event with registration and
-     *             Single event without registration.
-     * @return Program list by a type specified
-     */
-    Collection<Program> getByCurrentUser( int type );
-    
-    /**
      * Get {@link Program} by TrackedEntity
      *
      * @param trackedEntity {@link TrackedEntity}
