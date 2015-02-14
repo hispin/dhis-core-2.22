@@ -62,6 +62,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.system.util.ReflectionUtils;
+import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -79,6 +80,9 @@ public class DefaultMetaDataDependencyService
     @SuppressWarnings("unchecked")
     private final Set<Class<? extends BaseIdentifiableObject>> SPECIAL_CASE_CLASSES = Sets.newHashSet( DataElement.class, DataElementCategoryCombo.class, Indicator.class, OrganisationUnit.class, ValidationRule.class );
 
+    @SuppressWarnings("unchecked")
+    private final Set<Class<User>> SKIP_DEPENDENCY_CHECK_CLASSES = Sets.newHashSet( User.class );
+    
     //-------------------------------------------------------------------------------------------------------
     // Dependencies
     //-------------------------------------------------------------------------------------------------------
@@ -218,6 +222,7 @@ public class DefaultMetaDataDependencyService
     private List<IdentifiableObject> computeAllDependencies( IdentifiableObject identifiableObject )
     {
         List<IdentifiableObject> finalDependencies = new ArrayList<>();
+        
         List<IdentifiableObject> dependencies = getDependencies( identifiableObject );
 
         if ( dependencies.isEmpty() )
@@ -243,6 +248,12 @@ public class DefaultMetaDataDependencyService
     private List<IdentifiableObject> getDependencies( IdentifiableObject identifiableObject )
     {
         List<IdentifiableObject> dependencies = new ArrayList<>();
+        
+        if ( identifiableObject == null || SKIP_DEPENDENCY_CHECK_CLASSES.contains( identifiableObject.getClass() ) )
+        {
+            return dependencies;
+        }
+        
         List<Field> fields = ReflectionUtils.getAllFields( identifiableObject.getClass() );
         
         List<Schema> schemas = schemaService.getMetadataSchemas();
