@@ -29,9 +29,12 @@ package org.hisp.dhis.dxf2.metadata;
  */
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.collect.Sets;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.proxy.HibernateProxy;
+import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.view.ExportView;
@@ -74,7 +77,8 @@ public class DefaultMetaDataDependencyService
 {
     private static final Log log = LogFactory.getLog( DefaultMetaDataDependencyService.class );
 
-    private final Class<?>[] SPECIAL_CASE_CLASSES = new Class<?>[]{ DataElement.class, DataElementCategoryCombo.class, Indicator.class, OrganisationUnit.class, ValidationRule.class };
+    @SuppressWarnings("unchecked")
+    private final Set<Class<? extends BaseIdentifiableObject>> SPECIAL_CASE_CLASSES = Sets.newHashSet( DataElement.class, DataElementCategoryCombo.class, Indicator.class, OrganisationUnit.class, ValidationRule.class );
 
     //-------------------------------------------------------------------------------------------------------
     // Dependencies
@@ -307,15 +311,7 @@ public class DefaultMetaDataDependencyService
 
     private boolean isSpecialCase( IdentifiableObject identifiableObject )
     {
-        for ( Class<?> specialCase : SPECIAL_CASE_CLASSES )
-        {
-            if ( identifiableObject.getClass().equals( specialCase ) )
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return SPECIAL_CASE_CLASSES.contains( identifiableObject.getClass() );
     }
 
     private Set<IdentifiableObject> computeSpecialDependencyCase( IdentifiableObject identifiableObject )
