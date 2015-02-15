@@ -1,4 +1,4 @@
-package org.hisp.dhis.analytics.event;
+package org.hisp.dhis.analytics;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,40 +28,10 @@ package org.hisp.dhis.analytics.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Set;
-
-import org.hisp.dhis.analytics.EventOutputType;
-import org.hisp.dhis.analytics.SortOrder;
-import org.hisp.dhis.common.AnalyticalObject;
-import org.hisp.dhis.common.DisplayProperty;
-import org.hisp.dhis.common.EventAnalyticalObject;
-import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.i18n.I18nFormat;
-
 /**
  * @author Lars Helge Overland
  */
-public interface EventAnalyticsService
-{    
-    Grid getAggregatedEventData( EventQueryParams params );
-    
-    Grid getAggregatedEventData( AnalyticalObject object, I18nFormat format );
-    
-    Grid getEvents( EventQueryParams params );
-
-    /**
-     * Used for aggregate query.
-     */
-    EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate, 
-        Set<String> dimension, Set<String> filter, boolean skipMeta, boolean hierarchyMeta, SortOrder sortOrder, 
-        Integer limit, EventOutputType outputType, DisplayProperty displayProperty, I18nFormat format );
-
-    /**
-     * Used for event query.
-     */
-    EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate, Set<String> dimension, Set<String> filter, 
-        String ouMode, Set<String> asc, Set<String> desc, boolean skipMeta, boolean hierarchyMeta, boolean coordinatesOnly, 
-        DisplayProperty displayProperty, Integer page, Integer pageSize, I18nFormat format );
-    
-    EventQueryParams getFromAnalyticalObject( EventAnalyticalObject object, I18nFormat format );
+public enum EventOutputType
+{
+    EVENT, ENROLLMENT, TRACKED_ENTITY_INSTANCE;
 }
