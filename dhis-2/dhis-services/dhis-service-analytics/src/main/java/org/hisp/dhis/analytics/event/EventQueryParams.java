@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.analytics.DataQueryParams;
+import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.analytics.Partitions;
 import org.hisp.dhis.analytics.SortOrder;
 import org.hisp.dhis.common.DimensionalObject;
@@ -80,7 +81,7 @@ public class EventQueryParams
     
     private Integer limit;
     
-    private boolean uniqueInstances;
+    private EventOutputType outputType;
     
     private boolean coordinatesOnly;
     
@@ -126,7 +127,7 @@ public class EventQueryParams
         params.pageSize = this.pageSize;
         params.sortOrder = this.sortOrder;
         params.limit = this.limit;
-        params.uniqueInstances = this.uniqueInstances;
+        params.outputType = this.outputType;
         params.coordinatesOnly = this.coordinatesOnly;
         
         params.periodType = this.periodType;
@@ -421,14 +422,14 @@ public class EventQueryParams
         this.limit = limit;
     }
     
-    public boolean isUniqueInstances()
+    public EventOutputType getOutputType()
     {
-        return uniqueInstances;
+        return outputType;
     }
 
-    public void setUniqueInstances( boolean uniqueInstances )
+    public void setOutputType( EventOutputType outputType )
     {
-        this.uniqueInstances = uniqueInstances;
+        this.outputType = outputType;
     }
 
     public boolean isCoordinatesOnly()

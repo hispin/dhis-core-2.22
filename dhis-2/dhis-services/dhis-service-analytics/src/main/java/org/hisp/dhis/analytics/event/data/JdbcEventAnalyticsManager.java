@@ -43,6 +43,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.analytics.event.EventAnalyticsManager;
 import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.common.DimensionType;
@@ -84,7 +85,7 @@ public class JdbcEventAnalyticsManager
     @Override
     public Grid getAggregatedEventData( EventQueryParams params, Grid grid, int maxLimit )
     {
-        String countClause = ( params.isProgramRegistration() && params.isUniqueInstances() ) ? "count(distinct tei)" : "count(psi)";
+        String countClause = getCountClause( params );
         
         String sql = "select " + countClause + " as value," + getSelectColumns( params ) + " ";
 
@@ -305,6 +306,27 @@ public class JdbcEventAnalyticsManager
     // Supportive methods
     // -------------------------------------------------------------------------
 
+    /**
+     * Returns the count clause based on the output type.
+     */
+    private String getCountClause( EventQueryParams params )
+    {
+        EventOutputType outputType = params.getOutputType();
+        
+        if ( EventOutputType.TRACKED_ENTITY_INSTANCE.equals( outputType ) && params.isProgramRegistration() )
+        {
+            return "count(distinct tei)";
+        }
+        else if ( EventOutputType.ENROLLMENT.equals( outputType ) )
+        {
+            return "count(distinct pi)";
+        }
+        else // EVENT
+        {
+            return "count(psi)";
+        }
+    }
+    
     /**
      * Returns the dynamic select columns. Dimensions come first and query items
      * second.

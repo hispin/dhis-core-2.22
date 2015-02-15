@@ -51,6 +51,7 @@ import java.util.Set;
 
 import org.hisp.dhis.analytics.AnalyticsSecurityManager;
 import org.hisp.dhis.analytics.AnalyticsService;
+import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.analytics.SortOrder;
 import org.hisp.dhis.analytics.event.EventAnalyticsManager;
 import org.hisp.dhis.analytics.event.EventAnalyticsService;
@@ -90,6 +91,8 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.common.base.MoreObjects;
 
 /**
  * @author Lars Helge Overland
@@ -341,14 +344,14 @@ public class DefaultEventAnalyticsService
     @Override
     public EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate,
         Set<String> dimension, Set<String> filter, boolean skipMeta, boolean hierarchyMeta, SortOrder sortOrder, 
-        Integer limit, boolean uniqueInstances, DisplayProperty displayProperty, I18nFormat format )
+        Integer limit, EventOutputType outputType, DisplayProperty displayProperty, I18nFormat format )
     {
         EventQueryParams params = getFromUrl( program, stage, startDate, endDate, dimension, filter, null, null, null,
             skipMeta, hierarchyMeta, false, displayProperty, null, null, format );
         
         params.setSortOrder( sortOrder );
         params.setLimit( limit );
-        params.setUniqueInstances( uniqueInstances );
+        params.setOutputType( MoreObjects.firstNonNull( outputType, EventOutputType.EVENT ) );
         params.setAggregate( true );
 
         return params;
