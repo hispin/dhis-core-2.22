@@ -19,7 +19,9 @@ jQuery( document ).ready( function()
 </script>
 
 <h3>$i18n.getString( "create_new_program_indicator" ) #openHelp( "program_indicator" )</h3>
-									
+
+<h4>$encoder.htmlEncode($program.displayName)</h4>
+							
 <form id="programIndicatorForm" action="addProgramIndicator.action" method="post" class="inputForm">
 <input type='hidden' id='programId' name='programId' value='$program.id'>
 
@@ -77,7 +79,7 @@ jQuery( document ).ready( function()
 				<select id="programStageId" name="programStageId" onChange="getTrackedEntityDataElements();">
 					<option value=''>[$i18n.getString('please_select')]</option>
 					#foreach( $programStage in $program.programStages )
-					<option value='$programStage.id'>$programStage.displayName</option>
+					<option value='$programStage.uid'>$programStage.displayName</option>
 					#end
 				</select>
 			</td>

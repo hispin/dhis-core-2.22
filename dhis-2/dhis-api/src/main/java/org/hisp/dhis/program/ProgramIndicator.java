@@ -33,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -49,17 +50,25 @@ public class ProgramIndicator
     extends BaseNameableObject
 {
     public static final String SEPARATOR_ID = "\\.";
-    public static final String VALUE_TYPE_DATE = "date";
-    public static final String VALUE_TYPE_INT = "int";
+    public static final String KEY_DATAELEMENT = "\\$";
+    public static final String KEY_ATTRIBUTE = "A";
+    public static final String KEY_PROGRAM_VARIABLE = "V";
+    public static final String KEY_CONSTANT = "C";
     public static final String INCIDENT_DATE = "incident_date";
     public static final String ENROLLEMENT_DATE = "enrollment_date";
     public static final String CURRENT_DATE = "current_date";
+    public static final String VALUE_TYPE_DATE = "date";
+    public static final String VALUE_TYPE_INT = "int";
     private static final long serialVersionUID = 7920320128945484331L;
-    public static String OBJECT_PROGRAM_STAGE_DATAELEMENT = "DE";
     public static String SEPARATOR_OBJECT = ":";
-    public static final String regExp = "\\[" + OBJECT_PROGRAM_STAGE_DATAELEMENT + SEPARATOR_OBJECT + "([a-zA-Z0-9\\- ]+["
-        + SEPARATOR_ID + "[0-9]*]*)" + "\\]";
 
+    public static final String regExp = "("+KEY_DATAELEMENT+"|"+KEY_ATTRIBUTE+"|"+KEY_PROGRAM_VARIABLE+"|"+KEY_CONSTANT+")\\{([a-zA-Z0-9]+|" + INCIDENT_DATE + "|" + ENROLLEMENT_DATE + "|"
+        + CURRENT_DATE + ")" + SEPARATOR_ID + "*([a-zA-Z0-9]*)\\}";
+
+    public static final String VALID = "valid";
+
+    public static final String EXPRESSION_NOT_WELL_FORMED = "expression_not_well_formed";
+    
     private String valueType;
 
     private String expression;

@@ -134,4 +134,12 @@ public interface ProgramIndicatorService
      */
     String getExpressionDescription( String expression );
 
+    /**
+     * Get description of an indicator expression
+     *
+     * @param expression A expression string
+     * @return The expression is valid or not
+     */
+    String expressionIsValid( String expression );
+
 }

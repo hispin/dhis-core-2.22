@@ -53,7 +53,7 @@
 		#foreach( $indicator in $programStage.programIndicators )
 		<tr>
 			<td>$indicator.displayName</td>
-			<td>$encoder.htmlEncode( $programIndicatorsMap.get($indicator.displayName) )</td>
+			<td>$!encoder.htmlEncode( $programIndicatorsMap.get($indicator.displayName) )</td>
 		</tr>
 		#end
 	</table>

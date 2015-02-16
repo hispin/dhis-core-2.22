@@ -2,6 +2,8 @@
 	<ul>
 		<li><a href="#tab-1">$i18n.getString("dataelements")</a></li>
 		<li><a href="#tab-2">$i18n.getString("program")</a></li>
+		<li><a href="#tab-3">$i18n.getString("attributes")</a></li>
+		<li><a href="#tab-4">$i18n.getString("constant")</a></li>
 	</ul>	
 	
 	<div id="tab-1">
@@ -31,14 +33,63 @@
 			<tr>
 				<td>
 					<select id="programProperty" name="programProperty" size="10" ondblclick="insertInfo(this, false);" >
-						<option value="incident_date">$i18n.getString( "incident_date" )</option>
-						<option value="enrollment_date">$i18n.getString( "date_of_enrollment" )</option>
-						<option value="current_date">$i18n.getString( "current_date" )</option>
+						<option value="V{incident_date}">$i18n.getString( "incident_date" )</option>
+						<option value="V{enrollment_date}">$i18n.getString( "date_of_enrollment" )</option>
+						<option value="V{current_date}">$i18n.getString( "current_date" )</option>
 					</select>
 				</td>
 			</tr>
 		</table>
 	</div>
+
+	<div id="tab-3">
+		<table>
+        <tr>
+			<td><label for="attributes">$i18n.getString( "attribute" )</label></td>
+		</tr>
+        <tr>
+			<td>
+				<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterAttr(event, this.value, 'attributes');" style='width:265px;'/>
+				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" style='width:50px'>			
+			</td>
+        </tr>
+        <tr>
+			<td>
+				<select id="attributes" name="attributes" size="8" style="height:120px;" ondblclick="insertAttribute(this);">
+					#foreach( $programAttribute in $program.programAttributes )
+						#if( $programAttribute.attribute.valueType=='number' )
+							<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
+						#end
+					#end
+				</select>
+			</td>
+		</tr>
+      </table>
+	</div>
+	
+	<div id="tab-4">
+		<table>
+        <tr>
+			<td><label for="constant">$i18n.getString( "constant" )</label></td>
+		</tr>
+        <tr>
+			<td>
+				<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterAttr(event, this.value, 'attributes');" style='width:265px;'/>
+				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" style='width:50px'>			
+			</td>
+        </tr>
+        <tr>
+			<td>
+				<select id="constants" name="constants" size="8" style="height:120px;" ondblclick="insertAttribute(this);">
+					#foreach( $constant in $constants )
+						<option value='$constant.uid'>$encoder.htmlEncode($constant.displayName)</option>
+					#end
+				</select>
+			</td>
+		</tr>
+      </table>
+	</div>
+	
 </div>
 
 <tr>
@@ -77,6 +128,7 @@
 			<fieldset>
 				<legend>$i18n.getString( "description" )</legend>
 				<div id='aggregationDescription'>$!encoder.htmlEncode($!description)</div>
+				<input type="hidden" id="checkExpression" name="checkExpression" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
 			</fieldset>
 		</td>
 	</tr>
