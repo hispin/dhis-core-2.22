@@ -338,17 +338,17 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         serialize( request, response, summary );
     }
 
-    protected void translate( List<T> entities, TranslateOptions translate )
+    protected void translate( List<T> entities, TranslateOptions translateOptions )
     {
-        if ( translate.isTranslate() )
+        if ( translateOptions.isTranslate() )
         {
-            if ( translate.defaultLocale() )
+            if ( translateOptions.defaultLocale() )
             {
                 i18nService.internationalise( entities );
             }
             else
             {
-                i18nService.internationalise( entities, translate.getLocale() );
+                i18nService.internationalise( entities, translateOptions.getLocale() );
             }
         }
     }
