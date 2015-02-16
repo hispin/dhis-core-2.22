@@ -70,9 +70,6 @@ public class SystemController
     public static final String RESOURCE_PATH = "/system";
 
     @Autowired
-    private Scheduler scheduler;
-
-    @Autowired
     private CurrentUserService currentUserService;
 
     @Autowired

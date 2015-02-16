@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author Abyot Asalefew Gizaw <abyota@gmail.com>
- *
  */
 @Controller
 @RequestMapping( value = ProgramStageSectionSchemaDescriptor.API_ENDPOINT )
