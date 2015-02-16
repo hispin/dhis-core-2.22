@@ -28,36 +28,16 @@ package org.hisp.dhis.dxf2.datavalueset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static com.google.common.collect.Sets.newHashSet;
-import static org.apache.commons.lang.StringUtils.trimToNull;
-import static org.hisp.dhis.common.IdentifiableProperty.UUID;
-import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
-import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
-import static org.hisp.dhis.system.util.ConversionUtils.wrap;
-import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
-import static org.hisp.dhis.system.util.DateUtils.parseDate;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.csvreader.CsvReader;
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.staxwax.factory.XMLFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -70,9 +50,9 @@ import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportCount;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.dxf2.metadata.ExportOptions;
 import org.hisp.dhis.dxf2.metadata.ImportOptions;
 import org.hisp.dhis.dxf2.pdfform.PdfDataEntryFormUtil;
+import org.hisp.dhis.dxf2.utils.IdSchemes;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
@@ -95,7 +75,26 @@ import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.csvreader.CsvReader;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.collect.Sets.newHashSet;
+import static org.apache.commons.lang.StringUtils.trimToNull;
+import static org.hisp.dhis.common.IdentifiableProperty.UUID;
+import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
+import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
+import static org.hisp.dhis.system.util.ConversionUtils.wrap;
+import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
+import static org.hisp.dhis.system.util.DateUtils.parseDate;
 
 /**
  * @author Lars Helge Overland
@@ -109,7 +108,7 @@ public class DefaultDataValueSetService
     private static final String ERROR_INVALID_PERIOD = "Invalid period: ";
     private static final String ERROR_INVALID_ORG_UNIT = "Invalid org unit: ";
     private static final String ERROR_OBJECT_NEEDED_TO_COMPLETE = "Must be provided to complete data set";
-    
+
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
 
@@ -136,7 +135,7 @@ public class DefaultDataValueSetService
 
     @Autowired
     private DataValueSetStore dataValueSetStore;
-    
+
     @Autowired
     private I18nManager i18nManager;
 
@@ -157,7 +156,7 @@ public class DefaultDataValueSetService
     //--------------------------------------------------------------------------
 
     @Override
-    public void writeDataValueSetXml( String dataSet, String period, String orgUnit, OutputStream out, ExportOptions exportOptions )
+    public void writeDataValueSetXml( String dataSet, String period, String orgUnit, OutputStream out, IdSchemes idSchemes )
     {
         DataSet dataSet_ = dataSetService.getDataSet( dataSet );
         Period period_ = PeriodType.getPeriodFromIsoString( period );
@@ -188,12 +187,12 @@ public class DefaultDataValueSetService
         period_ = periodService.reloadPeriod( period_ );
 
         dataValueSetStore.writeDataValueSetXml( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, wrap( period_ ),
-            wrap( orgUnit_ ), out, exportOptions );
+            wrap( orgUnit_ ), out, idSchemes );
     }
 
     @Override
-    public void writeDataValueSetXml( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits, 
-        boolean includeChildren, OutputStream out, ExportOptions exportOptions )
+    public void writeDataValueSetXml( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits,
+        boolean includeChildren, OutputStream out, IdSchemes idSchemes )
     {
         Set<DataSet> ds = new HashSet<>( dataSetService.getDataSetsByUid( dataSets ) );
         Set<Period> pe = new HashSet<>( periodService.getPeriodsBetweenDates( startDate, endDate ) );
@@ -203,27 +202,27 @@ public class DefaultDataValueSetService
         {
             throw new IllegalArgumentException( "At least one data set must be specified" );
         }
-        
+
         if ( pe.isEmpty() )
         {
             throw new IllegalArgumentException( "At least one period must be specified" );
         }
-        
+
         if ( ou.isEmpty() )
         {
             throw new IllegalArgumentException( "At least one organisation unit must be specified" );
         }
-        
+
         if ( includeChildren )
         {
             ou = new HashSet<>( organisationUnitService.getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( ou ) ) );
         }
-        
-        dataValueSetStore.writeDataValueSetXml( ds, null, null, null, pe, ou, out, exportOptions );
+
+        dataValueSetStore.writeDataValueSetXml( ds, null, null, null, pe, ou, out, idSchemes );
     }
 
     @Override
-    public void writeDataValueSetJson( String dataSet, String period, String orgUnit, OutputStream outputStream, ExportOptions exportOptions )
+    public void writeDataValueSetJson( String dataSet, String period, String orgUnit, OutputStream outputStream, IdSchemes idSchemes )
     {
         DataSet dataSet_ = dataSetService.getDataSet( dataSet );
         Period period_ = PeriodType.getPeriodFromIsoString( period );
@@ -254,18 +253,18 @@ public class DefaultDataValueSetService
         period_ = periodService.reloadPeriod( period_ );
 
         dataValueSetStore.writeDataValueSetJson( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, wrap( period_ ),
-            wrap( orgUnit_ ), outputStream, exportOptions );
+            wrap( orgUnit_ ), outputStream, idSchemes );
     }
 
     @Override
-    public void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, ExportOptions exportOptions )
+    public void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes )
     {
-        dataValueSetStore.writeDataValueSetJson( lastUpdated, outputStream, exportOptions );
+        dataValueSetStore.writeDataValueSetJson( lastUpdated, outputStream, idSchemes );
     }
 
     @Override
     public void writeDataValueSetJson( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits,
-        boolean includeChildren, OutputStream outputStream, ExportOptions exportOptions )
+        boolean includeChildren, OutputStream outputStream, IdSchemes idSchemes )
     {
         Set<DataSet> ds = new HashSet<>( dataSetService.getDataSetsByUid( dataSets ) );
         Set<Period> pe = new HashSet<>( periodService.getPeriodsBetweenDates( startDate, endDate ) );
@@ -275,27 +274,27 @@ public class DefaultDataValueSetService
         {
             throw new IllegalArgumentException( "At least one data set must be specified" );
         }
-        
+
         if ( pe.isEmpty() )
         {
             throw new IllegalArgumentException( "At least one period must be specified" );
         }
-        
+
         if ( ou.isEmpty() )
         {
             throw new IllegalArgumentException( "At least one organisation unit must be specified" );
         }
-        
+
         if ( includeChildren )
         {
             ou = new HashSet<>( organisationUnitService.getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( ou ) ) );
         }
 
-        dataValueSetStore.writeDataValueSetJson( ds, null, null, null, pe, ou, outputStream, exportOptions );
+        dataValueSetStore.writeDataValueSetJson( ds, null, null, null, pe, ou, outputStream, idSchemes );
     }
 
     @Override
-    public void writeDataValueSetCsv( String dataSet, String period, String orgUnit, Writer writer, ExportOptions exportOptions )
+    public void writeDataValueSetCsv( String dataSet, String period, String orgUnit, Writer writer, IdSchemes idSchemes )
     {
         DataSet dataSet_ = dataSetService.getDataSet( dataSet );
         Period period_ = PeriodType.getPeriodFromIsoString( period );
@@ -326,12 +325,12 @@ public class DefaultDataValueSetService
         period_ = periodService.reloadPeriod( period_ );
 
         dataValueSetStore.writeDataValueSetCsv( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, wrap( period_ ),
-            wrap( orgUnit_ ), writer, exportOptions );
+            wrap( orgUnit_ ), writer, idSchemes );
     }
 
     @Override
     public void writeDataValueSetCsv( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits,
-        boolean includeChildren, Writer writer, ExportOptions exportOptions )
+        boolean includeChildren, Writer writer, IdSchemes idSchemes )
     {
         Set<DataSet> ds = new HashSet<>( dataSetService.getDataSetsByUid( dataSets ) );
         Set<Period> pe = new HashSet<>( periodService.getPeriodsBetweenDates( startDate, endDate ) );
@@ -341,23 +340,23 @@ public class DefaultDataValueSetService
         {
             throw new IllegalArgumentException( "At least one data set must be specified" );
         }
-        
+
         if ( pe.isEmpty() )
         {
             throw new IllegalArgumentException( "At least one period must be specified" );
         }
-        
+
         if ( ou.isEmpty() )
         {
             throw new IllegalArgumentException( "At least one organisation unit must be specified" );
         }
-        
+
         if ( includeChildren )
         {
             ou = new HashSet<>( organisationUnitService.getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( ou ) ) );
         }
 
-        dataValueSetStore.writeDataValueSetCsv( ds, null, null, null, pe, ou, writer, exportOptions );
+        dataValueSetStore.writeDataValueSetCsv( ds, null, null, null, pe, ou, writer, idSchemes );
     }
 
     @Override
@@ -567,18 +566,18 @@ public class DefaultDataValueSetService
      * a generic id scheme for all objects. The specific id schemes will take
      * precedence over the generic id scheme. The generic id scheme also applies
      * to data set and category option combo.
-     * 
+     * <p/>
      * The id schemes uses the following order of precedence:
-     * 
+     * <p/>
      * <ul>
      * <li>Id scheme from the data value set</li>
      * <li>Id scheme from the import options</li>
      * <li>Default id scheme which is UID</li>
      * <ul>
-     * 
+     * <p/>
      * If id scheme is specific in the data value set, any id schemes in the import
      * options will be ignored.
-     * 
+     *
      * @param importOptions
      * @param id
      * @param dataValueSet
@@ -590,13 +589,13 @@ public class DefaultDataValueSetService
         notifier.clear( id ).notify( id, "Process started" );
 
         ImportSummary summary = new ImportSummary();
-        
+
         I18n i18n = i18nManager.getI18n();
 
         importOptions = importOptions != null ? importOptions : ImportOptions.getDefaultImportOptions();
 
         log.info( "Import options: " + importOptions );
-        
+
         //----------------------------------------------------------------------
         // Get id scheme
         //----------------------------------------------------------------------
@@ -604,21 +603,21 @@ public class DefaultDataValueSetService
         IdentifiableProperty dvSetIdScheme = dataValueSet.getIdSchemeProperty();
         IdentifiableProperty dvSetDataElementIdScheme = dataValueSet.getDataElementIdSchemeProperty();
         IdentifiableProperty dvSetOrgUnitIdScheme = dataValueSet.getOrgUnitIdSchemeProperty();
-        
+
         log.info( "Data value set scheme: " + dvSetIdScheme + ", data element scheme: " + dvSetDataElementIdScheme + ", org unit scheme: " + dvSetOrgUnitIdScheme );
-        
-        IdentifiableProperty idScheme = dvSetIdScheme != null ? dvSetIdScheme : importOptions.getIdScheme();                    
+
+        IdentifiableProperty idScheme = dvSetIdScheme != null ? dvSetIdScheme : importOptions.getIdScheme();
         IdentifiableProperty dataElementIdScheme = dvSetDataElementIdScheme != null ? dvSetDataElementIdScheme : importOptions.getDataElementIdScheme();
         IdentifiableProperty orgUnitIdScheme = dvSetOrgUnitIdScheme != null ? dvSetOrgUnitIdScheme : importOptions.getOrgUnitIdScheme();
-        
+
         log.info( "Scheme: " + idScheme + ", data element scheme: " + dataElementIdScheme + ", org unit scheme: " + orgUnitIdScheme );
-        
+
         boolean dryRun = dataValueSet.getDryRun() != null ? dataValueSet.getDryRun() : importOptions.isDryRun();
-        
+
         ImportStrategy strategy = dataValueSet.getStrategy() != null ?
             ImportStrategy.valueOf( dataValueSet.getStrategy() ) :
             importOptions.getImportStrategy();
-            
+
         boolean skipExistingCheck = importOptions.isSkipExistingCheck();
 
         //----------------------------------------------------------------------
@@ -660,19 +659,19 @@ public class DefaultDataValueSetService
             summary.getConflicts().add( new ImportConflict( dataValueSet.getDataSet(), "Data set not found or not accessible" ) );
             summary.setStatus( ImportStatus.ERROR );
         }
-        
+
         if ( outerOrgUnit == null && trimToNull( dataValueSet.getOrgUnit() ) != null )
         {
             summary.getConflicts().add( new ImportConflict( dataValueSet.getDataSet(), "Org unit not found or not accessible" ) );
-            summary.setStatus( ImportStatus.ERROR );            
+            summary.setStatus( ImportStatus.ERROR );
         }
-        
+
         if ( outerAttrOptionCombo == null && trimToNull( dataValueSet.getAttributeOptionCombo() ) != null )
         {
             summary.getConflicts().add( new ImportConflict( dataValueSet.getDataSet(), "Attribute option combo not found or not accessible" ) );
-            summary.setStatus( ImportStatus.ERROR );             
+            summary.setStatus( ImportStatus.ERROR );
         }
-        
+
         if ( ImportStatus.ERROR.equals( summary.getStatus() ) )
         {
             summary.setDescription( "Import process was aborted" );
@@ -680,7 +679,7 @@ public class DefaultDataValueSetService
             dataValueSet.close();
             return summary;
         }
-            
+
         if ( dataSet != null && completeDate != null )
         {
             notifier.notify( id, "Completing data set" );
@@ -704,7 +703,7 @@ public class DefaultDataValueSetService
         // ---------------------------------------------------------------------
 
         Date now = new Date();
-        
+
         notifier.notify( id, "Importing data values" );
         log.info( "Importing data values" );
 
@@ -720,7 +719,7 @@ public class DefaultDataValueSetService
             Period period = outerPeriod != null ? outerPeriod : PeriodType.getPeriodFromIsoString( trimToNull( dataValue.getPeriod() ) );
             OrganisationUnit orgUnit = outerOrgUnit != null ? outerOrgUnit : orgUnitMap.get( trimToNull( dataValue.getOrgUnit() ) );
             DataElementCategoryOptionCombo categoryOptionCombo = categoryOptionComboMap.get( trimToNull( dataValue.getCategoryOptionCombo() ) );
-            DataElementCategoryOptionCombo attrOptionCombo = outerAttrOptionCombo != null ? outerAttrOptionCombo : 
+            DataElementCategoryOptionCombo attrOptionCombo = outerAttrOptionCombo != null ? outerAttrOptionCombo :
                 categoryOptionComboMap.get( trimToNull( dataValue.getAttributeOptionCombo() ) );
 
             // -----------------------------------------------------------------
@@ -750,13 +749,13 @@ public class DefaultDataValueSetService
                 summary.getConflicts().add( new ImportConflict( dataValue.getCategoryOptionCombo(), "Category option combo not found or not accessible" ) );
                 continue;
             }
-            
+
             if ( attrOptionCombo == null && trimToNull( dataValue.getAttributeOptionCombo() ) != null )
             {
                 summary.getConflicts().add( new ImportConflict( dataValue.getAttributeOptionCombo(), "Attribute option combo not found or not accessible" ) );
                 continue;
             }
-            
+
             if ( categoryOptionCombo == null )
             {
                 categoryOptionCombo = fallbackCategoryOptionCombo;
@@ -806,7 +805,7 @@ public class DefaultDataValueSetService
             internalValue.setValue( trimToNull( dataValue.getValue() ) );
 
             String storedByValid = ValidationUtils.storedByIsValid( dataValue.getStoredBy() );
-            
+
             if ( dataValue.getStoredBy() == null || dataValue.getStoredBy().trim().isEmpty() )
             {
                 internalValue.setStoredBy( currentUser );
@@ -827,7 +826,7 @@ public class DefaultDataValueSetService
             internalValue.setFollowup( dataValue.getFollowup() );
 
             boolean zeroInsignificant = ValidationUtils.dataValueIsZeroAndInsignificant( internalValue.getValue(), dataElement );
-            
+
             if ( zeroInsignificant )
             {
                 summary.getConflicts().add( new ImportConflict( internalValue.getValue(), "Value is zero and not significant" ) );

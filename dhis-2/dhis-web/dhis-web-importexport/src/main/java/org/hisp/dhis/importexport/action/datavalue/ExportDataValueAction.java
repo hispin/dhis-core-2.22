@@ -28,31 +28,26 @@ package org.hisp.dhis.importexport.action.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
-import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
-import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_CSV;
-import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_XML;
-import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_JSON;
-import static org.hisp.dhis.util.ContextUtils.getZipOut;
-
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.struts2.ServletActionContext;
-import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
-import org.hisp.dhis.dxf2.metadata.ExportOptions;
+import org.hisp.dhis.dxf2.utils.IdSchemes;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
 import org.hisp.dhis.util.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
+import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
+import static org.hisp.dhis.util.ContextUtils.*;
 
 /**
  * @author Lars Helge Overland
@@ -76,7 +71,7 @@ public class ExportDataValueAction
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
-    
+
     @Autowired
     private DataValueSetService dataValueSetService;
 
@@ -142,37 +137,40 @@ public class ExportDataValueAction
         throws Exception
     {
         //TODO reimplement to use web api
-        
-        ExportOptions exportOptions = new ExportOptions( dataElementIdScheme, orgUnitIdScheme, categoryOptionComboIdScheme );
-        
+
+        IdSchemes idSchemes = new IdSchemes();
+        idSchemes.setDataElementIdScheme( dataElementIdScheme );
+        idSchemes.setOrgUnitIdScheme( orgUnitIdScheme );
+        idSchemes.setCategoryOptionComboIdScheme( categoryOptionComboIdScheme );
+
         Set<String> orgUnits = new HashSet<>( IdentifiableObjectUtils.getUids( selectionTreeManager.getSelectedOrganisationUnits() ) );
-                
+
         HttpServletResponse response = ServletActionContext.getResponse();
-        
+
         if ( FORMAT_CSV.equals( exportFormat ) )
         {
             ContextUtils.configureResponse( response, CONTENT_TYPE_CSV, true, getFileName( EXTENSION_CSV_ZIP ), true );
-            
+
             Writer writer = new OutputStreamWriter( getZipOut( response, getFileName( EXTENSION_CSV ) ) );
-            
-            dataValueSetService.writeDataValueSetCsv( selectedDataSets, getMediumDate( startDate ), 
-                getMediumDate( endDate ), orgUnits, true, writer, exportOptions );
+
+            dataValueSetService.writeDataValueSetCsv( selectedDataSets, getMediumDate( startDate ),
+                getMediumDate( endDate ), orgUnits, true, writer, idSchemes );
         }
         else if ( FORMAT_JSON.equals( exportFormat ) )
         {
             ContextUtils.configureResponse( response, CONTENT_TYPE_JSON, true, getFileName( EXTENSION_JSON_ZIP ), true );
-            
-            dataValueSetService.writeDataValueSetJson( selectedDataSets, getMediumDate( startDate ), 
-                getMediumDate( endDate ), orgUnits, true, getZipOut( response, getFileName( EXTENSION_JSON ) ), exportOptions );
+
+            dataValueSetService.writeDataValueSetJson( selectedDataSets, getMediumDate( startDate ),
+                getMediumDate( endDate ), orgUnits, true, getZipOut( response, getFileName( EXTENSION_JSON ) ), idSchemes );
         }
         else
         {
             ContextUtils.configureResponse( response, CONTENT_TYPE_XML, true, getFileName( EXTENSION_XML_ZIP ), true );
-            
-            dataValueSetService.writeDataValueSetXml( selectedDataSets, getMediumDate( startDate ), 
-                getMediumDate( endDate ), orgUnits, true, getZipOut( response, getFileName( EXTENSION_XML ) ), exportOptions );
+
+            dataValueSetService.writeDataValueSetXml( selectedDataSets, getMediumDate( startDate ),
+                getMediumDate( endDate ), orgUnits, true, getZipOut( response, getFileName( EXTENSION_XML ) ), idSchemes );
         }
-        
+
         return SUCCESS;
     }
 
@@ -183,12 +181,12 @@ public class ExportDataValueAction
     private String getFileName( String extension )
     {
         String fileName = FILE_PREFIX + FILE_SEPARATOR + startDate + FILE_SEPARATOR + endDate;
-        
+
         if ( selectionTreeManager.getSelectedOrganisationUnits().size() == 1 )
         {
             fileName += FILE_SEPARATOR + filenameEncode( selectionTreeManager.getSelectedOrganisationUnits().iterator().next().getShortName() );
         }
-        
+
         return fileName + extension;
     }
 }
