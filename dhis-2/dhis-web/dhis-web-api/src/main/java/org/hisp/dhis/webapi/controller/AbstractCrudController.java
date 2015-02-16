@@ -42,7 +42,7 @@ import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
-import org.hisp.dhis.dxf2.metadata.Options;
+import org.hisp.dhis.dxf2.metadata.TranslateOptions;
 import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
@@ -136,7 +136,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
     @RequestMapping( method = RequestMethod.GET )
     public @ResponseBody RootNode getObjectList(
-        @RequestParam Map<String, String> rpParameters, HttpServletResponse response, HttpServletRequest request )
+        @RequestParam Map<String, String> rpParameters, TranslateOptions translateOptions, HttpServletResponse response, HttpServletRequest request )
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
         List<String> filters = Lists.newArrayList( contextService.getParameterValues( "filter" ) );
@@ -219,7 +219,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         Pager pager = metaData.getPager();
 
         entities = objectFilterService.filter( entities, filters );
-        translate( entities, options );
+        translate( entities, translateOptions );
 
         if ( hasPaging )
         {
@@ -254,7 +254,9 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.GET )
     public @ResponseBody RootNode getObject(
-        @PathVariable( "uid" ) String pvUid, @RequestParam Map<String, String> rpParameters,
+        @PathVariable( "uid" ) String pvUid,
+        @RequestParam Map<String, String> rpParameters,
+        TranslateOptions translateOptions,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
@@ -265,12 +267,14 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             fields.add( ":all" );
         }
 
-        return getObjectInternal( pvUid, rpParameters, filters, fields );
+        return getObjectInternal( pvUid, rpParameters, filters, fields, translateOptions );
     }
 
     @RequestMapping( value = "/{uid}/{property}", method = RequestMethod.GET )
     public @ResponseBody RootNode getObjectProperty(
-        @PathVariable( "uid" ) String pvUid, @PathVariable( "property" ) String pvProperty, @RequestParam Map<String, String> rpParameters,
+        @PathVariable( "uid" ) String pvUid, @PathVariable( "property" ) String pvProperty,
+        @RequestParam Map<String, String> rpParameters,
+        TranslateOptions translateOptions,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
@@ -282,7 +286,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         String fieldFilter = "[" + Joiner.on( ',' ).join( fields ) + "]";
 
-        return getObjectInternal( pvUid, rpParameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + fieldFilter ) );
+        return getObjectInternal( pvUid, rpParameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + fieldFilter ), translateOptions );
     }
 
     @RequestMapping( value = "/{uid}/{property}", method = { RequestMethod.PUT, RequestMethod.PATCH } )
@@ -334,17 +338,17 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         serialize( request, response, summary );
     }
 
-    protected void translate( List<T> entities, Options options )
+    protected void translate( List<T> entities, TranslateOptions translate )
     {
-        if ( options.isTranslate() )
+        if ( translate.isTranslate() )
         {
-            if ( options.defaultLocale() )
+            if ( translate.defaultLocale() )
             {
                 i18nService.internationalise( entities );
             }
             else
             {
-                i18nService.internationalise( entities, options.getLocale() );
+                i18nService.internationalise( entities, translate.getLocale() );
             }
         }
     }
@@ -352,9 +356,19 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     private RootNode getObjectInternal( String uid, Map<String, String> parameters,
         List<String> filters, List<String> fields ) throws Exception
     {
+        return getObjectInternal( uid, parameters, filters, fields, null );
+    }
+
+    private RootNode getObjectInternal( String uid, Map<String, String> parameters,
+        List<String> filters, List<String> fields, TranslateOptions translateOptions ) throws Exception
+    {
         WebOptions options = new WebOptions( parameters );
         List<T> entities = getEntity( uid, options );
-        translate( entities, options );
+
+        if ( translateOptions != null )
+        {
+            translate( entities, translateOptions );
+        }
 
         if ( entities.isEmpty() )
         {
@@ -562,9 +576,10 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         @PathVariable( "property" ) String pvProperty,
         @PathVariable( "itemId" ) String pvItemId,
         @RequestParam Map<String, String> parameters,
+        TranslateOptions translateOptions,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        RootNode rootNode = getObjectInternal( pvUid, parameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + "[:all]" ) );
+        RootNode rootNode = getObjectInternal( pvUid, parameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + "[:all]" ), translateOptions );
 
         // TODO optimize this using field filter (collection filtering)
         if ( !rootNode.getChildren().isEmpty() && rootNode.getChildren().get( 0 ).isCollection() )
