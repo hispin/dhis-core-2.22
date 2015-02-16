@@ -346,10 +346,14 @@ public class DefaultProgramIndicatorService
                     return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
                 }
             }
+            else if ( key.equals( ProgramIndicator.KEY_PROGRAM_VARIABLE ) )
+            {
+               matcher.appendReplacement( description, 0 + "" );
+          }
         }
 
         matcher.appendTail( description );
-        
+
         // ---------------------------------------------------------------------
         // Well-formed expression
         // ---------------------------------------------------------------------

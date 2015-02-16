@@ -1,7 +1,7 @@
 <div id="tabs">
 	<ul>
 		<li><a href="#tab-1">$i18n.getString("dataelements")</a></li>
-		<li><a href="#tab-2">$i18n.getString("program")</a></li>
+		<li><a href="#tab-2">$i18n.getString("program_variables")</a></li>
 		<li><a href="#tab-3">$i18n.getString("attributes")</a></li>
 		<li><a href="#tab-4">$i18n.getString("constant")</a></li>
 	</ul>	
@@ -55,7 +55,7 @@
         </tr>
         <tr>
 			<td>
-				<select id="attributes" name="attributes" size="8" style="height:120px;" ondblclick="insertAttribute(this);">
+				<select id="attributes" name="attributes" size="8" style="height:120px;" ondblclick="insertData(this,'A');">
 					#foreach( $programAttribute in $program.programAttributes )
 						#if( $programAttribute.attribute.valueType=='number' )
 							<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
@@ -80,7 +80,7 @@
         </tr>
         <tr>
 			<td>
-				<select id="constants" name="constants" size="8" style="height:120px;" ondblclick="insertAttribute(this);">
+				<select id="constants" name="constants" size="8" style="height:120px;" ondblclick="insertData(this,'C');">
 					#foreach( $constant in $constants )
 						<option value='$constant.uid'>$encoder.htmlEncode($constant.displayName)</option>
 					#end
