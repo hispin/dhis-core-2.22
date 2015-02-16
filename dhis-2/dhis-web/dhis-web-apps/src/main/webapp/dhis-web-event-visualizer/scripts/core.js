@@ -344,6 +344,8 @@ Ext.onReady( function() {
 
                 // sortOrder: number
 
+                // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_INSTANCE', 'ENROLLMENT'
+
                 // rangeAxisMaxValue: number
 
                 // rangeAxisMinValue: number
@@ -571,6 +573,7 @@ Ext.onReady( function() {
                     layout.baseLineTitle = Ext.isString(config.baseLineLabel) && !Ext.isEmpty(config.baseLineLabel) ? config.baseLineLabel :
                         (Ext.isString(config.baseLineTitle) && !Ext.isEmpty(config.baseLineTitle) ? config.baseLineTitle : null);
                     layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
+					layout.outputType = Ext.isString(config.outputType) && !Ext.isEmpty(config.outputType) ? config.outputType : 'EVENT';
 
 					layout.rangeAxisMaxValue = Ext.isNumber(config.rangeAxisMaxValue) ? config.rangeAxisMaxValue : null;
 					layout.rangeAxisMinValue = Ext.isNumber(config.rangeAxisMinValue) ? config.rangeAxisMinValue : null;
@@ -2024,6 +2027,11 @@ Ext.onReady( function() {
                 // dates
                 if (layout.startDate && layout.endDate) {
                     paramString += '&startDate=' + layout.startDate + '&endDate=' + layout.endDate;
+                }
+
+                // output type
+                if (layout.outputType) {
+                    paramString += '&outputType=' + layout.outputType;
                 }
 
                 // display property

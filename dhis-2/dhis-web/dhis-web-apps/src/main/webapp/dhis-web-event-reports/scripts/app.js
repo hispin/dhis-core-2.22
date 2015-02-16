@@ -1701,7 +1701,7 @@ Ext.onReady( function() {
 			showDimensionLabels,
 			hideEmptyRows,
             limit,
-            countType,
+            outputType,
             aggregationType,
 			showHierarchy,
 			digitGroupSeparator,
@@ -1765,22 +1765,23 @@ Ext.onReady( function() {
             style: 'margin-top:' + separatorTopMargin + 'px'
         });
 
-        countType = Ext.create('Ext.form.field.ComboBox', {
+        outputType = Ext.create('Ext.form.field.ComboBox', {
 			cls: 'ns-combo',
 			style: 'margin-bottom:' + comboBottomMargin + 'px',
 			width: comboboxWidth,
 			labelWidth: 130,
-			fieldLabel: NS.i18n.count_type,
+			fieldLabel: NS.i18n.output_type,
 			labelStyle: 'color:#333',
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'events',
+			value: 'EVENT',
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'events', text: NS.i18n.events},
-					{id: 'tracked_entity_instances', text: NS.i18n.tracked_entity_instances}
+					{id: 'EVENT', text: NS.i18n.event},
+					{id: 'ENROLLMENT', text: NS.i18n.enrollment},
+					{id: 'TRACKED_ENTITY_INSTANCE', text: NS.i18n.tracked_entity_instance}
 				]
 			})
 		});
@@ -1864,7 +1865,7 @@ Ext.onReady( function() {
                 showDimensionLabels,
 				hideEmptyRows,
                 limit,
-                countType
+                outputType
                 //aggregationType
 			]
 		};
@@ -1906,7 +1907,7 @@ Ext.onReady( function() {
 					hideEmptyRows: hideEmptyRows.getValue(),
                     sortOrder: limit.getSortOrder(),
                     topLimit: limit.getTopLimit(),
-					countType: countType.getValue(),
+					outputType: outputType.getValue(),
 					showHierarchy: showHierarchy.getValue(),
                     showDimensionLabels: showDimensionLabels.getValue(),
 					displayDensity: displayDensity.getValue(),
@@ -1923,7 +1924,7 @@ Ext.onReady( function() {
 				showDimensionLabels.setValue(Ext.isBoolean(layout.showDimensionLabels) ? layout.showDimensionLabels : true);
 				hideEmptyRows.setValue(Ext.isBoolean(layout.hideEmptyRows) ? layout.hideEmptyRows : false);
 				limit.setValues(layout.sortOrder, layout.topLimit);
-				countType.setValue(Ext.isString(layout.countType) ? layout.countType : 'events');
+				outputType.setValue(Ext.isString(layout.outputType) ? layout.outputType : 'EVENT');
                 //aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'default');
 				showHierarchy.setValue(Ext.isBoolean(layout.showHierarchy) ? layout.showHierarchy : false);
 				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : 'normal');
@@ -2010,7 +2011,7 @@ Ext.onReady( function() {
                     w.showDimensionLabels = showDimensionLabels;
 					w.hideEmptyRows = hideEmptyRows;
                     w.limit = limit;
-					w.countType = countType;
+					w.outputType = outputType;
 					w.showHierarchy = showHierarchy;
 					w.displayDensity = displayDensity;
 					w.fontSize = fontSize;
