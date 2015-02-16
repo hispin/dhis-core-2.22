@@ -62,12 +62,7 @@ public class EventReport
     implements EventAnalyticalObject
 {
     public static final String DATA_TYPE_AGGREGATED_VALUES = "aggregated_values";
-
     public static final String DATA_TYPE_INDIVIDUAL_CASES = "individual_cases";
-
-    public static final String COUNT_TYPE_EVENTS = "events";
-
-    public static final String COUNT_TYPE_TRACKED_ENTITY_INSTANCES = "tracked_entity_instances";
 
     /**
      * Program. Required.
