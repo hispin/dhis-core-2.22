@@ -34,6 +34,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.chart.BaseChart;
 import org.hisp.dhis.common.AnalyticsType;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -52,6 +54,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.analytics.EventOutputType;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,7 +83,7 @@ public class EventChart
 
     private List<String> rowDimensions = new ArrayList<>();
 
-    private String countType;
+    private EventOutputType outputType;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -252,14 +255,14 @@ public class EventChart
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getCountType()
+    public EventOutputType getOutputType()
     {
-        return countType;
+        return outputType;
     }
 
-    public void setCountType( String countType )
+    public void setOutputType( EventOutputType outputType )
     {
-        this.countType = countType;
+        this.outputType = outputType;
     }
 
     // -------------------------------------------------------------------------
@@ -281,7 +284,7 @@ public class EventChart
                 programStage = eventChart.getProgramStage();
                 startDate = eventChart.getStartDate();
                 endDate = eventChart.getEndDate();
-                countType = eventChart.getCountType();
+                outputType = eventChart.getOutputType();
             }
             else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
             {
@@ -289,7 +292,7 @@ public class EventChart
                 programStage = eventChart.getProgramStage() == null ? programStage : eventChart.getProgramStage();
                 startDate = eventChart.getStartDate() == null ? startDate : eventChart.getStartDate();
                 endDate = eventChart.getEndDate() == null ? endDate : eventChart.getEndDate();
-                countType = eventChart.getCountType() == null ? countType : eventChart.getCountType();
+                outputType = eventChart.getOutputType() == null ? outputType : eventChart.getOutputType();
             }
 
             columnDimensions.clear();

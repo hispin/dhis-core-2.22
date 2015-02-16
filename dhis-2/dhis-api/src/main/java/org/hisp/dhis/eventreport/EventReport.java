@@ -48,6 +48,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.analytics.EventOutputType;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -125,9 +126,9 @@ public class EventReport
     private boolean colSubTotals;
 
     /**
-     * Indicates count type.
+     * Indicates output type.
      */
-    private String countType;
+    private EventOutputType outputType;
     
     /**
      * Indicates rendering of empty rows for the table.
@@ -382,14 +383,14 @@ public class EventReport
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getCountType()
+    public EventOutputType getOutputType()
     {
-        return countType;
+        return outputType;
     }
 
-    public void setCountType( String countType )
+    public void setOutputType( EventOutputType outputType )
     {
-        this.countType = countType;
+        this.outputType = outputType;
     }
 
     @JsonProperty
@@ -468,7 +469,7 @@ public class EventReport
                 programStage = eventReport.getProgramStage();
                 startDate = eventReport.getStartDate();
                 endDate = eventReport.getEndDate();
-                countType = eventReport.getCountType();
+                outputType = eventReport.getOutputType();
                 displayDensity = eventReport.getDisplayDensity();
                 fontSize = eventReport.getFontSize();
             }
@@ -479,7 +480,7 @@ public class EventReport
                 programStage = eventReport.getProgramStage() == null ? programStage : eventReport.getProgramStage();
                 startDate = eventReport.getStartDate() == null ? startDate : eventReport.getStartDate();
                 endDate = eventReport.getEndDate() == null ? endDate : eventReport.getEndDate();
-                countType = eventReport.getCountType() == null ? countType : eventReport.getCountType();
+                outputType = eventReport.getOutputType() == null ? outputType : eventReport.getOutputType();
                 displayDensity = eventReport.getDisplayDensity() == null ? displayDensity : eventReport.getDisplayDensity();
                 fontSize = eventReport.getFontSize() == null ? fontSize : eventReport.getFontSize();
             }
