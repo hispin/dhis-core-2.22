@@ -128,6 +128,7 @@
 			<fieldset>
 				<legend>$i18n.getString( "description" )</legend>
 				<div id='aggregationDescription'>$!encoder.htmlEncode($!description)</div>
+				
 				<input type="hidden" id="checkExpression" name="checkExpression" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
 			</fieldset>
 		</td>
