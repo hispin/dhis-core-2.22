@@ -126,6 +126,20 @@ public class IdSchemes
     public static String getValue( IdentifiableObject identifiableObject, IdentifiableProperty identifiableProperty )
     {
         boolean idScheme = IdentifiableProperty.ID.equals( identifiableProperty ) || IdentifiableProperty.UID.equals( identifiableProperty );
-        return idScheme ? identifiableObject.getUid() : identifiableObject.getCode();
+
+        if ( idScheme )
+        {
+            return identifiableObject.getUid();
+        }
+        else if ( IdentifiableProperty.CODE.equals( identifiableProperty ) )
+        {
+            return identifiableObject.getCode();
+        }
+        else if ( IdentifiableProperty.NAME.equals( identifiableProperty ) )
+        {
+            return identifiableObject.getName();
+        }
+
+        return null;
     }
 }
