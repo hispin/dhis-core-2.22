@@ -28,10 +28,13 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.springframework.util.StringUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -136,6 +139,10 @@ public class Options
 
     protected boolean assumeTrue;
 
+    protected boolean translate;
+
+    protected String locale;
+
     //--------------------------------------------------------------------------
     // Constructors
     //--------------------------------------------------------------------------
@@ -144,6 +151,8 @@ public class Options
     {
         this.options = options;
         this.assumeTrue = options.get( "assumeTrue" ) == null || options.get( "assumeTrue" ).equalsIgnoreCase( "true" );
+        this.locale = options.get( "locale" );
+        this.translate = isEnabled( "translate" ) || !StringUtils.isEmpty( locale );
     }
 
     public Options()
@@ -246,6 +255,21 @@ public class Options
     public void setAssumeTrue( boolean assumeTrue )
     {
         this.assumeTrue = assumeTrue;
+    }
+
+    public boolean isTranslate()
+    {
+        return translate;
+    }
+
+    public boolean defaultLocale()
+    {
+        return StringUtils.isEmpty( locale );
+    }
+
+    public Locale getLocale()
+    {
+        return Locale.forLanguageTag( locale );
     }
 
     //--------------------------------------------------------------------------
