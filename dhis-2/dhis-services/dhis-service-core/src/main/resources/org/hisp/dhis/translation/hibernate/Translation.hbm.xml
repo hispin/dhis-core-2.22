@@ -18,7 +18,7 @@
     <property name="className" column="objectclass" length="127" unique-key="translation_composite_key" />
     <property name="objectUid" column="objectUid" length="11" unique-key="translation_composite_key" />
     <property name="locale" column="locale" length="15" unique-key="translation_composite_key" />
-    <property name="property" column="objectproperty" length="63" unique-key="translation_composite_key" />
+    <property name="property" column="objectproperty" length="63" unique-key="translation_composite_key" index="translation_objectproperty_key" />
 
     <property name="value" column="value" type="text" not-null="true" />
 
