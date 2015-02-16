@@ -63,7 +63,14 @@ function insertDataElement( element ) {
   var programStageId = getFieldValue('programStageId');
   var dataElementId = element.options[element.selectedIndex].value;
 
-  insertTextCommon('expression', "[DE:" + programStageId + "." + dataElementId + "]");
+  insertTextCommon('expression', "${" + programStageId + "." + dataElementId + "}");
+  getConditionDescription();
+}
+
+function insertAttribute( element ){
+   var attributeId = element.options[element.selectedIndex].value;
+
+  insertTextCommon('expression', "A{" + attributeId + "}");
   getConditionDescription();
 }
 
@@ -91,7 +98,13 @@ function getConditionDescription() {
     {
       expression: getFieldValue('expression')
     }, function( json ) {
-      byId('aggregationDescription').innerHTML = json.message;
+		if( json.response =='error' ){
+			setFieldValue('checkExpression','');
+		}
+		else{
+			setFieldValue('checkExpression', json.message);
+		}
+		setInnerHTML('aggregationDescription', json.message);
     })
 }
 

@@ -33,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.constant.Constant;
+import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
@@ -80,6 +82,9 @@ public class GetProgramAction
     
     @Autowired
     private ProgramIndicatorService programIndicatorService;
+    
+    @Autowired
+    private ConstantService constantService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -144,6 +149,13 @@ public class GetProgramAction
         return programIndicators;
     }
     
+    private List<Constant> constants;
+
+    public List<Constant> getConstants()
+    {
+        return constants;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -162,6 +174,10 @@ public class GetProgramAction
 
         Collections.sort( programIndicators, IdentifiableObjectNameComparator.INSTANCE );
 
+        constants = new ArrayList<>(constantService.getAllConstants());
+        
+        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
+        
         return SUCCESS;
     }
 }

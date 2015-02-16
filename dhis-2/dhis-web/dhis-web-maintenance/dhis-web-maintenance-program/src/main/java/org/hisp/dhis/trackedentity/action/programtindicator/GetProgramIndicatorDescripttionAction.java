@@ -28,9 +28,13 @@ package org.hisp.dhis.trackedentity.action.programtindicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.i18n.I18n;
+import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 
 import com.opensymphony.xwork2.Action;
+import com.sun.imageio.plugins.common.I18N;
 
 /**
  * @author Chau Thu Tran
@@ -49,6 +53,13 @@ public class GetProgramIndicatorDescripttionAction
     public void setProgramIndicatorService( ProgramIndicatorService programIndicatorService )
     {
         this.programIndicatorService = programIndicatorService;
+    }
+
+    private I18n i18n;
+
+    public void setI18n( I18n i18n )
+    {
+        this.i18n = i18n;
     }
 
     // -------------------------------------------------------------------------
@@ -77,8 +88,15 @@ public class GetProgramIndicatorDescripttionAction
     public String execute()
         throws Exception
     {
-        message = programIndicatorService.getExpressionDescription( expression );
-
-        return SUCCESS;
+        String valid = programIndicatorService.expressionIsValid( expression );
+        if ( valid.equals( ProgramIndicator.VALID ) )
+        {
+            message = programIndicatorService.getExpressionDescription( expression );
+            return SUCCESS;
+        }
+       
+        message = i18n.getString( "expression_is_not_well_formed" );
+        
+        return ERROR;
     }
 }
