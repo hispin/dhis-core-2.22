@@ -128,7 +128,7 @@ public class EventReport
      * Indicates count type.
      */
     private String countType;
-
+    
     /**
      * Indicates rendering of empty rows for the table.
      */
