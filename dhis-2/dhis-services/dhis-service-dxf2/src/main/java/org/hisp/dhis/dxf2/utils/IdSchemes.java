@@ -28,6 +28,7 @@ package org.hisp.dhis.dxf2.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableProperty;
 
 /**
@@ -120,5 +121,11 @@ public class IdSchemes
     {
         boolean idScheme = IdentifiableProperty.ID.equals( identifiableProperty ) || IdentifiableProperty.UID.equals( identifiableProperty );
         return idScheme ? uid : code;
+    }
+
+    public static String getValue( IdentifiableObject identifiableObject, IdentifiableProperty identifiableProperty )
+    {
+        boolean idScheme = IdentifiableProperty.ID.equals( identifiableProperty ) || IdentifiableProperty.UID.equals( identifiableProperty );
+        return idScheme ? identifiableObject.getUid() : identifiableObject.getCode();
     }
 }
