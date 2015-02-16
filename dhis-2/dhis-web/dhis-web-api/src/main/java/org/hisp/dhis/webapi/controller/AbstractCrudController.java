@@ -338,7 +338,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         serialize( request, response, summary );
     }
 
-    protected void translate( List<T> entities, TranslateOptions translateOptions )
+    protected void translate( List<?> entities, TranslateOptions translateOptions )
     {
         if ( translateOptions.isTranslate() )
         {
