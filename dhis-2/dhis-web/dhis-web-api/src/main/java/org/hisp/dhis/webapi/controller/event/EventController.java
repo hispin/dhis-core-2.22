@@ -48,6 +48,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportOptions;
+import org.hisp.dhis.dxf2.utils.IdSchemes;
 import org.hisp.dhis.dxf2.utils.JacksonUtils;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
@@ -148,7 +149,8 @@ public class EventController
         @RequestParam( required = false ) EventStatus status,
         @RequestParam( required = false ) String attachment,
         @RequestParam( required = false, defaultValue = "false" ) boolean skipHeader,
-        @RequestParam Map<String, String> parameters, Model model, HttpServletResponse response, HttpServletRequest request ) throws IOException
+        @RequestParam Map<String, String> parameters,
+        IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
         WebOptions options = new WebOptions( parameters );
 
@@ -197,7 +199,8 @@ public class EventController
             }
         }
 
-        Events events = eventService.getEvents( pr, prs, programStatus, followUp, organisationUnits, tei, startDate, endDate, status );
+        Events events = eventService.getEvents( pr, prs, programStatus, followUp, organisationUnits, tei, startDate, endDate, status, idSchemes );
+
         if ( options.hasPaging() )
         {
             Pager pager = new Pager( options.getPage(), events.getEvents().size(), options.getPageSize() );
@@ -240,7 +243,7 @@ public class EventController
         @RequestParam( required = false ) EventStatus status,
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) String attachment,
-        @RequestParam Map<String, String> parameters, Model model, HttpServletResponse response, HttpServletRequest request )
+        @RequestParam Map<String, String> parameters, IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request )
     {
         WebOptions options = new WebOptions( parameters );
 
@@ -289,8 +292,8 @@ public class EventController
             }
         }
 
-        Events events = eventService.getEvents( pr, prs, programStatus, followUp, organisationUnits, tei, startDate, endDate, status );
-       
+        Events events = eventService.getEvents( pr, prs, programStatus, followUp, organisationUnits, tei, startDate, endDate, status, idSchemes );
+
         if ( options.hasLinks() )
         {
             for ( Event event : events.getEvents() )
