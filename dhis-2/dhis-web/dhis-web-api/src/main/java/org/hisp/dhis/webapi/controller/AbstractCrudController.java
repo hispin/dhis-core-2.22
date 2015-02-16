@@ -42,11 +42,13 @@ import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
+import org.hisp.dhis.dxf2.metadata.Options;
 import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
+import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodeUtils;
@@ -125,6 +127,9 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     @Autowired
     protected ContextService contextService;
 
+    @Autowired
+    protected I18nService i18nService;
+
     //--------------------------------------------------------------------------
     // GET
     //--------------------------------------------------------------------------
@@ -148,11 +153,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         boolean hasPaging = options.hasPaging();
 
-        List<T> entityList;
+        List<T> entities;
 
         if ( filters.isEmpty() )
         {
-            entityList = getEntityList( metaData, options, filters );
+            entities = getEntityList( metaData, options, filters );
             hasPaging = false;
         }
         else
@@ -186,12 +191,12 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
                     Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
                     metaData.setPager( pager );
 
-                    entityList = Lists.newArrayList( manager.getBetweenLikeName( getEntityClass(), name, pager.getOffset(), pager.getPageSize() ) );
+                    entities = Lists.newArrayList( manager.getBetweenLikeName( getEntityClass(), name, pager.getOffset(), pager.getPageSize() ) );
                     hasPaging = false;
                 }
                 else
                 {
-                    entityList = Lists.newArrayList( manager.getLikeName( getEntityClass(), name ) );
+                    entities = Lists.newArrayList( manager.getLikeName( getEntityClass(), name ) );
                 }
             }
             else
@@ -207,29 +212,30 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
                     }
                 }
 
-                entityList = getEntityList( metaData, options, filters );
+                entities = getEntityList( metaData, options, filters );
             }
         }
 
         Pager pager = metaData.getPager();
 
-        entityList = objectFilterService.filter( entityList, filters );
+        entities = objectFilterService.filter( entities, filters );
+        translate( entities, options );
 
         if ( hasPaging )
         {
-            pager = new Pager( options.getPage(), entityList.size(), options.getPageSize() );
-            entityList = PagerUtils.pageCollection( entityList, pager );
+            pager = new Pager( options.getPage(), entities.size(), options.getPageSize() );
+            entities = PagerUtils.pageCollection( entities, pager );
         }
 
-        postProcessEntities( entityList );
-        postProcessEntities( entityList, options, rpParameters );
+        postProcessEntities( entities );
+        postProcessEntities( entities, options, rpParameters );
 
         if ( fields.contains( "access" ) )
         {
             options.getOptions().put( "viewClass", "sharing" );
         }
 
-        handleLinksAndAccess( options, entityList, false );
+        handleLinksAndAccess( options, entities, false );
 
         linkService.generatePagerLinks( pager, getEntityClass() );
 
@@ -241,7 +247,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             rootNode.addChild( NodeUtils.createPager( pager ) );
         }
 
-        rootNode.addChild( fieldFilterService.filter( getEntityClass(), entityList, fields ) );
+        rootNode.addChild( fieldFilterService.filter( getEntityClass(), entities, fields ) );
 
         return rootNode;
     }
@@ -328,11 +334,27 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         serialize( request, response, summary );
     }
 
+    protected void translate( List<T> entities, Options options )
+    {
+        if ( options.isTranslate() )
+        {
+            if ( options.defaultLocale() )
+            {
+                i18nService.internationalise( entities );
+            }
+            else
+            {
+                i18nService.internationalise( entities, options.getLocale() );
+            }
+        }
+    }
+
     private RootNode getObjectInternal( String uid, Map<String, String> parameters,
         List<String> filters, List<String> fields ) throws Exception
     {
         WebOptions options = new WebOptions( parameters );
         List<T> entities = getEntity( uid, options );
+        translate( entities, options );
 
         if ( entities.isEmpty() )
         {
