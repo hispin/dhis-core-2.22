@@ -35,7 +35,14 @@ import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.translation.TranslationService;
 import org.hisp.dhis.user.UserSettingService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import static org.hisp.dhis.system.util.ReflectionUtils.*;
 
@@ -55,7 +62,7 @@ public class DefaultI18nService
     {
         this.translationService = translationService;
     }
-    
+
     private I18nLocaleService localeService;
 
     public void setLocaleService( I18nLocaleService localeService )
@@ -69,7 +76,7 @@ public class DefaultI18nService
     {
         this.userSettingService = userSettingService;
     }
-    
+
     // -------------------------------------------------------------------------
     // Internationalise
     // -------------------------------------------------------------------------
@@ -161,7 +168,7 @@ public class DefaultI18nService
         {
             return null;
         }
-        
+
         List<String> properties = getObjectPropertyNames( object );
 
         Map<String, String> translations = new HashMap<>();
@@ -181,12 +188,12 @@ public class DefaultI18nService
         {
             return null;
         }
-        
+
         if ( !(object instanceof IdentifiableObject) )
         {
             throw new IllegalArgumentException( "I18n object must be identifiable: " + object );
         }
-        
+
         if ( object instanceof DataElement )
         {
             return Arrays.asList( DataElement.I18N_PROPERTIES );
@@ -318,7 +325,7 @@ public class DefaultI18nService
     /**
      * Returns a map for a collection of Translations where the key is the
      * translation property and the value is the translation value.
-     * 
+     *
      * @param translations the Collection of translations.
      * @return Map containing translations.
      */
