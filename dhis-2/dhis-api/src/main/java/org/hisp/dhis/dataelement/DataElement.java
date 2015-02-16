@@ -41,6 +41,7 @@ import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.comparator.DataSetFrequencyComparator;
@@ -463,6 +464,9 @@ public class DataElement
         return formName != null && !formName.isEmpty() ? getDisplayFormName() : getDisplayName();
     }
 
+    @JsonView( { DetailedView.class, DimensionalView.class } )
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getDisplayFormName()
     {
         return displayFormName != null && !displayFormName.trim().isEmpty() ? displayFormName : formName;
