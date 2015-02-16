@@ -35,6 +35,7 @@ import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementOperand;
+import org.hisp.dhis.dxf2.metadata.TranslateOptions;
 import org.hisp.dhis.schema.descriptors.DataElementGroupSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -67,11 +68,14 @@ public class DataElementGroupController
     private DataElementCategoryService dataElementCategoryService;
 
     @RequestMapping( value = "/{uid}/operands", method = RequestMethod.GET )
-    public String getOperands( @PathVariable( "uid" ) String uid, @RequestParam Map<String, String> parameters,
+    public String getOperands( @PathVariable( "uid" ) String uid,
+        @RequestParam Map<String, String> parameters,
+        TranslateOptions translateOptions,
         Model model, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         WebOptions options = new WebOptions( parameters );
         List<DataElementGroup> dataElementGroups = getEntity( uid );
+        translate( dataElementGroups, translateOptions );
 
         if ( dataElementGroups.isEmpty() )
         {
@@ -109,12 +113,16 @@ public class DataElementGroupController
     }
 
     @RequestMapping( value = "/{uid}/operands/query/{q}", method = RequestMethod.GET )
-    public String getOperandsByQuery( @PathVariable( "uid" ) String uid, @PathVariable( "q" ) String q,
-        @RequestParam Map<String, String> parameters, Model model, HttpServletRequest request,
+    public String getOperandsByQuery( @PathVariable( "uid" ) String uid,
+        @PathVariable( "q" ) String q,
+        @RequestParam Map<String, String> parameters,
+        TranslateOptions translateOptions,
+        Model model, HttpServletRequest request,
         HttpServletResponse response ) throws Exception
     {
         WebOptions options = new WebOptions( parameters );
         List<DataElementGroup> dataElementGroups = getEntity( uid );
+        translate( dataElementGroups, translateOptions );
 
         if ( dataElementGroups.isEmpty() )
         {
