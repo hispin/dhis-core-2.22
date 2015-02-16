@@ -28,8 +28,16 @@ package org.hisp.dhis.trackedentity.action.programtindicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.constant.Constant;
+import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
@@ -50,6 +58,9 @@ public class GetProgramIndicatorAction
     {
         this.programIndicatorService = programIndicatorService;
     }
+
+    @Autowired
+    private ConstantService constantService;
 
     // -------------------------------------------------------------------------
     // Setters
@@ -76,6 +87,13 @@ public class GetProgramIndicatorAction
         return description;
     }
 
+    private List<Constant> constants;
+
+    public List<Constant> getConstants()
+    {
+        return constants;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -87,6 +105,10 @@ public class GetProgramIndicatorAction
         programIndicator = programIndicatorService.getProgramIndicator( id );
 
         description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );
+
+        constants = new ArrayList<>(constantService.getAllConstants());
+        
+        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
         
         return SUCCESS;
     }

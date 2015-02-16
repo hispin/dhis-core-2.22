@@ -167,6 +167,9 @@
 		<property name="programStageInstanceService"
 			ref="org.hisp.dhis.program.ProgramStageInstanceService" />
 		<property name="i18nService" ref="org.hisp.dhis.i18n.I18nService" />
+		<property name="attributeService" ref="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
+		<property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+		<property name="attributeValueService" ref="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService" />
 	</bean>
 
 	<bean id="org.hisp.dhis.relationship.RelationshipService" class="org.hisp.dhis.relationship.DefaultRelationshipService">
