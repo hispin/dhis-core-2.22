@@ -100,9 +100,11 @@ function getConditionDescription() {
     }, function( json ) {
 		if( json.response =='error' ){
 			setFieldValue('checkExpression','');
+			$('#aggregationDescription').css('color','red');
 		}
 		else{
 			setFieldValue('checkExpression', json.message);
+			$('#aggregationDescription').css('color','black');
 		}
 		setInnerHTML('aggregationDescription', json.message);
     })
