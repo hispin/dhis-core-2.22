@@ -50,7 +50,7 @@ public class ProgramIndicator
     extends BaseNameableObject
 {
     public static final String SEPARATOR_ID = "\\.";
-    public static final String KEY_DATAELEMENT = "\\$";
+    public static final String KEY_DATAELEMENT = "#";
     public static final String KEY_ATTRIBUTE = "A";
     public static final String KEY_PROGRAM_VARIABLE = "V";
     public static final String KEY_CONSTANT = "C";
