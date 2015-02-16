@@ -139,10 +139,6 @@ public class Options
 
     protected boolean assumeTrue;
 
-    protected boolean translate;
-
-    protected String locale;
-
     //--------------------------------------------------------------------------
     // Constructors
     //--------------------------------------------------------------------------
@@ -151,8 +147,6 @@ public class Options
     {
         this.options = options;
         this.assumeTrue = options.get( "assumeTrue" ) == null || options.get( "assumeTrue" ).equalsIgnoreCase( "true" );
-        this.locale = options.get( "locale" );
-        this.translate = isEnabled( "translate" ) || !StringUtils.isEmpty( locale );
     }
 
     public Options()
@@ -255,21 +249,6 @@ public class Options
     public void setAssumeTrue( boolean assumeTrue )
     {
         this.assumeTrue = assumeTrue;
-    }
-
-    public boolean isTranslate()
-    {
-        return translate;
-    }
-
-    public boolean defaultLocale()
-    {
-        return StringUtils.isEmpty( locale );
-    }
-
-    public Locale getLocale()
-    {
-        return Locale.forLanguageTag( locale );
     }
 
     //--------------------------------------------------------------------------
