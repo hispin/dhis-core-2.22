@@ -351,7 +351,7 @@ public class BaseIdentifiableObject
     }
 
     @Override
-    @JsonView( { DimensionalView.class } )
+    @JsonView( { DetailedView.class, DimensionalView.class } )
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getDisplayName()
