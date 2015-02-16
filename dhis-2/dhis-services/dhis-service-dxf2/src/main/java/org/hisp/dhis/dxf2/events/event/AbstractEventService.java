@@ -43,6 +43,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportOptions;
+import org.hisp.dhis.dxf2.utils.IdSchemes;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -374,11 +375,18 @@ public abstract class AbstractEventService
 
     @Override
     public Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
-        List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, Date startDate,
-        Date endDate, EventStatus status )
+        List<OrganisationUnit> organisationUnit, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status )
+    {
+        return getEvents( program, programStage, programStatus, followUp, organisationUnit, trackedEntityInstance, startDate, endDate, status, new IdSchemes() );
+    }
+
+    @Override
+    public Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
+        List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes )
     {
         List<Event> eventList = eventStore.getAll( program, programStage, programStatus, followUp, organisationUnits,
-            trackedEntityInstance, startDate, endDate, status );
+            trackedEntityInstance, startDate, endDate, status, idSchemes );
+
         Events events = new Events();
         events.setEvents( eventList );
 
@@ -581,7 +589,7 @@ public abstract class AbstractEventService
         {
             programStageInstance.setStatus( EventStatus.VISITED );
         }
-        
+
         OrganisationUnit organisationUnit = getOrganisationUnit( null, event.getOrgUnit() );
 
         if ( organisationUnit == null )
