@@ -136,8 +136,8 @@ public class ProgramIndicatorServiceTest
         programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, programA, enrollmentDate, incidenDate,
             organisationUnit );
 
-        indicatorDate = new ProgramIndicator( "IndicatorA", "IndicatorDesA", ProgramIndicator.VALUE_TYPE_INT, "( "
-            + ProgramIndicator.INCIDENT_DATE + " - " + ProgramIndicator.ENROLLEMENT_DATE + " )  / 7" );
+        indicatorDate = new ProgramIndicator( "IndicatorA", "IndicatorDesA", ProgramIndicator.VALUE_TYPE_INT, "( " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{"
+            + ProgramIndicator.INCIDENT_DATE + "} - " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.ENROLLEMENT_DATE + "} )  / 7" );
         indicatorDate.setUid( "UID-DATE" );
         indicatorDate.setShortName( "DATE" );
         indicatorDate.setProgram( programA );
