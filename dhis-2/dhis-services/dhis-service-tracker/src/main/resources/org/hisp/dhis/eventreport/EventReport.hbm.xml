@@ -124,7 +124,12 @@
 
     <property name="showHierarchy" />
 
-    <property name="countType" />
+    <property name="outputType" length="30">
+		<type name="org.hibernate.type.EnumType">
+			<param name="enumClass">org.hisp.dhis.analytics.EventOutputType</param>
+			<param name="type">12</param>
+		</type> 
+	</property>
 
     <property name="showDimensionLabels" />
 

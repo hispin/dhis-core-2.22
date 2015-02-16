@@ -32,6 +32,7 @@ import java.util.Date;
 
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.analytics.EventOutputType;
 
 /**
  * @author Lars Helge Overland
@@ -46,4 +47,6 @@ public interface EventAnalyticalObject
     Date getStartDate();
     
     Date getEndDate();
+    
+    EventOutputType getOutputType();
 }

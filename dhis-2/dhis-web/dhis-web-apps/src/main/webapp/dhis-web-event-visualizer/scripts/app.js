@@ -1409,6 +1409,7 @@ Ext.onReady( function() {
 			baseLineValue,
 			baseLineTitle,
             sortOrder,
+            outputType,
 
             rangeAxisMinValue,
             rangeAxisMaxValue,
@@ -1514,6 +1515,27 @@ Ext.onReady( function() {
 					{id: 0, text: NS.i18n.none},
 					{id: -1, text: NS.i18n.low_to_high},
 					{id: 1, text: NS.i18n.high_to_low}
+				]
+			})
+		});
+
+        outputType = Ext.create('Ext.form.field.ComboBox', {
+			cls: 'ns-combo',
+			style: 'margin-bottom:' + comboBottomMargin + 'px',
+			width: cmpWidth,
+			labelWidth: 125,
+			fieldLabel: NS.i18n.output_type,
+			labelStyle: 'color:#333',
+			queryMode: 'local',
+			valueField: 'id',
+			editable: false,
+			value: 'EVENT',
+			store: Ext.create('Ext.data.Store', {
+				fields: ['id', 'text'],
+				data: [
+					{id: 'EVENT', text: NS.i18n.event},
+					{id: 'ENROLLMENT', text: NS.i18n.enrollment},
+					{id: 'TRACKED_ENTITY_INSTANCE', text: NS.i18n.tracked_entity_instance}
 				]
 			})
 		});
@@ -1636,7 +1658,8 @@ Ext.onReady( function() {
 						baseLineTitle
 					]
 				},
-                sortOrder
+                sortOrder,
+                outputType
 			]
 		};
 
@@ -1676,13 +1699,13 @@ Ext.onReady( function() {
 
 		window = Ext.create('Ext.window.Window', {
 			title: NS.i18n.chart_options,
-			bodyStyle: 'background-color:#fff; padding:3px',
+			bodyStyle: 'background-color:#fff; padding:2px',
 			closeAction: 'hide',
 			autoShow: true,
 			modal: true,
 			resizable: false,
 			hideOnBlur: true,
-			getOptions: function() {
+			getOptions: function() {                
 				return {
 					showValues: showValues.getValue(),
                     hideEmptyRows: hideEmptyRows.getValue(),
@@ -1692,6 +1715,7 @@ Ext.onReady( function() {
 					baseLineValue: baseLineValue.getValue(),
 					baseLineTitle: baseLineTitle.getValue(),
                     sortOrder: sortOrder.getValue(),
+					outputType: outputType.getValue(),
 					rangeAxisMaxValue: rangeAxisMaxValue.getValue(),
 					rangeAxisMinValue: rangeAxisMinValue.getValue(),
 					rangeAxisSteps: rangeAxisSteps.getValue(),
@@ -1739,6 +1763,7 @@ Ext.onReady( function() {
 				}
 
                 sortOrder.setValue(Ext.isNumber(layout.sortOrder) ? layout.sortOrder : 0);
+				outputType.setValue(Ext.isString(layout.outputType) ? layout.outputType : 'EVENT');
 
 				// rangeAxisMaxValue
 				if (Ext.isNumber(layout.rangeAxisMaxValue)) {
@@ -1802,7 +1827,7 @@ Ext.onReady( function() {
 			items: [
 				{
 					bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
-					style: 'margin-bottom:6px; margin-left:2px',
+					style: 'margin-top:4px; margin-bottom:6px; margin-left:5px',
 					html: NS.i18n.data
 				},
 				data,
@@ -1811,7 +1836,7 @@ Ext.onReady( function() {
 				},
 				{
 					bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
-					style: 'margin-bottom:6px; margin-left:2px',
+					style: 'margin-bottom:6px; margin-left:5px',
 					html: NS.i18n.axes
 				},
 				axes,
@@ -1820,7 +1845,7 @@ Ext.onReady( function() {
 				},
 				{
 					bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
-					style: 'margin-bottom:6px; margin-left:2px',
+					style: 'margin-bottom:6px; margin-left:5px',
 					html: NS.i18n.general
 				},
 				general
@@ -1861,6 +1886,7 @@ Ext.onReady( function() {
 					w.baseLineValue = baseLineValue;
 					w.baseLineTitle = baseLineTitle;
                     w.sortOrder = sortOrder;
+					w.outputType = outputType;
 
 					w.rangeAxisMaxValue = rangeAxisMaxValue;
 					w.rangeAxisMinValue = rangeAxisMinValue;
