@@ -586,6 +586,7 @@ public class IdentifiableObjectManagerTest
         identifiableObjectManager.save( dataElementD );
 
         Property property = new Property( DataElement.class, null, null );
+        property.setSimple( true );
         property.setPersisted( true );
         property.setFieldName( "name" );
 
@@ -616,6 +617,7 @@ public class IdentifiableObjectManagerTest
         identifiableObjectManager.save( dataElementD );
 
         Property property = new Property( DataElement.class, null, null );
+        property.setSimple( true );
         property.setPersisted( true );
         property.setFieldName( "name" );
 
