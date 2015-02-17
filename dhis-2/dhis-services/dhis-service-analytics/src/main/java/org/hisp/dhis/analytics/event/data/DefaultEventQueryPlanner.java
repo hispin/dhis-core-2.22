@@ -113,6 +113,11 @@ public class DefaultEventQueryPlanner
             violation = "Value dimension cannot also be specified as an item or item filter";
         }
         
+        if ( params.hasAggregationType() && !params.hasValueDimension() )
+        {
+            violation = "Value dimension must be specified when aggregation type is specified";
+        }
+        
         if ( !params.hasPeriods() && ( params.getStartDate() == null || params.getEndDate() == null ) )
         {
             violation = "Start and end date or at least one period must be specified";
