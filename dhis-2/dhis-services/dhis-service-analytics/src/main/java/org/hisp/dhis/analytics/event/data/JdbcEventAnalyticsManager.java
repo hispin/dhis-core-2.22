@@ -61,6 +61,7 @@ import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.system.util.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -177,7 +178,7 @@ public class JdbcEventAnalyticsManager
             if ( params.hasValueDimension() )
             {
                 double value = rowSet.getDouble( "value" );
-                grid.addValue( value );
+                grid.addValue( params.isSkipRounding() ? value : MathUtils.getRounded( value ) );
             }
             else
             {

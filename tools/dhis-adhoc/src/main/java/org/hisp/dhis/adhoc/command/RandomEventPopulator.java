@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RandomEventPopulator
     implements Command
 {
-    private static final int EVENT_NO = 1000;
+    private static final int EVENT_NO = 10000;
     private static final List<String> OPT_GENDER = Arrays.asList( "male", "female" );
     
     @Autowired

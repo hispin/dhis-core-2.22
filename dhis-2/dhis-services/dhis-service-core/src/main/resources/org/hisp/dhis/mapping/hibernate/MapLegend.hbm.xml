@@ -22,9 +22,9 @@
 
     <property name="lastUpdated" type="timestamp" />
 
-    <property name="startValue" column="startvalue" />
+    <property name="startValue" column="startvalue" index="maplegend_startvalue" />
 
-    <property name="endValue" column="endvalue" />
+    <property name="endValue" column="endvalue" index="maplegend_endvalue" />
 
     <property name="color" column="color" />
 

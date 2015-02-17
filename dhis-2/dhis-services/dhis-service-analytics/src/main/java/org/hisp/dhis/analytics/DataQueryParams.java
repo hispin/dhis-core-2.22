@@ -121,7 +121,7 @@ public class DataQueryParams
     /**
      * Indicates that full precision should be provided for values.
      */
-    private boolean skipRounding;
+    protected boolean skipRounding;
     
     /**
      * Indicates i) if the names of all ancestors of the organisation units part
