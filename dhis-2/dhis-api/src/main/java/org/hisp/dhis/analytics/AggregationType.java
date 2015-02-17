@@ -38,7 +38,8 @@ public enum AggregationType
     AVERAGE_SUM_INT_DISAGGREGATION( "avg_sum_int_disaggregation" ), // Sum in organisation unit hierarchy
     AVERAGE_INT( "avg_int" ),
     AVERAGE_INT_DISAGGREGATION( "avg_int_disaggregation" ),
-    AVERAGE_BOOL( "avg" ), 
+    AVERAGE_BOOL( "avg" ),
+    AVERAGE( "average" ), // General average
     COUNT( "count" ), 
     STDDEV( "stddev" ), 
     VARIANCE( "variance" ),
