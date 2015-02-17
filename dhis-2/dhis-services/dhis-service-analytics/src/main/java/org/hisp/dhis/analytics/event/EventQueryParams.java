@@ -112,6 +112,7 @@ public class EventQueryParams
         params.filters = new ArrayList<>( this.filters );
         params.displayProperty = this.displayProperty;
         params.aggregationType = this.aggregationType;
+        params.skipRounding = this.skipRounding;
 
         params.partitions = new Partitions( this.partitions );
         params.periodType = this.periodType;
