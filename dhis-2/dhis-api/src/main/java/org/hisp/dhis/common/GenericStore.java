@@ -28,6 +28,8 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.query.Order;
+
 import java.util.List;
 
 /**
@@ -90,11 +92,25 @@ public interface GenericStore<T>
     List<T> getAll();
 
     /**
-     * Retrieves a List of all objects.
+     * Retrieves a List of all objects, ordered as specified (only persisted properties are supported).
+     *
+     * @return a List of all objects.
+     */
+    List<T> getAll( Order order );
+
+    /**
+     * Retrieves a paged List of all objects.
      *
      * @return a List of all objects.
      */
     List<T> getAll( int first, int max );
+
+    /**
+     * Retrieves a paged List of all objects, ordered as specified (only persisted properties are supported).
+     *
+     * @return a List of all objects.
+     */
+    List<T> getAll( int first, int max, Order order );
 
     /**
      * Removes the given object instance.
