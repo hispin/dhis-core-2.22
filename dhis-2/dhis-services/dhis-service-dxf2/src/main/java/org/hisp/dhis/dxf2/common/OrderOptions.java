@@ -1,4 +1,4 @@
-package org.hisp.dhis.query;
+package org.hisp.dhis.dxf2.common;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,62 +29,84 @@ package org.hisp.dhis.query;
  */
 
 import com.google.common.base.MoreObjects;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.Property;
+import org.hisp.dhis.schema.Schema;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class Order
+public class OrderOptions
 {
-    private boolean ascending;
+    private Set<String> order = new HashSet<>();
 
-    private boolean ignoreCase;
-
-    private Property property;
-
-    public Order( Property property, boolean ascending )
+    public OrderOptions()
     {
-        this.property = property;
-        this.ascending = ascending;
     }
 
-    public Order ignoreCase()
+    public void setOrder( Set<String> order )
     {
-        this.ignoreCase = true;
-        return this;
+        this.order = order;
     }
 
-    public boolean isAscending()
+    public List<Order> getOrders( Schema schema )
     {
-        return ascending;
+        Map<String, Order> orders = new HashMap<>();
+
+        for ( String o : order )
+        {
+            String[] split = o.split( ":" );
+
+            if ( split.length <= 1 )
+            {
+                continue;
+            }
+
+            if ( orders.containsKey( split[0] ) || !schema.haveProperty( split[0] )
+                || !validProperty( schema.getProperty( split[0] ) ) || !validDirection( split[1] ) )
+            {
+                continue;
+            }
+
+            Order newOrder;
+
+            if ( "asc".equals( split[1] ) )
+            {
+                newOrder = Order.asc( schema.getProperty( split[0] ) );
+            }
+            else
+            {
+                newOrder = Order.desc( schema.getProperty( split[0] ) );
+            }
+
+            orders.put( split[0], newOrder.ignoreCase() );
+        }
+
+        return new ArrayList<>( orders.values() );
     }
 
-    public boolean isIgnoreCase()
+    private boolean validProperty( Property property )
     {
-        return ignoreCase;
+        return property.isPersisted() && property.isSimple();
     }
 
-    public Property getProperty()
+    private boolean validDirection( String direction )
     {
-        return property;
-    }
-
-    public static Order asc( Property property )
-    {
-        return new Order( property, true );
-    }
-
-    public static Order desc( Property property )
-    {
-        return new Order( property, false );
+        return "asc".equals( direction ) || "desc".equals( direction );
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash( ascending, ignoreCase, property );
+        return Objects.hash( order );
     }
 
     @Override
@@ -100,20 +122,17 @@ public class Order
             return false;
         }
 
-        final Order other = (Order) obj;
+        final OrderOptions other = (OrderOptions) obj;
 
-        return Objects.equals( this.ascending, other.ascending )
-            && Objects.equals( this.ignoreCase, other.ignoreCase )
-            && Objects.equals( this.property, other.property );
+        return Objects.equals( this.order, other.order );
     }
+
 
     @Override
     public String toString()
     {
         return MoreObjects.toStringHelper( this )
-            .add( "ascending", ascending )
-            .add( "ignoreCase", ignoreCase )
-            .add( "property", property != null ? property.getName() : null )
+            .add( "order", order )
             .toString();
     }
 }

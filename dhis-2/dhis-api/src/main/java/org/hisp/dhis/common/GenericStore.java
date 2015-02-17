@@ -99,6 +99,13 @@ public interface GenericStore<T>
     List<T> getAll( Order order );
 
     /**
+     * Retrieves a List of all objects, ordered as specified (only persisted properties are supported).
+     *
+     * @return a List of all objects.
+     */
+    List<T> getAll( List<Order> order );
+
+    /**
      * Retrieves a paged List of all objects.
      *
      * @return a List of all objects.
@@ -111,6 +118,13 @@ public interface GenericStore<T>
      * @return a List of all objects.
      */
     List<T> getAll( int first, int max, Order order );
+
+    /**
+     * Retrieves a paged List of all objects, ordered as specified (only persisted properties are supported).
+     *
+     * @return a List of all objects.
+     */
+    List<T> getAll( int first, int max, List<Order> order );
 
     /**
      * Removes the given object instance.
