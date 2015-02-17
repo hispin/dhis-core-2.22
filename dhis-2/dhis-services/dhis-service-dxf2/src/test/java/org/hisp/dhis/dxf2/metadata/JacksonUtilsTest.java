@@ -30,7 +30,7 @@ package org.hisp.dhis.dxf2.metadata;
 
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.dxf2.utils.JacksonUtils;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.junit.Test;
 
 /**

@@ -35,7 +35,7 @@ import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementOperand;
-import org.hisp.dhis.dxf2.metadata.TranslateOptions;
+import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.schema.descriptors.DataElementGroupSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;

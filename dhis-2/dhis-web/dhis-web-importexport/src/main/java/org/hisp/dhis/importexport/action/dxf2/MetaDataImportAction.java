@@ -40,7 +40,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dxf2.csv.CsvImportService;
 import org.hisp.dhis.dxf2.gml.GmlImportService;
-import org.hisp.dhis.dxf2.metadata.ImportOptions;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.importexport.action.util.ImportMetaDataCsvTask;

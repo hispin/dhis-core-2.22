@@ -33,7 +33,7 @@ import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
-import org.hisp.dhis.dxf2.utils.IdSchemes;
+import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
 import org.hisp.dhis.util.ContextUtils;

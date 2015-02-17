@@ -30,7 +30,7 @@ package org.hisp.dhis.webapi.view;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.dxf2.utils.JacksonUtils;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.view.AbstractView;
 

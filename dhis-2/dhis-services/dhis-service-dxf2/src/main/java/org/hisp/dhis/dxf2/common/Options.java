@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.metadata;
+package org.hisp.dhis.dxf2.common;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,13 +28,10 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.springframework.util.StringUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**

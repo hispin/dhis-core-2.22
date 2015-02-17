@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.metadata;
  */
 
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.scheduling.TaskId;
 import org.springframework.stereotype.Service;

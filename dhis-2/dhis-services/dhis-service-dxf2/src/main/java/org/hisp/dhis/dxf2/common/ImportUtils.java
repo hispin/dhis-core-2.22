@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.metadata;
+package org.hisp.dhis.dxf2.common;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,36 +28,41 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import net.sf.json.JSONObject;
+import org.hisp.dhis.common.IdentifiableObject;
 
 /**
- * @author Ovidiu Rosu <rosu.ovi@gmail.com>
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class FilterOptions
-    extends Options
+public class ImportUtils
 {
-    private JSONObject restrictionsJson;
-
-    //--------------------------------------------------------------------------
-    // Constructors
-    //--------------------------------------------------------------------------
-
-    public FilterOptions( JSONObject restrictionsJson )
+    /**
+     * @param object Object to get display name for
+     * @return A usable display name
+     */
+    public static String getDisplayName( Object object )
     {
-        this.restrictionsJson = restrictionsJson;
-    }
+        if ( object == null )
+        {
+            return "[ object is null ]";
+        }
+        else if ( IdentifiableObject.class.isInstance( object ) )
+        {
+            IdentifiableObject identifiableObject = (IdentifiableObject) object;
 
-    //--------------------------------------------------------------------------
-    // Getters & Setters
-    //--------------------------------------------------------------------------
+            if ( identifiableObject.getName() != null && identifiableObject.getName().length() > 0 )
+            {
+                return identifiableObject.getName();
+            }
+            else if ( identifiableObject.getUid() != null && identifiableObject.getUid().length() > 0 )
+            {
+                return identifiableObject.getUid();
+            }
+            else if ( identifiableObject.getCode() != null && identifiableObject.getCode().length() > 0 )
+            {
+                return identifiableObject.getCode();
+            }
+        }
 
-    public JSONObject getRestrictionsJson()
-    {
-        return restrictionsJson;
-    }
-
-    public void setRestrictionsJson( JSONObject restrictionsJson )
-    {
-        this.restrictionsJson = restrictionsJson;
+        return object.getClass().getName();
     }
 }

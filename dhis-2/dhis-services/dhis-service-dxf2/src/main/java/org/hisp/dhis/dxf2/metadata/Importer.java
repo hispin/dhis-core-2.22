@@ -28,6 +28,7 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.user.User;
 
 import java.util.List;

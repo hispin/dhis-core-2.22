@@ -33,7 +33,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.common.collect.Lists;
 
 import org.hisp.dhis.common.Pager;
-import org.hisp.dhis.dxf2.metadata.TranslateOptions;
+import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.organisationunit.comparator.OrganisationUnitByLevelComparator;

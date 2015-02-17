@@ -30,7 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.dxf2.metadata.ImportSummary;
-import org.hisp.dhis.dxf2.utils.JacksonUtils;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.node.exception.InvalidTypeException;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
@@ -41,7 +41,6 @@ import org.hisp.dhis.system.SystemInfo;
 import org.hisp.dhis.system.SystemService;
 import org.hisp.dhis.system.notification.Notification;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.system.scheduling.Scheduler;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;

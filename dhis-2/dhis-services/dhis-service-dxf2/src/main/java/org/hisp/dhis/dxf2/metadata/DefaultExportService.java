@@ -35,6 +35,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.dxf2.common.FilterOptions;
+import org.hisp.dhis.dxf2.common.Options;
 import org.hisp.dhis.filter.MetaDataFilter;
 import org.hisp.dhis.filter.MetaDataFilterService;
 import org.hisp.dhis.scheduling.TaskId;

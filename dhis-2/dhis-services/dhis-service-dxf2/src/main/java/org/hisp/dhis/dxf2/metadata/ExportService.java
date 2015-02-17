@@ -29,6 +29,8 @@ package org.hisp.dhis.dxf2.metadata;
  */
 
 import net.sf.json.JSONObject;
+import org.hisp.dhis.dxf2.common.FilterOptions;
+import org.hisp.dhis.dxf2.common.Options;
 import org.hisp.dhis.filter.MetaDataFilter;
 import org.hisp.dhis.scheduling.TaskId;
 
