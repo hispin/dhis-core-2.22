@@ -28,9 +28,9 @@ package org.hisp.dhis.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Set;
-
 import org.hisp.dhis.common.ListMap;
+
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -38,6 +38,7 @@ import org.hisp.dhis.common.ListMap;
 public interface SchedulingManager
 {
     final String TASK_RESOURCE_TABLE = "resourceTableTask";
+    final String TASK_RESOURCE_TABLE_15_MINS = "resourceTable15MinTask";
     final String TASK_DATAMART_LAST_YEAR = "dataMartLastYearTask";
     final String TASK_ANALYTICS_ALL = "analyticsAllTask";
     final String TASK_ANALYTICS_LAST_3_YEARS = "analyticsLast3YearsTask";
