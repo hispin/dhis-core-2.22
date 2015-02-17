@@ -42,7 +42,7 @@ import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
-import org.hisp.dhis.dxf2.metadata.TranslateOptions;
+import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;

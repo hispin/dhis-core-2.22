@@ -30,7 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hisp.dhis.dxf2.render.RenderService;
-import org.hisp.dhis.dxf2.utils.JacksonUtils;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.springframework.beans.factory.annotation.Autowired;

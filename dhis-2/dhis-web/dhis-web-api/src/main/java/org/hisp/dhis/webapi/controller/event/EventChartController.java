@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.dxf2.utils.JacksonUtils;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.eventchart.EventChart;
 import org.hisp.dhis.eventchart.EventChartService;
 import org.hisp.dhis.i18n.I18nFormat;

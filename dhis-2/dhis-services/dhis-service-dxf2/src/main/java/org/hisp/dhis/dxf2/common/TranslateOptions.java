@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.utils;
+package org.hisp.dhis.dxf2.common;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,38 +28,45 @@ package org.hisp.dhis.dxf2.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
+import org.springframework.util.StringUtils;
 
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResponseExtractor;
+import java.util.Locale;
 
 /**
- * Converts a response into an ImportSummary instance.
- * 
- * @throws HttpServerErrorException if the response status code is different
- *         from 200 OK or 201 Created.
- * @throws IOException if converting the response into an ImportSummary failed.
- * 
- * @author Lars Helge Overland
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class ImportSummaryResponseExtractor
-    implements ResponseExtractor<ImportSummary>
+public class TranslateOptions
 {
-    @Override
-    public ImportSummary extractData( ClientHttpResponse response ) throws IOException
+    private boolean translate;
+
+    private String locale;
+
+    public TranslateOptions()
     {
-        ImportSummary summary = JacksonUtils.fromJson( response.getBody(), ImportSummary.class );
-        
-        HttpStatus status = response.getStatusCode();
-        
-        if ( !( HttpStatus.CREATED.equals( status ) || HttpStatus.OK.equals( status ) ) )
-        {
-            throw new HttpServerErrorException( status, "Data synch failed on remote server" );
-        }
-        
-        return summary;
+    }
+
+    public boolean isTranslate()
+    {
+        return translate || !StringUtils.isEmpty( locale );
+    }
+
+    public void setTranslate( boolean translate )
+    {
+        this.translate = translate;
+    }
+
+    public Locale getLocale()
+    {
+        return Locale.forLanguageTag( locale );
+    }
+
+    public void setLocale( String locale )
+    {
+        this.locale = locale;
+    }
+
+    public boolean defaultLocale()
+    {
+        return StringUtils.isEmpty( locale );
     }
 }

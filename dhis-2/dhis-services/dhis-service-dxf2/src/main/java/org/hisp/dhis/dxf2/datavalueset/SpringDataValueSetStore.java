@@ -34,7 +34,7 @@ import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dxf2.datavalue.DataValue;
-import org.hisp.dhis.dxf2.utils.IdSchemes;
+import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;

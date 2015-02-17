@@ -29,7 +29,7 @@ package org.hisp.dhis.webapi.webdomain;
  */
 
 import org.hisp.dhis.common.Pager;
-import org.hisp.dhis.dxf2.metadata.Options;
+import org.hisp.dhis.dxf2.common.Options;
 
 import java.util.Map;
 

@@ -29,7 +29,7 @@ package org.hisp.dhis.webapi.controller.mapping;
  */
 
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.dxf2.utils.JacksonUtils;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.mapping.MapLegend;
 import org.hisp.dhis.mapping.MapLegendSet;
 import org.hisp.dhis.mapping.MappingService;
