@@ -28,6 +28,7 @@ package org.hisp.dhis.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -63,6 +64,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -437,20 +439,24 @@ public class HibernateGenericStore<T>
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public final List<T> getAll( Order order )
     {
-        Criteria criteria = getSharingCriteria();
-        org.hibernate.criterion.Order criteriaOrder = getHibernateOrder( order );
+        return getAll( Lists.newArrayList( order ) );
+    }
 
-        if ( criteriaOrder == null )
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<T> getAll( List<Order> order )
+    {
+        Criteria criteria = getSharingCriteria();
+        List<org.hibernate.criterion.Order> hibernateOrders = getHibernateOrders( order );
+
+        for ( org.hibernate.criterion.Order ho : hibernateOrders )
         {
-            return criteria.list();
+            criteria.addOrder( ho );
         }
 
-        return criteria
-            .addOrder( criteriaOrder )
-            .list();
+        return criteria.list();
     }
 
     @Override
@@ -464,19 +470,24 @@ public class HibernateGenericStore<T>
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public List<T> getAll( int first, int max, Order order )
     {
-        Criteria criteria = getSharingCriteria();
-        org.hibernate.criterion.Order criteriaOrder = getHibernateOrder( order );
+        return getAll( first, max, Lists.newArrayList( order ) );
+    }
 
-        if ( criteriaOrder == null )
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<T> getAll( int first, int max, List<Order> order )
+    {
+        Criteria criteria = getSharingCriteria();
+        List<org.hibernate.criterion.Order> hibernateOrders = getHibernateOrders( order );
+
+        for ( org.hibernate.criterion.Order ho : hibernateOrders )
         {
-            return criteria.list();
+            criteria.addOrder( ho );
         }
 
         return criteria
-            .addOrder( criteriaOrder )
             .setFirstResult( first )
             .setMaxResults( max )
             .list();
@@ -590,9 +601,26 @@ public class HibernateGenericStore<T>
         return true;
     }
 
+    protected List<org.hibernate.criterion.Order> getHibernateOrders( List<Order> order )
+    {
+        List<org.hibernate.criterion.Order> orders = new ArrayList<>();
+
+        for ( Order o : order )
+        {
+            org.hibernate.criterion.Order hibernateOrder = getHibernateOrder( o );
+
+            if ( hibernateOrder != null )
+            {
+                orders.add( hibernateOrder );
+            }
+        }
+
+        return orders;
+    }
+
     protected org.hibernate.criterion.Order getHibernateOrder( Order order )
     {
-        if ( order.getProperty() == null || !order.getProperty().isPersisted() )
+        if ( order.getProperty() == null || !order.getProperty().isPersisted() || !order.getProperty().isSimple() )
         {
             return null;
         }
