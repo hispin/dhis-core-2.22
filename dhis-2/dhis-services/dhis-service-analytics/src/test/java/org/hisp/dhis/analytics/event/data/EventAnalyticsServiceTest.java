@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.event.EventAnalyticsService;
 import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.common.AnalyticsType;
@@ -157,12 +158,33 @@ public class EventAnalyticsServiceTest
         filterParams.add( "pe:201401;201402" );
         
         EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
-            null, null, dimensionParams, filterParams, false, false, null, null, null, null, null );
+            null, null, dimensionParams, filterParams, null, null, false, false, null, null, null, null, null );
         
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getOrganisationUnits().size() );
         assertEquals( 1, params.getItems().size() );
         assertEquals( 2, params.getFilterPeriods().size() );
+    }
+
+    @Test
+    public void testGetFromUrlB()
+    {
+        Set<String> dimensionParams = new HashSet<>();
+        dimensionParams.add( "ou:" + ouA.getUid() + ";" + ouB.getId() );
+        dimensionParams.add( atA.getUid() + ":LE:5" );
+        
+        Set<String> filterParams = new HashSet<>();
+        filterParams.add( "pe:201401" );
+        
+        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
+            null, null, dimensionParams, filterParams, deA.getUid(), AggregationType.AVERAGE, false, false, null, null, null, null, null );
+        
+        assertEquals( prA, params.getProgram() );
+        assertEquals( 1, params.getOrganisationUnits().size() );
+        assertEquals( 1, params.getItems().size() );
+        assertEquals( 1, params.getFilterPeriods().size() );
+        assertEquals( deA, params.getValue() );
+        assertEquals( AggregationType.AVERAGE, params.getAggregationType() );
     }
     
     @Test

@@ -66,7 +66,9 @@ public class EventQueryParams
     private List<QueryItem> items = new ArrayList<>();
     
     private List<QueryItem> itemFilters = new ArrayList<>();
-
+    
+    private NameableObject value;
+    
     private List<String> asc = new ArrayList<>();
     
     private List<String> desc = new ArrayList<>();
@@ -108,8 +110,8 @@ public class EventQueryParams
 
         params.dimensions = new ArrayList<>( this.dimensions );
         params.filters = new ArrayList<>( this.filters );
-        params.aggregationType = this.aggregationType;
         params.displayProperty = this.displayProperty;
+        params.aggregationType = this.aggregationType;
 
         params.partitions = new Partitions( this.partitions );
         params.periodType = this.periodType;
@@ -120,6 +122,7 @@ public class EventQueryParams
         params.endDate = this.endDate;
         params.items = new ArrayList<>( this.items );
         params.itemFilters = new ArrayList<>( this.itemFilters );
+        params.value = this.value;
         params.asc = new ArrayList<>( this.asc );
         params.desc = new ArrayList<>( this.desc );
         params.organisationUnitMode = this.organisationUnitMode;
@@ -187,6 +190,27 @@ public class EventQueryParams
         return duplicates;
     }
     
+    /**
+     * Get NameableObjects part of items and item filters.
+     * @return
+     */
+    public Set<NameableObject> getNameableObjectItems()
+    {
+        Set<NameableObject> objects = new HashSet<NameableObject>();
+        
+        for ( QueryItem item : items )
+        {
+            objects.add( item.getItem() );
+        }
+        
+        for ( QueryItem item : itemFilters )
+        {
+            objects.add( item.getItem() );
+        }
+        
+        return objects;
+    }
+    
     public boolean isOrganisationUnitMode( String mode )
     {
         return organisationUnitMode != null && organisationUnitMode.equalsIgnoreCase( mode );
@@ -245,6 +269,11 @@ public class EventQueryParams
         return limit != null && limit > 0;
     }
     
+    public boolean hasValueDimension()
+    {
+        return value != null;
+    }
+        
     /**
      * Indicates whether the program of this query requires registration of
      * tracked entity instances.
@@ -270,8 +299,10 @@ public class EventQueryParams
             "Stage: " + programStage + ", " +
             "Start date: " + startDate + ", " +
             "End date: " + endDate + ", " +
-            "Items " + items + ", " +
+            "Items: " + items + ", " +
             "Item filters: " + itemFilters + ", " +
+            "Value: " + value + ", " +
+            "Aggregation type: " + aggregationType + ", " +
             "Dimensions: " + dimensions + ", " +
             "Filters: " + filters + "]";
     }
@@ -338,6 +369,16 @@ public class EventQueryParams
     public void setItemFilters( List<QueryItem> itemFilters )
     {
         this.itemFilters = itemFilters;
+    }
+
+    public NameableObject getValue()
+    {
+        return value;
+    }
+
+    public void setValue( NameableObject value )
+    {
+        this.value = value;
     }
 
     public List<String> getAsc()

@@ -28,6 +28,12 @@ package org.hisp.dhis.analytics.event.data;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.analytics.AggregationType.COUNT;
+import static org.hisp.dhis.analytics.AggregationType.MAX;
+import static org.hisp.dhis.analytics.AggregationType.MIN;
+import static org.hisp.dhis.analytics.AggregationType.STDDEV;
+import static org.hisp.dhis.analytics.AggregationType.SUM;
+import static org.hisp.dhis.analytics.AggregationType.VARIANCE;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
@@ -85,7 +91,7 @@ public class JdbcEventAnalyticsManager
     @Override
     public Grid getAggregatedEventData( EventQueryParams params, Grid grid, int maxLimit )
     {
-        String countClause = getCountClause( params );
+        String countClause = getAggregateClause( params );
         
         String sql = "select " + countClause + " as value," + getSelectColumns( params ) + " ";
 
@@ -150,12 +156,10 @@ public class JdbcEventAnalyticsManager
     {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
 
-        log.debug( "Analytics event aggregate SQL: " + sql );
+        log.info( "Analytics event aggregate SQL: " + sql );
         
         while ( rowSet.next() )
-        {
-            int value = rowSet.getInt( "value" );
-            
+        {            
             grid.addRow();
             
             for ( DimensionalObject dimension : params.getDimensions() )
@@ -170,7 +174,16 @@ public class JdbcEventAnalyticsManager
                 grid.addValue( itemValue );
             }
             
-            grid.addValue( value );
+            if ( params.hasValueDimension() )
+            {
+                double value = rowSet.getDouble( "value" );
+                grid.addValue( value );
+            }
+            else
+            {
+                int value = rowSet.getInt( "value" );
+                grid.addValue( value );
+            }
         }
     }
     
@@ -309,21 +322,57 @@ public class JdbcEventAnalyticsManager
     /**
      * Returns the count clause based on the output type.
      */
-    private String getCountClause( EventQueryParams params )
+    private String getAggregateClause( EventQueryParams params )
     {
         EventOutputType outputType = params.getOutputType();
         
-        if ( EventOutputType.TRACKED_ENTITY_INSTANCE.equals( outputType ) && params.isProgramRegistration() )
+        if ( params.hasValueDimension() ) // && isNumeric
         {
-            return "count(distinct tei)";
+            String column = statementBuilder.columnQuote( params.getValue().getUid() );
+            
+            if ( params.isAggregationType( SUM ) )
+            {
+                return "sum(" + column + ")";
+            }
+            else if ( params.isAggregationType( COUNT ) )
+            {
+                return "count(" + column + ")";
+            }
+            else if ( params.isAggregationType( STDDEV ) )
+            {
+                return "stddev(" + column + ")";
+            }
+            else if ( params.isAggregationType( VARIANCE ) )
+            {
+                return "variance(" + column + ")";
+            }
+            else if ( params.isAggregationType( MIN ) )
+            {
+                return "min(" + column + ")";
+            }
+            else if ( params.isAggregationType( MAX ) )
+            {
+                return "max(" + column + ")";
+            }
+            else // AVERAGE
+            {
+                return "avg(" + column + ")";
+            }
         }
-        else if ( EventOutputType.ENROLLMENT.equals( outputType ) )
+        else
         {
-            return "count(distinct pi)";
-        }
-        else // EVENT
-        {
-            return "count(psi)";
+            if ( EventOutputType.TRACKED_ENTITY_INSTANCE.equals( outputType ) && params.isProgramRegistration() )
+            {
+                return "count(distinct tei)";
+            }
+            else if ( EventOutputType.ENROLLMENT.equals( outputType ) )
+            {
+                return "count(distinct pi)";
+            }
+            else // EVENT
+            {
+                return "count(psi)";
+            }
         }
     }
     

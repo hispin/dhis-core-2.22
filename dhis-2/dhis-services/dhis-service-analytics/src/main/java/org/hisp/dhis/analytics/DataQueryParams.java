@@ -636,6 +636,14 @@ public class DataQueryParams
     {
         return this.aggregationType != null && this.aggregationType.equals( aggregationType );
     }
+    
+    /**
+     * Indicates whether an aggregation type is specified.
+     */
+    public boolean hasAggregationType()
+    {
+        return this.aggregationType != null;
+    }
 
     /**
      * Creates a mapping between the data periods, based on the data period type
