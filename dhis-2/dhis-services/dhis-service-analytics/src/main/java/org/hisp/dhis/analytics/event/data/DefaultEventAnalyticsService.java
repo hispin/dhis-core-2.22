@@ -344,14 +344,15 @@ public class DefaultEventAnalyticsService
 
     @Override
     public EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate,
-        Set<String> dimension, Set<String> filter, String value, AggregationType aggregationType, boolean skipMeta, boolean hierarchyMeta, SortOrder sortOrder, 
-        Integer limit, EventOutputType outputType, DisplayProperty displayProperty, I18nFormat format )
+        Set<String> dimension, Set<String> filter, String value, AggregationType aggregationType, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, 
+        SortOrder sortOrder, Integer limit, EventOutputType outputType, DisplayProperty displayProperty, I18nFormat format )
     {
         EventQueryParams params = getFromUrl( program, stage, startDate, endDate, dimension, filter, null, null, null,
             skipMeta, hierarchyMeta, false, displayProperty, null, null, format );
                 
         params.setValue( getValueDimension( value ) );
         params.setAggregationType( aggregationType );
+        params.setSkipRounding( skipRounding );
         params.setSortOrder( sortOrder );
         params.setLimit( limit );
         params.setOutputType( MoreObjects.firstNonNull( outputType, EventOutputType.EVENT ) );
