@@ -5,6 +5,8 @@
     <bean id="exampleCommand" class="org.hisp.dhis.adhoc.command.ExampleCommand" />
     
     <bean id="randomDataPopulator" class="org.hisp.dhis.adhoc.command.RandomDataPopulator" />
+    
+    <bean id="randomEventPopulator" class="org.hisp.dhis.adhoc.command.RandomEventPopulator" />
 
 	<bean id="analyticsTableGenerator" class="org.hisp.dhis.adhoc.command.AnalyticsTableGenerator" />
 </beans>
