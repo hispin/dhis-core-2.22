@@ -17,6 +17,7 @@
 <select id="resourceTableStrategy" name="resourceTableStrategy" class="scheduling">
 	<option value="disabled">$i18n.getString( "disabled" )</option>
 	<option value="allDaily"#if( $resourceTableStrategy && $resourceTableStrategy == "allDaily" ) selected="selected"#end>$i18n.getString( "all_daily" )</option>
+	<option value="allEvery15Min"#if( $resourceTableStrategy && $resourceTableStrategy == "allEvery15Min" ) selected="selected"#end>$i18n.getString( "all_every_15_min" )</option>
 </select>
 </div>
 
