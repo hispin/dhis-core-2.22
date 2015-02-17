@@ -2064,6 +2064,16 @@ Ext.onReady( function() {
 					}
 				}
 
+                // values
+                if (view.valueId) {
+                    paramString += '&value=' + view.valueId;
+				}
+
+                // aggregation type
+                if (view.aggregationType) {
+                    paramString += '&aggregationType=' + view.aggregationType;
+                }
+
                 // dates
                 if (view.startDate && view.endDate) {
                     paramString += '&startDate=' + view.startDate + '&endDate=' + view.endDate;
