@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.metadata;
+package org.hisp.dhis.dxf2.common;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,45 +28,38 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.springframework.util.StringUtils;
+import java.io.IOException;
 
-import java.util.Locale;
+import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResponseExtractor;
 
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * Converts a response into an ImportSummary instance.
+ * 
+ * @throws HttpServerErrorException if the response status code is different
+ *         from 200 OK or 201 Created.
+ * @throws IOException if converting the response into an ImportSummary failed.
+ * 
+ * @author Lars Helge Overland
  */
-public class TranslateOptions
+public class ImportSummaryResponseExtractor
+    implements ResponseExtractor<ImportSummary>
 {
-    private boolean translate;
-
-    private String locale;
-
-    public TranslateOptions()
+    @Override
+    public ImportSummary extractData( ClientHttpResponse response ) throws IOException
     {
-    }
-
-    public boolean isTranslate()
-    {
-        return translate || !StringUtils.isEmpty( locale );
-    }
-
-    public void setTranslate( boolean translate )
-    {
-        this.translate = translate;
-    }
-
-    public Locale getLocale()
-    {
-        return Locale.forLanguageTag( locale );
-    }
-
-    public void setLocale( String locale )
-    {
-        this.locale = locale;
-    }
-
-    public boolean defaultLocale()
-    {
-        return StringUtils.isEmpty( locale );
+        ImportSummary summary = JacksonUtils.fromJson( response.getBody(), ImportSummary.class );
+        
+        HttpStatus status = response.getStatusCode();
+        
+        if ( !( HttpStatus.CREATED.equals( status ) || HttpStatus.OK.equals( status ) ) )
+        {
+            throw new HttpServerErrorException( status, "Data synch failed on remote server" );
+        }
+        
+        return summary;
     }
 }

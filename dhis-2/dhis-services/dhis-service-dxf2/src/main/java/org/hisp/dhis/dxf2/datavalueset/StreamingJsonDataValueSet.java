@@ -31,7 +31,7 @@ package org.hisp.dhis.dxf2.datavalueset;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 import org.hisp.dhis.dxf2.datavalue.DataValue;
-import org.hisp.dhis.dxf2.utils.JacksonUtils;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;

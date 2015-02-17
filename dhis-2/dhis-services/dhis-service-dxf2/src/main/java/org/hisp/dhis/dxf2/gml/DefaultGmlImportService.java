@@ -31,7 +31,7 @@ package org.hisp.dhis.dxf2.gml;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.dxf2.metadata.ImportOptions;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
 import org.hisp.dhis.dxf2.render.RenderService;

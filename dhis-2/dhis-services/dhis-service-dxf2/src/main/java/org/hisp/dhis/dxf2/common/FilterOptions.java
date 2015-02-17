@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.metadata;
+package org.hisp.dhis.dxf2.common;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,41 +28,36 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.IdentifiableObject;
+import net.sf.json.JSONObject;
 
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * @author Ovidiu Rosu <rosu.ovi@gmail.com>
  */
-public class ImportUtils
+public class FilterOptions
+    extends Options
 {
-    /**
-     * @param object Object to get display name for
-     * @return A usable display name
-     */
-    public static String getDisplayName( Object object )
+    private JSONObject restrictionsJson;
+
+    //--------------------------------------------------------------------------
+    // Constructors
+    //--------------------------------------------------------------------------
+
+    public FilterOptions( JSONObject restrictionsJson )
     {
-        if ( object == null )
-        {
-            return "[ object is null ]";
-        }
-        else if ( IdentifiableObject.class.isInstance( object ) )
-        {
-            IdentifiableObject identifiableObject = (IdentifiableObject) object;
+        this.restrictionsJson = restrictionsJson;
+    }
 
-            if ( identifiableObject.getName() != null && identifiableObject.getName().length() > 0 )
-            {
-                return identifiableObject.getName();
-            }
-            else if ( identifiableObject.getUid() != null && identifiableObject.getUid().length() > 0 )
-            {
-                return identifiableObject.getUid();
-            }
-            else if ( identifiableObject.getCode() != null && identifiableObject.getCode().length() > 0 )
-            {
-                return identifiableObject.getCode();
-            }
-        }
+    //--------------------------------------------------------------------------
+    // Getters & Setters
+    //--------------------------------------------------------------------------
 
-        return object.getClass().getName();
+    public JSONObject getRestrictionsJson()
+    {
+        return restrictionsJson;
+    }
+
+    public void setRestrictionsJson( JSONObject restrictionsJson )
+    {
+        this.restrictionsJson = restrictionsJson;
     }
 }
