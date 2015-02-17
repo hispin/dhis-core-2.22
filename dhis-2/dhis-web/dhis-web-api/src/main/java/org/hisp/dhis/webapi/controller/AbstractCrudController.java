@@ -38,11 +38,12 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.PagerUtils;
+import org.hisp.dhis.dxf2.common.OrderOptions;
+import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
-import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
@@ -56,6 +57,7 @@ import org.hisp.dhis.node.config.InclusionStrategy;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.node.types.SimpleNode;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
@@ -136,10 +138,14 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
     @RequestMapping( method = RequestMethod.GET )
     public @ResponseBody RootNode getObjectList(
-        @RequestParam Map<String, String> rpParameters, TranslateOptions translateOptions, HttpServletResponse response, HttpServletRequest request )
+        @RequestParam Map<String, String> rpParameters,
+        TranslateOptions translateOptions, OrderOptions orderOptions,
+        HttpServletResponse response, HttpServletRequest request )
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
         List<String> filters = Lists.newArrayList( contextService.getParameterValues( "filter" ) );
+
+        List<Order> orders = orderOptions.getOrders( getSchema() );
 
         WebOptions options = new WebOptions( rpParameters );
         WebMetaData metaData = new WebMetaData();
@@ -155,7 +161,23 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         List<T> entities;
 
-        if ( filters.isEmpty() )
+        if ( !orders.isEmpty() )
+        {
+            if ( options.hasPaging() )
+            {
+                int count = manager.getCount( getEntityClass() );
+                Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
+                metaData.setPager( pager );
+                entities = manager.getBetween( getEntityClass(), pager.getOffset(), pager.getPageSize(), orders );
+                hasPaging = false;
+            }
+            else
+            {
+                entities = (List<T>) manager.getAll( getEntityClass(), orders );
+                hasPaging = false;
+            }
+        }
+        else if ( filters.isEmpty() )
         {
             entities = getEntityList( metaData, options, filters );
             hasPaging = false;
@@ -167,7 +189,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
             // Use database query for name filter
 
-            if ( schema.getProperty( "name" ) != null && schema.getProperty( "name" ).isPersisted() )
+            if ( schema.haveProperty( "name" ) && schema.getProperty( "name" ).isPersisted() )
             {
                 while ( iterator.hasNext() )
                 {
@@ -855,9 +877,16 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         return list; //TODO consider ACL
     }
 
+    private Schema schema;
+
     protected Schema getSchema()
     {
-        return schemaService.getDynamicSchema( getEntityClass() );
+        if ( schema == null )
+        {
+            schema = schemaService.getDynamicSchema( getEntityClass() );
+        }
+
+        return schema;
     }
 
     protected void addAccessProperties( List<T> objects )

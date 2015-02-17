@@ -72,6 +72,8 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> Collection<T> getAll( Class<T> clazz, Order order );
 
+    <T extends IdentifiableObject> Collection<T> getAll( Class<T> clazz, List<Order> order );
+
     <T extends IdentifiableObject> Collection<T> getAllByName( Class<T> clazz, String name );
 
     <T extends IdentifiableObject> Collection<T> getAllByNameIgnoreCase( Class<T> clazz, String name );
@@ -89,6 +91,8 @@ public interface IdentifiableObjectManager
     <T extends IdentifiableObject> List<T> getBetween( Class<T> clazz, int first, int max );
 
     <T extends IdentifiableObject> List<T> getBetween( Class<T> clazz, int first, int max, Order order );
+
+    <T extends IdentifiableObject> List<T> getBetween( Class<T> clazz, int first, int max, List<Order> order );
 
     <T extends IdentifiableObject> List<T> getBetweenSorted( Class<T> clazz, int first, int max );
 
