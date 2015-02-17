@@ -38,6 +38,8 @@ import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.query.Order;
+import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupAccess;
@@ -568,5 +570,69 @@ public class IdentifiableObjectManagerTest
         assertFalse( cd.contains( dataElementB ) );
         assertTrue( cd.contains( dataElementC ) );
         assertTrue( cd.contains( dataElementD ) );
+    }
+
+    @Test
+    public void orderTest()
+    {
+        DataElement dataElementC = createDataElement( 'C' );
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementD = createDataElement( 'D' );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        identifiableObjectManager.save( dataElementA );
+        identifiableObjectManager.save( dataElementB );
+        identifiableObjectManager.save( dataElementC );
+        identifiableObjectManager.save( dataElementD );
+
+        Property property = new Property( DataElement.class, null, null );
+        property.setPersisted( true );
+        property.setFieldName( "name" );
+
+        List<DataElement> asc = new ArrayList<>( identifiableObjectManager.getAll( DataElement.class, Order.asc( property ) ) );
+        assertTrue( "DataElementA".equals( asc.get( 0 ).getName() ) );
+        assertTrue( "DataElementB".equals( asc.get( 1 ).getName() ) );
+        assertTrue( "DataElementC".equals( asc.get( 2 ).getName() ) );
+        assertTrue( "DataElementD".equals( asc.get( 3 ).getName() ) );
+
+        List<DataElement> desc = new ArrayList<>( identifiableObjectManager.getAll( DataElement.class, Order.desc( property ) ) );
+        assertTrue( "DataElementD".equals( desc.get( 0 ).getName() ) );
+        assertTrue( "DataElementC".equals( desc.get( 1 ).getName() ) );
+        assertTrue( "DataElementB".equals( desc.get( 2 ).getName() ) );
+        assertTrue( "DataElementA".equals( desc.get( 3 ).getName() ) );
+    }
+
+    @Test
+    public void pagedOrderTest()
+    {
+        DataElement dataElementC = createDataElement( 'C' );
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementD = createDataElement( 'D' );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        identifiableObjectManager.save( dataElementA );
+        identifiableObjectManager.save( dataElementB );
+        identifiableObjectManager.save( dataElementC );
+        identifiableObjectManager.save( dataElementD );
+
+        Property property = new Property( DataElement.class, null, null );
+        property.setPersisted( true );
+        property.setFieldName( "name" );
+
+        List<DataElement> asc = new ArrayList<>( identifiableObjectManager.getBetween( DataElement.class, 0, 2, Order.asc( property ) ) );
+        assertTrue( "DataElementA".equals( asc.get( 0 ).getName() ) );
+        assertTrue( "DataElementB".equals( asc.get( 1 ).getName() ) );
+
+        asc = new ArrayList<>( identifiableObjectManager.getBetween( DataElement.class, 2, 2, Order.asc( property ) ) );
+        assertTrue( "DataElementC".equals( asc.get( 0 ).getName() ) );
+        assertTrue( "DataElementD".equals( asc.get( 1 ).getName() ) );
+
+        List<DataElement> desc = new ArrayList<>( identifiableObjectManager.getBetween( DataElement.class, 0, 2, Order.desc( property ) ) );
+        assertTrue( "DataElementD".equals( desc.get( 0 ).getName() ) );
+        assertTrue( "DataElementC".equals( desc.get( 1 ).getName() ) );
+
+        desc = new ArrayList<>( identifiableObjectManager.getBetween( DataElement.class, 2, 2, Order.desc( property ) ) );
+        assertTrue( "DataElementB".equals( desc.get( 0 ).getName() ) );
+        assertTrue( "DataElementA".equals( desc.get( 1 ).getName() ) );
     }
 }

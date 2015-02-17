@@ -54,6 +54,7 @@ import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.interpretation.Interpretation;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -437,9 +438,45 @@ public class HibernateGenericStore<T>
 
     @Override
     @SuppressWarnings( "unchecked" )
+    public final List<T> getAll( Order order )
+    {
+        Criteria criteria = getSharingCriteria();
+        org.hibernate.criterion.Order criteriaOrder = getHibernateOrder( order );
+
+        if ( criteriaOrder == null )
+        {
+            return criteria.list();
+        }
+
+        return criteria
+            .addOrder( criteriaOrder )
+            .list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
     public final List<T> getAll( int first, int max )
     {
         return getSharingCriteria()
+            .setFirstResult( first )
+            .setMaxResults( max )
+            .list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<T> getAll( int first, int max, Order order )
+    {
+        Criteria criteria = getSharingCriteria();
+        org.hibernate.criterion.Order criteriaOrder = getHibernateOrder( order );
+
+        if ( criteriaOrder == null )
+        {
+            return criteria.list();
+        }
+
+        return criteria
+            .addOrder( criteriaOrder )
             .setFirstResult( first )
             .setMaxResults( max )
             .list();
@@ -551,5 +588,31 @@ public class HibernateGenericStore<T>
         }
 
         return true;
+    }
+
+    protected org.hibernate.criterion.Order getHibernateOrder( Order order )
+    {
+        if ( order.getProperty() == null || !order.getProperty().isPersisted() )
+        {
+            return null;
+        }
+
+        org.hibernate.criterion.Order criteriaOrder;
+
+        if ( order.isAscending() )
+        {
+            criteriaOrder = org.hibernate.criterion.Order.asc( order.getProperty().getFieldName() );
+        }
+        else
+        {
+            criteriaOrder = org.hibernate.criterion.Order.desc( order.getProperty().getFieldName() );
+        }
+
+        if ( order.isIgnoreCase() )
+        {
+            criteriaOrder.ignoreCase();
+        }
+
+        return criteriaOrder;
     }
 }
