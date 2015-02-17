@@ -35,6 +35,7 @@ public interface Scheduler
 {
     final String CRON_DAILY_0AM = "0 0 0 * * ?";
     final String CRON_EVERY_MIN = "0 0/1 * * * ?";
+    final String CRON_EVERY_15MIN = "0 0/15 * * * ?";
     final String CRON_TEST = "0 * * * * ?";
     
     final String STATUS_RUNNING = "running";
