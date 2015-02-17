@@ -84,7 +84,7 @@ public class EventReport
      * End date.
      */
     private Date endDate;
-
+    
     /**
      * Type of data, can be aggregated values and individual cases.
      */
