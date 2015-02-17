@@ -29,6 +29,7 @@ package org.hisp.dhis.common;
  */
 
 import org.hisp.dhis.common.NameableObject.NameableProperty;
+import org.hisp.dhis.query.Order;
 
 import java.util.Collection;
 import java.util.Date;
@@ -69,6 +70,8 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> Collection<T> getAll( Class<T> clazz );
 
+    <T extends IdentifiableObject> Collection<T> getAll( Class<T> clazz, Order order );
+
     <T extends IdentifiableObject> Collection<T> getAllByName( Class<T> clazz, String name );
 
     <T extends IdentifiableObject> Collection<T> getAllByNameIgnoreCase( Class<T> clazz, String name );
@@ -84,6 +87,8 @@ public interface IdentifiableObjectManager
     <T extends IdentifiableObject> Collection<T> getLikeShortName( Class<T> clazz, String shortName );
 
     <T extends IdentifiableObject> List<T> getBetween( Class<T> clazz, int first, int max );
+
+    <T extends IdentifiableObject> List<T> getBetween( Class<T> clazz, int first, int max, Order order );
 
     <T extends IdentifiableObject> List<T> getBetweenSorted( Class<T> clazz, int first, int max );
 
