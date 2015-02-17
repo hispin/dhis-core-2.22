@@ -513,6 +513,7 @@ public class DefaultEventAnalyticsService
         params.setProgramStage( object.getProgramStage() );
         params.setStartDate( object.getStartDate() );
         params.setEndDate( object.getEndDate() );
+        params.setOutputType( object.getOutputType() );
         
         return params;
     }
