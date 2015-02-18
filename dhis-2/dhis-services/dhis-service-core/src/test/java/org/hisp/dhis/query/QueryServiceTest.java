@@ -80,12 +80,12 @@ public class QueryServiceTest
         dataElementE.setCreated( Year.parseYear( "2005" ).getStart() );
         dataElementF.setCreated( Year.parseYear( "2006" ).getStart() );
 
-        identifiableObjectManager.save( dataElementA );
         identifiableObjectManager.save( dataElementB );
-        identifiableObjectManager.save( dataElementC );
-        identifiableObjectManager.save( dataElementD );
         identifiableObjectManager.save( dataElementE );
+        identifiableObjectManager.save( dataElementA );
+        identifiableObjectManager.save( dataElementC );
         identifiableObjectManager.save( dataElementF );
+        identifiableObjectManager.save( dataElementD );
     }
 
     private boolean collectionContainsUid( Collection<? extends IdentifiableObject> collection, String uid )
