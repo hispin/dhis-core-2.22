@@ -91,10 +91,8 @@ textarea {
     line-height: inherit;
 }
 
-.empty-stage-container {
+.empty-event-container {
     display: inline-block;
-    width: 135px;
-    height: 60px;
     opacity: 1.0;
     white-space: normal;
     padding-top: 5px;
@@ -113,6 +111,20 @@ textarea {
 
 .stage-container:hover {
     border: 2px solid;
+    font-weight: bold;
+}
+
+.event-container {
+    cursor: pointer;
+    opacity: 1.0;
+    white-space: normal;
+    padding-top: 5px;
+    border: 2px dotted;
+}
+
+.event-container:hover {
+    border: 2px solid;
+    font-weight: bold;
 }
 
 .new-event {    
@@ -133,6 +145,7 @@ textarea {
 
 .current-stage {
     border: 2px solid;
+    font-weight: bold;
 }
 
 .current-stage-color {

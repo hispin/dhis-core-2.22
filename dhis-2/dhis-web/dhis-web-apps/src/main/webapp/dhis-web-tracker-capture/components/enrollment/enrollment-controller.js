@@ -79,11 +79,12 @@ trackerCapture.controller('EnrollmentController',
             }
             else{
                 $scope.selectedEnrollment = null;
+                $scope.broadCastSelections('dashboardWidgets');
             }
         }
-        
-        $scope.broadCastSelections('dashboardWidgets');
-        
+        else{
+            $scope.broadCastSelections('dashboardWidgets');
+        }        
     });
     
     $scope.loadEnrollmentDetails = function(enrollment) {
@@ -103,9 +104,13 @@ trackerCapture.controller('EnrollmentController',
                         $scope.selectedProgram.displayCustomForm = $scope.selectedProgram.hasCustomForm ? true:false;
                         $scope.trackedEntityForm = teForm;
                         $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
-                    }                    
+                    }
+                    $scope.broadCastSelections('dashboardWidgets');
                 });
             });                
+        }
+        else{
+            $scope.broadCastSelections('dashboardWidgets');
         }
     };
         

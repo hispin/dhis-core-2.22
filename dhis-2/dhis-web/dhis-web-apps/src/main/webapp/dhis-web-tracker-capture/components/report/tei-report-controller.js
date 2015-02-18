@@ -6,28 +6,12 @@ trackerCapture.controller('TeiReportController',
                 DateUtils,
                 EventUtils,
                 TEIService,
-                ProgramFactory,
                 ProgramStageFactory,
                 EnrollmentService,
                 DHIS2EventFactory) {  
     $scope.showProgramReportDetailsDiv = false;
     $scope.enrollmentsByProgram = [];
-    
-    /*$scope.programs = [];  
-    $scope.programNames = [];  
-    $scope.programStageNames = [];
-    
-    ProgramFactory.getAll().then(function(programs){     
-        $scope.programs = programs;
-        angular.forEach($scope.programs, function(pr){
-            delete pr.organisationUnits;
-            $scope.programNames[pr.id] = {id: pr.id, name: pr.name};
-            angular.forEach(pr.programStages, function(stage){                
-                $scope.programStageNames[stage.id] = {id: stage.id, name: stage.name};
-            });
-        });
-    });*/
-        
+
     $scope.$on('dashboardWidgets', function(event, args) {
         $scope.showProgramReportDetailsDiv = false;
         var selections = CurrentSelection.get();        
@@ -93,7 +77,6 @@ trackerCapture.controller('TeiReportController',
                             $scope.report[ev.program].enrollments[ev.enrollment]= [ev];
                         }
                     }
-                    ev = EventUtils.setEventOrgUnitName(ev);
                 }                
             });
 

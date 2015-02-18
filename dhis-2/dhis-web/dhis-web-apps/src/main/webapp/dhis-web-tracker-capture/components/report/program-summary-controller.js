@@ -108,7 +108,6 @@ trackerCapture.controller('ProgramSummaryController',
                             }  
                             $scope.dhis2Events[ev.trackedEntityInstance] = [ev];
                         }
-                        ev = EventUtils.setEventOrgUnitName(ev);
                     }
                 });
                 $scope.reportStarted = false;
