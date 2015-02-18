@@ -1451,10 +1451,11 @@ Ext.onReady( function() {
             resetData: resetData,
             reset: reset,
             getValueConfig: function() {
-                var config = {};
+                var config = {},
+                    valueId = value.getValue();
 
-                if (value.getValue() !== defaultValueId) {
-                    config.value = value.getValue();
+                if (valueId && valueId !== defaultValueId) {
+                    config.value = valueId;
                     config.aggregationType = aggregationType.getValue();
                 }
 
