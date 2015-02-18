@@ -325,7 +325,8 @@ public class UpdateDataElementAction
 
         for ( DataSet dataSet : dataSets )
         {
-            dataSetService.updateDataSet( dataSet.increaseVersion() );
+            dataSet.increaseVersion();
+            dataSetService.updateDataSet( dataSet );
         }
 
         for ( int i = 0; i < dataElementGroupSets.size(); i++ )

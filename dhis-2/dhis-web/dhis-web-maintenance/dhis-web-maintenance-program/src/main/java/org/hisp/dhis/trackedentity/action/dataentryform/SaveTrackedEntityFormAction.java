@@ -141,6 +141,7 @@ public class SaveTrackedEntityFormAction
             {
                 registrationForm.setProgram( program );
             }
+            
             formService.saveTrackedEntityForm( registrationForm );
         }
         else
@@ -157,6 +158,7 @@ public class SaveTrackedEntityFormAction
                 dataEntryForm.setHtmlCode( designTextarea );
                 dataEntryFormService.updateDataEntryForm( dataEntryForm );
             }
+            
             registrationForm.setDataEntryForm( dataEntryForm );
             formService.updateTrackedEntityForm( registrationForm );
         }

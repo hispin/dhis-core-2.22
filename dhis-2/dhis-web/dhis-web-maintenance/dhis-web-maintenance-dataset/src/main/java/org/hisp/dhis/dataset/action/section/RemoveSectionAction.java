@@ -79,7 +79,9 @@ public class RemoveSectionAction
         
         DataSet dataSet = section.getDataSet();
 
-        dataSetService.updateDataSet( dataSet.increaseVersion() );
+        dataSet.increaseVersion();
+        
+        dataSetService.updateDataSet( dataSet );
         
         sectionService.deleteSection( section );
         

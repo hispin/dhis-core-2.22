@@ -170,7 +170,8 @@ public class AddSectionAction
         dataSet.getSections().add( section );
         sectionService.addSection( section );
 
-        dataSetService.updateDataSet( dataSet.increaseVersion() );
+        dataSet.increaseVersion();
+        dataSetService.updateDataSet( dataSet );
         
         return SUCCESS;
     }
