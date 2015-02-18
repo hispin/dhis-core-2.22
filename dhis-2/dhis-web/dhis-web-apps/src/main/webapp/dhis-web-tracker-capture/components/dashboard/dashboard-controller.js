@@ -184,6 +184,10 @@ trackerCapture.controller('DashboardController',
                     $scope.orderChanged = true;
                 }
             }
+            
+            if($scope.orderChanged){
+                saveDashboardLayout();
+            }
         }
     });
     
@@ -215,27 +219,15 @@ trackerCapture.controller('DashboardController',
     
     $scope.removeWidget = function(widget){        
         widget.show = false;
-        trackWidgetStatusChange(widget);
+        saveDashboardLayout();
     };
     
     $scope.expandCollapse = function(widget){
         widget.expand = !widget.expand;
-        trackWidgetStatusChange(widget);
+        saveDashboardLayout();;
     };
     
-    var trackWidgetStatusChange = function(widget){
-        var w = $scope.dashboardStatus[widget.title];
-        
-        if(!angular.equals(w, widget) && $scope.widgetsChanged.indexOf(widget.title) === -1){
-            $scope.widgetsChanged.push(widget.title);
-        }        
-        if(angular.equals(w, widget) && $scope.widgetsChanged.indexOf(widget.title) !== -1){
-            var idx = $scope.widgetsChanged.indexOf(widget.title);
-            $scope.widgetsChanged.splice(idx,1);
-        }
-    };
-    
-    $scope.saveDashboardLayout = function(){
+    var saveDashboardLayout = function(){
         var widgets = [];
         angular.forEach($rootScope.dashboardWidgets, function(widget){
             var w = angular.copy(widget);            
@@ -257,15 +249,7 @@ trackerCapture.controller('DashboardController',
             $scope.dashboardLayouts[$scope.selectedProgram.id] = {widgets: widgets, program: $scope.selectedProgram.id};
         }
         
-        DashboardLayoutService.saveLayout($scope.dashboardLayouts).then(function(){            
-            if($scope.selectedProgramId && $scope.selectedProgram && $scope.selectedProgramId === $scope.selectedProgram.id ||
-                    !$scope.selectedProgramId && !$scope.selectedProgram){
-                $route.reload();
-            }
-            else{
-                $location.path('/dashboard').search({tei: $scope.selectedTeiId,                                            
-                                            program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
-            }            
+        DashboardLayoutService.saveLayout($scope.dashboardLayouts).then(function(){
         });
     };
     
@@ -280,6 +264,6 @@ trackerCapture.controller('DashboardController',
     };
     
     $rootScope.closeOpenWidget = function(widget){
-        trackWidgetStatusChange(widget);
+        saveDashboardLayout();
     };
 });
