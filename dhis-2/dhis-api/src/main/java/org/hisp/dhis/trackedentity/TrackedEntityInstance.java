@@ -111,6 +111,10 @@ public class TrackedEntityInstance
         this.organisationUnit = organisationUnit;
     }
 
+    @JsonProperty( "trackedEntityAttributeValues" )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "trackedEntityAttributeValues", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "trackedEntityAttributeValue", namespace = DxfNamespaces.DXF_2_0 )
     public Set<TrackedEntityAttributeValue> getAttributeValues()
     {
         return attributeValues;
@@ -121,6 +125,10 @@ public class TrackedEntityInstance
         this.attributeValues = attributeValues;
     }
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "programInstances", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programInstance", namespace = DxfNamespaces.DXF_2_0 )
     public Set<ProgramInstance> getProgramInstances()
     {
         return programInstances;
