@@ -184,10 +184,10 @@ public class TrackedEntityAttributeValue
         this.value = value;
     }
 
-    @JsonProperty
+    @JsonProperty( "trackedEntityAttribute" )
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "trackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityAttribute getAttribute()
     {
         return attribute;
@@ -198,10 +198,10 @@ public class TrackedEntityAttributeValue
         this.attribute = attribute;
     }
 
-    @JsonProperty
+    @JsonProperty( "trackedEntityInstance" )
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "trackedEntityInstance", namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityInstance getEntityInstance()
     {
         return entityInstance;
