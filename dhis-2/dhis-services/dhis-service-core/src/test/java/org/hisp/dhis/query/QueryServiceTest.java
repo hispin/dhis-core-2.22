@@ -41,6 +41,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -149,6 +150,13 @@ public class QueryServiceTest
         Result result = queryService.query( query );
 
         assertEquals( 5, result.size() );
+
+        assertFalse( collectionContainsUid( result.getItems(), "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
     }
 
     @Test
