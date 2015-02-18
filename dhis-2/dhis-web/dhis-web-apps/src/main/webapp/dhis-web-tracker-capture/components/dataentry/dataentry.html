@@ -28,12 +28,13 @@
         </div>
 
         <div ng-if="dhis2Events && !showEventCreationDiv">            
-            <table class="table-borderless">
+            <table class="table-borderless table-with-fixed-layout">
                 <tbody>
                     <tr>
                         <td class="inline-block" ng-repeat="dhis2Event in dhis2Events | orderBy:'sortingDate':reverse">
                             <div class="stage-container" ng-class='getEventStyle(dhis2Event, false)' ng-click="showDataEntry(dhis2Event, false)">
                                 {{dhis2Event.name}}<br/>
+                                {{dhis2Event.orgUnitName}}<br/>
                                 {{dhis2Event.sortingDate}}         
                             </div>
                             <i class="fa fa-arrow-right" ng-if="$index < dhis2Events.length - 1"></i>

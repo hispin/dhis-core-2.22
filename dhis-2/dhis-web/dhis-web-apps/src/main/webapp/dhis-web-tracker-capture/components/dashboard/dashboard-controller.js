@@ -86,6 +86,8 @@ trackerCapture.controller('DashboardController',
             angular.forEach(orderByFilter($filter('filter')($scope.dashboardWidgets, {parent: "smallerWidget"}), 'order'), function(w){
                 $scope.dashboardWidgetsOrder.smallerWidgets.push(w.title);
             });
+            
+            $scope.broadCastSelections();
         });        
     };
     
@@ -137,11 +139,9 @@ trackerCapture.controller('DashboardController',
                                 }
                             });
                             
-                            getDashboardLayout();                            
-
-                            //broadcast selected items for dashboard controllers
-                            CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: response.enrollments, selectedEnrollment: selectedEnrollment, optionSets: $scope.optionSets});
-                            $scope.broadCastSelections();                        
+                            //prepare selected items for broadcast
+                            CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: response.enrollments, selectedEnrollment: selectedEnrollment, optionSets: $scope.optionSets});                            
+                            getDashboardLayout();                    
                         });
                     });
                 });            
@@ -189,7 +189,6 @@ trackerCapture.controller('DashboardController',
     
     $scope.applySelectedProgram = function(){
         getDashboardLayout();
-        $scope.broadCastSelections(); 
     };
     
     $scope.broadCastSelections = function(){
@@ -199,10 +198,10 @@ trackerCapture.controller('DashboardController',
         $scope.trackedEntity = selections.te;
         $scope.optionSets = selections.optionSets;
         
-        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: selections.enrollments, selectedEnrollment: null, optionSets: $scope.optionSets});
+        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: selections.enrollments, selectedEnrollment: null, optionSets: $scope.optionSets});        
         $timeout(function() { 
             $rootScope.$broadcast('selectedItems', {programExists: $scope.programs.length > 0});            
-        }, 100); 
+        }, 100);
     };     
     
     $scope.back = function(){

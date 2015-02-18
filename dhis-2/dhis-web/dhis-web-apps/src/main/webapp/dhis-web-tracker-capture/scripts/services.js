@@ -1346,29 +1346,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             dueDate = $filter('date')(dueDate, calendarSetting.keyDateFormat); 
             return dueDate;
         },
-        getEventOrgUnitName: function(orgUnitId){            
-            if(orgUnitId){
-                OrgUnitService.open().then(function(){
-                    OrgUnitService.get(orgUnitId).then(function(ou){
-                        if(ou){
-                            return ou.n;             
-                        }                                                       
-                    });                            
-                }); 
-            }
-        },
-        setEventOrgUnitName: function(dhis2Event){            
-            if(dhis2Event.orgUnit){
-                OrgUnitService.open().then(function(){
-                    OrgUnitService.get(dhis2Event.orgUnit).then(function(ou){
-                        if(ou){
-                            dhis2Event.eventOrgUnitName = ou.n;
-                            return dhis2Event;                            
-                        }                                                       
-                    });                            
-                }); 
-            }
-        },
         reconstruct: function(dhis2Event, programStage, optionSets){
             
             var e = {dataValues: [], 
