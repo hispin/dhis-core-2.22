@@ -136,7 +136,7 @@ public abstract class BaseAnalyticalObject
     protected transient List<DimensionalObject> filters = new ArrayList<>();
 
     protected transient Map<String, String> parentGraphMap = new HashMap<>();
-
+    
     // -------------------------------------------------------------------------
     // Transient properties
     // -------------------------------------------------------------------------
@@ -986,7 +986,7 @@ public abstract class BaseAnalyticalObject
     }
 
     // -------------------------------------------------------------------------
-    // Web domain properties
+    // Analytical properties
     // -------------------------------------------------------------------------
 
     @Override

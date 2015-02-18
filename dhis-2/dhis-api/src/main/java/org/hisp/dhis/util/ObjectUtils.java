@@ -50,4 +50,27 @@ public class ObjectUtils
         put( TrackedEntityAttribute.TYPE_OPTION_SET, String.class );
         put( TrackedEntityAttribute.TYPE_EMAIL, String.class );
     } };
+    
+    /**
+     * Returns the first non-null argument. Returns null if all arguments are null.
+     * 
+     * @param objects the objects.
+     * @return the first non-null argument.
+     */
+    @SafeVarargs
+    public static final <T> T firstNonNull( T... objects )
+    {
+        if ( objects != null )
+        {
+            for ( T object : objects )
+            {
+                if ( object != null )
+                {
+                    return object;
+                }
+            }
+        }
+        
+        return null;
+    }
 }
