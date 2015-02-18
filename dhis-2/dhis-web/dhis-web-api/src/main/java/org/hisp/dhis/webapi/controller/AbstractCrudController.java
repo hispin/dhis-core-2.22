@@ -378,12 +378,6 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     }
 
     private RootNode getObjectInternal( String uid, Map<String, String> parameters,
-        List<String> filters, List<String> fields ) throws Exception
-    {
-        return getObjectInternal( uid, parameters, filters, fields, null );
-    }
-
-    private RootNode getObjectInternal( String uid, Map<String, String> parameters,
         List<String> filters, List<String> fields, TranslateOptions translateOptions ) throws Exception
     {
         WebOptions options = new WebOptions( parameters );
