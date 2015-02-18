@@ -12,9 +12,6 @@
         </select>
 
         <div class="pull-right">
-            <span ng-if="selectedProgram && (widgetsChanged.length > 0 || orderChanged)">
-                <span class="trimmed-alert alert-danger">{{'dashboard_layout_not_saved'| translate}}</span><button type="button" class="btn btn-primary small-horizonal-spacing" ng-click="saveDashboardLayout()">{{'save'| translate}}</button>
-            </span>            
             <div class="btn-group" dropdown is-open="status.isopen">
                 <button type="button" class="btn btn-default dropdown-toggle">
                     <i class="fa fa-cog" title="{{'settings'| translate}}"></i>
