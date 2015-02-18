@@ -35,6 +35,7 @@ import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
+import org.hisp.dhis.common.EventAnalyticalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.MergeStrategy;
@@ -340,6 +341,32 @@ public class DefaultDimensionService
             mergeDimensionalObjects( object, object.getColumns() );
             mergeDimensionalObjects( object, object.getRows() );
             mergeDimensionalObjects( object, object.getFilters() );
+        }
+    }
+
+    @Override
+    public void mergeEventAnalyticalObject( EventAnalyticalObject object )
+    {
+        if ( object != null )
+        {
+            if ( object.getValue() != null )
+            {
+                String uid = object.getValue().getUid();
+                
+                DataElement dataElement = identifiableObjectManager.get( DataElement.class, uid );
+                
+                if ( dataElement != null )
+                {
+                    object.setDataElementValueDimension( dataElement );
+                }
+                
+                TrackedEntityAttribute attribute = identifiableObjectManager.get( TrackedEntityAttribute.class, uid );
+                
+                if ( attribute != null )
+                {
+                    object.setAttributeValueDimension( attribute );
+                }
+            }
         }
     }
     

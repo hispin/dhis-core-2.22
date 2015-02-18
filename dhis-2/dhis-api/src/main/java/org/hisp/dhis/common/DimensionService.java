@@ -56,4 +56,6 @@ public interface DimensionService
     DimensionalObject getDimensionalObjectCopy( String uid, boolean filterCanRead );
     
     void mergeAnalyticalObject( BaseAnalyticalObject object );
+    
+    void mergeEventAnalyticalObject( EventAnalyticalObject object );
 }

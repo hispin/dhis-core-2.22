@@ -28,31 +28,38 @@ package org.hisp.dhis.eventreport;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.common.BaseAnalyticalObject;
+import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.EventAnalyticalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.analytics.EventOutputType;
+import org.hisp.dhis.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author Lars Helge Overland
@@ -84,6 +91,16 @@ public class EventReport
      * End date.
      */
     private Date endDate;
+    
+    /**
+     * Data element value dimension.
+     */
+    private DataElement dataElementValueDimension;
+    
+    /**
+     * Attribute value dimension.
+     */
+    private TrackedEntityAttribute attributeValueDimension;
     
     /**
      * Type of data, can be aggregated values and individual cases.
@@ -156,6 +173,15 @@ public class EventReport
     private boolean showDimensionLabels;
 
     // -------------------------------------------------------------------------
+    // Analytical properties
+    // -------------------------------------------------------------------------
+
+    /**
+     * Value dimension.
+     */
+    private transient NameableObject value;
+
+    // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
@@ -196,6 +222,8 @@ public class EventReport
         {
             filters.addAll( getDimensionalObjectList( filter ) );
         }
+        
+        value = ObjectUtils.firstNonNull( dataElementValueDimension, attributeValueDimension );
     }
 
     // -------------------------------------------------------------------------
@@ -258,6 +286,34 @@ public class EventReport
     public void setEndDate( Date endDate )
     {
         this.endDate = endDate;
+    }
+
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public DataElement getDataElementValueDimension()
+    {
+        return dataElementValueDimension;
+    }
+
+    public void setDataElementValueDimension( DataElement dataElementValueDimension )
+    {
+        this.dataElementValueDimension = dataElementValueDimension;
+    }
+
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public TrackedEntityAttribute getAttributeValueDimension()
+    {
+        return attributeValueDimension;
+    }
+
+    public void setAttributeValueDimension( TrackedEntityAttribute attributeValueDimension )
+    {
+        this.attributeValueDimension = attributeValueDimension;
     }
 
     @JsonProperty
@@ -445,6 +501,29 @@ public class EventReport
         this.showDimensionLabels = showDimensionLabels;
     }
 
+    // -------------------------------------------------------------------------
+    // Analytical properties
+    // -------------------------------------------------------------------------
+
+    @JsonProperty
+    @JsonDeserialize( as = BaseDimensionalObject.class )
+    @JsonSerialize( as = BaseDimensionalObject.class )
+    @JsonView( { DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public NameableObject getValue()
+    {
+        return value;
+    }
+
+    public void setValue( NameableObject value )
+    {
+        this.value = value;
+    }
+
+    // -------------------------------------------------------------------------
+    // Merge with
+    // -------------------------------------------------------------------------
+
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -464,6 +543,8 @@ public class EventReport
 
             if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
             {
+                dataElementValueDimension = eventReport.getDataElementValueDimension();
+                attributeValueDimension = eventReport.getAttributeValueDimension();
                 dataType = eventReport.getDataType();
                 program = eventReport.getProgram();
                 programStage = eventReport.getProgramStage();
@@ -475,6 +556,8 @@ public class EventReport
             }
             else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
             {
+                dataElementValueDimension = eventReport.getDataElementValueDimension() == null ? dataElementValueDimension : eventReport.getDataElementValueDimension();
+                attributeValueDimension = eventReport.getAttributeValueDimension() == null ? attributeValueDimension : eventReport.getAttributeValueDimension();
                 dataType = eventReport.getDataType() == null ? dataType : eventReport.getDataType();
                 program = eventReport.getProgram() == null ? program : eventReport.getProgram();
                 programStage = eventReport.getProgramStage() == null ? programStage : eventReport.getProgramStage();
