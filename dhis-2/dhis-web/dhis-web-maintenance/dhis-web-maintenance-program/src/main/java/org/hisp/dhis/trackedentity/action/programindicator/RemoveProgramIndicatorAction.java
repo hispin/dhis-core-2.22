@@ -1,4 +1,4 @@
-package org.hisp.dhis.trackedentity.action.programtindicator;
+package org.hisp.dhis.trackedentity.action.programindicator;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,9 +28,6 @@ package org.hisp.dhis.trackedentity.action.programtindicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 
@@ -38,9 +35,9 @@ import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
- * @version $ UpdateProgramIndicatorAction Apr 16, 2013 3:24:51 PM $
+ * @version $ RemoveProgramIndicatorAction Apr 16, 2013 3:24:51 PM $
  */
-public class UpdateProgramIndicatorAction
+public class RemoveProgramIndicatorAction
     implements Action
 {
     // -------------------------------------------------------------------------
@@ -65,62 +62,6 @@ public class UpdateProgramIndicatorAction
         this.id = id;
     }
 
-    private String name;
-
-    public void setName( String name )
-    {
-        this.name = name;
-    }
-
-    private String code;
-
-    public void setCode( String code )
-    {
-        this.code = code;
-    }
-
-    private String description;
-
-    public void setDescription( String description )
-    {
-        this.description = description;
-    }
-
-    private String valueType;
-
-    public void setValueType( String valueType )
-    {
-        this.valueType = valueType;
-    }
-
-    private String expression;
-
-    public void setExpression( String expression )
-    {
-        this.expression = expression;
-    }
-
-    private String rootDate;
-
-    public void setRootDate( String rootDate )
-    {
-        this.rootDate = rootDate;
-    }
-
-    private String shortName;
-
-    public void setShortName( String shortName )
-    {
-        this.shortName = shortName;
-    }
-
-    private Integer programId;
-
-    public Integer getProgramId()
-    {
-        return programId;
-    }
-
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -129,32 +70,9 @@ public class UpdateProgramIndicatorAction
     public String execute()
         throws Exception
     {
-        code = (code == null && code.trim().length() == 0) ? null : code;
-        expression = expression.trim();
-
-        if ( valueType.equals( ProgramIndicator.VALUE_TYPE_DATE ) )
-        {
-            Pattern pattern = Pattern.compile( "[(+|-|*|\\)]+" );
-            Matcher matcher = pattern.matcher( expression );
-            if ( matcher.find() && matcher.start() != 0 )
-            {
-                expression = "+" + expression;
-            }
-        }
-
         ProgramIndicator programIndicator = programIndicatorService.getProgramIndicator( id );
 
-        programIndicator.setName( name );
-        programIndicator.setShortName( shortName );
-        programIndicator.setCode( code );
-        programIndicator.setDescription( description );
-        programIndicator.setExpression( expression );
-        programIndicator.setValueType( valueType );
-        programIndicator.setRootDate( rootDate );
-
-        programIndicatorService.updateProgramIndicator( programIndicator );
-
-        programId = programIndicator.getProgram().getId();
+        programIndicatorService.deleteProgramIndicator( programIndicator );
 
         return SUCCESS;
     }

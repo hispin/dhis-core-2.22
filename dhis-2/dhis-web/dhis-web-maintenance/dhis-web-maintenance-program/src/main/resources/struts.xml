@@ -1006,7 +1006,7 @@
     <!-- Program Indicator -->
 
     <action name="programIndicator"
-      class="org.hisp.dhis.trackedentity.action.programtindicator.GetProgramIndicatorListAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorListAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/programIndicator.vm</param>
       <param name="menu">/dhis-web-maintenance-program/menu.vm</param>
@@ -1015,7 +1015,7 @@
     </action>
 
     <action name="getProgramIndicator"
-      class="org.hisp.dhis.trackedentity.action.programtindicator.GetProgramIndicatorAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorAction">
       <result name="success" type="velocity-json">
         /dhis-web-commons/ajax/jsonProgramIndicator.vm
       </result>
@@ -1031,14 +1031,14 @@
     </action>
 
     <action name="addProgramIndicator"
-      class="org.hisp.dhis.trackedentity.action.programtindicator.AddProgramIndicatorAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.AddProgramIndicatorAction">
       <result name="success" type="redirect">programIndicator.action?programId=${programId}
       </result>
       <param name="requiredAuthorities">F_ADD_PROGRAM_INDICATOR</param>
     </action>
 
     <action name="showUpdateProgramIndicator"
-      class="org.hisp.dhis.trackedentity.action.programtindicator.GetProgramIndicatorAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/updateProgramIndicator.vm</param>
       <param name="javascripts">javascript/commons.js,javascript/programIndicator.js</param>
@@ -1046,14 +1046,14 @@
     </action>
 
     <action name="updateProgramIndicator"
-      class="org.hisp.dhis.trackedentity.action.programtindicator.UpdateProgramIndicatorAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.UpdateProgramIndicatorAction">
       <result name="success" type="redirect">programIndicator.action?programId=${programId}
       </result>
       <param name="requiredAuthorities">F_ADD_PROGRAM_INDICATOR</param>
     </action>
 
     <action name="removeProgramIndicator"
-      class="org.hisp.dhis.trackedentity.action.programtindicator.RemoveProgramIndicatorAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.RemoveProgramIndicatorAction">
       <result name="success" type="velocity-json">
         /dhis-web-commons/ajax/jsonResponseSuccess.vm
       </result>
@@ -1061,7 +1061,7 @@
     </action>
 
     <action name="validateProgramIndicator"
-      class="org.hisp.dhis.trackedentity.action.programtindicator.ValidateProgramIndicatorAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.ValidateProgramIndicatorAction">
       <result name="success" type="velocity-json">
         /dhis-web-commons/ajax/jsonResponseSuccess.vm
       </result>
@@ -1072,7 +1072,7 @@
     </action>
 
     <action name="getProgramIndicatorDescripttion"
-      class="org.hisp.dhis.trackedentity.action.programtindicator.GetProgramIndicatorDescripttionAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorDescriptionAction">
       <result name="success" type="velocity-json">
         /dhis-web-commons/ajax/jsonResponseSuccess.vm
       </result> <result name="error" type="velocity-json">
