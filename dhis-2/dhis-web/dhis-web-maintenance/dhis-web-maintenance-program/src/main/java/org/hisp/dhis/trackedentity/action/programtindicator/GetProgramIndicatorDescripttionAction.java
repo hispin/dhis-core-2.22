@@ -29,12 +29,10 @@ package org.hisp.dhis.trackedentity.action.programtindicator;
  */
 
 import org.hisp.dhis.i18n.I18n;
-import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 
 import com.opensymphony.xwork2.Action;
-import com.sun.imageio.plugins.common.I18N;
 
 /**
  * @author Chau Thu Tran
