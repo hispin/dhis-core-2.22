@@ -35,6 +35,10 @@ import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.NameableObject.NameableProperty;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.Query;
+import org.hisp.dhis.query.QueryService;
+import org.hisp.dhis.query.Result;
+import org.hisp.dhis.query.ResultTransformer;
 import org.hisp.dhis.user.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +70,9 @@ public class DefaultIdentifiableObjectManager
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    private QueryService queryService;
 
     private Map<Class<? extends IdentifiableObject>, GenericIdentifiableObjectStore<? extends IdentifiableObject>> identifiableObjectStoreMap;
 
@@ -853,6 +860,18 @@ public class DefaultIdentifiableObjectManager
     public void refresh( Object object )
     {
         sessionFactory.getCurrentSession().refresh( object );
+    }
+
+    @Override
+    public Result query( Query query )
+    {
+        return queryService.query( query );
+    }
+
+    @Override
+    public Result query( Query query, ResultTransformer transformer )
+    {
+        return queryService.query( query, transformer );
     }
 
     @Override
