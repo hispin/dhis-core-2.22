@@ -28,16 +28,26 @@ package org.hisp.dhis.trackedentityattributevalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.Serializable;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
+import java.io.Serializable;
+
 /**
  * TODO index on attribute and instance
- * 
+ *
  * @author Abyot Asalefew
  */
+@JacksonXmlRootElement( localName = "trackedEntityAttributeValue", namespace = DxfNamespaces.DXF_2_0 )
 public class TrackedEntityAttributeValue
     implements Serializable
 {
@@ -161,11 +171,23 @@ public class TrackedEntityAttributeValue
     // Getters and setters
     // -------------------------------------------------------------------------
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getValue()
     {
         return value;
     }
 
+    public void setValue( String value )
+    {
+        this.value = value;
+    }
+
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityAttribute getAttribute()
     {
         return attribute;
@@ -176,6 +198,10 @@ public class TrackedEntityAttributeValue
         this.attribute = attribute;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityInstance getEntityInstance()
     {
         return entityInstance;
@@ -184,10 +210,5 @@ public class TrackedEntityAttributeValue
     public void setEntityInstance( TrackedEntityInstance entityInstance )
     {
         this.entityInstance = entityInstance;
-    }
-
-    public void setValue( String value )
-    {
-        this.value = value;
     }
 }
