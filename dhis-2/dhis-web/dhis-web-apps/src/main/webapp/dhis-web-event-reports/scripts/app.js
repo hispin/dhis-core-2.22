@@ -1343,7 +1343,7 @@ Ext.onReady( function() {
         addDimension = function(record, store, excludedStores) {
             var store = dimensionStoreMap[record.id] || store || filterStore;
 
-            if (!hasDimension(record.id, excludedStores)) {
+            if (!hasDimension(record.id, excludedStores) && record.id !== value.getValue()) {
                 store.add(record);
             }
         };
@@ -4103,10 +4103,13 @@ Ext.onReady( function() {
                 element.name = element.name || element.displayName;
                 recordMap[element.id] = element;
 
-				ux = addUxFromDataElement(element);
+                // add ux if not selected as value
+                if (element.id !== aggWindow.value.getValue()) {
+                    ux = addUxFromDataElement(element);
 
-                if (layout) {
-                    ux.setRecord(element);
+                    if (layout) {
+                        ux.setRecord(element);
+                    }
                 }
 
                 store = Ext.Array.contains(includeKeys, element.type) || element.optionSet ? aggWindow.rowStore : aggWindow.fixedFilterStore;
@@ -6110,7 +6113,7 @@ Ext.onReady( function() {
 
                 for (var i = 0, el; i < masks.length; i++) {
                     el = Ext.get(masks[i]);
-console.log(el.getWidth(), Ext.getBody().getWidth());
+
                     if (el.getWidth() == Ext.getBody().getWidth()) {
                         el.on('click', function() {
                             if (w.hideOnBlur) {
