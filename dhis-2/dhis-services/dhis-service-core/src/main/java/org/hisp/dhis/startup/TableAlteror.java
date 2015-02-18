@@ -711,7 +711,9 @@ public class TableAlteror
 
         executeSql( "UPDATE dashboard SET publicaccess='--------' WHERE publicaccess is null" );
 
-        executeSql( "UPDATE optionset SET version=1 WHERE version IS NULL" );
+        executeSql( "UPDATE optionset SET version=0 WHERE version IS NULL" );
+        executeSql( "UPDATE dataset SET version=0 WHERE version IS NULL" );
+        executeSql( "UPDATE program SET version=0 WHERE version IS NULL" );
 
         executeSql( "ALTER TABLE datavalue ALTER COLUMN lastupdated TYPE timestamp" );
         executeSql( "ALTER TABLE completedatasetregistration ALTER COLUMN date TYPE timestamp" );

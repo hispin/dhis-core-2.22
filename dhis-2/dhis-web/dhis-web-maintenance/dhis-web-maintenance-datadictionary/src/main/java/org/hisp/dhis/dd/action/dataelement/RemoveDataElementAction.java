@@ -105,7 +105,8 @@ public class RemoveDataElementAction
             
             for ( DataSet dataSet : dataElement.getDataSets() )
             {
-                dataSetService.updateDataSet( dataSet.increaseVersion() );
+                dataSet.increaseVersion();
+                dataSetService.updateDataSet( dataSet );
             }
             
             dataElementService.deleteDataElement( dataElementService.getDataElement( id ) );

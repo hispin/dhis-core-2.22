@@ -28,24 +28,26 @@ package org.hisp.dhis.option;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.VersionedObject;
+import org.hisp.dhis.common.annotation.Scanned;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.annotation.Scanned;
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.ExportView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Lars Helge Overland
@@ -53,16 +55,18 @@ import java.util.regex.Pattern;
 @JacksonXmlRootElement( localName = "optionSet", namespace = DxfNamespaces.DXF_2_0 )
 public class OptionSet
     extends BaseIdentifiableObject
+    implements VersionedObject
 {
     private static final Pattern OPTION_PATTERN = Pattern.compile( "\\[(.*)\\]" );
 
     @Scanned
     private List<Option> options = new ArrayList<>();
 
-    /**
-     * Indicating version number.
-     */
-    private Integer version = 1;
+    private int version;
+
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
 
     public OptionSet()
     {
@@ -73,36 +77,18 @@ public class OptionSet
         this.name = name;
     }
 
+    // -------------------------------------------------------------------------
+    // Logic
+    // -------------------------------------------------------------------------
+
     public void removeAllOptions()
     {
         options.clear();
     }
 
-    @JsonProperty
-    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "options", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "option", namespace = DxfNamespaces.DXF_2_0 )
-    public List<Option> getOptions()
+    public int increaseVersion()
     {
-        return options;
-    }
-
-    public void setOptions( List<Option> options )
-    {
-        this.options = options;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( localName = "version", namespace = DxfNamespaces.DXF_2_0 )
-    public Integer getVersion()
-    {
-        return version;
-    }
-
-    public void setVersion( Integer version )
-    {
-        this.version = version;
+        return ++version;
     }
 
     public static String optionEncode( String option )
@@ -128,6 +114,41 @@ public class OptionSet
         return result;
     }
 
+    // -------------------------------------------------------------------------
+    // Getters and setters
+    // -------------------------------------------------------------------------
+
+    @JsonProperty
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "options", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "option", namespace = DxfNamespaces.DXF_2_0 )
+    public List<Option> getOptions()
+    {
+        return options;
+    }
+
+    public void setOptions( List<Option> options )
+    {
+        this.options = options;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public int getVersion()
+    {
+        return version;
+    }
+
+    public void setVersion( int version )
+    {
+        this.version = version;
+    }
+
+    // -------------------------------------------------------------------------
+    // Merge with
+    // -------------------------------------------------------------------------
+
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -137,15 +158,8 @@ public class OptionSet
         {
             OptionSet optionSet = (OptionSet) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
-            {
-                version = optionSet.getVersion();
-            }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
-            {
-                version = optionSet.getVersion() == null ? version : optionSet.getVersion();
-            }
-
+            version = optionSet.getVersion();
+            
             removeAllOptions();
             options.addAll( optionSet.getOptions() );
         }

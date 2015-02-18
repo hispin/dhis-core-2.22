@@ -156,7 +156,9 @@ public class UpdateSectionAction
             if ( !( equalsNullSafe( sectionName, section.getName() ) && 
                 dataElements.equals( section.getDataElements() ) && indicators.equals( section.getIndicators() ) ) )
             {
-                dataSetService.updateDataSet( dataSet.increaseVersion() );
+                dataSet.increaseVersion();
+                
+                dataSetService.updateDataSet( dataSet );
             }
         }
 

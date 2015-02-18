@@ -121,7 +121,9 @@ public class SaveSectionSortOrderAction
         
         if ( update )
         {
-            dataSetService.updateDataSet( dataSet.increaseVersion() );
+            dataSet.increaseVersion();
+            
+            dataSetService.updateDataSet( dataSet );
         }
         
         return SUCCESS;
