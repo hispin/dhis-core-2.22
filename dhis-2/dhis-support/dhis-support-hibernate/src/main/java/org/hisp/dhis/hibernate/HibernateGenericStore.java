@@ -179,12 +179,12 @@ public class HibernateGenericStore<T>
      *
      * @return a Criteria instance.
      */
-    protected final Criteria getCriteria()
+    public final Criteria getCriteria()
     {
         return getClazzCriteria().setCacheable( cacheable );
     }
 
-    protected final Criteria getSharingCriteria()
+    public final Criteria getSharingCriteria()
     {
         return getSharingCriteria( currentUserService.getCurrentUser(), "r%" );
     }
