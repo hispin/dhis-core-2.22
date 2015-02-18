@@ -51,6 +51,7 @@ trackerCapture.controller('DataEntryController',
         $scope.allowEventCreation = false;
         $scope.repeatableStages = [];        
         $scope.dhis2Events = [];
+        $scope.programStages = [];
         
         var selections = CurrentSelection.get();          
         $scope.selectedOrgUnit = storage.get('SELECTED_OU');
@@ -62,7 +63,8 @@ trackerCapture.controller('DataEntryController',
         $scope.selectedProgramWithStage = [];        
         if($scope.selectedOrgUnit && $scope.selectedProgram && $scope.selectedEntity && $scope.selectedEnrollment){
 
-            ProgramStageFactory.getByProgram($scope.selectedProgram).then(function(stages){                
+            ProgramStageFactory.getByProgram($scope.selectedProgram).then(function(stages){
+                $scope.programStages = stages;
                 angular.forEach(stages, function(stage){
                     if(stage.openAfterEnrollment){
                         $scope.currentStage = stage;
