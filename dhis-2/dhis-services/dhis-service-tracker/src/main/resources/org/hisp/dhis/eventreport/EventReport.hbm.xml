@@ -95,6 +95,13 @@
     <many-to-one name="attributeValueDimension" class="org.hisp.dhis.trackedentity.TrackedEntityAttribute" 
       column="attributevaluedimensionid" foreign-key="fk_eventreport_attributevaluedimensionid" />
 
+    <property name="aggregationType" length="40">
+		<type name="org.hibernate.type.EnumType">
+			<param name="enumClass">org.hisp.dhis.analytics.AggregationType</param>
+			<param name="type">12</param>
+		</type> 
+	</property>
+
     <property name="dataType" not-null="true" />
 
     <list name="columnDimensions" table="eventreport_columns">
