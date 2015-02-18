@@ -28,14 +28,23 @@ package org.hisp.dhis.relationship;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.Serializable;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
+
+import java.io.Serializable;
 
 /**
  * @author Abyot Asalefew
- * @version $Id$
  */
+@JacksonXmlRootElement( localName = "telationship", namespace = DxfNamespaces.DXF_2_0 )
 public class Relationship
     implements Serializable
 {
@@ -132,6 +141,10 @@ public class Relationship
     /**
      * @return the relationshipType
      */
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public RelationshipType getRelationshipType()
     {
         return relationshipType;
@@ -145,6 +158,10 @@ public class Relationship
         this.relationshipType = relationshipType;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityInstance getEntityInstanceA()
     {
         return entityInstanceA;
@@ -155,6 +172,10 @@ public class Relationship
         this.entityInstanceA = entityInstanceA;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityInstance getEntityInstanceB()
     {
         return entityInstanceB;
