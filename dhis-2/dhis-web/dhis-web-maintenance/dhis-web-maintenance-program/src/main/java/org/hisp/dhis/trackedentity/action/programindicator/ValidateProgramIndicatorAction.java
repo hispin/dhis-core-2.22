@@ -1,4 +1,4 @@
-package org.hisp.dhis.trackedentity.action.programtindicator;
+package org.hisp.dhis.trackedentity.action.programindicator;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -36,10 +36,9 @@ import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
- * @version $ GetProgramIndicatorDescripttionAction.java May 30, 2013 11:09:04
- *          AM $
+ * @version $ ValidateProgramIndicatorAction.java Apr 16, 2013 3:29:11 PM $
  */
-public class GetProgramIndicatorDescripttionAction
+public class ValidateProgramIndicatorAction
     implements Action
 {
     // -------------------------------------------------------------------------
@@ -53,22 +52,36 @@ public class GetProgramIndicatorDescripttionAction
         this.programIndicatorService = programIndicatorService;
     }
 
-    private I18n i18n;
-
-    public void setI18n( I18n i18n )
-    {
-        this.i18n = i18n;
-    }
-
     // -------------------------------------------------------------------------
     // Setters
     // -------------------------------------------------------------------------
 
-    private String expression;
+    private Integer id;
 
-    public void setExpression( String expression )
+    public void setId( Integer id )
     {
-        this.expression = expression;
+        this.id = id;
+    }
+
+    private String name;
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    private String shortName;
+
+    public void setShortName( String shortName )
+    {
+        this.shortName = shortName;
+    }
+
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
     }
 
     private String message;
@@ -76,6 +89,13 @@ public class GetProgramIndicatorDescripttionAction
     public String getMessage()
     {
         return message;
+    }
+
+    private I18n i18n;
+
+    public void setI18n( I18n i18n )
+    {
+        this.i18n = i18n;
     }
 
     // -------------------------------------------------------------------------
@@ -86,15 +106,36 @@ public class GetProgramIndicatorDescripttionAction
     public String execute()
         throws Exception
     {
-        String valid = programIndicatorService.expressionIsValid( expression );
-        if ( valid.equals( ProgramIndicator.VALID ) )
+        ProgramIndicator match = null;
+
+        if ( name != null )
         {
-            message = programIndicatorService.getExpressionDescription( expression );
-            return SUCCESS;
+            name = name.trim();
+
+            match = programIndicatorService.getProgramIndicator( name );
         }
-       
-        message = i18n.getString( "expression_is_not_well_formed" );
+        else if ( shortName != null )
+        {
+            shortName = shortName.trim();
+
+            match = programIndicatorService.getProgramIndicatorByShortName( shortName );
+        }
+        else if ( code != null )
+        {
+            code = code.trim();
+
+            match = programIndicatorService.getProgramIndicator( code );
+        }
+
+        if ( match != null && (id == null || match.getId() != id.intValue()) )
+        {
+            message = i18n.getString( "name_exists" );
+
+            return ERROR;
+        }
         
-        return ERROR;
+        message = i18n.getString( "everything_is_ok" );
+
+        return SUCCESS;
     }
 }

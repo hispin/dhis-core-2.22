@@ -101,7 +101,7 @@ function getConditionDescription() {
 	}
 	else
 	{
-	  $.postJSON('getProgramIndicatorDescripttion.action',
+	  $.postJSON('getProgramIndicatorDescription.action',
 		{
 		  expression: expression
 		}, function( json ) {
