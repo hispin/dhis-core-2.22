@@ -39,6 +39,11 @@ public interface VersionedObject
     int getVersion();
     
     /**
+     * Sets the version.
+     */
+    void setVersion( int version );
+    
+    /**
      * Increases the version and returns its new version.
      */
     int increaseVersion();
