@@ -15,6 +15,10 @@
 
   <bean id="org.hisp.dhis.schema.SchemaService" class="org.hisp.dhis.schema.DefaultSchemaService" />
 
+  <bean id="org.hisp.dhis.query.QueryEngine" class="org.hisp.dhis.query.CriteriaQueryEngine" />
+
+  <bean id="org.hisp.dhis.query.QueryService" class="org.hisp.dhis.query.DefaultQueryService" />
+
   <bean id="org.hisp.dhis.schema.PropertyIntrospectorService" class="org.hisp.dhis.schema.Jackson2PropertyIntrospectorService" />
 
   <bean id="org.hisp.dhis.acl.AclService" class="org.hisp.dhis.acl.DefaultAclService" />

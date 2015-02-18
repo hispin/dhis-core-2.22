@@ -338,6 +338,16 @@ public class Schema implements Ordered
         this.propertyMap = propertyMap;
     }
 
+    public void addProperty( Property property )
+    {
+        if ( property == null || property.getName() == null || propertyMap.containsKey( property.getName() ) )
+        {
+            return;
+        }
+
+        propertyMap.put( property.getName(), property );
+    }
+
     @JsonIgnore
     public Property getProperty( String name )
     {
