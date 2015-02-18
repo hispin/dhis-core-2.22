@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.chart.BaseChart;
 import org.hisp.dhis.common.AnalyticsType;
@@ -105,6 +106,11 @@ public class EventChart
      */
     private TrackedEntityAttribute attributeValueDimension;
 
+    /**
+     * Aggregation type.
+     */
+    private AggregationType aggregationType;
+    
     /**
      * Dimensions to crosstabulate / use as columns.
      */
@@ -299,6 +305,19 @@ public class EventChart
     }
 
     @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public AggregationType getAggregationType()
+    {
+        return aggregationType;
+    }
+
+    public void setAggregationType( AggregationType aggregationType )
+    {
+        this.aggregationType = aggregationType;
+    }
+
+    @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlElementWrapper( localName = "columnDimensions", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "columnDimension", namespace = DxfNamespaces.DXF_2_0 )
@@ -369,34 +388,36 @@ public class EventChart
 
         if ( other.getClass().isInstance( this ) )
         {
-            EventChart eventChart = (EventChart) other;
+            EventChart chart = (EventChart) other;
 
             if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
             {
-                dataElementValueDimension = eventChart.getDataElementValueDimension();
-                attributeValueDimension = eventChart.getAttributeValueDimension();
-                program = eventChart.getProgram();
-                programStage = eventChart.getProgramStage();
-                startDate = eventChart.getStartDate();
-                endDate = eventChart.getEndDate();
-                outputType = eventChart.getOutputType();
+                dataElementValueDimension = chart.getDataElementValueDimension();
+                attributeValueDimension = chart.getAttributeValueDimension();
+                aggregationType = chart.getAggregationType();
+                program = chart.getProgram();
+                programStage = chart.getProgramStage();
+                startDate = chart.getStartDate();
+                endDate = chart.getEndDate();
+                outputType = chart.getOutputType();
             }
             else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
             {
-                dataElementValueDimension = eventChart.getDataElementValueDimension() == null ? dataElementValueDimension : eventChart.getDataElementValueDimension();
-                attributeValueDimension = eventChart.getAttributeValueDimension() == null ? attributeValueDimension : eventChart.getAttributeValueDimension();
-                program = eventChart.getProgram() == null ? program : eventChart.getProgram();
-                programStage = eventChart.getProgramStage() == null ? programStage : eventChart.getProgramStage();
-                startDate = eventChart.getStartDate() == null ? startDate : eventChart.getStartDate();
-                endDate = eventChart.getEndDate() == null ? endDate : eventChart.getEndDate();
-                outputType = eventChart.getOutputType() == null ? outputType : eventChart.getOutputType();
+                dataElementValueDimension = chart.getDataElementValueDimension() == null ? dataElementValueDimension : chart.getDataElementValueDimension();
+                attributeValueDimension = chart.getAttributeValueDimension() == null ? attributeValueDimension : chart.getAttributeValueDimension();
+                aggregationType = chart.getAggregationType() == null ? aggregationType : chart.getAggregationType();
+                program = chart.getProgram() == null ? program : chart.getProgram();
+                programStage = chart.getProgramStage() == null ? programStage : chart.getProgramStage();
+                startDate = chart.getStartDate() == null ? startDate : chart.getStartDate();
+                endDate = chart.getEndDate() == null ? endDate : chart.getEndDate();
+                outputType = chart.getOutputType() == null ? outputType : chart.getOutputType();
             }
 
             columnDimensions.clear();
-            columnDimensions.addAll( eventChart.getColumnDimensions() );
+            columnDimensions.addAll( chart.getColumnDimensions() );
 
             rowDimensions.clear();
-            rowDimensions.addAll( eventChart.getRowDimensions() );
+            rowDimensions.addAll( chart.getRowDimensions() );
         }
     }
 }

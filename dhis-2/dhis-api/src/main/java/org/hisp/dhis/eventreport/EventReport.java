@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
@@ -101,6 +102,11 @@ public class EventReport
      * Attribute value dimension.
      */
     private TrackedEntityAttribute attributeValueDimension;
+    
+    /**
+     * Aggregation type.
+     */
+    private AggregationType aggregationType;
     
     /**
      * Type of data, can be aggregated values and individual cases.
@@ -319,6 +325,19 @@ public class EventReport
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public AggregationType getAggregationType()
+    {
+        return aggregationType;
+    }
+
+    public void setAggregationType( AggregationType aggregationType )
+    {
+        this.aggregationType = aggregationType;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getDataType()
     {
         return dataType;
@@ -531,51 +550,53 @@ public class EventReport
 
         if ( other.getClass().isInstance( this ) )
         {
-            EventReport eventReport = (EventReport) other;
+            EventReport report = (EventReport) other;
 
-            rowSubTotals = eventReport.isRowSubTotals();
-            colSubTotals = eventReport.isColSubTotals();
-            hideEmptyRows = eventReport.isHideEmptyRows();
-            rowTotals = eventReport.isRowTotals();
-            colTotals = eventReport.isColTotals();
-            showHierarchy = eventReport.isShowHierarchy();
-            showDimensionLabels = eventReport.isShowDimensionLabels();
+            rowSubTotals = report.isRowSubTotals();
+            colSubTotals = report.isColSubTotals();
+            hideEmptyRows = report.isHideEmptyRows();
+            rowTotals = report.isRowTotals();
+            colTotals = report.isColTotals();
+            showHierarchy = report.isShowHierarchy();
+            showDimensionLabels = report.isShowDimensionLabels();
 
             if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
             {
-                dataElementValueDimension = eventReport.getDataElementValueDimension();
-                attributeValueDimension = eventReport.getAttributeValueDimension();
-                dataType = eventReport.getDataType();
-                program = eventReport.getProgram();
-                programStage = eventReport.getProgramStage();
-                startDate = eventReport.getStartDate();
-                endDate = eventReport.getEndDate();
-                outputType = eventReport.getOutputType();
-                displayDensity = eventReport.getDisplayDensity();
-                fontSize = eventReport.getFontSize();
+                dataElementValueDimension = report.getDataElementValueDimension();
+                attributeValueDimension = report.getAttributeValueDimension();
+                aggregationType = report.getAggregationType();
+                dataType = report.getDataType();
+                program = report.getProgram();
+                programStage = report.getProgramStage();
+                startDate = report.getStartDate();
+                endDate = report.getEndDate();
+                outputType = report.getOutputType();
+                displayDensity = report.getDisplayDensity();
+                fontSize = report.getFontSize();
             }
             else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
             {
-                dataElementValueDimension = eventReport.getDataElementValueDimension() == null ? dataElementValueDimension : eventReport.getDataElementValueDimension();
-                attributeValueDimension = eventReport.getAttributeValueDimension() == null ? attributeValueDimension : eventReport.getAttributeValueDimension();
-                dataType = eventReport.getDataType() == null ? dataType : eventReport.getDataType();
-                program = eventReport.getProgram() == null ? program : eventReport.getProgram();
-                programStage = eventReport.getProgramStage() == null ? programStage : eventReport.getProgramStage();
-                startDate = eventReport.getStartDate() == null ? startDate : eventReport.getStartDate();
-                endDate = eventReport.getEndDate() == null ? endDate : eventReport.getEndDate();
-                outputType = eventReport.getOutputType() == null ? outputType : eventReport.getOutputType();
-                displayDensity = eventReport.getDisplayDensity() == null ? displayDensity : eventReport.getDisplayDensity();
-                fontSize = eventReport.getFontSize() == null ? fontSize : eventReport.getFontSize();
+                dataElementValueDimension = report.getDataElementValueDimension() == null ? dataElementValueDimension : report.getDataElementValueDimension();
+                attributeValueDimension = report.getAttributeValueDimension() == null ? attributeValueDimension : report.getAttributeValueDimension();
+                aggregationType = report.getAggregationType() == null ? aggregationType : report.getAggregationType();
+                dataType = report.getDataType() == null ? dataType : report.getDataType();
+                program = report.getProgram() == null ? program : report.getProgram();
+                programStage = report.getProgramStage() == null ? programStage : report.getProgramStage();
+                startDate = report.getStartDate() == null ? startDate : report.getStartDate();
+                endDate = report.getEndDate() == null ? endDate : report.getEndDate();
+                outputType = report.getOutputType() == null ? outputType : report.getOutputType();
+                displayDensity = report.getDisplayDensity() == null ? displayDensity : report.getDisplayDensity();
+                fontSize = report.getFontSize() == null ? fontSize : report.getFontSize();
             }
 
             columnDimensions.clear();
-            columnDimensions.addAll( eventReport.getColumnDimensions() );
+            columnDimensions.addAll( report.getColumnDimensions() );
 
             rowDimensions.clear();
-            rowDimensions.addAll( eventReport.getRowDimensions() );
+            rowDimensions.addAll( report.getRowDimensions() );
 
             filterDimensions.clear();
-            filterDimensions.addAll( eventReport.getFilterDimensions() );
+            filterDimensions.addAll( report.getFilterDimensions() );
         }
     }
 }
