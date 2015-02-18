@@ -34,11 +34,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.VersionedObject;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -65,6 +67,7 @@ import java.util.Set;
 @JacksonXmlRootElement( localName = "program", namespace = DxfNamespaces.DXF_2_0 )
 public class Program
     extends BaseIdentifiableObject
+    implements VersionedObject
 {
     public static final List<String> TYPE_LOOKUP = Arrays.asList( "", "MULTIPLE_EVENTS_WITH_REGISTRATION",
         "SINGLE_EVENT_WITH_REGISTRATION", "SINGLE_EVENT_WITHOUT_REGISTRATION" );
@@ -75,7 +78,7 @@ public class Program
 
     private String description;
 
-    private Integer version;
+    private int version;
 
     private String dateOfEnrollmentDescription;
 
@@ -214,12 +217,11 @@ public class Program
         return null;
     }
 
-    public Program increaseVersion()
+    public int increaseVersion()
     {
-        version = version != null ? version + 1 : 1;
-        return this;
+        return ++version;
     }
-
+    
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -241,12 +243,12 @@ public class Program
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Integer getVersion()
+    public int getVersion()
     {
         return version;
     }
 
-    public void setVersion( Integer version )
+    public void setVersion( int version )
     {
         this.version = version;
     }
@@ -570,10 +572,11 @@ public class Program
         {
             Program program = (Program) other;
 
+            version = program.getVersion();
+            
             if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
             {
                 description = program.getDescription();
-                version = program.getVersion();
                 dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription();
                 dateOfIncidentDescription = program.getDateOfIncidentDescription();
                 type = program.getType();
@@ -591,8 +594,7 @@ public class Program
             }
             else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
             {
-                description = program.getDescription() == null ? description : program.getDescription();
-                version = program.getVersion() == null ? version : program.getVersion();
+                description = program.getDescription() == null ? description : program.getDescription();                
                 dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription() == null ? dateOfEnrollmentDescription : program.getDateOfEnrollmentDescription();
                 dateOfIncidentDescription = program.getDateOfIncidentDescription() == null ? dateOfIncidentDescription : program.getDateOfIncidentDescription();
                 type = program.getType() == null ? type : program.getType();

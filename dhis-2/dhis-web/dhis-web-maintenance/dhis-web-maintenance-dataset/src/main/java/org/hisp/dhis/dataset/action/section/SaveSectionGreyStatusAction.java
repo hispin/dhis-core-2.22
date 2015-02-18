@@ -191,7 +191,10 @@ public class SaveSectionGreyStatusAction
         sectionService.updateSection( section );       
 
         DataSet dataSet = section.getDataSet();
-        dataSetService.updateDataSet( dataSet.increaseVersion() ); // Update version
+        
+        dataSet.increaseVersion();
+        
+        dataSetService.updateDataSet( dataSet );
         
         return SUCCESS;
     }
