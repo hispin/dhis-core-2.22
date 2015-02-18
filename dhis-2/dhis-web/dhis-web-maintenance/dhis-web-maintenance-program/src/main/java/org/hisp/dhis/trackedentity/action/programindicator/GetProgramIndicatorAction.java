@@ -1,4 +1,4 @@
-package org.hisp.dhis.trackedentity.action.programtindicator;
+package org.hisp.dhis.trackedentity.action.programindicator;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,33 +28,29 @@ package org.hisp.dhis.trackedentity.action.programtindicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import org.hisp.dhis.program.Program;
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.constant.Constant;
+import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
-import org.hisp.dhis.program.ProgramService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
- * @version $ AddProgramIndicatorAction.java Apr 16, 2013 3:24:51 PM $
+ * @version $ DeleteProgramIndicatorAction Apr 16, 2013 3:24:51 PM $
  */
-public class AddProgramIndicatorAction
+public class GetProgramIndicatorAction
     implements Action
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
-
-    private ProgramService programService;
-
-    public void setProgramService( ProgramService programService )
-    {
-        this.programService = programService;
-    }
 
     private ProgramIndicatorService programIndicatorService;
 
@@ -63,69 +59,39 @@ public class AddProgramIndicatorAction
         this.programIndicatorService = programIndicatorService;
     }
 
+    @Autowired
+    private ConstantService constantService;
+
     // -------------------------------------------------------------------------
     // Setters
     // -------------------------------------------------------------------------
 
-    private Integer programId;
+    private Integer id;
 
-    public void setProgramId( Integer programId )
+    public void setId( Integer id )
     {
-        this.programId = programId;
+        this.id = id;
     }
 
-    public Integer getProgramId()
+    private ProgramIndicator programIndicator;
+
+    public ProgramIndicator getProgramIndicator()
     {
-        return programId;
-    }
-
-    private String name;
-
-    public void setName( String name )
-    {
-        this.name = name;
-    }
-
-    private String shortName;
-
-    public void setShortName( String shortName )
-    {
-        this.shortName = shortName;
-    }
-
-    private String code;
-
-    public void setCode( String code )
-    {
-        this.code = code;
+        return programIndicator;
     }
 
     private String description;
 
-    public void setDescription( String description )
+    public String getDescription()
     {
-        this.description = description;
+        return description;
     }
 
-    private String valueType;
+    private List<Constant> constants;
 
-    public void setValueType( String valueType )
+    public List<Constant> getConstants()
     {
-        this.valueType = valueType;
-    }
-
-    private String expression;
-
-    public void setExpression( String expression )
-    {
-        this.expression = expression;
-    }
-
-    private String rootDate;
-
-    public void setRootDate( String rootDate )
-    {
-        this.rootDate = rootDate;
+        return constants;
     }
 
     // -------------------------------------------------------------------------
@@ -136,28 +102,14 @@ public class AddProgramIndicatorAction
     public String execute()
         throws Exception
     {
-        code = (code == null && code.trim().length() == 0) ? null : code;
-        expression = expression.trim();
+        programIndicator = programIndicatorService.getProgramIndicator( id );
 
-        if ( valueType.equals( ProgramIndicator.VALUE_TYPE_DATE ) )
-        {
-            Pattern pattern = Pattern.compile( "[(+|-|*|\\)]+" );
-            Matcher matcher = pattern.matcher( expression );
-            if ( matcher.find() && matcher.start() != 0 )
-            {
-                expression = "+" + expression;
-            }
-        }
+        description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );
 
-        Program program = programService.getProgram( programId );
-        ProgramIndicator programIndicator = new ProgramIndicator( name, description, valueType, expression );
-        programIndicator.setShortName( shortName );
-        programIndicator.setCode( code );
-        programIndicator.setRootDate( rootDate );
-        programIndicator.setProgram( program );
-
-        programIndicatorService.addProgramIndicator( programIndicator );
-
+        constants = new ArrayList<>(constantService.getAllConstants());
+        
+        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
+        
         return SUCCESS;
     }
 

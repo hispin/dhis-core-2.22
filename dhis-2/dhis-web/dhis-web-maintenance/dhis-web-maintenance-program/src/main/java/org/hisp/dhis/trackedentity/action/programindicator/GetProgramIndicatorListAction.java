@@ -1,4 +1,4 @@
-package org.hisp.dhis.trackedentity.action.programtindicator;
+package org.hisp.dhis.trackedentity.action.programindicator;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -33,19 +33,18 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.constant.Constant;
-import org.hisp.dhis.constant.ConstantService;
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hisp.dhis.program.ProgramService;
 
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
- * @version $ DeleteProgramIndicatorAction Apr 16, 2013 3:24:51 PM $
+ * @version $ UpdateProgramIndicatorAction Apr 16, 2013 3:24:51 PM $
  */
-public class GetProgramIndicatorAction
+public class GetProgramIndicatorListAction
     implements Action
 {
     // -------------------------------------------------------------------------
@@ -59,39 +58,36 @@ public class GetProgramIndicatorAction
         this.programIndicatorService = programIndicatorService;
     }
 
-    @Autowired
-    private ConstantService constantService;
+    private ProgramService programService;
+
+    public void setProgramService( ProgramService programService )
+    {
+        this.programService = programService;
+    }
 
     // -------------------------------------------------------------------------
     // Setters
     // -------------------------------------------------------------------------
 
-    private Integer id;
+    private Integer programId;
 
-    public void setId( Integer id )
+    public void setProgramId( Integer programId )
     {
-        this.id = id;
+        this.programId = programId;
     }
 
-    private ProgramIndicator programIndicator;
+    private List<ProgramIndicator> programIndicators;
 
-    public ProgramIndicator getProgramIndicator()
+    public List<ProgramIndicator> getProgramIndicators()
     {
-        return programIndicator;
+        return programIndicators;
     }
 
-    private String description;
+    private Program program;
 
-    public String getDescription()
+    public Program getProgram()
     {
-        return description;
-    }
-
-    private List<Constant> constants;
-
-    public List<Constant> getConstants()
-    {
-        return constants;
+        return program;
     }
 
     // -------------------------------------------------------------------------
@@ -102,14 +98,12 @@ public class GetProgramIndicatorAction
     public String execute()
         throws Exception
     {
-        programIndicator = programIndicatorService.getProgramIndicator( id );
+        program = programService.getProgram( programId );
 
-        description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );
+        programIndicators = new ArrayList<>( programIndicatorService.getProgramIndicators( program ) );
 
-        constants = new ArrayList<>(constantService.getAllConstants());
-        
-        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
-        
+        Collections.sort( programIndicators, IdentifiableObjectNameComparator.INSTANCE );
+
         return SUCCESS;
     }
 

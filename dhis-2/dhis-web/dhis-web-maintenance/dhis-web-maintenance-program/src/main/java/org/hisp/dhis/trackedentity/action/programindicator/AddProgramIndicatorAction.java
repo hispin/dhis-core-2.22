@@ -1,4 +1,4 @@
-package org.hisp.dhis.trackedentity.action.programtindicator;
+package org.hisp.dhis.trackedentity.action.programindicator;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,21 +28,33 @@ package org.hisp.dhis.trackedentity.action.programtindicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
+import org.hisp.dhis.program.ProgramService;
 
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
- * @version $ RemoveProgramIndicatorAction Apr 16, 2013 3:24:51 PM $
+ * @version $ AddProgramIndicatorAction.java Apr 16, 2013 3:24:51 PM $
  */
-public class RemoveProgramIndicatorAction
+public class AddProgramIndicatorAction
     implements Action
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
+
+    private ProgramService programService;
+
+    public void setProgramService( ProgramService programService )
+    {
+        this.programService = programService;
+    }
 
     private ProgramIndicatorService programIndicatorService;
 
@@ -55,11 +67,65 @@ public class RemoveProgramIndicatorAction
     // Setters
     // -------------------------------------------------------------------------
 
-    private Integer id;
+    private Integer programId;
 
-    public void setId( Integer id )
+    public void setProgramId( Integer programId )
     {
-        this.id = id;
+        this.programId = programId;
+    }
+
+    public Integer getProgramId()
+    {
+        return programId;
+    }
+
+    private String name;
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    private String shortName;
+
+    public void setShortName( String shortName )
+    {
+        this.shortName = shortName;
+    }
+
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+
+    private String description;
+
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
+
+    private String valueType;
+
+    public void setValueType( String valueType )
+    {
+        this.valueType = valueType;
+    }
+
+    private String expression;
+
+    public void setExpression( String expression )
+    {
+        this.expression = expression;
+    }
+
+    private String rootDate;
+
+    public void setRootDate( String rootDate )
+    {
+        this.rootDate = rootDate;
     }
 
     // -------------------------------------------------------------------------
@@ -70,9 +136,27 @@ public class RemoveProgramIndicatorAction
     public String execute()
         throws Exception
     {
-        ProgramIndicator programIndicator = programIndicatorService.getProgramIndicator( id );
+        code = (code == null && code.trim().length() == 0) ? null : code;
+        expression = expression.trim();
 
-        programIndicatorService.deleteProgramIndicator( programIndicator );
+        if ( valueType.equals( ProgramIndicator.VALUE_TYPE_DATE ) )
+        {
+            Pattern pattern = Pattern.compile( "[(+|-|*|\\)]+" );
+            Matcher matcher = pattern.matcher( expression );
+            if ( matcher.find() && matcher.start() != 0 )
+            {
+                expression = "+" + expression;
+            }
+        }
+
+        Program program = programService.getProgram( programId );
+        ProgramIndicator programIndicator = new ProgramIndicator( name, description, valueType, expression );
+        programIndicator.setShortName( shortName );
+        programIndicator.setCode( code );
+        programIndicator.setRootDate( rootDate );
+        programIndicator.setProgram( program );
+
+        programIndicatorService.addProgramIndicator( programIndicator );
 
         return SUCCESS;
     }
