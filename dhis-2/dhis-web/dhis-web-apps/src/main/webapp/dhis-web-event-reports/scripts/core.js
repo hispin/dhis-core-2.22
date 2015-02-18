@@ -2065,8 +2065,8 @@ Ext.onReady( function() {
 				}
 
                 // values
-                if (view.valueId) {
-                    paramString += '&value=' + view.valueId;
+                if (view.value) {
+                    paramString += '&value=' + view.value;
 				}
 
                 // aggregation type
