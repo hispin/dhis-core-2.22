@@ -32,6 +32,7 @@ import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.jfree.data.time.Year;
 import org.junit.Test;
@@ -40,9 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -316,5 +315,65 @@ public class QueryServiceTest
         assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
         assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
         assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
+    }
+
+    @Test
+    public void sortNameDesc()
+    {
+        createDataElements();
+        Schema schema = schemaService.getDynamicSchema( DataElement.class );
+
+        Query query = Query.from( schema );
+        query.addOrder( new Order( schema.getProperty( "name" ), false ) );
+        Result result = queryService.query( query );
+
+        assertEquals( 6, result.size() );
+
+        assertEquals( "deabcdefghF", result.getItems().get( 0 ).getUid() );
+        assertEquals( "deabcdefghE", result.getItems().get( 1 ).getUid() );
+        assertEquals( "deabcdefghD", result.getItems().get( 2 ).getUid() );
+        assertEquals( "deabcdefghC", result.getItems().get( 3 ).getUid() );
+        assertEquals( "deabcdefghB", result.getItems().get( 4 ).getUid() );
+        assertEquals( "deabcdefghA", result.getItems().get( 5 ).getUid() );
+    }
+
+    @Test
+    public void sortCreatedDesc()
+    {
+        createDataElements();
+        Schema schema = schemaService.getDynamicSchema( DataElement.class );
+
+        Query query = Query.from( schema );
+        query.addOrder( new Order( schema.getProperty( "created" ), false ) );
+        Result result = queryService.query( query );
+
+        assertEquals( 6, result.size() );
+
+        assertEquals( "deabcdefghF", result.getItems().get( 0 ).getUid() );
+        assertEquals( "deabcdefghE", result.getItems().get( 1 ).getUid() );
+        assertEquals( "deabcdefghD", result.getItems().get( 2 ).getUid() );
+        assertEquals( "deabcdefghC", result.getItems().get( 3 ).getUid() );
+        assertEquals( "deabcdefghB", result.getItems().get( 4 ).getUid() );
+        assertEquals( "deabcdefghA", result.getItems().get( 5 ).getUid() );
+    }
+
+    @Test
+    public void sortCreatedAsc()
+    {
+        createDataElements();
+        Schema schema = schemaService.getDynamicSchema( DataElement.class );
+
+        Query query = Query.from( schema );
+        query.addOrder( new Order( schema.getProperty( "created" ), true ) );
+        Result result = queryService.query( query );
+
+        assertEquals( 6, result.size() );
+
+        assertEquals( "deabcdefghA", result.getItems().get( 0 ).getUid() );
+        assertEquals( "deabcdefghB", result.getItems().get( 1 ).getUid() );
+        assertEquals( "deabcdefghC", result.getItems().get( 2 ).getUid() );
+        assertEquals( "deabcdefghD", result.getItems().get( 3 ).getUid() );
+        assertEquals( "deabcdefghE", result.getItems().get( 4 ).getUid() );
+        assertEquals( "deabcdefghF", result.getItems().get( 5 ).getUid() );
     }
 }
