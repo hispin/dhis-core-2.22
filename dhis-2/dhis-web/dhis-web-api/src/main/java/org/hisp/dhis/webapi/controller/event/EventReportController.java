@@ -166,6 +166,7 @@ public class EventReportController
     private void mergeEventReport( EventReport report )
     {
         dimensionService.mergeAnalyticalObject( report );
+        dimensionService.mergeEventAnalyticalObject( report );
 
         report.getColumnDimensions().clear();
         report.getRowDimensions().clear();

@@ -216,26 +216,27 @@ public class EventChartController
     // Supportive methods
     //--------------------------------------------------------------------------
 
-    private void mergeEventChart( EventChart eventChart )
+    private void mergeEventChart( EventChart chart )
     {
-        dimensionService.mergeAnalyticalObject( eventChart );
+        dimensionService.mergeAnalyticalObject( chart );
+        dimensionService.mergeEventAnalyticalObject( chart );
 
-        eventChart.getColumnDimensions().clear();
-        eventChart.getRowDimensions().clear();
-        eventChart.getFilterDimensions().clear();
+        chart.getColumnDimensions().clear();
+        chart.getRowDimensions().clear();
+        chart.getFilterDimensions().clear();
 
-        eventChart.getColumnDimensions().addAll( getDimensions( eventChart.getColumns() ) );
-        eventChart.getRowDimensions().addAll( getDimensions( eventChart.getRows() ) );
-        eventChart.getFilterDimensions().addAll( getDimensions( eventChart.getFilters() ) );
+        chart.getColumnDimensions().addAll( getDimensions( chart.getColumns() ) );
+        chart.getRowDimensions().addAll( getDimensions( chart.getRows() ) );
+        chart.getFilterDimensions().addAll( getDimensions( chart.getFilters() ) );
 
-        if ( eventChart.getProgram() != null )
+        if ( chart.getProgram() != null )
         {
-            eventChart.setProgram( programService.getProgram( eventChart.getProgram().getUid() ) );
+            chart.setProgram( programService.getProgram( chart.getProgram().getUid() ) );
         }
 
-        if ( eventChart.getProgramStage() != null )
+        if ( chart.getProgramStage() != null )
         {
-            eventChart.setProgramStage( programStageService.getProgramStage( eventChart.getProgramStage().getUid() ) );
+            chart.setProgramStage( programStageService.getProgramStage( chart.getProgramStage().getUid() ) );
         }
     }
 }
