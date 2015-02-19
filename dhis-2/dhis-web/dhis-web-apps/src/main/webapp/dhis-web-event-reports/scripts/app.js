@@ -1625,7 +1625,7 @@ Ext.onReady( function() {
 				height: 25,
 				items: {
 					xtype: 'label',
-					text: NS.i18n.filter,
+					text: NS.i18n.report_filter,
 					cls: 'ns-toolbar-multiselect-leftright-label'
 				}
 			},
@@ -1659,7 +1659,7 @@ Ext.onReady( function() {
 				height: 25,
 				items: {
 					xtype: 'label',
-					text: NS.i18n.column,
+					text: NS.i18n.column_dimensions,
 					cls: 'ns-toolbar-multiselect-leftright-label'
 				}
 			},
@@ -1776,6 +1776,9 @@ Ext.onReady( function() {
             saveState: saveState,
             resetData: resetData,
             reset: reset,
+            getValueConfig: function() {
+                return {};
+            },
 			hideOnBlur: true,
 			items: [
                 dimension,
