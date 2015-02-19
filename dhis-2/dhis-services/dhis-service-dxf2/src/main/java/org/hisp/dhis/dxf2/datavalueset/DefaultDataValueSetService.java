@@ -28,7 +28,26 @@ package org.hisp.dhis.dxf2.datavalueset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.csvreader.CsvReader;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.apache.commons.lang3.StringUtils.trimToNull;
+import static org.hisp.dhis.common.IdentifiableProperty.UUID;
+import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
+import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
+import static org.hisp.dhis.system.util.ConversionUtils.wrap;
+import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
+import static org.hisp.dhis.system.util.DateUtils.parseDate;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.staxwax.factory.XMLFactory;
@@ -46,14 +65,14 @@ import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datavalue.DataValue;
+import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportCount;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.pdfform.PdfDataEntryFormUtil;
-import org.hisp.dhis.dxf2.common.IdSchemes;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.importexport.ImportStrategy;
@@ -75,26 +94,7 @@ import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static com.google.common.collect.Sets.newHashSet;
-import static org.apache.commons.lang3.StringUtils.trimToNull;
-import static org.hisp.dhis.common.IdentifiableProperty.UUID;
-import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
-import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
-import static org.hisp.dhis.system.util.ConversionUtils.wrap;
-import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
-import static org.hisp.dhis.system.util.DateUtils.parseDate;
+import com.csvreader.CsvReader;
 
 /**
  * @author Lars Helge Overland
@@ -625,7 +625,7 @@ public class DefaultDataValueSetService
         //----------------------------------------------------------------------
 
         Map<String, DataElement> dataElementMap = identifiableObjectManager.getIdMap( DataElement.class, dataElementIdScheme );
-        Map<String, OrganisationUnit> orgUnitMap = orgUnitIdScheme == UUID ? getUuidOrgUnitMap() : identifiableObjectManager.getIdMap( OrganisationUnit.class, orgUnitIdScheme );
+        Map<String, OrganisationUnit> orgUnitMap = getOrgUnitMap( orgUnitIdScheme );
         Map<String, DataElementCategoryOptionCombo> categoryOptionComboMap = identifiableObjectManager.getIdMap( DataElementCategoryOptionCombo.class, idScheme );
         Map<String, Period> periodMap = new HashMap<>();
 
@@ -930,17 +930,10 @@ public class DefaultDataValueSetService
         summary.setDataSetComplete( DateUtils.getMediumDateString( completeDate ) );
     }
 
-    private Map<String, OrganisationUnit> getUuidOrgUnitMap()
+    private Map<String, OrganisationUnit> getOrgUnitMap( IdentifiableProperty orgUnitIdScheme )
     {
-        Map<String, OrganisationUnit> orgUnitMap = new HashMap<>();
-
-        Collection<OrganisationUnit> allOrganisationUnits = organisationUnitService.getAllOrganisationUnits();
-
-        for ( OrganisationUnit organisationUnit : allOrganisationUnits )
-        {
-            orgUnitMap.put( organisationUnit.getUuid(), organisationUnit );
-        }
-
-        return orgUnitMap;
+        return UUID.equals( orgUnitIdScheme ) ? 
+            organisationUnitService.getUuidOrganisationUnitMap() : 
+                identifiableObjectManager.getIdMap( OrganisationUnit.class, orgUnitIdScheme );
     }
 }
