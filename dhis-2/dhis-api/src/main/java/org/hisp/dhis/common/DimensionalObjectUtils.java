@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.comparator.ObjectStringValueComparator;
 
 /**

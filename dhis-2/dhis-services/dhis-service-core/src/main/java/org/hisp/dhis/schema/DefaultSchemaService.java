@@ -208,7 +208,7 @@ public class DefaultSchemaService implements SchemaService
 
     private String beautify( String name )
     {
-        String[] camelCaseWords = org.apache.commons.lang.StringUtils.capitalize( name ).split( "(?=[A-Z])" );
-        return org.apache.commons.lang.StringUtils.join( camelCaseWords, " " ).trim();
+        String[] camelCaseWords = org.apache.commons.lang3.StringUtils.capitalize( name ).split( "(?=[A-Z])" );
+        return org.apache.commons.lang3.StringUtils.join( camelCaseWords, " " ).trim();
     }
 }

@@ -29,7 +29,7 @@ package org.hisp.dhis.validationrule.action;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.i18n.I18n;

@@ -39,7 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.hisp.dhis.appmanager.AppManager.KEY_APP_BASE_URL;
 import static org.hisp.dhis.setting.SystemSettingManager.*;
 

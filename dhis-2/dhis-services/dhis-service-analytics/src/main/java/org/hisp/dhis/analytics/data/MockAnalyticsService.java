@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.DataQueryParams;
@@ -59,13 +59,13 @@ public class MockAnalyticsService
     @Override
     public Grid getAggregatedDataValues( DataQueryParams params )
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("");
     }
 
     @Override
     public Grid getAggregatedDataValues( DataQueryParams params, boolean tableLayout, List<String> columns, List<String> rows )
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("");
     }
 
     @Override
@@ -85,25 +85,25 @@ public class MockAnalyticsService
         String measureCriteria, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, 
         boolean showHierarchy, DisplayProperty displayProperty, I18nFormat format )
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("");
     }
 
     @Override
     public DataQueryParams getFromAnalyticalObject( AnalyticalObject object, I18nFormat format )
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("");
     }
     
     @Override
     public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, I18nFormat format )
     {
-        throw new NotImplementedException();        
+        throw new NotImplementedException("");
     }
 
     @Override
     public List<DimensionalObject> getDimension( String dimension, List<String> items, Date relativePeriodDate,
         I18nFormat format, boolean allowNull )
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("");
     }
 }

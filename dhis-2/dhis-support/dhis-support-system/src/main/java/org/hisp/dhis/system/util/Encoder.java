@@ -28,7 +28,7 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * @author Lars Helge Overland
@@ -37,22 +37,22 @@ public class Encoder
 {
     public String htmlEncode( Object object )
     {
-        return object != null ? StringEscapeUtils.escapeHtml( String.valueOf( object ) ) : null;
+        return object != null ? StringEscapeUtils.escapeHtml4( String.valueOf( object ) ) : null;
     }
     
     public String htmlEncode( String object )
     {
-        return StringEscapeUtils.escapeHtml( object );
+        return StringEscapeUtils.escapeHtml4( object );
     }
 
     public String xmlEncode( String object )
     {
-        return StringEscapeUtils.escapeXml( object );
+        return StringEscapeUtils.escapeXml11( object );
     }
 
     public String jsEncode( String object )
     {
-        return StringEscapeUtils.escapeJavaScript( object );
+        return StringEscapeUtils.escapeEcmaScript( object );
     }
 
     /**

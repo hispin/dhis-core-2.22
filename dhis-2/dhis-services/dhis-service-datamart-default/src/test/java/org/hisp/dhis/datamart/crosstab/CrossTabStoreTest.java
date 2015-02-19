@@ -31,7 +31,7 @@ package org.hisp.dhis.datamart.crosstab;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hisp.dhis.DhisTest;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.datamart.crosstab.jdbc.CrossTabStore;
