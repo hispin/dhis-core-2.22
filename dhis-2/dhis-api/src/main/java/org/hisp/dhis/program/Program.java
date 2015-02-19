@@ -34,7 +34,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -221,7 +220,7 @@ public class Program
     {
         return ++version;
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -482,6 +481,7 @@ public class Program
     }
 
     @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Program getRelatedProgram()
@@ -573,7 +573,7 @@ public class Program
             Program program = (Program) other;
 
             version = program.getVersion();
-            
+
             if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
             {
                 description = program.getDescription();
@@ -594,7 +594,7 @@ public class Program
             }
             else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
             {
-                description = program.getDescription() == null ? description : program.getDescription();                
+                description = program.getDescription() == null ? description : program.getDescription();
                 dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription() == null ? dateOfEnrollmentDescription : program.getDateOfEnrollmentDescription();
                 dateOfIncidentDescription = program.getDateOfIncidentDescription() == null ? dateOfIncidentDescription : program.getDateOfIncidentDescription();
                 type = program.getType() == null ? type : program.getType();
