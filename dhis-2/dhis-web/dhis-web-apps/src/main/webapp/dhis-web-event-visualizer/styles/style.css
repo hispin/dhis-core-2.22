@@ -412,6 +412,16 @@ table.small td {
     border-radius: 1px 0px 0px 0px;
 }
 
+	/* Custom */
+.ns-combo.h21 .x-form-trigger {
+    height: 21px;
+}
+.ns-combo.h22 .x-form-trigger {
+    height: 22px;
+}
+.ns-combo.h24 .x-form-trigger {
+    height: 24px;
+}
 
 /*----------------------------------------------------------------------------
  * PT Trigger
