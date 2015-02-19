@@ -47,10 +47,12 @@ trackerCapture.controller('DataEntryController',
         $scope.currentDummyEvent = null;
         $scope.currentEvent = null;
         $scope.currentStage = null;
+        $scope.totalEvents = 0;
             
         $scope.allowEventCreation = false;
         $scope.repeatableStages = [];        
         $scope.dhis2Events = [];
+        $scope.eventsByStage = [];
         $scope.programStages = [];
         
         var selections = CurrentSelection.get();          
@@ -70,8 +72,8 @@ trackerCapture.controller('DataEntryController',
                         $scope.currentStage = stage;
                     }
                     $scope.selectedProgramWithStage[stage.id] = stage;
+                    $scope.eventsByStage[stage.id] = [];
                 });
-                
                 $scope.getEvents();                
             });
         }
@@ -110,14 +112,17 @@ trackerCapture.controller('DataEntryController',
                                 $scope.currentEvent = dhis2Event;                                
                                 $scope.showDataEntry($scope.currentEvent, true);
                             }
+                            
+                            $scope.dhis2Events.push(dhis2Event);
+                            $scope.eventsByStage[dhis2Event.programStage].push(dhis2Event);
                         }
-                        $scope.dhis2Events.push(dhis2Event);
                     }
                 });
             }
             
             $scope.dhis2Events = orderByFilter($scope.dhis2Events, '-sortingDate');            
-            $scope.dummyEvents = $scope.checkForEventCreation($scope.dhis2Events, $scope.selectedProgram);
+            $scope.dummyEvents = $scope.checkForEventCreation($scope.dhis2Events, $scope.selectedProgram);            
+            sortEventsByStage();                        
         });          
     };
     
@@ -259,6 +264,7 @@ trackerCapture.controller('DataEntryController',
                     $scope.dhis2Events.splice(0,0,newEvent);
                 }
                 
+                $scope.eventsByStage[newEvent.programStage].push(newEvent);
                 $scope.showDataEntry(newEvent, false);
             }
         });
@@ -707,7 +713,18 @@ trackerCapture.controller('DataEntryController',
                         index = i;
                     }
                 }
-                $scope.dhis2Events.splice(index,1);                
+                $scope.dhis2Events.splice(index,1);
+                
+                continueLoop = true, index = -1;
+                for(var i=0; i< $scope.eventsByStage[$scope.currentEvent.programStage].length && continueLoop; i++){
+                    if($scope.eventsByStage[$scope.currentEvent.programStage][i].event === $scope.currentEvent.event ){
+                        $scope.eventsByStage[$scope.currentEvent.programStage][i] = $scope.currentEvent;
+                        continueLoop = false;
+                        index = i;
+                    }
+                }
+                $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1);
+                
                 $scope.currentEvent = null;
                 if($scope.dhis2Events.length < 1){  
                     $scope.dhis2Events = '';
@@ -736,5 +753,23 @@ trackerCapture.controller('DataEntryController',
             }
         }        
         return style;
+    };
+    
+    $scope.getColumnWidth = function(weight){
+        var col = 1;
+        if($scope.totalEvents > 0){
+            col = weight <=1 ? 1 : weight;
+            col = Math.round(col*12/$scope.totalEvents);
+        }        
+        return "col-sm-" + col; 
+    };
+    
+    var sortEventsByStage = function(){
+        for(var key in $scope.eventsByStage){
+            if($scope.eventsByStage.hasOwnProperty(key)){
+                $scope.eventsByStage[key] = orderByFilter($scope.eventsByStage[key], '-sortingDate').reverse(); 
+                $scope.totalEvents += $scope.eventsByStage[key].length <=1 ? 1:$scope.eventsByStage[key].length;
+            }
+        }
     };
 });
