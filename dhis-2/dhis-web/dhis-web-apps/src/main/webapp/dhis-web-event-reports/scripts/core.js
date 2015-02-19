@@ -485,7 +485,7 @@ Ext.onReady( function() {
                         layout.endDate = config.endDate;
                     }
 
-					// properties
+					// options
 					layout.showColTotals = Ext.isBoolean(config.colTotals) ? config.colTotals : (Ext.isBoolean(config.showColTotals) ? config.showColTotals : true);
 					layout.showRowTotals = Ext.isBoolean(config.rowTotals) ? config.rowTotals : (Ext.isBoolean(config.showRowTotals) ? config.showRowTotals : true);
 					layout.showColSubTotals = Ext.isBoolean(config.colSubTotals) ? config.colSubTotals : (Ext.isBoolean(config.showColSubTotals) ? config.showColSubTotals : true);
@@ -493,27 +493,33 @@ Ext.onReady( function() {
 					layout.showDimensionLabels = Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
 					layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
 					layout.outputType = Ext.isString(config.outputType) && !Ext.isEmpty(config.outputType) ? config.outputType : 'EVENT';
-                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'default';
-
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
-
 					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : 'normal';
 					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : 'normal';
 					layout.digitGroupSeparator = Ext.isString(config.digitGroupSeparator) && !Ext.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : 'space';
 					layout.legendSet = Ext.isObject(config.legendSet) && Ext.isString(config.legendSet.id) ? config.legendSet : null;
 
-					layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
+                    // value
+                    if ((Ext.isObject(config.value) && Ext.isString(config.value.id)) || Ext.isString(config.value)) {
+                        layout.value = Ext.isString(config.value) ? {id: config.value} : config.value;
+                    }
 
+                    // aggregation type
+                    if (layout.value && Ext.isString(config.aggregationType)) {
+                        layout.aggregationType = config.aggregationType;
+                    }
+
+					layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
 					layout.sorting = Ext.isObject(config.sorting) && Ext.isDefined(config.sorting.id) && Ext.isString(config.sorting.direction) ? config.sorting : null;
 
 					layout.reportingPeriod = Ext.isObject(config.reportParams) && Ext.isBoolean(config.reportParams.paramReportingPeriod) ? config.reportParams.paramReportingPeriod : (Ext.isBoolean(config.reportingPeriod) ? config.reportingPeriod : false);
 					layout.organisationUnit =  Ext.isObject(config.reportParams) && Ext.isBoolean(config.reportParams.paramOrganisationUnit) ? config.reportParams.paramOrganisationUnit : (Ext.isBoolean(config.organisationUnit) ? config.organisationUnit : false);
 					layout.parentOrganisationUnit =  Ext.isObject(config.reportParams) && Ext.isBoolean(config.reportParams.paramParentOrganisationUnit) ? config.reportParams.paramParentOrganisationUnit : (Ext.isBoolean(config.parentOrganisationUnit) ? config.parentOrganisationUnit : false);
 
-					layout.regression = Ext.isBoolean(config.regression) ? config.regression : false;
-					layout.cumulative = Ext.isBoolean(config.cumulative) ? config.cumulative : false;
-					layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
-					layout.topLimit = Ext.isNumber(config.topLimit) ? config.topLimit : 0;
+					//layout.regression = Ext.isBoolean(config.regression) ? config.regression : false;
+					//layout.cumulative = Ext.isBoolean(config.cumulative) ? config.cumulative : false;
+					//layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
+					//layout.topLimit = Ext.isNumber(config.topLimit) ? config.topLimit : 0;
 
 					if (!validateSpecialCases()) {
 						return;
@@ -2064,10 +2070,13 @@ Ext.onReady( function() {
 					}
 				}
 
-                // values
-                if (view.value) {
+                // value
+                if (Ext.isString(view.value)) {
                     paramString += '&value=' + view.value;
 				}
+                else if (Ext.isObject(view.value) && Ext.isString(view.value.id)) {
+                    paramString += '&value=' + view.value.id;
+                }
 
                 // aggregation type
                 if (view.aggregationType) {

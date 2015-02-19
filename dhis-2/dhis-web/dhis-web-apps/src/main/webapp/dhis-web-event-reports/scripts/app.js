@@ -1455,7 +1455,7 @@ Ext.onReady( function() {
                     valueId = value.getValue();
 
                 if (valueId && valueId !== defaultValueId) {
-                    config.value = valueId;
+                    config.value = {id: valueId};
                     config.aggregationType = aggregationType.getValue();
                 }
 
