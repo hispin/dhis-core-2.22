@@ -338,6 +338,26 @@ public class QueryServiceTest
     }
 
     @Test
+    public void sortNameAsc()
+    {
+        createDataElements();
+        Schema schema = schemaService.getDynamicSchema( DataElement.class );
+
+        Query query = Query.from( schema );
+        query.addOrder( new Order( schema.getProperty( "name" ), true ) );
+        Result result = queryService.query( query );
+
+        assertEquals( 6, result.size() );
+
+        assertEquals( "deabcdefghA", result.getItems().get( 0 ).getUid() );
+        assertEquals( "deabcdefghB", result.getItems().get( 1 ).getUid() );
+        assertEquals( "deabcdefghC", result.getItems().get( 2 ).getUid() );
+        assertEquals( "deabcdefghD", result.getItems().get( 3 ).getUid() );
+        assertEquals( "deabcdefghE", result.getItems().get( 4 ).getUid() );
+        assertEquals( "deabcdefghF", result.getItems().get( 5 ).getUid() );
+    }
+
+    @Test
     public void sortCreatedDesc()
     {
         createDataElements();
