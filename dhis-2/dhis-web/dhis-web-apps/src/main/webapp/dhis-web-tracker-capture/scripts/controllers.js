@@ -137,11 +137,10 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     };
     
     $scope.getProgramAttributes = function(program){ 
-        console.log('the program is:  ', program);
         $scope.selectedProgram = program;
         
         if($scope.selectedProgram){
-            $location.path('/').search({program: $scope.selectedProgramId});
+            $location.path('/').search({program: $scope.selectedProgram.id});
         }
         else{
             $location.path('/').search({});
