@@ -78,8 +78,6 @@ public class DefaultI18nLocaleService
         {
             langs.add( new BaseIdentifiableObject( lang, lang, new Locale( lang ).getDisplayLanguage() ) );
         }
-		//TODO: This needs to be fixed. We should have a list of ISO 639-1 and ISO 639-2 codes (when needed) together
-		langs.add( new BaseIdentifiableObject( "tet", "tet", "Tetum" ));
 
         for ( String country : Locale.getISOCountries() )
         {
