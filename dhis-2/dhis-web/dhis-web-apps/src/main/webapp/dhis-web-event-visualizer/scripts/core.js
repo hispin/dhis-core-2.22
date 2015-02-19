@@ -588,8 +588,17 @@ Ext.onReady( function() {
                     layout.hideTitle = Ext.isBoolean(config.hideTitle) ? config.hideTitle : false;
                     layout.title = Ext.isString(config.title) &&  !Ext.isEmpty(config.title) ? config.title : null;
 
-                    layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
+                    // value
+                    if ((Ext.isObject(config.value) && Ext.isString(config.value.id)) || Ext.isString(config.value)) {
+                        layout.value = Ext.isString(config.value) ? {id: config.value} : config.value;
+                    }
 
+                    // aggregation type
+                    if (layout.value && Ext.isString(config.aggregationType)) {
+                        layout.aggregationType = config.aggregationType;
+                    }
+
+                    layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
                     layout.legend = Ext.isObject(config.legend) ? config.legend : null;
 
 					//layout.sorting = Ext.isObject(config.sorting) && Ext.isDefined(config.sorting.id) && Ext.isString(config.sorting.direction) ? config.sorting : null;
@@ -2023,6 +2032,19 @@ Ext.onReady( function() {
                         }
 					}
 				}
+
+                // value
+                if (Ext.isString(layout.value)) {
+                    paramString += '&value=' + layout.value;
+				}
+                else if (Ext.isObject(layout.value) && Ext.isString(layout.value.id)) {
+                    paramString += '&value=' + layout.value.id;
+                }
+
+                // aggregation type
+                if (layout.aggregationType) {
+                    paramString += '&aggregationType=' + layout.aggregationType;
+                }
 
                 // dates
                 if (layout.startDate && layout.endDate) {
