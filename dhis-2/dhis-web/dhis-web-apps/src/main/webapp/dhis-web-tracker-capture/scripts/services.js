@@ -1286,9 +1286,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 dummyEvent.coordinate = {};
             }
             
-            dummyEvent.statusColor = 'alert alert-warning';//'stage-on-time';
+            dummyEvent.statusColor = 'alert-warning';//'stage-on-time';
             if(moment(today).isAfter(dummyEvent.dueDate)){
-                dummyEvent.statusColor = 'alert alert-danger';//'stage-overdue';
+                dummyEvent.statusColor = 'alert-danger';//'stage-overdue';
             }
             return dummyEvent;        
         },
@@ -1301,20 +1301,20 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
     
             if(dhis2Event.status === 'COMPLETED'){
-                return 'alert alert-success';//'stage-completed';
+                return 'alert-success';//'stage-completed';
             }
             else if(dhis2Event.status === 'SKIPPED'){
-                return 'alert alert-default'; //'stage-skipped';
+                return 'alert-default'; //'stage-skipped';
             }
             else{                
                 if(dhis2Event.eventDate){
-                    return 'alert alert-info'; //'stage-executed';
+                    return 'alert-info'; //'stage-executed';
                 }
                 else{
                     if(moment(eventDate, calendarSetting.momentFormat).isAfter(dhis2Event.dueDate)){
-                        return 'alert alert-danger';//'stage-overdue';
+                        return 'alert-danger';//'stage-overdue';
                     }                
-                    return 'alert alert-warning';//'stage-on-time';
+                    return 'alert-warning';//'stage-on-time';
                 }               
             }            
         },

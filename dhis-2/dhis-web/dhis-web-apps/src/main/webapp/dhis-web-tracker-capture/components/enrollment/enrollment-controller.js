@@ -2,6 +2,7 @@ trackerCapture.controller('EnrollmentController',
         function($rootScope,
                 $scope,  
                 $location,
+                $timeout,
                 DateUtils,
                 EventUtils,
                 storage,
@@ -120,7 +121,9 @@ trackerCapture.controller('EnrollmentController',
         }
        
         $scope.showEnrollmentDiv = !$scope.showEnrollmentDiv;
-        $rootScope.$broadcast('enrollmentEditing', {enrollmentEditing: $scope.showEnrollmentDiv});
+        $timeout(function() { 
+            $rootScope.$broadcast('enrollmentEditing', {enrollmentEditing: $scope.showEnrollmentDiv});
+        }, 100);        
         
         if($scope.showEnrollmentDiv){            
             $scope.showEnrollmentHistoryDiv = false;
@@ -222,7 +225,9 @@ trackerCapture.controller('EnrollmentController',
             enrollment = $scope.selectedEnrollment;
         }
         CurrentSelection.set({tei: tei, te: $scope.selectedEntity, prs: $scope.programs, pr: pr, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: $scope.enrollments, selectedEnrollment: enrollment, optionSets: $scope.optionSets});
-        $rootScope.$broadcast(listeners, {});
+        $timeout(function() { 
+            $rootScope.$broadcast(listeners, {});
+        }, 100);
     };    
     
     var getProcessedForm = function(){        
