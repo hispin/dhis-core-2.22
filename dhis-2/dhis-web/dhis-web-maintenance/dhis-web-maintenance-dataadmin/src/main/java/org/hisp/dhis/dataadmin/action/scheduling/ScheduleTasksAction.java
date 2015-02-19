@@ -65,7 +65,6 @@ import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_MIN;
 import static org.hisp.dhis.system.scheduling.Scheduler.STATUS_RUNNING;
 import static org.hisp.dhis.system.util.CollectionUtils.emptyIfNull;
 
-
 /**
  * @author Lars Helge Overland
  */
