@@ -97,6 +97,6 @@ public class DefaultRelationshipService
     public Collection<Relationship> getRelationships( TrackedEntityInstance entityInstanceA,
         RelationshipType relationshipType )
     {
-        throw new NotImplementedException("Notsupported");
+        throw new NotImplementedException("");
     }
 }
