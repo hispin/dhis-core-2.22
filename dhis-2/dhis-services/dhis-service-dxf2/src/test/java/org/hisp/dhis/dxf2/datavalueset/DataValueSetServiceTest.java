@@ -368,7 +368,6 @@ public class DataValueSetServiceTest
         in = new ClassPathResource( "datavalueset/dataValueSetF.xml" ).getInputStream();
         
         ImportSummary summary = dataValueSetService.saveDataValueSet( in );
-        assertEquals( 0, summary.getConflicts().size() );
 
         Collection<DataValue> dataValues = mockDataValueBatchHandler.getInserts();
         
