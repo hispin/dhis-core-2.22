@@ -30,7 +30,7 @@ package org.hisp.dhis.trackedentity.action.caseaggregation;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionService;

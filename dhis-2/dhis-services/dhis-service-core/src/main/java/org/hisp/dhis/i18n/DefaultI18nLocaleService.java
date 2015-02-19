@@ -78,7 +78,8 @@ public class DefaultI18nLocaleService
         {
             langs.add( new BaseIdentifiableObject( lang, lang, new Locale( lang ).getDisplayLanguage() ) );
         }
-        
+		langs.add( new BaseIdentifiableObject( "tet", "tet", "Tetum" ));
+
         for ( String country : Locale.getISOCountries() )
         {
             countrs.add( new BaseIdentifiableObject( country, country, new Locale( "en", country ).getDisplayCountry() ) );

@@ -29,7 +29,7 @@ package org.hisp.dhis.light.dataentry.action;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementOperand;
