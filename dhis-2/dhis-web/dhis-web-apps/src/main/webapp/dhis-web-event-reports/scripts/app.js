@@ -1089,6 +1089,7 @@ Ext.onReady( function() {
             filter.setHeight(defaultHeight - fixedFilterHeight);
         };
 
+        // gui
 		col = Ext.create('Ext.ux.form.MultiSelect', {
 			cls: 'ns-toolbar-multiselect-leftright',
 			width: defaultWidth,
@@ -1328,7 +1329,7 @@ Ext.onReady( function() {
                                         xtype: 'label',
                                         height: 22,
                                         style: 'padding-left: 6px; line-height: 22px',
-                                        text: 'Value'
+                                        text: NS.i18n.value
                                     },
                                     '->',
                                     aggregationType
@@ -6128,13 +6129,19 @@ Ext.onReady( function() {
 			};
 
 			web.window.addDestroyOnBlurHandler = function(w) {
-				var el = Ext.get(Ext.query('.x-mask')[0]);
+				var masks = Ext.query('.x-mask');
 
-				el.on('click', function() {
-					if (w.destroyOnBlur) {
-						w.destroy();
-					}
-				});
+                for (var i = 0, el; i < masks.length; i++) {
+                    el = Ext.get(masks[i]);
+
+                    if (el.getWidth() == Ext.getBody().getWidth()) {
+                        el.on('click', function() {
+                            if (w.destroyOnBlur) {
+                                w.destroy();
+                            }
+                        });
+                    }
+                }
 
 				w.hasDestroyOnBlurHandler = true;
 			};
