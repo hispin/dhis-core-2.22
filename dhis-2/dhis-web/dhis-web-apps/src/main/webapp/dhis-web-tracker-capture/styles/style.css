@@ -117,9 +117,10 @@ textarea {
 .event-container {
     cursor: pointer;
     opacity: 1.0;
-    white-space: normal;
-    padding-top: 5px;
+    //white-space: normal;
+    padding: 5px;
     border: 2px dotted;
+    border-radius: 4px
 }
 
 .event-container:hover {
@@ -147,15 +148,6 @@ textarea {
     border: 2px solid;
     font-weight: bold;
 }
-
-.current-stage-color {
-    color: #b94a48;
-}
-
-.stages-color {
-    display: block;
-}
-
 
 /*----------------------------------------------------------------------------*/
 /* App - specific
@@ -507,13 +499,6 @@ div#searchOuTree h4{
 .trim {
     margin-bottom: 5px; 
     margin-top: 5px;
-}
-
-.trimmed-alert {
-	padding: 10px;
-	margin-bottom: 20px;
-	border: 1px solid transparent;
-	border-radius: 4px
 }
 
 .remove-default-padding {

@@ -2,9 +2,9 @@
     <div class="panel-heading handle bold">
         {{dataentryWidget.title| translate}}
         <span class="nav-pills" ng-if="allowEventCreation">
-            | <a href ng-click="showEventCreation()"><span ng-class="{true: 'widget-link-active', false: 'widget-link'} [showEventCreationDiv]">{{'create_new_event'| translate}}</span></a>
+            | <a href ng-click="showEventCreation()"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [showEventCreationDiv]">{{'create_new_event'| translate}}</span></a>
         </span>
-        
+
         <span class="pull-right widget-link">
             <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}"><i class="fa fa-info-circle vertical-center"></i></a>
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(dataentryWidget)">
@@ -17,22 +17,48 @@
 
     <div ng-show="dataentryWidget.expand" class="panel-body dashboard-widget-container">
         <div ng-if="showEventColors">
-            <span class='bold'>{{'legend' | translate}}</span>
+            <span class='bold'>{{'legend'| translate}}</span>
             <table class="table table-bordered" style="width: 100%;">               
                 <tr>
                     <td ng-class="eventColor.color" ng-repeat="eventColor in eventColors">
-                        <span class="bold">{{eventColor.description | translate}}</span>
+                        <span class="bold">{{eventColor.description| translate}}</span>
                     </td>
                 </tr>                    
             </table>
         </div>
 
-        <div ng-if="dhis2Events && !showEventCreationDiv">            
-            <table class="table-borderless table-with-fixed-layout">
+        <div ng-if="dhis2Events && !showEventCreationDiv">
+
+            <table class="table table-bordered table-with-fixed-layout">
+                <thead>
+                    <tr>
+                        <th class="active align-center" ng-class="getColumnWidth(eventsByStage[stage.id].length)" ng-repeat="stage in programStages| orderBy:'sortOrder':reverse">
+                            {{stage.name}}
+                        </th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
-                        <td class="inline-block" ng-repeat="dhis2Event in dhis2Events | orderBy:'sortingDate':reverse">
-                            <div class="stage-container" ng-class='getEventStyle(dhis2Event, false)' ng-click="showDataEntry(dhis2Event, false)">
+                        <td ng-repeat="stage in programStages| orderBy:'sortOrder':reverse">
+                            <div class="inline-block" ng-repeat="dhis2Event in eventsByStage[stage.id]">
+                                <div class="stage-container alert" 
+                                     ng-class="getEventStyle(dhis2Event, false)" 
+                                     ng-click="showDataEntry(dhis2Event, false)">
+                                    {{dhis2Event.orgUnitName}}<br/>
+                                    {{dhis2Event.sortingDate}}         
+                                </div>
+                                <i class="fa fa-arrow-right" ng-if="$index < eventsByStage[stage.id].length - 1"></i>
+                            </div>
+                        </td>                        
+                    </tr>
+                </tbody>                
+            </table>
+
+            <!--<table class="table-borderless table-with-fixed-layout">
+                <tbody>
+                    <tr>
+                        <td class="inline-block" ng-repeat="dhis2Event in dhis2Events| orderBy:'sortingDate':reverse">
+                            <div class="stage-container alert" ng-class='getEventStyle(dhis2Event, false)' ng-click="showDataEntry(dhis2Event, false)">
                                 {{dhis2Event.name}}<br/>
                                 {{dhis2Event.orgUnitName}}<br/>
                                 {{dhis2Event.sortingDate}}         
@@ -41,7 +67,8 @@
                         </td>                        
                     </tr>
                 </tbody>                
-            </table>
+            </table>-->
+            
         </div>     
         <div ng-if="!dhis2Events && selectedEnrollment" class="alert alert-danger">{{'no_event_is_yet_created'| translate}}</div>
         <div ng-if="dhis2Events && showEventCreationDiv" class="alert alert-warning">{{'event_creation'| translate}}</div>
@@ -51,7 +78,7 @@
                 <tbody>
                     <tr>
                         <td class="inline-block" ng-repeat="dummyEvent in dummyEvents| orderBy:'sortingDate':reverse">                                 
-                            <span class="stage-container" ng-class='getEventStyle(dummyEvent, true)' ng-click="showDummyEventCreation(dummyEvent)">
+                            <span class="stage-container alert" ng-class='getEventStyle(dummyEvent, true)' ng-click="showDummyEventCreation(dummyEvent)">
                                 {{dummyEvent.name}}<br/>
                                 {{dummyEvent.dueDate}}         
                             </span>
@@ -162,7 +189,7 @@
                     <a href ng-click="completeIncompleteEvent()" 
                        class="btn btn-warning" 
                        ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed"
-                       ng-if="currentEvent.eventDate && ( currentEvent.status === 'SCHEDULE' || currentEvent.status === 'ACTIVE' || currentEvent.status === 'VISITED')">{{'complete'| translate}}</a>
+                       ng-if="currentEvent.eventDate && (currentEvent.status === 'SCHEDULE' || currentEvent.status === 'ACTIVE' || currentEvent.status === 'VISITED')">{{'complete'| translate}}</a>
                     <a href ng-click="completeIncompleteEvent()" 
                        class="btn btn-warning"
                        ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed"
@@ -201,16 +228,16 @@
             <table class="table table-striped dhis2-table-hover">
                 <tr ng-repeat="note in currentEvent.notes">
                     <td class="overflow-ellipsis">
-                        <d2-pop-over content="note" template="popover.html" details="{{'details'| translate}}">
-                            <div>{{note.value}}</div>
-                        </d2-pop-over>
-                        <script type="text/ng-template" id="popover.html">
-                            <p>{{content.value}}</p>
-                            <hr>
-                            <p><strong>{{'created_by' | translate}}: </strong>{{content.storedBy}}</p>
-                            <p><strong>{{'date' | translate}}: </strong>{{content.storedDate}}</p>                           
-                        </script>
-                    </td> 
+                <d2-pop-over content="note" template="popover.html" details="{{'details'| translate}}">
+                    <div>{{note.value}}</div>
+                </d2-pop-over>
+                <script type="text/ng-template" id="popover.html">
+                    <p>{{content.value}}</p>
+                    <hr>
+                    <p><strong>{{'created_by' | translate}}: </strong>{{content.storedBy}}</p>
+                    <p><strong>{{'date' | translate}}: </strong>{{content.storedDate}}</p>                           
+                </script>
+                </td> 
                 </tr>
             </table>
         </div>
