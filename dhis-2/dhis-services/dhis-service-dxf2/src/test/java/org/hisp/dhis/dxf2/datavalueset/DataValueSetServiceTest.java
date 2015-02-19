@@ -283,7 +283,6 @@ public class DataValueSetServiceTest
         ImportSummary summary = dataValueSetService.saveDataValueSetCsv( in, null, null );
 
         assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
-        assertEquals( 0, summary.getConflicts().size() );
         
         assertImportDataValues( summary );
     }
