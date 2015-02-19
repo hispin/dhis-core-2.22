@@ -29,7 +29,7 @@ package org.hisp.dhis.dxf2.parser;
  */
 
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dxf2.fieldfilter.FieldMap;
 import org.hisp.dhis.dxf2.objectfilter.Filters;
 

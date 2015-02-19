@@ -33,7 +33,7 @@ package org.hisp.dhis.result;
  * wont allow dynamic setting of the chart height and width.
  */
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;

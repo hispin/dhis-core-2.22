@@ -29,7 +29,7 @@ package org.hisp.dhis.dataset.action;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
@@ -153,7 +153,7 @@ public class ValidateDataSetAction
 
                 if ( dataElement != null && pType != null && !pType.equals( dataElement.getPeriodType() ) )
                 {
-                    message = i18n.getString( "data_element_has_other_period_type_than_data_set" ) + ": " + StringEscapeUtils.escapeHtml( dataElement.getName() );
+                    message = i18n.getString( "data_element_has_other_period_type_than_data_set" ) + ": " + StringEscapeUtils.escapeHtml3( dataElement.getName() );
 
                     return ERROR;
                 }

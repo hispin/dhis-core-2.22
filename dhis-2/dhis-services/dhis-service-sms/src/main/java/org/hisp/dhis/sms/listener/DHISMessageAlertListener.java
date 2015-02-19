@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.sms.SmsMessageSender;
 import org.hisp.dhis.sms.command.SMSCommand;

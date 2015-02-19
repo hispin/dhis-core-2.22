@@ -30,7 +30,7 @@ package org.hisp.dhis.settings.action.system;
 
 import static org.hisp.dhis.setting.SystemSettingManager.*;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.setting.StyleManager;

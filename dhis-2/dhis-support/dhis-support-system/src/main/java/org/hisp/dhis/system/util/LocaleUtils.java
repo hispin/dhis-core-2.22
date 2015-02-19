@@ -60,7 +60,7 @@ public class LocaleUtils
         }
         else
         {
-            return org.apache.commons.lang.LocaleUtils.toLocale( localeStr );
+            return org.apache.commons.lang3.LocaleUtils.toLocale( localeStr );
         }
     }
         

@@ -28,7 +28,7 @@ package org.hisp.dhis.webapi.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.apache.commons.lang.StringUtils.trimToNull;
+import static org.apache.commons.lang3.StringUtils.trimToNull;
 import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_CACHE_STRATEGY;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_CACHE_STRATEGY;
 

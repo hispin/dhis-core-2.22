@@ -30,7 +30,7 @@ package org.hisp.dhis.caseentry.action.caseentry;
 
 import com.opensymphony.xwork2.Action;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;

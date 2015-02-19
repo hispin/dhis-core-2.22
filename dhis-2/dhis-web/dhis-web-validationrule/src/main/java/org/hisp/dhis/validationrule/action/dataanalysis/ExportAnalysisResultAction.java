@@ -30,7 +30,7 @@ package org.hisp.dhis.validationrule.action.dataanalysis;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.datavalue.DeflatedDataValue;

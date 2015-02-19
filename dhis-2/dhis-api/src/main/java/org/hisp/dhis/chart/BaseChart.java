@@ -55,7 +55,7 @@ import org.hisp.dhis.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang.StringUtils.join;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  * @author Lars Helge Overland
