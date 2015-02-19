@@ -96,14 +96,12 @@ join dataset using (datasetid)
 join periodtype using(periodtypeid) 
 where de.aggregationtype = 'average';
 
--- Recreate indexes on aggregated tables
+-- Get category option groups which are members of more than one group set
 
-drop index aggregateddatavalue_index;
-drop index aggregatedindicatorvalue_index;
-drop index aggregateddatasetcompleteness_index;
-create index aggregateddatavalue_index on aggregateddatavalue (dataelementid, periodid, organisationunitid, categoryoptioncomboid, value);
-create index aggregatedindicatorvalue_index on aggregatedindicatorvalue (indicatorid, periodid, organisationunitid, value);
-create index aggregateddatasetcompleteness_index on aggregateddatasetcompleteness  (datasetid, periodid, organisationunitid, value);
+select categoryoptiongroupid, count(categoryoptiongroupid) as count
+from categoryoptiongroupsetmembers
+group by categoryoptiongroupid
+having count(categoryoptiongroupid) > 1;
 
 -- Get missing items in a list / missing options in a category by looking at the sort_order and the max sort_order value
 
