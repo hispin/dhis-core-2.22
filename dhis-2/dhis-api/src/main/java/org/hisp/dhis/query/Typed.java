@@ -46,6 +46,11 @@ public class Typed
         this.klasses = klasses;
     }
 
+    public Class<?>[] getKlasses()
+    {
+        return klasses;
+    }
+
     public boolean isValid( Klass klass )
     {
         return klass == null || isValid( klass.getKlass() );

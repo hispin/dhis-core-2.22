@@ -103,6 +103,16 @@ public abstract class Op
             {
             }
         }
+        else if ( Double.class.isAssignableFrom( klass ) )
+        {
+            try
+            {
+                return (T) Double.valueOf( value );
+            }
+            catch ( Exception ignored )
+            {
+            }
+        }
         else if ( Date.class.isAssignableFrom( klass ) )
         {
             for ( SimpleDateFormat simpleDateFormat : simpleDateFormats )

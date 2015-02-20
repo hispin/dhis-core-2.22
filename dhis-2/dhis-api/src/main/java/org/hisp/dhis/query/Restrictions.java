@@ -28,6 +28,10 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.time.DateUtils;
+
+import java.util.Date;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
@@ -68,9 +72,15 @@ public final class Restrictions
         return new Restriction( path, Operator.BETWEEN, lside, rside );
     }
 
+    // Map like to ilike for the moment, since like in the web-api is actually ilike..
     public static Restriction like( String path, Object value )
     {
-        return new Restriction( path, Operator.LIKE, value );
+        return new Restriction( path, Operator.ILIKE, value );
+    }
+
+    public static Restriction ilike( String path, Object value )
+    {
+        return new Restriction( path, Operator.ILIKE, value );
     }
 
     public static Restriction in( String path, Object... values )

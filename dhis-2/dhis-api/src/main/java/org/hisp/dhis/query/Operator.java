@@ -28,6 +28,7 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.hisp.dhis.schema.Klass;
 
 import java.util.Date;
@@ -37,14 +38,15 @@ import java.util.Date;
  */
 public enum Operator
 {
-    EQ( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    NE( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    GT( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    LT( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    GE( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    LE( Typed.from( String.class, Number.class, Date.class ), 1 ),
+    EQ( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
+    NE( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
+    GT( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
+    LT( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
+    GE( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
+    LE( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
     BETWEEN( Typed.from( String.class, Number.class, Date.class ), 2 ),
     LIKE( Typed.from( String.class ), 1 ),
+    ILIKE( Typed.from( String.class ), 1 ),
     IN( 1, Integer.MAX_VALUE );
 
     Integer min;
