@@ -74,7 +74,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             var promise = $http.get(  '../api/userSettings/dhis2-tracker-dashboard' ).then(function(response){                
                 return response.data === "" ? defaultLayout: response.data;
             }, function(){
-                console.log('has failed....');
                 return defaultLayout;
             });
             return promise;
