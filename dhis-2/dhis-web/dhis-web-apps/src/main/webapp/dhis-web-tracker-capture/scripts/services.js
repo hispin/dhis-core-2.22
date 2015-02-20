@@ -1317,7 +1317,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }               
             }            
         },
-        getEventDueDate: function(eventsPerStage, programStage, enrollment){            
+        getEventDueDate: function(eventsByStage, programStage, enrollment){            
             var referenceDate = enrollment.dateOfIncident ? enrollment.dateOfIncident : enrollment.dateOfEnrollment,
                 offset = programStage.minDaysFromStart,
                 calendarSetting = CalendarService.getSetting();
@@ -1327,16 +1327,16 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             
             if(programStage.repeatable){
-                /*var eventsPerStage = [];
-                angular.forEach(events, function(event){
-                    if(event.programStage === programStage.id){
-                        eventsPerStage.push(event);
+                var evs = [];                
+                angular.forEach(eventsByStage, function(ev){
+                    if(ev.eventDate){
+                        evs.push(ev);
                     }
-                });*/
-
-                if(eventsPerStage.length > 0){
-                    eventsPerStage = orderByFilter(eventsPerStage, '-eventDate');
-                    referenceDate = eventsPerStage[0].eventDate;
+                });
+                
+                if(evs.length > 0){
+                    evs = orderByFilter(evs, '-eventDate');
+                    referenceDate = evs[0].eventDate;
                     offset = programStage.standardInterval;
                 }                
             }            
