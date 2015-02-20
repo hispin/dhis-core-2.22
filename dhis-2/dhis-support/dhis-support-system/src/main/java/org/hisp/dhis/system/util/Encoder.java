@@ -47,7 +47,7 @@ public class Encoder
 
     public String xmlEncode( String object )
     {
-        return StringEscapeUtils.escapeXml( object );
+        return StringEscapeUtils.escapeXml11( object );
     }
 
     public String jsEncode( String object )
