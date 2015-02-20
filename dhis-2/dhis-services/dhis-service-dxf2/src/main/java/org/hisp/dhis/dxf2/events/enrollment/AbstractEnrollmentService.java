@@ -333,7 +333,6 @@ public abstract class AbstractEnrollmentService
     public ImportSummary addEnrollment( Enrollment enrollment )
     {
         ImportSummary importSummary = new ImportSummary();
-        importSummary.setDataValueCount( null );
 
         org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = getTrackedEntityInstance( enrollment
             .getTrackedEntityInstance() );
@@ -398,7 +397,6 @@ public abstract class AbstractEnrollmentService
     public ImportSummary updateEnrollment( Enrollment enrollment )
     {
         ImportSummary importSummary = new ImportSummary();
-        importSummary.setDataValueCount( null );
 
         if ( enrollment == null || enrollment.getEnrollment() == null )
         {

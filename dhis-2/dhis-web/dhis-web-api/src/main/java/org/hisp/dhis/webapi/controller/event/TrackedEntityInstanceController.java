@@ -307,7 +307,6 @@ public class TrackedEntityInstanceController
             else
             {
                 importSummary = new ImportSummary( ImportStatus.SUCCESS, "Empty list of tracked entity instances given." );
-                importSummary.setDataValueCount( null );
                 importSummary.setImportCount( null );
             }
 
@@ -345,7 +344,6 @@ public class TrackedEntityInstanceController
             else
             {
                 importSummary = new ImportSummary( ImportStatus.SUCCESS, "Empty list of tracked entity instances given." );
-                importSummary.setDataValueCount( null );
                 importSummary.setImportCount( null );
             }
 

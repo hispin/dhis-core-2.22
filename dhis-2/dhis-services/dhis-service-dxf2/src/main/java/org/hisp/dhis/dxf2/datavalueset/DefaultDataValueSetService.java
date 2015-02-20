@@ -884,7 +884,7 @@ public class DefaultDataValueSetService
 
         int ignores = totalCount - importCount - updateCount;
 
-        summary.setDataValueCount( new ImportCount( importCount, updateCount, ignores, 0 ) );
+        summary.setImportCount( new ImportCount( importCount, updateCount, ignores, 0 ) );
         summary.setStatus( ImportStatus.SUCCESS );
         summary.setDescription( "Import process completed successfully" );
 
