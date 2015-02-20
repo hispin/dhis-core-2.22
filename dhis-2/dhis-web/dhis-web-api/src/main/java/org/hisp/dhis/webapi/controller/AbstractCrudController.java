@@ -28,19 +28,10 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.base.Enums;
+import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import org.hisp.dhis.acl.AclService;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -87,10 +78,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.base.Enums;
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -146,106 +144,23 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
         List<String> filters = Lists.newArrayList( contextService.getParameterValues( "filter" ) );
-
         List<Order> orders = orderOptions.getOrders( getSchema() );
 
         WebOptions options = new WebOptions( rpParameters );
         WebMetaData metaData = new WebMetaData();
-
-        Schema schema = getSchema();
 
         if ( fields.isEmpty() )
         {
             fields.add( ":identifiable" );
         }
 
-        boolean hasPaging = options.hasPaging();
-
-        List<T> entities;
-
-        if ( !orders.isEmpty() )
-        {
-            if ( options.hasPaging() )
-            {
-                int count = manager.getCount( getEntityClass() );
-                Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
-                metaData.setPager( pager );
-                entities = manager.getBetween( getEntityClass(), pager.getOffset(), pager.getPageSize(), orders );
-                hasPaging = false;
-            }
-            else
-            {
-                entities = (List<T>) manager.getAll( getEntityClass(), orders );
-                hasPaging = false;
-            }
-        }
-        else if ( filters.isEmpty() )
-        {
-            entities = getEntityList( metaData, options, filters );
-            hasPaging = false;
-        }
-        else
-        {
-            Iterator<String> iterator = filters.iterator();
-            String name = null;
-
-            // Use database query for name filter
-
-            if ( schema.haveProperty( "name" ) && schema.getProperty( "name" ).isPersisted() )
-            {
-                while ( iterator.hasNext() )
-                {
-                    String filter = iterator.next();
-
-                    if ( filter.startsWith( "name:like:" ) )
-                    {
-                        name = filter.substring( "name:like:".length() );
-                        iterator.remove();
-                        break;
-                    }
-                }
-            }
-
-            if ( name != null )
-            {
-                if ( options.hasPaging() )
-                {
-                    int count = manager.getCountLikeName( getEntityClass(), name );
-
-                    Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
-                    metaData.setPager( pager );
-
-                    entities = Lists.newArrayList( manager.getBetweenLikeName( getEntityClass(), name, pager.getOffset(), pager.getPageSize() ) );
-                    hasPaging = false;
-                }
-                else
-                {
-                    entities = Lists.newArrayList( manager.getLikeName( getEntityClass(), name ) );
-                }
-            }
-            else
-            {
-                // Get full list when using filters other than name / objects without persisted name
-
-                if ( !filters.isEmpty() )
-                {
-                    if ( options.hasPaging() )
-                    {
-                        hasPaging = true;
-                        options.getOptions().put( "paging", "false" );
-                    }
-                }
-
-                entities = getEntityList( metaData, options, filters );
-            }
-        }
-
+        List<T> entities = getEntityList( metaData, options, filters );
         Pager pager = metaData.getPager();
 
         entities = objectFilterService.filter( entities, filters );
         translate( entities, translateOptions );
 
-        if ( hasPaging )
+        if ( options.hasPaging() )
         {
             pager = new Pager( options.getPage(), entities.size(), options.getPageSize() );
             entities = PagerUtils.pageCollection( entities, pager );
@@ -835,18 +750,18 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         {
             entityList = Lists.newArrayList( manager.filter( getEntityClass(), options.getOptions().get( "query" ) ) );
         }
-        else if ( options.hasPaging() )
+        else if ( options.hasPaging() && filters.isEmpty() )
         {
             int count = manager.getCount( getEntityClass() );
 
             Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
             metaData.setPager( pager );
 
-            entityList = Lists.newArrayList( manager.getBetweenSorted( getEntityClass(), pager.getOffset(), pager.getPageSize() ) );
+            entityList = objectFilterService.query( getEntityClass(), filters, pager.getOffset(), pager.getPageSize() );
         }
         else
         {
-            entityList = Lists.newArrayList( manager.getAllSorted( getEntityClass() ) );
+            entityList = objectFilterService.query( getEntityClass(), filters, 0, Integer.MAX_VALUE );
         }
 
         return entityList;
