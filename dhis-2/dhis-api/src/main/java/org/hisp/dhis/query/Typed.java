@@ -48,14 +48,19 @@ public class Typed
 
     public boolean isValid( Klass klass )
     {
-        if ( klasses.length == 0 || klass == null || klass.getKlass() == null )
+        return klass == null || isValid( klass.getKlass() );
+    }
+
+    public boolean isValid( Class<?> klass )
+    {
+        if ( klasses.length == 0 || klass == null )
         {
             return true;
         }
 
         for ( Class<?> k : klasses )
         {
-            if ( k != null && k.isAssignableFrom( klass.getKlass() ) )
+            if ( k != null && k.isAssignableFrom( klass ) )
             {
                 return true;
             }
