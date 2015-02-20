@@ -32,6 +32,7 @@ import java.util.List;
 
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.ValidationRuleSchemaDescriptor;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
@@ -59,7 +60,7 @@ public class ValidationRuleController
     private ValidationRuleService validationRuleService;
     
     @Override
-    protected List<ValidationRule> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<ValidationRule> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         if ( options.contains( "dataSet" ) )
         {            
@@ -73,6 +74,6 @@ public class ValidationRuleController
             return Lists.newArrayList( validationRuleService.getValidationRulesByDataElements( ds.getDataElements() ) );
         }
         
-        return super.getEntityList( metaData, options, filters );
+        return super.getEntityList( metaData, options, filters, orders );
     }
 }

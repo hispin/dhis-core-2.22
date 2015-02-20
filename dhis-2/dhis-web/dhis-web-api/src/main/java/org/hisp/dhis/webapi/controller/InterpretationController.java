@@ -43,6 +43,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.schema.descriptors.InterpretationSchemaDescriptor;
@@ -96,7 +97,7 @@ public class InterpretationController
     private CurrentUserService currentUserService;
 
     @Override
-    protected List<Interpretation> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<Interpretation> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<Interpretation> entityList;
 

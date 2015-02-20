@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.Pager;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.TranslationSchemaDescriptor;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -47,7 +48,7 @@ import java.util.List;
 public class TranslationController extends AbstractCrudController<Translation>
 {
     @Override
-    protected List<Translation> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<Translation> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<Translation> entityList;
 

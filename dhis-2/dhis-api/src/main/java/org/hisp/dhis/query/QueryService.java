@@ -28,6 +28,8 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
@@ -36,4 +38,6 @@ public interface QueryService
     Result query( Query query );
 
     Result query( Query query, ResultTransformer transformer );
+
+    Query getQueryFromUrl( Class<?> klass, List<String> filters, List<Order> orders );
 }

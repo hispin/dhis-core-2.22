@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller.user;
 
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.UserRoleSchemaDescriptor;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserAuthorityGroup;
@@ -59,9 +60,9 @@ public class UserRoleController
     private UserService userService;
 
     @Override
-    protected List<UserAuthorityGroup> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<UserAuthorityGroup> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
-        List<UserAuthorityGroup> entityList = super.getEntityList( metaData, options, filters );
+        List<UserAuthorityGroup> entityList = super.getEntityList( metaData, options, filters, orders );
 
         if ( options.getOptions().containsKey( "canIssue" ) && Boolean.parseBoolean( options.getOptions().get( "canIssue" ) ) )
         {

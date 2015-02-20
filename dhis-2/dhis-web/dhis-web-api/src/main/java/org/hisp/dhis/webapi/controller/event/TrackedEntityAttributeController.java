@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.TrackedEntityAttributeSchemaDescriptor;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -60,7 +61,7 @@ public class TrackedEntityAttributeController
     private ProgramService programService;
 
     @Override
-    protected List<TrackedEntityAttribute> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<TrackedEntityAttribute> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<TrackedEntityAttribute> entityList = new ArrayList<>();
 

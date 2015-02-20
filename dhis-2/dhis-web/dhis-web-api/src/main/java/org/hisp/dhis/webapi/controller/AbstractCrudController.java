@@ -58,6 +58,8 @@ import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.node.types.SimpleNode;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.Query;
+import org.hisp.dhis.query.QueryService;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
@@ -132,6 +134,9 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     @Autowired
     protected I18nService i18nService;
 
+    @Autowired
+    protected QueryService queryService;
+
     //--------------------------------------------------------------------------
     // GET
     //--------------------------------------------------------------------------
@@ -154,7 +159,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             fields.add( ":identifiable" );
         }
 
-        List<T> entities = getEntityList( metaData, options, filters );
+        List<T> entities = getEntityList( metaData, options, filters, orders );
         Pager pager = metaData.getPager();
 
         entities = objectFilterService.filter( entities, filters );
@@ -742,9 +747,13 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     // Helpers
     //--------------------------------------------------------------------------
 
-    protected List<T> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    @SuppressWarnings( "unchecked" )
+    protected List<T> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<T> entityList;
+
+        Query query = queryService.getQueryFromUrl( getEntityClass(), filters, orders );
+        query.setDefaultOrder();
 
         if ( options.getOptions().containsKey( "query" ) )
         {
@@ -757,11 +766,13 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
             metaData.setPager( pager );
 
-            entityList = objectFilterService.query( getEntityClass(), filters, pager.getOffset(), pager.getPageSize() );
+            query.setFirstResult( pager.getOffset() );
+            query.setMaxResults( pager.getPageSize() );
+            entityList = (List<T>) queryService.query( query ).getItems();
         }
         else
         {
-            entityList = objectFilterService.query( getEntityClass(), filters, 0, Integer.MAX_VALUE );
+            entityList = (List<T>) queryService.query( query ).getItems();
         }
 
         return entityList;

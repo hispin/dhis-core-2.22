@@ -37,6 +37,7 @@ import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.organisationunit.comparator.OrganisationUnitByLevelComparator;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.OrganisationUnitSchemaDescriptor;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -80,7 +81,7 @@ public class OrganisationUnitController
     private CurrentUserService currentUserService;
 
     @Override
-    protected List<OrganisationUnit> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<OrganisationUnit> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<OrganisationUnit> entityList;
 

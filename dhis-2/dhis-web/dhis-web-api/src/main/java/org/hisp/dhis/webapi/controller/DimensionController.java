@@ -48,6 +48,7 @@ import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
@@ -84,7 +85,7 @@ public class DimensionController
     // -------------------------------------------------------------------------
 
     @Override
-    protected List<DimensionalObject> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<DimensionalObject> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         return dimensionService.getAllDimensions();
     }
