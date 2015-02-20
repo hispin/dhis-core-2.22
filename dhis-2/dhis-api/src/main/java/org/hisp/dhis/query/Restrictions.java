@@ -70,11 +70,6 @@ public final class Restrictions
 
     public static Restriction like( String path, Object value )
     {
-        if ( !String.class.isInstance( value ) )
-        {
-            throw new RestrictionException( "Invalid type for LIKE operator, only String is allowed." );
-        }
-
         return new Restriction( path, Operator.LIKE, value );
     }
 
