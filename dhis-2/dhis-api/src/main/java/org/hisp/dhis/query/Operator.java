@@ -107,4 +107,9 @@ public enum Operator
     {
         return typed.isValid( klass );
     }
+
+    public boolean isValid( Class<?> klass )
+    {
+        return typed.isValid( klass );
+    }
 }
