@@ -1268,9 +1268,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
 .service('EventUtils', function(DateUtils, CalendarService, OptionSetService, OrgUnitService, $filter, orderByFilter){
     return {
-        createDummyEvent: function(events, programStage, orgUnit, enrollment){
+        createDummyEvent: function(eventsPerStage, programStage, orgUnit, enrollment){
             var today = DateUtils.getToday();    
-            var dueDate = this.getEventDueDate(events, programStage, enrollment);
+            var dueDate = this.getEventDueDate(eventsPerStage, programStage, enrollment);
             var dummyEvent = {programStage: programStage.id, 
                               orgUnit: orgUnit.id,
                               orgUnitName: orgUnit.name,
@@ -1317,7 +1317,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }               
             }            
         },
-        getEventDueDate: function(events, programStage, enrollment){            
+        getEventDueDate: function(eventsPerStage, programStage, enrollment){            
             var referenceDate = enrollment.dateOfIncident ? enrollment.dateOfIncident : enrollment.dateOfEnrollment,
                 offset = programStage.minDaysFromStart,
                 calendarSetting = CalendarService.getSetting();
@@ -1327,12 +1327,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             
             if(programStage.repeatable){
-                var eventsPerStage = [];
+                /*var eventsPerStage = [];
                 angular.forEach(events, function(event){
                     if(event.programStage === programStage.id){
                         eventsPerStage.push(event);
                     }
-                });
+                });*/
 
                 if(eventsPerStage.length > 0){
                     eventsPerStage = orderByFilter(eventsPerStage, '-eventDate');

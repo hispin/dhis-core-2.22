@@ -310,7 +310,7 @@ trackerCapture.controller('EnrollmentController',
                             program: program.id,
                             programStage: stage.id,
                             orgUnit: orgUnit.id,                        
-                            dueDate: DateUtils.formatFromUserToApi( EventUtils.getEventDueDate(dhis2Events.events, stage, enrollment) ),
+                            dueDate: DateUtils.formatFromUserToApi( EventUtils.getEventDueDate(null, stage, enrollment) ),
                             status: 'SCHEDULE'
                         };
                     
