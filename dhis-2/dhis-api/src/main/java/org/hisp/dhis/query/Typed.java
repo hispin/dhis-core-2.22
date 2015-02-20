@@ -28,83 +28,49 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Iterators;
 import org.hisp.dhis.schema.Klass;
 
-import java.util.Date;
-
 /**
+ * Simple class for checking if an object is one of several allowed classes, mainly used in Operator where
+ * a parameter can be type constrained.
+ *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public enum Operator
+public class Typed
 {
-    EQ( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    NE( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    GT( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    LT( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    GE( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    LE( Typed.from( String.class, Number.class, Date.class ), 1 ),
-    BETWEEN( Typed.from( String.class, Number.class, Date.class ), 2 ),
-    LIKE( Typed.from( String.class ), 1 ),
-    IN( 1, Integer.MAX_VALUE );
+    private final Class<?>[] klasses;
 
-    Integer min;
-
-    Integer max;
-
-    // default is to allow all types
-    Typed typed = Typed.from();
-
-    Operator()
+    public Typed( Class<?>[] klasses )
     {
-        this.min = null;
-        this.max = null;
-    }
-
-    Operator( Typed typed )
-    {
-        this.typed = typed;
-        this.min = null;
-        this.max = null;
-    }
-
-    Operator( int value )
-    {
-        this.min = value;
-        this.max = value;
-    }
-
-    Operator( Typed typed, int value )
-    {
-        this.typed = typed;
-        this.min = value;
-        this.max = value;
-    }
-
-    Operator( int min, int max )
-    {
-        this.min = min;
-        this.max = max;
-    }
-
-    Operator( Typed typed, int min, int max )
-    {
-        this.typed = typed;
-        this.min = min;
-        this.max = max;
-    }
-
-    public Integer getMin()
-    {
-        return min;
-    }
-
-    public Integer getMax()
-    {
-        return max;
+        this.klasses = klasses;
     }
 
     public boolean isValid( Klass klass )
     {
-        return typed.isValid( klass );
+        if ( klasses.length == 0 || klass == null || klass.getKlass() == null )
+        {
+            return true;
+        }
+
+        for ( Class<?> k : klasses )
+        {
+            if ( k != null && k.isAssignableFrom( klass.getKlass() ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static Typed from( Class... klasses )
+    {
+        return new Typed( klasses );
+    }
+
+    public static Typed from( Iterable<? extends Class> iterable )
+    {
+        return new Typed( Iterators.toArray( iterable.iterator(), Class.class ) );
     }
 }

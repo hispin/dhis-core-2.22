@@ -44,7 +44,7 @@ import java.lang.reflect.Method;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @JacksonXmlRootElement( localName = "property", namespace = DxfNamespaces.DXF_2_0 )
-public class Property implements Ordered
+public class Property implements Ordered, Klass
 {
     /**
      * Class for property.
