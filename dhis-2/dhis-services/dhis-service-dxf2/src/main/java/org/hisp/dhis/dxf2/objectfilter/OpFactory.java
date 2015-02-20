@@ -56,14 +56,18 @@ public class OpFactory
     static
     {
         register( "eq", EqOp.class );
+        register( "ne", NeqOp.class );
         register( "neq", NeqOp.class );
         register( "like", LikeOp.class );
+        register( "ilike", LikeOp.class );
         register( "nlike", NLikeOp.class );
         register( "startsWith", StartsWithOp.class );
         register( "endsWith", EndsWithOp.class );
         register( "gt", GtOp.class );
+        register( "ge", GteOp.class );
         register( "gte", GteOp.class );
         register( "lt", LtOp.class );
+        register( "le", LteOp.class );
         register( "lte", LteOp.class );
         register( "null", NullOp.class );
         register( "nnull", NnullOp.class );

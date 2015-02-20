@@ -150,6 +150,10 @@ public class DefaultObjectFilterService implements ObjectFilterService
             {
                 return Restrictions.eq( split[0], split[2] );
             }
+            case "ne":
+            {
+                return Restrictions.ne( split[0], split[2] );
+            }
             case "neq":
             {
                 return Restrictions.ne( split[0], split[2] );
@@ -166,13 +170,25 @@ public class DefaultObjectFilterService implements ObjectFilterService
             {
                 return Restrictions.ge( split[0], split[2] );
             }
+            case "ge":
+            {
+                return Restrictions.ge( split[0], split[2] );
+            }
             case "lte":
+            {
+                return Restrictions.le( split[0], split[2] );
+            }
+            case "le":
             {
                 return Restrictions.le( split[0], split[2] );
             }
             case "like":
             {
                 return Restrictions.like( split[0], "%" + split[2] + "%" );
+            }
+            case "ilike":
+            {
+                return Restrictions.ilike( split[0], "%" + split[2] + "%" );
             }
         }
 
