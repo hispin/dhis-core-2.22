@@ -60,8 +60,7 @@ trackerCapture.controller('ProfileController',
     });
     
     //listen for enrollment editing
-    $scope.$on('enrollmentEditing', function(event, args) { 
-        console.log('the editing:  ', args.enrollmentEditing);
+    $scope.$on('enrollmentEditing', function(event, args){
         $scope.enrollmentEditing = args.enrollmentEditing;
     });
     
