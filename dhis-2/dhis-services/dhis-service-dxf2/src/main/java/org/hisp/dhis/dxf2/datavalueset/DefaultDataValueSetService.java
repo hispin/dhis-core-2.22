@@ -636,7 +636,7 @@ public class DefaultDataValueSetService
 
         if ( importOptions.isPreheatCache() )
         {
-            notifier.notify( id, "Loading organisation units" ).addTaskSummary( id, summary );            
+            notifier.notify( id, "Loading organisation units" );
             orgUnitMap.putAll( getOrgUnitMap( orgUnitIdScheme ) );
         }
         
