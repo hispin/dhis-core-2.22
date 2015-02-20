@@ -28,6 +28,7 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -112,6 +113,16 @@ public class QueryServiceTest
     }
 
     @Test
+    public void getAllQueryUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.<String>newArrayList(), Lists.<Order>newArrayList() );
+        Result result = queryService.query( query );
+
+        assertEquals( 6, result.size() );
+    }
+
+    @Test
     public void getMinMaxQuery()
     {
         createDataElements();
@@ -141,11 +152,39 @@ public class QueryServiceTest
     }
 
     @Test
+    public void getEqQueryUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "id:eq:deabcdefghA" ), Lists.<Order>newArrayList() );
+        Result result = queryService.query( query );
+
+        assertEquals( 1, result.size() );
+        assertEquals( "deabcdefghA", result.getItems().get( 0 ).getUid() );
+    }
+
+    @Test
     public void getNeQuery()
     {
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.ne( "id", "deabcdefghA" ) );
+        Result result = queryService.query( query );
+
+        assertEquals( 5, result.size() );
+
+        assertFalse( collectionContainsUid( result.getItems(), "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
+    }
+
+    @Test
+    public void getNeQueryUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "id:ne:deabcdefghA" ), Lists.<Order>newArrayList() );
         Result result = queryService.query( query );
 
         assertEquals( 5, result.size() );
@@ -171,6 +210,17 @@ public class QueryServiceTest
     }
 
     @Test
+    public void getLikeQueryUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "name:like:F" ), Lists.<Order>newArrayList() );
+        Result result = queryService.query( query );
+
+        assertEquals( 1, result.size() );
+        assertEquals( "deabcdefghF", result.getItems().get( 0 ).getUid() );
+    }
+
+    @Test
     public void getGtQuery()
     {
         createDataElements();
@@ -186,11 +236,38 @@ public class QueryServiceTest
     }
 
     @Test
+    public void getGtQueryUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "created:gt:2003" ), Lists.<Order>newArrayList() );
+        Result result = queryService.query( query );
+
+        assertEquals( 3, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
+    }
+
+    @Test
     public void getLtQuery()
     {
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.lt( "created", Year.parseYear( "2003" ).getStart() ) );
+        Result result = queryService.query( query );
+
+        assertEquals( 2, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+    }
+
+    @Test
+    public void getLtQueryUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "created:lt:2003" ), Lists.<Order>newArrayList() );
         Result result = queryService.query( query );
 
         assertEquals( 2, result.size() );
@@ -216,11 +293,40 @@ public class QueryServiceTest
     }
 
     @Test
+    public void getGeQueryUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "created:ge:2003" ), Lists.<Order>newArrayList() );
+        Result result = queryService.query( query );
+
+        assertEquals( 4, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
+    }
+
+    @Test
     public void getLeQuery()
     {
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.le( "created", Year.parseYear( "2003" ).getStart() ) );
+        Result result = queryService.query( query );
+
+        assertEquals( 3, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+    }
+
+    @Test
+    public void getLeQueryUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "created:le:2003" ), Lists.<Order>newArrayList() );
         Result result = queryService.query( query );
 
         assertEquals( 3, result.size() );
