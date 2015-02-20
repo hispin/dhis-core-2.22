@@ -49,7 +49,7 @@ import java.util.Map;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @JacksonXmlRootElement( localName = "schema", namespace = DxfNamespaces.DXF_2_0 )
-public class Schema implements Ordered
+public class Schema implements Ordered, Klass
 {
     /**
      * Class that is described in this schema.
