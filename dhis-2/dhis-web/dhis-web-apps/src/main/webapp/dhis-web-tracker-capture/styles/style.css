@@ -107,6 +107,9 @@ textarea {
     padding-top: 5px;
     text-align: center;
     border: 2px dotted;
+    margin: 2px;
+    padding: 5px;
+    border-radius: 4px;
 }
 
 .stage-container:hover {
@@ -117,10 +120,11 @@ textarea {
 .event-container {
     cursor: pointer;
     opacity: 1.0;
-    //white-space: normal;
+    text-align: center;
+    margin: 2px;
     padding: 5px;
     border: 2px dotted;
-    border-radius: 4px
+    border-radius: 4px;    
 }
 
 .event-container:hover {
