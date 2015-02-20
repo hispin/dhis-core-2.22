@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller.dataelement;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.CategoryOptionComboSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -54,7 +55,7 @@ public class CategoryOptionComboController
     // name (clashes with getAllOrderedName)
     // FIXME add paging also for this?
     @Override
-    protected List<DataElementCategoryOptionCombo> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<DataElementCategoryOptionCombo> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<DataElementCategoryOptionCombo> entityList;
 

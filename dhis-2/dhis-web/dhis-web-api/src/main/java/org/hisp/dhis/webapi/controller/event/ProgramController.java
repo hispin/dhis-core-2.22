@@ -35,6 +35,7 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.ProgramSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -78,7 +79,7 @@ public class ProgramController
     }
 
     @Override
-    protected List<Program> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<Program> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         String type = options.getOptions().get( "type" );
         String orgUnit = options.getOptions().get( "orgUnit" );

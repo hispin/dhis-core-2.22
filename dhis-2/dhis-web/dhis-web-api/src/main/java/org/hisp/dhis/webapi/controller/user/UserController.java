@@ -48,6 +48,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.UserSchemaDescriptor;
 import org.hisp.dhis.security.RestoreOptions;
 import org.hisp.dhis.security.SecurityService;
@@ -113,7 +114,7 @@ public class UserController
     // -------------------------------------------------------------------------
 
     @Override
-    protected List<User> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<User> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         UserQueryParams params = new UserQueryParams();
         params.setQuery( options.get( "query" ) );

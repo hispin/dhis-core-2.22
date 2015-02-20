@@ -33,6 +33,7 @@ import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.ProgramStageSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -61,7 +62,7 @@ public class ProgramStageController
     }
 
     @Override
-    protected List<ProgramStage> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<ProgramStage> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<ProgramStage> entityList = new ArrayList<>();
 
