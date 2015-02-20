@@ -25,7 +25,7 @@
     <name>HISP</name>
     <url>http://www.dhis2.org</url>
   </organization>
-
+  
   <modules>
     <module>dhis-api</module>
     <module>dhis-services</module>
@@ -187,9 +187,10 @@
         </plugin>
 
         <plugin>
+          <!-- Run with mvn clean compile site -->
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
-          <version>2.3.3</version>
+          <version>3.0.0</version>
           <configuration>
             <findbugsXmlOutput>true</findbugsXmlOutput>
             <findbugsXmlWithMessages>true</findbugsXmlWithMessages>

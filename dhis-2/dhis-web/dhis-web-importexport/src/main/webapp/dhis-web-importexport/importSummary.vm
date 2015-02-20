@@ -6,7 +6,7 @@
 #end
 
 <h4>$i18n.getString( "import_count" )</h4>
-#if( $summary.dataValueCount )
+#if( $summary.importCount )
 <table>
 <col width="120">
 <col width="260">
@@ -16,15 +16,15 @@
 </tr>
 <tr>
 	<td>$i18n.getString( "imported" )</td>
-	<td>${summary.dataValueCount.imported}</td>
+	<td>${summary.importCount.imported}</td>
 </tr>
 <tr>
 	<td>$i18n.getString( "updated" )</td>
-	<td>${summary.dataValueCount.updated}</td>
+	<td>${summary.importCount.updated}</td>
 </tr>
 <tr>
 	<td>$i18n.getString( "ignored" )</td>
-	<td>${summary.dataValueCount.ignored}</td>
+	<td>${summary.importCount.ignored}</td>
 </tr>
 </table>
 #else

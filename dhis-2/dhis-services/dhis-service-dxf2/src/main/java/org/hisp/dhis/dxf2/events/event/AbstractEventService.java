@@ -745,7 +745,7 @@ public abstract class AbstractEventService
         if ( status != null )
         {
             importSummary.getConflicts().add( new ImportConflict( dataElement.getUid(), status ) );
-            importSummary.getDataValueCount().incrementIgnored();
+            importSummary.getImportCount().incrementIgnored();
             return false;
         }
 
@@ -794,7 +794,7 @@ public abstract class AbstractEventService
 
                 if ( importSummary != null )
                 {
-                    importSummary.getDataValueCount().incrementImported();
+                    importSummary.getImportCount().incrementImported();
                 }
             }
             else
@@ -808,7 +808,7 @@ public abstract class AbstractEventService
 
                 if ( importSummary != null )
                 {
-                    importSummary.getDataValueCount().incrementUpdated();
+                    importSummary.getImportCount().incrementUpdated();
                 }
             }
         }
@@ -818,7 +818,7 @@ public abstract class AbstractEventService
 
             if ( importSummary != null )
             {
-                importSummary.getDataValueCount().incrementDeleted();
+                importSummary.getImportCount().incrementDeleted();
             }
         }
     }
@@ -942,7 +942,7 @@ public abstract class AbstractEventService
             {
                 importSummary.getConflicts().add(
                     new ImportConflict( "dataElement", dataValue.getDataElement() + " is not a valid data element" ) );
-                importSummary.getDataValueCount().incrementIgnored();
+                importSummary.getImportCount().incrementIgnored();
             }
         }
 
