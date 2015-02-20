@@ -221,6 +221,7 @@ public class ImportOptions
     public String toString()
     {
         return "[Id scheme: " + idScheme + ", data element id scheme: " + dataElementIdScheme + ", org unit id scheme: " +
-            orgUnitIdScheme + ", dry run: " + dryRun + ", async: " + async + ", strategy: " + importStrategy + ", skip check: " + skipExistingCheck + "]";
+            orgUnitIdScheme + ", dry run: " + dryRun + ", preheat cache: " + preheatCache + ", async: " + 
+            async + ", strategy: " + importStrategy + ", skip check: " + skipExistingCheck + "]";
     }
 }
