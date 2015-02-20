@@ -203,6 +203,13 @@ public class DefaultDataApprovalService
             DataApproval d = dataApprovalStore.getDataApproval( da.getDataApprovalLevel(), da.getDataSet(),
                     da.getPeriod(), da.getOrganisationUnit(), da.getAttributeOptionCombo() );
 
+            if ( d == null )
+            {
+                log.warn( "unapproveData: approval not found at " + da );
+
+                throw new DataMayNotBeAcceptedException();
+            }
+
             dataApprovalStore.deleteDataApproval( d );
         }
         
@@ -255,6 +262,13 @@ public class DefaultDataApprovalService
             DataApproval d = dataApprovalStore.getDataApproval( da.getDataApprovalLevel(), da.getDataSet(),
                     da.getPeriod(), da.getOrganisationUnit(), da.getAttributeOptionCombo() );
 
+            if ( d == null )
+            {
+                log.warn( "acceptData: approval not found at " + da );
+
+                throw new DataMayNotBeAcceptedException();
+            }
+
             d.setAccepted( true );
 
             dataApprovalStore.updateDataApproval( d );
@@ -306,6 +320,13 @@ public class DefaultDataApprovalService
 
             DataApproval d = dataApprovalStore.getDataApproval( da.getDataApprovalLevel(), da.getDataSet(),
                     da.getPeriod(), da.getOrganisationUnit(), da.getAttributeOptionCombo() );
+
+            if ( d == null )
+            {
+                log.warn( "unacceptData: approval not found at " + da );
+
+                throw new DataMayNotBeAcceptedException();
+            }
 
             d.setAccepted( false );
 
