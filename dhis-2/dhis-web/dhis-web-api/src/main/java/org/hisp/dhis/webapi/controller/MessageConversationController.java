@@ -41,6 +41,7 @@ import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.node.types.SimpleNode;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.MessageConversationSchemaDescriptor;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -128,7 +129,7 @@ public class MessageConversationController
     }
 
     @Override
-    protected List<org.hisp.dhis.message.MessageConversation> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<org.hisp.dhis.message.MessageConversation> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<org.hisp.dhis.message.MessageConversation> entityList;
 

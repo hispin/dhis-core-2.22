@@ -38,6 +38,7 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementOperand;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.DataElementOperandSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -59,7 +60,7 @@ public class DataElementOperandController extends AbstractCrudController<DataEle
     private DataElementCategoryService dataElementCategoryService;
 
     @Override
-    protected List<DataElementOperand> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<DataElementOperand> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<DataElementOperand> dataElementOperands;
 

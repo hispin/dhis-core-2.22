@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dashboard.DashboardService;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.DashboardItemSchemaDescriptor;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -60,7 +61,7 @@ public class DashboardItemController
     private DashboardService dashboardService;
     
     @Override
-    protected List<DashboardItem> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<DashboardItem> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<DashboardItem> entityList;
 

@@ -154,6 +154,30 @@ public class Query
         return this;
     }
 
+    public Query forceDefaultOrder()
+    {
+        orders.clear();
+        return setDefaultOrder();
+    }
+
+    public Query setDefaultOrder()
+    {
+        if ( !orders.isEmpty() )
+        {
+            return this;
+        }
+
+        if ( schema.haveProperty( "name" ) && schema.getProperty( "name" ).isPersisted() )
+        {
+            addOrder( Order.asc( schema.getProperty( "name" ) ) );
+        }
+        else
+        {
+            addOrder( Order.desc( schema.getProperty( "created" ) ) );
+        }
+
+        return this;
+    }
 
     @Override
     public String toString()

@@ -34,6 +34,7 @@ import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.mapping.MappingService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.MapViewSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -117,7 +118,7 @@ public class MapViewController
     //--------------------------------------------------------------------------
 
     @Override
-    protected List<MapView> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters )
+    protected List<MapView> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<MapView> entityList;
 

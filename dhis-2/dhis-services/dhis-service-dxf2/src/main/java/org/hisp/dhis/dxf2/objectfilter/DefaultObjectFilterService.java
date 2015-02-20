@@ -29,24 +29,17 @@ package org.hisp.dhis.dxf2.objectfilter;
  */
 
 import com.google.common.collect.Lists;
-import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.dxf2.objectfilter.ops.Op;
 import org.hisp.dhis.dxf2.objectfilter.ops.OpStatus;
 import org.hisp.dhis.dxf2.parser.ParserService;
-import org.hisp.dhis.query.Order;
-import org.hisp.dhis.query.Query;
 import org.hisp.dhis.query.QueryService;
-import org.hisp.dhis.query.Restriction;
-import org.hisp.dhis.query.Restrictions;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.system.util.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -63,137 +56,6 @@ public class DefaultObjectFilterService implements ObjectFilterService
 
     @Autowired
     private QueryService queryService;
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> List<T> query( Class<? extends IdentifiableObject> klass, List<String> filters, int first, int max )
-    {
-        Schema schema = schemaService.getDynamicSchema( klass );
-        Query query = Query.from( schema );
-        query.setFirstResult( first ).setMaxResults( max );
-        query.add( getRestrictions( schema, filters ) );
-
-        if ( schema.haveProperty( "name" ) && schema.getProperty( "name" ).isPersisted() )
-        {
-            query.addOrder( Order.asc( schema.getProperty( "name" ) ) );
-        }
-        else
-        {
-            query.addOrder( Order.desc( schema.getProperty( "created" ) ) );
-        }
-
-        return (List<T>) queryService.query( query ).getItems();
-    }
-
-    private List<Restriction> getRestrictions( Schema schema, List<String> filters )
-    {
-        List<Restriction> restrictions = new ArrayList<>();
-        List<String> candidates = getRestrictionCandidates( schema, filters );
-
-        if ( candidates.isEmpty() )
-        {
-            return restrictions;
-        }
-
-        for ( String candidate : candidates )
-        {
-            restrictions.add( getRestriction( schema, candidate ) );
-        }
-
-        return restrictions;
-    }
-
-    private List<String> getRestrictionCandidates( Schema schema, List<String> filters )
-    {
-        List<String> candidates = new ArrayList<>();
-
-        Iterator<String> iterator = filters.iterator();
-
-        while ( iterator.hasNext() )
-        {
-            String candidate = iterator.next();
-
-            if ( !candidate.contains( "." ) && getRestriction( schema, candidate ) != null )
-            {
-                candidates.add( candidate );
-                iterator.remove();
-            }
-        }
-
-        return candidates;
-    }
-
-    private Restriction getRestriction( Schema schema, String filter )
-    {
-        if ( filter == null )
-        {
-            return null;
-        }
-
-        String[] split = filter.split( ":" );
-
-        if ( split.length != 3 )
-        {
-            return null;
-        }
-
-        Property property = schema.getProperty( split[0] );
-
-        if ( property == null || !property.isPersisted() || !property.isSimple() )
-        {
-            return null;
-        }
-
-        switch ( split[1] )
-        {
-            case "eq":
-            {
-                return Restrictions.eq( split[0], split[2] );
-            }
-            case "ne":
-            {
-                return Restrictions.ne( split[0], split[2] );
-            }
-            case "neq":
-            {
-                return Restrictions.ne( split[0], split[2] );
-            }
-            case "gt":
-            {
-                return Restrictions.gt( split[0], split[2] );
-            }
-            case "lt":
-            {
-                return Restrictions.lt( split[0], split[2] );
-            }
-            case "gte":
-            {
-                return Restrictions.ge( split[0], split[2] );
-            }
-            case "ge":
-            {
-                return Restrictions.ge( split[0], split[2] );
-            }
-            case "lte":
-            {
-                return Restrictions.le( split[0], split[2] );
-            }
-            case "le":
-            {
-                return Restrictions.le( split[0], split[2] );
-            }
-            case "like":
-            {
-                return Restrictions.like( split[0], "%" + split[2] + "%" );
-            }
-            case "ilike":
-            {
-                return Restrictions.ilike( split[0], "%" + split[2] + "%" );
-            }
-        }
-
-        return null;
-    }
 
     @Override
     public <T> List<T> filter( List<T> objects, List<String> filters )
