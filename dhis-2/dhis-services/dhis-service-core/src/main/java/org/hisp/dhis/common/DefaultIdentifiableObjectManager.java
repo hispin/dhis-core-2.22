@@ -28,17 +28,12 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.NameableObject.NameableProperty;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.query.Order;
-import org.hisp.dhis.query.Query;
 import org.hisp.dhis.query.QueryService;
-import org.hisp.dhis.query.Result;
-import org.hisp.dhis.query.ResultTransformer;
 import org.hisp.dhis.user.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -275,26 +270,6 @@ public class DefaultIdentifiableObjectManager
     }
 
     @Override
-    public <T extends IdentifiableObject> Collection<T> getAll( Class<T> clazz, Order order )
-    {
-        return getAll( clazz, Lists.newArrayList( order ) );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> Collection<T> getAll( Class<T> clazz, List<Order> order )
-    {
-        GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( clazz );
-
-        if ( store == null )
-        {
-            return new ArrayList<>();
-        }
-
-        return (Collection<T>) store.getAll( order );
-    }
-
-    @Override
     @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> Collection<T> getAllByName( Class<T> clazz, String name )
     {
@@ -495,26 +470,6 @@ public class DefaultIdentifiableObjectManager
         }
 
         return (List<T>) store.getAll( first, max );
-    }
-
-    @Override
-    public <T extends IdentifiableObject> List<T> getBetween( Class<T> clazz, int first, int max, Order order )
-    {
-        return getBetween( clazz, first, max, Lists.newArrayList( order ) );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> List<T> getBetween( Class<T> clazz, int first, int max, List<Order> order )
-    {
-        GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( clazz );
-
-        if ( store == null )
-        {
-            return new ArrayList<>();
-        }
-
-        return (List<T>) store.getAll( first, max, order );
     }
 
     @Override
@@ -860,18 +815,6 @@ public class DefaultIdentifiableObjectManager
     public void refresh( Object object )
     {
         sessionFactory.getCurrentSession().refresh( object );
-    }
-
-    @Override
-    public Result query( Query query )
-    {
-        return queryService.query( query );
-    }
-
-    @Override
-    public Result query( Query query, ResultTransformer transformer )
-    {
-        return queryService.query( query, transformer );
     }
 
     @Override
