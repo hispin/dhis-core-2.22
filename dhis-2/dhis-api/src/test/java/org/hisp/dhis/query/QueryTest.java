@@ -62,6 +62,11 @@ public class QueryTest
         schema.addProperty( createProperty( Date.class, "created", true, true ) );
         schema.addProperty( createProperty( Date.class, "lastUpdated", true, true ) );
 
+        schema.addProperty( createProperty( Integer.class, "int", true, true ) );
+        schema.addProperty( createProperty( Long.class, "long", true, true ) );
+        schema.addProperty( createProperty( Float.class, "float", true, true ) );
+        schema.addProperty( createProperty( Double.class, "double", true, true ) );
+
         return schema;
     }
 
@@ -104,6 +109,11 @@ public class QueryTest
         assertTrue( Operator.LE.isValid( schema.getProperty( "id" ) ) );
         assertTrue( Operator.BETWEEN.isValid( schema.getProperty( "id" ) ) );
         assertTrue( Operator.LIKE.isValid( schema.getProperty( "id" ) ) );
+
+        assertTrue( Operator.EQ.isValid( schema.getProperty( "int" ) ) );
+        assertTrue( Operator.EQ.isValid( schema.getProperty( "long" ) ) );
+        assertTrue( Operator.EQ.isValid( schema.getProperty( "float" ) ) );
+        assertTrue( Operator.EQ.isValid( schema.getProperty( "double" ) ) );
 
         assertFalse( Operator.LIKE.isValid( schema.getProperty( "lastUpdated" ) ) );
     }
