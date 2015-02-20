@@ -129,7 +129,7 @@ trackerCapture.controller('DataEntryController',
 
         if(stage.repeatable){
             for(var j=0; j<$scope.eventsByStage[stage.id].length; j++){
-                if(!$scope.eventsByStage[stage.id][j].eventDate){
+                if(!$scope.eventsByStage[stage.id][j].eventDate && $scope.eventsByStage[stage.id][j].status !== 'SKIPPED'){
                     return false;
                 }
             }            
@@ -641,13 +641,10 @@ trackerCapture.controller('DataEntryController',
         return style;
     };
     
-    $scope.getColumnWidth = function(weight){
-        var col = 1;
-        if($scope.totalEvents > 0){
-            col = weight <=1 ? 1 : weight;
-            col = Math.round(col*12/$scope.totalEvents);
-        }        
-        return "col-sm-" + col; 
+    $scope.getColumnWidth = function(weight){        
+        var width = weight <= 1 ? 1 : weight;
+        width = (width/$scope.totalEvents)*100;
+        return "width: " + width + '%';
     };
     
     var sortEventsByStage = function(){
