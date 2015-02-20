@@ -180,7 +180,6 @@ public abstract class AbstractTrackedEntityInstanceService
     public ImportSummary addTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance )
     {
         ImportSummary importSummary = new ImportSummary();
-        importSummary.setDataValueCount( null );
 
         trackedEntityInstance.trimValuesToNull();
 
@@ -219,7 +218,6 @@ public abstract class AbstractTrackedEntityInstanceService
     public ImportSummary updateTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance )
     {
         ImportSummary importSummary = new ImportSummary();
-        importSummary.setDataValueCount( null );
 
         trackedEntityInstance.trimValuesToNull();
 

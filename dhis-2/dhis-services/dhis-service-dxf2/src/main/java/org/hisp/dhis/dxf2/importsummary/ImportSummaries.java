@@ -57,13 +57,6 @@ public class ImportSummaries
 
     public ImportSummaries addImportSummary( ImportSummary importSummary )
     {
-        if ( importSummary.getDataValueCount() != null )
-        {
-            imported += importSummary.getDataValueCount().getImported();
-            updated += importSummary.getDataValueCount().getUpdated();
-            ignored += importSummary.getDataValueCount().getIgnored();
-        }
-
         if ( importSummary.getImportCount() != null )
         {
             imported += importSummary.getImportCount().getImported();
