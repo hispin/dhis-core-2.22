@@ -32,6 +32,7 @@ import com.google.common.base.MoreObjects;
 import org.hisp.dhis.schema.Schema;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -89,9 +90,10 @@ public class Query
         return firstResult;
     }
 
-    public void setFirstResult( Integer firstResult )
+    public Query setFirstResult( Integer firstResult )
     {
         this.firstResult = firstResult;
+        return this;
     }
 
     public Integer getMaxResults()
@@ -99,9 +101,10 @@ public class Query
         return maxResults;
     }
 
-    public void setMaxResults( Integer maxResults )
+    public Query setMaxResults( Integer maxResults )
     {
         this.maxResults = maxResults;
+        return this;
     }
 
     // Builder
@@ -126,6 +129,12 @@ public class Query
         return this;
     }
 
+    public Query add( Collection<Restriction> restrictions )
+    {
+        this.restrictions.addAll( restrictions );
+        return this;
+    }
+
     public Query addOrder( Order... orders )
     {
         for ( Order order : orders )
@@ -139,7 +148,7 @@ public class Query
         return this;
     }
 
-    public Query addOrders( List<Order> orders )
+    public Query addOrders( Collection<Order> orders )
     {
         this.orders.addAll( orders );
         return this;

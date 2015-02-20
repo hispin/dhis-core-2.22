@@ -28,6 +28,8 @@ package org.hisp.dhis.dxf2.objectfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.IdentifiableObject;
+
 import java.util.List;
 
 /**
@@ -35,6 +37,17 @@ import java.util.List;
  */
 public interface ObjectFilterService
 {
+    /**
+     * Splits out candidates for DB query, and returns result.
+     * <p/>
+     * WARNING: filters list will be modified, filters that have been taken care of using Query will be removed.
+     *
+     * @param klass   Class to query
+     * @param filters Filter string
+     * @return Filtered object list
+     */
+    <T extends IdentifiableObject> List<T> query( Class<? extends IdentifiableObject> klass, List<String> filters, int first, int max );
+
     /**
      * Filter a list of objects based on un-parsed filter string.
      * In-memory filter
