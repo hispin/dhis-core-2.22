@@ -28,6 +28,8 @@ package org.hisp.dhis.de.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.system.util.TextUtils.SEP;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,7 +43,6 @@ import java.util.Set;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -61,8 +62,6 @@ import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
-
-import static org.hisp.dhis.system.util.TextUtils.SEP;
 
 /**
  * @author Lars Helge Overland
@@ -115,9 +114,6 @@ public class GetMetaDataAction
     {
         this.currentUserService = currentUserService;
     }
-
-    @Autowired
-    private ConfigurationService configurationService;
 
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;

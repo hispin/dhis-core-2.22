@@ -52,7 +52,6 @@ import com.opensymphony.xwork2.Action;
 public class CacheManifestAction
     implements Action
 {
-
     @Autowired
     private UserSettingService userSettingService;
 
@@ -138,10 +137,8 @@ public class CacheManifestAction
 
         if ( cacheManifest != null )
         {
-            try
+            try ( BufferedReader bufferedReader = new BufferedReader( new FileReader( cacheManifest ) ) )
             {
-                FileReader fileReader = new FileReader( cacheManifest );
-                BufferedReader bufferedReader = new BufferedReader( fileReader );
                 stringBuffer = new StringBuffer();
                 String line;
                 while ( (line = bufferedReader.readLine()) != null )
@@ -151,8 +148,6 @@ public class CacheManifestAction
                 }
                 stringBuffer.append( revisionTag );
                 stringBuffer.append( "\n" );
-
-                fileReader.close();
 
                 if ( i18nFolder != null )
                 {
@@ -186,7 +181,6 @@ public class CacheManifestAction
             {
                 e.printStackTrace();
             }
-
         }
 
         stringBuffer = new StringBuffer();
