@@ -40,23 +40,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
-import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.dxf2.metadata.ExportService;
 import org.hisp.dhis.dxf2.common.FilterOptions;
 import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.metadata.ExportService;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
 import org.hisp.dhis.dxf2.metadata.tasks.ImportMetaDataTask;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.filter.MetaDataFilter;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
-import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -95,9 +94,6 @@ public class FilteredMetaDataController
 
     @Autowired
     private CurrentUserService currentUserService;
-
-    @Autowired
-    private Notifier notifier;
 
     private boolean dryRun;
 
