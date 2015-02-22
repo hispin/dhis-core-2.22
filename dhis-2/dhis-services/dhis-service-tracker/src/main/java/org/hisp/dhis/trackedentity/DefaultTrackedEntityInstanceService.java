@@ -654,7 +654,7 @@ public class DefaultTrackedEntityInstanceService
             return false;
         }
 
-        return instance.getRepresentative() == null || !(instance.getRepresentative().getUid() == representativeId);
+        return instance.getRepresentative() == null || !(instance.getRepresentative().getUid().equals( representativeId ) );
     }
     
     @Override
