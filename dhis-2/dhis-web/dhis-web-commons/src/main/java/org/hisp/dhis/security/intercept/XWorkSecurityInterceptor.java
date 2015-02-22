@@ -58,7 +58,7 @@ public class XWorkSecurityInterceptor
 
     private static final String KEY_SECURITY_SERVICE = "security";
 
-    private ThreadLocal<SecurityMetadataSource> definitionSourceTag = new ThreadLocal<>();
+    private final ThreadLocal<SecurityMetadataSource> definitionSourceTag = new ThreadLocal<>();
 
     // -------------------------------------------------------------------------
     // Dependencies

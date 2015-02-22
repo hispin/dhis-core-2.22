@@ -54,7 +54,7 @@ public class DefaultAuthenticationSuccessHandler
      * client, since entering data can take time, and data will be lost if the session
      * times out while entering data.
      */
-    public static int DEFAULT_SESSION_TIMEOUT = 60 * 60;
+    public static final int DEFAULT_SESSION_TIMEOUT = 60 * 60;
 
     @Override
     public void onAuthenticationSuccess( HttpServletRequest request, HttpServletResponse response, Authentication authentication )
