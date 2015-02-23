@@ -29,6 +29,8 @@ package org.hisp.dhis.query;
  */
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
+import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 
 import java.util.ArrayList;
@@ -167,13 +169,16 @@ public class Query
             return this;
         }
 
-        if ( schema.haveProperty( "name" ) && schema.getProperty( "name" ).isPersisted() )
+        Optional<Property> name = Optional.fromNullable( schema.getProperty( "name" ) );
+        Optional<Property> created = Optional.fromNullable( schema.getProperty( "created" ) );
+
+        if ( name.isPresent() )
         {
-            addOrder( Order.asc( schema.getProperty( "name" ) ) );
+            addOrder( Order.asc( name.get() ) );
         }
-        else
+        else if ( created.isPresent() )
         {
-            addOrder( Order.desc( schema.getProperty( "created" ) ) );
+            addOrder( Order.desc( created.get() ) );
         }
 
         return this;
