@@ -28,9 +28,6 @@ package org.hisp.dhis.dxf2.objectfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.query.Query;
-
 import java.util.List;
 
 /**
