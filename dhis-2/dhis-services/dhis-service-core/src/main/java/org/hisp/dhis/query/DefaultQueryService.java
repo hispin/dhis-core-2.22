@@ -39,12 +39,14 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Default implementation of QueryService which works with IdObjects.
+ *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class DefaultQueryService implements QueryService
+public class DefaultQueryService<T extends IdentifiableObject> implements QueryService
 {
     @Autowired
-    private QueryEngine queryEngine;
+    private QueryEngine<T> queryEngine;
 
     @Autowired
     private SchemaService schemaService;
@@ -52,14 +54,14 @@ public class DefaultQueryService implements QueryService
     @Override
     public Result query( Query query )
     {
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+        List<T> objects = queryEngine.query( query );
         return new Result( objects );
     }
 
     @Override
     public Result query( Query query, ResultTransformer transformer )
     {
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+        List<T> objects = queryEngine.query( query );
 
         if ( transformer != null )
         {

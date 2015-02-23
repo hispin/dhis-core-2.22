@@ -30,7 +30,6 @@ package org.hisp.dhis.query;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
@@ -49,7 +48,7 @@ import java.util.Map;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class CriteriaQueryEngine implements QueryEngine
+public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryEngine<T>
 {
     @Autowired
     private final List<HibernateGenericStore<? extends IdentifiableObject>> hibernateGenericStores = new ArrayList<>();
@@ -58,7 +57,7 @@ public class CriteriaQueryEngine implements QueryEngine
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<? extends IdentifiableObject> query( Query query )
+    public List<T> query( Query query )
     {
         Schema schema = query.getSchema();
 
