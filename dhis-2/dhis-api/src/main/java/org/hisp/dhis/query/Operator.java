@@ -28,7 +28,6 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.hisp.dhis.schema.Klass;
 
 import java.util.Date;

@@ -28,14 +28,48 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.IdentifiableObject;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface QueryEngine<T>
+public class ResultTransformers implements ResultTransformer
 {
-    List<T> query( Query query );
+    private List<ResultTransformer> resultTransformers = new ArrayList<>();
+
+    public ResultTransformers( ResultTransformer... resultTransformers )
+    {
+        Collections.addAll( this.resultTransformers, resultTransformers );
+    }
+
+    public ResultTransformers( List<ResultTransformer> resultTransformers )
+    {
+        this.resultTransformers = resultTransformers;
+    }
+
+    @Override
+    public Result transform( MutableResult mutableResult )
+    {
+        Result result = mutableResult;
+
+        for ( ResultTransformer resultTransformer : resultTransformers )
+        {
+            result = resultTransformer.transform( new MutableResult( result.getItems() ) );
+        }
+
+        return result;
+    }
+
+    public ResultTransformer add( ResultTransformer... resultTransformers )
+    {
+        Collections.addAll( this.resultTransformers, resultTransformers );
+        return this;
+    }
+
+    public static ResultTransformer from( ResultTransformer... resultTransformers )
+    {
+        return new ResultTransformers( resultTransformers );
+    }
 }
