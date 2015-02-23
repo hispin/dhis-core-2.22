@@ -29,10 +29,8 @@ package org.hisp.dhis.query;
  */
 
 import com.google.common.base.MoreObjects;
-import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

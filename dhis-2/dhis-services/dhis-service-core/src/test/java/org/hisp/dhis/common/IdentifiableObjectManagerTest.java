@@ -38,8 +38,6 @@ import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.query.Order;
-import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupAccess;
