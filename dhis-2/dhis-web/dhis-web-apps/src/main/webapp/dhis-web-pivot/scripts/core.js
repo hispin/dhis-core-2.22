@@ -179,7 +179,7 @@ Ext.onReady( function() {
 			conf.pivot = {
 				digitGroupSeparator: {
 					'comma': ',',
-					'space': ' '
+					'space': '&nbsp;'
 				},
 				displayDensity: {
                     'xcompact': '2px',

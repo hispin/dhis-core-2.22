@@ -49,6 +49,7 @@ body {
 
 body,
 .x-body,
+.x-btn-default-small .x-btn-inner,
 .x-btn-default-toolbar-small .x-btn-inner,
 .x-form-item,
 .x-panel-header-text-default,
@@ -435,13 +436,23 @@ table.small td {
 
 	/* Custom */
 .ns-combo.h21 .x-form-trigger {
-    height: 21px;
+    height: 21px !important;
 }
 .ns-combo.h22 .x-form-trigger {
-    height: 22px;
+    height: 22px !important;
 }
 .ns-combo.h24 .x-form-trigger {
-    height: 24px;
+    height: 24px !important;
+}
+
+    /* Option selector */
+.ns-optionselector .x-boundlist-selected {
+    background-color: #fff;
+    border-color: #fff
+}
+.ns-optionselector .x-boundlist-selected.x-boundlist-item-over {
+    background-color: #ddd;
+    border-color: #ddd
 }
 
 
@@ -805,11 +816,25 @@ table.small td {
     background-image: url('../images/trigger.gif');
     background-position: 0 0;
     width: 17px;
+    border-top-right-radius: 2px;
 }
 .ns-button-combotrigger-disabled,
 .ns-button-combotrigger-disabled * {
     opacity: 0.8;
     cursor: default !important;
+}
+
+	/* Link button */
+.ns-linkbutton.x-btn-default-small {
+    border: 1px solid transparent;
+    background: transparent;
+}
+.ns-linkbutton .x-btn-inner {
+    color: #4a66ae;
+    color: #3162c5;
+}
+.ns-linkbutton.x-btn-over .x-btn-inner {
+    text-decoration: underline;
 }
 
 
