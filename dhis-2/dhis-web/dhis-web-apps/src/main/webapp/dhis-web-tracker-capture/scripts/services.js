@@ -443,8 +443,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 /* Service for getting tracked entity */
 .factory('TEService', function(TCStorageService, $q, $rootScope) {
 
-    return {
-        
+    return {        
         getAll: function(){            
             var def = $q.defer();
             

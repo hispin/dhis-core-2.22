@@ -18,6 +18,7 @@ trackerCapture.controller('RelationshipController',
         $scope.selections = CurrentSelection.get();
         $scope.optionSets = $scope.selections.optionSets;
         $scope.selectedTei = angular.copy($scope.selections.tei);
+        $scope.attributesById = CurrentSelection.getAttributesById();
         
         $scope.trackedEntity = $scope.selections.te;
         $scope.selectedEnrollment = $scope.selections.selectedEnrollment;
@@ -37,8 +38,7 @@ trackerCapture.controller('RelationshipController',
                 $scope.relationships[rel.id] = rel;
             });
             
-            setRelationships();
-            
+            setRelationships();            
         });
     });
     
@@ -135,7 +135,25 @@ trackerCapture.controller('RelationshipController',
 
     $scope.relationshipSources = ['search_from_existing','register_new'];
     $scope.selectedRelationshipSource = {};
+    $scope.selectedRelationship = {};
     $scope.relationship = {};
+    
+    
+    //watch for selection of relationship
+    $scope.$watch('relationship.selected', function() {        
+        if( angular.isObject($scope.relationship.selected)){
+            $scope.selectedRelationship = {aIsToB: $scope.relationship.selected.aIsToB, bIsToA: $scope.relationship.selected.bIsToA};  
+        }
+    });
+    
+    $scope.setRelationshipSides = function(side){
+        if(side === 'A'){            
+            $scope.selectedRelationship.bIsToA = $scope.selectedRelationship.aIsToB === $scope.relationship.selected.aIsToB ? $scope.relationship.selected.bIsToA : $scope.relationship.selected.aIsToB;
+        }
+        if(side === 'B'){
+            $scope.selectedRelationship.aIsToB = $scope.selectedRelationship.bIsToA === $scope.relationship.selected.bIsToA ? $scope.relationship.selected.aIsToB : $scope.relationship.selected.bIsToA;
+        }
+    };
     
     //Selection
     $scope.selectedOrgUnit = storage.get('SELECTED_OU');
@@ -164,20 +182,11 @@ trackerCapture.controller('RelationshipController',
         }
     }    
     
-    if($scope.selectedProgramForRelative){
-        AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
-            $scope.attributes = atts;
-            $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
-            $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
-        });
-    }   
-    else{
-        AttributesFactory.getWithoutProgram().then(function(atts){
-            $scope.attributes = atts;
-            $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
-            $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
-        });
-    }    
+    AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
+        $scope.attributes = atts;
+        $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
+        $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
+    });
     
     //set attributes as per selected program
     $scope.setAttributesForSearch = function(program){
@@ -380,11 +389,13 @@ trackerCapture.controller('RelationshipController',
     $scope.addRelationship = function(){
         if($scope.selectedTei && $scope.teiForRelationship && $scope.relationship.selected){
 
-            var relationship = {relationship: $scope.relationship.selected.id, 
-                                displayName: $scope.relationship.selected.name, 
-                                trackedEntityInstanceA: $scope.selectedTei.trackedEntityInstance, 
-                                trackedEntityInstanceB: $scope.teiForRelationship.id};
+            var relationship = {};
+            relationship.relationship = $scope.relationship.selected.id;
+            relationship.displayName = $scope.relationship.selected.name;
             
+            relationship.trackedEntityInstanceA = $scope.selectedRelationship.aIsToB === $scope.relationship.selected.aIsToB ? $scope.selectedTei.trackedEntityInstance : $scope.teiForRelationship.id;
+            relationship.trackedEntityInstanceB = $scope.selectedRelationship.bIsToA === $scope.relationship.selected.bIsToA ? $scope.teiForRelationship.id : $scope.selectedTei.trackedEntityInstance;
+
             if($scope.selectedTei.relationships){
                 $scope.selectedTei.relationships.push(relationship);
             }
@@ -437,16 +448,9 @@ trackerCapture.controller('RelationshipController',
     
     //watch for selection of program
     $scope.$watch('selectedProgramForRelative', function() {        
-        if( angular.isObject($scope.selectedProgramForRelative)){
-            AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
-                $scope.attributes = atts;
-            });
-        }
-        else{
-            AttributesFactory.getWithoutProgram().then(function(atts){
-                $scope.attributes = atts;
-            });
-        }
+        AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
+            $scope.attributes = atts;
+        });
     }); 
             
     $scope.trackedEntities = {available: []};
