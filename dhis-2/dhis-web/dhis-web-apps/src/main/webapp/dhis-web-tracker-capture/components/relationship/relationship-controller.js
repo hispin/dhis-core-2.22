@@ -3,12 +3,10 @@ trackerCapture.controller('RelationshipController',
                 $rootScope,
                 $modal,                
                 $location,
-                $translate,
                 CurrentSelection,
-                TEIService,
                 RelationshipFactory) {
     $rootScope.showAddRelationshipDiv = false;    
-    $scope.addRelationshipLabel = $translate('add');
+    $scope.relatedProgramRelationship = false;
     
     //listen for the selected entity       
     $scope.$on('dashboardWidgets', function(event, args) { 
@@ -25,13 +23,6 @@ trackerCapture.controller('RelationshipController',
         $scope.selectedProgram = $scope.selections.pr;
         $scope.programs = $scope.selections.pr;
         
-        if($scope.selectedProgram && $scope.selectedProgram.relationshipText){
-            $scope.addRelationshipLabel = $scope.selectedProgram.relationshipText;
-        }
-        else{
-            $scope.addRelationshipLabel = $translate('add');
-        }
-        
         RelationshipFactory.getAll().then(function(rels){
             $scope.relationshipTypes = rels;    
             angular.forEach(rels, function(rel){
@@ -42,7 +33,8 @@ trackerCapture.controller('RelationshipController',
         });
     });
     
-    $scope.showAddRelationship = function() {
+    $scope.showAddRelationship = function(related) {
+        $scope.relatedProgramRelationship = related;
         $rootScope.showAddRelationshipDiv = !$rootScope.showAddRelationshipDiv;
        
         if($rootScope.showAddRelationshipDiv){
@@ -62,6 +54,9 @@ trackerCapture.controller('RelationshipController',
                     },
                     selectedProgram: function(){
                         return $scope.selectedProgram;
+                    },
+                    relatedProgramRelationship: function(){
+                        return $scope.relatedProgramRelationship;
                     }
                 }
             });
@@ -125,11 +120,13 @@ trackerCapture.controller('RelationshipController',
             $modalInstance, 
             relationshipTypes,
             selectedProgram,
+            relatedProgramRelationship,
             selections,
             selectedTei){
     
     $scope.relationshipTypes = relationshipTypes;
     $scope.selectedProgram = selectedProgram;
+    $scope.relatedProgramRelationship = relatedProgramRelationship;
     $scope.selectedTei = selectedTei;
     $scope.programs = selections.prs;
 
@@ -165,7 +162,7 @@ trackerCapture.controller('RelationshipController',
     } 
     
     if($scope.selectedProgram){
-        if($scope.selectedProgram.relatedProgram){
+        if($scope.selectedProgram.relatedProgram && $scope.relatedProgramRelationship){
             angular.forEach($scope.programs, function(pr){
                 if(pr.id === $scope.selectedProgram.relatedProgram.id){
                     $scope.selectedProgramForRelative = pr;
