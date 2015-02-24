@@ -6658,9 +6658,9 @@ Ext.onReady( function() {
 
                                         // legend sets
                                         requests.push({
-                                            url: contextPath + '/api/mapLegendSets.json?fields=id,name,mapLegends[id,name,startValue,endValue,color]&paging=false',
+                                            url: contextPath + '/api/legendSets.json?fields=id,name,legends[id,name,startValue,endValue,color]&paging=false',
                                             success: function(r) {
-                                                init.legendSets = Ext.decode(r.responseText).mapLegendSets || [];
+                                                init.legendSets = Ext.decode(r.responseText).legendSets || [];
                                                 fn();
                                             }
                                         });

@@ -611,10 +611,10 @@ Ext.onReady( function() {
 				fields: ['id', 'name'],
 				proxy: {
 					type: 'ajax',
-					url: gis.init.contextPath + '/api/mapLegendSets.json?fields=id,name&paging=false',
+					url: gis.init.contextPath + '/api/legendSets.json?fields=id,name&paging=false',
 					reader: {
 						type: 'json',
-						root: 'mapLegendSets'
+						root: 'legendSets'
 					}
 				},
 				isLoaded: false,
@@ -3222,10 +3222,10 @@ Ext.onReady( function() {
 			fields: ['id', 'name'],
 			proxy: {
 				type: 'ajax',
-				url: gis.init.contextPath + '/api/mapLegendSets.json?fields=id,name&paging=false',
+				url: gis.init.contextPath + '/api/legendSets.json?fields=id,name&paging=false',
 				reader: {
 					type: 'json',
-					root: 'mapLegendSets'
+					root: 'legendSets'
 				},
 				pageParam: false,
 				startParam: false,
@@ -3247,7 +3247,7 @@ Ext.onReady( function() {
 				url: '',
 				reader: {
 					type: 'json',
-					root: 'mapLegends'
+					root: 'legends'
 				}
 			},
 			deleteLegend: deleteLegend,
@@ -3665,7 +3665,7 @@ Ext.onReady( function() {
 			});
 
 			if (id) {
-				legendStore.proxy.url = gis.init.contextPath + '/api/mapLegendSets/' + id + '.json?fields=mapLegends[id,name,startValue,endValue,color]';
+				legendStore.proxy.url = gis.init.contextPath + '/api/legendSets/' + id + '.json?fields=legends[id,name,startValue,endValue,color]';
 				legendStore.load();
 
 				legendSetName.setValue(legendSetStore.getById(id).data.name);
@@ -3692,7 +3692,7 @@ Ext.onReady( function() {
 		deleteLegendSet = function(id) {
 			if (id) {
 				Ext.Ajax.request({
-					url: gis.init.contextPath + '/api/mapLegendSets/' + id,
+					url: gis.init.contextPath + '/api/legendSets/' + id,
 					method: 'DELETE',
 					success: function() {
 						legendSetStore.load();
@@ -3713,12 +3713,12 @@ Ext.onReady( function() {
 			body = {
 				name: legendSetName.getValue(),
 				symbolizer: gis.conf.finals.widget.symbolizer_color,
-				mapLegends: []
+				legends: []
 			};
 
 			for (var i = 0; i < items.length; i++) {
 				var item = items[i];
-				body.mapLegends.push({
+				body.legends.push({
 					name: item.data.name,
 					startValue: item.data.startValue,
 					endValue: item.data.endValue,
@@ -3791,7 +3791,7 @@ Ext.onReady( function() {
 					var body = Ext.encode(getRequestBody());
 
 					Ext.Ajax.request({
-						url: gis.init.contextPath + '/api/mapLegendSets/',
+						url: gis.init.contextPath + '/api/legendSets/',
 						method: 'POST',
 						headers: {'Content-Type': 'application/json'},
 						params: body,
@@ -3815,7 +3815,7 @@ Ext.onReady( function() {
 					body = Ext.encode(getRequestBody());
 
 					Ext.Ajax.request({
-						url: gis.init.contextPath + '/api/mapLegendSets/' + id,
+						url: gis.init.contextPath + '/api/legendSets/' + id,
 						method: 'PUT',
 						headers: {'Content-Type': 'application/json'},
 						params: body,
@@ -7039,7 +7039,7 @@ Ext.onReady( function() {
 				url: '',
 				reader: {
 					type: 'json',
-					root: 'mapLegends'
+					root: 'legends'
 				}
 			},
 			isLoaded: false,

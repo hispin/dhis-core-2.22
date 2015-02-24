@@ -1184,9 +1184,9 @@ Ext.onReady( function() {
 				// legend set
 				xLayout.legendSet = layout.legendSet ? init.idLegendSetMap[layout.legendSet.id] : null;
 
-				if (layout.legendSet && layout.legendSet.mapLegends) {
+				if (layout.legendSet && layout.legendSet.legends) {
 					xLayout.legendSet = init.idLegendSetMap[layout.legendSet.id];
-					support.prototype.array.sort(xLayout.legendSet.mapLegends, 'ASC', 'startValue');
+					support.prototype.array.sort(xLayout.legendSet.legends, 'ASC', 'startValue');
 				}
 
 				// unique dimension names

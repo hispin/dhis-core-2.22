@@ -1154,9 +1154,9 @@ Ext.onReady( function() {
 				// legend set
 				xLayout.legendSet = layout.legendSet ? init.idLegendSetMap[layout.legendSet.id] : null;
 
-				if (layout.legendSet && layout.legendSet.mapLegends) {
+				if (layout.legendSet && layout.legendSet.legends) {
 					xLayout.legendSet = init.idLegendSetMap[layout.legendSet.id];
-					support.prototype.array.sort(xLayout.legendSet.mapLegends, 'ASC', 'startValue');
+					support.prototype.array.sort(xLayout.legendSet.legends, 'ASC', 'startValue');
 				}
 
 				// unique dimension names
@@ -2235,7 +2235,7 @@ Ext.onReady( function() {
 					valueObjects = [],
 					totalColObjects = [],
 					uuidDimUuidsMap = {},
-					isLegendSet = Ext.isObject(xLayout.legendSet) && Ext.isArray(xLayout.legendSet.mapLegends) && xLayout.legendSet.mapLegends.length,
+					isLegendSet = Ext.isObject(xLayout.legendSet) && Ext.isArray(xLayout.legendSet.legends) && xLayout.legendSet.legends.length,
                     tdCount = 0,
 					htmlArray;
 
@@ -2248,7 +2248,7 @@ Ext.onReady( function() {
 
 				getTdHtml = function(config, metaDataId) {
 					var bgColor,
-						mapLegends,
+						legends,
 						colSpan,
 						rowSpan,
 						htmlValue,
@@ -2273,11 +2273,11 @@ Ext.onReady( function() {
 					// background color from legend set
 					if (isNumeric && xLayout.legendSet) {
 						var value = parseFloat(config.value);
-						mapLegends = xLayout.legendSet.mapLegends;
+						legends = xLayout.legendSet.legends;
 
-						for (var i = 0; i < mapLegends.length; i++) {
-							if (Ext.Number.constrain(value, mapLegends[i].startValue, mapLegends[i].endValue) === value) {
-								bgColor = mapLegends[i].color;
+						for (var i = 0; i < legends.length; i++) {
+							if (Ext.Number.constrain(value, legends[i].startValue, legends[i].endValue) === value) {
+								bgColor = legends[i].color;
 							}
 						}
 					}
