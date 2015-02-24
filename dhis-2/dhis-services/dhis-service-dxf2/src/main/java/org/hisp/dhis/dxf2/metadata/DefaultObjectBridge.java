@@ -29,7 +29,6 @@ package org.hisp.dhis.dxf2.metadata;
  */
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
@@ -38,6 +37,8 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableProperty;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodStore;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.schema.Schema;
@@ -50,6 +51,7 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -91,6 +93,9 @@ public class DefaultObjectBridge
     private SessionFactory sessionFactory;
 
     @Autowired
+    private OrganisationUnitService organisationUnitService;
+
+    @Autowired
     private CurrentUserService currentUserService;
 
     //-------------------------------------------------------------------------------------------------------
@@ -104,6 +109,8 @@ public class DefaultObjectBridge
     private Map<String, PeriodType> periodTypeMap;
 
     private Map<Class<? extends IdentifiableObject>, Map<String, IdentifiableObject>> uidMap;
+
+    private Map<Class<? extends IdentifiableObject>, Map<String, IdentifiableObject>> uuidMap;
 
     private Map<Class<? extends IdentifiableObject>, Map<String, IdentifiableObject>> codeMap;
 
@@ -137,12 +144,13 @@ public class DefaultObjectBridge
         log.info( "Building object-bridge maps (preheatCache: " + preheatCache + ")." );
         Timer timer = new SystemTimer().start();
 
-        masterMap = Maps.newHashMap();
-        periodTypeMap = Maps.newHashMap();
-        uidMap = Maps.newHashMap();
-        codeMap = Maps.newHashMap();
-        nameMap = Maps.newHashMap();
-        usernameMap = Maps.newHashMap();
+        masterMap = new HashMap<>();
+        periodTypeMap = new HashMap<>();
+        uidMap = new HashMap<>();
+        uuidMap = new HashMap<>();
+        codeMap = new HashMap<>();
+        nameMap = new HashMap<>();
+        usernameMap = new HashMap<>();
 
         populatePeriodTypeMap( PeriodType.class );
         populateUsernameMap( UserCredentials.class );
@@ -151,6 +159,7 @@ public class DefaultObjectBridge
         {
             populateIdentifiableObjectMap( type );
             populateIdentifiableObjectMap( type, IdentifiableProperty.UID );
+            populateIdentifiableObjectMap( type, IdentifiableProperty.UUID );
             populateIdentifiableObjectMap( type, IdentifiableProperty.CODE );
             populateIdentifiableObjectMap( type, IdentifiableProperty.NAME );
         }
@@ -214,6 +223,10 @@ public class DefaultObjectBridge
             if ( property == IdentifiableProperty.UID )
             {
                 uidMap.put( (Class<? extends IdentifiableObject>) clazz, map );
+            }
+            else if ( property == IdentifiableProperty.UUID && OrganisationUnit.class.isAssignableFrom( clazz ) )
+            {
+                uuidMap.put( (Class<? extends IdentifiableObject>) clazz, map );
             }
             else if ( property == IdentifiableProperty.CODE && identifiableObject.haveUniqueCode() )
             {
@@ -461,6 +474,16 @@ public class DefaultObjectBridge
             }
         }
 
+        if ( OrganisationUnit.class.isInstance( object ) )
+        {
+            OrganisationUnit organisationUnit = (OrganisationUnit) getUuidMatch( (OrganisationUnit) object );
+
+            if ( organisationUnit != null )
+            {
+                objects.add( (T) organisationUnit );
+            }
+        }
+
         if ( IdentifiableObject.class.isInstance( object ) )
         {
             IdentifiableObject identifiableObject = (IdentifiableObject) object;
@@ -501,6 +524,37 @@ public class DefaultObjectBridge
 
     private <T> void _updateInternalMaps( T object, boolean delete )
     {
+        if ( OrganisationUnit.class.isInstance( object ) )
+        {
+            OrganisationUnit organisationUnit = (OrganisationUnit) object;
+
+            if ( !StringUtils.isEmpty( organisationUnit.getUuid() ) )
+            {
+                Map<String, IdentifiableObject> map = uuidMap.get( OrganisationUnit.class );
+
+                if ( map == null )
+                {
+                    // might be dynamically sub-classed by javassist or cglib, fetch superclass and try again
+                    map = uuidMap.get( OrganisationUnit.class.getSuperclass() );
+                }
+
+                if ( !delete )
+                {
+                    map.put( organisationUnit.getUuid(), organisationUnit );
+                }
+                else
+                {
+                    try
+                    {
+                        map.remove( organisationUnit.getUuid() );
+                    }
+                    catch ( NullPointerException ignored )
+                    {
+                    }
+                }
+            }
+        }
+
         if ( IdentifiableObject.class.isInstance( object ) )
         {
             IdentifiableObject identifiableObject = (IdentifiableObject) object;
@@ -584,6 +638,35 @@ public class DefaultObjectBridge
 
             }
         }
+    }
+
+    private IdentifiableObject getUuidMatch( OrganisationUnit organisationUnit )
+    {
+        Class<? extends OrganisationUnit> klass = organisationUnit.getClass();
+        Map<String, IdentifiableObject> map = uuidMap.get( klass );
+        OrganisationUnit entity = null;
+
+        if ( map != null )
+        {
+            entity = (OrganisationUnit) map.get( organisationUnit.getUuid() );
+        }
+        else
+        {
+            uuidMap.put( klass, new HashMap<String, IdentifiableObject>() );
+            map = uuidMap.get( klass );
+        }
+
+        if ( !preheatCache && entity == null )
+        {
+            entity = organisationUnitService.getOrganisationUnitByUuid( organisationUnit.getUuid() );
+
+            if ( entity != null )
+            {
+                map.put( entity.getUuid(), entity );
+            }
+        }
+
+        return entity;
     }
 
     private IdentifiableObject getUidMatch( IdentifiableObject identifiableObject )
