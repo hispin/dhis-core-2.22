@@ -3,10 +3,12 @@ package org.hisp.dhis.legend;
 import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Lars Helge Overland
  */
+@Transactional
 public class DefaultLegendService
     implements LegendService
 {
