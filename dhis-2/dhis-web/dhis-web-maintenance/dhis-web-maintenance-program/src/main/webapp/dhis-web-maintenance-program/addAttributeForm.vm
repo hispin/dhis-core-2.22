@@ -97,6 +97,17 @@
 		</td>
 	</tr>
 	
+    <tr>
+        <td><label for="legendSetId">$i18n.getString( 'legend_set' )</label></td>            
+        <td>
+            <select id="legendSetId" name="legendSetId">
+                <option>[$i18n.getString('please_select')]</option>
+                #foreach ( $legendSet in $legendSets )
+                <option value="$legendSet.id">$encoder.htmlEncode( $legendSet.name )</option>
+                #end
+            </select>
+        </td>
+    </tr>
     </tbody>
 
 	<tr>
