@@ -529,9 +529,12 @@ dhis2.de.addEventListeners = function()
                 },
                 onShow: function() {
                     valueFocus(fakeEvent);
-                }
+                },
+				minDate:null,
+				maxDate:null
             } );
         }
+		
     } );
     
     $( '.entryselect' ).each( function( i )
