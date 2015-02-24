@@ -178,7 +178,7 @@ public class DefaultEventQueryPlanner
     {
         Set<String> validPartitions = partitionManager.getEventAnalyticsPartitions();
 
-        String tableSuffix = "_" + params.getProgram().getUid();
+        String tableSuffix = PartitionUtils.SEP + params.getProgram().getUid();
         
         if ( params.hasStartEndDate() )
         {
@@ -220,7 +220,7 @@ public class DefaultEventQueryPlanner
 
     private List<EventQueryParams> groupByPartition( EventQueryParams params, Set<String> validPartitions )
     {
-        String tableSuffix = "_" + params.getProgram().getUid();
+        String tableSuffix = PartitionUtils.SEP + params.getProgram().getUid();
         
         if ( params.hasStartEndDate() )
         {

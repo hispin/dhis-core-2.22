@@ -268,7 +268,7 @@ public class JdbcEventAnalyticsTableManager
             String[] col = { quote( dataElement.getUid() ), dataType, sql };
             columns.add( col );
         }
-
+        
         for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributes() )
         {
             String dataType = attribute.isNumericType() ? dbl : text;

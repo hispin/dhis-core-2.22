@@ -185,6 +185,26 @@ public class Program
     }
 
     /**
+     * Returns data elements which are part of the stages of this program which
+     * have a legend set.
+     */
+    public Set<DataElement> getDataElementsWithLegendSet()
+    {
+        Set<DataElement> elements = new HashSet<>();
+
+        for ( DataElement element : getAllDataElements() )
+        {
+            if ( element != null && element.hasLegendSet() )
+            {
+                elements.add( element );
+            }
+        }
+
+        return elements;
+    }
+    
+
+    /**
      * Returns TrackedEntityAttributes from ProgramTrackedEntityAttributes. Use
      * getAttributes() to access the persisted attribute list.
      */
