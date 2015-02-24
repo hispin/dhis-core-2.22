@@ -641,6 +641,11 @@ public class DefaultDataValueSetService
             orgUnitMap.putAll( getOrgUnitMap( orgUnitIdScheme ) );
         }
         
+        IdentifiableObjectCallable<DataElement> dataElementCallable = new IdentifiableObjectCallable<>( 
+            identifiableObjectManager, DataElement.class, null );
+        IdentifiableObjectCallable<OrganisationUnit> orgUnitCallable = new IdentifiableObjectCallable<>( 
+            identifiableObjectManager, OrganisationUnit.class, trimToNull( dataValueSet.getOrgUnit() ) );
+        
         //----------------------------------------------------------------------
         // Get outer meta-data
         //----------------------------------------------------------------------
@@ -651,8 +656,7 @@ public class DefaultDataValueSetService
 
         Period outerPeriod = PeriodType.getPeriodFromIsoString( trimToNull( dataValueSet.getPeriod() ) );
 
-        OrganisationUnit outerOrgUnit = orgUnitMap.get( trimToNull( dataValueSet.getOrgUnit() ), 
-            new IdentifiableObjectCallable<>( identifiableObjectManager, OrganisationUnit.class, trimToNull( dataValueSet.getOrgUnit() ) ) );
+        OrganisationUnit outerOrgUnit = orgUnitMap.get( trimToNull( dataValueSet.getOrgUnit() ), orgUnitCallable );
 
         DataElementCategoryOptionCombo fallbackCategoryOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
 
@@ -724,11 +728,10 @@ public class DefaultDataValueSetService
 
             totalCount++;
 
-            DataElement dataElement = dataElementMap.get( trimToNull( dataValue.getDataElement() ),
-                new IdentifiableObjectCallable<>( identifiableObjectManager, DataElement.class, trimToNull( dataValue.getDataElement() ) ) );
+            DataElement dataElement = dataElementMap.get( trimToNull( dataValue.getDataElement() ), dataElementCallable.setUid( trimToNull( dataValue.getDataElement() ) ) );
             Period period = outerPeriod != null ? outerPeriod : PeriodType.getPeriodFromIsoString( trimToNull( dataValue.getPeriod() ) );
-            OrganisationUnit orgUnit = outerOrgUnit != null ? outerOrgUnit : orgUnitMap.get( trimToNull( dataValue.getOrgUnit() ), 
-                new IdentifiableObjectCallable<>( identifiableObjectManager, OrganisationUnit.class, trimToNull( dataValue.getOrgUnit() ) ) );
+            OrganisationUnit orgUnit = outerOrgUnit != null ? outerOrgUnit : 
+                orgUnitMap.get( trimToNull( dataValue.getOrgUnit() ), orgUnitCallable.setUid( trimToNull( dataValue.getOrgUnit() ) ) );
             DataElementCategoryOptionCombo categoryOptionCombo = categoryOptionComboMap.get( trimToNull( dataValue.getCategoryOptionCombo() ) );
             DataElementCategoryOptionCombo attrOptionCombo = outerAttrOptionCombo != null ? outerAttrOptionCombo :
                 categoryOptionComboMap.get( trimToNull( dataValue.getAttributeOptionCombo() ) );
