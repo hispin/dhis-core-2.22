@@ -1,4 +1,4 @@
-package org.hisp.dhis.mapping;
+package org.hisp.dhis.legend;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -42,8 +42,8 @@ import org.hisp.dhis.common.view.ExportView;
 /**
  * @author Jan Henrik Overland
  */
-@JacksonXmlRootElement( localName = "mapLegend", namespace = DxfNamespaces.DXF_2_0 )
-public class MapLegend
+@JacksonXmlRootElement( localName = "legend", namespace = DxfNamespaces.DXF_2_0 )
+public class Legend
     extends BaseIdentifiableObject
 {
     private Double startValue;
@@ -54,11 +54,11 @@ public class MapLegend
 
     private String image;
 
-    public MapLegend()
+    public Legend()
     {
     }
 
-    public MapLegend( String name, Double startValue, Double endValue, String color, String image )
+    public Legend( String name, Double startValue, Double endValue, String color, String image )
     {
         this.name = name;
         this.startValue = startValue;
@@ -136,21 +136,21 @@ public class MapLegend
 
         if ( other.getClass().isInstance( this ) )
         {
-            MapLegend mapLegend = (MapLegend) other;
+            Legend legend = (Legend) other;
 
             if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
             {
-                startValue = mapLegend.getStartValue();
-                endValue = mapLegend.getEndValue();
-                color = mapLegend.getColor();
-                image = mapLegend.getImage();
+                startValue = legend.getStartValue();
+                endValue = legend.getEndValue();
+                color = legend.getColor();
+                image = legend.getImage();
             }
             else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
             {
-                startValue = mapLegend.getStartValue() == null ? startValue : mapLegend.getStartValue();
-                endValue = mapLegend.getEndValue() == null ? endValue : mapLegend.getEndValue();
-                color = mapLegend.getColor() == null ? color : mapLegend.getColor();
-                image = mapLegend.getImage() == null ? image : mapLegend.getImage();
+                startValue = legend.getStartValue() == null ? startValue : legend.getStartValue();
+                endValue = legend.getEndValue() == null ? endValue : legend.getEndValue();
+                color = legend.getColor() == null ? color : legend.getColor();
+                image = legend.getImage() == null ? image : legend.getImage();
             }
         }
     }

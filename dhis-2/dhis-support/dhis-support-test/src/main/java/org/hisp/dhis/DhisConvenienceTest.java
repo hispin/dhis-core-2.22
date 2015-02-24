@@ -75,8 +75,8 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 import org.hisp.dhis.indicator.IndicatorType;
-import org.hisp.dhis.mapping.MapLegend;
-import org.hisp.dhis.mapping.MapLegendSet;
+import org.hisp.dhis.legend.Legend;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
@@ -994,12 +994,12 @@ public abstract class DhisConvenienceTest
         return importDataValue;
     }
 
-    public static MapLegend createMapLegend( char uniqueCharacter, Double startValue, Double endValue )
+    public static Legend createLegend( char uniqueCharacter, Double startValue, Double endValue )
     {
-        MapLegend legend = new MapLegend();
+        Legend legend = new Legend();
         legend.setAutoFields();
 
-        legend.setName( "MapLegend" + uniqueCharacter );
+        legend.setName( "Legend" + uniqueCharacter );
         legend.setStartValue( startValue );
         legend.setEndValue( endValue );
         legend.setColor( "Color" + uniqueCharacter );
@@ -1007,12 +1007,12 @@ public abstract class DhisConvenienceTest
         return legend;
     }
 
-    public static MapLegendSet createMapLegendSet( char uniqueCharacter )
+    public static LegendSet createLegendSet( char uniqueCharacter )
     {
-        MapLegendSet legendSet = new MapLegendSet();
+        LegendSet legendSet = new LegendSet();
         legendSet.setAutoFields();
 
-        legendSet.setName( "MapLegendSet" + uniqueCharacter );
+        legendSet.setName( "LegendSet" + uniqueCharacter );
 
         return legendSet;
     }

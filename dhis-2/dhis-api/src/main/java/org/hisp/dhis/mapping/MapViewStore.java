@@ -29,6 +29,7 @@ package org.hisp.dhis.mapping;
  */
 
 import org.hisp.dhis.common.AnalyticalObjectStore;
+import org.hisp.dhis.legend.LegendSet;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -36,5 +37,5 @@ import org.hisp.dhis.common.AnalyticalObjectStore;
 public interface MapViewStore
     extends AnalyticalObjectStore<MapView>
 {
-    int countMapLegendSetMapViews( MapLegendSet mapLegendSet );
+    int countLegendSetMapViews( LegendSet legendSet );
 }

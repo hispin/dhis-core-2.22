@@ -28,7 +28,6 @@ package org.hisp.dhis.indicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.mapping.MapLegendSet;
 
 import java.util.Collection;
 import java.util.List;
@@ -178,6 +177,4 @@ public interface IndicatorService
     int getIndicatorGroupSetCount();
 
     int getIndicatorGroupSetCountByName( String name );
-
-    int countMapLegendSetIndicators( MapLegendSet mapLegendSet );
 }

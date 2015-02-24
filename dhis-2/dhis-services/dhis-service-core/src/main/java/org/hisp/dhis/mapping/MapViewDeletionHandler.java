@@ -31,13 +31,13 @@ package org.hisp.dhis.mapping;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.deletion.DeletionHandler;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class MapViewDeletionHandler
     extends DeletionHandler
@@ -100,8 +100,8 @@ public class MapViewDeletionHandler
     }
 
     @Override
-    public String allowDeleteMapLegendSet( MapLegendSet mapLegendSet )
+    public String allowDeleteLegendSet( LegendSet legendSet )
     {
-        return mappingService.countMapLegendSetMapViews( mapLegendSet ) == 0 ? null : ERROR;
+        return mappingService.countLegendSetMapViews( legendSet ) == 0 ? null : ERROR;
     }
 }

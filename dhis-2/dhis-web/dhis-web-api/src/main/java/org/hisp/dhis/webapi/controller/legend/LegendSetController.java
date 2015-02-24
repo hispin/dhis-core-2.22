@@ -1,4 +1,4 @@
-package org.hisp.dhis.webapi.controller.mapping;
+package org.hisp.dhis.webapi.controller.legend;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,12 +28,17 @@ package org.hisp.dhis.webapi.controller.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Iterator;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
-import org.hisp.dhis.mapping.MapLegend;
-import org.hisp.dhis.mapping.MapLegendSet;
-import org.hisp.dhis.mapping.MappingService;
-import org.hisp.dhis.schema.descriptors.MapLegendSetSchemaDescriptor;
+import org.hisp.dhis.legend.Legend;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
+import org.hisp.dhis.schema.descriptors.LegendSetSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,36 +48,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Iterator;
-
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @Controller
-@RequestMapping( value = MapLegendSetSchemaDescriptor.API_ENDPOINT )
-public class MapLegendSetController
-    extends AbstractCrudController<MapLegendSet>
+@RequestMapping( value = LegendSetSchemaDescriptor.API_ENDPOINT )
+public class LegendSetController
+    extends AbstractCrudController<LegendSet>
 {
     @Autowired
-    private MappingService mappingService;
+    private LegendService legendService;
 
     @Override
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     @PreAuthorize( "hasRole('F_GIS_ADMIN') or hasRole('ALL')" )
     public void postJsonObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        MapLegendSet legendSet = JacksonUtils.fromJson( request.getInputStream(), MapLegendSet.class );
+        LegendSet legendSet = JacksonUtils.fromJson( request.getInputStream(), LegendSet.class );
 
-        for ( MapLegend legend : legendSet.getMapLegends() )
+        for ( Legend legend : legendSet.getLegends() )
         {
-            mappingService.addMapLegend( legend );
+            legendService.addLegend( legend );
         }
 
-        mappingService.addMapLegendSet( legendSet );
+        legendService.addLegendSet( legendSet );
 
-        ContextUtils.createdResponse( response, "Map legend set created", MapLegendSetSchemaDescriptor.API_ENDPOINT + "/" + legendSet.getUid() );
+        ContextUtils.createdResponse( response, "Map legend set created", LegendSetSchemaDescriptor.API_ENDPOINT + "/" + legendSet.getUid() );
     }
 
     @Override
@@ -80,7 +81,7 @@ public class MapLegendSetController
     @PreAuthorize( "hasRole('F_GIS_ADMIN') or hasRole('ALL')" )
     public void putJsonObject( @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        MapLegendSet legendSet = mappingService.getMapLegendSet( uid );
+        LegendSet legendSet = legendService.getLegendSet( uid );
 
         if ( legendSet == null )
         {
@@ -88,25 +89,25 @@ public class MapLegendSetController
             return;
         }
 
-        Iterator<MapLegend> legends = legendSet.getMapLegends().iterator();
+        Iterator<Legend> legends = legendSet.getLegends().iterator();
 
         while ( legends.hasNext() )
         {
-            MapLegend legend = legends.next();
+            Legend legend = legends.next();
             legends.remove();
-            mappingService.deleteMapLegend( legend );
+            legendService.deleteLegend( legend );
         }
 
-        MapLegendSet newLegendSet = JacksonUtils.fromJson( request.getInputStream(), MapLegendSet.class );
+        LegendSet newLegendSet = JacksonUtils.fromJson( request.getInputStream(), LegendSet.class );
 
-        for ( MapLegend legend : newLegendSet.getMapLegends() )
+        for ( Legend legend : newLegendSet.getLegends() )
         {
-            mappingService.addMapLegend( legend );
+            legendService.addLegend( legend );
         }
 
         legendSet.mergeWith( newLegendSet, MergeStrategy.MERGE_IF_NOT_NULL );
 
-        mappingService.updateMapLegendSet( legendSet );
+        legendService.updateLegendSet( legendSet );
     }
 
     @Override
@@ -114,7 +115,7 @@ public class MapLegendSetController
     @PreAuthorize( "hasRole('F_GIS_ADMIN') or hasRole('ALL')" )
     public void deleteObject( @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        MapLegendSet legendSet = mappingService.getMapLegendSet( uid );
+        LegendSet legendSet = legendService.getLegendSet( uid );
 
         if ( legendSet == null )
         {
@@ -122,15 +123,15 @@ public class MapLegendSetController
             return;
         }
 
-        Iterator<MapLegend> legends = legendSet.getMapLegends().iterator();
+        Iterator<Legend> legends = legendSet.getLegends().iterator();
 
         while ( legends.hasNext() )
         {
-            MapLegend legend = legends.next();
+            Legend legend = legends.next();
             legends.remove();
-            mappingService.deleteMapLegend( legend );
+            legendService.deleteLegend( legend );
         }
 
-        mappingService.deleteMapLegendSet( legendSet );
+        legendService.deleteLegendSet( legendSet );
     }
 }

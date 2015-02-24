@@ -1,4 +1,4 @@
-package org.hisp.dhis.mapping.comparator;
+package org.hisp.dhis.webapi.controller.legend;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,21 +28,18 @@ package org.hisp.dhis.mapping.comparator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Comparator;
-
-import org.hisp.dhis.mapping.MapLegend;
+import org.hisp.dhis.legend.Legend;
+import org.hisp.dhis.schema.descriptors.LegendSchemaDescriptor;
+import org.hisp.dhis.webapi.controller.AbstractCrudController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author Tran Thanh Tri
- * @version $Id$
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-
-public class MapLegendComparator
-    implements Comparator<MapLegend>
+@Controller
+@RequestMapping( value = LegendSchemaDescriptor.API_ENDPOINT )
+public class LegendController
+    extends AbstractCrudController<Legend>
 {
-    @Override
-    public int compare( MapLegend o1, MapLegend o2 )
-    {
-        return o1.getStartValue().compareTo( o2.getStartValue() );
-    }
 }

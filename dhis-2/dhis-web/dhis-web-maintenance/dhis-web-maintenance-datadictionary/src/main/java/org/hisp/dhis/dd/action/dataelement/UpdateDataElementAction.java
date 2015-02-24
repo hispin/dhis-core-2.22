@@ -44,8 +44,8 @@ import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.mapping.MapLegendSet;
-import org.hisp.dhis.mapping.MappingService;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.system.util.AttributeUtils;
@@ -98,11 +98,11 @@ public class UpdateDataElementAction
         this.optionService = optionService;
     }
 
-    private MappingService mappingService;
+    private LegendService legendService;
 
-    public void setMappingService( MappingService mappingService )
+    public void setLegendService( LegendService legendService )
     {
-        this.mappingService = mappingService;
+        this.legendService = legendService;
     }
 
     // -------------------------------------------------------------------------
@@ -290,7 +290,7 @@ public class UpdateDataElementAction
 
         OptionSet optionSet = optionService.getOptionSet( selectedOptionSetId );
         OptionSet commentOptionSet = optionService.getOptionSet( selectedCommentOptionSetId );
-        MapLegendSet legendSet = mappingService.getMapLegendSet( selectedLegendSetId );
+        LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
 
         dataElement.setName( name );
         dataElement.setShortName( shortName );

@@ -160,12 +160,12 @@
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.mapping.MapView" />
   </bean>
 
-  <bean id="mapLegendImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
-    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.mapping.MapLegend" />
+  <bean id="legendImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.legend.Legend" />
   </bean>
 
-  <bean id="mapLegendSetImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
-    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.mapping.MapLegendSet" />
+  <bean id="legendSetImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.legend.LegendSet" />
   </bean>
 
   <bean id="mapLayerImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">

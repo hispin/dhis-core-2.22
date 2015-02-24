@@ -38,8 +38,8 @@ import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
-import org.hisp.dhis.mapping.MapLegendSet;
-import org.hisp.dhis.mapping.MappingService;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.system.util.AttributeUtils;
 
 import com.opensymphony.xwork2.Action;
@@ -68,11 +68,11 @@ public class UpdateIndicatorAction
         this.attributeService = attributeService;
     }
 
-    private MappingService mappingService;
+    private LegendService legendService;
 
-    public void setMappingService( MappingService mappingService )
+    public void setLegendService( LegendService legendService )
     {
-        this.mappingService = mappingService;
+        this.legendService = legendService;
     }
 
     // -------------------------------------------------------------------------
@@ -209,7 +209,7 @@ public class UpdateIndicatorAction
 
         IndicatorType indicatorType = indicatorService.getIndicatorType( indicatorTypeId );
 
-        MapLegendSet legendSet = mappingService.getMapLegendSet( selectedLegendSetId );
+        LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
         
         code = StringUtils.trimToNull( code );
         description = StringUtils.trimToNull( description );

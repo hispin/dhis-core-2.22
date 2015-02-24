@@ -28,7 +28,13 @@ package org.hisp.dhis.dd.action.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
@@ -39,20 +45,15 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementService;
-import org.hisp.dhis.mapping.MapLegendSet;
-import org.hisp.dhis.mapping.MappingService;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.system.util.AttributeUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Hans S. Toemmerholt
@@ -71,7 +72,7 @@ public class ShowDataElementFormAction
     private OrganisationUnitService organisationUnitService;
     private AttributeService attributeService;
     private OptionService optionService;
-    private MappingService mappingService;
+    private LegendService legendService;
     private Integer id;
     private DataElement dataElement;
     private Collection<DataElementGroup> dataElementGroups;
@@ -81,12 +82,13 @@ public class ShowDataElementFormAction
     // -------------------------------------------------------------------------
     // Input/output
     // -------------------------------------------------------------------------
+    
     private List<OrganisationUnitLevel> aggregationLevels = new ArrayList<>();
     private DataElementCategoryCombo defaultCategoryCombo;
     private List<DataElementGroupSet> groupSets;
     private List<Attribute> attributes;
     private List<OptionSet> optionSets;
-    private List<MapLegendSet> legendSets;
+    private List<LegendSet> legendSets;
     private boolean update;
 
     public void setDataElementService( DataElementService dataElementService )
@@ -114,9 +116,9 @@ public class ShowDataElementFormAction
         this.optionService = optionService;
     }
 
-    public void setMappingService( MappingService mappingService )
+    public void setLegendService( LegendService legendService )
     {
-        this.mappingService = mappingService;
+        this.legendService = legendService;
     }
 
     public void setId( Integer id )
@@ -174,7 +176,7 @@ public class ShowDataElementFormAction
         return optionSets;
     }
 
-    public List<MapLegendSet> getLegendSets()
+    public List<LegendSet> getLegendSets()
     {
         return legendSets;
     }
@@ -233,7 +235,7 @@ public class ShowDataElementFormAction
 
         optionSets = new ArrayList<>( optionService.getAllOptionSets() );
 
-        legendSets = new ArrayList<>( mappingService.getAllMapLegendSets() );
+        legendSets = new ArrayList<>( legendService.getAllLegendSets() );
 
         Collections.sort( dataElementCategoryCombos, IdentifiableObjectNameComparator.INSTANCE );
         Collections.sort( groupSets, IdentifiableObjectNameComparator.INSTANCE );

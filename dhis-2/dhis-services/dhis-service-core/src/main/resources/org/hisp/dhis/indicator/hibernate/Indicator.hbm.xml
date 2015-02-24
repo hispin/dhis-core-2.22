@@ -69,7 +69,7 @@
       <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />
     </set>
 
-    <many-to-one name="legendSet" class="org.hisp.dhis.mapping.MapLegendSet" column="legendsetid"
+    <many-to-one name="legendSet" class="org.hisp.dhis.legend.LegendSet" column="legendsetid"
       foreign-key="fk_indicator_legendset" />
 
   </class>

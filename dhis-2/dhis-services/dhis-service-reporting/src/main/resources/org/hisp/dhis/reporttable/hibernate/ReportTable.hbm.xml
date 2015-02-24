@@ -175,7 +175,7 @@
 
     <property name="userOrganisationUnitGrandChildren" />
 
-    <many-to-one name="legendSet" class="org.hisp.dhis.mapping.MapLegendSet" column="legendsetid"
+    <many-to-one name="legendSet" class="org.hisp.dhis.legend.LegendSet" column="legendsetid"
       foreign-key="fk_reporttable_legendsetid" />
 
     <property name="showHierarchy" />
