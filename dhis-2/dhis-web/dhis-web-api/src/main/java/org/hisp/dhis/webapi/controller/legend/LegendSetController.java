@@ -73,7 +73,7 @@ public class LegendSetController
 
         legendService.addLegendSet( legendSet );
 
-        ContextUtils.createdResponse( response, "Map legend set created", LegendSetSchemaDescriptor.API_ENDPOINT + "/" + legendSet.getUid() );
+        ContextUtils.createdResponse( response, "Legend set created", LegendSetSchemaDescriptor.API_ENDPOINT + "/" + legendSet.getUid() );
     }
 
     @Override
@@ -85,7 +85,7 @@ public class LegendSetController
 
         if ( legendSet == null )
         {
-            ContextUtils.notFoundResponse( response, "Map legend set does not exist: " + uid );
+            ContextUtils.notFoundResponse( response, "Legend set does not exist: " + uid );
             return;
         }
 
@@ -119,7 +119,7 @@ public class LegendSetController
 
         if ( legendSet == null )
         {
-            ContextUtils.notFoundResponse( response, "Map legend set does not exist: " + uid );
+            ContextUtils.notFoundResponse( response, "Legend set does not exist: " + uid );
             return;
         }
 
