@@ -2446,11 +2446,11 @@ Ext.onReady( function() {
 					legends = [];
 
 				Ext.Ajax.request({
-					url: gis.init.contextPath + '/api/mapLegendSets/' + view.legendSet.id + '.json?fields=' + gis.conf.url.mapLegendSetFields.join(','),
+					url: gis.init.contextPath + '/api/legendSets/' + view.legendSet.id + '.json?fields=' + gis.conf.url.legendSetFields.join(','),
 					scope: this,
                     disableCaching: false,
 					success: function(r) {
-						legends = Ext.decode(r.responseText).mapLegends;
+						legends = Ext.decode(r.responseText).legends;
 
 						Ext.Array.sort(legends, function (a, b) {
 							return a.startValue - b.startValue;
@@ -2820,7 +2820,7 @@ Ext.onReady( function() {
                 'mapViews[' + conf.url.analysisFields.join(',') + ']'
             ];
 
-            conf.url.mapLegendFields = [
+            conf.url.legendFields = [
                 '*',
                 '!created',
                 '!lastUpdated',
@@ -2830,8 +2830,8 @@ Ext.onReady( function() {
                 '!userGroupAccesses'
             ];
 
-            conf.url.mapLegendSetFields = [
-                'id,name,mapLegends[' + conf.url.mapLegendFields.join(',') + ']'
+            conf.url.legendSetFields = [
+                'id,name,legends[' + conf.url.legendFields.join(',') + ']'
             ];
         }());
 

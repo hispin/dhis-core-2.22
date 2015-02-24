@@ -327,7 +327,7 @@ Ext.onReady( function() {
                         container.rangeSearchCmp.show();
                         container.rangeValueCmp.show();
 
-                        ranges = Ext.clone(ns.core.init.idLegendSetMap[id].mapLegends);
+                        ranges = Ext.clone(ns.core.init.idLegendSetMap[id].legends);
 
                         // display name
                         for (var i = 0; i < ranges.length; i++) {
@@ -8068,9 +8068,9 @@ Ext.onReady( function() {
 
                                         // legend sets
                                         requests.push({
-                                            url: contextPath + '/api/mapLegendSets.json?fields=id,name,mapLegends[id,name,startValue,endValue,color]&paging=false',
+                                            url: contextPath + '/api/legendSets.json?fields=id,name,legends[id,name,startValue,endValue,color]&paging=false',
                                             success: function(r) {
-                                                init.legendSets = Ext.decode(r.responseText).mapLegendSets || [];
+                                                init.legendSets = Ext.decode(r.responseText).legendSets || [];
                                                 fn();
                                             }
                                         });
