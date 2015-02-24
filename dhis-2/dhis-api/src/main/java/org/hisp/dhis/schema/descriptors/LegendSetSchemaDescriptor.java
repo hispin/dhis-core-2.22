@@ -1,4 +1,4 @@
-package org.hisp.dhis.webapi.controller.mapping;
+package org.hisp.dhis.schema.descriptors;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,18 +28,30 @@ package org.hisp.dhis.webapi.controller.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.mapping.MapLegend;
-import org.hisp.dhis.schema.descriptors.MapLegendSchemaDescriptor;
-import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.hisp.dhis.legend.LegendSet;
+import org.hisp.dhis.schema.Schema;
+import org.hisp.dhis.schema.SchemaDescriptor;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-@Controller
-@RequestMapping( value = MapLegendSchemaDescriptor.API_ENDPOINT )
-public class MapLegendController
-    extends AbstractCrudController<MapLegend>
+@Component
+public class LegendSetSchemaDescriptor implements SchemaDescriptor
 {
+    public static final String SINGULAR = "legendSet";
+
+    public static final String PLURAL = "legendSets";
+
+    public static final String API_ENDPOINT = "/" + PLURAL;
+
+    @Override
+    public Schema getSchema()
+    {
+        Schema schema = new Schema( LegendSet.class, SINGULAR, PLURAL );
+        schema.setApiEndpoint( API_ENDPOINT );
+        schema.setOrder( 1080 );
+
+        return schema;
+    }
 }

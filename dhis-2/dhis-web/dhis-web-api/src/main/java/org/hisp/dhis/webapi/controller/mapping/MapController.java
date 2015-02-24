@@ -44,6 +44,7 @@ import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
+import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.mapgeneration.MapGenerationService;
 import org.hisp.dhis.mapping.Map;
 import org.hisp.dhis.mapping.MapView;
@@ -80,6 +81,9 @@ public class MapController
 
     @Autowired
     private MappingService mappingService;
+    
+    @Autowired
+    private LegendService legendService;
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
@@ -276,7 +280,7 @@ public class MapController
 
         if ( view.getLegendSet() != null )
         {
-            view.setLegendSet( mappingService.getMapLegendSet( view.getLegendSet().getUid() ) );
+            view.setLegendSet( legendService.getLegendSet( view.getLegendSet().getUid() ) );
         }
 
         if ( view.getOrganisationUnitGroupSet() != null )

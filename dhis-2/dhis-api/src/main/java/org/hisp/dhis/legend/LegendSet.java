@@ -1,4 +1,4 @@
-package org.hisp.dhis.mapping;
+package org.hisp.dhis.legend;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -49,25 +49,25 @@ import java.util.Set;
 /**
  * @author Jan Henrik Overland
  */
-@JacksonXmlRootElement( localName = "mapLegendSet", namespace = DxfNamespaces.DXF_2_0 )
-public class MapLegendSet
+@JacksonXmlRootElement( localName = "legendSet", namespace = DxfNamespaces.DXF_2_0 )
+public class LegendSet
     extends BaseIdentifiableObject
 {
     private String symbolizer;
 
     @Scanned
-    private Set<MapLegend> mapLegends = new HashSet<>();
+    private Set<Legend> legends = new HashSet<>();
 
-    public MapLegendSet()
+    public LegendSet()
     {
     }
 
-    public MapLegendSet( String name, String type, String symbolizer, Set<MapLegend> mapLegends,
+    public LegendSet( String name, String type, String symbolizer, Set<Legend> legends,
         Set<Indicator> indicators, Set<DataElement> dataElements )
     {
         this.name = name;
         this.symbolizer = symbolizer;
-        this.mapLegends = mapLegends;
+        this.legends = legends;
     }
 
     // -------------------------------------------------------------------------
@@ -76,7 +76,7 @@ public class MapLegendSet
 
     public void removeAllMapLegends()
     {
-        mapLegends.clear();
+        legends.clear();
     }
 
     // -------------------------------------------------------------------------
@@ -98,16 +98,16 @@ public class MapLegendSet
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "mapLegends", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "mapLegend", namespace = DxfNamespaces.DXF_2_0 )
-    public Set<MapLegend> getMapLegends()
+    @JacksonXmlElementWrapper( localName = "legends", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "legend", namespace = DxfNamespaces.DXF_2_0 )
+    public Set<Legend> getLegends()
     {
-        return mapLegends;
+        return legends;
     }
 
-    public void setMapLegends( Set<MapLegend> mapLegends )
+    public void setLegends( Set<Legend> legends )
     {
-        this.mapLegends = mapLegends;
+        this.legends = legends;
     }
 
     @Override
@@ -117,19 +117,19 @@ public class MapLegendSet
 
         if ( other.getClass().isInstance( this ) )
         {
-            MapLegendSet mapLegendSet = (MapLegendSet) other;
+            LegendSet legendSet = (LegendSet) other;
 
             if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
             {
-                symbolizer = mapLegendSet.getSymbolizer();
+                symbolizer = legendSet.getSymbolizer();
             }
             else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
             {
-                symbolizer = mapLegendSet.getSymbolizer() == null ? symbolizer : mapLegendSet.getSymbolizer();
+                symbolizer = legendSet.getSymbolizer() == null ? symbolizer : legendSet.getSymbolizer();
             }
 
             removeAllMapLegends();
-            mapLegends.addAll( mapLegendSet.getMapLegends() );
+            legends.addAll( legendSet.getLegends() );
         }
     }
 }

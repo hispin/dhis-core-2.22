@@ -28,13 +28,11 @@ package org.hisp.dhis.indicator.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hibernate.Query;
+import java.util.Collection;
+
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorStore;
-import org.hisp.dhis.mapping.MapLegendSet;
-
-import java.util.Collection;
 
 /**
  * @author Lars Helge Overland
@@ -73,14 +71,5 @@ public class HibernateIndicatorStore
         final String hql = "from Indicator d where d.dataSets.size > 0";
 
         return getQuery( hql ).setCacheable( true ).list();
-    }
-
-    @Override
-    public int countMapLegendSetIndicators( MapLegendSet mapLegendSet )
-    {
-        Query query = getQuery( "select count(distinct c) from Indicator c where c.legendSet=:mapLegendSet" );
-        query.setEntity( "mapLegendSet", mapLegendSet );
-
-        return ((Long) query.uniqueResult()).intValue();
     }
 }

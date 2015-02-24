@@ -40,8 +40,7 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
-import org.hisp.dhis.mapgeneration.InternalMapLayer;
-import org.hisp.dhis.mapping.MapLegendSet;
+import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.mapping.MappingService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
@@ -75,6 +74,9 @@ public class GeoToolsMapLayerTest
     @Autowired
     private PeriodService periodService;
 
+    @Autowired
+    private LegendService legendService;
+    
     private OrganisationUnit organisationUnit;
     
     private InternalMapLayer internalMapLayer;
@@ -95,7 +97,7 @@ public class GeoToolsMapLayerTest
 
     private Period period;
 
-    private MapLegendSet mapLegendSet;
+    private org.hisp.dhis.legend.LegendSet mapLegendSet;
 
     @Override
     public void setUpTest()
@@ -126,8 +128,8 @@ public class GeoToolsMapLayerTest
         period = createPeriod( periodType, getDate( 2000, 1, 1 ), getDate( 2000, 2, 1 ) );
         periodService.addPeriod( period );
 
-        mapLegendSet = createMapLegendSet( 'A' );
-        mappingService.addMapLegendSet( mapLegendSet );
+        mapLegendSet = createLegendSet( 'A' );
+        legendService.addLegendSet( mapLegendSet );
 
         internalMapLayer = new InternalMapLayer();
         internalMapLayer.setRadiusLow( 15 );

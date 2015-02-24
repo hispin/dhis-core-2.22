@@ -1,4 +1,6 @@
-package org.hisp.dhis.mapping.comparator;
+package org.hisp.dhis.legend;
+
+import java.util.List;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,20 +30,40 @@ package org.hisp.dhis.mapping.comparator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Comparator;
-
-import org.hisp.dhis.mapping.MapLayer;
-
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
-public class MapLayerNameComparator
-    implements Comparator<MapLayer>
+public interface LegendService
 {
-    @Override
-    public int compare( MapLayer mapLayer0, MapLayer mapLayer1 )
-    {
-        return mapLayer0.getName().compareToIgnoreCase( mapLayer1.getName() );
-    }
+    // -------------------------------------------------------------------------
+    // Legend
+    // -------------------------------------------------------------------------
+
+    int addLegend( Legend legend );
+    
+    void updateLegend( Legend legend );
+    
+    Legend getLegend( int id );
+    
+    Legend getLegend( String uid );
+    
+    void deleteLegend( Legend legend );
+    
+    List<Legend> getAllLegends();
+    
+    // -------------------------------------------------------------------------
+    // LegendSet
+    // -------------------------------------------------------------------------
+
+    int addLegendSet( LegendSet legend );
+    
+    void updateLegendSet( LegendSet legend );
+    
+    LegendSet getLegendSet( int id );
+    
+    LegendSet getLegendSet( String uid );
+    
+    void deleteLegendSet( LegendSet legendSet );
+    
+    List<LegendSet> getAllLegendSets();
 }

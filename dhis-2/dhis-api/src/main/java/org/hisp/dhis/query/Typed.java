@@ -28,8 +28,9 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Iterators;
 import org.hisp.dhis.schema.Klass;
+
+import com.google.common.collect.Iterators;
 
 /**
  * Simple class for checking if an object is one of several allowed classes, mainly used in Operator where
@@ -74,12 +75,12 @@ public class Typed
         return false;
     }
 
-    public static Typed from( Class... klasses )
+    public static Typed from( Class<?>... klasses )
     {
         return new Typed( klasses );
     }
 
-    public static Typed from( Iterable<? extends Class> iterable )
+    public static Typed from( Iterable<? extends Class<?>> iterable )
     {
         return new Typed( Iterators.toArray( iterable.iterator(), Class.class ) );
     }

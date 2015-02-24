@@ -1,4 +1,4 @@
-package org.hisp.dhis.mapping;
+package org.hisp.dhis.legend;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,45 +28,67 @@ package org.hisp.dhis.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.system.deletion.DeletionHandler;
+import org.hisp.dhis.DhisSpringTest;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
-public class MapLegendSetDeletionHandler
-    extends DeletionHandler
+public class LegendServiceTest
+    extends DhisSpringTest
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
+    @Autowired
+    private LegendService legendService;
 
-    private MappingService mappingService;
-
-    public void setMappingService( MappingService mappingService )
+    private Legend legendA;
+    private Legend legendB;
+    
+    private LegendSet legendSetA;
+    
+    @Test
+    public void testAddGetLegend()
     {
-        this.mappingService = mappingService;
+        legendA = createLegend( 'A', 0d, 10d );
+        legendB = createLegend( 'B', 0d, 10d );
+        
+        int idA = legendService.addLegend( legendA );
+        int idB = legendService.addLegend( legendB );
+        
+        assertEquals( legendA, legendService.getLegend( idA ) );
+        assertEquals( legendB, legendService.getLegend( idB ) );
     }
-
-    // -------------------------------------------------------------------------
-    // DeletionHandler implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    protected String getClassName()
+    
+    @Test
+    public void testDeleteLegend()
     {
-        return MapLegendSet.class.getSimpleName();
+        //TODO
     }
-
-    @Override
-    public void deleteMapLegend( MapLegend mapLegend )
+    
+    @Test
+    public void testAddGetLegendSet()
     {
-        for ( MapLegendSet legendSet : mappingService.getAllMapLegendSets() )
-        {
-            if ( legendSet.getMapLegends().remove( mapLegend ) )
-            {
-                mappingService.updateMapLegendSet( legendSet );
-            }
-        }
+        legendA = createLegend( 'A', 0d, 10d );
+        legendB = createLegend( 'B', 0d, 10d );
+        
+        legendService.addLegend( legendA );
+        legendService.addLegend( legendB );
+        
+        legendSetA = createLegendSet( 'A' );
+        legendSetA.getLegends().add( legendA );
+        legendSetA.getLegends().add( legendB );
+        
+        int idA = legendService.addLegendSet( legendSetA );
+        
+        assertEquals( legendSetA, legendService.getLegendSet( idA ) );
+        assertEquals( 2, legendService.getLegendSet( idA ).getLegends().size() );
     }
+    
+    @Test
+    public void testDeleteLegendSet()
+    {
+        //TODO
+    }   
 }

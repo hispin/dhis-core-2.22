@@ -103,8 +103,8 @@
     <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
     <property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="mappingService" ref="org.hisp.dhis.mapping.MappingService" />
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
+    <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />
   </bean>
 
   <bean id="org.hisp.dhis.dataset.action.AddDataSetAction" class="org.hisp.dhis.dataset.action.AddDataSetAction"
@@ -115,8 +115,8 @@
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
     <property name="userService" ref="org.hisp.dhis.user.UserService" />
     <property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
-    <property name="mappingService" ref="org.hisp.dhis.mapping.MappingService" />
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
+    <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />
   </bean>
 
   <bean id="org.hisp.dhis.dataset.action.UpdateDataSetAction" class="org.hisp.dhis.dataset.action.UpdateDataSetAction"
@@ -128,8 +128,8 @@
     <property name="indicatorService" ref="org.hisp.dhis.indicator.IndicatorService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
     <property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
-    <property name="mappingService" ref="org.hisp.dhis.mapping.MappingService" />
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
+    <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />
   </bean>
 
   <bean id="org.hisp.dhis.dataset.action.GetDataSetAction" class="org.hisp.dhis.dataset.action.GetDataSetAction"
