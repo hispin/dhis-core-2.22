@@ -31,7 +31,10 @@ package org.hisp.dhis.dxf2.events.trackedentity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.MoreObjects;
 import org.hisp.dhis.common.DxfNamespaces;
+
+import java.util.Objects;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -42,10 +45,12 @@ public class Relationship
     private String displayName;
 
     private String trackedEntityInstanceA;
-    
+
     private String trackedEntityInstanceB;
 
     private String relationship;
+
+    private TrackedEntityInstance relative;
 
     public Relationship()
     {
@@ -74,7 +79,7 @@ public class Relationship
     {
         this.trackedEntityInstanceA = trackedEntityInstanceA;
     }
-    
+
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
     public String getTrackedEntityInstanceB()
@@ -99,42 +104,51 @@ public class Relationship
         this.relationship = relationship;
     }
 
-    @Override
-    public boolean equals( Object o )
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public TrackedEntityInstance getRelative()
     {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
+        return relative;
+    }
 
-        Relationship that = (Relationship) o;
-
-        if ( displayName != null ? !displayName.equals( that.displayName ) : that.displayName != null ) return false;
-        if ( trackedEntityInstanceA != null ? !trackedEntityInstanceA.equals( that.trackedEntityInstanceA ) : that.trackedEntityInstanceA != null )
-            return false;
-        if ( trackedEntityInstanceB != null ? !trackedEntityInstanceB.equals( that.trackedEntityInstanceB ) : that.trackedEntityInstanceB != null )
-            return false;
-        if ( relationship != null ? !relationship.equals( that.relationship ) : that.relationship != null ) return false;
-
-        return true;
+    public void setRelative( TrackedEntityInstance relative )
+    {
+        this.relative = relative;
     }
 
     @Override
     public int hashCode()
     {
-        int result = displayName != null ? displayName.hashCode() : 0;
-        result = 31 * result + (trackedEntityInstanceA != null ? trackedEntityInstanceA.hashCode() : 0);
-        result = 31 * result + (trackedEntityInstanceB != null ? trackedEntityInstanceB.hashCode() : 0);
-        result = 31 * result + (relationship != null ? relationship.hashCode() : 0);
-        return result;
+        return Objects.hash( displayName, trackedEntityInstanceA, trackedEntityInstanceB, relationship, relative );
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if ( this == obj )
+        {
+            return true;
+        }
+        if ( obj == null || getClass() != obj.getClass() )
+        {
+            return false;
+        }
+        final Relationship other = (Relationship) obj;
+        return Objects.equals( this.displayName, other.displayName )
+            && Objects.equals( this.trackedEntityInstanceA, other.trackedEntityInstanceA )
+            && Objects.equals( this.trackedEntityInstanceB, other.trackedEntityInstanceB )
+            && Objects.equals( this.relationship, other.relationship )
+            && Objects.equals( this.relative, other.relative );
     }
 
     @Override
     public String toString()
     {
-        return "Relationship{" +
-            "displayName='" + displayName + '\'' +
-            ", trackedEntityInstanceA='" + trackedEntityInstanceA + '\'' +
-            ", trackedEntityInstanceB='" + trackedEntityInstanceB + '\'' +
-            ", relationship='" + relationship + '\'' +
-            '}';
+        return MoreObjects.toStringHelper( this )
+            .add( "displayName", displayName )
+            .add( "trackedEntityInstanceA", trackedEntityInstanceA )
+            .add( "trackedEntityInstanceB", trackedEntityInstanceB )
+            .add( "relationship", relationship )
+            .toString();
     }
 }
