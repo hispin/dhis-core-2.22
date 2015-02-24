@@ -595,6 +595,7 @@ gis-combo .x-form-item-label {
     background-image: url('../images/trigger.gif');
     background-position: 0 0;
     width: 17px;
+    border-top-right-radius: 2px;
 }
 .gis-button-combotrigger-disabled,
 .gis-button-combotrigger-disabled * {

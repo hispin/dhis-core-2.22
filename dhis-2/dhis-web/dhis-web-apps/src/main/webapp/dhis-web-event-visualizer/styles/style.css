@@ -783,6 +783,7 @@ table.small td {
     background-image: url('../images/trigger.gif');
     background-position: 0 0;
     width: 17px;
+    border-top-right-radius: 2px;
 }
 .ns-button-combotrigger-disabled,
 .ns-button-combotrigger-disabled * {
