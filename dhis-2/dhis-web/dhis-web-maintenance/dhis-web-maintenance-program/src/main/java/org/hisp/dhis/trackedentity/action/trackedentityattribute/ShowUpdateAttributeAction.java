@@ -29,7 +29,7 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.hisp.dhis.legend.LegendService;
@@ -101,9 +101,9 @@ public class ShowUpdateAttributeAction
         return attribute;
     }
 
-    private Collection<Program> programs;
+    private List<Program> programs;
 
-    public Collection<Program> getPrograms()
+    public List<Program> getPrograms()
     {
         return programs;
     }
@@ -138,17 +138,16 @@ public class ShowUpdateAttributeAction
         throws Exception
     {
         attribute = attributeService.getTrackedEntityAttribute( id );
-
-        programs = programService.getAllPrograms();
-
+        programs = new ArrayList<Program>( programService.getAllPrograms() );
         programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
-
         periodTypes = periodService.getAllPeriodTypes();
-
         optionSets = new ArrayList<>( optionService.getAllOptionSets() );
-
         legendSets = legendService.getAllLegendSets();
 
+        Collections.sort( programs );
+        Collections.sort( optionSets );
+        Collections.sort( legendSets );
+        
         return SUCCESS;
     }
 }

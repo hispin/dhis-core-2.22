@@ -139,6 +139,11 @@ public class TrackedEntityAttribute
         return optionSet != null;
     }
 
+    public boolean hasLegendSet()
+    {
+        return legendSet != null;
+    }
+    
     /**
      * Checks whether the given value is present among the options in the option
      * set of this attribute, matching on code.

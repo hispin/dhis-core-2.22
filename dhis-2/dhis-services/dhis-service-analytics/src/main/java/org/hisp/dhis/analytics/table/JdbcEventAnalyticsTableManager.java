@@ -261,8 +261,8 @@ public class JdbcEventAnalyticsTableManager
             String dataClause = dataElement.isNumericType() ? numericClause : "";
             String select = dataElement.isNumericType() ? doubleSelect : "value";
 
-            String sql = "(select " + select + " from trackedentitydatavalue where programstageinstanceid=" + 
-                "psi.programstageinstanceid and dataelementid=" + dataElement.getId() + dataClause + ") as " + quote( dataElement.getUid() );
+            String sql = "(select " + select + " from trackedentitydatavalue where programstageinstanceid=psi.programstageinstanceid " + 
+                "and dataelementid=" + dataElement.getId() + dataClause + ") as " + quote( dataElement.getUid() );
 
             String[] col = { quote( dataElement.getUid() ), dataType, sql };
             columns.add( col );
@@ -274,8 +274,8 @@ public class JdbcEventAnalyticsTableManager
             
             String sql = "(select l.name from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
                 "inner join trackedentitydatavalue dv on l.startvalue <= " + doubleSelect + " and l.endvalue > " + doubleSelect + " " +
-                "and lsl.legendsetid=" + dataElement.getLegendSet().getId() + " and dv.programstageinstanceid=" + 
-                "psi.programstageinstanceid and dv.dataelementid=" + dataElement.getId() + numericClause + ") as " + column;
+                "and lsl.legendsetid=" + dataElement.getLegendSet().getId() + " and dv.programstageinstanceid=psi.programstageinstanceid " + 
+                "and dv.dataelementid=" + dataElement.getId() + numericClause + ") as " + column;
                 
             String[] col = { column, "character varying(230)", sql };
             columns.add( col );
@@ -287,10 +287,23 @@ public class JdbcEventAnalyticsTableManager
             String dataClause = attribute.isNumericType() ? numericClause : "";
             String select = attribute.isNumericType() ? doubleSelect : "value";
 
-            String sql = "(select " + select + " from trackedentityattributevalue where trackedentityinstanceid=pi.trackedentityinstanceid and " + 
-                "trackedentityattributeid=" + attribute.getId() + dataClause + ") as " + quote( attribute.getUid() );
+            String sql = "(select " + select + " from trackedentityattributevalue where trackedentityinstanceid=pi.trackedentityinstanceid " + 
+                "and trackedentityattributeid=" + attribute.getId() + dataClause + ") as " + quote( attribute.getUid() );
 
             String[] col = { quote( attribute.getUid() ), dataType, sql };
+            columns.add( col );
+        }
+        
+        for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributesWithLegendSet() )
+        {
+            String column = quote( attribute.getUid() + PartitionUtils.SEP + attribute.getLegendSet().getUid() );
+            
+            String sql = "(select l.name from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
+                "inner join trackedentityattributevalue av on l.startvalue <= " + doubleSelect + " and l.endvalue > " + doubleSelect + " " +
+                "and lsl.legendsetid=" + attribute.getLegendSet().getId() + " and av.trackedentityinstanceid=pi.trackedentityinstanceid " +
+                "and av.trackedentityattributeid=" + attribute.getId() + numericClause + ") as " + column;
+            
+            String[] col = { column, "character varying(230)", sql };
             columns.add( col );
         }
 
