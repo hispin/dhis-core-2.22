@@ -3,6 +3,8 @@ trackerCapture.controller('RelationshipController',
                 $rootScope,
                 $modal,                
                 $location,
+                DateUtils,
+                OptionSetService,
                 CurrentSelection,
                 RelationshipFactory) {
     $rootScope.showAddRelationshipDiv = false;    
@@ -15,8 +17,15 @@ trackerCapture.controller('RelationshipController',
         $scope.relatedTeis = [];
         $scope.selections = CurrentSelection.get();
         $scope.optionSets = $scope.selections.optionSets;
-        $scope.selectedTei = angular.copy($scope.selections.tei);
+        $scope.selectedTei = angular.copy($scope.selections.tei);        
         $scope.attributesById = CurrentSelection.getAttributesById();
+        
+        $scope.attributes = [];
+        for(var key in $scope.attributesById){
+            if($scope.attributesById.hasOwnProperty(key)){
+                $scope.attributes.push($scope.attributesById[key]);
+            }            
+        }
         
         $scope.trackedEntity = $scope.selections.te;
         $scope.selectedEnrollment = $scope.selections.selectedEnrollment;
@@ -84,23 +93,51 @@ trackerCapture.controller('RelationshipController',
     
     var setRelationships = function(){
         $scope.relatedTeis = [];
-        angular.forEach($scope.selectedTei.relationships, function(rel){            
+        angular.forEach($scope.selectedTei.relationships, function(rel){
             var teiId = rel.trackedEntityInstanceA;
             var relName = $scope.relationships[rel.relationship].aIsToB;
             if($scope.selectedTei.trackedEntityInstance === rel.trackedEntityInstanceA){
                 teiId = rel.trackedEntityInstanceB;
                 relName = $scope.relationships[rel.relationship].bIsToA;
             }
-            var relative = {trackedEntityInstance: teiId, relName: relName, relId: rel.relationship};
+            var relative = {trackedEntityInstance: teiId, relName: relName, relId: rel.relationship, attributes: getRelativeAttributes(rel)};            
             $scope.relatedTeis.push(relative);
-            
-            /*TEIService.get(teiId, $scope.optionSets).then(function(tei){               
-               var relative = tei.data;
-               relative.relName = relName;
-               relative.relId = rel.relationship;               
-               $scope.relatedTeis.push(relative);
-            });*/
         });
+    };
+    
+    var getRelativeAttributes = function(tei){
+        
+        var attributes = {};
+        
+        if(tei && tei.relative && tei.relative.attributes && !tei.relative.processed){
+            angular.forEach(tei.relative.attributes, function(att){
+                var val = att.value;
+                if(att.type === 'trueOnly'){
+                    val = val === 'true' ? true : '';
+                }
+                else{
+                    if(val){
+                        if(att.type === 'date'){
+                            val = DateUtils.formatFromApiToUser(val);
+                        }
+                        if(att.type === 'optionSet' && 
+                                $scope.attributesById[att.attribute] && 
+                                $scope.attributesById[att.attribute].optionSet && 
+                                $scope.attributesById[att.attribute].optionSet.id && 
+                                $scope.optionSets[$scope.attributesById[att.attribute].optionSet.id]){   
+                            val = OptionSetService.getName($scope.optionSets[$scope.attributesById[att.attribute].optionSet.id].options, val);                                
+                        }
+                    }
+                }                
+                attributes[att.attribute] = val;
+            });
+        }
+        
+        if(tei && tei.relative && tei.relative.processed){
+            attributes = tei.relative.attributes;
+        }
+        
+        return attributes;
     };
 })
 
@@ -384,23 +421,24 @@ trackerCapture.controller('RelationshipController',
     };
     
     $scope.addRelationship = function(){
-        if($scope.selectedTei && $scope.teiForRelationship && $scope.relationship.selected){
-
+        if($scope.selectedTei && $scope.teiForRelationship && $scope.relationship.selected){            
+            var tei = angular.copy($scope.selectedTei);
             var relationship = {};
             relationship.relationship = $scope.relationship.selected.id;
             relationship.displayName = $scope.relationship.selected.name;
+            relationship.relative = {};
+            
             
             relationship.trackedEntityInstanceA = $scope.selectedRelationship.aIsToB === $scope.relationship.selected.aIsToB ? $scope.selectedTei.trackedEntityInstance : $scope.teiForRelationship.id;
             relationship.trackedEntityInstanceB = $scope.selectedRelationship.bIsToA === $scope.relationship.selected.bIsToA ? $scope.teiForRelationship.id : $scope.selectedTei.trackedEntityInstance;
-
-            if($scope.selectedTei.relationships){
-                $scope.selectedTei.relationships.push(relationship);
-            }
-            else{
-                $scope.selectedTei.relationships = [relationship];
-            }
             
-            TEIService.update($scope.selectedTei, $scope.optionSets).then(function(response){
+            tei.relationships = [];
+            angular.forEach($scope.selectedTei.relationships, function(rel){
+                tei.relationships.push({relationship: rel.relationship, displayName: rel.displayName, trackedEntityInstanceA: rel.trackedEntityInstanceA, trackedEntityInstanceB: rel.trackedEntityInstanceB});
+            });
+            tei.relationships.push(relationship);
+            
+            TEIService.update(tei, $scope.optionSets).then(function(response){
                 if(response.status !== 'SUCCESS'){//update has failed
                     var dialogOptions = {
                             headerText: 'relationship_error',
@@ -408,6 +446,16 @@ trackerCapture.controller('RelationshipController',
                         };
                     DialogService.showDialog({}, dialogOptions);
                     return;
+                }
+                
+                relationship.relative.processed = true;
+                relationship.relative.attributes = $scope.teiForRelationship;
+                
+                if($scope.selectedTei.relationships){
+                    $scope.selectedTei.relationships.push(relationship);
+                }
+                else{
+                    $scope.selectedTei.relationships = [relationship];
                 }
                 
                 $modalInstance.close($scope.selectedTei.relationships);                
