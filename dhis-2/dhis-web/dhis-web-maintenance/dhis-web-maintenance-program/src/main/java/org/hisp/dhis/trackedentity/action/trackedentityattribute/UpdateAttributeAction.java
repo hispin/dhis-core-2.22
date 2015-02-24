@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
  */
 
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -66,6 +67,9 @@ public class UpdateAttributeAction
 
     @Autowired
     private PeriodService periodService;
+
+    @Autowired
+    private LegendService legendService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -125,6 +129,13 @@ public class UpdateAttributeAction
     public void setOptionSetId( Integer optionSetId )
     {
         this.optionSetId = optionSetId;
+    }
+
+    private Integer legendSetId;
+
+    public void setLegendSetId( Integer legendSetId )
+    {
+        this.legendSetId = legendSetId;
     }
 
     private Boolean inherit;
@@ -202,6 +213,11 @@ public class UpdateAttributeAction
         else if ( valueType.equals( TrackedEntityAttribute.TYPE_OPTION_SET ) )
         {
             attribute.setOptionSet( optionService.getOptionSet( optionSetId ) );
+        }
+
+        if ( legendSetId != null )
+        {
+            attribute.setLegendSet( legendService.getLegendSet( legendSetId ) );
         }
 
         attributeService.updateTrackedEntityAttribute( attribute );

@@ -31,6 +31,8 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.period.PeriodService;
@@ -61,6 +63,9 @@ public class ShowAddAttributeFormAction
     @Autowired
     private OptionService optionService;
 
+    @Autowired
+    private LegendService legendService;
+
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -79,6 +84,13 @@ public class ShowAddAttributeFormAction
         return optionSets;
     }
 
+    private List<LegendSet> legendSets;
+
+    public List<LegendSet> getLegendSets()
+    {
+        return legendSets;
+    }
+
     // -------------------------------------------------------------------------
     // Getters && Setters
     // -------------------------------------------------------------------------
@@ -88,7 +100,10 @@ public class ShowAddAttributeFormAction
         throws Exception
     {
         periodTypes = periodService.getAllPeriodTypes();
-        optionSets =  new ArrayList<>(optionService.getAllOptionSets());
+        
+        optionSets =  new ArrayList<>( optionService.getAllOptionSets() );
+        
+        legendSets = legendService.getAllLegendSets();
         
         return SUCCESS;
     }
