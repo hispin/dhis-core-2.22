@@ -1,10 +1,14 @@
 <div class="panel panel-info" ng-controller="RelationshipController">
     <div class="panel-heading handle bold">
         {{relationshipWidget.title| translate}}
-        <span class="nav-pills" ng-if="selectedTei">
-            | <a href ng-click="showAddRelationship()" title="{{'add_relationship'| translate}}"><span ng-class="{true: 'widget-link-active', false: 'widget-link'} [showAddRelationshipDiv]">{{addRelationshipLabel}}</span></a>
+        <span class="nav-pills" ng-if="selectedTei && selectedProgram.relationshipText">
+            | <a href ng-click="showAddRelationship(true)" title="{{'add_relationship'| translate}}"><span ng-class="{true: 'widget-link-active', false: 'widget-link'} [showAddRelationshipDiv]">{{selectedProgram.relationshipText}}</span></a>
         </span>        
-
+        
+        <span class="nav-pills" ng-if="selectedTei">
+            | <a href ng-click="showAddRelationship(false)" title="{{'add_relationship'| translate}}"><span ng-class="{true: 'widget-link-active', false: 'widget-link'} [showAddRelationshipDiv]">{{'add' | translate}}</span></a>
+        </span>
+        
         <span class="pull-right widget-link">
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(relationshipWidget)">
                 <span ng-show="relationshipWidget.expand"><i class="fa fa-chevron-up" title="{{'collapse'| translate}}"></i></span>
