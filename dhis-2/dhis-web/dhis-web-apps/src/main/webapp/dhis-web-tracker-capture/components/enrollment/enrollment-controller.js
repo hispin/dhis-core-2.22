@@ -17,17 +17,7 @@ trackerCapture.controller('EnrollmentController',
                 DialogService) {
     
     $scope.today = DateUtils.getToday();
-    $scope.selectedOrgUnit = storage.get('SELECTED_OU');    
-      
-    AttributesFactory.getAll().then(function(atts){
-        $scope.attributes = [];  
-        $scope.attributesById = [];
-        angular.forEach(atts, function(att){
-            $scope.attributesById[att.id] = att;
-        });
-        
-        CurrentSelection.setAttributesById($scope.attributesById);
-    });
+    $scope.selectedOrgUnit = storage.get('SELECTED_OU');  
     
     //listen for the selected items
     var selections = {};
