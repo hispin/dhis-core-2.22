@@ -2460,7 +2460,7 @@ Ext.onReady( function() {
                 // legend set
                 if (xLayout.type === 'gauge' && Ext.Array.contains(xLayout.axisObjectNames, ind) && xLayout.objectNameIdsMap[ind].length) {
                     Ext.Ajax.request({
-                        url: ns.core.init.contextPath + '/api/indicators/' + xLayout.objectNameIdsMap[ind][0] + '.json?fields=legendSet[mapLegends[id,name,startValue,endValue,color]]',
+                        url: ns.core.init.contextPath + '/api/indicators/' + xLayout.objectNameIdsMap[ind][0] + '.json?fields=legendSet[legends[id,name,startValue,endValue,color]]',
                         disableCaching: false,
                         success: function(r) {
                             legendSet = Ext.decode(r.responseText).legendSet;
