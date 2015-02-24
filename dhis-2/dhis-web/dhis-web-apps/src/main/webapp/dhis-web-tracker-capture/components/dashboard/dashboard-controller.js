@@ -29,7 +29,7 @@ trackerCapture.controller('DashboardController',
         $scope.widgetsChanged = [];
         $scope.dashboardStatus = [];
         $scope.dashboardWidgetsOrder = {biggerWidgets: [], smallerWidgets: []};
-        $scope.orderChanged = false;
+        $scope.orderChanged = false;        
         
         DashboardLayoutService.get().then(function(response){
             $scope.dashboardLayouts = response;
@@ -79,13 +79,23 @@ trackerCapture.controller('DashboardController',
                 }
             });
 
+            $scope.hasBigger = false;
             angular.forEach(orderByFilter($filter('filter')($scope.dashboardWidgets, {parent: "biggerWidget"}), 'order'), function(w){
+                if(w.show){
+                    $scope.hasBigger = true;
+                }
                 $scope.dashboardWidgetsOrder.biggerWidgets.push(w.title);
             });
 
+            $scope.hasSmaller = false;
             angular.forEach(orderByFilter($filter('filter')($scope.dashboardWidgets, {parent: "smallerWidget"}), 'order'), function(w){
+                if(w.show){
+                    $scope.hasSmaller = true;
+                }
                 $scope.dashboardWidgetsOrder.smallerWidgets.push(w.title);
             });
+            
+            setWidgetsSize();
             
             AttributesFactory.getAll().then(function(atts){
                 $scope.attributes = [];  
@@ -98,6 +108,20 @@ trackerCapture.controller('DashboardController',
                 $scope.broadCastSelections();
             });            
         });        
+    };    
+    
+    
+    var setWidgetsSize = function(){        
+        
+        $scope.widgetSize = {smaller: "col-sm-6 col-md-4", bigger: "col-sm-6 col-md-8"};
+        
+        if(!$scope.hasSmaller){
+            $scope.widgetSize = {smaller: "col-sm-1", bigger: "col-sm-11"};
+        }
+
+        if(!$scope.hasBigger){
+            $scope.widgetSize = {smaller: "col-sm-11", bigger: "col-sm-1"};
+        }
     };
     
     if($scope.selectedTeiId){
@@ -238,27 +262,36 @@ trackerCapture.controller('DashboardController',
     
     var saveDashboardLayout = function(){
         var widgets = [];
+        $scope.hasBigger = false;
+        $scope.hasSmaller = false;
         angular.forEach($rootScope.dashboardWidgets, function(widget){
             var w = angular.copy(widget);            
             if($scope.orderChanged){
                 if($scope.widgetsOrder.biggerWidgets.indexOf(w.title) !== -1){
+                    $scope.hasBigger = $scope.hasBigger || w.show;
                     w.parent = 'biggerWidget';
                     w.order = $scope.widgetsOrder.biggerWidgets.indexOf(w.title);
                 }
                 
                 if($scope.widgetsOrder.smallerWidgets.indexOf(w.title) !== -1){
+                    $scope.hasSmaller = $scope.hasSmaller || w.show;
                     w.parent = 'smallerWidget';
                     w.order = $scope.widgetsOrder.smallerWidgets.indexOf(w.title);
                 }
-            }            
+            }
             widgets.push(w);
         });
-            
+
         if($scope.selectedProgram && $scope.selectedProgram.id){
             $scope.dashboardLayouts[$scope.selectedProgram.id] = {widgets: widgets, program: $scope.selectedProgram.id};
         }
         
         DashboardLayoutService.saveLayout($scope.dashboardLayouts).then(function(){
+            if(!$scope.orderChanged){
+                $scope.hasSmaller = $filter('filter')($scope.dashboardWidgets, {parent: "smallerWidget", show: true}).length > 0;
+                $scope.hasBigger = $filter('filter')($scope.dashboardWidgets, {parent: "biggerWidget", show: true}).length > 0;                                
+            }                
+            setWidgetsSize();      
         });
     };
     
