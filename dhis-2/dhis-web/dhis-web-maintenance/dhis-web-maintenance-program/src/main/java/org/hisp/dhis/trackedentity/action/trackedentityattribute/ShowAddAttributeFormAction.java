@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.hisp.dhis.legend.LegendService;
@@ -99,11 +100,12 @@ public class ShowAddAttributeFormAction
     public String execute()
         throws Exception
     {
-        periodTypes = periodService.getAllPeriodTypes();
-        
+        periodTypes = periodService.getAllPeriodTypes();        
         optionSets =  new ArrayList<>( optionService.getAllOptionSets() );
-        
         legendSets = legendService.getAllLegendSets();
+        
+        Collections.sort( optionSets );
+        Collections.sort( legendSets );
         
         return SUCCESS;
     }

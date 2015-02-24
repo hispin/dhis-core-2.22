@@ -223,26 +223,29 @@ public abstract class AbstractJdbcTableManager
     /**
      * Remove quotes from the given column name.
      */
-    protected String removeQuote( String column )
+    private String removeQuote( String column )
     {
         return column != null ? column.replaceAll( statementBuilder.getColumnQuote(), StringUtils.EMPTY ) : null;
     }
     
     /**
-     * Remove temp part of name from the given column name.
+     * Shortens the given table name.
      */
-    protected String removeTemp( String column )
+    private String shortenTableName( String table )
     {
-        return column != null ? column.replaceAll( TABLE_TEMP_SUFFIX, StringUtils.EMPTY ) : null;
+        table = table.replaceAll( ANALYTICS_TABLE_NAME, "ax" );
+        table = table.replaceAll( TABLE_TEMP_SUFFIX, StringUtils.EMPTY );
+        
+        return table;
     }
     
     /**
      * Returns index name for column. Purpose of code suffix is to avoid uniqueness
-     * collision between indexes for temp and real tables.
+     * collision between indexes for temporary and real tables.
      */
     protected String getIndexName( AnalyticsIndex inx )
     {
-        return quote( PREFIX_INDEX + removeQuote( removeTemp( inx.getColumn() ) ) + "_" + inx.getTable() + "_" + CodeGenerator.generateCode( 5 ) );        
+        return quote( PREFIX_INDEX + removeQuote( inx.getColumn() ) + "_" + shortenTableName( inx.getTable() ) + "_" + CodeGenerator.generateCode( 5 ) );        
     }
     
     /**
