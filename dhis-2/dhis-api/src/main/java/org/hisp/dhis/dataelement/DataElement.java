@@ -512,6 +512,11 @@ public class DataElement
         return optionSet != null;
     }
 
+    public boolean hasLegendSet()
+    {
+        return legendSet != null;
+    }
+    
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------

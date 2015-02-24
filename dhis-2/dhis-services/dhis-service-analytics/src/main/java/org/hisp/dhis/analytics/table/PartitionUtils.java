@@ -53,7 +53,7 @@ public class PartitionUtils
 {
     private static final YearlyPeriodType PERIODTYPE = new YearlyPeriodType();
 
-    private static final String SEP = "_";
+    public static final String SEP = "_";
 
     public static Period getPeriod( Integer year )
     {

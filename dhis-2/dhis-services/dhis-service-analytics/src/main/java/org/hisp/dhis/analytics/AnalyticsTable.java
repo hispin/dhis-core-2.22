@@ -30,6 +30,7 @@ package org.hisp.dhis.analytics;
 
 import java.util.List;
 
+import org.hisp.dhis.analytics.table.PartitionUtils;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
@@ -86,12 +87,12 @@ public class AnalyticsTable
 
         if ( period != null )
         {
-            name += "_" + PeriodType.getCalendar().fromIso( period.getStartDate() ).getYear();
+            name += PartitionUtils.SEP + PeriodType.getCalendar().fromIso( period.getStartDate() ).getYear();
         }
 
         if ( program != null )
         {
-            name += "_" + program.getUid().toLowerCase();
+            name += PartitionUtils.SEP + program.getUid().toLowerCase();
         }
 
         return name;
@@ -103,12 +104,12 @@ public class AnalyticsTable
 
         if ( period != null )
         {
-            name += "_" + PeriodType.getCalendar().fromIso( period.getStartDate() ).getYear();
+            name += PartitionUtils.SEP + PeriodType.getCalendar().fromIso( period.getStartDate() ).getYear();
         }
 
         if ( program != null )
         {
-            name += "_" + program.getUid().toLowerCase();
+            name += PartitionUtils.SEP + program.getUid().toLowerCase();
         }
 
         return name;
