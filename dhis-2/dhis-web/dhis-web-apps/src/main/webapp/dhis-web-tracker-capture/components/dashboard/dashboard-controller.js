@@ -14,6 +14,7 @@ trackerCapture.controller('DashboardController',
                 EnrollmentService,
                 ProgramFactory,
                 DashboardLayoutService,
+                AttributesFactory,
                 CurrentSelection) {
     //selections
     $scope.selectedTeiId = ($location.search()).tei; 
@@ -86,7 +87,16 @@ trackerCapture.controller('DashboardController',
                 $scope.dashboardWidgetsOrder.smallerWidgets.push(w.title);
             });
             
-            $scope.broadCastSelections();
+            AttributesFactory.getAll().then(function(atts){
+                $scope.attributes = [];  
+                $scope.attributesById = [];
+                angular.forEach(atts, function(att){
+                    $scope.attributesById[att.id] = att;
+                });
+
+                CurrentSelection.setAttributesById($scope.attributesById);
+                $scope.broadCastSelections();
+            });            
         });        
     };
     
