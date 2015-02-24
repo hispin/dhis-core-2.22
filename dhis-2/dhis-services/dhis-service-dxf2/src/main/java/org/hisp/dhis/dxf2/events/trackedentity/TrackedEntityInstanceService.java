@@ -48,6 +48,8 @@ public interface TrackedEntityInstanceService
 
     TrackedEntityInstance getTrackedEntityInstance( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance );
 
+    TrackedEntityInstance getTrackedEntityInstance( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance, boolean expandRelative );
+
     // -------------------------------------------------------------------------
     // CREATE
     // -------------------------------------------------------------------------

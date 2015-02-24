@@ -33,6 +33,7 @@ import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
@@ -40,7 +41,6 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.node.types.CollectionNode;
@@ -242,8 +242,7 @@ public class TrackedEntityInstanceController
 
     @RequestMapping( value = "/{id}", method = RequestMethod.GET )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_INSTANCE_SEARCH')" )
-    public @ResponseBody RootNode getTrackedEntityInstanceById( @PathVariable( "id" ) String pvId,
-        @RequestParam( value = "realObject", required = false, defaultValue = "false" ) boolean realObject )
+    public @ResponseBody RootNode getTrackedEntityInstanceById( @PathVariable( "id" ) String pvId )
         throws NotFoundException
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
@@ -253,18 +252,7 @@ public class TrackedEntityInstanceController
             fields.add( ":all" );
         }
 
-        CollectionNode collectionNode;
-
-        if ( !realObject )
-        {
-            collectionNode = fieldFilterService.filter( TrackedEntityInstance.class,
-                Lists.newArrayList( getTrackedEntityInstance( pvId ) ), fields );
-        }
-        else
-        {
-            collectionNode = fieldFilterService.filter( org.hisp.dhis.trackedentity.TrackedEntityInstance.class,
-                Lists.newArrayList( instanceService.getTrackedEntityInstance( pvId ) ), fields );
-        }
+        CollectionNode collectionNode = fieldFilterService.filter( TrackedEntityInstance.class, Lists.newArrayList( getTrackedEntityInstance( pvId ) ), fields );
 
         RootNode rootNode = new RootNode( collectionNode.getChildren().get( 0 ) );
         rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
