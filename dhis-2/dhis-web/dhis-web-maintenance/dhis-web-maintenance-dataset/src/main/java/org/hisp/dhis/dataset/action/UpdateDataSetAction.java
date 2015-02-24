@@ -28,8 +28,13 @@ package org.hisp.dhis.dataset.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import com.opensymphony.xwork2.Action;
+import static org.hisp.dhis.system.util.TextUtils.equalsNullSafe;
+import static org.hisp.dhis.system.util.TextUtils.nullIfEmpty;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -40,19 +45,15 @@ import org.hisp.dhis.dataset.Section;
 import org.hisp.dhis.dataset.SectionService;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorService;
-import org.hisp.dhis.mapping.MapLegendSet;
-import org.hisp.dhis.mapping.MappingService;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.UserGroupService;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.hisp.dhis.system.util.TextUtils.equalsNullSafe;
-import static org.hisp.dhis.system.util.TextUtils.nullIfEmpty;
+import com.google.common.collect.Lists;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Kristian
@@ -113,18 +114,18 @@ public class UpdateDataSetAction
         this.userGroupService = userGroupService;
     }
 
-    private MappingService mappingService;
-
-    public void setMappingService( MappingService mappingService )
-    {
-        this.mappingService = mappingService;
-    }
-
     private AttributeService attributeService;
 
     public void setAttributeService( AttributeService attributeService )
     {
         this.attributeService = attributeService;
+    }
+
+    private LegendService legendService;
+
+    public void setLegendService( LegendService legendService )
+    {
+        this.legendService = legendService;
     }
 
     // -------------------------------------------------------------------------
@@ -331,7 +332,7 @@ public class UpdateDataSetAction
 
         Set<DataElement> dataElements = new HashSet<>();
 
-        MapLegendSet legendSet = mappingService.getMapLegendSet( selectedLegendSetId );
+        LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
 
         for ( String id : deSelected )
         {

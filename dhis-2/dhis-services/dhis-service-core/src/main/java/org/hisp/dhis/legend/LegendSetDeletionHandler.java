@@ -1,4 +1,4 @@
-package org.hisp.dhis.schema.descriptors;
+package org.hisp.dhis.legend;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,30 +28,44 @@ package org.hisp.dhis.schema.descriptors;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.mapping.MapLegendSet;
-import org.hisp.dhis.schema.Schema;
-import org.hisp.dhis.schema.SchemaDescriptor;
-import org.springframework.stereotype.Component;
+import org.hisp.dhis.legend.Legend;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
+import org.hisp.dhis.system.deletion.DeletionHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * @author Lars Helge Overland
  */
-@Component
-public class MapLegendSetSchemaDescriptor implements SchemaDescriptor
+public class LegendSetDeletionHandler
+    extends DeletionHandler
 {
-    public static final String SINGULAR = "mapLegendSet";
+    // -------------------------------------------------------------------------
+    // Dependencies
+    // -------------------------------------------------------------------------
 
-    public static final String PLURAL = "mapLegendSets";
+    @Autowired
+    private LegendService legendService;
 
-    public static final String API_ENDPOINT = "/" + PLURAL;
+    // -------------------------------------------------------------------------
+    // DeletionHandler implementation
+    // -------------------------------------------------------------------------
 
     @Override
-    public Schema getSchema()
+    protected String getClassName()
     {
-        Schema schema = new Schema( MapLegendSet.class, SINGULAR, PLURAL );
-        schema.setApiEndpoint( API_ENDPOINT );
-        schema.setOrder( 1080 );
+        return LegendSet.class.getSimpleName();
+    }
 
-        return schema;
+    @Override
+    public void deleteLegend( Legend legend )
+    {
+        for ( LegendSet legendSet : legendService.getAllLegendSets() )
+        {
+            if ( legendSet.getLegends().remove( legend ) )
+            {
+                legendService.updateLegendSet( legendSet );
+            }
+        }
     }
 }

@@ -35,7 +35,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.expression.ExpressionService;
-import org.hisp.dhis.mapping.MapLegendSet;
 import org.hisp.dhis.system.deletion.DeletionHandler;
 
 /**
@@ -154,11 +153,5 @@ public class IndicatorDeletionHandler
         }
 
         return null;
-    }
-
-    @Override
-    public String allowDeleteMapLegendSet( MapLegendSet mapLegendSet )
-    {
-        return indicatorService.countMapLegendSetIndicators( mapLegendSet ) == 0 ? null : ERROR;
     }
 }

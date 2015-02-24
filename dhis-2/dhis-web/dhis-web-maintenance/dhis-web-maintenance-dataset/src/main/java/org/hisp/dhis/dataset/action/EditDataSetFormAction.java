@@ -44,8 +44,8 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.indicator.Indicator;
-import org.hisp.dhis.mapping.MapLegendSet;
-import org.hisp.dhis.mapping.MappingService;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.AttributeUtils;
@@ -92,18 +92,18 @@ public class EditDataSetFormAction
         this.categoryService = categoryService;
     }
 
-    private MappingService mappingService;
-
-    public void setMappingService( MappingService mappingService )
-    {
-        this.mappingService = mappingService;
-    }
-
     private AttributeService attributeService;
 
     public void setAttributeService( AttributeService attributeService )
     {
         this.attributeService = attributeService;
+    }
+
+    private LegendService legendService;
+
+    public void setLegendService( LegendService legendService )
+    {
+        this.legendService = legendService;
     }
 
     // -------------------------------------------------------------------------
@@ -159,9 +159,9 @@ public class EditDataSetFormAction
         return categoryCombos;
     }
 
-    private List<MapLegendSet> legendSets;
+    private List<LegendSet> legendSets;
 
-    public List<MapLegendSet> getLegendSets()
+    public List<LegendSet> getLegendSets()
     {
         return legendSets;
     }
@@ -191,7 +191,7 @@ public class EditDataSetFormAction
         periodTypes = periodService.getAllPeriodTypes();
         userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
         categoryCombos = new ArrayList<>( categoryService.getAttributeCategoryCombos() );
-        legendSets = new ArrayList<>( mappingService.getAllMapLegendSets() );
+        legendSets = new ArrayList<>( legendService.getAllLegendSets() );
         
         if ( dataSetId != null )
         {

@@ -28,19 +28,20 @@ package org.hisp.dhis.dd.action.indicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
-import org.hisp.dhis.mapping.MapLegendSet;
-import org.hisp.dhis.mapping.MappingService;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -66,11 +67,11 @@ public class ShowAddIndicatorForm
         this.attributeService = attributeService;
     }
 
-    private MappingService mappingService;
+    private LegendService legendService;
 
-    public void setMappingService( MappingService mappingService )
+    public void setLegendService( LegendService legendService )
     {
-        this.mappingService = mappingService;
+        this.legendService = legendService;
     }
 
     // -------------------------------------------------------------------------
@@ -91,9 +92,9 @@ public class ShowAddIndicatorForm
         return attributes;
     }
 
-    private List<MapLegendSet> legendSets;
+    private List<LegendSet> legendSets;
 
-    public List<MapLegendSet> getLegendSets()
+    public List<LegendSet> getLegendSets()
     {
         return legendSets;
     }
@@ -109,7 +110,7 @@ public class ShowAddIndicatorForm
         
         attributes = new ArrayList<>( attributeService.getIndicatorAttributes() );
 
-        legendSets = new ArrayList<>( mappingService.getAllMapLegendSets() );
+        legendSets = new ArrayList<>( legendService.getAllLegendSets() );
         
         Collections.sort( indicatorTypes, IdentifiableObjectNameComparator.INSTANCE );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );

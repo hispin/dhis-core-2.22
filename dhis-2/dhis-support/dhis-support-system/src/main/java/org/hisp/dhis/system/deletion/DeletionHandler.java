@@ -61,9 +61,9 @@ import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 import org.hisp.dhis.indicator.IndicatorType;
 import org.hisp.dhis.interpretation.Interpretation;
+import org.hisp.dhis.legend.Legend;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.mapping.Map;
-import org.hisp.dhis.mapping.MapLegend;
-import org.hisp.dhis.mapping.MapLegendSet;
 import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.minmax.MinMaxDataElement;
 import org.hisp.dhis.option.OptionSet;
@@ -461,20 +461,20 @@ public abstract class DeletionHandler
         return null;
     }
 
-    public void deleteMapLegend( MapLegend mapLegend )
+    public void deleteLegend( Legend mapLegend )
     {
     }
 
-    public String allowDeleteMapLegend( MapLegend mapLegend )
+    public String allowDeleteLegend( Legend mapLegend )
     {
         return null;
     }
 
-    public void deleteMapLegendSet( MapLegendSet mapLegendSet )
+    public void deleteLegendSet( LegendSet legendSet )
     {
     }
 
-    public String allowDeleteMapLegendSet( MapLegendSet mapLegendSet )
+    public String allowDeleteLegendSet( LegendSet legendSet )
     {
         return null;
     }

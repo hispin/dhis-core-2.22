@@ -28,15 +28,6 @@ package org.hisp.dhis.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-
-import java.util.Collection;
-import java.util.HashSet;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementGroup;
@@ -57,7 +48,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class MappingServiceTest
     extends DhisSpringTest
@@ -91,8 +81,6 @@ public class MappingServiceTest
 
     private Period period;
 
-    private MapLegendSet mapLegendSet;
-
     // -------------------------------------------------------------------------
     // Fixture
     // -------------------------------------------------------------------------
@@ -125,155 +113,17 @@ public class MappingServiceTest
         periodType = periodService.getPeriodTypeByName( MonthlyPeriodType.NAME );
         period = createPeriod( periodType, getDate( 2000, 1, 1 ), getDate( 2000, 2, 1 ) );
         periodService.addPeriod( period );
-
-        mapLegendSet = createMapLegendSet( 'A' );
-        mappingService.addMapLegendSet( mapLegendSet );
     }
-
-    // -------------------------------------------------------------------------
-    // MapLegend
-    // -------------------------------------------------------------------------
-
+    
     @Test
-    public void testGetAddOrUpdateMapLegend()
+    public void testAddGetMap()
     {
-        MapLegend legend = createMapLegend( 'A', 0.1, 0.2 );
-
-        mappingService.addOrUpdateMapLegend( legend.getName(), legend.getStartValue(), legend.getEndValue(),
-            legend.getColor(), legend.getImage() );
-
-        legend = mappingService.getMapLegendByName( legend.getName() );
-
-        assertNotNull( legend );
-
-        int id = legend.getId();
-
-        mappingService.addOrUpdateMapLegend( legend.getName(), legend.getStartValue(), 0.3, "ColorB", "img.png" );
-
-        assertEquals( "MapLegendA", mappingService.getMapLegend( id ).getName() );
-        assertEquals( new Double( 0.1 ), mappingService.getMapLegend( id ).getStartValue() );
-        assertEquals( new Double( 0.3 ), mappingService.getMapLegend( id ).getEndValue() );
-        assertEquals( "ColorB", mappingService.getMapLegend( id ).getColor() );
-        assertEquals( "img.png", mappingService.getMapLegend( id ).getImage() );
+        //TODO
     }
 
     @Test
-    public void testDeleteMapLegend()
+    public void testDeleteMap()
     {
-        MapLegend legend = createMapLegend( 'A', 0.1, 0.2 );
-
-        int id = mappingService.addMapLegend( legend );
-
-        legend = mappingService.getMapLegend( id );
-        
-        assertNotNull( legend );
-
-        mappingService.deleteMapLegend( legend );
-
-        assertNull( mappingService.getMapLegend( id ) );
-    }
-
-    @Test
-    public void testGetAllMapLegends()
-    {
-        MapLegend legend1 = createMapLegend( 'A', 0.1, 0.2 );
-        MapLegend legend2 = createMapLegend( 'B', 0.3, 0.4 );
-        MapLegend legend3 = createMapLegend( 'C', 0.5, 0.6 );
-
-        mappingService.addMapLegend( legend1 );
-        mappingService.addMapLegend( legend3 );
-
-        Collection<MapLegend> legends = mappingService.getAllMapLegends();
-        
-        assertEquals( 2, legends.size() );
-        assertTrue( legends.contains( legend1 ) );
-        assertTrue( legends.contains( legend3 ) );
-        assertFalse( legends.contains( legend2 ) );
-    }
-
-    @Test
-    public void testGetMapLegendsByName()
-    {
-        MapLegend legend1 = createMapLegend( 'A', 0.1, 0.2 );
-        MapLegend legend2 = createMapLegend( 'B', 0.3, 0.4 );
-        
-        mappingService.addMapLegend( legend1 );
-        mappingService.addMapLegend( legend2 );
-        
-        assertNotNull( mappingService.getMapLegendByName( "MapLegendA" ) );
-        assertNotNull( mappingService.getMapLegendByName( "MapLegendB" ) );
-        assertNull( mappingService.getMapLegendByName( "MapLegendC" ) );
-    }
-
-    // -------------------------------------------------------------------------
-    // MapLegendSet
-    // -------------------------------------------------------------------------
-
-    @Test
-    public void testAddGetMapLegendSet()
-    {
-        MapLegendSet legendSet = createMapLegendSet( 'B' );
-
-        int id = mappingService.addMapLegendSet( legendSet );
-
-        assertNotNull( mappingService.getMapLegendSet( id ) );
-    }
-
-    @Test
-    public void testGetUpdateMapLegendSet()
-    {
-        MapLegendSet legendSet = createMapLegendSet( 'F' );
-        legendSet.setSymbolizer( "SymbolF" );
-
-        int id = mappingService.addMapLegendSet( legendSet );
-
-        legendSet = mappingService.getMapLegendSet( id );
-
-        assertNotNull( legendSet );
-        assertEquals( "SymbolF", legendSet.getSymbolizer() );
-
-        legendSet.setSymbolizer( "SymbolG" );
-
-        mappingService.updateMapLegendSet( legendSet );
-
-        legendSet = mappingService.getMapLegendSet( id );
-
-        assertNotNull( legendSet );
-        assertEquals( "SymbolG", legendSet.getSymbolizer() );
-    }
-
-    @Test
-    public void testGetAllMapLegendSets()
-    {
-        MapLegendSet legendSet1 = createMapLegendSet( 'B' );
-        MapLegendSet legendSet2 = createMapLegendSet( 'C' );
-        MapLegendSet legendSet3 = createMapLegendSet( 'D' );
-
-        Collection<MapLegendSet> mapLegendSets = new HashSet<>();
-
-        mapLegendSets.add( mapLegendSet );
-        mapLegendSets.add( legendSet1 );
-        mapLegendSets.add( legendSet2 );
-        mapLegendSets.add( legendSet3 );
-
-        mappingService.addMapLegendSet( legendSet1 );
-        mappingService.addMapLegendSet( legendSet2 );
-        mappingService.addMapLegendSet( legendSet3 );
-
-        assertTrue( mappingService.getAllMapLegendSets().containsAll( mapLegendSets ) );
-    }
-
-    @Test
-    public void testGetMapLegendSetByName()
-    {
-        MapLegendSet legendSet1 = createMapLegendSet( 'B' );
-        MapLegendSet legendSet2 = createMapLegendSet( 'C' );
-
-        mappingService.addMapLegendSet( legendSet1 );
-        mappingService.addMapLegendSet( legendSet2 );
-
-        assertNotNull( mappingService.getMapLegendSetByName( "MapLegendSetB" ) );
-        assertNotNull( mappingService.getMapLegendSetByName( "MapLegendSetC" ) );
-        assertNull( mappingService.getMapLegendSetByName( "MapLegendSetD" ) );
+        //TODO
     }
 }

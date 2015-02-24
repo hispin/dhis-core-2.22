@@ -34,8 +34,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hisp.dhis.mapgeneration.comparator.IntervalLowValueAscComparator;
-import org.hisp.dhis.mapping.MapLegend;
-import org.hisp.dhis.mapping.MapLegendSet;
 import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
@@ -216,11 +214,11 @@ public class InternalMapLayer
      * 
      * @param legendSet the legend set.
      */
-    public void setIntervalSetFromLegendSet( MapLegendSet legendSet )
+    public void setIntervalSetFromLegendSet( org.hisp.dhis.legend.LegendSet legendSet )
     {
         IntervalSet intervalSet = new IntervalSet();
         
-        for ( MapLegend legend : legendSet.getMapLegends() )
+        for ( org.hisp.dhis.legend.Legend legend : legendSet.getLegends() )
         {
             Color color = MapUtils.createColorFromString( legend.getColor() );
             

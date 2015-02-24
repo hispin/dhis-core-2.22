@@ -28,15 +28,15 @@ package org.hisp.dhis.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Collection;
+import java.util.List;
+
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Jan Henrik Overland
@@ -61,44 +61,6 @@ public interface MappingService
 
     final String MAP_LAYER_TYPE_BASELAYER = "baselayer";
     final String MAP_LAYER_TYPE_OVERLAY = "overlay";
-
-    // -------------------------------------------------------------------------
-    // MapLegend
-    // -------------------------------------------------------------------------
-
-    void addOrUpdateMapLegend( String name, Double startValue, Double endValue, String color, String image );
-
-    int addMapLegend( MapLegend mapLegend );
-
-    void deleteMapLegend( MapLegend legend );
-
-    MapLegend getMapLegend( int id );
-
-    MapLegend getMapLegend( String uid );
-
-    MapLegend getMapLegendByName( String name );
-
-    Collection<MapLegend> getAllMapLegends();
-
-    // -------------------------------------------------------------------------
-    // MapLegendSet
-    // -------------------------------------------------------------------------
-
-    int addMapLegendSet( MapLegendSet legendSet );
-
-    void updateMapLegendSet( MapLegendSet legendSet );
-
-    void addOrUpdateMapLegendSet( String name, String type, String symbolizer, Set<MapLegend> mapLegends );
-
-    void deleteMapLegendSet( MapLegendSet legendSet );
-
-    MapLegendSet getMapLegendSet( int id );
-
-    MapLegendSet getMapLegendSet( String uid );
-
-    MapLegendSet getMapLegendSetByName( String name );
-
-    Collection<MapLegendSet> getAllMapLegendSets();
 
     // -------------------------------------------------------------------------
     // Map
@@ -179,5 +141,5 @@ public interface MappingService
     
     int countOrganisationUnitMapViews( OrganisationUnit organisationUnit );
 
-    int countMapLegendSetMapViews( MapLegendSet mapLegendSet );
+    int countLegendSetMapViews( LegendSet legendSet );
 }

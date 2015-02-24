@@ -63,10 +63,10 @@ import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 import org.hisp.dhis.indicator.IndicatorType;
 import org.hisp.dhis.interpretation.Interpretation;
+import org.hisp.dhis.legend.Legend;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.mapping.Map;
 import org.hisp.dhis.mapping.MapLayer;
-import org.hisp.dhis.mapping.MapLegend;
-import org.hisp.dhis.mapping.MapLegendSet;
 import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.message.MessageConversation;
 import org.hisp.dhis.option.Option;
@@ -193,9 +193,9 @@ public class MetaData
 
     private List<MapView> mapViews = new ArrayList<>();
 
-    private List<MapLegend> mapLegends = new ArrayList<>();
+    private List<Legend> legends = new ArrayList<>();
 
-    private List<MapLegendSet> mapLegendSets = new ArrayList<>();
+    private List<LegendSet> legendSets = new ArrayList<>();
 
     private List<MapLayer> mapLayers = new ArrayList<>();
 
@@ -807,29 +807,29 @@ public class MetaData
     }
 
     @JsonProperty
-    @JacksonXmlElementWrapper( localName = "mapLegends", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "mapLegend", namespace = DxfNamespaces.DXF_2_0 )
-    public List<MapLegend> getMapLegends()
+    @JacksonXmlElementWrapper( localName = "legends", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "legend", namespace = DxfNamespaces.DXF_2_0 )
+    public List<Legend> getLegends()
     {
-        return mapLegends;
+        return legends;
     }
 
-    public void setMapLegends( List<MapLegend> mapLegends )
+    public void setLegends( List<Legend> legends )
     {
-        this.mapLegends = mapLegends;
+        this.legends = legends;
     }
 
     @JsonProperty
-    @JacksonXmlElementWrapper( localName = "mapLegendSets", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "mapLegendSet", namespace = DxfNamespaces.DXF_2_0 )
-    public List<MapLegendSet> getMapLegendSets()
+    @JacksonXmlElementWrapper( localName = "legendSets", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "legendSet", namespace = DxfNamespaces.DXF_2_0 )
+    public List<LegendSet> getLegendSets()
     {
-        return mapLegendSets;
+        return legendSets;
     }
 
-    public void setMapLegendSets( List<MapLegendSet> mapLegendSets )
+    public void setLegendSets( List<LegendSet> legendSets )
     {
-        this.mapLegendSets = mapLegendSets;
+        this.legendSets = legendSets;
     }
 
     @JsonProperty
@@ -1084,8 +1084,8 @@ public class MetaData
             ", reportTables=" + reportTables +
             ", maps=" + maps +
             ", mapViews=" + mapViews +
-            ", mapLegends=" + mapLegends +
-            ", mapLegendSets=" + mapLegendSets +
+            ", legends=" + legends +
+            ", legendSets=" + legendSets +
             ", mapLayers=" + mapLayers +
             ", sections=" + sections +
             ", dataSets=" + dataSets +

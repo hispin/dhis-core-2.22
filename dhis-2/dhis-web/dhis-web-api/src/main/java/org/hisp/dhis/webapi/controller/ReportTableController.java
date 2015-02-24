@@ -44,6 +44,7 @@ import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
+import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.mapping.MappingService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -84,6 +85,9 @@ public class ReportTableController
 
     @Autowired
     private MappingService mappingService;
+    
+    @Autowired
+    private LegendService legendService;
 
     @Autowired
     private I18nManager i18nManager;
@@ -304,7 +308,7 @@ public class ReportTableController
 
         if ( reportTable.getLegendSet() != null )
         {
-            reportTable.setLegendSet( mappingService.getMapLegendSet( reportTable.getLegendSet().getUid() ) );
+            reportTable.setLegendSet( legendService.getLegendSet( reportTable.getLegendSet().getUid() ) );
         }
     }
 }

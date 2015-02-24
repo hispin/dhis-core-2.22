@@ -6,7 +6,7 @@
   >
 
 <hibernate-mapping>
-  <class name="org.hisp.dhis.mapping.MapLegend" table="maplegend">
+  <class name="org.hisp.dhis.legend.Legend" table="maplegend">
 
     <id name="id" column="maplegendid">
       <generator class="native" />

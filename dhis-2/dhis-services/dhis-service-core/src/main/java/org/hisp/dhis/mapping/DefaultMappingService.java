@@ -29,15 +29,13 @@ package org.hisp.dhis.mapping;
  */
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
@@ -77,20 +75,6 @@ public class DefaultMappingService
         this.mapLayerStore = mapLayerStore;
     }
 
-    private GenericIdentifiableObjectStore<MapLegend> mapLegendStore;
-
-    public void setMapLegendStore( GenericIdentifiableObjectStore<MapLegend> mapLegendStore )
-    {
-        this.mapLegendStore = mapLegendStore;
-    }
-
-    private GenericIdentifiableObjectStore<MapLegendSet> mapLegendSetStore;
-
-    public void setMapLegendSetStore( GenericIdentifiableObjectStore<MapLegendSet> mapLegendSetStore )
-    {
-        this.mapLegendSetStore = mapLegendSetStore;
-    }
-
     private OrganisationUnitService organisationUnitService;
 
     public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
@@ -115,139 +99,6 @@ public class DefaultMappingService
     // -------------------------------------------------------------------------
     // MappingService implementation
     // -------------------------------------------------------------------------
-
-    // -------------------------------------------------------------------------
-    // MapLegend
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void addOrUpdateMapLegend( String name, Double startValue, Double endValue, String color, String image )
-    {
-        MapLegend mapLegend = getMapLegendByName( name );
-
-        if ( mapLegend != null )
-        {
-            mapLegend.setName( name );
-            mapLegend.setStartValue( startValue );
-            mapLegend.setEndValue( endValue );
-            mapLegend.setColor( color );
-            mapLegend.setImage( image );
-
-            mapLegendStore.update( mapLegend );
-        }
-        else
-        {
-            mapLegend = new MapLegend( name, startValue, endValue, color, image );
-
-            mapLegendStore.save( mapLegend );
-        }
-    }
-
-    @Override
-    public int addMapLegend( MapLegend mapLegend )
-    {
-        return mapLegendStore.save( mapLegend );
-    }
-
-    @Override
-    public void deleteMapLegend( MapLegend mapLegend )
-    {
-        mapLegendStore.delete( mapLegend );
-    }
-
-    @Override
-    public MapLegend getMapLegend( int id )
-    {
-        return mapLegendStore.get( id );
-    }
-
-    @Override
-    public MapLegend getMapLegend( String uid )
-    {
-        return mapLegendStore.getByUid( uid );
-    }
-
-    @Override
-    public MapLegend getMapLegendByName( String name )
-    {
-        return mapLegendStore.getByName( name );
-    }
-
-    @Override
-    public Collection<MapLegend> getAllMapLegends()
-    {
-        return mapLegendStore.getAll();
-    }
-
-    // -------------------------------------------------------------------------
-    // MapLegendSet
-    // -------------------------------------------------------------------------
-
-    @Override
-    public int addMapLegendSet( MapLegendSet mapLegendSet )
-    {
-        return mapLegendSetStore.save( mapLegendSet );
-    }
-
-    @Override
-    public void updateMapLegendSet( MapLegendSet mapLegendSet )
-    {
-        mapLegendSetStore.update( mapLegendSet );
-    }
-
-    @Override
-    public void addOrUpdateMapLegendSet( String name, String type, String symbolizer, Set<MapLegend> mapLegends )
-    {
-        MapLegendSet mapLegendSet = getMapLegendSetByName( name );
-
-        Set<Indicator> indicators = new HashSet<>();
-
-        Set<DataElement> dataElements = new HashSet<>();
-
-        if ( mapLegendSet != null )
-        {
-            mapLegendSet.setSymbolizer( symbolizer );
-            mapLegendSet.setMapLegends( mapLegends );
-
-            mapLegendSetStore.update( mapLegendSet );
-        }
-        else
-        {
-            mapLegendSet = new MapLegendSet( name, type, symbolizer, mapLegends, indicators, dataElements );
-
-            mapLegendSetStore.save( mapLegendSet );
-        }
-    }
-
-    @Override
-    public void deleteMapLegendSet( MapLegendSet mapLegendSet )
-    {
-        mapLegendSetStore.delete( mapLegendSet );
-    }
-
-    @Override
-    public MapLegendSet getMapLegendSet( int id )
-    {
-        return mapLegendSetStore.get( id );
-    }
-
-    @Override
-    public MapLegendSet getMapLegendSet( String uid )
-    {
-        return mapLegendSetStore.getByUid( uid );
-    }
-
-    @Override
-    public MapLegendSet getMapLegendSetByName( String name )
-    {
-        return mapLegendSetStore.getByName( name );
-    }
-
-    @Override
-    public Collection<MapLegendSet> getAllMapLegendSets()
-    {
-        return mapLegendSetStore.getAll();
-    }
 
     // -------------------------------------------------------------------------
     // Map
@@ -528,8 +379,8 @@ public class DefaultMappingService
     }
 
     @Override
-    public int countMapLegendSetMapViews( MapLegendSet mapLegendSet )
+    public int countLegendSetMapViews( LegendSet legendSet )
     {
-        return mapViewStore.countMapLegendSetMapViews( mapLegendSet );
+        return mapViewStore.countLegendSetMapViews( legendSet );
     }
 }
