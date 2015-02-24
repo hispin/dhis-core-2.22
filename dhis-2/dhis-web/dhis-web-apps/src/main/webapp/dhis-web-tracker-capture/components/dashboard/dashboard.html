@@ -27,7 +27,7 @@
     
     <div class="col-sm-12">
         <div class="row">            
-            <div class="col-sm-6 col-md-8">
+            <div ng-class="widgetSize.bigger">
                 <div id="biggerWidget"
                     d2-sortable  
                     bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
@@ -38,7 +38,7 @@
                     </div>                                       
                 </div>                
             </div>            
-            <div class="col-sm-6 col-md-4">
+            <div ng-class="widgetSize.smaller">
                 <div id="smallerWidget" 
                     d2-sortable 
                     bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
