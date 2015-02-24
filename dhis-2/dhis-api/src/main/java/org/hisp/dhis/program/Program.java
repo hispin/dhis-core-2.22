@@ -186,7 +186,7 @@ public class Program
 
     /**
      * Returns data elements which are part of the stages of this program which
-     * have a legend set.
+     * have a legend set and is of numeric value type.
      */
     public Set<DataElement> getDataElementsWithLegendSet()
     {
@@ -194,7 +194,7 @@ public class Program
 
         for ( DataElement element : getAllDataElements() )
         {
-            if ( element != null && element.hasLegendSet() )
+            if ( element != null && element.hasLegendSet() && element.isNumericType() )
             {
                 elements.add( element );
             }
