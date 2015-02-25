@@ -36,7 +36,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
+import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.legend.LegendSet;
 
 import java.util.ArrayList;
@@ -227,8 +229,7 @@ public class BaseDimensionalObject
     @Override
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
-    @JsonDeserialize( as = BaseIdentifiableObject.class )
-    @JsonView( { DimensionalView.class } )
+    @JsonView( { DimensionalView.class, DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public LegendSet getLegendSet()
     {
