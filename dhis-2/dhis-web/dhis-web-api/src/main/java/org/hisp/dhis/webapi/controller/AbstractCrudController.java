@@ -759,7 +759,6 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     protected List<T> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<T> entityList;
-
         Query query = queryService.getQueryFromUrl( getEntityClass(), filters, orders );
         query.setDefaultOrder();
 
