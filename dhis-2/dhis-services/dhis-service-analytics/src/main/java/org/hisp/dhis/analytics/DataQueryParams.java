@@ -574,7 +574,8 @@ public class DataQueryParams
     }
     
     /**
-     * Returns a list of dimensions which occur more than once.
+     * Returns a list of dimensions which occur more than once, not including
+     * the first duplicate.
      */
     public List<DimensionalObject> getDuplicateDimensions()
     {
