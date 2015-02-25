@@ -876,7 +876,7 @@ Ext.onReady(function() {
                 var d = a.getLayer();
                 if (this.map.getLayer(d.id) != null) {
                     this._removing = true;
-                    this.removelayer(a);
+                    this.removeMapLayer(a);
                     delete this._removing
                 }
             }
@@ -892,11 +892,11 @@ Ext.onReady(function() {
                 }
             }
         },
-        removelayer: function(a) {
+        removeMapLayer: function(a) {
             this.map.removeLayer(a.getLayer())
         },
         onReplace: function(c, a, b) {
-            this.removelayer(a)
+            this.removeMapLayer(a)
         },
         getByLayer: function(b) {
             var a = this.findBy(function(c) {
@@ -2445,7 +2445,7 @@ Ext.onReady(function() {
         return window;
     };
 
-    GIS.core.loader = function(gis) {
+    GIS.core.MapLoader = function(gis) {
         var getMap,
             setMap,
             afterLoad,
@@ -3842,7 +3842,7 @@ Ext.onReady(function() {
                     config = {};
 
                 success = function(r) {
-                    legends = r.responseText ? Ext.decode(r.responseText).legends : r.legends;
+                    legends = r.responseText ? Ext.decode(r.responseText).mapLegends : r.mapLegends;
 
                     Ext.Array.sort(legends, function(a, b) {
                         return a.startValue - b.startValue;
@@ -3871,7 +3871,7 @@ Ext.onReady(function() {
                     console.log(r);
                 };
 
-                config.url = gis.init.contextPath + '/api/legendSets/' + view.legendSet.id + '.' + type + '?fields=' + gis.conf.url.legendSetFields.join(',');
+                config.url = gis.init.contextPath + '/api/mapLegendSets/' + view.legendSet.id + '.' + type + '?fields=' + gis.conf.url.mapLegendSetFields.join(',');
                 config.disableCaching = false;
                 config.scope = this;
                 config.success = success;
@@ -4321,7 +4321,7 @@ Ext.onReady(function() {
                 'mapViews[' + conf.url.analysisFields.join(',') + ']'
             ];
 
-            conf.url.legendFields = [
+            conf.url.mapLegendFields = [
                 '*',
                 '!created',
                 '!lastUpdated',
@@ -4331,8 +4331,8 @@ Ext.onReady(function() {
                 '!userGroupAccesses'
             ];
 
-            conf.url.legendSetFields = [
-                'id,name,legends[' + conf.url.legendFields.join(',') + ']'
+            conf.url.mapLegendSetFields = [
+                'id,name,mapLegends[' + conf.url.mapLegendFields.join(',') + ']'
             ];
         }());
 
@@ -7339,7 +7339,7 @@ Ext.onReady(function() {
                 msg: 'Loading'
             });
 
-            GIS.core.loader(gis).load();
+            GIS.core.MapLoader(gis).load();
         }();
     };
 
