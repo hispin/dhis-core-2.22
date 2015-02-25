@@ -33,6 +33,7 @@ import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.legend.LegendSet;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -54,6 +55,11 @@ public class TrackedEntityDataElementDimension
     private DataElement dataElement;
 
     /**
+     * Legend set.
+     */
+    private LegendSet legendSet;
+    
+    /**
      * Operator and filter on this format:
      * <operator>:<filter>;<operator>:<filter>
      * Operator and filter pairs can be repeated any number of times.
@@ -68,9 +74,10 @@ public class TrackedEntityDataElementDimension
     {
     }
 
-    public TrackedEntityDataElementDimension( DataElement dataElement, String filter )
+    public TrackedEntityDataElementDimension( DataElement dataElement, LegendSet legendSet, String filter )
     {
         this.dataElement = dataElement;
+        this.legendSet = legendSet;
         this.filter = filter;
     }
     
@@ -91,15 +98,16 @@ public class TrackedEntityDataElementDimension
     @Override
     public String toString()
     {
-        return "[Id: " + id + ", data element: " + dataElement + ", filter: " + filter + "]";
+        return "[Id: " + id + ", data element: " + dataElement + ", legend set: " + legendSet + ", filter: " + filter + "]";
     }
 
     @Override
     public int hashCode()
     {
         int result = id;
-        result = 31 * result + (dataElement != null ? dataElement.hashCode() : 0);
-        result = 31 * result + (filter != null ? filter.hashCode() : 0);
+        result = 31 * result + ( dataElement != null ? dataElement.hashCode() : 0 );
+        result = 31 * result + ( legendSet != null ? legendSet.hashCode() : 0 );
+        result = 31 * result + ( filter != null ? filter.hashCode() : 0 );
 
         return result;
     }
@@ -125,6 +133,11 @@ public class TrackedEntityDataElementDimension
         final TrackedEntityDataElementDimension other = (TrackedEntityDataElementDimension) o;
 
         if ( dataElement != null ? !dataElement.equals( other.dataElement ) : other.dataElement != null )
+        {
+            return false;
+        }
+        
+        if ( legendSet != null ? !legendSet.equals( other.legendSet ) : other.legendSet != null )
         {
             return false;
         }
@@ -163,6 +176,20 @@ public class TrackedEntityDataElementDimension
     public void setDataElement( DataElement dataElement )
     {
         this.dataElement = dataElement;
+    }
+
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( {DetailedView.class, ExportView.class} )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    public LegendSet getLegendSet()
+    {
+        return legendSet;
+    }
+
+    public void setLegendSet( LegendSet legendSet )
+    {
+        this.legendSet = legendSet;
     }
 
     @JsonProperty

@@ -111,7 +111,7 @@ public class BaseAnalyticalObjectTest
     {
         TrackedEntityAttribute tea = new TrackedEntityAttribute();
 
-        TrackedEntityAttributeDimension tead = new TrackedEntityAttributeDimension( tea, "EQ:10" );
+        TrackedEntityAttributeDimension tead = new TrackedEntityAttributeDimension( tea, null, "EQ:10" );
         
         EventChart chart = new EventChart();
         chart.getColumnDimensions().add( tea.getUid() );

@@ -13,6 +13,9 @@
     <many-to-one name="attribute" class="org.hisp.dhis.trackedentity.TrackedEntityAttribute" 
         column="trackedentityattributeid" foreign-key="fk_attributedimension_attributeid" />
     
+    <many-to-one name="legendSet" class="org.hisp.dhis.legend.LegendSet"
+    	column="legendsetid" foreign-key="fk_attributedimension_legendsetid" />
+    
     <property name="filter" />
 
   </class>
