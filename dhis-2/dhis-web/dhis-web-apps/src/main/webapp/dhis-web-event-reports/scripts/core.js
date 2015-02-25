@@ -2043,8 +2043,8 @@ Ext.onReady( function() {
 								paramString += encodeURIComponent(item.id) + ((j < (dim.items.length - 1)) ? ';' : '');
 							}
 						}
-                        else if (dim.rangeSet) {
-                            paramString += '-' + dim.rangeSet;
+                        else if (Ext.isObject(dim.legendSet) && dim.legendSet.id) {
+                            paramString += '-' + dim.legendSet.id;
 
                             if (dim.filter) {
                                 paramString += ':' + encodeURIComponent(dim.filter);
@@ -2071,8 +2071,8 @@ Ext.onReady( function() {
                                 paramString += j < dim.items.length - 1 ? ';' : '';
                             }
                         }
-                        else if (dim.rangeSet) {
-                            paramString += '-' + dim.rangeSet;
+                        else if (Ext.isObject(dim.legendSet) && dim.legendSet.id) {
+                            paramString += '-' + dim.legendSet.id;
 
                             if (dim.filter) {
                                 paramString += ':' + encodeURIComponent(dim.filter);
