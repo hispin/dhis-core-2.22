@@ -211,6 +211,7 @@ public class Property implements Ordered, Klass
         this.setterMethod = setter;
     }
 
+    @Override
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Class<?> getKlass()

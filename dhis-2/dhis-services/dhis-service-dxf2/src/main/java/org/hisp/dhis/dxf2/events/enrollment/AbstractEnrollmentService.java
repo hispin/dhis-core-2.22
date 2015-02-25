@@ -352,6 +352,22 @@ public abstract class AbstractEnrollmentService
             return importSummary;
         }
 
+        if ( program.getOnlyEnrollOnce() )
+        {
+            enrollments = getEnrollments( program, trackedEntityInstance, EnrollmentStatus.COMPLETED );
+
+            if ( !enrollments.getEnrollments().isEmpty() )
+            {
+                importSummary.setStatus( ImportStatus.ERROR );
+                importSummary.setDescription( "TrackedEntityInstance " + trackedEntityInstance.getTrackedEntityInstance()
+                    + " already have a completed enrollment in program " + program.getUid() + ", and this program is" +
+                    " configured to only allow enrolling one time." );
+                importSummary.getImportCount().incrementIgnored();
+
+                return importSummary;
+            }
+        }
+
         List<ImportConflict> importConflicts = new ArrayList<>();
         importConflicts.addAll( checkAttributes( enrollment ) );
 
