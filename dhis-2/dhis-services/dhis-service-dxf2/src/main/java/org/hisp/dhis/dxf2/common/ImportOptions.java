@@ -148,6 +148,11 @@ public class ImportOptions
         return mergeStrategy;
     }
 
+    public void setMergeStrategy( MergeStrategy mergeStrategy )
+    {
+        this.mergeStrategy = mergeStrategy;
+    }
+
     public boolean isSkipExistingCheck()
     {
         return skipExistingCheck;
@@ -221,7 +226,7 @@ public class ImportOptions
     public String toString()
     {
         return "[Id scheme: " + idScheme + ", data element id scheme: " + dataElementIdScheme + ", org unit id scheme: " +
-            orgUnitIdScheme + ", dry run: " + dryRun + ", preheat cache: " + preheatCache + ", async: " + 
+            orgUnitIdScheme + ", dry run: " + dryRun + ", preheat cache: " + preheatCache + ", async: " +
             async + ", strategy: " + importStrategy + ", skip check: " + skipExistingCheck + "]";
     }
 }

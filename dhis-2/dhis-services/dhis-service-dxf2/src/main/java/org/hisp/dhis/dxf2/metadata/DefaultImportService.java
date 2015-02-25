@@ -33,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.cache.HibernateCacheManager;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.system.timer.SystemTimer;
 import org.hisp.dhis.system.timer.Timer;
@@ -97,7 +98,7 @@ public class DefaultImportService
     //-------------------------------------------------------------------------------------------------------
 
     @Override
-    public <T extends IdentifiableObject> ImportTypeSummary importObject( String userUid, T object, ImportStrategy importStrategy )
+    public <T extends IdentifiableObject> ImportTypeSummary importObject( String userUid, T object, ImportStrategy importStrategy, MergeStrategy mergeStrategy )
     {
         User user = userService.getUser( userUid );
 
@@ -105,6 +106,7 @@ public class DefaultImportService
         importOptions.setDryRun( false );
         importOptions.setPreheatCache( false );
         importOptions.setImportStrategy( importStrategy.toString() );
+        importOptions.setMergeStrategy( mergeStrategy );
 
         objectBridge.setWriteEnabled( !importOptions.isDryRun() );
         objectBridge.setPreheatCache( importOptions.isPreheatCache() );
