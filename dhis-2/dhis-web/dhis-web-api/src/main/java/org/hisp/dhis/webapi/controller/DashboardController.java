@@ -33,6 +33,7 @@ import org.hisp.dhis.dashboard.Dashboard;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dashboard.DashboardSearchResult;
 import org.hisp.dhis.dashboard.DashboardService;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.schema.descriptors.DashboardItemSchemaDescriptor;
@@ -79,7 +80,7 @@ public class DashboardController
 
     @Override
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
-    public void postJsonObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         Dashboard dashboard = JacksonUtils.fromJson( request.getInputStream(), Dashboard.class );
 
@@ -91,7 +92,7 @@ public class DashboardController
 
     @Override
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = "application/json" )
-    public void putJsonObject( @PathVariable( "uid" ) String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void putJsonObject( ImportOptions importOptions, @PathVariable( "uid" ) String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         Dashboard dashboard = dashboardService.getDashboard( uid );
 

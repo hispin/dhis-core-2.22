@@ -361,6 +361,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     public void postXmlObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response )
         throws Exception
     {
+        System.err.println( "MERGE: " + importOptions.getMergeStrategy() );
+
         if ( !aclService.canCreate( currentUserService.getCurrentUser(), getEntityClass() ) )
         {
             throw new CreateAccessDeniedException( "You don't have the proper permissions to create this object." );
