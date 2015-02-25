@@ -1153,9 +1153,9 @@ Ext.onReady( function() {
 				// legend set
 				xLayout.legendSet = layout.legendSet ? init.idLegendSetMap[layout.legendSet.id] : null;
 
-				if (layout.legendSet && layout.legendSet.legends) {
+				if (layout.legendSet && layout.legendSet.mapLegends) {
 					xLayout.legendSet = init.idLegendSetMap[layout.legendSet.id];
-					support.prototype.array.sort(xLayout.legendSet.legends, 'ASC', 'startValue');
+					support.prototype.array.sort(xLayout.legendSet.mapLegends, 'ASC', 'startValue');
 				}
 
 				// unique dimension names
@@ -2184,7 +2184,7 @@ Ext.onReady( function() {
 					valueObjects = [],
 					totalColObjects = [],
 					uuidDimUuidsMap = {},
-					isLegendSet = Ext.isObject(xLayout.legendSet) && Ext.isArray(xLayout.legendSet.legends) && xLayout.legendSet.legends.length,
+					isLegendSet = Ext.isObject(xLayout.legendSet) && Ext.isArray(xLayout.legendSet.mapLegends) && xLayout.legendSet.mapLegends.length,
                     tdCount = 0,
 					htmlArray;
 
@@ -2197,7 +2197,7 @@ Ext.onReady( function() {
 
 				getTdHtml = function(config, metaDataId) {
 					var bgColor,
-						legends,
+						mapLegends,
 						colSpan,
 						rowSpan,
 						htmlValue,
@@ -2222,11 +2222,11 @@ Ext.onReady( function() {
 					// background color from legend set
 					if (isNumeric && xLayout.legendSet) {
 						var value = parseFloat(config.value);
-						legends = xLayout.legendSet.legends;
+						mapLegends = xLayout.legendSet.mapLegends;
 
-						for (var i = 0; i < legends.length; i++) {
-							if (Ext.Number.constrain(value, legends[i].startValue, legends[i].endValue) === value) {
-								bgColor = legends[i].color;
+						for (var i = 0; i < mapLegends.length; i++) {
+							if (Ext.Number.constrain(value, mapLegends[i].startValue, mapLegends[i].endValue) === value) {
+								bgColor = mapLegends[i].color;
 							}
 						}
 					}
@@ -3309,9 +3309,9 @@ Ext.onReady( function() {
 
         // legend sets
         requests.push({
-            url: init.contextPath + '/api/legendSets.json?fields=id,name,legends[id,name,startValue,endValue,color]&paging=false',
+            url: init.contextPath + '/api/mapLegendSets.json?fields=id,name,mapLegends[id,name,startValue,endValue,color]&paging=false',
             success: function(r) {
-                init.legendSets = Ext.decode(r.responseText).legendSets || [];
+                init.legendSets = Ext.decode(r.responseText).mapLegendSets || [];
                 fn();
             }
         });

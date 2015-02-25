@@ -1643,9 +1643,9 @@ Ext.onReady(function() {
 				// legend set
 				xLayout.legendSet = layout.legendSet ? init.idLegendSetMap[layout.legendSet.id] : null;
 
-				if (layout.legendSet && layout.legendSet.legends) {
+				if (layout.legendSet && layout.legendSet.mapLegends) {
 					xLayout.legendSet = init.idLegendSetMap[layout.legendSet.id];
-					support.prototype.array.sort(xLayout.legendSet.legends, 'ASC', 'startValue');
+					support.prototype.array.sort(xLayout.legendSet.mapLegends, 'ASC', 'startValue');
 				}
 
 				// unique dimension names
@@ -2119,17 +2119,17 @@ Ext.onReady(function() {
 			};
 
             // legend set
-            service.legend = {};
+            service.mapLegend = {};
 
-            service.legend.getColorByValue = function(legendSet, value) {
+            service.mapLegend.getColorByValue = function(legendSet, value) {
                 var color;
 
                 if (!(legendSet && value)) {
                     return;
                 }
 
-                for (var i = 0, legend; i < legendSet.legends.length; i++) {
-                    legend = legendSet.legends[i];
+                for (var i = 0, legend; i < legendSet.mapLegends.length; i++) {
+                    legend = legendSet.mapLegends[i];
 
                     if (value >= parseFloat(legend.startValue) && value < parseFloat(legend.endValue)) {
                         return legend.color;
@@ -3667,7 +3667,7 @@ Ext.onReady(function() {
 
                     // series, legendset
                     if (legendSet) {
-                        valueColor = service.legend.getColorByValue(legendSet, store.getRange()[0].data[failSafeColumnIds[0]]) || valueColor;
+                        valueColor = service.mapLegend.getColorByValue(legendSet, store.getRange()[0].data[failSafeColumnIds[0]]) || valueColor;
                     }
 
                     series = {
@@ -4135,7 +4135,7 @@ Ext.onReady(function() {
                 // legend set
                 if (xLayout.type === 'gauge' && Ext.Array.contains(xLayout.axisObjectNames, ind) && xLayout.objectNameIdsMap[ind].length) {
                     Ext.Ajax.request({
-                        url: ns.core.init.contextPath + '/api/indicators/' + xLayout.objectNameIdsMap[ind][0] + '.json?fields=legendSet[legends[id,name,startValue,endValue,color]]',
+                        url: ns.core.init.contextPath + '/api/indicators/' + xLayout.objectNameIdsMap[ind][0] + '.json?fields=legendSet[mapLegends[id,name,startValue,endValue,color]]',
                         disableCaching: false,
                         success: function(r) {
                             legendSet = Ext.decode(r.responseText).legendSet;
