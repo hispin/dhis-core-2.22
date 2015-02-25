@@ -47,7 +47,6 @@ import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.comparator.DataSetFrequencyComparator;
-import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
@@ -197,11 +196,6 @@ public class DataElement
      * The option set for comments linked to this data element.
      */
     private OptionSet commentOptionSet;
-
-    /**
-     * The legend set for this data element.
-     */
-    private LegendSet legendSet;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -722,20 +716,6 @@ public class DataElement
     public void setCommentOptionSet( OptionSet commentOptionSet )
     {
         this.commentOptionSet = commentOptionSet;
-    }
-
-    @JsonProperty
-    @JsonSerialize( as = BaseIdentifiableObject.class )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public LegendSet getLegendSet()
-    {
-        return legendSet;
-    }
-
-    public void setLegendSet( LegendSet legendSet )
-    {
-        this.legendSet = legendSet;
     }
 
     @Override

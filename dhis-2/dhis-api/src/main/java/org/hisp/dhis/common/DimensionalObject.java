@@ -37,6 +37,7 @@ import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
@@ -115,6 +116,11 @@ public interface DimensionalObject
      * Indicates whether this dimension has any items.
      */
     boolean hasItems();
+    
+    /**
+     * Gets the legend set.
+     */
+    LegendSet getLegendSet();
     
     /**
      * Gets the filter. Contains operator and filter. Applicable for events.
