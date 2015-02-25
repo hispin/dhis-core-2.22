@@ -31,13 +31,13 @@ package org.hisp.dhis.webapi.controller.organisationunit;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.organisationunit.comparator.OrganisationUnitByLevelComparator;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.Query;
 import org.hisp.dhis.schema.descriptors.OrganisationUnitSchemaDescriptor;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -55,7 +55,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,9 +80,12 @@ public class OrganisationUnitController
     private CurrentUserService currentUserService;
 
     @Override
+    @SuppressWarnings( "unchecked" )
     protected List<OrganisationUnit> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<OrganisationUnit> entityList;
+        Query query = queryService.getQueryFromUrl( getEntityClass(), filters, orders );
+        query.setDefaultOrder();
 
         Integer level = options.getInt( "level" );
         Integer maxLevel = options.getInt( "maxLevel" );
@@ -155,18 +157,20 @@ public class OrganisationUnitController
             entityList = new ArrayList<>( manager.getAll( getEntityClass() ) );
             Collections.sort( entityList, OrganisationUnitByLevelComparator.INSTANCE );
         }
-        else if ( options.hasPaging() )
+        else if ( options.hasPaging() && filters.isEmpty() )
         {
             int count = manager.getCount( getEntityClass() );
 
             Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
             metaData.setPager( pager );
 
-            entityList = new ArrayList<>( manager.getBetweenSorted( getEntityClass(), pager.getOffset(), pager.getPageSize() ) );
+            query.setFirstResult( pager.getOffset() );
+            query.setMaxResults( pager.getPageSize() );
+            entityList = (List<OrganisationUnit>) queryService.query( query ).getItems();
         }
         else
         {
-            entityList = new ArrayList<>( manager.getAllSorted( getEntityClass() ) );
+            entityList = (List<OrganisationUnit>) queryService.query( query ).getItems();
         }
 
         return entityList;
@@ -318,7 +322,7 @@ public class OrganisationUnitController
         if ( includeProperties )
         {
             Set<OrganisationUnit> roots = currentUserService.getCurrentUser().getDataViewOrganisationUnitsWithFallback();
-            
+
             generator.writeStringField( "code", organisationUnit.getCode() );
             generator.writeStringField( "name", organisationUnit.getName() );
             generator.writeStringField( "level", String.valueOf( organisationUnit.getLevel() ) );
