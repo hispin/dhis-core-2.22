@@ -363,7 +363,7 @@ public class UserController
         }
 
         ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
-            ImportStrategy.UPDATE, MergeStrategy.MERGE_IF_NOT_NULL );
+            ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
 
         if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getUpdated() == 1 )
         {
@@ -403,7 +403,7 @@ public class UserController
         }
 
         ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
-            ImportStrategy.UPDATE, MergeStrategy.MERGE_IF_NOT_NULL );
+            ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
 
         if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getUpdated() == 1 )
         {

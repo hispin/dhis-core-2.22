@@ -28,19 +28,7 @@ package org.hisp.dhis.webapi.controller.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.webapi.utils.ContextUtils.DATE_PATTERN;
-
-import java.awt.image.BufferedImage;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.DimensionService;
-import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.i18n.I18nFormat;
@@ -68,6 +56,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+
+import static org.hisp.dhis.webapi.utils.ContextUtils.DATE_PATTERN;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  * @author Lars Helge Overland
@@ -82,7 +80,7 @@ public class MapController
 
     @Autowired
     private MappingService mappingService;
-    
+
     @Autowired
     private LegendService legendService;
 
@@ -166,7 +164,7 @@ public class MapController
             mappingService.addMapView( view );
         }
 
-        map.mergeWith( newMap, MergeStrategy.MERGE_IF_NOT_NULL );
+        map.mergeWith( newMap, importOptions.getMergeStrategy() );
 
         if ( newMap.getUser() == null )
         {
@@ -239,7 +237,7 @@ public class MapController
         I18nFormat format = i18nManager.getI18nFormat();
 
         Set<OrganisationUnit> roots = currentUserService.getCurrentUser().getDataViewOrganisationUnitsWithFallback();
-        
+
         for ( MapView view : map.getMapViews() )
         {
             view.populateAnalyticalProperties();

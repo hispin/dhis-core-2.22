@@ -28,7 +28,6 @@ package org.hisp.dhis.webapi.controller.legend;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.legend.Legend;
@@ -105,7 +104,7 @@ public class LegendSetController
             legendService.addLegend( legend );
         }
 
-        legendSet.mergeWith( newLegendSet, MergeStrategy.MERGE_IF_NOT_NULL );
+        legendSet.mergeWith( newLegendSet, importOptions.getMergeStrategy() );
 
         legendService.updateLegendSet( legendSet );
     }
