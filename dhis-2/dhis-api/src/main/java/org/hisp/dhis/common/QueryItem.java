@@ -111,7 +111,7 @@ public class QueryItem
     
     public boolean isNumeric()
     {
-        return Double.class.equals( getTypeAsString() );
+        return Double.class.equals( ObjectUtils.VALUE_TYPE_JAVA_CLASS_MAP.get( valueType ) );
     }
     
     public boolean hasFilter()
