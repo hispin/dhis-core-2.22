@@ -36,8 +36,10 @@ import org.hisp.dhis.acl.AclService;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.PagerUtils;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.OrderOptions;
 import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
@@ -278,7 +280,9 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         property.getSetterMethod().invoke( persistedObject, value );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject, ImportStrategy.UPDATE );
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
+            ImportStrategy.UPDATE, MergeStrategy.MERGE_IF_NOT_NULL );
+
         serialize( request, response, summary );
     }
 
@@ -354,7 +358,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     //--------------------------------------------------------------------------
 
     @RequestMapping( method = RequestMethod.POST, consumes = { "application/xml", "text/xml" } )
-    public void postXmlObject( HttpServletRequest request, HttpServletResponse response )
+    public void postXmlObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response )
         throws Exception
     {
         if ( !aclService.canCreate( currentUserService.getCurrentUser(), getEntityClass() ) )
@@ -366,7 +370,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preCreateEntity( parsed );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, ImportStrategy.CREATE );
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+            ImportStrategy.CREATE, importOptions.getMergeStrategy() );
 
         if ( ImportStatus.SUCCESS.equals( summary.getStatus() ) )
         {
@@ -383,7 +388,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
-    public void postJsonObject( HttpServletRequest request, HttpServletResponse response )
+    public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response )
         throws Exception
     {
         if ( !aclService.canCreate( currentUserService.getCurrentUser(), getEntityClass() ) )
@@ -395,7 +400,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preCreateEntity( parsed );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, ImportStrategy.CREATE );
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+            ImportStrategy.CREATE, importOptions.getMergeStrategy() );
 
         if ( ImportStatus.SUCCESS.equals( summary.getStatus() ) )
         {
@@ -416,7 +422,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     //--------------------------------------------------------------------------
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE } )
-    public void putXmlObject( @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void putXmlObject( ImportOptions importOptions, @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         List<T> objects = getEntity( pvUid );
 
@@ -436,7 +442,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preUpdateEntity( parsed );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, ImportStrategy.UPDATE );
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+            ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
 
         if ( ImportStatus.SUCCESS.equals( summary.getStatus() ) )
         {
@@ -447,7 +454,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     }
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE )
-    public void putJsonObject( @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void putJsonObject( ImportOptions importOptions, @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         List<T> objects = getEntity( pvUid );
 
@@ -467,7 +474,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preUpdateEntity( parsed );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, ImportStrategy.UPDATE );
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+            ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
 
         if ( ImportStatus.SUCCESS.equals( summary.getStatus() ) )
         {
