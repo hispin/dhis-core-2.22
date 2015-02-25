@@ -28,21 +28,14 @@ package org.hisp.dhis.webapi.controller.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.Pager;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
@@ -74,8 +67,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -87,7 +86,7 @@ public class UserController
 {
     public static final String INVITE_PATH = "/invite";
     public static final String BULK_INVITE_PATH = "/invites";
-    
+
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
 
@@ -173,7 +172,7 @@ public class UserController
 
     @Override
     @RequestMapping( method = RequestMethod.POST, consumes = { "application/xml", "text/xml" } )
-    public void postXmlObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void postXmlObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         User user = renderService.fromXml( request.getInputStream(), getEntityClass() );
 
@@ -187,7 +186,7 @@ public class UserController
 
     @Override
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
-    public void postJsonObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         User user = renderService.fromJson( request.getInputStream(), getEntityClass() );
 
@@ -266,27 +265,27 @@ public class UserController
     @SuppressWarnings( "unchecked" )
     @PreAuthorize( "hasRole('ALL')" )
     @RequestMapping( value = "/{uid}/replica", method = RequestMethod.POST )
-    public void replicateUser( @PathVariable String uid, 
+    public void replicateUser( @PathVariable String uid,
         HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         User existingUser = userService.getUser( uid );
-        
+
         if ( existingUser == null || existingUser.getUserCredentials() == null )
         {
             ContextUtils.conflictResponse( response, "User not found: " + uid );
             return;
         }
-        
+
         if ( !validateCreateUser( existingUser, response ) )
         {
             return;
         }
-        
+
         Map<String, String> auth = renderService.fromJson( request.getInputStream(), Map.class );
 
         String username = StringUtils.trimToNull( auth != null ? auth.get( KEY_USERNAME ) : null );
         String password = StringUtils.trimToNull( auth != null ? auth.get( KEY_PASSWORD ) : null );
-        
+
         if ( auth == null || username == null )
         {
             ContextUtils.conflictResponse( response, "Username must be specified" );
@@ -298,47 +297,47 @@ public class UserController
             ContextUtils.conflictResponse( response, "Username already taken: " + username );
             return;
         }
-        
+
         if ( password == null )
         {
             ContextUtils.conflictResponse( response, "Password must be specified" );
-            return;            
+            return;
         }
-        
+
         if ( !ValidationUtils.passwordIsValid( password ) )
         {
             ContextUtils.conflictResponse( response, "Password must have at least 8 characters, one digit, one uppercase" );
             return;
         }
-        
+
         User userReplica = new User();
         userReplica.mergeWith( existingUser, MergeStrategy.MERGE_IF_NOT_NULL );
         userReplica.setUid( CodeGenerator.generateCode() );
         userReplica.setCreated( new Date() );
-        
+
         UserCredentials credentialsReplica = new UserCredentials();
         credentialsReplica.mergeWith( existingUser.getUserCredentials(), MergeStrategy.MERGE_IF_NOT_NULL );
-        
+
         credentialsReplica.setUsername( username );
         userService.encodeAndSetPassword( credentialsReplica, password );
-        
+
         userReplica.setUserCredentials( credentialsReplica );
         credentialsReplica.setUser( userReplica );
-        
+
         userService.addUser( userReplica );
         userService.addUserCredentials( credentialsReplica );
         userGroupService.addUserToGroups( userReplica, IdentifiableObjectUtils.getUids( existingUser.getGroups() ) );
-        
+
         ContextUtils.createdResponse( response, "User replica created", UserSchemaDescriptor.API_ENDPOINT + "/" + userReplica.getUid() );
     }
-    
+
     // -------------------------------------------------------------------------
     // PUT
     // -------------------------------------------------------------------------
 
     @Override
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = { "application/xml", "text/xml" } )
-    public void putXmlObject( @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void putXmlObject( ImportOptions importOptions, @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         List<User> users = getEntity( pvUid );
 
@@ -363,21 +362,22 @@ public class UserController
             return;
         }
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, ImportStrategy.UPDATE );
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+            ImportStrategy.UPDATE, MergeStrategy.MERGE_IF_NOT_NULL );
 
         if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getUpdated() == 1 )
         {
             User user = userService.getUser( pvUid );
-            
-            userGroupService.updateUserGroups( user, IdentifiableObjectUtils.getUids( parsed.getGroups() ));
+
+            userGroupService.updateUserGroups( user, IdentifiableObjectUtils.getUids( parsed.getGroups() ) );
         }
-        
+
         renderService.toXml( response.getOutputStream(), summary );
     }
 
     @Override
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = "application/json" )
-    public void putJsonObject( @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void putJsonObject( ImportOptions importOptions, @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         List<User> users = getEntity( pvUid );
 
@@ -402,15 +402,16 @@ public class UserController
             return;
         }
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, ImportStrategy.UPDATE );
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+            ImportStrategy.UPDATE, MergeStrategy.MERGE_IF_NOT_NULL );
 
         if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getUpdated() == 1 )
         {
             User user = userService.getUser( pvUid );
-            
-            userGroupService.updateUserGroups( user, IdentifiableObjectUtils.getUids( parsed.getGroups() ));
+
+            userGroupService.updateUserGroups( user, IdentifiableObjectUtils.getUids( parsed.getGroups() ) );
         }
-        
+
         renderService.toJson( response.getOutputStream(), summary );
     }
 
@@ -466,7 +467,8 @@ public class UserController
         user.getUserCredentials().getCatDimensionConstraints().addAll(
             currentUserService.getCurrentUser().getUserCredentials().getCatDimensionConstraints() );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), user, ImportStrategy.CREATE );
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), user,
+            ImportStrategy.CREATE, MergeStrategy.MERGE_IF_NOT_NULL );
 
         if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getImported() == 1 )
         {
