@@ -28,15 +28,7 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensions;
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.DimensionService;
-import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.eventreport.EventReport;
@@ -55,6 +47,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Set;
+
+import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensions;
 
 /**
  * @author Lars Helge Overland
@@ -112,7 +110,7 @@ public class EventReportController
 
         mergeEventReport( newReport );
 
-        report.mergeWith( newReport, MergeStrategy.MERGE_IF_NOT_NULL );
+        report.mergeWith( newReport, importOptions.getMergeStrategy() );
 
         eventReportService.updateEventReport( report );
     }
@@ -143,7 +141,7 @@ public class EventReportController
         report.populateAnalyticalProperties();
 
         Set<OrganisationUnit> roots = currentUserService.getCurrentUser().getDataViewOrganisationUnitsWithFallback();
-        
+
         for ( OrganisationUnit organisationUnit : report.getOrganisationUnits() )
         {
             report.getParentGraphMap().put( organisationUnit.getUid(), organisationUnit.getParentGraph( roots ) );

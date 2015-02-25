@@ -140,7 +140,7 @@ public class ChartController
 
         mergeChart( newChart );
 
-        chart.mergeWith( newChart, MergeStrategy.MERGE_IF_NOT_NULL );
+        chart.mergeWith( newChart, importOptions.getMergeStrategy() );
 
         chartService.updateChart( chart );
     }
