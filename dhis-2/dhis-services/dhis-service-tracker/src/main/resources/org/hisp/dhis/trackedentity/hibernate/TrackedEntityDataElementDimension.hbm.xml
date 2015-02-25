@@ -13,6 +13,9 @@
     <many-to-one name="dataElement" class="org.hisp.dhis.dataelement.DataElement" 
         column="dataelementid" foreign-key="fk_dataelementdimension_dataelementid" />
 
+	<many-to-one name="legendSet" class="org.hisp.dhis.legend.LegendSet"
+		column="legendsetid" foreign-key="fk_dataelementdimension_legendsetid" />
+
     <property name="filter" />
 
   </class>

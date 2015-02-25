@@ -98,7 +98,7 @@ public interface DimensionalObject
     
     /**
      * Gets the dimension name, which corresponds to a column in the analytics
-     * tables.
+     * tables, with fall back to dimension.
      */
     String getDimensionName();
      
@@ -106,14 +106,15 @@ public interface DimensionalObject
      * Dimension items.
      */
     List<NameableObject> getItems();
-    
+
     /**
-     * Indicates whether all items for this dimension should be used.
+     * Indicates whether this dimension should use all dimension items. All
+     * dimension options is represented as an option list of zero elements.
      */
     boolean isAllItems();
-    
+
     /**
-     * Indicates whether this dimension has any items.
+     * Indicates whether this dimension has any dimension items.
      */
     boolean hasItems();
     
@@ -121,6 +122,11 @@ public interface DimensionalObject
      * Gets the legend set.
      */
     LegendSet getLegendSet();
+
+    /**
+     * Indicates whether this dimension has a legend set.
+     */
+    boolean hasLegendSet();
     
     /**
      * Gets the filter. Contains operator and filter. Applicable for events.
