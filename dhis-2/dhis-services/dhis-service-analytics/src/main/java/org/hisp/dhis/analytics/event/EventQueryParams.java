@@ -173,7 +173,8 @@ public class EventQueryParams
     }
 
     /**
-     * Returns a list of query items which occur more than once.
+     * Returns a list of query items which occur more than once, not including
+     * the first duplicate.
      */
     public List<QueryItem> getDuplicateQueryItems()
     {
