@@ -55,7 +55,6 @@ import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
@@ -171,7 +170,7 @@ public class JdbcEventAnalyticsManager
             
             for ( QueryItem queryItem : params.getItems() )
             {
-                String itemValue = rowSet.getString( queryItem.getItem().getUid() );                
+                String itemValue = rowSet.getString( queryItem.getItemName() );                
                 grid.addValue( itemValue );
             }
             
@@ -389,12 +388,10 @@ public class JdbcEventAnalyticsManager
         {
             sql += statementBuilder.columnQuote( dimension.getDimensionName() ) + ",";
         }
-                
+        
         for ( QueryItem queryItem : params.getItems() )
-        {
-            IdentifiableObject item = queryItem.getItem();
-            
-            sql += statementBuilder.columnQuote( item.getUid() ) + ",";
+        {            
+            sql += statementBuilder.columnQuote( queryItem.getItemName() ) + ",";
         }
         
         return removeLastComma( sql );
@@ -523,7 +520,7 @@ public class JdbcEventAnalyticsManager
      */
     private String getColumn( QueryItem item )
     {
-        String col = statementBuilder.columnQuote( item.getItem().getUid() );
+        String col = statementBuilder.columnQuote( item.getItemName() );
         
         return item.isNumeric() ? col : "lower(" + col + ")"; 
     }
@@ -548,7 +545,7 @@ public class JdbcEventAnalyticsManager
     {
         if ( columns == null || columns.isEmpty() )
         {
-            return "";
+            return StringUtils.EMPTY;
         }
         
         String fixedCols = StringUtils.join( columns, ", " );

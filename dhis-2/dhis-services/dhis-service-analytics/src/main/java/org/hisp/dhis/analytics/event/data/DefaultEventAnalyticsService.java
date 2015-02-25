@@ -33,6 +33,7 @@ import static org.hisp.dhis.analytics.AnalyticsService.OU_HIERARCHY_KEY;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObjectUtils.DIMENSION_NAME_SEP;
+import static org.hisp.dhis.common.DimensionalObjectUtils.ITEM_SEP;
 import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensionFromParam;
 import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensionItemsFromParam;
 import static org.hisp.dhis.common.DimensionalObjectUtils.toDimension;
@@ -76,6 +77,8 @@ import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.program.Program;
@@ -124,9 +127,12 @@ public class DefaultEventAnalyticsService
 
     @Autowired
     private TrackedEntityAttributeService attributeService;
-
+    
     @Autowired
     private OrganisationUnitService organisationUnitService;
+
+    @Autowired
+    private LegendService legendService;
 
     @Autowired
     private EventAnalyticsManager analyticsManager;
@@ -543,7 +549,7 @@ public class DefaultEventAnalyticsService
             throw new IllegalQueryException( "Query item or filter is invalid: " + dimensionString );
         }
         
-        QueryItem queryItem = getQueryItemFromUid( split[0] );
+        QueryItem queryItem = getQueryItemFromDimension( split[0] );
         
         if ( split.length > 1 ) // Filters specified
         {   
@@ -651,20 +657,26 @@ public class DefaultEventAnalyticsService
         return item;
     }
 
-    private QueryItem getQueryItemFromUid( String item )
+    private QueryItem getQueryItemFromDimension( String dimension )
     {
+        String[] split = dimension.split( ITEM_SEP );
+
+        String item = split[0];
+
+        LegendSet legendSet = split.length > 1 && split[1] != null ? legendService.getLegendSet( split[1] ) : null;
+        
         DataElement de = dataElementService.getDataElement( item );
 
         if ( de != null ) //TODO check if part of program
         {
-            return new QueryItem( de, de.getType(), de.hasOptionSet() ? de.getOptionSet().getUid() : null );
+            return new QueryItem( de, legendSet, de.getType(), de.hasOptionSet() ? de.getOptionSet().getUid() : null );
         }
 
         TrackedEntityAttribute at = attributeService.getTrackedEntityAttribute( item );
 
         if ( at != null )
         {
-            return new QueryItem( at, at.getValueType(), at.hasOptionSet() ? at.getOptionSet().getUid() : null );
+            return new QueryItem( at, legendSet, at.getValueType(), at.hasOptionSet() ? at.getOptionSet().getUid() : null );
         }
 
         throw new IllegalQueryException( "Item identifier does not reference any data element or attribute part of the program: " + item );
