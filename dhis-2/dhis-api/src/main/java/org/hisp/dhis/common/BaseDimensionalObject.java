@@ -107,12 +107,13 @@ public class BaseDimensionalObject
         this.items = new ArrayList<>( items );
     }
 
-    public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, String filter )
+    public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, LegendSet legendSet, String filter )
     {
         this.uid = dimension;
         this.dimensionType = dimensionType;
         this.dimensionName = dimensionName;
         this.displayName = displayName;
+        this.legendSet = legendSet;
         this.filter = filter;
     }
 
@@ -120,28 +121,24 @@ public class BaseDimensionalObject
     // Logic
     // -------------------------------------------------------------------------
 
-    /**
-     * Indicates whether this dimension should use all dimension items. All
-     * dimension options is represented as an option list of zero elements.
-     */
     @Override
     public boolean isAllItems()
     {
         return items != null && items.isEmpty();
     }
 
-    /**
-     * Indicates whether this dimension has any dimension items.
-     */
     @Override
     public boolean hasItems()
     {
         return items != null && !items.isEmpty();
     }
+    
+    @Override
+    public boolean hasLegendSet()
+    {
+        return legendSet != null;
+    }
 
-    /**
-     * Returns dimension name with fall back to dimension.
-     */
     @Override
     public String getDimensionName()
     {
