@@ -31,6 +31,7 @@ package org.hisp.dhis.webapi.controller;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.acl.AclService;
 import org.hisp.dhis.common.Pager;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
@@ -159,14 +160,14 @@ public class MessageConversationController
     //--------------------------------------------------------------------------
 
     @Override
-    public void postXmlObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void postXmlObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         MessageConversation messageConversation = JacksonUtils.fromXml( request.getInputStream(), MessageConversation.class );
         postObject( response, request, messageConversation );
     }
 
     @Override
-    public void postJsonObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         MessageConversation messageConversation = JacksonUtils.fromJson( request.getInputStream(), MessageConversation.class );
         postObject( response, request, messageConversation );

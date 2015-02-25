@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.eventreport.EventReport;
 import org.hisp.dhis.eventreport.EventReportService;
@@ -84,7 +85,7 @@ public class EventReportController
 
     @Override
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
-    public void postJsonObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         EventReport report = JacksonUtils.fromJson( request.getInputStream(), EventReport.class );
 
@@ -97,7 +98,7 @@ public class EventReportController
 
     @Override
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = "application/json" )
-    public void putJsonObject( @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void putJsonObject( ImportOptions importOptions, @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         EventReport report = eventReportService.getEventReport( uid );
 

@@ -28,12 +28,8 @@ package org.hisp.dhis.webapi.controller.legend;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Iterator;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.legend.LegendService;
@@ -47,6 +43,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Iterator;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -62,7 +62,7 @@ public class LegendSetController
     @Override
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     @PreAuthorize( "hasRole('F_GIS_ADMIN') or hasRole('ALL')" )
-    public void postJsonObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         LegendSet legendSet = JacksonUtils.fromJson( request.getInputStream(), LegendSet.class );
 
@@ -79,7 +79,7 @@ public class LegendSetController
     @Override
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = "application/json" )
     @PreAuthorize( "hasRole('F_GIS_ADMIN') or hasRole('ALL')" )
-    public void putJsonObject( @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void putJsonObject( ImportOptions importOptions, @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         LegendSet legendSet = legendService.getLegendSet( uid );
 

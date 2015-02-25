@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
@@ -115,7 +116,7 @@ public class MapController
 
     @Override
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
-    public void postJsonObject( HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         Map map = JacksonUtils.fromJson( request.getInputStream(), Map.class );
 
@@ -135,7 +136,7 @@ public class MapController
 
     @Override
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = "application/json" )
-    public void putJsonObject( @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
+    public void putJsonObject( ImportOptions importOptions, @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         Map map = mappingService.getMap( uid );
 
