@@ -28,6 +28,12 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
@@ -38,12 +44,6 @@ import org.hisp.dhis.hibernate.HibernateGenericStore;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -66,7 +66,7 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
             return new ArrayList<>();
         }
 
-        HibernateGenericStore store = getStore( (Class<? extends IdentifiableObject>) schema.getKlass() );
+        HibernateGenericStore<?> store = getStore( (Class<? extends IdentifiableObject>) schema.getKlass() );
 
         if ( store == null )
         {
@@ -236,34 +236,33 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
         }
     }
 
-    private HibernateGenericStore getStore( Class<? extends IdentifiableObject> klass )
+    private HibernateGenericStore<?> getStore( Class<? extends IdentifiableObject> klass )
     {
         initStoreMap();
         return stores.get( klass );
     }
 
-    @SuppressWarnings( "unchecked" )
-    private <T> T getValue( Property property, Object objectValue )
+    private Object getValue( Property property, Object objectValue )
     {
         Class<?> klass = property.getKlass();
 
         if ( !String.class.isInstance( objectValue ) )
         {
-            return (T) objectValue;
+            return objectValue;
         }
 
         String value = (String) objectValue;
 
         if ( klass.isInstance( value ) )
         {
-            return (T) value;
+            return value;
         }
 
         if ( Boolean.class.isAssignableFrom( klass ) )
         {
             try
             {
-                return (T) Boolean.valueOf( value );
+                return Boolean.valueOf( value );
             }
             catch ( Exception ignored )
             {
@@ -273,7 +272,7 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
         {
             try
             {
-                return (T) Integer.valueOf( value );
+                return Integer.valueOf( value );
             }
             catch ( Exception ignored )
             {
@@ -283,7 +282,7 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
         {
             try
             {
-                return (T) Float.valueOf( value );
+                return Float.valueOf( value );
             }
             catch ( Exception ignored )
             {
@@ -293,7 +292,7 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
         {
             try
             {
-                return (T) Double.valueOf( value );
+                return Double.valueOf( value );
             }
             catch ( Exception ignored )
             {
@@ -303,7 +302,7 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
         {
             try
             {
-                return (T) DateUtils.parseDate( value,
+                return DateUtils.parseDate( value,
                     "yyyy-MM-dd'T'HH:mm:ssZ",
                     "yyyy-MM-dd'T'HH:mm:ss",
                     "yyyy-MM-dd'T'HH:mm",
