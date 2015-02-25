@@ -138,7 +138,9 @@ Ext.onReady( function() {
                     record.filter = this.rangeValueCmp.getValue().join(';');
                 }
                 else {
-                    record.filter = this.operatorCmp.getValue() + ':' + this.valueCmp.getValue();
+                    if (this.valueCmp.getValue()) {
+                        record.filter = this.operatorCmp.getValue() + ':' + this.valueCmp.getValue();
+                    }
                 }
 
 				return record;
