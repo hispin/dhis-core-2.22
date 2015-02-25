@@ -78,15 +78,7 @@ public class QueryItem
             this.filters.add( new QueryFilter( operator, filter ) );
         }
     }
-    
-    public QueryItem( NameableObject item, List<QueryFilter> filters, String valueType, String optionSet )
-    {
-        this.item = item;
-        this.filters = filters;
-        this.valueType = valueType;
-        this.optionSet = optionSet;
-    }
-    
+        
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
