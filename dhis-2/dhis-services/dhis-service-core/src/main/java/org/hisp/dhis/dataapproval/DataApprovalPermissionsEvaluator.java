@@ -181,11 +181,11 @@ class DataApprovalPermissionsEvaluator
             ( ( authorizedToApprove && userLevel == nextApproveDataLevel ) || ( authorizedToApproveAtLowerLevels && userLevel < nextApproveDataLevel ) );
 
         // TODO More testing needed
-        
-        // boolean mayAcceptOrUnacceptAtLevel = authorizedToAcceptAtLowerLevels && ( userLevel == dataLevel - 1 || ( userLevel < dataLevel && authorizedToApproveAtLowerLevels ) );
-        
-        boolean mayAcceptOrUnacceptAtLevel = authorizedToAcceptAtLowerLevels && ( userLevel <= dataLevel );
 
+        // boolean mayAcceptOrUnacceptAtLevel = authorizedToAcceptAtLowerLevels && ( userLevel <= dataLevel );
+
+        boolean mayAcceptOrUnacceptAtLevel = authorizedToAcceptAtLowerLevels && ( userLevel == dataLevel - 1 || ( userLevel < dataLevel && authorizedToApproveAtLowerLevels ) );
+        
         boolean mayApprove = ( s.isApprovable() && mayApproveOrUnapproveAtLevel ) || mayApproveAtNextLevel;
 
         boolean mayUnapprove = s.isUnapprovable() && ( ( mayApproveOrUnapproveAtLevel && !da.isAccepted() ) || mayAcceptOrUnacceptAtLevel );
