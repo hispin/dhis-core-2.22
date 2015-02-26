@@ -20,7 +20,9 @@
   <bean id="customAuthenticationFilter" class="org.hisp.dhis.security.filter.CustomAuthenticationFilter" />
 
   <bean id="corsFilter" class="org.hisp.dhis.security.filter.CorsFilter" />
-  
+
+  <bean id="appCacheFilter" class="org.hisp.dhis.servlet.filter.AppCacheFilter" />
+
   <sec:http pattern="/dhis-web-commons/javascripts/**" security="none" />
   <sec:http pattern="/dhis-web-commons/css/**" security="none" />
   <sec:http pattern="/dhis-web-commons/flags/**" security="none" />
