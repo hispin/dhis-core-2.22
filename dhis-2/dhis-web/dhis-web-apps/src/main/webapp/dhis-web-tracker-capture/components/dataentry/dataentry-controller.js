@@ -50,7 +50,8 @@ trackerCapture.controller('DataEntryController',
         $scope.allowEventCreation = false;
         $scope.repeatableStages = [];        
         $scope.eventsByStage = [];
-        $scope.programStages = [];
+        $scope.programStages = [];        
+        $scope.prStDes = [];
         
         var selections = CurrentSelection.get();          
         $scope.selectedOrgUnit = storage.get('SELECTED_OU');
@@ -67,7 +68,12 @@ trackerCapture.controller('DataEntryController',
                 angular.forEach(stages, function(stage){
                     if(stage.openAfterEnrollment){
                         $scope.currentStage = stage;
-                    }
+                    }                   
+                    
+                    angular.forEach(stage.programStageDataElements, function(prStDe){
+                        $scope.prStDes[prStDe.dataElement.id] = prStDe;
+                    });
+                    
                     $scope.selectedProgramWithStage[stage.id] = stage;
                     $scope.eventsByStage[stage.id] = [];
                 });
@@ -103,6 +109,7 @@ trackerCapture.controller('DataEntryController',
                             }                       
 
                             dhis2Event.statusColor = EventUtils.getEventStatusColor(dhis2Event);
+                            dhis2Event = processEvent(dhis2Event, eventStage);
                             
                             if($scope.currentStage && $scope.currentStage.id === dhis2Event.programStage){
                                 $scope.currentEvent = dhis2Event;                                
@@ -216,40 +223,28 @@ trackerCapture.controller('DataEntryController',
         $scope.displayCustomForm = !$scope.displayCustomForm;
     };
     
-    $scope.getDataEntryForm = function(){ 
-        
-        $scope.currentEvent.providedElsewhere = [];
+    $scope.getDataEntryForm = function(){
         
         $scope.currentStage = $scope.selectedProgramWithStage[$scope.currentEvent.programStage];
         
         angular.forEach($scope.currentStage.programStageSections, function(section){
             section.open = true;
         });
-        
-        $scope.prStDes = [];                  
-        angular.forEach($scope.currentStage.programStageDataElements, function(prStDe){
-            $scope.prStDes[prStDe.dataElement.id] = prStDe; 
-        }); 
 
         $scope.customForm = CustomFormService.getForProgramStage($scope.currentStage);
-        $scope.displayCustomForm = $scope.customForm ? true:false;
+        $scope.displayCustomForm = $scope.customForm ? true:false;        
 
-        $scope.allowProvidedElsewhereExists = false;
-        angular.forEach($scope.currentStage.programStageDataElements, function(prStDe){
-            $scope.currentStage.programStageDataElements[prStDe.dataElement.id] = prStDe.dataElement;
-            if(prStDe.allowProvidedElsewhere){
-                $scope.allowProvidedElsewhereExists = true;                
-            }
-        });        
+        $scope.currentEventOriginal = angular.copy($scope.currentEvent);        
+    };
+    
+    var processEvent = function(event, stage){
         
-        if($scope.currentStage.captureCoordinates){
-            $scope.currentEvent.coordinate = {latitude: $scope.currentEvent.coordinate.latitude ? $scope.currentEvent.coordinate.latitude : '',
-                                     longitude: $scope.currentEvent.coordinate.longitude ? $scope.currentEvent.coordinate.longitude : ''};
-        }
+        event.providedElsewhere = [];
         
-        angular.forEach($scope.currentEvent.dataValues, function(dataValue){
+        angular.forEach(event.dataValues, function(dataValue){
+            
             var val = dataValue.value;
-            var de = $scope.currentStage.programStageDataElements[dataValue.dataElement];
+            var de = $scope.prStDes[dataValue.dataElement].dataElement;
             if(de){                
                 if(val && de.type === 'string' && de.optionSet && $scope.optionSets[de.optionSet.id].options  ){
                     val = OptionSetService.getName($scope.optionSets[de.optionSet.id].options, val);
@@ -266,13 +261,26 @@ trackerCapture.controller('DataEntryController',
                     }
                 }
             }    
-            $scope.currentEvent[dataValue.dataElement] = val;
+            event[dataValue.dataElement] = val;
             if(dataValue.providedElsewhere){
-                $scope.currentEvent.providedElsewhere[dataValue.dataElement] = dataValue.providedElsewhere;
+                event.providedElsewhere[dataValue.dataElement] = dataValue.providedElsewhere;
             }
         });
-
-        $scope.currentEventOriginal = angular.copy($scope.currentEvent);        
+        
+        if(stage.captureCoordinates){
+            event.coordinate = {latitude: event.coordinate.latitude ? event.coordinate.latitude : '',
+                                     longitude: event.coordinate.longitude ? event.coordinate.longitude : ''};
+        }
+        
+        
+        event.allowProvidedElsewhereExists = false;
+        angular.forEach(stage.programStageDataElements, function(prStDe){
+            if(prStDe.allowProvidedElsewhere){
+                event.allowProvidedElsewhereExists = true;                
+            }
+        });
+        
+        return event;
     };
     
     $scope.saveDatavalue = function(prStDe){
@@ -317,6 +325,15 @@ trackerCapture.controller('DataEntryController',
                                         ]
                          };
                 DHIS2EventFactory.updateForSingleValue(ev).then(function(response){
+                    var index = -1;
+                    for(var i=0; i<$scope.eventsByStage[$scope.currentEvent.programStage].length && index === -1; i++){
+                        if($scope.eventsByStage[$scope.currentEvent.programStage][i].event === $scope.currentEvent.event){
+                            index = i;
+                        }
+                    }
+                    if(index !== -1){
+                        $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1,$scope.currentEvent);
+                    }
                     $scope.currentElement.saved = true;
                     $scope.currentEventOriginal = angular.copy($scope.currentEvent);
                 });
