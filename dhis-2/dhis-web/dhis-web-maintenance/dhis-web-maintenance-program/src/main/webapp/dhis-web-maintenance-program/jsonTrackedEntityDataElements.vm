@@ -3,6 +3,7 @@
   #foreach( ${dataElement} in $!{dataElements} )
   {
 	"id": "${dataElement.uid}",
+	"localid": "${dataElement.id}",
 	"name": "$!encoder.jsonEncode( ${dataElement.name} )",
 	"code": "$!encoder.jsonEncode( ${dataElement.code} )",
 	"type": "${dataElement.type}",
