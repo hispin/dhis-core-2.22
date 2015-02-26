@@ -255,12 +255,12 @@ public class Chart
 
             rewindRelativePeriods = chart.isRewindRelativePeriods();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 series = chart.getSeries();
                 category = chart.getCategory();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 series = chart.getSeries() == null ? series : chart.getSeries();
                 category = chart.getCategory() == null ? category : chart.getCategory();

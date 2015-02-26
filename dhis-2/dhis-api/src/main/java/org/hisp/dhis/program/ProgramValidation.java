@@ -153,14 +153,14 @@ public class ProgramValidation
         {
             ProgramValidation programValidation = (ProgramValidation) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 leftSide = programValidation.getLeftSide();
                 operator = programValidation.getOperator();
                 rightSide = programValidation.getRightSide();
                 program = programValidation.getProgram();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 leftSide = programValidation.getLeftSide() == null ? leftSide : programValidation.getLeftSide();
                 rightSide = programValidation.getRightSide() == null ? rightSide : programValidation.getRightSide();

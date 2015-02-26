@@ -185,11 +185,11 @@ public class ValidationRuleGroup
         {
             ValidationRuleGroup validationRuleGroup = (ValidationRuleGroup) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = validationRuleGroup.getDescription();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = validationRuleGroup.getDescription() == null ? description : validationRuleGroup.getDescription();
             }

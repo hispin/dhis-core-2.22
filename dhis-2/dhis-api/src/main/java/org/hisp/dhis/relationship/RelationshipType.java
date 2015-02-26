@@ -122,12 +122,12 @@ public class RelationshipType
         {
             RelationshipType relationshipType = (RelationshipType) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 aIsToB = relationshipType.getaIsToB();
                 bIsToA = relationshipType.getbIsToA();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 aIsToB = relationshipType.getaIsToB() == null ? aIsToB : relationshipType.getaIsToB();
                 bIsToA = relationshipType.getbIsToA() == null ? bIsToA : relationshipType.getbIsToA();

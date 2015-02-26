@@ -119,11 +119,11 @@ public class LegendSet
         {
             LegendSet legendSet = (LegendSet) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 symbolizer = legendSet.getSymbolizer();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 symbolizer = legendSet.getSymbolizer() == null ? symbolizer : legendSet.getSymbolizer();
             }

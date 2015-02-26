@@ -138,14 +138,14 @@ public class Legend
         {
             Legend legend = (Legend) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 startValue = legend.getStartValue();
                 endValue = legend.getEndValue();
                 color = legend.getColor();
                 image = legend.getImage();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 startValue = legend.getStartValue() == null ? startValue : legend.getStartValue();
                 endValue = legend.getEndValue() == null ? endValue : legend.getEndValue();

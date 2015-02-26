@@ -613,7 +613,7 @@ public class Program
 
             version = program.getVersion();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = program.getDescription();
                 dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription();
@@ -631,7 +631,7 @@ public class Program
                 dataEntryMethod = program.getDataEntryMethod();
                 trackedEntity = program.getTrackedEntity();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = program.getDescription() == null ? description : program.getDescription();
                 dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription() == null ? dateOfEnrollmentDescription : program.getDateOfEnrollmentDescription();

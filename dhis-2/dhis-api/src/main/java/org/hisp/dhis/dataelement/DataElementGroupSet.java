@@ -279,12 +279,12 @@ public class DataElementGroupSet
 
             dataDimension = dataElementGroupSet.isDataDimension();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = dataElementGroupSet.getDescription();
                 compulsory = dataElementGroupSet.isCompulsory();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = dataElementGroupSet.getDescription() == null ? description : dataElementGroupSet.getDescription();
                 compulsory = dataElementGroupSet.isCompulsory() == null ? compulsory : dataElementGroupSet.isCompulsory();

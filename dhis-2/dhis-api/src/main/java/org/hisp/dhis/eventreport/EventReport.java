@@ -560,7 +560,7 @@ public class EventReport
             showHierarchy = report.isShowHierarchy();
             showDimensionLabels = report.isShowDimensionLabels();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 dataElementValueDimension = report.getDataElementValueDimension();
                 attributeValueDimension = report.getAttributeValueDimension();
@@ -574,7 +574,7 @@ public class EventReport
                 displayDensity = report.getDisplayDensity();
                 fontSize = report.getFontSize();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 dataElementValueDimension = report.getDataElementValueDimension() == null ? dataElementValueDimension : report.getDataElementValueDimension();
                 attributeValueDimension = report.getAttributeValueDimension() == null ? attributeValueDimension : report.getAttributeValueDimension();

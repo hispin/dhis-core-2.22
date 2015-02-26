@@ -269,12 +269,12 @@ public class DataElementCategoryOption
         {
             DataElementCategoryOption categoryOption = (DataElementCategoryOption) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 startDate = categoryOption.getStartDate();
                 endDate = categoryOption.getEndDate();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 startDate = categoryOption.getStartDate() == null ? startDate : categoryOption.getStartDate();
                 endDate = categoryOption.getEndDate() == null ? endDate : categoryOption.getEndDate();

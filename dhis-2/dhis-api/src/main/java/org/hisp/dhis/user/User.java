@@ -640,7 +640,7 @@ public class User
         {
             User user = (User) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 surname = user.getSurname();
                 firstName = user.getFirstName();
@@ -658,7 +658,7 @@ public class User
                 lastCheckedInterpretations = user.getLastCheckedInterpretations();
                 userCredentials = user.getUserCredentials();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 surname = user.getSurname() == null ? surname : user.getSurname();
                 firstName = user.getFirstName() == null ? firstName : user.getFirstName();

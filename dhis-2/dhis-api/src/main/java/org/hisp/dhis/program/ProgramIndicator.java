@@ -161,14 +161,14 @@ public class ProgramIndicator
         {
             ProgramIndicator programIndicator = (ProgramIndicator) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 valueType = programIndicator.getValueType();
                 expression = programIndicator.getExpression();
                 rootDate = programIndicator.getRootDate();
                 program = programIndicator.getProgram();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 valueType = programIndicator.getValueType() == null ? valueType : programIndicator.getValueType();
                 expression = programIndicator.getExpression() == null ? expression : programIndicator.getExpression();
