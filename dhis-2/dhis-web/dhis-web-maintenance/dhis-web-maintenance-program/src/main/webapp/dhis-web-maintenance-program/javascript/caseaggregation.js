@@ -209,10 +209,11 @@ function getTrackedEntityDataElements() {
       var deSumId = jQuery('#deSumId');
       deSumId.append("<option value='' >" + i18n_please_select + "</option>");
       for( i in json.dataElements ) {
-        dataElements.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + "' dename='" + json.dataElements[i].name + "' decode='" + json.dataElements[i].code + "' optionSet='" + json.dataElements[i].optionset + "' valuetype='" + json.dataElements[i].type + "'>" + json.dataElements[i].name + "</option>");
-        dataElementBackups.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + "' dename='" + json.dataElements[i].name + "' decode='" + json.dataElements[i].code + "' optionSet='" + json.dataElements[i].optionset + "' valuetype='" + json.dataElements[i].type + "'>" + json.dataElements[i].name + "</option>");
+		var id =  json.dataElements[i].localid;
+        dataElements.append("<option value='" + id + "' title='" + json.dataElements[i].name + "' dename='" + json.dataElements[i].name + "' decode='" + json.dataElements[i].code + "' optionSet='" + json.dataElements[i].optionset + "' valuetype='" + json.dataElements[i].type + "'>" + json.dataElements[i].name + "</option>");
+        dataElementBackups.append("<option value='" + id + "' title='" + json.dataElements[i].name + "' dename='" + json.dataElements[i].name + "' decode='" + json.dataElements[i].code + "' optionSet='" + json.dataElements[i].optionset + "' valuetype='" + json.dataElements[i].type + "'>" + json.dataElements[i].name + "</option>");
         if( json.dataElements[i].type == 'int' ) {
-          deSumId.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + "' optionSet='" + json.dataElements[i].optionset + "' valuetype='" + json.dataElements[i].type + "'>" + json.dataElements[i].name + "</option>");
+          deSumId.append("<option value='" + id + "' title='" + json.dataElements[i].name + "' optionSet='" + json.dataElements[i].optionset + "' valuetype='" + json.dataElements[i].type + "'>" + json.dataElements[i].name + "</option>");
         }
       }
 
