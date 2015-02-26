@@ -378,7 +378,7 @@ public class Indicator
 
             annualized = indicator.isAnnualized();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 denominator = indicator.getDenominator();
                 denominatorDescription = indicator.getDenominatorDescription();
@@ -389,7 +389,7 @@ public class Indicator
                 indicatorType = indicator.getIndicatorType();
                 legendSet = indicator.getLegendSet();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 denominator = indicator.getDenominator() == null ? denominator : indicator.getDenominator();
                 denominatorDescription = indicator.getDenominatorDescription() == null ? denominatorDescription : indicator.getDenominatorDescription();

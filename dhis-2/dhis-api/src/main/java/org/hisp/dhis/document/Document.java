@@ -138,12 +138,12 @@ public class Document
 
             external = document.isExternal();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 url = document.getUrl();
                 contentType = document.getContentType();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 url = document.getUrl() == null ? url : document.getUrl();
                 contentType = document.getContentType() == null ? contentType : document.getContentType();

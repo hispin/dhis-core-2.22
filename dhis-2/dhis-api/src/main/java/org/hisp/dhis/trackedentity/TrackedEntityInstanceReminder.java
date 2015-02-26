@@ -252,7 +252,7 @@ public class TrackedEntityInstanceReminder
         {
             TrackedEntityInstanceReminder trackedEntityInstanceReminder = (TrackedEntityInstanceReminder) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 daysAllowedSendMessage = trackedEntityInstanceReminder.getDaysAllowedSendMessage();
                 templateMessage = trackedEntityInstanceReminder.getTemplateMessage();
@@ -262,7 +262,7 @@ public class TrackedEntityInstanceReminder
                 messageType = trackedEntityInstanceReminder.getMessageType();
                 userGroup = trackedEntityInstanceReminder.getUserGroup();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 daysAllowedSendMessage = trackedEntityInstanceReminder.getDaysAllowedSendMessage() == null ? daysAllowedSendMessage : trackedEntityInstanceReminder.getDaysAllowedSendMessage();
                 templateMessage = trackedEntityInstanceReminder.getTemplateMessage() == null ? templateMessage : trackedEntityInstanceReminder.getTemplateMessage();

@@ -473,7 +473,7 @@ public class MapView
         {
             MapView mapView = (MapView) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 layer = mapView.getLayer();
                 method = mapView.getMethod();
@@ -493,7 +493,7 @@ public class MapView
                 labelFontStyle = mapView.getLabelFontStyle();
                 labelFontColor = mapView.getLabelFontColor();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 layer = mapView.getLayer() == null ? layer : mapView.getLayer();
                 method = mapView.getMethod() == null ? method : mapView.getMethod();

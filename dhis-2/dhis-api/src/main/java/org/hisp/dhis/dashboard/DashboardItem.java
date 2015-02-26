@@ -432,7 +432,7 @@ public class DashboardItem
         {
             DashboardItem dashboardItem = (DashboardItem) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 chart = dashboardItem.getChart();
                 map = dashboardItem.getMap();
@@ -443,7 +443,7 @@ public class DashboardItem
                 messages = dashboardItem.getMessages();
                 shape = dashboardItem.getShape();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 chart = dashboardItem.getChart() == null ? chart : dashboardItem.getChart();
                 map = dashboardItem.getMap() == null ? map : dashboardItem.getMap();

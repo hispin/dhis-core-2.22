@@ -243,12 +243,12 @@ public class IndicatorGroupSet
         {
             IndicatorGroupSet indicatorGroupSet = (IndicatorGroupSet) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 compulsory = indicatorGroupSet.isCompulsory();
                 description = indicatorGroupSet.getDescription();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 compulsory = indicatorGroupSet.isCompulsory() == null ? compulsory : indicatorGroupSet.isCompulsory();
                 description = indicatorGroupSet.getDescription() == null ? description : indicatorGroupSet.getDescription();

@@ -212,11 +212,11 @@ public class UserAuthorityGroup
         {
             UserAuthorityGroup userAuthorityGroup = (UserAuthorityGroup) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = userAuthorityGroup.getDescription();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = userAuthorityGroup.getDescription() == null ? description : userAuthorityGroup.getDescription();
             }

@@ -286,11 +286,11 @@ public class OrganisationUnitGroupSet
             compulsory = organisationUnitGroupSet.isCompulsory();
             dataDimension = organisationUnitGroupSet.isDataDimension();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = organisationUnitGroupSet.getDescription();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = organisationUnitGroupSet.getDescription() == null ? description : organisationUnitGroupSet.getDescription();
             }

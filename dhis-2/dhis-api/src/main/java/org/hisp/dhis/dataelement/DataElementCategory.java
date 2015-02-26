@@ -231,11 +231,11 @@ public class DataElementCategory
         {
             DataElementCategory category = (DataElementCategory) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 dataDimensionType = category.getDataDimensionType();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 dataDimensionType = category.getDataDimensionType() == null ? dataDimensionType : category.getDataDimensionType();
             }

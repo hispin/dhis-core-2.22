@@ -137,12 +137,12 @@ public class ProgramStageSection
         {
             ProgramStageSection programStageSection = (ProgramStageSection) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 programStage = programStageSection.getProgramStage();
                 sortOrder = programStageSection.getSortOrder();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 programStage = programStageSection.getProgramStage() == null ? programStage : programStageSection.getProgramStage();
                 sortOrder = programStageSection.getSortOrder() == null ? sortOrder : programStageSection.getSortOrder();

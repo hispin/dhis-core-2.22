@@ -687,11 +687,11 @@ public class UserCredentials
             selfRegistered = userCredentials.isSelfRegistered();
             disabled = userCredentials.isDisabled();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 openId = userCredentials.getOpenId();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 openId = userCredentials.getOpenId() == null ? openId : userCredentials.getOpenId();
             }

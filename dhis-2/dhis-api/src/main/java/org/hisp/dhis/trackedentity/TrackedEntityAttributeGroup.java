@@ -125,11 +125,11 @@ public class TrackedEntityAttributeGroup
         {
             TrackedEntityAttributeGroup trackedEntityAttributeGroup = (TrackedEntityAttributeGroup) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = trackedEntityAttributeGroup.getDescription();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = trackedEntityAttributeGroup.getDescription() == null ? description : trackedEntityAttributeGroup.getDescription();
             }

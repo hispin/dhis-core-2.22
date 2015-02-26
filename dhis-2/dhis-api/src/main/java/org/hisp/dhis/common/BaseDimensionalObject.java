@@ -265,14 +265,14 @@ public class BaseDimensionalObject
         {
             DimensionalObject dimensionalObject = (DimensionalObject) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 dimensionType = dimensionalObject.getDimensionType();
                 dimensionName = dimensionalObject.getDimensionName();
                 legendSet = dimensionalObject.getLegendSet();
                 filter = dimensionalObject.getFilter();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 dimensionType = dimensionalObject.getDimensionType() == null ? dimensionType : dimensionalObject.getDimensionType();
                 dimensionName = dimensionalObject.getDimensionName() == null ? dimensionName : dimensionalObject.getDimensionName();

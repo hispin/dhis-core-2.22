@@ -131,11 +131,11 @@ public class CategoryOptionGroup
         {
             CategoryOptionGroup categoryOptionGroup = (CategoryOptionGroup) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 groupSet = categoryOptionGroup.getGroupSet() == null ? groupSet : categoryOptionGroup.getGroupSet();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 groupSet = categoryOptionGroup.getGroupSet();
             }

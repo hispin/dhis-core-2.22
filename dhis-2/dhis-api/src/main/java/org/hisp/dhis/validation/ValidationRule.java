@@ -487,13 +487,13 @@ public class ValidationRule
         {
             ValidationRule validationRule = (ValidationRule) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = validationRule.getDescription();
                 operator = validationRule.getOperator();
                 periodType = validationRule.getPeriodType();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = validationRule.getDescription() == null ? description : validationRule.getDescription();
                 operator = validationRule.getOperator() == null ? operator : validationRule.getOperator();

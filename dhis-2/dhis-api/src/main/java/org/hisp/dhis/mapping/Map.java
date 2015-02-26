@@ -148,14 +148,14 @@ public class Map
         {
             Map map = (Map) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 user = map.getUser();
                 longitude = map.getLongitude();
                 latitude = map.getLatitude();
                 zoom = map.getZoom();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 user = map.getUser() == null ? user : map.getUser();
                 longitude = map.getLongitude() == null ? longitude : map.getLongitude();

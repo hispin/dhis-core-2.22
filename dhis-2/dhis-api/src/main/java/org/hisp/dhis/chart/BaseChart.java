@@ -521,7 +521,7 @@ public abstract class BaseChart
             showData = chart.isShowData();
             hideEmptyRows = chart.isHideEmptyRows();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 domainAxisLabel = chart.getDomainAxisLabel();
                 rangeAxisLabel = chart.getRangeAxisLabel();
@@ -536,7 +536,7 @@ public abstract class BaseChart
                 rangeAxisSteps = chart.getRangeAxisSteps();
                 rangeAxisDecimals = chart.getRangeAxisDecimals();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 domainAxisLabel = chart.getDomainAxisLabel() == null ? domainAxisLabel : chart.getDomainAxisLabel();
                 rangeAxisLabel = chart.getRangeAxisLabel() == null ? rangeAxisLabel : chart.getRangeAxisLabel();

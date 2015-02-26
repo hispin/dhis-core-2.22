@@ -205,7 +205,7 @@ public class MapLayer
             strokeWidth = mapLayer.getStrokeWidth();
             fillOpacity = mapLayer.getFillOpacity();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 type = mapLayer.getType();
                 url = mapLayer.getUrl();
@@ -214,7 +214,7 @@ public class MapLayer
                 fillColor = mapLayer.getFillColor();
                 strokeColor = mapLayer.getStrokeColor();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 type = mapLayer.getType() == null ? type : mapLayer.getType();
                 url = mapLayer.getUrl() == null ? url : mapLayer.getUrl();

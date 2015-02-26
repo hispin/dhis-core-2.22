@@ -1104,7 +1104,7 @@ public class OrganisationUnit
         {
             OrganisationUnit organisationUnit = (OrganisationUnit) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 openingDate = organisationUnit.getOpeningDate();
                 closedDate = organisationUnit.getClosedDate();
@@ -1118,7 +1118,7 @@ public class OrganisationUnit
                 phoneNumber = organisationUnit.getPhoneNumber();
                 parent = organisationUnit.getParent();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 openingDate = organisationUnit.getOpeningDate() == null ? openingDate : organisationUnit.getOpeningDate();
                 closedDate = organisationUnit.getClosedDate() == null ? closedDate : organisationUnit.getClosedDate();

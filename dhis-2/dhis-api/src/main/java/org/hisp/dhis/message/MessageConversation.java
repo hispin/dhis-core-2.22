@@ -454,13 +454,13 @@ public class MessageConversation
         {
             MessageConversation messageConversation = (MessageConversation) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 subject = messageConversation.getSubject();
                 lastSender = messageConversation.getLastSender();
                 lastMessage = messageConversation.getLastMessage();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 subject = messageConversation.getSubject() == null ? subject : messageConversation.getSubject();
                 lastSender = messageConversation.getLastSender() == null ? lastSender : messageConversation.getLastSender();

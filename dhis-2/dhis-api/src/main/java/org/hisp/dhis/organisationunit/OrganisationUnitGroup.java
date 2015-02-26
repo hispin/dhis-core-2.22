@@ -203,12 +203,12 @@ public class OrganisationUnitGroup
         {
             OrganisationUnitGroup organisationUnitGroup = (OrganisationUnitGroup) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 groupSet = organisationUnitGroup.getGroupSet();
                 symbol = organisationUnitGroup.getSymbol();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 groupSet = organisationUnitGroup.getGroupSet() == null ? groupSet : organisationUnitGroup.getGroupSet();
                 symbol = organisationUnitGroup.getSymbol() == null ? symbol : organisationUnitGroup.getSymbol();

@@ -228,12 +228,12 @@ public class BaseNameableObject
         {
             NameableObject nameableObject = (NameableObject) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 this.shortName = nameableObject.getShortName();
                 this.description = nameableObject.getDescription();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 this.shortName = nameableObject.getShortName() == null ? this.shortName : nameableObject.getShortName();
                 this.description = nameableObject.getDescription() == null ? this.description : nameableObject.getDescription();

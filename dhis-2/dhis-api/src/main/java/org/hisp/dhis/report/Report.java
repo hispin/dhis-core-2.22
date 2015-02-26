@@ -216,12 +216,12 @@ public class Report
         {
             Report report = (Report) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 designContent = report.getDesignContent();
                 reportTable = report.getReportTable();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 designContent = report.getDesignContent() == null ? designContent : report.getDesignContent();
                 reportTable = report.getReportTable() == null ? reportTable : report.getReportTable();
