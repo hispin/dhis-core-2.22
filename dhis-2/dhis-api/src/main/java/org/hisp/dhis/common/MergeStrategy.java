@@ -33,5 +33,16 @@ package org.hisp.dhis.common;
  */
 public enum MergeStrategy
 {
-    MERGE_ALWAYS, MERGE_IF_NOT_NULL
+    MERGE_ALWAYS, MERGE_IF_NOT_NULL,
+    MERGE, REPLACE;
+
+    public boolean isMerge()
+    {
+        return this == MERGE_IF_NOT_NULL || this == MERGE;
+    }
+
+    public boolean isReplace()
+    {
+        return this == MERGE_ALWAYS || this == REPLACE;
+    }
 }
