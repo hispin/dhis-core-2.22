@@ -39,7 +39,7 @@ trackerCapture.controller('EnrollmentController',
         $scope.optionSets = selections.optionSets;
         $scope.programs = selections.prs;
         var selectedEnrollment = selections.selectedEnrollment;
-        $scope.enrollments = selections.enrollments ? selections.enrollments : [];        
+        $scope.enrollments = selections.enrollments;
         $scope.programExists = args.programExists;
         $scope.programNames = selections.prNames;
         $scope.programStageNames = selections.prStNames;

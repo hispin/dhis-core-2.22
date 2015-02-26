@@ -144,10 +144,10 @@ trackerCapture.controller('DashboardController',
 
                     //get enrollments for the selected tei
                     EnrollmentService.getByEntity($scope.selectedTeiId).then(function(response){                    
-
+                        var enrollments = angular.isObject(response) && response.enrollments ? response.enrollments : [];
                         var selectedEnrollment = null;
-                        if(angular.isObject(response) && response.enrollments && response.enrollments.length === 1 && response.enrollments[0].status === 'ACTIVE'){
-                            selectedEnrollment = response.enrollments[0];
+                        if(enrollments.length === 1 && enrollments[0].status === 'ACTIVE'){
+                            selectedEnrollment = enrollments[0];
                         }
                         
                         ProgramFactory.getAll().then(function(programs){
@@ -173,7 +173,7 @@ trackerCapture.controller('DashboardController',
                             });
                             
                             //prepare selected items for broadcast
-                            CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: response.enrollments, selectedEnrollment: selectedEnrollment, optionSets: $scope.optionSets});                            
+                            CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: enrollments, selectedEnrollment: selectedEnrollment, optionSets: $scope.optionSets});                            
                             getDashboardLayout();                    
                         });
                     });
