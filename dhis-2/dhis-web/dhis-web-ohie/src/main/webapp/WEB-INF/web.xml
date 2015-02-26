@@ -49,6 +49,10 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
+  <filter>
+    <filter-name>appCacheFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
 
   <filter-mapping>
     <filter-name>encoding-filter</filter-name>
@@ -89,6 +93,10 @@
   <filter-mapping>
     <filter-name>Struts</filter-name>
     <url-pattern>*.action</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>appCacheFilter</filter-name>
+    <url-pattern>*.appcache</url-pattern>
   </filter-mapping>
 
   <listener>
