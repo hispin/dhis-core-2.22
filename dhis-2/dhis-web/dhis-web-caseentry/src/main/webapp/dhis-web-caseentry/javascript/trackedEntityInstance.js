@@ -258,9 +258,9 @@ function displayTEIList(json, page) {
 	// Header
 	var title = "";
 	
-	if (getFieldValue('programIdAddTrackedEntity') != "") {
+	if (getFieldValue('program') != "") {
 		var status = jQuery('#statusEnrollment option:selected').text();
-		var programName = jQuery('#programIdAddTrackedEntity option:selected')
+		var programName = jQuery('#program option:selected')
 				.text();
 		title = i18n_for + " " + status + " " + i18n_enrollments_in + " "
 				+ programName + " " + i18n_program;
