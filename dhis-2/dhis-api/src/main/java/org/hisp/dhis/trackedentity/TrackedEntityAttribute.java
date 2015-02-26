@@ -358,7 +358,7 @@ public class TrackedEntityAttribute
         {
             TrackedEntityAttribute trackedEntityAttribute = (TrackedEntityAttribute) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = trackedEntityAttribute.getDescription();
                 valueType = trackedEntityAttribute.getValueType();
@@ -374,7 +374,7 @@ public class TrackedEntityAttribute
                 programScope = trackedEntityAttribute.getProgramScope();
                 confidential = trackedEntityAttribute.getConfidential();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = trackedEntityAttribute.getDescription() == null ? description : trackedEntityAttribute.getDescription();
                 valueType = trackedEntityAttribute.getValueType() == null ? valueType : trackedEntityAttribute.getValueType();

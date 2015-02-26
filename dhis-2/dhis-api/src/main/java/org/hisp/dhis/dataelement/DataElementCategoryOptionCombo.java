@@ -402,11 +402,11 @@ public class DataElementCategoryOptionCombo
         {
             DataElementCategoryOptionCombo categoryOptionCombo = (DataElementCategoryOptionCombo) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 categoryCombo = categoryOptionCombo.getCategoryCombo();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 categoryCombo = categoryOptionCombo.getCategoryCombo() == null ? categoryCombo : categoryOptionCombo.getCategoryCombo();
             }

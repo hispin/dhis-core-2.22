@@ -230,13 +230,13 @@ public class SqlView
         {
             SqlView sqlView = (SqlView) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 description = sqlView.getDescription();
                 sqlQuery = sqlView.getSqlQuery();
                 query = sqlView.isQuery();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 description = sqlView.getDescription() == null ? description : sqlView.getDescription();
                 sqlQuery = sqlView.getSqlQuery() == null ? sqlQuery : sqlView.getSqlQuery();

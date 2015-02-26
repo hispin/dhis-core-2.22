@@ -763,11 +763,11 @@ public abstract class BaseAnalyticalObject
 
             this.clear();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 relatives = object.getRelatives();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 relatives = object.getRelatives() == null ? relatives : object.getRelatives();
             }

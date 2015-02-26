@@ -544,7 +544,7 @@ public class BaseIdentifiableObject
     {
         Validate.notNull( other );
 
-        if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+        if ( strategy.isReplace() )
         {
             uid = other.getUid();
             name = other.getName();
@@ -553,7 +553,7 @@ public class BaseIdentifiableObject
             created = other.getCreated();
             user = other.getUser();
         }
-        else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+        else if ( strategy.isMerge() )
         {
             uid = other.getUid() == null ? uid : other.getUid();
             name = other.getName() == null ? name : other.getName();

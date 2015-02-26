@@ -187,11 +187,11 @@ public class IndicatorGroup
         {
             IndicatorGroup indicatorGroup = (IndicatorGroup) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 groupSet = indicatorGroup.getGroupSet();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 groupSet = indicatorGroup.getGroupSet() == null ? groupSet : indicatorGroup.getGroupSet();
             }

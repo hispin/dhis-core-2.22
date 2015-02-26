@@ -272,11 +272,11 @@ public class Section
         {
             Section section = (Section) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 dataSet = section.getDataSet();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 dataSet = section.getDataSet() == null ? dataSet : section.getDataSet();
             }

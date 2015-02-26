@@ -143,12 +143,12 @@ public class TrackedEntityForm
         {
             TrackedEntityForm trackedEntityForm = (TrackedEntityForm) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 program = trackedEntityForm.getProgram();
                 dataEntryForm = trackedEntityForm.getDataEntryForm();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 program = trackedEntityForm.getProgram() == null ? program : trackedEntityForm.getProgram();
                 dataEntryForm = trackedEntityForm.getDataEntryForm() == null ? dataEntryForm : trackedEntityForm.getDataEntryForm();

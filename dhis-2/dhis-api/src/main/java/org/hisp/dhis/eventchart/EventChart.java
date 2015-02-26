@@ -390,7 +390,7 @@ public class EventChart
         {
             EventChart chart = (EventChart) other;
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 dataElementValueDimension = chart.getDataElementValueDimension();
                 attributeValueDimension = chart.getAttributeValueDimension();
@@ -401,7 +401,7 @@ public class EventChart
                 endDate = chart.getEndDate();
                 outputType = chart.getOutputType();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 dataElementValueDimension = chart.getDataElementValueDimension() == null ? dataElementValueDimension : chart.getDataElementValueDimension();
                 attributeValueDimension = chart.getAttributeValueDimension() == null ? attributeValueDimension : chart.getAttributeValueDimension();

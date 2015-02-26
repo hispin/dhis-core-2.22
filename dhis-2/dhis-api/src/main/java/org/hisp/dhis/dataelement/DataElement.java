@@ -729,7 +729,7 @@ public class DataElement
 
             zeroIsSignificant = dataElement.isZeroIsSignificant();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 formName = dataElement.getFormName();
                 domainType = dataElement.getDomainType();
@@ -741,7 +741,7 @@ public class DataElement
                 url = dataElement.getUrl();
                 optionSet = dataElement.getOptionSet();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 formName = dataElement.getFormName() == null ? formName : dataElement.getFormName();
                 domainType = dataElement.getDomainType() == null ? domainType : dataElement.getDomainType();

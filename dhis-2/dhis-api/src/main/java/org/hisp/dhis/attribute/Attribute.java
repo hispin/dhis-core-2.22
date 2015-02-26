@@ -309,12 +309,12 @@ public class Attribute
             programAttribute = attribute.isProgramAttribute();
             mandatory = attribute.isMandatory();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 valueType = attribute.getValueType();
                 sortOrder = attribute.getSortOrder();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 valueType = attribute.getValueType() == null ? valueType : attribute.getValueType();
                 sortOrder = attribute.getSortOrder() == null ? sortOrder : attribute.getSortOrder();

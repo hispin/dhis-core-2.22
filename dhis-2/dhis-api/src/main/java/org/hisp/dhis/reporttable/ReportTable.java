@@ -1104,7 +1104,7 @@ public class ReportTable
             topLimit = reportTable.getTopLimit();
             sortOrder = reportTable.getSortOrder();
 
-            if ( MergeStrategy.MERGE_ALWAYS.equals( strategy ) )
+            if ( strategy.isReplace() )
             {
                 reportParams = reportTable.getReportParams();
                 aggregationType = reportTable.getAggregationType();
@@ -1112,7 +1112,7 @@ public class ReportTable
                 fontSize = reportTable.getFontSize();
                 legendSet = reportTable.getLegendSet();
             }
-            else if ( MergeStrategy.MERGE_IF_NOT_NULL.equals( strategy ) )
+            else if ( strategy.isMerge() )
             {
                 reportParams = reportTable.getReportParams() == null ? reportParams : reportTable.getReportParams();
                 aggregationType = reportTable.getAggregationType() == null ? aggregationType : reportTable.getAggregationType();
