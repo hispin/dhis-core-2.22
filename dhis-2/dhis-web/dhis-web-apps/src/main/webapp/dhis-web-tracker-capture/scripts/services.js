@@ -797,6 +797,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             attributes.push(attribute);
                         }
                     });     
+                    
+                    attributes = orderByFilter(attributes, '-sortOrderInListNoProgram').reverse();
                     def.resolve(attributes);
                 }                
             });
