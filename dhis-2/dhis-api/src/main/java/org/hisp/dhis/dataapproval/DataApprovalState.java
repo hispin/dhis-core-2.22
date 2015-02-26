@@ -31,9 +31,13 @@ package org.hisp.dhis.dataapproval;
 /**
  * Current state of data approval for a selected combination of data set, period,
  * organisation unit, and category options or category group options.
+ * 
+ * ACCEPTED_HERE refers the approval being accepted by the level above, implying
+ * that the approval has an accepted state at this level.
+ * 
+ * APPROVED_HERE refers to the data being approved by this level.
  *
  * @author Jim Grace
- * @version $Id$
  */
 public enum DataApprovalState
 {
