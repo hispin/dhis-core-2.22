@@ -41,7 +41,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -62,13 +65,17 @@ public class AppCacheFilter implements Filter
             HttpServletRequest request = (HttpServletRequest) req;
             HttpServletResponse response = (HttpServletResponse) res;
 
-            chain.doFilter( request, response );
+            PrintWriter writer = response.getWriter();
+            CharResponseWrapper responseWrapper = new CharResponseWrapper( response );
+
+            chain.doFilter( request, responseWrapper );
 
             SystemInfo systemInfo = systemService.getSystemInfo();
 
-            response.getOutputStream().println( "# User: " + currentUserService.getCurrentUsername() );
-            response.getOutputStream().println( "# Revision: " + systemInfo.getRevision() );
-            response.getOutputStream().println( "# Calendar: " + systemInfo.getCalendar() );
+            writer.print( responseWrapper.toString() );
+            writer.println( "# User: " + currentUserService.getCurrentUsername() );
+            writer.println( "# Revision: " + systemInfo.getRevision() );
+            writer.println( "# Calendar: " + systemInfo.getCalendar() );
         }
     }
 
@@ -80,5 +87,27 @@ public class AppCacheFilter implements Filter
     @Override
     public void destroy()
     {
+    }
+}
+
+class CharResponseWrapper extends HttpServletResponseWrapper
+{
+    private CharArrayWriter output;
+
+    public String toString()
+    {
+        return output.toString();
+    }
+
+    public CharResponseWrapper( HttpServletResponse response )
+    {
+        super( response );
+        output = new CharArrayWriter();
+    }
+
+    @Override
+    public PrintWriter getWriter()
+    {
+        return new PrintWriter( output );
     }
 }
