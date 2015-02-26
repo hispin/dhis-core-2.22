@@ -57,6 +57,7 @@ import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.config.InclusionStrategy;
 import org.hisp.dhis.node.types.CollectionNode;
+import org.hisp.dhis.node.types.ComplexNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.node.types.SimpleNode;
 import org.hisp.dhis.query.Order;
@@ -346,7 +347,18 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         }
         else
         {
-            RootNode rootNode = NodeUtils.createRootNode( collectionNode.getChildren().get( 0 ) );
+            List<Node> children = collectionNode.getChildren();
+            RootNode rootNode;
+
+            if ( !children.isEmpty() )
+            {
+                rootNode = NodeUtils.createRootNode( children.get( 0 ) );
+            }
+            else
+            {
+                rootNode = NodeUtils.createRootNode( new ComplexNode( getSchema().getSingular() ) );
+            }
+
             rootNode.getConfig().setInclusionStrategy( getInclusionStrategy( parameters.get( "inclusionStrategy" ) ) );
 
             return rootNode;
