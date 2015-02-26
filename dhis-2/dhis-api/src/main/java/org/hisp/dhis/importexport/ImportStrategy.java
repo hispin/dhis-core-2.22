@@ -45,21 +45,21 @@ public enum ImportStrategy
 
     public boolean isCreate()
     {
-        return this.equals( NEW ) || this.equals( CREATE );
+        return this == NEW || this == CREATE;
     }
 
     public boolean isUpdate()
     {
-        return this.equals( UPDATES ) || this.equals( UPDATE );
+        return this == UPDATES || this == UPDATE;
     }
 
     public boolean isCreateAndUpdate()
     {
-        return this.equals( NEW_AND_UPDATES ) || this.equals( CREATE_AND_UPDATE );
+        return this == NEW_AND_UPDATES || this == CREATE_AND_UPDATE;
     }
 
     public boolean isDelete()
     {
-        return this.equals( DELETE ) || this.equals( DELETES );
+        return this == DELETE || this == DELETES;
     }
 }
