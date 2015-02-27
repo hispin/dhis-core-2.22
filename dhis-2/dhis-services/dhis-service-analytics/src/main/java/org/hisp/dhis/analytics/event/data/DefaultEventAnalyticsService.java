@@ -77,6 +77,7 @@ import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -552,18 +553,22 @@ public class DefaultEventAnalyticsService
         QueryItem queryItem = getQueryItemFromDimension( split[0] );
         
         if ( split.length > 1 ) // Filters specified
-        {   
+        {
             for ( int i = 1; i < split.length; i += 2 )
             {
+                // Legends comes as identifiers, replace with names if legend set
+                
+                String filterItem = queryItem.hasLegendSet() ? replaceLegendUidsWithNames( split[i+1] ) : split[i+1];
+                
                 QueryOperator operator = QueryOperator.fromString( split[i] );
-                QueryFilter filter = new QueryFilter( operator, split[i+1] );
+                QueryFilter filter = new QueryFilter( operator, filterItem );
                 queryItem.getFilters().add( filter );
             }
         }
         
         return queryItem;
     }
-
+    
     private Map<String, String> getUidNameMap( EventQueryParams params )
     {
         Map<String, String> map = new HashMap<>();
@@ -704,5 +709,30 @@ public class DefaultEventAnalyticsService
         }
         
         throw new IllegalQueryException( "Value identifier does not reference any data element or attribute which are numeric type and part of the program: " + value );        
+    }
+
+    /**
+     * Replaces legend identifiers with names.
+     */
+    private String replaceLegendUidsWithNames( String filter )
+    {
+        if ( filter != null )
+        {
+            String[] filterItems = QueryFilter.getFilterItems( filter );
+            
+            for ( String uid : filterItems )
+            {
+                Legend legend = legendService.getLegend( uid );
+
+                if ( legend == null )
+                {
+                    throw new IllegalQueryException( "Legend does not exist: " + uid );
+                }
+                
+                filter = filter.replace( uid, legend.getName() );
+            }
+        }
+        
+        return filter;
     }
 }
