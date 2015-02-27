@@ -73,8 +73,8 @@ public class AppCacheFilter implements Filter
             SystemInfo systemInfo = systemService.getSystemInfo();
 
             writer.print( responseWrapper.toString() );
+            writer.println( "# DHIS2 " + systemInfo.getVersion() + " r" + systemInfo.getRevision() );
             writer.println( "# User: " + currentUserService.getCurrentUsername() );
-            writer.println( "# Revision: " + systemInfo.getRevision() );
             writer.println( "# Calendar: " + systemInfo.getCalendar() );
         }
     }
