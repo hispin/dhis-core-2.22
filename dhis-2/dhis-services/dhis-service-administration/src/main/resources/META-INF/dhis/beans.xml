@@ -100,8 +100,8 @@
   
   <!-- Scheduled tasks -->
   
-  <bean id="resourceTableTask" class="org.hisp.dhis.resourcetable.scheduling.ResourceTableTask" />
+  <bean id="resourceTableTask" class="org.hisp.dhis.resourcetable.scheduling.ResourceTableTask" scope="prototype" />
 
-  <bean id="resourceTable15MinTask" class="org.hisp.dhis.resourcetable.scheduling.ResourceTableTask" />
+  <bean id="resourceTable15MinTask" class="org.hisp.dhis.resourcetable.scheduling.ResourceTableTask" scope="prototype" />
 
 </beans>
