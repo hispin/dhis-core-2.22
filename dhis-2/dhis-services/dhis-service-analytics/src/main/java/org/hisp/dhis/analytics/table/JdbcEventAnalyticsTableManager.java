@@ -334,7 +334,7 @@ public class JdbcEventAnalyticsTableManager
         String sql = 
             "select distinct(extract(year from psi.executiondate)) " +
             "from programstageinstance psi " +
-            "where psi.executiondate is not null";
+            "where psi.executiondate is not null ";
 
         if ( earliest != null )
         {
