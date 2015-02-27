@@ -69,6 +69,7 @@ public class AppCacheFilter implements Filter
             CharResponseWrapper responseWrapper = new CharResponseWrapper( response );
 
             chain.doFilter( request, responseWrapper );
+            responseWrapper.setContentType( "text/cache-manifest" );
 
             SystemInfo systemInfo = systemService.getSystemInfo();
 
