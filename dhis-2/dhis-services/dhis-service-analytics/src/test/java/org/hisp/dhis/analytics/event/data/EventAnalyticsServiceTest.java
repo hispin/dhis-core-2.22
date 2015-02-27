@@ -302,15 +302,19 @@ public class EventAnalyticsServiceTest
     public void testGetFromUrlLegendSet()
     {
         Set<String> dimensionParams = new HashSet<>();
-        dimensionParams.add( "dx:" + deA.getUid() + "-" + legendSetA.getUid() + ":IN:" + legendA.getUid() + ";" + legendB.getId() );
-        dimensionParams.add( atA.getUid() );
+        dimensionParams.add( deA.getUid() + "-" + legendSetA.getUid() + ":IN:" + legendA.getUid() + ";" + legendB.getUid() );
         
         Set<String> filterParams = new HashSet<>();
         filterParams.add( "pe:201401;201402" );
+        filterParams.add( atA.getUid() + ":LE:5" );
         
         EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
             null, null, dimensionParams, filterParams, null, null, false, false, false, null, null, null, null, null );
         
         assertEquals( prA, params.getProgram() );
+        assertEquals( 1, params.getItems().size() );
+        assertEquals( legendSetA, params.getItems().get( 0 ).getLegendSet() );
+        assertEquals( 1, params.getItemFilters().size() );
+        assertEquals( 2, params.getFilterPeriods().size() );
     }
 }
