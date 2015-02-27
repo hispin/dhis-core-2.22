@@ -88,11 +88,10 @@ trackerCapture.controller('EnrollmentController',
         if(!$scope.selectedEnrollment.enrollment){//prepare for possible enrollment
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
                 $scope.attributes = atts;                
-                $scope.selectedProgram.hasCustomForm = false;               
+                $scope.customFormExists = false;               
                 TEFormService.getByProgram($scope.selectedProgram, atts).then(function(teForm){                    
                     if(angular.isObject(teForm)){                        
-                        $scope.selectedProgram.hasCustomForm = true;
-                        $scope.selectedProgram.displayCustomForm = $scope.selectedProgram.hasCustomForm ? true:false;
+                        $scope.customFormExists = true;
                         $scope.trackedEntityForm = teForm;
                         $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
                     }
@@ -123,14 +122,14 @@ trackerCapture.controller('EnrollmentController',
             $scope.loadEnrollmentDetails($scope.selectedEnrollment);
             
             //check custom form for enrollment
-            $scope.selectedProgram.hasCustomForm = false;
+            $scope.customFormExists = false;
             $scope.registrationForm = '';
             TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){
                 if(angular.isObject(teForm)){
-                    $scope.selectedProgram.hasCustomForm = true;
+                    $scope.customFormExists = true;
                     $scope.registrationForm = teForm;
                 }                
-                $scope.selectedProgram.displayCustomForm = $scope.selectedProgram.hasCustomForm ? true:false;
+                $scope.customFormExists = $scope.customFormExists ? true:false;
                 $scope.broadCastSelections('dashboardWidgets');
             });            
         }
@@ -339,6 +338,6 @@ trackerCapture.controller('EnrollmentController',
     };
     
     $scope.switchRegistrationForm = function(){
-        $scope.selectedProgram.displayCustomForm = !$scope.selectedProgram.displayCustomForm;
+        $scope.customFormExists = !$scope.customFormExists;
     };
 });

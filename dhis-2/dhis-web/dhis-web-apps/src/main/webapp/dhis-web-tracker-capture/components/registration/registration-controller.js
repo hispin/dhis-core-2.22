@@ -57,25 +57,17 @@ trackerCapture.controller('RegistrationController',
     });    
         
     $scope.getAttributes = function(){
-        if($scope.selectedProgram && $scope.selectedProgram.id){            
-            AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
-                $scope.attributes = atts;
-                $scope.selectedProgram.hasCustomForm = false;               
-                TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){                    
-                    if(angular.isObject(teForm)){                        
-                        $scope.selectedProgram.hasCustomForm = true;
-                        $scope.selectedProgram.displayCustomForm = $scope.selectedProgram.hasCustomForm ? true:false;                        
-                        $scope.trackedEntityForm = teForm;                      
-                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
-                    }                    
-                });  
-            });                
-        }
-        else{            
-            AttributesFactory.getWithoutProgram().then(function(atts){
-                $scope.attributes = atts;
-            });
-        }
+        AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
+            $scope.attributes = atts;
+            $scope.customFormExists = false;               
+            TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){
+                if(angular.isObject(teForm)){                        
+                    $scope.customFormExists = true;
+                    $scope.trackedEntityForm = teForm;                      
+                    $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
+                }                    
+            });  
+        });        
     };
     
     $scope.registerEntity = function(destination){        
@@ -229,6 +221,6 @@ trackerCapture.controller('RegistrationController',
     };
     
     $scope.switchRegistrationForm = function(){
-        $scope.selectedProgram.displayCustomForm = !$scope.selectedProgram.displayCustomForm;
+        $scope.customFormExists = !$scope.customFormExists;
     };
 });

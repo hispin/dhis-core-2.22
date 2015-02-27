@@ -476,6 +476,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
     return {
         getByProgram: function(program, attributes){            
+            
+            if(!program){
+                program = {id: 'NO_PROGRAM', name: 'NO_PROGRAM', selectIncidentDatesInFuture: false, selectEnrollmentDatesInFuture: false, displayIncidentDate: false};
+            }
+            
             var def = $q.defer();
             
             TCStorageService.currentStore.open().done(function(){
