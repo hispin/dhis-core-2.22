@@ -166,8 +166,7 @@ function downloadMetaData()
     promise = promise.then( getTrackedEntityAttributes );
     promise = promise.then( getOptionSetsForAttributes );
     promise = promise.then( getMetaProgramValidations );
-    promise = promise.then( getProgramValidations );
-    promise = promise.then( getMetaTrackedEntityForms );
+    promise = promise.then( getProgramValidations );    
     promise = promise.then( getTrackedEntityForms );
     promise.done(function() {
         
@@ -720,115 +719,34 @@ function getProgramValidation( id )
     };
 }
 
-function getMetaTrackedEntityForms( programs )
+function getTrackedEntityForms( )
 {
-	
-    if( !programs ){
-        return;
-    }
-    
-    var def = $.Deferred();
-    
-    var programIds = [];
-    _.each( _.values( programs ), function ( program ) { 
-        if( program.id ) {
-            programIds.push( program.id );
+    dhis2.tc.store.getKeys( 'trackedEntityForms').done(function(res){        
+        if(res.length > 0){
+            return;
         }
-    });
+        var def = $.Deferred();
 
-    $.ajax({
-        url: '../api/trackedEntityForms.json',
-        type: 'GET',
-        data:'paging=false&fields=id,program[id]'
-    }).done( function(response) {          
-        var trackedEntityForms = [];
-        _.each( _.values( response.trackedEntityForms ), function ( trackedEntityForm ) { 
-            if( trackedEntityForm &&
-                trackedEntityForm.id &&
-                trackedEntityForm.program &&
-                trackedEntityForm.program.id && 
-                programIds.indexOf( trackedEntityForm.program.id ) !== -1) {
-            
-                trackedEntityForms.push( trackedEntityForm );
-            }  
-            
-        });
-        
-        def.resolve( trackedEntityForms );
-        
-    }).fail(function(){
-        def.resolve( null );
-    });
-    
-    return def.promise(); 
-    
-}
-
-function getTrackedEntityForms( trackedEntityForms )
-{
-    if( !trackedEntityForms ){
-        return;
-    }
-    
-    var mainDef = $.Deferred();
-    var mainPromise = mainDef.promise();
-
-    var def = $.Deferred();
-    var promise = def.promise();
-
-    var builder = $.Deferred();
-    var build = builder.promise();
-
-    _.each( _.values( trackedEntityForms ), function ( trackedEntityForm ) {
-        build = build.then(function() {
-            var d = $.Deferred();
-            var p = d.promise();
-            dhis2.tc.store.get('trackedEntityForms', trackedEntityForm.program.id).done(function(obj) {
-                if(!obj) {
-                    promise = promise.then( getTrackedEntityForm( trackedEntityForm.id ) );
-                }
-                d.resolve();
-            });
-
-            return p;
-        });
-    });
-
-    build.done(function() {
-        def.resolve();
-
-        promise = promise.done( function () {
-            mainDef.resolve();
-        } );
-    }).fail(function(){
-        mainDef.resolve();
-    });
-
-    builder.resolve();
-
-    return mainPromise;
-}
-
-function getTrackedEntityForm( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/trackedEntityForms.json',
-            type: 'GET',
-            data: 'paging=false&filter=id:eq:' + id +'&fields=id,program[id,name],dataEntryForm[name,htmlCode]'
-        }).done( function( response ){
-            
+        $.ajax({
+            url: '../api/trackedEntityForms.json?paging=false&fields=id,program[id,name],dataEntryForm[name,htmlCode]',
+            type: 'GET'
+        }).done(function(response) {
             _.each( _.values( response.trackedEntityForms ), function ( trackedEntityForm ) { 
                 
-                if( trackedEntityForm &&
-                    trackedEntityForm.id &&
-                    trackedEntityForm.program &&
-                    trackedEntityForm.program.id ) {
-
+                if( trackedEntityForm && trackedEntityForm.id){
+                    if(!trackedEntityForm.program || !trackedEntityForm.program.id){
+                        trackedEntityForm.program = {id: 'NO_PROGRAM', name: 'NO_PROGRAM'};
+                    }                    
                     trackedEntityForm.id = trackedEntityForm.program.id;
                     dhis2.tc.store.set( 'trackedEntityForms', trackedEntityForm );
                 }
             });
+            
+            def.resolve();        
+        }).fail(function(){
+            def.resolve();
         });
-    };
+
+        return def.promise();
+    });    
 }
