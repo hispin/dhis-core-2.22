@@ -104,7 +104,7 @@ public class QueryFilter
         }
         else if ( QueryOperator.IN.equals( operator ) )
         {
-            String[] split = encodedFilter.split( OPTION_SEP );
+            String[] split =  getFilterItems( encodedFilter );
             
             final StringBuffer buffer = new StringBuffer( "(" );        
             
@@ -117,6 +117,14 @@ public class QueryFilter
         }
         
         return "'" + encodedFilter + "'";
+    }
+    
+    /**
+     * Returns the items of the filter. Items are separated with the ";" character.
+     */
+    public static String[] getFilterItems( String filter )
+    {
+        return filter.split( OPTION_SEP );
     }
     
     // -------------------------------------------------------------------------

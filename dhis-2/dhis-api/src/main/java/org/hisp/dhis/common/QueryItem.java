@@ -114,6 +114,11 @@ public class QueryItem
         return Double.class.equals( ObjectUtils.VALUE_TYPE_JAVA_CLASS_MAP.get( valueType ) );
     }
     
+    public boolean hasLegendSet()
+    {
+        return legendSet != null;
+    }
+    
     public boolean hasFilter()
     {
         return filters != null && !filters.isEmpty();
