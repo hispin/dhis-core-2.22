@@ -172,7 +172,7 @@ public class QueryItem
     @Override
     public String toString()
     {
-        return "[Item: " + item + ", filters: " + filters + ", value type: " + valueType + ", optionSet: " + optionSet + "]";
+        return "[Item: " + item + ", legend set: " + legendSet + ", filters: " + filters + ", value type: " + valueType + ", optionSet: " + optionSet + "]";
     }
     
     // -------------------------------------------------------------------------
