@@ -188,9 +188,9 @@ Ext.onReady( function() {
                     '*',
                     'program[id,name]',
                     'programStage[id,name]',
-                    'columns[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    'rows[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    'filters[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
+                    'columns[dimension,filter,legendSet[id,name],items[id,' + init.namePropertyUrl + ']]',
+                    'rows[dimension,filter,legendSet[id,name],items[id,' + init.namePropertyUrl + ']]',
+                    'filters[dimension,filter,legendSet[id,name],items[id,' + init.namePropertyUrl + ']]',
                     '!lastUpdated',
                     '!href',
                     '!created',
@@ -266,7 +266,7 @@ Ext.onReady( function() {
 					}
 
 					if (config.dimension !== conf.finals.dimension.category.objectName) {
-						var records = [];
+						//var records = [];
 
 						//if (!Ext.isArray(config.items)) {
 							//console.log('Dimension: items is not an array: ' + config);
@@ -1052,6 +1052,10 @@ Ext.onReady( function() {
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
 
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
+
 						xDim.items = [];
 						xDim.ids = [];
 
@@ -1090,6 +1094,10 @@ Ext.onReady( function() {
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
 
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
+
 						xDim.items = [];
 						xDim.ids = [];
 
@@ -1127,6 +1135,10 @@ Ext.onReady( function() {
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
+
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
 
 						xDim.items = [];
 						xDim.ids = [];
@@ -1899,6 +1911,9 @@ Ext.onReady( function() {
 					nameHeaderMap = {},
                     nameMap = {},
                     ouIndex;
+
+                metaData.optionNames = {};
+                metaData.booleanNames = {};
 
                 nameMap['pe'] = 'eventdate';
                 nameMap['ou'] = 'ouname';

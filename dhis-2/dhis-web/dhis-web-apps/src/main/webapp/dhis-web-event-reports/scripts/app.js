@@ -153,6 +153,7 @@ Ext.onReady( function() {
             },
             setRecord: function(record) {
                 if (Ext.isObject(record.legendSet) && record.legendSet.id) {
+                    this.rangeSetCmp.pendingValue = record.legendSet.id;
                     this.onRangeSetSelect(record.legendSet.id);
 
                     if (record.filter) {
@@ -369,6 +370,13 @@ Ext.onReady( function() {
                     displayField: nameProperty,
                     editable: false,
                     storage: {},
+                    pendingValue: null,
+                    setPendingValue: function() {
+                        if (this.pendingValue) {
+                            this.setValue(this.pendingValue);
+                            this.pendingValue = null;
+                        }
+                    },
                     store: Ext.create('Ext.data.Store', {
                         fields: [idProperty, nameProperty]
                     }),
@@ -388,6 +396,7 @@ Ext.onReady( function() {
 
                                     if (Ext.isObject(r) && Ext.isObject(r.legendSet)) {
                                         cb.store.add(r.legendSet);
+                                        cb.setPendingValue();
                                     }
                                 }
                             });
@@ -2719,6 +2728,11 @@ Ext.onReady( function() {
                 delete favorite.access;
                 delete favorite.lastUpdated;
                 delete favorite.created;
+
+                if (favorite.dataType === "individual_cases") {
+                    delete favorite.colSubTotals;
+                    delete favorite.rowSubTotals;
+                }
 			}
 
 			return favorite;
