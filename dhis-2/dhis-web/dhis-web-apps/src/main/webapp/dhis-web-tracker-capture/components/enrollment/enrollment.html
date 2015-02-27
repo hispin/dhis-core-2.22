@@ -84,7 +84,7 @@
         <!-- new enrollment registration form begins -->
         <form name="outerForm" novalidate>
             <div ng-if="showEnrollmentDiv">
-                <div class="row col-sm-12 vertical-spacing" ng-if="selectedProgram && selectedProgram.displayCustomForm">
+                <div class="row col-sm-12 vertical-spacing" ng-if="selectedProgram && customFormExists">
                     <div ng-if="!customForm.hasProgramDate">
                         <table class="dhis2-list-table-striped dhis2-table-hover">
                             <tr>
@@ -123,7 +123,7 @@
                     </div>
                     <div ng-include="'../dhis-web-commons/customform/custom-form.html'"></div>
                 </div>
-                <div class="row col-sm-12 vertical-spacing" ng-if="!selectedProgram.displayCustomForm">
+                <div class="row col-sm-12 vertical-spacing" ng-if="!customFormExists">
                     <div ng-include="'views/enrollment-dates-form.html'"></div>
                     <div ng-include="'views/default-registration-form.html'"></div>
                 </div>
