@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.hisp.dhis.legend.LegendSet;
+import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.util.ObjectUtils;
 
@@ -52,7 +53,7 @@ public class QueryItem
     
     private String valueType;
     
-    private String optionSet;
+    private OptionSet optionSet;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -63,7 +64,7 @@ public class QueryItem
         this.item = item;
     }
 
-    public QueryItem( NameableObject item, LegendSet legendSet, String valueType, String optionSet )
+    public QueryItem( NameableObject item, LegendSet legendSet, String valueType, OptionSet optionSet )
     {
         this.item = item;
         this.legendSet = legendSet;
@@ -71,7 +72,7 @@ public class QueryItem
         this.optionSet = optionSet;
     }
     
-    public QueryItem( NameableObject item, QueryOperator operator, String filter, String valueType, String optionSet )
+    public QueryItem( NameableObject item, QueryOperator operator, String filter, String valueType, OptionSet optionSet )
     {
         this.item = item;
         this.valueType = valueType;
@@ -124,6 +125,11 @@ public class QueryItem
         return legendSet != null ? legendSet.getUid() : null;
     }
     
+    public String getOptionSetUid()
+    {
+        return optionSet != null ? optionSet.getUid() : null;
+    }
+    
     public boolean hasFilter()
     {
         return filters != null && !filters.isEmpty();
@@ -135,7 +141,7 @@ public class QueryItem
         
         for ( TrackedEntityAttribute attribute : attributes )
         {
-            queryItems.add( new QueryItem( attribute, attribute.getLegendSet(), attribute.getValueType(), attribute.hasOptionSet() ? attribute.getOptionSet().getUid() : null ) );
+            queryItems.add( new QueryItem( attribute, attribute.getLegendSet(), attribute.getValueType(), attribute.hasOptionSet() ? attribute.getOptionSet() : null ) );
         }
         
         return queryItems;
@@ -224,12 +230,12 @@ public class QueryItem
         this.valueType = valueType;
     }
 
-    public String getOptionSet()
+    public OptionSet getOptionSet()
     {
         return optionSet;
     }
 
-    public void setOptionSet( String optionSet )
+    public void setOptionSet( OptionSet optionSet )
     {
         this.optionSet = optionSet;
     }
