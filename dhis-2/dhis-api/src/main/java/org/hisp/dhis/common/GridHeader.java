@@ -54,6 +54,8 @@ public class GridHeader
     private boolean meta;
     
     private String optionSet;
+    
+    private String legendSet;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -128,7 +130,7 @@ public class GridHeader
      * @param meta meta
      * @param optionSet optionSet
      */
-    public GridHeader( String name, String column, String type, boolean hidden, boolean meta, String optionSet )
+    public GridHeader( String name, String column, String type, boolean hidden, boolean meta, String optionSet, String legendSet )
     {
         this.name = name;
         this.column = column;
@@ -136,6 +138,7 @@ public class GridHeader
         this.hidden = hidden;
         this.meta = meta;
         this.optionSet = optionSet;
+        this.legendSet = legendSet;
     }
 
     // -------------------------------------------------------------------------
@@ -221,6 +224,18 @@ public class GridHeader
     public void setOptionSet( String optionSet )
     {
         this.optionSet = optionSet;
+    }
+
+    @JsonProperty
+    @JsonView( {DetailedView.class} )
+    public String getLegendSet()
+    {
+        return legendSet;
+    }
+
+    public void setLegendSet( String legendSet )
+    {
+        this.legendSet = legendSet;
     }
 
     // -------------------------------------------------------------------------
