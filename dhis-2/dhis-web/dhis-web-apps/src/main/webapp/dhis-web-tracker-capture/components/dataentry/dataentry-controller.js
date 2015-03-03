@@ -88,7 +88,7 @@ trackerCapture.controller('DataEntryController',
                 angular.forEach(events, function(dhis2Event){                    
                     if(dhis2Event.enrollment === $scope.selectedEnrollment.enrollment && dhis2Event.orgUnit){
                         if(dhis2Event.notes){
-                            dhis2Event.notes = orderByFilter(dhis2Event.notes, '-storedDate');            
+                            dhis2Event.notes = orderByFilter(dhis2Event.notes, '-storedDate');
                             angular.forEach(dhis2Event.notes, function(note){
                                 note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
                             });
@@ -442,20 +442,20 @@ trackerCapture.controller('DataEntryController',
     
     $scope.saveCoordinate = function(type){
         
-        if(type === 'LAT'){
+        if(type === 'LAT' || type === 'LATLNG' ){
             $scope.latitudeSaved = false;
         }
-        else{
+        if(type === 'LAT' || type === 'LATLNG'){
             $scope.longitudeSaved = false;
         }
         
-        if( type === 'LAT' && $scope.outerForm.latitude.$invalid  || 
-            type === 'LNG' && $scope.outerForm.longitude.$invalid ){//invalid coordinate            
+        if( (type === 'LAT' || type === 'LATLNG') && $scope.outerForm.latitude.$invalid  || 
+            (type === 'LNG' || type === 'LATLNG') && $scope.outerForm.longitude.$invalid ){//invalid coordinate            
             return;            
         }
         
-        if( type === 'LAT' && $scope.currentEvent.coordinate.latitude === $scope.currentEventOriginal.coordinate.latitude  || 
-            type === 'LNG' && $scope.currentEvent.coordinate.longitude === $scope.currentEventOriginal.coordinate.longitude){//no change            
+        if( (type === 'LAT' || type === 'LATLNG') && $scope.currentEvent.coordinate.latitude === $scope.currentEventOriginal.coordinate.latitude  || 
+            (type === 'LNG' || type === 'LATLNG') && $scope.currentEvent.coordinate.longitude === $scope.currentEventOriginal.coordinate.longitude){//no change            
             return;            
         }
         
@@ -464,10 +464,10 @@ trackerCapture.controller('DataEntryController',
         
         DHIS2EventFactory.update(dhis2Event).then(function(response){            
             $scope.currentEventOriginal = angular.copy($scope.currentEvent);
-            if(type === 'LAT'){
+            if(type === 'LAT' || type === 'LATLNG' ){
                 $scope.latitudeSaved = true;
             }
-            else{
+            if(type === 'LAT' || type === 'LATLNG'){
                 $scope.longitudeSaved = true;
             }
         });
@@ -672,6 +672,32 @@ trackerCapture.controller('DataEntryController',
             }
         }
     };
+    
+    $scope.showMap = function(event){
+        var modalInstance = $modal.open({
+            templateUrl: 'views/map.html',
+            controller: 'MapController',
+            windowClass: 'modal-full-window',
+            resolve: {
+                location: function () {
+                    return {lat: event.coordinate.latitude, lng: event.coordinate.longitude};
+                },
+                geoJsons: function(){
+                    return $scope.geoJsons;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (location) {
+            if(angular.isObject(location)){
+                event.coordinate.latitude = location.lat;
+                event.coordinate.longitude = location.lng;                
+                $scope.saveCoordinate('LATLNG');
+            }
+        }, function () {
+        });
+    };
+    
 })
 
 .controller('EventCreationController', 

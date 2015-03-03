@@ -6,6 +6,7 @@ trackerCapture.controller('DashboardController',
                 $modal,
                 $timeout,
                 $filter,
+                TCStorageService,
                 orderByFilter,
                 storage,
                 TEIService, 
@@ -22,6 +23,14 @@ trackerCapture.controller('DashboardController',
     $scope.selectedOrgUnit = storage.get('SELECTED_OU');
     $scope.selectedProgram;    
     $scope.selectedTei;
+    
+    //get ouLevels
+    TCStorageService.currentStore.open().done(function(){
+        TCStorageService.currentStore.getAll('ouLevels').done(function(response){
+            var ouLevels = response;
+            CurrentSelection.setOuLevels(orderByFilter(ouLevels, '-level').reverse());
+        });
+    });
     
     //dashboard items   
     var getDashboardLayout = function(){        

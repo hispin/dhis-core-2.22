@@ -26,7 +26,7 @@ if( dhis2.tc.memoryOnly ) {
 dhis2.tc.store = new dhis2.storage.Store({
     name: 'dhis2tc',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations']      
+    objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels']      
 });
 
 (function($) {
@@ -168,6 +168,7 @@ function downloadMetaData()
     promise = promise.then( getMetaProgramValidations );
     promise = promise.then( getProgramValidations );    
     promise = promise.then( getTrackedEntityForms );
+    promise = promise.then( getOrgUnitLevels );
     promise.done(function() {
         
         //Enable ou selection after meta-data has downloaded
@@ -711,7 +712,8 @@ function getProgramValidation( id )
                     programValidation.id &&
                     programValidation.program &&
                     programValidation.program.id ) {
-                
+                    
+                    //
                     dhis2.tc.store.set( 'programValidations', programValidation );
                 }
             });
@@ -749,4 +751,29 @@ function getTrackedEntityForms( )
 
         return def.promise();
     });    
+}
+
+function getOrgUnitLevels()
+{
+    dhis2.tc.store.getKeys( 'ouLevels').done(function(res){        
+        if(res.length > 0){
+            return;
+        }
+        var def = $.Deferred();
+
+        $.ajax({
+            url: '../api/organisationUnitLevels.json',
+            type: 'GET',
+            data:'filter=level:gt:1&fields=id,name,level&paging=false'
+        }).done(function(response) {
+            if(response.organisationUnitLevels){
+                dhis2.tc.store.setAll( 'ouLevels', response.organisationUnitLevels );
+            }            
+            def.resolve();        
+        }).fail(function(){
+            def.resolve();
+        });
+
+        return def.promise();
+    }); 
 }
