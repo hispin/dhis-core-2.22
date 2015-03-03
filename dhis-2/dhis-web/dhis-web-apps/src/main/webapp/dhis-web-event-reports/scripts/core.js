@@ -620,7 +620,7 @@ Ext.onReady( function() {
 				return array.length;
 			};
 
-			support.prototype.array.sort = function(array, direction, key) {
+			support.prototype.array.sort = function(array, direction, key, emptyFirst) {
 				// supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
 
 				if (!support.prototype.array.getLength(array)) {
@@ -660,6 +660,14 @@ Ext.onReady( function() {
 					else if (Ext.isNumber(a) && Ext.isNumber(b)) {
 						return direction === 'DESC' ? b - a : a - b;
 					}
+
+                    else if (a === undefined || a === null) {
+                        return emptyFirst ? -1 : 1;
+                    }
+
+                    else if (b === undefined || b === null) {
+                        return emptyFirst ? 1 : -1;
+                    }
 
 					return -1;
 				});
@@ -758,6 +766,29 @@ Ext.onReady( function() {
                 }
 
                 return o;
+            };
+
+            support.prototype.array.getObjectDataById = function(array, sourceArray, properties, idProperty) {
+                array = Ext.Array.from(array);
+                sourceArray = Ext.Array.from(sourceArray);
+                properties = Ext.Array.from(properties);
+                idProperty = idProperty || 'id';
+
+                for (var i = 0, obj; i < array.length; i++) {
+                    obj = array[i];
+
+                    for (var j = 0, sourceObj; j < sourceArray.length; j++) {
+                        sourceObj = sourceArray[j];
+
+                        if (Ext.isString(obj[idProperty]) && sourceObj[idProperty] && obj[idProperty].indexOf(sourceObj.id) !== -1) {
+                            for (var k = 0, property; k < properties.length; k++) {
+                                property = properties[k];
+
+                                obj[property] = sourceObj[property];
+                            }
+                        }
+                    }
+                }
             };
 
                 // object
@@ -1285,7 +1316,7 @@ Ext.onReady( function() {
                     }
                 }
 
-                // restore order for options
+                // restore item order
                 for (var i = 0, orgDim; i < originalDimensions.length; i++) {
                     orgDim = originalDimensions[i];
 
@@ -1294,6 +1325,7 @@ Ext.onReady( function() {
                         continue;
                     }
 
+                    // user specified options/legends
                     if (Ext.isString(orgDim.filter)) {
                         var a = orgDim.filter.split(':');
 
@@ -1319,6 +1351,21 @@ Ext.onReady( function() {
 
                                     dim.items = items;
                                 }
+                            }
+                        }
+                    }
+                    // no specified legends -> sort by start value
+                    else if (orgDim.legendSet && orgDim.legendSet.id) {
+                        for (var j = 0, dim, items; j < dimensions.length; j++) {
+                            dim = dimensions[j];
+
+                            if (dim.dimension === orgDim.dimension && dim.items && dim.items.length) {
+
+                                // get start/end value
+                                support.prototype.array.getObjectDataById(dim.items, init.idLegendSetMap[orgDim.legendSet.id].legends, ['startValue', 'endValue']);
+
+                                // sort by start value
+                                support.prototype.array.sort(dim.items, 'ASC', 'startValue');
                             }
                         }
                     }
@@ -1805,7 +1852,8 @@ Ext.onReady( function() {
                                 displayId = Ext.isNumber(parsedId) ? parsedId : (names[id] || id);
 
 								// update names
-                                names[fullId] = (isMeta ? '' : header.column + ' ') + displayId;
+                                //names[fullId] = (isMeta ? '' : header.column + ' ') + displayId;
+                                names[fullId] = displayId;
 
 								// update rows
                                 response.rows[j][i] = fullId;
@@ -1968,7 +2016,7 @@ Ext.onReady( function() {
 
 				return xResponse;
 			};
-		}());
+        }());
 
 		// web
 		(function() {

@@ -834,8 +834,8 @@ table.small td {
     background: transparent;
 }
 .ns-linkbutton .x-btn-inner {
-    color: #4a66ae;
     color: #3162c5;
+    padding: 0;
 }
 .ns-linkbutton.x-btn-over .x-btn-inner {
     text-decoration: underline;
