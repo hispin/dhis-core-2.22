@@ -183,7 +183,7 @@ public class DefaultEventAnalyticsService
         {
             String legendSet = item.hasLegendSet() ? item.getLegendSet().getUid() : null;
             
-            grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSet(), legendSet ) );
+            grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSetUid(), legendSet ) );
         }
 
         grid.addHeader( new GridHeader( "value", "Value", Double.class.getName(), false, false ) );
@@ -292,7 +292,7 @@ public class DefaultEventAnalyticsService
 
         for ( QueryItem item : params.getItems() )
         {
-            grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSet(), item.getLegendSetUid() ) );
+            grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSetUid(), item.getLegendSetUid() ) );
         }
 
         // ---------------------------------------------------------------------
@@ -672,14 +672,14 @@ public class DefaultEventAnalyticsService
 
         if ( de != null ) //TODO check if part of program
         {
-            return new QueryItem( de, legendSet, de.getType(), de.hasOptionSet() ? de.getOptionSet().getUid() : null );
+            return new QueryItem( de, legendSet, de.getType(), de.getOptionSet() );
         }
 
         TrackedEntityAttribute at = attributeService.getTrackedEntityAttribute( item );
 
         if ( at != null )
         {
-            return new QueryItem( at, legendSet, at.getValueType(), at.hasOptionSet() ? at.getOptionSet().getUid() : null );
+            return new QueryItem( at, legendSet, at.getValueType(), at.getOptionSet() );
         }
 
         throw new IllegalQueryException( "Item identifier does not reference any data element or attribute part of the program: " + item );
