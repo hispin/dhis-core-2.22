@@ -65,12 +65,22 @@ public class Enrollments
     @Override
     public boolean equals( Object o )
     {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
+        if ( this == o )
+        {
+            return true;
+        }
+        
+        if ( o == null || getClass() != o.getClass() )
+        {
+            return false;
+        }
 
         Enrollments that = (Enrollments) o;
 
-        if ( enrollments != null ? !enrollments.equals( that.enrollments ) : that.enrollments != null ) return false;
+        if ( enrollments != null ? !enrollments.equals( that.enrollments ) : that.enrollments != null )
+        {
+            return false;
+        }
 
         return true;
     }
@@ -78,7 +88,9 @@ public class Enrollments
     @Override
     public int hashCode()
     {
-        return enrollments != null ? enrollments.hashCode() : 0;
+        int result = 0;
+        result = 31 * result + ( enrollments != null ? enrollments.hashCode() : 0 );
+        return result;
     }
 
     @Override
