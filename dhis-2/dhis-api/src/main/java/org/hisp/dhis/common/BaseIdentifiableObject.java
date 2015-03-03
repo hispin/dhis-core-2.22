@@ -378,8 +378,8 @@ public class BaseIdentifiableObject
     public int hashCode()
     {
         int result = getUid() != null ? getUid().hashCode() : 0;
-        result = 31 * result + (getCode() != null ? getCode().hashCode() : 0);
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + ( getCode() != null ? getCode().hashCode() : 0 );
+        result = 31 * result + ( getName() != null ? getName().hashCode() : 0 );
 
         return result;
     }
