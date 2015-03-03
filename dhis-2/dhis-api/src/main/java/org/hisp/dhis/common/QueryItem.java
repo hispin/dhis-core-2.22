@@ -119,6 +119,11 @@ public class QueryItem
         return legendSet != null;
     }
     
+    public String getLegendSetUid()
+    {
+        return legendSet != null ? legendSet.getUid() : null;
+    }
+    
     public boolean hasFilter()
     {
         return filters != null && !filters.isEmpty();
