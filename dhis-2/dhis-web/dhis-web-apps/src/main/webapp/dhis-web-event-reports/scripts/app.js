@@ -117,8 +117,9 @@ Ext.onReady( function() {
             triggerCmpWidth = 17,
             valueCmpWidth = 235,
             rangeSetWidth = 135,
-            namePadding = '2px 3px',
+            namePadding = '3px 3px',
             margin = '3px 0 1px',
+            removeCmpStyle = 'padding: 0; margin-left: 3px',
             defaultRangeSetId = 'default';
 
         Ext.define('Ext.ux.panel.DataElementIntegerContainer', {
@@ -160,11 +161,13 @@ Ext.onReady( function() {
                         var a = record.filter.split(':');
 
                         if (a.length > 1 && Ext.isString(a[1])) {
-                            this.rangeValueCmp.setValue(a[1].split(';'));
+                            this.onRangeSearchSelect(a[1].split(';'), true);
                         }
                     }
                 }
                 else if (record.filter) {
+                    this.rangeSetCmp.pendingValue = defaultRangeSetId;
+
 					var a = record.filter.split(':');
 
                     if (a.length > 1) {
@@ -190,7 +193,7 @@ Ext.onReady( function() {
                     cls: 'ns-linkbutton',
                     style: 'padding: 0',
                     height: 18,
-                    text: 'Duplicate',
+                    text: NS.i18n.duplicate,
                     handler: function() {
 						container.duplicateDataElement();
 					}
@@ -198,9 +201,9 @@ Ext.onReady( function() {
 
                 this.removeCmp = Ext.create('Ext.button.Button', {
                     cls: 'ns-linkbutton',
-                    style: 'padding: 0',
+                    style: removeCmpStyle,
                     height: 18,
-                    text: 'Remove',
+                    text: NS.i18n.remove,
                     handler: function() {
                         container.removeDataElement();
                     }
@@ -237,9 +240,16 @@ Ext.onReady( function() {
                 });
 
                 // function
-                this.filterSearchStore = function() {
+                this.filterSearchStore = function(isLayout) {
                     var selected = container.rangeValueCmp.getValue();
 
+                    // hack, using internal method to activate dropdown before filtering
+                    if (isLayout) {
+                        container.rangeSearchCmp.onTriggerClick();
+                        container.rangeSearchCmp.collapse();
+                    }
+
+                    // filter
                     container.rangeSearchStore.clearFilter();
 
                     container.rangeSearchStore.filterBy(function(record) {
@@ -247,11 +257,31 @@ Ext.onReady( function() {
                     });
                 };
 
+                // function
+                this.onRangeSearchSelect = function(ids, isLayout) {
+                    ids = Ext.Array.from(ids);
+
+                    // store
+                    for (var i = 0, id; i < ids.length; i++) {
+                        id = ids[i];
+
+                        if (container.rangeValueStore.findExact(idProperty, id) === -1) {
+                            container.rangeValueStore.add(container.rangeSearchStore.getAt(container.rangeSearchStore.findExact(idProperty, id)).data);
+                        }
+                    }
+
+                    // search cmp
+                    container.rangeSearchCmp.select([]);
+
+                    // filter
+                    container.filterSearchStore(isLayout);
+                };
+
                 this.rangeSearchCmp = Ext.create('Ext.form.field.ComboBox', {
                     multiSelect: true,
                     width: operatorCmpWidth,
-                    style: 'margin-bottom:0',
-                    emptyText: 'Select..',
+                    style: 'margin-bottom: 0',
+                    emptyText: NS.i18n.select + '..',
                     valueField: idProperty,
                     displayField: displayProperty,
                     editable: false,
@@ -259,22 +289,11 @@ Ext.onReady( function() {
                     hidden: true,
                     store: this.rangeSearchStore,
                     listConfig: {
-                        minWidth: 326
+                        minWidth: operatorCmpWidth + (nameCmpWidth - operatorCmpWidth - rangeSetWidth)
                     },
                     listeners: {
 						select: function() {
-                            var id = Ext.Array.from(this.getValue())[0];
-
-                            // value
-                            if (container.rangeValueStore.findExact(idProperty, id) === -1) {
-                                container.rangeValueStore.add(container.rangeSearchStore.getAt(container.rangeSearchStore.findExact(idProperty, id)).data);
-                            }
-
-                            // search
-                            this.select([]);
-
-                            // filter
-                            container.filterSearchStore();
+                            container.onRangeSearchSelect(Ext.Array.from(this.getValue())[0]);
 						},
                         expand: function() {
                             container.filterSearchStore();
@@ -296,7 +315,7 @@ Ext.onReady( function() {
 
                 this.rangeValueCmp = Ext.create('Ext.form.field.ComboBox', {
                     multiSelect: true,
-                    style: 'margin-bottom:0',
+                    style: 'margin-bottom: 0',
                     width: nameCmpWidth - operatorCmpWidth - rangeSetWidth,
                     valueField: idProperty,
                     displayField: nameProperty,
@@ -333,15 +352,15 @@ Ext.onReady( function() {
 
                 // function
                 this.onRangeSetSelect = function(id) {
-                    var ranges;
-
-                    if (id === defaultRangeSetId) {
+                    if (!id || id === defaultRangeSetId) {
                         container.operatorCmp.show();
                         container.valueCmp.show();
                         container.rangeSearchCmp.hide();
                         container.rangeValueCmp.hide();
                     }
                     else {
+                        var ranges;
+
                         container.operatorCmp.hide();
                         container.valueCmp.hide();
                         container.rangeSearchCmp.show();
@@ -362,6 +381,7 @@ Ext.onReady( function() {
 
                 this.rangeSetCmp = Ext.create('Ext.form.field.ComboBox', {
                     cls: 'ns-combo h22',
+					style: 'margin-bottom: 0',
                     width: rangeSetWidth,
                     height: 22,
                     fieldStyle: 'height: 22px',
@@ -374,6 +394,8 @@ Ext.onReady( function() {
                     setPendingValue: function() {
                         if (this.pendingValue) {
                             this.setValue(this.pendingValue);
+                            container.onRangeSetSelect(this.pendingValue);
+
                             this.pendingValue = null;
                         }
                     },
@@ -387,7 +409,7 @@ Ext.onReady( function() {
                                 name: 'No range set'
                             });
 
-                            cb.setValue(defaultRangeSetId);
+                            //cb.setValue(defaultRangeSetId);
 
                             Ext.Ajax.request({
                                 url: ns.core.init.contextPath + '/api/dataElements/' + container.dataElement.id + '.json?fields=legendSet[id,name]',
@@ -396,8 +418,13 @@ Ext.onReady( function() {
 
                                     if (Ext.isObject(r) && Ext.isObject(r.legendSet)) {
                                         cb.store.add(r.legendSet);
-                                        cb.setPendingValue();
+
+                                        cb.setValue(r.legendSet.id);
+                                        container.onRangeSetSelect(r.legendSet.id);
                                     }
+                                },
+                                callback: function() {
+                                    cb.setPendingValue();
                                 }
                             });
                         },
@@ -473,7 +500,7 @@ Ext.onReady( function() {
 
                 this.removeCmp = Ext.create('Ext.button.Button', {
                     cls: 'ns-linkbutton',
-                    style: 'padding: 0',
+                    style: removeCmpStyle,
                     height: 18,
                     text: 'Remove',
                     handler: function() {
@@ -570,7 +597,7 @@ Ext.onReady( function() {
 
                 this.removeCmp = Ext.create('Ext.button.Button', {
                     cls: 'ns-linkbutton',
-                    style: 'padding: 0',
+                    style: removeCmpStyle,
                     height: 18,
                     text: 'Remove',
                     handler: function() {
@@ -668,7 +695,7 @@ Ext.onReady( function() {
 
                 this.removeCmp = Ext.create('Ext.button.Button', {
                     cls: 'ns-linkbutton',
-                    style: 'padding: 0',
+                    style: removeCmpStyle,
                     height: 18,
                     text: 'Remove',
                     handler: function() {
@@ -779,7 +806,7 @@ Ext.onReady( function() {
 
                 this.removeCmp = Ext.create('Ext.button.Button', {
                     cls: 'ns-linkbutton',
-                    style: 'padding: 0',
+                    style: removeCmpStyle,
                     height: 18,
                     text: 'Remove',
                     handler: function() {
