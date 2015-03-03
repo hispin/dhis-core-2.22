@@ -28,22 +28,23 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
+import org.hisp.dhis.i18n.I18nService;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.system.util.CollectionUtils;
+import org.hisp.dhis.trackedentity.TrackedEntity;
+import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserAuthorityGroup;
+import org.hisp.dhis.user.UserService;
+import org.hisp.dhis.validation.ValidationCriteria;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hisp.dhis.i18n.I18nService;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.system.util.CollectionUtils;
-import org.hisp.dhis.trackedentity.TrackedEntity;
-import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.user.UserAuthorityGroup;
-import org.hisp.dhis.user.UserService;
-import org.hisp.dhis.validation.ValidationCriteria;
-import org.springframework.transaction.annotation.Transactional;
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 /**
  * @author Abyot Asalefew
@@ -166,6 +167,12 @@ public class DefaultProgramService
     }
 
     @Override
+    public Collection<Program> getProgramsByUser( User user )
+    {
+        return i18n( i18nService, getByUser( user ) );
+    }
+
+    @Override
     public Collection<Program> getProgramsByCurrentUser( int type )
     {
         return i18n( i18nService, getByCurrentUser( type ) );
@@ -195,13 +202,13 @@ public class DefaultProgramService
     @Override
     public Integer getProgramCountByName( String name )
     {
-        return i18n( i18nService, programStore.getCountLikeName( name ));
+        return i18n( i18nService, programStore.getCountLikeName( name ) );
     }
 
     @Override
     public Collection<Program> getProgramBetweenByName( String name, int min, int max )
     {
-        return i18n( i18nService, programStore.getAllLikeName( name, min, max ));
+        return i18n( i18nService, programStore.getAllLikeName( name, min, max ) );
     }
 
     @Override
@@ -215,13 +222,18 @@ public class DefaultProgramService
     {
         return i18n( i18nService, programStore.getAllOrderedName( min, max ) );
     }
-    
+
     @Override
     public Collection<Program> getByCurrentUser()
     {
+        return getByUser( currentUserService.getCurrentUser() );
+    }
+
+    public Collection<Program> getByUser( User user )
+    {
         Collection<Program> programs = new HashSet<>();
 
-        if ( currentUserService.getCurrentUser() != null && !currentUserService.currentUserIsSuper() )
+        if ( user != null && !user.isSuper() )
         {
             Set<UserAuthorityGroup> userRoles = userService.getUserCredentials( currentUserService.getCurrentUser() )
                 .getUserAuthorityGroups();
