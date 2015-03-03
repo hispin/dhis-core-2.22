@@ -8,43 +8,10 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     var store = new dhis2.storage.Store({
         name: "dhis2tc",
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations']
+        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels']
     });
     return{
         currentStore: store
-    };
-})
-
-/* Factory to fetch geojsons */
-.factory('GeoJsonFactory', function($q, $rootScope, TCStorageService) { 
-    return {
-        getAll: function(){
-
-            var def = $q.defer();
-            
-            TCStorageService.currentStore.open().done(function(){
-                TCStorageService.currentStore.getAll('geoJsons').done(function(geoJsons){
-                    $rootScope.$apply(function(){
-                        def.resolve(geoJsons);
-                    });                    
-                });
-            });
-            
-            return def.promise;            
-        },
-        get: function(level){
-            
-            var def = $q.defer();
-            
-            TCStorageService.currentStore.open().done(function(){
-                TCStorageService.currentStore.get('geoJsons', level).done(function(geoJson){                    
-                    $rootScope.$apply(function(){
-                        def.resolve(geoJson);
-                    });
-                });
-            });                        
-            return def.promise;            
-        }
     };
 })
 
@@ -247,15 +214,15 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Factory to fetch programValidations */
-.factory('ProgramValidationFactory', function($q, $rootScope, ECStorageService) {  
+.factory('ProgramValidationFactory', function($q, $rootScope, TCStorageService) {  
     
     return {        
         get: function(uid){
             
             var def = $q.defer();
             
-            ECStorageService.currentStore.open().done(function(){
-                ECStorageService.currentStore.get('programValidations', uid).done(function(pv){                    
+            TCStorageService.currentStore.open().done(function(){
+                TCStorageService.currentStore.get('programValidations', uid).done(function(pv){                    
                     $rootScope.$apply(function(){
                         def.resolve(pv);
                     });
@@ -1122,6 +1089,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.relationshipInfo = '';
     this.optionSets = null;
     this.attributesById = null;
+    this.ouLevels = null;
     
     this.set = function(currentSelection){  
         this.currentSelection = currentSelection;        
@@ -1149,7 +1117,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
     this.getAttributesById = function(){
         return this.attributesById;
-    };  
+    }; 
+    
+    this.setOuLevels = function(ouLevels){
+        this.ouLevels = ouLevels;
+    };
+    this.getOuLevels = function(){
+        return this.ouLevels;
+    };
 })
 
 .service('TEIGridService', function(OrgUnitService, OptionSetService, DateUtils, $translate, AttributesFactory){
@@ -1272,7 +1247,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
 })
 
-.service('EventUtils', function(DateUtils, CalendarService, OptionSetService, OrgUnitService, $filter, orderByFilter){
+.service('EventUtils', function(DateUtils, CalendarService, OptionSetService, $filter, orderByFilter){
     return {
         createDummyEvent: function(eventsPerStage, programStage, orgUnit, enrollment){
             var today = DateUtils.getToday();    
