@@ -781,12 +781,9 @@ public class DefaultIdentifiableObjectManager
             {
                 return store.getByUid( id );
             }
-            else if ( IdentifiableProperty.UUID.equals( property ) )
+            else if ( IdentifiableProperty.UUID.equals( property ) && OrganisationUnit.class.isAssignableFrom( clazz ) )
             {
-                if ( OrganisationUnit.class.isAssignableFrom( clazz ) )
-                {
-                    return (T) organisationUnitService.getOrganisationUnitByUuid( id );
-                }
+                return (T) organisationUnitService.getOrganisationUnitByUuid( id );
             }
             else if ( IdentifiableProperty.CODE.equals( property ) )
             {
