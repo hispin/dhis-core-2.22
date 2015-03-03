@@ -177,9 +177,9 @@ div.paging a.active
 }
 
 .alert-default {
-	color: #55514d;
-	background-color: #D5CBC1;
-	border-color: #aaa29a;
+    color: #55514d;
+    background-color: #D5CBC1;
+    border-color: #aaa29a;
 }
 
 .red {
@@ -817,12 +817,12 @@ a:active {
 }
 
 .ui-datepicker-group .ui-datepicker-header {
-	//height: 1.5em; 
+    //height: 1.5em; 
     height: inherit;  //this is to make it play nice with bootstrap
 }
 
 #ui-datepicker-div, .calendars-popup {
-	z-index: 2000; //has to be greater than bootsrap's modal z-index
+    z-index: 2000; //has to be greater than bootsrap's modal z-index
 }
 
 //Necessary to override the .panel-group .panel { overflow: hidden; } in bootstrap.
@@ -930,4 +930,21 @@ ul.tree ul li:last-child:before {
 .selected-org-unit {
     font-weight: bold;
     color: #FF8000;
+}
+
+#map-container { 
+    height: 800px;
+    width: 100%;
+}
+
+#polygon-label {
+    text-align: center;
+    padding: 5px;
+    font-size: 15px;
+}
+
+.polygon-name {
+    padding: 5px;
+    font-size: 15px;
+    position: absolute;
 }

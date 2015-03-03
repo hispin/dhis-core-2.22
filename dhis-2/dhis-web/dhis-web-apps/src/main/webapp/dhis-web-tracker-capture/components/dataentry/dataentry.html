@@ -105,7 +105,7 @@
                 <!-- coordinates begin -->
                 <div class="row" ng-if="currentStage.captureCoordinates && currentEvent.eventDate">
                     <div class="col-md-6">
-                        {{'latitude'| translate}}
+                        {{'latitude'| translate}}<span><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
                         <input type="number"
                                ng-model="currentEvent.coordinate.latitude"     
                                class="form-control" 
@@ -119,7 +119,7 @@
                         <span ng-show="outerForm.latitude.$invalid" class="required">{{'value_must_be_between'| translate}} [-90 ... 90]</span>
                     </div>
                     <div class="col-md-6">
-                        {{'longitude'| translate}}                    
+                        {{'longitude'| translate}}<span><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>                    
                         <input type="number"  
                                ng-model="currentEvent.coordinate.longitude"     
                                class="form-control" 
@@ -131,7 +131,7 @@
                                ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed" 
                                ng-required="false"/>
                         <span ng-show="outerForm.longitude.$invalid" class="required">{{'value_must_be_between'| translate}}[-180 ... 180]</span>
-                    </div>                        
+                    </div>
                 </div>
                 <!-- coordinates begin -->
 
