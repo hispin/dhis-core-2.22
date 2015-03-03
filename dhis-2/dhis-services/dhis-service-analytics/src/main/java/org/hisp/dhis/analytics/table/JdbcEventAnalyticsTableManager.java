@@ -276,12 +276,12 @@ public class JdbcEventAnalyticsTableManager
         {
             String column = quote( dataElement.getUid() + PartitionUtils.SEP + dataElement.getLegendSet().getUid() );
             
-            String sql = "(select l.name from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
+            String sql = "(select l.uid from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
                 "inner join trackedentitydatavalue dv on l.startvalue <= " + doubleSelect + " and l.endvalue > " + doubleSelect + " " +
                 "and lsl.legendsetid=" + dataElement.getLegendSet().getId() + " and dv.programstageinstanceid=psi.programstageinstanceid " + 
                 "and dv.dataelementid=" + dataElement.getId() + numericClause + ") as " + column;
                 
-            String[] col = { column, "character varying(230)", sql };
+            String[] col = { column, "character(11)", sql };
             columns.add( col );
         }
 
@@ -302,12 +302,12 @@ public class JdbcEventAnalyticsTableManager
         {
             String column = quote( attribute.getUid() + PartitionUtils.SEP + attribute.getLegendSet().getUid() );
             
-            String sql = "(select l.name from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
+            String sql = "(select l.uid from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
                 "inner join trackedentityattributevalue av on l.startvalue <= " + doubleSelect + " and l.endvalue > " + doubleSelect + " " +
                 "and lsl.legendsetid=" + attribute.getLegendSet().getId() + " and av.trackedentityinstanceid=pi.trackedentityinstanceid " +
                 "and av.trackedentityattributeid=" + attribute.getId() + numericClause + ") as " + column;
             
-            String[] col = { column, "character varying(230)", sql };
+            String[] col = { column, "character(11)", sql };
             columns.add( col );
         }
 
