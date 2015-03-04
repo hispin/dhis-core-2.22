@@ -8,7 +8,7 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
     var store = new dhis2.storage.Store({
         name: 'dhis2ec',
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations']
+        objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'ouLevels']
     });
     return{
         currentStore: store
@@ -55,6 +55,19 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
             });
             return def.promise;
         }
+    };
+})
+
+/* current selections */
+.service('CurrentSelection', function(){
+
+    this.ouLevels = null;     
+    
+    this.setOuLevels = function(ouLevels){
+        this.ouLevels = ouLevels;
+    };
+    this.getOuLevels = function(){
+        return this.ouLevels;
     };
 })
 

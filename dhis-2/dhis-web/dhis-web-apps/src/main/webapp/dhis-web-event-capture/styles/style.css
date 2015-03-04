@@ -251,9 +251,15 @@ input[type=date]::-webkit-inner-spin-button, input[type=date]::-webkit-outer-spi
 }
 
 #polygon-label {
-    background-color: #000000;
-    color: #fff;
-    font-size: 12px;
+    text-align: center;
+    padding: 5px;
+    font-size: 15px;
+}
+
+.polygon-name {
+    padding: 5px;
+    font-size: 15px;
+    position: absolute;
 }
 
 .contextmenu{
