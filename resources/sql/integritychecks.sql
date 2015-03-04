@@ -114,6 +114,16 @@ left join categories_categoryoptions cco on (
   and cco.categoryid=492298)
 where cco.sort_order is null;
 
+-- Identify sections where sort_order is wrong
+
+select ds.name as dataset, s.name as section, sd.sectionid, 
+max(sd.sort_order) as max_sort_order, count(distinct dataelementid) as dataelement_count
+from sectiondataelements sd
+inner join section s on sd.sectionid=s.sectionid
+inner join dataset ds on s.datasetid=ds.datasetid
+group by ds.name, s.name, sd.sectionid
+order by max(sd.sort_order) desc;
+
 -- Get category option combos from data values which are not part of the category combo of the data element
 
 select distinct de.name as data_element, dv.dataelementid, de_cc.name as data_element_category_combo, oc_cc.name as option_combo_category_combo, con.categoryoptioncomboname, dv.categoryoptioncomboid

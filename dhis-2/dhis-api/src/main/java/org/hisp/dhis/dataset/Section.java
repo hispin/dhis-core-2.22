@@ -127,7 +127,7 @@ public class Section
 
     public DataElementCategoryCombo getCategoryCombo()
     {
-        return dataElements != null && dataElements.size() > 0 ? dataElements.iterator().next().getCategoryCombo() : null;
+        return dataElements != null && !dataElements.isEmpty() ? dataElements.iterator().next().getCategoryCombo() : null;
     }
 
     public boolean hasMultiDimensionalDataElement()
