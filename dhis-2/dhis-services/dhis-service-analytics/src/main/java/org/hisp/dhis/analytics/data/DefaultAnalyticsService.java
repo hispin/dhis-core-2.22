@@ -839,11 +839,11 @@ public class DefaultAnalyticsService
             for ( String param : dimensionParams )
             {
                 String dimension = DimensionalObjectUtils.getDimensionFromParam( param );
-                List<String> options = DimensionalObjectUtils.getDimensionItemsFromParam( param );
+                List<String> items = DimensionalObjectUtils.getDimensionItemsFromParam( param );
 
-                if ( dimension != null && options != null )
+                if ( dimension != null && items != null )
                 {
-                    list.addAll( getDimension( dimension, options, null, format, false ) );
+                    list.addAll( getDimension( dimension, items, null, format, false ) );
                 }
             }
         }
@@ -867,7 +867,7 @@ public class DefaultAnalyticsService
             List<NameableObject> dataSets = new ArrayList<>();
             List<NameableObject> operandDataElements = new ArrayList<>();
 
-            options:
+            itemLoop:
             for ( String uid : items )
             {
                 if ( uid != null && uid.startsWith( KEY_DE_GROUP ) )
@@ -881,7 +881,7 @@ public class DefaultAnalyticsService
                         dataElementGroups.add( group );
                     }
                     
-                    continue options;
+                    continue itemLoop;
                 }
                 
                 Indicator in = indicatorService.getIndicator( uid );
@@ -889,7 +889,7 @@ public class DefaultAnalyticsService
                 if ( in != null )
                 {
                     indicators.add( in );
-                    continue options;
+                    continue itemLoop;
                 }
 
                 DataElement de = dataElementService.getDataElement( uid );
@@ -897,7 +897,7 @@ public class DefaultAnalyticsService
                 if ( de != null )
                 {
                     dataElements.add( de );
-                    continue options;
+                    continue itemLoop;
                 }
 
                 DataSet ds = dataSetService.getDataSet( uid );
@@ -905,7 +905,7 @@ public class DefaultAnalyticsService
                 if ( ds != null )
                 {
                     dataSets.add( ds );
-                    continue options;
+                    continue itemLoop;
                 }
 
                 DataElementOperand dc = operandService.getDataElementOperandByUid( uid );
@@ -913,7 +913,7 @@ public class DefaultAnalyticsService
                 if ( dc != null )
                 {
                     operandDataElements.add( dc.getDataElement() );
-                    continue options;
+                    continue itemLoop;
                 }
 
                 throw new IllegalQueryException( "Data dimension option identifier does not reference any option: " + uid );
@@ -1112,7 +1112,7 @@ public class DefaultAnalyticsService
 
         OrganisationUnitGroupSet ougs = organisationUnitGroupService.getOrganisationUnitGroupSet( dimension );
 
-        if ( ougs != null )
+        if ( ougs != null && ougs.isDataDimension() )
         {
             List<NameableObject> ous = asList( organisationUnitGroupService.getOrganisationUnitGroupsByUid( items ) );
 
@@ -1123,7 +1123,7 @@ public class DefaultAnalyticsService
 
         DataElementGroupSet degs = dataElementService.getDataElementGroupSet( dimension );
 
-        if ( degs != null )
+        if ( degs != null && degs.isDataDimension() )
         {
             List<NameableObject> des = asList( dataElementService.getDataElementGroupsByUid( items ) );
 
@@ -1134,7 +1134,7 @@ public class DefaultAnalyticsService
 
         CategoryOptionGroupSet cogs = categoryService.getCategoryOptionGroupSet( dimension );
 
-        if ( cogs != null )
+        if ( cogs != null && cogs.isDataDimension() )
         {
             List<NameableObject> cogz = asList( categoryService.getCategoryOptionGroupsByUid( items ) );
 
@@ -1219,7 +1219,7 @@ public class DefaultAnalyticsService
             boolean orgUnitHierarchy = hierarchyMeta && DimensionType.ORGANISATIONUNIT.equals( dimension.getDimensionType() );
 
             // -----------------------------------------------------------------
-            // If dimension is not fixed and has no options, insert all options
+            // If dimension is not fixed and has no options, insert all items
             // -----------------------------------------------------------------
 
             if ( !FIXED_DIMS.contains( dimension.getDimension() ) && items.isEmpty() )
