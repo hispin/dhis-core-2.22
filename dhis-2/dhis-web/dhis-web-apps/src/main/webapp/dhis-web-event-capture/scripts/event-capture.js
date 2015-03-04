@@ -29,7 +29,7 @@ if( dhis2.ec.memoryOnly ) {
 dhis2.ec.store = new dhis2.storage.Store({
     name: 'dhis2ec',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations']
+    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'ouLevels']
 });
 
 (function($) {
@@ -143,8 +143,7 @@ function downloadMetaData(){
     
     promise = promise.then( dhis2.ec.store.open );
     promise = promise.then( getCalendarSetting );
-    promise = promise.then( getOrgUnitLevels );
-    //promise = promise.then( getGeoJsonsByLevel );
+    promise = promise.then( getOrgUnitLevels );    
     promise = promise.then( getMetaPrograms );     
     promise = promise.then( getPrograms );     
     promise = promise.then( getProgramStages );
@@ -183,88 +182,27 @@ function getCalendarSetting()
 
 function getOrgUnitLevels()
 {
-    var def = $.Deferred();
-
-    $.ajax({
-        url: '../api/organisationUnitLevels.json',
-        type: 'GET',
-        data:'filter=level:gt:1&fields=id,name,level&paging=false'
-    }).done( function(response) {      
-        var ouLevels = [];
-        if(response.organisationUnitLevels){
-            ouLevels = _.sortBy(response.organisationUnitLevels, function(ouLevel){
-                return ouLevel.level;
-            });
+    dhis2.ec.store.getKeys( 'ouLevels').done(function(res){        
+        if(res.length > 0){
+            return;
         }
-        def.resolve( ouLevels );
-    }).fail(function(){
-        def.resolve(null);
-    });
-    
-    return def.promise();    
-}
+        var def = $.Deferred();
 
-function getGeoJsonsByLevel( ouLevels )
-{
-    if( !ouLevels ){
-        return;
-    }
-
-    var mainDef = $.Deferred();
-    var mainPromise = mainDef.promise();
-
-    var def = $.Deferred();
-    var promise = def.promise();
-
-    var builder = $.Deferred();
-    var build = builder.promise();
-
-    _.each( _.values( ouLevels ), function ( ouLevel ) {
-        if(ouLevel.level){
-            build = build.then(function() {
-                var d = $.Deferred();
-                var p = d.promise();
-                dhis2.ec.store.get('geoJsons', ouLevel.level).done(function(obj) {
-                    if(!obj) {
-                        promise = promise.then( getGeoJson( ouLevel.level ) );
-                    }
-                    d.resolve();
-                });
-
-                return p;
-            });
-        }        
-    });
-
-    build.done(function() {
-        def.resolve();
-        promise = promise.done( function () {
-            mainDef.resolve();
-        });
-    }).fail(function(){
-        mainDef.resolve();
-    });
-
-    builder.resolve();
-
-    return mainPromise;
-}
-
-function getGeoJson( level )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/organisationUnits.geojson',
+        $.ajax({
+            url: '../api/organisationUnitLevels.json',
             type: 'GET',
-            data: 'level=' + level
-        }).done( function( response ){
-            
-            var geojson = {};
-            geojson = response;
-            geojson.id = level;            
-            dhis2.ec.store.set( 'geoJsons', geojson );
+            data:'filter=level:gt:1&fields=id,name,level&paging=false'
+        }).done(function(response) {
+            if(response.organisationUnitLevels){
+                dhis2.ec.store.setAll( 'ouLevels', response.organisationUnitLevels );
+            }            
+            def.resolve();        
+        }).fail(function(){
+            def.resolve();
         });
-    };
+
+        return def.promise();
+    });    
 }
 
 function getMetaPrograms()

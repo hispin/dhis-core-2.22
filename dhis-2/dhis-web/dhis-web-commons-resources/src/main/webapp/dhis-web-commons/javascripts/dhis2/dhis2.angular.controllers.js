@@ -32,8 +32,7 @@ var d2Controllers = angular.module('d2Controllers', [])
 .controller('MapController',
         function($scope, 
                 $modalInstance,
-                DHIS2URL,
-                geoJsons,
+                DHIS2URL,                
                 location) {
     
     $scope.home = function(){        
@@ -41,7 +40,6 @@ var d2Controllers = angular.module('d2Controllers', [])
     };
     
     $scope.location = location;
-    $scope.geoJsons = geoJsons;
     
     $scope.close = function () {
         $modalInstance.close();

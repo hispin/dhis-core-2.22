@@ -675,15 +675,12 @@ trackerCapture.controller('DataEntryController',
     
     $scope.showMap = function(event){
         var modalInstance = $modal.open({
-            templateUrl: 'views/map.html',
+            templateUrl: '../dhis-web-commons/coordinatecapture/map.html',
             controller: 'MapController',
             windowClass: 'modal-full-window',
             resolve: {
                 location: function () {
                     return {lat: event.coordinate.latitude, lng: event.coordinate.longitude};
-                },
-                geoJsons: function(){
-                    return $scope.geoJsons;
                 }
             }
         });

@@ -346,7 +346,7 @@ var d2Directives = angular.module('d2Directives', [])
         replace: true,
         template: '<div></div>',
         link: function(scope, element, attrs){
-            
+
             var ouLevels = CurrentSelection.getOuLevels();
             
             //remove angular bootstrap ui modal draggable
@@ -459,12 +459,12 @@ var d2Directives = angular.module('d2Directives', [])
                             latLngBounds.extend(new google.maps.LatLng(coordinate[1],coordinate[0]));
                             polygonPoints.extend(new google.maps.LatLng(coordinate[1],coordinate[0]));                            
                         });
-                        var txt = new TxtOverlay(polygonPoints.getCenter(), customTxt, "polygon-name", map);
+                        var txt = new Dhis2TextOverlay(polygonPoints.getCenter(), customTxt, "polygon-name", map);
                         overLays.push(txt);
                     }
                     else if(feature.geometry.type === 'Point'){
                         latLngBounds.extend(new google.maps.LatLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]));                        
-                        var txt = new TxtOverlay(new google.maps.LatLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]),customTxt, "polygon-name",map );
+                        var txt = new Dhis2TextOverlay(new google.maps.LatLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]),customTxt, "polygon-name",map );
                         overLays.push(txt);
                     }
                 });

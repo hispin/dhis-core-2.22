@@ -27,7 +27,7 @@ trackerCapture.controller('DashboardController',
     //get ouLevels
     TCStorageService.currentStore.open().done(function(){
         TCStorageService.currentStore.getAll('ouLevels').done(function(response){
-            var ouLevels = response;
+            var ouLevels = angular.isObject(response) ? orderByFilter(response, '-level').reverse() : [];
             CurrentSelection.setOuLevels(orderByFilter(ouLevels, '-level').reverse());
         });
     });

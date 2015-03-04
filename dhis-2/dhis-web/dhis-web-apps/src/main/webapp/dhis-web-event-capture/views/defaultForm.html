@@ -50,6 +50,9 @@
                            ng-required="false"
                            style="width:99%;"/>
                     <span ng-show="outerForm.latitude.$invalid" class="required">{{'int_required'| translate}} [-90 ... 90]</span>
+                    <span class='pull-right'>
+                        <a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a>
+                    </span>
                 </td>                                            
             </tr>
             <tr ng-if="selectedProgramStage.captureCoordinates">
@@ -65,11 +68,12 @@
                            ng-required="false"
                            style="width:99%;"/>
                     <span ng-show="outerForm.longitude.$invalid" class="required">{{'int_required'| translate}}[-180 ... 180]</span>
-                </td>                                            
+                    <span class='pull-right'>
+                        <a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a>
+                    </span>
+                </td>                                                            
             </tr>
-            <!--<span class='pull-right'>
-                <a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a>
-            </span>-->
+            
             <tr ng-repeat="eventGridColumn in eventGridColumns" ng-if="eventGridColumn.id !== 'comment' && eventGridColumn.id !== 'uid' && eventGridColumn.id !== 'event_date'">
                 <td >
                     {{eventGridColumn.name}}<span ng-if="eventGridColumn.compulsory" class="required">*</span>

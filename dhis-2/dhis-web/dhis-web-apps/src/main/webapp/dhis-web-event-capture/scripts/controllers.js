@@ -10,6 +10,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $timeout,
                 $translate,
                 $anchorScroll,
+                orderByFilter,
                 storage,
                 Paginator,
                 OptionSetService,
@@ -23,7 +24,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 CalendarService,
                 GridColumnService,
                 CustomFormService,
+                ECStorageService,
                 ErrorMessageService,
+                CurrentSelection,
                 ModalService,
                 DialogService) {
     //selected org unit
@@ -49,7 +52,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.currentElement = {id: '', update: false};
     $scope.optionSets = [];
     $scope.proceedSelection = true;
-    $scope.formUnsaved = false;
+    $scope.formUnsaved = false;    
     
     //notes
     $scope.note = {};
@@ -58,13 +61,22 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     var userAccount = storage.get('USER_PROFILE');
     var storedBy = userAccount ? userAccount.userName : '';    
     $scope.noteExists = false;
-    storage.remove('SELECTED_OU');   
+    storage.remove('SELECTED_OU');
         
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {
         
         if(angular.isObject($scope.selectedOrgUnit)){
             storage.set('SELECTED_OU', $scope.selectedOrgUnit);
+            
+            //get ouLevels
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.getAll('ouLevels').done(function(response){
+                    var ouLevels = angular.isObject(response) ? orderByFilter(response, '-level').reverse() : [];
+                    CurrentSelection.setOuLevels(orderByFilter(ouLevels, '-level').reverse());
+                });
+            });
+            
             if($scope.optionSets.length < 1){
                 $scope.optionSets = [];
                 OptionSetService.getAll().then(function(optionSets){
@@ -785,15 +797,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.showMap = function(event){
         var modalInstance = $modal.open({
-            templateUrl: 'views/map.html',
+            templateUrl: '../dhis-web-commons/coordinatecapture/map.html',
             controller: 'MapController',
             windowClass: 'modal-full-window',
             resolve: {
                 location: function () {
                     return {lat: event.coordinate.latitude, lng: event.coordinate.longitude};
-                },
-                geoJsons: function(){
-                    return $scope.geoJsons;
                 }
             }
         });
