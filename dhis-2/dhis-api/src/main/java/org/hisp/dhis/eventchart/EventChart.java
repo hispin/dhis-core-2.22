@@ -73,9 +73,6 @@ public class EventChart
     extends BaseChart
     implements EventAnalyticalObject
 {
-    public static final String COUNT_TYPE_EVENTS = "events";
-    public static final String COUNT_TYPE_TRACKED_ENTITY_INSTANCES = "tracked_entity_instances";
-
     /**
      * Program. Required.
      */
