@@ -52,17 +52,9 @@
       <id>MavenCentral</id>
       <name>Maven repository</name>
       <url>http://repo1.maven.org/maven2</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-    </repository>
-    <repository>
-      <id>UK</id>
-      <name>UK Central</name>
-      <url>http://uk.maven.org/maven2</url>
     </repository>
     <!-- GeoTools -->
     <repository>
