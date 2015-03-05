@@ -308,6 +308,9 @@ public class TableAlteror
         executeSql( "ALTER TABLE period ALTER COLUMN periodid DROP DEFAULT" );
         executeSql( "DROP SEQUENCE period_periodid_seq" );
         
+        executeSql( "update eventreport set collapsedatadimensions = false where collapsedatadimensions is null" );
+        executeSql( "update eventchart set collapsedatadimensions = false where collapsedatadimensions is null" );
+        
         updateProgramStageList();
         updateProgramAttributeList();
         

@@ -30,6 +30,7 @@ package org.hisp.dhis.common;
 
 import java.util.Date;
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.Program;
@@ -50,9 +51,13 @@ public interface EventAnalyticalObject
     
     Date getEndDate();
     
+    AggregationType getAggregationType();
+    
     EventOutputType getOutputType();
     
     NameableObject getValue();
+    
+    boolean isCollapseDataDimensions();
 
     // -------------------------------------------------------------------------
     // Base class emulation methods
