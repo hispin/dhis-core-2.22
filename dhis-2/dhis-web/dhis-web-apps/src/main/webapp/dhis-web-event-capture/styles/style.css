@@ -907,6 +907,24 @@ input.typeahead::-ms-input-placeholder {
     pointer-events: none;
 }
 
+.map_context_menu{
+	background-color:white;
+	border:1px solid gray;
+    z-index: 1000;
+}
+.map_context_menu_item{
+	padding:3px 6px;
+}
+.map_context_menu_item:hover{
+	background-color:#CCCCCC;
+}
+.map_context_menu_separator{
+	background-color:gray;
+	height:1px;
+	margin:0;
+	padding:0;
+}
+
 .disabled-context-menu-item {    
     pointer-events: none;
     color: #dddddd;
