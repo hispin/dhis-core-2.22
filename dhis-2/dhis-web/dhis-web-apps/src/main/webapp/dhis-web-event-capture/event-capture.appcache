@@ -64,6 +64,8 @@ styles/style.css
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.filters.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.services.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.controllers.js
+../dhis-web-commons/javascripts/dhis2/dhis2.map.contextmenu.js
+../dhis-web-commons/javascripts/dhis2/dhis2.map.textoverlay.js
 
 ../dhis-web-commons/javascripts/moment/moment-with-langs.min.js       
 
