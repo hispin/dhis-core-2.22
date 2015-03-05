@@ -1,4 +1,4 @@
-package org.hisp.dhis.scheduling;
+package org.hisp.dhis.dataadmin.action.dataintegrity;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,21 +28,55 @@ package org.hisp.dhis.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.Action;
+import org.hisp.dhis.dataintegrity.DataIntegrityReport;
+import org.hisp.dhis.scheduling.TaskCategory;
+import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.system.notification.Notifier;
+import org.hisp.dhis.user.CurrentUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
- * @author Lars Helge Overland
+ * @author Halvdan Hoem Grelland
  */
-public enum TaskCategory
+public class GetDataIntegrityReportAction
+    implements Action
 {
-    DATAMART,
-    RESOURCETABLE_UPDATE,
-    ANALYTICSTABLE_UPDATE,
-    MONITORING,
-    DATAVALUE_IMPORT,
-    EVENT_IMPORT,
-    METADATA_IMPORT,
-    METADATA_EXPORT,
-    AGGREGATE_QUERY_BUILDER,
-    SENDING_REMINDER_MESSAGE,
-    SENDING_SMS,
-    DATAINTEGRITY
+    @Autowired
+    private Notifier notifier;
+
+    @Autowired
+    private CurrentUserService currentUserService;
+
+    // -------------------------------------------------------------------------
+    // Input
+    // -------------------------------------------------------------------------
+
+    private TaskCategory category;
+
+    public void setCategory( TaskCategory category )
+    {
+        this.category = category;
+    }
+
+    // -------------------------------------------------------------------------
+    // Output
+    // -------------------------------------------------------------------------
+
+    private DataIntegrityReport dataIntegrityReport;
+
+    public DataIntegrityReport getDataIntegrityReport()
+    {
+        return dataIntegrityReport;
+    }
+
+    @Override
+    public String execute()
+    {
+        TaskId taskId = new TaskId( category, currentUserService.getCurrentUser() );
+
+        dataIntegrityReport = (DataIntegrityReport) notifier.getTaskSummary( taskId );
+
+        return SUCCESS;
+    }
 }

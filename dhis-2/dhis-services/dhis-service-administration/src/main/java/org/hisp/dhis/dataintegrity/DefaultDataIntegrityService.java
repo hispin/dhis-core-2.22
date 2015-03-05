@@ -616,7 +616,7 @@ public class DefaultDataIntegrityService
             
             for ( OrganisationUnit duplicate : duplicates )
             {
-                targets.put( duplicate, duplicate.getGroups() );
+                targets.put( duplicate, new HashSet<>( duplicate.getGroups() ) );
             }
         }
 
