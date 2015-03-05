@@ -54,7 +54,7 @@
     <!-- Other -->
 
     <dependency>
-      <groupId>org.nfunk</groupId>
+      <groupId>org.scijava</groupId>
       <artifactId>jep</artifactId>
     </dependency>
     <dependency>
