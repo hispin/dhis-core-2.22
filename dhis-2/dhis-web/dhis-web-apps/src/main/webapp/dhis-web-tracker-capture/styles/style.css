@@ -859,7 +859,6 @@ input.typeahead::-ms-input-placeholder {
     }
 }
 
-
 .org-unit-tree {
     margin-left: -5px;
     color: #000;
@@ -947,4 +946,31 @@ ul.tree ul li:last-child:before {
     padding: 5px;
     font-size: 15px;
     position: absolute;
+}
+
+.map_context_menu{
+	background-color:white;
+	border:1px solid gray;
+    z-index: 1000;
+}
+.map_context_menu_item{
+	padding:3px 6px;
+}
+.map_context_menu_item:hover{
+	background-color:#CCCCCC;
+}
+.map_context_menu_separator{
+	background-color:gray;
+	height:1px;
+	margin:0;
+	padding:0;
+}
+
+.disabled-context-menu-item {    
+    pointer-events: none;
+    color: #dddddd;
+    cursor: none;
+}
+.enable-context-menu-item {    
+    cursor:pointer; 
 }

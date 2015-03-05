@@ -253,21 +253,6 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-/*.directive('d2Sortable', function() {        
-
-    return {        
-        restrict: 'A',        
-        link: function(scope, element, attrs){
-            element.sortable({
-                connectWith: ".connectedSortable",
-                placeholder: "ui-state-highlight",
-                tolerance: "pointer",
-                handle: '.handle'
-            });
-        }  
-    };
-})*/
-
 .directive('d2Sortable', function($timeout) {        
 
     return {        
@@ -340,7 +325,7 @@ var d2Directives = angular.module('d2Directives', [])
     };  
 })
 
-.directive('d2GoogleMap', function ($parse, $http, CurrentSelection) {
+.directive('d2GoogleMap', function ($parse, $http, $translate, CurrentSelection) {
     return {
         restrict: 'E',
         replace: true,
@@ -350,7 +335,7 @@ var d2Directives = angular.module('d2Directives', [])
             var ouLevels = CurrentSelection.getOuLevels();
             
             //remove angular bootstrap ui modal draggable
-            $(".modal-content").draggable({ disabled: true });
+            $(".modal-content").draggable({ disabled: true });            
             
             //get a default center
             var latCenter = 12.31, lngCenter = 51.48;            
@@ -365,7 +350,7 @@ var d2Directives = angular.module('d2Directives', [])
             
             //default map configurations 
             var mapOptions = {
-                zoom: 3,
+                zoom: 4,
                 center: new google.maps.LatLng(latCenter, lngCenter),
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             },
@@ -388,20 +373,40 @@ var d2Directives = angular.module('d2Directives', [])
                 }                
             }
             
-            var currentLayer, currentGeojson, currentGeojsonFeatures;
+            var currentLayer = 0, currentGeojson, currentGeojsonFeatures;
             
-            function getGeoJsonByOuLevel(initialize, event){
-                
+            var contextMenuOptions={};
+            contextMenuOptions.classNames={menu:'map_context_menu', menuSeparator:'map_context_menu_separator'};
+
+            //create an array of MapContextMenuItem objects            
+            var menuItems=[];            
+            menuItems.push({className: 'map_context_menu_item', eventName: 'zoom_in', id: 'zoomIn', label: '<i class="fa fa-search-plus"></i>   ' + $translate('zoom_in')});
+            menuItems.push({className: 'map_context_menu_item', eventName: 'zoom_out', id: 'zoomOut', label: '<i class="fa fa-search-minus"></i>   ' + $translate('zoom_out')});
+            menuItems.push({}); 
+            menuItems.push({className: 'map_context_menu_item', eventName: 'centerMap', label: '<i class="fa fa-crosshairs"></i>   ' + $translate('center_map')});
+            menuItems.push({});
+            menuItems.push({className: 'map_context_menu_item', eventName: 'captureCoordinate', label: '<i class="fa fa-map-marker"></i>   ' + $translate('capture_coordinate')});
+            contextMenuOptions.menuItems=menuItems;
+            var mapContextMenu = new MapContextMenu(map, contextMenuOptions);   
+            
+            function getGeoJsonByOuLevel(initialize, event, mode){
                 var url = '';
-                if(currentLayer >= ouLevels.length-1 || initialize){                        
+                if(initialize){                        
                     currentLayer = 0;
                     url = '../api/organisationUnits.geojson?level=' + ouLevels[currentLayer].level;
                 }
                 else{
-                    currentLayer++;                        
-                    url = '../api/organisationUnits.geojson?level=' + ouLevels[currentLayer].level + '&parent=' + event.feature.D;
+                    if(mode === 'IN'){
+                        currentLayer++;
+                        url = '../api/organisationUnits.geojson?level=' + ouLevels[currentLayer].level + '&parent=' + event.feature.D;
+                    }
+                    if(mode === 'OUT'){
+                        currentLayer--;
+                        var parents = event.feature.k.parentGraph.substring(1,event.feature.k.parentGraph.length-1).split('/');                        
+                        url = '../api/organisationUnits.geojson?level=' + ouLevels[currentLayer].level + '&parent=' + parents[parents.length-2];
+                    }                    
                 }
-
+                
                 $http.get( url ).then(function(response){                            
                     currentGeojson = response.data;
                     currentGeojsonFeatures = map.data.addGeoJson(currentGeojson);
@@ -434,11 +439,11 @@ var d2Directives = angular.module('d2Directives', [])
                 });
             }
             
-            function centerMap(){
+            function centerMap(){                
                 if(currentGeojson && currentGeojson.features){
                     var latLngBounds = getMapCenter(currentGeojson);
                     map.fitBounds(latLngBounds);
-                    map.panToBounds(latLngBounds);
+                    map.panToBounds(latLngBounds);                    
                 }              
             }
 
@@ -476,6 +481,41 @@ var d2Directives = angular.module('d2Directives', [])
                 getGeoJsonByOuLevel(true, null);
             }
             
+            function zoomMap(event, mode){
+                
+                for(var i = 0; i < currentGeojsonFeatures.length; i++){
+                    map.data.remove(currentGeojsonFeatures[i]);
+                }
+                
+                for(var i=0; i<overLays.length; i++){
+                    overLays[i].setMap(null);
+                }
+                
+                getGeoJsonByOuLevel(false, event, mode);
+            }
+            
+            function enableDisableZoom(){
+                if(currentLayer >= ouLevels.length-1){                    
+                    $("#zoomIn").addClass('disabled-context-menu-item');
+                    $("#zoomIn").removeClass('enable-context-menu-item');
+                    $('#zoomIn').attr('disabled', "disabled");
+                }else{
+                    $("#zoomIn").removeClass('disabled-context-menu-item');
+                    $("#zoomIn").addClass('enable-context-menu-item');
+                    $('#zoomIn').attr('disabled', "");
+                }
+                if(currentLayer === 0){
+                    $("#zoomOut").addClass('disabled-context-menu-item');
+                    $("#zoomOut").removeClass('enable-context-menu-item');
+                    $('#zoomOut').attr('disabled', "disabled");
+                }
+                else{
+                    $("#zoomOut").removeClass('disabled-context-menu-item');
+                    $("#zoomOut").addClass('enable-context-menu-item');
+                    $('#zoomIn').attr('disabled', "");
+                }
+            }
+            
             //get lable for current polygon
             map.data.addListener('mouseover', function(e) {
                 $("#polygon-label").text( e.feature.k.name );
@@ -490,28 +530,61 @@ var d2Directives = angular.module('d2Directives', [])
             });
             
             //drill-down based on polygons assigned to orgunits
-            map.data.addListener('rightclick', function(e){                
-                for(var i = 0; i < currentGeojsonFeatures.length; i++){
-                    map.data.remove(currentGeojsonFeatures[i]);
-                }
-                
-                for(var i=0; i<overLays.length; i++){
-                    overLays[i].setMap(null);
-                }
-                getGeoJsonByOuLevel(false, e);
-                        
-            });            
+            map.data.addListener('rightclick', function(e){
+                mapContextMenu.show(e);
+                enableDisableZoom();
+            });
             
-            //capturing coordinate from defined polygons
-            map.data.addListener('click', function(e) {                
-                applyMarker(e);               
+            //drill-down based on points assigned to orgunits
+            google.maps.event.addListener(marker, 'rightclick', function(e){
+                mapContextMenu.show(e);
+                enableDisableZoom();
             });
             
             //capturing coordinate from anywhere in the map - incase no polygons are defined
-            google.maps.event.addListener(map, 'click', function(e){                
-                applyMarker(e);                
+            google.maps.event.addListener(map, 'rightclick', function(e){                
+                mapContextMenu.show(e);
+            });            
+            
+            //remove context menu onclick
+            map.data.addListener('click', function(e) {                
+                mapContextMenu.hide();
             });
             
+            google.maps.event.addListener(map, 'click', function(e){                
+                mapContextMenu.hide();
+            }); 
+            
+            //listen for the clicks on mapContextMenu
+            google.maps.event.addListener(mapContextMenu, 'menu_item_selected', function(e, latLng, eventName){              
+                switch(eventName){                    
+                    case 'zoom_in':
+                        if(e.feature){
+                            zoomMap(e, 'IN');
+                        }
+                        else{
+                            map.setZoom(map.getZoom()+1);
+                        }
+                        
+                        break;                    
+                    case 'zoom_out':
+                        if(e.feature){
+                            zoomMap(e, 'OUT');
+                        }
+                        else{
+                            map.setZoom(map.getZoom()-1);
+                        }
+                        
+                        break;
+                    case 'centerMap':
+                        map.panTo(latLng);
+                        break;
+                    case 'captureCoordinate':
+                        applyMarker(e);
+                        break;
+                }
+            });
+    
             initializeMap();
         }
     };
