@@ -907,6 +907,15 @@ input.typeahead::-ms-input-placeholder {
     pointer-events: none;
 }
 
+.disabled-context-menu-item {    
+    pointer-events: none;
+    color: #dddddd;
+    cursor: none;
+}
+.enable-context-menu-item {    
+    cursor:pointer; 
+}
+
 @media print {
     #header, #leftBar, .not-printable {
         display: none;
