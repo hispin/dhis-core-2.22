@@ -47,6 +47,7 @@ import org.hisp.dhis.mock.MockCurrentUserService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.user.CurrentUserService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -520,15 +521,8 @@ public class DataApprovalLevelServiceTest
         assertEquals( 4, (int) readApprovalLevels.get( organisationUnitF ) );
         assertEquals( 3, (int) readApprovalLevels.get( organisationUnitB ) );
     }
-/*
-    @Test
-    public void testGetUserReadApprovalLevels_2A() throws Exception
-    {
-        //
-        // Test 2... TBD
-        //
-    }
 
+    @Ignore
     @Test
     public void testGetUserDataApprovalLevelsApproveHere() throws Exception
     {
@@ -563,6 +557,7 @@ public class DataApprovalLevelServiceTest
         assertEquals( "03", levels.get( 3 ).getName() );
     }
 
+    @Ignore
     @Test
     public void testGetUserDataApprovalLevelsApproveLower() throws Exception
     {
@@ -601,6 +596,7 @@ public class DataApprovalLevelServiceTest
         assertEquals( "4B", levels.get( 7 ).getName() );
     }
 
+    @Ignore
     @Test
     public void testGetUserDataApprovalLevelsApproveHereAndLower() throws Exception
     {
@@ -640,6 +636,7 @@ public class DataApprovalLevelServiceTest
         assertEquals( "4B", levels.get( 8 ).getName() );
     }
 
+    @Ignore
     @Test
     public void testGetUserDataApprovalLevelsAcceptLower() throws Exception
     {
@@ -672,5 +669,4 @@ public class DataApprovalLevelServiceTest
         assertEquals( "2B", levels.get( 1 ).getName() );
         assertEquals( "03", levels.get( 2 ).getName() );
     }
-*/
 }
