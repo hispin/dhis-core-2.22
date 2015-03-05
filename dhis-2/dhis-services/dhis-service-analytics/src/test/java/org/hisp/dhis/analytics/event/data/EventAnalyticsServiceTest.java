@@ -181,7 +181,7 @@ public class EventAnalyticsServiceTest
         filterParams.add( "pe:201401;201402" );
         
         EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
-            null, null, dimensionParams, filterParams, null, null, false, false, false, null, null, null, null, null );
+            null, null, dimensionParams, filterParams, null, null, false, false, false, null, null, null, false, null, null );
         
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getOrganisationUnits().size() );
@@ -200,7 +200,7 @@ public class EventAnalyticsServiceTest
         filterParams.add( "pe:201401" );
         
         EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
-            null, null, dimensionParams, filterParams, deA.getUid(), AggregationType.AVERAGE, false, false, false, null, null, null, null, null );
+            null, null, dimensionParams, filterParams, deA.getUid(), AggregationType.AVERAGE, false, false, false, null, null, null, false, null, null );
         
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getOrganisationUnits().size() );
@@ -261,6 +261,31 @@ public class EventAnalyticsServiceTest
     }
 
     @Test
+    public void testGetFromAnalyticalObjectC()
+    {
+        EventChart chart = new EventChart();
+        chart.setProgram( prA );
+        
+        chart.getColumnDimensions().add( deA.getUid() );
+        chart.getColumnDimensions().add( atA.getUid() );
+        chart.getRowDimensions().add( DimensionalObject.ORGUNIT_DIM_ID );
+        chart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
+        
+        chart.getDataElementDimensions().add( new TrackedEntityDataElementDimension( deA, null, "GT:2000" ) );
+        chart.getAttributeDimensions().add( new TrackedEntityAttributeDimension( atA, null, "LE:5" ) );
+        chart.getPeriods().add( peA );
+        chart.getPeriods().add( peB );
+        chart.getOrganisationUnits().add( ouA );
+        
+        EventQueryParams params = analyticsService.getFromAnalyticalObject( chart, null );
+        
+        assertNotNull( params );
+        assertEquals( 2, params.getItems().size() );
+        assertEquals( 1, params.getOrganisationUnits().size() );
+        assertEquals( 2, params.getFilterPeriods().size() );
+    }
+    
+    @Test
     public void testSetItemsForDimensionFilters()
     {
         TrackedEntityAttribute tea = new TrackedEntityAttribute();
@@ -309,7 +334,7 @@ public class EventAnalyticsServiceTest
         filterParams.add( atA.getUid() + ":LE:5" );
         
         EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
-            null, null, dimensionParams, filterParams, null, null, false, false, false, null, null, null, null, null );
+            null, null, dimensionParams, filterParams, null, null, false, false, false, null, null, null, false, null, null );
         
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getItems().size() );
