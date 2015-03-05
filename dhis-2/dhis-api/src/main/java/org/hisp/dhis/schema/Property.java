@@ -195,6 +195,16 @@ public class Property implements Ordered, Klass
      */
     private String cascade;
 
+    /**
+     * Is collection many-to-many.
+     */
+    private boolean manyToMany;
+
+    /**
+     * Is collection one-to-many.
+     */
+    private boolean oneToMany;
+
     public Property()
     {
     }
@@ -532,6 +542,30 @@ public class Property implements Ordered, Klass
     public void setCascade( String cascade )
     {
         this.cascade = cascade;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isManyToMany()
+    {
+        return manyToMany;
+    }
+
+    public void setManyToMany( boolean manyToMany )
+    {
+        this.manyToMany = manyToMany;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isOneToMany()
+    {
+        return oneToMany;
+    }
+
+    public void setOneToMany( boolean oneToMany )
+    {
+        this.oneToMany = oneToMany;
     }
 
     public String key()
