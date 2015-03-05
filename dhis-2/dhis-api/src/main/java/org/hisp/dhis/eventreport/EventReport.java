@@ -154,6 +154,11 @@ public class EventReport
     private EventOutputType outputType;
     
     /**
+     * Indicates whether to collapse all data dimensions into a single dimension.
+     */
+    private boolean collapseDataDimensions;
+    
+    /**
      * Indicates rendering of empty rows for the table.
      */
     private boolean hideEmptyRows;
@@ -466,6 +471,19 @@ public class EventReport
     public void setOutputType( EventOutputType outputType )
     {
         this.outputType = outputType;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isCollapseDataDimensions()
+    {
+        return collapseDataDimensions;
+    }
+
+    public void setCollapseDataDimensions( boolean collapseDataDimensions )
+    {
+        this.collapseDataDimensions = collapseDataDimensions;
     }
 
     @JsonProperty

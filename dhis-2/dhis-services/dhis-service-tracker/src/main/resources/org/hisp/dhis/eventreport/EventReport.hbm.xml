@@ -144,6 +144,8 @@
 		</type> 
 	</property>
 
+	<property name="collapseDataDimensions" />
+
     <property name="showDimensionLabels" />
 
     <property name="digitGroupSeparator" />
