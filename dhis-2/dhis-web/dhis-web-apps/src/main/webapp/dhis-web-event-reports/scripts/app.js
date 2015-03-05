@@ -1320,14 +1320,12 @@ Ext.onReady( function() {
 			dataType = 'aggregated_values',
             defaultValueId = 'default';
 
-		getStore = function(data) {
+		getStore = function(applyConfig) {
 			var config = {};
 
 			config.fields = ['id', 'name'];
 
-			if (data) {
-				config.data = data;
-			}
+			Ext.apply(config, applyConfig);
 
 			config.getDimensionNames = function() {
 				var dimensionNames = [];
@@ -1355,11 +1353,11 @@ Ext.onReady( function() {
 			return keys;
 		};
 
-		colStore = getStore();
-		rowStore = getStore();
-        fixedFilterStore = getStore();
-        filterStore = getStore();
-        valueStore = getStore();
+		colStore = getStore({name: 'colStore'});
+		rowStore = getStore({name: 'rowStore'});
+        fixedFilterStore = getStore({name: 'fixedFilterStore'});
+        filterStore = getStore({name: 'filterStore'});
+        valueStore = getStore({name: 'valueStore'});
 
         // store functions
         valueStore.addDefaultData = function() {
@@ -1540,7 +1538,11 @@ Ext.onReady( function() {
 
                 // remove ux and layout item
                 if (hasDimension(id, valueStore)) {
-                    ns.app.accordion.getUx(id).removeDataElement();
+                    var uxArray = ns.app.accordion.getUxArray(id);
+
+                    for (var i = 0; i < uxArray.length; i++) {
+                        uxArray[i].removeDataElement();
+                    }
                 }
             }
         };
@@ -1685,9 +1687,9 @@ Ext.onReady( function() {
                 map[record.data.id] = fixedFilterStore;
             });
 
-            valueStore.each(function(record) {
-                map[record.data.id] = valueStore;
-            });
+            //valueStore.each(function(record) {
+                //map[record.data.id] = valueStore;
+            //});
 
             return map;
         };
@@ -4253,16 +4255,16 @@ Ext.onReady( function() {
 
 				return hasDataElement;
 			},
-            getUxById: function(dataElementId) {
-                var ux;
+            getUxArrayById: function(dataElementId) {
+                var uxArray = [];
 
                 this.items.each(function(item) {
 					if (item.dataElement.id === dataElementId) {
-						ux = item;
+						uxArray.push(item);
 					}
 				});
 
-                return ux;
+                return uxArray;
             },
 			removeAllDataElements: function(reset) {
 				var items = this.items.items,
@@ -4401,7 +4403,7 @@ Ext.onReady( function() {
                 element.name = element.name || element.displayName;
                 recordMap[element.id] = element;
 
-                // add ux if not selected as value
+                // dont add ux if dim is selected as value
                 if (element.id !== aggWindow.value.getValue()) {
                     ux = addUxFromDataElement(element);
 
@@ -4416,6 +4418,7 @@ Ext.onReady( function() {
                 queryWindow.colStore.add(element);
 			}
 
+            // favorite
 			if (layout && layout.dataType === 'aggregated_values') {
 				aggWindow.reset(true);
 
@@ -6277,8 +6280,8 @@ Ext.onReady( function() {
 			setGui: setGui,
 			getView: getView,
 
-            getUx: function(id) {
-                return dataElementSelected.getUxById(id);
+            getUxArray: function(id) {
+                return dataElementSelected.getUxArrayById(id);
             },
 
             listeners: {
