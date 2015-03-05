@@ -47,6 +47,7 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MaintenanceModeException;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
@@ -166,7 +167,12 @@ public class DefaultEventQueryPlanner
             
             for ( EventQueryParams byOrgUnitLevel : groupedByOrgUnitLevel )
             {
-                queries.addAll( convert( queryPlanner.groupByPeriodType( byOrgUnitLevel ) ) );
+                List<EventQueryParams> groupedByPeriodType = convert( queryPlanner.groupByPeriodType( byOrgUnitLevel ) );
+                
+                for ( EventQueryParams byPeriodType : groupedByPeriodType )
+                {
+                    queries.addAll( groupByItems( byPeriodType ) );
+                }
             }
         }
         
@@ -244,6 +250,32 @@ public class DefaultEventQueryPlanner
         {
             return convert( queryPlanner.groupByPartition( params, EVENT_ANALYTICS_TABLE_NAME, tableSuffix ) );
         }
+    }
+    
+    /**
+     * Group by items if query items are to be collapsed in order to aggregate
+     * each item individually.
+     */
+    private List<EventQueryParams> groupByItems( EventQueryParams params )
+    {
+        List<EventQueryParams> queries = new ArrayList<>();
+        
+        if ( params.isCollapseDataDimensions() && params.getItems() != null && !params.getItems().isEmpty() )
+        {
+            for ( QueryItem item : params.getItems() )
+            {
+                EventQueryParams query = params.instance();
+                query.getItems().clear();
+                query.getItems().add( item );
+                queries.add( query );
+            }
+        }
+        else
+        {
+            queries.add( params.instance() );
+        }
+        
+        return queries;
     }
         
     private static List<EventQueryParams> convert( List<DataQueryParams> params )

@@ -53,6 +53,7 @@ import java.util.Set;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.AnalyticsSecurityManager;
 import org.hisp.dhis.analytics.AnalyticsService;
+import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.analytics.SortOrder;
 import org.hisp.dhis.analytics.event.EventAnalyticsManager;
@@ -179,11 +180,18 @@ public class DefaultEventAnalyticsService
             grid.addHeader( new GridHeader( dimension.getDimension(), dimension.getDisplayName(), String.class.getName(), false, true ) );
         }
 
-        for ( QueryItem item : params.getItems() )
+        if ( params.isCollapseDataDimensions() )
         {
-            String legendSet = item.hasLegendSet() ? item.getLegendSet().getUid() : null;
-            
-            grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSetUid(), legendSet ) );
+            grid.addHeader( new GridHeader( DimensionalObject.DATA_X_DIM_ID, DataQueryParams.DISPLAY_NAME_DATA_X, String.class.getName(), false, true ) );
+        }
+        else
+        {
+            for ( QueryItem item : params.getItems() )
+            {
+                String legendSet = item.hasLegendSet() ? item.getLegendSet().getUid() : null;
+                
+                grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSetUid(), legendSet ) );
+            }
         }
 
         grid.addHeader( new GridHeader( "value", "Value", Double.class.getName(), false, false ) );
@@ -353,7 +361,7 @@ public class DefaultEventAnalyticsService
     @Override
     public EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate,
         Set<String> dimension, Set<String> filter, String value, AggregationType aggregationType, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, 
-        SortOrder sortOrder, Integer limit, EventOutputType outputType, DisplayProperty displayProperty, I18nFormat format )
+        SortOrder sortOrder, Integer limit, EventOutputType outputType, boolean collapseDataDimensions, DisplayProperty displayProperty, I18nFormat format )
     {
         EventQueryParams params = getFromUrl( program, stage, startDate, endDate, dimension, filter, null, null, null,
             skipMeta, hierarchyMeta, false, displayProperty, null, null, format );
@@ -364,6 +372,7 @@ public class DefaultEventAnalyticsService
         params.setSortOrder( sortOrder );
         params.setLimit( limit );
         params.setOutputType( MoreObjects.firstNonNull( outputType, EventOutputType.EVENT ) );
+        params.setCollapseDataDimensions( collapseDataDimensions );
         params.setAggregate( true );
 
         return params;

@@ -87,6 +87,8 @@ public class EventQueryParams
     
     private EventOutputType outputType;
     
+    private boolean collapseDataDimensions;
+    
     private boolean coordinatesOnly;
     
     // -------------------------------------------------------------------------
@@ -134,6 +136,7 @@ public class EventQueryParams
         params.sortOrder = this.sortOrder;
         params.limit = this.limit;
         params.outputType = this.outputType;
+        params.collapseDataDimensions = this.collapseDataDimensions;
         params.coordinatesOnly = this.coordinatesOnly;
         
         params.periodType = this.periodType;
@@ -487,6 +490,16 @@ public class EventQueryParams
     public void setOutputType( EventOutputType outputType )
     {
         this.outputType = outputType;
+    }
+
+    public boolean isCollapseDataDimensions()
+    {
+        return collapseDataDimensions;
+    }
+
+    public void setCollapseDataDimensions( boolean collapseDataDimensions )
+    {
+        this.collapseDataDimensions = collapseDataDimensions;
     }
 
     public boolean isCoordinatesOnly()
