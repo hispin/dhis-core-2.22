@@ -131,9 +131,12 @@ public class SystemController
 
             TaskId taskId = new TaskId( taskCategory, currentUserService.getCurrentUser() );
 
-            importSummary = (ImportSummary) notifier.getTaskSummary( taskId );
-
-            notifier.clear( taskId );
+            // TODO Support DataIntegrityReport (make task summary generic).
+            if ( !taskCategory.equals( TaskCategory.DATAINTEGRITY ) )
+            {
+                importSummary = (ImportSummary) notifier.getTaskSummary( taskId );
+                notifier.clear( taskId );
+            }
         }
 
         JacksonUtils.toJson( response.getOutputStream(), importSummary );

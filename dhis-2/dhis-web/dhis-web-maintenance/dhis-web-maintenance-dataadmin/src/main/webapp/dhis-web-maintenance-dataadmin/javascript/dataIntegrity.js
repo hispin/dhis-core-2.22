@@ -1,15 +1,33 @@
+$( document ).ready( function() {
+    showLoader();
 
-$( document ).ready( function()
-{
-	showLoader();
-	
-    $.getJSON( "getDataIntegrity.action", {}, populateIntegrityItems );
+    $.ajax({
+        url: '../api/dataIntegrity',
+        method: 'POST',
+        success: pollDataIntegrityCheckFinished,
+        error: function( xhr, txtStatus, err ) {
+            showErrorMessage( "Data integrity checks cannot be run. Request failed.", 3 );
+            throw Error( xhr.responseText );
+        }
+    } );
 } );
 
-function populateIntegrityItems( json )
-{
-	hideLoader();
-	
+var checkFinishedTimeout = null;
+
+function pollDataIntegrityCheckFinished() {
+    pingNotifications( 'DATAINTEGRITY', 'notificationsTable', function() {
+        $.getJSON( "getDataIntegrityReport.action", {}, function( json ) {
+            hideLoader();
+            $( "#di-title" ).hide();
+            $( "#di-completed" ).show();
+            populateIntegrityItems( json );
+            clearTimeout( checkFinishedTimeout );
+        } );
+    } );
+    checkFinishedTimeout = setTimeout( "pollDataIntegrityCheckFinished()", 1500 );
+}
+
+function populateIntegrityItems( json ) {
     displayViolationList( json.dataElementsWithoutDataSet, "dataElementsWithoutDataSet", false );
     displayViolationList( json.dataElementsWithoutGroups, "dataElementsWithoutGroups", false );
     displayViolationList( json.dataElementsViolatingExclusiveGroupSets, "dataElementsViolatingExclusiveGroupSets", true );
@@ -34,35 +52,32 @@ function populateIntegrityItems( json )
     displayViolationList( json.invalidValidationRuleRightSideExpressions, "invalidValidationRuleRightSideExpressions", true );
 }
 
-function displayViolationList( list, id, lineBreak )
-{
-    if ( list.length > 0 )
-    {
-    	// Display image "drop-down" button
-    	
-        $( "#" + id + "Button" )
-           .attr({ src: "../images/down.png", title: "View violations" })
-           .css({ cursor: "pointer" })
-           .click( function() { $( "#" + id + "Div" ).slideToggle( "fast" ); } );
+function displayViolationList( list, id, lineBreak ) {
+    var $button = $( "#" + id + "Button" );
+    var $container = $( "#" + id + "Div" );
+
+    if ( list.length > 0 ) {
+        // Display image "drop-down" button
+        $button
+           .attr( { src: "../images/down.png", title: "View violations" } )
+           .css( { cursor: "pointer" } )
+           .click( function() { $container.slideToggle( "fast" ); } );
 
         // Populate violation div
-
         var violations = "";
         
-        for ( var i = 0; i < list.length; i++ )
-        {
+        for ( var i = 0; i < list.length; i++ ) {
             violations += list[i] + "<br>";
             violations += !!lineBreak ? "<br>" : "";
         }
         
-        $( "#" + id + "Div" ).html( violations );
+        $container.html( violations );
     }
     else
     {
-    	// Display image "check" button
-    	
-        $( "#" + id + "Button" ).attr({ src: "../images/check.png", title: "No violations" });
+        // Display image "check" button
+        $button.attr({ src: "../images/check.png", title: "No violations" });
     }
         
-    $( "#" + id + "Div" ).hide();
+    $container.hide();
 }
