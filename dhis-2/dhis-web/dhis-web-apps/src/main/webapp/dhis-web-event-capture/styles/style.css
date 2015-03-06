@@ -934,6 +934,10 @@ input.typeahead::-ms-input-placeholder {
     cursor:pointer; 
 }
 
+.small-horizonal-spacing{
+    margin-left: 5px;    
+}
+
 @media print {
     #header, #leftBar, .not-printable {
         display: none;
