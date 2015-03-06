@@ -54,10 +54,6 @@
     <!-- Other -->
 
     <dependency>
-      <groupId>org.scijava</groupId>
-      <artifactId>jep</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
     </dependency>
