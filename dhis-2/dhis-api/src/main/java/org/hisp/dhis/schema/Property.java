@@ -201,9 +201,14 @@ public class Property implements Ordered, Klass
     private boolean manyToMany;
 
     /**
-     * Is collection one-to-many.
+     * The hibernate role of the owning side.
      */
-    private boolean oneToMany;
+    private String owningRole;
+
+    /**
+     * The hibernate role of the inverse side (if many-to-many).
+     */
+    private String inverseRole;
 
     public Property()
     {
@@ -558,14 +563,26 @@ public class Property implements Ordered, Klass
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isOneToMany()
+    public String getOwningRole()
     {
-        return oneToMany;
+        return owningRole;
     }
 
-    public void setOneToMany( boolean oneToMany )
+    public void setOwningRole( String owningRole )
     {
-        this.oneToMany = oneToMany;
+        this.owningRole = owningRole;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getInverseRole()
+    {
+        return inverseRole;
+    }
+
+    public void setInverseRole( String inverseRole )
+    {
+        this.inverseRole = inverseRole;
     }
 
     public String key()
