@@ -41,6 +41,7 @@ import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
 import org.springframework.core.Ordered;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -330,9 +331,14 @@ public class Schema implements Ordered, Klass
 
     public Method getterByRole( String role )
     {
+        if ( StringUtils.isEmpty( role ) )
+        {
+            return null;
+        }
+
         for ( Property property : propertyMap.values() )
         {
-            if ( property.isCollection() && property.isManyToMany() && (property.getOwningRole().equals( role ) || property.getInverseRole().equals( role )) )
+            if ( property.isCollection() && property.isManyToMany() && (role.equals( property.getOwningRole() ) || role.equals( property.getInverseRole() )) )
             {
                 return property.getGetterMethod();
             }
@@ -343,9 +349,14 @@ public class Schema implements Ordered, Klass
 
     public Method setterByRole( String role )
     {
+        if ( StringUtils.isEmpty( role ) )
+        {
+            return null;
+        }
+
         for ( Property property : propertyMap.values() )
         {
-            if ( property.isCollection() && property.isManyToMany() && (property.getOwningRole().equals( role ) || property.getInverseRole().equals( role )) )
+            if ( property.isCollection() && property.isManyToMany() && (role.equals( property.getOwningRole() ) || role.equals( property.getInverseRole() )) )
             {
                 return property.getSetterMethod();
             }
