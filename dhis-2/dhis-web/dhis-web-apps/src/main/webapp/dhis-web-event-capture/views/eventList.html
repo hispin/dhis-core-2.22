@@ -13,7 +13,7 @@
         </div>
         <div ng-switch-default>
             <h4>
-                {{'registered_events'| translate}}   
+                {{'registered_events'| translate}}<span class="small-horizonal-spacing" ng-if="pager.total">({{'total' | translate}}:  {{pager.total}})</span>
                 <button class="button button-std pull-right not-printable"
                         ng-show="dhis2Events.length"
                         ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid"                                        
