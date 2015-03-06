@@ -510,35 +510,21 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Service for getting tracked entity instances */
-.factory('TEIService', function($http, $q, AttributesFactory, OptionSetService, CurrentSelection, DateUtils) {
+.factory('TEIService', function($http, $q, AttributesFactory) {
     
-    return {        
-        convertFromApiToUser: function(promise, optionSets, attsById){            
-            promise.then(function(response){
+    return {
+        get: function(entityUid, optionSets, attributesById){
+            var promise = $http.get( '../api/trackedEntityInstances/' +  entityUid + '.json').then(function(response){
                 var tei = response.data;
                 angular.forEach(tei.attributes, function(att){
-                    if(attsById[att.attribute]){
-                        att.displayName = attsById[att.attribute].name;
+                    if(attributesById[att.attribute]){
+                        att.displayName = attributesById[att.attribute].name;
                     }
-                    att.value = AttributesFactory.formatAttributeValue(att, attsById, optionSets, 'USER');
-                });    
+                    att.value = AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'USER');
+                });
                 return tei;
-            });            
-            return promise;
-        },
-        convertFromUserToApi: function(_tei, optionSets, attsById){            
-            var tei = angular.copy(_tei);
-            angular.forEach(tei.attributes, function(att){                        
-                att.value = AttributesFactory.formatAttributeValue(att, attsById, optionSets, 'API');                                                                
-            });            
-            return tei;
-        },        
-        get: function(entityUid, optionSets, attributesById){            
-            var promise = $http.get(  '../api/trackedEntityInstances/' +  entityUid );
-            
-            this.convertFromApiToUser(promise, optionSets, attributesById).then(function(response){
-                return response.data; 
             });
+            
             return promise;
         },
         search: function(ouId, ouMode, queryUrl, programUrl, attributeUrl, pager, paging) {
@@ -571,8 +557,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });            
             return promise;
         },                
-        update: function(tei, optionSets, attributesById){           
-            var formattedTei = this.convertFromUserToApi(tei,optionSets, attributesById);
+        update: function(tei, optionSets, attributesById){
+            var formattedTei = angular.copy(tei);
+            angular.forEach(formattedTei.attributes, function(att){                        
+                att.value = AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'API');                                                                
+            });
             var promise = $http.put( '../api/trackedEntityInstances/' + formattedTei.trackedEntityInstance , formattedTei ).then(function(response){                    
                 return response.data;
             });
@@ -580,7 +569,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return promise;
         },
         register: function(tei, optionSets, attributesById){
-            var formattedTei = this.convertFromUserToApi(tei,optionSets, attributesById);
+            var formattedTei = angular.copy(tei);
+            angular.forEach(formattedTei.attributes, function(att){                        
+                att.value = AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'API');                                                                
+            });
+            
             var promise = $http.put( '../api/trackedEntityInstances' , formattedTei ).then(function(response){                    
                 return response.data;
             });            
