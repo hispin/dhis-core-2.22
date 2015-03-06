@@ -169,7 +169,44 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 });
             });                        
             return def.promise;            
-        }
+        },
+        getProgramsByOu: function(ou, selectedProgram){
+            var def = $q.defer();
+            
+            TCStorageService.currentStore.open().done(function(){
+                TCStorageService.currentStore.getAll('programs').done(function(prs){
+                    var programs = [];
+                    angular.forEach(prs, function(pr){                            
+                        if(pr.organisationUnits.hasOwnProperty(ou.id)){                                
+                            programs.push(pr);
+                        }
+                    });
+                    if(programs.length === 0){
+                        selectedProgram = null;
+                    }
+                    else{
+                        if(selectedProgram){
+                            angular.forEach(programs, function(pr){                            
+                                if(pr.id === selectedProgram.id){                                
+                                    selectedProgram = pr;
+                                }
+                            });
+                        }
+                        else{                        
+                            if(programs.length === 1){
+                                selectedProgram = programs[0];
+                            }                        
+                        }
+                    }
+                    
+                    $rootScope.$apply(function(){
+                        def.resolve({programs: programs, selectedProgram: selectedProgram});
+                    });                      
+                });
+            });
+            
+            return def.promise;
+        }          
     };
 })
 

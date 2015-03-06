@@ -30,30 +30,9 @@ trackerCapture.controller('ProgramStatisticsController',
     $scope.loadPrograms = function(orgUnit) {        
         $scope.selectedOrgUnit = orgUnit;        
         if (angular.isObject($scope.selectedOrgUnit)){
-            ProgramFactory.getAll().then(function(programs){
-                $scope.programs = [];
-                angular.forEach(programs, function(program){                            
-                    if(program.organisationUnits.hasOwnProperty($scope.selectedOrgUnit.id)){                                
-                        $scope.programs.push(program);
-                    }
-                });
-                if($scope.programs.length === 0){
-                    $scope.selectedProgram = null;
-                }
-                else{
-                    if($scope.selectedProgram){
-                        angular.forEach($scope.programs, function(program){                            
-                            if(program.id === $scope.selectedProgram.id){                                
-                                $scope.selectedProgram = program;
-                            }
-                        });
-                    }
-                    else{                        
-                        if($scope.programs.length === 1){
-                            $scope.selectedProgram = $scope.programs[0];
-                        }                        
-                    }
-                }
+            ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
+                $scope.programs = response.programs;
+                $scope.selectedProgram = response.selectedProgram;
             });
         }        
     };    
