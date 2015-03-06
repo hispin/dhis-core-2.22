@@ -193,8 +193,7 @@ public class DefaultProgramExpressionService
             }
 
             matcher.appendReplacement( description,
-                "[" + key + ProgramExpression.SEPARATOR_OBJECT
-                    + programStage.getDisplayName() + SEPARATOR_ID + name + "]" );
+                "[" + key + ProgramExpression.SEPARATOR_OBJECT + programStage.getDisplayName() + SEPARATOR_ID + name + "]" );
         }
 
         StringBuffer tail = new StringBuffer();
@@ -230,5 +229,4 @@ public class DefaultProgramExpressionService
 
         return dataElements;
     }
-    
 }

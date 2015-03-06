@@ -483,10 +483,6 @@ public class DefaultProgramDataEntryService
                     }
                 }
 
-                // -----------------------------------------------------------
-                //
-                // -----------------------------------------------------------
-
                 inputHTML = inputHTML.replace( "$DATAELEMENTID", String.valueOf( dataElementUid ) );
                 inputHTML = inputHTML.replace( "$VALUE", dataElementValue );
                 inputHTML = inputHTML.replace( "$PROGRAMSTAGEID", String.valueOf( programStageUid ) );

@@ -99,6 +99,5 @@ public class ProgramDataEntryFormDeletionHandler
                 dataEntryFormService.deleteDataEntryForm( dataEntryForm );
             }
         }
-
     }
 }
