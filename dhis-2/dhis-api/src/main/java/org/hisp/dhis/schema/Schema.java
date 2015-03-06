@@ -42,6 +42,7 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
 import org.springframework.core.Ordered;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
@@ -325,6 +326,32 @@ public class Schema implements Ordered, Klass
     public boolean haveProperty( String propertyName )
     {
         return getPropertyMap().containsKey( propertyName );
+    }
+
+    public Method getterByRole( String role )
+    {
+        for ( Property property : propertyMap.values() )
+        {
+            if ( property.isCollection() && property.isManyToMany() && (property.getOwningRole().equals( role ) || property.getInverseRole().equals( role )) )
+            {
+                return property.getGetterMethod();
+            }
+        }
+
+        return null;
+    }
+
+    public Method setterByRole( String role )
+    {
+        for ( Property property : propertyMap.values() )
+        {
+            if ( property.isCollection() && property.isManyToMany() && (property.getOwningRole().equals( role ) || property.getInverseRole().equals( role )) )
+            {
+                return property.getSetterMethod();
+            }
+        }
+
+        return null;
     }
 
     @JsonIgnore
