@@ -29,10 +29,6 @@
     <!-- Other -->
     
     <dependency>
-      <groupId>org.scijava</groupId>
-      <artifactId>jep</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
     </dependency>
