@@ -140,6 +140,7 @@ public abstract class AbstractPropertyIntrospectorService
 
         LocalSessionFactoryBean sessionFactoryBean = getLocalSessionFactoryBean();
         PersistentClass persistentClass = sessionFactoryBean.getConfiguration().getClassMapping( klass.getName() );
+        SessionFactoryImplementor sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
 
         Iterator<?> propertyIterator = persistentClass.getPropertyClosureIterator();
 
@@ -164,14 +165,22 @@ public abstract class AbstractPropertyIntrospectorService
 
             if ( property.isCollection() )
             {
+
                 CollectionType collectionType = (CollectionType) type;
-
                 Collection collection = sessionFactoryBean.getConfiguration().getCollectionMapping( collectionType.getRole() );
-                property.setOwner( !collection.isInverse() );
+                CollectionPersister persister = sessionFactoryImplementor.getCollectionPersister( collection.getRole() );
 
-                CollectionPersister collectionPersister = ((SessionFactoryImplementor) sessionFactory).getCollectionPersister( collection.getRole() );
-                property.setOneToMany( collectionPersister.isOneToMany() );
-                property.setManyToMany( collectionPersister.isManyToMany() );
+                property.setOwner( !collection.isInverse() );
+                property.setManyToMany( persister.isManyToMany() );
+
+                if ( property.isOwner() )
+                {
+                    property.setOwningRole( collectionType.getRole() );
+                }
+                else
+                {
+                    property.setInverseRole( collectionType.getRole() );
+                }
             }
 
             if ( SingleColumnType.class.isInstance( type ) )
