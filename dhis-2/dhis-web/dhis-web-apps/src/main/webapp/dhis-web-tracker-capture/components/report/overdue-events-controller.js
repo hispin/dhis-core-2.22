@@ -12,7 +12,6 @@ trackerCapture.controller('OverdueEventsController',
                 ProgramFactory,
                 CurrentSelection,
                 OptionSetService,
-                TEIService,
                 storage) {    
     $scope.today = DateUtils.getToday();
     
@@ -134,37 +133,10 @@ trackerCapture.controller('OverdueEventsController',
                 }
                     
                 angular.forEach(data.eventRows, function(row){
-                    var overdueEvent = {};
-                    TEIService.reconstructForUser(row.attributes, attributes, $scope.attributesById, $scope.optionSets)
+                    var overdueEvent = {};                    
                     angular.forEach(row.attributes, function(att){
-                        
-                        /*if(att.type === 'trueOnly'){
-                            if(att.value === 'true'){
-                                att.value = true;
-                            }
-                            else{
-                                att.value = '';
-                            }
-                        }
-                        else{
-                            var val = att.value;
-                            if(val){
-                                if(att.type === 'date'){
-                                    val = DateUtils.formatFromApiToUser(val);
-                                }
-                                if(att.type === 'optionSet' && 
-                                        attsById[att.attribute] && 
-                                        attsById[att.attribute].optionSet && 
-                                        attsById[att.attribute].optionSet.id && 
-                                        optionSets[attsById[att.attribute].optionSet.id]){   
-                                    val = OptionSetService.getName(optionSets[attsById[att.attribute].optionSet.id].options, val);                                
-                                }
-                                att.value = val;
-                            }
-                        }*/
-                        
-                        overdueEvent[att.attribute] = val;
-                        
+                        var val = AttributesFactory.formatAttributeValue(att, $scope.attributesById, $scope.optionSets, 'USER');                        
+                        overdueEvent[att.attribute] = val;                        
                     });
                     
                     overdueEvent.dueDate = DateUtils.formatFromApiToUser(row.dueDate);

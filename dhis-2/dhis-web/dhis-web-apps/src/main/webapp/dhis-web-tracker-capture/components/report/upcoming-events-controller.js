@@ -40,7 +40,6 @@ trackerCapture.controller('UpcomingEventsController',
         });
 
         CurrentSelection.setAttributesById($scope.attributesById);
-        $scope.broadCastSelections();
     });
     
     //load programs associated with the selected org unit.
@@ -119,7 +118,8 @@ trackerCapture.controller('UpcomingEventsController',
             angular.forEach(data.eventRows, function(row){
                 var upcomingEvent = {};
                 angular.forEach(row.attributes, function(att){
-                    upcomingEvent[att.attribute] = att.value;
+                    var val = AttributesFactory.formatAttributeValue(att, $scope.attributesById, $scope.optionSets, 'USER');
+                    upcomingEvent[att.attribute] = val;                        
                 });
                     
                 upcomingEvent.dueDate = DateUtils.formatFromApiToUser(row.dueDate);
