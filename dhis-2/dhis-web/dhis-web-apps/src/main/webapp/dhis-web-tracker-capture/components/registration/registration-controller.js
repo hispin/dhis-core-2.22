@@ -19,16 +19,21 @@ trackerCapture.controller('RegistrationController',
     
     $scope.today = DateUtils.getToday();
     $scope.trackedEntityForm = null;
-    $scope.customForm = null;
-    $scope.optionSets = CurrentSelection.getOptionSets();
-    $scope.attributesById = [];
-    $scope.selectedTei = {};
-    AttributesFactory.getAll().then(function(atts){
-        angular.forEach(atts, function(att){
-            $scope.attributesById[att.id] = att;
-        });
-    });
+    $scope.customForm = null;    
+    $scope.selectedTei = {};    
+    
+    $scope.attributesById = CurrentSelection.getAttributesById();
+    if(!$scope.attributesById){
+        AttributesFactory.getAll().then(function(atts){
+            angular.forEach(atts, function(att){
+                $scope.attributesById[att.id] = att;
+            });
             
+            CurrentSelection.setAttributesById($scope.attributesById);
+        });
+    }    
+    
+    $scope.optionSets = CurrentSelection.getOptionSets();        
     if(!$scope.optionSets){
         $scope.optionSets = [];
         OptionSetService.getAll().then(function(optionSets){
@@ -102,7 +107,7 @@ trackerCapture.controller('RegistrationController',
         }
         
         var teiId = '';
-        TEIService.register($scope.tei, $scope.optionSets).then(function(response){
+        TEIService.register($scope.tei, $scope.optionSets, $scope.attributesById).then(function(response){
             
             if(response.status === 'SUCCESS'){
                 
