@@ -93,36 +93,6 @@ $(document).bind('dhis2.offline', function()
     }
 });
 
-$(".select-dropdown-button").on('click', function(e) {
-    $("#selectDropDown").width($("#selectDropDownParent").width());
-    e.stopPropagation();
-    $("#selectDropDown").dropdown('toggle');
-});  
-
-$(".select-dropdown-caret").on('click', function(e) {
-    $("#selectDropDown").width($("#selectDropDownParent").width());
-    e.stopPropagation();
-    $("#selectDropDown").dropdown('toggle');
-}); 
-
-$(".search-dropdown-button").on('click', function() {
-    $("#searchDropDown").width($("#searchDropDownParent").width());
-}); 
-
-$('#searchDropDown').on('click', "[data-stop-propagation]", function(e) {
-    e.stopPropagation();
-});
-
-//stop date picker's event bubling
-$(document).on('click.dropdown touchstart.dropdown.data-api', '#ui-datepicker-div', function (e) { 
-    e.stopPropagation(); 
-});
-
-$(window).resize(function() {
-    $("#selectDropDown").width($("#selectDropDownParent").width());
-    $("#searchDropDown").width($("#searchDropDownParent").width());
-});
-
 function ajax_login()
 {
     $('#login_button').bind('click', function()
