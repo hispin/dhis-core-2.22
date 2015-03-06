@@ -10,6 +10,7 @@ trackerCapture.controller('UpcomingEventsController',
                 TEIGridService,
                 AttributesFactory,
                 ProgramFactory,
+                CurrentSelection,
                 storage) {
     $scope.today = DateUtils.getToday();
     
@@ -30,6 +31,18 @@ trackerCapture.controller('UpcomingEventsController',
         }
     });
     
+    
+    AttributesFactory.getAll().then(function(atts){
+        $scope.attributes = [];  
+        $scope.attributesById = [];
+        angular.forEach(atts, function(att){
+            $scope.attributesById[att.id] = att;
+        });
+
+        CurrentSelection.setAttributesById($scope.attributesById);
+        $scope.broadCastSelections();
+    });
+    
     //load programs associated with the selected org unit.
     $scope.loadPrograms = function(orgUnit) {        
         $scope.selectedOrgUnit = orgUnit;        
@@ -41,19 +54,21 @@ trackerCapture.controller('UpcomingEventsController',
                         $scope.programs.push(program);
                     }
                 });
-                if($scope.programs.length === 1){
-                    $scope.selectedProgram = $scope.programs[0];
+                if($scope.programs.length === 0){
+                    $scope.selectedProgram = null;
                 }
                 else{
-                    var continueLoop = true;
-                    for(var i=0; i<programs.length && continueLoop; i++){
-                        if(programs[i].id === $scope.selectedProgram.id){
-                            $scope.selectedProgram = programs[i];
-                            continueLoop = false;
-                        }
+                    if($scope.selectedProgram){
+                        angular.forEach($scope.programs, function(program){                            
+                            if(program.id === $scope.selectedProgram.id){                                
+                                $scope.selectedProgram = program;
+                            }
+                        });
                     }
-                    if(continueLoop){
-                        $scope.selectedProgram = null;
+                    else{                        
+                        if($scope.programs.length === 1){
+                            $scope.selectedProgram = $scope.programs[0];
+                        }                        
                     }
                 }
             });
@@ -111,6 +126,7 @@ trackerCapture.controller('UpcomingEventsController',
                 upcomingEvent.event = row.event;
                 upcomingEvent.eventName = $scope.programStages[row.programStage].name;
                 upcomingEvent.eventOrgUnitName = row.eventOrgUnitName;
+                upcomingEvent.orgUnitName = row.eventOrgUnitName;
                 upcomingEvent.followup = row.followup;
                 upcomingEvent.program = row.program;
                 upcomingEvent.programStage = row.programStage;

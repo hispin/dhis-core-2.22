@@ -17,7 +17,9 @@ trackerCapture.controller('EnrollmentController',
                 DialogService) {
     
     $scope.today = DateUtils.getToday();
-    $scope.selectedOrgUnit = storage.get('SELECTED_OU');  
+    $scope.selectedOrgUnit = storage.get('SELECTED_OU');
+    
+    
     
     //listen for the selected items
     var selections = {};
@@ -43,6 +45,7 @@ trackerCapture.controller('EnrollmentController',
         $scope.programExists = args.programExists;
         $scope.programNames = selections.prNames;
         $scope.programStageNames = selections.prStNames;
+        $scope.attributesById = CurrentSelection.getAttributesById();
         
         if($scope.selectedProgram){
             
@@ -171,7 +174,7 @@ trackerCapture.controller('EnrollmentController',
                             dateOfIncident: $scope.selectedEnrollment.dateOfIncident ? $scope.selectedEnrollment.dateOfIncident : $scope.selectedEnrollment.dateOfEnrollment
                         };
                         
-        TEIService.update(tei, $scope.optionSets).then(function(updateResponse){            
+        TEIService.update(tei, $scope.optionSets, $scope.attributesById).then(function(updateResponse){            
             
             if(updateResponse.status === 'SUCCESS'){
                 //registration is successful, continue for enrollment               
@@ -220,7 +223,6 @@ trackerCapture.controller('EnrollmentController',
     };    
     
     var getProcessedForm = function(){        
-        $scope.attributesById = CurrentSelection.getAttributesById();
         var tei = angular.copy(selections.tei);
         tei.attributes = [];
         var formEmpty = true;
