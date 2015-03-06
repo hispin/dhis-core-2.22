@@ -123,6 +123,9 @@ public class Jackson2PropertyIntrospectorService
                 property.setCollection( hibernateProperty.isCollection() );
                 property.setCascade( hibernateProperty.getCascade() );
                 property.setOwner( hibernateProperty.isOwner() );
+                property.setManyToMany( hibernateProperty.isManyToMany() );
+                property.setOwningRole( hibernateProperty.getOwningRole() );
+                property.setInverseRole( hibernateProperty.getInverseRole() );
 
                 property.setGetterMethod( hibernateProperty.getGetterMethod() );
                 property.setSetterMethod( hibernateProperty.getSetterMethod() );
