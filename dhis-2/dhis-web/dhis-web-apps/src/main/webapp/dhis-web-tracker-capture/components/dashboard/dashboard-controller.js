@@ -142,7 +142,7 @@ trackerCapture.controller('DashboardController',
             
                 //Fetch the selected entity
                 TEIService.get($scope.selectedTeiId, $scope.optionSets, $scope.attributesById).then(function(response){
-                    $scope.selectedTei = response.data;
+                    $scope.selectedTei = response;
 
                     //get the entity type
                     TEService.get($scope.selectedTei.trackedEntity).then(function(te){                    
