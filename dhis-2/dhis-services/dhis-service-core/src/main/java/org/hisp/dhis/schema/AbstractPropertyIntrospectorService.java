@@ -221,7 +221,6 @@ public abstract class AbstractPropertyIntrospectorService
 
             if ( property.isCollection() )
             {
-
                 CollectionType collectionType = (CollectionType) type;
                 Collection collection = sessionFactoryBean.getConfiguration().getCollectionMapping( collectionType.getRole() );
                 CollectionPersister collectionPersister = sessionFactoryImplementor.getCollectionPersister( collection.getRole() );
