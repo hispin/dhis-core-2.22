@@ -10,6 +10,9 @@ trackerCapture.controller('OverdueEventsController',
                 TEIGridService,
                 AttributesFactory,
                 ProgramFactory,
+                CurrentSelection,
+                OptionSetService,
+                TEIService,
                 storage) {    
     $scope.today = DateUtils.getToday();
     
@@ -18,6 +21,32 @@ trackerCapture.controller('OverdueEventsController',
     $scope.displayMode = {};
     $scope.printMode = false;
     
+    //get optionsets
+    $scope.optionSets = CurrentSelection.getOptionSets();
+    if(!$scope.optionSets){
+        $scope.optionSets = [];
+        OptionSetService.getAll().then(function(optionSets){
+            angular.forEach(optionSets, function(optionSet){                        
+                $scope.optionSets[optionSet.id] = optionSet;
+            });
+
+            CurrentSelection.setOptionSets($scope.optionSets);
+        });
+    }
+    
+    //get attributes
+    $scope.attributesById = CurrentSelection.getAttributesById();
+    if(!$scope.attributesById){
+        AttributesFactory.getAll().then(function(atts){
+            $scope.attributes = [];  
+            $scope.attributesById = [];
+            angular.forEach(atts, function(att){
+                $scope.attributesById[att.id] = att;
+            });
+            CurrentSelection.setAttributesById($scope.attributesById);
+        });
+    }    
+
     //Paging
     $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};   
     
@@ -43,19 +72,21 @@ trackerCapture.controller('OverdueEventsController',
                         $scope.programs.push(program);
                     }
                 });
-                if($scope.programs.length === 1){
-                    $scope.selectedProgram = $scope.programs[0];
+                if($scope.programs.length === 0){
+                    $scope.selectedProgram = null;
                 }
                 else{
-                    var continueLoop = true;
-                    for(var i=0; i<programs.length && continueLoop; i++){
-                        if(programs[i].id === $scope.selectedProgram.id){
-                            $scope.selectedProgram = programs[i];
-                            continueLoop = false;
-                        }
+                    if($scope.selectedProgram){
+                        angular.forEach($scope.programs, function(program){                            
+                            if(program.id === $scope.selectedProgram.id){                                
+                                $scope.selectedProgram = program;
+                            }
+                        });
                     }
-                    if(continueLoop){
-                        $scope.selectedProgram = null;
+                    else{                        
+                        if($scope.programs.length === 1){
+                            $scope.selectedProgram = $scope.programs[0];
+                        }                        
                     }
                 }
             });
@@ -104,19 +135,46 @@ trackerCapture.controller('OverdueEventsController',
                     
                 angular.forEach(data.eventRows, function(row){
                     var overdueEvent = {};
+                    TEIService.reconstructForUser(row.attributes, attributes, $scope.attributesById, $scope.optionSets)
                     angular.forEach(row.attributes, function(att){
-                        overdueEvent[att.attribute] = att.value;
+                        
+                        /*if(att.type === 'trueOnly'){
+                            if(att.value === 'true'){
+                                att.value = true;
+                            }
+                            else{
+                                att.value = '';
+                            }
+                        }
+                        else{
+                            var val = att.value;
+                            if(val){
+                                if(att.type === 'date'){
+                                    val = DateUtils.formatFromApiToUser(val);
+                                }
+                                if(att.type === 'optionSet' && 
+                                        attsById[att.attribute] && 
+                                        attsById[att.attribute].optionSet && 
+                                        attsById[att.attribute].optionSet.id && 
+                                        optionSets[attsById[att.attribute].optionSet.id]){   
+                                    val = OptionSetService.getName(optionSets[attsById[att.attribute].optionSet.id].options, val);                                
+                                }
+                                att.value = val;
+                            }
+                        }*/
+                        
+                        overdueEvent[att.attribute] = val;
+                        
                     });
                     
                     overdueEvent.dueDate = DateUtils.formatFromApiToUser(row.dueDate);
                     overdueEvent.event = row.event;
                     overdueEvent.eventName = $scope.programStages[row.programStage].name;
-                    overdueEvent.orgUnitName = row.orgUnitName;                    
+                    overdueEvent.orgUnitName = row.eventOrgUnitName;                    
                     overdueEvent.followup = row.followup;
                     overdueEvent.program = row.program;
                     overdueEvent.programStage = row.programStage;
                     overdueEvent.trackedEntityInstance = row.trackedEntityInstance;
-                    overdueEvent.orgUnitName = row.registrationOrgUnit;
                     overdueEvent.created = DateUtils.formatFromApiToUser(row.registrationDate);;
                     $scope.overdueEvents.push(overdueEvent);
                     

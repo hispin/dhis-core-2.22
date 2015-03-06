@@ -3,8 +3,7 @@ trackerCapture.controller('RelationshipController',
                 $rootScope,
                 $modal,                
                 $location,
-                DateUtils,
-                OptionSetService,
+                AttributesFactory,
                 CurrentSelection,
                 RelationshipFactory) {
     $rootScope.showAddRelationshipDiv = false;    
@@ -110,25 +109,8 @@ trackerCapture.controller('RelationshipController',
         var attributes = {};
         
         if(tei && tei.relative && tei.relative.attributes && !tei.relative.processed){
-            angular.forEach(tei.relative.attributes, function(att){
-                var val = att.value;
-                if(att.type === 'trueOnly'){
-                    val = val === 'true' ? true : '';
-                }
-                else{
-                    if(val){
-                        if(att.type === 'date'){
-                            val = DateUtils.formatFromApiToUser(val);
-                        }
-                        if(att.type === 'optionSet' && 
-                                $scope.attributesById[att.attribute] && 
-                                $scope.attributesById[att.attribute].optionSet && 
-                                $scope.attributesById[att.attribute].optionSet.id && 
-                                $scope.optionSets[$scope.attributesById[att.attribute].optionSet.id]){   
-                            val = OptionSetService.getName($scope.optionSets[$scope.attributesById[att.attribute].optionSet.id].options, val);                                
-                        }
-                    }
-                }                
+            angular.forEach(tei.relative.attributes, function(att){                
+                var val = AttributesFactory.formatAttributeValue(att,$scope.attributesById, $scope.optionSets, 'USER');                
                 attributes[att.attribute] = val;
             });
         }
@@ -438,7 +420,7 @@ trackerCapture.controller('RelationshipController',
             });
             tei.relationships.push(relationship);
             
-            TEIService.update(tei, $scope.optionSets).then(function(response){
+            TEIService.update(tei, $scope.optionSets, $scope.attributesById).then(function(response){
                 if(response.status !== 'SUCCESS'){//update has failed
                     var dialogOptions = {
                             headerText: 'relationship_error',

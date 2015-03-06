@@ -7,6 +7,8 @@ trackerCapture.controller('ProgramSummaryController',
                 TEIGridService,
                 AttributesFactory,
                 ProgramFactory,
+                CurrentSelection,
+                OptionSetService,
                 DHIS2EventFactory,
                 storage) {    
     $scope.today = DateUtils.getToday();
@@ -14,6 +16,18 @@ trackerCapture.controller('ProgramSummaryController',
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
     $scope.selectedOuMode = $scope.ouModes[0];
     $scope.report = {};
+    
+    $scope.optionSets = CurrentSelection.getOptionSets();
+    if(!$scope.optionSets){
+        $scope.optionSets = [];
+        OptionSetService.getAll().then(function(optionSets){
+            angular.forEach(optionSets, function(optionSet){                        
+                $scope.optionSets[optionSet.id] = optionSet;
+            });
+
+            CurrentSelection.setOptionSets($scope.optionSets);
+        });
+    }
     
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {      
@@ -35,19 +49,21 @@ trackerCapture.controller('ProgramSummaryController',
                         $scope.programs.push(program);
                     }
                 });
-                if($scope.programs.length === 1){
-                    $scope.selectedProgram = $scope.programs[0];
+                if($scope.programs.length === 0){
+                    $scope.selectedProgram = null;
                 }
                 else{
-                    var continueLoop = true;
-                    for(var i=0; i<programs.length && continueLoop; i++){
-                        if(programs[i].id === $scope.selectedProgram.id){
-                            $scope.selectedProgram = programs[i];
-                            continueLoop = false;
-                        }
+                    if($scope.selectedProgram){
+                        angular.forEach($scope.programs, function(program){                            
+                            if(program.id === $scope.selectedProgram.id){                                
+                                $scope.selectedProgram = program;
+                            }
+                        });
                     }
-                    if(continueLoop){
-                        $scope.selectedProgram = null;
+                    else{                        
+                        if($scope.programs.length === 1){
+                            $scope.selectedProgram = $scope.programs[0];
+                        }                        
                     }
                 }
             });
@@ -96,7 +112,7 @@ trackerCapture.controller('ProgramSummaryController',
                             false).then(function(data){                     
             
             //process tei grid
-            var teis = TEIGridService.format(data,true, null);     
+            var teis = TEIGridService.format(data,true, $scope.optionSets);     
             $scope.teiList = [];
 
             DHIS2EventFactory.getByOrgUnitAndProgram($scope.selectedOrgUnit.id, 

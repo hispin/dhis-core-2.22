@@ -37,19 +37,21 @@ trackerCapture.controller('ProgramStatisticsController',
                         $scope.programs.push(program);
                     }
                 });
-                if($scope.programs.length === 1){
-                    $scope.selectedProgram = $scope.programs[0];
+                if($scope.programs.length === 0){
+                    $scope.selectedProgram = null;
                 }
                 else{
-                    var continueLoop = true;
-                    for(var i=0; i<programs.length && continueLoop; i++){
-                        if(programs[i].id === $scope.selectedProgram.id){
-                            $scope.selectedProgram = programs[i];
-                            continueLoop = false;
-                        }
+                    if($scope.selectedProgram){
+                        angular.forEach($scope.programs, function(program){                            
+                            if(program.id === $scope.selectedProgram.id){                                
+                                $scope.selectedProgram = program;
+                            }
+                        });
                     }
-                    if(continueLoop){
-                        $scope.selectedProgram = null;
+                    else{                        
+                        if($scope.programs.length === 1){
+                            $scope.selectedProgram = $scope.programs[0];
+                        }                        
                     }
                 }
             });

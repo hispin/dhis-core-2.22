@@ -13,7 +13,7 @@ trackerCapture.controller('ProfileController',
     
     //listen for the selected entity
     var selections = {};
-    $scope.$on('dashboardWidgets', function(event, args) {
+    $scope.$on('dashboardWidgets', function(event, args) {        
         selections = CurrentSelection.get();
         $scope.selectedTei = angular.copy(selections.tei);
         $scope.trackedEntity = selections.te;
@@ -82,7 +82,7 @@ trackerCapture.controller('ProfileController',
             return false;
         }
                 
-        TEIService.update(tei, $scope.optionSets).then(function(updateResponse){
+        TEIService.update(tei, $scope.optionSets, $scope.attributesById).then(function(updateResponse){
             
             if(updateResponse.status !== 'SUCCESS'){//update has failed
                 var dialogOptions = {
