@@ -294,50 +294,51 @@ trackerCapture.controller('DataEntryController',
         //input is valid        
         var value = $scope.currentEvent[prStDe.dataElement.id];
         
-        if(!angular.isUndefined(value)){
-            if(prStDe.dataElement.type === 'date'){                    
-                value = DateUtils.formatFromUserToApi(value);
-            }
-            if(prStDe.dataElement.type === 'string'){                    
-                if(prStDe.dataElement.optionSet && $scope.optionSets[prStDe.dataElement.optionSet.id] &&  $scope.optionSets[prStDe.dataElement.optionSet.id].options ) {
-                    value = OptionSetService.getCode($scope.optionSets[prStDe.dataElement.optionSet.id].options, value);
-                }                    
+        if($scope.currentEventOriginal[prStDe.dataElement.id] !== value){
+            
+            if(value){
+                if(prStDe.dataElement.type === 'date'){                    
+                    value = DateUtils.formatFromUserToApi(value);
+                }
+                if(prStDe.dataElement.type === 'string'){                    
+                    if(prStDe.dataElement.optionSet && $scope.optionSets[prStDe.dataElement.optionSet.id] &&  $scope.optionSets[prStDe.dataElement.optionSet.id].options ) {
+                        value = OptionSetService.getCode($scope.optionSets[prStDe.dataElement.optionSet.id].options, value);
+                    }                    
+                }
             }
 
-            if($scope.currentEventOriginal[prStDe.dataElement.id] !== value){
+            $scope.updateSuccess = false;
 
-                $scope.updateSuccess = false;
-        
-                $scope.currentElement = {id: prStDe.dataElement.id, saved: false};
-        
-                var ev = {  event: $scope.currentEvent.event,
-                            orgUnit: $scope.currentEvent.orgUnit,
-                            program: $scope.currentEvent.program,
-                            programStage: $scope.currentEvent.programStage,
-                            status: $scope.currentEvent.status,
-                            trackedEntityInstance: $scope.currentEvent.trackedEntityInstance,
-                            dataValues: [
-                                            {
-                                                dataElement: prStDe.dataElement.id, 
-                                                value: value, 
-                                                providedElsewhere: $scope.currentEvent.providedElsewhere[prStDe.dataElement.id] ? true : false
-                                            }
-                                        ]
-                         };
-                DHIS2EventFactory.updateForSingleValue(ev).then(function(response){
-                    var index = -1;
-                    for(var i=0; i<$scope.eventsByStage[$scope.currentEvent.programStage].length && index === -1; i++){
-                        if($scope.eventsByStage[$scope.currentEvent.programStage][i].event === $scope.currentEvent.event){
-                            index = i;
-                        }
+            $scope.currentElement = {id: prStDe.dataElement.id, saved: false};
+
+            var ev = {  event: $scope.currentEvent.event,
+                        orgUnit: $scope.currentEvent.orgUnit,
+                        program: $scope.currentEvent.program,
+                        programStage: $scope.currentEvent.programStage,
+                        status: $scope.currentEvent.status,
+                        trackedEntityInstance: $scope.currentEvent.trackedEntityInstance,
+                        dataValues: [
+                                        {
+                                            dataElement: prStDe.dataElement.id, 
+                                            value: value, 
+                                            providedElsewhere: $scope.currentEvent.providedElsewhere[prStDe.dataElement.id] ? true : false
+                                        }
+                                    ]
+                     };
+            DHIS2EventFactory.updateForSingleValue(ev).then(function(response){
+                var index = -1;
+                for(var i=0; i<$scope.eventsByStage[$scope.currentEvent.programStage].length && index === -1; i++){
+                    if($scope.eventsByStage[$scope.currentEvent.programStage][i].event === $scope.currentEvent.event){
+                        index = i;
                     }
-                    if(index !== -1){
-                        $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1,$scope.currentEvent);
-                    }
-                    $scope.currentElement.saved = true;
-                    $scope.currentEventOriginal = angular.copy($scope.currentEvent);
-                });
-            }
+                }
+                if(index !== -1){
+                    $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1,$scope.currentEvent);
+                }
+                $scope.currentElement.saved = true;
+                $scope.currentEventOriginal = angular.copy($scope.currentEvent);
+            });
+            
         }
     };
     

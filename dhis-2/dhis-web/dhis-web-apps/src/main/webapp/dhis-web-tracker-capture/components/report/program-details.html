@@ -60,19 +60,16 @@
 
             <h2 class='col-sm-12'>{{'visits'| translate}}</h2>
             <div class='vertical-spacing' ng-repeat="dhis2Event in selectedReport.enrollments[enrollment.enrollment]| orderBy:'sortingDate':reverse">
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <span class="bold">{{'name'| translate}}:</span>    {{dhis2Event.name}}                
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <span class="bold">{{'org_unit'| translate}}:</span> {{dhis2Event.orgUnitName}}                
                 </div>
-                <div class="col-sm-2">
-                    <span class="bold">{{dhis2Event.eventDate ? 'event_date' : 'due_date'| translate}}:</span>    {{dhis2Event.dueDate}}
+                <div class="col-sm-3">
+                    <span class="bold">{{dhis2Event.eventDate ? 'event_date' : 'due_date'| translate}}:</span>    {{dhis2Event.eventDate ? dhis2Event.eventDate : dhis2Event.dueDate}}
                 </div>
-                <div class="col-sm-2">
-                    <span class="bold">{{'visit'| translate}} {{'_date'| translate}}:</span>    {{dhis2Event.eventDate ? dhis2Event.eventDate : 'no_visit_made'| translate}}
-                </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <span class="bold">{{'status'| translate}}:</span>  {{dhis2Event.status}}
                 </div>
                 <div class='row vertical-spacing'></div>

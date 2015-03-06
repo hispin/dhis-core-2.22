@@ -119,7 +119,6 @@ trackerCapture.controller('DashboardController',
         });        
     };    
     
-    
     var setWidgetsSize = function(){        
         
         $scope.widgetSize = {smaller: "col-sm-6 col-md-4", bigger: "col-sm-6 col-md-8"};
@@ -173,14 +172,14 @@ trackerCapture.controller('DashboardController',
                                 });
                                 if(program.organisationUnits.hasOwnProperty($scope.selectedOrgUnit.id) &&
                                    program.trackedEntity.id === $scope.selectedTei.trackedEntity){
-                                    $scope.programs.push(program);                                    
-                                }
-
-                                if($scope.selectedProgramId && program.id === $scope.selectedProgramId || selectedEnrollment && selectedEnrollment.program === program.id){
-                                    $scope.selectedProgram = program;
-                                }
+                                    $scope.programs.push(program);
+                                    
+                                    if($scope.selectedProgramId && program.id === $scope.selectedProgramId || selectedEnrollment && selectedEnrollment.program === program.id){
+                                        $scope.selectedProgram = program;
+                                    }
+                                }                                
                             });
-                            
+
                             //prepare selected items for broadcast
                             CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: enrollments, selectedEnrollment: selectedEnrollment, optionSets: $scope.optionSets});                            
                             getDashboardLayout();                    
