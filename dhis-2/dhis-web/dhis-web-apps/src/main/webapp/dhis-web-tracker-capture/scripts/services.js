@@ -612,34 +612,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }
             }       
             return def.promise;
-        },
-        reconstructForWebApi: function(attributes, attributesById, optionSets){            
-            var registrationAttributes = [];
-            var formEmpty = true;
-            angular.forEach(attributes, function(att){
-                var val = AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'API');
-                registrationAttributes.push({attribute: att.id, value: val});
-                if(val){
-                    formEmpty = false;
-                }                                     
-            });
-            return {attributes: registrationAttributes, formEmpty: formEmpty};
-        },
-        reconstructForUser: function(tei, attributes, attributesById, optionSets){
-            var registrationAttributes = [];
-            var formEmpty = true;
-            angular.forEach(attributes, function(att){
-                var _att = att;
-                _att.value = tei[att.id];
-                
-                var val = AttributesFactory.formatAttributeValue(_att, attributesById, optionSets, 'USER');
-                registrationAttributes.push({attribute: att.id, value: val});
-                if(val){
-                    formEmpty = false;
-                }                    
-            });
-            return {attributes: registrationAttributes, formEmpty: formEmpty};
-        }        
+        }
     };
 })
 
