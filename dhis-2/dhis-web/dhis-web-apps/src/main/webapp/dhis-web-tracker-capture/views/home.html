@@ -61,13 +61,10 @@
         <div class="row top-bar">        
             <div class="col-sm-12">            
                 <span ng-if='searchState'>
-                    {{selectedProgram.trackedEntity.name}} {{'search'| translate}}
+                    {{selectedProgram.trackedEntity.name}} {{'search'| translate}}<span class="small-horizonal-spacing" ng-if="pager.total">({{'total' | translate}}:  {{pager.total}})</span>
                 </span>
                 <span ng-if='showRegistrationDiv'>
                     {{selectedProgram.trackedEntity.name}} {{'register'| translate}}
-                </span>        
-                <span ng-if='showReportDiv'>
-                    {{selectedProgram.name}} {{'report'| translate}}
                 </span>
                 <div class="pull-right not-printable">
                     <div class="btn-group" dropdown is-open="status.isopen">
@@ -118,10 +115,10 @@
             
             <!-- simple/advanced search begins -->
             <div id="searchDropDownParent" class="input-group col-md-4 not-printable">
-                <input type="text" placeholder="{{'type_your_search_criteria_here'| translate}}" ng-model="searchText" class="form-control expanded" d2-enter="search(searchMode.freeText)" ng-class="{true: 'invalid-input'} [!searchText && emptySearchText]" ng-focus="showHideSearch()" ng-disabled="showRegistrationDiv || showReportDiv">
+                <input type="text" placeholder="{{'type_your_search_criteria_here'| translate}}" ng-model="searchText" class="form-control expanded" d2-enter="search(searchMode.freeText)" ng-class="{true: 'invalid-input'} [!searchText && emptySearchText]" ng-focus="showHideSearch()" ng-disabled="showRegistrationDiv">
                 <div class="input-group-btn">
-                    <button class="btn btn-default search-dropdown-button trim" type="button" title="{{'advanced_search'| translate}}" data-toggle="dropdown" ng-click="showHideSearch()" ng-disabled="showRegistrationDiv || showReportDiv"><i class="fa fa-caret-down"></i></button>
-                    <button class="btn btn-primary trim" type="button" title="{{'search'| translate}}" ng-disabled="showRegistrationDiv || showReportDiv" ng-click="search(searchMode.freeText)"><i class="fa fa-search"></i></button>
+                    <button class="btn btn-default search-dropdown-button trim" type="button" title="{{'advanced_search'| translate}}" data-toggle="dropdown" ng-click="showHideSearch()" ng-disabled="showRegistrationDiv"><i class="fa fa-caret-down"></i></button>
+                    <button class="btn btn-primary trim" type="button" title="{{'search'| translate}}" ng-disabled="showRegistrationDiv" ng-click="search(searchMode.freeText)"><i class="fa fa-search"></i></button>
                     <div id="searchDropDown" class="dropdown-menu dropdown-menu-right">
                         <form name="searchForm">
                             <div ng-include="'views/advanced-search.html'"></div>
@@ -135,13 +132,12 @@
             <div class="col-md-4 trim not-printable">            
                 <button type="button" 
                         class="btn btn-success"
-                        ng-disabled="showRegistrationDiv || showReportDiv"
+                        ng-disabled="showRegistrationDiv"
                         ng-click="search(searchMode.listAll)">
                     {{'list_all'| translate}}
                 </button>
                 <button type="button" 
                         class="btn btn-primary"
-                        ng-disabled="showReportDiv"
                         ng-click="showRegistration()">                    
                     {{'register'| translate}}
                 </button>
@@ -171,15 +167,7 @@
                 <div ng-include="'components/registration/registration.html'"></div>             
             </div>
         </div>
-        <!-- registration form ends -->
-
-        <!--report div begins -->
-        <div class="row" ng-if="showReportDiv">
-            <div class="col-md-8">
-                <div ng-include="'components/report/report.html'"></div>             
-            </div>
-        </div>
-        <!-- report div ends -->
+        <!-- registration form ends -->        
 
         <!-- entity grid begins -->
         <img src="../images/ajax-loader-bar.gif" alt="{{'in_progress' | translate}}" ng-if="!teiFetched && searchText && !emptySearchTex"/>

@@ -49,9 +49,6 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     //Registration
     $scope.showRegistrationDiv = false;
     
-    //Reporting
-    $scope.showReportDiv = false;
-    
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {           
 
@@ -146,12 +143,11 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $location.path('/').search({});
         }
 
-        $scope.trackedEntityList = null; 
-        
+        $scope.trackedEntityList = null;        
         
         $scope.processAttributes();
         
-        if($scope.showRegistrationDiv || $scope.showReportDiv){
+        if($scope.showRegistrationDiv){
             $scope.doSearch = false;
         }
         
@@ -175,7 +171,6 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         $scope.emptySearchText = false;
         $scope.emptySearchAttribute = false;
         $scope.showRegistrationDiv = false;  
-        $scope.showReportDiv = false;
         $scope.showTrackedEntityDiv = false;
         $scope.trackedEntityList = null; 
         $scope.teiCount = null;
@@ -306,20 +301,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.doSearch = true;
             $scope.getProgramAttributes($scope.selectedProgram);
         }
-    };  
-    
-    $scope.showReport = function(){
-        $scope.showReportDiv = !$scope.showReportDiv;
-        $scope.showTrackedEntityDiv = false;
-        $scope.showSearchDiv = false;
-        $scope.searchState = false;
-        
-        if(!$scope.showReportDiv){
-            $scope.searchState = true;
-            $scope.doSearch = true;
-            $scope.getProgramAttributes($scope.selectedProgram);
-        }
-    };
+    };    
     
     $scope.showHideColumns = function(){
         $scope.hiddenGridColumns = 0;
