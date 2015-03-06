@@ -22,7 +22,8 @@ trackerCapture.controller('UpcomingEventsController',
     $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};
     
     //watch for selection of org unit from tree
-    $scope.$watch('selectedOrgUnit', function() {        
+    $scope.$watch('selectedOrgUnit', function() {      
+        $scope.selectedProgram = null;
         if( angular.isObject($scope.selectedOrgUnit)){            
             storage.set('SELECTED_OU', $scope.selectedOrgUnit);            
             $scope.loadPrograms($scope.selectedOrgUnit);
@@ -34,24 +35,24 @@ trackerCapture.controller('UpcomingEventsController',
         $scope.selectedOrgUnit = orgUnit;        
         if (angular.isObject($scope.selectedOrgUnit)){
             ProgramFactory.getAll().then(function(programs){
-                $scope.programs = programs;                
+                $scope.programs = [];
+                angular.forEach(programs, function(program){                            
+                    if(program.organisationUnits.hasOwnProperty($scope.selectedOrgUnit.id)){                                
+                        $scope.programs.push(program);
+                    }
+                });
                 if($scope.programs.length === 1){
                     $scope.selectedProgram = $scope.programs[0];
                 }
                 else{
-                    if(angular.isObject($scope.selectedProgram)){
-                        var continueLoop = true;
-                        for(var i=0; i<programs.length && continueLoop; i++){
-                            if(programs[i].id === $scope.selectedProgram.id){
-                                $scope.selectedProgram = programs[i];
-                                continueLoop = false;
-                            }
-                        }
-                        if(continueLoop){
-                            $scope.selectedProgram = null;
+                    var continueLoop = true;
+                    for(var i=0; i<programs.length && continueLoop; i++){
+                        if(programs[i].id === $scope.selectedProgram.id){
+                            $scope.selectedProgram = programs[i];
+                            continueLoop = false;
                         }
                     }
-                    else{
+                    if(continueLoop){
                         $scope.selectedProgram = null;
                     }
                 }
