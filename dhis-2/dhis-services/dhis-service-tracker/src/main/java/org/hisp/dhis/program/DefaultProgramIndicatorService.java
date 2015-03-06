@@ -209,7 +209,7 @@ public class DefaultProgramIndicatorService
                 return DateUtils.getMediumDateString( date );
             }
 
-            return Math.floor( value ) + "";
+            return String.valueOf( Math.floor( value ) );
         }
 
         return null;

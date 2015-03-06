@@ -72,5 +72,4 @@ public class ProgramIndicatorDeletionHandler
             programIndicatorService.deleteProgramIndicator( indicator );
         }
     }
-
 }
