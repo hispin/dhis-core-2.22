@@ -43,7 +43,6 @@ import org.hisp.dhis.common.NameableObject;
 import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
@@ -329,36 +328,16 @@ public class Schema implements Ordered, Klass
         return getPropertyMap().containsKey( propertyName );
     }
 
-    public Method getterByRole( String role )
+    public Property propertyByRole( String role )
     {
-        if ( StringUtils.isEmpty( role ) )
+        if ( !StringUtils.isEmpty( role ) )
         {
-            return null;
-        }
-
-        for ( Property property : propertyMap.values() )
-        {
-            if ( property.isCollection() && property.isManyToMany() && (role.equals( property.getOwningRole() ) || role.equals( property.getInverseRole() )) )
+            for ( Property property : propertyMap.values() )
             {
-                return property.getGetterMethod();
-            }
-        }
-
-        return null;
-    }
-
-    public Method setterByRole( String role )
-    {
-        if ( StringUtils.isEmpty( role ) )
-        {
-            return null;
-        }
-
-        for ( Property property : propertyMap.values() )
-        {
-            if ( property.isCollection() && property.isManyToMany() && (role.equals( property.getOwningRole() ) || role.equals( property.getInverseRole() )) )
-            {
-                return property.getSetterMethod();
+                if ( property.isCollection() && property.isManyToMany() && (role.equals( property.getOwningRole() ) || role.equals( property.getInverseRole() )) )
+                {
+                    return property;
+                }
             }
         }
 
