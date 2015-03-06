@@ -129,14 +129,14 @@ public abstract class AbstractPropertyIntrospectorService
 
         LocalSessionFactoryBean sessionFactoryBean = getLocalSessionFactoryBean();
         SessionFactoryImplementor sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
-        Iterator iterator = sessionFactoryBean.getConfiguration().getCollectionMappings();
+        Iterator collectionIterator = sessionFactoryBean.getConfiguration().getCollectionMappings();
 
-        while ( iterator.hasNext() )
+        while ( collectionIterator.hasNext() )
         {
-            Collection collection = (Collection) iterator.next();
-            CollectionPersister persister = sessionFactoryImplementor.getCollectionPersister( collection.getRole() );
+            Collection collection = (Collection) collectionIterator.next();
+            CollectionPersister collectionPersister = sessionFactoryImplementor.getCollectionPersister( collection.getRole() );
 
-            if ( persister.isManyToMany() && collection.getType().isAssociationType() )
+            if ( collectionPersister.isManyToMany() && collection.getType().isAssociationType() )
             {
                 AssociationType associationType = (AssociationType) collection.getType();
                 Joinable associatedJoinable = associationType.getAssociatedJoinable( sessionFactoryImplementor );
@@ -224,10 +224,10 @@ public abstract class AbstractPropertyIntrospectorService
 
                 CollectionType collectionType = (CollectionType) type;
                 Collection collection = sessionFactoryBean.getConfiguration().getCollectionMapping( collectionType.getRole() );
-                CollectionPersister persister = sessionFactoryImplementor.getCollectionPersister( collection.getRole() );
+                CollectionPersister collectionPersister = sessionFactoryImplementor.getCollectionPersister( collection.getRole() );
 
                 property.setOwner( !collection.isInverse() );
-                property.setManyToMany( persister.isManyToMany() );
+                property.setManyToMany( collectionPersister.isManyToMany() );
 
                 if ( property.isOwner() )
                 {
