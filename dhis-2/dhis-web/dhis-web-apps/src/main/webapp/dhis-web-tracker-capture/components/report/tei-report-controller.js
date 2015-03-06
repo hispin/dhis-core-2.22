@@ -50,13 +50,13 @@ trackerCapture.controller('TeiReportController',
         
         DHIS2EventFactory.getEventsByProgram($scope.selectedTei.trackedEntityInstance, $scope.selectedOrgUnit.id, programId).then(function(eventList){
             angular.forEach(eventList, function(ev){
-                if(ev.program){       
+                if(ev.program && $scope.report[ev.program] && ev.orgUnit){       
                     ev.visited = true;
                     ev.dueDate = DateUtils.formatFromApiToUser(ev.dueDate);  
                     ev.sortingDate = ev.dueDate;
                     ev.name = $scope.programStageNames[ev.programStage].name;
-                    ev.programName = $scope.programNames[ev.program].name;
-                    if(angular.isUndefined($scope.report[ev.program].enrollments)){
+                    ev.programName = $scope.programNames[ev.program].name;                    
+                    if(!$scope.report[ev.program].enrollments){
                         $scope.report[ev.program] = {enrollments: {}};
                     }
                     ev.statusColor = EventUtils.getEventStatusColor(ev); 
@@ -76,13 +76,12 @@ trackerCapture.controller('TeiReportController',
                         else{
                             $scope.report[ev.program].enrollments[ev.enrollment]= [ev];
                         }
+                    }                    
+                    if(!$scope.dataExists){
+                        $scope.dataExists = true;
                     }
                 }                
             });
-
-            if(eventList){
-                $scope.dataExists = true;
-            }
             $scope.dataFetched = true;
         });
     };

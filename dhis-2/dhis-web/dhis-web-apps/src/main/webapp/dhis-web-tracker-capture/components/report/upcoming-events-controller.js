@@ -109,12 +109,11 @@ trackerCapture.controller('UpcomingEventsController',
                 upcomingEvent.dueDate = DateUtils.formatFromApiToUser(row.dueDate);
                 upcomingEvent.event = row.event;
                 upcomingEvent.eventName = $scope.programStages[row.programStage].name;
-                upcomingEvent.orgUnitName = row.orgUnitName;
+                upcomingEvent.eventOrgUnitName = row.eventOrgUnitName;
                 upcomingEvent.followup = row.followup;
                 upcomingEvent.program = row.program;
                 upcomingEvent.programStage = row.programStage;
-                upcomingEvent.trackedEntityInstance = row.trackedEntityInstance;
-                upcomingEvent.orgUnitName = row.registrationOrgUnit;
+                upcomingEvent.trackedEntityInstance = row.trackedEntityInstance;                
                 upcomingEvent.created = DateUtils.formatFromApiToUser(row.registrationDate);;
                 $scope.upcomingEvents.push(upcomingEvent);
 
@@ -145,7 +144,7 @@ trackerCapture.controller('UpcomingEventsController',
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){            
                 $scope.gridColumns = TEIGridService.generateGridColumns(atts, $scope.selectedOuMode);
                 
-                $scope.gridColumns.push({name: $translate('event_orgunit_name'), id: 'orgUnitName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true});
+                $scope.gridColumns.push({name: $translate('event_orgunit_name'), id: 'eventOrgUnitName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true});
                 $scope.filterTypes['orgUnitName'] = 'string';
                 $scope.gridColumns.push({name: $translate('event_name'), id: 'eventName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true});
                 $scope.filterTypes['eventName'] = 'string';
