@@ -287,9 +287,11 @@ public class DefaultProgramInstanceService
         for ( Program program : programs )
         {
             List<TrackedEntityAttribute> atttributes = program.getTrackedEntityAttributes();
+            
             while ( iterAttribute.hasNext() )
             {
                 TrackedEntityAttributeValue attributeValue = iterAttribute.next();
+                
                 if ( !atttributes.contains( attributeValue.getAttribute() ) )
                 {
                     iterAttribute.remove();
