@@ -168,7 +168,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         entities = objectFilterService.filter( entities, filters );
         translate( entities, translateOptions );
 
-        if ( options.hasPaging() )
+        if ( options.hasPaging() && pager == null )
         {
             pager = new Pager( options.getPage(), entities.size(), options.getPageSize() );
             entities = PagerUtils.pageCollection( entities, pager );
