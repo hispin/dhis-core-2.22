@@ -11,6 +11,7 @@ trackerCapture.controller('UpcomingEventsController',
                 AttributesFactory,
                 ProgramFactory,
                 CurrentSelection,
+                OptionSetService,
                 storage) {
     $scope.today = DateUtils.getToday();
     
@@ -18,6 +19,32 @@ trackerCapture.controller('UpcomingEventsController',
     $scope.report = {};
     $scope.displayMode = {};
     $scope.printMode = false;
+    
+    //get optionsets
+    $scope.optionSets = CurrentSelection.getOptionSets();
+    if(!$scope.optionSets){
+        $scope.optionSets = [];
+        OptionSetService.getAll().then(function(optionSets){
+            angular.forEach(optionSets, function(optionSet){                        
+                $scope.optionSets[optionSet.id] = optionSet;
+            });
+
+            CurrentSelection.setOptionSets($scope.optionSets);
+        });
+    }
+    
+    //get attributes
+    $scope.attributesById = CurrentSelection.getAttributesById();
+    if(!$scope.attributesById){
+        AttributesFactory.getAll().then(function(atts){
+            $scope.attributes = [];  
+            $scope.attributesById = [];
+            angular.forEach(atts, function(att){
+                $scope.attributesById[att.id] = att;
+            });
+            CurrentSelection.setAttributesById($scope.attributesById);
+        });
+    }
     
     //Paging
     $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};
@@ -29,17 +56,6 @@ trackerCapture.controller('UpcomingEventsController',
             storage.set('SELECTED_OU', $scope.selectedOrgUnit);            
             $scope.loadPrograms($scope.selectedOrgUnit);
         }
-    });
-    
-    
-    AttributesFactory.getAll().then(function(atts){
-        $scope.attributes = [];  
-        $scope.attributesById = [];
-        angular.forEach(atts, function(att){
-            $scope.attributesById[att.id] = att;
-        });
-
-        CurrentSelection.setAttributesById($scope.attributesById);
     });
     
     //load programs associated with the selected org unit.
