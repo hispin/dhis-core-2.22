@@ -63,6 +63,7 @@ import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.DisplayProperty;
+import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
@@ -153,6 +154,11 @@ public class DataQueryParams
      */
     protected DisplayProperty displayProperty;
     
+    /**
+     * The property to use as identifier in the response.
+     */
+    protected IdentifiableProperty idScheme;
+    
     // -------------------------------------------------------------------------
     // Transient properties
     // -------------------------------------------------------------------------
@@ -210,6 +216,7 @@ public class DataQueryParams
         params.hideEmptyRows = this.hideEmptyRows;
         params.showHierarchy = this.showHierarchy;
         params.displayProperty = this.displayProperty;
+        params.idScheme = this.idScheme;
         
         params.partitions = new Partitions( this.partitions );
         params.dataType = this.dataType;
@@ -498,7 +505,7 @@ public class DataQueryParams
     }
     
     /**
-     * Indicates whether organisation units are present as dimensio or filter.
+     * Indicates whether organisation units are present as dimension or filter.
      */
     public boolean hasOrganisationUnits()
     {
@@ -909,7 +916,16 @@ public class DataQueryParams
         
         return list;
     }
-    
+
+    /**
+     * Indicates whether this params defines an identifier scheme different from
+     * UID.
+     */
+    public boolean hasNonUidIdScheme()
+    {
+        return idScheme != null && !IdentifiableProperty.UID.equals( idScheme );
+    }
+
     /**
      * Indicates whether this params specifies data approval levels.
      */
@@ -933,6 +949,21 @@ public class DataQueryParams
     public boolean isAggregation()
     {
         return !( AggregationType.NONE.equals( aggregationType ) || DataType.TEXT.equals( dataType ) );
+    }
+    
+    /**
+     * Returns all dimension items.
+     */
+    public List<NameableObject> getAllDimensionItems()
+    {
+        List<NameableObject> items = new ArrayList<NameableObject>();
+        
+        for ( DimensionalObject dim : ListUtils.union( dimensions, filters ) )
+        {
+            items.addAll( dim.getItems() );
+        }
+        
+        return items;
     }
     
     // -------------------------------------------------------------------------
@@ -1165,6 +1196,16 @@ public class DataQueryParams
     public void setDisplayProperty( DisplayProperty displayProperty )
     {
         this.displayProperty = displayProperty;
+    }
+
+    public IdentifiableProperty getIdScheme()
+    {
+        return idScheme;
+    }
+
+    public void setIdScheme( IdentifiableProperty idScheme )
+    {
+        this.idScheme = idScheme;
     }
 
     // -------------------------------------------------------------------------
