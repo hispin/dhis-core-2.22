@@ -88,14 +88,14 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean hideEmptyRows,
         @RequestParam( required = false ) boolean showHierarchy,
         @RequestParam( required = false ) DisplayProperty displayProperty,
-        @RequestParam( required = false ) IdentifiableProperty idScheme,
+        @RequestParam( required = false ) IdentifiableProperty outputIdScheme,
         @RequestParam( required = false ) String columns,
         @RequestParam( required = false ) String rows,
         Model model,
         HttpServletResponse response ) throws Exception
     {
         DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria,
-            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, idScheme, i18nManager.getI18nFormat() );
+            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.RESPECT_SYSTEM_SETTING );
         Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
@@ -118,14 +118,14 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean hideEmptyRows,
         @RequestParam( required = false ) boolean showHierarchy,
         @RequestParam( required = false ) DisplayProperty displayProperty,
-        @RequestParam( required = false ) IdentifiableProperty idScheme,
+        @RequestParam( required = false ) IdentifiableProperty outputIdScheme,
         @RequestParam( required = false ) String columns,
         @RequestParam( required = false ) String rows,
         Model model,
         HttpServletResponse response ) throws Exception
     {
         DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria,
-            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, idScheme, i18nManager.getI18nFormat() );
+            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.RESPECT_SYSTEM_SETTING );
         Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
@@ -146,14 +146,14 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean hideEmptyRows,
         @RequestParam( required = false ) boolean showHierarchy,
         @RequestParam( required = false ) DisplayProperty displayProperty,
-        @RequestParam( required = false ) IdentifiableProperty idScheme,
+        @RequestParam( required = false ) IdentifiableProperty outputIdScheme,
         @RequestParam( required = false ) String columns,
         @RequestParam( required = false ) String rows,
         Model model,
         HttpServletResponse response ) throws Exception
     {
         DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria,
-            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, idScheme, i18nManager.getI18nFormat() );
+            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
         Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
@@ -174,14 +174,14 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean hideEmptyRows,
         @RequestParam( required = false ) boolean showHierarchy,
         @RequestParam( required = false ) DisplayProperty displayProperty,
-        @RequestParam( required = false ) IdentifiableProperty idScheme,
+        @RequestParam( required = false ) IdentifiableProperty outputIdScheme,
         @RequestParam( required = false ) String columns,
         @RequestParam( required = false ) String rows,
         Model model,
         HttpServletResponse response ) throws Exception
     {
         DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria,
-            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, idScheme, i18nManager.getI18nFormat() );
+            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
         Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
@@ -202,14 +202,14 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean hideEmptyRows,
         @RequestParam( required = false ) boolean showHierarchy,
         @RequestParam( required = false ) DisplayProperty displayProperty,
-        @RequestParam( required = false ) IdentifiableProperty idScheme,
+        @RequestParam( required = false ) IdentifiableProperty outputIdScheme,
         @RequestParam( required = false ) String columns,
         @RequestParam( required = false ) String rows,
         Model model,
         HttpServletResponse response ) throws Exception
     {
         DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria,
-            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, idScheme, i18nManager.getI18nFormat() );
+            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "data.csv", true );
         Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
@@ -230,14 +230,14 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean hideEmptyRows,
         @RequestParam( required = false ) boolean showHierarchy,
         @RequestParam( required = false ) DisplayProperty displayProperty,
-        @RequestParam( required = false ) IdentifiableProperty idScheme,
+        @RequestParam( required = false ) IdentifiableProperty outputIdScheme,
         @RequestParam( required = false ) String columns,
         @RequestParam( required = false ) String rows,
         Model model,
         HttpServletResponse response ) throws Exception
     {
         DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria,
-            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, idScheme, i18nManager.getI18nFormat() );
+            skipMeta, skipRounding, hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.RESPECT_SYSTEM_SETTING, "data.xls", true );
         Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
@@ -258,7 +258,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean hideEmptyRows,
         @RequestParam( required = false ) boolean showHierarchy,
         @RequestParam( required = false ) DisplayProperty displayProperty,
-        @RequestParam( required = false ) IdentifiableProperty idScheme,
+        @RequestParam( required = false ) IdentifiableProperty outputIdScheme,
         @RequestParam( required = false ) String columns,
         @RequestParam( required = false ) String rows,
         Model model,

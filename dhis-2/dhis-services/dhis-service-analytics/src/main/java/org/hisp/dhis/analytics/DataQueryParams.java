@@ -155,9 +155,9 @@ public class DataQueryParams
     protected DisplayProperty displayProperty;
     
     /**
-     * The property to use as identifier in the response.
+     * The property to use as identifier in the query response.
      */
-    protected IdentifiableProperty idScheme;
+    protected IdentifiableProperty outputIdScheme;
     
     // -------------------------------------------------------------------------
     // Transient properties
@@ -216,7 +216,7 @@ public class DataQueryParams
         params.hideEmptyRows = this.hideEmptyRows;
         params.showHierarchy = this.showHierarchy;
         params.displayProperty = this.displayProperty;
-        params.idScheme = this.idScheme;
+        params.outputIdScheme = this.outputIdScheme;
         
         params.partitions = new Partitions( this.partitions );
         params.dataType = this.dataType;
@@ -921,9 +921,9 @@ public class DataQueryParams
      * Indicates whether this params defines an identifier scheme different from
      * UID.
      */
-    public boolean hasNonUidIdScheme()
+    public boolean hasNonUidOutputIdScheme()
     {
-        return idScheme != null && !IdentifiableProperty.UID.equals( idScheme );
+        return outputIdScheme != null && !IdentifiableProperty.UID.equals( outputIdScheme );
     }
 
     /**
@@ -1198,14 +1198,14 @@ public class DataQueryParams
         this.displayProperty = displayProperty;
     }
 
-    public IdentifiableProperty getIdScheme()
+    public IdentifiableProperty getOutputIdScheme()
     {
-        return idScheme;
+        return outputIdScheme;
     }
 
-    public void setIdScheme( IdentifiableProperty idScheme )
+    public void setOutputIdScheme( IdentifiableProperty outputIdScheme )
     {
-        this.idScheme = idScheme;
+        this.outputIdScheme = outputIdScheme;
     }
 
     // -------------------------------------------------------------------------
