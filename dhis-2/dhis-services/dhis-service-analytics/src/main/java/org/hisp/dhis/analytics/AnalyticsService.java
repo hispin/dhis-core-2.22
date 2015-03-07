@@ -37,6 +37,7 @@ import org.hisp.dhis.common.AnalyticalObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.Grid;
+import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.i18n.I18nFormat;
 
@@ -158,11 +159,13 @@ public interface AnalyticsService
      * @param hideEmptyRows whether to hide rows without data values, applis to table layout.
      * @param showHierarchy whether to show the org unit hierarchy together with the name.
      * @param displayProperty the property to display for meta-data.
+     * @param idScheme the identifier scheme to use.
      * @param format the i18n format.
      * @return a data query parameter object created based on the given URL info.
      */
     DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, String measureCriteria, 
-        boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, I18nFormat format );
+        boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, boolean showHierarchy, 
+        DisplayProperty displayProperty, IdentifiableProperty idScheme, I18nFormat format );
     
     /**
      * Creates a data query parameter object from the given BaseAnalyticalObject.
