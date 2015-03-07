@@ -534,11 +534,11 @@ public class DefaultAnalyticsService
      */
     private void applyIdScheme( DataQueryParams params, Grid grid )
     {
-        if ( params.hasNonUidIdScheme() )
+        if ( params.hasNonUidOutputIdScheme() )
         {
             List<NameableObject> items = params.getAllDimensionItems();
             
-            Map<String, String> map = NameableObjectUtils.getUidPropertyMap( items, params.getIdScheme() );
+            Map<String, String> map = NameableObjectUtils.getUidPropertyMap( items, params.getOutputIdScheme() );
             
             grid.substituteMetaData( map );
         }
@@ -555,7 +555,7 @@ public class DefaultAnalyticsService
         }
         else
         {
-            params.setIdScheme( null );
+            params.setOutputIdScheme( null );
             grid = getAggregatedDataValues( params );
         }
 
@@ -816,7 +816,7 @@ public class DefaultAnalyticsService
     @Override
     public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType,
         String measureCriteria, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit,
-        boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty idScheme, I18nFormat format )
+        boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, I18nFormat format )
     {
         DataQueryParams params = new DataQueryParams();
 
@@ -844,7 +844,7 @@ public class DefaultAnalyticsService
         params.setHideEmptyRows( hideEmptyRows );
         params.setShowHierarchy( showHierarchy );
         params.setDisplayProperty( displayProperty );
-        params.setIdScheme( idScheme );
+        params.setOutputIdScheme( outputIdScheme );
 
         return params;
     }
