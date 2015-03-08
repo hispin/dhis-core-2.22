@@ -79,6 +79,15 @@ public class BaseDimensionalObject
     private String filter;
 
     //--------------------------------------------------------------------------
+    // Persistent properties
+    //--------------------------------------------------------------------------
+
+    /**
+     * Indicates whether this object should be handled as a data dimension.
+     */
+    protected boolean dataDimension = true;
+
+    //--------------------------------------------------------------------------
     // Constructors
     //--------------------------------------------------------------------------
 
@@ -252,6 +261,19 @@ public class BaseDimensionalObject
         this.filter = filter;
     }
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isDataDimension()
+    {
+        return dataDimension;
+    }
+
+    public void setDataDimension( boolean dataDimension )
+    {
+        this.dataDimension = dataDimension;
+    }
+
     //--------------------------------------------------------------------------
     // Supportive methods
     //--------------------------------------------------------------------------
@@ -265,6 +287,8 @@ public class BaseDimensionalObject
         {
             DimensionalObject dimensionalObject = (DimensionalObject) other;
 
+            dataDimension = dimensionalObject.isDataDimension();
+            
             if ( strategy.isReplace() )
             {
                 dimensionType = dimensionalObject.getDimensionType();

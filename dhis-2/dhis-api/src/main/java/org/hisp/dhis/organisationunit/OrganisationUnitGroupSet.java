@@ -72,8 +72,6 @@ public class OrganisationUnitGroupSet
     @Scanned
     private Set<OrganisationUnitGroup> organisationUnitGroups = new HashSet<>();
 
-    private boolean dataDimension = true;
-
     /**
      * Set of the dynamic attributes values that belong to this data element.
      */
@@ -247,19 +245,6 @@ public class OrganisationUnitGroupSet
         this.organisationUnitGroups = organisationUnitGroups;
     }
 
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isDataDimension()
-    {
-        return dataDimension;
-    }
-
-    public void setDataDimension( boolean dataDimension )
-    {
-        this.dataDimension = dataDimension;
-    }
-
     @JsonProperty( "attributeValues" )
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )
@@ -284,7 +269,6 @@ public class OrganisationUnitGroupSet
             OrganisationUnitGroupSet organisationUnitGroupSet = (OrganisationUnitGroupSet) other;
 
             compulsory = organisationUnitGroupSet.isCompulsory();
-            dataDimension = organisationUnitGroupSet.isDataDimension();
 
             if ( strategy.isReplace() )
             {
