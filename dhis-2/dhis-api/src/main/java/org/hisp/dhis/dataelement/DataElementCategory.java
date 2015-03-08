@@ -72,8 +72,6 @@ public class DataElementCategory
     @Scanned
     private List<DataElementCategoryOption> categoryOptions = new ArrayList<>();
 
-    private boolean dataDimension;
-
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -207,19 +205,6 @@ public class DataElementCategory
     public void setCategoryOptions( List<DataElementCategoryOption> categoryOptions )
     {
         this.categoryOptions = categoryOptions;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isDataDimension()
-    {
-        return dataDimension;
-    }
-
-    public void setDataDimension( boolean dataDimension )
-    {
-        this.dataDimension = dataDimension;
     }
 
     @Override

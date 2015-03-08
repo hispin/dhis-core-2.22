@@ -137,4 +137,10 @@ public interface DimensionalObject
      * Indicates the analytics type of this dimensional object.
      */
     AnalyticsType getAnalyticsType();
+    
+    /**
+     * Indicates whether this object should be handled as a data dimension. 
+     * Persistent property.
+     */
+    boolean isDataDimension();
 }
