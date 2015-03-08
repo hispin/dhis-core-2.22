@@ -60,8 +60,6 @@ public class CategoryOptionGroupSet
     @Scanned
     private List<CategoryOptionGroup> members = new ArrayList<>();
 
-    private boolean dataDimension = true;
-
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -133,19 +131,6 @@ public class CategoryOptionGroupSet
         this.members = members;
     }
 
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isDataDimension()
-    {
-        return dataDimension;
-    }
-
-    public void setDataDimension( boolean dataDimension )
-    {
-        this.dataDimension = dataDimension;
-    }
-
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
@@ -170,7 +155,6 @@ public class CategoryOptionGroupSet
         if ( other.getClass().isInstance( this ) )
         {
             CategoryOptionGroupSet categoryOptionGroupSet = (CategoryOptionGroupSet) other;
-            dataDimension = categoryOptionGroupSet.isDataDimension();
 
             members.clear();
 

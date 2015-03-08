@@ -72,8 +72,6 @@ public class DataElementGroupSet
     @Scanned
     private List<DataElementGroup> members = new ArrayList<>();
 
-    private boolean dataDimension = true;
-
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -255,19 +253,6 @@ public class DataElementGroupSet
         this.members = members;
     }
 
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isDataDimension()
-    {
-        return dataDimension;
-    }
-
-    public void setDataDimension( boolean dataDimension )
-    {
-        this.dataDimension = dataDimension;
-    }
-
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -276,8 +261,6 @@ public class DataElementGroupSet
         if ( other.getClass().isInstance( this ) )
         {
             DataElementGroupSet dataElementGroupSet = (DataElementGroupSet) other;
-
-            dataDimension = dataElementGroupSet.isDataDimension();
 
             if ( strategy.isReplace() )
             {
