@@ -193,18 +193,18 @@ public class DefaultProgramIndicatorService
         {
             if ( programIndicator.getValueType().equals( ProgramIndicator.VALUE_TYPE_DATE ) )
             {
-                Date rootDate = new Date();
+                Date baseDate = new Date();
 
                 if ( ProgramIndicator.INCIDENT_DATE.equals( programIndicator.getRootDate() ) )
                 {
-                    rootDate = programInstance.getDateOfIncident();
+                    baseDate = programInstance.getDateOfIncident();
                 }
                 else if ( ProgramIndicator.ENROLLEMENT_DATE.equals( programIndicator.getRootDate() ) )
                 {
-                    rootDate = programInstance.getEnrollmentDate();
+                    baseDate = programInstance.getEnrollmentDate();
                 }
 
-                Date date = DateUtils.getDateAfterAddition( rootDate, value.intValue() );
+                Date date = DateUtils.getDateAfterAddition( baseDate, value.intValue() );
 
                 return DateUtils.getMediumDateString( date );
             }
@@ -250,7 +250,7 @@ public class DefaultProgramIndicatorService
             String key = matcher.group( 1 );
             String uid1 = matcher.group( 2 );
 
-            if ( key.equals( ProgramIndicator.KEY_DATAELEMENT ) )
+            if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
             {
                 String uid2 = matcher.group( 3 );
 
@@ -268,7 +268,7 @@ public class DefaultProgramIndicatorService
                 }
             }
 
-            else if ( key.equals( ProgramIndicator.KEY_ATTRIBUTE ) )
+            else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
                 TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid1 );
                 
@@ -278,7 +278,7 @@ public class DefaultProgramIndicatorService
                         ProgramIndicator.KEY_ATTRIBUTE + "{" + attribute.getDisplayName() + "}" );
                 }
             }
-            else if ( key.equals( ProgramIndicator.KEY_CONSTANT ) )
+            else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
             {
                 Constant constant = constantService.getConstant( uid1 );
                 
@@ -309,7 +309,7 @@ public class DefaultProgramIndicatorService
             String key = matcher.group( 1 );
             String uid1 = matcher.group( 2 );
 
-            if ( key.equals( ProgramIndicator.KEY_DATAELEMENT ) )
+            if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
             {
                 String uid2 = matcher.group( 3 );
 
@@ -326,7 +326,7 @@ public class DefaultProgramIndicatorService
                 }
             }
 
-            else if ( key.equals( ProgramIndicator.KEY_ATTRIBUTE ) )
+            else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
                 TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid1 );
                 
@@ -339,7 +339,7 @@ public class DefaultProgramIndicatorService
                     return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
                 }
             }
-            else if ( key.equals( ProgramIndicator.KEY_CONSTANT ) )
+            else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
             {
                 Constant constant = constantService.getConstant( uid1 );
                 
@@ -352,7 +352,7 @@ public class DefaultProgramIndicatorService
                     return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
                 }
             }
-            else if ( key.equals( ProgramIndicator.KEY_PROGRAM_VARIABLE ) )
+            else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
                 matcher.appendReplacement( description, String.valueOf( 0 ) );
             }
@@ -378,8 +378,6 @@ public class DefaultProgramIndicatorService
 
     private Double getValue( ProgramInstance programInstance, String valueType, String expression )
     {
-        String value = "";
-
         StringBuffer description = new StringBuffer();
 
         Pattern pattern = Pattern.compile( ProgramIndicator.regExp );
@@ -390,7 +388,7 @@ public class DefaultProgramIndicatorService
             String key = matcher.group( 1 );
             String uid1 = matcher.group( 2 );
 
-            if ( key.equals( ProgramIndicator.KEY_DATAELEMENT ) )
+            if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
             {
                 String uid2 = matcher.group( 3 );
                 ProgramStage programStage = programStageService.getProgramStage( uid1 );
@@ -409,10 +407,10 @@ public class DefaultProgramIndicatorService
                         return null;
                     }
 
-                    value = dataValue.getValue();
+                    String value = dataValue.getValue();
 
-                    if ( valueType.equals( ProgramIndicator.VALUE_TYPE_INT )
-                        && (dataElement == null || dataElement.getType().equals( DataElement.VALUE_TYPE_DATE )) )
+                    if ( valueType.equals( ProgramIndicator.VALUE_TYPE_INT ) && 
+                        ( dataElement == null || dataElement.getType().equals( DataElement.VALUE_TYPE_DATE ) ) )
                     {
                         value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
                     }
@@ -424,18 +422,18 @@ public class DefaultProgramIndicatorService
                     return null;
                 }
             }
-            else if ( key.equals( ProgramIndicator.KEY_ATTRIBUTE ) )
+            else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
                 TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid1 );
                 
                 if ( attribute != null )
                 {
-                    TrackedEntityAttributeValue attrValue = attributeValueService.getTrackedEntityAttributeValue(
+                    TrackedEntityAttributeValue attributeValue = attributeValueService.getTrackedEntityAttributeValue(
                         programInstance.getEntityInstance(), attribute );
 
-                    if ( attrValue != null )
+                    if ( attributeValue != null )
                     {
-                        matcher.appendReplacement( description, attrValue.getValue() );
+                        matcher.appendReplacement( description, attributeValue.getValue() );
                     }
                     else
                     {
@@ -447,7 +445,7 @@ public class DefaultProgramIndicatorService
                     return null;
                 }
             }
-            else if ( key.equals( ProgramIndicator.KEY_CONSTANT ) )
+            else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
             {
                 Constant constant = constantService.getConstant( uid1 );
                 
@@ -460,7 +458,7 @@ public class DefaultProgramIndicatorService
                     return null;
                 }
             }
-            else if ( key.equals( ProgramIndicator.KEY_PROGRAM_VARIABLE ) )
+            else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
                 Date currentDate = new Date();
                 Date date = null;
