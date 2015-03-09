@@ -105,9 +105,5 @@ trackerCapture.controller('ProfileController',
     $scope.cancel = function(){
         $scope.selectedTei = $scope.teiOriginal;  
         $scope.editingDisabled = !$scope.editingDisabled;
-    };
-    
-    $scope.switchRegistrationForm = function(){
-        $scope.customFormExists = !$scope.customFormExists;
-    };    
+    };  
 });

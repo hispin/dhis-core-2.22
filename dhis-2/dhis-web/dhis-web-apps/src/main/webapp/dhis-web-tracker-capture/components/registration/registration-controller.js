@@ -194,8 +194,4 @@ trackerCapture.controller('RegistrationController',
             $scope.broadCastSelections();
         }
     };
-    
-    $scope.switchRegistrationForm = function(){
-        $scope.customFormExists = !$scope.customFormExists;
-    };
 });
