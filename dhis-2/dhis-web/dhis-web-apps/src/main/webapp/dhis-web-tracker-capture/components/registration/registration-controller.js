@@ -24,6 +24,7 @@ trackerCapture.controller('RegistrationController',
     
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
+        $scope.attributesById = [];
         AttributesFactory.getAll().then(function(atts){
             angular.forEach(atts, function(att){
                 $scope.attributesById[att.id] = att;
