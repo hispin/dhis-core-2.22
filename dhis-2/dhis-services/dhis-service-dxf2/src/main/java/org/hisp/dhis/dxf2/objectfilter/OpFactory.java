@@ -34,6 +34,7 @@ import org.hisp.dhis.dxf2.objectfilter.ops.EndsWithOp;
 import org.hisp.dhis.dxf2.objectfilter.ops.EqOp;
 import org.hisp.dhis.dxf2.objectfilter.ops.GtOp;
 import org.hisp.dhis.dxf2.objectfilter.ops.GteOp;
+import org.hisp.dhis.dxf2.objectfilter.ops.InOp;
 import org.hisp.dhis.dxf2.objectfilter.ops.LikeOp;
 import org.hisp.dhis.dxf2.objectfilter.ops.LtOp;
 import org.hisp.dhis.dxf2.objectfilter.ops.LteOp;
@@ -72,6 +73,7 @@ public class OpFactory
         register( "null", NullOp.class );
         register( "nnull", NnullOp.class );
         register( "empty", EmptyCollectionOp.class );
+        register( "in", InOp.class );
     }
 
     public static void register( String type, Class<? extends Op> opClass )
