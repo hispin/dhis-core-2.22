@@ -133,6 +133,7 @@ function downloadMetaData()
     promise = promise.then( getPrograms );     
     promise = promise.then( getProgramStages );    
     promise = promise.then( getOptionSetsForDataElements );
+    promise = promise.then( getMetaTrackeEntityAttributes );
     promise = promise.then( getTrackedEntityAttributes );
     promise = promise.then( getOptionSetsForAttributes );
     promise = promise.then( getMetaProgramValidations );
@@ -151,7 +152,6 @@ function downloadMetaData()
     def.resolve();
     
 }
-
 
 function getCalendarSetting()
 {
@@ -323,124 +323,6 @@ function getProgram( id )
             });         
         });
     };
-}
-
-function getTrackedEntityAttributes( programs )
-{
-    if( !programs ){
-        return;
-    }
-    
-    var mainDef = $.Deferred();
-    var mainPromise = mainDef.promise();
-
-    var def = $.Deferred();
-    var promise = def.promise();
-
-    var builder = $.Deferred();
-    var build = builder.promise();
-
-    _.each( _.values( programs ), function ( program ) {
-        
-        if(program.programTrackedEntityAttributes){
-            _.each(_.values(program.programTrackedEntityAttributes), function(teAttribute){
-                build = build.then(function() {
-                    var d = $.Deferred();
-                    var p = d.promise();
-                    dhis2.tc.store.get('attributes', teAttribute.trackedEntityAttribute.id).done(function(obj) {
-                        if(!obj || obj.version !== teAttribute.trackedEntityAttribute.version) {
-                            promise = promise.then( getAttribute( teAttribute.trackedEntityAttribute.id ) );
-                        }
-                        d.resolve();
-                    });
-                    return p;
-                });            
-            });
-        }                             
-    });
-
-    build.done(function() {
-        def.resolve();
-
-        promise = promise.done( function () {
-            mainDef.resolve( programs );
-        } );
-    }).fail(function(){
-        mainDef.resolve( null );
-    });
-
-    builder.resolve();
-
-    return mainPromise;    
-}
-
-function getAttribute( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/trackedEntityAttributes.json',
-            type: 'GET',
-            data: 'filter=id:eq:' + id +'&fields=id,name,code,version,description,valueType,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version]'
-        }).done( function( response ){            
-            _.each( _.values( response.trackedEntityAttributes ), function( teAttribute ) {
-                dhis2.tc.store.set( 'attributes', teAttribute );
-            });
-        });
-    };
-}
-
-
-function getOptionSetsForAttributes( programs )
-{
-    if( !programs ){
-        return;
-    }
-    
-    var mainDef = $.Deferred();
-    var mainPromise = mainDef.promise();
-
-    var def = $.Deferred();
-    var promise = def.promise();
-
-    var builder = $.Deferred();
-    var build = builder.promise();    
-
-    _.each( _.values( programs ), function ( program ) {
-        
-        if(program.programTrackedEntityAttributes){
-            _.each(_.values( program.programTrackedEntityAttributes), function( teAttribute) {           
-                if( teAttribute.trackedEntityAttribute.optionSet && teAttribute.trackedEntityAttribute.optionSet.id ){
-                    build = build.then(function() {
-                        var d = $.Deferred();
-                        var p = d.promise();
-                        dhis2.tc.store.get('optionSets', teAttribute.trackedEntityAttribute.optionSet.id).done(function(obj) {                            
-                            if((!obj || obj.version !== teAttribute.trackedEntityAttribute.optionSet.version) && !optionSetsInPromise[teAttribute.trackedEntityAttribute.optionSet.id]) {                                
-                                optionSetsInPromise[teAttribute.trackedEntityAttribute.optionSet.id] = teAttribute.trackedEntityAttribute.optionSet.id;                                
-                                promise = promise.then( getOptionSet( teAttribute.trackedEntityAttribute.optionSet.id ) );
-                            }
-                            d.resolve();
-                        });
-
-                        return p;
-                    });
-                }            
-            });
-        }                                      
-    });
-
-    build.done(function() {
-        def.resolve();
-
-        promise = promise.done( function () {
-            mainDef.resolve( programs );
-        } );
-    }).fail(function(){
-        mainDef.resolve( null );
-    });
-
-    builder.resolve();
-
-    return mainPromise;    
 }
 
 function getProgramStages( programs )
@@ -682,13 +564,152 @@ function getProgramValidation( id )
                     programValidation.id &&
                     programValidation.program &&
                     programValidation.program.id ) {
-                    
-                    //
                     dhis2.tc.store.set( 'programValidations', programValidation );
                 }
             });
         });
     };
+}
+
+function getMetaTrackeEntityAttributes( programs ){
+    
+    var def = $.Deferred();
+    
+    $.ajax({
+        url: '../api/trackedEntityAttributes.json',
+        type: 'GET',
+        data:'paging=false&filter=displayInListNoProgram:eq:true&fields=id,optionSet[id,version]'
+    }).done( function(response) {          
+        var trackedEntityAttributes = [];
+        _.each( _.values( response.trackedEntityAttributes ), function ( trackedEntityAttribute ) {             
+            if( trackedEntityAttribute && trackedEntityAttribute.id ) {            
+                trackedEntityAttributes.push( trackedEntityAttribute );
+            }            
+        });
+        
+        _.each( _.values( programs ), function ( program ) {        
+            if(program.programTrackedEntityAttributes){
+                _.each(_.values(program.programTrackedEntityAttributes), function(teAttribute){                    
+                    trackedEntityAttributes.push(teAttribute.trackedEntityAttribute);
+                });
+            }
+        });
+        
+        def.resolve( {trackedEntityAttributes: trackedEntityAttributes, programs: programs} );
+        
+    }).fail(function(){
+        def.resolve( null );
+    });
+    
+    return def.promise();
+}
+
+function getTrackedEntityAttributes( data )
+{
+    if( !data.trackedEntityAttributes ){
+        return;
+    }
+    
+    var mainDef = $.Deferred();
+    var mainPromise = mainDef.promise();
+
+    var def = $.Deferred();
+    var promise = def.promise();
+
+    var builder = $.Deferred();
+    var build = builder.promise();        
+
+    _.each(_.values(data.trackedEntityAttributes), function(teAttribute){        
+        build = build.then(function() {
+            var d = $.Deferred();
+            var p = d.promise();
+            dhis2.tc.store.get('attributes', teAttribute.id).done(function(obj) {
+                if(!obj || obj.version !== teAttribute.version) {
+                    promise = promise.then( getAttribute( teAttribute.id ) );
+                }
+                d.resolve();
+            });
+            return p;
+        });            
+    });
+
+    build.done(function() {
+        def.resolve();
+
+        promise = promise.done( function () {
+            mainDef.resolve( {trackedEntityAttributes: data.trackedEntityAttributes, programs: data.programs} );
+        } );
+    }).fail(function(){
+        mainDef.resolve( null );
+    });
+
+    builder.resolve();
+
+    return mainPromise;    
+}
+
+function getAttribute( id )
+{
+    return function() {
+        return $.ajax( {
+            url: '../api/trackedEntityAttributes.json',
+            type: 'GET',
+            data: 'filter=id:eq:' + id +'&fields=id,name,code,version,description,valueType,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version]'
+        }).done( function( response ){            
+            _.each( _.values( response.trackedEntityAttributes ), function( teAttribute ) {
+                dhis2.tc.store.set( 'attributes', teAttribute );
+            });
+        });
+    };
+}
+
+
+function getOptionSetsForAttributes( data )
+{
+    if( !data.trackedEntityAttributes ){
+        return;
+    }
+    
+    var mainDef = $.Deferred();
+    var mainPromise = mainDef.promise();
+
+    var def = $.Deferred();
+    var promise = def.promise();
+
+    var builder = $.Deferred();
+    var build = builder.promise();
+
+    _.each(_.values( data.trackedEntityAttributes), function( teAttribute) {           
+        if( teAttribute.optionSet && teAttribute.optionSet.id ){
+            build = build.then(function() {
+                var d = $.Deferred();
+                var p = d.promise();
+                dhis2.tc.store.get('optionSets', teAttribute.optionSet.id).done(function(obj) {                            
+                    if((!obj || obj.version !== teAttribute.optionSet.version) && !optionSetsInPromise[teAttribute.optionSet.id]) {                                
+                        optionSetsInPromise[teAttribute.optionSet.id] = teAttribute.optionSet.id;                                
+                        promise = promise.then( getOptionSet( teAttribute.optionSet.id ) );
+                    }
+                    d.resolve();
+                });
+
+                return p;
+            });
+        }            
+    });
+
+    build.done(function() {
+        def.resolve();
+
+        promise = promise.done( function () {
+            mainDef.resolve( data.programs );
+        } );
+    }).fail(function(){
+        mainDef.resolve( null );
+    });
+
+    builder.resolve();
+
+    return mainPromise;    
 }
 
 function getTrackedEntityForms( )
