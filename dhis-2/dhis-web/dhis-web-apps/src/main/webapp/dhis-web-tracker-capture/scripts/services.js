@@ -574,7 +574,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 att.value = AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'API');                                                                
             });
             
-            var promise = $http.put( '../api/trackedEntityInstances' , formattedTei ).then(function(response){                    
+            var promise = $http.post( '../api/trackedEntityInstances' , formattedTei ).then(function(response){                    
                 return response.data;
             });            
             return promise;            
@@ -1177,10 +1177,40 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 .service('EventUtils', function(DateUtils, CalendarService, OptionSetService, $filter, orderByFilter){
+    
+    var getEventDueDate = function(eventsByStage, programStage, enrollment){            
+        var referenceDate = enrollment.dateOfIncident ? enrollment.dateOfIncident : enrollment.dateOfEnrollment,
+            offset = programStage.minDaysFromStart,
+            calendarSetting = CalendarService.getSetting();
+
+        if(programStage.generatedByEnrollmentDate){
+            referenceDate = enrollment.dateOfEnrollment;
+        }
+
+        if(programStage.repeatable){
+            var evs = [];                
+            angular.forEach(eventsByStage, function(ev){
+                if(ev.eventDate){
+                    evs.push(ev);
+                }
+            });
+
+            if(evs.length > 0){
+                evs = orderByFilter(evs, '-eventDate');
+                referenceDate = evs[0].eventDate;
+                offset = programStage.standardInterval;
+            }                
+        }            
+
+        var dueDate = moment(referenceDate, calendarSetting.momentFormat).add('d', offset)._d;
+        dueDate = $filter('date')(dueDate, calendarSetting.keyDateFormat); 
+        return dueDate;
+    };
+    
     return {
         createDummyEvent: function(eventsPerStage, programStage, orgUnit, enrollment){
             var today = DateUtils.getToday();    
-            var dueDate = this.getEventDueDate(eventsPerStage, programStage, enrollment);
+            var dueDate = getEventDueDate(eventsPerStage, programStage, enrollment);
             var dummyEvent = {programStage: programStage.id, 
                               orgUnit: orgUnit.id,
                               orgUnitName: orgUnit.name,
@@ -1227,34 +1257,36 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }               
             }            
         },
-        getEventDueDate: function(eventsByStage, programStage, enrollment){            
-            var referenceDate = enrollment.dateOfIncident ? enrollment.dateOfIncident : enrollment.dateOfEnrollment,
-                offset = programStage.minDaysFromStart,
-                calendarSetting = CalendarService.getSetting();
-        
-            if(programStage.generatedByEnrollmentDate){
-                referenceDate = enrollment.dateOfEnrollment;
-            }
-            
-            if(programStage.repeatable){
-                var evs = [];                
-                angular.forEach(eventsByStage, function(ev){
-                    if(ev.eventDate){
-                        evs.push(ev);
+        autoGenerateEvents: function(teiId, program, orgUnit, enrollment){
+            var dhis2Events = {events: []};
+            if(teiId && program && orgUnit && enrollment){                
+                angular.forEach(program.programStages, function(stage){
+                    if(stage.autoGenerateEvent){
+                        var newEvent = {
+                                trackedEntityInstance: teiId,
+                                program: program.id,
+                                programStage: stage.id,
+                                orgUnit: orgUnit.id,
+                                dueDate: DateUtils.formatFromUserToApi(getEventDueDate(null,stage, enrollment)),
+                                status: 'SCHEDULE'
+                            };
+                            
+                        if(stage.openAfterEnrollment){
+                            if(stage.reportDateToUse === 'dateOfIncident'){
+                                newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.dateOfIncident);
+                            }
+                            else{
+                                newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.dateOfEnrollment);
+                            }
+                        }
+
+                        dhis2Events.events.push(newEvent);    
                     }
                 });
-                
-                if(evs.length > 0){
-                    evs = orderByFilter(evs, '-eventDate');
-                    referenceDate = evs[0].eventDate;
-                    offset = programStage.standardInterval;
-                }                
-            }            
+            }
             
-            var dueDate = moment(referenceDate, calendarSetting.momentFormat).add('d', offset)._d;
-            dueDate = $filter('date')(dueDate, calendarSetting.keyDateFormat); 
-            return dueDate;
-        },
+           return dhis2Events;
+        },        
         reconstruct: function(dhis2Event, programStage, optionSets){
             
             var e = {dataValues: [], 
@@ -1305,5 +1337,5 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             
             return e;
         }
-    }; 
+    };
 });

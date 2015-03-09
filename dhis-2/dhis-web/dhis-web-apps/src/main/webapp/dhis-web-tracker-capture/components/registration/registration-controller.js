@@ -135,7 +135,14 @@ trackerCapture.controller('RegistrationController',
                         }
                         else{
                             enrollment.enrollment = data.reference;
-                            $scope.autoGenerateEvents(teiId,$scope.selectedProgram, $scope.selectedOrgUnit, enrollment, destination);                          
+                            var dhis2Events = EventUtils.autoGenerateEvents(teiId, $scope.selectedProgram, $scope.selectedOrgUnit, enrollment);
+                            if(dhis2Events.events.length > 0){
+                                DHIS2EventFactory.create(dhis2Events).then(function(data){
+                                    goToDashboard(destination, teiId);
+                                });
+                            }else{
+                                goToDashboard(destination, teiId);
+                            }                            
                         }
                     });
                 }
@@ -170,44 +177,6 @@ trackerCapture.controller('RegistrationController',
         $timeout(function() { 
             $rootScope.$broadcast('relationship', {});
         }, 100);
-    };
-    
-    $scope.autoGenerateEvents = function(teiId, program, orgUnit, enrollment, destination){            
-            
-        if(teiId && program && orgUnit && enrollment){            
-            var dhis2Events = {events: []};
-            angular.forEach(program.programStages, function(stage){
-                if(stage.autoGenerateEvent){
-                    var newEvent = {
-                            trackedEntityInstance: teiId,
-                            program: program.id,
-                            programStage: stage.id,
-                            orgUnit: orgUnit.id,                        
-                            dueDate: DateUtils.formatFromUserToApi(EventUtils.getEventDueDate(null,stage, enrollment)),
-                            status: 'SCHEDULE'
-                        };
-                    
-                    if(stage.openAfterEnrollment){
-                        if(stage.reportDateToUse === 'dateOfIncident'){
-                            newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.dateOfIncident);
-                        }
-                        else{
-                            newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.dateOfEnrollment);
-                        }
-                    }
-                    
-                    dhis2Events.events.push(newEvent);    
-                }
-            });
-
-            if(dhis2Events.events.length > 0){
-                DHIS2EventFactory.create(dhis2Events).then(function(data){
-                    goToDashboard(destination, teiId);
-                });
-            }else{
-                goToDashboard(destination, teiId);
-            }
-        }
     };
     
     var goToDashboard = function(destination, teiId){
