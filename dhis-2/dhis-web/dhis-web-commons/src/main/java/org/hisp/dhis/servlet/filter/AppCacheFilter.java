@@ -28,6 +28,8 @@ package org.hisp.dhis.servlet.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.i18n.I18nService;
+import org.hisp.dhis.i18n.ui.locale.UserSettingLocaleManager;
 import org.hisp.dhis.system.SystemInfo;
 import org.hisp.dhis.system.SystemService;
 import org.hisp.dhis.user.CurrentUserService;
@@ -57,6 +59,12 @@ public class AppCacheFilter implements Filter
     @Autowired
     private SystemService systemService;
 
+    @Autowired
+    private UserSettingLocaleManager localeManager;
+
+    @Autowired
+    private I18nService i18nService;
+
     @Override
     public void doFilter( ServletRequest req, ServletResponse res, FilterChain chain ) throws IOException, ServletException
     {
@@ -76,6 +84,8 @@ public class AppCacheFilter implements Filter
             writer.print( responseWrapper.toString() );
             writer.println( "# DHIS2 " + systemInfo.getVersion() + " r" + systemInfo.getRevision() );
             writer.println( "# User: " + currentUserService.getCurrentUsername() );
+            writer.println( "# User UI Language: " + localeManager.getCurrentLocale() );
+            writer.println( "# User DB Language: " + i18nService.getCurrentLocale() );
             writer.println( "# Calendar: " + systemInfo.getCalendar() );
         }
     }
