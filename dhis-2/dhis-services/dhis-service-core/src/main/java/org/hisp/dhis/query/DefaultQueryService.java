@@ -28,6 +28,7 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
@@ -35,6 +36,7 @@ import org.hisp.dhis.schema.SchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -190,8 +192,24 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
             {
                 return Restrictions.ilike( split[0], "%" + split[2] + "%" );
             }
+            case "in":
+            {
+                return Restrictions.in( split[0], parseInOperator( split[2] ) );
+            }
         }
 
         return null;
+    }
+
+    private Collection<String> parseInOperator( String value )
+    {
+        if ( value == null || !value.startsWith( "[" ) || !value.endsWith( "]" ) )
+        {
+            return Lists.newArrayList();
+        }
+
+        String[] split = value.substring( 1, value.length() - 1 ).split( "," );
+
+        return Lists.newArrayList( split );
     }
 }
