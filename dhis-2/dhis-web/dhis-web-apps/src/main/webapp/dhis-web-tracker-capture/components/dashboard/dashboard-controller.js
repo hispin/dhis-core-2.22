@@ -199,6 +199,8 @@ trackerCapture.controller('DashboardController',
                 $scope.selectedProgram = pr;
             }
         });
+        
+        $scope.applySelectedProgram();
     }); 
     
     //watch for widget sorting    
