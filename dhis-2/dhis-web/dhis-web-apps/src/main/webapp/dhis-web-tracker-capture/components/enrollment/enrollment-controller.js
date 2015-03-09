@@ -293,8 +293,4 @@ trackerCapture.controller('EnrollmentController',
         EnrollmentService.update($scope.selectedEnrollment).then(function(data){         
         });
     };
-    
-    $scope.switchRegistrationForm = function(){
-        $scope.customFormExists = !$scope.customFormExists;
-    };
 });
