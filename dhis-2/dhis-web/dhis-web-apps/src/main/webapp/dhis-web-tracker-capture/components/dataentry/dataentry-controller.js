@@ -61,8 +61,7 @@ trackerCapture.controller('DataEntryController',
         $scope.optionSets = selections.optionSets;
         
         $scope.selectedProgramWithStage = [];        
-        if($scope.selectedOrgUnit && $scope.selectedProgram && $scope.selectedEntity && $scope.selectedEnrollment){
-
+        if($scope.selectedOrgUnit && $scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedEntity && $scope.selectedEnrollment && $scope.selectedEnrollment.enrollment){            
             ProgramStageFactory.getByProgram($scope.selectedProgram).then(function(stages){
                 $scope.programStages = stages;
                 angular.forEach(stages, function(stage){

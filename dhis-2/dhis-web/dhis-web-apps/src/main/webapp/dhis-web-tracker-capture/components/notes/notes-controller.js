@@ -19,12 +19,11 @@ trackerCapture.controller('NotesController',
     
     $scope.$on('dashboardWidgets', function() {
         $scope.selectedEnrollment = null;
-        var selections = CurrentSelection.get();                    
-        $scope.selectedTei = angular.copy(selections.tei);
-        $scope.selectedProgram = selections.pr;
+        var selections = CurrentSelection.get();
+        $scope.selectedTei = selections.tei;
         
         var selections = CurrentSelection.get();
-        if(selections.selectedEnrollment){
+        if(selections.selectedEnrollment && selections.selectedEnrollment.enrollment){
             EnrollmentService.get(selections.selectedEnrollment.enrollment).then(function(data){    
                 $scope.selectedEnrollment = data;   
                 if(!angular.isUndefined( $scope.selectedEnrollment.notes)){
