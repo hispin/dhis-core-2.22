@@ -91,7 +91,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -579,13 +578,13 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             return;
         }
 
-        if ( !getSchema().getPropertyMap().containsKey( pvProperty ) )
+        if ( !getSchema().haveProperty( pvProperty ) )
         {
             ContextUtils.notFoundResponse( response, "Property " + pvProperty + " does not exist on " + getEntityName() );
             return;
         }
 
-        Property property = getSchema().getPropertyMap().get( pvProperty );
+        Property property = getSchema().getProperty( pvProperty );
 
         if ( !property.isCollection() || !property.isIdentifiableObject() )
         {
@@ -593,41 +592,50 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             return;
         }
 
-        if ( !property.isOwner() )
-        {
-            ContextUtils.conflictResponse( response, getEntityName() + " is not the owner of this relationship." );
-            return;
-        }
+        IdentifiableObject inverseObject = manager.getNoAcl( (Class<? extends IdentifiableObject>) property.getItemKlass(), pvItemId );
+        IdentifiableObject owningObject = objects.get( 0 );
 
-        Collection<IdentifiableObject> identifiableObjects =
-            (Collection<IdentifiableObject>) property.getGetterMethod().invoke( objects.get( 0 ) );
-
-        IdentifiableObject candidate = manager.getNoAcl( (Class<? extends IdentifiableObject>) property.getItemKlass(), pvItemId );
-
-        if ( candidate == null )
+        if ( inverseObject == null )
         {
             ContextUtils.notFoundResponse( response, "Collection " + pvProperty + " does not have an item with ID: " + pvItemId );
             return;
         }
 
+        Collection<IdentifiableObject> collection;
+
+        if ( property.isOwner() )
+        {
+            collection = (Collection<IdentifiableObject>) property.getGetterMethod().invoke( owningObject );
+        }
+        else
+        {
+            Schema owningSchema = getSchema( property.getItemKlass() );
+            Property owningProperty = owningSchema.propertyByRole( property.getOwningRole() );
+            collection = (Collection<IdentifiableObject>) owningProperty.getGetterMethod().invoke( inverseObject );
+
+            IdentifiableObject o = owningObject;
+            owningObject = inverseObject;
+            inverseObject = o;
+        }
+
+        response.setStatus( HttpServletResponse.SC_NO_CONTENT );
+
+        if ( !aclService.canUpdate( currentUserService.getCurrentUser(), owningObject ) )
+        {
+            throw new DeleteAccessDeniedException( "You don't have the proper permissions to update this object." );
+        }
+
         // if it already contains this object, don't add it. It might be a list and not set, and we don't want duplicates.
-        if ( identifiableObjects.contains( candidate ) )
+        if ( collection.contains( inverseObject ) )
         {
             response.setStatus( HttpServletResponse.SC_NO_CONTENT );
             return; // nothing to do, just return with OK
         }
 
-        identifiableObjects.add( candidate );
+        collection.add( inverseObject );
 
-        if ( !aclService.canUpdate( currentUserService.getCurrentUser(), objects.get( 0 ) ) )
-        {
-            throw new DeleteAccessDeniedException( "You don't have the proper permissions to delete this object." );
-        }
-
-        response.setStatus( HttpServletResponse.SC_NO_CONTENT );
-
-        manager.update( objects.get( 0 ) );
-        manager.refresh( candidate );
+        manager.update( owningObject );
+        manager.refresh( inverseObject );
     }
 
     @RequestMapping( value = "/{uid}/{property}/{itemId}", method = RequestMethod.DELETE )
@@ -660,46 +668,42 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             return;
         }
 
-        if ( !property.isOwner() )
+        Collection<IdentifiableObject> collection;
+        IdentifiableObject inverseObject = manager.getNoAcl( (Class<? extends IdentifiableObject>) property.getItemKlass(), pvItemId );
+        IdentifiableObject owningObject = objects.get( 0 );
+
+        if ( property.isOwner() )
         {
-            ContextUtils.conflictResponse( response, getEntityName() + " is not the owner of this relationship." );
-            return;
+            collection = (Collection<IdentifiableObject>) property.getGetterMethod().invoke( owningObject );
+        }
+        else
+        {
+            Schema owningSchema = getSchema( property.getItemKlass() );
+            Property owningProperty = owningSchema.propertyByRole( property.getOwningRole() );
+            collection = (Collection<IdentifiableObject>) owningProperty.getGetterMethod().invoke( inverseObject );
+
+            IdentifiableObject o = owningObject;
+            owningObject = inverseObject;
+            inverseObject = o;
         }
 
-        Collection<IdentifiableObject> identifiableObjects =
-            (Collection<IdentifiableObject>) property.getGetterMethod().invoke( objects.get( 0 ) );
-
-        Iterator<IdentifiableObject> iterator = identifiableObjects.iterator();
-        IdentifiableObject candidate = null;
-
-        while ( iterator.hasNext() )
+        if ( !aclService.canUpdate( currentUserService.getCurrentUser(), owningObject ) )
         {
-            candidate = iterator.next();
-
-            if ( candidate.getUid() != null && candidate.getUid().equals( pvItemId ) )
-            {
-                iterator.remove();
-                break;
-            }
-
-            candidate = null;
+            throw new DeleteAccessDeniedException( "You don't have the proper permissions to delete this object." );
         }
 
-        if ( candidate == null )
+        if ( !collection.contains( inverseObject ) )
         {
             ContextUtils.notFoundResponse( response, "Collection " + pvProperty + " does not have an item with ID: " + pvItemId );
             return;
         }
 
-        if ( !aclService.canUpdate( currentUserService.getCurrentUser(), objects.get( 0 ) ) )
-        {
-            throw new DeleteAccessDeniedException( "You don't have the proper permissions to delete this object." );
-        }
+        collection.remove( inverseObject );
 
         response.setStatus( HttpServletResponse.SC_NO_CONTENT );
 
-        manager.update( objects.get( 0 ) );
-        manager.refresh( candidate );
+        manager.update( owningObject );
+        manager.refresh( inverseObject );
     }
 
     //--------------------------------------------------------------------------
@@ -828,6 +832,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         }
 
         return schema;
+    }
+
+    protected Schema getSchema( Class<?> klass )
+    {
+        return schemaService.getDynamicSchema( klass );
     }
 
     protected void addAccessProperties( List<T> objects )
