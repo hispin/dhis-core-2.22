@@ -28,8 +28,10 @@ package org.hisp.dhis.dxf2.objectfilter.ops;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
 import org.hisp.dhis.system.util.DateUtils;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -105,6 +107,16 @@ public abstract class Op
         else if ( Date.class.isAssignableFrom( klass ) )
         {
             return (T) DateUtils.parseDate( value );
+        }
+        else if ( Collection.class.isAssignableFrom( klass ) )
+        {
+            if ( value == null || !value.startsWith( "[" ) || !value.endsWith( "]" ) )
+            {
+                return null;
+            }
+
+            String[] split = value.substring( 1, value.length() - 1 ).split( "," );
+            return (T) Lists.newArrayList( split );
         }
 
         return null;
