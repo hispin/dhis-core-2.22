@@ -61,6 +61,7 @@
             <div class='relationship-container' ng-show="!teiForRelationship">
                 <select ng-model="selectedRelationshipSource.value"
                         class="form-control"
+                        ng-change='getRelative()'
                         ng-options="relationshipSource | translate for relationshipSource in relationshipSources">
                     <option value="">{{'please_select_source'| translate}}</option>
                 </select>
