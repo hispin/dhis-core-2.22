@@ -62,8 +62,7 @@ public class WebAppServer extends Thread {
             throws Exception {
         
         int port;
-        try {
-            Scanner scanner = new Scanner(new File(installDir + JETTY_PORT_CONF));
+        try (Scanner scanner = new Scanner(new File(installDir + JETTY_PORT_CONF))) {
             port = scanner.nextInt();
             log.info("Loading DHIS 2 on port: " + port);
         } catch (Exception ex) {
