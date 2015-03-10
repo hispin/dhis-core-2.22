@@ -141,7 +141,7 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
 
         Property property = schema.getProperty( split[0] );
 
-        if ( property == null || !property.isPersisted() || !property.isSimple() )
+        if ( property == null || !property.isPersisted() || !property.isSimple() || Enum.class.isAssignableFrom( property.getKlass() ) )
         {
             return null;
         }
