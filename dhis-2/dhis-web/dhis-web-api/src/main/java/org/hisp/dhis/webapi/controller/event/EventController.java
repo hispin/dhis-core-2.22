@@ -146,6 +146,7 @@ public class EventController
         @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date startDate,
         @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date lastUpdated,
         @RequestParam( required = false ) String attachment,
         @RequestParam( required = false, defaultValue = "false" ) boolean skipHeader,
         @RequestParam Map<String, String> parameters,
@@ -180,7 +181,7 @@ public class EventController
             }
         }
 
-        Events events = eventService.getEvents( pr, prs, programStatus, followUp, ou, ouMode, tei, startDate, endDate, status, idSchemes );
+        Events events = eventService.getEvents( pr, prs, programStatus, followUp, ou, ouMode, tei, startDate, endDate, status, lastUpdated, idSchemes );
 
         if ( options.hasPaging() )
         {
@@ -222,6 +223,7 @@ public class EventController
         @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date startDate,
         @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date lastUpdated,
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) String attachment,
         @RequestParam Map<String, String> parameters, IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request )
@@ -255,7 +257,7 @@ public class EventController
             }
         }
 
-        Events events = eventService.getEvents( pr, prs, programStatus, followUp, ou, ouMode, tei, startDate, endDate, status, idSchemes );
+        Events events = eventService.getEvents( pr, prs, programStatus, followUp, ou, ouMode, tei, startDate, endDate, status, lastUpdated, idSchemes );
 
         if ( options.hasLinks() )
         {

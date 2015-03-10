@@ -396,13 +396,13 @@ public abstract class AbstractEventService
     @Override
     public Events getEvents( Program program, OrganisationUnit organisationUnit, OrganisationUnitSelectionMode orgUnitSelectionMode )
     {
-        return getEvents( program, null, null, null, organisationUnit, orgUnitSelectionMode, null, null, null, null, null );
+        return getEvents( program, null, null, null, organisationUnit, orgUnitSelectionMode, null, null, null, null, null, null );
     }
 
     @Override
     public Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp, OrganisationUnit orgUnit, 
         OrganisationUnitSelectionMode orgUnitSelectionMode, TrackedEntityInstance trackedEntityInstance, 
-        Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes )
+        Date startDate, Date endDate, EventStatus status, Date lastUpdated, IdSchemes idSchemes )
     {
         List<OrganisationUnit> organisationUnits = new ArrayList<>();
         
@@ -424,7 +424,7 @@ public abstract class AbstractEventService
         }
 
         List<Event> eventList = eventStore.getEvents( program, programStage, programStatus, followUp, organisationUnits,
-            trackedEntityInstance, startDate, endDate, status, idSchemes );
+            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes );
 
         Events events = new Events();
         events.setEvents( eventList );
