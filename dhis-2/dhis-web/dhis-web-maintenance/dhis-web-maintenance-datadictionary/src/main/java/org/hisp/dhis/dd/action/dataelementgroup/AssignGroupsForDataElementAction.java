@@ -58,9 +58,9 @@ public class AssignGroupsForDataElementAction
     // Input & Output
     // -------------------------------------------------------------------------
 
-    private Integer dataElementId;
+    private String dataElementId;
 
-    public void setDataElementId( Integer dataElementId )
+    public void setDataElementId( String dataElementId )
     {
         this.dataElementId = dataElementId;
     }
