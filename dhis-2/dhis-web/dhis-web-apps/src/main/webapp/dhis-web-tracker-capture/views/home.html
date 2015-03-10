@@ -60,7 +60,7 @@
         <!-- top bar begins -->
         <div class="row top-bar">        
             <div class="col-sm-12">            
-                <span ng-if='searchState'>
+                <span ng-if='!showRegistrationDiv'>
                     {{selectedProgram.trackedEntity.name}} {{'search'| translate}}<span class="small-horizonal-spacing" ng-if="pager.total">({{'total' | translate}}:  {{pager.total}})</span>
                 </span>
                 <span ng-if='showRegistrationDiv'>
