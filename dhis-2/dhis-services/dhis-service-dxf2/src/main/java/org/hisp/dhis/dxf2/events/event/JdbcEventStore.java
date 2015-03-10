@@ -75,15 +75,15 @@ public class JdbcEventStore
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public List<Event> getAll( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
+    public List<Event> getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
         List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status )
     {
-        return getAll( program, programStage, programStatus, followUp, organisationUnits, trackedEntityInstance,
+        return getEvents( program, programStage, programStatus, followUp, organisationUnits, trackedEntityInstance,
             startDate, endDate, status, new IdSchemes() );
     }
 
     @Override
-    public List<Event> getAll( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
+    public List<Event> getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
         List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes )
     {
         List<Event> events = new ArrayList<>();
