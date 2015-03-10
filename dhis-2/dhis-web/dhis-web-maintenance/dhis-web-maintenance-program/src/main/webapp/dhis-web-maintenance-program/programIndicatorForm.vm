@@ -1,8 +1,10 @@
 <div id="tabs">
 	<ul>
 		<li><a href="#tab-1">$i18n.getString("dataelements")</a></li>
-		<li><a href="#tab-2">$i18n.getString("program_variables")</a></li>
-		<li><a href="#tab-3">$i18n.getString("attributes")</a></li>
+		#if($program.type!='3')
+			<li><a href="#tab-2">$i18n.getString("program_variables")</a></li>
+			<li><a href="#tab-3">$i18n.getString("attributes")</a></li>
+		#end
 		<li><a href="#tab-4">$i18n.getString("constant")</a></li>
 	</ul>	
 	
@@ -25,6 +27,7 @@
       </table>
 	</div>
 	
+#if($program.type!='3')
 	<div id="tab-2">
 		<table>
 			<tr>
@@ -67,6 +70,8 @@
       </table>
 	</div>
 	
+#end
+
 	<div id="tab-4">
 		<table>
         <tr>
