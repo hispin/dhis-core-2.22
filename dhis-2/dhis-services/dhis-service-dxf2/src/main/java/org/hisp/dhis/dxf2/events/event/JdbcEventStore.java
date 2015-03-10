@@ -77,15 +77,8 @@ public class JdbcEventStore
 
     @Override
     public List<Event> getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
-        List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status )
-    {
-        return getEvents( program, programStage, programStatus, followUp, organisationUnits, trackedEntityInstance,
-            startDate, endDate, status, new IdSchemes() );
-    }
-
-    @Override
-    public List<Event> getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
-        List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes )
+        List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, 
+        Date startDate, Date endDate, EventStatus status, Date lastUpdated, IdSchemes idSchemes )
     {
         List<Event> events = new ArrayList<>();
 
@@ -103,7 +96,7 @@ public class JdbcEventStore
         }
 
         String sql = buildSql( program, programStage, programStatus, followUp, getIdList( organisationUnits ),
-            trackedEntityInstanceId, startDate, endDate, status );
+            trackedEntityInstanceId, startDate, endDate, status, lastUpdated );
 
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
 
@@ -212,7 +205,7 @@ public class JdbcEventStore
     }
 
     private String buildSql( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
-        List<Integer> orgUnitIds, Integer trackedEntityInstanceId, Date startDate, Date endDate, EventStatus status )
+        List<Integer> orgUnitIds, Integer trackedEntityInstanceId, Date startDate, Date endDate, EventStatus status, Date lastUpdated )
     {
         SqlHelper hlp = new SqlHelper();
 
@@ -271,6 +264,11 @@ public class JdbcEventStore
         if ( followUp != null )
         {
             sql += hlp.whereAnd() + " pi.followup is " + (followUp ? "true" : "false") + " ";
+        }
+        
+        if ( lastUpdated != null )
+        {
+            sql += hlp.whereAnd() + " psi.lastupdated > '" + DateUtils.getLongDateString( lastUpdated ) + "' ";
         }
 
         if ( status == null || EventStatus.isExistingEvent( status ) )
