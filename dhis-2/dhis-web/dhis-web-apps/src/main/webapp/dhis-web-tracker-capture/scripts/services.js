@@ -181,21 +181,25 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             programs.push(pr);
                         }
                     });
+                    
                     if(programs.length === 0){
                         selectedProgram = null;
                     }
+                    else if(programs.length === 1){
+                        selectedProgram = programs[0];
+                    } 
                     else{
                         if(selectedProgram){
-                            angular.forEach(programs, function(pr){                            
-                                if(pr.id === selectedProgram.id){                                
-                                    selectedProgram = pr;
+                            var continueLoop = true;
+                            for(var i=0; i<programs.length && continueLoop; i++){
+                                if(programs[i].id === selectedProgram.id){                                
+                                    selectedProgram = programs[i];
+                                    continueLoop = false;
                                 }
-                            });
-                        }
-                        else{                        
-                            if(programs.length === 1){
-                                selectedProgram = programs[0];
-                            }                        
+                            }
+                            if(continueLoop){
+                                selectedProgram = null;
+                            }
                         }
                     }
                     
