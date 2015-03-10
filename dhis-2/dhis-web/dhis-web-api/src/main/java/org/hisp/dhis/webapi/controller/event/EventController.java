@@ -31,10 +31,8 @@ package org.hisp.dhis.webapi.controller.event;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -157,7 +155,6 @@ public class EventController
 
         Program pr = manager.get( Program.class, program );
         ProgramStage prs = manager.get( ProgramStage.class, programStage );
-        List<OrganisationUnit> organisationUnits = new ArrayList<>();
         TrackedEntityInstance tei = null;
         OrganisationUnit ou = null;
 
@@ -183,24 +180,7 @@ public class EventController
             }
         }
 
-        if ( ou != null )
-        {
-            if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( ouMode ) )
-            {
-                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( ou.getUid() ) );
-            }
-            else if ( OrganisationUnitSelectionMode.CHILDREN.equals( ouMode ) )
-            {
-                organisationUnits.add( ou );
-                organisationUnits.addAll( ou.getChildren() );
-            }
-            else // SELECTED
-            {
-                organisationUnits.add( ou );
-            }
-        }
-
-        Events events = eventService.getEvents( pr, prs, programStatus, followUp, organisationUnits, tei, startDate, endDate, status, idSchemes );
+        Events events = eventService.getEvents( pr, prs, programStatus, followUp, ou, ouMode, tei, startDate, endDate, status, idSchemes );
 
         if ( options.hasPaging() )
         {
@@ -250,7 +230,6 @@ public class EventController
 
         Program pr = manager.get( Program.class, program );
         ProgramStage prs = manager.get( ProgramStage.class, programStage );
-        List<OrganisationUnit> organisationUnits = new ArrayList<>();
         TrackedEntityInstance tei = null;
         OrganisationUnit ou = null;
 
@@ -276,24 +255,7 @@ public class EventController
             }
         }
 
-        if ( ou != null )
-        {
-            if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( ouMode ) )
-            {
-                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( ou.getUid() ) );
-            }
-            else if ( OrganisationUnitSelectionMode.CHILDREN.equals( ouMode ) )
-            {
-                organisationUnits.add( ou );
-                organisationUnits.addAll( ou.getChildren() );
-            }
-            else // SELECTED
-            {
-                organisationUnits.add( ou );
-            }
-        }
-
-        Events events = eventService.getEvents( pr, prs, programStatus, followUp, organisationUnits, tei, startDate, endDate, status, idSchemes );
+        Events events = eventService.getEvents( pr, prs, programStatus, followUp, ou, ouMode, tei, startDate, endDate, status, idSchemes );
 
         if ( options.hasLinks() )
         {
@@ -341,7 +303,6 @@ public class EventController
         WebOptions options = new WebOptions( parameters );
 
         Program pr = manager.get( Program.class, program );
-        List<OrganisationUnit> organisationUnits = new ArrayList<>();
         OrganisationUnit ou = null;
 
         if ( orgUnit != null )
@@ -349,24 +310,7 @@ public class EventController
             ou = manager.get( OrganisationUnit.class, orgUnit );
         }
 
-        if ( ou != null )
-        {
-            if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( ouMode ) )
-            {
-                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( ou.getUid() ) );
-            }
-            else if ( OrganisationUnitSelectionMode.CHILDREN.equals( ouMode ) )
-            {
-                organisationUnits.add( ou );
-                organisationUnits.addAll( ou.getChildren() );
-            }
-            else // SELECTED
-            {
-                organisationUnits.add( ou );
-            }
-        }
-
-        EventRows eventRows = eventRowService.getEventRows( pr, organisationUnits, programStatus, eventStatus, startDate, endDate );
+        EventRows eventRows = eventRowService.getEventRows( pr, ou, ouMode, programStatus, eventStatus, startDate, endDate );
 
         if ( options.hasPaging() )
         {

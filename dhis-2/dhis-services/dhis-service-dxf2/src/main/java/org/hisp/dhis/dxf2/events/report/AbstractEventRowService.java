@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dxf2.events.event.Event;
 import org.hisp.dhis.dxf2.events.event.EventService;
 import org.hisp.dhis.dxf2.events.event.Events;
@@ -51,7 +52,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AbstractEventRowService
     implements EventRowService
 {
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -66,14 +66,14 @@ public class AbstractEventRowService
     private TrackedEntityInstanceService trackedEntityInstanceService;
 
     @Override
-    public EventRows getEventRows( Program program, List<OrganisationUnit> organisationUnits,
+    public EventRows getEventRows( Program program, OrganisationUnit orgUnit, OrganisationUnitSelectionMode orgUnitSelectionMode,
         ProgramStatus programStatus, EventStatus eventStatus, Date startDate, Date endDate )
     {
         List<EventRow> eventRowList = new ArrayList<EventRow>();
         EventRows eventRows = new EventRows();
 
-        Events events = eventService.getEvents( program, null, programStatus, null, organisationUnits, null, startDate,
-            endDate, eventStatus, null );
+        Events events = eventService.getEvents( program, null, programStatus, null, orgUnit, orgUnitSelectionMode, 
+            null, startDate, endDate, eventStatus, null );
 
         for ( Event event : events.getEvents() )
         {
