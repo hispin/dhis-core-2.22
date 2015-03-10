@@ -129,7 +129,7 @@ public abstract class AbstractPropertyIntrospectorService
 
         LocalSessionFactoryBean sessionFactoryBean = getLocalSessionFactoryBean();
         SessionFactoryImplementor sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
-        Iterator collectionIterator = sessionFactoryBean.getConfiguration().getCollectionMappings();
+        Iterator<?> collectionIterator = sessionFactoryBean.getConfiguration().getCollectionMappings();
 
         while ( collectionIterator.hasNext() )
         {
@@ -182,7 +182,6 @@ public abstract class AbstractPropertyIntrospectorService
         return (LocalSessionFactoryBean) context.getBean( "&sessionFactory" );
     }
 
-    @SuppressWarnings( "unused" )
     protected Map<String, Property> getPropertiesFromHibernate( Class<?> klass )
     {
         updateJoinTables();
