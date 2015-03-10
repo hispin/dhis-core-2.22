@@ -109,12 +109,12 @@ trackerCapture.controller('DataEntryController',
 
                             dhis2Event.statusColor = EventUtils.getEventStatusColor(dhis2Event);
                             dhis2Event = processEvent(dhis2Event, eventStage);
+                            $scope.eventsByStage[dhis2Event.programStage].push(dhis2Event);
                             
                             if($scope.currentStage && $scope.currentStage.id === dhis2Event.programStage){
                                 $scope.currentEvent = dhis2Event;                                
                                 $scope.showDataEntry($scope.currentEvent, true);
                             }
-                            $scope.eventsByStage[dhis2Event.programStage].push(dhis2Event);
                         }
                     }
                 });
@@ -401,6 +401,7 @@ trackerCapture.controller('DataEntryController',
             $scope.invalidDate = false;
             $scope.eventDateSaved = true;
             $scope.currentEvent.statusColor = EventUtils.getEventStatusColor($scope.currentEvent);
+            sortEventsByStage();
         });
     };
     
@@ -436,6 +437,7 @@ trackerCapture.controller('DataEntryController',
             $scope.currentEvent.sortingDate = $scope.currentEvent.dueDate;
             $scope.currentEvent.statusColor = EventUtils.getEventStatusColor($scope.currentEvent);            
             $scope.schedulingEnabled = !$scope.schedulingEnabled;
+            sortEventsByStage();
         });
                       
     };
@@ -641,6 +643,7 @@ trackerCapture.controller('DataEntryController',
                 }
                 $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1);
                 $scope.currentEvent = null;
+                sortEventsByStage();
             });
         });
     };
@@ -669,6 +672,11 @@ trackerCapture.controller('DataEntryController',
             if($scope.eventsByStage.hasOwnProperty(key)){
                 $scope.eventsByStage[key] = orderByFilter($scope.eventsByStage[key], '-sortingDate').reverse(); 
                 $scope.totalEvents += $scope.eventsByStage[key].length <=1 ? 1:$scope.eventsByStage[key].length;
+                
+                console.log('the stage:  ', key);
+                angular.forEach($scope.eventsByStage[key], function(stage){
+                    console.log('event:  ', stage.sortingDate);
+                });
             }
         }
     };
