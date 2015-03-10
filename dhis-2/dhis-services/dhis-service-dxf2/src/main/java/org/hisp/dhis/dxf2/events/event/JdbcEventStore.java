@@ -51,6 +51,7 @@ import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.SqlHelper;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
+import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -112,6 +113,8 @@ public class JdbcEventStore
         event.setEvent( "not_valid" );
 
         Set<String> notes = new HashSet<>();
+        
+        idSchemes = ObjectUtils.firstNonNull( idSchemes, new IdSchemes() );
 
         while ( rowSet.next() )
         {

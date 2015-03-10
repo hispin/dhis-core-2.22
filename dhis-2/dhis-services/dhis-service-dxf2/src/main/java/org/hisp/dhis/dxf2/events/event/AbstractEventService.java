@@ -395,14 +395,7 @@ public abstract class AbstractEventService
     @Override
     public Events getEvents( Program program, OrganisationUnit organisationUnit )
     {
-        return getEvents( program, null, null, null, Arrays.asList( organisationUnit ), null, null, null, null );
-    }
-
-    @Override
-    public Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
-        List<OrganisationUnit> organisationUnit, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status )
-    {
-        return getEvents( program, programStage, programStatus, followUp, organisationUnit, trackedEntityInstance, startDate, endDate, status, new IdSchemes() );
+        return getEvents( program, null, null, null, Arrays.asList( organisationUnit ), null, null, null, null, null );
     }
 
     @Override

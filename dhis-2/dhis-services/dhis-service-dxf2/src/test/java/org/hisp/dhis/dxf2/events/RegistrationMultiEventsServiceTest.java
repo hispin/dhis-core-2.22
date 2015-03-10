@@ -234,7 +234,7 @@ public class RegistrationMultiEventsServiceTest
         importSummary = eventService.addEvent( event );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
-        assertEquals( 1, eventService.getEvents( programA, programStageA, null, null, Arrays.asList( organisationUnitA ), null, null, null, null ).getEvents().size() );
+        assertEquals( 1, eventService.getEvents( programA, programStageA, null, null, Arrays.asList( organisationUnitA ), null, null, null, null, null ).getEvents().size() );
     }
 
     @Test

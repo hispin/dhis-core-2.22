@@ -73,7 +73,7 @@ public class AbstractEventRowService
         EventRows eventRows = new EventRows();
 
         Events events = eventService.getEvents( program, null, programStatus, null, organisationUnits, null, startDate,
-            endDate, eventStatus );
+            endDate, eventStatus, null );
 
         for ( Event event : events.getEvents() )
         {
