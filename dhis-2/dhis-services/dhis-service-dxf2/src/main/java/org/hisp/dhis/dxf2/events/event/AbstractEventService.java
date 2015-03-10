@@ -28,14 +28,25 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableProperty;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dxf2.common.IdSchemes;
@@ -78,18 +89,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -393,15 +394,35 @@ public abstract class AbstractEventService
     // -------------------------------------------------------------------------
 
     @Override
-    public Events getEvents( Program program, OrganisationUnit organisationUnit )
+    public Events getEvents( Program program, OrganisationUnit organisationUnit, OrganisationUnitSelectionMode orgUnitSelectionMode )
     {
-        return getEvents( program, null, null, null, Arrays.asList( organisationUnit ), null, null, null, null, null );
+        return getEvents( program, null, null, null, organisationUnit, orgUnitSelectionMode, null, null, null, null, null );
     }
 
     @Override
-    public Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
-        List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes )
+    public Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp, OrganisationUnit orgUnit, 
+        OrganisationUnitSelectionMode orgUnitSelectionMode, TrackedEntityInstance trackedEntityInstance, 
+        Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes )
     {
+        List<OrganisationUnit> organisationUnits = new ArrayList<>();
+        
+        if ( orgUnit != null )
+        {
+            if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( orgUnitSelectionMode ) )
+            {
+                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( orgUnit.getUid() ) );
+            }
+            else if ( OrganisationUnitSelectionMode.CHILDREN.equals( orgUnitSelectionMode ) )
+            {
+                organisationUnits.add( orgUnit );
+                organisationUnits.addAll( orgUnit.getChildren() );
+            }
+            else // SELECTED
+            {
+                organisationUnits.add( orgUnit );
+            }
+        }
+
         List<Event> eventList = eventStore.getEvents( program, programStage, programStatus, followUp, organisationUnits,
             trackedEntityInstance, startDate, endDate, status, idSchemes );
 

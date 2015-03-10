@@ -29,8 +29,8 @@ package org.hisp.dhis.dxf2.events.report;
  */
 
 import java.util.Date;
-import java.util.List;
 
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
@@ -38,16 +38,9 @@ import org.hisp.dhis.program.ProgramStatus;
 
 /**
  * @author Abyot Asalefew Gizaw <abyota@gmail.com>
- *
  */
 public interface EventRowService
 {
-
-    // -------------------------------------------------------------------------
-    // READ
-    // -------------------------------------------------------------------------
-
-    EventRows getEventRows( Program program, List<OrganisationUnit> organisationUnits, ProgramStatus programStatus,
-        EventStatus eventStatus, Date startDate, Date endDate );
-
+    EventRows getEventRows( Program program, OrganisationUnit orgUnit, OrganisationUnitSelectionMode orgUnitSelectionMode, 
+        ProgramStatus programStatus, EventStatus eventStatus, Date startDate, Date endDate );
 }

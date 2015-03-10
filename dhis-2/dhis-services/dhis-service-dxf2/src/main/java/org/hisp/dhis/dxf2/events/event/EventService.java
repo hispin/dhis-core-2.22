@@ -28,6 +28,7 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
@@ -55,10 +56,11 @@ public interface EventService
     // READ
     // -------------------------------------------------------------------------
 
-    Events getEvents( Program program, OrganisationUnit organisationUnit );
+    Events getEvents( Program program, OrganisationUnit organisationUnit, OrganisationUnitSelectionMode orgUnitSelectionMode );
 
-    Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp, List<OrganisationUnit> organisationUnit,
-        TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes );
+    Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp, OrganisationUnit orgUnit,
+        OrganisationUnitSelectionMode orgUnitSelectionMode, TrackedEntityInstance trackedEntityInstance, 
+        Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes );
 
     Event getEvent( String uid );
 
