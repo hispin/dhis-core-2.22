@@ -33,7 +33,6 @@ import java.util.Map;
 
 /**
  * @author Chau Thu Tran
- * @version $ ProgramIndicatorService.java Apr 16, 2013 1:11:07 PM $
  */
 public interface ProgramIndicatorService
 {
@@ -141,5 +140,4 @@ public interface ProgramIndicatorService
      * @return The expression is valid or not
      */
     String expressionIsValid( String expression );
-
 }
