@@ -28,18 +28,17 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hisp.dhis.common.BaseLinkableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.event.EventStatus;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -80,9 +79,9 @@ public class Event
     
     private Boolean followup;
     
-    private Date created;
+    private String created;
     
-    private Date lastUpdated;
+    private String lastUpdated;
 
     public Event()
     {
@@ -284,27 +283,27 @@ public class Event
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
-    public Date getCreated()
+    public String getCreated()
     {
         return created;
     }
 
-    public void setCreated( Date created )
+    public void setCreated( String created )
     {
         this.created = created;
     }
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
-    public Date getLastUpdated()
+    public String getLastUpdated()
     {
         return lastUpdated;
     }
 
-    public void setLastUpdated( Date lastUpdated )
+    public void setLastUpdated( String lastUpdated )
     {
         this.lastUpdated = lastUpdated;
-    }
+    }    
 
     @Override
     public boolean equals( Object o )

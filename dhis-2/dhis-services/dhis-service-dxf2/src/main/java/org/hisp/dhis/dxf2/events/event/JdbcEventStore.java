@@ -28,13 +28,21 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.StringUtils;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdList;
+import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
+import static org.hisp.dhis.system.util.TextUtils.getCommaDelimitedString;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
@@ -47,16 +55,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdList;
-import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
-import static org.hisp.dhis.system.util.TextUtils.getCommaDelimitedString;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -143,14 +143,10 @@ public class JdbcEventStore
 
                 event.setStoredBy( rowSet.getString( "psi_completeduser" ) );
                 event.setOrgUnitName( rowSet.getString( "ou_name" ) );
-
-                event.setDueDate( StringUtils.defaultIfEmpty(
-                    DateUtils.getLongDateString( rowSet.getDate( "psi_duedate" ) ), DateUtils.getLongDateString( rowSet.getDate(
-                        "psi_duedate" ) ) ) );
-
-                event.setEventDate( StringUtils.defaultIfEmpty(
-                    DateUtils.getLongDateString( rowSet.getDate( "psi_executiondate" ) ), DateUtils.getLongDateString( rowSet.getDate(
-                        "psi_executiondate" ) ) ) );
+                event.setDueDate( DateUtils.getLongDateString( rowSet.getDate( "psi_duedate" ) ) );
+                event.setEventDate( DateUtils.getLongDateString( rowSet.getDate( "psi_executiondate" ) ) );
+                event.setCreated( DateUtils.getLongDateString( rowSet.getDate( "psi_created" ) ) );
+                event.setLastUpdated( DateUtils.getLongDateString( rowSet.getDate( "psi_lastupdated" ) ) );
 
                 if ( rowSet.getBoolean( "ps_capturecoordinates" ) )
                 {
@@ -222,7 +218,7 @@ public class JdbcEventStore
                 "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, pa.uid as pa_uid, " +
                 "psi.uid as psi_uid, psi.status as psi_status, ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, " +
                 "psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
-                "psi.longitude as psi_longitude, psi.latitude as psi_latitude, " +
+                "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, " +
                 "psinote.trackedentitycommentid as psinote_id, psinote.commenttext as psinote_value, " +
                 "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby, " +
                 "pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, de.uid as de_uid, de.code as de_code " +
