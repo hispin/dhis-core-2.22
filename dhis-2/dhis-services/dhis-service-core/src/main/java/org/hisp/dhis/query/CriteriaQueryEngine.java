@@ -196,12 +196,12 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
             }
             case IN:
             {
-                if ( !Collection.class.isInstance( parameters.get( 0 ) ) || ((Collection) parameters.get( 0 )).isEmpty() )
+                if ( !Collection.class.isInstance( parameters.get( 0 ) ) || ((Collection<?>) parameters.get( 0 )).isEmpty() )
                 {
                     return null;
                 }
 
-                return Restrictions.in( property.getFieldName(), (Collection) parameters.get( 0 ) );
+                return Restrictions.in( property.getFieldName(), (Collection<?>) parameters.get( 0 ) );
             }
         }
 
