@@ -159,7 +159,7 @@ public class EventController
         ProgramStage prs = manager.get( ProgramStage.class, programStage );
         List<OrganisationUnit> organisationUnits = new ArrayList<>();
         TrackedEntityInstance tei = null;
-        OrganisationUnit rootOrganisationUnit = null;
+        OrganisationUnit ou = null;
 
         if ( trackedEntityInstance != null )
         {
@@ -174,29 +174,29 @@ public class EventController
 
         if ( orgUnit != null )
         {
-            rootOrganisationUnit = manager.get( OrganisationUnit.class, orgUnit );
+            ou = manager.get( OrganisationUnit.class, orgUnit );
 
-            if ( rootOrganisationUnit == null )
+            if ( ou == null )
             {
                 ContextUtils.conflictResponse( response, "Invalid orgUnit ID." );
                 return;
             }
         }
 
-        if ( rootOrganisationUnit != null )
+        if ( ou != null )
         {
             if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( ouMode ) )
             {
-                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( rootOrganisationUnit.getUid() ) );
+                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( ou.getUid() ) );
             }
             else if ( OrganisationUnitSelectionMode.CHILDREN.equals( ouMode ) )
             {
-                organisationUnits.add( rootOrganisationUnit );
-                organisationUnits.addAll( rootOrganisationUnit.getChildren() );
+                organisationUnits.add( ou );
+                organisationUnits.addAll( ou.getChildren() );
             }
             else // SELECTED
             {
-                organisationUnits.add( rootOrganisationUnit );
+                organisationUnits.add( ou );
             }
         }
 
@@ -252,7 +252,7 @@ public class EventController
         ProgramStage prs = manager.get( ProgramStage.class, programStage );
         List<OrganisationUnit> organisationUnits = new ArrayList<>();
         TrackedEntityInstance tei = null;
-        OrganisationUnit rootOrganisationUnit = null;
+        OrganisationUnit ou = null;
 
         if ( trackedEntityInstance != null )
         {
@@ -267,29 +267,29 @@ public class EventController
 
         if ( orgUnit != null )
         {
-            rootOrganisationUnit = manager.get( OrganisationUnit.class, orgUnit );
+            ou = manager.get( OrganisationUnit.class, orgUnit );
 
-            if ( rootOrganisationUnit == null )
+            if ( ou == null )
             {
                 ContextUtils.conflictResponse( response, "Invalid orgUnit ID." );
                 return null;
             }
         }
 
-        if ( rootOrganisationUnit != null )
+        if ( ou != null )
         {
             if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( ouMode ) )
             {
-                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( rootOrganisationUnit.getUid() ) );
+                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( ou.getUid() ) );
             }
             else if ( OrganisationUnitSelectionMode.CHILDREN.equals( ouMode ) )
             {
-                organisationUnits.add( rootOrganisationUnit );
-                organisationUnits.addAll( rootOrganisationUnit.getChildren() );
+                organisationUnits.add( ou );
+                organisationUnits.addAll( ou.getChildren() );
             }
             else // SELECTED
             {
-                organisationUnits.add( rootOrganisationUnit );
+                organisationUnits.add( ou );
             }
         }
 
@@ -342,27 +342,27 @@ public class EventController
 
         Program pr = manager.get( Program.class, program );
         List<OrganisationUnit> organisationUnits = new ArrayList<>();
-        OrganisationUnit rootOrganisationUnit = null;
+        OrganisationUnit ou = null;
 
         if ( orgUnit != null )
         {
-            rootOrganisationUnit = manager.get( OrganisationUnit.class, orgUnit );
+            ou = manager.get( OrganisationUnit.class, orgUnit );
         }
 
-        if ( rootOrganisationUnit != null )
+        if ( ou != null )
         {
             if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( ouMode ) )
             {
-                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( rootOrganisationUnit.getUid() ) );
+                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( ou.getUid() ) );
             }
             else if ( OrganisationUnitSelectionMode.CHILDREN.equals( ouMode ) )
             {
-                organisationUnits.add( rootOrganisationUnit );
-                organisationUnits.addAll( rootOrganisationUnit.getChildren() );
+                organisationUnits.add( ou );
+                organisationUnits.addAll( ou.getChildren() );
             }
             else // SELECTED
             {
-                organisationUnits.add( rootOrganisationUnit );
+                organisationUnits.add( ou );
             }
         }
 
