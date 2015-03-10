@@ -14,7 +14,9 @@ jQuery( document ).ready( function()
 	
 	checkValueIsExist( "name", "validateProgramIndicator.action",{id:getFieldValue('id')} );	
 	checkValueIsExist( "shortName", "validateProgramIndicator.action",{id:getFieldValue('id')} );	
-	checkValueIsExist( "code", "validateProgramIndicator.action",{id:getFieldValue('id')} );	
+	checkValueIsExist( "code", "validateProgramIndicator.action",{id:getFieldValue('id')} );
+		
+	setFieldValue('checkExpression',$('#aggregationDescription').html() );
 });
 </script>
 
@@ -93,7 +95,7 @@ jQuery( document ).ready( function()
 #parse( "/dhis-web-maintenance-program/programIndicatorForm.vm" )
 
 <p>
-	<input type="submit" value="$i18n.getString( 'add' )" style="width:10em">
+	<input type="submit" value="$i18n.getString( 'update' )" style="width:10em">
 	<input type="button" value="$i18n.getString( 'cancel' )" style="width:10em" onclick="window.location.href='programIndicator.action?programId=$programIndicator.program.id'" >
 </p>
 

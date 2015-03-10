@@ -263,8 +263,7 @@ public class DefaultProgramIndicatorService
 
                     String dataelementName = dataElement.getDisplayName();
 
-                    matcher.appendReplacement( description, ProgramIndicator.KEY_DATAELEMENT + "{" + programStageName
-                        + ProgramIndicator.SEPARATOR_ID + dataelementName + "}" );
+                    matcher.appendReplacement( description, programStageName + ProgramIndicator.SEPARATOR_ID + dataelementName );
                 }
             }
 
@@ -274,8 +273,7 @@ public class DefaultProgramIndicatorService
                 
                 if ( attribute != null )
                 {
-                    matcher.appendReplacement( description,
-                        ProgramIndicator.KEY_ATTRIBUTE + "{" + attribute.getDisplayName() + "}" );
+                    matcher.appendReplacement( description, attribute.getDisplayName() );
                 }
             }
             else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
@@ -284,8 +282,22 @@ public class DefaultProgramIndicatorService
                 
                 if ( constant != null )
                 {
-                    matcher.appendReplacement( description,
-                        ProgramIndicator.KEY_CONSTANT + "{" + constant.getDisplayName() + "}" );
+                    matcher.appendReplacement( description, constant.getDisplayName() );
+                }
+            }
+            else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
+            {
+                if( uid1.equals( ProgramIndicator.CURRENT_DATE ) )
+                {
+                    matcher.appendReplacement( description, "Current date" );
+                }
+                else if( uid1.equals( ProgramIndicator.ENROLLEMENT_DATE ) )
+                {
+                    matcher.appendReplacement( description, "Enrollment date" );
+                }
+                else if( uid1.equals( ProgramIndicator.INCIDENT_DATE ) )
+                {
+                    matcher.appendReplacement( description, "Incident date" );
                 }
             }
         }
@@ -357,7 +369,6 @@ public class DefaultProgramIndicatorService
                 matcher.appendReplacement( description, String.valueOf( 0 ) );
             }
         }
-
         matcher.appendTail( description );
 
         // ---------------------------------------------------------------------
