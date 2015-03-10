@@ -112,30 +112,21 @@
 	
 <p></p>
 <table>
-	
+	<tr>
+        <th>$i18n.getString( "expression" )</th>
+      </tr>	
 	<tr>
 		<td>
-			<fieldset>
-				<legend>$i18n.getString( "expression" ) <em title="$i18n.getString( "required" )" class="required">*</em></legend>
-				<table>
-					<tr>
-						<td>
-							<textarea style="width:660px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
-						</td>
-					</tr>
-				</table>
-			</fieldset>
+			<textarea style="width:660px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
 		</td>
-	</tr>
-	
+	</tr>	
+	<tr>
+        <th>$i18n.getString( "description" )</th>
+      </tr>	
 	<tr>
 		<td>
-			<fieldset>
-				<legend>$i18n.getString( "description" )</legend>
-				<div id='aggregationDescription'>$!encoder.htmlEncode($!description)</div>
-				
-				<input type="hidden" id="checkExpression" name="checkExpression" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
-			</fieldset>
+			<div id='aggregationDescription' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!description)</div>			
+			<input type="hidden" id="checkExpression" name="checkExpression" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
 		</td>
 	</tr>
 </table>		
