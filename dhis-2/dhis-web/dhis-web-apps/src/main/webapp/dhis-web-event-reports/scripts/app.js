@@ -1498,7 +1498,7 @@ Ext.onReady( function() {
 
         aggregationType = Ext.create('Ext.form.field.ComboBox', {
 			cls: 'ns-combo h22',
-			width: 70,
+			width: 80,
 			height: 22,
 			style: 'margin: 0',
             fieldStyle: 'height: 22px',
@@ -4425,8 +4425,6 @@ Ext.onReady( function() {
 
             // favorite
 			if (layout && layout.dataType === 'aggregated_values') {
-				aggWindow.reset(true);
-
 				if (layout.startDate && layout.endDate) {
 					aggWindow.fixedFilterStore.add({id: dimConf.startEndDate.value, name: dimConf.startEndDate.name});
 				}
@@ -4436,7 +4434,7 @@ Ext.onReady( function() {
                         dim = layout.columns[i];
                         record = recordMap[dim.dimension];
 
-						aggWindow.colStore.add(record || extendDim(Ext.clone(dim)));
+						aggWindow.addDimension(record || extendDim(Ext.clone(dim)), aggWindow.colStore);
 					}
 				}
 
@@ -4445,7 +4443,7 @@ Ext.onReady( function() {
                         dim = layout.rows[i];
                         record = recordMap[dim.dimension];
 
-						aggWindow.rowStore.add(record || extendDim(Ext.clone(dim)));
+						aggWindow.addDimension(record || extendDim(Ext.clone(dim)), aggWindow.rowStore);
 					}
 				}
 
@@ -4455,7 +4453,7 @@ Ext.onReady( function() {
 						record = recordMap[dim.dimension];
 						store = Ext.Array.contains(includeKeys, element.type) || element.optionSet ? aggWindow.filterStore : aggWindow.fixedFilterStore;
 
-						store.add(record || extendDim(Ext.clone(dim)));
+                        aggWindow.addDimension(record || extendDim(Ext.clone(dim)), store);
 					}
 				}
 			}
