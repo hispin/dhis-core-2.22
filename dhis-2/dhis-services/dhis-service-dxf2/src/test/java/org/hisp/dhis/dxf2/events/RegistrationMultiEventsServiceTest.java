@@ -31,13 +31,13 @@ package org.hisp.dhis.dxf2.events;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
 import org.hamcrest.CoreMatchers;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dxf2.events.enrollment.Enrollment;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentService;
@@ -234,7 +234,7 @@ public class RegistrationMultiEventsServiceTest
         importSummary = eventService.addEvent( event );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
-        assertEquals( 1, eventService.getEvents( programA, programStageA, null, null, Arrays.asList( organisationUnitA ), null, null, null, null, null ).getEvents().size() );
+        assertEquals( 1, eventService.getEvents( programA, programStageA, null, null, organisationUnitA, OrganisationUnitSelectionMode.SELECTED, null, null, null, null, null ).getEvents().size() );
     }
 
     @Test
@@ -255,14 +255,14 @@ public class RegistrationMultiEventsServiceTest
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         sessionFactory.getCurrentSession().flush();
-        assertEquals( 2, eventService.getEvents( programA, organisationUnitA ).getEvents().size() );
+        assertEquals( 2, eventService.getEvents( programA, organisationUnitA, OrganisationUnitSelectionMode.SELECTED ).getEvents().size() );
 
         event = createEvent( programA.getUid(), programStageB.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementB.getUid() );
         importSummary = eventService.addEvent( event );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
-        assertEquals( 3, eventService.getEvents( programA, organisationUnitA ).getEvents().size() );
+        assertEquals( 3, eventService.getEvents( programA, organisationUnitA, OrganisationUnitSelectionMode.SELECTED ).getEvents().size() );
     }
 
     @Test
@@ -283,7 +283,7 @@ public class RegistrationMultiEventsServiceTest
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         sessionFactory.getCurrentSession().flush();
-        assertEquals( 2, eventService.getEvents( programA, organisationUnitA ).getEvents().size() );
+        assertEquals( 2, eventService.getEvents( programA, organisationUnitA, OrganisationUnitSelectionMode.SELECTED ).getEvents().size() );
 
         event = createEvent( programA.getUid(), programStageB.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementB.getUid() );
@@ -291,14 +291,14 @@ public class RegistrationMultiEventsServiceTest
         importSummary = eventService.addEvent( event );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
-        assertEquals( 2, eventService.getEvents( programA, organisationUnitA ).getEvents().size() );
+        assertEquals( 2, eventService.getEvents( programA, organisationUnitA, OrganisationUnitSelectionMode.SELECTED ).getEvents().size() );
 
         event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementA.getUid() );
         importSummary = eventService.addEvent( event );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
-        assertEquals( 2, eventService.getEvents( programA, organisationUnitA ).getEvents().size() );
+        assertEquals( 2, eventService.getEvents( programA, organisationUnitA, OrganisationUnitSelectionMode.SELECTED ).getEvents().size() );
     }
 
     private Enrollment createEnrollment( String program, String person )
