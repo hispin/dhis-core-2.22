@@ -206,6 +206,7 @@ trackerCapture.controller('RelationshipController',
     
     //set attributes as per selected program
     $scope.setAttributesForSearch = function(program){
+        
         $scope.selectedProgramForRelative = program;
         if( angular.isObject($scope.selectedProgramForRelative)){
             AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
@@ -251,8 +252,7 @@ trackerCapture.controller('RelationshipController',
         $scope.teiForRelationship = relationshipInfo.tei;
     });
 
-    $scope.search = function(mode){ 
-        
+    var resetFields = function(){
         $scope.teiForRelationship = null;
         $scope.teiFetched = false;    
         $scope.emptySearchText = false;
@@ -266,6 +266,20 @@ trackerCapture.controller('RelationshipController',
         $scope.queryUrl = null;
         $scope.programUrl = null;
         $scope.attributeUrl = {url: null, hasValue: false};
+    };
+    
+    $scope.getRelative = function(){
+        
+        resetFields();
+        
+        if($scope.selectedRelationshipSource.value === $scope.relationshipSources[0]){
+            $scope.search($scope.searchMode.listAll);
+        }
+    };
+    
+    $scope.search = function(mode){ 
+        
+        resetFields();
         
         $scope.selectedSearchMode = mode;        
    
