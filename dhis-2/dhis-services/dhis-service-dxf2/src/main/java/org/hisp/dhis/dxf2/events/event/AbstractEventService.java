@@ -409,7 +409,7 @@ public abstract class AbstractEventService
     public Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
         List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, Date startDate, Date endDate, EventStatus status, IdSchemes idSchemes )
     {
-        List<Event> eventList = eventStore.getAll( program, programStage, programStatus, followUp, organisationUnits,
+        List<Event> eventList = eventStore.getEvents( program, programStage, programStatus, followUp, organisationUnits,
             trackedEntityInstance, startDate, endDate, status, idSchemes );
 
         Events events = new Events();
