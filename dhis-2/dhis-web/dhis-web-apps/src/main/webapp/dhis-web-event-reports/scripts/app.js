@@ -398,6 +398,11 @@ Ext.onReady( function() {
 
                             this.pendingValue = null;
                         }
+
+                        if (!this.getValue()) {
+                            this.pendingValue = defaultRangeSetId;
+                            this.setPendingValue();
+                        }
                     },
                     store: Ext.create('Ext.data.Store', {
                         fields: [idProperty, nameProperty]
