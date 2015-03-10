@@ -201,14 +201,12 @@ public class JdbcEventStore
             {
                 Note note = new Note();
                 note.setValue( rowSet.getString( "psinote_value" ) );
-                note.setStoredDate( StringUtils.defaultIfEmpty(
-                    rowSet.getString( "psinote_soreddate" ), rowSet.getString( "psinote_soreddate" ) ) );
+                note.setStoredDate( rowSet.getString( "psinote_storeddate" ) );
                 note.setStoredBy( rowSet.getString( "psinote_storedby" ) );
 
                 event.getNotes().add( note );
                 notes.add( rowSet.getString( "psinote_id" ) );
             }
-
         }
 
         return events;
@@ -226,7 +224,7 @@ public class JdbcEventStore
                 "psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
                 "psi.longitude as psi_longitude, psi.latitude as psi_latitude, " +
                 "psinote.trackedentitycommentid as psinote_id, psinote.commenttext as psinote_value, " +
-                "psinote.createddate as psinote_soreddate, psinote.creator as psinote_storedby, " +
+                "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby, " +
                 "pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, de.uid as de_uid, de.code as de_code " +
                 "from program p " +
                 "left join programstage ps on ps.programid=p.programid " +
