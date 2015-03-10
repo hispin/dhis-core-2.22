@@ -38,13 +38,15 @@ import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.event.EventStatus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @JacksonXmlRootElement( localName = "event", namespace = DxfNamespaces.DXF_2_0 )
-public class Event extends BaseLinkableObject
+public class Event 
+    extends BaseLinkableObject
 {
     private String event;
 
@@ -77,6 +79,10 @@ public class Event extends BaseLinkableObject
     private List<Note> notes = new ArrayList<>();
     
     private Boolean followup;
+    
+    private Date created;
+    
+    private Date lastUpdated;
 
     public Event()
     {
@@ -274,6 +280,30 @@ public class Event extends BaseLinkableObject
     public void setFollowup( Boolean followup )
     {
         this.followup = followup;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    public Date getCreated()
+    {
+        return created;
+    }
+
+    public void setCreated( Date created )
+    {
+        this.created = created;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    public Date getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( Date lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
     }
 
     @Override
