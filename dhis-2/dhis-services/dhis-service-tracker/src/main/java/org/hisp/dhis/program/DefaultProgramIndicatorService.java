@@ -187,7 +187,7 @@ public class DefaultProgramIndicatorService
     @Override
     public String getProgramIndicatorValue( ProgramInstance programInstance, ProgramIndicator programIndicator )
     {
-        Double value = getValue( programInstance, programIndicator.getValueType(), programIndicator.getExpression() );
+        Double value = getValue( programInstance, programIndicator );
 
         if ( value != null )
         {
@@ -376,12 +376,12 @@ public class DefaultProgramIndicatorService
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private Double getValue( ProgramInstance programInstance, String valueType, String expression )
+    private Double getValue( ProgramInstance programInstance, ProgramIndicator indicator )
     {
         StringBuffer description = new StringBuffer();
 
         Pattern pattern = Pattern.compile( ProgramIndicator.regExp );
-        Matcher matcher = pattern.matcher( expression );
+        Matcher matcher = pattern.matcher( indicator.getExpression() );
 
         while ( matcher.find() )
         {
@@ -409,7 +409,7 @@ public class DefaultProgramIndicatorService
 
                     String value = dataValue.getValue();
 
-                    if ( valueType.equals( ProgramIndicator.VALUE_TYPE_INT ) && 
+                    if ( indicator.getValueType().equals( ProgramIndicator.VALUE_TYPE_INT ) && 
                         ( dataElement == null || dataElement.getType().equals( DataElement.VALUE_TYPE_DATE ) ) )
                     {
                         value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
