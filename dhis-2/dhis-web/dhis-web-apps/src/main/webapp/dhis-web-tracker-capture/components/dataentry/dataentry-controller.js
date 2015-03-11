@@ -1,3 +1,5 @@
+/* global angular, trackerCapture */
+
 trackerCapture.controller('DataEntryController',
         function($scope,
                 $modal,

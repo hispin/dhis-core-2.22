@@ -1,3 +1,5 @@
+/* global angular */
+
 'use strict';
 
 /* Services */
@@ -1079,6 +1081,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.optionSets = null;
     this.attributesById = null;
     this.ouLevels = null;
+    this.sortedTeiIds = [];
     
     this.set = function(currentSelection){  
         this.currentSelection = currentSelection;        
@@ -1113,6 +1116,13 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
     this.getOuLevels = function(){
         return this.ouLevels;
+    };
+    
+    this.setSortedTeiIds = function(sortedTeiIds){
+        this.sortedTeiIds = sortedTeiIds;
+    };
+    this.getSortedTeiIds = function(){
+        return this.sortedTeiIds;
     };
 })
 
@@ -1192,6 +1202,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         generateGridColumns: function(attributes, ouMode){
             
+            var filterTypes = {}, filterText = {};
             var columns = attributes ? angular.copy(attributes) : [];
        
             //also add extra columns which are not part of attributes (orgunit for example)
@@ -1200,16 +1211,20 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){
-                if(column.id === 'orgUnitName' && ouMode !== 'SELECTED'){
+                column.show = false;                
+                if( (column.id === 'orgUnitName' && ouMode !== 'SELECTED') ||
+                    column.displayInListNoProgram || 
+                    column.displayInList || 
+                    column.id === 'created'){
                     column.show = true;    
+                }                
+                column.showFilter = false;                
+                filterTypes[column.id] = column.valueType;
+                if(column.valueType === 'date' || column.valueType === 'number' ){
+                    filterText[column.id]= {};
                 }
-
-                if(column.displayInListNoProgram || column.displayInList){
-                    column.show = true;
-                }  
-                column.showFilter = false;
             });
-            return columns;  
+            return {columns: columns, filterTypes: filterTypes, filterText: filterText};
         },
         getData: function(rows, columns){
             var data = [];
