@@ -68,6 +68,8 @@ public final class NodeUtils
     public static Node createPager( Pager pager )
     {
         ComplexNode pagerNode = new ComplexNode( "pager" );
+        pagerNode.setMetadata( true );
+
         pagerNode.addChild( new SimpleNode( "page", pager.getPage() ) );
         pagerNode.addChild( new SimpleNode( "pageCount", pager.getPageCount() ) );
         pagerNode.addChild( new SimpleNode( "total", pager.getTotal() ) );
