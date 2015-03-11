@@ -183,7 +183,7 @@ public class DefaultCsvImportService
             {
                 DataElement object = new DataElement();
                 setIdentifiableObject( object, values );
-                object.setCode( getSafe( values, 2, null, 230 ) ); //TODO temporary hack
+                object.setCode( getSafe( values, 2, null, 50 ) );
                 object.setShortName( getSafe( values, 3, object.getName(), 50 ) );
                 object.setDescription( getSafe( values, 4, null, null ) );
                 object.setFormName( getSafe( values, 5, null, 230 ) );
