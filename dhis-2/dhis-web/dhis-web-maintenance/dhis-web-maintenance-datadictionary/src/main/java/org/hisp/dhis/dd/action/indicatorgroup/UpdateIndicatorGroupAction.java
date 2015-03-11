@@ -30,6 +30,8 @@ package org.hisp.dhis.dd.action.indicatorgroup;
 
 import com.google.common.collect.Lists;
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
@@ -112,11 +114,8 @@ public class UpdateIndicatorGroupAction
     {
         indicatorGroup = indicatorService.getIndicatorGroup( id );
 
-        if ( name != null && name.trim().length() > 0 )
-        {
-            indicatorGroup.setName( name );
-        }
-
+        indicatorGroup.setName( StringUtils.trimToNull( name ) );
+        
         Set<Indicator> members = new HashSet<>();
 
         for ( String id : inSelected )

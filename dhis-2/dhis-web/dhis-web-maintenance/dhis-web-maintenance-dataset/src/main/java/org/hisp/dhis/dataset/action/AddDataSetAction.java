@@ -28,12 +28,11 @@ package org.hisp.dhis.dataset.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.TextUtils.nullIfEmpty;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -304,17 +303,14 @@ public class AddDataSetAction
     public String execute()
         throws Exception
     {
-        // ---------------------------------------------------------------------
-        // Prepare values
-        // ---------------------------------------------------------------------
-
-        code = nullIfEmpty( code );
-        shortName = nullIfEmpty( shortName );
-        description = nullIfEmpty( description );
-
         PeriodType periodType = PeriodType.getPeriodTypeByName( frequencySelect );
 
-        DataSet dataSet = new DataSet( name, shortName, code, periodType );
+        DataSet dataSet = new DataSet();
+        
+        dataSet.setName( StringUtils.trimToNull( name ) );
+        dataSet.setShortName( StringUtils.trimToNull( shortName ) );
+        dataSet.setCode( StringUtils.trimToNull( code ) );
+        dataSet.setPeriodType( periodType );
 
         LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
 
@@ -339,7 +335,7 @@ public class AddDataSetAction
             dataSet.setCategoryCombo( categoryService.getDataElementCategoryCombo( categoryComboId ) );
         }
 
-        dataSet.setDescription( description );
+        dataSet.setDescription( StringUtils.trimToNull( description ) );
         dataSet.setVersion( 1 );
         dataSet.setMobile( false );
         dataSet.setIndicators( indicators );

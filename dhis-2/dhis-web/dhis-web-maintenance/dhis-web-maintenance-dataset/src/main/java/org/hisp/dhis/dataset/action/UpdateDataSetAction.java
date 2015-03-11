@@ -29,12 +29,12 @@ package org.hisp.dhis.dataset.action;
  */
 
 import static org.hisp.dhis.system.util.TextUtils.equalsNullSafe;
-import static org.hisp.dhis.system.util.TextUtils.nullIfEmpty;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -322,14 +322,6 @@ public class UpdateDataSetAction
     public String execute()
         throws Exception
     {
-        // ---------------------------------------------------------------------
-        // Prepare values
-        // ---------------------------------------------------------------------
-
-        code = nullIfEmpty( code );
-        shortName = nullIfEmpty( shortName );
-        description = nullIfEmpty( description );
-
         Set<DataElement> dataElements = new HashSet<>();
 
         LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
@@ -363,10 +355,10 @@ public class UpdateDataSetAction
             dataSet.increaseVersion(); // Check if version must be updated
         }
 
-        dataSet.setName( name );
-        dataSet.setShortName( shortName );
-        dataSet.setDescription( description );
-        dataSet.setCode( code );
+        dataSet.setName( StringUtils.trimToNull( name ) );
+        dataSet.setShortName( StringUtils.trimToNull( shortName ) );
+        dataSet.setCode( StringUtils.trimToNull( code ) );
+        dataSet.setDescription( StringUtils.trimToNull( description ) );
         dataSet.setPeriodType( periodService.getPeriodTypeByClass( periodType.getClass() ) );
         dataSet.updateDataElements( dataElements );
         dataSet.setIndicators( indicators );

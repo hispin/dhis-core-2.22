@@ -31,6 +31,7 @@ package org.hisp.dhis.dd.action.category;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 
@@ -101,8 +102,8 @@ public class AddDataElementCategoryAction
     public String execute()
     {
         DataElementCategory dataElementCategory = new DataElementCategory();
-        dataElementCategory.setName( name );
-        dataElementCategory.setCode( code );
+        dataElementCategory.setName( StringUtils.trimToNull( name ) );
+        dataElementCategory.setCode( StringUtils.trimToNull( code ) );
         dataElementCategory.setDataDimension( dataDimension );
         dataElementCategory.setDataDimensionType( dimensionType );
 

@@ -211,22 +211,19 @@ public class UpdateIndicatorAction
 
         LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
         
-        code = StringUtils.trimToNull( code );
-        description = StringUtils.trimToNull( description );
-
-        indicator.setName( name );
-        indicator.setShortName( shortName );
-        indicator.setCode( code );
-        indicator.setDescription( description );
+        indicator.setName( StringUtils.trimToNull( name ) );
+        indicator.setShortName( StringUtils.trimToNull( shortName ) );
+        indicator.setCode( StringUtils.trimToNull( code ) );
+        indicator.setDescription( StringUtils.trimToNull( description ) );
         indicator.setAnnualized( annualized );
         indicator.setDecimals( decimals );
         indicator.setIndicatorType( indicatorType );
         indicator.setLegendSet( legendSet );
-        indicator.setUrl( url );
-        indicator.setNumerator( numerator );
-        indicator.setNumeratorDescription( numeratorDescription );
-        indicator.setDenominator( denominator );
-        indicator.setDenominatorDescription( denominatorDescription );
+        indicator.setUrl( StringUtils.trimToNull( url ) );
+        indicator.setNumerator( StringUtils.trimToNull( numerator ) );
+        indicator.setNumeratorDescription( StringUtils.trimToNull( numeratorDescription ) );
+        indicator.setDenominator( StringUtils.trimToNull( denominator ) );
+        indicator.setDenominatorDescription( StringUtils.trimToNull( denominatorDescription ) );
 
         for ( int i = 0; i < indicatorGroupSets.size(); i++ )
         {

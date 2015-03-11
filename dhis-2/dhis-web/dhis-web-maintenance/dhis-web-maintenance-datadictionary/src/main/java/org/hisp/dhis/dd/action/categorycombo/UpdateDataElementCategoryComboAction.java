@@ -30,6 +30,7 @@ package org.hisp.dhis.dd.action.categorycombo;
 
 import com.opensymphony.xwork2.Action;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -100,11 +101,10 @@ public class UpdateDataElementCategoryComboAction
     @Override
     public String execute()
     {
-        DataElementCategoryCombo categoryCombo = dataElementCategoryService
-            .getDataElementCategoryCombo( id );
+        DataElementCategoryCombo categoryCombo = dataElementCategoryService.getDataElementCategoryCombo( id );
 
-        categoryCombo.setName( name );
-        categoryCombo.setCode( code );
+        categoryCombo.setName( StringUtils.trimToNull( name ) );
+        categoryCombo.setCode( StringUtils.trimToNull( code ) );
         categoryCombo.setSkipTotal( skipTotal );
 
         List<DataElementCategory> updatedCategories = new ArrayList<>();

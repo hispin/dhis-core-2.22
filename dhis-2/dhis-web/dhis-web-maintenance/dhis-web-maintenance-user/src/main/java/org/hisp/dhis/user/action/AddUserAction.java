@@ -280,11 +280,6 @@ public class AddUserAction
     {
         //TODO: Allow user with F_USER_ADD_WITHIN_MANAGED_GROUP to add a user within managed groups.
 
-        email = StringUtils.trimToNull( email );
-        username = username.trim();
-        inviteUsername = inviteUsername.trim();
-        inviteEmail = inviteEmail.trim();
-
         User currentUser = currentUserService.getCurrentUser();
 
         // ---------------------------------------------------------------------
@@ -297,7 +292,7 @@ public class AddUserAction
         userCredentials.setUser( user );
         user.setUserCredentials( userCredentials );
 
-        userCredentials.setUsername( username );
+        userCredentials.setUsername( StringUtils.trimToNull( username ) );
 
         if ( !StringUtils.isEmpty( openId ) )
         {
@@ -306,20 +301,20 @@ public class AddUserAction
 
         if ( ACCOUNT_ACTION_INVITE.equals( accountAction ) )
         {
-            userCredentials.setUsername( inviteUsername );
+            userCredentials.setUsername( StringUtils.trimToNull( inviteUsername ) );
             userCredentials.setInvitation( true );
-            user.setEmail( inviteEmail );
+            user.setEmail( StringUtils.trimToNull( inviteEmail ) );
 
             securityService.prepareUserForInvite( user );
         }
         else
         {
-            user.setSurname( surname );
-            user.setFirstName( firstName );
-            user.setEmail( email );
-            user.setPhoneNumber( phoneNumber );
+            user.setSurname( StringUtils.trimToNull( surname ) );
+            user.setFirstName( StringUtils.trimToNull( firstName ) );
+            user.setEmail( StringUtils.trimToNull( email ) );
+            user.setPhoneNumber( StringUtils.trimToNull( phoneNumber ) );
 
-            userService.encodeAndSetPassword( userCredentials, rawPassword );
+            userService.encodeAndSetPassword( userCredentials, StringUtils.trimToNull( rawPassword ) );
         }
 
         if ( jsonAttributeValues != null )

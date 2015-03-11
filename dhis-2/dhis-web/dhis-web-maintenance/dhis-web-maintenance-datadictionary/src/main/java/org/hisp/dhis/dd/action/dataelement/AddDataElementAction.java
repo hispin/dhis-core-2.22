@@ -106,13 +106,6 @@ public class AddDataElementAction
         this.name = name;
     }
 
-    private String alternativeName;
-
-    public void setAlternativeName( String alternativeName )
-    {
-        this.alternativeName = alternativeName;
-    }
-
     private String shortName;
 
     public void setShortName( String shortName )
@@ -246,19 +239,6 @@ public class AddDataElementAction
     @Override
     public String execute()
     {
-        // ---------------------------------------------------------------------
-        // Prepare values
-        // ---------------------------------------------------------------------
-
-        alternativeName = StringUtils.trimToNull( alternativeName );
-        code = StringUtils.trimToNull( code );
-        description = StringUtils.trimToNull( description );
-        formName = StringUtils.trimToNull( formName );
-        
-        // ---------------------------------------------------------------------
-        // Create data element
-        // ---------------------------------------------------------------------
-
         DataElement dataElement = new DataElement();
 
         DataElementCategoryCombo categoryCombo = dataElementCategoryService
@@ -268,11 +248,11 @@ public class AddDataElementAction
         OptionSet commentOptionSet = optionService.getOptionSet( selectedCommentOptionSetId );
         LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
 
-        dataElement.setName( name );
-        dataElement.setShortName( shortName );
-        dataElement.setCode( code );
-        dataElement.setDescription( description );
-        dataElement.setFormName( formName );
+        dataElement.setName( StringUtils.trimToNull( name ) );
+        dataElement.setShortName( StringUtils.trimToNull( shortName ) );
+        dataElement.setCode( StringUtils.trimToNull( code ) );
+        dataElement.setDescription( StringUtils.trimToNull( description ) );
+        dataElement.setFormName( StringUtils.trimToNull( formName ) );
         dataElement.setDomainType( DataElementDomain.fromValue( domainType )  );
         dataElement.setType( valueType );
         

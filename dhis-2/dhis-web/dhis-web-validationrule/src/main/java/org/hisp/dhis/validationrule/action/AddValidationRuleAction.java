@@ -31,6 +31,7 @@ package org.hisp.dhis.validationrule.action;
 import static org.hisp.dhis.expression.MissingValueStrategy.SKIP_IF_ANY_VALUE_MISSING;
 import static org.hisp.dhis.expression.MissingValueStrategy.safeValueOf;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.expression.Expression;
 import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.expression.Operator;
@@ -229,12 +230,12 @@ public class AddValidationRuleAction
         
         ValidationRule validationRule = new ValidationRule();
         
-        validationRule.setName( name );
-        validationRule.setDescription( description );
-        validationRule.setInstruction( instruction );
-        validationRule.setImportance( importance );
-        validationRule.setRuleType( ruleType );
-        validationRule.setOperator( Operator.valueOf(operator) );
+        validationRule.setName( StringUtils.trimToNull( name ) );
+        validationRule.setDescription( StringUtils.trimToNull( description ) );
+        validationRule.setInstruction( StringUtils.trimToNull( instruction ) );
+        validationRule.setImportance( StringUtils.trimToNull( importance ) );
+        validationRule.setRuleType( StringUtils.trimToNull( ruleType ) );
+        validationRule.setOperator( Operator.valueOf( operator ) );
         validationRule.setLeftSide( leftSide );
         validationRule.setRightSide( rightSide );
         validationRule.setOrganisationUnitLevel( organisationUnitLevel );

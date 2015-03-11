@@ -30,6 +30,7 @@ package org.hisp.dhis.oum.action.organisationunitgroupset;
 
 import com.opensymphony.xwork2.Action;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
@@ -134,11 +135,10 @@ public class UpdateGroupSetAction
         throws Exception
     {
         OrganisationUnitGroupSet organisationUnitGroupSet = organisationUnitGroupService.getOrganisationUnitGroupSet( id );
-
-        organisationUnitGroupSet.setCode( code );
         
-        organisationUnitGroupSet.setName( name );
-        organisationUnitGroupSet.setDescription( description );
+        organisationUnitGroupSet.setName( StringUtils.trimToNull( name ) );
+        organisationUnitGroupSet.setCode( StringUtils.trimToNull( code ) );
+        organisationUnitGroupSet.setDescription( StringUtils.trimToNull( description ) );
         organisationUnitGroupSet.setCompulsory( compulsory );
         organisationUnitGroupSet.setDataDimension( dataDimension );
 
