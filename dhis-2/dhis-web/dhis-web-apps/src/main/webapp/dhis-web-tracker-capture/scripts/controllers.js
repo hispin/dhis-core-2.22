@@ -1,3 +1,5 @@
+/* global angular */
+
 'use strict';
 
 /* Controllers */
@@ -8,8 +10,11 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         function($scope,
                 $modal,
                 $location,
+                $translate,
+                $filter,
                 Paginator,
                 storage,
+                DateUtils,
                 OptionSetService,
                 OrgUnitFactory,
                 OperatorFactory,
@@ -134,11 +139,35 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     };
     
     $scope.processAttributes = function(){
-        
+        $scope.sortColumn = {};
         AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
             $scope.attributes = $scope.generateAttributeFilters(atts);
-            $scope.gridColumns = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);            
+            var grid = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);
+            $scope.gridColumns = grid.columns;
         });
+    };
+    
+    //sortGrid
+    $scope.sortGrid = function(gridHeader){
+        if ($scope.sortColumn && $scope.sortColumn.id === gridHeader.id){
+            $scope.reverse = !$scope.reverse;
+            return;
+        }        
+        $scope.sortColumn = gridHeader;
+        if($scope.sortColumn.valueType === 'date'){
+            $scope.reverse = true;
+        }
+        else{
+            $scope.reverse = false;    
+        }
+    };
+    
+    $scope.d2Sort = function(tei){        
+        if($scope.sortColumn && $scope.sortColumn.valueType === 'date'){            
+            var d = tei[$scope.sortColumn.id];         
+            return DateUtils.getDate(d);
+        }
+        return tei[$scope.sortColumn.id];
     };
    
     //$scope.searchParam = {bools: []};
@@ -228,6 +257,10 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.showTrackedEntityDiv = true;
             $scope.teiFetched = true;  
             $scope.doSearch = true;
+            
+            if(!$scope.sortColumn.id){                                      
+                $scope.sortGrid({id: 'created', name: $translate('registration_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: true});
+            }
         });
     };
     
@@ -305,7 +338,17 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         });
     };
 
-    $scope.showDashboard = function(currentEntity){   
+    $scope.showDashboard = function(currentEntity){
+        var sortedTei = $filter('orderBy')($scope.trackedEntityList.rows, function(tei) {
+            return $scope.d2Sort(tei);
+        }, $scope.reverse);
+        
+        var sortedTeiIds = [];
+        angular.forEach(sortedTei, function(tei){
+            sortedTeiIds.push(tei.id);
+        });
+        
+        CurrentSelection.setSortedTeiIds(sortedTeiIds);        
         $location.path('/dashboard').search({tei: currentEntity.id,                                            
                                             program: $scope.selectedProgram ? $scope.selectedProgram.id: null});                                    
     };
