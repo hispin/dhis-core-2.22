@@ -94,7 +94,9 @@ public class ProgramIndicatorServiceTest
     private ProgramIndicator indicatorInt;
 
     private ProgramIndicator indicatorC;
-
+    
+    private ProgramIndicator indicatorD;
+    
     @Override
     public void setUpTest()
     {
@@ -152,6 +154,13 @@ public class ProgramIndicatorServiceTest
         indicatorC.setUid( "UID-C" );
         indicatorC.setShortName( "C" );
         indicatorC.setProgram( programB );
+        
+
+        indicatorD = new ProgramIndicator( "IndicatorD", "IndicatorDesD", ProgramIndicator.VALUE_TYPE_INT, "0 + A + 4 + " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{"
+            + ProgramIndicator.INCIDENT_DATE + "}" );
+        indicatorD.setUid( "UID-D" );
+        indicatorD.setShortName( "D" );
+        indicatorD.setProgram( programB );
     }
 
     @Test
@@ -289,4 +298,30 @@ public class ProgramIndicatorServiceTest
         assertEquals( DateUtils.getMediumDateString( enrollmentDate ), indicatorMap.get( "IndicatorB" ) );
 
     }
+    
+    @Test
+    public void testGetExpressionDescription()
+    {
+        programIndicatorService.addProgramIndicator( indicatorDate );
+        programIndicatorService.addProgramIndicator( indicatorInt );
+
+        String description = programIndicatorService.getExpressionDescription( indicatorDate.getExpression() );
+        assertEquals( "( Incident date - Enrollment date )  / 7", description);
+        
+        description = programIndicatorService.getExpressionDescription( indicatorInt.getExpression() );
+        assertEquals( "70", description);
+    }
+    
+    @Test
+    public void testExpressionIsValid()
+    {
+        programIndicatorService.addProgramIndicator( indicatorDate );
+        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorD );
+
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorDate.getExpression() ) );
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorInt.getExpression() ) );
+        assertEquals( ProgramIndicator.EXPRESSION_NOT_WELL_FORMED, programIndicatorService.expressionIsValid( indicatorD.getExpression() ) );
+    }
+    
 }
