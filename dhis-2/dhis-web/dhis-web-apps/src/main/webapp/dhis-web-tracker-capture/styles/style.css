@@ -90,7 +90,7 @@ textarea {
 .vertical-center {
     line-height: inherit;
     vertical-align: middle;
-    
+
 }
 
 .empty-event-container {
@@ -132,10 +132,6 @@ textarea {
 .event-container:hover {
     border: 2px solid;
     font-weight: bold;
-}
-
-.new-event {    
-    cursor: pointer;
 }
 
 .stage-completed {
@@ -990,21 +986,21 @@ ul.tree ul li:last-child:before {
 }
 
 .map_context_menu{
-	background-color:white;
-	border:1px solid gray;
+    background-color:white;
+    border:1px solid gray;
     z-index: 1000;
 }
 .map_context_menu_item{
-	padding:3px 6px;
+    padding:3px 6px;
 }
 .map_context_menu_item:hover{
-	background-color:#CCCCCC;
+    background-color:#CCCCCC;
 }
 .map_context_menu_separator{
-	background-color:gray;
-	height:1px;
-	margin:0;
-	padding:0;
+    background-color:gray;
+    height:1px;
+    margin:0;
+    padding:0;
 }
 
 .disabled-context-menu-item {    
@@ -1012,6 +1008,7 @@ ul.tree ul li:last-child:before {
     color: #dddddd;
     cursor: none;
 }
-.enable-context-menu-item {    
-    cursor:pointer; 
+
+.mouse-pointer {    
+    cursor: pointer;
 }
