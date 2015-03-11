@@ -47,9 +47,9 @@ trackerCapture.controller('EnrollmentController',
         
         if($scope.selectedProgram){
             
-            $scope.selectedProgramWithStage = [];        
+            $scope.stagesById = [];        
             angular.forEach($scope.selectedProgram.programStages, function(stage){
-                $scope.selectedProgramWithStage[stage.id] = stage;
+                $scope.stagesById[stage.id] = stage;
             });
             
             angular.forEach($scope.enrollments, function(enrollment){
