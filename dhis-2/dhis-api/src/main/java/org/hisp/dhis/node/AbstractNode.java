@@ -50,6 +50,8 @@ public abstract class AbstractNode implements Node
 
     protected final NodeType nodeType;
 
+    protected boolean metadata;
+
     protected Node parent;
 
     protected String namespace;
@@ -88,6 +90,17 @@ public abstract class AbstractNode implements Node
     public NodeType getType()
     {
         return nodeType;
+    }
+
+    @Override
+    public boolean isMetadata()
+    {
+        return metadata;
+    }
+
+    public void setMetadata( boolean metadata )
+    {
+        this.metadata = metadata;
     }
 
     @Override
