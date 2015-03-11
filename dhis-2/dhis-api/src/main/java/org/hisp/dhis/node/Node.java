@@ -92,6 +92,13 @@ public interface Node extends Ordered
     boolean isCollection();
 
     /**
+     * Should this be considered data or metadata.
+     *
+     * @return True if metadata (like a pager)
+     */
+    boolean isMetadata();
+
+    /**
      * Namespace for this node. Not all serializers support this, and its up to the
      * NodeSerializer implementation to decide what to do with this.
      *
