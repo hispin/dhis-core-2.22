@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.UserGroup;
@@ -108,7 +109,7 @@ public class AddUserGroupAction
     public String execute()
         throws Exception
     {
-        UserGroup userGroup = new UserGroup( name );
+        UserGroup userGroup = new UserGroup( StringUtils.trimToNull( name ) );
 
         for ( String uid : usersSelected )
         {

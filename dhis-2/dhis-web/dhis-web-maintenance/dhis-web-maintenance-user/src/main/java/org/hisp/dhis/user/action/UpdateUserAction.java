@@ -238,9 +238,6 @@ public class UpdateUserAction
     {
         //TODO: Allow user with F_USER_ADD_WITHIN_MANAGED_GROUP to update a user within managed groups.
 
-        email = StringUtils.trimToNull( email );
-        rawPassword = StringUtils.trimToNull( rawPassword );
-
         User currentUser = currentUserService.getCurrentUser();
 
         // ---------------------------------------------------------------------
@@ -248,16 +245,16 @@ public class UpdateUserAction
         // ---------------------------------------------------------------------
 
         User user = userService.getUser( id );
-        user.setSurname( surname );
-        user.setFirstName( firstName );
-        user.setEmail( email );
-        user.setPhoneNumber( phoneNumber );
+        user.setSurname( StringUtils.trimToNull( surname ) );
+        user.setFirstName( StringUtils.trimToNull( firstName ) );
+        user.setEmail( StringUtils.trimToNull( email ) );
+        user.setPhoneNumber( StringUtils.trimToNull( phoneNumber ) );
 
         UserCredentials userCredentials = userService.getUserCredentials( user );
 
         if ( !StringUtils.isEmpty( openId ) )
         {
-            userCredentials.setOpenId( openId );
+            userCredentials.setOpenId( StringUtils.trimToNull( openId ) );
         }
         else
         {

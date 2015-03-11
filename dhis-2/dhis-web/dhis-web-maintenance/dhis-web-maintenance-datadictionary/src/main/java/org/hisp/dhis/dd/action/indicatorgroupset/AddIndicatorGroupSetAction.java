@@ -29,6 +29,8 @@ package org.hisp.dhis.dd.action.indicatorgroupset;
  */
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 import org.hisp.dhis.indicator.IndicatorService;
@@ -92,7 +94,11 @@ public class AddIndicatorGroupSetAction
     @Override
     public String execute()
     {
-        IndicatorGroupSet indicatorGroupSet = new IndicatorGroupSet( name, description, compulsory );
+        IndicatorGroupSet indicatorGroupSet = new IndicatorGroupSet();
+        
+        indicatorGroupSet.setName( StringUtils.trimToNull( name ) );
+        indicatorGroupSet.setDescription( StringUtils.trimToNull( description ) );
+        indicatorGroupSet.setCompulsory( compulsory );
 
         List<IndicatorGroup> indicatorGroups = new ArrayList<>();
 

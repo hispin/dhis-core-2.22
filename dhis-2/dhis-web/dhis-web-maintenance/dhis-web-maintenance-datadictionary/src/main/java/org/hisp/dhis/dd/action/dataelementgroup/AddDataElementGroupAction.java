@@ -30,6 +30,8 @@ package org.hisp.dhis.dd.action.dataelementgroup;
 
 import com.google.common.collect.Lists;
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -120,11 +122,9 @@ public class AddDataElementGroupAction
     @Override
     public String execute()
     {
-        code = (code != null && code.trim().length() == 0) ? null : code;
-
-        dataElementGroup = new DataElementGroup( name );
-        dataElementGroup.setShortName( shortName );
-        dataElementGroup.setCode( code );
+        dataElementGroup = new DataElementGroup( StringUtils.trimToNull( name ) );
+        dataElementGroup.setShortName( StringUtils.trimToNull( shortName ) );
+        dataElementGroup.setCode( StringUtils.trimToNull( code ) );
 
         for ( String id : deSelected )
         {

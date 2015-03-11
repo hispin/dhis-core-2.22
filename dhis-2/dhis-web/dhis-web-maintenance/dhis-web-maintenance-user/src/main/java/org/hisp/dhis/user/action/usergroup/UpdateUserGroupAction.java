@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.User;
@@ -123,7 +124,7 @@ public class UpdateUserGroupAction
             users.add( userService.getUser( uid ) );
         }
 
-        userGroup.setName( name );
+        userGroup.setName( StringUtils.trimToNull( name ) );
         userGroup.updateUsers( users );
 
         if ( jsonAttributeValues != null )

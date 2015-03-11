@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
@@ -127,9 +128,13 @@ public class AddGroupSetAction
     public String execute()
         throws Exception
     {
-        OrganisationUnitGroupSet groupSet = new OrganisationUnitGroupSet( name, description, compulsory, dataDimension );
-
-        groupSet.setCode( code );
+        OrganisationUnitGroupSet groupSet = new OrganisationUnitGroupSet();
+        
+        groupSet.setName( StringUtils.trimToNull( name ) );
+        groupSet.setCode( StringUtils.trimToNull( code ) );
+        groupSet.setDescription( StringUtils.trimToNull( description ) );
+        groupSet.setCompulsory( compulsory );
+        groupSet.setDataDimension( dataDimension );
         
         Set<OrganisationUnitGroup> selectedMembers = new HashSet<>();
 

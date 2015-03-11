@@ -28,7 +28,6 @@ package org.hisp.dhis.oum.action.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.TextUtils.nullIfEmpty;
 import static org.hisp.dhis.system.util.ValidationUtils.coordinateIsValid;
 
 import java.util.ArrayList;
@@ -38,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.calendar.DateTimeUnit;
@@ -254,18 +254,6 @@ public class UpdateOrganisationUnitAction
     public String execute()
         throws Exception
     {
-        code = nullIfEmpty( code );
-        comment = nullIfEmpty( comment );
-        description = nullIfEmpty( description );
-        longitude = nullIfEmpty( longitude );
-        latitude = nullIfEmpty( latitude );
-        url = nullIfEmpty( url );
-
-        contactPerson = nullIfEmpty( contactPerson );
-        address = nullIfEmpty( address );
-        email = nullIfEmpty( email );
-        phoneNumber = nullIfEmpty( phoneNumber );
-
         DateTimeUnit isoOpeningDate = calendarService.getSystemCalendar().toIso( openingDate );
         Date oDate = isoOpeningDate.toJdkCalendar().getTime();
 
@@ -288,18 +276,18 @@ public class UpdateOrganisationUnitAction
             organisationUnitService.updateVersion();
         }
 
-        organisationUnit.setName( name );
-        organisationUnit.setShortName( shortName );
-        organisationUnit.setDescription( description );
-        organisationUnit.setCode( code );
+        organisationUnit.setName( StringUtils.trimToNull( name ) );
+        organisationUnit.setShortName( StringUtils.trimToNull( shortName ) );
+        organisationUnit.setDescription( StringUtils.trimToNull( description ) );
+        organisationUnit.setCode( StringUtils.trimToNull( code ) );
         organisationUnit.setOpeningDate( oDate );
         organisationUnit.setClosedDate( cDate );
-        organisationUnit.setComment( comment );
-        organisationUnit.setUrl( url );
-        organisationUnit.setContactPerson( contactPerson );
-        organisationUnit.setAddress( address );
-        organisationUnit.setEmail( email );
-        organisationUnit.setPhoneNumber( phoneNumber );
+        organisationUnit.setComment( StringUtils.trimToNull( comment ) );
+        organisationUnit.setUrl( StringUtils.trimToNull( url ) );
+        organisationUnit.setContactPerson( StringUtils.trimToNull( contactPerson ) );
+        organisationUnit.setAddress( StringUtils.trimToNull( address ) );
+        organisationUnit.setEmail( StringUtils.trimToNull( email ) );
+        organisationUnit.setPhoneNumber( StringUtils.trimToNull( phoneNumber ) );
 
         if ( jsonAttributeValues != null )
         {

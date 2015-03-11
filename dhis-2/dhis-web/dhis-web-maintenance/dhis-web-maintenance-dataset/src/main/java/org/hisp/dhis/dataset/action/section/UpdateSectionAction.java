@@ -31,6 +31,7 @@ package org.hisp.dhis.dataset.action.section;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
@@ -150,6 +151,9 @@ public class UpdateSectionAction
         }
 
         DataSet dataSet = section.getDataSet();
+        
+        section.setName( StringUtils.trimToNull( sectionName ) );
+        section.setDescription( StringUtils.trimToNull( description ) );
 
         if ( dataSet != null ) // Check if version must be updated
         {
@@ -164,8 +168,6 @@ public class UpdateSectionAction
 
         section.setDataElements( dataElements );
         section.setIndicators( indicators );
-        section.setName( sectionName );
-        section.setDescription( description );
 
         sectionService.updateSection( section );
 
