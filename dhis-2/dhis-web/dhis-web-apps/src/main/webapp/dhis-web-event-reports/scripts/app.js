@@ -7936,7 +7936,6 @@ Ext.onReady( function() {
 			}
 		};
 
-
         // dhis2
         dhis2.util.namespace('dhis2.er');
 
@@ -8141,10 +8140,10 @@ Ext.onReady( function() {
                                             url: '.',
                                             disableCaching: false,
                                             success: function() {
+                                                var store = dhis2.er.store;
 
                                                 // check if idb has any option sets
-                                                dhis2.er.store.count('optionSets').done( function(count) {
-                                                    var store = dhis2.er.store;
+                                                store.count('optionSets').done( function(count) {
 
                                                     if (count === 0) {
                                                         Ext.Ajax.request({
