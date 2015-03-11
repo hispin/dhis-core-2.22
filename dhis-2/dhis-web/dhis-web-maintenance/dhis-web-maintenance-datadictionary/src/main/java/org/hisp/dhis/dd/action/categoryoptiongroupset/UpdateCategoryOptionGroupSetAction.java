@@ -29,6 +29,8 @@ package org.hisp.dhis.dd.action.categoryoptiongroupset;
  */
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,8 +99,8 @@ public class UpdateCategoryOptionGroupSetAction
         throws Exception
     {
         CategoryOptionGroupSet categoryOptionGroupSet = dataElementCategoryService.getCategoryOptionGroupSet( id );
-        categoryOptionGroupSet.setName( name );
-        categoryOptionGroupSet.setDescription( description );
+        categoryOptionGroupSet.setName( StringUtils.trimToNull( name ) );
+        categoryOptionGroupSet.setDescription( StringUtils.trimToNull( description ) );
         categoryOptionGroupSet.setDataDimension( dataDimension );
         categoryOptionGroupSet.getMembers().clear();
 

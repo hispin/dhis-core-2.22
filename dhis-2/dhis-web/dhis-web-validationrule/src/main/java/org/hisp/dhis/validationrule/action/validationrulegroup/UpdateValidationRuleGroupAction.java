@@ -30,6 +30,7 @@ package org.hisp.dhis.validationrule.action.validationrulegroup;
 
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.validation.ValidationRuleGroup;
 import org.hisp.dhis.validation.ValidationRuleService;
@@ -116,8 +117,8 @@ public class UpdateValidationRuleGroupAction
     {
         ValidationRuleGroup group = validationRuleService.getValidationRuleGroup( id );
         
-        group.setName( name );
-        group.setDescription( description );
+        group.setName( StringUtils.trimToNull( name ) );
+        group.setDescription( StringUtils.trimToNull( description ) );
         group.getMembers().clear();
         
         if ( groupMembers != null )

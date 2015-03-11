@@ -29,6 +29,8 @@ package org.hisp.dhis.user.action;
  */
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.user.UserAuthorityGroup;
@@ -104,8 +106,8 @@ public class AddRoleAction
     {
         UserAuthorityGroup group = new UserAuthorityGroup();
 
-        group.setName( name );
-        group.setDescription( description );
+        group.setName( StringUtils.trimToNull( name ) );
+        group.setDescription( StringUtils.trimToNull( description ) );
 
         for ( String id : selectedList )
         {

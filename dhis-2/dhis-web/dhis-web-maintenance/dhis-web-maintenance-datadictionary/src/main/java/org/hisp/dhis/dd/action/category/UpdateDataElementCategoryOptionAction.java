@@ -134,22 +134,22 @@ public class UpdateDataElementCategoryOptionAction
         Date sDate = null;
         Date eDate = null;
 
-        if ( startDate != null && startDate.trim().length() != 0 )
+        if ( startDate != null && !startDate.isEmpty() )
         {
             DateTimeUnit isoStartDate = calendarService.getSystemCalendar().toIso( startDate );
             sDate = isoStartDate.toJdkCalendar().getTime();
         }
 
-        if ( endDate != null && endDate.trim().length() != 0 )
+        if ( endDate != null && !endDate.isEmpty() )
         {
             DateTimeUnit isoEndDate = calendarService.getSystemCalendar().toIso( endDate );
             eDate = isoEndDate.toJdkCalendar().getTime();
         }
 
         DataElementCategoryOption categoryOption = dataElementCategoryService.getDataElementCategoryOption( id );
-        categoryOption.setName( name );
-        categoryOption.setShortName( shortName );
-        categoryOption.setCode( code );
+        categoryOption.setName( StringUtils.trimToNull( name ) );
+        categoryOption.setShortName( StringUtils.trimToNull( shortName ) );
+        categoryOption.setCode( StringUtils.trimToNull( code ) );
         categoryOption.setStartDate( sDate );
         categoryOption.setEndDate( eDate );
         categoryOption.getOrganisationUnits().clear();

@@ -31,6 +31,7 @@ package org.hisp.dhis.dataset.action.section;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
@@ -147,8 +148,8 @@ public class AddSectionAction
         Section section = new Section();
 
         section.setDataSet( dataSet );
-        section.setName( sectionName );
-        section.setDescription( description );
+        section.setName( StringUtils.trimToNull( sectionName ) );
+        section.setDescription( StringUtils.trimToNull( description ) );
         section.setSortOrder( 0 );
 
         List<DataElement> selectedDataElements = new ArrayList<>();

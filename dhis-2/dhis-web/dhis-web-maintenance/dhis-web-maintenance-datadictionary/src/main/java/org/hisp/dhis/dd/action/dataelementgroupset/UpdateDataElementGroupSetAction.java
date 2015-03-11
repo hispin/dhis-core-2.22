@@ -30,6 +30,7 @@ package org.hisp.dhis.dd.action.dataelementgroupset;
 
 import com.opensymphony.xwork2.Action;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementService;
 
@@ -116,9 +117,9 @@ public class UpdateDataElementGroupSetAction
     {
         DataElementGroupSet dataElementGroupSet = dataElementService.getDataElementGroupSet( id );
 
-        dataElementGroupSet.setName( name );
-        dataElementGroupSet.setDescription( description );
-        dataElementGroupSet.setCode( code );
+        dataElementGroupSet.setName( StringUtils.trimToNull( name ) );
+        dataElementGroupSet.setCode( StringUtils.trimToNull( code ) );
+        dataElementGroupSet.setDescription( StringUtils.trimToNull( description ) );
         dataElementGroupSet.setCompulsory( compulsory );
         dataElementGroupSet.setDataDimension( dataDimension );
 

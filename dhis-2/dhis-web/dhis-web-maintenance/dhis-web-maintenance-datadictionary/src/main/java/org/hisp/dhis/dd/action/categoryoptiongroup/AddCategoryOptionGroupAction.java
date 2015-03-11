@@ -29,6 +29,8 @@ package org.hisp.dhis.dd.action.categoryoptiongroup;
  */
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,9 +91,9 @@ public class AddCategoryOptionGroupAction
     public String execute()
         throws Exception
     {
-        CategoryOptionGroup categoryOptionGroup = new CategoryOptionGroup( name );
-        categoryOptionGroup.setShortName( shortName );
-        categoryOptionGroup.setCode( code );
+        CategoryOptionGroup categoryOptionGroup = new CategoryOptionGroup( StringUtils.trimToNull( name ) );
+        categoryOptionGroup.setShortName( StringUtils.trimToNull( shortName ) );
+        categoryOptionGroup.setCode( StringUtils.trimToNull( code ) );
 
         for ( String id : coSelected )
         {

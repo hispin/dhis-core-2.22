@@ -28,6 +28,7 @@ package org.hisp.dhis.dd.action.indicatortype;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
 
@@ -93,7 +94,7 @@ public class UpdateIndicatorTypeAction
     {
         IndicatorType indicatorType = indicatorService.getIndicatorType( id );
 
-        indicatorType.setName( name );
+        indicatorType.setName( StringUtils.trimToNull( name ) );
         indicatorType.setFactor( factor );
         indicatorType.setNumber( number );
 

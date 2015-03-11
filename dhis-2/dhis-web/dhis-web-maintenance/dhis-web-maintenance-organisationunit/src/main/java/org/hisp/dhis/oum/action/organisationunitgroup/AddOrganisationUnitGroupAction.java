@@ -31,6 +31,7 @@ package org.hisp.dhis.oum.action.organisationunitgroup;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -121,10 +122,10 @@ public class AddOrganisationUnitGroupAction
         code = (code != null && code.trim().length() == 0) ? null : code;
 
         OrganisationUnitGroup organisationUnitGroup = new OrganisationUnitGroup();
-        organisationUnitGroup.setName( name );
-        organisationUnitGroup.setShortName( shortName );
-        organisationUnitGroup.setCode( code );
-        organisationUnitGroup.setSymbol( symbol );
+        organisationUnitGroup.setName( StringUtils.trimToNull( name ) );
+        organisationUnitGroup.setShortName( StringUtils.trimToNull( shortName ) );
+        organisationUnitGroup.setCode( StringUtils.trimToNull( code ) );
+        organisationUnitGroup.setSymbol( StringUtils.trimToNull( symbol ) );
 
         organisationUnitGroupService.addOrganisationUnitGroup( organisationUnitGroup );
 

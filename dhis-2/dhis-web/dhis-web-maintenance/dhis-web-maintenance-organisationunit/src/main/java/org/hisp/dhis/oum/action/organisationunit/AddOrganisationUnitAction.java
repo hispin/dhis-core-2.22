@@ -28,12 +28,11 @@ package org.hisp.dhis.oum.action.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.TextUtils.nullIfEmpty;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.calendar.DateTimeUnit;
@@ -237,22 +236,6 @@ public class AddOrganisationUnitAction
     public String execute()
         throws Exception
     {
-        code = nullIfEmpty( code );
-        comment = nullIfEmpty( comment );
-        description = nullIfEmpty( description );
-        longitude = nullIfEmpty( longitude );
-        latitude = nullIfEmpty( latitude );
-        url = nullIfEmpty( url );
-
-        contactPerson = nullIfEmpty( contactPerson );
-        address = nullIfEmpty( address );
-        email = nullIfEmpty( email );
-        phoneNumber = nullIfEmpty( phoneNumber );
-
-        // ---------------------------------------------------------------------
-        // Get parent
-        // ---------------------------------------------------------------------
-
         OrganisationUnit parent = selectionManager.getSelectedOrganisationUnit();
 
         if ( parent == null )
@@ -270,15 +253,20 @@ public class AddOrganisationUnitAction
 
         DateTimeUnit isoOpeningDate = calendarService.getSystemCalendar().toIso( openingDate );
 
-        OrganisationUnit organisationUnit = new OrganisationUnit( name, shortName, code, isoOpeningDate.toJdkCalendar().getTime(), null, comment );
+        OrganisationUnit organisationUnit = new OrganisationUnit();
 
+        organisationUnit.setName( StringUtils.trimToNull( name ) );
+        organisationUnit.setShortName( StringUtils.trimToNull( shortName ) );
+        organisationUnit.setCode( StringUtils.trimToNull( code ) );
+        organisationUnit.setOpeningDate( isoOpeningDate.toJdkCalendar().getTime() );
         organisationUnit.setDescription( description );
-        organisationUnit.setUrl( url );
+        organisationUnit.setComment( StringUtils.trimToNull( comment ) );
+        organisationUnit.setUrl( StringUtils.trimToNull( url ) );
         organisationUnit.setParent( parent );
-        organisationUnit.setContactPerson( contactPerson );
-        organisationUnit.setAddress( address );
-        organisationUnit.setEmail( email );
-        organisationUnit.setPhoneNumber( phoneNumber );
+        organisationUnit.setContactPerson( StringUtils.trimToNull( contactPerson ) );
+        organisationUnit.setAddress( StringUtils.trimToNull( address ) );
+        organisationUnit.setEmail( StringUtils.trimToNull( email ) );
+        organisationUnit.setPhoneNumber( StringUtils.trimToNull( phoneNumber ) );
 
         if ( parent != null )
         {

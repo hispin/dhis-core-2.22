@@ -29,6 +29,8 @@ package org.hisp.dhis.dd.action.categoryoptiongroupset;
  */
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -92,8 +94,8 @@ public class AddCategoryOptionGroupSetAction
     public String execute()
         throws Exception
     {
-        CategoryOptionGroupSet categoryOptionGroupSet = new CategoryOptionGroupSet( name );
-        categoryOptionGroupSet.setDescription( description );
+        CategoryOptionGroupSet categoryOptionGroupSet = new CategoryOptionGroupSet( StringUtils.trimToNull( name ) );
+        categoryOptionGroupSet.setDescription( StringUtils.trimToNull( description ) );
         categoryOptionGroupSet.setDataDimension( dataDimension );
 
         List<CategoryOptionGroup> members = new ArrayList<>();

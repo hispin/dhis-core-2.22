@@ -121,26 +121,24 @@ public class AddDataElementCategoryOptionAction
     @Override
     public String execute()
     {
-        code = StringUtils.trimToNull( code );
-
         Date sDate = null;
         Date eDate = null;
 
-        if ( startDate != null && startDate.trim().length() != 0 )
+        if ( startDate != null && !startDate.isEmpty() )
         {
             DateTimeUnit isoStartDate = calendarService.getSystemCalendar().toIso( startDate );
             sDate = isoStartDate.toJdkCalendar().getTime();
         }
 
-        if ( endDate != null && endDate.trim().length() != 0 )
+        if ( endDate != null && !endDate.isEmpty() )
         {
             DateTimeUnit isoEndDate = calendarService.getSystemCalendar().toIso( endDate );
             eDate = isoEndDate.toJdkCalendar().getTime();
         }
 
-        dataElementCategoryOption = new DataElementCategoryOption( name );
-        dataElementCategoryOption.setShortName( shortName );
-        dataElementCategoryOption.setCode( code );
+        dataElementCategoryOption = new DataElementCategoryOption( StringUtils.trimToNull( name ) );
+        dataElementCategoryOption.setShortName( StringUtils.trimToNull( shortName ) );
+        dataElementCategoryOption.setCode( StringUtils.trimToNull( code ) );
         dataElementCategoryOption.setStartDate( sDate );
         dataElementCategoryOption.setEndDate( eDate );
         dataElementCategoryOption.getOrganisationUnits().addAll ( selectionManager.getSelectedOrganisationUnits() );

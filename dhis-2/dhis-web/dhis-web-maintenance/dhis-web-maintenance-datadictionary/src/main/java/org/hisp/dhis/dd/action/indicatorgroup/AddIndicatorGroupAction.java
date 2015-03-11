@@ -30,6 +30,8 @@ package org.hisp.dhis.dd.action.indicatorgroup;
 
 import com.google.common.collect.Lists;
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorService;
@@ -100,7 +102,7 @@ public class AddIndicatorGroupAction
     @Override
     public String execute()
     {
-        indicatorGroup = new IndicatorGroup( name );
+        indicatorGroup = new IndicatorGroup( StringUtils.trimToNull( name ) );
 
         indicatorService.addIndicatorGroup( indicatorGroup );
 
