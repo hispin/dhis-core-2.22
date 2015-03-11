@@ -3,7 +3,8 @@
         {{dataentryWidget.title| translate}}        
 
         <span class="pull-right widget-link">
-            <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}"><i class="fa fa-info-circle vertical-center"></i></a>
+            <a href ng-click="filterEvents = !filterEvents" title="{{filterEvents ? 'list_events'  : 'filter_events' | translate}}" ng-show="eventFilteringRequired"><span ng-if="!filterEvents"><i class="fa fa-filter vertical-center"></i></span><span ng-if="filterEvents"><i class="fa fa-list vertical-center"></i></span></a>
+            <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}" class="small-horizonal-spacing"><i class="fa fa-info-circle vertical-center"></i></a>
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(dataentryWidget)">
                 <span ng-show="dataentryWidget.expand"><i class="fa fa-chevron-up vertical-center" title="{{'collapse'| translate}}"></i></span>
                 <span ng-show="!dataentryWidget.expand"><i class="fa fa-chevron-down vertical-center" title="{{'expand'| translate}}"></i></span>
@@ -20,7 +21,7 @@
                     <td ng-class="eventColor.color" ng-repeat="eventColor in eventColors">
                         <span class="bold">{{eventColor.description| translate}}</span>
                     </td>
-                </tr>                    
+                </tr>
             </table>
         </div>
 
@@ -28,17 +29,21 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="active" ng-class="getColumnWidth(eventsByStage[stage.id].length)" ng-repeat="stage in programStages| orderBy:'sortOrder':reverse">
+                        <th class="active" style="vertical-align:middle" ng-repeat="stage in programStages| orderBy:'sortOrder':reverse">
                             {{stage.name}}
+                            <div ng-if="eventsByStage[stage.id].length > 1 && filterEvents" class="inline-block small-horizonal-spacing">
+                                <select class="form-control-inline" 
+                                        ng-model="currentPeriod[stage.id]" 
+                                        ng-change="showDataEntryForEvent(currentPeriod[stage.id])"
+                                        ng-options="period.name for period in eventPeriods[stage.id]">
+                                </select>
+                            </div>
 
                             <!-- event add/filter icon begins -->
                             <span class='pull-right'>
                                 <span ng-if="stageNeedsEvent(stage)">
-                                    <a href title="{{'create_new_event'| translate}}" ng-click="showCreateEvent(stage)"><i class="fa fa-plus"></i></a>
+                                    <a href title="{{'create_new_event'| translate}}" ng-click="showCreateEvent(stage)" style="vertical-align:middle"><i class="fa fa-plus"></i></a>
                                 </span>
-                                <span class="small-horizonal-spacing" ng-if="eventsByStage[stage.id].length > 1">
-                                    <a href title="{{'filter'| translate}}"><i class="fa fa-search"></i></a>
-                                </span>                                                    
                             </span>
                             <!-- event add/filter icon ends -->
                         </th>
@@ -47,15 +52,15 @@
                 <tbody>
                     <tr>
                         <td ng-repeat="stage in programStages| orderBy:'sortOrder':reverse">
-                            <div class="inline-block" ng-repeat="dhis2Event in eventsByStage[stage.id]">
+                            <div class="inline-block" ng-repeat="dhis2Event in eventsByStage[stage.id] | orderBy:sortEventsByDate:reverse">
                                 <div class="event-container" 
                                      ng-class="getEventStyle(dhis2Event)" 
+                                     ng-show="!currentPeriod[stage.id] || !filterEvents || currentPeriod[stage.id] && currentPeriod[stage.id].event === dhis2Event.event"
                                      ng-click="showDataEntry(dhis2Event, false)">
                                     {{dhis2Event.orgUnitName}}<br/>
                                     {{dhis2Event.sortingDate}}<br>
-                                    <span ng-if="eventsByStage[stage.id].length > 1">[{{$index + 1}}]</span>
+                                    <span ng-if="eventsByStage[stage.id].length > 1 && !filterEvents">[{{$index + 1}}]</span>
                                 </div>
-                                <!--<i class="fa fa-arrow-right" ng-if="$index < eventsByStage[stage.id].length - 1"></i>-->
                             </div>
                         </td>                        
                     </tr>

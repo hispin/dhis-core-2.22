@@ -48,6 +48,62 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
 })
 
+/* current selections */
+.service('PeriodService', function($translate, CalendarService){
+    
+    var calendarSetting = CalendarService.getSetting();    
+    var months = [
+                    $translate('jan'), 
+                    $translate('feb'),
+                    $translate('mar'),
+                    $translate('apr'),
+                    $translate('may'),
+                    $translate('jun'),
+                    $translate('jul'),
+                    $translate('aug'),                    
+                    $translate('sep'),
+                    $translate('oct'),
+                    $translate('nov'),
+                    $translate('dec')
+                  ];    
+   
+    this.getMonths = function(){
+        return months;
+    };
+    
+    this.getPeriods = function(events, stage){
+        var periods = [];
+        if(stage){            
+            angular.forEach(events, function(event){
+                periods.push({event: event.event, name: event.sortingDate, stage: stage.id});
+            });
+            /*if(stage.standardInterval === 30){
+                angular.forEach(events, function(event){
+                    var obj = {year: moment(event.sortingDate, calendarSetting.momentFormat).year(), month: moment(event.sortingDate, calendarSetting.momentFormat).month(), week: moment(event.sortingDate, calendarSetting.momentFormat).week(), day: moment(event.sortingDate, calendarSetting.momentFormat).day()};                
+                    periods.push({event: event.event, name: months[obj.month] + ' ' + obj.year, stage: stage.id});
+                });
+            }
+            else{
+                angular.forEach(events, function(event){
+                    periods.push({event: event.event, name: event.sortingDate, stage: stage.id});
+                });
+            }*/            
+        }
+        
+        return periods;
+    };
+    
+    
+    this.splitDate = function(dateValue){
+        if(!dateValue){
+            return;
+        }
+        var calendarSetting = CalendarService.getSetting();            
+
+        return {year: moment(dateValue, calendarSetting.momentFormat).year(), month: moment(dateValue, calendarSetting.momentFormat).month(), week: moment(dateValue, calendarSetting.momentFormat).week(), day: moment(dateValue, calendarSetting.momentFormat).day()};
+    };
+})
+
 /* Factory to fetch optionSets */
 .factory('OptionSetService', function($q, $rootScope, TCStorageService) { 
     return {

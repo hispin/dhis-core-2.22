@@ -89,6 +89,8 @@ textarea {
 
 .vertical-center {
     line-height: inherit;
+    vertical-align: middle;
+    
 }
 
 .empty-event-container {
@@ -463,6 +465,7 @@ input[type=date]::-webkit-inner-spin-button, input[type=date]::-webkit-outer-spi
     padding-left: 5px;
     padding-right: 5px;
 }
+
 .advanced-search-container-main {
     width: 100%;
     float: left;
@@ -668,6 +671,21 @@ input[type=number], input[type=text], input[type=email], input[type=password], t
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+.form-control-inline {
+    color: #555;
+    padding: 6px 6px;
+    vertical-align: middle;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+
 .form-control-program {    
     width: 40%;
     height: 34px;
@@ -707,6 +725,29 @@ input[type=number], input[type=text], input[type=email], input[type=password], t
     color: #999
 }
 .form-control-program[disabled], .form-control-program[readonly], fieldset[disabled] .form-control-program {
+    cursor: not-allowed;
+    background-color: #eee
+}
+
+.form-control-inline:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6)
+}
+.form-control-inline:-moz-placeholder {
+    color: #999
+}
+.form-control-inline::-moz-placeholder {
+    color: #999
+}
+.form-control-inline:-ms-input-placeholder {
+    color: #999
+}
+.form-control-inline::-webkit-input-placeholder {
+    color: #999
+}
+.form-control-inline[disabled], .form-control-inline[readonly], fieldset[disabled] .form-control-inline {
     cursor: not-allowed;
     background-color: #eee
 }
