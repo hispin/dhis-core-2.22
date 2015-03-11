@@ -7121,7 +7121,9 @@ Ext.onReady( function() {
             defaultButton,
             centerRegion,
             getLayoutWindow,
-            viewport;
+            viewport,
+
+            scrollbarWidth = Ext.isWebKit ? 8 : (Ext.isLinux && Ext.isGecko ? 13 : 17);
 
 		ns.app.stores = ns.app.stores || {};
 
@@ -7257,17 +7259,7 @@ Ext.onReady( function() {
 			preventHeader: true,
 			collapsible: true,
 			collapseMode: 'mini',
-			width: function() {
-				if (Ext.isWebKit) {
-					return ns.core.conf.layout.west_width + 8;
-				}
-				else {
-					if (Ext.isLinux && Ext.isGecko) {
-						return ns.core.conf.layout.west_width + 13;
-					}
-					return ns.core.conf.layout.west_width + 17;
-				}
-			}(),
+			width: ns.core.conf.layout.west_width + scrollbarWidth,
 			items: [
 				typeToolbar,
 				accordion
@@ -7876,6 +7868,8 @@ Ext.onReady( function() {
 					}
 					else {
 						westRegion.hasScrollbar = true;
+
+                        caseButton.setWidth(caseButton.getWidth() + scrollbarWidth);
 					}
 
 					// expand init panels
