@@ -92,6 +92,8 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
         List<Restriction> restrictions = new ArrayList<>();
         List<String> candidates = getRestrictionCandidates( schema, filters );
 
+        System.err.println( "candidates: " + candidates );
+
         if ( candidates.isEmpty() )
         {
             return restrictions;
@@ -141,7 +143,7 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
 
         Property property = schema.getProperty( split[0] );
 
-        if ( property == null || !property.isPersisted() || !property.isSimple() || Enum.class.isAssignableFrom( property.getKlass() ) )
+        if ( property == null || !property.isPersisted() || !property.isSimple() )
         {
             return null;
         }
@@ -150,39 +152,39 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
         {
             case "eq":
             {
-                return Restrictions.eq( split[0], split[2] );
+                return Restrictions.eq( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "ne":
             {
-                return Restrictions.ne( split[0], split[2] );
+                return Restrictions.ne( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "neq":
             {
-                return Restrictions.ne( split[0], split[2] );
+                return Restrictions.ne( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "gt":
             {
-                return Restrictions.gt( split[0], split[2] );
+                return Restrictions.gt( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "lt":
             {
-                return Restrictions.lt( split[0], split[2] );
+                return Restrictions.lt( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "gte":
             {
-                return Restrictions.ge( split[0], split[2] );
+                return Restrictions.ge( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "ge":
             {
-                return Restrictions.ge( split[0], split[2] );
+                return Restrictions.ge( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "lte":
             {
-                return Restrictions.le( split[0], split[2] );
+                return Restrictions.le( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "le":
             {
-                return Restrictions.le( split[0], split[2] );
+                return Restrictions.le( split[0], QueryUtils.getValue( property.getKlass(), split[2] ) );
             }
             case "like":
             {

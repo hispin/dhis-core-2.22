@@ -28,11 +28,7 @@ package org.hisp.dhis.dxf2.objectfilter.ops;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import org.hisp.dhis.system.util.DateUtils;
-
-import java.util.Collection;
-import java.util.Date;
+import org.hisp.dhis.query.QueryUtils;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -56,70 +52,9 @@ public abstract class Op
         return value;
     }
 
-    @SuppressWarnings( "unchecked" )
     public <T> T getValue( Class<?> klass )
     {
-        if ( klass.isInstance( value ) )
-        {
-            return (T) value;
-        }
-
-        if ( Boolean.class.isAssignableFrom( klass ) )
-        {
-            try
-            {
-                return (T) Boolean.valueOf( value );
-            }
-            catch ( Exception ignored )
-            {
-            }
-        }
-        else if ( Integer.class.isAssignableFrom( klass ) )
-        {
-            try
-            {
-                return (T) Integer.valueOf( value );
-            }
-            catch ( Exception ignored )
-            {
-            }
-        }
-        else if ( Float.class.isAssignableFrom( klass ) )
-        {
-            try
-            {
-                return (T) Float.valueOf( value );
-            }
-            catch ( Exception ignored )
-            {
-            }
-        }
-        else if ( Double.class.isAssignableFrom( klass ) )
-        {
-            try
-            {
-                return (T) Double.valueOf( value );
-            }
-            catch ( Exception ignored )
-            {
-            }
-        }
-        else if ( Date.class.isAssignableFrom( klass ) )
-        {
-            return (T) DateUtils.parseDate( value );
-        }
-        else if ( Collection.class.isAssignableFrom( klass ) )
-        {
-            if ( value == null || !value.startsWith( "[" ) || !value.endsWith( "]" ) )
-            {
-                return null;
-            }
-
-            String[] split = value.substring( 1, value.length() - 1 ).split( "," );
-            return (T) Lists.newArrayList( split );
-        }
-
-        return null;
+        return QueryUtils.getValue( klass, value );
     }
 
     public abstract OpStatus evaluate( Object object );
