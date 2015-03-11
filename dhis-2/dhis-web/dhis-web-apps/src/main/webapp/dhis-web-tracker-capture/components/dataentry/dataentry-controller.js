@@ -1,6 +1,7 @@
 trackerCapture.controller('DataEntryController',
         function($scope,
                 $modal,
+                $filter,
                 DateUtils,
                 EventUtils,
                 orderByFilter,
@@ -10,13 +11,16 @@ trackerCapture.controller('DataEntryController',
                 OptionSetService,
                 ModalService,
                 CurrentSelection,
-                CustomFormService) {
-    
+                CustomFormService,
+                PeriodService) {
     //Data entry form
     $scope.dataEntryOuterForm = {};
     $scope.displayCustomForm = false;
     $scope.currentElement = {};
     $scope.schedulingEnabled = false;
+    $scope.eventPeriods = [];
+    $scope.currentPeriod = [];
+    $scope.filterEvents = true;
     
     var loginDetails = storage.get('LOGIN_DETAILS');
     var storedBy = '';
@@ -60,7 +64,7 @@ trackerCapture.controller('DataEntryController',
         $scope.selectedEnrollment = selections.selectedEnrollment;   
         $scope.optionSets = selections.optionSets;
         
-        $scope.selectedProgramWithStage = [];        
+        $scope.stagesById = [];        
         if($scope.selectedOrgUnit && $scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedEntity && $scope.selectedEnrollment && $scope.selectedEnrollment.enrollment){            
             ProgramStageFactory.getByProgram($scope.selectedProgram).then(function(stages){
                 $scope.programStages = stages;
@@ -73,7 +77,7 @@ trackerCapture.controller('DataEntryController',
                         $scope.prStDes[prStDe.dataElement.id] = prStDe;
                     });
                     
-                    $scope.selectedProgramWithStage[stage.id] = stage;
+                    $scope.stagesById[stage.id] = stage;
                     $scope.eventsByStage[stage.id] = [];
                 });
                 $scope.getEvents();                
@@ -93,7 +97,7 @@ trackerCapture.controller('DataEntryController',
                             });
                         }
                     
-                        var eventStage = $scope.selectedProgramWithStage[dhis2Event.programStage];
+                        var eventStage = $scope.stagesById[dhis2Event.programStage];
                         if(angular.isObject(eventStage)){
 
                             dhis2Event.name = eventStage.name; 
@@ -152,6 +156,9 @@ trackerCapture.controller('DataEntryController',
             templateUrl: 'components/dataentry/new-event.html',
             controller: 'EventCreationController',
             resolve: {
+                stagesById: function(){
+                    return $scope.stagesById;
+                },
                 dummyEvent: function(){
                     return dummyEvent;
                 },
@@ -224,7 +231,7 @@ trackerCapture.controller('DataEntryController',
     
     $scope.getDataEntryForm = function(){
         
-        $scope.currentStage = $scope.selectedProgramWithStage[$scope.currentEvent.programStage];
+        $scope.currentStage = $scope.stagesById[$scope.currentEvent.programStage];
         
         angular.forEach($scope.currentStage.programStageSections, function(section){
             section.open = true;
@@ -667,18 +674,40 @@ trackerCapture.controller('DataEntryController',
         return "width: " + width + '%';
     };
     
+    $scope.sortEventsByDate = function(dhis2Event){
+        var d = dhis2Event.sortingDate;         
+        return DateUtils.getDate(d);                
+    };
+    
     var sortEventsByStage = function(){
-        for(var key in $scope.eventsByStage){
-            if($scope.eventsByStage.hasOwnProperty(key)){
-                $scope.eventsByStage[key] = orderByFilter($scope.eventsByStage[key], '-sortingDate').reverse(); 
-                $scope.totalEvents += $scope.eventsByStage[key].length <=1 ? 1:$scope.eventsByStage[key].length;
-                
-                console.log('the stage:  ', key);
-                angular.forEach($scope.eventsByStage[key], function(stage){
-                    console.log('event:  ', stage.sortingDate);
-                });
+        $scope.eventFilteringRequired = false;
+        for(var key in $scope.eventsByStage){ 
+            var stage = $scope.stagesById[key];
+            if($scope.eventsByStage.hasOwnProperty(key) && stage){                
+                var sortedEvents = $filter('orderBy')($scope.eventsByStage[key], function(event) {
+                    return DateUtils.getDate(event.sortingDate);
+                });                
+                var periods = PeriodService.getPeriods(sortedEvents, stage);
+                $scope.eventPeriods[key] = periods;
+                $scope.currentPeriod[key] = periods.length > 0 ? periods[0] : null;  
+                $scope.eventFilteringRequired = $scope.eventFilteringRequired ? $scope.eventFilteringRequired : periods.length > 1;
             }
         }
+    };
+    
+    $scope.showDataEntryForEvent = function(period){
+        var event = null;
+        for(var i=0; i<$scope.eventsByStage[period.stage].length; i++){
+            if($scope.eventsByStage[period.stage][i].event === period.event){
+                event = $scope.eventsByStage[period.stage][i];
+                break;
+            }
+        }
+        
+        if(event){
+            $scope.showDataEntry(event, false);
+        }
+        
     };
     
     $scope.showMap = function(event){
@@ -711,9 +740,11 @@ trackerCapture.controller('DataEntryController',
             DateUtils,
             DHIS2EventFactory,
             DialogService,
+            stagesById,
             dummyEvent,
             programId,
             trackedEntityInstanceId){
+    $scope.stagesById = stagesById;
     $scope.programStageId = dummyEvent.programStage;
     $scope.programId = programId;
     $scope.orgUnitId = dummyEvent.orgUnit;    
@@ -724,7 +755,7 @@ trackerCapture.controller('DataEntryController',
     $scope.dueDateInvalid = false;
     $scope.eventDateInvalid = false;
     
-    //watch for changes in eventDate
+    //watch for changes in due/event-date
     $scope.$watchCollection('[dhis2Event.dueDate, dhis2Event.eventDate]', function() {        
         if(angular.isObject($scope.dhis2Event)){
             if(!$scope.dhis2Event.dueDate){
@@ -765,8 +796,9 @@ trackerCapture.controller('DataEntryController',
                 notes: [],
                 dataValues: [],
                 status: 'ACTIVE'
-            };
-        newEvents.events.push(newEvent);        
+            };            
+        newEvents.events.push(newEvent);
+        
         DHIS2EventFactory.create(newEvents).then(function(data){
             if (data.importSummaries[0].status === 'ERROR') {
                 var dialogOptions = {
@@ -781,6 +813,7 @@ trackerCapture.controller('DataEntryController',
                 $modalInstance.close(newEvent);
             }
         });
+        
     };
     
     $scope.cancel = function(){
