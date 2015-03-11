@@ -100,13 +100,12 @@
 <tr>
 	<td>
 		<br/>
-		<input type='button' class="small-button" alt="$i18n.getString( 'plus' )" onclick='insertOperator( "+" );' value="+" />
-		<input type='button' class="small-button" alt="$i18n.getString( 'minus' )" onclick='insertOperator( "-" );' value="-" />
-		<input type='button' class="small-button" alt="$i18n.getString( 'multiply' )" onclick='insertOperator( "*" );' value="*" />
-		<input type='button' class="small-button" alt="$i18n.getString( 'divide' )" onclick='insertOperator( "/" );' value="/" />
-		&nbsp;&nbsp;&nbsp;
-		<input type='button' class="small-button" alt="$i18n.getString( 'left_parent' )" onclick='insertOperator( "(" );' value="(" />
-		<input type='button' class="small-button" alt="$i18n.getString( 'right_parent' )" onclick='insertOperator( ")" );' value=")" />
+		<a href="javascript:insertOperator( '(' )"><img src="../images/left_parent.png" title="$i18n.getString( 'left_brackets' )"/></a>
+		<a href="javascript:insertOperator( ')' )"><img src="../images/right_parent.png" title="$i18n.getString( 'right_brackets' )"/></a>
+		<a href="javascript:insertOperator( '*' )"><img src="../images/multiply.png" title="$i18n.getString( 'multiply' )"/></a>
+		<a href="javascript:insertOperator( '/' )"><img src="../images/divide.png" title="$i18n.getString( 'divide' )"/></a>
+		<a href="javascript:insertOperator( '+' )"><img src="../images/plus.png" title="$i18n.getString( 'plus' )"/></a>
+		<a href="javascript:insertOperator( '-' )"><img src="../images/minus.png" title="$i18n.getString( 'minus' )"/></a>
 	</td>
 </tr>
 	
