@@ -145,6 +145,8 @@ public class EventController
         @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
         @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date lastUpdated,
+        @RequestParam( required = false ) Integer page,
+        @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) String attachment,
         @RequestParam( required = false, defaultValue = "false" ) boolean skipHeader,
         @RequestParam Map<String, String> parameters,
@@ -153,7 +155,7 @@ public class EventController
         WebOptions options = new WebOptions( parameters );
 
         EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode, 
-            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes );
+            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize );
         
         Events events = eventService.getEvents( params );
 
@@ -198,6 +200,8 @@ public class EventController
         @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
         @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date lastUpdated,
+        @RequestParam( required = false ) Integer page,
+        @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) String attachment,
         @RequestParam Map<String, String> parameters, IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request )
@@ -205,7 +209,7 @@ public class EventController
         WebOptions options = new WebOptions( parameters );
 
         EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode, 
-            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes );
+            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize );
         
         Events events = eventService.getEvents( params );
 
@@ -254,7 +258,8 @@ public class EventController
     {
         WebOptions options = new WebOptions( parameters );
 
-        EventSearchParams params = eventService.getFromUrl( program, null, programStatus, false, orgUnit, ouMode, null, startDate, endDate, null, null, null );
+        EventSearchParams params = eventService.getFromUrl( program, null, programStatus, false, 
+            orgUnit, ouMode, null, startDate, endDate, null, null, null, null, null );
         
         EventRows eventRows = eventRowService.getEventRows( params );
 
