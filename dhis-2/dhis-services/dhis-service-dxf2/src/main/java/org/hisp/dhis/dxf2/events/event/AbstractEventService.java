@@ -465,6 +465,10 @@ public abstract class AbstractEventService
             throw new IllegalQueryException( "Tracked entity instance is specified but does not exist: " + trackedEntityInstance );
         }
         
+        params.setProgram( pr );
+        params.setProgramStage( ps );
+        params.setOrgUnit( ou );
+        params.setTrackedEntityInstance( tei );
         params.setProgramStatus( programStatus );
         params.setFollowUp( followUp );
         params.setOrgUnitSelectionMode( orgUnitSelectionMode );
