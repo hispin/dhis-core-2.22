@@ -28,24 +28,20 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.OrganisationUnitSelectionMode;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
-import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.IdSchemes;
-import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.program.ProgramStageInstance;
-import org.hisp.dhis.program.ProgramStatus;
-import org.hisp.dhis.scheduling.TaskId;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
+import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.event.EventStatus;
+import org.hisp.dhis.program.ProgramStageInstance;
+import org.hisp.dhis.program.ProgramStatus;
+import org.hisp.dhis.scheduling.TaskId;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -56,12 +52,12 @@ public interface EventService
     // READ
     // -------------------------------------------------------------------------
 
-    Events getEvents( Program program, OrganisationUnit organisationUnit, OrganisationUnitSelectionMode orgUnitSelectionMode );
+    Events getEvents( EventSearchParams params );
 
-    Events getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp, OrganisationUnit orgUnit,
-        OrganisationUnitSelectionMode orgUnitSelectionMode, TrackedEntityInstance trackedEntityInstance, 
-        Date startDate, Date endDate, EventStatus status, Date lastUpdated, IdSchemes idSchemes );
-
+    EventSearchParams getFromUrl( String program, String programStage, ProgramStatus programStatus, Boolean followUp, String orgUnit,
+        OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate, 
+        EventStatus status, Date lastUpdated, IdSchemes idSchemes );
+    
     Event getEvent( String uid );
 
     Event getEvent( ProgramStageInstance programStageInstance );

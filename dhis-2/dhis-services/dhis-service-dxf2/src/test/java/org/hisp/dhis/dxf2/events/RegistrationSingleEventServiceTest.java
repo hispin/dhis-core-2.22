@@ -43,6 +43,7 @@ import org.hisp.dhis.dxf2.events.enrollment.Enrollment;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentService;
 import org.hisp.dhis.dxf2.events.event.DataValue;
 import org.hisp.dhis.dxf2.events.event.Event;
+import org.hisp.dhis.dxf2.events.event.EventSearchParams;
 import org.hisp.dhis.dxf2.events.event.EventService;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
@@ -189,19 +190,24 @@ public class RegistrationSingleEventServiceTest
         importSummary = eventService.addEvent( event );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
-        assertEquals( 1, eventService.getEvents( programA, organisationUnitA, OrganisationUnitSelectionMode.SELECTED ).getEvents().size() );
+        EventSearchParams params = new EventSearchParams();
+        params.setProgram( programA );
+        params.setOrgUnit( organisationUnitA );
+        params.setOrgUnitSelectionMode( OrganisationUnitSelectionMode.SELECTED );
+        
+        assertEquals( 1, eventService.getEvents( params ).getEvents().size() );
 
         event = createEvent( programA.getUid(), organisationUnitA.getUid(), trackedEntityInstanceMaleA.getTrackedEntityInstance() );
         importSummary = eventService.addEvent( event );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
-        assertEquals( 1, eventService.getEvents( programA, organisationUnitA, OrganisationUnitSelectionMode.SELECTED ).getEvents().size() );
+        assertEquals( 1, eventService.getEvents( params ).getEvents().size() );
 
         event = createEvent( programA.getUid(), organisationUnitA.getUid(), trackedEntityInstanceMaleA.getTrackedEntityInstance() );
         importSummary = eventService.addEvent( event );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
-        assertEquals( 1, eventService.getEvents( programA, organisationUnitA, OrganisationUnitSelectionMode.SELECTED ).getEvents().size() );
+        assertEquals( 1, eventService.getEvents( params ).getEvents().size() );
     }
 
     @Test
