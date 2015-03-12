@@ -775,6 +775,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     protected List<T> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
         List<T> entityList;
+        boolean haveFilters = !filters.isEmpty();
         Query query = queryService.getQueryFromUrl( getEntityClass(), filters, orders );
         query.setDefaultOrder();
 
@@ -782,7 +783,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         {
             entityList = Lists.newArrayList( manager.filter( getEntityClass(), options.getOptions().get( "query" ) ) );
         }
-        else if ( options.hasPaging() && filters.isEmpty() )
+        else if ( options.hasPaging() && !haveFilters )
         {
             int count = manager.getCount( getEntityClass() );
 
@@ -792,6 +793,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             query.setFirstResult( pager.getOffset() );
             query.setMaxResults( pager.getPageSize() );
             entityList = (List<T>) queryService.query( query ).getItems();
+
+            metaData.setPager( new Pager( options.getPage(), entityList.size(), options.getPageSize() ) );
         }
         else
         {
