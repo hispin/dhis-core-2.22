@@ -92,8 +92,6 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
         List<Restriction> restrictions = new ArrayList<>();
         List<String> candidates = getRestrictionCandidates( schema, filters );
 
-        System.err.println( "candidates: " + candidates );
-
         if ( candidates.isEmpty() )
         {
             return restrictions;
