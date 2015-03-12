@@ -32,6 +32,8 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.selectedOrgUnitId = ($location.search()).ou;
     $scope.treeLoaded = false;
     $scope.searchOuTree = false;
+    $scope.teiListMode = {onlyActive: false};
+    $scope.enrollmentStatus = 'ALL';
     
     //Paging
     $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};   
@@ -171,15 +173,12 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     };
    
     //$scope.searchParam = {bools: []};
-    $scope.search = function(mode){
-        $scope.teiFetched = false;
+    $scope.search = function(mode){        
         $scope.selectedSearchMode = mode;
         $scope.emptySearchText = false;
         $scope.emptySearchAttribute = false;
         $scope.showRegistrationDiv = false;  
-        $scope.showTrackedEntityDiv = false;
-        $scope.trackedEntityList = null; 
-        $scope.teiCount = null;
+        $scope.showTrackedEntityDiv = false;        
         
         $scope.queryUrl = null;
         $scope.programUrl = null;
@@ -230,6 +229,11 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     };
     
     $scope.fetchTeis = function(){
+        
+        $scope.teiFetched = false;
+        $scope.trackedEntityList = null; 
+        $scope.teiCount = null;
+        
         //get events for the specified parameters        
         TEIService.search($scope.searchingOrgUnit.id, 
                                             $scope.selectedOuMode.name,
@@ -385,6 +389,20 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         else{
             orgUnit.show = !orgUnit.show;   
         }        
+    };
+    
+    
+    $scope.filterByEnrollmentStatus = function(status){
+        if(status !== $scope.enrollmentStatus){            
+            $scope.enrollmentStatus = status;                
+            if($scope.enrollmentStatus === 'ALL'){
+                $scope.programUrl = 'program=' + $scope.selectedProgram.id;                
+            }
+            else{
+                $scope.programUrl = 'program=' + $scope.selectedProgram.id + '&programStatus=' + $scope.enrollmentStatus;
+            }
+            $scope.fetchTeis();
+        }
     };
     
     //load programs for the selected orgunit (from tree)
