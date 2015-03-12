@@ -76,7 +76,7 @@ public class EventQueryParams
     private List<String> desc = new ArrayList<>();
     
     private String organisationUnitMode;
-        
+    
     private Integer page;
     
     private Integer pageSize;
