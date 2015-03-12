@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.AnalyticsSecurityManager;
 import org.hisp.dhis.analytics.AnalyticsService;
@@ -394,7 +395,7 @@ public class DefaultEventAnalyticsService
 
         ProgramStage ps = programStageService.getProgramStage( stage );
 
-        if ( stage != null && !stage.isEmpty() && ps == null )
+        if ( StringUtils.isNotEmpty( stage ) && ps == null )
         {
             throw new IllegalQueryException( "Program stage is specified but does not exist: " + stage );
         }

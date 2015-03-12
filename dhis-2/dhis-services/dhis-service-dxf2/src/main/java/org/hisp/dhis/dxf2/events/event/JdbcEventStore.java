@@ -34,7 +34,6 @@ import static org.hisp.dhis.system.util.TextUtils.getCommaDelimitedString;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,12 +41,9 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.common.IdSchemes;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.SqlHelper;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
@@ -76,28 +72,12 @@ public class JdbcEventStore
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public List<Event> getEvents( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
-        List<OrganisationUnit> organisationUnits, TrackedEntityInstance trackedEntityInstance, 
-        Date startDate, Date endDate, EventStatus status, Date lastUpdated, IdSchemes idSchemes )
+    public List<Event> getEvents( EventSearchParams params, List<OrganisationUnit> organisationUnits )
     {
         List<Event> events = new ArrayList<>();
 
-        Integer trackedEntityInstanceId = null;
-
-        if ( trackedEntityInstance != null )
-        {
-            org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = entityInstanceService
-                .getTrackedEntityInstance( trackedEntityInstance.getTrackedEntityInstance() );
-
-            if ( entityInstance != null )
-            {
-                trackedEntityInstanceId = entityInstance.getId();
-            }
-        }
-
-        String sql = buildSql( program, programStage, programStatus, followUp, getIdList( organisationUnits ),
-            trackedEntityInstanceId, startDate, endDate, status, lastUpdated );
-
+        String sql = buildSql( params, organisationUnits );
+        
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
 
         log.debug( "Event query SQL: " + sql );
@@ -107,7 +87,7 @@ public class JdbcEventStore
 
         Set<String> notes = new HashSet<>();
         
-        idSchemes = ObjectUtils.firstNonNull( idSchemes, new IdSchemes() );
+        IdSchemes idSchemes = ObjectUtils.firstNonNull( params.getIdSchemes(), new IdSchemes() );
 
         while ( rowSet.next() )
         {
@@ -204,9 +184,23 @@ public class JdbcEventStore
         return events;
     }
 
-    private String buildSql( Program program, ProgramStage programStage, ProgramStatus programStatus, Boolean followUp,
-        List<Integer> orgUnitIds, Integer trackedEntityInstanceId, Date startDate, Date endDate, EventStatus status, Date lastUpdated )
+    private String buildSql( EventSearchParams params, List<OrganisationUnit> organisationUnits )
     {
+        List<Integer> orgUnitIds = getIdList( organisationUnits );
+
+        Integer trackedEntityInstanceId = null;
+
+        if ( params.getTrackedEntityInstance() != null )
+        {
+            org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = entityInstanceService
+                .getTrackedEntityInstance( params.getTrackedEntityInstance().getTrackedEntityInstance() );
+
+            if ( entityInstance != null )
+            {
+                trackedEntityInstanceId = entityInstance.getId();
+            }
+        }
+
         SqlHelper hlp = new SqlHelper();
 
         String sql =
@@ -225,7 +219,7 @@ public class JdbcEventStore
                 "left join programstageinstancecomments psic on psi.programstageinstanceid=psic.programstageinstanceid " +
                 "left join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
 
-        if ( status == null || EventStatus.isExistingEvent( status ) )
+        if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
         {
             sql += "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
         }
@@ -246,46 +240,46 @@ public class JdbcEventStore
             sql += hlp.whereAnd() + " pa.trackedentityinstanceid=" + trackedEntityInstanceId + " ";
         }
 
-        if ( program != null )
+        if ( params.getProgram() != null )
         {
-            sql += hlp.whereAnd() + " p.programid = " + program.getId() + " ";
+            sql += hlp.whereAnd() + " p.programid = " + params.getProgram().getId() + " ";
         }
 
-        if ( programStage != null )
+        if ( params.getProgramStage() != null )
         {
-            sql += hlp.whereAnd() + " ps.programstageid = " + programStage.getId() + " ";
+            sql += hlp.whereAnd() + " ps.programstageid = " + params.getProgramStage().getId() + " ";
         }
 
-        if ( programStatus != null )
+        if ( params.getProgramStatus() != null )
         {
-            sql += hlp.whereAnd() + " pi.status = " + programStatus.getValue() + " ";
+            sql += hlp.whereAnd() + " pi.status = " + params.getProgramStatus().getValue() + " ";
         }
 
-        if ( followUp != null )
+        if ( params.getFollowUp() != null )
         {
-            sql += hlp.whereAnd() + " pi.followup is " + (followUp ? "true" : "false") + " ";
+            sql += hlp.whereAnd() + " pi.followup is " + ( params.getFollowUp() ? "true" : "false" ) + " ";
         }
         
-        if ( lastUpdated != null )
+        if ( params.getLastUpdated() != null )
         {
-            sql += hlp.whereAnd() + " psi.lastupdated > '" + DateUtils.getLongDateString( lastUpdated ) + "' ";
+            sql += hlp.whereAnd() + " psi.lastupdated > '" + DateUtils.getLongDateString( params.getLastUpdated() ) + "' ";
         }
 
-        if ( status == null || EventStatus.isExistingEvent( status ) )
+        if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
         {
             if ( orgUnitIds != null && !orgUnitIds.isEmpty() )
             {
                 sql += hlp.whereAnd() + " psi.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
             }
 
-            if ( startDate != null )
+            if ( params.getStartDate() != null )
             {
-                sql += hlp.whereAnd() + " psi.executiondate >= '" + getMediumDateString( startDate ) + "' ";
+                sql += hlp.whereAnd() + " psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' ";
             }
 
-            if ( endDate != null )
+            if ( params.getEndDate() != null )
             {
-                sql += hlp.whereAnd() + " psi.executiondate <= '" + getMediumDateString( endDate ) + "' ";
+                sql += hlp.whereAnd() + " psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' ";
             }
         }
         else
@@ -295,37 +289,37 @@ public class JdbcEventStore
                 sql += hlp.whereAnd() + " tei.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
             }
 
-            if ( startDate != null )
+            if ( params.getStartDate() != null )
             {
-                sql += hlp.whereAnd() + " psi.duedate >= '" + getMediumDateString( startDate ) + "' ";
+                sql += hlp.whereAnd() + " psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "' ";
             }
 
-            if ( endDate != null )
+            if ( params.getEndDate() != null )
             {
-                sql += hlp.whereAnd() + " psi.duedate <= '" + getMediumDateString( endDate ) + "' ";
+                sql += hlp.whereAnd() + " psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "' ";
             }
 
-            if ( status == EventStatus.VISITED )
+            if ( params.getEventStatus() == EventStatus.VISITED )
             {
                 sql = "and psi.status = '" + EventStatus.ACTIVE.name() + "' and psi.executiondate is not null ";
             }
-            else if ( status == EventStatus.COMPLETED )
+            else if ( params.getEventStatus() == EventStatus.COMPLETED )
             {
                 sql = "and psi.status = '" + EventStatus.COMPLETED.name() + "' ";
             }
-            else if ( status == EventStatus.SCHEDULE )
+            else if ( params.getEventStatus() == EventStatus.SCHEDULE )
             {
                 sql += "and psi.executiondate is null and date(now()) <= date(psi.duedate) and psi.status = '" + EventStatus.SCHEDULE
                     .name() + "' ";
             }
-            else if ( status == EventStatus.OVERDUE )
+            else if ( params.getEventStatus() == EventStatus.OVERDUE )
             {
                 sql += "and psi.executiondate is null and date(now()) > date(psi.duedate) and psi.status = '" + EventStatus.SCHEDULE.name
                     () + "' ";
             }
             else
             {
-                sql += "and psi.status = '" + status.name() + "' ";
+                sql += "and psi.status = '" + params.getEventStatus().name() + "' ";
             }
         }
 
