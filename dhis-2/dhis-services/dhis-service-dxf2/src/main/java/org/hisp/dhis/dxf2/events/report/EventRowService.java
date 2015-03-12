@@ -28,19 +28,12 @@ package org.hisp.dhis.dxf2.events.report;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Date;
-
-import org.hisp.dhis.common.OrganisationUnitSelectionMode;
-import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramStatus;
+import org.hisp.dhis.dxf2.events.event.EventSearchParams;
 
 /**
  * @author Abyot Asalefew Gizaw <abyota@gmail.com>
  */
 public interface EventRowService
 {
-    EventRows getEventRows( Program program, OrganisationUnit orgUnit, OrganisationUnitSelectionMode orgUnitSelectionMode, 
-        ProgramStatus programStatus, EventStatus eventStatus, Date startDate, Date endDate );
+    EventRows getEventRows( EventSearchParams params );
 }

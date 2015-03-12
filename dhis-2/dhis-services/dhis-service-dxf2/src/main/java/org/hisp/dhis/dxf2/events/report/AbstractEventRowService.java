@@ -29,25 +29,19 @@ package org.hisp.dhis.dxf2.events.report;
  */
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dxf2.events.event.Event;
+import org.hisp.dhis.dxf2.events.event.EventSearchParams;
 import org.hisp.dhis.dxf2.events.event.EventService;
 import org.hisp.dhis.dxf2.events.event.Events;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
-import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Abyot Asalefew Gizaw <abyota@gmail.com>
- *
  */
 public class AbstractEventRowService
     implements EventRowService
@@ -66,26 +60,24 @@ public class AbstractEventRowService
     private TrackedEntityInstanceService trackedEntityInstanceService;
 
     @Override
-    public EventRows getEventRows( Program program, OrganisationUnit orgUnit, OrganisationUnitSelectionMode orgUnitSelectionMode,
-        ProgramStatus programStatus, EventStatus eventStatus, Date startDate, Date endDate )
+    public EventRows getEventRows( EventSearchParams params )
     {
         List<EventRow> eventRowList = new ArrayList<EventRow>();
         EventRows eventRows = new EventRows();
-
-        Events events = eventService.getEvents( program, null, programStatus, null, orgUnit, orgUnitSelectionMode, 
-            null, startDate, endDate, eventStatus, null, null );
+        
+        Events events = eventService.getEvents( params );
 
         for ( Event event : events.getEvents() )
         {
             if ( event.getTrackedEntityInstance() != null )
             {
-                TrackedEntityInstance tei = trackedEntityInstanceService.getTrackedEntityInstance( event
-                    .getTrackedEntityInstance() );
+                TrackedEntityInstance tei = trackedEntityInstanceService.getTrackedEntityInstance( event.getTrackedEntityInstance() );
+                
                 EventRow eventRow = new EventRow();
                 eventRow.setTrackedEntityInstance( event.getTrackedEntityInstance() );
                 eventRow.setAttributes( tei.getAttributes() );
                 eventRow.setEvent( event.getEvent() );
-                eventRow.setProgram( program.getUid() );
+                eventRow.setProgram( params.getProgram().getUid() );
                 eventRow.setProgramStage( event.getProgramStage() );                
                 eventRow.setRegistrationOrgUnit( tei.getOrgUnit() );
                 eventRow.setRegistrationDate( tei.getCreated() );

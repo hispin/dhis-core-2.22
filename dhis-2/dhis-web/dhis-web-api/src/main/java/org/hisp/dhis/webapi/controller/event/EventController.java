@@ -50,6 +50,7 @@ import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.event.Event;
+import org.hisp.dhis.dxf2.events.event.EventSearchParams;
 import org.hisp.dhis.dxf2.events.event.EventService;
 import org.hisp.dhis.dxf2.events.event.Events;
 import org.hisp.dhis.dxf2.events.event.ImportEventTask;
@@ -57,17 +58,14 @@ import org.hisp.dhis.dxf2.events.event.ImportEventsTask;
 import org.hisp.dhis.dxf2.events.event.csv.CsvEventService;
 import org.hisp.dhis.dxf2.events.report.EventRowService;
 import org.hisp.dhis.dxf2.events.report.EventRows;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
@@ -154,34 +152,10 @@ public class EventController
     {
         WebOptions options = new WebOptions( parameters );
 
-        Program pr = manager.get( Program.class, program );
-        ProgramStage prs = manager.get( ProgramStage.class, programStage );
-        TrackedEntityInstance tei = null;
-        OrganisationUnit ou = null;
-
-        if ( trackedEntityInstance != null )
-        {
-            tei = trackedEntityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
-
-            if ( tei == null )
-            {
-                ContextUtils.conflictResponse( response, "Invalid trackedEntityInstance ID." );
-                return;
-            }
-        }
-
-        if ( orgUnit != null )
-        {
-            ou = manager.get( OrganisationUnit.class, orgUnit );
-
-            if ( ou == null )
-            {
-                ContextUtils.conflictResponse( response, "Invalid orgUnit ID." );
-                return;
-            }
-        }
-
-        Events events = eventService.getEvents( pr, prs, programStatus, followUp, ou, ouMode, tei, startDate, endDate, status, lastUpdated, idSchemes );
+        EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode, 
+            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes );
+        
+        Events events = eventService.getEvents( params );
 
         if ( options.hasPaging() )
         {
@@ -230,34 +204,10 @@ public class EventController
     {
         WebOptions options = new WebOptions( parameters );
 
-        Program pr = manager.get( Program.class, program );
-        ProgramStage prs = manager.get( ProgramStage.class, programStage );
-        TrackedEntityInstance tei = null;
-        OrganisationUnit ou = null;
-
-        if ( trackedEntityInstance != null )
-        {
-            tei = trackedEntityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
-
-            if ( tei == null )
-            {
-                ContextUtils.conflictResponse( response, "Invalid trackedEntityInstance ID." );
-                return null;
-            }
-        }
-
-        if ( orgUnit != null )
-        {
-            ou = manager.get( OrganisationUnit.class, orgUnit );
-
-            if ( ou == null )
-            {
-                ContextUtils.conflictResponse( response, "Invalid orgUnit ID." );
-                return null;
-            }
-        }
-
-        Events events = eventService.getEvents( pr, prs, programStatus, followUp, ou, ouMode, tei, startDate, endDate, status, lastUpdated, idSchemes );
+        EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode, 
+            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes );
+        
+        Events events = eventService.getEvents( params );
 
         if ( options.hasLinks() )
         {
@@ -274,9 +224,9 @@ public class EventController
             events.setEvents( PagerUtils.pageCollection( events.getEvents(), pager ) );
         }
 
-        if ( !skipMeta && pr != null )
+        if ( !skipMeta && params.getProgram() != null )
         {
-            events.setMetaData( getMetaData( pr ) );
+            events.setMetaData( getMetaData( params.getProgram() ) );
         }
 
         model.addAttribute( "model", events );
@@ -304,15 +254,9 @@ public class EventController
     {
         WebOptions options = new WebOptions( parameters );
 
-        Program pr = manager.get( Program.class, program );
-        OrganisationUnit ou = null;
-
-        if ( orgUnit != null )
-        {
-            ou = manager.get( OrganisationUnit.class, orgUnit );
-        }
-
-        EventRows eventRows = eventRowService.getEventRows( pr, ou, ouMode, programStatus, eventStatus, startDate, endDate );
+        EventSearchParams params = eventService.getFromUrl( program, null, programStatus, false, orgUnit, ouMode, null, startDate, endDate, null, null, null );
+        
+        EventRows eventRows = eventRowService.getEventRows( params );
 
         if ( options.hasPaging() )
         {
