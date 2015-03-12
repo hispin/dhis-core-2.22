@@ -252,7 +252,7 @@ public class UpdateUserAction
 
         UserCredentials userCredentials = userService.getUserCredentials( user );
 
-        if ( !StringUtils.isEmpty( openId ) )
+        if ( StringUtils.isNotEmpty( openId ) )
         {
             userCredentials.setOpenId( StringUtils.trimToNull( openId ) );
         }
@@ -330,7 +330,7 @@ public class UpdateUserAction
         // Update User
         // ---------------------------------------------------------------------
 
-        if ( rawPassword != null )
+        if ( StringUtils.isNotEmpty( rawPassword ) )
         {
             userService.encodeAndSetPassword( userCredentials, rawPassword );
         }
