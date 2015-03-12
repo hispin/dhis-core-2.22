@@ -430,9 +430,10 @@ public abstract class AbstractEventService
         return events;
     }
     
+    @Override
     public EventSearchParams getFromUrl( String program, String programStage, ProgramStatus programStatus, Boolean followUp, String orgUnit,
         OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate, 
-        EventStatus status, Date lastUpdated, IdSchemes idSchemes )
+        EventStatus status, Date lastUpdated, IdSchemes idSchemes, Integer page, Integer pageSize )
     {
         EventSearchParams params = new EventSearchParams();
 
@@ -472,6 +473,8 @@ public abstract class AbstractEventService
         params.setEventStatus( status );
         params.setLastUpdated( lastUpdated );
         params.setIdSchemes( idSchemes );
+        params.setPage( page );
+        params.setPageSize( pageSize );
         
         return params;
     }

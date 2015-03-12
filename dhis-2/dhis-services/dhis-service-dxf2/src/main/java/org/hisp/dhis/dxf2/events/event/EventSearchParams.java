@@ -68,6 +68,10 @@ public class EventSearchParams
     
     private IdSchemes idSchemes;
 
+    private Integer page;
+    
+    private Integer pageSize;
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -76,6 +80,30 @@ public class EventSearchParams
     {
     }
 
+    // -------------------------------------------------------------------------
+    // Logic
+    // -------------------------------------------------------------------------
+
+    public boolean isPaging()
+    {
+        return page != null || pageSize != null;
+    }
+
+    public int getPageWithDefault()
+    {
+        return page != null && page > 0 ? page : 1;
+    }
+    
+    public int getPageSizeWithDefault()
+    {
+        return pageSize != null && pageSize >= 0 ? pageSize : 100;
+    }
+
+    public int getOffset()
+    {
+        return ( getPageWithDefault() - 1 ) * getPageSizeWithDefault();
+    }
+    
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -198,5 +226,25 @@ public class EventSearchParams
     public void setIdSchemes( IdSchemes idSchemes )
     {
         this.idSchemes = idSchemes;
+    }
+
+    public Integer getPage()
+    {
+        return page;
+    }
+
+    public void setPage( Integer page )
+    {
+        this.page = page;
+    }
+
+    public Integer getPageSize()
+    {
+        return pageSize;
+    }
+
+    public void setPageSize( Integer pageSize )
+    {
+        this.pageSize = pageSize;
     }
 }

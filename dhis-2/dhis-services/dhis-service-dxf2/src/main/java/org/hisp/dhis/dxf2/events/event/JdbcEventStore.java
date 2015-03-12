@@ -323,7 +323,16 @@ public class JdbcEventStore
             }
         }
 
-        sql += " order by psi_uid;";
+        sql += " order by psi.lastupdated desc ";
+
+        // ---------------------------------------------------------------------
+        // Paging
+        // ---------------------------------------------------------------------
+
+        if ( params.isPaging() )
+        {
+            sql += "limit " + params.getPageSizeWithDefault() + " offset " + params.getOffset();
+        }
 
         return sql;
     }
