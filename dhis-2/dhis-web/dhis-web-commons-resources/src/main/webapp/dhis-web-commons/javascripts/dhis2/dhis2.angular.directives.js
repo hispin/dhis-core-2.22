@@ -497,7 +497,7 @@ var d2Directives = angular.module('d2Directives', [])
             function enableDisableZoom(){
                 if(currentLayer >= ouLevels.length-1){                    
                     $("#zoomIn").addClass('disabled-context-menu-item');
-                    $("#zoomIn").removeClass('enable-context-menu-item');
+                    $("#zoomIn").removeClass('mouse-pointer');
                     $('#zoomIn').attr('disabled', "disabled");
                 }else{
                     $("#zoomIn").removeClass('disabled-context-menu-item');

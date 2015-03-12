@@ -1,57 +1,55 @@
-<div ng-switch="teiCount">                    
+<div ng-switch="teiCount" class='vertical-spacing'>                    
     <div ng-switch-when="undefined">
         <div class="alert alert-warning vertical-spacing">
-            {{'no'| translate}} {{selectedProgram.trackedEntity.name || 'records' | translate}} {{'found'| translate}}                        
+            {{'no'| translate}} {{selectedProgram.trackedEntity.name|| 'records' | translate}} {{'found'| translate}}                        
         </div>
     </div>
     <div ng-switch-when="0">  
         <div class="alert alert-warning vertical-spacing">
-            {{'no'| translate}} {{selectedProgram.trackedEntity.name || 'records' | translate}} {{'found'| translate}}                        
+            {{'no'| translate}} {{selectedProgram.trackedEntity.name|| 'records' | translate}} {{'found'| translate}}                        
         </div>
     </div>    
-    <div ng-switch-default> 
-        
+    <div ng-switch-default>        
         <!-- entity begins -->
-        <div class="vertical-spacing">
-            <table class="table table-striped dhis2-table-hover table-bordered">               
-                <thead>                        
-                    <tr>
-                        <th ng-if="gridColumn.show" ng-repeat="gridColumn in gridColumns" class='mouse-pointer' ng-click="sortGrid(gridColumn)">                            
-                            <!-- sort icon begins -->                                
-                            <span ng-hide="gridColumn.showFilter" class="bold pointer" title="{{'sort'| translate}}">
-                                <span ng-class="{true: 'red'} [sortColumn.id === gridColumn.id]"><i class="fa fa-sort"></i></span>
-                                {{gridColumn.name}}
+        <table class="table table-striped dhis2-table-hover table-bordered">               
+            <thead>                        
+                <tr>
+                    <th ng-if="gridColumn.show" ng-repeat="gridColumn in gridColumns" class='mouse-pointer' ng-click="sortGrid(gridColumn)">                            
+                        <!-- sort icon begins -->                                
+                        <span ng-hide="gridColumn.showFilter" class="bold pointer" title="{{'sort'| translate}}">
+                            <span ng-class="{true: 'red'} [sortColumn.id === gridColumn.id]"><i class="fa fa-sort"></i></span>
+                            {{gridColumn.name}}
+                        </span>
+                        <!-- sort icon ends -->                            
+                    </th>                                    
+                </tr>                        
+            </thead>
+            <tbody id="list">
+                <tr ng-repeat="trackedEntity in trackedEntityList.rows| orderBy:d2Sort:reverse"   
+                    ng-click="showDashboard(trackedEntity)"
+                    title="{{'go_to_dashboard'| translate}}">
+                    <td ng-show="gridColumn.show"                                            
+                        ng-repeat="gridColumn in gridColumns">
+                        <span ng-switch="gridColumn.valueType">
+                            <span ng-switch-when="bool">
+                                <span ng-if="trackedEntity[gridColumn.id] === 'true'">{{'yes'| translate}}</span>
+                                <span ng-if="trackedEntity[gridColumn.id] === 'false'">{{ 'no' | translate}}</span>
                             </span>
-                            <!-- sort icon ends -->                            
-                        </th>                                    
-                    </tr>                        
-                </thead>
-                <tbody id="list">
-                    <tr ng-repeat="trackedEntity in trackedEntityList.rows | orderBy:d2Sort:reverse"   
-                        ng-click="showDashboard(trackedEntity)"
-                        title="{{'go_to_dashboard'| translate}}">
-                        <td ng-show="gridColumn.show"                                            
-                            ng-repeat="gridColumn in gridColumns">
-                            <span ng-switch="gridColumn.valueType">
-                                <span ng-switch-when="bool">
-                                    <span ng-if="trackedEntity[gridColumn.id] === 'true'">{{'yes' | translate}}</span>
-                                    <span ng-if="trackedEntity[gridColumn.id] === 'false'">{{ 'no' | translate}}</span>
-                                </span>
-                                <span ng-switch-when="trueOnly">
-                                    <span ng-if="trackedEntity[gridColumn.id] === 'true'"><i class="fa fa-check"></i></span>
-                                </span>
-                                <span ng-switch-default>{{trackedEntity[gridColumn.id]}}</span>
-                            </span>                            
-                        </td>
-                    </tr>
-                </tbody>        
-            </table>
-        </div>
+                            <span ng-switch-when="trueOnly">
+                                <span ng-if="trackedEntity[gridColumn.id] === 'true'"><i class="fa fa-check"></i></span>
+                            </span>
+                            <span ng-switch-default>{{trackedEntity[gridColumn.id]}}</span>
+                        </span>                            
+                    </td>
+                </tr>
+            </tbody>        
+        </table>
+
         <!-- entity ends -->
-        
+
         <!-- paging begins -->
         <serverside-paginator></serverside-paginator>
         <!-- paging ends -->
-        
+
     </div>
 </div> 
