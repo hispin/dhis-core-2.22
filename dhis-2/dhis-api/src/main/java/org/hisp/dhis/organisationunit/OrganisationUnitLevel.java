@@ -29,12 +29,16 @@ package org.hisp.dhis.organisationunit;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 
 /**
@@ -50,6 +54,8 @@ public class OrganisationUnitLevel
     private static final long serialVersionUID = 1599124366660090489L;
 
     private int level;
+    
+    private Integer offlineLevels;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -63,6 +69,13 @@ public class OrganisationUnitLevel
     {
         this.level = level;
         this.name = name;
+    }
+
+    public OrganisationUnitLevel( int level, String name, Integer offlineLevels )
+    {
+        this.level = level;
+        this.name = name;
+        this.offlineLevels = offlineLevels;
     }
 
     // -------------------------------------------------------------------------
@@ -126,6 +139,19 @@ public class OrganisationUnitLevel
     public void setLevel( int level )
     {
         this.level = level;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Integer getOfflineLevels()
+    {
+        return offlineLevels;
+    }
+
+    public void setOfflineLevels( Integer offlineLevels )
+    {
+        this.offlineLevels = offlineLevels;
     }
 
     @Override
