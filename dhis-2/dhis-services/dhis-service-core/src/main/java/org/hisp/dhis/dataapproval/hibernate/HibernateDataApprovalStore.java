@@ -328,8 +328,8 @@ public class HibernateDataApprovalStore
                     "left join dataapproval da on da.organisationunitid = ous.organisationunitid " +
                     "and da.dataapprovallevelid = " + dal.getId() + " and da.periodid in (" + periodIds + ") " +
                     "and da.datasetid in (" + dataSetIds + ") " +
-                    "and da.attributeoptioncomboid = cocco.categoryoptioncomboid " +
                     "where ous.idlevel" + orgUnitLevel + " = o.organisationunitid " +
+                    "and da.attributeoptioncomboid = cocco.categoryoptioncomboid " +
                     "and ous.level = " + dal.getOrgUnitLevel() + " " +
                     "and ( da.dataapprovalid is null " + ( acceptanceRequiredForApproval ? "or not da.accepted " : "" ) + ") )";
                 break;
@@ -349,16 +349,16 @@ public class HibernateDataApprovalStore
         final String sql =
             "select cocco.categoryoptioncomboid, o.organisationunitid, " +
             "(select min(coalesce(dal.level, 0)) from period p " +
-            "left join dataapproval da on da.datasetid in (" + dataSetIds + ") and da.periodid = p.periodid " +
-                    "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and da.organisationunitid = o.organisationunitid " +
+                "left join dataapproval da on da.datasetid in (" + dataSetIds + ") and da.periodid = p.periodid " +
                 "left join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
                 "where p.periodid in (" + periodIds + ") " +
+                "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and da.organisationunitid = o.organisationunitid " +
             ") as highest_approved_level, " +
             "(select substring(min(concat(100000 + coalesce(dal.level, 0), coalesce(da.accepted, FALSE))) from 7) from period p " +
                 "left join dataapproval da on da.datasetid in (" + dataSetIds + ") and da.periodid = p.periodid " +
-                    "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and da.organisationunitid = o.organisationunitid " +
                 "left join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
                 "where p.periodid in (" + periodIds + ") " +
+                "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and da.organisationunitid = o.organisationunitid " +
             ") as accepted_at_highest_level, " +
             readyBelowSubquery + " as ready_below, " +
             approvedAboveSubquery + " as approved_above " +
