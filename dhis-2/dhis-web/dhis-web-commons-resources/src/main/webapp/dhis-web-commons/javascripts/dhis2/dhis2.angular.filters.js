@@ -86,6 +86,31 @@ var d2Filters = angular.module('d2Filters', [])
     };
 })
 
+/* trim away all single and double quotes in the start and end of a string*/
+.filter('trimquotes', function() {
+    return function(input) {
+        if (!input || (typeof input !== 'string' && !(input instanceof String))) {
+            return input;
+        }
+        
+        var beingTrimmed = input;
+        var trimmingComplete = false;
+        //Trim until no more quotes can be removed.
+        while(!trimmingComplete) {
+            var beforeTrimming = beingTrimmed;
+            beingTrimmed = input.replace(/^'/,"").replace(/'$/,"");
+            beingTrimmed = beingTrimmed.replace(/^"/,"").replace(/"$/,"");
+            
+            if(beforeTrimming.length === beingTrimmed.length) {
+                trimmingComplete = true;
+            }
+        }
+        
+        
+        return beingTrimmed;
+    };
+})
+
 .filter('forLoop', function() {
     return function(input, start, end) {
         input = new Array(end - start);
