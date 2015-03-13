@@ -76,6 +76,9 @@ import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramInstance;
+import org.hisp.dhis.programrule.ProgramRule;
+import org.hisp.dhis.programrule.ProgramRuleAction;
+import org.hisp.dhis.programrule.ProgramRuleVariable;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageInstance;
@@ -602,6 +605,33 @@ public abstract class DeletionHandler
     }
 
     public void deleteProgramStageInstance( ProgramStageInstance programStageInstance )
+    {
+    }
+    
+    public String allowDeleteProgramRule( ProgramRule programRule )
+    {
+        return null;
+    }
+
+    public void deleteProgramRule( ProgramRule programRule )
+    {
+    }
+    
+    public String allowDeleteProgramRuleVariable( ProgramRuleVariable programRuleVariable )
+    {
+        return null;
+    }
+
+    public void deleteProgramRuleVariable( ProgramRuleVariable programRuleVariable )
+    {
+    }
+    
+    public String allowDeleteProgramRuleAction( ProgramRuleAction programRuleAction )
+    {
+        return null;
+    }
+
+    public void deleteProgramRuleAction( ProgramRuleAction programRuleAction )
     {
     }
 

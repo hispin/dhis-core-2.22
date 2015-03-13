@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"
+  [<!ENTITY identifiableProperties SYSTEM "classpath://org/hisp/dhis/common/identifiableProperties.hbm">]
+  >
+
+<hibernate-mapping>
+  <class name="org.hisp.dhis.programrule.ProgramRuleAction" table="programruleaction">
+
+    <cache usage="read-write" />
+
+    <id name="id" column="programruleactionid">
+      <generator class="native" />
+    </id>
+
+    &identifiableProperties;
+
+    <property name="name" column="name" length="230" />
+
+	<many-to-one name="programRule" class="org.hisp.dhis.programrule.ProgramRule" 
+		column="programruleid" foreign-key="fk_programruleaction_programrule" />
+
+    <property name="programRuleActionType" column="actiontype">
+        <type name="org.hibernate.type.EnumType">
+            <param name="enumClass">org.hisp.dhis.programrule.ProgramRuleActionType</param>
+            <param name="type">12</param>
+        </type>
+    </property>
+
+    <many-to-one name="dataElement" class="org.hisp.dhis.dataelement.DataElement" 
+        column="dataelementid" foreign-key="fk_programruleaction_dataelement" />
+
+    <property name="location" />
+   
+    <property name="content" />
+    
+    <property name="data" />
+  </class>
+</hibernate-mapping>
