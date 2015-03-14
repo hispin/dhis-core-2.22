@@ -35,6 +35,8 @@ import java.util.Set;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.period.PeriodService;
+import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
@@ -97,6 +99,13 @@ public class AddProgramStageAction
         this.userGroupService = userGroupService;
     }
 
+    private PeriodService periodService;
+
+    public void setPeriodService( PeriodService periodService )
+    {
+        this.periodService = periodService;
+    }
+    
     @Autowired
     private ProgramIndicatorService programIndicatorService;
 
@@ -326,6 +335,13 @@ public class AddProgramStageAction
         this.preGenerateUID = preGenerateUID;
     }
 
+    private String periodTypeName;
+
+    public void setPeriodTypeName( String periodTypeName )
+    {
+        this.periodTypeName = periodTypeName;
+    }
+    
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -346,7 +362,8 @@ public class AddProgramStageAction
         remindCompleted = (remindCompleted == null) ? false : remindCompleted;
         allowGenerateNextVisit = (allowGenerateNextVisit == null) ? false : allowGenerateNextVisit;
         openAfterEnrollment = (openAfterEnrollment == null) ? false : openAfterEnrollment;
-        preGenerateUID = (preGenerateUID == null) ? false : preGenerateUID;
+        preGenerateUID = (preGenerateUID == null) ? false : preGenerateUID; 
+
 
         ProgramStage programStage = new ProgramStage();
         Program program = programService.getProgram( id );
@@ -360,6 +377,13 @@ public class AddProgramStageAction
         programStage.setMinDaysFromStart( minDaysFromStart );
         programStage.setDisplayGenerateEventBox( displayGenerateEventBox );
         programStage.setValidCompleteOnly( validCompleteOnly );
+        if( periodTypeName != null )
+        {
+
+            PeriodType periodType = PeriodType.getPeriodTypeByName( periodTypeName );
+            programStage.setPeriodType( periodService.getPeriodTypeByClass( periodType.getClass() ) );
+        }
+        
         if ( program.isSingleEvent() )
         {
             programStage.setAutoGenerateEvent( true );

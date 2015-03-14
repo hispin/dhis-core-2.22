@@ -38,6 +38,8 @@ import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
+import org.hisp.dhis.period.PeriodService;
+import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
@@ -72,17 +74,31 @@ public class GetProgramAction
     {
         this.selectionTreeManager = selectionTreeManager;
     }
-    
+
     private UserGroupService userGroupService;
-    
+
     public void setUserGroupService( UserGroupService userGroupService )
     {
         this.userGroupService = userGroupService;
     }
-    
+
+    private List<PeriodType> periodTypes = new ArrayList<>();
+
+    public List<PeriodType> getPeriodTypes()
+    {
+        return periodTypes;
+    }
+
+    private PeriodService periodService;
+
+    public void setPeriodService( PeriodService periodService )
+    {
+        this.periodService = periodService;
+    }
+
     @Autowired
     private ProgramIndicatorService programIndicatorService;
-    
+
     @Autowired
     private ConstantService constantService;
 
@@ -134,21 +150,21 @@ public class GetProgramAction
     {
         this.level = level;
     }
-    
+
     private List<UserGroup> userGroups;
-    
+
     public List<UserGroup> getUserGroups()
     {
         return userGroups;
     }
-    
+
     private List<ProgramIndicator> programIndicators;
 
     public List<ProgramIndicator> getProgramIndicators()
     {
         return programIndicators;
     }
-    
+
     private List<Constant> constants;
 
     public List<Constant> getConstants()
@@ -164,20 +180,22 @@ public class GetProgramAction
     public String execute()
         throws Exception
     {
+        periodTypes = periodService.getAllPeriodTypes();
+
         program = programService.getProgram( id );
-        
+
         selectionTreeManager.setSelectedOrganisationUnits( program.getOrganisationUnits() );
-        
+
         userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
-       
+
         programIndicators = new ArrayList<>( programIndicatorService.getProgramIndicators( program ) );
 
         Collections.sort( programIndicators, IdentifiableObjectNameComparator.INSTANCE );
 
-        constants = new ArrayList<>(constantService.getAllConstants());
-        
+        constants = new ArrayList<>( constantService.getAllConstants() );
+
         Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
-        
+
         return SUCCESS;
     }
 }

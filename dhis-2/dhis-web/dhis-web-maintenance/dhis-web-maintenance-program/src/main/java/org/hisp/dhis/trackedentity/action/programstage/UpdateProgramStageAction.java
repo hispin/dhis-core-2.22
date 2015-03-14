@@ -35,6 +35,8 @@ import java.util.Set;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.period.PeriodService;
+import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
@@ -89,9 +91,19 @@ public class UpdateProgramStageAction
         this.userGroupService = userGroupService;
     }
 
+    private PeriodService periodService;
+
+    public void setPeriodService( PeriodService periodService )
+    {
+        this.periodService = periodService;
+    }
+    
     @Autowired
     private ProgramService programService;
-    
+
+    @Autowired
+    private ProgramIndicatorService programIndicatorService;
+
     // -------------------------------------------------------------------------
     // Input/Output
     // -------------------------------------------------------------------------
@@ -320,9 +332,13 @@ public class UpdateProgramStageAction
         this.preGenerateUID = preGenerateUID;
     }
 
-    @Autowired
-    private ProgramIndicatorService programIndicatorService;
+    private String periodTypeName;
 
+    public void setPeriodTypeName( String periodTypeName )
+    {
+        this.periodTypeName = periodTypeName;
+    }
+    
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -362,7 +378,13 @@ public class UpdateProgramStageAction
         programStage.setOpenAfterEnrollment( openAfterEnrollment );
         programStage.setReportDateToUse( reportDateToUse );
         programStage.setPreGenerateUID( preGenerateUID );
-
+        
+        if( periodTypeName != null )
+        {
+            PeriodType periodType = PeriodType.getPeriodTypeByName( periodTypeName );
+            programStage.setPeriodType( periodService.getPeriodTypeByClass( periodType.getClass() ) );
+        }
+        
         if ( programStage.getProgram().isSingleEvent() )
         {
             programStage.setAutoGenerateEvent( true );
