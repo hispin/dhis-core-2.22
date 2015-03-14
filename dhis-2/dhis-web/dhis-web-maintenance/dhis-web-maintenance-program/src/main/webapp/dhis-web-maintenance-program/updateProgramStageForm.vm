@@ -52,12 +52,29 @@
 
 			<tr>
 				<td><label for="displayGenerateEventBox">$i18n.getString( "display_generate_event_box_after_completed" )</label></td>
-				<td><input type="checkbox" id="displayGenerateEventBox" name="displayGenerateEventBox" value='true' #if( $programStage.displayGenerateEventBox && $programStage.displayGenerateEventBox=='true' ) checked #end #if($programStage.irregular!='true' ) disabled checked #end /></td>
+				<td><input type="checkbox" id="displayGenerateEventBox" name="displayGenerateEventBox" value='true' #if( $programStage.displayGenerateEventBox && $programStage.displayGenerateEventBox=='true' ) checked #end /></td>
 			</tr>
 
 			<tr>
+				<td><label for="customStandardInterval">$i18n.getString( "custom_standard_interval" )</label></td>
+				<td><input type="checkbox" id="customStandardInterval" name="customStandardInterval" #if($!programStage.periodType) #else checked #end #if($programStage.irregular!='true' ) disabled #end onchange=" customStandardIntervalOnChange()" /></td>
+			</tr>
+			
+			<tr>
 				<td><label for="standardInterval">$i18n.getString( "standard_interval_days" )</label></td>
-				<td><input type="text" id="standardInterval" name="standardInterval" value='$!programStage.standardInterval'#if($programStage.irregular!='true' ) disabled #end /></td>
+				<td><input type="text" id="standardInterval" name="standardInterval" value='$!programStage.standardInterval'#if($programStage.irregular!='true' ) disabled #end #if($!programStage.periodType) disabled #end #if($programStage.irregular!='true' ) disabled #end  #if($programStage.irregular!='true' ) disabled checked #end /></td>
+			</tr>
+						
+			<tr>
+				<td><label for="periodTypeName">$i18n.getString( "period_type" )</label></td>
+				<td>
+					<select id="periodTypeName" name="periodTypeName" #if($!programStage.periodType) #else disabled #end  #if($programStage.irregular!='true' ) disabled checked #end >
+						<option value="">[$i18n.getString("please_select")]</option>
+						#foreach( $periodType in $periodTypes )
+						<option value="$periodType.name" #if($programStage.periodType.name=="$periodType.name") selected #end >$i18n.getString( $periodType.name )</option>
+						#end
+					</select>
+				</td>
 			</tr>
 			
 			#end

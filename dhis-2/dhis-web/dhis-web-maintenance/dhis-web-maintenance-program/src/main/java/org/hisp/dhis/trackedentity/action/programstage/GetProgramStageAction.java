@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.hisp.dhis.period.PeriodService;
+import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramStage;
@@ -69,6 +71,13 @@ public class GetProgramStageAction
         this.userGroupService = userGroupService;
     }
 
+    private PeriodService periodService;
+
+    public void setPeriodService( PeriodService periodService )
+    {
+        this.periodService = periodService;
+    }
+    
     @Autowired
     private ProgramIndicatorService programIndicatorService;
     
@@ -120,6 +129,13 @@ public class GetProgramStageAction
     {
         return programIndicators;
     }
+
+    private List<PeriodType> periodTypes = new ArrayList<>();
+
+    public List<PeriodType> getPeriodTypes()
+    {
+        return periodTypes;
+    }
     
     // -------------------------------------------------------------------------
     // Action implementation
@@ -129,6 +145,8 @@ public class GetProgramStageAction
     public String execute()
         throws Exception
     {
+        periodTypes = periodService.getAllPeriodTypes();
+        
         programStage = programStageService.getProgramStage( id );
 
         programStageDataElements = programStage.getProgramStageDataElements();

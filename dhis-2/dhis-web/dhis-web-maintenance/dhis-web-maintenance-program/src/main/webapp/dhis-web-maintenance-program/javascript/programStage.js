@@ -265,13 +265,31 @@ function repeatableOnChange()
 	var checked = byId('irregular').checked;
 	if( checked )
 	{
-		enable('standardInterval');
 		enable('displayGenerateEventBox');
+		enable('customStandardInterval');
+		enable('periodTypeName');
+	}
+	else
+	{
+		disable('displayGenerateEventBox');
+		disabled('customStandardInterval');
+		disabled('periodTypeName');
+	}
+	customStandardIntervalOnChange();
+}
+
+function customStandardIntervalOnChange()
+{
+	var checked = byId('customStandardInterval').checked;
+	if( checked )
+	{
+		enable('standardInterval');
+		disable('periodTypeName');
 	}
 	else
 	{
 		disable('standardInterval');
-		disable('displayGenerateEventBox');
+		enable('periodTypeName');
 	}
 }
 
