@@ -200,6 +200,7 @@
 		<property name="selectionTreeManager"
 			ref="org.hisp.dhis.oust.manager.SelectionTreeManager" />
 		<property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
+		<property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
 	</bean>
 
 	<bean id="org.hisp.dhis.trackedentity.action.program.RemoveProgramAction"
@@ -270,6 +271,7 @@
 		<property name="programStageDataElementService"
 			ref="org.hisp.dhis.program.ProgramStageDataElementService" />
 		<property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
+		<property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
 	</bean>
 
 	<bean
@@ -278,6 +280,7 @@
 		scope="prototype">
 		<property name="programStageService" ref="org.hisp.dhis.program.ProgramStageService" />
 		<property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
+		<property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
 	</bean>
 
 	<bean
@@ -296,6 +299,7 @@
 		<property name="programStageDataElementService"
 			ref="org.hisp.dhis.program.ProgramStageDataElementService" />
 		<property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
+		<property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
 	</bean>
 
 	<bean

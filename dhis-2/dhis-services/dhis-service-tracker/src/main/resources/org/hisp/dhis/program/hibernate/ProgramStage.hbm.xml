@@ -80,6 +80,9 @@
     </list>
     
     <property name="sortOrder" column="sort_order" />
-
+    
+    <many-to-one name="periodType" lazy="false" class="org.hisp.dhis.period.PeriodType" column="periodtypeid"
+      foreign-key="fk_programstage_periodtypeid" />
+    
   </class>
 </hibernate-mapping>
