@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.period.PeriodService;
@@ -362,8 +363,7 @@ public class AddProgramStageAction
         remindCompleted = (remindCompleted == null) ? false : remindCompleted;
         allowGenerateNextVisit = (allowGenerateNextVisit == null) ? false : allowGenerateNextVisit;
         openAfterEnrollment = (openAfterEnrollment == null) ? false : openAfterEnrollment;
-        preGenerateUID = (preGenerateUID == null) ? false : preGenerateUID; 
-
+        preGenerateUID = (preGenerateUID == null) ? false : preGenerateUID;
 
         ProgramStage programStage = new ProgramStage();
         Program program = programService.getProgram( id );
@@ -377,12 +377,18 @@ public class AddProgramStageAction
         programStage.setMinDaysFromStart( minDaysFromStart );
         programStage.setDisplayGenerateEventBox( displayGenerateEventBox );
         programStage.setValidCompleteOnly( validCompleteOnly );
+        
+        periodTypeName = StringUtils.trimToNull( periodTypeName );
+        
         if( periodTypeName != null )
         {
-
             PeriodType periodType = PeriodType.getPeriodTypeByName( periodTypeName );
             programStage.setPeriodType( periodService.getPeriodTypeByClass( periodType.getClass() ) );
         }
+        else{
+            programStage.setPeriodType( null );
+        }
+        
         
         if ( program.isSingleEvent() )
         {

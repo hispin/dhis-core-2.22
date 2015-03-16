@@ -8,15 +8,7 @@ jQuery( document ).ready( function()
 		'beforeValidateHandler' : function()
 		{
 			selectAllById('selectedIndicators');
-		
-			var customStandardInterval = byId('customStandardInterval').checked;
-			if( customStandardInterval ){
-				setFieldValue('periodTypeName','');
-			}
-			else{
-				setFieldValue('standardInterval','');
-			}
-				
+							
 			var selectedDataElementsValidator = jQuery( "#selectedDataElementsValidator" );
 			selectedDataElementsValidator.empty();
 			
