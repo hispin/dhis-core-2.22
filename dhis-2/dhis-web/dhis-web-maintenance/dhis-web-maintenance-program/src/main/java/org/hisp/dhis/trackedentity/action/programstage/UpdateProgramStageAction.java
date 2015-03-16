@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.period.PeriodService;
@@ -379,10 +380,15 @@ public class UpdateProgramStageAction
         programStage.setReportDateToUse( reportDateToUse );
         programStage.setPreGenerateUID( preGenerateUID );
         
+        periodTypeName = StringUtils.trimToNull( periodTypeName );
+        
         if( periodTypeName != null )
         {
             PeriodType periodType = PeriodType.getPeriodTypeByName( periodTypeName );
             programStage.setPeriodType( periodService.getPeriodTypeByClass( periodType.getClass() ) );
+        }
+        else{
+            programStage.setPeriodType( null );
         }
         
         if ( programStage.getProgram().isSingleEvent() )
