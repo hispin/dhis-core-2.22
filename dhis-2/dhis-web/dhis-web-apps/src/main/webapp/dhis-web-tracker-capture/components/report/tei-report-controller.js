@@ -48,7 +48,7 @@ trackerCapture.controller('TeiReportController',
             $scope.report[pr.id] = {};
         });
         
-        DHIS2EventFactory.getEventsByProgram($scope.selectedTei.trackedEntityInstance, $scope.selectedOrgUnit.id, programId).then(function(eventList){
+        DHIS2EventFactory.getEventsByProgram($scope.selectedTei.trackedEntityInstance, programId).then(function(eventList){
             angular.forEach(eventList, function(ev){
                 if(ev.program && $scope.report[ev.program] && ev.orgUnit){       
                     ev.visited = true;
