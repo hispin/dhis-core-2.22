@@ -28,12 +28,18 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import org.hisp.dhis.acl.AclService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.common.TranslateOptions;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.message.MessageService;
@@ -65,12 +71,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Lists;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -548,7 +549,7 @@ public class MessageConversationController
      */
     private boolean canModifyUserConversation( User currentUser, User user )
     {
-        return currentUser.equals( user ) || currentUser.getUserCredentials().hasAnyAuthority( AclService.ACL_OVERRIDE_AUTHORITIES );
+        return currentUser.equals( user ) || currentUser.isSuper();
     }
 
     /**
@@ -560,7 +561,7 @@ public class MessageConversationController
      */
     private boolean canReadMessageConversation( User user, org.hisp.dhis.message.MessageConversation messageConversation )
     {
-        return messageConversation.getUsers().contains( user ) || user.getUserCredentials().hasAnyAuthority( AclService.ACL_OVERRIDE_AUTHORITIES );
+        return messageConversation.getUsers().contains( user ) || user.isSuper();
     }
 
     /**
