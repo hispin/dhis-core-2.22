@@ -1,3 +1,5 @@
+/* global trackerCapture, angular */
+
 //conroller for tei report
 trackerCapture.controller('TeiReportController',
         function($scope,
@@ -24,13 +26,14 @@ trackerCapture.controller('TeiReportController',
         $scope.programNames = selections.prNames;  
         $scope.programStageNames = selections.prStNames;
     
-        if($scope.selectedTei && $scope.selectedOrgUnit){            
-            $scope.getEvents();
-        }
-        
         angular.forEach(selections.enrollments, function(en){            
             $scope.enrollmentsByProgram[en.program] = en;
         });
+        
+        if( $scope.selectedTei ){            
+            $scope.getEvents();
+        }
+        
     });
     
     $scope.getEvents = function(){
