@@ -265,34 +265,27 @@ function repeatableOnChange()
 	var checked = byId('irregular').checked;
 	if( checked )
 	{
-		enable('displayGenerateEventBox');
-		enable('customStandardInterval');
-		enable('periodTypeName');
-	}
-	else
-	{
-		disable('displayGenerateEventBox');
-		disabled('customStandardInterval');
-		disabled('periodTypeName');
-	}
-	customStandardIntervalOnChange();
-}
-
-function customStandardIntervalOnChange()
-{
-	var checked = byId('customStandardInterval').checked;
-	if( checked )
-	{
 		enable('standardInterval');
-		disable('periodTypeName');
+		enable('periodTypeName');
+		enable('displayGenerateEventBox');
 	}
 	else
 	{
 		disable('standardInterval');
-		enable('periodTypeName');
+		disable('periodTypeName');
+		disable('displayGenerateEventBox');
 	}
 }
 
+function periodTypeOnChange(){
+	var periodType = byId('periodTypeName').value;	
+	if( periodType != ''){
+		disable('standardInterval');
+	}
+	else{
+		enable('standardInterval');
+	}
+}
 // --------------------------------------------------------------------
 // Generate template message form
 // --------------------------------------------------------------------

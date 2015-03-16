@@ -43,30 +43,25 @@
 	</tr>
 	
 	<tr>
-		<td><label for="displayGenerateEventBox">$i18n.getString( "display_generate_event_box_after_completed" )</label></td>
-		<td><input type="checkbox" id="displayGenerateEventBox" name="displayGenerateEventBox" value='true' checked disabled /></td>
-	</tr>
-	
-	<tr>
-		<td><label for="customStandardInterval">$i18n.getString( "custom_standard_interval" )</label></td>
-		<td><input type="checkbox" id="customStandardInterval" name="customStandardInterval" checked disabled onchange=" customStandardIntervalOnChange()" /></td>
-	</tr>
-	
-	<tr>
-		<td><label for="standardInterval">$i18n.getString( "standard_interval_days" )</label></td>
-		<td><input type="text" id="standardInterval" name="standardInterval" disabled /></td>
-	</tr>
-	
-	<tr>
 		<td><label for="periodTypeName">$i18n.getString( "period_type" )</label></td>
 		<td>
-			<select id="periodTypeName" name="periodTypeName" disabled>
+			<select id="periodTypeName" name="periodTypeName" disabled onchange='periodTypeOnChange();'>
 				<option value="">[$i18n.getString("please_select")]</option>
 				#foreach( $periodType in $periodTypes )
 					  <option value="$periodType.name">$i18n.getString( $periodType.name )</option>
 				#end
 			</select>
 		</td>
+	</tr>
+      	
+	<tr>
+		<td><label for="standardInterval">$i18n.getString( "standard_interval_days" )</label></td>
+		<td><input type="text" id="standardInterval" name="standardInterval" disabled /></td>
+	</tr>
+	
+	<tr>
+		<td><label for="displayGenerateEventBox">$i18n.getString( "display_generate_event_box_after_completed" )</label></td>
+		<td><input type="checkbox" id="displayGenerateEventBox" name="displayGenerateEventBox" value='true' checked disabled /></td>
 	</tr>
 	
 	#end
