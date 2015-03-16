@@ -1272,10 +1272,10 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
             if(evs.length > 0){
                 evs = orderByFilter(evs, '-eventDate');
-                referenceDate = evs[0].eventDate;
-                offset = programStage.standardInterval;
-            }                
-        }            
+                referenceDate = evs[0].eventDate;                
+                offset = programStage.standardInterval ? programStage.standardInterval : 0;
+            }
+        }
 
         var dueDate = moment(referenceDate, calendarSetting.momentFormat).add('d', offset)._d;
         dueDate = $filter('date')(dueDate, calendarSetting.keyDateFormat); 
