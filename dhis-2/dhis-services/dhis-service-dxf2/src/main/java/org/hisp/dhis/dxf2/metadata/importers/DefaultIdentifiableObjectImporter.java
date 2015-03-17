@@ -492,8 +492,12 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             if ( PeriodType.class.isAssignableFrom( field.getType() ) )
             {
                 PeriodType periodType = ReflectionUtils.invokeGetterMethod( field.getName(), object );
-                periodType = objectBridge.getObject( periodType );
-                ReflectionUtils.invokeSetterMethod( field.getName(), object, periodType );
+
+                if ( periodType != null )
+                {
+                    periodType = objectBridge.getObject( periodType );
+                    ReflectionUtils.invokeSetterMethod( field.getName(), object, periodType );
+                }
             }
         }
     }
