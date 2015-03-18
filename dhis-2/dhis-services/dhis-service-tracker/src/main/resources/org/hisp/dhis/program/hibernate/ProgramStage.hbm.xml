@@ -70,19 +70,27 @@
     <property name="openAfterEnrollment" />
 
     <property name="reportDateToUse" />
-    
+
     <property name="preGenerateUID" />
-    
+
     <list name="programIndicators" table="programstage_programindicators">
       <key column="programStageid" />
       <list-index column="sort_order" base="1" />
       <many-to-many class="org.hisp.dhis.program.ProgramIndicator" column="programindicatorid" />
     </list>
-    
+
     <property name="sortOrder" column="sort_order" />
-    
+
     <many-to-one name="periodType" lazy="false" class="org.hisp.dhis.period.PeriodType" column="periodtypeid"
       foreign-key="fk_programstage_periodtypeid" />
-    
+
+    <!-- Dynamic attribute values -->
+
+    <set name="attributeValues" table="programstageattributevalues">
+      <cache usage="read-write" />
+      <key column="programstageid" />
+      <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />
+    </set>
+
   </class>
 </hibernate-mapping>
