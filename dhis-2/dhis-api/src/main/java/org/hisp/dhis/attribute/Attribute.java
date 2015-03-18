@@ -78,6 +78,12 @@ public class Attribute
 
     private boolean programAttribute;
 
+    private boolean programStageAttribute;
+
+    private boolean trackedEntityAttribute;
+
+    private boolean trackedEntityAttributeAttribute;
+
     private boolean mandatory;
 
     private Integer sortOrder;
@@ -264,6 +270,45 @@ public class Attribute
         this.programAttribute = programAttribute;
     }
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isProgramStageAttribute()
+    {
+        return programStageAttribute;
+    }
+
+    public void setProgramStageAttribute( boolean programStageAttribute )
+    {
+        this.programStageAttribute = programStageAttribute;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isTrackedEntityAttribute()
+    {
+        return trackedEntityAttribute;
+    }
+
+    public void setTrackedEntityAttribute( boolean trackedEntityAttribute )
+    {
+        this.trackedEntityAttribute = trackedEntityAttribute;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isTrackedEntityAttributeAttribute()
+    {
+        return trackedEntityAttributeAttribute;
+    }
+
+    public void setTrackedEntityAttributeAttribute( boolean trackedEntityAttributeAttribute )
+    {
+        this.trackedEntityAttributeAttribute = trackedEntityAttributeAttribute;
+    }
+
     public Set<AttributeValue> getAttributeValues()
     {
         return attributeValues;
@@ -307,6 +352,9 @@ public class Attribute
             userAttribute = attribute.isUserAttribute();
             userGroupAttribute = attribute.isUserGroupAttribute();
             programAttribute = attribute.isProgramAttribute();
+            programStageAttribute = attribute.isProgramStageAttribute();
+            trackedEntityAttribute = attribute.isTrackedEntityAttribute();
+            trackedEntityAttributeAttribute = attribute.isTrackedEntityAttributeAttribute();
             mandatory = attribute.isMandatory();
 
             if ( strategy.isReplace() )
