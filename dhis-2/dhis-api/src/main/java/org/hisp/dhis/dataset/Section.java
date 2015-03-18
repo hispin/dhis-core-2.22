@@ -239,6 +239,9 @@ public class Section
         this.indicators = indicators;
     }
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public int getSortOrder()
     {
         return sortOrder;
