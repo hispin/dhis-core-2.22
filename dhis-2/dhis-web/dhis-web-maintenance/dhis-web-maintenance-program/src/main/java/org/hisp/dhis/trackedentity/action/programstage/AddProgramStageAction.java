@@ -28,12 +28,9 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.period.PeriodService;
@@ -46,12 +43,16 @@ import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageDataElementService;
 import org.hisp.dhis.program.ProgramStageService;
+import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -105,9 +106,12 @@ public class AddProgramStageAction
     {
         this.periodService = periodService;
     }
-    
+
     @Autowired
     private ProgramIndicatorService programIndicatorService;
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -327,7 +331,7 @@ public class AddProgramStageAction
     {
         this.selectedIndicators = selectedIndicators;
     }
-    
+
     private Boolean preGenerateUID;
 
     public void setPreGenerateUID( Boolean preGenerateUID )
@@ -341,7 +345,14 @@ public class AddProgramStageAction
     {
         this.periodTypeName = periodTypeName;
     }
-    
+
+    private List<String> jsonAttributeValues;
+
+    public void setJsonAttributeValues( List<String> jsonAttributeValues )
+    {
+        this.jsonAttributeValues = jsonAttributeValues;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -376,7 +387,7 @@ public class AddProgramStageAction
         programStage.setMinDaysFromStart( minDaysFromStart );
         programStage.setDisplayGenerateEventBox( displayGenerateEventBox );
         programStage.setValidCompleteOnly( validCompleteOnly );
-        
+
         periodTypeName = StringUtils.trimToNull( periodTypeName );
 
         if ( periodTypeName != null )
@@ -388,7 +399,7 @@ public class AddProgramStageAction
         {
             programStage.setPeriodType( null );
         }
-        
+
         if ( program.isSingleEvent() )
         {
             programStage.setAutoGenerateEvent( true );
@@ -397,7 +408,7 @@ public class AddProgramStageAction
         {
             programStage.setAutoGenerateEvent( autoGenerateEvent );
         }
-        
+
         programStage.setCaptureCoordinates( captureCoordinates );
         programStage.setBlockEntryForm( blockEntryForm );
         programStage.setRemindCompleted( remindCompleted );
@@ -407,7 +418,7 @@ public class AddProgramStageAction
         programStage.setReportDateToUse( reportDateToUse );
         programStage.setPreGenerateUID( preGenerateUID );
         programStage.setSortOrder( program.getProgramStages().size() + 1 );
-        
+
         // Program indicators
 
         List<ProgramIndicator> programIndicators = new ArrayList<>();
@@ -416,9 +427,9 @@ public class AddProgramStageAction
             ProgramIndicator indicator = programIndicatorService.getProgramIndicator( id );
             programIndicators.add( indicator );
         }
-        
+
         programStage.setProgramIndicators( programIndicators );
-      
+
         // SMS Reminder
 
         Set<TrackedEntityInstanceReminder> reminders = new HashSet<>();
@@ -431,7 +442,7 @@ public class AddProgramStageAction
             reminder.setSendTo( sendTo.get( i ) );
             reminder.setWhenToSend( whenToSend.get( i ) );
             reminder.setMessageType( messageType.get( i ) );
-            
+
             if ( sendTo.get( i ) == TrackedEntityInstanceReminder.SEND_TO_USER_GROUP )
             {
                 UserGroup selectedUserGroup = userGroupService.getUserGroup( userGroup.get( i ) );
@@ -441,15 +452,21 @@ public class AddProgramStageAction
             {
                 reminder.setUserGroup( null );
             }
-            
+
             reminders.add( reminder );
         }
-        
+
         programStage.setReminders( reminders );
         program.getProgramStages().add( programStage );
 
+        if ( jsonAttributeValues != null )
+        {
+            AttributeUtils.updateAttributeValuesFromJson( programStage.getAttributeValues(), jsonAttributeValues,
+                attributeService );
+        }
+
         programStageService.saveProgramStage( programStage );
-       
+
         // Data elements
 
         for ( int i = 0; i < this.selectedDataElementsValidator.size(); i++ )
