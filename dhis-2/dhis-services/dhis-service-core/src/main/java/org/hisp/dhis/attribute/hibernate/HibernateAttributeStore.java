@@ -119,4 +119,25 @@ public class HibernateAttributeStore
     {
         return new HashSet<Attribute>( getCriteria( Restrictions.eq( "programAttribute", true ) ).list() );
     }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Set<Attribute> getProgramStageAttributes()
+    {
+        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "programStageAttribute", true ) ).list() );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Set<Attribute> getTrackedEntityAttributes()
+    {
+        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "trackedEntityAttribute", true ) ).list() );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Set<Attribute> getTrackedEntityAttributeAttributes()
+    {
+        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "trackedEntityAttributeAttribute", true ) ).list() );
+    }
 }

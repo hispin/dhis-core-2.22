@@ -187,6 +187,24 @@ public class DefaultAttributeService
     }
 
     @Override
+    public Set<Attribute> getProgramStageAttributes()
+    {
+        return new HashSet<>( i18n( i18nService, attributeStore.getProgramStageAttributes() ) );
+    }
+
+    @Override
+    public Set<Attribute> getTrackedEntityAttributes()
+    {
+        return new HashSet<>( i18n( i18nService, attributeStore.getTrackedEntityAttributes() ) );
+    }
+
+    @Override
+    public Set<Attribute> getTrackedEntityAttributeAttributes()
+    {
+        return new HashSet<>( i18n( i18nService, attributeStore.getTrackedEntityAttributeAttributes() ) );
+    }
+
+    @Override
     public int getAttributeCount()
     {
         return attributeStore.getCount();
