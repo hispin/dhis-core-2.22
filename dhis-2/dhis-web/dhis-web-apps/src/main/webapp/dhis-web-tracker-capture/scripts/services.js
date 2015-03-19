@@ -1,4 +1,4 @@
-/* global angular */
+/* global angular, moment, dhis2 */
 
 'use strict';
 
@@ -51,58 +51,64 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* current selections */
-.service('PeriodService', function($translate, CalendarService){
+.service('PeriodService', function($translate, $filter, DateUtils, CalendarService){
     
     var calendarSetting = CalendarService.getSetting();    
-    var months = [
-                    $translate('jan'), 
-                    $translate('feb'),
-                    $translate('mar'),
-                    $translate('apr'),
-                    $translate('may'),
-                    $translate('jun'),
-                    $translate('jul'),
-                    $translate('aug'),                    
-                    $translate('sep'),
-                    $translate('oct'),
-                    $translate('nov'),
-                    $translate('dec')
-                  ];    
-   
-    this.getMonths = function(){
-        return months;
-    };
     
-    this.getPeriods = function(events, stage){
-        var periods = [];
-        if(stage){            
-            angular.forEach(events, function(event){
-                periods.push({event: event.event, name: event.sortingDate, stage: stage.id});
-            });
-            /*if(stage.standardInterval === 30){
-                angular.forEach(events, function(event){
-                    var obj = {year: moment(event.sortingDate, calendarSetting.momentFormat).year(), month: moment(event.sortingDate, calendarSetting.momentFormat).month(), week: moment(event.sortingDate, calendarSetting.momentFormat).week(), day: moment(event.sortingDate, calendarSetting.momentFormat).day()};                
-                    periods.push({event: event.event, name: months[obj.month] + ' ' + obj.year, stage: stage.id});
-                });
-            }
-            else{
-                angular.forEach(events, function(event){
-                    periods.push({event: event.event, name: event.sortingDate, stage: stage.id});
-                });
-            }*/            
-        }
-        
-        return periods;
-    };
-    
-    
-    this.splitDate = function(dateValue){
+    var splitDate = function(dateValue){
         if(!dateValue){
             return;
         }
         var calendarSetting = CalendarService.getSetting();            
 
         return {year: moment(dateValue, calendarSetting.momentFormat).year(), month: moment(dateValue, calendarSetting.momentFormat).month(), week: moment(dateValue, calendarSetting.momentFormat).week(), day: moment(dateValue, calendarSetting.momentFormat).day()};
+    };
+    
+    this.getPeriods = function(events, stage, enrollment){
+        
+        if(!stage){
+            return;
+        }
+        
+        var referenceDate = enrollment.dateOfIncident ? enrollment.dateOfIncident : enrollment.dateOfEnrollment;
+        var offset = stage.minDaysFromStart;
+        
+        if(stage.generatedByEnrollmentDate){
+            referenceDate = enrollment.dateOfEnrollment;
+        }        
+               
+        var occupiedPeriods = [];
+        var availablePeriods = [];
+        if(!stage.periodType){
+            angular.forEach(events, function(event){
+                occupiedPeriods.push({event: event.event, name: event.sortingDate, stage: stage.id});
+            });            
+            
+        }
+        else{
+
+            var startDate = DateUtils.format( moment(referenceDate, calendarSetting.momentFormat).add(offset, 'days') );
+            var periodOffet = splitDate(DateUtils.getToday()).year - splitDate(startDate).year;
+
+            //generate availablePeriods
+            var pt = new PeriodType();
+            var d2Periods = pt.get(stage.periodType).generatePeriods({offset: periodOffet, filterFuturePeriods: false, reversePeriods: false});
+            angular.forEach(d2Periods, function(p){
+                p.endDate = DateUtils.formatFromApiToUser(p.endDate);
+                p.startDate = DateUtils.formatFromApiToUser(p.startDate);
+                availablePeriods[p.endDate] = p;
+            });                
+
+            //get occupied periods
+            angular.forEach(events, function(event){
+                var p = availablePeriods[event.sortingDate];
+                if(p){
+                    occupiedPeriods.push({event: event.event, name: p.name, stage: stage.id, eventDate: event.sortingDate});
+                    delete availablePeriods[event.sortingDate];
+                }                    
+            });
+        }
+        return {occupiedPeriods: occupiedPeriods, availablePeriods: availablePeriods};
     };
 })
 
@@ -1214,8 +1220,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 column.show = false;                
                 if( (column.id === 'orgUnitName' && ouMode !== 'SELECTED') ||
                     column.displayInListNoProgram || 
-                    column.displayInList || 
-                    column.id === 'created'){
+                    column.displayInList){
                     column.show = true;    
                 }                
                 column.showFilter = false;                
@@ -1251,12 +1256,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
 })
 
-.service('EventUtils', function(DateUtils, CalendarService, OptionSetService, $filter, orderByFilter){
+.service('EventUtils', function(DateUtils, PeriodService, CalendarService, OptionSetService, $filter, orderByFilter){
     
-    var getEventDueDate = function(eventsByStage, programStage, enrollment){            
+    var getEventDueDate = function(eventsByStage, programStage, enrollment){       
+        
         var referenceDate = enrollment.dateOfIncident ? enrollment.dateOfIncident : enrollment.dateOfEnrollment,
             offset = programStage.minDaysFromStart,
-            calendarSetting = CalendarService.getSetting();
+            calendarSetting = CalendarService.getSetting(),
+            dueDate;
 
         if(programStage.generatedByEnrollmentDate){
             referenceDate = enrollment.dateOfEnrollment;
@@ -1271,30 +1278,71 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });
 
             if(evs.length > 0){
-                evs = orderByFilter(evs, '-eventDate');
-                referenceDate = evs[0].eventDate;                
-                offset = programStage.standardInterval ? programStage.standardInterval : 0;
-            }
+                evs = orderByFilter(evs, '-eventDate');                
+                if(programStage.periodType){
+                    
+                }
+                else{
+                    referenceDate = evs[0].eventDate;
+                    offset = programStage.standardInterval;
+                }
+            }                
         }
-
-        var dueDate = moment(referenceDate, calendarSetting.momentFormat).add('d', offset)._d;
-        dueDate = $filter('date')(dueDate, calendarSetting.keyDateFormat); 
+        dueDate = moment(referenceDate, calendarSetting.momentFormat).add('d', offset)._d;
+        dueDate = $filter('date')(dueDate, calendarSetting.keyDateFormat);        
         return dueDate;
     };
     
+    var getEventDuePeriod = function(eventsByStage, programStage, enrollment){ 
+        
+        var evs = [];                
+        angular.forEach(eventsByStage, function(ev){
+            if(ev.eventDate){
+                evs.push(ev);
+            }
+        });
+
+        if(evs.length > 0){
+            evs = orderByFilter(evs, '-eventDate');
+        }
+        
+        var availabelPeriods = PeriodService.getPeriods(evs,programStage, enrollment).availablePeriods;
+        var periods = [];
+        for(var k in availabelPeriods){
+            if(availabelPeriods.hasOwnProperty(k)){
+                periods.push( availabelPeriods[k] );
+            }
+        }        
+        return periods;
+    };
+    
     return {
-        createDummyEvent: function(eventsPerStage, programStage, orgUnit, enrollment){
-            var today = DateUtils.getToday();    
-            var dueDate = getEventDueDate(eventsPerStage, programStage, enrollment);
-            var dummyEvent = {programStage: programStage.id, 
+        createDummyEvent: function(eventsPerStage, tei, program, programStage, orgUnit, enrollment){
+            var today = DateUtils.getToday();
+            var dummyEvent = {trackedEntityInstance: tei.trackedEntityInstance, 
+                              programStage: programStage.id, 
+                              program: program.id,
                               orgUnit: orgUnit.id,
                               orgUnitName: orgUnit.name,
-                              dueDate: dueDate,
-                              sortingDate: dueDate,
                               name: programStage.name,
                               reportDateDescription: programStage.reportDateDescription,
                               enrollmentStatus: 'ACTIVE',
+                              enrollment: enrollment.enrollment,
                               status: 'SCHEDULED'};
+                          
+            if(programStage.periodType){                
+                var periods = getEventDuePeriod(eventsPerStage, programStage, enrollment);
+                dummyEvent.dueDate = periods[0].endDate;
+                dummyEvent.periodName = periods[0].name;
+                dummyEvent.eventDate = dummyEvent.dueDate;
+                dummyEvent.periods = periods;
+            }
+            else{
+                dummyEvent.dueDate = getEventDueDate(eventsPerStage, programStage, enrollment);
+            }
+            
+            dummyEvent.sortingDate = dummyEvent.dueDate;
+            
             
             if(programStage.captureCoordinates){
                 dummyEvent.coordinate = {};
@@ -1342,10 +1390,20 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 program: program.id,
                                 programStage: stage.id,
                                 orgUnit: orgUnit.id,
-                                dueDate: DateUtils.formatFromUserToApi(getEventDueDate(null,stage, enrollment)),
+                                enrollment: enrollment.enrollment,                                
                                 status: 'SCHEDULE'
                             };
-                            
+                        if(stage.periodType){
+                            var periods = getEventDuePeriod(null, stage, enrollment);
+                            newEvent.dueDate = DateUtils.formatFromUserToApi(periods[0].dueDate);;
+                            newEvent.eventDate = newEvent.dueDate;
+                            //newEvent.periodName = periods[0].name;                            
+                            //newEvent.periods = periods;
+                        }
+                        else{
+                            newEvent.dueDate = DateUtils.formatFromUserToApi(getEventDueDate(null,stage, enrollment));
+                        }
+                        
                         if(stage.openAfterEnrollment){
                             if(stage.reportDateToUse === 'dateOfIncident'){
                                 newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.dateOfIncident);

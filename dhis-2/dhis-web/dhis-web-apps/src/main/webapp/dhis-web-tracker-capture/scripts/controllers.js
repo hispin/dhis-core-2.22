@@ -263,7 +263,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.doSearch = true;
             
             if(!$scope.sortColumn.id){                                      
-                $scope.sortGrid({id: 'created', name: $translate('registration_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: true});
+                $scope.sortGrid({id: 'created', name: $translate('registration_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: false});
             }
         });
     };

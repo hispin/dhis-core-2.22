@@ -43,8 +43,8 @@ trackerCapture.controller('DataEntryController',
                             {color: 'alert-danger', description: 'overdue'},
                             {color: 'alert-default', description: 'skipped'}
                          ];
-    $scope.showEventColors = false;
-    
+    $scope.showEventColors = false;    
+      
     //listen for the selected items
     $scope.$on('dashboardWidgets', function() {        
         $scope.showDataEntryDiv = false;
@@ -152,7 +152,7 @@ trackerCapture.controller('DataEntryController',
     
     $scope.showCreateEvent = function(stage){
         
-        var dummyEvent = EventUtils.createDummyEvent($scope.eventsByStage[stage.id], stage, $scope.selectedOrgUnit, $scope.selectedEnrollment);
+        var dummyEvent = EventUtils.createDummyEvent($scope.eventsByStage[stage.id], $scope.selectedEntity, $scope.selectedProgram, stage, $scope.selectedOrgUnit, $scope.selectedEnrollment);
         
         var modalInstance = $modal.open({
             templateUrl: 'components/dataentry/new-event.html',
@@ -164,11 +164,8 @@ trackerCapture.controller('DataEntryController',
                 dummyEvent: function(){
                     return dummyEvent;
                 },
-                programId: function () {
-                    return $scope.selectedProgram.id;
-                },
-                trackedEntityInstanceId: function(){
-                    return $scope.selectedEntity.trackedEntityInstance;
+                eventPeriods: function(){
+                    return $scope.eventPeriods;
                 }
             }
         });
@@ -187,9 +184,10 @@ trackerCapture.controller('DataEntryController',
                 
                 if(dummyEvent.coordinate){
                     newEvent.coordinate = {};
-                }                
+                }
                 
                 $scope.eventsByStage[newEvent.programStage].push(newEvent);
+                sortEventsByStage();
                 $scope.showDataEntry(newEvent, false);
             }            
         }, function () {
@@ -415,6 +413,7 @@ trackerCapture.controller('DataEntryController',
     };
     
     $scope.saveDueDate = function(){
+        
         $scope.dueDateSaved = false;
 
         if($scope.currentEvent.dueDate === ''){
@@ -440,10 +439,23 @@ trackerCapture.controller('DataEntryController',
              trackedEntityInstance: $scope.currentEvent.trackedEntityInstance
             };
         
+        if($scope.currentStage.periodType){
+            e.eventDate = e.dueDate;
+        }
+        
+        if($scope.currentEvent.coordinate){
+            e.coordinate = $scope.currentEvent.coordinate;
+        }
+            
         DHIS2EventFactory.update(e).then(function(data){            
             $scope.invalidDate = false;
             $scope.dueDateSaved = true;
-            $scope.currentEvent.sortingDate = $scope.currentEvent.dueDate;
+            
+            if(e.eventDate && !$scope.currentEvent.eventDate && $scope.currentStage.periodType){
+                $scope.currentEvent.eventDate = $scope.currentEvent.dueDate;
+            }
+            
+            $scope.currentEvent.sortingDate = $scope.currentEvent.dueDate;            
             $scope.currentEvent.statusColor = EventUtils.getEventStatusColor($scope.currentEvent);            
             $scope.schedulingEnabled = !$scope.schedulingEnabled;
             sortEventsByStage();
@@ -682,22 +694,29 @@ trackerCapture.controller('DataEntryController',
     };
     
     var sortEventsByStage = function(){
+        
         $scope.eventFilteringRequired = false;
-        for(var key in $scope.eventsByStage){ 
+        
+        for(var key in $scope.eventsByStage){
+            
             var stage = $scope.stagesById[key];
+            
             if($scope.eventsByStage.hasOwnProperty(key) && stage){                
+                
                 var sortedEvents = $filter('orderBy')($scope.eventsByStage[key], function(event) {
                     return DateUtils.getDate(event.sortingDate);
-                });                
-                var periods = PeriodService.getPeriods(sortedEvents, stage);
+                }, true);
+                
+                var periods = PeriodService.getPeriods(sortedEvents, stage, $scope.selectedEnrollment).occupiedPeriods;
                 $scope.eventPeriods[key] = periods;
                 $scope.currentPeriod[key] = periods.length > 0 ? periods[0] : null;  
                 $scope.eventFilteringRequired = $scope.eventFilteringRequired ? $scope.eventFilteringRequired : periods.length > 1;
+                
             }
         }
     };
     
-    $scope.showDataEntryForEvent = function(period){
+    $scope.showDataEntryForEvent = function(period){        
         var event = null;
         for(var i=0; i<$scope.eventsByStage[period.stage].length; i++){
             if($scope.eventsByStage[period.stage][i].event === period.event){
@@ -744,15 +763,20 @@ trackerCapture.controller('DataEntryController',
             DialogService,
             stagesById,
             dummyEvent,
-            programId,
-            trackedEntityInstanceId){
+            eventPeriods){
     $scope.stagesById = stagesById;
     $scope.programStageId = dummyEvent.programStage;
-    $scope.programId = programId;
-    $scope.orgUnitId = dummyEvent.orgUnit;    
-    $scope.trackedEntityInstanceId = trackedEntityInstanceId;
+    $scope.eventPeriods = eventPeriods;
+    $scope.selectedStage =  $scope.stagesById[dummyEvent.programStage];
     
     $scope.dhis2Event = {eventDate: '', dueDate: dummyEvent.dueDate, reportDateDescription: dummyEvent.reportDateDescription, name: dummyEvent.name, invalid: true};
+    
+    if($scope.selectedStage.periodType){
+        $scope.dhis2Event.eventDate = dummyEvent.dueDate;
+        $scope.dhis2Event.periodName = dummyEvent.periodName;
+        $scope.dhis2Event.periods = dummyEvent.periods;
+        $scope.dhis2Event.selectedPeriod = dummyEvent.periods[0];
+    }
     
     $scope.dueDateInvalid = false;
     $scope.eventDateInvalid = false;
@@ -785,14 +809,20 @@ trackerCapture.controller('DataEntryController',
             return false;
         }
         
+        if($scope.selectedStage.periodType){
+            $scope.dhis2Event.eventDate = $scope.dhis2Event.selectedPeriod.endDate;
+            $scope.dhis2Event.dueDate = $scope.dhis2Event.selectedPeriod.endDate;
+        }        
+        
         var eventDate = DateUtils.formatFromUserToApi($scope.dhis2Event.eventDate);
         var dueDate = DateUtils.formatFromUserToApi($scope.dhis2Event.dueDate);
         var newEvents = {events: []};
         var newEvent = {
-                trackedEntityInstance: $scope.trackedEntityInstanceId,
-                program: $scope.programId,
-                programStage: $scope.programStageId,
-                orgUnit: $scope.orgUnitId,                        
+                trackedEntityInstance: dummyEvent.trackedEntityInstance,
+                program: dummyEvent.program,
+                programStage: dummyEvent.programStage,
+                enrollment: dummyEvent.enrollment,
+                orgUnit: dummyEvent.orgUnit,                        
                 dueDate: dueDate,
                 eventDate: eventDate,
                 notes: [],
@@ -800,7 +830,6 @@ trackerCapture.controller('DataEntryController',
                 status: 'ACTIVE'
             };            
         newEvents.events.push(newEvent);
-        
         DHIS2EventFactory.create(newEvents).then(function(data){
             if (data.importSummaries[0].status === 'ERROR') {
                 var dialogOptions = {
