@@ -72,7 +72,8 @@
 
         <form name="outerForm" novalidate>
             <div ng-if="currentEvent">
-                <!-- event dates begin -->
+                
+                <!-- event dates/scheduling begin -->
                 <div class="row">
                     <div class="col-md-6">
                         {{currentEvent.reportDateDescription}}
@@ -105,7 +106,7 @@
                         <span ng-if="invalidDate" class="error">{{'date_required'| translate}}</span>
                     </div>                        
                 </div>
-                <!-- event dates end -->
+                <!-- event dates/scheduling end -->
 
                 <!-- coordinates begin -->
                 <div class="row" ng-if="currentStage.captureCoordinates && currentEvent.eventDate">
@@ -140,11 +141,14 @@
                 </div>
                 <!-- coordinates begin -->
 
+                <!-- data entry form begins -->
                 <div ng-if="currentEvent.eventDate">                            
                     <div class="clear vertical-spacing" ng-if="displayCustomForm" ng-include="'../dhis-web-commons/customform/custom-form.html'"></div>  
                     <div class="clear vertical-spacing" ng-if="!displayCustomForm" ng-include="'components/dataentry/default-form.html'"></div>
                 </div>            
-
+                <!-- data entry form ends -->
+                
+                <!-- data entry/event buttons begins -->
                 <div class="form-group">
                     <div class='row'><hr></div>
                     <a href ng-click="completeIncompleteEvent()" 
@@ -167,6 +171,8 @@
                        ng-disabled="currentEvent.enrollmentStatus === 'COMPLETED' || currentEvent.editingNotAllowed"
                        class="btn btn-danger">{{'delete'| translate}}</a>
                 </div>
+                <!-- data entry/event buttons ends -->
+                
             </div>
         </form>
 

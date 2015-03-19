@@ -90,7 +90,6 @@ textarea {
 .vertical-center {
     line-height: inherit;
     vertical-align: middle;
-
 }
 
 .empty-event-container {
@@ -1011,4 +1010,9 @@ ul.tree ul li:last-child:before {
 
 .mouse-pointer {    
     cursor: pointer;
+}
+
+ .form-horizontal .control-label {
+    display: table-cell;
+    vertical-align: middle;
 }
