@@ -28,38 +28,46 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.system.util.AttributeUtils;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ ShowAddAttributeFormAction.java Jan 23, 2014 3:01:44 PM $
  */
-public class ShowAddAttributeFormAction
+public class ShowAddUpdateAttributeAction
     implements Action
 {
     // -------------------------------------------------------------------------
     // Dependency
     // -------------------------------------------------------------------------
 
-    private PeriodService periodService;
+    @Autowired
+    private TrackedEntityAttributeService trackedEntityAttributeService;
 
-    public void setPeriodService( PeriodService periodService )
-    {
-        this.periodService = periodService;
-    }
+    @Autowired
+    private ProgramService programService;
+
+    @Autowired
+    private PeriodService periodService;
 
     @Autowired
     private OptionService optionService;
@@ -67,9 +75,33 @@ public class ShowAddAttributeFormAction
     @Autowired
     private LegendService legendService;
 
+    @Autowired
+    private AttributeService attributeService;
+
     // -------------------------------------------------------------------------
-    // Output
+    // Input/Output
     // -------------------------------------------------------------------------
+
+    private Integer id;
+
+    public void setId( Integer id )
+    {
+        this.id = id;
+    }
+
+    private TrackedEntityAttribute attribute;
+
+    public TrackedEntityAttribute getAttribute()
+    {
+        return attribute;
+    }
+
+    private List<Program> programs;
+
+    public List<Program> getPrograms()
+    {
+        return programs;
+    }
 
     private List<PeriodType> periodTypes;
 
@@ -92,22 +124,46 @@ public class ShowAddAttributeFormAction
         return legendSets;
     }
 
+    private List<Attribute> attributes;
+
+    public List<Attribute> getAttributes()
+    {
+        return attributes;
+    }
+
+    private Map<Integer, String> attributeValues = new HashMap<>();
+
+    public Map<Integer, String> getAttributeValues()
+    {
+        return attributeValues;
+    }
+
     // -------------------------------------------------------------------------
-    // Getters && Setters
+    // Action implementation
     // -------------------------------------------------------------------------
 
     @Override
     public String execute()
         throws Exception
     {
-        periodTypes = periodService.getAllPeriodTypes();        
-        optionSets =  new ArrayList<>( optionService.getAllOptionSets() );
+        if ( id != null )
+        {
+            attribute = trackedEntityAttributeService.getTrackedEntityAttribute( id );
+            attributeValues = AttributeUtils.getAttributeValueMap( attribute.getAttributeValues() );
+
+            programs = new ArrayList<>( programService.getAllPrograms() );
+            programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
+            Collections.sort( programs );
+        }
+
+        periodTypes = periodService.getAllPeriodTypes();
+        optionSets = new ArrayList<>( optionService.getAllOptionSets() );
         legendSets = legendService.getAllLegendSets();
-        
+        attributes = new ArrayList<>( attributeService.getTrackedEntityAttributeAttributes() );
+
         Collections.sort( optionSets );
         Collections.sort( legendSets );
-        
+
         return SUCCESS;
     }
-
 }
