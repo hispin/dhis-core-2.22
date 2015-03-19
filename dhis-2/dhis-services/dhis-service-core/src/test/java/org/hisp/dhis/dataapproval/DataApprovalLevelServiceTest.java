@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -522,7 +523,8 @@ public class DataApprovalLevelServiceTest
         assertEquals( 3, (int) readApprovalLevels.get( organisationUnitB ) );
     }
 
-    @Ignore
+    //TODO: add tests for getUserDataApprovalLevels where the user can access the CategoryOptionGroupSets
+
     @Test
     public void testGetUserDataApprovalLevelsApproveHere() throws Exception
     {
@@ -550,14 +552,9 @@ public class DataApprovalLevelServiceTest
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
 
-        assertEquals( 4, levels.size() );
-        assertEquals( "02", levels.get( 0 ).getName() );
-        assertEquals( "2A", levels.get( 1 ).getName() );
-        assertEquals( "2B", levels.get( 2 ).getName() );
-        assertEquals( "03", levels.get( 3 ).getName() );
+        assertEquals( "02", levelNames( levels ) );
     }
 
-    @Ignore
     @Test
     public void testGetUserDataApprovalLevelsApproveLower() throws Exception
     {
@@ -584,19 +581,10 @@ public class DataApprovalLevelServiceTest
         setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
-        
-        assertEquals( 8, levels.size() );
-        assertEquals( "2A", levels.get( 0 ).getName() );
-        assertEquals( "2B", levels.get( 1 ).getName() );
-        assertEquals( "03", levels.get( 2 ).getName() );
-        assertEquals( "3A", levels.get( 3 ).getName() );
-        assertEquals( "3B", levels.get( 4 ).getName() );
-        assertEquals( "04", levels.get( 5 ).getName() );
-        assertEquals( "4A", levels.get( 6 ).getName() );
-        assertEquals( "4B", levels.get( 7 ).getName() );
+
+        assertEquals( "03 04", levelNames( levels ) );
     }
 
-    @Ignore
     @Test
     public void testGetUserDataApprovalLevelsApproveHereAndLower() throws Exception
     {
@@ -623,20 +611,10 @@ public class DataApprovalLevelServiceTest
         setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
-        
-        assertEquals( 9, levels.size() );
-        assertEquals( "02", levels.get( 0 ).getName() );
-        assertEquals( "2A", levels.get( 1 ).getName() );
-        assertEquals( "2B", levels.get( 2 ).getName() );
-        assertEquals( "03", levels.get( 3 ).getName() );
-        assertEquals( "3A", levels.get( 4 ).getName() );
-        assertEquals( "3B", levels.get( 5 ).getName() );
-        assertEquals( "04", levels.get( 6 ).getName() );
-        assertEquals( "4A", levels.get( 7 ).getName() );
-        assertEquals( "4B", levels.get( 8 ).getName() );
+
+        assertEquals( "02 03 04", levelNames( levels ) );
     }
 
-    @Ignore
     @Test
     public void testGetUserDataApprovalLevelsAcceptLower() throws Exception
     {
@@ -663,10 +641,38 @@ public class DataApprovalLevelServiceTest
         setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
-        
-        assertEquals( 3, levels.size() );
-        assertEquals( "2A", levels.get( 0 ).getName() );
-        assertEquals( "2B", levels.get( 1 ).getName() );
-        assertEquals( "03", levels.get( 2 ).getName() );
+
+        assertEquals( "03 04", levelNames( levels ) );
+    }
+
+    @Test
+    public void testGetUserDataApprovalLevelsAcceptMuchLower() throws Exception
+    {
+        dataApprovalLevelService.addDataApprovalLevel( level4 );
+
+        Set<OrganisationUnit> assignedOrgUnits = new HashSet<>();
+        assignedOrgUnits.add( organisationUnitB );
+
+        Set<OrganisationUnit> dataViewOrgUnits = new HashSet<>();
+        dataViewOrgUnits.add( organisationUnitB );
+
+        CurrentUserService currentUserService = new MockCurrentUserService( assignedOrgUnits, dataViewOrgUnits, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
+
+        List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
+
+        assertEquals( "04", levelNames( levels ) );
+    }
+
+    private String levelNames(List<DataApprovalLevel> levels )
+    {
+        String names = "";
+
+        for ( DataApprovalLevel level : levels )
+        {
+            names += (names.isEmpty() ? "" : " ") + level.getName();
+        }
+
+        return names;
     }
 }

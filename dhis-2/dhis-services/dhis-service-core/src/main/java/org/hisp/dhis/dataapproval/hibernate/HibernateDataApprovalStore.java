@@ -378,7 +378,7 @@ public class HibernateDataApprovalStore
                                  "left join usergroupmembers ugm on ugm.usergroupid = uga.usergroupid " +
                                  "where couga.categoryoptionid = cocco.categoryoptionid and ugm.userid = " + user.getId() + ") )" );
 
-        log.debug( "Get approval SQL: " + sql );
+        log.info( "Get approval SQL: " + sql );
 
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
 
