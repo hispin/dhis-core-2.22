@@ -1,4 +1,6 @@
 
+/* global dhis2, angular, i18n_ajax_login_failed, _ */
+
 dhis2.util.namespace('dhis2.ec');
 
 // whether current user has any organisation units
@@ -31,6 +33,16 @@ dhis2.ec.store = new dhis2.storage.Store({
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
     objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'ouLevels']
 });
+
+(function($) {
+    $.safeEach = function(arr, fn)
+    {
+        if (arr)
+        {
+            $.each(arr, fn);
+        }
+    };
+})(jQuery);
 
 /**
  * Page init. The order of events is:

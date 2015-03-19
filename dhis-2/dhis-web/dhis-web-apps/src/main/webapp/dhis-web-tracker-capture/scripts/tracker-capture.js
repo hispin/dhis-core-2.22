@@ -29,6 +29,16 @@ dhis2.tc.store = new dhis2.storage.Store({
     objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels']      
 });
 
+(function($) {
+    $.safeEach = function(arr, fn)
+    {
+        if (arr)
+        {
+            $.each(arr, fn);
+        }
+    };
+})(jQuery);
+
 /**
  * Page init. The order of events is:
  *
