@@ -4,7 +4,10 @@
 		{
 			form.submit();
 		},{
-			'rules' : getValidationRules( "trackedEntity" )
+			'rules' : getValidationRules( "trackedEntity" ),
+      'beforeValidateHandler' : function() {
+        #tblDynamicAttributesJavascript()
+      }
 		});
 		
 		checkValueIsExist( "name", "validateTrackedEntity.action");
@@ -32,7 +35,11 @@
 			<td></td>
 		</tr>
     </tbody>
+</table>
 
+#tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
+
+<table>
 	<tr>
 		<td></td>
 		<td>
