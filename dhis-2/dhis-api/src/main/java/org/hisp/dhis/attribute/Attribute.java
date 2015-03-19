@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.MoreObjects;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -371,5 +372,30 @@ public class Attribute
             attributeValues.clear();
             attributeValues.addAll( attribute.getAttributeValues() );
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper( this )
+            .add( "sortOrder", sortOrder )
+            .add( "valueType", valueType )
+            .add( "dataElementAttribute", dataElementAttribute )
+            .add( "dataElementGroupAttribute", dataElementGroupAttribute )
+            .add( "indicatorAttribute", indicatorAttribute )
+            .add( "indicatorGroupAttribute", indicatorGroupAttribute )
+            .add( "dataSetAttribute", dataSetAttribute )
+            .add( "organisationUnitAttribute", organisationUnitAttribute )
+            .add( "organisationUnitGroupAttribute", organisationUnitGroupAttribute )
+            .add( "organisationUnitGroupSetAttribute", organisationUnitGroupSetAttribute )
+            .add( "userAttribute", userAttribute )
+            .add( "userGroupAttribute", userGroupAttribute )
+            .add( "programAttribute", programAttribute )
+            .add( "programStageAttribute", programStageAttribute )
+            .add( "trackedEntityAttribute", trackedEntityAttribute )
+            .add( "trackedEntityAttributeAttribute", trackedEntityAttributeAttribute )
+            .add( "mandatory", mandatory )
+            .add( "attributeValues", attributeValues )
+            .toString();
     }
 }

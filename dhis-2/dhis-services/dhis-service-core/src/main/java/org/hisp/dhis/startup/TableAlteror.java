@@ -756,6 +756,9 @@ public class TableAlteror
         executeSql( "UPDATE attribute SET usergroupattribute=false WHERE usergroupattribute IS NULL" );
         executeSql( "UPDATE attribute SET datasetattribute=false WHERE datasetattribute IS NULL" );
         executeSql( "UPDATE attribute SET programattribute=false WHERE programattribute IS NULL" );
+        executeSql( "UPDATE attribute SET programstageattribute=false WHERE programstageattribute IS NULL" );
+        executeSql( "UPDATE attribute SET trackedentityattribute=false WHERE trackedentityattribute IS NULL" );
+        executeSql( "UPDATE attribute SET trackedentityattributeattribute=false WHERE trackedentityattributeattribute IS NULL" );
 
         executeSql( "ALTER TABLE trackedentityattributedimension DROP COLUMN operator" );
         executeSql( "ALTER TABLE trackedentitydataelementdimension DROP COLUMN operator" );

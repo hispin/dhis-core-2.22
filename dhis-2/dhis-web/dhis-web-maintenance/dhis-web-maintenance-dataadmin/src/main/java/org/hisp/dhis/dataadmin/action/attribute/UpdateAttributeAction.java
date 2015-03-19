@@ -167,6 +167,27 @@ public class UpdateAttributeAction
         this.programAttribute = programAttribute;
     }
 
+    private boolean programStageAttribute;
+
+    public void setProgramStageAttribute( boolean programStageAttribute )
+    {
+        this.programStageAttribute = programStageAttribute;
+    }
+
+    private boolean trackedEntityAttribute;
+
+    public void setTrackedEntityAttribute( boolean trackedEntityAttribute )
+    {
+        this.trackedEntityAttribute = trackedEntityAttribute;
+    }
+
+    private boolean trackedEntityAttributeAttribute;
+
+    public void setTrackedEntityAttributeAttribute( boolean trackedEntityAttributeAttribute )
+    {
+        this.trackedEntityAttributeAttribute = trackedEntityAttributeAttribute;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -193,6 +214,9 @@ public class UpdateAttributeAction
             attribute.setUserAttribute( userAttribute );
             attribute.setUserGroupAttribute( userGroupAttribute );
             attribute.setProgramAttribute( programAttribute );
+            attribute.setProgramStageAttribute( programStageAttribute );
+            attribute.setTrackedEntityAttribute( trackedEntityAttribute );
+            attribute.setTrackedEntityAttributeAttribute( trackedEntityAttributeAttribute );
 
             attributeService.updateAttribute( attribute );
 
