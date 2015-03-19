@@ -4,7 +4,10 @@
 		{
 			form.submit();
 		},{
-			'rules' : getValidationRules( "trackedEntity" )
+			'rules' : getValidationRules( "trackedEntity" ),
+      'beforeValidateHandler' : function() {
+        #tblDynamicAttributesJavascript()
+      }
 		});
 		
 		checkValueIsExist( "name", "validateTrackedEntity.action", {id:getFieldValue('id')});
@@ -15,7 +18,8 @@
 <form id="updateTrackedEntityForm" action="updateTrackedEntity.action" method="post" class="inputForm">
 
 <input type='hidden' id='id' name='id' value='$trackedEntity.id'/>
-<table id="attrTable"> 
+
+  <table id="attrTable">
 	<thead>
 		<tr><th colspan="2">$i18n.getString( "tracked_entity_details" )</th></tr>
     </thead>
@@ -33,8 +37,12 @@
 			<td></td>
 		</tr>
     </tbody>
+</table>
 
-	<tr>
+#tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
+
+<table>
+  <tr>
 		<td></td>
 		<td>
 			<input type="submit" value="$i18n.getString( 'update' )" style="width:10em"/>
