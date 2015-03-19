@@ -120,20 +120,9 @@
   </bean>
 
   <bean
-    id="org.hisp.dhis.trackedentity.action.trackedentityattribute.ShowAddAttributeFormAction"
-    class="org.hisp.dhis.trackedentity.action.trackedentityattribute.ShowAddAttributeFormAction"
+    id="org.hisp.dhis.trackedentity.action.trackedentityattribute.ShowAddUpdateAttributeAction"
+    class="org.hisp.dhis.trackedentity.action.trackedentityattribute.ShowAddUpdateAttributeAction"
     scope="prototype">
-    <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
-  </bean>
-
-  <bean
-    id="org.hisp.dhis.trackedentity.action.trackedentityattribute.ShowUpdateAttributeAction"
-    class="org.hisp.dhis.trackedentity.action.trackedentityattribute.ShowUpdateAttributeAction"
-    scope="prototype">
-    <property name="attributeService"
-      ref="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
-    <property name="programService" ref="org.hisp.dhis.program.ProgramService" />
-    <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
   </bean>
 
   <bean

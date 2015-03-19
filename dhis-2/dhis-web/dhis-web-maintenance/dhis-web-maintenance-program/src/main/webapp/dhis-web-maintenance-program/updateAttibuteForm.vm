@@ -1,5 +1,20 @@
-<script type="text/javascript" src="javascript/updateAttributeForm.js"></script>
+<script>
+  jQuery(document).ready(	function(){
+  	validation2( 'updateAttributeForm', function( form )
+  	{
+  		form.submit();
+  	}, {
+  		'rules' : getValidationRules( "trackedEntityAttribute" ),
+      'beforeValidateHandler' : function() {
+        #tblDynamicAttributesJavascript()
+      }
+  	} );
 
+  	checkValueIsExist( "name", "validateAttribute.action", {id:getFieldValue('id')});
+  	checkValueIsExist( "shortName", "validateAttribute.action", {id:getFieldValue('id')});
+  	checkValueIsExist( "code", "validateAttribute.action", {id:getFieldValue('id')});
+  });
+</script>
 <h3>$i18n.getString( "edit_tracked_entity_attribute" ) #openHelp( "tracked_entity_attribute_information" )</h3>
 
 <form id="updateAttributeForm" name="updateAttributeForm" action="updateAttribute.action" method="post" class="inputForm">
@@ -106,7 +121,11 @@
         </td>
     </tr>
     </tbody>
-	
+</table>
+
+#tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
+
+<table>
 	<tr>
 		<td></td>
 		<td>
