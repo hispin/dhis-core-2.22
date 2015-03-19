@@ -60,6 +60,9 @@
             <input type="checkbox" id="userAttribute" name="userAttribute" value="true" /><label for="userAttribute">$i18n.getString( 'user' )</label> <br />
             <input type="checkbox" id="userGroupAttribute" name="userGroupAttribute" value="true" /><label for="userGroupAttribute">$i18n.getString( 'user_group' )</label> <br />
             <input type="checkbox" id="programAttribute" name="programAttribute" value="true" /><label for="programAttribute">$i18n.getString( 'program' )</label> <br />
+            <input type="checkbox" id="programStageAttribute" name="programStageAttribute" value="true" /><label for="programStageAttribute">$i18n.getString( 'program_stage' )</label> <br />
+            <input type="checkbox" id="trackedEntityAttribute" name="trackedEntityAttribute" value="true" /><label for="trackedEntityAttribute">$i18n.getString( 'tracked_entity' )</label> <br />
+            <input type="checkbox" id="trackedEntityAttributeAttribute" name="trackedEntityAttributeAttribute" value="true" /><label for="trackedEntityAttributeAttribute">$i18n.getString( 'tracked_entity_attribute' )</label> <br />
 		</td>
 	</tr>
 
