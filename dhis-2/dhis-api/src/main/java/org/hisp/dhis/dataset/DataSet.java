@@ -49,6 +49,7 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.indicator.Indicator;
@@ -400,6 +401,21 @@ public class DataSet
         return dataElements;
     }
 
+    public Set<DataElementCategoryOptionCombo> getDataElementOptionCombos()
+    {
+        Set<DataElementCategoryOptionCombo> optionCombos = new HashSet<>();
+        
+        for ( DataElement element : dataElements )
+        {
+            if ( element.hasCategoryCombo() )
+            {
+                optionCombos.addAll( element.getCategoryCombo().getOptionCombos() );
+            }
+        }
+        
+        return optionCombos;
+    }
+
     public int increaseVersion()
     {
         return ++version;
@@ -435,7 +451,7 @@ public class DataSet
     {
         return categoryCombo != null && !DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME.equals( categoryCombo.getName() );
     }
-
+    
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
