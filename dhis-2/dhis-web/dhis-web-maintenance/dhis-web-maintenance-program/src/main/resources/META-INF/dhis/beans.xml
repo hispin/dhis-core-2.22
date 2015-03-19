@@ -250,6 +250,9 @@
 
   <!-- ProgramStage -->
 
+  <bean id="org.hisp.dhis.trackedentity.action.programstage.ShowAddProgramStageAction"
+    class="org.hisp.dhis.trackedentity.action.programstage.ShowAddProgramStageAction" />
+
   <bean
     id="org.hisp.dhis.trackedentity.action.programstage.AddProgramStageAction"
     class="org.hisp.dhis.trackedentity.action.programstage.AddProgramStageAction"

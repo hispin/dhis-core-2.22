@@ -31,59 +31,55 @@ package org.hisp.dhis.trackedentity.action.programstage;
 import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.constant.Constant;
+import org.hisp.dhis.constant.ConstantService;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
+import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
+import org.hisp.dhis.oust.manager.SelectionTreeManager;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
-import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.program.ProgramStageDataElement;
-import org.hisp.dhis.program.ProgramStageService;
-import org.hisp.dhis.system.util.AttributeUtils;
+import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author Abyot Asalefew Gizaw
- * @version $Id$
- * @modified Tran Thanh Tri
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class GetProgramStageAction
+public class ShowAddProgramStageAction
     implements Action
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private ProgramStageService programStageService;
+    @Autowired
+    private ProgramService programService;
 
-    public void setProgramStageService( ProgramStageService programStageService )
-    {
-        this.programStageService = programStageService;
-    }
+    @Autowired
+    private SelectionTreeManager selectionTreeManager;
 
+    @Autowired
     private UserGroupService userGroupService;
 
-    public void setUserGroupService( UserGroupService userGroupService )
-    {
-        this.userGroupService = userGroupService;
-    }
-
+    @Autowired
     private PeriodService periodService;
-
-    public void setPeriodService( PeriodService periodService )
-    {
-        this.periodService = periodService;
-    }
 
     @Autowired
     private ProgramIndicatorService programIndicatorService;
+
+    @Autowired
+    private ConstantService constantService;
 
     @Autowired
     private AttributeService attributeService;
@@ -104,18 +100,37 @@ public class GetProgramStageAction
         this.id = id;
     }
 
-    private ProgramStage programStage;
+    private Program program;
 
-    public ProgramStage getProgramStage()
+    public Program getProgram()
     {
-        return programStage;
+        return program;
     }
 
-    private Collection<ProgramStageDataElement> programStageDataElements;
+    private List<OrganisationUnitLevel> levels;
 
-    public Collection<ProgramStageDataElement> getProgramStageDataElements()
+    public List<OrganisationUnitLevel> getLevels()
     {
-        return programStageDataElements;
+        return levels;
+    }
+
+    private List<OrganisationUnitGroup> groups;
+
+    public List<OrganisationUnitGroup> getGroups()
+    {
+        return groups;
+    }
+
+    private Integer level;
+
+    public Integer getLevel()
+    {
+        return level;
+    }
+
+    public void setLevel( Integer level )
+    {
+        this.level = level;
     }
 
     private List<UserGroup> userGroups;
@@ -125,16 +140,18 @@ public class GetProgramStageAction
         return userGroups;
     }
 
-    public void setUserGroups( List<UserGroup> userGroups )
-    {
-        this.userGroups = userGroups;
-    }
-
     private List<ProgramIndicator> programIndicators;
 
     public List<ProgramIndicator> getProgramIndicators()
     {
         return programIndicators;
+    }
+
+    private List<Constant> constants;
+
+    public List<Constant> getConstants()
+    {
+        return constants;
     }
 
     private List<PeriodType> periodTypes = new ArrayList<>();
@@ -151,13 +168,6 @@ public class GetProgramStageAction
         return attributes;
     }
 
-    private Map<Integer, String> attributeValues = new HashMap<>();
-
-    public Map<Integer, String> getAttributeValues()
-    {
-        return attributeValues;
-    }
-
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -166,23 +176,22 @@ public class GetProgramStageAction
     public String execute()
         throws Exception
     {
-        programStage = programStageService.getProgramStage( id );
-
-        if ( programStage == null )
-        {
-            return INPUT;
-        }
-
         periodTypes = periodService.getAllPeriodTypes();
 
-        programStageDataElements = programStage.getProgramStageDataElements();
+        program = programService.getProgram( id );
+
+        selectionTreeManager.setSelectedOrganisationUnits( program.getOrganisationUnits() );
 
         userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
 
-        programIndicators = new ArrayList<>( programIndicatorService.getProgramIndicators( programStage.getProgram() ) );
-        programIndicators.removeAll( programStage.getProgramIndicators() );
+        programIndicators = new ArrayList<>( programIndicatorService.getProgramIndicators( program ) );
 
-        attributeValues = AttributeUtils.getAttributeValueMap( programStage.getAttributeValues() );
+        Collections.sort( programIndicators, IdentifiableObjectNameComparator.INSTANCE );
+
+        constants = new ArrayList<>( constantService.getAllConstants() );
+
+        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
+
         attributes = new ArrayList<>( attributeService.getProgramStageAttributes() );
 
         return SUCCESS;

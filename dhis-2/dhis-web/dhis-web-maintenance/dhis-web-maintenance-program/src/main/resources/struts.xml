@@ -300,7 +300,7 @@
     </action>
 
     <action name="showAddProgramStageForm"
-      class="org.hisp.dhis.trackedentity.action.program.GetProgramAction">
+      class="org.hisp.dhis.trackedentity.action.programstage.ShowAddProgramStageAction">
       <result name="input" type="velocity-xml">
         /dhis-web-commons/ajax/xmlResponseInput.vm
       </result>
