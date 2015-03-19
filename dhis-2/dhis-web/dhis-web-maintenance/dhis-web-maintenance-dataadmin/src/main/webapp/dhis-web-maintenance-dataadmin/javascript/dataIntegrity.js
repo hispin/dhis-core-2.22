@@ -16,7 +16,7 @@ var checkFinishedTimeout = null;
 
 function pollDataIntegrityCheckFinished() {
     pingNotifications( 'DATAINTEGRITY', 'notificationsTable', function() {
-        $.getJSON( "../../api/system/taskSummaries/dataintegrity", {}, function( json ) {
+        $.getJSON( "../api/system/taskSummaries/dataintegrity", {}, function( json ) {
             hideLoader();
             $( "#di-title" ).hide();
             $( "#di-completed" ).show();
