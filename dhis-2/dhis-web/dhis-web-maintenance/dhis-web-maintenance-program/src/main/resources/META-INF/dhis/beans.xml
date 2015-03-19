@@ -75,7 +75,7 @@
 		id="org.hisp.dhis.trackedentity.action.trackedentityattribute.AddAttributeAction"
 		class="org.hisp.dhis.trackedentity.action.trackedentityattribute.AddAttributeAction"
 		scope="prototype">
-		<property name="attributeService"
+		<property name="trackedEntityAttributeService"
 			ref="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
 	</bean>
 
@@ -91,7 +91,7 @@
 		id="org.hisp.dhis.trackedentity.action.trackedentityattribute.UpdateAttributeAction"
 		class="org.hisp.dhis.trackedentity.action.trackedentityattribute.UpdateAttributeAction"
 		scope="prototype">
-		<property name="attributeService"
+		<property name="trackedEntityAttributeService"
 			ref="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
 	</bean>
 

@@ -29,14 +29,18 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
  */
 
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.period.PeriodService;
+import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
+
+import java.util.List;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -55,11 +59,11 @@ public class UpdateAttributeAction
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private TrackedEntityAttributeService attributeService;
+    private TrackedEntityAttributeService trackedEntityAttributeService;
 
-    public void setAttributeService( TrackedEntityAttributeService attributeService )
+    public void setTrackedEntityAttributeService( TrackedEntityAttributeService trackedEntityAttributeService )
     {
-        this.attributeService = attributeService;
+        this.trackedEntityAttributeService = trackedEntityAttributeService;
     }
 
     @Autowired
@@ -70,6 +74,9 @@ public class UpdateAttributeAction
 
     @Autowired
     private LegendService legendService;
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -166,6 +173,13 @@ public class UpdateAttributeAction
         this.confidential = confidential;
     }
     
+    private List<String> jsonAttributeValues;
+
+    public void setJsonAttributeValues( List<String> jsonAttributeValues )
+    {
+        this.jsonAttributeValues = jsonAttributeValues;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -174,24 +188,24 @@ public class UpdateAttributeAction
     public String execute()
         throws Exception
     {
-        TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( id );
+        TrackedEntityAttribute trackedEntityAttribute = trackedEntityAttributeService.getTrackedEntityAttribute( id );
 
-        attribute.setName( name );
-        attribute.setShortName( shortName );
-        attribute.setCode( StringUtils.isEmpty( code.trim() ) ? null : code );
-        attribute.setDescription( description );
-        attribute.setValueType( valueType );
-        attribute.setExpression( expression );
-        attribute.setDisplayOnVisitSchedule( false );
+        trackedEntityAttribute.setName( name );
+        trackedEntityAttribute.setShortName( shortName );
+        trackedEntityAttribute.setCode( StringUtils.isEmpty( code.trim() ) ? null : code );
+        trackedEntityAttribute.setDescription( description );
+        trackedEntityAttribute.setValueType( valueType );
+        trackedEntityAttribute.setExpression( expression );
+        trackedEntityAttribute.setDisplayOnVisitSchedule( false );
 
         unique = (unique == null) ? false : true;
-        attribute.setUnique( unique );
+        trackedEntityAttribute.setUnique( unique );
 
         inherit = (inherit == null) ? false : true;
-        attribute.setInherit( inherit );
+        trackedEntityAttribute.setInherit( inherit );
 
         confidential = (confidential == null) ? false : true;
-        attribute.setConfidential( confidential );
+        trackedEntityAttribute.setConfidential( confidential );
 
         if ( unique )
         {
@@ -207,20 +221,26 @@ public class UpdateAttributeAction
                 programScope = true;
             }
 
-            attribute.setOrgunitScope( orgunitScope );
-            attribute.setProgramScope( programScope );
+            trackedEntityAttribute.setOrgunitScope( orgunitScope );
+            trackedEntityAttribute.setProgramScope( programScope );
         }
         else if ( valueType.equals( TrackedEntityAttribute.TYPE_OPTION_SET ) )
         {
-            attribute.setOptionSet( optionService.getOptionSet( optionSetId ) );
+            trackedEntityAttribute.setOptionSet( optionService.getOptionSet( optionSetId ) );
         }
 
         if ( legendSetId != null )
         {
-            attribute.setLegendSet( legendService.getLegendSet( legendSetId ) );
+            trackedEntityAttribute.setLegendSet( legendService.getLegendSet( legendSetId ) );
         }
 
-        attributeService.updateTrackedEntityAttribute( attribute );
+        if ( jsonAttributeValues != null )
+        {
+            AttributeUtils.updateAttributeValuesFromJson( trackedEntityAttribute.getAttributeValues(), jsonAttributeValues,
+                attributeService );
+        }
+
+        trackedEntityAttributeService.updateTrackedEntityAttribute( trackedEntityAttribute );
 
         return SUCCESS;
     }
