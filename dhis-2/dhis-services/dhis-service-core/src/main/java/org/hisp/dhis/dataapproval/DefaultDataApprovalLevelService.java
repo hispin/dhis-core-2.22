@@ -306,10 +306,10 @@ public class DefaultDataApprovalLevelService
                 
                 // Get new values of assignedAtLevel and approvableAtLevel for the current approval level.
                 
-                assignedAtLevel = canReadThisLevel && ( userOrgUnitLevels.contains( approvalLevel.getOrgUnitLevel() )
+                assignedAtLevel = canReadThisLevel && ( ( mayApprove && userOrgUnitLevels.contains( approvalLevel.getOrgUnitLevel() ) )
                         || ( ( mayApproveAtLowerLevels || mayAcceptAtLowerLevels ) && approvalLevel.getOrgUnitLevel() > lowestNumberOrgUnitLevel ) );
 
-                approvableAtLevel = canReadThisLevel && ( ( mayApprove && assignedAtLevel ) || approvableAtAllLowerLevels );
+                approvableAtLevel = canReadThisLevel && ( assignedAtLevel || approvableAtAllLowerLevels );
                 
                 // Test using assignedAtLevel and approvableAtLevel values from the current level.
                 
