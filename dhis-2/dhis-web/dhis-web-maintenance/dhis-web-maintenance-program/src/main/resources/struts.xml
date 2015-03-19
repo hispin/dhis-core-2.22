@@ -1215,7 +1215,7 @@
       <param name="requiredAuthorities">F_TRACKED_ENTITY_MANAGEMENT</param>
     </action>
 
-    <action name="showAddTrackedEntityForm" class="org.hisp.dhis.trackedentity.action.NoAction">
+    <action name="showAddTrackedEntityForm" class="org.hisp.dhis.trackedentity.action.trackedentity.ShowAddUpdateTrackedEntityAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/addTrackedEntity.vm</param>
       <param name="javascripts">javascript/trackedEntity.js</param>
@@ -1230,7 +1230,7 @@
     </action>
 
     <action name="showUpdateTrackedEntityForm"
-      class="org.hisp.dhis.trackedentity.action.trackedentity.GetTrackedEntityAction">
+      class="org.hisp.dhis.trackedentity.action.trackedentity.ShowAddUpdateTrackedEntityAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/updateTrackedEntity.vm</param>
       <param name="javascripts">javascript/trackedEntity.js</param>
