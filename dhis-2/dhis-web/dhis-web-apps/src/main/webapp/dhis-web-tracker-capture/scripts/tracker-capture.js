@@ -1,3 +1,5 @@
+/* global dhis2 */
+
 dhis2.util.namespace('dhis2.tc');
 
 // whether current user has any organisation units
@@ -13,6 +15,7 @@ var i18n_sync_failed = 'Upload to server failed, please try again later';
 var i18n_uploading_data_notification = 'Uploading locally stored data to the server';
 
 var optionSetsInPromise = [];
+var attributesInPromise = [];
 
 dhis2.tc.store = null;
 dhis2.tc.memoryOnly = $('html').hasClass('ie7') || $('html').hasClass('ie8');
@@ -415,9 +418,9 @@ function getOptionSetsForDataElements( programs )
                             build = build.then(function() {
                                 var d = $.Deferred();
                                 var p = d.promise();
-                                dhis2.tc.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {                            
-                                    if((!obj || obj.version !== prStDe.dataElement.optionSet.version) && !optionSetsInPromise[prStDe.dataElement.optionSet.id]) {                                
-                                        optionSetsInPromise[prStDe.dataElement.optionSet.id] = prStDe.dataElement.optionSet.id;                                
+                                dhis2.tc.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {                                    
+                                    if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetsInPromise.indexOf(prStDe.dataElement.optionSet.id) === -1) {                                
+                                        optionSetsInPromise.push( prStDe.dataElement.optionSet.id );
                                         promise = promise.then( getOptionSet( prStDe.dataElement.optionSet.id ) );
                                     }
                                     d.resolve();
@@ -624,7 +627,8 @@ function getTrackedEntityAttributes( data )
             var d = $.Deferred();
             var p = d.promise();
             dhis2.tc.store.get('attributes', teAttribute.id).done(function(obj) {
-                if(!obj || obj.version !== teAttribute.version) {
+                if((!obj || obj.version !== teAttribute.version) && attributesInPromise.indexOf(teAttribute.id) === -1) {
+                    attributesInPromise.push( teAttribute.id );
                     promise = promise.then( getAttribute( teAttribute.id ) );
                 }
                 d.resolve();
@@ -654,7 +658,7 @@ function getAttribute( id )
         return $.ajax( {
             url: '../api/trackedEntityAttributes.json',
             type: 'GET',
-            data: 'filter=id:eq:' + id +'&fields=id,name,code,version,description,valueType,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version]'
+            data: 'filter=id:eq:' + id +'&paging=false&fields=id,name,code,version,description,valueType,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version]'
         }).done( function( response ){            
             _.each( _.values( response.trackedEntityAttributes ), function( teAttribute ) {
                 dhis2.tc.store.set( 'attributes', teAttribute );
@@ -685,8 +689,8 @@ function getOptionSetsForAttributes( data )
                 var d = $.Deferred();
                 var p = d.promise();
                 dhis2.tc.store.get('optionSets', teAttribute.optionSet.id).done(function(obj) {                            
-                    if((!obj || obj.version !== teAttribute.optionSet.version) && !optionSetsInPromise[teAttribute.optionSet.id]) {                                
-                        optionSetsInPromise[teAttribute.optionSet.id] = teAttribute.optionSet.id;                                
+                    if((!obj || obj.version !== teAttribute.optionSet.version) && optionSetsInPromise.indexOf(teAttribute.optionSet.id) === -1) {                                
+                        optionSetsInPromise.push(teAttribute.optionSet.id);
                         promise = promise.then( getOptionSet( teAttribute.optionSet.id ) );
                     }
                     d.resolve();
