@@ -120,7 +120,7 @@ trackerCapture.controller('TeiReportController',
                         providedElsewhereExists = true;
                         $scope.allowProvidedElsewhereExists[st.id] = true;
                     }                
-                }            
+                }
             });
         });
         

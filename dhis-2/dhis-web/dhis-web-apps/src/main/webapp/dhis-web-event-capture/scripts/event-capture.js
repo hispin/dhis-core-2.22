@@ -32,17 +32,6 @@ dhis2.ec.store = new dhis2.storage.Store({
     objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'ouLevels']
 });
 
-(function($) {
-    $.safeEach = function(arr, fn)
-    {
-        if (arr)
-        {
-            $.each(arr, fn);
-        }
-    };
-})(jQuery);
-
-
 /**
  * Page init. The order of events is:
  *
