@@ -43,28 +43,28 @@ public interface AttributeService
 
     /**
      * Adds an attribute.
-     * 
+     *
      * @param attribute the attribute.
      */
     void addAttribute( Attribute attribute );
 
     /**
      * Updates an attribute.
-     * 
+     *
      * @param attribute the attribute.
      */
     void updateAttribute( Attribute attribute );
 
     /**
      * Deletes an attribute.
-     * 
+     *
      * @param attribute the attribute.
      */
     void deleteAttribute( Attribute attribute );
 
     /**
      * Gets the attribute with the given id.
-     * 
+     *
      * @param id the attribute id.
      * @return the attribute with the given id.
      */
@@ -72,7 +72,7 @@ public interface AttributeService
 
     /**
      * Gets the attribute with the given uid.
-     * 
+     *
      * @param id the attribute uid.
      * @return the attribute with the given uid.
      */
@@ -80,7 +80,7 @@ public interface AttributeService
 
     /**
      * Gets the attribute with the given name.
-     * 
+     *
      * @param name the name.
      * @return the attribute with the given name.
      */
@@ -96,35 +96,35 @@ public interface AttributeService
 
     /**
      * Gets all attributes.
-     * 
+     *
      * @return a set of all attributes.
      */
     Set<Attribute> getAllAttributes();
 
     /**
      * Gets attributes which are associated with data elements.
-     * 
+     *
      * @return a set of attributes associated with data elements.
      */
     Set<Attribute> getDataElementAttributes();
 
     /**
      * Gets attributes which are associated with data element groups.
-     * 
+     *
      * @return a set of attributes associated with data element groups.
      */
     Set<Attribute> getDataElementGroupAttributes();
 
     /**
      * Gets attributes which are associated with indicators.
-     * 
+     *
      * @return a set of attributes associated with indicators.
      */
     Set<Attribute> getIndicatorAttributes();
 
     /**
      * Gets attributes which are associated with data elements.
-     * 
+     *
      * @return a set of attributes associated with data elements.
      */
     Set<Attribute> getIndicatorGroupAttributes();
@@ -138,14 +138,14 @@ public interface AttributeService
 
     /**
      * Gets attributes which are associated with organisation units.
-     * 
+     *
      * @return a set of attributes associated with organisation units.
      */
     Set<Attribute> getOrganisationUnitAttributes();
 
     /**
      * Gets attributes which are associated with organisation unit groups.
-     * 
+     *
      * @return a set of attributes associated with organisation unit groups.
      */
     Set<Attribute> getOrganisationUnitGroupAttributes();
@@ -159,14 +159,14 @@ public interface AttributeService
 
     /**
      * Gets attributes which are associated with users.
-     * 
+     *
      * @return a set of attributes which are associated with users.
      */
     Set<Attribute> getUserAttributes();
 
     /**
      * Gets attributes which are associated with user groups.
-     * 
+     *
      * @return a set of attributes which are associated with user groups.
      */
     Set<Attribute> getUserGroupAttributes();
@@ -179,15 +179,36 @@ public interface AttributeService
     Set<Attribute> getProgramAttributes();
 
     /**
+     * Gets attributes which are associated with program stages.
+     *
+     * @return a set of attributes which are associated with programs.
+     */
+    Set<Attribute> getProgramStageAttributes();
+
+    /**
+     * Gets attributes which are associated with tracked entities.
+     *
+     * @return a set of attributes which are associated with programs.
+     */
+    Set<Attribute> getTrackedEntityAttributes();
+
+    /**
+     * Gets attributes which are associated with programs.
+     *
+     * @return a set of attributes which are associated with programs.
+     */
+    Set<Attribute> getTrackedEntityAttributeAttributes();
+
+    /**
      * Gets the number of attributes.
-     * 
+     *
      * @return the number of attributes.
      */
     int getAttributeCount();
 
     /**
      * Gets the number of attributes with the given name.
-     * 
+     *
      * @return the number of attributes with the given name.
      */
     int getAttributeCountByName( String name );
@@ -202,28 +223,28 @@ public interface AttributeService
 
     /**
      * Adds an attribute value.
-     * 
+     *
      * @param attributeValue the attribute value.
      */
     void addAttributeValue( AttributeValue attributeValue );
 
     /**
      * Updates an attribute value.
-     * 
+     *
      * @param attributeValue the attribute value.
      */
     void updateAttributeValue( AttributeValue attributeValue );
 
     /**
      * Deletes an attribute value.
-     * 
+     *
      * @param attributeValue the attribute value.
      */
     void deleteAttributeValue( AttributeValue attributeValue );
 
     /**
      * Gets the attribute value with the given id.
-     * 
+     *
      * @param id the id.
      * @return the attribute value with the given id.
      */
@@ -231,14 +252,14 @@ public interface AttributeService
 
     /**
      * Gets all attribute values.
-     * 
+     *
      * @return a set with all attribute values.
      */
     Set<AttributeValue> getAllAttributeValues();
 
     /**
      * Gets the number of attribute values.
-     * 
+     *
      * @return the number of attribute values.
      */
     int getAttributeValueCount();
