@@ -1,4 +1,3 @@
-<script type="text/javascript" src="javascript/updateProgramStageForm.js"></script>
 <script>
 	var i18n_characters_without_params = '$encoder.jsEscape( $i18n.getString( "characters_without_params" ) , "'")';
 	var program_stage_SMS_reminder_form ="<select type='text' id='userGroup$index' name='userGroup$index' class='userGroup'>";
@@ -7,6 +6,110 @@
 	#end
 	program_stage_SMS_reminder_form +="</select>";
 </script>
+
+<script>
+  jQuery(document).ready(function() {
+    validation2( 'updateProgramStageForm', function( form )
+   	{
+   		form.submit();
+   	},{
+   		'beforeValidateHandler' : function()
+   		{
+        #tblDynamicAttributesJavascript()
+
+   			selectAllById('selectedIndicators');
+
+   			var periodType = byId('periodTypeName').value;
+   			if( periodType != ''){
+   				setFieldValue('standardInterval','');
+   			}
+
+   			/*var customStandardInterval = byId('customStandardInterval').checked;
+   			if( customStandardInterval ){
+   				setFieldValue('periodTypeName','');
+   			}
+   			else{
+   				setFieldValue('standardInterval','');
+   			}*/
+
+   			var selectedDataElementsValidator = jQuery( "#selectedDataElementsValidator" );
+   			selectedDataElementsValidator.empty();
+
+   			var compulsories = jQuery( "#compulsories" );
+   			compulsories.empty();
+
+   			var displayInReports = jQuery( "#displayInReports" );
+   			displayInReports.empty();
+
+   			var daysAllowedSendMessages = jQuery( "#daysAllowedSendMessages" );
+   			daysAllowedSendMessages.empty();
+
+   			var allowFutureDates = jQuery( "#allowFutureDates" );
+   			allowFutureDates.empty();
+
+   			var templateMessages = jQuery( "#templateMessages" );
+   			templateMessages.empty();
+
+   			var allowProvidedElsewhere = jQuery( "#allowProvidedElsewhere" );
+   			allowProvidedElsewhere.empty();
+
+   			var sendTo = jQuery( "#sendTo" );
+   			sendTo.empty();
+
+   			var whenToSend = jQuery( "#whenToSend" );
+   			whenToSend.empty();
+
+   			var userGroup = jQuery( "#userGroup" );
+   			userGroup.empty();
+
+   			var messageType = jQuery( "#messageType" );
+   			messageType.empty();
+
+   			jQuery("#selectedList").find("tr").each( function( i, item ){
+
+   				selectedDataElementsValidator.append( "<option value='" + item.id + "' selected='true'>" + item.id + "</option>" );
+
+   				var compulsory = jQuery( item ).find( "input[name='compulsory']:first");
+   				var checked = compulsory.attr('checked') ? true : false;
+   				compulsories.append( "<option value='" + checked + "' selected='true'>" + checked + "</option>" );
+
+   				var allowProvided = jQuery( item ).find( "input[name='allowProvided']:first");
+   				checked = allowProvided.attr('checked') ? true : false;
+   				allowProvidedElsewhere.append( "<option value='" + checked + "' selected='true'>" + checked + "</option>" );
+
+   				var displayInReport = jQuery( item ).find( "input[name='displayInReport']:first");
+   				checked = displayInReport.attr('checked') ? true : false;
+   				displayInReports.append( "<option value='" + checked + "' selected='true'><" + checked + "/option>" );
+
+   				var allowFutureDate = jQuery( item ).find( "input[name='allowFutureDate']:first");
+   				checked = allowFutureDate.attr('checked') ? true : false;
+   				allowFutureDates.append( "<option value='" + checked + "' selected='true'>" + checked + "</option>" );
+   			});
+   			jQuery(".daysAllowedSendMessage").each( function( i, item ){
+   				var days = (jQuery(item).attr('realvalue')==undefined) ? 0 : jQuery(item).attr('realvalue');
+   				daysAllowedSendMessages.append( "<option value='" + days + "' selected='true'>" + days + "</option>" );
+   			});
+   			jQuery(".templateMessage").each( function( i, item ){
+   				templateMessages.append( "<option value='" + item.value + "' selected='true'>" + item.value + "</option>" );
+   			});
+   			jQuery(".sendTo").each( function( i, item ){
+   				sendTo.append( "<option value='" + item.value + "' selected='true'>" + item.value + "</option>" );
+   			});
+   			jQuery(".whenToSend").each( function( i, item ){
+   				whenToSend.append( "<option value='" + item.value + "' selected='true'>" + item.value + "</option>" );
+   			});
+   			jQuery(".messageType").each( function( i, item ){
+   				messageType.append( "<option value='" + item.value + "' selected='true'>" + item.value + "</option>" );
+   			});
+   			jQuery(".userGroup").each( function( i, item ){
+   				userGroup.append( "<option value='" + item.value + "' selected='true'>" + item.value + "</option>" );
+   			});
+   		},
+   		'rules' : getValidationRules( "programStage" )
+   	});
+  });
+</script>
+<script type="text/javascript" src="javascript/updateProgramStageForm.js"></script>
 
 <h3>$i18n.getString( "edit_program_stage" ) #openHelp( "program_stage_information" )</h3>
 
@@ -171,6 +274,8 @@
 		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 	</table>
 
+  #tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
+
 	<table id="programStageMembersArea">
 		<colgroup>
 			<col style="width:550px;"/>
@@ -295,18 +400,16 @@
 	</tr> 
 </table>
 
-	<p>
-		<input type="submit" value="$i18n.getString( 'update' )" style="width:10em">
-		<input type="button" value="$i18n.getString( 'cancel' )" onclick="window.location.href='programStage.action?id=$programStage.program.id'" style="width:10em"/>
-	</p>
+<p>
+  <input type="submit" value="$i18n.getString( 'update' )" style="width:10em">
+  <input type="button" value="$i18n.getString( 'cancel' )" onclick="window.location.href='programStage.action?id=$programStage.program.id'" style="width:10em"/>
+</p>
 
 </form> 	
 
 <script type="text/javascript">     
-    
 	var attrOptions = "";
 	#foreach($programAttribute in $programStage.program.programAttributes)
 		attrOptions+="<option value={attributeid=$programAttribute.attribute.uid}>$programAttribute.attribute.displayName</option>";
 	#end
-	
 </script>
