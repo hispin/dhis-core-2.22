@@ -29,6 +29,8 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import org.hisp.dhis.common.CodeGenerator;
+import org.hisp.dhis.dataintegrity.DataIntegrityReport;
+import org.hisp.dhis.dataintegrity.FlattenedDataIntegrityReport;
 import org.hisp.dhis.dxf2.metadata.ImportSummary;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.node.exception.InvalidTypeException;
@@ -123,8 +125,6 @@ public class SystemController
     @RequestMapping( value = "/taskSummaries/{category}", method = RequestMethod.GET, produces = { "*/*", "application/json" } )
     public void getTaskSummaryJson( HttpServletResponse response, @PathVariable( "category" ) String category ) throws IOException
     {
-        ImportSummary importSummary = new ImportSummary();
-
         if ( category != null )
         {
             TaskCategory taskCategory = TaskCategory.valueOf( category.toUpperCase() );
@@ -132,14 +132,22 @@ public class SystemController
             TaskId taskId = new TaskId( taskCategory, currentUserService.getCurrentUser() );
 
             // TODO Support DataIntegrityReport (make task summary generic).
-            if ( !taskCategory.equals( TaskCategory.DATAINTEGRITY ) )
+            // TODO Also avoid null pointer on fetching unfinished task
+            if ( taskCategory.equals( TaskCategory.DATAINTEGRITY ) )
             {
-                importSummary = (ImportSummary) notifier.getTaskSummary( taskId );
-                notifier.clear( taskId );
+                DataIntegrityReport dataIntegrityReport = (DataIntegrityReport) notifier.getTaskSummary( taskId );
+                JacksonUtils.toJson( response.getOutputStream(), new FlattenedDataIntegrityReport( dataIntegrityReport ) );
+                return;
+            }
+            else
+            {
+                ImportSummary importSummary = (ImportSummary) notifier.getTaskSummary( taskId );
+                JacksonUtils.toJson( response.getOutputStream(), importSummary );
+                return;
             }
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), importSummary );
+        JacksonUtils.toJson( response.getOutputStream(), new ImportSummary() );
     }
 
     @RequestMapping( value = "/info", method = RequestMethod.GET, produces = { "application/json", "application/javascript" } )
