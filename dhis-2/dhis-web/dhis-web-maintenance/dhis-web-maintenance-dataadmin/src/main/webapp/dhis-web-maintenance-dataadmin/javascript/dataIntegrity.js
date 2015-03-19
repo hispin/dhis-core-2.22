@@ -16,7 +16,7 @@ var checkFinishedTimeout = null;
 
 function pollDataIntegrityCheckFinished() {
     pingNotifications( 'DATAINTEGRITY', 'notificationsTable', function() {
-        $.getJSON( "getDataIntegrityReport.action", {}, function( json ) {
+        $.getJSON( "../../api/system/taskSummaries/dataintegrity", {}, function( json ) {
             hideLoader();
             $( "#di-title" ).hide();
             $( "#di-completed" ).show();
@@ -28,56 +28,105 @@ function pollDataIntegrityCheckFinished() {
 }
 
 function populateIntegrityItems( json ) {
-    displayViolationList( json.dataElementsWithoutDataSet, "dataElementsWithoutDataSet", false );
-    displayViolationList( json.dataElementsWithoutGroups, "dataElementsWithoutGroups", false );
-    displayViolationList( json.dataElementsViolatingExclusiveGroupSets, "dataElementsViolatingExclusiveGroupSets", true );
-    displayViolationList( json.dataElementsInDataSetNotInForm, "dataElementsInDataSetNotInForm", true );
-    displayViolationList( json.dataElementsAssignedToDataSetsWithDifferentPeriodTypes, "dataElementsAssignedToDataSetsWithDifferentPeriodTypes", true );
-    displayViolationList( json.categoryOptionCombosNotInDataElementCategoryCombo, "categoryOptionCombosNotInDataElementCategoryCombo", true );
-    displayViolationList( json.dataSetsNotAssignedToOrganisationUnits, "dataSetsNotAssignedToOrganisationUnits", false );
-    displayViolationList( json.sectionsWithInvalidCategoryCombinations, "sectionsWithInvalidCategoryCombinations", false );
-    displayViolationList( json.indicatorsWithIdenticalFormulas, "indicatorsWithIdenticalFormulas", false );
-    displayViolationList( json.indicatorsWithoutGroups, "indicatorsWithoutGroups", false );
-    displayViolationList( json.invalidIndicatorNumerators, "invalidIndicatorNumerators", true );
-    displayViolationList( json.invalidIndicatorDenominators, "invalidIndicatorDenominators", true );
-    displayViolationList( json.indicatorsViolatingExclusiveGroupSets, "indicatorsViolatingExclusiveGroupSets", true );
-    displayViolationList( json.organisationUnitsWithCyclicReferences, "organisationUnitsWithCyclicReferences", false );
-    displayViolationList( json.orphanedOrganisationUnits, "orphanedOrganisationUnits", false );
-    displayViolationList( json.organisationUnitsWithoutGroups, "organisationUnitsWithoutGroups", false );
-    displayViolationList( json.organisationUnitsViolatingExclusiveGroupSets, "organisationUnitsViolatingExclusiveGroupSets", true );
-    displayViolationList( json.organisationUnitGroupsWithoutGroupSets, "organisationUnitGroupsWithoutGroupSets", false );
-    displayViolationList( json.duplicatePeriods, "duplicatePeriods", false );
-    displayViolationList( json.validationRulesWithoutGroups, "validationRulesWithoutGroups", false );
-    displayViolationList( json.invalidValidationRuleLeftSideExpressions, "invalidValidationRuleLeftSideExpressions", true );
-    displayViolationList( json.invalidValidationRuleRightSideExpressions, "invalidValidationRuleRightSideExpressions", true );
-}
 
-function displayViolationList( list, id, lineBreak ) {
-    var $button = $( "#" + id + "Button" );
-    var $container = $( "#" + id + "Div" );
+    // Render functions
 
-    if ( list.length > 0 ) {
-        // Display image "drop-down" button
-        $button
-           .attr( { src: "../images/down.png", title: "View violations" } )
-           .css( { cursor: "pointer" } )
-           .click( function() { $container.slideToggle( "fast" ); } );
+    var asMap = function( obj, lineBreak ) {
+        var violationsText = "";
 
-        // Populate violation div
-        var violations = "";
-        
-        for ( var i = 0; i < list.length; i++ ) {
-            violations += list[i] + "<br>";
-            violations += !!lineBreak ? "<br>" : "";
+        for ( var o in obj ) {
+            if ( obj.hasOwnProperty( o ) ) {
+                violationsText += o + ": " + obj[o];
+                violationsText += "<br>" + ( !!lineBreak ? "<br>" : "" );
+            }
         }
-        
-        $container.html( violations );
-    }
-    else
-    {
-        // Display image "check" button
-        $button.attr({ src: "../images/check.png", title: "No violations" });
-    }
-        
-    $container.hide();
+
+        return violationsText;
+    };
+
+    var asListList = function( obj, lineBreak ) {
+        var violationsText = "";
+
+        obj.forEach( function( o ) {
+            o.forEach( function( s ) {
+                violationsText += s + ", ";
+            } );
+            violationsText += "<br>" + ( !!lineBreak ? "<br>" : "" );
+        } );
+
+        return violationsText;
+    };
+
+    var asMapList = function( obj, lineBreak ) {
+        var violationsText = "";
+
+        for ( var o in obj ) {
+            if( obj.hasOwnProperty( o ) ) {
+                violationsText += o + ": ";
+                obj[o].forEach( function( s ) {
+                    violationsText += s + ", ";
+                } );
+                violationsText += "<br>" + ( !!lineBreak ? "<br>" : "" );
+            }
+        }
+
+        return violationsText;
+    };
+
+    var asList = function( list, lineBreak ) {
+        var violationsText = "";
+
+        list.forEach( function( violation ) {
+            violationsText += violation + "<br>" + ( !!lineBreak ? "<br>" : "" );
+        } );
+
+        return violationsText;
+    };
+
+    // Displays an item using the selected renderer function
+
+    var displayViolation = function( obj, id, lineBreak, renderFunc ) {
+
+        var $button = $( "#" + id + "Button" );
+        var $container = $( "#" + id + "Div" );
+
+        if ( typeof obj !== "undefined" ) {
+            $button
+                .attr( { src: "../images/down.png", title: "View violations" } )
+                .css( { cursor: "pointer" } )
+                .click( function() { $container.slideToggle( "fast" ); } );
+
+            $container.html( renderFunc( obj, lineBreak ) );
+
+        } else {
+            $button.attr({ src: "../images/check.png", title: "No violations" } );
+        }
+
+        $container.hide();
+    };
+
+    // Display each reported item
+
+    displayViolation( json.dataElementsWithoutDataSet, "dataElementsWithoutDataSet", false, asList );
+    displayViolation( json.dataElementsWithoutGroups, "dataElementsWithoutGroups", false, asList );
+    displayViolation( json.dataElementsViolatingExclusiveGroupSets, "dataElementsViolatingExclusiveGroupSets", true, asMapList );
+    displayViolation( json.dataElementsInDataSetNotInForm, "dataElementsInDataSetNotInForm", true, asMapList );
+    displayViolation( json.dataElementsAssignedToDataSetsWithDifferentPeriodTypes, "dataElementsAssignedToDataSetsWithDifferentPeriodTypes", true, asMapList );
+    displayViolation( json.categoryOptionCombosNotInDataElementCategoryCombo, "categoryOptionCombosNotInDataElementCategoryCombo", true, asMapList );
+    displayViolation( json.dataSetsNotAssignedToOrganisationUnits, "dataSetsNotAssignedToOrganisationUnits", false, asList );
+    displayViolation( json.sectionsWithInvalidCategoryCombinations, "sectionsWithInvalidCategoryCombinations", false, asList );
+    displayViolation( json.indicatorsWithIdenticalFormulas, "indicatorsWithIdenticalFormulas", false, asListList );
+    displayViolation( json.indicatorsWithoutGroups, "indicatorsWithoutGroups", false, asList );
+    displayViolation( json.invalidIndicatorNumerators, "invalidIndicatorNumerators", true, asMap );
+    displayViolation( json.invalidIndicatorDenominators, "invalidIndicatorDenominators", true, asMap );
+    displayViolation( json.indicatorsViolatingExclusiveGroupSets, "indicatorsViolatingExclusiveGroupSets", true, asMapList );
+    displayViolation( json.duplicatePeriods, "duplicatePeriods", false, asList );
+    displayViolation( json.organisationUnitsWithCyclicReferences, "organisationUnitsWithCyclicReferences", false, asList );
+    displayViolation( json.orphanedOrganisationUnits, "orphanedOrganisationUnits", false, asList );
+    displayViolation( json.organisationUnitsWithoutGroups, "organisationUnitsWithoutGroups", false, asList );
+    displayViolation( json.organisationUnitsViolatingExclusiveGroupSets, "organisationUnitsViolatingExclusiveGroupSets", true, asMapList );
+    displayViolation( json.organisationUnitGroupsWithoutGroupSets, "organisationUnitGroupsWithoutGroupSets", false, asList );
+    displayViolation( json.validationRulesWithoutGroups, "validationRulesWithoutGroups", false, asList );
+    displayViolation( json.invalidValidationRuleLeftSideExpressions, "invalidValidationRuleLeftSideExpressions", true, asMapList );
+    displayViolation( json.invalidValidationRuleRightSideExpressions, "invalidValidationRuleRightSideExpressions", true, asMapList );
 }

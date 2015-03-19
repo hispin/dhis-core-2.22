@@ -52,47 +52,47 @@ import java.util.SortedMap;
 public class DataIntegrityReport
 {
     private List<DataElement> dataElementsWithoutDataSet;
-
+    
     private List<DataElement> dataElementsWithoutGroups;
-
+    
     private Map<DataElement, Collection<DataSet>> dataElementsAssignedToDataSetsWithDifferentPeriodTypes;
-
+    
     private SortedMap<DataElement, Collection<DataElementGroup>> dataElementsViolatingExclusiveGroupSets;
 
     private SortedMap<DataSet, Collection<DataElement>> dataElementsInDataSetNotInForm;
 
     private Map<DataSet, Set<DataElementOperand>> categoryOptionCombosNotInDataElementCategoryCombo;
-
+    
     private List<DataSet> dataSetsNotAssignedToOrganisationUnits;
-
+    
     private List<Section> sectionsWithInvalidCategoryCombinations;
 
     private Collection<Collection<Indicator>> indicatorsWithIdenticalFormulas;
-
+    
     private List<Indicator> indicatorsWithoutGroups;
-
+    
     private Map<Indicator, String> invalidIndicatorNumerators;
-
+    
     private Map<Indicator, String> invalidIndicatorDenominators;
-
+    
     private SortedMap<Indicator, Collection<IndicatorGroup>> indicatorsViolatingExclusiveGroupSets;
-
+    
     private List<Period> duplicatePeriods;
-
+    
     private List<OrganisationUnit> organisationUnitsWithCyclicReferences;
-
+    
     private List<OrganisationUnit> orphanedOrganisationUnits;
-
+    
     private List<OrganisationUnit> organisationUnitsWithoutGroups;
-
+    
     private SortedMap<OrganisationUnit, Collection<OrganisationUnitGroup>> organisationUnitsViolatingExclusiveGroupSets;
-
+    
     private List<OrganisationUnitGroup> organisationUnitGroupsWithoutGroupSets;
-
+    
     private List<ValidationRule> validationRulesWithoutGroups;
-
+    
     private Map<ValidationRule, String> invalidValidationRuleLeftSideExpressions;
-
+    
     private Map<ValidationRule, String> invalidValidationRuleRightSideExpressions;
 
     //-------------------------------------------------------------------------
