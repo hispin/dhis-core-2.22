@@ -279,6 +279,9 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
   <!-- Dynamic Attributes -->
 
+  <bean id="org.hisp.dhis.dataadmin.action.attribute.ShowAddUpdateAttributeAction"
+    class="org.hisp.dhis.dataadmin.action.attribute.ShowAddUpdateAttributeAction" />
+
   <bean id="org.hisp.dhis.dataadmin.action.attribute.GetAttributeListAction"
     class="org.hisp.dhis.dataadmin.action.attribute.GetAttributeListAction"
     scope="prototype">
@@ -306,7 +309,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   <bean id="org.hisp.dhis.dataadmin.action.attribute.AddAttributeAction"
     class="org.hisp.dhis.dataadmin.action.attribute.AddAttributeAction"
     scope="prototype">
-    <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
   </bean>
 
   <bean id="org.hisp.dhis.dataadmin.action.attribute.SaveAttributeSortOrderAction"
@@ -318,7 +320,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   <bean id="org.hisp.dhis.dataadmin.action.attribute.UpdateAttributeAction"
     class="org.hisp.dhis.dataadmin.action.attribute.UpdateAttributeAction"
     scope="prototype">
-    <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
   </bean>
 
   <bean id="org.hisp.dhis.dataadmin.action.attribute.RemoveAttributeAction"
@@ -331,7 +332,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
   <bean id="org.hisp.dhis.dataadmin.action.scheduling.ScheduleTasksAction"
     class="org.hisp.dhis.dataadmin.action.scheduling.ScheduleTasksAction"
-    scope="prototype"/>
+    scope="prototype" />
 
   <!-- OptionSet -->
 
@@ -370,39 +371,39 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     scope="prototype">
     <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
   </bean>
-  
-   <!-- Option -->
+
+  <!-- Option -->
 
   <bean id="org.hisp.dhis.dataadmin.action.option.AddOptionAction"
     class="org.hisp.dhis.dataadmin.action.option.AddOptionAction"
     scope="prototype">
     <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dataadmin.action.option.RemoveOptionAction"
     class="org.hisp.dhis.dataadmin.action.option.RemoveOptionAction"
     scope="prototype">
     <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dataadmin.action.option.SortOptionsAction"
     class="org.hisp.dhis.dataadmin.action.option.SortOptionsAction"
     scope="prototype">
     <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dataadmin.action.option.UpdateOptionAction"
     class="org.hisp.dhis.dataadmin.action.option.UpdateOptionAction"
     scope="prototype">
     <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
   </bean>
-  
-   <bean id="org.hisp.dhis.dataadmin.action.option.ValidateOptionAction"
+
+  <bean id="org.hisp.dhis.dataadmin.action.option.ValidateOptionAction"
     class="org.hisp.dhis.dataadmin.action.option.ValidateOptionAction"
     scope="prototype">
     <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dataadmin.action.option.GetOptionAction"
     class="org.hisp.dhis.dataadmin.action.option.GetOptionAction"
     scope="prototype">

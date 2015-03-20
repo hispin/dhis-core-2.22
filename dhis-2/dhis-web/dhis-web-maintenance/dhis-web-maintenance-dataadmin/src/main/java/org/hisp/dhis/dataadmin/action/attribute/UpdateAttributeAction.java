@@ -28,10 +28,12 @@ package org.hisp.dhis.dataadmin.action.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
-
-import com.opensymphony.xwork2.Action;
+import org.hisp.dhis.option.OptionService;
+import org.hisp.dhis.option.OptionSet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 /**
@@ -44,12 +46,11 @@ public class UpdateAttributeAction
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private AttributeService attributeService;
 
-    public void setAttributeService( AttributeService attributeService )
-    {
-        this.attributeService = attributeService;
-    }
+    @Autowired
+    private OptionService optionService;
 
     // -------------------------------------------------------------------------
     // Input & Output
@@ -159,7 +160,7 @@ public class UpdateAttributeAction
     {
         this.userGroupAttribute = userGroupAttribute;
     }
-    
+
     private boolean programAttribute;
 
     public void setProgramAttribute( boolean programAttribute )
@@ -188,6 +189,13 @@ public class UpdateAttributeAction
         this.trackedEntityAttributeAttribute = trackedEntityAttributeAttribute;
     }
 
+    private String optionSetUid;
+
+    public void setOptionSetUid( String optionSetUid )
+    {
+        this.optionSetUid = optionSetUid;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -199,6 +207,18 @@ public class UpdateAttributeAction
 
         if ( attribute != null )
         {
+            if ( "option_set".equals( attribute.getValueType() ) )
+            {
+                OptionSet optionSet = optionService.getOptionSet( optionSetUid );
+
+                if ( optionSet == null )
+                {
+                    return INPUT;
+                }
+
+                attribute.setOptionSet( optionSet );
+            }
+
             attribute.setName( name );
             attribute.setCode( StringUtils.isEmpty( code.trim() ) ? null : code );
             attribute.setValueType( valueType );

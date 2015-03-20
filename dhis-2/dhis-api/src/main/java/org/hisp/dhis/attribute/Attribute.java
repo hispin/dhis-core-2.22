@@ -39,6 +39,7 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.option.OptionSet;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -88,6 +89,8 @@ public class Attribute
     private boolean mandatory;
 
     private Integer sortOrder;
+
+    private OptionSet optionSet;
 
     private Set<AttributeValue> attributeValues = new HashSet<>();
 
@@ -310,14 +313,17 @@ public class Attribute
         this.trackedEntityAttributeAttribute = trackedEntityAttributeAttribute;
     }
 
-    public Set<AttributeValue> getAttributeValues()
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public OptionSet getOptionSet()
     {
-        return attributeValues;
+        return optionSet;
     }
 
-    public void setAttributeValues( Set<AttributeValue> attributeValues )
+    public void setOptionSet( OptionSet optionSet )
     {
-        this.attributeValues = attributeValues;
+        this.optionSet = optionSet;
     }
 
     @JsonProperty
@@ -331,6 +337,16 @@ public class Attribute
     public void setSortOrder( Integer sortOrder )
     {
         this.sortOrder = sortOrder;
+    }
+
+    public Set<AttributeValue> getAttributeValues()
+    {
+        return attributeValues;
+    }
+
+    public void setAttributeValues( Set<AttributeValue> attributeValues )
+    {
+        this.attributeValues = attributeValues;
     }
 
     @Override
