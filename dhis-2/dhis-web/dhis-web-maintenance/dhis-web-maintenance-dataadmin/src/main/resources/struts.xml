@@ -502,14 +502,14 @@
       <param name="javascripts">javascript/attribute.js</param>
     </action>
 
-    <action name="showAddAttributeForm" class="org.hisp.dhis.dataadmin.action.NoAction">
+    <action name="showAddAttributeForm" class="org.hisp.dhis.dataadmin.action.attribute.ShowAddUpdateAttributeAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="menu">/dhis-web-maintenance-dataadmin/menu.vm</param>
       <param name="page">/dhis-web-maintenance-dataadmin/addAttributeForm.vm</param>
       <param name="requiredAuthorities">F_ATTRIBUTE_ADD</param>
     </action>
 
-    <action name="showUpdateAttributeForm" class="org.hisp.dhis.dataadmin.action.attribute.GetAttributeAction">
+    <action name="showUpdateAttributeForm" class="org.hisp.dhis.dataadmin.action.attribute.ShowAddUpdateAttributeAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="menu">/dhis-web-maintenance-dataadmin/menu.vm</param>
       <param name="page">/dhis-web-maintenance-dataadmin/updateAttributeForm.vm</param>

@@ -28,31 +28,42 @@ package org.hisp.dhis.dataadmin.action.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.option.OptionService;
+import org.hisp.dhis.option.OptionSet;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class GetAttributeAction
+public class ShowAddUpdateAttributeAction
     implements Action
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private AttributeService attributeService;
 
-    public void setAttributeService( AttributeService attributeService )
-    {
-        this.attributeService = attributeService;
-    }
+    @Autowired
+    private OptionService optionService;
 
     // -------------------------------------------------------------------------
     // Input & Output
     // -------------------------------------------------------------------------
+
+    private Integer id;
+
+    public void setId( Integer id )
+    {
+        this.id = id;
+    }
 
     private Attribute attribute;
 
@@ -61,11 +72,11 @@ public class GetAttributeAction
         return attribute;
     }
 
-    private Integer id;
+    private List<OptionSet> optionSets = new ArrayList<>();
 
-    public void setId( Integer id )
+    public List<OptionSet> getOptionSets()
     {
-        this.id = id;
+        return optionSets;
     }
 
     // -------------------------------------------------------------------------
@@ -75,8 +86,13 @@ public class GetAttributeAction
     @Override
     public String execute()
     {
-        attribute = attributeService.getAttribute( id );
-        
+        if ( id != null )
+        {
+            attribute = attributeService.getAttribute( id );
+        }
+
+        optionSets = new ArrayList<>( optionService.getAllOptionSets() );
+
         return SUCCESS;
     }
 }

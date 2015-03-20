@@ -1,18 +1,15 @@
 function onValueTypeChange( e ) {
   var val = $(this).find(":selected").val();
 
-  if( val == "multiple_choice" ) {
-    $("#memberValidator").addClass("required");
-    $("#multipleChoice").show();
-  }
-  else {
-    $("#memberValidator").removeClass("required");
-    $("#multipleChoice").hide();
+  if( val == "option_set" ) {
+    $('#optionSet').show();
+  } else {
+    $('#optionSet').hide();
   }
 }
 
 function showAttributeDetails( context ) {
-  jQuery.post('getAttribute.action', { id: context.id },
+  jQuery.post('getAttribute.action', {id: context.id},
     function( json ) {
       setInnerHTML('nameField', json.attribute.name);
       setInnerHTML('mandatoryField', json.attribute.mandatory);
