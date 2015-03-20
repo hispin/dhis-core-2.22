@@ -39,5 +39,7 @@ public interface QueryService
 
     Result query( Query query, ResultTransformer transformer );
 
+    int count( Query query );
+
     Query getQueryFromUrl( Class<?> klass, List<String> filters, List<Order> orders );
 }

@@ -74,6 +74,12 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
     }
 
     @Override
+    public int count( Query query )
+    {
+        return queryEngine.count( query );
+    }
+
+    @Override
     public Query getQueryFromUrl( Class<?> klass, List<String> filters, List<Order> orders )
     {
         Query query = Query.from( schemaService.getDynamicSchema( klass ) );
