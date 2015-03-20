@@ -110,8 +110,9 @@ public class DefaultAnalyticsTableService
         Date earliest = PartitionUtils.getEarliestDate( lastYears );
         
         final List<AnalyticsTable> tables = tableManager.getTables( earliest );
+        final String tableName = tableManager.getTableName();
         
-        clock.logTime( "Partition tables: " + tables + ", last years: " + lastYears + ", earliest: " + earliest );        
+        clock.logTime( "Table update start: " + tableName + ", partitions: " + tables + ", last years: " + lastYears + ", earliest: " + earliest );        
         notifier.notify( taskId, "Creating analytics tables, processes: " + processNo + ", org unit levels: " + orgUnitLevelNo );
         
         createTables( tables );
@@ -146,7 +147,7 @@ public class DefaultAnalyticsTableService
 
         partitionManager.clearCaches();
 
-        clock.logTime( "Table update done" );
+        clock.logTime( "Table update done: " + tableName );
         notifier.notify( taskId, "Table update done" );
     }
 
