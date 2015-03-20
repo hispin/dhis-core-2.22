@@ -46,7 +46,6 @@ import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
-import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
@@ -77,9 +76,6 @@ public abstract class AbstractJdbcTableManager
    
     @Autowired
     protected OrganisationUnitService organisationUnitService;
-    
-    @Autowired
-    protected DataElementService dataElementService;
     
     @Autowired
     protected DataElementCategoryService categoryService;
