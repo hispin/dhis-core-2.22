@@ -172,11 +172,11 @@ public class Query
         Optional<Property> name = Optional.fromNullable( schema.getProperty( "name" ) );
         Optional<Property> created = Optional.fromNullable( schema.getProperty( "created" ) );
 
-        if ( name.isPresent() )
+        if ( name.isPresent() && name.get().isPersisted() )
         {
             addOrder( Order.asc( name.get() ) );
         }
-        else if ( created.isPresent() )
+        else if ( created.isPresent() && created.get().isPersisted() )
         {
             addOrder( Order.desc( created.get() ) );
         }
