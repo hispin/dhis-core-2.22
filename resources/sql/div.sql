@@ -82,6 +82,14 @@ inner join categorycombos_optioncombos ccoc on coc.categoryoptioncomboid=ccoc.ca
 inner join categorycombo cc on ccoc.categorycomboid=cc.categorycomboid
 where coc.categoryoptioncomboid=2118430;
 
+-- Display overview of category option combos
+
+select coc.uid as optioncombo_uid, cocn.categoryoptioncomboname as optioncombo_name, cc.uid as categorycombo_uid, cc.name as categorycombo_name 
+from categoryoptioncombo coc 
+inner join _categoryoptioncomboname cocn on coc.categoryoptioncomboid=cocn.categoryoptioncomboid 
+inner join categorycombos_optioncombos ccoc on coc.categoryoptioncomboid=ccoc.categoryoptioncomboid 
+inner join categorycombo cc on ccoc.categorycomboid=cc.categorycomboid;
+
 -- Get category option combos linked to category option
 
 select coc.categoryoptioncomboid as coc_id, coc.uid as coc_uid, co.categoryoptionid as co_id, co.name as co_name
