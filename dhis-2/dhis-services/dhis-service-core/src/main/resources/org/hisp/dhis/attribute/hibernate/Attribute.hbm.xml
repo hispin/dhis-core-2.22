@@ -57,5 +57,8 @@
       <one-to-many class="AttributeValue" />
     </set>
 
+    <many-to-one name="optionSet" class="org.hisp.dhis.option.OptionSet" column="optionsetid"
+      foreign-key="fk_attribute_optionsetid" />
+
   </class>
 </hibernate-mapping>

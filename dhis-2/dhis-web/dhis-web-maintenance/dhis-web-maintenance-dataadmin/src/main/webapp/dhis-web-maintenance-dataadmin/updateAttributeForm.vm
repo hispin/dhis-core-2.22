@@ -78,9 +78,21 @@
 				<option value="integer" #if( $attribute.valueType == 'integer') selected="selected" #end>$i18n.getString( "integer" )</option>
 				<option value="positive_integer" #if( $attribute.valueType == 'positive_integer') selected="selected" #end>$i18n.getString( "positive_integer" )</option>
 				<option value="negative_integer" #if( $attribute.valueType == 'negative_integer') selected="selected" #end>$i18n.getString( "negative_integer" )</option>
-			</select>
-		</td>
-	</tr>
+				<option value="option_set" #if( $attribute.valueType == 'option_set') selected="selected" #end>$i18n.getString( "option_set" )</option>
+      </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td>
+      <select id="optionSet" name="optionSetUid" style="display: none;">
+        #foreach( $optionSet in $optionSets )
+        <option value="$optionSet.uid" #if( $attribute.optionSet && $attribute.optionSet.uid == $optionSet.uid )selected="selected"#end>$optionSet.displayName</option>
+        #end
+      </select>
+    </td>
+  </tr>
 
 	<tr>
 		<td colspan="2">

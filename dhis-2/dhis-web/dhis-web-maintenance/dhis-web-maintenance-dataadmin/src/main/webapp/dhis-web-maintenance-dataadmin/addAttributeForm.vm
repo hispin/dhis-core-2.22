@@ -49,20 +49,20 @@
 	<tr>
 		<td style="vertical-align: text-top;">$i18n.getString( "assigned_to" )</td>
 		<td>
-            <input type="checkbox" id="dataElementAttribute" name="dataElementAttribute" value="true" /><label for="dataElementAttribute">$i18n.getString( 'data_element' )</label> <br />
-            <input type="checkbox" id="dataElementGroupAttribute" name="dataElementGroupAttribute" value="true" /><label for="dataElementGroupAttribute">$i18n.getString( 'data_element_group' )</label> <br />
-            <input type="checkbox" id="indicatorAttribute" name="indicatorAttribute" value="true" /><label for="indicatorAttribute">$i18n.getString( 'indicator' )</label> <br />
-            <input type="checkbox" id="indicatorGroupAttribute" name="indicatorGroupAttribute" value="true" /><label for="indicatorGroupAttribute">$i18n.getString( 'indicator_group' )</label> <br />
-            <input type="checkbox" id="dataSetAttribute" name="dataSetAttribute" value="true" /><label for="dataSetAttribute">$i18n.getString( 'data_set' )</label> <br />
-            <input type="checkbox" id="organisationUnitAttribute" name="organisationUnitAttribute" value="true" /><label for="organisationUnitAttribute">$i18n.getString( 'organisation_unit' )</label> <br />
-            <input type="checkbox" id="organisationUnitGroupAttribute" name="organisationUnitGroupAttribute" value="true" /><label for="organisationUnitGroupAttribute">$i18n.getString( 'organisation_unit_group' )</label> <br />
-            <input type="checkbox" id="organisationUnitGroupSetAttribute" name="organisationUnitGroupSetAttribute" value="true" /><label for="organisationUnitGroupSetAttribute">$i18n.getString( 'organisation_unit_group_set' )</label> <br />
-            <input type="checkbox" id="userAttribute" name="userAttribute" value="true" /><label for="userAttribute">$i18n.getString( 'user' )</label> <br />
-            <input type="checkbox" id="userGroupAttribute" name="userGroupAttribute" value="true" /><label for="userGroupAttribute">$i18n.getString( 'user_group' )</label> <br />
-            <input type="checkbox" id="programAttribute" name="programAttribute" value="true" /><label for="programAttribute">$i18n.getString( 'program' )</label> <br />
-            <input type="checkbox" id="programStageAttribute" name="programStageAttribute" value="true" /><label for="programStageAttribute">$i18n.getString( 'program_stage' )</label> <br />
-            <input type="checkbox" id="trackedEntityAttribute" name="trackedEntityAttribute" value="true" /><label for="trackedEntityAttribute">$i18n.getString( 'tracked_entity' )</label> <br />
-            <input type="checkbox" id="trackedEntityAttributeAttribute" name="trackedEntityAttributeAttribute" value="true" /><label for="trackedEntityAttributeAttribute">$i18n.getString( 'tracked_entity_attribute' )</label> <br />
+      <input type="checkbox" id="dataElementAttribute" name="dataElementAttribute" value="true" /><label for="dataElementAttribute">$i18n.getString( 'data_element' )</label> <br />
+      <input type="checkbox" id="dataElementGroupAttribute" name="dataElementGroupAttribute" value="true" /><label for="dataElementGroupAttribute">$i18n.getString( 'data_element_group' )</label> <br />
+      <input type="checkbox" id="indicatorAttribute" name="indicatorAttribute" value="true" /><label for="indicatorAttribute">$i18n.getString( 'indicator' )</label> <br />
+      <input type="checkbox" id="indicatorGroupAttribute" name="indicatorGroupAttribute" value="true" /><label for="indicatorGroupAttribute">$i18n.getString( 'indicator_group' )</label> <br />
+      <input type="checkbox" id="dataSetAttribute" name="dataSetAttribute" value="true" /><label for="dataSetAttribute">$i18n.getString( 'data_set' )</label> <br />
+      <input type="checkbox" id="organisationUnitAttribute" name="organisationUnitAttribute" value="true" /><label for="organisationUnitAttribute">$i18n.getString( 'organisation_unit' )</label> <br />
+      <input type="checkbox" id="organisationUnitGroupAttribute" name="organisationUnitGroupAttribute" value="true" /><label for="organisationUnitGroupAttribute">$i18n.getString( 'organisation_unit_group' )</label> <br />
+      <input type="checkbox" id="organisationUnitGroupSetAttribute" name="organisationUnitGroupSetAttribute" value="true" /><label for="organisationUnitGroupSetAttribute">$i18n.getString( 'organisation_unit_group_set' )</label> <br />
+      <input type="checkbox" id="userAttribute" name="userAttribute" value="true" /><label for="userAttribute">$i18n.getString( 'user' )</label> <br />
+      <input type="checkbox" id="userGroupAttribute" name="userGroupAttribute" value="true" /><label for="userGroupAttribute">$i18n.getString( 'user_group' )</label> <br />
+      <input type="checkbox" id="programAttribute" name="programAttribute" value="true" /><label for="programAttribute">$i18n.getString( 'program' )</label> <br />
+      <input type="checkbox" id="programStageAttribute" name="programStageAttribute" value="true" /><label for="programStageAttribute">$i18n.getString( 'program_stage' )</label> <br />
+      <input type="checkbox" id="trackedEntityAttribute" name="trackedEntityAttribute" value="true" /><label for="trackedEntityAttribute">$i18n.getString( 'tracked_entity' )</label> <br />
+      <input type="checkbox" id="trackedEntityAttributeAttribute" name="trackedEntityAttributeAttribute" value="true" /><label for="trackedEntityAttributeAttribute">$i18n.getString( 'tracked_entity_attribute' )</label> <br />
 		</td>
 	</tr>
 
@@ -77,9 +77,21 @@
 				<option value="integer" >$i18n.getString( "integer" )</option>
 				<option value="positive_integer">$i18n.getString( "positive_integer" )</option>
 				<option value="negative_integer">$i18n.getString( "negative_integer" )</option>
+				<option value="option_set">$i18n.getString( "option_set" )</option>
 			</select>
 		</td>
 	</tr>
+
+  <tr>
+    <td></td>
+    <td>
+      <select id="optionSet" name="optionSetUid" style="display: none;">
+        #foreach( $optionSet in $optionSets )
+        <option value="$optionSet.uid">$optionSet.displayName</option>
+        #end
+      </select>
+    </td>
+  </tr>
 
 	<tr>
 		<td colspan="2">
