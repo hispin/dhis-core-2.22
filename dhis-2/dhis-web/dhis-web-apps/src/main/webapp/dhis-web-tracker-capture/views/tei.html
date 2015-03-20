@@ -14,7 +14,7 @@
         <table class="table table-striped dhis2-table-hover table-bordered">               
             <thead>                        
                 <tr>
-                    <th ng-if="gridColumn.show" ng-repeat="gridColumn in gridColumns" class='mouse-pointer' ng-click="sortGrid(gridColumn)">                            
+                    <th ng-repeat="gridColumn in gridColumns | filter:{show: true}" class='mouse-pointer' ng-click="sortGrid(gridColumn)">                            
                         <!-- sort icon begins -->                                
                         <span ng-hide="gridColumn.showFilter" class="bold pointer" title="{{'sort'| translate}}">
                             <span ng-class="{true: 'red'} [sortColumn.id === gridColumn.id]"><i class="fa fa-sort"></i></span>
@@ -22,14 +22,13 @@
                         </span>
                         <!-- sort icon ends -->                            
                     </th>                                    
-                </tr>                        
+                </tr>
             </thead>
             <tbody id="list">
                 <tr ng-repeat="trackedEntity in trackedEntityList.rows| orderBy:d2Sort:reverse"   
                     ng-click="showDashboard(trackedEntity)"
                     title="{{'go_to_dashboard'| translate}}">
-                    <td ng-show="gridColumn.show"                                            
-                        ng-repeat="gridColumn in gridColumns">
+                    <td ng-repeat="gridColumn in gridColumns | filter:{show: true}">
                         <span ng-switch="gridColumn.valueType">
                             <span ng-switch-when="bool">
                                 <span ng-if="trackedEntity[gridColumn.id] === 'true'">{{'yes'| translate}}</span>
