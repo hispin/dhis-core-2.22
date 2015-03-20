@@ -328,6 +328,11 @@ public class Schema implements Ordered, Klass
         return getPropertyMap().containsKey( propertyName );
     }
 
+    public boolean havePersistedProperty( String propertyName )
+    {
+        return haveProperty( propertyName ) && getProperty( propertyName ).isPersisted();
+    }
+
     public Property propertyByRole( String role )
     {
         if ( !StringUtils.isEmpty( role ) )
@@ -371,6 +376,19 @@ public class Schema implements Ordered, Klass
         if ( propertyMap.containsKey( name ) )
         {
             return propertyMap.get( name );
+        }
+
+        return null;
+    }
+
+    @JsonIgnore
+    public Property getPersistedProperty( String name )
+    {
+        Property property = getProperty( name );
+
+        if ( property != null && property.isPersisted() )
+        {
+            return property;
         }
 
         return null;
