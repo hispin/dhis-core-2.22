@@ -785,7 +785,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         }
         else if ( options.hasPaging() && !haveFilters )
         {
-            int count = manager.getCount( getEntityClass() );
+            int count = queryService.count( query );
 
             Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
             metaData.setPager( pager );
@@ -793,8 +793,6 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             query.setFirstResult( pager.getOffset() );
             query.setMaxResults( pager.getPageSize() );
             entityList = (List<T>) queryService.query( query ).getItems();
-
-            metaData.setPager( new Pager( options.getPage(), entityList.size(), options.getPageSize() ) );
         }
         else
         {

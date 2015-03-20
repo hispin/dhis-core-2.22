@@ -36,4 +36,6 @@ import java.util.List;
 public interface QueryEngine<T>
 {
     List<T> query( Query query );
+
+    int count( Query query );
 }
