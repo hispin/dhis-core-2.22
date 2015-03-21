@@ -257,6 +257,25 @@ jQuery(function() {
 </tr>
 #end
 
+#macro( trOptionSetInput $args )
+#if( "$!args.name" == "" )
+  #set( $name = $!args.id )
+#else
+  #set( $name = $!args.name )
+#end
+
+<tr>
+	<td style="width: 200px;"><label for="$!args.id">$!args.text #if($args.mandatory)<em title="$i18n.getString( 'required' )" class="required">*</em>#end</label></td>
+	<td>
+		<select id="$!args.id" name="$name">
+		#foreach( $choice in $args.attribute.optionSet.options )
+			<option value="$choice.code" #if( $args.value == $choice.code )selected="selected"#end>$choice.displayName</option>
+		#end
+		</select>
+	</td>
+</tr>
+#end
+
 #macro( tblDynamicAttributesJavascript )
 var attributes = jQuery("form").find(":input[name*='attribute_']");
 var jqJsonAttributeValues= jQuery("#jsonAttributeValues");
@@ -318,6 +337,8 @@ jQuery.each(attributes, function(i, item) {
 			#trPositiveIntegerInput( { "text": $text, "id": "attribute_$id", "mandatory": $mandatory, "value": $value } )
 		#elseif( $attribute.valueType == "negative_integer" )
 			#trNegativeIntegerInput( { "text": $text, "id": "attribute_$id", "mandatory": $mandatory, "value": $value } )
+		#elseif( $attribute.valueType == "option_set" )
+			#trOptionSetInput( { "text": $text, "id": "attribute_$id", "mandatory": $mandatory, "value": $value, "attribute": $attribute } )
 		#end
 	#end
 </table>
