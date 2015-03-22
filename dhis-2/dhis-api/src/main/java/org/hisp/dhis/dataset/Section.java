@@ -274,6 +274,7 @@ public class Section
         if ( other.getClass().isInstance( this ) )
         {
             Section section = (Section) other;
+            sortOrder = section.getSortOrder();
 
             if ( strategy.isReplace() )
             {
