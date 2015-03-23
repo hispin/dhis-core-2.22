@@ -48,6 +48,7 @@ public interface DimensionalObject
     extends NameableObject
 {
     final String DATA_X_DIM_ID = "dx"; // in, de, ds, do
+    final String DATA_COLLAPSED_DIM_ID = "dy"; // Collapsed event data dimensions
     final String INDICATOR_DIM_ID = "in";
     final String DATAELEMENT_DIM_ID = "de";
     final String DATASET_DIM_ID = "ds";
