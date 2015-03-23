@@ -44,6 +44,7 @@ import org.springframework.util.StringUtils;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,6 @@ import java.util.Map;
 public class Jackson2PropertyIntrospectorService
     extends AbstractPropertyIntrospectorService
 {
-
     @Override
     protected Map<String, Property> scanClass( Class<?> clazz )
     {
@@ -217,6 +217,19 @@ public class Jackson2PropertyIntrospectorService
             else
             {
                 propertyMap.put( property.getName(), property );
+            }
+
+            if ( Enum.class.isAssignableFrom( property.getKlass() ) )
+            {
+                Object[] enumConstants = property.getKlass().getEnumConstants();
+                List<String> enumValues = new ArrayList<>();
+
+                for ( Object value : enumConstants )
+                {
+                    enumValues.add( value.toString() );
+                }
+
+                property.setConstants( enumValues );
             }
 
             SchemaUtils.updatePropertyTypes( property );
