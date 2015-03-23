@@ -76,7 +76,7 @@ public class JacksonPeriodDeserializer
 {
     @Override
     public Period deserialize( JsonParser jp, DeserializationContext ctxt )
-        throws IOException, JsonProcessingException
+        throws IOException
     {
         LocalPeriod p = jp.readValueAs( LocalPeriod.class );
 

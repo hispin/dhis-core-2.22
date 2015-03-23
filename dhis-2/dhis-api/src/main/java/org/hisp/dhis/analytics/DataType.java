@@ -33,5 +33,5 @@ package org.hisp.dhis.analytics;
  */
 public enum DataType
 {
-    NUMERIC, TEXT;
+    NUMERIC, TEXT
 }
