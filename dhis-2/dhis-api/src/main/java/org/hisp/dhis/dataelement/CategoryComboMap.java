@@ -140,7 +140,7 @@ public class CategoryComboMap
      */
     public DataElementCategoryOptionCombo getCategoryOptionCombo( String compositeIdentifier )
     {
-        return (DataElementCategoryOptionCombo) ccMap.get( compositeIdentifier );
+        return ccMap.get( compositeIdentifier );
     }
 
     /**
