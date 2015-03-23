@@ -50,7 +50,7 @@ public class JacksonOrganisationUnitChildrenSerializer extends JsonSerializer<Or
     private static DateFormat format = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ" );
 
     @Override
-    public void serialize( OrganisationUnit value, JsonGenerator jgen, SerializerProvider provider ) throws IOException, JsonProcessingException
+    public void serialize( OrganisationUnit value, JsonGenerator jgen, SerializerProvider provider ) throws IOException
     {
         if ( ToXmlGenerator.class.isAssignableFrom( jgen.getClass() ) )
         {
