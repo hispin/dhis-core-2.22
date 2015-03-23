@@ -91,6 +91,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
@@ -244,7 +245,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     @RequestMapping( value = "/{uid}", method = RequestMethod.PATCH )
     public void partialUpdateObject(
         @PathVariable( "uid" ) String pvUid, @RequestParam Map<String, String> rpParameters,
-        HttpServletRequest request, HttpServletResponse response ) throws IOException
+        HttpServletRequest request, HttpServletResponse response ) throws IOException, InvocationTargetException, IllegalAccessException
     {
         WebOptions options = new WebOptions( rpParameters );
         List<T> entities = getEntity( pvUid, options );
@@ -285,7 +286,20 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             return;
         }
 
-        response.setStatus( HttpServletResponse.SC_NO_CONTENT );
+        Schema schema = getSchema();
+
+        for ( String keyProperty : properties )
+        {
+            Property property = schema.getProperty( keyProperty );
+
+            Object value = property.getGetterMethod().invoke( object );
+            property.getSetterMethod().invoke( persistedObject, value );
+        }
+
+        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
+            ImportStrategy.UPDATE, MergeStrategy.MERGE );
+
+        serialize( request, response, summary );
     }
 
     private List<String> getJsonProperties( String payload ) throws IOException
@@ -367,7 +381,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         property.getSetterMethod().invoke( persistedObject, value );
 
         ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
-            ImportStrategy.UPDATE, MergeStrategy.MERGE_IF_NOT_NULL );
+            ImportStrategy.UPDATE, MergeStrategy.MERGE );
 
         serialize( request, response, summary );
     }
