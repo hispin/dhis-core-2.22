@@ -29,8 +29,8 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class I18nController
         I18n i18n = i18nManager.getI18n( searchPackage );
         Map<String, String> output = new HashMap<>();
 
-        List<String> input = JacksonUtils.getJsonMapper().readValue( inputStream, new TypeReference<List<String>>()
+        List<String> input = ((DefaultRenderService) renderService).getJsonMapper().readValue( inputStream, new TypeReference<List<String>>()
         {
         } );
 
