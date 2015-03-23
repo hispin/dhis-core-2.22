@@ -104,6 +104,12 @@ public class DefaultRenderService implements RenderService
     }
 
     @Override
+    public <T> T fromJson( String input, Class<T> klass ) throws IOException
+    {
+        return jsonMapper.readValue( input, klass );
+    }
+
+    @Override
     public <T> void toXml( OutputStream output, T value ) throws IOException
     {
         xmlMapper.writeValue( output, value );
@@ -121,9 +127,25 @@ public class DefaultRenderService implements RenderService
         return xmlMapper.readValue( input, klass );
     }
 
+    @Override
+    public <T> T fromXml( String input, Class<T> klass ) throws IOException
+    {
+        return xmlMapper.readValue( input, klass );
+    }
+
     //--------------------------------------------------------------------------
     // Helpers
     //--------------------------------------------------------------------------
+
+    public ObjectMapper getJsonMapper()
+    {
+        return jsonMapper;
+    }
+
+    public XmlMapper getXmlMapper()
+    {
+        return xmlMapper;
+    }
 
     private void configureObjectMappers()
     {

@@ -47,9 +47,13 @@ public interface RenderService
 
     <T> T fromJson( InputStream input, Class<T> klass ) throws IOException;
 
+    <T> T fromJson( String input, Class<T> klass ) throws IOException;
+
     <T> void toXml( OutputStream output, T value ) throws IOException;
 
     <T> void toXml( OutputStream output, T value, Class<?> klass ) throws IOException;
 
     <T> T fromXml( InputStream input, Class<T> klass ) throws IOException;
+
+    <T> T fromXml( String input, Class<T> klass ) throws IOException;
 }
