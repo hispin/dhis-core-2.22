@@ -610,6 +610,11 @@ public class Property implements Ordered, Klass
         return isCollection() ? collectionName : name;
     }
 
+    public boolean is( PropertyType propertyType )
+    {
+        return propertyType != null && propertyType.equals( this.propertyType );
+    }
+
     @Override
     public int getOrder()
     {
