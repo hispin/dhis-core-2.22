@@ -29,6 +29,7 @@ package org.hisp.dhis.schema;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
@@ -39,6 +40,7 @@ import org.hisp.dhis.common.NameableObject;
 import org.springframework.core.Ordered;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -209,6 +211,11 @@ public class Property implements Ordered, Klass
      * The hibernate role of the inverse side (if many-to-many).
      */
     private String inverseRole;
+
+    /**
+     * If property type is enum, this is the list of valid options.
+     */
+    private List<String> constants;
 
     public Property()
     {
@@ -583,6 +590,19 @@ public class Property implements Ordered, Klass
     public void setInverseRole( String inverseRole )
     {
         this.inverseRole = inverseRole;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "constants", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "constant", namespace = DxfNamespaces.DXF_2_0 )
+    public List<String> getConstants()
+    {
+        return constants;
+    }
+
+    public void setConstants( List<String> constants )
+    {
+        this.constants = constants;
     }
 
     public String key()

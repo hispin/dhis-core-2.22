@@ -51,5 +51,6 @@ public enum PropertyType
     COLOR,
     COMPLEX,
     COLLECTION,
-    REFERENCE
+    REFERENCE,
+    CONSTANT
 }

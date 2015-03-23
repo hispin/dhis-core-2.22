@@ -105,7 +105,7 @@ public final class SchemaUtils
         }
         else if ( isAssignableFrom( klass, Enum.class ) )
         {
-            return PropertyType.TEXT; // TODO enum payloads are text, but should we expose a different type?
+            return PropertyType.CONSTANT;
         }
         else if ( isAssignableFrom( klass, IdentifiableObject.class ) )
         {
