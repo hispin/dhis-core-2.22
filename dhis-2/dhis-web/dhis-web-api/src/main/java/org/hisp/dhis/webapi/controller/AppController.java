@@ -28,22 +28,16 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
+import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
 import org.hisp.dhis.system.util.DateUtils;
@@ -64,8 +58,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -75,15 +74,15 @@ import com.google.common.collect.Lists;
 public class AppController
 {
     private static final Log log = LogFactory.getLog( AppController.class );
-    
+
     public static final String RESOURCE_PATH = "/apps";
 
     @Autowired
     private AppManager appManager;
-    
+
     @Autowired
     private RenderService renderService;
-    
+
     @Autowired
     private LocationManager locationManager;
 
@@ -94,7 +93,7 @@ public class AppController
         throws IOException
     {
         List<App> apps = appManager.getApps();
-        
+
         renderService.toJson( response.getOutputStream(), apps );
     }
 
@@ -105,21 +104,21 @@ public class AppController
     {
         File tempFile = File.createTempFile( "IMPORT_", "_ZIP" );
         file.transferTo( tempFile );
-        
+
         String contextPath = ContextUtils.getContextPath( request );
-        
+
         try
         {
             appManager.installApp( tempFile, file.getOriginalFilename(), contextPath );
         }
         catch ( JsonParseException ex )
         {
-            ContextUtils.conflictResponse( response, "Invalid JSON in app manifest file" );            
+            ContextUtils.conflictResponse( response, "Invalid JSON in app manifest file" );
             log.error( ex );
         }
         catch ( IOException ex )
         {
-            ContextUtils.conflictResponse( response, "App could not not be installed on file system, check permissions" );            
+            ContextUtils.conflictResponse( response, "App could not not be installed on file system, check permissions" );
             log.error( ex );
         }
     }
@@ -148,7 +147,8 @@ public class AppController
             return;
         }
 
-        App application = JacksonUtils.getJsonMapper().readValue( manifest.getInputStream(), App.class );
+        ObjectMapper jsonMapper = ((DefaultRenderService) renderService).getJsonMapper();
+        App application = jsonMapper.readValue( manifest.getInputStream(), App.class );
 
         if ( application.getName() == null || !appManager.isAccessible( application ) )
         {
@@ -163,9 +163,9 @@ public class AppController
             if ( "*".equals( application.getActivities().getDhis().getHref() ) )
             {
                 String contextPath = ContextUtils.getContextPath( request );
-                
+
                 application.getActivities().getDhis().setHref( contextPath );
-                JacksonUtils.getJsonMapper().writeValue( response.getOutputStream(), application );
+                jsonMapper.writeValue( response.getOutputStream(), application );
                 return;
             }
         }
@@ -217,42 +217,42 @@ public class AppController
     public void setConfig( HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         Map<String, String> config = renderService.fromJson( request.getInputStream(), Map.class );
-        
+
         if ( config == null )
         {
             ContextUtils.conflictResponse( response, "No config specified" );
             return;
         }
-        
+
         String appBaseUrl = StringUtils.trimToNull( config.get( AppManager.KEY_APP_BASE_URL ) );
         String appFolderPath = StringUtils.trimToNull( config.get( AppManager.KEY_APP_FOLDER_PATH ) );
         String appStoreUrl = StringUtils.trimToNull( config.get( AppManager.KEY_APP_STORE_URL ) );
-        
+
         if ( appBaseUrl != null )
         {
             appManager.setAppBaseUrl( appBaseUrl );
         }
-        
+
         if ( appFolderPath != null )
         {
             appManager.setAppFolderPath( appFolderPath );
         }
-        
+
         if ( appStoreUrl != null )
         {
             appManager.setAppStoreUrl( appStoreUrl );
         }
     }
-    
+
     @RequestMapping( value = "/config", method = RequestMethod.DELETE )
     @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
     public void resetConfig( HttpServletRequest request )
     {
         String contextPath = ContextUtils.getContextPath( request );
-        
+
         String appFolderPath = locationManager.getExternalDirectoryPath() + AppManager.APPS_DIR;
         String appBaseUrl = contextPath + AppManager.APPS_API_PATH;
-        
+
         appManager.setAppFolderPath( appFolderPath );
         appManager.setAppBaseUrl( appBaseUrl );
     }
