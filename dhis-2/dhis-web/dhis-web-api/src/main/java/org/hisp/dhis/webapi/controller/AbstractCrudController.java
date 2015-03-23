@@ -28,6 +28,9 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.base.Enums;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -47,6 +50,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
 import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
+import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
@@ -76,6 +80,7 @@ import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,6 +93,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -233,6 +239,86 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         String fieldFilter = "[" + Joiner.on( ',' ).join( fields ) + "]";
 
         return getObjectInternal( pvUid, rpParameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + fieldFilter ), translateOptions );
+    }
+
+    @RequestMapping( value = "/{uid}", method = RequestMethod.PATCH )
+    public void partialUpdateObject(
+        @PathVariable( "uid" ) String pvUid, @RequestParam Map<String, String> rpParameters,
+        HttpServletRequest request, HttpServletResponse response ) throws IOException
+    {
+        WebOptions options = new WebOptions( rpParameters );
+        List<T> entities = getEntity( pvUid, options );
+
+        if ( entities.isEmpty() )
+        {
+            ContextUtils.notFoundResponse( response, getEntityName() + " does not exist: " + pvUid );
+            return;
+        }
+
+        T persistedObject = entities.get( 0 );
+
+        if ( !aclService.canUpdate( currentUserService.getCurrentUser(), persistedObject ) )
+        {
+            throw new UpdateAccessDeniedException( "You don't have the proper permissions to update this object." );
+        }
+
+        String payload = StreamUtils.copyToString( request.getInputStream(), Charset.forName( "UTF-8" ) );
+        List<String> properties = new ArrayList<>();
+        T object = null;
+
+        if ( isJson( request ) )
+        {
+            properties = getJsonProperties( payload );
+            object = renderService.fromJson( payload, getEntityClass() );
+        }
+        else if ( isXml( request ) )
+        {
+            properties = getXmlProperties( payload );
+            object = renderService.fromXml( payload, getEntityClass() );
+        }
+
+        properties = getPersistedProperties( properties );
+
+        if ( properties.isEmpty() || object == null )
+        {
+            response.setStatus( HttpServletResponse.SC_NO_CONTENT );
+            return;
+        }
+
+        response.setStatus( HttpServletResponse.SC_NO_CONTENT );
+    }
+
+    private List<String> getJsonProperties( String payload ) throws IOException
+    {
+        ObjectMapper mapper = ((DefaultRenderService) renderService).getJsonMapper();
+        JsonNode root = mapper.readTree( payload );
+
+        return Lists.newArrayList( root.fieldNames() );
+    }
+
+    private List<String> getXmlProperties( String payload ) throws IOException
+    {
+        XmlMapper mapper = ((DefaultRenderService) renderService).getXmlMapper();
+        JsonNode root = mapper.readTree( payload );
+
+        return Lists.newArrayList( root.fieldNames() );
+    }
+
+    private List<String> getPersistedProperties( List<String> properties )
+    {
+        List<String> persistedProperties = new ArrayList<>();
+
+        Schema schema = getSchema();
+
+        for ( String property : properties )
+        {
+            if ( schema.havePersistedProperty( property ) )
+            {
+                persistedProperties.add( property );
+            }
+        }
+
+        return persistedProperties;
     }
 
     @RequestMapping( value = "/{uid}/{property}", method = { RequestMethod.PUT, RequestMethod.PATCH } )
@@ -952,7 +1038,16 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
      */
     protected boolean isJson( HttpServletRequest request )
     {
-        return isCompatibleWith( request.getContentType(), MediaType.APPLICATION_JSON );
+        String type = request.getContentType();
+        type = !StringUtils.isEmpty( type ) ? type : MediaType.APPLICATION_JSON_VALUE;
+
+        // allow type to be overridden by path extension
+        if ( request.getPathInfo().endsWith( ".json" ) )
+        {
+            type = MediaType.APPLICATION_JSON_VALUE;
+        }
+
+        return isCompatibleWith( type, MediaType.APPLICATION_JSON );
     }
 
     /**
@@ -963,7 +1058,16 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
      */
     protected boolean isXml( HttpServletRequest request )
     {
-        return isCompatibleWith( request.getContentType(), MediaType.APPLICATION_XML );
+        String type = request.getContentType();
+        type = !StringUtils.isEmpty( type ) ? type : MediaType.APPLICATION_JSON_VALUE;
+
+        // allow type to be overridden by path extension
+        if ( request.getPathInfo().endsWith( ".xml" ) )
+        {
+            type = MediaType.APPLICATION_XML_VALUE;
+        }
+
+        return isCompatibleWith( type, MediaType.APPLICATION_XML );
     }
 
     protected boolean isCompatibleWith( String type, MediaType mediaType )
