@@ -29,6 +29,7 @@ package org.hisp.dhis.analytics.event;
  */
 
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -231,6 +232,25 @@ public class EventQueryParams
     public boolean isOrganisationUnitMode( String mode )
     {
         return organisationUnitMode != null && organisationUnitMode.equalsIgnoreCase( mode );
+    }
+    
+    /**
+     * Indicates whether any items or item filters are present.
+     */
+    public boolean hasItemsOrItemFilters()
+    {
+        return !items.isEmpty() || !itemFilters.isEmpty();
+    }
+
+    /**
+     * Indicates whether program indicators are present as dimension or filter.
+     */
+    public boolean hasProgramIndicators()
+    {
+        List<NameableObject> dimOpts = getDimensionOptions( PROGRAM_INDICATOR_DIM_ID );
+        List<NameableObject> filterOpts = getFilterOptions( PROGRAM_INDICATOR_DIM_ID );
+        
+        return ( dimOpts != null && !dimOpts.isEmpty() ) || ( filterOpts != null && !filterOpts.isEmpty() );
     }
     
     public boolean hasStartEndDate()
