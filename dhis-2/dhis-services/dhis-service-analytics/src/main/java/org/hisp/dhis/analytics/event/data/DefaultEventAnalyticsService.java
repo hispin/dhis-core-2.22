@@ -183,7 +183,7 @@ public class DefaultEventAnalyticsService
 
         if ( params.isCollapseDataDimensions() )
         {
-            grid.addHeader( new GridHeader( DimensionalObject.DATA_X_DIM_ID, DataQueryParams.DISPLAY_NAME_DATA_X, String.class.getName(), false, true ) );
+            grid.addHeader( new GridHeader( DimensionalObject.DATA_COLLAPSED_DIM_ID, DataQueryParams.DISPLAY_NAME_DATA_X, String.class.getName(), false, true ) );
         }
         else
         {
