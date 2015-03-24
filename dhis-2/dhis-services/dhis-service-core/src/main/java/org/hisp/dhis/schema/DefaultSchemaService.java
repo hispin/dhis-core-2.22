@@ -197,7 +197,7 @@ public class DefaultSchemaService implements SchemaService
     {
         if ( schema.getPropertyMap().containsKey( "__self__" ) )
         {
-            Property property = schema.getPropertyMap().get( "__self__" );
+            Property property = schema.getProperty( "__self__" );
             schema.setName( property.getName() );
             schema.setCollectionName( schema.getPlural() );
             schema.setNamespace( property.getNamespace() );
