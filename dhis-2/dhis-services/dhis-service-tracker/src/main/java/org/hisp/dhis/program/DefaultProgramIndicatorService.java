@@ -35,7 +35,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
@@ -241,9 +240,7 @@ public class DefaultProgramIndicatorService
     {
         StringBuffer description = new StringBuffer();
 
-        Pattern patternCondition = Pattern.compile( ProgramIndicator.EXPRESSION_REGEXP );
-
-        Matcher matcher = patternCondition.matcher( expression );
+        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
         
         while ( matcher.find() )
         {
@@ -312,9 +309,7 @@ public class DefaultProgramIndicatorService
     {
         StringBuffer description = new StringBuffer();
 
-        Pattern patternCondition = Pattern.compile( ProgramIndicator.EXPRESSION_REGEXP );
-
-        Matcher matcher = patternCondition.matcher( expression );
+        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
         
         while ( matcher.find() )
         {
@@ -392,8 +387,7 @@ public class DefaultProgramIndicatorService
     {
         StringBuffer description = new StringBuffer();
 
-        Pattern pattern = Pattern.compile( ProgramIndicator.EXPRESSION_REGEXP );
-        Matcher matcher = pattern.matcher( indicator.getExpression() );
+        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( indicator.getExpression() );
 
         while ( matcher.find() )
         {
