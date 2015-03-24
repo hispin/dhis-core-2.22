@@ -55,15 +55,15 @@ public class ProgramIndicator
     public static final String KEY_PROGRAM_VARIABLE = "V";
     public static final String KEY_CONSTANT = "C";
     public static final String INCIDENT_DATE = "incident_date";
-    public static final String ENROLLEMENT_DATE = "enrollment_date";
+    public static final String ENROLLMENT_DATE = "enrollment_date";
     public static final String CURRENT_DATE = "current_date";
     public static final String VALUE_TYPE_DATE = "date";
     public static final String VALUE_TYPE_INT = "int";
-    private static final long serialVersionUID = 7920320128945484331L;
-    public static String SEPARATOR_OBJECT = ":";
+    
+    public static String SEP_OBJECT = ":";
 
-    public static final String regExp = "("+KEY_DATAELEMENT+"|"+KEY_ATTRIBUTE+"|"+KEY_PROGRAM_VARIABLE+"|"+KEY_CONSTANT+")\\{([a-zA-Z0-9]+|" + INCIDENT_DATE + "|" + ENROLLEMENT_DATE + "|"
-        + CURRENT_DATE + ")" + SEPARATOR_ID + "*([a-zA-Z0-9]*)\\}";
+    public static final String EXPRESSION_REGEXP = "(" + KEY_DATAELEMENT + "|" + KEY_ATTRIBUTE + "|" + KEY_PROGRAM_VARIABLE + "|" + KEY_CONSTANT + ")\\{([a-zA-Z0-9]+|" + 
+        INCIDENT_DATE + "|" + ENROLLMENT_DATE + "|" + CURRENT_DATE + ")" + SEPARATOR_ID + "*([a-zA-Z0-9]*)\\}";
 
     public static final String VALID = "valid";
 

@@ -199,7 +199,7 @@ public class DefaultProgramIndicatorService
                 {
                     baseDate = programInstance.getDateOfIncident();
                 }
-                else if ( ProgramIndicator.ENROLLEMENT_DATE.equals( programIndicator.getRootDate() ) )
+                else if ( ProgramIndicator.ENROLLMENT_DATE.equals( programIndicator.getRootDate() ) )
                 {
                     baseDate = programInstance.getEnrollmentDate();
                 }
@@ -241,7 +241,7 @@ public class DefaultProgramIndicatorService
     {
         StringBuffer description = new StringBuffer();
 
-        Pattern patternCondition = Pattern.compile( ProgramIndicator.regExp );
+        Pattern patternCondition = Pattern.compile( ProgramIndicator.EXPRESSION_REGEXP );
 
         Matcher matcher = patternCondition.matcher( expression );
         
@@ -287,15 +287,15 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
-                if( uid1.equals( ProgramIndicator.CURRENT_DATE ) )
+                if ( uid1.equals( ProgramIndicator.CURRENT_DATE ) )
                 {
                     matcher.appendReplacement( description, "Current date" );
                 }
-                else if( uid1.equals( ProgramIndicator.ENROLLEMENT_DATE ) )
+                else if ( uid1.equals( ProgramIndicator.ENROLLMENT_DATE ) )
                 {
                     matcher.appendReplacement( description, "Enrollment date" );
                 }
-                else if( uid1.equals( ProgramIndicator.INCIDENT_DATE ) )
+                else if ( uid1.equals( ProgramIndicator.INCIDENT_DATE ) )
                 {
                     matcher.appendReplacement( description, "Incident date" );
                 }
@@ -312,7 +312,7 @@ public class DefaultProgramIndicatorService
     {
         StringBuffer description = new StringBuffer();
 
-        Pattern patternCondition = Pattern.compile( ProgramIndicator.regExp );
+        Pattern patternCondition = Pattern.compile( ProgramIndicator.EXPRESSION_REGEXP );
 
         Matcher matcher = patternCondition.matcher( expression );
         
@@ -369,6 +369,7 @@ public class DefaultProgramIndicatorService
                 matcher.appendReplacement( description, String.valueOf( 0 ) );
             }
         }
+        
         matcher.appendTail( description );
 
         // ---------------------------------------------------------------------
@@ -391,7 +392,7 @@ public class DefaultProgramIndicatorService
     {
         StringBuffer description = new StringBuffer();
 
-        Pattern pattern = Pattern.compile( ProgramIndicator.regExp );
+        Pattern pattern = Pattern.compile( ProgramIndicator.EXPRESSION_REGEXP );
         Matcher matcher = pattern.matcher( indicator.getExpression() );
 
         while ( matcher.find() )
@@ -474,7 +475,7 @@ public class DefaultProgramIndicatorService
                 Date currentDate = new Date();
                 Date date = null;
                 
-                if ( uid1.equals( ProgramIndicator.ENROLLEMENT_DATE ) )
+                if ( uid1.equals( ProgramIndicator.ENROLLMENT_DATE ) )
                 {
                     date = programInstance.getEnrollmentDate();
                 }

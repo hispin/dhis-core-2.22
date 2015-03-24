@@ -52,8 +52,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ ProgramIndicatorServiceTest.java Nov 13, 2013 1:34:55 PM $
  */
 public class ProgramIndicatorServiceTest
     extends DhisSpringTest
@@ -139,7 +137,7 @@ public class ProgramIndicatorServiceTest
             organisationUnit );
 
         indicatorDate = new ProgramIndicator( "IndicatorA", "IndicatorDesA", ProgramIndicator.VALUE_TYPE_INT, "( " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{"
-            + ProgramIndicator.INCIDENT_DATE + "} - " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.ENROLLEMENT_DATE + "} )  / 7" );
+            + ProgramIndicator.INCIDENT_DATE + "} - " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.ENROLLMENT_DATE + "} )  / 7" );
         indicatorDate.setUid( "UID-DATE" );
         indicatorDate.setShortName( "DATE" );
         indicatorDate.setProgram( programA );
@@ -162,6 +160,10 @@ public class ProgramIndicatorServiceTest
         indicatorD.setShortName( "D" );
         indicatorD.setProgram( programB );
     }
+
+    // -------------------------------------------------------------------------
+    // Tests
+    // -------------------------------------------------------------------------
 
     @Test
     public void testAddProgramIndicator()
@@ -322,6 +324,5 @@ public class ProgramIndicatorServiceTest
         assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorDate.getExpression() ) );
         assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorInt.getExpression() ) );
         assertEquals( ProgramIndicator.EXPRESSION_NOT_WELL_FORMED, programIndicatorService.expressionIsValid( indicatorD.getExpression() ) );
-    }
-    
+    }    
 }
