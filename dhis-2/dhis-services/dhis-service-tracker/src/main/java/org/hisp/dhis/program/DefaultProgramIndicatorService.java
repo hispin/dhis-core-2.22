@@ -245,14 +245,14 @@ public class DefaultProgramIndicatorService
         while ( matcher.find() )
         {
             String key = matcher.group( 1 );
-            String uid1 = matcher.group( 2 );
+            String uid = matcher.group( 2 );
 
             if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
             {
-                String uid2 = matcher.group( 3 );
+                String de = matcher.group( 3 );
 
-                ProgramStage programStage = programStageService.getProgramStage( uid1 );
-                DataElement dataElement = dataElementService.getDataElement( uid2 );
+                ProgramStage programStage = programStageService.getProgramStage( uid );
+                DataElement dataElement = dataElementService.getDataElement( de );
 
                 if ( programStage != null && dataElement != null )
                 {
@@ -266,7 +266,7 @@ public class DefaultProgramIndicatorService
 
             else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
-                TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid1 );
+                TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid );
                 
                 if ( attribute != null )
                 {
@@ -275,7 +275,7 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
             {
-                Constant constant = constantService.getConstant( uid1 );
+                Constant constant = constantService.getConstant( uid );
                 
                 if ( constant != null )
                 {
@@ -284,15 +284,15 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
-                if ( uid1.equals( ProgramIndicator.CURRENT_DATE ) )
+                if ( uid.equals( ProgramIndicator.CURRENT_DATE ) )
                 {
                     matcher.appendReplacement( description, "Current date" );
                 }
-                else if ( uid1.equals( ProgramIndicator.ENROLLMENT_DATE ) )
+                else if ( uid.equals( ProgramIndicator.ENROLLMENT_DATE ) )
                 {
                     matcher.appendReplacement( description, "Enrollment date" );
                 }
-                else if ( uid1.equals( ProgramIndicator.INCIDENT_DATE ) )
+                else if ( uid.equals( ProgramIndicator.INCIDENT_DATE ) )
                 {
                     matcher.appendReplacement( description, "Incident date" );
                 }
@@ -314,14 +314,14 @@ public class DefaultProgramIndicatorService
         while ( matcher.find() )
         {
             String key = matcher.group( 1 );
-            String uid1 = matcher.group( 2 );
+            String uid = matcher.group( 2 );
 
             if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
             {
-                String uid2 = matcher.group( 3 );
+                String de = matcher.group( 3 );
 
-                ProgramStage programStage = programStageService.getProgramStage( uid1 );
-                DataElement dataElement = dataElementService.getDataElement( uid2 );
+                ProgramStage programStage = programStageService.getProgramStage( uid );
+                DataElement dataElement = dataElementService.getDataElement( de );
 
                 if ( programStage != null && dataElement != null )
                 {
@@ -335,7 +335,7 @@ public class DefaultProgramIndicatorService
 
             else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
-                TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid1 );
+                TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid );
                 
                 if ( attribute != null )
                 {
@@ -348,7 +348,7 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
             {
-                Constant constant = constantService.getConstant( uid1 );
+                Constant constant = constantService.getConstant( uid );
                 
                 if ( constant != null )
                 {
@@ -392,13 +392,13 @@ public class DefaultProgramIndicatorService
         while ( matcher.find() )
         {
             String key = matcher.group( 1 );
-            String uid1 = matcher.group( 2 );
+            String uid = matcher.group( 2 );
 
             if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
             {
-                String uid2 = matcher.group( 3 );
-                ProgramStage programStage = programStageService.getProgramStage( uid1 );
-                DataElement dataElement = dataElementService.getDataElement( uid2 );
+                String de = matcher.group( 3 );
+                ProgramStage programStage = programStageService.getProgramStage( uid );
+                DataElement dataElement = dataElementService.getDataElement( de );
 
                 if ( programStage != null && dataElement != null )
                 {
@@ -430,7 +430,7 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
-                TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid1 );
+                TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid );
                 
                 if ( attribute != null )
                 {
@@ -453,7 +453,7 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
             {
-                Constant constant = constantService.getConstant( uid1 );
+                Constant constant = constantService.getConstant( uid );
                 
                 if ( constant != null )
                 {
@@ -469,15 +469,15 @@ public class DefaultProgramIndicatorService
                 Date currentDate = new Date();
                 Date date = null;
                 
-                if ( uid1.equals( ProgramIndicator.ENROLLMENT_DATE ) )
+                if ( uid.equals( ProgramIndicator.ENROLLMENT_DATE ) )
                 {
                     date = programInstance.getEnrollmentDate();
                 }
-                else if ( uid1.equals( ProgramIndicator.INCIDENT_DATE ) )
+                else if ( uid.equals( ProgramIndicator.INCIDENT_DATE ) )
                 {
                     date = programInstance.getDateOfIncident();
                 }
-                else if ( uid1.equals( ProgramIndicator.CURRENT_DATE ) )
+                else if ( uid.equals( ProgramIndicator.CURRENT_DATE ) )
                 {
                     date = programInstance.getDateOfIncident();
                 }
