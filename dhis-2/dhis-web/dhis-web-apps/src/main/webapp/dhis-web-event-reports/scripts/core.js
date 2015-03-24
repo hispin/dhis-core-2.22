@@ -32,8 +32,8 @@ Ext.onReady( function() {
 					data: {
 						value: 'data',
 						name: NS.i18n.data || 'Data',
-						dimensionName: 'dx',
-						objectName: 'dx',
+						dimensionName: 'dy',
+						objectName: 'dy',
 						warning: {
 							filter: '...'//NS.i18n.wm_multiple_filter_ind_de
 						}
@@ -1296,6 +1296,32 @@ Ext.onReady( function() {
 					return headerNames;
 				};
 
+                // collapse data dimensions?
+                (function() {
+                    var keys = xLayout.collapseDataDimensions ? ['dy', 'pe', 'ou'] : ['dy'],
+                        dimensionsToRemove = [];
+
+                    // find dimensions to remove
+                    for (var i = 0, dim; i < dimensions.length; i++) {
+                        dim = dimensions[i];
+
+                        if (xLayout.collapseDataDimensions && !Ext.Array.contains(keys, dim.dimension)) {
+                            dimensionsToRemove.push(dim);
+                        }
+                        else if (!xLayout.collapseDataDimensions && Ext.Array.contains(keys, dim.dimension)) {
+                            dimensionsToRemove.push(dim);
+                        }
+                    }
+
+                    // remove dimensions
+                    for (var i = 0, dim; i < dimensionsToRemove.length; i++) {
+                        removeDimensionFromXLayout(dimensionsToRemove[i].dimension);
+                    }
+
+                    // update dimensions array
+                    dimensions = Ext.Array.clean([].concat(xLayout.columns || [], xLayout.rows || [], xLayout.filters || []));
+                }());
+
                 // items
                 for (var i = 0, dim, header; i < dimensions.length; i++) {
                     dim = dimensions[i];
@@ -1923,13 +1949,17 @@ Ext.onReady( function() {
 
 				// idValueMap: vars
 				var valueHeaderIndex = response.nameHeaderMap[conf.finals.dimension.value.value].index,
-					dx = dimConf.data.dimensionName,
+					dy = dimConf.data.dimensionName,
 					axisDimensionNames = xLayout.axisDimensionNames,
 					idIndexOrder = [];
 
 				// idValueMap: idIndexOrder
-				for (var i = 0; i < axisDimensionNames.length; i++) {
-					idIndexOrder.push(response.nameHeaderMap[axisDimensionNames[i]].index);
+				for (var i = 0, dimensionName; i < axisDimensionNames.length; i++) {
+                    dimensionName = axisDimensionNames[i];
+
+                    if (response.nameHeaderMap.hasOwnProperty(dimensionName)) {
+                        idIndexOrder.push(response.nameHeaderMap[dimensionName].index);
+                    }
 				}
 
 				// idValueMap
@@ -2072,7 +2102,7 @@ Ext.onReady( function() {
 			web.analytics.getParamString = function(view, format, skipPaging) {
                 var paramString,
                     dimensions = Ext.Array.clean([].concat(view.columns || [], view.rows || [])),
-                    ignoreKeys = ['longitude', 'latitude'],
+                    ignoreKeys = ['dy', 'longitude', 'latitude'],
                     dataTypeMap = {
                         'aggregated_values': 'aggregate',
                         'individual_cases': 'query'
@@ -2193,6 +2223,11 @@ Ext.onReady( function() {
 
                 // display property
                 paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+
+                // collapse data items
+                if (view.collapseDataDimensions) {
+                    paramString += '&collapseDataDimensions=true';
+                }
 
                 return paramString;
             };
@@ -2456,7 +2491,7 @@ Ext.onReady( function() {
                                 for (var j = 0; j < xRowAxis.dims - 1; j++) {
                                     a.push(getEmptyNameTdConfig({
                                         cls: 'pivot-dim-label',
-                                        htmlValue: dimConf.objectNameMap[xLayout.rowObjectNames[j]].name
+                                        htmlValue: dimConf.objectNameMap[xLayout.rowObjectNames[j]] ? dimConf.objectNameMap[xLayout.rowObjectNames[j]].name : 'missing col name'
                                     }));
                                 }
                             }

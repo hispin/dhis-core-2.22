@@ -71,7 +71,7 @@ Ext.onReady(function() {
             styleEl = document.createElement("style");
 
         styleEl.setAttribute("type", "text/css");
-        
+
         if (id) {
            styleEl.setAttribute("id", id);
         }
@@ -3192,7 +3192,7 @@ Ext.onReady(function() {
                             shadow: false,
                             insetPadding: ns.dashboard ? 17 : 35,
                             insetPaddingObject: {
-                                top: 10,
+                                top: 12,
                                 right: 3,
                                 bottom: 2,
                                 left: 7
@@ -3207,7 +3207,7 @@ Ext.onReady(function() {
                         defaultConfig.legend = getDefaultLegend(store, config);
 
                         if (defaultConfig.legend.position === 'right') {
-                            defaultConfig.insetPaddingObject.top = ns.dashboard ? 20 : 40;
+                            defaultConfig.insetPaddingObject.top = ns.dashboard ? 22 : 40;
                             defaultConfig.insetPaddingObject.right = ns.dashboard ? 5 : 40;
                         }
                     }

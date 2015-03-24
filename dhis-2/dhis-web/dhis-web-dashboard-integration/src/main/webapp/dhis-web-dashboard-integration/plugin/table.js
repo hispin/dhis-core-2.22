@@ -15,7 +15,7 @@ Ext.onReady( function() {
             styleEl = document.createElement("style");
 
         styleEl.setAttribute("type", "text/css");
-        
+
         if (id) {
            styleEl.setAttribute("id", id);
         }
