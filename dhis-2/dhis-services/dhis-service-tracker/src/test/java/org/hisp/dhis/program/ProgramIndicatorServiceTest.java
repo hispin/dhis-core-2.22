@@ -153,7 +153,6 @@ public class ProgramIndicatorServiceTest
         indicatorC.setShortName( "C" );
         indicatorC.setProgram( programB );
         
-
         indicatorD = new ProgramIndicator( "IndicatorD", "IndicatorDesD", ProgramIndicator.VALUE_TYPE_INT, "0 + A + 4 + " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{"
             + ProgramIndicator.INCIDENT_DATE + "}" );
         indicatorD.setUid( "UID-D" );
