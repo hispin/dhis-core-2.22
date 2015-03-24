@@ -349,7 +349,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             return;
         }
 
-        if ( !getSchema().getPropertyMap().containsKey( pvProperty ) )
+        if ( !getSchema().haveProperty( pvProperty ) )
         {
             ContextUtils.notFoundResponse( response, "Property " + pvProperty + " does not exist on " + getEntityName() );
             return;
@@ -754,13 +754,13 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             return;
         }
 
-        if ( !getSchema().getPropertyMap().containsKey( pvProperty ) )
+        if ( !getSchema().haveProperty( pvProperty ) )
         {
             ContextUtils.notFoundResponse( response, "Property " + pvProperty + " does not exist on " + getEntityName() );
             return;
         }
 
-        Property property = getSchema().getPropertyMap().get( pvProperty );
+        Property property = getSchema().getProperty( pvProperty );
 
         if ( !property.isCollection() || !property.isIdentifiableObject() )
         {

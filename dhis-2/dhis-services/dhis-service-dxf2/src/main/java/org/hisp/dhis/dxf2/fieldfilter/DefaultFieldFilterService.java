@@ -175,12 +175,12 @@ public class DefaultFieldFilterService implements FieldFilterService
         {
             AbstractNode child = null;
 
-            if ( !schema.getPropertyMap().containsKey( fieldKey ) )
+            if ( !schema.haveProperty( fieldKey ) )
             {
                 continue;
             }
 
-            Property property = schema.getPropertyMap().get( fieldKey );
+            Property property = schema.getProperty( fieldKey );
 
             Object returnValue = ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
             Schema propertySchema = schemaService.getDynamicSchema( property.getKlass() );
@@ -467,7 +467,7 @@ public class DefaultFieldFilterService implements FieldFilterService
 
         for ( String field : fields )
         {
-            Property property = schema.getPropertyMap().get( field );
+            Property property = schema.getProperty( field );
 
             if ( property == null )
             {

@@ -128,9 +128,9 @@ public class SchemaController
             throw new HttpClientErrorException( HttpStatus.NOT_FOUND, "Type " + type + " does not exist." );
         }
 
-        if ( schema.getPropertyMap().containsKey( property ) )
+        if ( schema.haveProperty( property ) )
         {
-            return schema.getPropertyMap().get( property );
+            return schema.getProperty( property );
         }
 
         throw new HttpClientErrorException( HttpStatus.NOT_FOUND, "Property " + property + " does not exist on type " + type + "." );
