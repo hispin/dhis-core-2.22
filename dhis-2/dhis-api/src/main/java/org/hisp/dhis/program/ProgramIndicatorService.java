@@ -30,6 +30,9 @@ package org.hisp.dhis.program;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
+
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
  * @author Chau Thu Tran
@@ -140,4 +143,22 @@ public interface ProgramIndicatorService
      * @return The expression is valid or not
      */
     String expressionIsValid( String expression );
+    
+    /**
+     * Get all {@link ProgramStageDataElement} part of the expression of the 
+     * given indicator.
+     * 
+     * @param indicator the ProgramIndicator.
+     * @return a set of ProgramStageDataElements.
+     */
+    Set<ProgramStageDataElement> getProgramStageDataElementsInExpression( ProgramIndicator indicator );
+
+    /**
+     * Get all {@link TrackedEntityAttribute} part of the expression of the 
+     * given indicator.
+     * 
+     * @param indicator the ProgramIndicator.
+     * @return a set of TrackedEntityAttributes.
+     */
+    Set<TrackedEntityAttribute> getAttributesInExpression( ProgramIndicator indicator );
 }
