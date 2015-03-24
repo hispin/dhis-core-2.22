@@ -124,6 +124,11 @@ public class DefaultEventQueryPlanner
             violation = "Start and end date or at least one period must be specified";
         }
         
+        if ( params.hasProgramIndicators() && params.hasItemsOrItemFilters() )
+        {
+            violation = "Data elements or attributs cannot be specified together with indicators";
+        }
+        
         if ( params.getStartDate() != null && params.getEndDate() != null && params.getStartDate().after( params.getEndDate() ) )
         {
             violation = "Start date is after end date: " + params.getStartDate() + " - " + params.getEndDate();
