@@ -45,8 +45,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ ProgramIndicatorStoreTest.java Nov 13, 2013 1:34:55 PM $
  */
 public class ProgramIndicatorStoreTest
     extends DhisSpringTest
@@ -109,7 +107,7 @@ public class ProgramIndicatorStoreTest
         programService.addProgram( programB );
 
         indicatorDate = new ProgramIndicator( "IndicatorA", "IndicatorDesA", ProgramIndicator.VALUE_TYPE_INT, "( "
-            + ProgramIndicator.INCIDENT_DATE + " - " + ProgramIndicator.ENROLLEMENT_DATE + " )  / 7" );
+            + ProgramIndicator.INCIDENT_DATE + " - " + ProgramIndicator.ENROLLMENT_DATE + " )  / 7" );
         indicatorDate.setUid( "UID-DATE" );
         indicatorDate.setShortName( "DATE" );
         indicatorDate.setProgram( programA );
@@ -126,6 +124,10 @@ public class ProgramIndicatorStoreTest
         indicatorC.setProgram( programB );
     }
 
+    // -------------------------------------------------------------------------
+    // Tests
+    // -------------------------------------------------------------------------
+
     @Test
     public void testGetProgramIndicatorsByProgram()
     {
@@ -141,6 +143,5 @@ public class ProgramIndicatorStoreTest
         indicators = programIndicatorStore.getByProgram( programB );
         assertEquals( 1, indicators.size() );
         assertTrue( indicators.contains( indicatorC ) );
-
     }
 }
