@@ -371,13 +371,13 @@ public class HibernateDataApprovalStore
                 "left join _orgunitstructure ous on ous.idlevel" + orgUnitLevel + " = o.organisationunitid and ous.organisationunitid = coo.organisationunitid " +
                 joinAncestors +
                 "where ( coo.categoryoptionid is null or ous.organisationunitid is not null " + testAncestors + ")" +
-                 ( attributeOptionCombo == null ? "" : " and cocco.categoryoptioncomboid = " + attributeOptionCombo.getId() ) +
-                 ( isSuperUser || user == null ? "" :
-                         " and ( co.publicaccess is null or left(co.publicaccess, 1) = 'r' or co.userid = " + user.getId() + " or exists ( " +
-                                 "select 1 from dataelementcategoryoptionusergroupaccesses couga " +
-                                 "left join usergroupaccess uga on uga.usergroupaccessid = couga.usergroupaccessid " +
-                                 "left join usergroupmembers ugm on ugm.usergroupid = uga.usergroupid " +
-                                 "where couga.categoryoptionid = cocco.categoryoptionid and ugm.userid = " + user.getId() + ") )" );
+                ( attributeOptionCombo == null ? "" : " and cocco.categoryoptioncomboid = " + attributeOptionCombo.getId() ) +
+                ( isSuperUser || user == null ? "" :
+                    " and ( co.publicaccess is null or left(co.publicaccess, 1) = 'r' or co.userid = " + user.getId() + " or exists ( " +
+                    "select 1 from dataelementcategoryoptionusergroupaccesses couga " +
+                    "left join usergroupaccess uga on uga.usergroupaccessid = couga.usergroupaccessid " +
+                    "left join usergroupmembers ugm on ugm.usergroupid = uga.usergroupid " +
+                    "where couga.categoryoptionid = cocco.categoryoptionid and ugm.userid = " + user.getId() + ") )" );
 
         log.info( "Get approval SQL: " + sql );
 
