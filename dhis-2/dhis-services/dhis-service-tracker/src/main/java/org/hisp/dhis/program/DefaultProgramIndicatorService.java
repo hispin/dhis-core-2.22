@@ -33,7 +33,9 @@ import static org.hisp.dhis.i18n.I18nUtils.i18n;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 import org.hisp.dhis.constant.Constant;
@@ -305,6 +307,7 @@ public class DefaultProgramIndicatorService
 
     }
 
+    @Override
     public String expressionIsValid( String expression )
     {
         StringBuffer description = new StringBuffer();
@@ -379,6 +382,52 @@ public class DefaultProgramIndicatorService
         return ProgramIndicator.VALID;
     }
 
+    @Override
+    public Set<ProgramStageDataElement> getProgramStageDataElementsInExpression( ProgramIndicator indicator )
+    {
+        Set<ProgramStageDataElement> elements = new HashSet<>();
+        
+        Matcher matcher = ProgramIndicator.DATAELEMENT_PATTERN.matcher( indicator.getExpression() );
+        
+        while ( matcher.find() )
+        {
+            String ps = matcher.group( 1 );
+            String de = matcher.group( 2 );
+            
+            ProgramStage programStage = programStageService.getProgramStage( ps );
+            DataElement dataElement = dataElementService.getDataElement( de );
+            
+            if ( programStage != null && dataElement != null )
+            {
+                elements.add( new ProgramStageDataElement( programStage, dataElement ) );
+            }
+        }
+        
+        return elements;
+    }
+
+    @Override
+    public Set<TrackedEntityAttribute> getAttributesInExpression( ProgramIndicator indicator )
+    {
+        Set<TrackedEntityAttribute> attributes = new HashSet<>();
+
+        Matcher matcher = ProgramIndicator.ATTRIBUTE_PATTERN.matcher( indicator.getExpression() );
+        
+        while ( matcher.find() )
+        {
+            String at = matcher.group( 1 );
+            
+            TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( at );
+            
+            if ( attribute != null )
+            {
+                attributes.add( attribute );
+            }
+        }
+        
+        return attributes;        
+    }
+    
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------

@@ -85,6 +85,12 @@ public class ProgramStageDataElement
     {
     }
 
+    public ProgramStageDataElement( ProgramStage programStage, DataElement dataElement )
+    {
+        this.programStage = programStage;
+        this.dataElement = dataElement;
+    }
+
     public ProgramStageDataElement( ProgramStage programStage, DataElement dataElement, boolean compulsory )
     {
         this.programStage = programStage;
