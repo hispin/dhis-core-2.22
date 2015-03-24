@@ -92,12 +92,12 @@ public class DefaultObjectFilterService implements ObjectFilterService
 
         for ( String field : filters.getFilters().keySet() )
         {
-            if ( !schema.getPropertyMap().containsKey( field ) )
+            if ( !schema.haveProperty( field ) )
             {
                 continue;
             }
 
-            Property descriptor = schema.getPropertyMap().get( field );
+            Property descriptor = schema.getProperty( field );
 
             if ( descriptor == null )
             {
