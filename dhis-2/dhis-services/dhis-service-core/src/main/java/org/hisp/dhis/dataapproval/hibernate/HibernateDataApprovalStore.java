@@ -371,6 +371,7 @@ public class HibernateDataApprovalStore
                 "left join _orgunitstructure ous on ous.idlevel" + orgUnitLevel + " = o.organisationunitid and ous.organisationunitid = coo.organisationunitid " +
                 joinAncestors +
                 "where ( coo.categoryoptionid is null or ous.organisationunitid is not null " + testAncestors + ")" +
+                 ( attributeOptionCombo == null ? "" : " and cocco.categoryoptioncomboid = " + attributeOptionCombo.getId() ) +
                  ( isSuperUser || user == null ? "" :
                          " and ( co.publicaccess is null or left(co.publicaccess, 1) = 'r' or co.userid = " + user.getId() + " or exists ( " +
                                  "select 1 from dataelementcategoryoptionusergroupaccesses couga " +
