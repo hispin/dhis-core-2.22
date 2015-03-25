@@ -1,10 +1,31 @@
-<div class="bordered-div col-md-12" ng-controller="RegistrationController">
+<div ng-class="{true: 'bordered-div'} [registrationMode === 'REGISTRATION']" ng-controller="RegistrationController">
     
     <!--registration form starts -->
     <form name="outerForm" novalidate>
+        
+        <!-- Entity type begins -->
+        <div ng-if="!selectedProgram && registrationMode === 'REGISTRATION'">
+            <h3>{{'category'| translate}}</h3>
+            <table class="table-borderless table-striped">
+                <tr>
+                    <td>
+                        {{'entity_type'| translate}}
+                    </td>
+                    <td>
+                        <select class="form-control" ng-model="trackedEntities.selected" ng-options="trackedEntity.name for trackedEntity in trackedEntities.available | orderBy: 'name'">                                
+                        </select>                            
+                    </td>
+                </tr>                   
+            </table>
+            <hr>
+        </div>
+        <!-- Entity type ends -->        
+        
         <!--custom registration form begins -->
         <div class="row col-sm-12 vertical-spacing" ng-if="customFormExists">
-            <div ng-if="selectedProgram && !customForm.hasProgramDate">
+            
+            <!-- enrollment and incidence dates begin -->
+            <div ng-if="selectedProgram && !customForm.hasProgramDate && registrationMode !== 'PROFILE'">
                 <table class="dhis2-list-table-striped dhis2-table-hover">
                     <tr>
                         <td>
@@ -40,42 +61,16 @@
                     </tr>
                 </table>
             </div>
-            <div ng-if="!selectedProgram">            
-                <table class="table-borderless table-striped">
-                    <tr>
-                        <td>
-                            {{'entity_type'| translate}}
-                        </td>
-                        <td>
-                            <select class="form-control" ng-model="trackedEntities.selected" ng-options="trackedEntity.name for trackedEntity in trackedEntities.available | orderBy: 'name'">                                
-                            </select>                            
-                        </td>
-                    </tr>                   
-                </table>
-                <hr>                
-            </div>
+            <!-- enrollment and incidence dates begin -->
+            
             <div ng-include="'../dhis-web-commons/customform/custom-form.html'"></div>
+            
         </div>
         <!-- custom registration form ends-->
 
         <!-- default registration form begins -->
-        <div class="row col-sm-12 vertical-spacing" ng-if="!customFormExists">
-            <div ng-if='!selectedProgram'>
-                <h3>{{'category'| translate}}</h3>
-                <table class="table-borderless table-striped">
-                    <tr>
-                        <td>
-                            {{'entity_type'| translate}}
-                        </td>
-                        <td>
-                            <select class="form-control" ng-model="trackedEntities.selected" ng-options="trackedEntity.name for trackedEntity in trackedEntities.available | orderBy: 'name'">                                
-                            </select>                            
-                        </td>
-                    </tr>                   
-                </table>
-                <hr>
-            </div>
-            <div ng-if="selectedProgram" ng-include="'views/enrollment-dates-form.html'"></div>            
+        <div class="row col-sm-12 vertical-spacing" ng-if="!customFormExists">            
+            <div ng-if="selectedProgram && registrationMode !== 'PROFILE'" ng-include="'views/enrollment-dates-form.html'"></div>            
             <div ng-include="'views/default-registration-form.html'"></div>
         </div>
         <!-- default registration form ends -->
@@ -84,11 +79,22 @@
             <div class="alert alert-warning">{{'form_is_empty_fill_at_least_one'| translate}}</div> 
         </div>
         
-        <div class="vertical-spacing">                
+        <div ng-if="!editingDisabled && registrationMode === 'PROFILE'" class="vertical-spacing">
+            <button type="button" class="btn btn-primary small-horizonal-spacing" ng-click="registerEntity(null)">{{'save'| translate}}</button>        
+            <button type="button" class="btn btn-default small-horizonal-spacing" ng-click="cancel()">{{'cancel'| translate}}</button>
+        </div>
+        
+        <div class="vertical-spacing" ng-if="registrationMode === 'ENROLLMENT'">            
+            <button type="button" class="btn btn-primary" ng-click="registerEntity(null)">{{'enroll'| translate}}</button>  
+            <button type="button" class="btn btn-default" ng-click="showNewEnrollment()">{{'cancel'| translate}}</button>                    
+        </div>
+        
+        <div class="vertical-spacing" ng-if="registrationMode === 'REGISTRATION'">                
             <button type="button" class="btn btn-primary" ng-click="registerEntity('DASHBOARD')">{{'save_and_continue'| translate}}</button>
             <button type="button" class="btn btn-success small-horizonal-spacing" ng-click="registerEntity('SELF')">{{'save_and_add_new'| translate}}</button>
             <button type="button" class="btn btn-default small-horizonal-spacing" ng-click="showRegistration()">{{'cancel'| translate}}</button>
         </div>
+        
     </form>
     <!--registration form ends -->
 </div>

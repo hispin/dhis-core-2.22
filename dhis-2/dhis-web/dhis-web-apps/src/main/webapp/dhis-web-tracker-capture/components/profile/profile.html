@@ -1,6 +1,5 @@
 <div class="panel panel-info" ng-controller="ProfileController">
     <div class="panel-heading handle bold">
-
         {{profileWidget.title| translate}}
         <span class="nav-pills" ng-if="!enrollmentEditing">
             | <a href ng-click="enableEdit()" title="{{'edit_profile'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [!editingDisabled]">{{'edit'| translate}}</span></a>
@@ -16,26 +15,8 @@
     </div>
     <div ng-show="profileWidget.expand" class="panel-body dashboard-widget-container">
         <form name="outerForm" novalidate>
-            <div ng-if="!enrollmentEditing">
-                <div class="vertical-spacing" ng-if="customFormExists">
-                    <div ng-include="'../dhis-web-commons/customform/custom-form.html'"></div>
-                </div>
-                <div class="vertical-spacing" ng-if="!customFormExists">            
-                    <div ng-include="'views/default-registration-form.html'"></div>
-                </div>
-
-                <div ng-if="!editingDisabled" class="vertical-spacing">
-                    <button type="button" 
-                            class="btn btn-primary small-horizonal-spacing"
-                            ng-click="save()">
-                        {{'save'| translate}}
-                    </button>        
-                    <button type="button" 
-                            class="btn btn-default small-horizonal-spacing" 
-                            ng-click="cancel()">
-                        {{'cancel'| translate}}
-                    </button>
-                </div>
+            <div ng-if="!enrollmentEditing">                
+                <div ng-include="'components/registration/registration.html'"></div>
             </div>
         </form>
     </div>
