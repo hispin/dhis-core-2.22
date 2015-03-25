@@ -436,6 +436,42 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     }; 
 })
 
+/* service to deal with TEI registration and update */
+.service('RegistrationService', function(DialogService, TEIService, $q){
+    return {
+        registerOrUpdate: function(tei, optionSets, attributesById){
+            if(tei){
+                var def = $q.defer();
+                if(tei.trackedEntityInstance){
+                    TEIService.update(tei, optionSets, attributesById).then(function(response){
+                        def.resolve(response); 
+                    });
+                }
+                else{
+                    TEIService.register(tei, optionSets, attributesById).then(function(response){
+                        def.resolve(response); 
+                    });
+                }
+                return def.promise;
+            }            
+        },
+        processForm: function(existingTei, formTei, attributesById){
+            var tei = angular.copy(existingTei);
+            tei.attributes = [];
+            var formEmpty = true;
+            for(var k in attributesById){
+                if( formTei[k] ){
+                    var att = attributesById[k];
+                    tei.attributes.push({attribute: att.id, value: formTei[k], displayName: att.name, type: att.valueType});
+                    formEmpty = false;
+                }
+                delete tei[k];
+            }
+            return {tei: tei, formEmpty: formEmpty};
+        }
+    };
+})
+
 /* Service to deal with enrollment */
 .service('EnrollmentService', function($http, DateUtils) {
     
@@ -843,7 +879,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* factory for handling events */
-.factory('DHIS2EventFactory', function($http, $q) {   
+.factory('DHIS2EventFactory', function($http) {   
     
     return {     
         
@@ -854,7 +890,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return promise;
         },
         getEventsByProgram: function(entity, program){   
-            var promise = $http.get( '../api/events.json?' + 'trackedEntityInstance=' + entity + '&program=' + program + '&paging=false').then(function(response){
+            
+            var url = '../api/events.json?' + 'trackedEntityInstance=' + entity + '&paging=false';            
+            if(program){
+                url = url + '&program=' + program;
+            }
+            var promise = $http.get( url ).then(function(response){
                 return response.data.events;
             });            
             return promise;

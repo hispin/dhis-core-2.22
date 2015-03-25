@@ -1,3 +1,5 @@
+/* global trackerCapture, angular */
+
 trackerCapture.controller('RelationshipController',
         function($scope,
                 $rootScope,

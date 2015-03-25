@@ -7,11 +7,13 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
 
 //Controller for settings page
 .controller('SelectionController',
-        function($scope,
+        function($rootScope,
+                $scope,
                 $modal,
                 $location,
                 $translate,
                 $filter,
+                $timeout,
                 Paginator,
                 storage,
                 DateUtils,
@@ -305,10 +307,15 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     
     $scope.showRegistration = function(){
         $scope.showRegistrationDiv = !$scope.showRegistrationDiv;
-        $scope.showTrackedEntityDiv = false;
-        $scope.showSearchDiv = false;
         
-        if(!$scope.showRegistrationDiv){
+        if($scope.showRegistrationDiv){
+            $scope.showTrackedEntityDiv = false;
+            $scope.showSearchDiv = false;
+            $timeout(function() { 
+                $rootScope.$broadcast('registrationWidget', {registrationMode: 'REGISTRATION'});
+            }, 100);
+        }
+        else{
             $scope.doSearch = true;
             $scope.getProgramAttributes($scope.selectedProgram);
         }
