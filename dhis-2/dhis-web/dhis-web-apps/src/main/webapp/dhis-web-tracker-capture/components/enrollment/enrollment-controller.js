@@ -1,20 +1,18 @@
+/* global trackerCapture, angular */
+
 trackerCapture.controller('EnrollmentController',
         function($rootScope,
                 $scope,  
                 $location,
                 $timeout,
                 DateUtils,
-                EventUtils,
                 storage,
-                DHIS2EventFactory,
                 AttributesFactory,
                 CurrentSelection,
-                TEIService,
                 TEFormService,
                 CustomFormService,
                 EnrollmentService,
-                ModalService,
-                DialogService) {
+                ModalService) {
     
     $scope.today = DateUtils.getToday();
     $scope.selectedOrgUnit = storage.get('SELECTED_OU');    
@@ -97,11 +95,15 @@ trackerCapture.controller('EnrollmentController',
                         $scope.trackedEntityForm = teForm;
                         $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
                     }
-                    $scope.broadCastSelections('dashboardWidgets');
+                    if($scope.selectedEnrollment.enrollment){
+                        $scope.broadCastSelections('dashboardWidgets');
+                    }                    
                 });
             }
             else{
-                $scope.broadCastSelections('dashboardWidgets');
+                if($scope.selectedEnrollment.enrollment){
+                    $scope.broadCastSelections('dashboardWidgets');
+                }
             }            
         });
     };
@@ -110,12 +112,21 @@ trackerCapture.controller('EnrollmentController',
         
         $scope.showEnrollmentDiv = !$scope.showEnrollmentDiv;
         
-        if($scope.showEnrollmentDiv){            
+        $timeout(function() { 
+            $rootScope.$broadcast('enrollmentEditing', {enrollmentEditing: $scope.showEnrollmentDiv});
+        }, 100);
+            
+        if($scope.showEnrollmentDiv){
+            
             $scope.showEnrollmentHistoryDiv = false;
             
             //load new enrollment details
             $scope.selectedEnrollment = {};            
             $scope.loadEnrollmentDetails($scope.selectedEnrollment);
+            
+            $timeout(function() { 
+                $rootScope.$broadcast('registrationWidget', {registrationMode: 'ENROLLMENT', selectedTei: $scope.selectedTei});
+            }, 100);
         }
         else{
             hideEnrollmentDiv();
@@ -134,77 +145,6 @@ trackerCapture.controller('EnrollmentController',
         }
     };
     
-    $scope.enroll = function(){    
-        
-        //check for form validity
-        $scope.outerForm.submitted = true;        
-        if( $scope.outerForm.$invalid ){
-            return false;
-        }
-        
-        //form is valid, continue with enrollment
-        var result = getProcessedForm();
-        $scope.formEmpty = result.formEmpty;
-        var tei = result.tei;
-        
-        if($scope.formEmpty){//form is empty
-            return false;
-        }
-        
-        var enrollment = {trackedEntityInstance: tei.trackedEntityInstance,
-                            program: $scope.selectedProgram.id,
-                            status: 'ACTIVE',
-                            dateOfEnrollment: $scope.selectedEnrollment.dateOfEnrollment,
-                            dateOfIncident: $scope.selectedEnrollment.dateOfIncident ? $scope.selectedEnrollment.dateOfIncident : $scope.selectedEnrollment.dateOfEnrollment
-                        };
-                        
-        TEIService.update(tei, $scope.optionSets, $scope.attributesById).then(function(updateResponse){            
-            
-            if(updateResponse.status === 'SUCCESS'){
-                //registration is successful, continue for enrollment               
-                EnrollmentService.enroll(enrollment).then(function(enrollmentResponse){                    
-                    if(enrollmentResponse.status !== 'SUCCESS'){
-                        //enrollment has failed
-                        var dialogOptions = {
-                                headerText: 'enrollment_error',
-                                bodyText: enrollmentResponse
-                            };
-                        DialogService.showDialog({}, dialogOptions);
-                        return;
-                    }
-                    
-                    enrollment.enrollment = enrollmentResponse.reference;
-                    $scope.selectedEnrollment = enrollment;
-                    $scope.enrollments.push($scope.selectedEnrollment);
-                    
-                    var dhis2Events = EventUtils.autoGenerateEvents(tei.trackedEntityInstance, $scope.selectedProgram, $scope.selectedOrgUnit, $scope.selectedEnrollment);
-                    
-                    $scope.showEnrollmentDiv = false;
-                    $scope.outerForm.submitted = false;
-
-                    CurrentSelection.set({tei: tei, te: $scope.selectedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: $scope.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: $scope.optionSets});
-                    if(dhis2Events.events.length > 0){
-                        DHIS2EventFactory.create(dhis2Events).then(function(data) {
-                            $scope.broadCastSelections('dashboardWidgets');
-                        });
-                    }
-                    else{
-                        $scope.broadCastSelections('dashboardWidgets');
-                    }                    
-                });
-            }
-            else{
-                //update has failed
-                var dialogOptions = {
-                        headerText: 'registration_error',
-                        bodyText: updateResponse.description
-                    };
-                DialogService.showDialog({}, dialogOptions);
-                return;
-            }
-        });
-    };
-    
     $scope.broadCastSelections = function(listeners){
         var selections = CurrentSelection.get();
         var tei = selections.tei;
@@ -213,24 +153,6 @@ trackerCapture.controller('EnrollmentController',
         $timeout(function() { 
             $rootScope.$broadcast(listeners, {});
         }, 100);
-        
-        $timeout(function() { 
-            $rootScope.$broadcast('enrollmentEditing', {enrollmentEditing: $scope.showEnrollmentDiv});
-        }, 100);
-    };    
-    
-    var getProcessedForm = function(){        
-        var tei = angular.copy(selections.tei);
-        tei.attributes = [];
-        var formEmpty = true;
-        for(var k in $scope.attributesById){
-            if( $scope.selectedTei[k] ){
-                tei.attributes.push({attribute: $scope.attributesById[k].id, value: $scope.selectedTei[k], displayName: $scope.attributesById[k].name, type: $scope.attributesById[k].valueType});
-                formEmpty = false;
-            }
-        }
-        
-        return {tei: tei, formEmpty: formEmpty};
     };
     
     var processSelectedTei = function(){

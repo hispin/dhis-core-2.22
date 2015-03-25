@@ -251,7 +251,7 @@ trackerCapture.controller('DataEntryController',
             
             var val = dataValue.value;
             var de = $scope.prStDes[dataValue.dataElement].dataElement;
-            if(de){                
+            if(de){           
                 if(val && de.type === 'string' && de.optionSet && $scope.optionSets[de.optionSet.id].options  ){
                     val = OptionSetService.getName($scope.optionSets[de.optionSet.id].options, val);
                 }
@@ -276,8 +276,7 @@ trackerCapture.controller('DataEntryController',
         if(stage.captureCoordinates){
             event.coordinate = {latitude: event.coordinate.latitude ? event.coordinate.latitude : '',
                                      longitude: event.coordinate.longitude ? event.coordinate.longitude : ''};
-        }
-        
+        }        
         
         event.allowProvidedElsewhereExists = false;
         angular.forEach(stage.programStageDataElements, function(prStDe){

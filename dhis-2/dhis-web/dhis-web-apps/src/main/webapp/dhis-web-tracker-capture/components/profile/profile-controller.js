@@ -1,11 +1,12 @@
+/* global trackerCapture, angular */
+
 trackerCapture.controller('ProfileController',
         function($rootScope,
-                $scope,     
+                $scope,
+                $timeout,
                 CurrentSelection,
                 CustomFormService,
                 TEFormService,
-                TEIService,
-                DialogService,
                 AttributesFactory) {    
     
     $scope.editingDisabled = true;
@@ -47,6 +48,9 @@ trackerCapture.controller('ProfileController',
                 }); 
             }           
         });
+        $timeout(function() { 
+            $rootScope.$broadcast('registrationWidget', {registrationMode: 'PROFILE', selectedTei: $scope.selectedTei, enrollment: $scope.selectedEnrollment});
+        }, 100);
     });
     
     //listen for enrollment editing
@@ -60,50 +64,11 @@ trackerCapture.controller('ProfileController',
         $rootScope.profileWidget.expand = true;
     };
     
-    $scope.save = function(){
-        //check for form validity
-        $scope.outerForm.submitted = true;        
-        if( $scope.outerForm.$invalid ){
-            return false;
-        }
-
-        //form is valid, continue the update process        
-        //get tei attributes and their values
-        //but there could be a case where attributes are non-mandatory and
-        //form comes empty, in this case enforce at least one value        
-        $scope.formEmpty = true;
-        var tei = angular.copy(selections.tei);
-        tei.attributes = [];
-        for(var k in $scope.attributesById){
-            if( $scope.selectedTei.hasOwnProperty(k) && $scope.selectedTei[k] ){
-                tei.attributes.push({attribute: $scope.attributesById[k].id, value: $scope.selectedTei[k], type: $scope.attributesById[k].valueType});
-                $scope.formEmpty = false;
-            }
-        }
-        
-        if($scope.formEmpty){//form is empty
-            return false;
-        }
-                
-        TEIService.update(tei, $scope.optionSets, $scope.attributesById).then(function(updateResponse){
-            
-            if(updateResponse.status !== 'SUCCESS'){//update has failed
-                var dialogOptions = {
-                        headerText: 'update_error',
-                        bodyText: updateResponse.description
-                    };
-                DialogService.showDialog({}, dialogOptions);
-                return;
-            }
-            
-            $scope.editingDisabled = !$scope.editingDisabled;
-            CurrentSelection.set({tei: tei, te: $scope.trackedEntity, pr: $scope.selectedProgram, enrollment: $scope.selectedEnrollment, optionSets: $scope.optionSets});   
-            $scope.outerForm.submitted = false; 
-        });
-    };
-    
     $scope.cancel = function(){
         $scope.selectedTei = $scope.teiOriginal;  
         $scope.editingDisabled = !$scope.editingDisabled;
+        $timeout(function() { 
+            $rootScope.$broadcast('registrationWidget', {registrationMode: 'PROFILE', selectedTei: $scope.selectedTei, enrollment: $scope.selectedEnrollment});
+        }, 100);
     };  
 });

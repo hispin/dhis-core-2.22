@@ -1,3 +1,5 @@
+/* global trackerCapture, angular */
+
 trackerCapture.controller('RegistrationController', 
         function($rootScope,
                 $scope,
@@ -6,7 +8,6 @@ trackerCapture.controller('RegistrationController',
                 AttributesFactory,
                 DHIS2EventFactory,
                 TEService,
-                TEIService,
                 TEFormService,
                 CustomFormService,
                 EnrollmentService,
@@ -14,13 +15,16 @@ trackerCapture.controller('RegistrationController',
                 CurrentSelection,
                 OptionSetService,
                 EventUtils,
+                RegistrationService,
                 DateUtils,
                 storage) {
     
     $scope.today = DateUtils.getToday();
     $scope.trackedEntityForm = null;
     $scope.customForm = null;    
-    $scope.selectedTei = {};    
+    $scope.selectedTei = {};
+    $scope.tei = {};
+    $scope.registrationMode = null;
     
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
@@ -59,10 +63,30 @@ trackerCapture.controller('RegistrationController',
     $scope.$watch('selectedProgram', function() {        
         $scope.trackedEntityForm = null;
         $scope.customForm = null;
-        $scope.getAttributes();
-    });    
+        if($scope.registrationMode === 'REGISTRATION'){
+            $scope.getAttributes($scope.registrationMode);
+        }        
+    }); 
+    
+    //listen to modes of registration
+    $scope.$on('registrationWidget', function(event, args){
+        $scope.selectedTei = {};
+        $scope.tei = {};
+        $scope.registrationMode = args.registrationMode;
+        $scope.getAttributes($scope.registrationMode);
         
-    $scope.getAttributes = function(){
+        if($scope.registrationMode !== 'REGISTRATION'){
+            $scope.selectedTei = args.selectedTei;            
+            $scope.tei = angular.copy(args.selectedTei);            
+        }
+        
+        if($scope.registrationMode === 'PROFILE'){
+            $scope.selectedEnrollment = args.enrollment;
+        }
+    });
+        
+    $scope.getAttributes = function(_mode){
+        var mode = _mode ? _mode : 'ENROLLMENT';
         AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
             $scope.attributes = atts;
             $scope.customFormExists = false;               
@@ -70,59 +94,55 @@ trackerCapture.controller('RegistrationController',
                 if(angular.isObject(teForm)){                        
                     $scope.customFormExists = true;
                     $scope.trackedEntityForm = teForm;                      
-                    $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
+                    $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
                 }                    
             });  
         });        
     };
     
     $scope.registerEntity = function(destination){        
+        
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
             return false;
-        }
+        }                   
         
         //form is valid, continue the registration
-        //get selected entity
-        var selectedTrackedEntity = $scope.trackedEntities.selected.id; 
-        if($scope.selectedProgram){
-            selectedTrackedEntity = $scope.selectedProgram.trackedEntity.id;
+        //get selected entity        
+        if(!$scope.selectedTei.trackedEntityInstance){
+            $scope.selectedTei.trackedEntity = $scope.tei.trackedEntity = $scope.selectedProgram && $scope.selectedProgram.trackedEntity && $scope.selectedProgram.trackedEntity.id ? $scope.selectedProgram.trackedEntity.id : $scope.trackedEntities.selected.id;
+            $scope.selectedTei.orgUnit = $scope.selectedTei.orgUnit = $scope.selectedOrgUnit.id;
+            $scope.selectedTei.attributes = $scope.selectedTei.attributes = [];
         }
         
         //get tei attributes and their values
         //but there could be a case where attributes are non-mandatory and
         //registration form comes empty, in this case enforce at least one value        
-        $scope.formEmpty = true;        
-        $scope.tei = {trackedEntity: selectedTrackedEntity, orgUnit: $scope.selectedOrgUnit.id, attributes: [] };
-        for(var k in $scope.attributesById){
-            if( $scope.selectedTei.hasOwnProperty(k) && $scope.selectedTei[k] ){
-                var val = $scope.selectedTei[k];
-                $scope.tei.attributes.push({attribute: $scope.attributesById[k].id, value: val, type: $scope.attributesById[k].valueType});
-                $scope.formEmpty = false;
-            }
-        }
+        
+        var result = RegistrationService.processForm($scope.tei, $scope.selectedTei, $scope.attributesById);
+        $scope.formEmpty = result.formEmpty;
+        $scope.tei = result.tei;
         
         if($scope.formEmpty){//registration form is empty
             return false;
         }
         
-        var teiId = '';
-        TEIService.register($scope.tei, $scope.optionSets, $scope.attributesById).then(function(response){
-            
+        RegistrationService.registerOrUpdate($scope.tei, $scope.optionSets, $scope.attributesById).then(function(response){
             if(response.status === 'SUCCESS'){
+                if( $scope.tei && !$scope.tei.trackedEntityInstance ){
+                    $scope.tei.trackedEntityInstance = response.reference;
+                }
                 
-                teiId = response.reference;
-                
-                //registration is successful and check for enrollment
-                if($scope.selectedProgram){    
+                if($scope.selectedProgram && $scope.registrationMode !== 'PROFILE'){
                     //enroll TEI
-                    var enrollment = {trackedEntityInstance: teiId,
-                                program: $scope.selectedProgram.id,
-                                status: 'ACTIVE',
-                                dateOfEnrollment: $scope.selectedEnrollment.dateOfEnrollment,
-                                dateOfIncident: $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident
-                            };                           
+                    var enrollment = {};
+                    enrollment.trackedEntityInstance = $scope.tei.trackedEntityInstance;
+                    enrollment.program = $scope.selectedProgram.id;
+                    enrollment.status = 'ACTIVE';
+                    enrollment.dateOfEnrollment = $scope.selectedEnrollment.dateOfEnrollment;
+                    enrollment.dateOfIncident = $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident;
+                    
                     EnrollmentService.enroll(enrollment).then(function(data){
                         if(data.status !== 'SUCCESS'){
                             //enrollment has failed
@@ -135,35 +155,28 @@ trackerCapture.controller('RegistrationController',
                         }
                         else{
                             enrollment.enrollment = data.reference;
-                            var dhis2Events = EventUtils.autoGenerateEvents(teiId, $scope.selectedProgram, $scope.selectedOrgUnit, enrollment);
+                            $scope.selectedEnrollment = enrollment;
+                            var dhis2Events = EventUtils.autoGenerateEvents($scope.tei.trackedEntityInstance, $scope.selectedProgram, $scope.selectedOrgUnit, enrollment);
                             if(dhis2Events.events.length > 0){
                                 DHIS2EventFactory.create(dhis2Events).then(function(data){
-                                    goToDashboard(destination, teiId);
+                                    notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
                                 });
                             }else{
-                                goToDashboard(destination, teiId);
+                                notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
                             }                            
                         }
                     });
-                }
-                else{
-                    goToDashboard(destination, teiId);
-                }
+                }                
             }
-            else{
-                //registration has failed
+            else{//update/registration has failed
                 var dialogOptions = {
-                        headerText: 'registration_error',
+                        headerText: $scope.tei && $scope.tei.trackedEntityInstance ? 'update_error' : 'registration_error',
                         bodyText: response.description
                     };
                 DialogService.showDialog({}, dialogOptions);
                 return;
-            }            
-        });
-    };
-    
-    $scope.resetRelationshipSource = function(){
-        $scope.selectedRelationshipSource = '';        
+            }
+        });        
     };
     
     $scope.broadCastSelections = function(){
@@ -193,5 +206,20 @@ trackerCapture.controller('RegistrationController',
             $scope.tei.trackedEntityInstance = teiId;
             $scope.broadCastSelections();
         }
+    };
+    
+    var notifyRegistrtaionCompletion = function(destination, teiId){
+        goToDashboard( destination ? destination : 'DASHBOARD', teiId );
+        /*if($scope.registrationMode === 'REGISTRATION'){
+            goToDashboard(destination, teiId);
+        }
+        else{
+            
+            var selections = CurrentSelection.get();
+            CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments.push($scope.selectedEnrollment), selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});        
+            $timeout(function() { 
+                $rootScope.$broadcast('selectedItems', {programExists: selections.prs.length > 0});            
+            }, 100);
+        }*/
     };
 });
