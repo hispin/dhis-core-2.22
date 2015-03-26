@@ -40,12 +40,10 @@ import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategoryDimension;
-import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementOperandService;
 import org.hisp.dhis.dataentryform.DataEntryForm;
@@ -55,6 +53,7 @@ import org.hisp.dhis.dxf2.common.ImportUtils;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
 import org.hisp.dhis.dxf2.metadata.Importer;
+import org.hisp.dhis.dxf2.metadata.MergeService;
 import org.hisp.dhis.dxf2.metadata.ObjectBridge;
 import org.hisp.dhis.dxf2.metadata.handlers.ObjectHandler;
 import org.hisp.dhis.dxf2.metadata.handlers.ObjectHandlerUtils;
@@ -149,10 +148,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
     private List<ObjectHandler<T>> objectHandlers;
 
     @Autowired
-    private DataElementCategoryService categoryService;
-
-    @Autowired
-    private IdentifiableObjectManager manager;
+    private MergeService mergeService;
 
     //-------------------------------------------------------------------------------------------------------
     // Constructor
@@ -441,11 +437,13 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         {
             User persistedObjectUser = persistedObject.getUser();
             persistedObject.mergeWith( object, options.getMergeStrategy() );
+            // mergeService.merge( persistedObject, object, options.getMergeStrategy() );
             persistedObject.setUser( persistedObjectUser );
         }
         else
         {
             persistedObject.mergeWith( object, options.getMergeStrategy() );
+            // mergeService.merge( persistedObject, object, options.getMergeStrategy() );
             persistedObject.mergeSharingWith( object );
         }
 
@@ -470,6 +468,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                 }
 
                 ((User) persistedObject).getUserCredentials().mergeWith( userCredentials, options.getMergeStrategy() );
+                // mergeService.merge( ((User) persistedObject).getUserCredentials(), userCredentials, options.getMergeStrategy() );
                 reattachCollectionFields( ((User) persistedObject).getUserCredentials(), collectionFieldsUserCredentials, user );
 
                 sessionFactory.getCurrentSession().saveOrUpdate( ((User) persistedObject).getUserCredentials() );

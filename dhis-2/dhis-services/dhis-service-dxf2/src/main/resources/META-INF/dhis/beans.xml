@@ -4,6 +4,8 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
 
+  <bean id="org.hisp.dhis.dxf2.metadata.MergeService" class="org.hisp.dhis.dxf2.metadata.DefaultMergeService" />
+
   <bean id="org.hisp.dhis.dxf2.gml.GmlImportService" class="org.hisp.dhis.dxf2.gml.DefaultGmlImportService" />
 
   <bean id="org.hisp.dhis.dxf2.events.event.csv.CsvEventService" class="org.hisp.dhis.dxf2.events.event.csv.DefaultCsvEventService" />
