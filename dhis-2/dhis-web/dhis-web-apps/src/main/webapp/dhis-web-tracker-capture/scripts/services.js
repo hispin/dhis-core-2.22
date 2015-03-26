@@ -674,10 +674,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         register: function(tei, optionSets, attributesById){
             var formattedTei = angular.copy(tei);
-            angular.forEach(formattedTei.attributes, function(att){                        
-                att.value = AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'API');                                                                
+            var attributes = [];
+            angular.forEach(formattedTei.attributes, function(att){ 
+                attributes.push({attribute: att.attribute, value: AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'API')});
             });
             
+            formattedTei.attributes = attributes;
             var promise = $http.post( '../api/trackedEntityInstances' , formattedTei ).then(function(response){                    
                 return response.data;
             });            
