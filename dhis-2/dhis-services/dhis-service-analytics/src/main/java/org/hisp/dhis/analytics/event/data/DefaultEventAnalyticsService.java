@@ -249,7 +249,7 @@ public class DefaultEventAnalyticsService
 
             User user = currentUserService.getCurrentUser();
             
-            Collection<OrganisationUnit> roots = user != null ? user.getDataViewOrganisationUnits() : null;
+            Collection<OrganisationUnit> roots = user != null ? user.getOrganisationUnits() : null;
             
             if ( params.isHierarchyMeta() )
             {
@@ -340,7 +340,7 @@ public class DefaultEventAnalyticsService
 
         User user = currentUserService.getCurrentUser();
 
-        Collection<OrganisationUnit> roots = user != null ? user.getDataViewOrganisationUnits() : null;
+        Collection<OrganisationUnit> roots = user != null ? user.getOrganisationUnits() : null;
         
         if ( params.isHierarchyMeta() )
         {
