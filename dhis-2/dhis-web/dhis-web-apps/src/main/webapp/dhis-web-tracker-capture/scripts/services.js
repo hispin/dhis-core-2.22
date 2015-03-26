@@ -51,7 +51,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* current selections */
-.service('PeriodService', function($translate, $filter, DateUtils, CalendarService){
+.service('PeriodService', function(DateUtils, CalendarService){
     
     var calendarSetting = CalendarService.getSetting();    
     
