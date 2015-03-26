@@ -7,10 +7,7 @@ trackerCapture.controller('EnrollmentController',
                 $timeout,
                 DateUtils,
                 storage,
-                AttributesFactory,
                 CurrentSelection,
-                TEFormService,
-                CustomFormService,
                 EnrollmentService,
                 ModalService) {
     
@@ -77,35 +74,13 @@ trackerCapture.controller('EnrollmentController',
         }        
     });
     
-    $scope.loadEnrollmentDetails = function(enrollment) {
-        
-        $scope.attributesForEnrollment = [];
-        $scope.attributes = [];
+    $scope.loadEnrollmentDetails = function(enrollment){
         $scope.showEnrollmentHistoryDiv = false;
         $scope.selectedEnrollment = enrollment;
         
-        AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
-            $scope.attributes = atts;                
-            $scope.customFormExists = false;    
-            
-            if($scope.selectedProgram && $scope.selectedProgram.id){
-                TEFormService.getByProgram($scope.selectedProgram, atts).then(function(teForm){                    
-                    if(angular.isObject(teForm)){                        
-                        $scope.customFormExists = true;
-                        $scope.trackedEntityForm = teForm;
-                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'ENROLLMENT');
-                    }
-                    if($scope.selectedEnrollment.enrollment){
-                        $scope.broadCastSelections('dashboardWidgets');
-                    }                    
-                });
-            }
-            else{
-                if($scope.selectedEnrollment.enrollment){
-                    $scope.broadCastSelections('dashboardWidgets');
-                }
-            }            
-        });
+        if($scope.selectedEnrollment.enrollment){
+            $scope.broadCastSelections('dashboardWidgets');
+        }
     };
         
     $scope.showNewEnrollment = function(){

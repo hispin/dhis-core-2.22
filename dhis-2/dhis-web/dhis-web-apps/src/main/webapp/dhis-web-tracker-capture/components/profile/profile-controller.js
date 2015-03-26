@@ -4,10 +4,7 @@ trackerCapture.controller('ProfileController',
         function($rootScope,
                 $scope,
                 $timeout,
-                CurrentSelection,
-                CustomFormService,
-                TEFormService,
-                AttributesFactory) {    
+                CurrentSelection) {    
     
     $scope.editingDisabled = true;
     $scope.enrollmentEditing = false;
@@ -16,6 +13,21 @@ trackerCapture.controller('ProfileController',
     //listen for the selected entity
     var selections = {};
     $scope.$on('dashboardWidgets', function(event, args) {        
+        listenToBroadCast();
+    });
+    
+    //listen to changes in profile
+    $scope.$on('profileWidget', function(event, args){
+        listenToBroadCast();
+    });
+    
+    //listen to changes in enrollment editing
+    $scope.$on('enrollmentEditing', function(event, args){
+        $scope.enrollmentEditing = args.enrollmentEditing;
+    });
+    
+    var listenToBroadCast = function(){     
+        $scope.editingDisabled = true;
         selections = CurrentSelection.get();
         $scope.selectedTei = angular.copy(selections.tei);
         $scope.trackedEntity = selections.te;
@@ -34,29 +46,11 @@ trackerCapture.controller('ProfileController',
         });
         
         delete $scope.selectedTei.attributes;
-        
-        AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
-            $scope.attributes = atts;          
-            $scope.customFormExists = false;
-            if($scope.selectedProgram && $scope.selectedProgram.id){
-                TEFormService.getByProgram($scope.selectedProgram, atts).then(function(teForm){                    
-                    if(angular.isObject(teForm)){                        
-                        $scope.customFormExists = true;
-                        $scope.trackedEntityForm = teForm;
-                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'PROFILE');
-                    }                    
-                }); 
-            }           
-        });
+
         $timeout(function() { 
             $rootScope.$broadcast('registrationWidget', {registrationMode: 'PROFILE', selectedTei: $scope.selectedTei, enrollment: $scope.selectedEnrollment});
         }, 100);
-    });
-    
-    //listen for enrollment editing
-    $scope.$on('enrollmentEditing', function(event, args){
-        $scope.enrollmentEditing = args.enrollmentEditing;
-    });
+    };
     
     $scope.enableEdit = function(){
         $scope.teiOriginal = angular.copy($scope.selectedTei);
