@@ -5,9 +5,12 @@ trackerCapture.controller('RelationshipController',
                 $rootScope,
                 $modal,                
                 $location,
+                TEIService,
                 AttributesFactory,
                 CurrentSelection,
-                RelationshipFactory) {
+                RelationshipFactory,
+                ModalService,
+                DialogService) {
     $rootScope.showAddRelationshipDiv = false;    
     $scope.relatedProgramRelationship = false;
     
@@ -77,6 +80,45 @@ trackerCapture.controller('RelationshipController',
                 setRelationships();
             });
         }
+    };
+    
+    $scope.removeRelationship = function(rel){
+        
+        var modalOptions = {
+            closeButtonText: 'cancel',
+            actionButtonText: 'delete',
+            headerText: 'delete',
+            bodyText: 'are_you_sure_to_delete_relationship'
+        };
+
+        ModalService.showModal({}, modalOptions).then(function(result){
+            
+            var index = -1;
+            for(var i=0; i<$scope.selectedTei.relationships.length; i++){
+                if($scope.selectedTei.relationships[i].relationship === rel.relId){
+                    index = i;
+                    break;
+                }
+            }
+
+            if( index !== -1 ){
+                $scope.selectedTei.relationships.splice(index,1);
+                TEIService.update($scope.selectedTei, $scope.optionSets, $scope.attributesById).then(function(response){
+                    if(response.status !== 'SUCCESS'){//update has failed
+                        var dialogOptions = {
+                                headerText: 'update_error',
+                                bodyText: response.description
+                            };
+                        DialogService.showDialog({}, dialogOptions);
+                        return;
+                    }
+
+                    var selections = CurrentSelection.get();
+                    CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});                                
+                    setRelationships();
+                });
+            }
+        });        
     };
     
     $scope.showDashboard = function(teiId, relId){
