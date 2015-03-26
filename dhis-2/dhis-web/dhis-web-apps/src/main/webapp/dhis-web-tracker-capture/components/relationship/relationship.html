@@ -31,10 +31,13 @@
                         {{att.name}}
                     </th>
                 </tr>
-                <tr ng-click="showDashboard(rel.trackedEntityInstance, rel.relId)" ng-repeat="rel in relatedTeis" title="{{'go_to_dashboard'| translate}}">
-                    <td>{{rel.relName}}</td> 
-                    <td ng-repeat="att in attributes" ng-if="att.displayInListNoProgram">
+                <tr ng-repeat="rel in relatedTeis">
+                    <td title="{{'go_to_dashboard'| translate}}" ng-click="showDashboard(rel.trackedEntityInstance, rel.relId)">{{rel.relName}}</td> 
+                    <td title="{{'go_to_dashboard'| translate}}" ng-click="showDashboard(rel.trackedEntityInstance, rel.relId)" ng-repeat="att in attributes" ng-if="att.displayInListNoProgram">
                         {{rel.attributes[att.id]}}
+                    </td>
+                    <td ng-click="removeRelationship(rel)" title="{{'delete_relationship'| translate}}">
+                        <i class="fa fa-trash-o"></i>
                     </td>
                 </tr>
             </table>           
