@@ -101,7 +101,7 @@ trackerCapture.controller('RegistrationController',
     };
     
     $scope.registerEntity = function(destination){        
-        
+
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
@@ -129,43 +129,48 @@ trackerCapture.controller('RegistrationController',
         }
         
         RegistrationService.registerOrUpdate($scope.tei, $scope.optionSets, $scope.attributesById).then(function(response){
+            
             if(response.status === 'SUCCESS'){
-                if( $scope.tei && !$scope.tei.trackedEntityInstance ){
-                    $scope.tei.trackedEntityInstance = response.reference;
-                }
                 
-                if($scope.selectedProgram && $scope.registrationMode !== 'PROFILE'){
-                    //enroll TEI
-                    var enrollment = {};
-                    enrollment.trackedEntityInstance = $scope.tei.trackedEntityInstance;
-                    enrollment.program = $scope.selectedProgram.id;
-                    enrollment.status = 'ACTIVE';
-                    enrollment.dateOfEnrollment = $scope.selectedEnrollment.dateOfEnrollment;
-                    enrollment.dateOfIncident = $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident;
-                    
-                    EnrollmentService.enroll(enrollment).then(function(data){
-                        if(data.status !== 'SUCCESS'){
-                            //enrollment has failed
-                            var dialogOptions = {
-                                    headerText: 'enrollment_error',
-                                    bodyText: data.description
-                                };
-                            DialogService.showDialog({}, dialogOptions);
-                            return;
-                        }
-                        else{
-                            enrollment.enrollment = data.reference;
-                            $scope.selectedEnrollment = enrollment;
-                            var dhis2Events = EventUtils.autoGenerateEvents($scope.tei.trackedEntityInstance, $scope.selectedProgram, $scope.selectedOrgUnit, enrollment);
-                            if(dhis2Events.events.length > 0){
-                                DHIS2EventFactory.create(dhis2Events).then(function(data){
+                $scope.tei.trackedEntityInstance = response.reference;
+                
+                if( $scope.registrationMode === 'PROFILE' ){                    
+                    reloadProfileWidget();
+                }
+                else{
+                    if( $scope.selectedProgram ){
+                        //enroll TEI
+                        var enrollment = {};
+                        enrollment.trackedEntityInstance = $scope.tei.trackedEntityInstance;
+                        enrollment.program = $scope.selectedProgram.id;
+                        enrollment.status = 'ACTIVE';
+                        enrollment.dateOfEnrollment = $scope.selectedEnrollment.dateOfEnrollment;
+                        enrollment.dateOfIncident = $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident;
+
+                        EnrollmentService.enroll(enrollment).then(function(data){
+                            if(data.status !== 'SUCCESS'){
+                                //enrollment has failed
+                                var dialogOptions = {
+                                        headerText: 'enrollment_error',
+                                        bodyText: data.description
+                                    };
+                                DialogService.showDialog({}, dialogOptions);
+                                return;
+                            }
+                            else{
+                                enrollment.enrollment = data.reference;
+                                $scope.selectedEnrollment = enrollment;
+                                var dhis2Events = EventUtils.autoGenerateEvents($scope.tei.trackedEntityInstance, $scope.selectedProgram, $scope.selectedOrgUnit, enrollment);
+                                if(dhis2Events.events.length > 0){
+                                    DHIS2EventFactory.create(dhis2Events).then(function(data){
+                                        notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
+                                    });
+                                }else{
                                     notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
-                                });
-                            }else{
-                                notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
-                            }                            
-                        }
-                    });
+                                }                            
+                            }
+                        });
+                    }
                 }                
             }
             else{//update/registration has failed
@@ -206,6 +211,14 @@ trackerCapture.controller('RegistrationController',
             $scope.tei.trackedEntityInstance = teiId;
             $scope.broadCastSelections();
         }
+    };
+    
+    var reloadProfileWidget = function(){
+        var selections = CurrentSelection.get();
+        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});        
+        $timeout(function() { 
+            $rootScope.$broadcast('profileWidget', {});            
+        }, 100);
     };
     
     var notifyRegistrtaionCompletion = function(destination, teiId){
