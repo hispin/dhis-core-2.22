@@ -117,18 +117,15 @@ public class DefaultSchemaValidator implements SchemaValidator
         {
             validationViolations.add( new ValidationViolation( property.getName(), "Not a valid email.", value ) );
         }
-
-        if ( PropertyType.URL == property.getPropertyType() && !GenericValidator.isUrl( value ) )
+        else if ( PropertyType.URL == property.getPropertyType() && !isUrl( value ) )
         {
             validationViolations.add( new ValidationViolation( property.getName(), "Not a valid URL.", value ) );
         }
-
-        if ( PropertyType.PASSWORD == property.getPropertyType() && !ValidationUtils.passwordIsValid( value ) )
+        else if ( PropertyType.PASSWORD == property.getPropertyType() && !ValidationUtils.passwordIsValid( value ) )
         {
             validationViolations.add( new ValidationViolation( property.getName(), "Not a valid password.", value ) );
         }
-
-        if ( PropertyType.COLOR == property.getPropertyType() && !ValidationUtils.isValidHexColor( value ) )
+        else if ( PropertyType.COLOR == property.getPropertyType() && !ValidationUtils.isValidHexColor( value ) )
         {
             validationViolations.add( new ValidationViolation( property.getName(), "Not a valid hex color.", value ) );
         }
@@ -141,6 +138,12 @@ public class DefaultSchemaValidator implements SchemaValidator
         */
 
         return validationViolations;
+    }
+
+    // Commons validator have some issues in latest version, replacing with a very simple test for now
+    private boolean isUrl( String url )
+    {
+        return !StringUtils.isEmpty( url ) && (url.startsWith( "http://" ) || url.startsWith( "https://" ));
     }
 
     private Collection<? extends ValidationViolation> validateCollection( Object object, Property property )
