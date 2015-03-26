@@ -112,7 +112,7 @@ trackerCapture.controller('RegistrationController',
         //get selected entity        
         if(!$scope.selectedTei.trackedEntityInstance){
             $scope.selectedTei.trackedEntity = $scope.tei.trackedEntity = $scope.selectedProgram && $scope.selectedProgram.trackedEntity && $scope.selectedProgram.trackedEntity.id ? $scope.selectedProgram.trackedEntity.id : $scope.trackedEntities.selected.id;
-            $scope.selectedTei.orgUnit = $scope.selectedTei.orgUnit = $scope.selectedOrgUnit.id;
+            $scope.selectedTei.orgUnit = $scope.tei.orgUnit = $scope.selectedOrgUnit.id;
             $scope.selectedTei.attributes = $scope.selectedTei.attributes = [];
         }
         
@@ -144,6 +144,7 @@ trackerCapture.controller('RegistrationController',
                         enrollment.trackedEntityInstance = $scope.tei.trackedEntityInstance;
                         enrollment.program = $scope.selectedProgram.id;
                         enrollment.status = 'ACTIVE';
+                        enrollment.orgUnit = $scope.selectedOrgUnit.id;
                         enrollment.dateOfEnrollment = $scope.selectedEnrollment.dateOfEnrollment;
                         enrollment.dateOfIncident = $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident;
 
@@ -170,6 +171,9 @@ trackerCapture.controller('RegistrationController',
                                 }                            
                             }
                         });
+                    }
+                    else{
+                       notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance); 
                     }
                 }                
             }
