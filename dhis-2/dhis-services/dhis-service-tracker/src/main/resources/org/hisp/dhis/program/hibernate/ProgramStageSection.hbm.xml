@@ -23,6 +23,13 @@
       <list-index column="section_sort_order" base="1" />
       <one-to-many class="org.hisp.dhis.program.ProgramStageDataElement" />
     </list>
+    
+    <list name="programIndicators" table="programstagesection_programindicators">
+      <key column="programstagesectionid" foreign-key="fk_programstagesection_programindicators_sectionid" />
+      <list-index column="sort_order" base="1" />
+      <many-to-many class="org.hisp.dhis.program.ProgramIndicator" column="programindicatorid"
+      	foreign-key="fk_programstagesection_programindicators_indicatorid"/>
+    </list>
 
     <property name="sortOrder" column="sortorder" not-null="true" />
 

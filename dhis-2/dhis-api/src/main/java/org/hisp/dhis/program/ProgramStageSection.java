@@ -56,6 +56,8 @@ public class ProgramStageSection
     private ProgramStage programStage;
 
     private List<ProgramStageDataElement> programStageDataElements = new ArrayList<>();
+    
+    private List<ProgramIndicator> programIndicators = new ArrayList<>();
 
     private Integer sortOrder;
 
@@ -113,6 +115,20 @@ public class ProgramStageSection
     public void setProgramStageDataElements( List<ProgramStageDataElement> programStageDataElements )
     {
         this.programStageDataElements = programStageDataElements;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "programIndicators", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programIndicator", namespace = DxfNamespaces.DXF_2_0 )
+    public List<ProgramIndicator> getProgramIndicators()
+    {
+        return programIndicators;
+    }
+
+    public void setProgramIndicators( List<ProgramIndicator> programIndicators )
+    {
+        this.programIndicators = programIndicators;
     }
 
     @JsonProperty
