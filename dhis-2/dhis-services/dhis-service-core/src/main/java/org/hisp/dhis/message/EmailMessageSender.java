@@ -31,18 +31,20 @@ package org.hisp.dhis.message;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.hisp.dhis.user.UserSettingService.KEY_MESSAGE_EMAIL_NOTIFICATION;
 
+import java.util.HashMap;
 import java.util.Set;
 
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
+import org.apache.commons.mail.HtmlEmail;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.DebugUtils;
+import org.hisp.dhis.system.velocity.VelocityManager;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.scheduling.annotation.Async;
@@ -54,11 +56,18 @@ public class EmailMessageSender
     implements MessageSender
 {
     private static final Log log = LogFactory.getLog( EmailMessageSender.class );
+
     private static final String FROM_ADDRESS = "noreply@dhis2.org";
+
     private static final String DEFAULT_APPLICATION_TITLE = "DHIS 2";
+
     private static final String DEFAULT_FROM_NAME = DEFAULT_APPLICATION_TITLE + " Message [No reply]";
+
     private static final String DEFAULT_SUBJECT_PREFIX = "[" + DEFAULT_APPLICATION_TITLE + "] ";
+
     private static final String LB = System.getProperty( "line.separator" );
+
+    private static final String MESSAGE_EMAIL_TEMPLATE = "message_email";
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -94,7 +103,7 @@ public class EmailMessageSender
      */
     @Async
     @Override
-    public String sendMessage( String subject, String text, User sender, Set<User> users, boolean forceSend )
+    public String sendMessage( String subject, String text, String footer, User sender, Set<User> users, boolean forceSend )
     {
         String hostName = systemSettingManager.getEmailHostName();
         int port = systemSettingManager.getEmailPort();
@@ -108,30 +117,28 @@ public class EmailMessageSender
             return null;
         }
 
-        text = sender == null ? text : ( text + LB + LB + 
-            sender.getName() + LB + 
-            ( sender.getOrganisationUnitsName() != null ? ( sender.getOrganisationUnitsName() + LB ) : StringUtils.EMPTY ) +
-            ( sender.getEmail() != null ? ( sender.getEmail() + LB ) : StringUtils.EMPTY ) +
-            ( sender.getPhoneNumber() != null ? ( sender.getPhoneNumber() + LB ) : StringUtils.EMPTY ) );
-        
+        String plainContent = renderPlainContent( text, sender );
+        String htmlContent = renderHtmlContent( text, footer, sender );
+
         try
         {
-            Email email = getEmail( hostName, port, username, password, tls, from );
+            HtmlEmail email = getHtmlEmail( hostName, port, username, password, tls, from );
             email.setSubject( customizeTitle( DEFAULT_SUBJECT_PREFIX ) + subject );
-            email.setMsg( text );
-                        
+            email.setTextMsg( plainContent );
+            email.setHtmlMsg( htmlContent );
+
             boolean hasRecipients = false;
-            
+
             for ( User user : users )
             {
                 boolean doSend = forceSend || (Boolean) userSettingService.getUserSettingValue( user, KEY_MESSAGE_EMAIL_NOTIFICATION, false );
-                
+
                 if ( doSend && user.getEmail() != null && !user.getEmail().trim().isEmpty() )
                 {
                     email.addBcc( user.getEmail() );
-                    
+
                     log.info( "Sending email to user: " + user.getUsername() + " with email address: " + user.getEmail() + " to host: " + hostName + ":" + port );
-                    
+
                     hasRecipients = true;
                 }
             }
@@ -154,21 +161,71 @@ public class EmailMessageSender
         return null;
     }
 
-    private Email getEmail( String hostName, int port, String username, String password, boolean tls, String sender )
+    // -------------------------------------------------------------------------
+    // Supportive methods
+    // -------------------------------------------------------------------------
+
+    private HtmlEmail getHtmlEmail( String hostName, int port, String username, String password, boolean tls, String sender )
         throws EmailException
     {
-        Email email = new SimpleEmail();
+        HtmlEmail email = new HtmlEmail();
         email.setHostName( hostName );
         email.setFrom( defaultIfEmpty( sender, FROM_ADDRESS ), customizeTitle( DEFAULT_FROM_NAME ) );
         email.setSmtpPort( port );
         email.setStartTLSEnabled( tls );
-        
+
         if ( username != null && password != null )
         {
             email.setAuthenticator( new DefaultAuthenticator( username, password ) );
         }
-        
+
         return email;
+    }
+
+    private String renderPlainContent( String text, User sender )
+    {
+        return sender == null ? text : ( text + LB + LB +
+            sender.getName() + LB +
+            ( sender.getOrganisationUnitsName() != null ? ( sender.getOrganisationUnitsName() + LB ) : StringUtils.EMPTY ) +
+            ( sender.getEmail() != null ? ( sender.getEmail() + LB ) : StringUtils.EMPTY ) +
+            ( sender.getPhoneNumber() != null ? ( sender.getPhoneNumber() + LB ) : StringUtils.EMPTY ) );
+    }
+
+    private String renderHtmlContent( String text, String footer, User sender )
+    {
+        HashMap<String, Object> content = new HashMap<>();
+
+        if ( !Strings.isNullOrEmpty( text ) )
+        {
+            content.put( "text", text.replaceAll( "\\r?\\n", "<br>" ) );
+        }
+
+        if ( !Strings.isNullOrEmpty( footer ) )
+        {
+            content.put( "footer", footer );
+        }
+
+        if ( sender != null )
+        {
+            content.put( "senderName", sender.getName() );
+
+            if ( sender.getOrganisationUnitsName() != null )
+            {
+                content.put( "organisationUnitsName", sender.getOrganisationUnitsName() );
+            }
+
+            if ( sender.getEmail() != null )
+            {
+                content.put( "email", sender.getEmail() );
+            }
+
+            if ( sender.getPhoneNumber() != null )
+            {
+                content.put( "phoneNumber", sender.getPhoneNumber() );
+            }
+        }
+
+        return new VelocityManager().render( content, MESSAGE_EMAIL_TEMPLATE );
     }
 
     private String customizeTitle( String title )
