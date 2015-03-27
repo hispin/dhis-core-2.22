@@ -2,7 +2,7 @@
 var d2Services = angular.module('d2Services', ['ngResource'])
 
 /* Factory for loading translation strings */
-.factory('i18nLoader', function ($q, $http, storage, DialogService) {
+.factory('i18nLoader', function ($q, $http, SessionStorageService, DialogService) {
  
     var getTranslationStrings = function(locale){
         var defaultUrl = 'i18n/i18n_app.properties';
@@ -39,7 +39,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         var locale = 'en';
 
         var promise = $http.get('../api/me/profile.json').then(function(response){
-            storage.set('USER_PROFILE', response.data);
+            SessionStorageService.set( 'USER_PROFILE', response.data );
             if(response.data && response.data.settings && response.data.settings.keyUiLocale){
                 locale = response.data.settings.keyUiLocale;
             }
@@ -52,7 +52,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     };
     return function () {
         var deferred = $q.defer(), translations;    
-        var userProfile = storage.get('USER_PROFILE');
+        var userProfile = SessionStorageService.get( 'USER_PROFILE' );
         if(userProfile && userProfile.settings && userProfile.settings.keyUiLocale){                
             getTranslationStrings(userProfile.settings.keyUiLocale).then(function(response){
                 translations = response.keys;
@@ -85,14 +85,26 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     };
 })
 
+/* service for wrapping sessionStorage '*/
+.service('SessionStorageService', function($window){
+    return {        
+        get: function(key){
+            return JSON.parse( $window.sessionStorage.getItem( key ) );
+        },
+        set: function(key, obj) {            
+            $window.sessionStorage.setItem( key, JSON.stringify( obj ) );
+        }
+    };
+})
+
 /* service for getting calendar setting */
-.service('CalendarService', function(storage, $rootScope){    
+.service('CalendarService', function(storage, $rootScope, SessionStorageService){    
 
     return {
         getSetting: function() {
             
             var dhis2CalendarFormat = {keyDateFormat: 'yyyy-MM-dd', keyCalendar: 'gregorian', momentFormat: 'YYYY-MM-DD'};                
-            var storedFormat = storage.get('CALENDAR_SETTING');
+            var storedFormat = SessionStorageService.get('CALENDAR_SETTING');
             if(angular.isObject(storedFormat) && storedFormat.keyDateFormat && storedFormat.keyCalendar){
                 if(storedFormat.keyCalendar === 'iso8601'){
                     storedFormat.keyCalendar = 'gregorian';

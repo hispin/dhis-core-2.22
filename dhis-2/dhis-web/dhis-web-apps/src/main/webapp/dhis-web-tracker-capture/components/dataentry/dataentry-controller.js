@@ -8,6 +8,7 @@ trackerCapture.controller('DataEntryController',
                 EventUtils,
                 orderByFilter,
                 storage,
+                SessionStorageService,
                 ProgramStageFactory,
                 DHIS2EventFactory,
                 OptionSetService,
@@ -24,7 +25,7 @@ trackerCapture.controller('DataEntryController',
     $scope.currentPeriod = [];
     $scope.filterEvents = true;
     
-    var userProfile = storage.get('USER_PROFILE');
+    var userProfile = SessionStorageService.get('USER_PROFILE');
     var storedBy = userProfile && userProfile.username ? userProfile.username : '';
     
     var today = DateUtils.getToday();
