@@ -102,6 +102,8 @@ public class Program
 
     @Scanned
     private Set<UserAuthorityGroup> userRoles = new HashSet<>();
+    
+    private Set<ProgramIndicator> programIndicators = new HashSet<>();
 
     private Boolean onlyEnrollOnce = false;
 
@@ -148,7 +150,7 @@ public class Program
     // -------------------------------------------------------------------------
     // Logic methods
     // -------------------------------------------------------------------------
-
+    
     /**
      * Returns the ProgramTrackedEntityAttribute of this Program which contains
      * the given TrackedEntityAttribute.
@@ -438,6 +440,21 @@ public class Program
     public void setUserRoles( Set<UserAuthorityGroup> userRoles )
     {
         this.userRoles = userRoles;
+    }
+
+    @JsonProperty
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JacksonXmlElementWrapper( localName = "programIndicators", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programIndicator", namespace = DxfNamespaces.DXF_2_0 )
+    public Set<ProgramIndicator> getProgramIndicators()
+    {
+        return programIndicators;
+    }
+
+    public void setProgramIndicators( Set<ProgramIndicator> programIndicators )
+    {
+        this.programIndicators = programIndicators;
     }
 
     @JsonProperty
