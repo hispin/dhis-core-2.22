@@ -29,8 +29,10 @@ package org.hisp.dhis.message;
  */
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -40,10 +42,14 @@ import org.hisp.dhis.dataset.CompleteDataSetRegistration;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.email.Email;
 import org.hisp.dhis.email.EmailService;
+import org.hisp.dhis.i18n.I18nManager;
+import org.hisp.dhis.i18n.locale.LocaleManager;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
+import org.hisp.dhis.user.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +65,8 @@ public class DefaultMessageService
     private static final String COMPLETE_SUBJECT = "Form registered as complete";
 
     private static final String COMPLETE_TEMPLATE = "completeness_message";
+
+    private static final String MESSAGE_EMAIL_FOOTER_TEMPLATE = "message_email_footer";
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -90,6 +98,27 @@ public class DefaultMessageService
     public void setEmailService( EmailService emailService )
     {
         this.emailService = emailService;
+    }
+
+    private UserSettingService userSettingService;
+
+    public void setUserSettingService( UserSettingService userSettingService )
+    {
+        this.userSettingService = userSettingService;
+    }
+
+    private I18nManager i18nManager;
+
+    public void setI18nManager( I18nManager i18nManager )
+    {
+        this.i18nManager = i18nManager;
+    }
+
+    private SystemSettingManager systemSettingManager;
+
+    public void setSystemSettingManager( SystemSettingManager systemSettingManager )
+    {
+        this.systemSettingManager = systemSettingManager;
     }
 
     private List<MessageSender> messageSenders;
@@ -164,8 +193,10 @@ public class DefaultMessageService
         int id = saveMessageConversation( conversation );
 
         users.remove( sender );
-        
-        invokeMessageSenders( subject, text, sender, users, forceNotifications );
+
+        String footer = getMessageFooter( conversation );
+
+        invokeMessageSenders( subject, text, footer, sender, users, forceNotifications );
 
         return id;
     }
@@ -195,7 +226,7 @@ public class DefaultMessageService
 
         updateMessageConversation( conversation );
 
-        invokeMessageSenders( conversation.getSubject(), text, sender, new HashSet<>( conversation.getUsers() ), false );
+        invokeMessageSenders( conversation.getSubject(), text, null, sender, new HashSet<>( conversation.getUsers() ), false );
     }
 
     @Override
@@ -244,7 +275,7 @@ public class DefaultMessageService
         {
             int id = saveMessageConversation( conversation );
             
-            invokeMessageSenders( COMPLETE_SUBJECT, text, sender, new HashSet<>( conversation.getUsers() ), false );
+            invokeMessageSenders( COMPLETE_SUBJECT, text, null, sender, new HashSet<>( conversation.getUsers() ), false );
 
             return id;
         }
@@ -374,13 +405,30 @@ public class DefaultMessageService
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void invokeMessageSenders( String subject, String text, User sender, Set<User> users, boolean forceSend )
+    private void invokeMessageSenders( String subject, String text, String footer, User sender, Set<User> users, boolean forceSend )
     {
         for ( MessageSender messageSender : messageSenders )
         {
             log.debug( "Invoking message sender: " + messageSender.getClass().getSimpleName() );
             
-            messageSender.sendMessage( subject, text, sender, new HashSet<>( users ), forceSend );
+            messageSender.sendMessage( subject, text, footer, sender, new HashSet<>( users ), forceSend );
         }
+    }
+
+    private String getMessageFooter( MessageConversation conversation ) {
+        HashMap<String, Object> values = new HashMap<>( 2 );
+        String baseUrl = systemSettingManager.getInstanceBaseUrl();
+
+        if ( baseUrl == null )
+        {
+            return ""; // No base url is configured for this instance. Cannot create a reply link.
+        }
+
+        values.put( "responseUrl", baseUrl + "/dhis-web-dashboard-integration/readMessage.action?id=" + conversation.getUid() );
+
+        Locale locale = (Locale) userSettingService.getUserSettingValue( conversation.getUser(), UserSettingService.KEY_UI_LOCALE, LocaleManager.DHIS_STANDARD_LOCALE );
+        values.put( "i18n", i18nManager.getI18n( locale ) );
+
+        return new VelocityManager().render( values , MESSAGE_EMAIL_FOOTER_TEMPLATE );
     }
 }
