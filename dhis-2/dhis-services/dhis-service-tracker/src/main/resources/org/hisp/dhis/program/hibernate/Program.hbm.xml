@@ -62,6 +62,11 @@
         column="userroleid" foreign-key="fk_program_userroles" />
     </set>
 
+	<set name="programIndicators" inverse="true">
+	  <key column="programid" />
+	  <one-to-many class="org.hisp.dhis.program.ProgramIndicator" />
+	</set>
+
     <set name="instanceReminders" order-by="daysAllowedSendMessage" cascade="all">
       <key column="programid" />
       <one-to-many class="org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder" />
