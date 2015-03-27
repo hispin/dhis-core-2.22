@@ -502,15 +502,6 @@ public class ProgramIndicatorServiceTest
 
         String valueG = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorG );
         assertEquals( "29.0", valueG );
-        
-        String valueH = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorH );
-        assertEquals( "29.0", valueH );
-        
-        String valueI = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorI );
-        assertEquals( "2014-11-20", valueI );    
-        
-        String valueJ = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorJ );
-        assertEquals( "2014-11-13", valueJ );   
     }
 
     @Test
