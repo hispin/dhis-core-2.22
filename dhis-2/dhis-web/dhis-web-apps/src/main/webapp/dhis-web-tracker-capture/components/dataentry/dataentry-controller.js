@@ -7,7 +7,6 @@ trackerCapture.controller('DataEntryController',
                 DateUtils,
                 EventUtils,
                 orderByFilter,
-                storage,
                 SessionStorageService,
                 ProgramStageFactory,
                 DHIS2EventFactory,
@@ -59,7 +58,7 @@ trackerCapture.controller('DataEntryController',
         $scope.prStDes = [];
         
         var selections = CurrentSelection.get();          
-        $scope.selectedOrgUnit = storage.get('SELECTED_OU');
+        $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
         $scope.selectedEntity = selections.tei;      
         $scope.selectedProgram = selections.pr;        
         $scope.selectedEnrollment = selections.selectedEnrollment;   

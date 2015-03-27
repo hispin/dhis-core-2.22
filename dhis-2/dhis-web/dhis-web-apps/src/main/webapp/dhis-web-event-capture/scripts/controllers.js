@@ -1,3 +1,5 @@
+/* global angular */
+
 'use strict';
 
 /* Controllers */
@@ -11,7 +13,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $translate,
                 $anchorScroll,
                 orderByFilter,
-                storage,
+                SessionStorageService,
                 Paginator,
                 OptionSetService,
                 ProgramValidationService,
@@ -58,16 +60,16 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.note = {};
     $scope.today = DateUtils.getToday();
     
-    var userAccount = storage.get('USER_PROFILE');
-    var storedBy = userAccount ? userAccount.userName : '';    
+    var userProfile = SessionStorageService.get('USER_PROFILE');
+    var storedBy = userProfile && userProfile.username ? userProfile.username : '';
+    
     $scope.noteExists = false;
-    storage.remove('SELECTED_OU');
         
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {
         
         if(angular.isObject($scope.selectedOrgUnit)){
-            storage.set('SELECTED_OU', $scope.selectedOrgUnit);
+            SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);
             
             //get ouLevels
             ECStorageService.currentStore.open().done(function(){
