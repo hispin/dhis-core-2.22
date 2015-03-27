@@ -28,38 +28,18 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
 
 import java.util.Collection;
 
 /**
  * @author Viet Nguyen
- * @version $Id$
  */
 public interface ProgramStageDataElementStore
+    extends GenericIdentifiableObjectStore<ProgramStageDataElement>
 {
     String ID = ProgramStageInstanceStore.class.getName();
-
-    /**
-     * Adds an {@link ProgramStageDataElement}
-     *
-     * @param programStageDataElement The to ProgramStageDataElement add.
-     */
-    void save( ProgramStageDataElement programStageDataElement );
-
-    /**
-     * Updates an {@link ProgramStageDataElement}.
-     *
-     * @param programStageDataElement the ProgramStageDataElement to update.
-     */
-    void update( ProgramStageDataElement programStageDataElement );
-
-    /**
-     * Deletes a {@link ProgramStageDataElement}.
-     *
-     * @param programStageDataElement the ProgramStageDataElement to delete.
-     */
-    void delete( ProgramStageDataElement programStageDataElement );
 
     /**
      * Retrieve ProgramStageDataElement list on a program stage and a data
@@ -70,14 +50,6 @@ public interface ProgramStageDataElementStore
      * @return ProgramStageDataElement
      */
     ProgramStageDataElement get( ProgramStage programStage, DataElement dataElement );
-
-    /**
-     * Returns all {@link ProgramStageDataElement}
-     *
-     * @return a collection of all ProgramStageDataElement, or an empty
-     * collection if there are no ProgramStageDataElements.
-     */
-    Collection<ProgramStageDataElement> getAll();
 
     /**
      * Retrieve Data element list on a program stage

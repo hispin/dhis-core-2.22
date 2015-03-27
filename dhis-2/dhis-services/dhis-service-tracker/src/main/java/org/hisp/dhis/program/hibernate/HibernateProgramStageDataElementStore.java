@@ -28,82 +28,30 @@ package org.hisp.dhis.program.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Collection;
+
 import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageDataElementStore;
 
-import java.util.Collection;
-
 /**
  * @author Viet Nguyen
  */
 public class HibernateProgramStageDataElementStore
+    extends HibernateIdentifiableObjectStore<ProgramStageDataElement>
     implements ProgramStageDataElementStore
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
-    private SessionFactory sessionFactory;
-
-    public void setSessionFactory( SessionFactory sessionFactory )
-    {
-        this.sessionFactory = sessionFactory;
-    }
-
-    // -------------------------------------------------------------------------
-    // Implemented methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void save( ProgramStageDataElement programStageDataElement )
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        session.save( programStageDataElement );
-    }
-
-    @Override
-    public void update( ProgramStageDataElement programStageDataElement )
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        session.update( programStageDataElement );
-    }
-
-    @Override
-    public void delete( ProgramStageDataElement programStageDataElement )
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        session.delete( programStageDataElement );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public Collection<ProgramStageDataElement> getAll()
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        Criteria criteria = session.createCriteria( ProgramStageDataElement.class );
-
-        return criteria.list();
-    }
-
     @Override
     public ProgramStageDataElement get( ProgramStage programStage, DataElement dataElement )
     {
-        Session session = sessionFactory.getCurrentSession();
-
-        Criteria criteria = session.createCriteria( ProgramStageDataElement.class );
-        criteria.add( Restrictions.eq( "programStage", programStage ) );
-        criteria.add( Restrictions.eq( "dataElement", dataElement ) );
+        Criteria criteria = getCriteria( 
+            Restrictions.eq( "programStage", programStage ),
+            Restrictions.eq( "dataElement", dataElement ) );
 
         return (ProgramStageDataElement) criteria.uniqueResult();
     }
@@ -112,10 +60,10 @@ public class HibernateProgramStageDataElementStore
     @SuppressWarnings( "unchecked" )
     public Collection<DataElement> getListDataElement( ProgramStage programStage )
     {
-        Session session = sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria( ProgramStageDataElement.class );
+        Criteria criteria = getCriteria();
         criteria.add( Restrictions.eq( "programStage", programStage ) );
         criteria.setProjection( Projections.property( "dataElement" ) );
+        
         return criteria.list();
     }
 }
