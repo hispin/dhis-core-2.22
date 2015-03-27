@@ -76,6 +76,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramValidation;
@@ -214,6 +215,8 @@ public class MetaData
     private List<Program> programs = new ArrayList<>();
 
     private List<ProgramStage> programStages = new ArrayList<>();
+    
+    private List<ProgramIndicator> programIndicators = new ArrayList<>();
 
     private List<ProgramValidation> programValidations = Lists.newArrayList();
 
@@ -869,6 +872,19 @@ public class MetaData
     public void setProgramStages( List<ProgramStage> programStages )
     {
         this.programStages = programStages;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "programIndicators", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programIndicator", namespace = DxfNamespaces.DXF_2_0 )
+    public List<ProgramIndicator> getProgramIndicators()
+    {
+        return programIndicators;
+    }
+
+    public void setProgramIndicators( List<ProgramIndicator> programIndicators )
+    {
+        this.programIndicators = programIndicators;
     }
 
     @JsonProperty
