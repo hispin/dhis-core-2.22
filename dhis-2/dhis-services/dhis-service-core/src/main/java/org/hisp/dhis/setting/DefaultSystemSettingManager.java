@@ -175,6 +175,12 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    public String getInstanceBaseUrl()
+    {
+        return StringUtils.trimToNull( (String) getSystemSetting( KEY_INSTANCE_BASE_URL ) );
+    }
+
+    @Override
     public boolean accountRecoveryEnabled()
     {
         return (Boolean) getSystemSetting( KEY_ACCOUNT_RECOVERY, false );

@@ -260,8 +260,8 @@ public class DefaultSecurityService
         // Send emails
         // -------------------------------------------------------------------------
 
-        emailMessageSender.sendMessage( subject1, text1, null, users, true );
-        emailMessageSender.sendMessage( subject2, text2, null, users, true );
+        emailMessageSender.sendMessage( subject1, text1, null, null, users, true );
+        emailMessageSender.sendMessage( subject2, text2, null, null, users, true );
 
         return true;
     }

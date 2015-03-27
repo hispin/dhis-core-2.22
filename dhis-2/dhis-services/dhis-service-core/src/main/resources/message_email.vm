@@ -1,0 +1,11 @@
+<!DOCTYPE HTML>
+<html>
+  <body>
+    $!object.text <br><br>
+    #if ( $object.senderName)${object.senderName}<br> #end
+    #if ( $object.organisationUnitsName )${object.organisationUnitsName}<br> #end
+    #if ( $object.email)${object.email}<br>#end
+    #if ( $object.phoneNumber)${object.phoneNumber}<br>#end
+    $!{object.footer}
+  </body>
+</html>

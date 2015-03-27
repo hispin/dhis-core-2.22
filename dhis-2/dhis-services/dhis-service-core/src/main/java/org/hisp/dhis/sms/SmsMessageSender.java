@@ -74,7 +74,7 @@ public class SmsMessageSender
 
     // @Async
     @Override
-    public String sendMessage( String subject, String text, User sender, Set<User> users, boolean forceSend )
+    public String sendMessage( String subject, String text, String footer, User sender, Set<User> users, boolean forceSend )
     {
         String message = null;
 

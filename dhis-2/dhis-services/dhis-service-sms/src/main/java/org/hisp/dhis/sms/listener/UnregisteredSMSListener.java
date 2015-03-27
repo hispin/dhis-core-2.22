@@ -161,7 +161,7 @@ public class UnregisteredSMSListener
                 sender.setPhoneNumber( senderPhoneNumber );
                 feedbackList.add( sender );
                 smsMessageSender.sendMessage( smsCommand.getName(), smsCommand.getReceivedMessage(), null,
-                    feedbackList, true );
+                    null, feedbackList, true );
 
                 // update the status of the sms after process
                 sms.setStatus( SmsMessageStatus.PROCESSED );

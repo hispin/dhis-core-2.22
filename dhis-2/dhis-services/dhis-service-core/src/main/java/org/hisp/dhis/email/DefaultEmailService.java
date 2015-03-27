@@ -88,7 +88,7 @@ public class DefaultEmailService
     @Override
     public void sendEmail( Email email )
     {
-        emailMessageSender.sendMessage( email.getSubject(), email.getText(), email.getSender(), email.getRecipients(), true );
+        emailMessageSender.sendMessage( email.getSubject(), email.getText(), null, email.getSender(), email.getRecipients(), true );
     }
 
     @Override
@@ -122,7 +122,7 @@ public class DefaultEmailService
         sender.setFirstName( StringUtils.trimToEmpty( appTitle ) );
         sender.setSurname( recipient );
         
-        emailMessageSender.sendMessage( email.getSubject(), email.getText(), sender, Sets.newHashSet( user ), true );
+        emailMessageSender.sendMessage( email.getSubject(), email.getText(), null, sender, Sets.newHashSet( user ), true );
         
         return true;
     }

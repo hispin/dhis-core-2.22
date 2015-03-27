@@ -157,7 +157,7 @@ public class DHISMessageAlertListener
                     confirmMessage = SMSCommand.ALERT_FEEDBACK;
                 }
 
-                smsMessageSender.sendMessage( smsCommand.getName(), confirmMessage, null, feedbackList, true );
+                smsMessageSender.sendMessage( smsCommand.getName(), confirmMessage, null, null, feedbackList, true );
 
                 sms.setParsed( true );
                 sms.setStatus( SmsMessageStatus.PROCESSED );
