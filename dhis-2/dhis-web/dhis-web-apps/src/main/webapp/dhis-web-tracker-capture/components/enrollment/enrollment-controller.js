@@ -6,13 +6,13 @@ trackerCapture.controller('EnrollmentController',
                 $location,
                 $timeout,
                 DateUtils,
-                storage,
+                SessionStorageService,
                 CurrentSelection,
                 EnrollmentService,
                 ModalService) {
     
     $scope.today = DateUtils.getToday();
-    $scope.selectedOrgUnit = storage.get('SELECTED_OU');    
+    $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');    
     
     //listen for the selected items
     var selections = {};

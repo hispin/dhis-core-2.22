@@ -12,7 +12,7 @@ trackerCapture.controller('UpcomingEventsController',
                 ProgramFactory,
                 CurrentSelection,
                 OptionSetService,
-                storage) {
+                SessionStorageService) {
     $scope.today = DateUtils.getToday();
     
     $scope.selectedOuMode = 'SELECTED';
@@ -53,7 +53,7 @@ trackerCapture.controller('UpcomingEventsController',
     $scope.$watch('selectedOrgUnit', function() {      
         $scope.selectedProgram = null;
         if( angular.isObject($scope.selectedOrgUnit)){            
-            storage.set('SELECTED_OU', $scope.selectedOrgUnit);            
+            SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);            
             $scope.loadPrograms($scope.selectedOrgUnit);
         }
     });

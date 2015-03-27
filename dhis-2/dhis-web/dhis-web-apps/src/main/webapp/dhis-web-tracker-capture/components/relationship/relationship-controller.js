@@ -179,7 +179,7 @@ trackerCapture.controller('RelationshipController',
             TEIGridService,
             DialogService,
             Paginator,
-            storage,
+            SessionStorageService,
             $modalInstance, 
             relationshipTypes,
             selectedProgram,
@@ -216,7 +216,7 @@ trackerCapture.controller('RelationshipController',
     };
     
     //Selection
-    $scope.selectedOrgUnit = storage.get('SELECTED_OU');
+    $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
     $scope.optionSets = selections.optionSets;
     $scope.selectedTeiForDisplay = angular.copy($scope.selectedTei);
     
@@ -517,7 +517,7 @@ trackerCapture.controller('RelationshipController',
                 OptionSetService,
                 DateUtils,
                 storage) {
-    $scope.selectedOrgUnit = storage.get('SELECTED_OU');
+    $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
     $scope.enrollment = {enrollmentDate: '', incidentDate: ''};    
     
     var selections = CurrentSelection.get();
