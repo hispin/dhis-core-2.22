@@ -464,13 +464,13 @@ public class DefaultProgramIndicatorService
 
                     String value = dataValue.getValue();
 
-                    if ( indicator.getValueType().equals( ProgramIndicator.VALUE_TYPE_INT ) && 
-                        ( dataElement == null || dataElement.getType().equals( DataElement.VALUE_TYPE_DATE ) ) )
+                    if ( dataElement.getType().equals( DataElement.VALUE_TYPE_DATE ) )
                     {
                         value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
                     }
 
                     matcher.appendReplacement( description, value );
+                    
                 }
                 else
                 {
@@ -488,7 +488,12 @@ public class DefaultProgramIndicatorService
 
                     if ( attributeValue != null )
                     {
-                        matcher.appendReplacement( description, attributeValue.getValue() );
+                        String value = attributeValue.getValue();
+                        if( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_DATE ))
+                        {
+                            value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
+                        }
+                        matcher.appendReplacement( description, value );
                     }
                     else
                     {
@@ -528,19 +533,19 @@ public class DefaultProgramIndicatorService
                 }
                 else if ( uid.equals( ProgramIndicator.CURRENT_DATE ) )
                 {
-                    date = programInstance.getDateOfIncident();
+                    date = currentDate;
                 }
 
                 if ( date != null )
                 {
-                    matcher.appendReplacement( description, DateUtils.daysBetween( date, currentDate ) + "" );
+                    matcher.appendReplacement( description, DateUtils.daysBetween( currentDate, date ) + "" );
                 }
             }
 
         }
 
         matcher.appendTail( description );
-        
+
         return MathUtils.calculateExpression( description.toString() );
     }
 }
