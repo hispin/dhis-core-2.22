@@ -1,3 +1,5 @@
+/* global trackerCapture, angular */
+
 //Controller for dashboard
 trackerCapture.controller('DashboardController',
         function($rootScope,
@@ -8,7 +10,7 @@ trackerCapture.controller('DashboardController',
                 $filter,
                 TCStorageService,
                 orderByFilter,
-                storage,
+                SessionStorageService,
                 TEIService, 
                 TEService,
                 OptionSetService,
@@ -20,7 +22,7 @@ trackerCapture.controller('DashboardController',
     //selections
     $scope.selectedTeiId = ($location.search()).tei; 
     $scope.selectedProgramId = ($location.search()).program; 
-    $scope.selectedOrgUnit = storage.get('SELECTED_OU');
+    $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
     
     $scope.sortedTeiIds = CurrentSelection.getSortedTeiIds();    
     

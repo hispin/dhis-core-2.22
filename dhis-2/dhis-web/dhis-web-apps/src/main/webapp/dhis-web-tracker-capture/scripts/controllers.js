@@ -15,7 +15,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 $filter,
                 $timeout,
                 Paginator,
-                storage,
+                SessionStorageService,
                 DateUtils,
                 OptionSetService,
                 OrgUnitFactory,
@@ -62,7 +62,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
 
         if( angular.isObject($scope.selectedOrgUnit)){   
             
-            storage.set('SELECTED_OU', $scope.selectedOrgUnit);
+            SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);
             
             $scope.trackedEntityList = [];
             

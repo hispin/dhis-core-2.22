@@ -4,7 +4,7 @@
 trackerCapture.controller('TeiReportController',
         function($scope,
                 CurrentSelection,
-                storage,
+                SessionStorageService,
                 DateUtils,
                 EventUtils,
                 TEIService,
@@ -17,7 +17,7 @@ trackerCapture.controller('TeiReportController',
     $scope.$on('dashboardWidgets', function(event, args) {
         $scope.showProgramReportDetailsDiv = false;
         var selections = CurrentSelection.get();        
-        $scope.selectedOrgUnit = storage.get('SELECTED_OU');
+        $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
         $scope.selectedTei = selections.tei;  
         $scope.selectedEntity = selections.te;
         $scope.selectedProgram = selections.pr;

@@ -17,7 +17,7 @@ trackerCapture.controller('RegistrationController',
                 EventUtils,
                 RegistrationService,
                 DateUtils,
-                storage) {
+                SessionStorageService) {
     
     $scope.today = DateUtils.getToday();
     $scope.trackedEntityForm = null;
@@ -50,7 +50,7 @@ trackerCapture.controller('RegistrationController',
         });
     }
     
-    $scope.selectedOrgUnit = storage.get('SELECTED_OU');
+    $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
     $scope.selectedEnrollment = {dateOfEnrollment: '', dateOfIncident: ''};   
             
     $scope.trackedEntities = {available: []};
