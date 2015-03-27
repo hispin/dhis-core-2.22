@@ -1,4 +1,4 @@
-/* global dhis2 */
+/* global dhis2, angular */
 
 dhis2.util.namespace('dhis2.tc');
 
@@ -158,7 +158,9 @@ function downloadMetaData()
 
 function getCalendarSetting()
 {
-    if(localStorage['CALENDAR_SETTING']){
+    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
+    
+    if( SessionStorageService.get('CALENDAR_SETTING') ){
        return; 
     }
     
@@ -168,7 +170,7 @@ function getCalendarSetting()
         url: '../api/systemSettings?key=keyCalendar&key=keyDateFormat',
         type: 'GET'
     }).done(function(response) {
-        localStorage['CALENDAR_SETTING'] = JSON.stringify(response);
+        SessionStorageService.set('CALENDAR_SETTING', response);
         def.resolve();
     }).fail(function(){
         def.resolve();

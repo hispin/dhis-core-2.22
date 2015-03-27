@@ -167,13 +167,19 @@ function downloadMetaData(){
 
 function getCalendarSetting()
 {
+    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
+    
+    if( SessionStorageService.get('CALENDAR_SETTING') ){
+       return; 
+    }
+    
     var def = $.Deferred();
 
     $.ajax({
         url: '../api/systemSettings?key=keyCalendar&key=keyDateFormat',
         type: 'GET'
     }).done(function(response) {
-        localStorage['CALENDAR_SETTING'] = JSON.stringify(response);
+        SessionStorageService.set('CALENDAR_SETTING', response);
         def.resolve();
     }).fail(function(){
         def.resolve();
