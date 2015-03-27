@@ -148,7 +148,7 @@ public class EventAnalyticsServiceTest
         prA = createProgram( 'A', new HashSet<ProgramStage>(), asSet( atA, atB ), asSet( ouA, ouB ) );
         programService.addProgram( prA );
         
-        psA = createProgramStage( 'A', asSet( deA, deB ) );
+        psA = createProgramStage( 'A', 0 );
         prA.getProgramStages().add( psA );
         
         programStageService.saveProgramStage( psA );
