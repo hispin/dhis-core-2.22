@@ -1,3 +1,5 @@
+/* global angular */
+
 'use strict';
 
 /* Controllers */
@@ -11,12 +13,19 @@ var cacheCleanerControllers = angular.module('cacheCleanerControllers', [])
     var getItemsToClear = function(){
         
         $scope.lsCacheExists = false;
-        $scope.idxCacheExists = false;
+        $scope.ssCacheExists = false;
+        $scope.idCacheExists = false;
         
-        $scope.lsKeys = [], $scope.dbKeys = [];
+        $scope.lsKeys = [];
+        $scope.dbKeys = [];
+        $scope.ssKeys = [];
         
-        var reservedLocalStorageKeys = ['key', 'getItem', 'setItem', 'removeItem', 'clear', 'length'];
-    
+        for(var key in $window.sessionStorage){
+            $scope.ssKeys.push({id: key, remove: false});
+            $scope.ssCacheExists = true;
+        }
+        
+        var reservedLocalStorageKeys = ['key', 'getItem', 'setItem', 'removeItem', 'clear', 'length'];    
         for(var key in $window.localStorage){
             if(reservedLocalStorageKeys.indexOf(key) === -1)
             {
@@ -30,7 +39,7 @@ var cacheCleanerControllers = angular.module('cacheCleanerControllers', [])
             idbStorageService.dbExists(db).then(function(res){
                 if( res ){
                     $scope.dbKeys.push({id: db, remove: false});
-                    $scope.idxCacheExists = true;
+                    $scope.idCacheExists = true;
                 }
             });
         });        
@@ -48,6 +57,14 @@ var cacheCleanerControllers = angular.module('cacheCleanerControllers', [])
         };
 
         ModalService.showModal({}, modalOptions).then(function(){
+            
+            angular.forEach($scope.ssKeys, function(ssKey){
+                if(ssKey.remove){
+                    $window.sessionStorage.removeItem(ssKey.id);
+                    console.log('removed from session storage:  ', ssKey.id);
+                }
+            });
+            
             angular.forEach($scope.lsKeys, function(lsKey){
                 if(lsKey.remove){
                     storage.remove(lsKey.id);
@@ -63,23 +80,26 @@ var cacheCleanerControllers = angular.module('cacheCleanerControllers', [])
                         }
                         else{
                             console.log('failed to remove from indexeddb:  ', dbKey.id);
-                        }
-                        
+                        }                        
                     });
                 }
-            });   
+            });
             $scope.afterClearing = true;
             getItemsToClear();            
         });
     };
     
     $scope.selectAll = function(){
+        angular.forEach($scope.ssKeys, function(ssKey){
+            ssKey.remove = !ssKey.remove;
+        });
+        
         angular.forEach($scope.lsKeys, function(lsKey){
-            lsKey.remove = true;
+            lsKey.remove = !lsKey.remove;
         });
 
         angular.forEach($scope.dbKeys, function(dbKey){
-            dbKey.remove = true;
+            dbKey.remove = !dbKey.remove;
         });
     };
 });
