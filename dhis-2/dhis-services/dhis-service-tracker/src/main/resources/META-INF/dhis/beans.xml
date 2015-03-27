@@ -103,13 +103,13 @@
 
 	<bean id="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupStore"
 		class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
-		<property name="clazz"
-			value="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroup" />
+		<property name="clazz" value="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroup" />
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="org.hisp.dhis.program.ProgramStageDataElementStore"
 		class="org.hisp.dhis.program.hibernate.HibernateProgramStageDataElementStore">
+		<property name="clazz" value="org.hisp.dhis.program.ProgramStageDataElement" />
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
@@ -414,6 +414,7 @@
 				<value>trackedentityinstancereminder</value>
 				<value>program</value>
 				<value>programstage</value>
+				<value>programstagedataelement</value>
 				<value>programinstance</value>
 				<value>programstageinstance</value>
 				<value>relationshiptype</value>

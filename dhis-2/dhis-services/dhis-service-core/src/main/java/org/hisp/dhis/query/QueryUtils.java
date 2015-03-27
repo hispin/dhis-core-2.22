@@ -95,7 +95,7 @@ public final class QueryUtils
         }
         else if ( Enum.class.isAssignableFrom( klass ) )
         {
-            Optional<? extends Enum> enumValue = Enums.getIfPresent( (Class<? extends Enum>) klass, value );
+            Optional<? extends Enum<?>> enumValue = Enums.getIfPresent( (Class<? extends Enum>) klass, value );
 
             if ( enumValue.isPresent() )
             {
