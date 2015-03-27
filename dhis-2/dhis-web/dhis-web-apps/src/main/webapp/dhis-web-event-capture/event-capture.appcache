@@ -41,7 +41,7 @@ CACHE:
 
 ../dhis-web-commons/javascripts/underscore.min.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.util.js
-scripts/d2-commons.js
+../dhis-web-commons/javascripts/commons.js
 ../dhis-web-commons/javascripts/commons.ajax.js
 ../dhis-web-commons/javascripts/lists.js
 ../dhis-web-commons/javascripts/periodType.js
