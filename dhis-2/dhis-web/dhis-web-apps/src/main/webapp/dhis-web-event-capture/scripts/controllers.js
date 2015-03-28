@@ -58,7 +58,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     //notes
     $scope.note = {};
-    $scope.today = DateUtils.getToday();
+    $scope.today = DateUtils.getToday();    
     
     var userProfile = SessionStorageService.get('USER_PROFILE');
     var storedBy = userProfile && userProfile.username ? userProfile.username : '';
@@ -116,12 +116,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         if (angular.isObject($scope.selectedOrgUnit)) {    
             
             ProgramFactory.getAll().then(function(programs){
-                $scope.programs = [];
-                angular.forEach(programs, function(program){                            
-                    if(program.organisationUnits.hasOwnProperty($scope.selectedOrgUnit.id)){                                
-                        $scope.programs.push(program);
-                    }
-                });
+                $scope.programs = programs;                
                 
                 if(angular.isObject($scope.programs) && $scope.programs.length === 1){
                     $scope.selectedProgram = $scope.programs[0];

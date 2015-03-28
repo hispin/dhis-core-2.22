@@ -199,17 +199,38 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Factory to fetch programs */
-.factory('ProgramFactory', function($q, $rootScope, TCStorageService) { 
-    return {
+.factory('ProgramFactory', function($q, $rootScope, SessionStorageService, TCStorageService) { 
+    
+    var userHasValidRole = function(program, userRoles){
+        
+        var hasRole = false;
+
+        if($.isEmptyObject(program.userRoles)){
+            return !hasRole;
+        }
+
+        for(var i=0; i < userRoles.length && !hasRole; i++){
+            if( program.userRoles.hasOwnProperty( userRoles[i].id ) ){
+                hasRole = true;
+            }
+        }        
+        return hasRole;        
+    };
+    
+    return {        
+        
         getAll: function(){
             
+            var roles = SessionStorageService.get('USER_ROLES');
+            var userRoles = roles && roles.userCredentials && roles.userCredentials.userRoles ? roles.userCredentials.userRoles : [];
+            var ou = SessionStorageService.get('SELECTED_OU');
             var def = $q.defer();
             
             TCStorageService.currentStore.open().done(function(){
                 TCStorageService.currentStore.getAll('programs').done(function(prs){
                     var programs = [];
                     angular.forEach(prs, function(pr){
-                        if(pr.type === 1){
+                        if(pr.organisationUnits.hasOwnProperty( ou.id ) && userHasValidRole(pr, userRoles)){
                             programs.push(pr);
                         }
                     });
@@ -235,13 +256,15 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return def.promise;            
         },
         getProgramsByOu: function(ou, selectedProgram){
+            var roles = SessionStorageService.get('USER_ROLES');
+            var userRoles = roles && roles.userCredentials && roles.userCredentials.userRoles ? roles.userCredentials.userRoles : [];
             var def = $q.defer();
             
             TCStorageService.currentStore.open().done(function(){
                 TCStorageService.currentStore.getAll('programs').done(function(prs){
                     var programs = [];
                     angular.forEach(prs, function(pr){                            
-                        if(pr.organisationUnits.hasOwnProperty(ou.id)){                                
+                        if(pr.organisationUnits.hasOwnProperty( ou.id ) && userHasValidRole(pr, userRoles)){
                             programs.push(pr);
                         }
                     });
