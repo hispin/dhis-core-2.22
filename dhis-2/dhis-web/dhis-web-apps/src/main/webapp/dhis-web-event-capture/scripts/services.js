@@ -1,3 +1,5 @@
+/* global angular */
+
 'use strict';
 
 /* Services */
@@ -158,19 +160,37 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
 })
 
 /* Factory to fetch programs */
-.factory('ProgramFactory', function($q, $rootScope, ECStorageService) {  
+.factory('ProgramFactory', function($q, $rootScope, SessionStorageService, ECStorageService) {  
+    
+    var userHasValidRole = function(program, userRoles){
         
+        var hasRole = false;
+
+        if($.isEmptyObject(program.userRoles)){
+            return !hasRole;
+        }
+
+        for(var i=0; i < userRoles.length && !hasRole; i++){
+            if( program.userRoles.hasOwnProperty( userRoles[i].id ) ){
+                hasRole = true;
+            }
+        }        
+        return hasRole;        
+    };
+    
     return {
         
         getAll: function(){
-            
+            var roles = SessionStorageService.get('USER_ROLES');
+            var userRoles = roles && roles.userCredentials && roles.userCredentials.userRoles ? roles.userCredentials.userRoles : [];
+            var ou = SessionStorageService.get('SELECTED_OU');
             var def = $q.defer();
             
             ECStorageService.currentStore.open().done(function(){
                 ECStorageService.currentStore.getAll('programs').done(function(prs){
-                    var programs = [];
+                    var programs = [];                    
                     angular.forEach(prs, function(pr){
-                        if(pr.type === 3){
+                        if(pr.organisationUnits.hasOwnProperty( ou.id ) && userHasValidRole(pr, userRoles)){
                             programs.push(pr);
                         }
                     });

@@ -143,7 +143,8 @@ function downloadMetaData(){
     var def = $.Deferred();
     var promise = def.promise();
     
-    promise = promise.then( dhis2.ec.store.open );
+    promise = promise.then( dhis2.ec.store.open );    
+    promise = promise.then( getUserRoles );
     promise = promise.then( getCalendarSetting );
     promise = promise.then( getOrgUnitLevels );    
     promise = promise.then( getMetaPrograms );     
@@ -163,6 +164,29 @@ function downloadMetaData(){
     });         
 
     def.resolve();
+}
+
+function getUserRoles()
+{
+    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
+    
+    if( SessionStorageService.get('USER_ROLES') ){
+       return; 
+    }
+    
+    var def = $.Deferred();
+
+    $.ajax({
+        url: '../api/me.json?fields=id,name,userCredentials[userRoles[id]]',
+        type: 'GET'
+    }).done(function(response) {
+        SessionStorageService.set('USER_ROLES', response);
+        def.resolve();
+    }).fail(function(){
+        def.resolve();
+    });
+
+    return def.promise();
 }
 
 function getCalendarSetting()
@@ -288,7 +312,7 @@ function getProgram( id )
 {
     return function() {
         return $.ajax( {
-            url: '../api/programs.json?filter=id:eq:' + id +'&fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version]',
+            url: '../api/programs.json?filter=id:eq:' + id +'&fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]',
             type: 'GET'
         }).done( function( response ){
             

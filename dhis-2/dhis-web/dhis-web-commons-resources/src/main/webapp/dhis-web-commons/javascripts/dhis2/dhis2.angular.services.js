@@ -93,6 +93,11 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         },
         set: function(key, obj) {            
             $window.sessionStorage.setItem( key, JSON.stringify( obj ) );
+        },
+        clearAll: function(){
+        	for(var key in $window.sessionStorage){
+	            $window.sessionStorage.removeItem(key);
+	        }
         }
     };
 })

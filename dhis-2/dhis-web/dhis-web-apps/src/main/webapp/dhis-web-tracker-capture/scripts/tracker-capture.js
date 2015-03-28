@@ -128,7 +128,8 @@ function downloadMetaData()
     var def = $.Deferred();
     var promise = def.promise();
 
-    promise = promise.then( dhis2.tc.store.open );    
+    promise = promise.then( dhis2.tc.store.open );
+    promise = promise.then( getUserRoles );
     promise = promise.then( getCalendarSetting );
     promise = promise.then( getRelationships );       
     promise = promise.then( getTrackedEntities );
@@ -154,6 +155,29 @@ function downloadMetaData()
 
     def.resolve();
     
+}
+
+function getUserRoles()
+{
+    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
+    
+    if( SessionStorageService.get('USER_ROLES') ){
+       return; 
+    }
+    
+    var def = $.Deferred();
+
+    $.ajax({
+        url: '../api/me.json?fields=id,name,userCredentials[userRoles[id]]',
+        type: 'GET'
+    }).done(function(response) {
+        SessionStorageService.set('USER_ROLES', response);
+        def.resolve();
+    }).fail(function(){
+        def.resolve();
+    });
+
+    return def.promise();
 }
 
 function getCalendarSetting()
@@ -299,7 +323,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs.json',
             type: 'GET',
-            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
+            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
         }).done( function( response ){
             
             _.each( _.values( response.programs ), function ( program ) { 
