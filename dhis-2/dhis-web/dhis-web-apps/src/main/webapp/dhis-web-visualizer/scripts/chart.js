@@ -2780,7 +2780,7 @@ Ext.onReady(function() {
                         numberOfItems = titles.length,
                         numberOfChars,
                         totalItemLength = numberOfItems * itemLength,
-                        minLength = 5,
+                        //minLength = 5,
                         maxLength = support.prototype.array.getMaxLength(titles),
                         fallbackLength = 10,
                         maxWidth = ns.app.centerRegion.getWidth(),
@@ -2794,7 +2794,7 @@ Ext.onReady(function() {
 
                         fallbackLength = len < fallbackLength ? len : fallbackLength;
 
-                        for (var i = len, width; i >= minLength; i--) {
+                        for (var i = len, width; i > 0; i--) {
                             newTitles = [];
 
                             for (var j = 0, title, numberOfChars, newTitle; j < titles.length; j++) {
