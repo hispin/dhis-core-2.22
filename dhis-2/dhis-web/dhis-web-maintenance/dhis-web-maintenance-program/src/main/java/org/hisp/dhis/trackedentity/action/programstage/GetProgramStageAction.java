@@ -28,13 +28,17 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.ProgramIndicator;
-import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageService;
@@ -43,11 +47,7 @@ import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -81,9 +81,6 @@ public class GetProgramStageAction
     {
         this.periodService = periodService;
     }
-
-    @Autowired
-    private ProgramIndicatorService programIndicatorService;
 
     @Autowired
     private AttributeService attributeService;
@@ -179,7 +176,7 @@ public class GetProgramStageAction
 
         userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
 
-        programIndicators = new ArrayList<>( programIndicatorService.getProgramIndicators( programStage.getProgram() ) );
+        programIndicators = new ArrayList<>( programStage.getProgram().getProgramIndicators() );
         programIndicators.removeAll( programStage.getProgramIndicators() );
 
         attributeValues = AttributeUtils.getAttributeValueMap( programStage.getAttributeValues() );

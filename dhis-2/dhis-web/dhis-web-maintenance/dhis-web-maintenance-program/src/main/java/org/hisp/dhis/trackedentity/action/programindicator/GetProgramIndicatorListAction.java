@@ -35,8 +35,8 @@ import java.util.List;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
-import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
@@ -47,23 +47,8 @@ import com.opensymphony.xwork2.Action;
 public class GetProgramIndicatorListAction
     implements Action
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
-    private ProgramIndicatorService programIndicatorService;
-
-    public void setProgramIndicatorService( ProgramIndicatorService programIndicatorService )
-    {
-        this.programIndicatorService = programIndicatorService;
-    }
-
+    @Autowired
     private ProgramService programService;
-
-    public void setProgramService( ProgramService programService )
-    {
-        this.programService = programService;
-    }
 
     // -------------------------------------------------------------------------
     // Setters
@@ -100,11 +85,10 @@ public class GetProgramIndicatorListAction
     {
         program = programService.getProgram( programId );
 
-        programIndicators = new ArrayList<>( programIndicatorService.getProgramIndicators( program ) );
+        programIndicators = new ArrayList<>( program.getProgramIndicators() );
 
         Collections.sort( programIndicators, IdentifiableObjectNameComparator.INSTANCE );
 
         return SUCCESS;
     }
-
 }

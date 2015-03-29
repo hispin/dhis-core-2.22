@@ -28,13 +28,9 @@ package org.hisp.dhis.program.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
-import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorStore;
-
-import java.util.Collection;
 
 /**
  * @author Chau Thu Tran
@@ -43,14 +39,4 @@ public class HibernateProgramIndicatorStore
     extends HibernateIdentifiableObjectStore<ProgramIndicator>
     implements ProgramIndicatorStore
 {
-    // -------------------------------------------------------------------------
-    // Implemented methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public Collection<ProgramIndicator> getByProgram( Program program )
-    {
-        return getCriteria( Restrictions.eq( "program", program ) ).list();
-    }
 }

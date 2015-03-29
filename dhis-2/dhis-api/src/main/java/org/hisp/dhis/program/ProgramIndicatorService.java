@@ -103,14 +103,6 @@ public interface ProgramIndicatorService
     Collection<ProgramIndicator> getAllProgramIndicators();
 
     /**
-     * Get {@link ProgramIndicator} of a program
-     *
-     * @param program Program
-     * @return ProgramIndicators belong to the program
-     */
-    Collection<ProgramIndicator> getProgramIndicators( Program program );
-
-    /**
      * Calculate an program indicator value based on program instance and an
      * indicator defined for a TrackedEntityInstance
      *
@@ -124,7 +116,7 @@ public interface ProgramIndicatorService
      * Get indicator values of all program indicators defined for a TrackedEntityInstance
      *
      * @param programInstance ProgramInstance
-     * @return Map<Indicator name, Indicator value>
+     * @return a mapping of indicator display name and indicator value.
      */
     Map<String, String> getProgramIndicatorValues( ProgramInstance programInstance );
 
