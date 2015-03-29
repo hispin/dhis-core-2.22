@@ -29,6 +29,7 @@ package org.hisp.dhis.program;
  */
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.hisp.dhis.system.deletion.DeletionHandler;
@@ -36,8 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ ProgramIndicatorDeletionHandler.java Apr 4, 2014 10:45:58 PM $
  */
 public class ProgramIndicatorDeletionHandler
     extends DeletionHandler
@@ -62,7 +61,7 @@ public class ProgramIndicatorDeletionHandler
     @Override
     public void deleteProgram( Program program )
     {
-        Collection<ProgramIndicator> indicators = programIndicatorService.getProgramIndicators( program );
+        Collection<ProgramIndicator> indicators = new HashSet<ProgramIndicator>( program.getProgramIndicators() );
 
         Iterator<ProgramIndicator> iter = indicators.iterator();
 

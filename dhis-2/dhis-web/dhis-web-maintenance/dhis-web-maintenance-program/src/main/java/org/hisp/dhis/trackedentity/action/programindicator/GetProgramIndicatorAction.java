@@ -106,7 +106,7 @@ public class GetProgramIndicatorAction
 
         description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );
 
-        constants = new ArrayList<>(constantService.getAllConstants());
+        constants = new ArrayList<>( constantService.getAllConstants() );
         
         Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
         

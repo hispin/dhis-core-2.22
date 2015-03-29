@@ -150,11 +150,10 @@ public class AddProgramIndicatorAction
         }
 
         Program program = programService.getProgram( programId );
-        ProgramIndicator programIndicator = new ProgramIndicator( name, description, valueType, expression );
+        ProgramIndicator programIndicator = new ProgramIndicator( name, description, program, valueType, expression );
         programIndicator.setShortName( shortName );
         programIndicator.setCode( code );
         programIndicator.setRootDate( rootDate );
-        programIndicator.setProgram( program );
 
         programIndicatorService.addProgramIndicator( programIndicator );
 

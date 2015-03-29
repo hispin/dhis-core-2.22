@@ -180,12 +180,6 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
-    public Collection<ProgramIndicator> getProgramIndicators( Program program )
-    {
-        return i18n( i18nService, programIndicatorStore.getByProgram( program ) );
-    }
-
-    @Override
     public String getProgramIndicatorValue( ProgramInstance programInstance, ProgramIndicator programIndicator )
     {
         Double value = getValue( programInstance, programIndicator );
@@ -221,7 +215,7 @@ public class DefaultProgramIndicatorService
     {
         Map<String, String> result = new HashMap<>();
 
-        Collection<ProgramIndicator> programIndicators = programIndicatorStore.getByProgram( programInstance.getProgram() );
+        Collection<ProgramIndicator> programIndicators = new HashSet<>( programInstance.getProgram().getProgramIndicators() );
 
         for ( ProgramIndicator programIndicator : programIndicators )
         {
