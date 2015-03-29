@@ -29,13 +29,17 @@ package org.hisp.dhis.trackedentity.action.programstage;
  */
 
 import com.opensymphony.xwork2.Action;
+
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageDataElementService;
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramStageService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -74,6 +78,9 @@ public class AddProgramStageSectionAction
         this.programStageDataElementService = programStageDataElementService;
     }
 
+    @Autowired
+    private ProgramIndicatorService programIndicatorService;
+
     // -------------------------------------------------------------------------
     // Input/Output
     // -------------------------------------------------------------------------
@@ -104,6 +111,13 @@ public class AddProgramStageSectionAction
         this.dataElementIds = dataElementIds;
     }
 
+    private List<Integer> selectedIndicators = new ArrayList<>();
+
+    public void setSelectedIndicators( List<Integer> selectedIndicators )
+    {
+        this.selectedIndicators = selectedIndicators;
+    }
+    
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -141,6 +155,20 @@ public class AddProgramStageSectionAction
         }
 
         sections.add( section );
+        
+        // ---------------------------------------------------------------------
+        // Program indicators
+        // ---------------------------------------------------------------------
+        
+        List<ProgramIndicator> programIndicators = new ArrayList<>();
+        for ( Integer id : selectedIndicators )
+        {
+            ProgramIndicator indicator = programIndicatorService.getProgramIndicator( id );
+            programIndicators.add( indicator );
+        }
+
+        section.setProgramIndicators( programIndicators );
+        
 
         programStage.setProgramStageSections( sections );
         programStageService.updateProgramStage( programStage );

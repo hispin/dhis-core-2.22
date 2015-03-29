@@ -28,13 +28,18 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramStageSectionService;
 import org.hisp.dhis.program.ProgramStageService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
@@ -64,6 +69,9 @@ public class GetProgramStageSectionAction
         this.programStageSectionService = programStageSectionService;
     }
 
+    @Autowired
+    private ProgramIndicatorService programIndicatorService;
+    
     // -------------------------------------------------------------------------
     // Input/Output
     // -------------------------------------------------------------------------
@@ -103,6 +111,20 @@ public class GetProgramStageSectionAction
         return availableDataElements;
     }
 
+    private List<ProgramIndicator> programIndicators;
+
+    public List<ProgramIndicator> getProgramIndicators()
+    {
+        return programIndicators;
+    }
+
+    private List<ProgramIndicator> availableProgramIndicators;
+
+    public List<ProgramIndicator> getAvailableProgramIndicators()
+    {
+        return availableProgramIndicators;
+    }
+    
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -118,13 +140,15 @@ public class GetProgramStageSectionAction
             programStage = programStageService.getProgramStage( programStageId );
 
             availableDataElements = programStage.getProgramStageDataElements();
-
+            availableProgramIndicators = new ArrayList<>( programStage.getProgramIndicators() );
+            availableProgramIndicators.removeAll( section.getProgramIndicators() );
+            
             for ( ProgramStageSection section : programStage.getProgramStageSections() )
             {
                 availableDataElements.removeAll( section.getProgramStageDataElements() );
             }
         }
-
+        
         return SUCCESS;
     }
 }
