@@ -33,12 +33,15 @@ import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageDataElementService;
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramStageSectionService;
 import org.hisp.dhis.program.ProgramStageService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
@@ -82,6 +85,9 @@ public class UpdateProgramStageSectionAction
         this.programStageDataElementService = programStageDataElementService;
     }
 
+    @Autowired
+    private ProgramIndicatorService programIndicatorService;
+
     // -------------------------------------------------------------------------
     // Input/Output
     // -------------------------------------------------------------------------
@@ -119,6 +125,13 @@ public class UpdateProgramStageSectionAction
         this.dataElementIds = dataElementIds;
     }
 
+    private List<Integer> selectedIndicators = new ArrayList<>();
+
+    public void setSelectedIndicators( List<Integer> selectedIndicators )
+    {
+        this.selectedIndicators = selectedIndicators;
+    }
+    
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -134,7 +147,8 @@ public class UpdateProgramStageSectionAction
         // ---------------------------------------------------------------------
 
         ProgramStageSection section = programStageSectionService.getProgramStageSection( id );
-
+        section.setName( name );
+        
         List<ProgramStageDataElement> psDataElements = new ArrayList<>();
         for ( Integer id : dataElementIds )
         {
@@ -143,8 +157,21 @@ public class UpdateProgramStageSectionAction
             psDataElements.add( psDataElement );
         }
 
-        section.setName( name );
         section.setProgramStageDataElements( psDataElements );
+        
+        // ---------------------------------------------------------------------
+        // Program indicators
+        // ---------------------------------------------------------------------
+        
+        List<ProgramIndicator> programIndicators = new ArrayList<>();
+        for ( Integer id : selectedIndicators )
+        {
+            ProgramIndicator indicator = programIndicatorService.getProgramIndicator( id );
+            programIndicators.add( indicator );
+        }
+
+        section.setProgramIndicators( programIndicators );
+        
 
         programStageSectionService.updateProgramStageSection( section );
 
