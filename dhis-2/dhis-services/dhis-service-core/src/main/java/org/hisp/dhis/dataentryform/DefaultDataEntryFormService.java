@@ -325,14 +325,14 @@ public class DefaultDataEntryFormService
 
                 if ( dataElement == null )
                 {
-                    return i18n.getString( "dataelement_with_id" ) + ": " + dataElementId + " " + i18n.getString( "does_not_exist" );
+                    return i18n.getString( "dataelement_with_id" ) + ": " + dataElementId + " " + i18n.getString( "does_not_exist_in_data_set" );
                 }
 
                 DataElementCategoryOptionCombo categoryOptionCombo = optionComboMap.get( optionComboId, optionComboCallabel.setUid( optionComboId ) );
 
                 if ( categoryOptionCombo == null )
                 {
-                    return i18n.getString( "category_option_combo_with_id" ) + ": " + optionComboId + " " + i18n.getString( "does_not_exist" );
+                    return i18n.getString( "category_option_combo_with_id" ) + ": " + optionComboId + " " + i18n.getString( "does_not_exist_in_data_set" );
                 }
                 
                 if ( dataSet.isDataElementDecoration() && dataElement.hasDescription() ) 
