@@ -60,7 +60,7 @@ jQuery( document ).ready( function()
     <tbody>
       <tr>
         <td>
-            <select style="width:100%;" size="15" id="availableList" name='availableList' multiple="multiple" ondblclick="moveSelectedById( 'availableList', 'dataElementIds' );">
+            <select style="height: 200px; width: 100%;" size="15" id="availableList" name='availableList' multiple="multiple" ondblclick="moveSelectedById( 'availableList', 'dataElementIds' );">
 				#foreach( $psDataElement in $availableDataElements )
 					<option value='$psDataElement.dataElement.id'>$encoder.htmlEncode($psDataElement.dataElement.name)</option>
 				#end
@@ -75,7 +75,7 @@ jQuery( document ).ready( function()
 		</td>
 		
 		<td>
-			<select style="width:100%;" size="15" id="dataElementIds" name='dataElementIds' multiple="multiple"  ondblclick="moveSelectedById( 'dataElementIds', 'availableList' );">
+			<select style="height: 200px; width: 100%;" size="15" id="dataElementIds" name='dataElementIds' multiple="multiple"  ondblclick="moveSelectedById( 'dataElementIds', 'availableList' );">
 				#foreach( $psDataElement in $section.programStageDataElements )
 					<option value='$psDataElement.dataElement.id'>$encoder.htmlEncode($psDataElement.dataElement.name)</option>
 				#end
@@ -118,7 +118,7 @@ jQuery( document ).ready( function()
 			<input type="button" value="&lt;&lt;" onclick="moveAllById( 'selectedIndicators', 'availableIndicators' )" class='filterButton' />
 		</td>
 		<td>
-			<select style="height: 200px; width: 100%; margin-top: 22px;" multiple="multiple" id="selectedIndicators" name="selectedIndicators" ondblclick="moveSelectedById( 'selectedIndicators', 'availableIndicators' )" >
+			<select style="height: 200px; width: 100%;" multiple="multiple" id="selectedIndicators" name="selectedIndicators" ondblclick="moveSelectedById( 'selectedIndicators', 'availableIndicators' )" >
 				#foreach( $indicator in $section.programIndicators )
 					<option value="$indicator.id">$encoder.htmlEncode( $indicator.displayName )</option>
 				#end

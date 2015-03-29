@@ -59,7 +59,7 @@ jQuery( document ).ready( function()
     <tbody>
       <tr>
         <td>
-            <select id="availableList" name='availableList' size="15" style="width:100%;" multiple="multiple" ondblclick="moveSelectedById( 'availableList', 'dataElementIds' );">
+            <select id="availableList" name='availableList' size="15" style="height: 200px; width: 100%;" multiple="multiple" ondblclick="moveSelectedById( 'availableList', 'dataElementIds' );">
 				#foreach( $psPataElement in $availableDataElements )
 					<option value='$psPataElement.dataElement.id'>$psPataElement.dataElement.name</option>
 				#end
@@ -74,7 +74,7 @@ jQuery( document ).ready( function()
 		</td>
 		
 		<td>
-			<select id="dataElementIds" name='dataElementIds' size="15" style="width:100%;" multiple="multiple"  ondblclick="moveSelectedById( 'dataElementIds', 'availableList' );"></select>
+			<select id="dataElementIds" name='dataElementIds' size="15" style="height: 200px; width: 100%;" multiple="multiple"  ondblclick="moveSelectedById( 'dataElementIds', 'availableList' );"></select>
 		</td>
 			
 		<td>
@@ -113,7 +113,7 @@ jQuery( document ).ready( function()
 			<input type="button" value="&lt;&lt;" onclick="moveAllById( 'selectedIndicators', 'availableIndicators' )" class='filterButton' />
 		</td>
 		<td>
-			<select style="height: 200px; width: 100%; margin-top: 22px;" multiple="multiple" id="selectedIndicators" name="selectedIndicators" ondblclick="moveSelectedById( 'selectedIndicators', 'availableIndicators' )" >		</select>
+			<select style="height: 200px; width: 100%;" multiple="multiple" id="selectedIndicators" name="selectedIndicators" ondblclick="moveSelectedById( 'selectedIndicators', 'availableIndicators' )" >		</select>
 		</td>
 		<td>
 			<a href="javascript:moveUpSelectedOption( 'selectedIndicators')" title="$i18n.getString( 'move_up' )"><img src="../images/move_up.png" alt="$i18n.getString( 'move_up' )"/></a><br/><br/>
