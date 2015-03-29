@@ -42,7 +42,6 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
-import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
@@ -82,22 +81,12 @@ public class GetProgramAction
         this.userGroupService = userGroupService;
     }
 
-    private List<PeriodType> periodTypes = new ArrayList<>();
-
-    public List<PeriodType> getPeriodTypes()
-    {
-        return periodTypes;
-    }
-
     private PeriodService periodService;
 
     public void setPeriodService( PeriodService periodService )
     {
         this.periodService = periodService;
     }
-
-    @Autowired
-    private ProgramIndicatorService programIndicatorService;
 
     @Autowired
     private ConstantService constantService;
@@ -172,6 +161,13 @@ public class GetProgramAction
         return constants;
     }
 
+    private List<PeriodType> periodTypes = new ArrayList<>();
+
+    public List<PeriodType> getPeriodTypes()
+    {
+        return periodTypes;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -188,7 +184,7 @@ public class GetProgramAction
 
         userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
 
-        programIndicators = new ArrayList<>( programIndicatorService.getProgramIndicators( program ) );
+        programIndicators = new ArrayList<>( program.getProgramIndicators() );
 
         Collections.sort( programIndicators, IdentifiableObjectNameComparator.INSTANCE );
 

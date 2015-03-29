@@ -30,6 +30,7 @@ package org.hisp.dhis.program;
 
 import static org.hisp.dhis.program.ProgramIndicator.KEY_ATTRIBUTE;
 import static org.hisp.dhis.program.ProgramIndicator.KEY_DATAELEMENT;
+import static org.hisp.dhis.program.ProgramIndicator.KEY_CONSTANT;
 import static org.hisp.dhis.program.ProgramIndicator.KEY_PROGRAM_VARIABLE;
 import static org.hisp.dhis.program.ProgramIndicator.VALUE_TYPE_DATE;
 import static org.hisp.dhis.program.ProgramIndicator.VALUE_TYPE_INT;
@@ -38,7 +39,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -130,8 +130,8 @@ public class ProgramIndicatorServiceTest
     private TrackedEntityAttribute atC;
     private TrackedEntityAttribute atD;
 
-    private ProgramIndicator indicatorDate;
-    private ProgramIndicator indicatorInt;
+    private ProgramIndicator indicatorA;
+    private ProgramIndicator indicatorB;
     private ProgramIndicator indicatorC;
     private ProgramIndicator indicatorD;
     private ProgramIndicator indicatorE;
@@ -197,7 +197,7 @@ public class ProgramIndicatorServiceTest
         programStageDataElementService.addProgramStageDataElement( stageDataElementD );
 
         // ---------------------------------------------------------------------
-        // TrackedEntityInstance & Enrollement
+        // TrackedEntityInstance & Enrollment
         // ---------------------------------------------------------------------       
         
         TrackedEntityInstance entityInstance = createTrackedEntityInstance( 'A', organisationUnit );
@@ -214,6 +214,8 @@ public class ProgramIndicatorServiceTest
 
         programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, programA, enrollmentDate, incidenDate,
             organisationUnit );
+        
+        //TODO enroll twice?
         
         // ---------------------------------------------------------------------
         // TrackedEntityAttribute
@@ -250,14 +252,12 @@ public class ProgramIndicatorServiceTest
         Set<ProgramStageInstance> programStageInstances = new HashSet<>();
         programStageInstances.add( stageInstanceA );
         programStageInstances.add( stageInstanceB );
-        programInstance.setProgramStageInstances( programStageInstances );
-        
+        programInstance.setProgramStageInstances( programStageInstances );        
         
         TrackedEntityDataValue dataValueA = new TrackedEntityDataValue( stageInstanceA, deA, "3" );
         TrackedEntityDataValue dataValueB = new TrackedEntityDataValue( stageInstanceA, deB, "2015-03-01" );
         TrackedEntityDataValue dataValueC = new TrackedEntityDataValue( stageInstanceB, deA, "5" );
-        TrackedEntityDataValue dataValueD = new TrackedEntityDataValue( stageInstanceB, deB, "2015-03-15" );
-        
+        TrackedEntityDataValue dataValueD = new TrackedEntityDataValue( stageInstanceB, deB, "2015-03-15" );        
         
         dataValueService.saveTrackedEntityDataValue( dataValueA );
         dataValueService.saveTrackedEntityDataValue( dataValueB );
@@ -275,65 +275,65 @@ public class ProgramIndicatorServiceTest
         // ProgramIndicator
         // ---------------------------------------------------------------------       
        
-        indicatorInt = new ProgramIndicator( "IndicatorA", "IndicatorDesA", VALUE_TYPE_INT, "( " + KEY_PROGRAM_VARIABLE + "{"
+        indicatorA = new ProgramIndicator( "IndicatorA", "IndicatorDesA", programA, VALUE_TYPE_INT, "( " + KEY_PROGRAM_VARIABLE + "{"
             + ProgramIndicator.ENROLLMENT_DATE + "} - " + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.INCIDENT_DATE + "} )  / " 
             + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}" );
-        indicatorInt.setUid( "UID-DATE" );
-        indicatorInt.setShortName( "DATE" );
-        indicatorInt.setProgram( programA );
+        indicatorA.setUid( "UID-DATE" );
+        indicatorA.setShortName( "DATE" );
 
-        indicatorDate = new ProgramIndicator( "IndicatorB", "IndicatorDesB", ProgramIndicator.VALUE_TYPE_DATE, "70" );
-        indicatorDate.setRootDate( ProgramIndicator.INCIDENT_DATE );
-        indicatorDate.setUid( "UID-INT" );
-        indicatorDate.setShortName( "INT" );
-        indicatorDate.setProgram( programA );
+        indicatorB = new ProgramIndicator( "IndicatorB", "IndicatorDesB", programA, ProgramIndicator.VALUE_TYPE_DATE, "70" );
+        indicatorB.setRootDate( ProgramIndicator.INCIDENT_DATE );
+        indicatorB.setUid( "UID-INT" );
+        indicatorB.setShortName( "INT" );
 
-        indicatorC = new ProgramIndicator( "IndicatorC", "IndicatorDesB", ProgramIndicator.VALUE_TYPE_INT, "0" );
+        indicatorC = new ProgramIndicator( "IndicatorC", "IndicatorDesB", programB, ProgramIndicator.VALUE_TYPE_INT, "0" );
         indicatorC.setUid( "UID-C" );
         indicatorC.setShortName( "C" );
-        indicatorC.setProgram( programB );
         
-        indicatorD = new ProgramIndicator( "IndicatorD", "IndicatorDesD", ProgramIndicator.VALUE_TYPE_INT, "0 + A + 4 + " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{"
+        indicatorD = new ProgramIndicator( "IndicatorD", "IndicatorDesD", programB, ProgramIndicator.VALUE_TYPE_INT, "0 + A + 4 + " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{"
             + ProgramIndicator.INCIDENT_DATE + "}" );
         indicatorD.setUid( "UID-D" );
         indicatorD.setShortName( "D" );
-        indicatorD.setProgram( programB );
         
-        indicatorE = new ProgramIndicator( "IndicatorE", "IndicatorDesE", VALUE_TYPE_INT, 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} + " + 
+        String expressionE = KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} + " + 
             KEY_DATAELEMENT + "{" + psB.getUid() + "." + deA.getUid() + "} - " + 
-            KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + KEY_ATTRIBUTE + "{" + atB.getUid() + "}" );
+            KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + KEY_ATTRIBUTE + "{" + atB.getUid() + "}";
         
-        indicatorF = new ProgramIndicator( "IndicatorF", "IndicatorDesF", VALUE_TYPE_INT, "(" + 
-            KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + 
+        indicatorE = new ProgramIndicator( "IndicatorE", "IndicatorDesE", programB, VALUE_TYPE_INT, expressionE );
+        
+        String expressionF = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + 
             KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + 
-            KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + KEY_ATTRIBUTE + "{" + atB.getUid() + "}" );
+            KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + KEY_ATTRIBUTE + "{" + atB.getUid() + "}";
         
-
-        indicatorG = new ProgramIndicator( "IndicatorG", "IndicatorDesG", VALUE_TYPE_INT, "(" + 
-            KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + 
+        indicatorF = new ProgramIndicator( "IndicatorF", "IndicatorDesF", programB, VALUE_TYPE_INT, expressionF );
+        
+        String expressionG = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + 
             KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " +
             KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + 
-            KEY_ATTRIBUTE + "{" + atB.getUid() + "} * " 
-            + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}"  );
+            KEY_ATTRIBUTE + "{" + atB.getUid() + "} * " +
+            KEY_CONSTANT + "{" + constantA.getUid() + "}";
         
-        indicatorH = new ProgramIndicator( "IndicatorH", "IndicatorDesH", VALUE_TYPE_INT, "(" + 
-            KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - " + 
+        indicatorG = new ProgramIndicator( "IndicatorG", "IndicatorDesG", programB, VALUE_TYPE_INT, expressionG );
+        
+        String expressionH = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - " + 
             KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "}" );
+            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "}";
         
+        indicatorH = new ProgramIndicator( "IndicatorH", "IndicatorDesH", programB, VALUE_TYPE_INT, expressionH );        
         
-        indicatorI = new ProgramIndicator( "IndicatorI", "IndicatorDesI", VALUE_TYPE_DATE, "(" + 
-            KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - " + 
+        String expressionI = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - " + 
             KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "}" ); 
+            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "}";
+        
+        indicatorI = new ProgramIndicator( "IndicatorI", "IndicatorDesI", programB, VALUE_TYPE_DATE, expressionI ); 
         indicatorI.setRootDate( ProgramIndicator.INCIDENT_DATE );        
 
-        indicatorJ = new ProgramIndicator( "IndicatorJ", "IndicatorDesJ", VALUE_TYPE_DATE, "(" +
-            KEY_ATTRIBUTE + "{" + atC.getUid() + "}  - " + 
+        String expressionJ = "(" + KEY_ATTRIBUTE + "{" + atC.getUid() + "}  - " + 
             KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.ENROLLMENT_DATE + "} ) + " +           
             KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} * " + 
-            ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}" ); 
+            ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}";
+        
+        indicatorJ = new ProgramIndicator( "IndicatorJ", "IndicatorDesJ", programB, VALUE_TYPE_DATE, expressionJ ); 
         indicatorJ.setRootDate( ProgramIndicator.INCIDENT_DATE );
     }
 
@@ -344,8 +344,8 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testAddProgramIndicator()
     {
-        int idA = programIndicatorService.addProgramIndicator( indicatorDate );
-        int idB = programIndicatorService.addProgramIndicator( indicatorInt );
+        int idA = programIndicatorService.addProgramIndicator( indicatorA );
+        int idB = programIndicatorService.addProgramIndicator( indicatorB );
 
         assertNotNull( programIndicatorService.getProgramIndicator( idA ) );
         assertNotNull( programIndicatorService.getProgramIndicator( idB ) );
@@ -354,18 +354,18 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testDeleteProgramIndicator()
     {
-        int idA = programIndicatorService.addProgramIndicator( indicatorDate );
-        int idB = programIndicatorService.addProgramIndicator( indicatorInt );
+        int idA = programIndicatorService.addProgramIndicator( indicatorB );
+        int idB = programIndicatorService.addProgramIndicator( indicatorA );
 
         assertNotNull( programIndicatorService.getProgramIndicator( idA ) );
         assertNotNull( programIndicatorService.getProgramIndicator( idB ) );
 
-        programIndicatorService.deleteProgramIndicator( indicatorDate );
+        programIndicatorService.deleteProgramIndicator( indicatorB );
 
         assertNull( programIndicatorService.getProgramIndicator( idA ) );
         assertNotNull( programIndicatorService.getProgramIndicator( idB ) );
 
-        programIndicatorService.deleteProgramIndicator( indicatorInt );
+        programIndicatorService.deleteProgramIndicator( indicatorA );
 
         assertNull( programIndicatorService.getProgramIndicator( idA ) );
         assertNull( programIndicatorService.getProgramIndicator( idB ) );
@@ -374,12 +374,12 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testUpdateProgramIndicator()
     {
-        int idA = programIndicatorService.addProgramIndicator( indicatorDate );
+        int idA = programIndicatorService.addProgramIndicator( indicatorB );
 
         assertNotNull( programIndicatorService.getProgramIndicator( idA ) );
 
-        indicatorDate.setName( "B" );
-        programIndicatorService.updateProgramIndicator( indicatorDate );
+        indicatorB.setName( "B" );
+        programIndicatorService.updateProgramIndicator( indicatorB );
 
         assertEquals( "B", programIndicatorService.getProgramIndicator( idA ).getName() );
     }
@@ -387,18 +387,18 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetProgramIndicatorById()
     {
-        int idA = programIndicatorService.addProgramIndicator( indicatorDate );
-        int idB = programIndicatorService.addProgramIndicator( indicatorInt );
+        int idA = programIndicatorService.addProgramIndicator( indicatorB );
+        int idB = programIndicatorService.addProgramIndicator( indicatorA );
 
-        assertEquals( indicatorDate, programIndicatorService.getProgramIndicator( idA ) );
-        assertEquals( indicatorInt, programIndicatorService.getProgramIndicator( idB ) );
+        assertEquals( indicatorB, programIndicatorService.getProgramIndicator( idA ) );
+        assertEquals( indicatorA, programIndicatorService.getProgramIndicator( idB ) );
     }
 
     @Test
     public void testGetProgramIndicatorByName()
     {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorB );
+        programIndicatorService.addProgramIndicator( indicatorA );
 
         assertEquals( "IndicatorA", programIndicatorService.getProgramIndicator( "IndicatorA" ).getName() );
         assertEquals( "IndicatorB", programIndicatorService.getProgramIndicator( "IndicatorB" ).getName() );
@@ -407,17 +407,17 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetAllProgramIndicators()
     {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorB );
+        programIndicatorService.addProgramIndicator( indicatorA );
 
-        assertTrue( equals( programIndicatorService.getAllProgramIndicators(), indicatorDate, indicatorInt ) );
+        assertTrue( equals( programIndicatorService.getAllProgramIndicators(), indicatorB, indicatorA ) );
     }
 
     @Test
     public void testGetProgramIndicatorByShortName()
     {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorB );
+        programIndicatorService.addProgramIndicator( indicatorA );
 
         assertEquals( "INT", programIndicatorService.getProgramIndicatorByShortName( "INT" ).getShortName() );
         assertEquals( "DATE", programIndicatorService.getProgramIndicatorByShortName( "DATE" ).getShortName() );
@@ -426,29 +426,11 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetProgramIndicatorByUid()
     {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorB );
+        programIndicatorService.addProgramIndicator( indicatorA );
 
         assertEquals( "UID-INT", programIndicatorService.getProgramIndicatorByUid( "UID-INT" ).getUid() );
         assertEquals( "UID-DATE", programIndicatorService.getProgramIndicatorByUid( "UID-DATE" ).getUid() );
-    }
-
-    @Test
-    public void testGetProgramIndicatorsByProgram()
-    {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
-        programIndicatorService.addProgramIndicator( indicatorC );
-
-        Collection<ProgramIndicator> indicators = programIndicatorService.getProgramIndicators( programA );
-        assertEquals( 2, indicators.size() );
-        assertTrue( indicators.contains( indicatorDate ) );
-        assertTrue( indicators.contains( indicatorInt ) );
-
-        indicators = programIndicatorService.getProgramIndicators( programB );
-        assertEquals( 1, indicators.size() );
-        assertTrue( indicators.contains( indicatorC ) );
-
     }
 
     // -------------------------------------------------------------------------
@@ -479,8 +461,8 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetProgramIndicatorValue()
     {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorB );
+        programIndicatorService.addProgramIndicator( indicatorA );
         programIndicatorService.addProgramIndicator( indicatorE );
         programIndicatorService.addProgramIndicator( indicatorF );
         programIndicatorService.addProgramIndicator( indicatorG );
@@ -488,10 +470,10 @@ public class ProgramIndicatorServiceTest
         programIndicatorService.addProgramIndicator( indicatorI );
         programIndicatorService.addProgramIndicator( indicatorJ );
 
-        String valueINT = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorInt);
+        String valueINT = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorA);
         assertEquals( "10.0", valueINT );
 
-        String valueDATE = programIndicatorService.getProgramIndicatorValue( programInstance,  indicatorDate  );
+        String valueDATE = programIndicatorService.getProgramIndicatorValue( programInstance,  indicatorB  );
         assertEquals( DateUtils.getMediumDateString( enrollmentDate ), valueDATE );
         
         String valueE = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorE );
@@ -507,26 +489,25 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetProgramIndicatorValues()
     {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorA );
+        programIndicatorService.addProgramIndicator( indicatorB );
 
         Map<String, String> indicatorMap = programIndicatorService.getProgramIndicatorValues( programInstance );
         assertEquals( 2, indicatorMap.keySet().size() );
         assertEquals( "10.0", indicatorMap.get( "IndicatorA" ) );
         assertEquals( DateUtils.getMediumDateString( enrollmentDate ), indicatorMap.get( "IndicatorB" ) );
-
     }
     
     @Test
     public void testGetExpressionDescription()
     {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorB );
+        programIndicatorService.addProgramIndicator( indicatorA );
 
-        String description = programIndicatorService.getExpressionDescription( indicatorDate.getExpression() );
+        String description = programIndicatorService.getExpressionDescription( indicatorB.getExpression() );
         assertEquals( "70", description);
         
-        description = programIndicatorService.getExpressionDescription( indicatorInt.getExpression() );
+        description = programIndicatorService.getExpressionDescription( indicatorA.getExpression() );
         assertEquals( "( Enrollment date - Incident date )  / ConstantA", description);
         
     }
@@ -534,12 +515,12 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testExpressionIsValid()
     {
-        programIndicatorService.addProgramIndicator( indicatorDate );
-        programIndicatorService.addProgramIndicator( indicatorInt );
+        programIndicatorService.addProgramIndicator( indicatorB );
+        programIndicatorService.addProgramIndicator( indicatorA );
         programIndicatorService.addProgramIndicator( indicatorD );
 
-        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorDate.getExpression() ) );
-        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorInt.getExpression() ) );
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorB.getExpression() ) );
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorA.getExpression() ) );
         assertEquals( ProgramIndicator.EXPRESSION_NOT_WELL_FORMED, programIndicatorService.expressionIsValid( indicatorD.getExpression() ) );
     }    
 }

@@ -1010,11 +1010,7 @@
   <bean
     id="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorListAction"
     class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorListAction"
-    scope="prototype">
-    <property name="programIndicatorService"
-      ref="org.hisp.dhis.program.ProgramIndicatorService" />
-    <property name="programService" ref="org.hisp.dhis.program.ProgramService" />
-  </bean>
+    scope="prototype"/>
 
   <bean
     id="org.hisp.dhis.trackedentity.action.programindicator.UpdateProgramIndicatorAction"

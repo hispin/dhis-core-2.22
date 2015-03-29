@@ -97,18 +97,6 @@
 	
 </div>
 
-<tr>
-	<td>
-		<br/>
-		<a href="javascript:insertOperator( '(' )"><img src="../images/left_parent.png" title="$i18n.getString( 'left_brackets' )"/></a>
-		<a href="javascript:insertOperator( ')' )"><img src="../images/right_parent.png" title="$i18n.getString( 'right_brackets' )"/></a>
-		<a href="javascript:insertOperator( '*' )"><img src="../images/multiply.png" title="$i18n.getString( 'multiply' )"/></a>
-		<a href="javascript:insertOperator( '/' )"><img src="../images/divide.png" title="$i18n.getString( 'divide' )"/></a>
-		<a href="javascript:insertOperator( '+' )"><img src="../images/plus.png" title="$i18n.getString( 'plus' )"/></a>
-		<a href="javascript:insertOperator( '-' )"><img src="../images/minus.png" title="$i18n.getString( 'minus' )"/></a>
-	</td>
-</tr>
-	
 <p></p>
 <table>
 	<tr>
@@ -117,6 +105,16 @@
 	<tr>
 		<td>
 			<textarea style="width:660px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
+		</td>
+	</tr>	
+	<tr>
+		<td>
+			<a href="javascript:insertOperator( '(' )"><img src="../images/left_parent.png" title="$i18n.getString( 'left_brackets' )"/></a>
+			<a href="javascript:insertOperator( ')' )"><img src="../images/right_parent.png" title="$i18n.getString( 'right_brackets' )"/></a>
+			<a href="javascript:insertOperator( '*' )"><img src="../images/multiply.png" title="$i18n.getString( 'multiply' )"/></a>
+			<a href="javascript:insertOperator( '/' )"><img src="../images/divide.png" title="$i18n.getString( 'divide' )"/></a>
+			<a href="javascript:insertOperator( '+' )"><img src="../images/plus.png" title="$i18n.getString( 'plus' )"/></a>
+			<a href="javascript:insertOperator( '-' )"><img src="../images/minus.png" title="$i18n.getString( 'minus' )"/></a><br><br>
 		</td>
 	</tr>	
 	<tr>
