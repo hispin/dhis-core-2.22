@@ -79,9 +79,7 @@ public class InitTableAlteror
 
     private void upgradeProgramStageDataElements()
     {
-        int r = executeSql( "select 1 from programstage_dataelements" );
-        
-        if ( r != -1 )
+        if ( tableExists( "programstage_dataelements" ) )
         {
             String autoIncr = statementBuilder.getAutoIncrementValue();
             
@@ -104,8 +102,6 @@ public class InitTableAlteror
     {
         try
         {
-            // TODO use jdbcTemplate
-
             return statementManager.getHolder().executeUpdate( sql );
         }
         catch ( Exception ex )
@@ -113,6 +109,19 @@ public class InitTableAlteror
             log.debug( ex );
 
             return -1;
+        }
+    }
+    
+    private boolean tableExists( String table )
+    {
+        try
+        {
+            statementManager.getHolder().queryForInteger( "select 1 from " + table );
+            return true;
+        }
+        catch ( Exception ex )
+        {
+            return false;
         }
     }
 }
