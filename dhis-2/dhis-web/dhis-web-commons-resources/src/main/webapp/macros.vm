@@ -268,6 +268,9 @@ jQuery(function() {
 	<td style="width: 200px;"><label for="$!args.id">$!args.text #if($args.mandatory)<em title="$i18n.getString( 'required' )" class="required">*</em>#end</label></td>
 	<td>
 		<select id="$!args.id" name="$name">
+    #if( $args.mandatory != true )
+      <option value="">---</option>
+    #end
 		#foreach( $choice in $args.attribute.optionSet.options )
 			<option value="$choice.code" #if( $args.value == $choice.code )selected="selected"#end>$choice.displayName</option>
 		#end
