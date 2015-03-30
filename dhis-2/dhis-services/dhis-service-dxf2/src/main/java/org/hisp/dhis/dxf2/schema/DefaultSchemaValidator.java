@@ -53,6 +53,12 @@ public class DefaultSchemaValidator implements SchemaValidator
     @Override
     public List<ValidationViolation> validate( Object object )
     {
+        return validate( object, true );
+    }
+
+    @Override
+    public List<ValidationViolation> validate( Object object, boolean persisted )
+    {
         if ( object == null || schemaService.getSchema( object.getClass() ) == null )
         {
             return new ArrayList<>();
@@ -64,6 +70,11 @@ public class DefaultSchemaValidator implements SchemaValidator
 
         for ( Property property : schema.getProperties() )
         {
+            if ( persisted && !property.isPersisted() )
+            {
+                continue;
+            }
+
             Object value = ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
 
             if ( value == null )

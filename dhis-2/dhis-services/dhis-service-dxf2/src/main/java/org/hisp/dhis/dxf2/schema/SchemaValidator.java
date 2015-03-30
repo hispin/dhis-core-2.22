@@ -38,6 +38,17 @@ public interface SchemaValidator
     /**
      * Validate object against its schema, the object is required to be non-null and have a schema associated with it.
      *
+     * @param object    Object to validate
+     * @param persisted Only include persisted properties
+     * @return WebMessage containing validation response
+     */
+    List<ValidationViolation> validate( Object object, boolean persisted );
+
+    /**
+     * Validate object against its schema, the object is required to be non-null and have a schema associated with it.
+     *
+     * Only persisted values will be checked.
+     *
      * @param object Object to validate
      * @return WebMessage containing validation response
      */
