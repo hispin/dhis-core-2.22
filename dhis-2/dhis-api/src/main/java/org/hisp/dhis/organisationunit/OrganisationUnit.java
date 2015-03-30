@@ -34,10 +34,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
+import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
@@ -68,6 +70,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.hisp.dhis.common.NameableObjectUtils.getProperty;
 
 /**
  * @author Kristian Nordal
@@ -757,7 +761,8 @@ public class OrganisationUnit
      * Returns a mapping between the uid and the uid parent graph of the given
      * organisation units.
      */
-    public static Map<String, String> getParentNameGraphMap( List<OrganisationUnit> organisationUnits, Collection<OrganisationUnit> roots, boolean includeThis )
+    public static Map<String, String> getParentNameGraphMap( List<OrganisationUnit> organisationUnits, 
+        Collection<OrganisationUnit> roots, boolean includeThis, DisplayProperty displayProperty )
     {
         Map<String, String> map = new HashMap<>();
 
@@ -765,7 +770,7 @@ public class OrganisationUnit
         {
             for ( OrganisationUnit unit : organisationUnits )
             {
-                map.put( unit.getName(), unit.getParentNameGraph( roots, includeThis ) );
+                map.put( getProperty( unit, displayProperty ), unit.getParentNameGraph( roots, includeThis ) );
             }
         }
 
