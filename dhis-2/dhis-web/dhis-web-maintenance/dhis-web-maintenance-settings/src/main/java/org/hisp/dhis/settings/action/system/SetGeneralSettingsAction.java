@@ -35,6 +35,7 @@ import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATABASE_SERVER_CPU
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_FACTOR_OF_DEVIATION;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_GOOGLE_ANALYTICS_UA;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_HELP_PAGE_LINK;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_INSTANCE_BASE_URL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_MULTI_ORGANISATION_UNIT_FORMS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_OMIT_INDICATORS_ZERO_NUMERATOR_DATAMART;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_PHONE_NUMBER_AREA_CODE;
@@ -237,6 +238,13 @@ public class SetGeneralSettingsAction
         this.helpPageLink = helpPageLink;
     }
 
+    private String instanceBaseUrl;
+
+    public void setInstanceBaseUrl( String instanceBaseUrl )
+    {
+        this.instanceBaseUrl = instanceBaseUrl;
+    }
+
     private String message;
 
     public String getMessage()
@@ -257,7 +265,7 @@ public class SetGeneralSettingsAction
 
     @Override
     public String execute()
-    { 
+    {
         systemSettingManager.saveSystemSetting( KEY_CACHE_STRATEGY, cacheStrategy );
         systemSettingManager.saveSystemSetting( KEY_ANALYTICS_MAX_LIMIT, analyticsMaxLimit );
         systemSettingManager.saveSystemSetting( KEY_DATABASE_SERVER_CPUS, databaseServerCpus );
@@ -268,6 +276,7 @@ public class SetGeneralSettingsAction
         systemSettingManager.saveSystemSetting( KEY_GOOGLE_ANALYTICS_UA, googleAnalyticsUA );
         systemSettingManager.saveSystemSetting( KEY_ANALYTICS_MAINTENANCE_MODE, analyticsMaintenanceMode );
         systemSettingManager.saveSystemSetting( KEY_HELP_PAGE_LINK, StringUtils.trimToNull( helpPageLink ) );
+        systemSettingManager.saveSystemSetting( KEY_INSTANCE_BASE_URL, StringUtils.removeEnd( StringUtils.trimToNull( instanceBaseUrl ), "/" ) );
         systemSettingManager.saveSystemSetting( KEY_SYSTEM_NOTIFICATIONS_EMAIL, systemNotificationsEmail );
         systemSettingManager.saveSystemSetting( KEY_ANALYSIS_RELATIVE_PERIOD, analysisRelativePeriod );
 
