@@ -32,6 +32,7 @@ import net.sf.json.JSONObject;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.AttributeValue;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +79,7 @@ public class AttributeUtils
             {
                 if ( attributeValueItem.getAttribute().getId() == attribute.getId() )
                 {
-                    if ( attributeValue == null || attributeValue.getValue() == null || attributeValue.getValue().length() == 0 )
+                    if ( attributeValue == null || StringUtils.isEmpty( attributeValue.getValue() ) )
                     {
                         attributeService.deleteAttributeValue( attributeValueItem );
                     }
