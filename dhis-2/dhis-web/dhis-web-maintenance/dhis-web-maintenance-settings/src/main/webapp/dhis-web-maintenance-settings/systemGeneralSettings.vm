@@ -1,4 +1,5 @@
 <script>
+    console.log( '$!keyInstanceBaseUrl' );
   jQuery(document).ready(function() {
     jQuery("input[type=button]").click(function() {
       jQuery.postUTF8('setSystemGeneralSettings.action', {
@@ -18,7 +19,8 @@
         googleAnalyticsUA: getFieldValue('googleAnalyticsUA'),
         multiOrganisationUnitForms: jQuery('#multiOrganisationUnitForms').is(':checked'),
         analyticsMaintenanceMode: jQuery('#analyticsMaintenanceMode').is(':checked'),
-        helpPageLink: getFieldValue('helpPageLink')
+        helpPageLink: getFieldValue('helpPageLink' ),
+        instanceBaseUrl: getFieldValue('instanceBaseUrl')
       }, function( json ) {
         if( json.response == "success" ) {
           setHeaderDelayMessage(json.message);
@@ -152,6 +154,12 @@
 
 <div class="setting">
 	<input type="text" id="helpPageLink" name="helpPageLink" value="$!helpPageLink"/>
+</div>
+
+<div class="settingLabel">$i18n.getString( "server_base_url" )</div>
+
+<div class="setting">
+    <input type="text" id="instanceBaseUrl" name="instanceBaseUrl" value="$!keyInstanceBaseUrl"/>
 </div>
 
 <div class="settingLabel">$i18n.getString( "google_analytics_ua_key" )</div>
