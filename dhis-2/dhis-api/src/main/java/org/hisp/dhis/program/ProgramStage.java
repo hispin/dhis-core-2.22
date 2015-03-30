@@ -35,7 +35,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -83,6 +82,7 @@ public class ProgramStage
 
     private Program program;
 
+    @Scanned
     private Set<ProgramStageDataElement> programStageDataElements = new HashSet<>();
 
     private List<ProgramIndicator> programIndicators = new ArrayList<>();
@@ -125,7 +125,7 @@ public class ProgramStage
     private String reportDateToUse;
 
     private Integer sortOrder;
-    
+
     private PeriodType periodType;
 
     /**
@@ -302,6 +302,7 @@ public class ProgramStage
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JacksonXmlElementWrapper( localName = "programStageDataElements", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "programStageDataElement", namespace = DxfNamespaces.DXF_2_0 )
     public Set<ProgramStageDataElement> getProgramStageDataElements()
