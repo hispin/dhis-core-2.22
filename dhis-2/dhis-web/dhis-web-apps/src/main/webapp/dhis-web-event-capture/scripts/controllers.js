@@ -149,8 +149,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     section.open = true;
                 });
 
-                $scope.customForm = CustomFormService.getForProgramStage($scope.selectedProgramStage);
-
                 $scope.prStDes = [];  
                 $scope.eventGridColumns = [];
                 $scope.filterTypes = {};                               
@@ -195,12 +193,13 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                         $scope.filterText[prStDe.dataElement.id]= {};
                     }
                 });
+                
+                $scope.customForm = CustomFormService.getForProgramStage($scope.selectedProgramStage, $scope.prStDes);
 
                 if($scope.selectedProgramStage.captureCoordinates){
                     $scope.newDhis2Event.coordinate = {};
                 }
                 $scope.newDhis2Event.eventDate = '';
-
 
                 ErrorMessageService.setErrorMessages(errorMessages);
 

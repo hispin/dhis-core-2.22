@@ -13,8 +13,7 @@ trackerCapture.controller('OverdueEventsController',
                 AttributesFactory,
                 ProgramFactory,
                 CurrentSelection,
-                OptionSetService,
-                SessionStorageService) {    
+                OptionSetService) {    
     $scope.today = DateUtils.getToday();
     
     $scope.selectedOuMode = 'SELECTED';
@@ -57,7 +56,6 @@ trackerCapture.controller('OverdueEventsController',
         $scope.reportStarted = false;
         $scope.selectedProgram = null;
         if( angular.isObject($scope.selectedOrgUnit)){            
-            SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);            
             $scope.loadPrograms($scope.selectedOrgUnit);
         }
     });
