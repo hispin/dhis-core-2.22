@@ -85,11 +85,4 @@ public class DefaultProgramStageDataElementService
     {
         programStageDataElementStore.update( programStageDataElement );
     }
-
-    @Override
-    public Collection<DataElement> getListDataElement( ProgramStage programStage )
-    {
-        return programStageDataElementStore.getListDataElement( programStage );
-    }
-
 }

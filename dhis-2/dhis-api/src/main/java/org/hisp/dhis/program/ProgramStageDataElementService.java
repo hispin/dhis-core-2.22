@@ -34,7 +34,6 @@ import java.util.Collection;
 
 /**
  * @author Viet Nguyen
- * @version $Id$
  */
 public interface ProgramStageDataElementService
 {
@@ -78,13 +77,4 @@ public interface ProgramStageDataElementService
      * collection if there are no ProgramStageDataElements.
      */
     Collection<ProgramStageDataElement> getAllProgramStageDataElements();
-
-    /**
-     * Retrieve Data element list on a program stage
-     *
-     * @param programStage ProgramStage
-     * @return ProgramStageDataElement list
-     */
-    Collection<DataElement> getListDataElement( ProgramStage programStage );
-
 }

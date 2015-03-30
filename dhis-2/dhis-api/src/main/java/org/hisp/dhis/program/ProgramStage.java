@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -46,6 +47,7 @@ import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.common.view.WithoutOrganisationUnitsView;
+import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.schema.annotation.PropertyRange;
@@ -147,6 +149,43 @@ public class ProgramStage
         setAutoFields();
         this.name = name;
         this.program = program;
+    }
+
+    // -------------------------------------------------------------------------
+    // Logic
+    // -------------------------------------------------------------------------
+
+    public Set<DataElement> getAllDataElements()
+    {
+        Set<DataElement> dataElements = new HashSet<>();
+        
+        for ( ProgramStageDataElement element : programStageDataElements )
+        {
+            if ( element.getDataElement() != null )
+            {
+                dataElements.add( element.getDataElement() );
+            }
+        }
+        
+        return dataElements;
+    }
+    
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getDataEntryType()
+    {
+        if ( dataEntryForm != null )
+        {
+            return TYPE_CUSTOM;
+        }
+
+        if ( programStageSections.size() > 0 )
+        {
+            return TYPE_SECTION;
+        }
+
+        return TYPE_DEFAULT;
     }
 
     // -------------------------------------------------------------------------
@@ -366,24 +405,6 @@ public class ProgramStage
     public void setDisplayGenerateEventBox( Boolean displayGenerateEventBox )
     {
         this.displayGenerateEventBox = displayGenerateEventBox;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDataEntryType()
-    {
-        if ( dataEntryForm != null )
-        {
-            return TYPE_CUSTOM;
-        }
-
-        if ( programStageSections.size() > 0 )
-        {
-            return TYPE_SECTION;
-        }
-
-        return TYPE_DEFAULT;
     }
 
     @JsonProperty

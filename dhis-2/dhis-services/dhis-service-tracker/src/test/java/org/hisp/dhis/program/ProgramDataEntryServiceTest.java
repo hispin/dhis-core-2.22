@@ -93,11 +93,13 @@ public class ProgramDataEntryServiceTest
         programService.addProgram( program );
 
         stageA = new ProgramStage( "A", program );
+        program.getProgramStages().add( stageA );
         stageA.setUid( "StageA" );
         stageA.setSortOrder( 1 );
         programStageService.saveProgramStage( stageA );
 
         ProgramStage stageB = new ProgramStage( "B", program );
+        program.getProgramStages().add( stageB );
         stageB.setSortOrder( 2 );
         programStageService.saveProgramStage( stageB );
 
@@ -113,10 +115,14 @@ public class ProgramDataEntryServiceTest
 
         dataElementService.addDataElement( dataElementA );
         dataElementService.addDataElement( dataElementB );
-        ProgramStageDataElement stageDataElement = new ProgramStageDataElement( stageA, dataElementA, false, 1 );
-        programStageDataElementService.addProgramStageDataElement( stageDataElement );
-        stageDataElement = new ProgramStageDataElement( stageA, dataElementB, false, 2 );
-        programStageDataElementService.addProgramStageDataElement( stageDataElement );
+        
+        ProgramStageDataElement programStageDataElementA = new ProgramStageDataElement( stageA, dataElementA, false, 1 );
+        stageA.getProgramStageDataElements().add( programStageDataElementA );
+        programStageDataElementService.addProgramStageDataElement( programStageDataElementA );
+        
+        ProgramStageDataElement programStageDataElementB = new ProgramStageDataElement( stageA, dataElementB, false, 2 );
+        stageA.getProgramStageDataElements().add( programStageDataElementB );
+        programStageDataElementService.addProgramStageDataElement( programStageDataElementB );
 
         htmlCode = "<input id=\"StageA-DeA-val\" style=\"width:4em;text-align:center\" value=\"\" title=\"\" />";
     }

@@ -406,8 +406,6 @@
     </property>
     <property name="programDataEntryService"
       ref="org.hisp.dhis.program.ProgramDataEntryService" />
-    <property name="programStageDataElementService"
-      ref="org.hisp.dhis.program.ProgramStageDataElementService" />
     <property name="systemSettingManager">
       <ref bean="org.hisp.dhis.setting.SystemSettingManager" />
     </property>
@@ -456,8 +454,6 @@
     <property name="programStageService">
       <ref bean="org.hisp.dhis.program.ProgramStageService" />
     </property>
-    <property name="programStageDataElementService"
-      ref="org.hisp.dhis.program.ProgramStageDataElementService" />
   </bean>
 
   <bean
@@ -467,8 +463,6 @@
     <property name="programStageService">
       <ref bean="org.hisp.dhis.program.ProgramStageService" />
     </property>
-    <property name="programStageDataElementService"
-      ref="org.hisp.dhis.program.ProgramStageDataElementService" />
   </bean>
 
   <bean
@@ -682,20 +676,12 @@
     scope="prototype">
     <property name="programService" ref="org.hisp.dhis.program.ProgramService" />
     <property name="programStageService" ref="org.hisp.dhis.program.ProgramStageService" />
-    <property name="programStageDataElementService"
-      ref="org.hisp.dhis.program.ProgramStageDataElementService" />
   </bean>
 
   <bean
     id="org.hisp.dhis.trackedentity.action.caseaggregation.GetAggPSDataElementsAction"
     class="org.hisp.dhis.trackedentity.action.caseaggregation.GetAggPSDataElementsAction"
-    scope="prototype">
-    <property name="programStageService">
-      <ref bean="org.hisp.dhis.program.ProgramStageService" />
-    </property>
-    <property name="programStageDataElementService"
-      ref="org.hisp.dhis.program.ProgramStageDataElementService" />
-  </bean>
+    scope="prototype"/>
 
   <bean
     id="org.hisp.dhis.trackedentity.action.caseaggregation.RemoveCaseAggregationConditionAction"
