@@ -28,17 +28,18 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.dataelement.DataElement;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.dataelement.DataElement;
 
 /**
  * @author Viet Nguyen
@@ -52,14 +53,8 @@ public class ProgramStageDataElement
      */
     private static final long serialVersionUID = -5670110591005778814L;
 
-    /**
-     * Part of composite key
-     */
     private ProgramStage programStage;
 
-    /**
-     * Part of composite key
-     */
     private DataElement dataElement;
 
     /**
@@ -237,5 +232,37 @@ public class ProgramStageDataElement
             ", displayInReports=" + displayInReports +
             ", allowFutureDate=" + allowFutureDate +
             '}';
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            ProgramStageDataElement programStageDataElement = (ProgramStageDataElement) other;
+
+            compulsory = programStageDataElement.isCompulsory();
+
+            if ( strategy.isReplace() )
+            {
+                programStage = programStageDataElement.getProgramStage();
+                dataElement = programStageDataElement.getDataElement();
+                allowFutureDate = programStageDataElement.getAllowFutureDate();
+                allowProvidedElsewhere = programStageDataElement.getAllowProvidedElsewhere();
+                displayInReports = programStageDataElement.getDisplayInReports();
+                sortOrder = programStageDataElement.getSortOrder();
+            }
+            else if ( strategy.isMerge() )
+            {
+                programStage = programStageDataElement.getProgramStage() == null ? programStage : programStageDataElement.getProgramStage();
+                dataElement = programStageDataElement.getDataElement() == null ? dataElement : programStageDataElement.getDataElement();
+                allowFutureDate = programStageDataElement.getAllowFutureDate() == null ? allowFutureDate : programStageDataElement.getAllowFutureDate();
+                allowProvidedElsewhere = programStageDataElement.getAllowProvidedElsewhere() == null ? allowProvidedElsewhere : programStageDataElement.getAllowProvidedElsewhere();
+                displayInReports = programStageDataElement.getDisplayInReports() == null ? displayInReports : programStageDataElement.getDisplayInReports();
+                sortOrder = programStageDataElement.getSortOrder() == null ? sortOrder : programStageDataElement.getSortOrder();
+            }
+        }
     }
 }
