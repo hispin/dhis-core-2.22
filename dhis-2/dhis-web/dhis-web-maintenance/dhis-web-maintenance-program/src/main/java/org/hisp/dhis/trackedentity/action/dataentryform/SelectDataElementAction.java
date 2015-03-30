@@ -36,7 +36,6 @@ import java.util.List;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.program.ProgramStageDataElementService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.system.filter.DataElementStringTypeFilter;
 import org.hisp.dhis.system.util.FilterUtils;
@@ -59,13 +58,6 @@ public class SelectDataElementAction
     public void setProgramStageService( ProgramStageService programStageService )
     {
         this.programStageService = programStageService;
-    }
-
-    private ProgramStageDataElementService programStageDataElementService;
-
-    public void setProgramStageDataElementService( ProgramStageDataElementService programStageDataElementService )
-    {
-        this.programStageDataElementService = programStageDataElementService;
     }
     
     // -------------------------------------------------------------------------
@@ -119,7 +111,7 @@ public class SelectDataElementAction
         
         if ( association != null )
         {
-            dataElements =  new ArrayList<>( programStageDataElementService.getListDataElement( association )  );
+            dataElements =  new ArrayList<>( association.getAllDataElements() );
 
             if ( typeTextOnly )
             {

@@ -31,8 +31,6 @@ package org.hisp.dhis.program;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
 
-import java.util.Collection;
-
 /**
  * @author Viet Nguyen
  */
@@ -50,12 +48,4 @@ public interface ProgramStageDataElementStore
      * @return ProgramStageDataElement
      */
     ProgramStageDataElement get( ProgramStage programStage, DataElement dataElement );
-
-    /**
-     * Retrieve Data element list on a program stage
-     *
-     * @param programStage ProgramStage
-     * @return ProgramStageDataElement list
-     */
-    Collection<DataElement> getListDataElement( ProgramStage programStage );
 }

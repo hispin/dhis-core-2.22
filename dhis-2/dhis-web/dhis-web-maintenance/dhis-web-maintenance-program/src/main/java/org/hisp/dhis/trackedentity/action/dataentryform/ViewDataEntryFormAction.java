@@ -38,7 +38,6 @@ import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
 import org.hisp.dhis.program.ProgramDataEntryService;
 import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.program.ProgramStageDataElementService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.UserSettingService;
@@ -77,13 +76,6 @@ public class ViewDataEntryFormAction
     public void setProgramStageService( ProgramStageService programStageService )
     {
         this.programStageService = programStageService;
-    }
-
-    private ProgramStageDataElementService programStageDataElementService;
-
-    public void setProgramStageDataElementService( ProgramStageDataElementService programStageDataElementService )
-    {
-        this.programStageDataElementService = programStageDataElementService;
     }
 
     private SystemSettingManager systemSettingManager;
@@ -222,7 +214,7 @@ public class ViewDataEntryFormAction
         // Get selected program-stage
         // ---------------------------------------------------------------------
 
-        dataElements = new ArrayList<>( programStageDataElementService.getListDataElement( programStage ) );
+        dataElements = new ArrayList<>( programStage.getAllDataElements() );
 
         Collections.sort( dataElements, new IdentifiableObjectNameComparator() );
 

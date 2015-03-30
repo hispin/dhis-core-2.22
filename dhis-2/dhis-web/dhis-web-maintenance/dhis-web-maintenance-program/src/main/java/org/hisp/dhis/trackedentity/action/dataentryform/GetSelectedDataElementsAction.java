@@ -35,7 +35,6 @@ import java.util.List;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.program.ProgramStageDataElementService;
 import org.hisp.dhis.program.ProgramStageService;
 
 import com.opensymphony.xwork2.Action;
@@ -56,13 +55,6 @@ public class GetSelectedDataElementsAction
     public void setProgramStageService( ProgramStageService programStageService )
     {
         this.programStageService = programStageService;
-    }
-
-    private ProgramStageDataElementService programStageDataElementService;
-
-    public void setProgramStageDataElementService( ProgramStageDataElementService programStageDataElementService )
-    {
-        this.programStageDataElementService = programStageDataElementService;
     }
 
     // -------------------------------------------------------------------------
@@ -93,7 +85,7 @@ public class GetSelectedDataElementsAction
     {
         ProgramStage programStage = programStageService.getProgramStage( associationId );
 
-        dataElementList = new ArrayList<>( programStageDataElementService.getListDataElement( programStage ) );
+        dataElementList = new ArrayList<>( programStage.getAllDataElements() );
 
         Collections.sort( dataElementList, new IdentifiableObjectNameComparator() );
 

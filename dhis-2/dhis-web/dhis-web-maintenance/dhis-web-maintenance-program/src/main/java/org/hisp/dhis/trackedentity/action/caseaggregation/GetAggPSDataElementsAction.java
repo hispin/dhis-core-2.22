@@ -33,8 +33,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.program.ProgramStageDataElementService;
+import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
@@ -50,19 +51,8 @@ public class GetAggPSDataElementsAction
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private ProgramStageService programStageService;
-
-    public void setProgramStageService( ProgramStageService programStageService )
-    {
-        this.programStageService = programStageService;
-    }
-
-    private ProgramStageDataElementService programStageDataElementService;
-
-    public void setProgramStageDataElementService( ProgramStageDataElementService programStageDataElementService )
-    {
-        this.programStageDataElementService = programStageDataElementService;
-    }
 
     // -------------------------------------------------------------------------
     // Input & Output
@@ -94,8 +84,9 @@ public class GetAggPSDataElementsAction
     @Override
     public String execute()
     {
-        dataElementList = new ArrayList<>( programStageDataElementService
-            .getListDataElement( programStageService.getProgramStage( psId ) ) );
+        ProgramStage stage = programStageService.getProgramStage( psId );
+        
+        dataElementList = new ArrayList<>( stage.getAllDataElements() );
 
         if ( dataElementList != null && !dataElementList.isEmpty() )
         {
