@@ -7283,9 +7283,11 @@ Ext.onReady(function() {
 
                 if (!base || base === 'none' || base === 'off') {
                     gis.layer.googleStreets.setVisibility(false);
-                } else if (base === 'gh' || base === 'googlehybrid') {
+                }
+                else if (base === 'gh' || base === 'googlehybrid') {
                     gis.olmap.setBaseLayer(gis.layer.googleHybrid);
-                } else if (base === 'osm' || base === 'openstreetmap') {
+                }
+                else if (base === 'osm' || base === 'openstreetmap') {
                     gis.olmap.setBaseLayer(gis.layer.openStreetMap);
                 }
             }
