@@ -64,6 +64,7 @@ public interface EventAnalyticsService
      * @param skipMeta whether to skip meta-data in response.
      * @param skipRounding whether to skip rounding of values in response.
      * @param hierarchyMeta whether to include hierarchy meta-data in the response.
+     * @param showHierarchy whether to include hierarchy meta-data names in the response.
      * @param sortOrder the sort order of the aggregate values.
      * @param limit the max limit of records to return.
      * @param outputType the event output type.
@@ -73,7 +74,7 @@ public interface EventAnalyticsService
      */
     EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate, 
         Set<String> dimension, Set<String> filter, String value, AggregationType aggregationType, 
-        boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, SortOrder sortOrder, Integer limit, 
+        boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean showHierarchy, SortOrder sortOrder, Integer limit, 
         EventOutputType outputType, boolean collapseDataDimensions, DisplayProperty displayProperty, I18nFormat format );
 
     /**
