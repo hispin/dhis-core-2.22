@@ -74,7 +74,7 @@
             <div ng-if="currentEvent">
                 
                 <!-- event dates/scheduling begin -->
-                <div class="row">
+                <div class="row" ng-if="!currentStage.periodType">
                     <div class="col-md-6">
                         {{currentEvent.reportDateDescription}}
                         <input type="text"
