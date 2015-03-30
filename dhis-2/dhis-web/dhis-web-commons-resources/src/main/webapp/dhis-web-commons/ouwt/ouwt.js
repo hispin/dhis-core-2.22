@@ -15,7 +15,8 @@
  * selection.setMultipleSelectionAllowed function to change this.
  */
 
-var organisationUnitTreePath = "../dhis-web-commons/ouwt/";
+var dhis2BaseUrl = "..";
+var organisationUnitTreePath = dhis2BaseUrl + "/dhis-web-commons/ouwt/";
 var organisationUnits = {};
 
 var selection = new Selection();
@@ -272,7 +273,7 @@ function Selection()
         format = format || "json";
 
         return $.ajax( {
-            url: '../dhis-web-commons-ajax-json/getOrganisationUnitTree.action',
+            url: dhis2BaseUrl + '/dhis-web-commons-ajax-json/getOrganisationUnitTree.action',
             data: {
                 versionOnly: versionOnly,
                 offlineLevel: offlineLevel
@@ -673,7 +674,7 @@ function Selection()
         }
         else {
             $.ajax( {
-                url: '../dhis-web-commons-ajax-json/getOrganisationUnitTree.action',
+                url: dhis2BaseUrl + '/dhis-web-commons-ajax-json/getOrganisationUnitTree.action',
                 data: { byName: name }
             } ).done(function( data ) {
                 if( data.realRoot === undefined ) {
@@ -708,11 +709,11 @@ function Selection()
 
 function Subtree() {
     this.ajaxGetChildren = function( parentId ) {
-        return $.post( '../dhis-web-commons-ajax-json/getOrganisationUnitTree.action?parentId=' + parentId);
+        return $.post( dhis2BaseUrl + '/dhis-web-commons-ajax-json/getOrganisationUnitTree.action?parentId=' + parentId);
     };
 
     this.ajaxGetLeaf = function( parentId ) {
-        return $.post( '../dhis-web-commons-ajax-json/getOrganisationUnitTree.action?leafId=' + parentId);
+        return $.post( dhis2BaseUrl + '/dhis-web-commons-ajax-json/getOrganisationUnitTree.action?leafId=' + parentId);
     };
 
     this.toggle = function( unitId ) {
@@ -979,15 +980,15 @@ function Subtree() {
     }
 
     function getToggleExpand() {
-        return getToggleImage().attr( "src", "../images/colapse.png" ).attr( "alt", "[+]" );
+        return getToggleImage().attr( "src", dhis2BaseUrl + "/images/colapse.png" ).attr( "alt", "[+]" );
     }
 
     function getToggleCollapse() {
-        return getToggleImage().attr( "src", "../images/expand.png" ).attr( "alt", "[-]" );
+        return getToggleImage().attr( "src", dhis2BaseUrl + "/images/expand.png" ).attr( "alt", "[-]" );
     }
 
     function getToggleBlank() {
-        return getToggleImage().attr( "src", "../images/transparent.gif" ).removeAttr( "alt" );
+        return getToggleImage().attr( "src", dhis2BaseUrl + "/images/transparent.gif" ).removeAttr( "alt" );
     }
 
     function getToggleImage() {
