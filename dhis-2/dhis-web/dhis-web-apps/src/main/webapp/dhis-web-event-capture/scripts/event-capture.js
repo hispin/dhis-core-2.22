@@ -191,9 +191,7 @@ function getUserRoles()
 
 function getCalendarSetting()
 {
-    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
-    
-    if( SessionStorageService.get('CALENDAR_SETTING') ){
+    if(localStorage['CALENDAR_SETTING']){
        return; 
     }
     
@@ -203,7 +201,7 @@ function getCalendarSetting()
         url: '../api/systemSettings?key=keyCalendar&key=keyDateFormat',
         type: 'GET'
     }).done(function(response) {
-        SessionStorageService.set('CALENDAR_SETTING', response);
+        localStorage['CALENDAR_SETTING'] = JSON.stringify(response);
         def.resolve();
     }).fail(function(){
         def.resolve();

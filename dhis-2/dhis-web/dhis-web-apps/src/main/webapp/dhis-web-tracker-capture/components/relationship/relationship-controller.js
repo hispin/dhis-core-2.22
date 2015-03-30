@@ -516,7 +516,7 @@ trackerCapture.controller('RelationshipController',
                 CurrentSelection,
                 OptionSetService,
                 DateUtils,
-                storage) {
+                SessionStorageService) {
     $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
     $scope.enrollment = {enrollmentDate: '', incidentDate: ''};    
     
