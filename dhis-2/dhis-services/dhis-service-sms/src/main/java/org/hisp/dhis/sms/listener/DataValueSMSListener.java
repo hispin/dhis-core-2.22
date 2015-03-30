@@ -257,8 +257,8 @@ public class DataValueSMSListener
         
         if ( !StringUtils.isBlank( smsCommand.getSeparator() ) )
         {
-            String x = "(\\w+)\\s*\\" + smsCommand.getSeparator().trim() + "\\s*([\\w ]+)\\s*(\\"
-                + smsCommand.getSeparator().trim() + "|$)*\\s*";
+        	String x = "([^\\s|" +  smsCommand.getSeparator().trim() +"]+)\\s*\\" + smsCommand.getSeparator().trim() + "\\s*([\\w ]+)\\s*(\\"
+                     + smsCommand.getSeparator().trim() + "|$)*\\s*";
             pattern = Pattern.compile( x );
         }
         
