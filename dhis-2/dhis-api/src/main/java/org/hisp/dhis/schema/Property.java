@@ -198,9 +198,14 @@ public class Property implements Ordered, Klass
     private String cascade;
 
     /**
-     * Is collection many-to-many.
+     * Is property many-to-many.
      */
     private boolean manyToMany;
+
+    /**
+     * Is property one-to-many.
+     */
+    private boolean oneToMany;
 
     /**
      * The hibernate role of the owning side.
@@ -566,6 +571,18 @@ public class Property implements Ordered, Klass
     public void setManyToMany( boolean manyToMany )
     {
         this.manyToMany = manyToMany;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isOneToMany()
+    {
+        return oneToMany;
+    }
+
+    public void setOneToMany( boolean oneToMany )
+    {
+        this.oneToMany = oneToMany;
     }
 
     @JsonProperty
