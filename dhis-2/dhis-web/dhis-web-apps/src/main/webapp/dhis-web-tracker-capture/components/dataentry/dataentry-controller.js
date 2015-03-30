@@ -8,6 +8,7 @@ trackerCapture.controller('DataEntryController',
                 EventUtils,
                 orderByFilter,
                 SessionStorageService,
+                EnrollmentService,
                 ProgramStageFactory,
                 DHIS2EventFactory,
                 OptionSetService,
@@ -108,7 +109,7 @@ trackerCapture.controller('DataEntryController',
                             if(dhis2Event.eventDate){
                                 dhis2Event.eventDate = DateUtils.formatFromApiToUser(dhis2Event.eventDate);
                                 dhis2Event.sortingDate = dhis2Event.eventDate;
-                                dhis2Event.editingNotAllowed = dhis2Event.orgUnit !== $scope.selectedOrgUnit.id;
+                                dhis2Event.editingNotAllowed = setEventEditing(dhis2Event, eventStage);
                             }                       
 
                             dhis2Event.statusColor = EventUtils.getEventStatusColor(dhis2Event);
@@ -125,6 +126,10 @@ trackerCapture.controller('DataEntryController',
             }
             sortEventsByStage();                        
         });          
+    };
+    
+    var setEventEditing = function(dhis2Event, stage){
+        return dhis2Event.editingNotAllowed = dhis2Event.orgUnit !== $scope.selectedOrgUnit.id || (stage.blockEntryForm && dhis2Event.status === 'COMPLETED');
     };
     
     $scope.enableRescheduling = function(){
@@ -548,6 +553,21 @@ trackerCapture.controller('DataEntryController',
         return 'form-control';
     };
     
+    var completeEnrollment = function(){
+        var modalOptions = {
+            closeButtonText: 'cancel',
+            actionButtonText: 'complete',
+            headerText: 'complete_enrollment',
+            bodyText: 'would_you_like_to_complete_enrollment'
+        };
+
+        ModalService.showModal({}, modalOptions).then(function(result){            
+            EnrollmentService.complete($scope.selectedEnrollment).then(function(data){                
+                $scope.selectedEnrollment.status = 'COMPLETED';            
+            });
+        });
+    };
+    
     $scope.completeIncompleteEvent = function(){
         var modalOptions;
         var dhis2Event = EventUtils.reconstruct($scope.currentEvent, $scope.currentStage, $scope.optionSets);        
@@ -582,10 +602,21 @@ trackerCapture.controller('DataEntryController',
                 }
                 
                 setStatusColor();
+                sortEventsByStage();
                 
-                if($scope.currentEvent.status === 'COMPLETED' && $scope.currentStage.allowGenerateNextVisit){
-                    $scope.showCreateEvent($scope.currentStage);
-                }
+                setEventEditing($scope.currentEvent, $scope.currentStage);
+                
+                if($scope.currentEvent.status === 'COMPLETED'){
+                    
+                    if($scope.currentStage.remindCompleted){
+                        completeEnrollment($scope.currentStage);
+                    }
+                    else{
+                        if($scope.currentStage.allowGenerateNextVisit){
+                            $scope.showCreateEvent($scope.currentStage);
+                        }
+                    }
+                }                
             });
         });
     };
@@ -624,7 +655,9 @@ trackerCapture.controller('DataEntryController',
                     $scope.currentEvent.status = 'SKIPPED';
                 }
                 
-                setStatusColor();                
+                setStatusColor();
+                setEventEditing($scope.currentEvent, $scope.currentStage);
+                sortEventsByStage();
             });
         });
     };
