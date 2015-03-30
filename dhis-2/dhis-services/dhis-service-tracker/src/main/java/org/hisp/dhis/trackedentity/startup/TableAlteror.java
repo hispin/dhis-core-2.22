@@ -315,37 +315,12 @@ public class TableAlteror
         executeSql( "update userroleauthorities set authority='F_ADD_TRACKED_ENTITY_FORM' where authority='F_TRACKED_ENTITY_FORM_ADD'" );
 
         updateProgramExpressionUid();
-        
-        upgradeProgramStageDataElements();
     }
 
     // -------------------------------------------------------------------------
     // Supporting methods
     // -------------------------------------------------------------------------
 
-    private void upgradeProgramStageDataElements()
-    {
-        int r = executeSql( "select 1 from programstage_dataelements" );
-        
-        if ( r != -1 )
-        {
-            String autoIncr = statementBuilder.getAutoIncrementValue();
-            
-            String insertSql = 
-                "insert into programstagedataelement(programstagedataelementid,programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,allowfuturedate) " +
-                "select " + autoIncr + ",programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,allowfuturedate " +
-                "from programstage_dataelements";
-            
-            executeSql( insertSql );
-            
-            String dropSql = "drop table programstage_dataelements";
-            
-            executeSql( dropSql );
-            
-            log.info( "Upgraded program stage data elements" );
-        }
-    }
-    
     private void updateAggregateQueryBuilder()
     {
         StatementHolder holder = statementManager.getHolder();
