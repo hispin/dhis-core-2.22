@@ -72,6 +72,9 @@
 <listitem>
 <para>Days after period end to qualify for timely data submission: Sets the number of days after the end of a period in which a data entry form must be marked as complete in order to be considered timely. This affects the &quot;reporting rate&quot; tool in the reporting module which lists forms marked as complete as well as marked as complete in time. The default value is 15.</para>
 </listitem>
+<listitem>
+<para>Server base URL: The full, externally accessible base URL for this server. Example: https://apps.dhis2.org/demo is the server base URL for the DHIS 2 demo server. The URL is used to provide links to this server from external locations such as in emails sent from the system.</para>
+</listitem>
 </itemizedlist>
 </section>
 <section id="systemAppearanceSettings">
