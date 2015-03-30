@@ -237,7 +237,7 @@ Ext.onReady(function() {
                 markerConfig, label, mask,
                 radius, toggle = false,
                 seriesStyle = Ext.apply(series.seriesStyle, series.style),
-                labelMarkerSize = legend.labelMarkerSize || 12;
+                labelMarkerSize = legend.labelMarkerSize || 10;
 
             function getSeriesProp(name) {
                 var val = series[name];
@@ -246,7 +246,7 @@ Ext.onReady(function() {
 
             label = me.add('label', surface.add({
                 type: 'text',
-                x: 0,
+                x: 30,
                 y: 0,
                 zIndex: z || 0,
                 font: legend.labelFont,
@@ -3186,16 +3186,17 @@ Ext.onReady(function() {
                         store = config.store || {},
                         width = ns.app.centerRegion.getWidth(),
                         height = ns.app.centerRegion.getHeight(),
+                        isLineBased = Ext.Array.contains(['line', 'area'], xLayout.type),
                         defaultConfig = {
                             //animate: true,
                             animate: false,
                             shadow: false,
                             insetPadding: ns.dashboard ? 17 : 35,
                             insetPaddingObject: {
-                                top: 12,
-                                right: 3,
-                                bottom: 2,
-                                left: 7
+                                top: ns.dashboard ? 12 : 22,
+                                right: ns.dashboard ? (isLineBased ? 5 : 3) : 10,
+                                bottom: ns.dashboard ? 2 : 10,
+                                left: ns.dashboard ? (isLineBased ? 15 : 7) : 17
                             },
                             width: ns.dashboard ? width : width - 15,
                             height: ns.dashboard ? height : height - 40,
