@@ -28,10 +28,7 @@ package org.hisp.dhis.program.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
@@ -54,16 +51,5 @@ public class HibernateProgramStageDataElementStore
             Restrictions.eq( "dataElement", dataElement ) );
 
         return (ProgramStageDataElement) criteria.uniqueResult();
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public Collection<DataElement> getListDataElement( ProgramStage programStage )
-    {
-        Criteria criteria = getCriteria();
-        criteria.add( Restrictions.eq( "programStage", programStage ) );
-        criteria.setProjection( Projections.property( "dataElement" ) );
-        
-        return criteria.list();
     }
 }

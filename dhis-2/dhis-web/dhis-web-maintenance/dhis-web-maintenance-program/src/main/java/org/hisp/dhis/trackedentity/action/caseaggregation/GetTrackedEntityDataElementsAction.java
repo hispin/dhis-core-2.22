@@ -30,16 +30,13 @@ package org.hisp.dhis.trackedentity.action.caseaggregation;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.program.ProgramStageDataElementService;
 import org.hisp.dhis.program.ProgramStageService;
 
 import com.opensymphony.xwork2.Action;
@@ -69,13 +66,6 @@ public class GetTrackedEntityDataElementsAction
     public void setProgramStageService( ProgramStageService programStageService )
     {
         this.programStageService = programStageService;
-    }
-
-    private ProgramStageDataElementService programStageDataElementService;
-
-    public void setProgramStageDataElementService( ProgramStageDataElementService programStageDataElementService )
-    {
-        this.programStageDataElementService = programStageDataElementService;
     }
 
     // -------------------------------------------------------------------------
@@ -113,20 +103,14 @@ public class GetTrackedEntityDataElementsAction
         if ( programStageId == null )
         {
             Program program = programService.getProgram( programId );
-
-            Set<DataElement> dataElementsInProgram = new HashSet<>();
-
-            for ( ProgramStage programStage : program.getProgramStages() )
-            {
-                dataElementsInProgram.addAll( programStageDataElementService.getListDataElement( programStage ) );
-            }
             
-            dataElements = new ArrayList<>( dataElementsInProgram );
+            dataElements = new ArrayList<>( program.getAllDataElements() );
         }
         else
         {
-            dataElements = new ArrayList<>( programStageDataElementService
-                .getListDataElement( programStageService.getProgramStage( programStageId ) ) );
+            ProgramStage stage = programStageService.getProgramStage( programStageId );
+            
+            dataElements = new ArrayList<>( stage.getAllDataElements() );
         }
         
         Collections.sort( dataElements, IdentifiableObjectNameComparator.INSTANCE );

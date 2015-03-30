@@ -822,12 +822,13 @@ public class DefaultProgramDataEntryService
      */
     private Map<String, DataElement> getDataElementMap( ProgramStage programStage )
     {
-        Collection<DataElement> dataElements = programStageDataElementService.getListDataElement( programStage );
-
         if ( programStage == null )
         {
             return null;
         }
+        
+        Collection<DataElement> dataElements = programStage.getAllDataElements();
+
         Map<String, DataElement> map = new HashMap<>();
 
         for ( DataElement element : dataElements )

@@ -177,10 +177,7 @@ public class Program
 
         for ( ProgramStage stage : programStages )
         {
-            for ( ProgramStageDataElement element : stage.getProgramStageDataElements() )
-            {
-                elements.add( element.getDataElement() );
-            }
+            elements.addAll( stage.getAllDataElements() );
         }
 
         return elements;

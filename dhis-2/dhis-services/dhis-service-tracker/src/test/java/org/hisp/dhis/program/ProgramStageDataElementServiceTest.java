@@ -33,7 +33,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -82,10 +81,6 @@ public class ProgramStageDataElementServiceTest
 
     private ProgramStageDataElement stageDataElementB;
 
-    private ProgramStageDataElement stageDataElementC;
-
-    private ProgramStageDataElement stageDataElementD;
-
     @Override
     public void setUpTest()
     {
@@ -119,10 +114,6 @@ public class ProgramStageDataElementServiceTest
         stageDataElementA = new ProgramStageDataElement( stageA, dataElementA, false, 1 );
 
         stageDataElementB = new ProgramStageDataElement( stageA, dataElementB, false, 2 );
-
-        stageDataElementC = new ProgramStageDataElement( stageB, dataElementA, false, 1 );
-
-        stageDataElementD = new ProgramStageDataElement( stageB, dataElementB, false, 2 );
     }
 
     @Test
@@ -186,20 +177,5 @@ public class ProgramStageDataElementServiceTest
 
         assertTrue( equals( programStageDataElementService.getAllProgramStageDataElements(), stageDataElementA,
             stageDataElementB ) );
-    }
-
-    @Test
-    public void testGetListDataElementByStage()
-    {
-        programStageDataElementService.addProgramStageDataElement( stageDataElementA );
-        programStageDataElementService.addProgramStageDataElement( stageDataElementB );
-        programStageDataElementService.addProgramStageDataElement( stageDataElementC );
-        programStageDataElementService.addProgramStageDataElement( stageDataElementD );
-
-        Collection<DataElement> stageDataElements = programStageDataElementService.getListDataElement( stageA );
-        assertTrue( equals( stageDataElements, dataElementA, dataElementB ) );
-
-        stageDataElements = programStageDataElementService.getListDataElement( stageB );
-        assertTrue( equals( stageDataElements, dataElementA, dataElementB ) );
     }
 }
