@@ -2,7 +2,7 @@
 <table class="table-borderless table-striped">
     <tr ng-repeat="attribute in attributes">
         <td>
-            {{attribute.name}}<span ng-if="attribute.mandatory" class="required">*</span>
+            {{attribute.name}}<span ng-if="attribute.mandatory || attribute.unique" class="required">*</span>
         </td>
         <td>
             <ng-form name="innerForm">
@@ -16,7 +16,7 @@
                                max-date="attribute.allowFutureDate ? '' : 0"
                                ng-model="selectedTei[attribute.id]"
                                ng-disabled="editingDisabled" 
-                               ng-required="attribute.mandatory"/>
+                               ng-required="attribute.mandatory || attribute.unique"/>
                     </span>
                     <span ng-switch-when="trueOnly">
                         <input type="checkbox" 
@@ -24,14 +24,14 @@
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
                                ng-disabled="editingDisabled" 
-                               ng-required="attribute.mandatory"/>
+                               ng-required="attribute.mandatory || attribute.unique"/>
                     </span>
                     <span ng-switch-when="bool">
                         <select name="foo" 
                                 ng-model="selectedTei[attribute.id]" 
                                 class="form-control" 
                                 ng-disabled="editingDisabled" 
-                                ng-required="attribute.mandatory">
+                                ng-required="attribute.mandatory || attribute.unique">
                             <option value="">{{'please_select'| translate}}</option>                        
                             <option value="false">{{'no'| translate}}</option>
                             <option value="true">{{'yes'| translate}}</option>
@@ -44,7 +44,7 @@
                                ng-model="selectedTei[attribute.id]"                                                 
                                typeahead="option.name as option.name for option in optionSets[attributesById[attribute.id].optionSet.id].options | filter:$viewValue | limitTo:20" 
                                typeahead-open-on-focus                                           
-                               ng-disabled="editingDisabled" ng-required="attribute.mandatory"/>
+                               ng-disabled="editingDisabled" ng-required="attribute.mandatory || attribute.unique"/>
                     </span>
                     <span ng-switch-when="number">
                         <input type="text" 
@@ -52,7 +52,7 @@
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
                                ng-disabled="editingDisabled" 
-                               ng-required="attribute.mandatory"/>
+                               ng-required="attribute.mandatory || attribute.unique"/>
                     </span>
                     <span ng-switch-when="email">
                         <input type="email" 
@@ -60,7 +60,7 @@
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
                                ng-disabled="editingDisabled" 
-                               ng-required="attribute.mandatory"/>
+                               ng-required="attribute.mandatory || attribute.unique"/>
                     </span>
                     <span ng-switch-default>
                         <input type="text" 
@@ -68,7 +68,7 @@
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
                                ng-disabled="editingDisabled" 
-                               ng-required="attribute.mandatory"/>                                    
+                               ng-required="attribute.mandatory || attribute.unique"/>                                    
                     </span>
                 </span>
             </ng-form>

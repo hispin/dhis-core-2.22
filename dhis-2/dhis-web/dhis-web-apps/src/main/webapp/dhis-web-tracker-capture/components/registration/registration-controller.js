@@ -227,16 +227,5 @@ trackerCapture.controller('RegistrationController',
     
     var notifyRegistrtaionCompletion = function(destination, teiId){
         goToDashboard( destination ? destination : 'DASHBOARD', teiId );
-        /*if($scope.registrationMode === 'REGISTRATION'){
-            goToDashboard(destination, teiId);
-        }
-        else{
-            
-            var selections = CurrentSelection.get();
-            CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments.push($scope.selectedEnrollment), selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});        
-            $timeout(function() { 
-                $rootScope.$broadcast('selectedItems', {programExists: selections.prs.length > 0});            
-            }, 100);
-        }*/
     };
 });
