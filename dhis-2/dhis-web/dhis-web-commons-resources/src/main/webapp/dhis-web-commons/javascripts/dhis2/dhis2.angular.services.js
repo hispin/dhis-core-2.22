@@ -403,7 +403,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 	                                            ' ng-model="selectedTei.' + attId + '" ' +
 	                                            ' ng-disabled="editingDisabled"' +
 	                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
-	                                            ' ng-required=" ' + att.mandatory || att.unique + '"> ';
+	                                            ' ng-required=" ' + (att.mandatory || att.unique) + '"> ';
 	                        }                                               
 	                        else if(att.valueType === "optionSet"){
 	                            var optionSetId = att.optionSet.id;                            
@@ -422,7 +422,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 	                                            ' typeahead="option.name as option.name for option in optionSets.' + optionSetId + '.options | filter:$viewValue | limitTo:50"' +
 	                                            ' typeahead-open-on-focus ' +
 	                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
-	                                            ' ng-required=" ' + att.mandatory || att.unique + '"> ';                            
+	                                            ' ng-required=" ' + (att.mandatory || att.unique) + '"> ';                            
 	                        }
 	                        else if(att.valueType === "bool"){
 	                            newInputField = '<select ' +
@@ -433,7 +433,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 	                                            ' ng-model="selectedTei.' + attId + '" ' +
 	                                            ' ng-disabled="editingDisabled"' +
 	                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
-	                                            ' ng-required=" ' + att.mandatory || att.unique + '"> ' +
+	                                            ' ng-required=" ' + (att.mandatory || att.unique) + '"> ' +
 	                                            ' <option value="">{{\'please_select\'| translate}}</option>' +
 	                                            ' <option value="false">{{\'no\'| translate}}</option>' + 
 	                                            ' <option value="true">{{\'yes\'| translate}}</option>' +
@@ -452,7 +452,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 	                                            ' d2-date' +
 	                                            ' d2-validation ' +
 	                                            ' blur-or-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
-	                                            ' ng-required=" ' + att.mandatory || att.unique + '"> ';
+	                                            ' ng-required=" ' + (att.mandatory || att.unique) + '"> ';
 	                        }
 	                        else if(att.valueType === "trueOnly"){
 	                            newInputField = '<input type="checkbox" ' +  
@@ -464,7 +464,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 	                                            ' ng-model="selectedTei.' + attId + '" ' +
 	                                            ' ng-disabled="editingDisabled"' +
 	                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
-	                                            ' ng-required=" ' + att.mandatory || att.unique + '"> ';
+	                                            ' ng-required=" ' + (att.mandatory || att.unique) + '"> ';
 	                        }
 	                        else if(att.valueType === "email"){
 	                            newInputField = '<input type="email" ' +    
@@ -476,7 +476,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 	                                            ' ng-model="selectedTei.' + attId + '" ' +
 	                                            ' ng-disabled="editingDisabled"' +
 	                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
-	                                            ' ng-required=" ' + att.mandatory || att.unique + '"> ';
+	                                            ' ng-required=" ' + (att.mandatory || att.unique) + '"> ';
 	                        }
 	                        else {
 	                            newInputField = '<input type="text" ' +
@@ -488,7 +488,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 	                                            ' ng-model="selectedTei.' + attId + '" ' +
 	                                            ' ng-disabled="editingDisabled"' +
 	                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
-	                                            ' ng-required=" ' + att.mandatory || att.unique + '"> ';
+	                                            ' ng-required=" ' + (att.mandatory || att.unique) + '"> ';
 	                        }
                        }
                          
