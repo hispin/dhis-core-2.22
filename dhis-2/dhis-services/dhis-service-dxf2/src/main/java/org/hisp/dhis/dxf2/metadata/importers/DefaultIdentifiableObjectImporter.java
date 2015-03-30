@@ -585,7 +585,8 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         }
 
         if ( (object.getName() == null || object.getName().length() == 0)
-            && !DashboardItem.class.isInstance( object ) && !Translation.class.isInstance( object ) )
+            && !DashboardItem.class.isInstance( object ) && !Translation.class.isInstance( object )
+            && !ProgramStageDataElement.class.isInstance( object ) )
         {
             conflict = new ImportConflict( ImportUtils.getDisplayName( object ), "Empty name for object " + object );
         }
@@ -599,7 +600,8 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                 && !TrackedEntityAttribute.class.isAssignableFrom( object.getClass() )
                 && !TrackedEntity.class.isAssignableFrom( object.getClass() )
                 && !CategoryOptionGroupSet.class.isAssignableFrom( object.getClass() )
-                && !DashboardItem.class.isAssignableFrom( object.getClass() ) )
+                && !DashboardItem.class.isAssignableFrom( object.getClass() )
+                && !ProgramStageDataElement.class.isAssignableFrom( object.getClass() ) )
             {
                 conflict = new ImportConflict( ImportUtils.getDisplayName( object ), "Empty shortName for object " + object );
             }
@@ -1235,18 +1237,8 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                     ReflectionUtils.invokeSetterMethod( "programAttributes", object, programTrackedEntityAttributes );
                 }
 
-                for ( ProgramTrackedEntityAttribute trackedEntityAttribute : programTrackedEntityAttributes )
-                {
-                    if ( sessionFactory.getCurrentSession().contains( trackedEntityAttribute ) )
-                    {
-                        sessionFactory.getCurrentSession().delete( trackedEntityAttribute );
-                    }
-
-                    programTrackedEntityAttributeSet.add( trackedEntityAttribute );
-                }
-
+                programTrackedEntityAttributeSet.addAll( programTrackedEntityAttributes );
                 programTrackedEntityAttributes.clear();
-                sessionFactory.getCurrentSession().flush();
             }
 
             return programTrackedEntityAttributeSet;
@@ -1260,14 +1252,17 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         private void saveProgramTrackedEntityAttributes( T object, Collection<ProgramTrackedEntityAttribute>
             programTrackedEntityAttributes )
         {
-            for ( ProgramTrackedEntityAttribute programTrackedEntityAttribute : programTrackedEntityAttributes )
-            {
-                Map<Field, Object> identifiableObjects = detachFields( programTrackedEntityAttribute );
-                reattachFields( programTrackedEntityAttribute, identifiableObjects, user );
-                sessionFactory.getCurrentSession().save( programTrackedEntityAttribute );
-            }
+            List<ProgramTrackedEntityAttribute> programTrackedEntityAttributeList = ReflectionUtils.invokeGetterMethod( "programAttributes", object );
 
-            ReflectionUtils.invokeSetterMethod( "programAttributes", object, programTrackedEntityAttributes );
+            if ( programTrackedEntityAttributeList != null )
+            {
+                for ( ProgramTrackedEntityAttribute programTrackedEntityAttribute : programTrackedEntityAttributes )
+                {
+                    Map<Field, Object> identifiableObjects = detachFields( programTrackedEntityAttribute );
+                    reattachFields( programTrackedEntityAttribute, identifiableObjects, user );
+                    programTrackedEntityAttributeList.add( programTrackedEntityAttribute );
+                }
+            }
         }
     }
 }

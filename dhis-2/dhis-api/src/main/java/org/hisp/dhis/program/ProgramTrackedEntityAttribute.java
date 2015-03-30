@@ -33,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.MoreObjects;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.view.DetailedView;
@@ -159,4 +160,15 @@ public class ProgramTrackedEntityAttribute
         this.allowFutureDate = allowFutureDate;
     }
 
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper( this )
+            .add( "id", id )
+            .add( "attribute", attribute )
+            .add( "displayInList", displayInList )
+            .add( "mandatory", mandatory )
+            .add( "allowFutureDate", allowFutureDate )
+            .toString();
+    }
 }
