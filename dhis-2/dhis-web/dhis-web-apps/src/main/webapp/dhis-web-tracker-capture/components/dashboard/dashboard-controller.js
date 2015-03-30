@@ -185,14 +185,13 @@ trackerCapture.controller('DashboardController',
                                 $scope.programStageNames = [];        
 
                                 //get programs valid for the selected ou and tei
-                                angular.forEach(programs, function(program){
-                                    $scope.programNames[program.id] = {id: program.id, name: program.name};
-                                    angular.forEach(program.programStages, function(stage){                
-                                        $scope.programStageNames[stage.id] = {id: stage.id, name: stage.name};
-                                    });
-                                    if(program.organisationUnits.hasOwnProperty($scope.selectedOrgUnit.id) &&
-                                       program.trackedEntity.id === $scope.selectedTei.trackedEntity){
+                                angular.forEach(programs, function(program){                                    
+                                    if( program.trackedEntity.id === $scope.selectedTei.trackedEntity ){
                                         $scope.programs.push(program);
+                                        $scope.programNames[program.id] = {id: program.id, name: program.name};
+										angular.forEach(program.programStages, function(stage){                
+											$scope.programStageNames[stage.id] = {id: stage.id, name: stage.name};
+										});
 
                                         if($scope.selectedProgramId && program.id === $scope.selectedProgramId || selectedEnrollment && selectedEnrollment.program === program.id){
                                             $scope.selectedProgram = program;

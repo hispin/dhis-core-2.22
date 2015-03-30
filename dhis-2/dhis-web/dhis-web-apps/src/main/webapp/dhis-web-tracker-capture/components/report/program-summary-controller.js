@@ -11,8 +11,7 @@ trackerCapture.controller('ProgramSummaryController',
                 ProgramFactory,
                 CurrentSelection,
                 OptionSetService,
-                DHIS2EventFactory,
-                SessionStorageService) {    
+                DHIS2EventFactory) {    
     $scope.today = DateUtils.getToday();
     
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
@@ -35,7 +34,6 @@ trackerCapture.controller('ProgramSummaryController',
     $scope.$watch('selectedOrgUnit', function() {      
         $scope.selectedProgram = null;
         if( angular.isObject($scope.selectedOrgUnit)){            
-            SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);            
             $scope.loadPrograms($scope.selectedOrgUnit);
         }
     });
