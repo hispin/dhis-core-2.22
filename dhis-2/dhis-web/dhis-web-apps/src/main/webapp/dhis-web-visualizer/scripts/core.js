@@ -855,7 +855,7 @@ Ext.onReady( function() {
 
                 // sortOrder: number
 
-                // aggregationType: string ('default') - 'default', 'count', 'sum', 'stddev', 'variance', 'min', 'max'
+                // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
 
                 // rangeAxisMaxValue: number
 
@@ -1103,7 +1103,7 @@ Ext.onReady( function() {
                     layout.baseLineTitle = Ext.isString(config.baseLineLabel) && !Ext.isEmpty(config.baseLineLabel) ? config.baseLineLabel :
                         (Ext.isString(config.baseLineTitle) && !Ext.isEmpty(config.baseLineTitle) ? config.baseLineTitle : null);
                     layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
-                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'default';
+                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'DEFAULT';
 
 					layout.rangeAxisMaxValue = Ext.isNumber(config.rangeAxisMaxValue) ? config.rangeAxisMaxValue : null;
 					layout.rangeAxisMinValue = Ext.isNumber(config.rangeAxisMinValue) ? config.rangeAxisMinValue : null;
@@ -1202,7 +1202,7 @@ Ext.onReady( function() {
 					}
 
 					if (!(Ext.isArray(config.rows) && config.rows.length > 0)) {
-                        init.alert('No values found');
+                        alert('No values found');
 						return;
 					}
 
@@ -1920,6 +1920,10 @@ Ext.onReady( function() {
 					delete layout.legend;
 				}
 
+				if (layout.aggregationType === 'DEFAULT') {
+					delete layout.aggregationType;
+				}
+
                 // default true
 
 				if (layout.showValues) {
@@ -2225,10 +2229,10 @@ Ext.onReady( function() {
                     }
                 }
 
-                // aggregation type
-                if (aggTypes.hasOwnProperty(xLayout.aggregationType)) {
-                    paramString += '&aggregationType=' + aggTypes[xLayout.aggregationType];
-                }
+				// aggregation type
+				if (xLayout.aggregationType) {
+					paramString += '&aggregationType=' + xLayout.aggregationType;
+				}
 
                 // display property
                 paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();

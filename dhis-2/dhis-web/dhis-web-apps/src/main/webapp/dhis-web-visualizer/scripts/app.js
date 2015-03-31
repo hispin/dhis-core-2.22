@@ -734,17 +734,17 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'default',
+			value: 'DEFAULT',
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'default', text: NS.i18n.by_data_element},
-					{id: 'count', text: NS.i18n.count},
-					{id: 'sum', text: NS.i18n.sum},
-					{id: 'stddev', text: NS.i18n.stddev},
-					{id: 'variance', text: NS.i18n.variance},
-					{id: 'min', text: NS.i18n.min},
-					{id: 'max', text: NS.i18n.max}
+					{id: 'DEFAULT', text: NS.i18n.by_data_element},
+					{id: 'COUNT', text: NS.i18n.count},
+					{id: 'SUM', text: NS.i18n.sum},
+					{id: 'STDDEV', text: NS.i18n.stddev},
+					{id: 'VARIANCE', text: NS.i18n.variance},
+					{id: 'MIN', text: NS.i18n.min},
+					{id: 'MAX', text: NS.i18n.max}
 				]
 			})
 		});
@@ -972,7 +972,7 @@ Ext.onReady( function() {
 				}
 
                 sortOrder.setValue(Ext.isNumber(layout.sortOrder) ? layout.sortOrder : 0);
-                aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'default');
+                aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'DEFAULT');
 
 				// rangeAxisMaxValue
 				if (Ext.isNumber(layout.rangeAxisMaxValue)) {
