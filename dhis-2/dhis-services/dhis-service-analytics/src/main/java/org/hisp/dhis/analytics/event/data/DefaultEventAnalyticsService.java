@@ -661,6 +661,15 @@ public class DefaultEventAnalyticsService
                     map.putAll( IdentifiableObjectUtils.getUidNameMap( objects ) );
                 }
             }
+            
+            if ( dimension.getDisplayShortName() != null && DisplayProperty.SHORTNAME.equals( displayProperty ) )
+            {
+                map.put( dimension.getDimension(), dimension.getDisplayShortName() );
+            }
+            else if ( dimension.getDisplayName() != null ) // NAME
+            {
+                map.put( dimension.getDimension(), dimension.getDisplayName() );
+            }
         }
 
         return map;
