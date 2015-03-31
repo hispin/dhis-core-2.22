@@ -43,7 +43,6 @@ import org.hisp.dhis.oust.manager.SelectionTreeManager;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
@@ -135,13 +134,6 @@ public class ShowAddProgramStageAction
         return userGroups;
     }
 
-    private List<ProgramIndicator> programIndicators;
-
-    public List<ProgramIndicator> getProgramIndicators()
-    {
-        return programIndicators;
-    }
-
     private List<Constant> constants;
 
     public List<Constant> getConstants()
@@ -179,12 +171,7 @@ public class ShowAddProgramStageAction
 
         userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
 
-        programIndicators = new ArrayList<>( program.getProgramIndicators() );
-
-        Collections.sort( programIndicators, IdentifiableObjectNameComparator.INSTANCE );
-
-        constants = new ArrayList<>( constantService.getAllConstants() );
-
+        constants = new ArrayList<>( constantService.getAllConstants());        
         Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
 
         attributes = new ArrayList<>( attributeService.getProgramStageAttributes() );

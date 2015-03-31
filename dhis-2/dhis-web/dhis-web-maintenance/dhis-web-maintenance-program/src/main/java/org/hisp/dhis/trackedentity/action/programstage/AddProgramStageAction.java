@@ -28,7 +28,11 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElement;
@@ -36,8 +40,6 @@ import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramIndicator;
-import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
@@ -49,10 +51,7 @@ import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -106,9 +105,6 @@ public class AddProgramStageAction
     {
         this.periodService = periodService;
     }
-
-    @Autowired
-    private ProgramIndicatorService programIndicatorService;
 
     @Autowired
     private AttributeService attributeService;
@@ -325,13 +321,6 @@ public class AddProgramStageAction
         this.reportDateToUse = reportDateToUse;
     }
 
-    private List<Integer> selectedIndicators = new ArrayList<>();
-
-    public void setSelectedIndicators( List<Integer> selectedIndicators )
-    {
-        this.selectedIndicators = selectedIndicators;
-    }
-
     private Boolean preGenerateUID;
 
     public void setPreGenerateUID( Boolean preGenerateUID )
@@ -418,17 +407,6 @@ public class AddProgramStageAction
         programStage.setReportDateToUse( reportDateToUse );
         programStage.setPreGenerateUID( preGenerateUID );
         programStage.setSortOrder( program.getProgramStages().size() + 1 );
-
-        // Program indicators
-
-        List<ProgramIndicator> programIndicators = new ArrayList<>();
-        for ( Integer id : selectedIndicators )
-        {
-            ProgramIndicator indicator = programIndicatorService.getProgramIndicator( id );
-            programIndicators.add( indicator );
-        }
-
-        programStage.setProgramIndicators( programIndicators );
 
         // SMS Reminder
 

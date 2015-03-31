@@ -48,12 +48,12 @@ jQuery( document ).ready( function()
 	</tr>	
 	<tr>
 		<td><label for="code">$i18n.getString( "code" )</label></td>
-		<td><input type="text" id="code" name="code" value='$encoder.htmlEncode($programIndicator.code)'></td>
+		<td><input type="text" id="code" name="code" value='$!encoder.htmlEncode($programIndicator.code)'></td>
 		<td></td>
 	</tr>	
 	<tr>
 		<td><label for="description">$i18n.getString( "description" ) </label></td>
-		<td><textarea type="text" id="description" name="description">$encoder.htmlEncode($programIndicator.description)</textarea></td>
+		<td><textarea type="text" id="description" name="description">$!encoder.htmlEncode($programIndicator.description)</textarea></td>
 		<td></td>
 	</tr>
 	<tr>
