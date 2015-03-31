@@ -12,9 +12,9 @@
       <generator class="native" />
     </id>
     
-    <property name="reportingMonth" />
-    <property name="reportingBimonth" />
-    <property name="reportingQuarter" />
+    <property name="lastMonth" />
+    <property name="lastBimonth" />
+    <property name="lastQuarter" />
     <property name="lastSixMonth" />
     <property name="monthsThisYear" />
     <property name="quartersThisYear" />

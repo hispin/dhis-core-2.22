@@ -142,7 +142,7 @@ public class ChartConverter
                 }
                 writer.closeElement();                
 
-                writer.writeElement( FIELD_REPORTING_MONTH, String.valueOf( chart.getRelatives().isReportingMonth() ) );
+                writer.writeElement( FIELD_REPORTING_MONTH, String.valueOf( chart.getRelatives().isLastMonth() ) );
                 writer.writeElement( FIELD_MONTHS_THIS_YEAR, String.valueOf( chart.getRelatives().isMonthsThisYear() ) );
                 writer.writeElement( FIELD_QUARTERS_THIS_YEAR, String.valueOf( chart.getRelatives().isQuartersThisYear() ) );
                 writer.writeElement( FIELD_THIS_YEAR, String.valueOf( chart.getRelatives().isThisYear() ) );
@@ -204,7 +204,7 @@ public class ChartConverter
             if ( params.minorVersionGreaterOrEqual( DXFConverter.MINOR_VERSION_12 ) )
             {
                 reader.moveToStartElement( FIELD_REPORTING_MONTH );          
-                chart.getRelatives().setReportingMonth( Boolean.parseBoolean( reader.getElementValue() ) );
+                chart.getRelatives().setLastMonth( Boolean.parseBoolean( reader.getElementValue() ) );
                 
                 reader.moveToStartElement( FIELD_MONTHS_THIS_YEAR );
                 chart.getRelatives().setMonthsThisYear( Boolean.parseBoolean( reader.getElementValue() ) );
