@@ -1,7 +1,4 @@
-/**
- * 
- */
-package org.hisp.dhis.webapi.controller;
+package org.hisp.dhis.webapi.controller.event;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -33,11 +30,12 @@ package org.hisp.dhis.webapi.controller;
 
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.schema.descriptors.ProgramStageSectionSchemaDescriptor;
+import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author Abyot Asalefew Gizaw <abyota@gmail.com>
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @Controller
 @RequestMapping( value = ProgramStageSectionSchemaDescriptor.API_ENDPOINT )
