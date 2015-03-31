@@ -40,6 +40,11 @@ import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hisp.dhis.setting.SystemSettingManager.*;
 
 /**
@@ -127,6 +132,13 @@ public class SetAccessSettingsAction
         this.openIdProviderLabel = openIdProviderLabel;
     }
 
+    private List<String> corsWhitelist = new ArrayList<>();
+
+    public void setCorsWhitelist( ArrayList<String> corsWhitelist )
+    {
+        this.corsWhitelist = corsWhitelist;
+    }
+
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -186,6 +198,8 @@ public class SetAccessSettingsAction
         {
             systemSettingManager.saveSystemSetting( KEY_CREDENTIALS_EXPIRES, credentialsExpires );
         }
+
+        systemSettingManager.saveSystemSetting( SystemSettingManager.KEY_CORS_WHITELIST, (Serializable) corsWhitelist );
 
         message = i18n.getString( "settings_updated" );
 

@@ -35,6 +35,7 @@ import java.util.List;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.NonCriticalUserAuthorityGroupFilter;
 import org.hisp.dhis.system.util.FilterUtils;
 import org.hisp.dhis.user.UserAuthorityGroup;
@@ -55,6 +56,9 @@ public class GetAccessSettingsAction
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
+    @Autowired
+    private SystemSettingManager systemSettingManager;
+
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -73,6 +77,13 @@ public class GetAccessSettingsAction
         return selfRegistrationOrgUnits;
     }
 
+    private List<String> corsWhitelist = new ArrayList<>();
+
+    public List<String> getCorsWhitelist()
+    {
+        return corsWhitelist;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -87,6 +98,8 @@ public class GetAccessSettingsAction
         
         selfRegistrationOrgUnits.addAll( organisationUnitService.getOrganisationUnitsAtLevel( 1 ) );
         selfRegistrationOrgUnits.addAll( organisationUnitService.getOrganisationUnitsAtLevel( 2 ) );
+
+        corsWhitelist = systemSettingManager.getCorsWhitelist();
         
         return SUCCESS;        
     }
