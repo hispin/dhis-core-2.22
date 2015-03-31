@@ -33,8 +33,9 @@
       <artifactId>commons-logging</artifactId>
     </dependency>
     <dependency>
-      <groupId>commons-math</groupId>
-      <artifactId>commons-math</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.4.1</version>
     </dependency>
     
   </dependencies>

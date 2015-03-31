@@ -28,7 +28,7 @@ package org.hisp.dhis.dxf2.gml;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.util.Precision;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -132,6 +132,6 @@ public class GmlConversionUtils
     private static String parseCoordinate( String number, int precision, NumberFormat nf )
         throws ParseException
     {
-        return Double.toString( MathUtils.round( nf.parse( number ).doubleValue(), precision ) );
+        return Double.toString( Precision.round(nf.parse(number).doubleValue(), precision ) );
     }
 }

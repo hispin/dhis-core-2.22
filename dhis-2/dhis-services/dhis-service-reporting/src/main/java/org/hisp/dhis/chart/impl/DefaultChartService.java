@@ -52,11 +52,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.math.MathException;
-import org.apache.commons.math.analysis.SplineInterpolator;
-import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.apache.commons.math.analysis.UnivariateRealInterpolator;
-import org.apache.commons.math.stat.regression.SimpleRegression;
+import org.apache.commons.math3.exception.MathRuntimeException;
+import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.event.EventAnalyticsService;
 import org.hisp.dhis.chart.BaseChart;
@@ -340,7 +340,7 @@ public class DefaultChartService
         MinMaxDataElement minMax = minMaxDataElementService.getMinMaxDataElement( organisationUnit, dataElement,
             categoryOptionCombo );
 
-        UnivariateRealInterpolator interpolator = new SplineInterpolator();
+        UnivariateInterpolator interpolator = new SplineInterpolator();
 
         Integer periodCount = 0;
         List<Double> x = new ArrayList<>();
@@ -396,7 +396,7 @@ public class DefaultChartService
 
             try
             {
-                UnivariateRealFunction function = interpolator.interpolate( xa, getArray( y ) );
+                UnivariateFunction function = interpolator.interpolate( xa, getArray( y ) );
 
                 for ( Period period : periods )
                 {
@@ -406,7 +406,7 @@ public class DefaultChartService
                     }
                 }
             }
-            catch ( MathException ex )
+            catch ( MathRuntimeException ex )
             {
                 throw new RuntimeException( "Failed to interpolate", ex );
             }
