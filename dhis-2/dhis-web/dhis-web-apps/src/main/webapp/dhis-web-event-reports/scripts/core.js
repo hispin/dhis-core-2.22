@@ -3198,15 +3198,15 @@ Ext.onReady( function() {
                     optionNames = xResponse.metaData.optionNames,
                     pager = xResponse.metaData.pager,
                     count = pager.page * pager.pageSize - pager.pageSize
-					tableCls = 'pivot',
+					cls = 'pivot',
 					html = '';
 
 				xResponse.sortableIdObjects = [];
 
-				tableCls += layout.displayDensity ? ' ' + layout.displayDensity : '';
-				tableCls += layout.fontSize ? ' ' + layout.fontSize : '';
+                cls += layout.displayDensity && layout.displayDensity !== 'normal' ? ' displaydensity-' + layout.displayDensity : '';
+                cls += layout.fontSize && layout.fontSize !== 'normal' ? ' fontsize-' + layout.fontSize : '';
 
-				html += '<table class="' + tableCls + '"><tr>';
+				html += '<table class="' + cls + '"><tr>';
                 html += '<td class="pivot-dim pivot-dim-subtotal">' + '#' + '</td>';
 
 				// get header indexes
