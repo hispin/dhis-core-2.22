@@ -30,7 +30,7 @@ jQuery( document ).ready( function()
 
 <table>
 	<thead>
-		<tr><th colspan="2">$i18n.getString( "program_stage_details" )</th></tr>
+		<tr><th colspan="2">$i18n.getString( "section_details" )</th></tr>
 	</thead>
 	<tbody>
 		<tr>
