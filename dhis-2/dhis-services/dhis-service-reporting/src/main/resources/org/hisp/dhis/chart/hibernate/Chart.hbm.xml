@@ -156,6 +156,13 @@
 
     <property name="userOrganisationUnitGrandChildren" />
 
+    <property name="aggregationType" length="40">
+		<type name="org.hibernate.type.EnumType">
+			<param name="enumClass">org.hisp.dhis.analytics.AggregationType</param>
+			<param name="type">12</param>
+		</type> 
+	</property>
+	
     <property name="showData" />
 
     <property name="hideEmptyRows" />

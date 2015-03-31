@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.chart.BaseChart;
 import org.hisp.dhis.common.AnalyticsType;
@@ -103,11 +102,6 @@ public class EventChart
      */
     private TrackedEntityAttribute attributeValueDimension;
 
-    /**
-     * Aggregation type.
-     */
-    private AggregationType aggregationType;
-    
     /**
      * Dimensions to crosstabulate / use as columns.
      */
@@ -307,19 +301,6 @@ public class EventChart
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public AggregationType getAggregationType()
-    {
-        return aggregationType;
-    }
-
-    public void setAggregationType( AggregationType aggregationType )
-    {
-        this.aggregationType = aggregationType;
-    }
-
-    @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlElementWrapper( localName = "columnDimensions", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "columnDimension", namespace = DxfNamespaces.DXF_2_0 )
@@ -409,7 +390,6 @@ public class EventChart
             {
                 dataElementValueDimension = chart.getDataElementValueDimension();
                 attributeValueDimension = chart.getAttributeValueDimension();
-                aggregationType = chart.getAggregationType();
                 program = chart.getProgram();
                 programStage = chart.getProgramStage();
                 startDate = chart.getStartDate();
@@ -420,7 +400,6 @@ public class EventChart
             {
                 dataElementValueDimension = chart.getDataElementValueDimension() == null ? dataElementValueDimension : chart.getDataElementValueDimension();
                 attributeValueDimension = chart.getAttributeValueDimension() == null ? attributeValueDimension : chart.getAttributeValueDimension();
-                aggregationType = chart.getAggregationType() == null ? aggregationType : chart.getAggregationType();
                 program = chart.getProgram() == null ? program : chart.getProgram();
                 programStage = chart.getProgramStage() == null ? programStage : chart.getProgramStage();
                 startDate = chart.getStartDate() == null ? startDate : chart.getStartDate();
