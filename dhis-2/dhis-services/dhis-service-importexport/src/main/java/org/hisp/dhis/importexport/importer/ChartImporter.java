@@ -71,7 +71,7 @@ public class ChartImporter
         match.setHideLegend( object.isHideLegend() );
         match.setRegression( object.isRegression() );        
 
-        match.getRelatives().setReportingMonth( object.getRelatives().isReportingMonth() );
+        match.getRelatives().setLastMonth( object.getRelatives().isLastMonth() );
         match.getRelatives().setMonthsThisYear( object.getRelatives().isMonthsThisYear() );
         match.getRelatives().setQuartersThisYear( object.getRelatives().isQuartersThisYear() );
         match.getRelatives().setThisYear( object.getRelatives().isThisYear() );

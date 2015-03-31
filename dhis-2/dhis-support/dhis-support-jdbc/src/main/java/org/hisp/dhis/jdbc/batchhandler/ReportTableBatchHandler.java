@@ -123,7 +123,7 @@ public class ReportTableBatchHandler
         statementBuilder.setValue( reportTable.isDoPeriods() );
         statementBuilder.setValue( reportTable.isDoUnits() );
         
-        statementBuilder.setValue( reportTable.getRelatives().isReportingMonth() );
+        statementBuilder.setValue( reportTable.getRelatives().isLastMonth() );
         statementBuilder.setValue( reportTable.getRelatives().isMonthsThisYear() );
         statementBuilder.setValue( reportTable.getRelatives().isQuartersThisYear() );
         statementBuilder.setValue( reportTable.getRelatives().isThisYear() );

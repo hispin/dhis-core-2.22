@@ -816,6 +816,8 @@ public class TableAlteror
         updateOptions();
         
         upgradeAggregationType( "reporttable" );
+        
+        updateRelativePeriods();
 
         log.info( "Tables updated" );
     }
@@ -831,6 +833,13 @@ public class TableAlteror
         executeSql( "update " + table + " set aggregationtype='DEFAULT' where aggregationtype='default'" );
     }
 
+    private void updateRelativePeriods()
+    {
+        executeSql( "update relativeperiods set lastmonth=reportingmonth" );
+        executeSql( "update relativeperiods set lastbimonth=reportingbimonth" );
+        executeSql( "update relativeperiods set lastquarter=reportingquarter" );
+    }
+    
     private void upgradeDataValuesWithAttributeOptionCombo()
     {
         final String sql = statementBuilder.getNumberOfColumnsInPrimaryKey( "datavalue" );

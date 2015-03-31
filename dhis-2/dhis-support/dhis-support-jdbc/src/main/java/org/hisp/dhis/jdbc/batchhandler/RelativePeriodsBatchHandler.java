@@ -84,9 +84,9 @@ public class RelativePeriodsBatchHandler
     @Override
     protected void setColumns()
     {
-        statementBuilder.setColumn( "reportingmonth" );
-        statementBuilder.setColumn( "reportingbimonth" );
-        statementBuilder.setColumn( "reportingquarter" );
+        statementBuilder.setColumn( "lastmonth" );
+        statementBuilder.setColumn( "lastbimonth" );
+        statementBuilder.setColumn( "lastquarter" );
         statementBuilder.setColumn( "lastsixmonth" );
         statementBuilder.setColumn( "monthsthisyear" );
         statementBuilder.setColumn( "quartersthisyear" );
@@ -112,9 +112,9 @@ public class RelativePeriodsBatchHandler
     @Override
     protected void setValues( RelativePeriods relatives )
     {        
-        statementBuilder.setValue( relatives.isReportingMonth() );
-        statementBuilder.setValue( relatives.isReportingBimonth() );
-        statementBuilder.setValue( relatives.isReportingQuarter() );
+        statementBuilder.setValue( relatives.isLastMonth() );
+        statementBuilder.setValue( relatives.isLastBimonth() );
+        statementBuilder.setValue( relatives.isLastQuarter() );
         statementBuilder.setValue( relatives.isLastSixMonth() );
         statementBuilder.setValue( relatives.isMonthsThisYear() );
         statementBuilder.setValue( relatives.isQuartersThisYear() );

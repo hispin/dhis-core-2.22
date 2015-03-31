@@ -55,9 +55,9 @@ public class RelativePeriods
     private static final List<Period> NO = new ArrayList<>();
     
     public static final String LAST_WEEK = "last_week";
-    public static final String REPORTING_MONTH = "reporting_month";
-    public static final String REPORTING_BIMONTH = "reporting_bimonth";
-    public static final String REPORTING_QUARTER = "reporting_quarter";
+    public static final String LAST_MONTH = "reporting_month";
+    public static final String LAST_BIMONTH = "reporting_bimonth";
+    public static final String LAST_QUARTER = "reporting_quarter";
     public static final String LAST_SIXMONTH = "last_sixmonth";
     public static final String THIS_YEAR = "year";
     public static final String LAST_YEAR = "last_year";
@@ -155,11 +155,11 @@ public class RelativePeriods
 
     private int id;
     
-    private boolean reportingMonth = false; // TODO rename to lastMonth
+    private boolean lastMonth = false;
 
-    private boolean reportingBimonth = false; // TODO rename to lastBimonth
+    private boolean lastBimonth = false;
 
-    private boolean reportingQuarter = false; // TODO rename to lastQuarter
+    private boolean lastQuarter = false;
 
     private boolean lastSixMonth = false;
 
@@ -212,9 +212,9 @@ public class RelativePeriods
     }
 
     /**
-     * @param reportingMonth        reporting month
-     * @param reportingBimonth      reporting bi-month
-     * @param reportingQuarter      reporting quarter
+     * @param lastMonth             last month
+     * @param lastBimonth           last bi-month
+     * @param lastQuarter           last quarter
      * @param lastSixMonth          last six month
      * @param monthsThisYear        months this year
      * @param quartersThisYear      quarters this year
@@ -236,16 +236,16 @@ public class RelativePeriods
      * @param last12Weeks           last 12 weeks
      * @param last52Weeks           last 52 weeks
      */
-    public RelativePeriods( boolean reportingMonth, boolean reportingBimonth, boolean reportingQuarter, boolean lastSixMonth,
+    public RelativePeriods( boolean lastMonth, boolean lastBimonth, boolean lastQuarter, boolean lastSixMonth,
                             boolean monthsThisYear, boolean quartersThisYear, boolean thisYear,
                             boolean monthsLastYear, boolean quartersLastYear, boolean lastYear, boolean last5Years,
                             boolean last12Months, boolean last6Months, boolean last3Months, boolean last6BiMonths, boolean last4Quarters, boolean last2SixMonths,
                             boolean thisFinancialYear, boolean lastFinancialYear, boolean last5FinancialYears, 
                             boolean lastWeek, boolean last4Weeks, boolean last12Weeks, boolean last52Weeks )
     {
-        this.reportingMonth = reportingMonth;
-        this.reportingBimonth = reportingBimonth;
-        this.reportingQuarter = reportingQuarter;
+        this.lastMonth = lastMonth;
+        this.lastBimonth = lastBimonth;
+        this.lastQuarter = lastQuarter;
         this.lastSixMonth = lastSixMonth;
         this.monthsThisYear = monthsThisYear;
         this.quartersThisYear = quartersThisYear;
@@ -278,9 +278,9 @@ public class RelativePeriods
      */
     public RelativePeriods clear()
     {
-        this.reportingMonth = false;
-        this.reportingBimonth = false;
-        this.reportingQuarter = false;
+        this.lastMonth = false;
+        this.lastBimonth = false;
+        this.lastQuarter = false;
         this.lastSixMonth = false;
         this.monthsThisYear = false;
         this.quartersThisYear = false;
@@ -326,17 +326,17 @@ public class RelativePeriods
             return PeriodType.getPeriodTypeByName( WeeklyPeriodType.NAME );
         }
         
-        if ( isReportingMonth() || isLast12Months() || isLast6Months() || isLast3Months() )
+        if ( isLastMonth() || isLast12Months() || isLast6Months() || isLast3Months() )
         {
             return PeriodType.getPeriodTypeByName( MonthlyPeriodType.NAME );
         }
 
-        if ( isReportingBimonth() || isLast6BiMonths() )
+        if ( isLastBimonth() || isLast6BiMonths() )
         {
             return PeriodType.getPeriodTypeByName( BiMonthlyPeriodType.NAME );
         }
 
-        if ( isReportingQuarter() || isLast4Quarters() )
+        if ( isLastQuarter() || isLast4Quarters() )
         {
             return PeriodType.getPeriodTypeByName( QuarterlyPeriodType.NAME );
         }
@@ -464,19 +464,19 @@ public class RelativePeriods
         
         List<Period> periods = new ArrayList<>();
 
-        if ( isReportingMonth() )
+        if ( isLastMonth() )
         {
-            periods.add( getRelativePeriod( new MonthlyPeriodType(), REPORTING_MONTH, date, dynamicNames, format ) );
+            periods.add( getRelativePeriod( new MonthlyPeriodType(), LAST_MONTH, date, dynamicNames, format ) );
         }
 
-        if ( isReportingBimonth() )
+        if ( isLastBimonth() )
         {
-            periods.add( getRelativePeriod( new BiMonthlyPeriodType(), REPORTING_BIMONTH, date, dynamicNames, format ) );
+            periods.add( getRelativePeriod( new BiMonthlyPeriodType(), LAST_BIMONTH, date, dynamicNames, format ) );
         }
 
-        if ( isReportingQuarter() )
+        if ( isLastQuarter() )
         {
-            periods.add( getRelativePeriod( new QuarterlyPeriodType(), REPORTING_QUARTER, date, dynamicNames, format ) );
+            periods.add( getRelativePeriod( new QuarterlyPeriodType(), LAST_QUARTER, date, dynamicNames, format ) );
         }
 
         if ( isLastSixMonth() )
@@ -712,9 +712,9 @@ public class RelativePeriods
     {
         Map<RelativePeriodEnum, RelativePeriods> map = new HashMap<>();
         
-        map.put( RelativePeriodEnum.LAST_MONTH, new RelativePeriods().setReportingMonth( true ) );
-        map.put( RelativePeriodEnum.LAST_BIMONTH, new RelativePeriods().setReportingBimonth( true ) );
-        map.put( RelativePeriodEnum.LAST_QUARTER, new RelativePeriods().setReportingQuarter( true ) );
+        map.put( RelativePeriodEnum.LAST_MONTH, new RelativePeriods().setLastMonth( true ) );
+        map.put( RelativePeriodEnum.LAST_BIMONTH, new RelativePeriods().setLastBimonth( true ) );
+        map.put( RelativePeriodEnum.LAST_QUARTER, new RelativePeriods().setLastQuarter( true ) );
         map.put( RelativePeriodEnum.LAST_SIX_MONTH, new RelativePeriods().setLastSixMonth( true ) );
         map.put( RelativePeriodEnum.MONTHS_THIS_YEAR, new RelativePeriods().setMonthsThisYear( true ) );
         map.put( RelativePeriodEnum.QUARTERS_THIS_YEAR, new RelativePeriods().setQuartersThisYear( true ) );
@@ -749,9 +749,9 @@ public class RelativePeriods
     {
         List<RelativePeriodEnum> list = new ArrayList<>();
         
-        add( list, RelativePeriodEnum.LAST_MONTH, reportingMonth );
-        add( list, RelativePeriodEnum.LAST_BIMONTH, reportingBimonth );
-        add( list, RelativePeriodEnum.LAST_QUARTER, reportingQuarter );
+        add( list, RelativePeriodEnum.LAST_MONTH, lastMonth );
+        add( list, RelativePeriodEnum.LAST_BIMONTH, lastBimonth );
+        add( list, RelativePeriodEnum.LAST_QUARTER, lastQuarter );
         add( list, RelativePeriodEnum.LAST_SIX_MONTH, lastSixMonth );
         add( list, RelativePeriodEnum.MONTHS_THIS_YEAR, monthsThisYear );
         add( list, RelativePeriodEnum.QUARTERS_THIS_YEAR, quartersThisYear );
@@ -781,9 +781,9 @@ public class RelativePeriods
     {
         if ( relativePeriods != null )
         {
-            reportingMonth = relativePeriods.contains( RelativePeriodEnum.LAST_MONTH );
-            reportingBimonth = relativePeriods.contains( RelativePeriodEnum.LAST_BIMONTH );
-            reportingQuarter = relativePeriods.contains( RelativePeriodEnum.LAST_QUARTER );
+            lastMonth = relativePeriods.contains( RelativePeriodEnum.LAST_MONTH );
+            lastBimonth = relativePeriods.contains( RelativePeriodEnum.LAST_BIMONTH );
+            lastQuarter = relativePeriods.contains( RelativePeriodEnum.LAST_QUARTER );
             lastSixMonth = relativePeriods.contains( RelativePeriodEnum.LAST_SIX_MONTH );
             monthsThisYear = relativePeriods.contains( RelativePeriodEnum.MONTHS_THIS_YEAR );
             quartersThisYear = relativePeriods.contains( RelativePeriodEnum.QUARTERS_THIS_YEAR );
@@ -834,40 +834,40 @@ public class RelativePeriods
 
     @JsonProperty( value = "lastMonth" )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
-    public boolean isReportingMonth()
+    public boolean isLastMonth()
     {
-        return reportingMonth;
+        return lastMonth;
     }
 
-    public RelativePeriods setReportingMonth( boolean reportingMonth )
+    public RelativePeriods setLastMonth( boolean lastMonth )
     {
-        this.reportingMonth = reportingMonth;
+        this.lastMonth = lastMonth;
         return this;
     }
 
     @JsonProperty( value = "lastBimonth" )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
-    public boolean isReportingBimonth()
+    public boolean isLastBimonth()
     {
-        return reportingBimonth;
+        return lastBimonth;
     }
 
-    public RelativePeriods setReportingBimonth( boolean reportingBimonth )
+    public RelativePeriods setLastBimonth( boolean reportingBimonth )
     {
-        this.reportingBimonth = reportingBimonth;
+        this.lastBimonth = reportingBimonth;
         return this;
     }
 
     @JsonProperty( value = "lastQuarter" )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
-    public boolean isReportingQuarter()
+    public boolean isLastQuarter()
     {
-        return reportingQuarter;
+        return lastQuarter;
     }
 
-    public RelativePeriods setReportingQuarter( boolean reportingQuarter )
+    public RelativePeriods setLastQuarter( boolean reportingQuarter )
     {
-        this.reportingQuarter = reportingQuarter;
+        this.lastQuarter = reportingQuarter;
         return this;
     }
 
@@ -1155,9 +1155,9 @@ public class RelativePeriods
 
         int result = 1;
 
-        result = prime * result + (reportingMonth ? 1 : 0);
-        result = prime * result + (reportingBimonth ? 1 : 0);
-        result = prime * result + (reportingQuarter ? 1 : 0);
+        result = prime * result + (lastMonth ? 1 : 0);
+        result = prime * result + (lastBimonth ? 1 : 0);
+        result = prime * result + (lastQuarter ? 1 : 0);
         result = prime * result + (lastSixMonth ? 1 : 0);
         result = prime * result + (monthsThisYear ? 1 : 0);
         result = prime * result + (quartersThisYear ? 1 : 0);
@@ -1202,17 +1202,17 @@ public class RelativePeriods
 
         final RelativePeriods other = (RelativePeriods) object;
 
-        if ( !reportingMonth == other.reportingMonth )
+        if ( !lastMonth == other.lastMonth )
         {
             return false;
         }
 
-        if ( !reportingBimonth == other.reportingBimonth )
+        if ( !lastBimonth == other.lastBimonth )
         {
             return false;
         }
 
-        if ( !reportingQuarter == other.reportingQuarter )
+        if ( !lastQuarter == other.lastQuarter )
         {
             return false;
         }
