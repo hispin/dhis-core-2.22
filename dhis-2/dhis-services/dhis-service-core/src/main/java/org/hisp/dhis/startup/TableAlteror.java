@@ -814,8 +814,21 @@ public class TableAlteror
         upgradeTranslations();
 
         updateOptions();
+        
+        upgradeAggregationType( "reporttable" );
 
         log.info( "Tables updated" );
+    }
+    
+    private void upgradeAggregationType( String table )
+    {
+        executeSql( "update " + table + " set aggregationtype='SUM' where aggregationtype='sum'" );
+        executeSql( "update " + table + " set aggregationtype='COUNT' where aggregationtype='count'" );
+        executeSql( "update " + table + " set aggregationtype='STDDEV' where aggregationtype='stddev'" );
+        executeSql( "update " + table + " set aggregationtype='VARIANCE' where aggregationtype='variance'" );
+        executeSql( "update " + table + " set aggregationtype='MIN' where aggregationtype='min'" );
+        executeSql( "update " + table + " set aggregationtype='MAX' where aggregationtype='max'" );
+        executeSql( "update " + table + " set aggregationtype='DEFAULT' where aggregationtype='default'" );
     }
 
     private void upgradeDataValuesWithAttributeOptionCombo()
