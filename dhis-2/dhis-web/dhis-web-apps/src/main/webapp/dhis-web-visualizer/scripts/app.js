@@ -724,6 +724,31 @@ Ext.onReady( function() {
 			})
 		});
 
+		aggregationType = Ext.create('Ext.form.field.ComboBox', {
+			cls: 'ns-combo',
+			style: 'margin-bottom:' + comboBottomMargin + 'px',
+			width: cmpWidth,
+			labelWidth: 125,
+			fieldLabel: NS.i18n.aggregation_type,
+			labelStyle: 'color:#333',
+			queryMode: 'local',
+			valueField: 'id',
+			editable: false,
+			value: 'default',
+			store: Ext.create('Ext.data.Store', {
+				fields: ['id', 'text'],
+				data: [
+					{id: 'default', text: NS.i18n.by_data_element},
+					{id: 'count', text: NS.i18n.count},
+					{id: 'sum', text: NS.i18n.sum},
+					{id: 'stddev', text: NS.i18n.stddev},
+					{id: 'variance', text: NS.i18n.variance},
+					{id: 'min', text: NS.i18n.min},
+					{id: 'max', text: NS.i18n.max}
+				]
+			})
+		});
+
         // axes
 		rangeAxisMinValue = Ext.create('Ext.form.field.Number', {
 			width: numberWidth,
@@ -842,7 +867,8 @@ Ext.onReady( function() {
 						baseLineTitle
 					]
 				},
-                sortOrder
+                sortOrder,
+                aggregationType
 			]
 		};
 
@@ -898,6 +924,7 @@ Ext.onReady( function() {
 					baseLineValue: baseLineValue.getValue(),
 					baseLineTitle: baseLineTitle.getValue(),
                     sortOrder: sortOrder.getValue(),
+                    aggregationType: aggregationType.getValue(),
 					rangeAxisMaxValue: rangeAxisMaxValue.getValue(),
 					rangeAxisMinValue: rangeAxisMinValue.getValue(),
 					rangeAxisSteps: rangeAxisSteps.getValue(),
@@ -945,6 +972,7 @@ Ext.onReady( function() {
 				}
 
                 sortOrder.setValue(Ext.isNumber(layout.sortOrder) ? layout.sortOrder : 0);
+                aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'default');
 
 				// rangeAxisMaxValue
 				if (Ext.isNumber(layout.rangeAxisMaxValue)) {
@@ -1067,6 +1095,7 @@ Ext.onReady( function() {
 					w.baseLineValue = baseLineValue;
 					w.baseLineTitle = baseLineTitle;
                     w.sortOrder = sortOrder;
+                    w.aggregationType = aggregationType;
 
 					w.rangeAxisMaxValue = rangeAxisMaxValue;
 					w.rangeAxisMinValue = rangeAxisMinValue;

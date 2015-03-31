@@ -1677,6 +1677,10 @@ Ext.onReady( function() {
 					delete layout.sorting;
 				}
 
+				if (layout.aggregationType === 'default') {
+					delete layout.aggregationType;
+				}
+
 				delete layout.parentGraphMap;
 				delete layout.reportingPeriod;
 				delete layout.organisationUnit;
@@ -1685,7 +1689,6 @@ Ext.onReady( function() {
 				delete layout.cumulative;
 				delete layout.sortOrder;
 				delete layout.topLimit;
-                delete layout.aggregationType;
 
 				return layout;
 			};
