@@ -85,8 +85,6 @@ public class ProgramStage
     @Scanned
     private Set<ProgramStageDataElement> programStageDataElements = new HashSet<>();
 
-    private List<ProgramIndicator> programIndicators = new ArrayList<>();
-
     @Scanned
     private Set<ProgramStageSection> programStageSections = new HashSet<>();
 
@@ -463,20 +461,6 @@ public class ProgramStage
     public void setReportDateToUse( String reportDateToUse )
     {
         this.reportDateToUse = reportDateToUse;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "programIndicators", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "programIndicator", namespace = DxfNamespaces.DXF_2_0 )
-    public List<ProgramIndicator> getProgramIndicators()
-    {
-        return programIndicators;
-    }
-
-    public void setProgramIndicators( List<ProgramIndicator> programIndicators )
-    {
-        this.programIndicators = programIndicators;
     }
 
     @JsonProperty

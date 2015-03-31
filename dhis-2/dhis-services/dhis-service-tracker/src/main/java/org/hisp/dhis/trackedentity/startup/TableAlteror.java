@@ -315,6 +315,8 @@ public class TableAlteror
         executeSql( "update userroleauthorities set authority='F_ADD_TRACKED_ENTITY_FORM' where authority='F_TRACKED_ENTITY_FORM_ADD'" );
 
         updateProgramExpressionUid();
+        
+        executeSql( "DROP TABLE programstage_programindicators" );
     }
 
     // -------------------------------------------------------------------------
