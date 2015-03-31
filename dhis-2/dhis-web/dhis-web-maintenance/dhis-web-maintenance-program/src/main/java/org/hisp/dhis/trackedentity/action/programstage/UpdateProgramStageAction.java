@@ -35,8 +35,6 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.program.ProgramIndicator;
-import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageDataElementService;
@@ -96,9 +94,6 @@ public class UpdateProgramStageAction
     {
         this.periodService = periodService;
     }
-
-    @Autowired
-    private ProgramIndicatorService programIndicatorService;
 
     @Autowired
     private AttributeService attributeService;
@@ -317,13 +312,6 @@ public class UpdateProgramStageAction
         this.reportDateToUse = reportDateToUse;
     }
 
-    private List<Integer> selectedIndicators = new ArrayList<>();
-
-    public void setSelectedIndicators( List<Integer> selectedIndicators )
-    {
-        this.selectedIndicators = selectedIndicators;
-    }
-
     private Boolean preGenerateUID;
 
     public void setPreGenerateUID( Boolean preGenerateUID )
@@ -408,17 +396,6 @@ public class UpdateProgramStageAction
 
         programStage.setValidCompleteOnly( validCompleteOnly );
         programStage.setCaptureCoordinates( captureCoordinates );
-
-        // Program indicators
-
-        List<ProgramIndicator> programIndicators = new ArrayList<>();
-        for ( Integer id : selectedIndicators )
-        {
-            ProgramIndicator indicator = programIndicatorService.getProgramIndicator( id );
-            programIndicators.add( indicator );
-        }
-
-        programStage.setProgramIndicators( programIndicators );
 
         // SMS Reminder
 

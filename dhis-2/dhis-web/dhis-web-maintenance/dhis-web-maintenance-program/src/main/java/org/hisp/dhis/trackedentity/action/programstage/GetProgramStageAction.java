@@ -38,7 +38,6 @@ import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageService;
@@ -127,13 +126,6 @@ public class GetProgramStageAction
         this.userGroups = userGroups;
     }
 
-    private List<ProgramIndicator> programIndicators;
-
-    public List<ProgramIndicator> getProgramIndicators()
-    {
-        return programIndicators;
-    }
-
     private List<PeriodType> periodTypes = new ArrayList<>();
 
     public List<PeriodType> getPeriodTypes()
@@ -175,9 +167,6 @@ public class GetProgramStageAction
         programStageDataElements = programStage.getProgramStageDataElements();
 
         userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
-
-        programIndicators = new ArrayList<>( programStage.getProgram().getProgramIndicators() );
-        programIndicators.removeAll( programStage.getProgramIndicators() );
 
         attributeValues = AttributeUtils.getAttributeValueMap( programStage.getAttributeValues() );
         attributes = new ArrayList<>( attributeService.getProgramStageAttributes() );
