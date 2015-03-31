@@ -61,15 +61,15 @@
         <div class="row top-bar">        
             <div class="col-sm-12">            
                 <span ng-if='!showRegistrationDiv'>
-                    {{selectedProgram.trackedEntity.name}} {{'search'| translate}}
+                    {{selectedProgram.trackedEntity.name}} {{'search'| translate}}                    
+                    <span class="btn-group horizonal-spacing" ng-show="selectedProgram">
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ALL'" title="{{'all_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("ALL")'><i class="fa fa-list mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ACTIVE'" title="{{'active_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("ACTIVE")'><i class="fa fa-circle-o mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{'completed_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-check mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'CANCELLED'" title="{{'cancelled_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("CANCELLED")'><i class="fa fa-times mouse-pointer"></i></label>
+                    </span>
                     <span class="small-horizonal-spacing" ng-if="pager.total">
                         ({{'total'| translate}}:  {{pager.total}})
-                    </span>
-                    <span class="btn-group horizonal-spacing" ng-show="selectedProgram">
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ALL'" title="{{'all_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("ALL")'><i class="fa fa-check-square mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ACTIVE'" title="{{'active_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("ACTIVE")'><i class="fa fa-spinner fa-spin mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{'completed_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-circle-o mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'CANCELLED'" title="{{'cancelled_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("CANCELLED")'><i class="fa fa-times mouse-pointer"></i></label>
                     </span>
                 </span>
                 <span ng-if='showRegistrationDiv'>
