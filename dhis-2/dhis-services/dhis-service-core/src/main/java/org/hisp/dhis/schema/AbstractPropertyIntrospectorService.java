@@ -34,6 +34,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.Column;
+import org.hibernate.mapping.ManyToOne;
+import org.hibernate.mapping.OneToMany;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.collection.CollectionPersister;
@@ -51,6 +53,9 @@ import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
@@ -237,6 +242,15 @@ public abstract class AbstractPropertyIntrospectorService
                     property.setOwningRole( roleToRole.get( collectionType.getRole() ) );
                     property.setInverseRole( collectionType.getRole() );
                 }
+            }
+
+            if ( ManyToOne.class.isInstance( type ) )
+            {
+                property.setManyToOne( true );
+            }
+            else if ( OneToMany.class.isInstance( type ) )
+            {
+                property.setOneToMany( true );
             }
 
             if ( SingleColumnType.class.isInstance( type ) )
