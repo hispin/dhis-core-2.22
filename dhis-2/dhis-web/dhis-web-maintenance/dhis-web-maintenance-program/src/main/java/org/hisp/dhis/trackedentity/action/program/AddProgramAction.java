@@ -58,8 +58,6 @@ import java.util.List;
 public class AddProgramAction
     implements Action
 {
-    private static String SINGLE_EVENT = "Single-Event";
-
     private static String REPORT_DATE_DESCRIPTION = "Report date";
 
     // -------------------------------------------------------------------------
@@ -330,7 +328,7 @@ public class AddProgramAction
         {
             ProgramStage programStage = new ProgramStage();
 
-            programStage.setName( SINGLE_EVENT + " " + name );
+            programStage.setName( name );
             programStage.setDescription( description );
             programStage.setProgram( program );
             programStage.setMinDaysFromStart( 0 );
