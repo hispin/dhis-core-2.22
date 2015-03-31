@@ -1,7 +1,5 @@
 package org.hisp.dhis.webportal.module;
 
-import java.io.File;
-
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.system.util.TextUtils;
 
