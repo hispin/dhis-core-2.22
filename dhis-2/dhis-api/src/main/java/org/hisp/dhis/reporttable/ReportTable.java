@@ -197,11 +197,6 @@ public class ReportTable
     private boolean showHierarchy;
 
     /**
-     * Indicates the aggregation type.
-     */
-    private String aggregationType;
-
-    /**
      * Indicates showing organisation unit hierarchy names.
      */
     private boolean showDimensionLabels;
@@ -957,19 +952,6 @@ public class ReportTable
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getAggregationType()
-    {
-        return aggregationType;
-    }
-
-    public void setAggregationType( String aggregationType )
-    {
-        this.aggregationType = aggregationType;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getDisplayDensity()
     {
         return displayDensity;
@@ -1107,7 +1089,6 @@ public class ReportTable
             if ( strategy.isReplace() )
             {
                 reportParams = reportTable.getReportParams();
-                aggregationType = reportTable.getAggregationType();
                 displayDensity = reportTable.getDisplayDensity();
                 fontSize = reportTable.getFontSize();
                 legendSet = reportTable.getLegendSet();
@@ -1115,7 +1096,6 @@ public class ReportTable
             else if ( strategy.isMerge() )
             {
                 reportParams = reportTable.getReportParams() == null ? reportParams : reportTable.getReportParams();
-                aggregationType = reportTable.getAggregationType() == null ? aggregationType : reportTable.getAggregationType();
                 displayDensity = reportTable.getDisplayDensity() == null ? displayDensity : reportTable.getDisplayDensity();
                 fontSize = reportTable.getFontSize() == null ? fontSize : reportTable.getFontSize();
                 legendSet = reportTable.getLegendSet() == null ? legendSet : reportTable.getLegendSet();

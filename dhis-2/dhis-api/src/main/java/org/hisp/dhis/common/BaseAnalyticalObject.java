@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
@@ -140,6 +141,8 @@ public abstract class BaseAnalyticalObject
 
     protected int topLimit;
 
+    protected AggregationType aggregationType;
+    
     // -------------------------------------------------------------------------
     // Analytical properties
     // -------------------------------------------------------------------------
@@ -785,10 +788,12 @@ public abstract class BaseAnalyticalObject
             if ( strategy.isReplace() )
             {
                 relatives = object.getRelatives();
+                aggregationType = object.getAggregationType();
             }
             else if ( strategy.isMerge() )
             {
                 relatives = object.getRelatives() == null ? relatives : object.getRelatives();
+                aggregationType = object.getAggregationType() == null ? aggregationType : object.getAggregationType();
             }
 
             indicators.addAll( object.getIndicators() );
@@ -978,6 +983,19 @@ public abstract class BaseAnalyticalObject
     public void setTopLimit( int topLimit )
     {
         this.topLimit = topLimit;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public AggregationType getAggregationType()
+    {
+        return aggregationType;
+    }
+
+    public void setAggregationType( AggregationType aggregationType )
+    {
+        this.aggregationType = aggregationType;
     }
 
     // -------------------------------------------------------------------------

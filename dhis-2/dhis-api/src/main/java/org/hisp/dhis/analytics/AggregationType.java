@@ -45,7 +45,8 @@ public enum AggregationType
     VARIANCE( "variance" ),
     MIN( "min" ),
     MAX( "max" ),
-    NONE( "none" );
+    NONE( "none" ),
+    DEFAULT( "default" );
 
     private final String value;
 
