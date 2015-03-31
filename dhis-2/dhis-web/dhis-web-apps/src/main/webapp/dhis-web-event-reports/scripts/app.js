@@ -6288,7 +6288,7 @@ nissa = window;
 
             // value, aggregation type
             Ext.apply(view, layoutWindow.getValueConfig());
-console.log(view);
+
 			return view;
 		};
 

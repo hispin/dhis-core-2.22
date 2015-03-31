@@ -2061,7 +2061,7 @@ Ext.onReady( function() {
 					if (header.type === 'java.lang.Double') {
 						for (var j = 0, value; j < xResponse.rows.length; j++) {
                             value = xResponse.rows[j][i];
-							xResponse.rows[j][i] = value ? parseFloat(value) : value;
+							xResponse.rows[j][i] = parseFloat(value) || value;
 						}
 					}
 
