@@ -332,6 +332,7 @@ var d2Directives = angular.module('d2Directives', [])
         template: '<div></div>',
         link: function(scope, element, attrs){
 
+            var contextMenuDisplayed = false;
             var ouLevels = CurrentSelection.getOuLevels();
             
             //remove angular bootstrap ui modal draggable
@@ -358,7 +359,7 @@ var d2Directives = angular.module('d2Directives', [])
                 strokeWeight: 2,
                 strokeOpacity: 0.4,
                 fillOpacity: 0.4,
-                fillColor: 'green'
+                fillColor: '#99cc99'
             };            
             
             var map = new google.maps.Map(document.getElementById(attrs.id), mapOptions);
@@ -379,13 +380,13 @@ var d2Directives = angular.module('d2Directives', [])
             contextMenuOptions.classNames={menu:'map_context_menu', menuSeparator:'map_context_menu_separator'};
 
             //create an array of MapContextMenuItem objects            
-            var menuItems=[];            
+            var menuItems=[];
+            menuItems.push({className: 'map_context_menu_item', eventName: 'captureCoordinate', label: '<i class="fa fa-map-marker"></i>   ' + $translate('set_coordinate')});
+            menuItems.push({});            
             menuItems.push({className: 'map_context_menu_item', eventName: 'zoom_in', id: 'zoomIn', label: '<i class="fa fa-search-plus"></i>   ' + $translate('zoom_in')});
             menuItems.push({className: 'map_context_menu_item', eventName: 'zoom_out', id: 'zoomOut', label: '<i class="fa fa-search-minus"></i>   ' + $translate('zoom_out')});
             menuItems.push({}); 
-            menuItems.push({className: 'map_context_menu_item', eventName: 'centerMap', label: '<i class="fa fa-crosshairs"></i>   ' + $translate('center_map')});
-            menuItems.push({});
-            menuItems.push({className: 'map_context_menu_item', eventName: 'captureCoordinate', label: '<i class="fa fa-map-marker"></i>   ' + $translate('capture_coordinate')});
+            menuItems.push({className: 'map_context_menu_item', eventName: 'centerMap', label: '<i class="fa fa-crosshairs"></i>   ' + $translate('center_map')});            
             contextMenuOptions.menuItems=menuItems;
             var mapContextMenu = new MapContextMenu(map, contextMenuOptions);   
             
@@ -516,11 +517,24 @@ var d2Directives = angular.module('d2Directives', [])
                 }
             }
             
+            function showHideContextMenu(event, allowDisable){
+                if(contextMenuDisplayed){
+                    mapContextMenu.hide();
+                    contextMenuDisplayed = false;
+                }
+                else{
+                    mapContextMenu.show(event);
+                    if(allowDisable){
+                        enableDisableZoom();
+                    }
+                }
+            }
+            
             //get lable for current polygon
             map.data.addListener('mouseover', function(e) {
                 $("#polygon-label").text( e.feature.k.name );
                 map.data.revertStyle();
-                map.data.overrideStyle(e.feature, {fillOpacity: 0.8});
+                map.data.overrideStyle(e.feature, {fillOpacity: 0.2});
             });
             
             //remove polygon label
@@ -529,31 +543,32 @@ var d2Directives = angular.module('d2Directives', [])
                 map.data.revertStyle();
             });
             
-            //drill-down based on polygons assigned to orgunits
+            //context menu based on polygons assigned to orgunits
             map.data.addListener('rightclick', function(e){
-                mapContextMenu.show(e);
-                enableDisableZoom();
+                showHideContextMenu(e, true);
+            });            
+
+            map.data.addListener('click', function(e) {
+                showHideContextMenu(e, true);                
             });
             
-            //drill-down based on points assigned to orgunits
+            //context menu based on points assigned to orgunits
             google.maps.event.addListener(marker, 'rightclick', function(e){
-                mapContextMenu.show(e);
-                enableDisableZoom();
+                showHideContextMenu(e, true);
             });
             
-            //capturing coordinate from anywhere in the map - incase no polygons are defined
+            google.maps.event.addListener(marker, 'click', function(e){
+                showHideContextMenu(e, true);
+            });
+            
+            //context menu anywhere in the map - incase no polygons are defined
             google.maps.event.addListener(map, 'rightclick', function(e){                
-                mapContextMenu.show(e);
+                showHideContextMenu(e, false);
             });            
             
-            //remove context menu onclick
-            map.data.addListener('click', function(e) {                
-                mapContextMenu.hide();
-            });
-            
             google.maps.event.addListener(map, 'click', function(e){                
-                mapContextMenu.hide();
-            }); 
+                showHideContextMenu(e, false);
+            });
             
             //listen for the clicks on mapContextMenu
             google.maps.event.addListener(mapContextMenu, 'menu_item_selected', function(e, latLng, eventName){              
@@ -577,9 +592,11 @@ var d2Directives = angular.module('d2Directives', [])
                         
                         break;
                     case 'centerMap':
+                        contextMenuDisplayed = true;
                         map.panTo(latLng);
                         break;
                     case 'captureCoordinate':
+                        contextMenuDisplayed = true;
                         applyMarker(e);
                         break;
                 }
