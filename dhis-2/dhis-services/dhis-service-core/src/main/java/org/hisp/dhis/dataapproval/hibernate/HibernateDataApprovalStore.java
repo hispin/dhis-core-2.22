@@ -31,6 +31,7 @@ package org.hisp.dhis.dataapproval.hibernate;
 import static org.hisp.dhis.dataapproval.DataApprovalState.ACCEPTED_HERE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.APPROVED_ABOVE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.APPROVED_HERE;
+import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVABLE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_ABOVE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_READY;
 import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_WAITING;
@@ -194,15 +195,24 @@ public class HibernateDataApprovalStore
         
         final User user = currentUserService.getCurrentUser();
 
-        if ( CollectionUtils.isEmpty( dataSets ) )
+        Set<DataSet> validDataSets = new HashSet<DataSet>();
+        for ( DataSet set : dataSets )
         {
-            log.warn( " No data sets specified for getting approvals, period " + period.getName()
+            if ( set.isApproveData() )
+            {
+                validDataSets.add( set );
+            }
+        }
+
+        if ( CollectionUtils.isEmpty( validDataSets ) )
+        {
+            log.warn( " No valid data sets specified for getting approvals, period " + period.getName()
                 + " user " + ( user == null ? "(null)" : user.getUsername() ) );
 
             return new ArrayList<>();
         }
 
-        PeriodType dataSetPeriodType = dataSets.iterator().next().getPeriodType();
+        PeriodType dataSetPeriodType = validDataSets.iterator().next().getPeriodType();
 
         List<Period> periods;
 
@@ -218,7 +228,7 @@ public class HibernateDataApprovalStore
         else
         {
             log.warn( "Selected period type " + period.getPeriodType().getName() + " is incompatible with data set '"
-                + dataSets.iterator().next().getName() + "' period type " + dataSetPeriodType.getName()
+                + validDataSets.iterator().next().getName() + "' period type " + dataSetPeriodType.getName()
                 + " user " + ( user == null ? "(null)" : user.getUsername() ) );
 
             return new ArrayList<>();
@@ -233,7 +243,7 @@ public class HibernateDataApprovalStore
 
         DataElementCategoryCombo defaultCategoryCombo = categoryService.getDefaultDataElementCategoryCombo();
 
-        final String dataSetIds = getCommaDelimitedString( getIdentifiers( DataSet.class, dataSets ) );
+        final String dataSetIds = getCommaDelimitedString( getIdentifiers( DataSet.class, validDataSets ) );
 
         boolean isDefaultCombo = categoryService.getDefaultDataElementCategoryOptionCombo().equals( attributeOptionCombo );
 
@@ -247,7 +257,7 @@ public class HibernateDataApprovalStore
         {
             Set<Integer> catComboIds = new HashSet<>();
 
-            for ( DataSet ds : dataSets )
+            for ( DataSet ds : validDataSets )
             {
                 if ( ds.isApproveData() && ( maySeeDefaultCategoryCombo || ds.getCategoryCombo() != defaultCategoryCombo ) )
                 {
@@ -305,7 +315,14 @@ public class HibernateDataApprovalStore
         int orgUnitLevelAbove = 0;
 
         List<DataApprovalLevel> approvalLevels = dataApprovalLevelService.getAllDataApprovalLevels();
-        
+
+        if ( CollectionUtils.isEmpty( approvalLevels ) )
+        {
+            log.warn( " No approval levels configured." );
+
+            return new ArrayList<>(); // Unapprovable.
+        }
+
         for ( DataApprovalLevel dal : approvalLevels )
         {
             if ( dal.getOrgUnitLevel() < orgUnitLevel )
@@ -323,13 +340,15 @@ public class HibernateDataApprovalStore
                 boolean acceptanceRequiredForApproval = (Boolean) systemSettingManager.getSystemSetting( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, false );
 
                 readyBelowSubquery = "not exists (select 1 from _orgunitstructure ous " +
-                    "left join dataapproval da on da.organisationunitid = ous.organisationunitid " +
-                    "and da.dataapprovallevelid = " + dal.getId() + " and da.periodid in (" + periodIds + ") " +
-                    "and da.datasetid in (" + dataSetIds + ") " +
-                    "where ous.idlevel" + orgUnitLevel + " = o.organisationunitid " +
-                    "and da.attributeoptioncomboid = cocco.categoryoptioncomboid " +
-                    "and ous.level = " + dal.getOrgUnitLevel() + " " +
-                    "and ( da.dataapprovalid is null " + ( acceptanceRequiredForApproval ? "or not da.accepted " : "" ) + ") )";
+                    "where not exists (select 1 from dataapproval da " +
+                        "where da.organisationunitid = ous.organisationunitid " +
+                        "and da.dataapprovallevelid = " + dal.getId() + " and da.periodid in (" + periodIds + ") " +
+                        "and da.datasetid in (" + dataSetIds + ") " +
+                        "and da.attributeoptioncomboid = cocco.categoryoptioncomboid " +
+                        ( acceptanceRequiredForApproval ? "and da.accepted " : "" ) +
+                    ") " +
+                    "and ous.idlevel" + orgUnitLevel + " = o.organisationunitid " +
+                    "and ous.level = " + dal.getOrgUnitLevel() + ") ";
                 break;
             }
         }
@@ -385,7 +404,7 @@ public class HibernateDataApprovalStore
         
         List<DataApprovalStatus> statusList = new ArrayList<>();
 
-        DataSet dataSet = ( dataSets.size() == 1 ? dataSets.iterator().next() : null );
+        DataSet dataSet = ( validDataSets.size() == 1 ? validDataSets.iterator().next() : null );
 
         while ( rowSet.next() )
         {
@@ -424,7 +443,9 @@ public class HibernateDataApprovalStore
                 DataApprovalState state = (
                     statusLevel == null ?
                         lowestApprovalLevelForOrgUnit == null ?
-                            UNAPPROVED_ABOVE :
+                            orgUnitLevelAbove == 0 ?
+                                UNAPPROVABLE :
+                                UNAPPROVED_ABOVE :
                             readyBelow ?
                                 UNAPPROVED_READY :
                                 UNAPPROVED_WAITING :

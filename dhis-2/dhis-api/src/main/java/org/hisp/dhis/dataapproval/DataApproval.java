@@ -270,7 +270,7 @@ public class DataApproval
                 ", attributeOptionCombo='" + ( attributeOptionCombo == null ? "(null)" : attributeOptionCombo.getName() ) + "'" +
                 ", accepted=" + accepted +
                 ", created=" + created +
-                ", creator=" + ( dataApprovalLevel == null ? "(null)" : dataApprovalLevel.getName() ) +
+                ", creator=" + ( creator == null ? "(null)" : creator.getName() ) +
                 '}';
     }
 
