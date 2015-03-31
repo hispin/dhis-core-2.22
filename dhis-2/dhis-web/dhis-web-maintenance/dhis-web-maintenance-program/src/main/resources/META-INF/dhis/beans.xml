@@ -352,9 +352,7 @@
   <bean
     id="org.hisp.dhis.trackedentity.action.programstage.ShowAddProgramStageSectionAction"
     class="org.hisp.dhis.trackedentity.action.programstage.ShowAddProgramStageSectionAction"
-    scope="prototype">
-    <property name="programStageService" ref="org.hisp.dhis.program.ProgramStageService" />
-  </bean>
+    scope="prototype"/>
 
   <bean
     id="org.hisp.dhis.trackedentity.action.programstage.ValidateProgramStageSectionAction"
