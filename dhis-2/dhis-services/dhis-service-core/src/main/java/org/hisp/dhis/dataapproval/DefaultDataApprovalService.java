@@ -47,11 +47,11 @@ import org.hisp.dhis.dataapproval.exceptions.DataMayNotBeUnapprovedException;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.CollectionUtils;
-import org.hisp.dhis.system.util.TextUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,6 +87,13 @@ public class DefaultDataApprovalService
     public void setCurrentUserService( CurrentUserService currentUserService )
     {
         this.currentUserService = currentUserService;
+    }
+
+    private OrganisationUnitService organisationUnitService;
+
+    public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
+    {
+        this.organisationUnitService = organisationUnitService;
     }
 
     private PeriodService periodService;
@@ -144,7 +151,7 @@ public class DefaultDataApprovalService
             if ( status == null || !status.getPermissions().isMayApprove() )
             {
                 log.warn( "approveData: data may not be approved, state " +
-                    ( status == null ? TextUtils.EMPTY : status.getState().name() ) + " " + da );
+                    ( status == null ? "(null)" : status.getState().name() ) + " " + da );
 
                 throw new DataMayNotBeApprovedException();
             }
@@ -246,7 +253,7 @@ public class DefaultDataApprovalService
 
             if ( status == null || !status.getPermissions().isMayAccept() )
             {
-                log.warn( "acceptData: data may not be accepted, state " + ( status == null ? TextUtils.EMPTY : status.getState().name() ) + " " + da );
+                log.warn( "acceptData: data may not be accepted, state " + ( status == null ? "(null)" : status.getState().name() ) + " " + da );
 
                 throw new DataMayNotBeAcceptedException();
             }
@@ -343,7 +350,7 @@ public class DefaultDataApprovalService
         log.debug( "getDataApprovalStatus( " + dataSet.getName() + ", "
             + period.getPeriodType().getName() + " " + period.getName() + " " + period + ", "
             + organisationUnit.getName() + ", "
-            + ( attributeOptionCombo == null ? TextUtils.EMPTY : attributeOptionCombo.getName() ) + " )" );
+            + ( attributeOptionCombo == null ? "(null)" : attributeOptionCombo.getName() ) + " )" );
 
         List<DataApprovalStatus> statuses = dataApprovalStore.getDataApprovals( CollectionUtils.asSet( dataSet ),
             periodService.reloadPeriod( period ), organisationUnit, attributeOptionCombo );
@@ -374,7 +381,7 @@ public class DefaultDataApprovalService
     {
         DataApprovalStatus status = getDataApprovalStatus( dataSet, period, organisationUnit, attributeOptionCombo );
 
-        status.setPermissions( makePermissionsEvaluator().getPermissions( status ) );
+        status.setPermissions( makePermissionsEvaluator().getPermissions( status, organisationUnit ) );
 
         return status;
     }
@@ -388,7 +395,7 @@ public class DefaultDataApprovalService
         
         for ( DataApprovalStatus status : statusList )
         {
-            status.setPermissions( permissionsEvaluator.getPermissions( status ) );
+            status.setPermissions( permissionsEvaluator.getPermissions( status, orgUnit ) );
         }
 
         return statusList;
@@ -472,7 +479,7 @@ public class DefaultDataApprovalService
 
             for ( DataApprovalStatus status : statuses )
             {
-                status.setPermissions( evaluator.getPermissions( status ) );
+                status.setPermissions( evaluator.getPermissions( status, da0.getOrganisationUnit() ) );
 
                 DataApproval da = status.getDataApproval();
 
@@ -511,6 +518,6 @@ public class DefaultDataApprovalService
     private DataApprovalPermissionsEvaluator makePermissionsEvaluator()
     {
         return DataApprovalPermissionsEvaluator.makePermissionsEvaluator(
-            currentUserService, systemSettingManager, dataApprovalLevelService );
+            currentUserService, organisationUnitService, systemSettingManager, dataApprovalLevelService );
     }
 }
