@@ -170,8 +170,7 @@ public class UpdateProgramStageSectionAction
             programIndicators.add( indicator );
         }
 
-        section.setProgramIndicators( programIndicators );
-        
+        section.setProgramIndicators( programIndicators );        
 
         programStageSectionService.updateProgramStageSection( section );
 
