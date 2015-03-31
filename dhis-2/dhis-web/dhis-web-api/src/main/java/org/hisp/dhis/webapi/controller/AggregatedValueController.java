@@ -101,10 +101,10 @@ public class AggregatedValueController
     ) throws IOException
     {
         RelativePeriods rp = new RelativePeriods();
-        rp.setReportingMonth( lastMonth );
+        rp.setLastMonth( lastMonth );
         rp.setMonthsThisYear( monthsThisYear );
         rp.setMonthsLastYear( monthsLastYear );
-        rp.setReportingQuarter( lastQuarter );
+        rp.setLastQuarter( lastQuarter );
         rp.setQuartersThisYear( quartersThisYear );
         rp.setQuartersLastYear( quartersLastYear );
         rp.setThisYear( thisYear );

@@ -180,7 +180,7 @@ public class ReportTableTest
 
         relatives = new RelativePeriods();
         
-        relatives.setReportingMonth( true );
+        relatives.setLastMonth( true );
         relatives.setThisYear( true );
 
         List<Period> rp = relatives.getRelativePeriods();

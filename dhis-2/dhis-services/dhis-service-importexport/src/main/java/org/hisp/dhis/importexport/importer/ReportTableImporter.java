@@ -94,7 +94,7 @@ public class ReportTableImporter
         match.setDoPeriods( match.isDoPeriods() );
         match.setDoUnits( match.isDoUnits() );
 
-        match.getRelatives().setReportingMonth( object.getRelatives().isReportingMonth() );
+        match.getRelatives().setLastMonth( object.getRelatives().isLastMonth() );
         match.getRelatives().setMonthsThisYear( object.getRelatives().isMonthsThisYear() );
         match.getRelatives().setQuartersThisYear( object.getRelatives().isQuartersThisYear() );
         match.getRelatives().setThisYear( object.getRelatives().isThisYear() );

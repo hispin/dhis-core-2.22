@@ -222,7 +222,7 @@ public class ReportTableConverter
                 writer.writeElement( FIELD_DO_PERIODS, String.valueOf( reportTable.isDoPeriods() ) );
                 writer.writeElement( FIELD_DO_ORGANISATION_UNITS, String.valueOf( reportTable.isDoUnits() ) );
 
-                writer.writeElement( FIELD_REPORTING_MONTH, String.valueOf( reportTable.getRelatives().isReportingMonth() ) );
+                writer.writeElement( FIELD_REPORTING_MONTH, String.valueOf( reportTable.getRelatives().isLastMonth() ) );
                 writer.writeElement( FIELD_MONTHS_THIS_YEAR, String.valueOf( reportTable.getRelatives().isMonthsThisYear() ) );
                 writer.writeElement( FIELD_QUARTERS_THIS_YEAR, String.valueOf( reportTable.getRelatives().isQuartersThisYear() ) );
                 writer.writeElement( FIELD_THIS_YEAR, String.valueOf( reportTable.getRelatives().isThisYear() ) );
@@ -313,7 +313,7 @@ public class ReportTableConverter
             if ( params.minorVersionGreaterOrEqual( DXFConverter.MINOR_VERSION_12 ) )
             {
                 reader.moveToStartElement( FIELD_REPORTING_MONTH );          
-                reportTable.getRelatives().setReportingMonth( Boolean.parseBoolean( reader.getElementValue() ) );
+                reportTable.getRelatives().setLastMonth( Boolean.parseBoolean( reader.getElementValue() ) );
                 
                 reader.moveToStartElement( FIELD_MONTHS_THIS_YEAR );
                 reportTable.getRelatives().setMonthsThisYear( Boolean.parseBoolean( reader.getElementValue() ) );
