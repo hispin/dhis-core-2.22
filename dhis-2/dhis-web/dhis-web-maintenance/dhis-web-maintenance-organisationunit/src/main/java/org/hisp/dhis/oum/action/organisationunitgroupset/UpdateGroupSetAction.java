@@ -30,7 +30,7 @@ package org.hisp.dhis.oum.action.organisationunitgroupset;
 
 import com.opensymphony.xwork2.Action;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
