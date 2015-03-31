@@ -2168,8 +2168,6 @@ Ext.onReady( function() {
 					rowSpan = config.rowSpan ? 'rowspan="' + config.rowSpan + '" ' : '';
                     htmlValue = getHtmlValue(config);
 					htmlValue = config.type !== 'dimension' ? support.prototype.number.prettyPrint(htmlValue, xLayout.digitGroupSeparator) : htmlValue;
-					displayDensity = conf.pivot.displayDensity[config.displayDensity] || conf.pivot.displayDensity[xLayout.displayDensity];
-					fontSize = conf.pivot.fontSize[config.fontSize] || conf.pivot.fontSize[xLayout.fontSize];
 
 					cls += config.hidden ? ' td-hidden' : '';
 					cls += config.collapsed ? ' td-collapsed' : '';
@@ -2200,7 +2198,7 @@ Ext.onReady( function() {
 						//html += '</div></div></div></td>';
 					//}
 					//else {
-						html += 'style="' + (bgColor && isValue ? 'color:' + bgColor + '; ' : '') + 'padding:' + displayDensity + '; font-size:' + fontSize + ';"' + '>' + htmlValue + '</td>';
+						html += 'style="' + (bgColor && isValue ? 'color:' + bgColor + '; ' : '') + '">' + htmlValue + '</td>';
 					//}
 
 					return html;
@@ -2844,13 +2842,19 @@ Ext.onReady( function() {
 				};
 
 				getHtml = function() {
-					var s = '<table id="' + xLayout.tableUuid + '" class="pivot">';
+                    var cls = 'pivot',
+                        table;
+
+                    cls += xLayout.displayDensity && xLayout.displayDensity !== 'normal' ? ' displaydensity-' + xLayout.displayDensity : '';
+                    cls += xLayout.fontSize && xLayout.fontSize !== 'normal' ? ' fontsize-' + xLayout.fontSize : '';
+
+					table = '<table id="' + xLayout.tableUuid + '" class="' + cls + '">';
 
 					for (var i = 0; i < htmlArray.length; i++) {
-						s += '<tr>' + htmlArray[i].join('') + '</tr>';
+						table += '<tr>' + htmlArray[i].join('') + '</tr>';
 					}
 
-					return s += '</table>';
+					return table += '</table>';
 				};
 
 				// get html
