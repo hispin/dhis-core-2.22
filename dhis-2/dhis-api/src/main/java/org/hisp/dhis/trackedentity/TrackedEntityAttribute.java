@@ -28,7 +28,12 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -37,16 +42,9 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.common.view.WithoutOrganisationUnitsView;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.schema.annotation.PropertyRange;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,7 +58,7 @@ public class TrackedEntityAttribute
 {
     public static final String TYPE_DATE = "date";
     public static final String TYPE_STRING = "string";
-    public static final String TYPE_NUMBER = "number";    
+    public static final String TYPE_NUMBER = "number";
     public static final String TYPE_LETTER = "letter";
     public static final String TYPE_BOOL = "bool";
     public static final String TYPE_TRUE_ONLY = "trueOnly";
@@ -79,7 +77,7 @@ public class TrackedEntityAttribute
     private TrackedEntityAttributeGroup attributeGroup;
 
     private OptionSet optionSet;
-    
+
     private String expression;
 
     private Boolean displayOnVisitSchedule = false;
@@ -150,7 +148,7 @@ public class TrackedEntityAttribute
     {
         return legendSet != null;
     }
-    
+
     /**
      * Checks whether the given value is present among the options in the option
      * set of this attribute, matching on code.
@@ -202,7 +200,7 @@ public class TrackedEntityAttribute
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getValueType()
     {

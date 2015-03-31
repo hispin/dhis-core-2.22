@@ -38,7 +38,6 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.common.view.WithoutOrganisationUnitsView;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 import java.io.Serializable;
@@ -122,7 +121,7 @@ public class ProgramTrackedEntityAttribute
 
     @JsonProperty( "trackedEntityAttribute" )
     @JsonSerialize( as = BaseIdentifiableObject.class )
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( localName = "trackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityAttribute getAttribute()
     {
@@ -135,7 +134,7 @@ public class ProgramTrackedEntityAttribute
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( localName = "displayInList", namespace = DxfNamespaces.DXF_2_0 )
     public boolean isDisplayInList()
     {
