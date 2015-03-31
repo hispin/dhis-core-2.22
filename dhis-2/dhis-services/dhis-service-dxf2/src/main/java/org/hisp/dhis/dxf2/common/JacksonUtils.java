@@ -46,7 +46,6 @@ import org.hisp.dhis.common.view.SharingDetailedView;
 import org.hisp.dhis.common.view.SharingExportView;
 import org.hisp.dhis.common.view.ShortNameView;
 import org.hisp.dhis.common.view.UuidView;
-import org.hisp.dhis.common.view.WithoutOrganisationUnitsView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,7 +105,6 @@ public class JacksonUtils
         viewClasses.put( "export", ExportView.class );
         viewClasses.put( "sharingExport", SharingExportView.class );
         viewClasses.put( "dimensional", DimensionalView.class );
-        viewClasses.put( "withoutOrganisationUnits", WithoutOrganisationUnitsView.class );
     }
 
     /**

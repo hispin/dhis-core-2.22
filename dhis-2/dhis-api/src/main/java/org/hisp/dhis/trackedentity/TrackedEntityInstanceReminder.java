@@ -39,7 +39,6 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.common.view.WithoutOrganisationUnitsView;
 import org.hisp.dhis.user.UserGroup;
 
 import java.util.regex.Pattern;
@@ -152,7 +151,7 @@ public class TrackedEntityInstanceReminder
     // -------------------------------------------------------------------------
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getDaysAllowedSendMessage()
     {
@@ -165,7 +164,7 @@ public class TrackedEntityInstanceReminder
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getTemplateMessage()
     {
@@ -178,7 +177,7 @@ public class TrackedEntityInstanceReminder
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getDateToCompare()
     {
@@ -191,7 +190,7 @@ public class TrackedEntityInstanceReminder
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getSendTo()
     {
@@ -204,7 +203,7 @@ public class TrackedEntityInstanceReminder
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getWhenToSend()
     {
@@ -218,7 +217,7 @@ public class TrackedEntityInstanceReminder
 
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public UserGroup getUserGroup()
     {
@@ -231,7 +230,7 @@ public class TrackedEntityInstanceReminder
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, WithoutOrganisationUnitsView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getMessageType()
     {
