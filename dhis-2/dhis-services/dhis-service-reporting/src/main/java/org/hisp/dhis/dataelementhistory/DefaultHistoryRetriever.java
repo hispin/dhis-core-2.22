@@ -30,7 +30,7 @@ package org.hisp.dhis.dataelementhistory;
 
 import java.util.List;
 
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.util.Precision;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.datavalue.DataValue;
@@ -129,7 +129,7 @@ public class DefaultHistoryRetriever
                 max = Math.max( max, historyPoint.getValue() );
                 total += historyPoint.getValue();
                 average = total / ++count;
-                average = MathUtils.round( average, 1 );
+                average = Precision.round( average, 1 );
             }
 
             historyPoint.setAverage( average );
