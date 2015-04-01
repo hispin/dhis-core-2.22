@@ -41,17 +41,11 @@ import java.util.*;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 @JacksonXmlRootElement( localName = "relativePeriods", namespace = DxfNamespaces.DXF_2_0)
 public class RelativePeriods
     implements Serializable
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 2949655296199662273L;
-
     private static final List<Period> NO = new ArrayList<>();
     
     public static final String LAST_WEEK = "last_week";
