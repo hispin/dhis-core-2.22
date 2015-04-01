@@ -331,7 +331,7 @@ public class ListGrid
     }
     
     @Override
-    public Grid addEmptyValues( int number )
+    public Grid addEmptyValues( int number )§
     {
         for ( int i = 0; i < number; i++ )
         {
