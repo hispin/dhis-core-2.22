@@ -38,6 +38,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
@@ -55,8 +56,10 @@ public class ProgramStageSection
 
     private ProgramStage programStage;
 
+    @Scanned
     private List<ProgramStageDataElement> programStageDataElements = new ArrayList<>();
-    
+
+    @Scanned
     private List<ProgramIndicator> programIndicators = new ArrayList<>();
 
     private Integer sortOrder;
@@ -166,6 +169,9 @@ public class ProgramStageSection
 
             programStageDataElements.clear();
             programStageDataElements.addAll( programStageSection.getProgramStageDataElements() );
+
+            programIndicators.clear();
+            programIndicators.addAll( programStageSection.getProgramIndicators() );
         }
     }
 }
