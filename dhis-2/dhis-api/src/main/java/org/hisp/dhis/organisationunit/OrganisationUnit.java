@@ -34,7 +34,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -47,7 +46,6 @@ import org.hisp.dhis.common.adapter.JacksonOrganisationUnitChildrenSerializer;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.common.view.UuidView;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.PeriodType;
@@ -761,7 +759,7 @@ public class OrganisationUnit
      * Returns a mapping between the uid and the uid parent graph of the given
      * organisation units.
      */
-    public static Map<String, String> getParentNameGraphMap( List<OrganisationUnit> organisationUnits, 
+    public static Map<String, String> getParentNameGraphMap( List<OrganisationUnit> organisationUnits,
         Collection<OrganisationUnit> roots, boolean includeThis, DisplayProperty displayProperty )
     {
         Map<String, String> map = new HashMap<>();
@@ -798,7 +796,7 @@ public class OrganisationUnit
     // -------------------------------------------------------------------------
 
     @JsonProperty
-    @JsonView( UuidView.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( isAttribute = true )
     @PropertyRange( min = 36, max = 36 )
     public String getUuid()
