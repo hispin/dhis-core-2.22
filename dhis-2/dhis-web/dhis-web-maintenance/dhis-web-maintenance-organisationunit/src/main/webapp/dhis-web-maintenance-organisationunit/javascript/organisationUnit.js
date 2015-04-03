@@ -40,7 +40,8 @@ function showOrganisationUnitDetails( context ) {
 		setInnerHTML( 'descriptionField', json.organisationUnit.description );
 		setInnerHTML( 'openingDateField', json.organisationUnit.openingDate );
 		setInnerHTML( 'idField', json.organisationUnit.uid );
-		setInnerHTML( 'createdByField', json.organisationUnit.user.name );
+		var userName = json.organisationUnit.user.name  != "" ? json.organisationUnit.user.name : '[' + none + ']';
+		setInnerHTML( 'createdByField', userName );
 
 		var orgUnitCode = json.organisationUnit.code;
 		setInnerHTML( 'codeField', orgUnitCode ? orgUnitCode : '[' + none + ']' );
