@@ -432,6 +432,7 @@ public class TableAlteror
         executeSql( "update eventchart set regression = false where regression is null" );
         executeSql( "update eventchart set hidetitle = false where hidetitle is null" );
         executeSql( "update eventchart set hidesubtitle = false where hidesubtitle is null" );
+        executeSql( "update eventchart set hidenadata = false where hidenadata is null" );
         executeSql( "update reporttable set showdimensionlabels = false where showdimensionlabels is null" );
         executeSql( "update eventreport set showdimensionlabels = false where showdimensionlabels is null" );
 
@@ -517,6 +518,7 @@ public class TableAlteror
         
         executeSql( "update eventreport set showhierarchy = false where showhierarchy is null" );
         executeSql( "update eventreport set counttype = 'events' where counttype is null" );
+        executeSql( "update eventreport set hidenadata = false where hidenadata is null" );
 
         // eventreport col/rowtotals = keep existing || copy from totals || true
         executeSql( "update eventreport set totals = true where totals is null" );

@@ -1543,6 +1543,7 @@ Ext.onReady( function() {
     AggregateOptionsWindow = function() {
 		var showValues,
             hideEmptyRows,
+            hideNaData,
             showTrendLine,
 			targetLineValue,
 			targetLineTitle,
@@ -1584,6 +1585,11 @@ Ext.onReady( function() {
 		hideEmptyRows = Ext.create('Ext.form.field.Checkbox', {
 			boxLabel: NS.i18n.hide_empty_category_items,
 			style: 'margin-bottom:' + checkboxBottomMargin + 'px'
+		});
+
+		hideNaData = Ext.create('Ext.form.field.Checkbox', {
+			boxLabel: NS.i18n.hide_na_data,
+			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
 		});
 
 		showTrendLine = Ext.create('Ext.form.field.Checkbox', {
@@ -1768,6 +1774,7 @@ Ext.onReady( function() {
 			items: [
 				showValues,
 				hideEmptyRows,
+                hideNaData,
 				showTrendLine,
 				{
 					xtype: 'container',
@@ -1849,6 +1856,7 @@ Ext.onReady( function() {
 				return {
 					showValues: showValues.getValue(),
                     hideEmptyRows: hideEmptyRows.getValue(),
+                    hideNaData: hideNaData.getValue(),
 					showTrendLine: showTrendLine.getValue(),
 					targetLineValue: targetLineValue.getValue(),
 					targetLineTitle: targetLineTitle.getValue(),
@@ -2020,6 +2028,7 @@ Ext.onReady( function() {
 					// cmp
 					w.showValues = showValues;
                     w.hideEmptyRows = hideEmptyRows;
+                    w.hideNaData = hideNaData;
 					w.showTrendLine = showTrendLine;
 					w.targetLineValue = targetLineValue;
 					w.targetLineTitle = targetLineTitle;
@@ -6692,6 +6701,7 @@ Ext.onReady( function() {
 				url += '&columns=' + columnNames.join(';');
 				url += '&rows=' + rowNames.join(';');
 				url += ns.app.layout.hideEmptyRows ? '&hideEmptyRows=true' : '';
+				url += ns.app.layout.hideNaData ? '&hideNaData=true' : '';
 
 				window.open(url, isNewTab ? '_blank' : '_top');
 			}

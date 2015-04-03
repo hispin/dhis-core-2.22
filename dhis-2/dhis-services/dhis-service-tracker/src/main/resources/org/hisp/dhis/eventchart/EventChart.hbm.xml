@@ -128,6 +128,8 @@
     <property name="showData" />
 
     <property name="hideEmptyRows" />
+    
+    <property name="hideNaData" />
 
     <property name="rangeAxisMaxValue" />
 

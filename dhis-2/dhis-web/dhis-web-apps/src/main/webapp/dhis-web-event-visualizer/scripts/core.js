@@ -356,23 +356,25 @@ Ext.onReady( function() {
 
                 // showValues: boolean (true)
 
-                    // showTotals: boolean (true)
+                // showTotals: boolean (true)
 
-                    // showSubTotals: boolean (true)
+                // showSubTotals: boolean (true)
 
 				// hideEmptyRows: boolean (false)
 
-                    // aggregationType: string ('default') - 'default', 'count', 'sum'
+                // hideNaData: boolean (false)
 
-                    // showHierarchy: boolean (false)
+                // aggregationType: string ('default') - 'default', 'count', 'sum'
 
-                    // displayDensity: string ('normal') - 'compact', 'normal', 'comfortable'
+                // showHierarchy: boolean (false)
 
-                    // fontSize: string ('normal') - 'small', 'normal', 'large'
+                // displayDensity: string ('normal') - 'compact', 'normal', 'comfortable'
 
-                    // digitGroupSeparator: string ('space') - 'none', 'comma', 'space'
+                // fontSize: string ('normal') - 'small', 'normal', 'large'
 
-                    // legendSet: object
+                // digitGroupSeparator: string ('space') - 'none', 'comma', 'space'
+
+                // legendSet: object
 
                 // hideLegend: boolean (false)
 
@@ -565,6 +567,7 @@ Ext.onReady( function() {
 					// properties
                     layout.showValues = Ext.isBoolean(config.showData) ? config.showData : (Ext.isBoolean(config.showValues) ? config.showValues : true);
                     layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : (Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : true);
+                    layout.hideNaData = Ext.isBoolean(config.hideNaData) ? config.hideNaData : false;
                     layout.showTrendLine = Ext.isBoolean(config.regression) ? config.regression : (Ext.isBoolean(config.showTrendLine) ? config.showTrendLine : false);
                     layout.targetLineValue = Ext.isNumber(config.targetLineValue) ? config.targetLineValue : null;
                     layout.targetLineTitle = Ext.isString(config.targetLineLabel) && !Ext.isEmpty(config.targetLineLabel) ? config.targetLineLabel :
@@ -1734,6 +1737,10 @@ Ext.onReady( function() {
 					delete layout.hideEmptyRows;
 				}
 
+				if (!layout.hideNaData) {
+					delete layout.hideNaData;
+				}
+
 				if (!layout.showHierarchy) {
 					delete layout.showHierarchy;
 				}
@@ -1824,6 +1831,12 @@ Ext.onReady( function() {
 
                             for (var j = 0, id, fullId, parsedId, displayId; j < response.rows.length; j++) {
                                 id = response.rows[j][i] || emptyId;
+
+                                // hide NA data
+                                if (xLayout.hideNaData && id === emptyId) {
+                                    continue;
+                                }
+
                                 fullId = header.name + id;
                                 parsedId = parseFloat(id);
                                 displayId = Ext.isNumber(parsedId) ? parsedId : (names[id] || id);
@@ -1849,6 +1862,12 @@ Ext.onReady( function() {
 
                             for (var k = 0, id, fullId, name, isHierarchy; k < response.rows.length; k++) {
                                 id = response.rows[k][i] || emptyId;
+
+                                // hide NA data
+                                if (xLayout.hideNaData && id === emptyId) {
+                                    continue;
+                                }
+
                                 fullId = header.name + id;
                                 isHierarchy = service.layout.isHierarchy(xLayout, response, id);
 

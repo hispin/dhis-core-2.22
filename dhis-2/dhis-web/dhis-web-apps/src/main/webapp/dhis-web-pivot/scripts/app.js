@@ -6595,7 +6595,17 @@ Ext.onReady( function() {
 
 				NS.instances.push(ns);
 
-				ns.core = NS.getCore(init);
+                ns.init = init;
+                ns.alert = function(msg, isAlert) {
+                    if (isAlert) {
+                        alert(msg);
+                    }
+                    else {
+                        console.log(msg);
+                    }
+                };
+
+				ns.core = NS.getCore(ns);
 				extendCore(ns.core);
 
 				dimConf = ns.core.conf.finals.dimension;

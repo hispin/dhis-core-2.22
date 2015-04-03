@@ -134,6 +134,8 @@
     <property name="colSubTotals" />
 
     <property name="hideEmptyRows" />
+    
+    <property name="hideNaData" />
 
     <property name="showHierarchy" />
 

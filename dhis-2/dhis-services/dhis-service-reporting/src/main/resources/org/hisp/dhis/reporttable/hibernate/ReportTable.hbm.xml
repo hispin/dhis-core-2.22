@@ -160,7 +160,7 @@
 	<property name="colSubTotals" />
 
     <property name="hideEmptyRows" />
-
+    
     <property name="aggregationType" length="40">
 		<type name="org.hibernate.type.EnumType">
 			<param name="enumClass">org.hisp.dhis.analytics.AggregationType</param>
