@@ -149,10 +149,13 @@ public class DefaultAppManager
         File updateManifest = new File( dest + File.separator + "manifest.webapp" );
         App installedApp = mapper.readValue( updateManifest, App.class );
 
-        if ( installedApp.getActivities().getDhis().getHref().equals( "*" ) )
+        if ( installedApp.getActivities() != null && installedApp.getActivities().getDhis() != null )
         {
-            installedApp.getActivities().getDhis().setHref( rootPath );
-            mapper.writeValue( updateManifest, installedApp );
+            if ( "*".equals( installedApp.getActivities().getDhis().getHref() ) )
+            {
+                installedApp.getActivities().getDhis().setHref( rootPath );
+                mapper.writeValue( updateManifest, installedApp );
+            }
         }
 
         zip.close();
