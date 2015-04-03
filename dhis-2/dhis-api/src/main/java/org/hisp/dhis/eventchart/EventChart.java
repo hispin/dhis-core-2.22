@@ -121,6 +121,11 @@ public class EventChart
      * Indicates whether to collapse all data dimensions into a single dimension.
      */
     private boolean collapseDataDimensions;
+
+    /**
+     * Indicates whether to hide n/a data.
+     */
+    private boolean hideNaData;   
     
     // -------------------------------------------------------------------------
     // Analytical properties

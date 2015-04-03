@@ -972,7 +972,7 @@ Ext.onReady( function() {
 				}
 
                 sortOrder.setValue(Ext.isNumber(layout.sortOrder) ? layout.sortOrder : 0);
-                aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'DEFAULT');
+                aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'default');
 
 				// rangeAxisMaxValue
 				if (Ext.isNumber(layout.rangeAxisMaxValue)) {
@@ -6676,7 +6676,17 @@ Ext.onReady( function() {
 
 				NS.instances.push(ns);
 
-				ns.core = NS.getCore(init);
+                ns.init = init;
+                ns.alert = function(msg, isAlert) {
+                    if (isAlert) {
+                        alert(msg);
+                    }
+                    else {
+                        console.log(msg);
+                    }
+                };
+
+				ns.core = NS.getCore(ns);
 				extendCore(ns.core);
 
 				dimConf = ns.core.conf.finals.dimension;
