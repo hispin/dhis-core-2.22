@@ -156,6 +156,11 @@ public class EventReport
      * Indicates rendering of empty rows for the table.
      */
     private boolean hideEmptyRows;
+    
+    /**
+     * Indicates rendering of empty rows for the table.
+     */
+    private boolean hideNaData;
 
     /**
      * Indicates rendering of empty rows for the table.
@@ -444,6 +449,19 @@ public class EventReport
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isHideNaData()
+    {
+        return hideNaData;
+    }
+
+    public void setHideNaData( boolean hideNaData )
+    {
+        this.hideNaData = hideNaData;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public EventOutputType getOutputType()
     {
         return outputType;
@@ -554,6 +572,7 @@ public class EventReport
             rowSubTotals = report.isRowSubTotals();
             colSubTotals = report.isColSubTotals();
             hideEmptyRows = report.isHideEmptyRows();
+            hideNaData = report.isHideNaData();
             rowTotals = report.isRowTotals();
             colTotals = report.isColTotals();
             showHierarchy = report.isShowHierarchy();

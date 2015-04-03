@@ -16,8 +16,9 @@ Ext.onReady( function() {
 	NS.isDebug = false;
 	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	NS.getCore = function(init) {
-        var conf = {},
+	NS.getCore = function(ns) {
+        var init = ns.init,
+            conf = {},
             api = {},
             support = {},
             service = {},
@@ -433,6 +434,12 @@ Ext.onReady( function() {
 						web.message.alert('Assigned categories and detailed data elements cannot be specified together');
 						return;
 					}
+
+                    // in and aggregation type
+                    if (objectNameDimensionMap[dimConf.indicator.objectName] && config.aggregationType !== 'DEFAULT') {
+                        ns.alert('Indicators and aggregation types cannot be specified together', true);
+                        return;
+                    }
 
 					return true;
 				};
@@ -1921,14 +1928,7 @@ Ext.onReady( function() {
 					map = xLayout.dimensionNameItemsMap,
 					dx = dimConf.indicator.dimensionName,
 					co = dimConf.category.dimensionName,
-                    aggTypes = {
-                        'count': 'COUNT',
-                        'sum': 'SUM',
-                        'stddev': 'STDDEV',
-                        'variance': 'VARIANCE',
-                        'min': 'MIN',
-                        'max': 'MAX'
-                    };
+                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'];
 
 				for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
 					dimName = axisDimensionNames[i];
@@ -1976,7 +1976,7 @@ Ext.onReady( function() {
 				}
 
 				// aggregation type
-				if (xLayout.aggregationType) {
+				if (Ext.Array.contains(aggTypes, xLayout.aggregationType)) {
 					paramString += '&aggregationType=' + xLayout.aggregationType;
 				}
 
