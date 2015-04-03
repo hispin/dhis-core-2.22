@@ -15,6 +15,11 @@
   "coordinates": "$!encoder.jsonEncode( ${organisationUnit.coordinates} )",
   "latitude": "$!{organisationUnit.latitude}",
   "longitude": "$!{organisationUnit.longitude}",
-	"hasChild": $!{organisationUnit.hasChild()}
+  "hasChild": $!{organisationUnit.hasChild()},
+  "user": {
+		"uid": "$!organisationUnit.user.uid",
+		"name":"$!encoder.jsonEncode( ${organisationUnit.user.name} )"
+	}
   }
+   
 }
