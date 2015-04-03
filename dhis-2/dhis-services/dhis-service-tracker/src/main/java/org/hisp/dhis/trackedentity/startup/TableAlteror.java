@@ -316,7 +316,8 @@ public class TableAlteror
 
         updateProgramExpressionUid();
         
-        executeSql( "DROP TABLE programstage_programindicators" );
+        // TODO fix
+        // executeSql( "DROP TABLE programstage_programindicators" );
     }
 
     // -------------------------------------------------------------------------
