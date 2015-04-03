@@ -111,6 +111,29 @@ public class DataElementCategoryCombo
     {
         return name.equals( DEFAULT_CATEGORY_COMBO_NAME );
     }
+    
+    /**
+     * Indicates whether this category combo has at least one category, has at
+     * least one category option combo and that all categories have at least one
+     * category option.
+     */
+    public boolean isValid()
+    {
+        if ( categories == null || categories.isEmpty() || optionCombos == null || optionCombos.isEmpty() )
+        {
+            return false;
+        }
+        
+        for ( DataElementCategory category : categories )
+        {
+            if ( category == null || category.getCategoryOptions() == null || category.getCategoryOptions().isEmpty() )
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
 
     public List<DataElementCategoryOption> getCategoryOptions()
     {

@@ -214,6 +214,12 @@ public class DefaultResourceTableService
 
         for ( DataElementCategoryCombo combo : combos )
         {
+            if ( !combo.isValid() )
+            {
+                log.warn( "Ignoring category combo, not valid: " + combo );
+                continue;
+            }
+            
             for ( DataElementCategoryOptionCombo coc : combo.getSortedOptionCombos() )
             {
                 List<Object> values = new ArrayList<>();
