@@ -125,9 +125,14 @@ public class Section
         dataElements.clear();
     }
 
+    public boolean hasCategoryCombo()
+    {
+        return getCategoryCombo() != null;
+    }
+
     public DataElementCategoryCombo getCategoryCombo()
     {
-        return dataElements != null && !dataElements.isEmpty() ? dataElements.iterator().next().getCategoryCombo() : null;
+        return dataElements != null && !dataElements.isEmpty() ? dataElements.get( 0 ).getCategoryCombo() : null;
     }
 
     public boolean hasMultiDimensionalDataElement()
@@ -170,7 +175,7 @@ public class Section
     {
         return dataElements != null && !dataElements.isEmpty();
     }
-
+    
     @Override
     public boolean haveUniqueNames()
     {
