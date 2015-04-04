@@ -359,6 +359,19 @@ public class EventChart
         this.collapseDataDimensions = collapseDataDimensions;
     }
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isHideNaData()
+    {
+        return hideNaData;
+    }
+
+    public void setHideNaData( boolean hideNaData )
+    {
+        this.hideNaData = hideNaData;
+    }
+
     // -------------------------------------------------------------------------
     // Analytical properties
     // -------------------------------------------------------------------------
