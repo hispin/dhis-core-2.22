@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.events.trackedentity;
  */
 
 import com.google.common.collect.Lists;
+
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -57,7 +58,9 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -202,7 +205,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
         trackedEntityInstance.trimValuesToNull();
 
-        List<ImportConflict> importConflicts = new ArrayList<>();
+        Set<ImportConflict> importConflicts = new HashSet<>();
         importConflicts.addAll( checkTrackedEntity( trackedEntityInstance ) );
         importConflicts.addAll( checkAttributes( trackedEntityInstance ) );
 
@@ -240,7 +243,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
         trackedEntityInstance.trimValuesToNull();
 
-        List<ImportConflict> importConflicts = new ArrayList<>();
+        Set<ImportConflict> importConflicts = new HashSet<>();
         importConflicts.addAll( checkRelationships( trackedEntityInstance ) );
         importConflicts.addAll( checkAttributes( trackedEntityInstance ) );
 

@@ -407,7 +407,7 @@ public class DataValueSetServiceTest
         
         ImportSummary summary = dataValueSetService.saveDataValueSet( in );
         
-        assertEquals( 3, summary.getConflicts().size() );
+        assertEquals( 2, summary.getConflicts().size() );
         assertEquals( 1, summary.getImportCount().getImported() );
         assertEquals( 0, summary.getImportCount().getUpdated() );
         assertEquals( 0, summary.getImportCount().getDeleted() );
