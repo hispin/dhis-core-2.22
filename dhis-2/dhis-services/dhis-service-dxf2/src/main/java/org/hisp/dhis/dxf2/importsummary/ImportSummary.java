@@ -28,14 +28,15 @@ package org.hisp.dhis.dxf2.importsummary;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.hisp.dhis.common.DxfNamespaces;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import org.hisp.dhis.common.DxfNamespaces;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @JacksonXmlRootElement( localName = "importSummary", namespace = DxfNamespaces.DXF_2_0 )
 public class ImportSummary
@@ -46,7 +47,7 @@ public class ImportSummary
 
     private ImportCount importCount = new ImportCount();
 
-    private List<ImportConflict> conflicts = new ArrayList<>();
+    private Set<ImportConflict> conflicts = new HashSet<>();
 
     private String dataSetComplete;
 
@@ -121,12 +122,12 @@ public class ImportSummary
     @JsonProperty
     @JacksonXmlElementWrapper( localName = "conflicts", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "conflict", namespace = DxfNamespaces.DXF_2_0 )
-    public List<ImportConflict> getConflicts()
+    public Set<ImportConflict> getConflicts()
     {
         return conflicts;
     }
 
-    public void setConflicts( List<ImportConflict> conflicts )
+    public void setConflicts( Set<ImportConflict> conflicts )
     {
         this.conflicts = conflicts;
     }

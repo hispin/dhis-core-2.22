@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.events.enrollment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
@@ -68,8 +69,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -368,7 +371,7 @@ public abstract class AbstractEnrollmentService
             }
         }
 
-        List<ImportConflict> importConflicts = new ArrayList<>();
+        Set<ImportConflict> importConflicts = new HashSet<>();
         importConflicts.addAll( checkAttributes( enrollment ) );
 
         importSummary.setConflicts( importConflicts );
@@ -432,7 +435,7 @@ public abstract class AbstractEnrollmentService
             return importSummary;
         }
 
-        List<ImportConflict> importConflicts = new ArrayList<>();
+        Set<ImportConflict> importConflicts = new HashSet<>();
         importConflicts.addAll( checkAttributes( enrollment ) );
 
         importSummary.setConflicts( importConflicts );
