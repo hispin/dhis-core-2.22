@@ -14,10 +14,10 @@
   <name>DHIS Support Parent Project</name>
   
   <modules>
+    <module>dhis-support-external</module>
     <module>dhis-support-test</module>
     <module>dhis-support-hibernate</module>
     <module>dhis-support-system</module>
-    <module>dhis-support-external</module>
     <module>dhis-support-jdbc</module>
   </modules>
   <properties>
