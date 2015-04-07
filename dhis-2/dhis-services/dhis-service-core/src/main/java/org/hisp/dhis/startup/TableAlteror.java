@@ -417,6 +417,7 @@ public class TableAlteror
         executeSql( "update chart set hidesubtitle = false where hidesubtitle is null" );
         executeSql( "update chart set userorganisationunit = false where userorganisationunit is null" );
         executeSql( "update chart set hideemptyrows = false where hideemptyrows is null" );
+        executeSql( "update chart set aggregationtype = 'DEFAULT' where aggregationtype is null" );
         executeSql( "update indicator set annualized = false where annualized is null" );
         executeSql( "update indicatortype set indicatornumber = false where indicatornumber is null" );
         executeSql( "update dataset set mobile = false where mobile is null" );
@@ -472,7 +473,7 @@ public class TableAlteror
         executeSql( "update reporttable set sortorder = 0 where sortorder is null" );
         executeSql( "update reporttable set toplimit = 0 where toplimit is null" );
         executeSql( "update reporttable set showhierarchy = false where showhierarchy is null" );
-        executeSql( "update reporttable set aggregationtype = 'default' where aggregationtype is null" );
+        executeSql( "update reporttable set aggregationtype = 'DEFAULT' where aggregationtype is null" );
 
         // reporttable col/row totals = keep existing || copy from totals || true
         executeSql( "update reporttable set totals = true where totals is null" );

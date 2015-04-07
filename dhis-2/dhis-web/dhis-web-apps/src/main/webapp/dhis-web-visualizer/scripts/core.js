@@ -724,6 +724,13 @@ Ext.onReady( function() {
                 }
             };
 
+			conf.report = {
+				digitGroupSeparator: {
+					'comma': ',',
+					'space': ' '
+				}
+			};
+
             conf.url = {
                 analysisFields: [
                     '*',
@@ -1341,6 +1348,19 @@ Ext.onReady( function() {
 				}
 
 				return null;
+			};
+
+                // number
+			support.prototype.number = {};
+                        
+			support.prototype.number.prettyPrint = function(number, separator) {
+				separator = separator || 'space';
+
+				if (separator === 'none') {
+					return number;
+				}
+
+				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.report.digitGroupSeparator[separator]);
 			};
 
 				// str
@@ -2575,7 +2595,10 @@ Ext.onReady( function() {
                         fields: store.numericFields,
                         minimum: minimum < 0 ? minimum : 0,
                         label: {
-                            renderer: Ext.util.Format.numberRenderer(renderer),
+                            //renderer: Ext.util.Format.numberRenderer(renderer),
+                            renderer: function(v) {
+                                return support.prototype.number.prettyPrint(v);
+                            },
                             style: {},
                             rotate: {}
                         },
@@ -2867,7 +2890,8 @@ Ext.onReady( function() {
                             font: labelFont,
                             fill: labelColor,
                             renderer: function(n) {
-                                return n === '0.0' ? '' : n;
+                                n = n === '0.0' ? '' : n;
+                                return support.prototype.number.prettyPrint(n);
                             }
                         };
                     }
@@ -2957,7 +2981,7 @@ Ext.onReady( function() {
                         renderer: function(si, item) {
                             if (item.value) {
                                 var value = item.value[1] === '0.0' ? '-' : item.value[1];
-                                this.update('<div style="font-size:17px; font-weight:bold">' + value + '</div><div style="font-size:10px">' + si.data[conf.finals.data.domain] + '</div>');
+                                this.update('<div style="font-size:17px; font-weight:bold">' + support.prototype.number.prettyPrint(value) + '</div><div style="font-size:10px">' + si.data[conf.finals.data.domain] + '</div>');
                             }
                         }
                     };
