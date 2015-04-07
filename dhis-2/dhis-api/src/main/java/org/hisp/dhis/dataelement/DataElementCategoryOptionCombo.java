@@ -77,6 +77,11 @@ public class DataElementCategoryOptionCombo
      */
     @Scanned
     private Set<DataElementCategoryOption> categoryOptions = new HashSet<>();
+    
+    /**
+     * Indicates whether to ignore data approval.
+     */
+    private boolean ignoreApproval;
 
     // -------------------------------------------------------------------------
     // Transient properties
@@ -361,7 +366,7 @@ public class DataElementCategoryOptionCombo
     @Override
     public void setShortName( String shortName )
     {
-        // throw new UnsupportedOperationException( "Cannot set shortName on DataElementCategoryOptionCombo: " + shortName );
+        // Not supported
     }
 
     @JsonProperty
@@ -393,6 +398,18 @@ public class DataElementCategoryOptionCombo
         this.categoryOptions = categoryOptions;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isIgnoreApproval()
+    {
+        return ignoreApproval;
+    }
+
+    public void setIgnoreApproval( boolean ignoreApproval )
+    {
+        this.ignoreApproval = ignoreApproval;
+    }
+    
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
