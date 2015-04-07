@@ -71,6 +71,13 @@ public class UpdateCategoryOptionComboAction
         this.code = code;
     }
 
+    private boolean ignoreApproval;
+
+    public void setIgnoreApproval( boolean ignoreApproval )
+    {
+        this.ignoreApproval = ignoreApproval;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -81,6 +88,7 @@ public class UpdateCategoryOptionComboAction
         DataElementCategoryOptionCombo optionCombo = categoryService.getDataElementCategoryOptionCombo( id );
         
         optionCombo.setCode( StringUtils.trimToNull( code ) );
+        optionCombo.setIgnoreApproval( ignoreApproval );
 
         categoryService.updateDataElementCategoryOptionCombo( optionCombo );
 
