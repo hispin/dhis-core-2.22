@@ -200,7 +200,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 return;
             }       
             
-            $scope.queryUrl = 'query=' + $scope.searchText;            
+            $scope.queryUrl = 'query=LIKE:' + $scope.searchText;            
             $scope.attributes = EntityQueryFactory.resetAttributesQuery($scope.attributes, $scope.enrollment);
             $scope.searchingOrgUnit = $scope.selectedOrgUnit;
         }
