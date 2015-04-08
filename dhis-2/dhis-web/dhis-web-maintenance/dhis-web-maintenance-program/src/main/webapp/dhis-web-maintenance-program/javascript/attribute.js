@@ -82,19 +82,25 @@ function removeAttribute( context )
 
 function typeOnChange() {
 	var type = getFieldValue('valueType');
-	if( type=="optionSet"){
+
+	hideById("optionSetRow");
+	disable("optionSetId");
+	hideById("trackedEntityRow");
+	disable("trackedEntityId");
+
+	if( type == "optionSet" ) {
 		showById("optionSetRow");
 		enable("optionSetId");
 	}
-	else{
-		hideById("optionSetRow");
-		disable("optionSetId");
+	else if( type == "trackerAssociate" ) {
+		showById("trackedEntityRow");
+		enable("trackedEntityId");
 	}
-	
-	if( type=="number" || type=='string' || type=='letter' || type=='phoneNumber' ){
+
+	if( type == "number" || type == 'string' || type == 'letter' || type == 'phoneNumber' ) {
 		enable("unique");
 	}
-	else{
+	else {
 		disable("unique");
 	}
 }
@@ -119,4 +125,3 @@ function uniqueOnChange(){
 		jQuery('#valueType [value=optionSet]').show();
 	}
 }
-
