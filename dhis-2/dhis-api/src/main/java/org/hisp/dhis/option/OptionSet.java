@@ -30,8 +30,6 @@ package org.hisp.dhis.option;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -57,8 +55,6 @@ public class OptionSet
     extends BaseIdentifiableObject
     implements VersionedObject
 {
-    private static final Pattern OPTION_PATTERN = Pattern.compile( "\\[(.*)\\]" );
-
     @Scanned
     private List<Option> options = new ArrayList<>();
 
@@ -89,17 +85,6 @@ public class OptionSet
     public int increaseVersion()
     {
         return ++version;
-    }
-
-    public static String optionEncode( String option )
-    {
-        return option != null ? ("[" + option.replaceAll( " ", "_" ) + "]") : null;
-    }
-
-    public static String optionDecode( String option )
-    {
-        Matcher matcher = OPTION_PATTERN.matcher( option );
-        return matcher.find() && matcher.groupCount() > 0 ? matcher.group( 1 ).replaceAll( "_", " " ) : null;
     }
 
     public List<String> getOptionValues()
