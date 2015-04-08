@@ -78,6 +78,8 @@ public class TrackedEntityAttribute
 
     private OptionSet optionSet;
 
+    private TrackedEntity trackedEntity;
+
     private String expression;
 
     private Boolean displayOnVisitSchedule = false;
@@ -342,6 +344,20 @@ public class TrackedEntityAttribute
     public void setOptionSet( OptionSet optionSet )
     {
         this.optionSet = optionSet;
+    }
+
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public TrackedEntity getTrackedEntity()
+    {
+        return trackedEntity;
+    }
+
+    public void setTrackedEntity( TrackedEntity trackedEntity )
+    {
+        this.trackedEntity = trackedEntity;
     }
 
     @JsonProperty

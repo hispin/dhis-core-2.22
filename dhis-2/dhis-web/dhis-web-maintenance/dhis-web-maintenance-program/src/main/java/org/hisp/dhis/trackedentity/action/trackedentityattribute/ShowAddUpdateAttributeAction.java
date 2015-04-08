@@ -40,8 +40,10 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.system.util.AttributeUtils;
+import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
+import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -62,6 +64,9 @@ public class ShowAddUpdateAttributeAction
 
     @Autowired
     private TrackedEntityAttributeService trackedEntityAttributeService;
+
+    @Autowired
+    private TrackedEntityService trackedEntityService;
 
     @Autowired
     private ProgramService programService;
@@ -138,6 +143,13 @@ public class ShowAddUpdateAttributeAction
         return attributeValues;
     }
 
+    private List<TrackedEntity> trackedEntities;
+
+    public List<TrackedEntity> getTrackedEntities()
+    {
+        return trackedEntities;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -160,9 +172,11 @@ public class ShowAddUpdateAttributeAction
         optionSets = new ArrayList<>( optionService.getAllOptionSets() );
         legendSets = legendService.getAllLegendSets();
         attributes = new ArrayList<>( attributeService.getTrackedEntityAttributeAttributes() );
+        trackedEntities = new ArrayList<>( trackedEntityService.getAllTrackedEntity() );
 
         Collections.sort( optionSets );
         Collections.sort( legendSets );
+        Collections.sort( trackedEntities );
 
         return SUCCESS;
     }

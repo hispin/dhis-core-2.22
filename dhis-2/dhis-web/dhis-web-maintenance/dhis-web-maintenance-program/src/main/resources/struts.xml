@@ -368,7 +368,7 @@
       <param name="page">/dhis-web-maintenance-program/programStageList.vm</param>
       <param name="javascripts">javascript/programStage.js</param>
     </action>
-    
+
     <action name="sortProgramStagesForm"
       class="org.hisp.dhis.trackedentity.action.program.GetProgramAction">
       <result name="success" type="velocity">/main.vm</result>
@@ -377,7 +377,7 @@
       <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAMSTAGE_ADD</param>
     </action>
-    
+
     <action name="sortProgramStages"
       class="org.hisp.dhis.trackedentity.action.programstage.SortProgramStagesAction">
       <result name="success" type="redirect">programStage.action?id=${id}</result>
@@ -814,8 +814,8 @@
       </result>
       <param name="onExceptionReturn">plainTextError</param>
     </action>
-    
-     <action name="getOptions"
+
+    <action name="getOptions"
       class="org.hisp.dhis.trackedentity.action.caseaggregation.GetOptionsAction">
       <result name="success" type="velocity-json">
         /dhis-web-maintenance-program/jsonOptions.vm
@@ -959,9 +959,10 @@
     <action name="getProgramExpressionDescription"
       class="org.hisp.dhis.trackedentity.action.validation.GetProgramExpressionDescriptionAction">
       <result name="success" type="velocity">
-         /dhis-web-commons/ajax/jsonResponseSuccess.vm
-      </result>  <result name="error" type="velocity">
-         /dhis-web-commons/ajax/jsonResponseError.vm
+        /dhis-web-commons/ajax/jsonResponseSuccess.vm
+      </result>
+      <result name="error" type="velocity">
+        /dhis-web-commons/ajax/jsonResponseError.vm
       </result>
       <param name="onExceptionReturn">plainTextError</param>
     </action>
@@ -1075,7 +1076,8 @@
       class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorDescriptionAction">
       <result name="success" type="velocity-json">
         /dhis-web-commons/ajax/jsonResponseSuccess.vm
-      </result> <result name="error" type="velocity-json">
+      </result>
+      <result name="error" type="velocity-json">
         /dhis-web-commons/ajax/jsonResponseError.vm
       </result>
     </action>
