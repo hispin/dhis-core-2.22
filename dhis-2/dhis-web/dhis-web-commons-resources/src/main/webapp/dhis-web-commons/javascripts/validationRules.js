@@ -338,9 +338,6 @@ var validationRules = {
             "required" : true,
             "rangelength" : [ 2, 160 ]
         },
-        "description" : {
-            "rangelength" : [ 2, 160 ]
-        },
         "importance" : {
             "required" : true
         },
@@ -389,9 +386,6 @@ var validationRules = {
         "name" : {
             "required" : true,
             "rangelength" : [ 2, 160 ]
-        },
-        "description" : {
-            "rangelength" : [ 2, 160 ]
         }
     },
     "constant" : {
@@ -425,20 +419,12 @@ var validationRules = {
         "shortName" : {
             "required" : true,
             "rangelength" : [ 2, 50 ]
-        },
-        "description" : {
-            "required" : true,
-            "minlength" : 2
         }
     },
     "trackedEntityAttributeGroup" : {
         "name" : {
             "required" : true,
             "rangelength" : [ 2,160 ]
-        },
-        "description" : {
-            "required" : true,
-            "rangelength" : [ 2, 255 ]
         },
         "attributeList" : {
             "required" : true
@@ -462,20 +448,12 @@ var validationRules = {
         "name" : {
             "required" : true,
             "rangelength" : [ 2,160 ]
-        },
-        "description" : {
-            "required" : true,
-            "minlength" : 2
         }
     },
     "program" : {
         "name" : {
             "required" : true,
             "rangelength" : [ 2,160 ]
-        },
-        "description" : {
-            "required" : true,
-            "minlength" : 2
         },
         "trackedEntityId" : {
             "required" : true
