@@ -739,7 +739,7 @@ Ext.onReady( function() {
 					return number;
 				}
 
-				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.reporet.digitGroupSeparator[separator]);
+				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.report.digitGroupSeparator[separator]);
 			};
 
 			// color
