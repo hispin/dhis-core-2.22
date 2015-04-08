@@ -103,16 +103,6 @@ public class OptionServiceTest
     }
 
     @Test
-    public void testCodec()
-    {
-        String decoded = "Malaria Severe Under 5";
-        String encoded = "[Malaria_Severe_Under_5]";
-
-        assertEquals( encoded, OptionSet.optionEncode( decoded ) );
-        assertEquals( decoded, OptionSet.optionDecode( encoded ) );
-    }
-
-    @Test
     public void testGetList()
     {
         int idA = optionService.saveOptionSet( optionSetA );
