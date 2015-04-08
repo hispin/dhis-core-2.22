@@ -75,7 +75,7 @@ public class QuarterlyPeriodType
     {
         DateTimeUnit start = new DateTimeUnit( dateTimeUnit );
 
-        start.setMonth( ((dateTimeUnit.getMonth() - 1) - ((dateTimeUnit.getMonth() - 1) % 3)) + 1 );
+        start.setMonth( ( ( dateTimeUnit.getMonth() - 1 ) - ( ( dateTimeUnit.getMonth() - 1 ) % 3 ) ) + 1 );
         start.setDay( 1 );
 
         DateTimeUnit end = new DateTimeUnit( start );
@@ -144,8 +144,8 @@ public class QuarterlyPeriodType
     @Override
     public List<Period> generateRollingPeriods( Date date )
     {
-        // get current quarter start date
         date = createPeriod( date ).getStartDate();
+        
         return generateRollingPeriods( createLocalDateUnitInstance( date ) );
     }
 

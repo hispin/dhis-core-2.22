@@ -12,9 +12,13 @@
       <generator class="native" />
     </id>
     
+    <property name="thisMonth" />
     <property name="lastMonth" />
+    <property name="thisBimonth" />
     <property name="lastBimonth" />
+    <property name="thisQuarter" />
     <property name="lastQuarter" />
+    <property name="thisSixMonth" />
     <property name="lastSixMonth" />
     <property name="monthsThisYear" />
     <property name="quartersThisYear" />
@@ -34,6 +38,8 @@
     <property name="thisFinancialYear" />
     <property name="lastFinancialYear" />
     <property name="last5FinancialYears" />
+    
+    <property name="thisWeek" />
     <property name="lastWeek" />
     <property name="last4Weeks" />
     <property name="last12Weeks" />

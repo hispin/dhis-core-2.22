@@ -138,7 +138,9 @@ public abstract class CalendarPeriodType
 
     public List<Period> generateRollingPeriods( Date date )
     {
-        return generateRollingPeriods( createLocalDateUnitInstance( date ) );
+        DateTimeUnit dateTime = createLocalDateUnitInstance( date );
+        
+        return generateRollingPeriods( dateTime );
     }
 
     public abstract List<Period> generateRollingPeriods( DateTimeUnit dateTimeUnit );

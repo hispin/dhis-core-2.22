@@ -138,7 +138,7 @@ public class BiMonthlyPeriodType
         Calendar cal = getCalendar();
 
         dateTimeUnit.setDay( 1 );
-        dateTimeUnit = cal.minusMonths( dateTimeUnit, (dateTimeUnit.getMonth() % 2) + 10 );
+        dateTimeUnit = cal.minusMonths( dateTimeUnit, ( dateTimeUnit.getMonth() % 2 ) + 10 );
 
         List<Period> periods = Lists.newArrayList();
 
@@ -154,7 +154,7 @@ public class BiMonthlyPeriodType
     @Override
     public String getIsoDate( DateTimeUnit dateTimeUnit )
     {
-        return String.format( "%d%02dB", dateTimeUnit.getYear(), (dateTimeUnit.getMonth() + 1) / 2 );
+        return String.format( "%d%02dB", dateTimeUnit.getYear(), ( dateTimeUnit.getMonth() + 1 ) / 2 );
     }
 
     @Override
