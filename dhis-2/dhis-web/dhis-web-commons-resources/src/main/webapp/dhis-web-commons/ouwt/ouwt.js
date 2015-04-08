@@ -745,7 +745,7 @@ function Subtree() {
     };
 
     var expandTreeAtOrgUnit = function( ou, select ) {
-        select = select || false;
+      select = select || false;
 
       if( organisationUnits[ou] == null ) {
           subtree.ajaxGetLeaf(ou).done(function( data ) {
@@ -851,6 +851,7 @@ function Subtree() {
             var def = $.Deferred();
 
             subtree.ajaxGetChildren( parentId ).done(function( data ) {
+                $('#orgUnitTree').trigger('dhis2.ouwt.childrenLoaded', parentId);
                 def.resolveWith( window, [ data ] );
             });
 
