@@ -171,6 +171,7 @@ trackerCapture.controller('RelationshipController',
 .controller('AddRelationshipController', 
     function($scope, 
             $rootScope,
+            $timeout,
             CurrentSelection,
             OperatorFactory,
             AttributesFactory,
@@ -194,7 +195,6 @@ trackerCapture.controller('RelationshipController',
     $scope.programs = selections.prs;
 
     $scope.relationshipSources = ['search_from_existing','register_new'];
-    $scope.selectedRelationshipSource = {};
     $scope.selectedRelationship = {};
     $scope.relationship = {};
     
@@ -246,7 +246,26 @@ trackerCapture.controller('RelationshipController',
         $scope.attributes = atts;
         $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
         $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
+        
+        resetFields();    
+        $scope.search($scope.searchMode.listAll);
     });
+    
+    function resetFields(){
+        $scope.teiForRelationship = null;
+        $scope.teiFetched = false;    
+        $scope.emptySearchText = false;
+        $scope.emptySearchAttribute = false;
+        $scope.showAdvancedSearchDiv = false;
+        $scope.showRegistrationDiv = false;  
+        $scope.showTrackedEntityDiv = false;
+        $scope.trackedEntityList = null; 
+        $scope.teiCount = null;
+
+        $scope.queryUrl = null;
+        $scope.programUrl = null;
+        $scope.attributeUrl = {url: null, hasValue: false};
+    }
     
     //set attributes as per selected program
     $scope.setAttributesForSearch = function(program){
@@ -272,13 +291,10 @@ trackerCapture.controller('RelationshipController',
     $scope.selectedOuMode = $scope.ouModes[0];
     
     //Paging
-    $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};   
-    
-    //EntityList
-    $scope.showTrackedEntityDiv = false;
+    $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5}; 
     
     //Searching
-    $scope.showSearchDiv = false;
+    $scope.showAdvancedSearchDiv = false;
     $scope.searchText = {value: null};
     $scope.emptySearchText = false;
     $scope.searchFilterExists = false;   
@@ -294,33 +310,8 @@ trackerCapture.controller('RelationshipController',
     $scope.$on('relationship', function() { 
         var relationshipInfo = CurrentSelection.getRelationshipInfo();
         $scope.teiForRelationship = relationshipInfo.tei;
-    });
+    });    
 
-    var resetFields = function(){
-        $scope.teiForRelationship = null;
-        $scope.teiFetched = false;    
-        $scope.emptySearchText = false;
-        $scope.emptySearchAttribute = false;
-        $scope.showSearchDiv = false;
-        $scope.showRegistrationDiv = false;  
-        $scope.showTrackedEntityDiv = false;
-        $scope.trackedEntityList = null; 
-        $scope.teiCount = null;
-
-        $scope.queryUrl = null;
-        $scope.programUrl = null;
-        $scope.attributeUrl = {url: null, hasValue: false};
-    };
-    
-    $scope.getRelative = function(){
-        
-        resetFields();
-        
-        if($scope.selectedRelationshipSource.value === $scope.relationshipSources[0]){
-            $scope.search($scope.searchMode.listAll);
-        }
-    };
-    
     $scope.search = function(mode){ 
         
         resetFields();
@@ -340,8 +331,8 @@ trackerCapture.controller('RelationshipController',
                 $scope.teiCount = null;
                 return;
             }       
- 
-            $scope.queryUrl = 'query=' + $scope.searchText.value;                     
+
+            $scope.queryUrl = 'query=LIKE:' + $scope.searchText.value;                     
         }
         
         if( $scope.selectedSearchMode === $scope.searchMode.attributeBased ){            
@@ -356,10 +347,10 @@ trackerCapture.controller('RelationshipController',
             }
         }
         
-        $scope.doSearch();
+        $scope.fetchTei();
     };
     
-    $scope.doSearch = function(){
+    $scope.fetchTei = function(){
 
         //get events for the specified parameters
         TEIService.search($scope.selectedOrgUnit.id, 
@@ -443,12 +434,33 @@ trackerCapture.controller('RelationshipController',
     
     $scope.showHideSearch = function(simpleSearch){
         if(simpleSearch){
-            $scope.showSearchDiv = false;
+            $scope.showAdvancedSearchDiv = false;
         }
         else{
-            $scope.showSearchDiv = !$scope.showSearchDiv;
+            $scope.showAdvancedSearchDiv = !$scope.showAdvancedSearchDiv;
+        }
+        
+        if($scope.showAdvancedSearchDiv){
+            $scope.showTrackedEntityDiv = false;
+        }
+        else{
+            $scope.showTrackedEntityDiv = true;
+        }
+    };
+    
+    $scope.showRegistration = function(){
+        $scope.showRegistrationDiv = !$scope.showRegistrationDiv;
+        
+        if($scope.showRegistrationDiv){
+            $scope.showTrackedEntityDiv = false;
+            /*$timeout(function() { 
+                $rootScope.$broadcast('registrationWidget', {registrationMode: 'RELATIONSHIP'});
+            }, 100);*/
+        }
+        else{
+            $scope.showTrackedEntityDiv = true;            
         }        
-    };    
+    };
     
     $scope.close = function () {
         $modalInstance.close($scope.selectedTei.relationships ? $scope.selectedTei.relationships : []);
@@ -648,10 +660,6 @@ trackerCapture.controller('RelationshipController',
         });
     };
     
-    $scope.resetRelationshipSource = function(){       
-        $scope.selectedRelationshipSource.value = '';   
-    };
-    
     $scope.broadCastSelections = function(){
         if($scope.tei){
             angular.forEach($scope.tei.attributes, function(att){
@@ -661,7 +669,7 @@ trackerCapture.controller('RelationshipController',
             $scope.tei.orgUnitName = $scope.selectedOrgUnit.name;
             $scope.tei.created = DateUtils.formatFromApiToUser(new Date());
             
-            CurrentSelection.setRelationshipInfo({tei: $scope.tei, src: $scope.selectedRelationshipSource});
+            CurrentSelection.setRelationshipInfo({tei: $scope.tei});
             
             $timeout(function() { 
                 $rootScope.$broadcast('relationship', {});

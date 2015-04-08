@@ -59,23 +59,35 @@
                 </table>
             </div>
             <div class='relationship-container' ng-show="!teiForRelationship">
-                <select ng-model="selectedRelationshipSource.value"
-                        class="form-control"
-                        ng-change='getRelative()'
-                        ng-options="relationshipSource | translate for relationshipSource in relationshipSources">
-                    <option value="">{{'please_select_source'| translate}}</option>
-                </select>
-                <div class="input-group vertical-spacing" ng-if="selectedRelationshipSource.value === 'search_from_existing'">
-                    <input type="text" placeholder="{{'type_your_search_criteria_here'| translate}}" ng-model="searchText.value" d2-enter="search(searchMode.freeText)" class="form-control expanded" ng-class="{true: 'invalid - input'} [!searchText && emptySearchText]" ng-focus="showHideSearch(true)">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default without-border-radius trim" type="button" title="{{'advanced_search'| translate}}" ng-click="showHideSearch(false)"><i class="fa fa-caret-down"></i></button>
-                        <button class="btn btn-primary trim" type="button" title="{{'search'| translate}}" ng-click="search(searchMode.freeText)"><i class="fa fa-search"></i></button>                            
-                    </div>                
+
+                <div class="row">
+                    
+                    <div class="col-sm-4 vertical-spacing">
+                        <select ng-model="selectedProgramForRelative"
+                                class="form-control"
+                                ng-disabled="programs.length < 1 || (selectedProgramForRelative && selectedProgram.relatedProgram && relatedProgramRelationship)"
+                                ng-options="program as program.name for program in programs | orderBy: 'name'">
+                            <option value="">{{'please_select_a_program'| translate}}</option>
+                        </select>                
+                    </div>
+
+                    <div class="input-group col-sm-8 vertical-spacing">
+                        <input type="text" placeholder="{{'type_your_search_criteria_here'| translate}}" ng-model="searchText.value" d2-enter="search(searchMode.freeText)" class="form-control expanded" ng-class="{true: 'invalid - input'} [!searchText && emptySearchText]" ng-focus="showHideSearch(true)">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default without-border-radius trim" type="button" title="{{'advanced_search'| translate}}" ng-click="showHideSearch(false)"><i class="fa fa-caret-down"></i></button>
+                            <button class="btn btn-primary without-border-radius trim" type="button" title="{{'search'| translate}}" ng-click="search(searchMode.freeText)"><i class="fa fa-search"></i></button>                            
+                            <button class="btn btn-info without-border-radius trim" type="button" title="{{'list_all'| translate}}" ng-disabled="showRegistrationDiv" ng-click="search(searchMode.listAll)"><i class="fa fa-list"></i></button>
+                            <button class="btn btn-success trim" type="button" title="{{'register'| translate}}" ng-click="showRegistration()"><i class="fa fa-user-plus"></i></button>                            
+                        </div>                
+                    </div>
+                    
                 </div>
-                <div ng-if="showSearchDiv && selectedRelationshipSource.value === 'search_from_existing'">
+
+                <div ng-if="showAdvancedSearchDiv">
                     <div ng-include="'components/relationship/search.html'"></div>     
                     <span>&nbsp;</span>
                 </div>
+
                 <!-- entity grid begins -->
                 <div class="row" ng-if="showTrackedEntityDiv">
                     <img class="col-md-12" src="../images/ajax-loader-bar.gif" ng-if="!teiFetched"/>
@@ -91,7 +103,7 @@
                 </div>
                 <!--- Error display for search ends -->
 
-                <div ng-show="selectedRelationshipSource.value === 'register_new'">
+                <div ng-show="showRegistrationDiv">
                     <div ng-include="'components/relationship/registration.html'"></div>
                     <span>&nbsp;</span>
                 </div>
