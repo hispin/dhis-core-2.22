@@ -207,12 +207,12 @@ public abstract class AbstractRelativePeriodsAction
     
     protected RelativePeriods getRelativePeriods()
     {
-        RelativePeriods relatives = new RelativePeriods( reportingMonth, reportingBimonth, reportingQuarter, lastSixMonth,
+        RelativePeriods relatives = new RelativePeriods( false, reportingMonth, false, reportingBimonth, false, reportingQuarter, false, lastSixMonth,
             monthsThisYear, quartersThisYear, thisYear, 
             monthsLastYear, quartersLastYear, lastYear, 
             last5Years, last12Months, last6Months, last3Months, last6BiMonths, last4Quarters, last2SixMonths,
             thisFinancialYear, lastFinancialYear, last5FinancialYears, 
-            lastWeek, last4Weeks, last12Weeks, last52Weeks );
+            false, lastWeek, last4Weeks, last12Weeks, last52Weeks );
         
         return relatives;
     }

@@ -149,12 +149,20 @@ public class RelativePeriods
 
     private int id;
     
+    private boolean thisMonth = false;
+    
     private boolean lastMonth = false;
 
+    private boolean thisBimonth = false;
+    
     private boolean lastBimonth = false;
 
+    private boolean thisQuarter = false;
+    
     private boolean lastQuarter = false;
 
+    private boolean thisSixMonth = false;
+    
     private boolean lastSixMonth = false;
 
     private boolean monthsThisYear = false;
@@ -189,6 +197,8 @@ public class RelativePeriods
     
     private boolean last5FinancialYears = false;
     
+    private boolean thisWeek = false;
+    
     private boolean lastWeek = false;
     
     private boolean last4Weeks = false;
@@ -206,9 +216,13 @@ public class RelativePeriods
     }
 
     /**
+     * @param thisMonth             this month
      * @param lastMonth             last month
+     * @param thisBimonth           this bi-month
      * @param lastBimonth           last bi-month
+     * @param thisQuarter           this quarter
      * @param lastQuarter           last quarter
+     * @param thisSixMonth          this six month
      * @param lastSixMonth          last six month
      * @param monthsThisYear        months this year
      * @param quartersThisYear      quarters this year
@@ -225,21 +239,27 @@ public class RelativePeriods
      * @param thisFinancialYear     this financial year
      * @param lastFinancialYear     last financial year
      * @param last5FinancialYears   last 5 financial years
+     * @param thisWeek              this week
      * @param lastWeek              last week
      * @param last4Weeks            last 4 weeks
      * @param last12Weeks           last 12 weeks
      * @param last52Weeks           last 52 weeks
      */
-    public RelativePeriods( boolean lastMonth, boolean lastBimonth, boolean lastQuarter, boolean lastSixMonth,
+    public RelativePeriods( boolean thisMonth, boolean lastMonth, boolean thisBimonth, boolean lastBimonth, 
+                            boolean thisQuarter, boolean lastQuarter, boolean thisSixMonth, boolean lastSixMonth,
                             boolean monthsThisYear, boolean quartersThisYear, boolean thisYear,
                             boolean monthsLastYear, boolean quartersLastYear, boolean lastYear, boolean last5Years,
                             boolean last12Months, boolean last6Months, boolean last3Months, boolean last6BiMonths, boolean last4Quarters, boolean last2SixMonths,
                             boolean thisFinancialYear, boolean lastFinancialYear, boolean last5FinancialYears, 
-                            boolean lastWeek, boolean last4Weeks, boolean last12Weeks, boolean last52Weeks )
+                            boolean thisWeek, boolean lastWeek, boolean last4Weeks, boolean last12Weeks, boolean last52Weeks )
     {
+        this.thisMonth = thisMonth;
         this.lastMonth = lastMonth;
+        this.thisBimonth = thisBimonth;
         this.lastBimonth = lastBimonth;
+        this.thisQuarter = thisQuarter;
         this.lastQuarter = lastQuarter;
+        this.thisSixMonth = thisSixMonth;
         this.lastSixMonth = lastSixMonth;
         this.monthsThisYear = monthsThisYear;
         this.quartersThisYear = quartersThisYear;
@@ -257,6 +277,7 @@ public class RelativePeriods
         this.thisFinancialYear = thisFinancialYear;
         this.lastFinancialYear = lastFinancialYear;
         this.last5FinancialYears = last5FinancialYears;
+        this.thisWeek = thisWeek;
         this.lastWeek = lastWeek;
         this.last4Weeks = last4Weeks;
         this.last12Weeks = last12Weeks;
@@ -272,9 +293,13 @@ public class RelativePeriods
      */
     public RelativePeriods clear()
     {
+        this.thisMonth = false;
         this.lastMonth = false;
+        this.thisBimonth = false;
         this.lastBimonth = false;
+        this.thisQuarter = false;
         this.lastQuarter = false;
+        this.thisSixMonth = false;
         this.lastSixMonth = false;
         this.monthsThisYear = false;
         this.quartersThisYear = false;
@@ -292,6 +317,7 @@ public class RelativePeriods
         this.thisFinancialYear = false;
         this.lastFinancialYear = false;
         this.last5FinancialYears = false;
+        this.thisWeek = false;
         this.lastWeek = false;
         this.last4Weeks = false;
         this.last12Weeks = false;
@@ -315,27 +341,27 @@ public class RelativePeriods
      */
     public PeriodType getPeriodType()
     {
-        if ( isLastWeek() || isLast4Weeks() || isLast12Weeks() || isLast52Weeks() )
+        if ( isThisWeek() || isLastWeek() || isLast4Weeks() || isLast12Weeks() || isLast52Weeks() )
         {
             return PeriodType.getPeriodTypeByName( WeeklyPeriodType.NAME );
         }
         
-        if ( isLastMonth() || isLast12Months() || isLast6Months() || isLast3Months() )
+        if ( isThisMonth() || isLastMonth() || isLast12Months() || isLast6Months() || isLast3Months() )
         {
             return PeriodType.getPeriodTypeByName( MonthlyPeriodType.NAME );
         }
 
-        if ( isLastBimonth() || isLast6BiMonths() )
+        if ( isThisBimonth() || isLastBimonth() || isLast6BiMonths() )
         {
             return PeriodType.getPeriodTypeByName( BiMonthlyPeriodType.NAME );
         }
 
-        if ( isLastQuarter() || isLast4Quarters() )
+        if ( isThisQuarter() || isLastQuarter() || isLast4Quarters() )
         {
             return PeriodType.getPeriodTypeByName( QuarterlyPeriodType.NAME );
         }
 
-        if ( isLastSixMonth() || isLast2SixMonths() )
+        if ( isThisSixMonth() || isLastSixMonth() || isLast2SixMonths() )
         {
             return PeriodType.getPeriodTypeByName( SixMonthlyPeriodType.NAME );
         }
@@ -458,24 +484,44 @@ public class RelativePeriods
         
         List<Period> periods = new ArrayList<>();
 
-        if ( isLastMonth() )
+        if ( isThisMonth() )
         {
             periods.add( getRelativePeriod( new MonthlyPeriodType(), LAST_MONTH, date, dynamicNames, format ) );
         }
 
-        if ( isLastBimonth() )
+        if ( isLastMonth() )
+        {
+            periods.add( getRelativePeriod( new MonthlyPeriodType(), LAST_MONTH, new DateTime( date ).minusMonths( 1 ).toDate(), dynamicNames, format ) );
+        }
+
+        if ( isThisBimonth() )
         {
             periods.add( getRelativePeriod( new BiMonthlyPeriodType(), LAST_BIMONTH, date, dynamicNames, format ) );
         }
 
-        if ( isLastQuarter() )
+        if ( isLastBimonth() )
+        {
+            periods.add( getRelativePeriod( new BiMonthlyPeriodType(), LAST_BIMONTH, new DateTime( date ).minusMonths( 2 ).toDate(), dynamicNames, format ) );
+        }
+
+        if ( isThisQuarter() )
         {
             periods.add( getRelativePeriod( new QuarterlyPeriodType(), LAST_QUARTER, date, dynamicNames, format ) );
         }
 
-        if ( isLastSixMonth() )
+        if ( isLastQuarter() )
+        {
+            periods.add( getRelativePeriod( new QuarterlyPeriodType(), LAST_QUARTER, new DateTime( date ).minusMonths( 3 ).toDate(), dynamicNames, format ) );
+        }
+
+        if ( isThisSixMonth() )
         {
             periods.add( getRelativePeriod( new SixMonthlyPeriodType(), LAST_SIXMONTH, date, dynamicNames, format ) );
+        }
+
+        if ( isLastSixMonth() )
+        {
+            periods.add( getRelativePeriod( new SixMonthlyPeriodType(), LAST_SIXMONTH, new DateTime( date ).minusMonths( 6 ).toDate(), dynamicNames, format ) );
         }
 
         if ( isMonthsThisYear() )
@@ -538,6 +584,11 @@ public class RelativePeriods
             periods.addAll( getRollingRelativePeriodList( new FinancialOctoberPeriodType(), LAST_5_FINANCIAL_YEARS, date, dynamicNames, format ) );
         }
 
+        if ( isThisWeek() )
+        {
+            periods.add( getRelativePeriod( new WeeklyPeriodType(), LAST_WEEK, new DateTime( date ).minusWeeks( 1 ).toDate(), dynamicNames, format ) );
+        }
+        
         if ( isLastWeek() )
         {
             periods.add( getRelativePeriod( new WeeklyPeriodType(), LAST_WEEK, date, dynamicNames, format ) );
@@ -705,10 +756,14 @@ public class RelativePeriods
     public static List<Period> getRelativePeriodsFromEnum( RelativePeriodEnum relativePeriod, Date date, I18nFormat format, boolean dynamicNames )
     {
         Map<RelativePeriodEnum, RelativePeriods> map = new HashMap<>();
-        
+
+        map.put( RelativePeriodEnum.THIS_MONTH, new RelativePeriods().setThisMonth( true ) );
         map.put( RelativePeriodEnum.LAST_MONTH, new RelativePeriods().setLastMonth( true ) );
+        map.put( RelativePeriodEnum.THIS_BIMONTH, new RelativePeriods().setThisBimonth( true ) );
         map.put( RelativePeriodEnum.LAST_BIMONTH, new RelativePeriods().setLastBimonth( true ) );
+        map.put( RelativePeriodEnum.THIS_QUARTER, new RelativePeriods().setThisQuarter( true ) );
         map.put( RelativePeriodEnum.LAST_QUARTER, new RelativePeriods().setLastQuarter( true ) );
+        map.put( RelativePeriodEnum.THIS_SIX_MONTH, new RelativePeriods().setThisSixMonth( true ) );
         map.put( RelativePeriodEnum.LAST_SIX_MONTH, new RelativePeriods().setLastSixMonth( true ) );
         map.put( RelativePeriodEnum.MONTHS_THIS_YEAR, new RelativePeriods().setMonthsThisYear( true ) );
         map.put( RelativePeriodEnum.QUARTERS_THIS_YEAR, new RelativePeriods().setQuartersThisYear( true ) );
@@ -726,6 +781,7 @@ public class RelativePeriods
         map.put( RelativePeriodEnum.THIS_FINANCIAL_YEAR, new RelativePeriods().setThisFinancialYear( true ) );
         map.put( RelativePeriodEnum.LAST_FINANCIAL_YEAR, new RelativePeriods().setLastFinancialYear( true ) );
         map.put( RelativePeriodEnum.LAST_5_FINANCIAL_YEARS, new RelativePeriods().setLast5FinancialYears( true ) );
+        map.put( RelativePeriodEnum.THIS_WEEK, new RelativePeriods().setThisWeek( true ) );
         map.put( RelativePeriodEnum.LAST_WEEK, new RelativePeriods().setLastWeek( true ) );
         map.put( RelativePeriodEnum.LAST_4_WEEKS, new RelativePeriods().setLast4Weeks( true ) );
         map.put( RelativePeriodEnum.LAST_12_WEEKS, new RelativePeriods().setLast12Weeks( true ) );
@@ -742,10 +798,14 @@ public class RelativePeriods
     public List<RelativePeriodEnum> getRelativePeriodEnums()
     {
         List<RelativePeriodEnum> list = new ArrayList<>();
-        
+
+        add( list, RelativePeriodEnum.THIS_MONTH, thisMonth );
         add( list, RelativePeriodEnum.LAST_MONTH, lastMonth );
+        add( list, RelativePeriodEnum.THIS_BIMONTH, thisBimonth );
         add( list, RelativePeriodEnum.LAST_BIMONTH, lastBimonth );
+        add( list, RelativePeriodEnum.THIS_QUARTER, thisQuarter );
         add( list, RelativePeriodEnum.LAST_QUARTER, lastQuarter );
+        add( list, RelativePeriodEnum.THIS_SIX_MONTH, thisSixMonth );
         add( list, RelativePeriodEnum.LAST_SIX_MONTH, lastSixMonth );
         add( list, RelativePeriodEnum.MONTHS_THIS_YEAR, monthsThisYear );
         add( list, RelativePeriodEnum.QUARTERS_THIS_YEAR, quartersThisYear );
@@ -763,6 +823,7 @@ public class RelativePeriods
         add( list, RelativePeriodEnum.THIS_FINANCIAL_YEAR, thisFinancialYear );
         add( list, RelativePeriodEnum.LAST_FINANCIAL_YEAR, lastFinancialYear );
         add( list, RelativePeriodEnum.LAST_5_FINANCIAL_YEARS, last5FinancialYears );
+        add( list, RelativePeriodEnum.THIS_WEEK, thisWeek );
         add( list, RelativePeriodEnum.LAST_WEEK, lastWeek );
         add( list, RelativePeriodEnum.LAST_4_WEEKS, last4Weeks );
         add( list, RelativePeriodEnum.LAST_12_WEEKS, last12Weeks );
@@ -775,9 +836,13 @@ public class RelativePeriods
     {
         if ( relativePeriods != null )
         {
+            thisMonth = relativePeriods.contains( RelativePeriodEnum.THIS_MONTH );
             lastMonth = relativePeriods.contains( RelativePeriodEnum.LAST_MONTH );
+            thisBimonth = relativePeriods.contains( RelativePeriodEnum.THIS_BIMONTH );
             lastBimonth = relativePeriods.contains( RelativePeriodEnum.LAST_BIMONTH );
+            thisQuarter = relativePeriods.contains( RelativePeriodEnum.THIS_QUARTER );
             lastQuarter = relativePeriods.contains( RelativePeriodEnum.LAST_QUARTER );
+            thisSixMonth = relativePeriods.contains( RelativePeriodEnum.THIS_SIX_MONTH );
             lastSixMonth = relativePeriods.contains( RelativePeriodEnum.LAST_SIX_MONTH );
             monthsThisYear = relativePeriods.contains( RelativePeriodEnum.MONTHS_THIS_YEAR );
             quartersThisYear = relativePeriods.contains( RelativePeriodEnum.QUARTERS_THIS_YEAR );
@@ -795,6 +860,7 @@ public class RelativePeriods
             thisFinancialYear = relativePeriods.contains( RelativePeriodEnum.THIS_FINANCIAL_YEAR );
             lastFinancialYear = relativePeriods.contains( RelativePeriodEnum.LAST_FINANCIAL_YEAR );
             last5FinancialYears = relativePeriods.contains( RelativePeriodEnum.LAST_5_FINANCIAL_YEARS );
+            thisWeek = relativePeriods.contains( RelativePeriodEnum.THIS_WEEK );
             lastWeek = relativePeriods.contains( RelativePeriodEnum.LAST_WEEK );
             last4Weeks = relativePeriods.contains( RelativePeriodEnum.LAST_4_WEEKS );
             last12Weeks = relativePeriods.contains( RelativePeriodEnum.LAST_12_WEEKS );
@@ -826,7 +892,20 @@ public class RelativePeriods
         this.id = id;
     }
 
-    @JsonProperty( value = "lastMonth" )
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    public boolean isThisMonth()
+    {
+        return thisMonth;
+    }
+
+    public RelativePeriods setThisMonth( boolean thisMonth )
+    {
+        this.thisMonth = thisMonth;
+        return this;
+    }
+
+    @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
     public boolean isLastMonth()
     {
@@ -839,7 +918,20 @@ public class RelativePeriods
         return this;
     }
 
-    @JsonProperty( value = "lastBimonth" )
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    public boolean isThisBimonth()
+    {
+        return thisBimonth;
+    }
+
+    public RelativePeriods setThisBimonth( boolean thisBimonth )
+    {
+        this.thisBimonth = thisBimonth;
+        return this;
+    }
+
+    @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
     public boolean isLastBimonth()
     {
@@ -852,7 +944,20 @@ public class RelativePeriods
         return this;
     }
 
-    @JsonProperty( value = "lastQuarter" )
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    public boolean isThisQuarter()
+    {
+        return thisQuarter;
+    }
+
+    public RelativePeriods setThisQuarter( boolean thisQuarter )
+    {
+        this.thisQuarter = thisQuarter;
+        return this;
+    }
+
+    @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
     public boolean isLastQuarter()
     {
@@ -862,6 +967,19 @@ public class RelativePeriods
     public RelativePeriods setLastQuarter( boolean reportingQuarter )
     {
         this.lastQuarter = reportingQuarter;
+        return this;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    public boolean isThisSixMonth()
+    {
+        return thisSixMonth;
+    }
+
+    public RelativePeriods setThisSixMonth( boolean thisSixMonth )
+    {
+        this.thisSixMonth = thisSixMonth;
         return this;
     }
 
@@ -1083,6 +1201,19 @@ public class RelativePeriods
     public RelativePeriods setLast5FinancialYears( boolean last5FinancialYears )
     {
         this.last5FinancialYears = last5FinancialYears;
+        return this;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    public boolean isThisWeek()
+    {
+        return thisWeek;
+    }
+
+    public RelativePeriods setThisWeek( boolean thisWeek )
+    {
+        this.thisWeek = thisWeek;
         return this;
     }
 
