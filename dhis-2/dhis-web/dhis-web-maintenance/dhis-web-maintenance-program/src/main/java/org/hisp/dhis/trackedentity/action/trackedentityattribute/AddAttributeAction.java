@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.legend.LegendService;
@@ -36,9 +37,8 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
+import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.Action;
 
 import java.util.List;
 
@@ -67,11 +67,14 @@ public class AddAttributeAction
     }
 
     @Autowired
+    private TrackedEntityService trackedEntityService;
+
+    @Autowired
     private OptionService optionService;
 
     @Autowired
     private PeriodService periodService;
-    
+
     @Autowired
     private LegendService legendService;
 
@@ -144,7 +147,14 @@ public class AddAttributeAction
     {
         this.optionSetId = optionSetId;
     }
-    
+
+    private Integer trackedEntityId;
+
+    public void setTrackedEntityId( Integer trackedEntityId )
+    {
+        this.trackedEntityId = trackedEntityId;
+    }
+
     private Integer legendSetId;
 
     public void setLegendSetId( Integer legendSetId )
@@ -160,12 +170,12 @@ public class AddAttributeAction
     }
 
     private Boolean confidential;
-    
+
     public void setConfidential( Boolean confidential )
     {
         this.confidential = confidential;
     }
-    
+
     private List<String> jsonAttributeValues;
 
     public void setJsonAttributeValues( List<String> jsonAttributeValues )
@@ -213,7 +223,7 @@ public class AddAttributeAction
             {
                 programScope = true;
             }
-            
+
             trackedEntityAttribute.setOrgunitScope( orgunitScope );
             trackedEntityAttribute.setProgramScope( programScope );
         }
@@ -221,7 +231,11 @@ public class AddAttributeAction
         {
             trackedEntityAttribute.setOptionSet( optionService.getOptionSet( optionSetId ) );
         }
-        
+        else if ( valueType.equals( TrackedEntityAttribute.TYPE_TRACKER_ASSOCIATE ) )
+        {
+            trackedEntityAttribute.setTrackedEntity( trackedEntityService.getTrackedEntity( trackedEntityId ) );
+        }
+
         if ( legendSetId != null )
         {
             trackedEntityAttribute.setLegendSet( legendService.getLegendSet( legendSetId ) );
