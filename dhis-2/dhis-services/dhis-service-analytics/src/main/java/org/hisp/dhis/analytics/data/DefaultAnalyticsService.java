@@ -277,7 +277,7 @@ public class DefaultAnalyticsService
      * parameters.
      *
      * @param params the data query parameters.
-     * @param grid   the grid.
+     * @param grid the grid.
      */
     private void addIndicatorValues( DataQueryParams params, Grid grid )
     {
@@ -312,9 +312,9 @@ public class DefaultAnalyticsService
 
             for ( Indicator indicator : indicators )
             {
-                for ( List<DimensionItem> options : dimensionItemPermutations )
+                for ( List<DimensionItem> dimensionItems : dimensionItemPermutations )
                 {
-                    String permKey = DimensionItem.asItemKey( options );
+                    String permKey = DimensionItem.asItemKey( dimensionItems );
 
                     Map<DataElementOperand, Double> valueMap = permutationOperandValueMap.get( permKey );
 
@@ -323,9 +323,9 @@ public class DefaultAnalyticsService
                         continue;
                     }
 
-                    Period period = filterPeriod != null ? filterPeriod : (Period) DimensionItem.getPeriodItem( options );
+                    Period period = filterPeriod != null ? filterPeriod : (Period) DimensionItem.getPeriodItem( dimensionItems );
 
-                    OrganisationUnit unit = (OrganisationUnit) DimensionItem.getOrganisationUnitItem( options );
+                    OrganisationUnit unit = (OrganisationUnit) DimensionItem.getOrganisationUnitItem( dimensionItems );
 
                     String ou = unit != null ? unit.getUid() : null;
 
@@ -335,7 +335,7 @@ public class DefaultAnalyticsService
 
                     if ( value != null )
                     {
-                        List<DimensionItem> row = new ArrayList<>( options );
+                        List<DimensionItem> row = new ArrayList<>( dimensionItems );
 
                         row.add( indicatorIndex, new DimensionItem( INDICATOR_DIM_ID, indicator ) );
 
@@ -355,7 +355,7 @@ public class DefaultAnalyticsService
      * parameters.
      *
      * @param params the data query parameters.
-     * @param grid   the grid.
+     * @param grid the grid.
      */
     private void addDataElementValues( DataQueryParams params, Grid grid )
     {
@@ -381,7 +381,7 @@ public class DefaultAnalyticsService
      * parameters.
      *
      * @param params the data query parameters.
-     * @param grid   the grid.
+     * @param grid the grid.
      */
     private void addDataSetValues( DataQueryParams params, Grid grid )
     {
@@ -623,9 +623,9 @@ public class DefaultAnalyticsService
      * Generates a mapping of permutations keys (organisation unit id or null)
      * and mappings of organisation unit group and counts.
      *
-     * @param params     the data query parameters.
+     * @param params the data query parameters.
      * @param indicators the indicators for which formulas to scan for organisation
-     *                   unit groups.
+     *        unit groups.
      * @return a map of maps.
      */
     private Map<String, Map<String, Integer>> getOrgUnitTargetMap( DataQueryParams params, Collection<Indicator> indicators )
@@ -725,7 +725,7 @@ public class DefaultAnalyticsService
      *
      * @param params the data query parameters.
      * @return a mapping between the the data set dimension key and the count of
-     * expected data sets to report.
+     *         expected data sets to report.
      */
     private Map<String, Double> getAggregatedCompletenessTargetMap( DataQueryParams params )
     {
@@ -739,7 +739,7 @@ public class DefaultAnalyticsService
      *
      * @param params the data query parameters.
      * @return a mapping between the the data set dimension key and the count of
-     * expected data sets to report.
+     *         expected data sets to report.
      */
     private Map<String, Double> getAggregatedOrganisationUnitTargetMap( DataQueryParams params )
     {
@@ -752,6 +752,7 @@ public class DefaultAnalyticsService
      * separated by "-".
      *
      * @param params the data query parameters.
+     * @return a mapping between a dimension key and aggregated values.
      */
     private Map<String, Object> getAggregatedValueMap( DataQueryParams params, String tableName )
     {
@@ -1227,8 +1228,9 @@ public class DefaultAnalyticsService
      * Replaces the indicator dimension including items with the data elements
      * part of the indicator expressions.
      *
-     * @param params         the data query parameters.
+     * @param params the data query parameters.
      * @param indicatorIndex the index of the indicator dimension in the given query.
+     * @return the data query parameters.
      */
     private DataQueryParams replaceIndicatorsWithDataElements( DataQueryParams params, int indicatorIndex )
     {
@@ -1246,6 +1248,7 @@ public class DefaultAnalyticsService
      * filter items for the given parameters.
      *
      * @param params the data query.
+     * @return a mapping between identifiers and names.
      */
     private Map<String, String> getUidNameMap( DataQueryParams params )
     {
@@ -1261,9 +1264,10 @@ public class DefaultAnalyticsService
      * Returns a mapping between identifiers and names for the given dimensional
      * objects.
      *
-     * @param dimensions    the dimensional objects.
+     * @param dimensions the dimensional objects.
      * @param hierarchyMeta indicates whether to include meta data of the
-     *                      organisation unit hierarchy.
+     *        organisation unit hierarchy.
+     * @return a mapping between identifiers and names.
      */
     private Map<String, String> getUidNameMap( List<DimensionalObject> dimensions, boolean hierarchyMeta, DisplayProperty displayProperty )
     {
@@ -1334,6 +1338,7 @@ public class DefaultAnalyticsService
      * in the given grid.
      *
      * @param params the data query parameters.
+     * @param a mapping between identifiers and names.
      */
     private Map<String, String> getCocNameMap( DataQueryParams params )
     {
@@ -1371,6 +1376,8 @@ public class DefaultAnalyticsService
      * Gets the number of available cores. Uses explicit number from system
      * setting if available. Detects number of cores from current server runtime
      * if not.
+     * 
+     * @return the number of available cores.
      */
     private int getProcessNo()
     {
@@ -1383,6 +1390,7 @@ public class DefaultAnalyticsService
      * Converts a String, Object map into a specific String, Double map.
      *
      * @param map the map to convert.
+     * @return a mapping between string and double values.
      */
     private Map<String, Double> getDoubleMap( Map<String, Object> map )
     {
@@ -1405,6 +1413,7 @@ public class DefaultAnalyticsService
      * Returns the given value. If of class Double the value is rounded.
      *
      * @param value the value to return and potentially round.
+     * @return the rounded value.
      */
     private Object getRounded( Object value )
     {
@@ -1413,6 +1422,8 @@ public class DefaultAnalyticsService
 
     /**
      * Returns the max records limit. 0 indicates no limit.
+     * 
+     * @return the max records limit.
      */
     private int getMaxLimit()
     {
