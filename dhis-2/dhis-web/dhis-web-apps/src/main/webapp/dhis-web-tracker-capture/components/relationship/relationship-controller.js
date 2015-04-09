@@ -192,32 +192,33 @@ trackerCapture.controller('RelationshipController',
     $scope.relatedProgramRelationship = relatedProgramRelationship;
     $scope.selectedTei = selectedTei;
     $scope.programs = selections.prs;
-
-    $scope.relationshipSources = ['search_from_existing','register_new'];
+    
     $scope.selectedRelationship = {};
     $scope.relationship = {};
-    
-    
-    //watch for selection of relationship
-    $scope.$watch('relationship.selected', function() {        
-        if( angular.isObject($scope.relationship.selected)){
-            $scope.selectedRelationship = {aIsToB: $scope.relationship.selected.aIsToB, bIsToA: $scope.relationship.selected.bIsToA};  
-        }
-    });
-    
-    $scope.setRelationshipSides = function(side){
-        if(side === 'A'){            
-            $scope.selectedRelationship.bIsToA = $scope.selectedRelationship.aIsToB === $scope.relationship.selected.aIsToB ? $scope.relationship.selected.bIsToA : $scope.relationship.selected.aIsToB;
-        }
-        if(side === 'B'){
-            $scope.selectedRelationship.aIsToB = $scope.selectedRelationship.bIsToA === $scope.relationship.selected.bIsToA ? $scope.relationship.selected.aIsToB : $scope.relationship.selected.bIsToA;
-        }
-    };
-    
-    //Selection
+
+    //Selections
     $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
     $scope.optionSets = selections.optionSets;
     $scope.selectedTeiForDisplay = angular.copy($scope.selectedTei);
+    $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
+    $scope.selectedOuMode = $scope.ouModes[0];
+    
+    //Paging
+    $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5}; 
+    
+    //Searching
+    $scope.showAdvancedSearchDiv = false;
+    $scope.searchText = {value: null};
+    $scope.emptySearchText = false;
+    $scope.searchFilterExists = false;   
+    $scope.defaultOperators = OperatorFactory.defaultOperators;
+    $scope.boolOperators = OperatorFactory.boolOperators;
+    
+    $scope.trackedEntityList = null; 
+    $scope.enrollment = {programStartDate: '', programEndDate: '', operator: $scope.defaultOperators[0]};
+   
+    $scope.searchMode = {listAll: 'LIST_ALL', freeText: 'FREE_TEXT', attributeBased: 'ATTRIBUTE_BASED'};
+    $scope.selectedSearchMode = $scope.searchMode.listAll;
     
     if(angular.isObject($scope.programs) && $scope.programs.length === 1){
         $scope.selectedProgramForRelative = $scope.programs[0];        
@@ -239,18 +240,17 @@ trackerCapture.controller('RelationshipController',
                 }
             });
         }
-    }    
+    }
     
-    AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
-        $scope.attributes = atts;
-        $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
-        $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
-        
-        resetFields();    
-        $scope.search($scope.searchMode.listAll);
+    //watch for selection of relationship
+    $scope.$watch('relationship.selected', function() {        
+        if( angular.isObject($scope.relationship.selected)){
+            $scope.selectedRelationship = {aIsToB: $scope.relationship.selected.aIsToB, bIsToA: $scope.relationship.selected.bIsToA};  
+        }
     });
     
     function resetFields(){
+        
         $scope.teiForRelationship = null;
         $scope.teiFetched = false;    
         $scope.emptySearchText = false;
@@ -266,51 +266,12 @@ trackerCapture.controller('RelationshipController',
         $scope.attributeUrl = {url: null, hasValue: false};
     }
     
-    //set attributes as per selected program
-    $scope.setAttributesForSearch = function(program){
-        
-        $scope.selectedProgramForRelative = program;
-        if( angular.isObject($scope.selectedProgramForRelative)){
-            AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
-                $scope.attributes = atts;
-                $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
-                $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
-            });
-        }
-        else{
-            AttributesFactory.getWithoutProgram().then(function(atts){
-                $scope.attributes = atts;
-                $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
-                $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
-            });
-        }
-    };
-    
-    $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
-    $scope.selectedOuMode = $scope.ouModes[0];
-    
-    //Paging
-    $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5}; 
-    
-    //Searching
-    $scope.showAdvancedSearchDiv = false;
-    $scope.searchText = {value: null};
-    $scope.emptySearchText = false;
-    $scope.searchFilterExists = false;   
-    $scope.defaultOperators = OperatorFactory.defaultOperators;
-    $scope.boolOperators = OperatorFactory.boolOperators;
-    
-    $scope.trackedEntityList = null; 
-    $scope.enrollment = {programStartDate: '', programEndDate: '', operator: $scope.defaultOperators[0]};
-   
-    $scope.searchMode = {listAll: 'LIST_ALL', freeText: 'FREE_TEXT', attributeBased: 'ATTRIBUTE_BASED'};      
-    
     //listen for selections
     $scope.$on('relationship', function() { 
         var relationshipInfo = CurrentSelection.getRelationshipInfo();
         $scope.teiForRelationship = relationshipInfo.tei;
-    });    
-
+    });
+    
     $scope.search = function(mode){ 
         
         resetFields();
@@ -379,6 +340,21 @@ trackerCapture.controller('RelationshipController',
             $scope.teiFetched = true;            
         });
     };
+    
+    //set attributes as per selected program
+    $scope.setAttributesForSearch = function(program){
+        
+        $scope.selectedProgramForRelative = program;
+        AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
+            $scope.attributes = atts;
+            $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
+            $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
+        });
+        
+        $scope.search( $scope.selectedSearchMode );        
+    }; 
+    
+    $scope.setAttributesForSearch( $scope.selectedProgramForRelative );
     
     $scope.jumpToPage = function(){
         console.log(' am I here... ');
@@ -470,6 +446,15 @@ trackerCapture.controller('RelationshipController',
     $scope.close = function () {
         $modalInstance.close($scope.selectedTei.relationships ? $scope.selectedTei.relationships : []);
         $rootScope.showAddRelationshipDiv = !$rootScope.showAddRelationshipDiv;
+    };
+    
+    $scope.setRelationshipSides = function(side){
+        if(side === 'A'){            
+            $scope.selectedRelationship.bIsToA = $scope.selectedRelationship.aIsToB === $scope.relationship.selected.aIsToB ? $scope.relationship.selected.bIsToA : $scope.relationship.selected.aIsToB;
+        }
+        if(side === 'B'){
+            $scope.selectedRelationship.aIsToB = $scope.selectedRelationship.bIsToA === $scope.relationship.selected.bIsToA ? $scope.relationship.selected.aIsToB : $scope.relationship.selected.bIsToA;
+        }
     };
     
     $scope.assignRelationship = function(relativeTei){
