@@ -9,21 +9,7 @@
                     <label><input type="radio" ng-model="selectedOuMode.name" name="descendants" value="DESCENDANTS"> {{'DESCENDANTS'| translate}}</label><br/>
                     <label><input type="radio" ng-model="selectedOuMode.name" name="accessible" value="ACCESSIBLE"> {{'ACCESSIBLE'| translate}}</label>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    {{'program' | translate}}
-                </td>
-                <td>
-                    <select ng-model="selectedProgramForRelative"
-                            class="form-control"
-                            ng-options="program as program.name for program in programs | orderBy: 'name'" 
-                            ng-disabled="programs.length < 1 || (selectedProgramForRelative && selectedProgram.relatedProgram && relatedProgramRelationship)"
-                            ng-change="setAttributesForSearch(selectedProgramForRelative)">
-                        <option value="">{{programs.length > 0 ? 'please_select_a_program' : 'no_program_exists' | translate}}</option>
-                    </select>                    
-                </td>
-            </tr>
+            </tr>            
             <tr ng-if="selectedProgramForRelative">
                 <td>{{'enrollment_date'| translate}}</td>
                 <td>
