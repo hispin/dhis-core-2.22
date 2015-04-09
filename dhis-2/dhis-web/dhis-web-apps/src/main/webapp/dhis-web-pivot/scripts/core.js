@@ -132,7 +132,8 @@ Ext.onReady( function() {
 					{id: 'FinancialOct', name: NS.i18n.financial_oct},
 					{id: 'FinancialJuly', name: NS.i18n.financial_july},
 					{id: 'FinancialApril', name: NS.i18n.financial_april}
-				]
+				],
+                relativePeriods: []
 			};
 
 			conf.layout = {
@@ -143,7 +144,7 @@ Ext.onReady( function() {
 				west_fill_accordion_indicator: 56,
 				west_fill_accordion_dataelement: 59,
 				west_fill_accordion_dataset: 31,
-				west_fill_accordion_period: 275,
+				west_fill_accordion_period: 303,
 				west_fill_accordion_organisationunit: 58,
 				west_maxheight_accordion_indicator: 400,
 				west_maxheight_accordion_dataelement: 400,

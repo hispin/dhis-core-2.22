@@ -4206,6 +4206,11 @@ Ext.onReady( function() {
 								},
 								{
 									xtype: 'checkbox',
+									relativePeriodId: 'THIS_WEEK',
+									boxLabel: NS.i18n.this_week
+								},
+								{
+									xtype: 'checkbox',
 									relativePeriodId: 'LAST_WEEK',
 									boxLabel: NS.i18n.last_week
 								},
@@ -4236,6 +4241,11 @@ Ext.onReady( function() {
 									xtype: 'label',
 									text: NS.i18n.quarters,
 									cls: 'ns-label-period-heading'
+								},
+								{
+									xtype: 'checkbox',
+									relativePeriodId: 'THIS_QUARTER',
+									boxLabel: NS.i18n.this_quarter
 								},
 								{
 									xtype: 'checkbox',
@@ -4297,6 +4307,11 @@ Ext.onReady( function() {
 								},
 								{
 									xtype: 'checkbox',
+									relativePeriodId: 'THIS_MONTH',
+									boxLabel: NS.i18n.this_month
+								},
+								{
+									xtype: 'checkbox',
 									relativePeriodId: 'LAST_MONTH',
 									boxLabel: NS.i18n.last_month
 								},
@@ -4330,6 +4345,11 @@ Ext.onReady( function() {
 								},
 								{
 									xtype: 'checkbox',
+									relativePeriodId: 'THIS_SIX_MONTH',
+									boxLabel: NS.i18n.this_sixmonth
+								},
+								{
+									xtype: 'checkbox',
 									relativePeriodId: 'LAST_SIX_MONTH',
 									boxLabel: NS.i18n.last_sixmonth
 								},
@@ -4358,6 +4378,11 @@ Ext.onReady( function() {
 									xtype: 'label',
 									text: NS.i18n.bimonths,
 									cls: 'ns-label-period-heading'
+								},
+								{
+									xtype: 'checkbox',
+									relativePeriodId: 'THIS_BIMONTH',
+									boxLabel: NS.i18n.this_bimonth
 								},
 								{
 									xtype: 'checkbox',
