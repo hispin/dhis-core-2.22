@@ -239,6 +239,7 @@ public class RegistrationSingleEventServiceTest
     private Enrollment createEnrollment( String program, String person )
     {
         Enrollment enrollment = new Enrollment();
+        enrollment.setOrgUnit( organisationUnitA.getUid() );
         enrollment.setProgram( program );
         enrollment.setTrackedEntityInstance( person );
 
