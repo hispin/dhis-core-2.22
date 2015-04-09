@@ -318,7 +318,8 @@ trackerCapture.controller('RelationshipController',
                                             $scope.queryUrl,
                                             $scope.programUrl,
                                             $scope.attributeUrl.url,
-                                            $scope.pager).then(function(data){
+                                            $scope.pager,
+                                            true).then(function(data){
             //$scope.trackedEntityList = data;            
             if(data.rows){
                 $scope.teiCount = data.rows.length;
@@ -357,7 +358,6 @@ trackerCapture.controller('RelationshipController',
     $scope.setAttributesForSearch( $scope.selectedProgramForRelative );
     
     $scope.jumpToPage = function(){
-        console.log(' am I here... ');
         if($scope.pager && $scope.pager.page && $scope.pager.pageCount && $scope.pager.page > $scope.pager.pageCount){
             $scope.pager.page = $scope.pager.pageCount;
         }
@@ -370,8 +370,7 @@ trackerCapture.controller('RelationshipController',
         $scope.search($scope.selectedSearchMode);
     };
     
-    $scope.getPage = function(page){    
-        console.log(' am I here... ');
+    $scope.getPage = function(page){
         $scope.pager.page = page;
         $scope.search($scope.selectedSearchMode);
     };
