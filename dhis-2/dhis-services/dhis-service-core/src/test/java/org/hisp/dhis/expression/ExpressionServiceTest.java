@@ -295,6 +295,24 @@ public class ExpressionServiceTest
 
         assertTrue( operands.contains( operandA ) );
         assertTrue( operands.contains( operandB ) );
+        
+        operands = expressionService.getOperandsInExpression( expressionG );
+
+        assertNotNull( operands );
+        assertEquals( 1, operands.size() );
+
+        assertTrue( operands.contains( operandA ) );
+    }
+
+    @Test
+    public void testGetOptionCombosInExpression()
+    {
+        Set<DataElementCategoryOptionCombo> optionCombos = expressionService.getOptionCombosInExpression( expressionG );
+
+        assertNotNull( optionCombos );
+        assertEquals( 1, optionCombos.size() );
+
+        assertTrue( optionCombos.contains( categoryOptionCombo ) );
     }
 
     @Test
