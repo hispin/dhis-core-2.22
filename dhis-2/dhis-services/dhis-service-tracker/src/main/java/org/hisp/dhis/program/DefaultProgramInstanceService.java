@@ -484,6 +484,7 @@ public class DefaultProgramInstanceService
 
         ProgramInstance programInstance = new ProgramInstance();
         programInstance.setUid( CodeGenerator.isValidCode( uid ) ? uid : CodeGenerator.generateCode() );
+        programInstance.setOrganisationUnit( organisationUnit );
 
         programInstance.enrollTrackedEntityInstance( entityInstance, program );
 
