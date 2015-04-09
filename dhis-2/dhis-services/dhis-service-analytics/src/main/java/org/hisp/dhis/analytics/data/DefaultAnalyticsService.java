@@ -297,7 +297,7 @@ public class DefaultAnalyticsService
             dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
             dataSourceParams.removeDimension( DATASET_DIM_ID );
 
-            dataSourceParams = replaceIndicatorsWithDataElements( dataSourceParams, indicatorIndex );
+            dataSourceParams = getQueryIndicatorsReplacedByDataElements( dataSourceParams, indicatorIndex );
 
             Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( dataSourceParams );
 
@@ -644,7 +644,7 @@ public class DefaultAnalyticsService
 
         Map<String, Double> orgUnitCountMap = getAggregatedOrganisationUnitTargetMap( orgUnitTargetParams );
 
-        return orgUnitTargetParams.getPermutationOrgUnitGroupCountMap( orgUnitCountMap );
+        return DataQueryParams.getPermutationOrgUnitGroupCountMap( orgUnitCountMap );
     }
 
     /**
@@ -1226,22 +1226,26 @@ public class DefaultAnalyticsService
     // -------------------------------------------------------------------------
 
     /**
-     * Replaces the indicator dimension including items with the data elements
-     * part of the indicator expressions.
+     * Returns a new instance of the given query where indicators are replaced
+     * with the data elements part of the indicator expressions.
      *
      * @param params the data query parameters.
      * @param indicatorIndex the index of the indicator dimension in the given query.
      * @return the data query parameters.
      */
-    private DataQueryParams replaceIndicatorsWithDataElements( DataQueryParams params, int indicatorIndex )
+    private DataQueryParams getQueryIndicatorsReplacedByDataElements( DataQueryParams params, int indicatorIndex )
     {
-        List<Indicator> indicators = asTypedList( params.getIndicators() );
+        DataQueryParams dataSourceParams = params.instance();
+        dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
+        dataSourceParams.removeDimension( DATASET_DIM_ID );
+        
+        List<Indicator> indicators = asTypedList( dataSourceParams.getIndicators() );
         List<NameableObject> dataElements = asList( expressionService.getDataElementsInIndicators( indicators ) );
 
-        params.getDimensions().set( indicatorIndex, new BaseDimensionalObject( DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
-        params.enableCategoryOptionCombos();
+        dataSourceParams.getDimensions().set( indicatorIndex, new BaseDimensionalObject( DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
+        dataSourceParams.enableCategoryOptionCombos();
 
-        return params;
+        return dataSourceParams;
     }
 
     /**
