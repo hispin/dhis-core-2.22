@@ -605,12 +605,17 @@ public class DefaultEventAnalyticsService
             }
         }
 
+        if ( params.hasValueDimension() )
+        {
+            map.put( params.getValue().getUid(), NameableObjectUtils.getProperty( params.getValue(), params.getDisplayProperty() ) );
+        }
+        
         map.putAll( getUidNameMap( params.getItems(), params.getDisplayProperty() ) );
         map.putAll( getUidNameMap( params.getItemFilters(), params.getDisplayProperty() ) );
         map.putAll( getUidNameMap( params.getDimensions(), params.isHierarchyMeta(), params.getDisplayProperty() ) );
         map.putAll( getUidNameMap( params.getFilters(), params.isHierarchyMeta(), params.getDisplayProperty() ) );
         map.putAll( IdentifiableObjectUtils.getUidNameMap( params.getLegends() ) );
-
+        
         return map;
     }
     
@@ -620,14 +625,7 @@ public class DefaultEventAnalyticsService
         
         for ( QueryItem item : queryItems )
         {
-            if ( DisplayProperty.SHORTNAME.equals( displayProperty ) )
-            {
-                map.put( item.getItem().getUid(), item.getItem().getDisplayShortName() );
-            }
-            else
-            {
-                map.put( item.getItem().getUid(), item.getItem().getDisplayName() );
-            }
+            map.put( item.getItem().getUid(), NameableObjectUtils.getProperty( item.getItem(), displayProperty ) );
         }
         
         return map;
@@ -662,14 +660,7 @@ public class DefaultEventAnalyticsService
                 }
             }
             
-            if ( dimension.getDisplayShortName() != null && DisplayProperty.SHORTNAME.equals( displayProperty ) )
-            {
-                map.put( dimension.getDimension(), dimension.getDisplayShortName() );
-            }
-            else if ( dimension.getDisplayName() != null ) // NAME
-            {
-                map.put( dimension.getDimension(), dimension.getDisplayName() );
-            }
+            map.put( dimension.getDimension(), NameableObjectUtils.getProperty( dimension, displayProperty ) );
         }
 
         return map;
