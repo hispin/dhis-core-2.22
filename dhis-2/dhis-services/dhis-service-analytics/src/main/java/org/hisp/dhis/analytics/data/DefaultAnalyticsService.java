@@ -1295,20 +1295,13 @@ public class DefaultAnalyticsService
                 }
                 else
                 {
-                    if ( DisplayProperty.SHORTNAME.equals( displayProperty ) )
-                    {
-                        map.put( object.getUid(), object.getDisplayShortName() );
-                    }
-                    else // NAME
-                    {
-                        map.put( object.getUid(), object.getDisplayName() );
-                    }
+                    map.put( object.getUid(), NameableObjectUtils.getProperty( object, displayProperty ) );
                 }
 
                 if ( orgUnitHierarchy )
                 {
                     OrganisationUnit unit = (OrganisationUnit) object;
-
+                   
                     if ( DisplayProperty.SHORTNAME.equals( displayProperty ) )
                     {
                         map.putAll( NameableObjectUtils.getUidShortNameMap( unit.getAncestors() ) );
@@ -1324,7 +1317,7 @@ public class DefaultAnalyticsService
             {
                 map.put( dimension.getDimension(), dimension.getDisplayShortName() );
             }
-            else if ( dimension.getDisplayName() != null ) // NAME
+            else if ( dimension.getDisplayName() != null ) // NAME TODO use getProperty
             {
                 map.put( dimension.getDimension(), dimension.getDisplayName() );
             }
