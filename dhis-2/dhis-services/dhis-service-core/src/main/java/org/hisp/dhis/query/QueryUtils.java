@@ -42,7 +42,7 @@ import java.util.Date;
 public final class QueryUtils
 {
     @SuppressWarnings( "unchecked" )
-    static public <T> T getValue( Class<?> klass, String value )
+    static public <T> T getValue( Class<T> klass, String value )
     {
         if ( klass.isInstance( value ) )
         {
@@ -118,6 +118,5 @@ public final class QueryUtils
 
     private QueryUtils()
     {
-
     }
 }

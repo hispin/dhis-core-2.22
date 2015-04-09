@@ -52,7 +52,7 @@ public abstract class Op
         return value;
     }
 
-    public <T> T getValue( Class<?> klass )
+    public <T> T getValue( Class<T> klass )
     {
         return QueryUtils.getValue( klass, value );
     }
