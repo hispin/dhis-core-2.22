@@ -1421,7 +1421,7 @@ Ext.onReady( function() {
 				separator = separator || 'space';
 
                 if (!Ext.isNumber(number)) {
-                    return;
+                    return '';
                 }
 
 				if (separator === 'none') {
