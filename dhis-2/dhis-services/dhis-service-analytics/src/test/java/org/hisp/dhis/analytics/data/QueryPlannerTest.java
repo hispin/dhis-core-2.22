@@ -268,7 +268,7 @@ public class QueryPlannerTest
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1" + DIMENSION_SEP + coc.getUid(), 7d );
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2" + DIMENSION_SEP + coc.getUid(), 8d );
         
-        Map<String, Map<DataElementOperand, Double>> permutationMap = params.getPermutationOperandValueMap( aggregatedDataMap );
+        Map<String, Map<DataElementOperand, Double>> permutationMap = DataQueryParams.getPermutationOperandValueMap( aggregatedDataMap, params );
         
         assertNotNull( permutationMap );
         
