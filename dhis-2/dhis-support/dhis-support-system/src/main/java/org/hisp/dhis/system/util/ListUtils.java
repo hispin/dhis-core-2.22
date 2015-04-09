@@ -46,7 +46,8 @@ import org.apache.commons.lang3.StringUtils;
 public class ListUtils
 {
     /**
-     * Removes from the given list the elements at the given indexes.
+     * Removes from the given list the elements at the given indexes. Ignores
+     * indexes which are out of bounds of list.
      * 
      * @param list the list to remove elements from.
      * @param indexes the indexes for the elements to remove.
@@ -60,14 +61,20 @@ public class ListUtils
         
         Collections.sort( indexes, Collections.reverseOrder() );
         
+        final int size = list.size();
+        
         for ( Integer index : indexes )
-        {            
-            list.remove( (int) index );
+        {
+            if ( index >= 0 && index < size )
+            {
+                list.remove( (int) index );
+            }
         }
     }
     
     /**
-     * Removes from the given list the elements at the given indexes.
+     * Removes from the given list the elements at the given indexes. Ignores
+     * indexes which are out of bounds of list.
      * 
      * @param indexes the list to remove elements from.
      * @param indexes the indexes for the elements to remove.
