@@ -293,7 +293,7 @@ public class DefaultExpressionService
         
         return groupsInExpression;
     }
-    
+
     @Override
     public Set<String> getDataElementTotalUids( String expression )
     {
@@ -322,7 +322,7 @@ public class DefaultExpressionService
         {
             optionCombosInExpression = new HashSet<>();
 
-            final Matcher matcher = OPERAND_PATTERN.matcher( expression );
+            final Matcher matcher = OPTION_COMBO_OPERAND_PATTERN.matcher( expression );
 
             while ( matcher.find() )
             {
@@ -349,7 +349,7 @@ public class DefaultExpressionService
         {
             operandsInExpression = new HashSet<>();
 
-            final Matcher matcher = OPERAND_PATTERN.matcher( expression );
+            final Matcher matcher = OPTION_COMBO_OPERAND_PATTERN.matcher( expression );
 
             while ( matcher.find() )
             {
