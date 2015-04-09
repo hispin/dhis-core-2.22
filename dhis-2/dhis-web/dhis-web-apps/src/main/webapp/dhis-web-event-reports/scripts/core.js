@@ -314,7 +314,7 @@ Ext.onReady( function() {
 
 				// hideEmptyRows: boolean (false)
 
-                // : boolean (false)
+                // collapseDataDimensions: boolean (false)
 
                 // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_INSTANCE', 'ENROLLMENT'
 
