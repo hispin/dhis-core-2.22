@@ -48,7 +48,7 @@ public class ListUtilsTest
     {
         List<String> list = new ArrayList<>( Arrays.asList( "a", "b", "c", "d", "e", "f", "g", "h" ) );
         
-        Integer[] indexes = { 0, 2, 5, 7 };
+        Integer[] indexes = { 0, 2, 5, 7, -1, 78 };
 
         assertEquals( 8, list.size() );
         
