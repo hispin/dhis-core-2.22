@@ -293,19 +293,19 @@ public class DefaultAnalyticsService
             // Get indicator values
             // -----------------------------------------------------------------
 
+            Period filterPeriod = params.getFilterPeriod();
+
+            Map<String, Map<String, Integer>> permutationOrgUnitTargetMap = getOrgUnitTargetMap( params, indicators );
+
+            List<List<DimensionItem>> dimensionItemPermutations = params.getDimensionItemPermutations();
+
             DataQueryParams dataSourceParams = getQueryIndicatorsReplacedByDataElements( params, indicatorIndex );
 
             Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( dataSourceParams );
 
             Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = getPermutationOperandValueMap( aggregatedDataMap, dataSourceParams );
 
-            List<List<DimensionItem>> dimensionItemPermutations = dataSourceParams.getDimensionItemPermutations();
-
             Map<String, Double> constantMap = constantService.getConstantMap();
-
-            Period filterPeriod = dataSourceParams.getFilterPeriod();
-
-            Map<String, Map<String, Integer>> permutationOrgUnitTargetMap = getOrgUnitTargetMap( dataSourceParams, indicators );
 
             for ( Indicator indicator : indicators )
             {
