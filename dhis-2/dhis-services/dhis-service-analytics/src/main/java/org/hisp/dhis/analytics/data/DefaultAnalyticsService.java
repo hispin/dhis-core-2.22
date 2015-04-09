@@ -40,6 +40,7 @@ import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_ORGUNIT;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PERIOD;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PROGRAM_INDICATOR;
 import static org.hisp.dhis.analytics.DataQueryParams.KEY_DE_GROUP;
+import static org.hisp.dhis.analytics.DataQueryParams.getPermutationOperandValueMap;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATASET_DIM_ID;
@@ -300,7 +301,7 @@ public class DefaultAnalyticsService
 
             Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( dataSourceParams );
 
-            Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = dataSourceParams.getPermutationOperandValueMap( aggregatedDataMap );
+            Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = getPermutationOperandValueMap( aggregatedDataMap, dataSourceParams );
 
             List<List<DimensionItem>> dimensionItemPermutations = dataSourceParams.getDimensionItemPermutations();
 
