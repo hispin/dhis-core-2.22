@@ -713,39 +713,6 @@ public class DataQueryParams
     }
 
     /**
-     * Returns a mapping of permutation keys and mappings of data element operands
-     * and values, based on the given mapping of dimension option keys and 
-     * aggregated values.
-     */
-    public Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( Map<String, Double> aggregatedDataMap )
-    {
-        MapMap<String, DataElementOperand, Double> valueMap = new MapMap<>();
-        
-        for ( String key : aggregatedDataMap.keySet() )
-        {
-            List<String> keys = new ArrayList<>( Arrays.asList( key.split( DIMENSION_SEP ) ) );
-            
-            int deInx = getDataElementDimensionIndex();
-            int cocInx = getCategoryOptionComboDimensionIndex();
-            
-            String de = keys.get( deInx );
-            String coc = keys.get( cocInx );
-            
-            ListUtils.removeAll( keys, deInx, cocInx );
-            
-            String permKey = StringUtils.join( keys, DIMENSION_SEP );
-            
-            DataElementOperand operand = new DataElementOperand( de, coc );
-            
-            Double value = aggregatedDataMap.get( key );
-            
-            valueMap.putEntry( permKey, operand, value );            
-        }
-        
-        return valueMap;
-    }
-
-    /**
      * Returns a mapping of permutations keys (org unit id or null) and mappings
      * of org unit group and counts, based on the given mapping of dimension option
      * keys and counts.
@@ -985,6 +952,40 @@ public class DataQueryParams
     // -------------------------------------------------------------------------
     // Static methods
     // -------------------------------------------------------------------------
+
+    /**
+     * Returns a mapping of permutation keys and mappings of data element operands
+     * and values, based on the given mapping of dimension option keys and 
+     * aggregated values.
+     */
+    public static Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( 
+        Map<String, Double> aggregatedDataMap, DataQueryParams params )
+    {
+        MapMap<String, DataElementOperand, Double> valueMap = new MapMap<>();
+        
+        for ( String key : aggregatedDataMap.keySet() )
+        {
+            List<String> keys = new ArrayList<>( Arrays.asList( key.split( DIMENSION_SEP ) ) );
+            
+            int deInx = params.getDataElementDimensionIndex();
+            int cocInx = params.getCategoryOptionComboDimensionIndex();
+            
+            String de = keys.get( deInx );
+            String coc = keys.get( cocInx );
+
+            DataElementOperand operand = new DataElementOperand( de, coc );
+            
+            ListUtils.removeAll( keys, deInx, cocInx );
+            
+            String permKey = StringUtils.join( keys, DIMENSION_SEP );
+            
+            Double value = aggregatedDataMap.get( key );
+            
+            valueMap.putEntry( permKey, operand, value );            
+        }
+        
+        return valueMap;
+    }
 
     /**
      * Retrieves the measure criteria from the given string. Criteria are separated
