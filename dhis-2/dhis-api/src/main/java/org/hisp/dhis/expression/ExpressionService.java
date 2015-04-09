@@ -173,12 +173,30 @@ public interface ExpressionService
     Set<String> getDataElementTotalUids( String expression );
     
     /**
-     * Returns all DataElements included in the given expression string.
+     * Returns all data elements included in the given expression string.
      * 
      * @param expression the expression string.
-     * @return a Set of DataElements included in the expression string.
+     * @return a set of data elements included in the expression string.
      */
     Set<DataElement> getDataElementsInExpression( String expression );
+
+    /**
+     * Returns all data elements included in the given expression string which
+     * represent data element totals.
+     * 
+     * @param expression the expression string.
+     * @return a set of data elements.
+     */
+    Set<DataElement> getDataElementTotalsInExpression( String expression );
+
+    /**
+     * Returns all data elements included in the given expression string which
+     * represent operands with data elements and category option combinations.
+     * 
+     * @param expression the expression string.
+     * @return a set of data elements.
+     */
+    Set<DataElement> getDataElementsWithOptionCombosInExpression( String expression );
     
     /**
      * Returns all OrganisationUnitGroups in the numerator and denominator

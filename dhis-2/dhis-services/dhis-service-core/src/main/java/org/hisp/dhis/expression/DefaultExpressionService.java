@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -228,13 +229,32 @@ public class DefaultExpressionService
     @Transactional
     public Set<DataElement> getDataElementsInExpression( String expression )
     {
-        Set<DataElement> dataElementsInExpression = null;
+        return getDataElementsInExpressionInternal( OPERAND_PATTERN, expression );
+    }
+
+    @Override
+    @Transactional
+    public Set<DataElement> getDataElementTotalsInExpression( String expression )
+    {
+        return getDataElementsInExpressionInternal( DATA_ELEMENT_TOTAL_PATTERN, expression );
+    }
+
+    @Override
+    @Transactional
+    public Set<DataElement> getDataElementsWithOptionCombosInExpression( String expression )
+    {
+        return getDataElementsInExpressionInternal( OPTION_COMBO_OPERAND_PATTERN, expression );
+    }
+    
+    private Set<DataElement> getDataElementsInExpressionInternal( Pattern pattern, String expression )
+    {
+        Set<DataElement> dataElements = null;
 
         if ( expression != null )
         {
-            dataElementsInExpression = new HashSet<>();
+            dataElements = new HashSet<>();
 
-            final Matcher matcher = OPERAND_PATTERN.matcher( expression );
+            final Matcher matcher = pattern.matcher( expression );
 
             while ( matcher.find() )
             {
@@ -242,12 +262,12 @@ public class DefaultExpressionService
 
                 if ( dataElement != null )
                 {
-                    dataElementsInExpression.add( dataElement );
+                    dataElements.add( dataElement );
                 }
             }
         }
 
-        return dataElementsInExpression;
+        return dataElements;
     }
     
     @Override
