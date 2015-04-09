@@ -84,8 +84,8 @@ public class InitTableAlteror
             String autoIncr = statementBuilder.getAutoIncrementValue();
             
             String insertSql = 
-                "insert into programstagedataelement(programstagedataelementid,programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate) " +
-                "select " + autoIncr + ",programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate " +
+                "insert into programstagedataelement(programstagedataelementid,programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order) " +
+                "select " + autoIncr + ",programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order " +
                 "from programstage_dataelements";
             
             executeSql( insertSql );
