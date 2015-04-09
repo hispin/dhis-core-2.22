@@ -192,6 +192,7 @@ public class EnrollmentServiceTest
     public void testSaveEnrollment()
     {
         Enrollment enrollment = new Enrollment();
+        enrollment.setOrgUnit( organisationUnitA.getUid() );
         enrollment.setTrackedEntityInstance( maleA.getUid() );
         enrollment.setProgram( programA.getUid() );
         enrollment.setDateOfIncident( new Date() );
@@ -211,6 +212,7 @@ public class EnrollmentServiceTest
     public void testUpdateEnrollment()
     {
         Enrollment enrollment = new Enrollment();
+        enrollment.setOrgUnit( organisationUnitA.getUid() );
         enrollment.setTrackedEntityInstance( maleA.getUid() );
         enrollment.setProgram( programA.getUid() );
         enrollment.setDateOfIncident( new Date() );
@@ -322,6 +324,7 @@ public class EnrollmentServiceTest
     public void testMultipleEnrollmentsShouldFail()
     {
         Enrollment enrollment = new Enrollment();
+        enrollment.setOrgUnit( organisationUnitA.getUid() );
         enrollment.setTrackedEntityInstance( maleA.getUid() );
         enrollment.setProgram( programA.getUid() );
         enrollment.setDateOfIncident( new Date() );
@@ -339,6 +342,7 @@ public class EnrollmentServiceTest
     public void testUpdatePersonShouldKeepEnrollments()
     {
         Enrollment enrollment = new Enrollment();
+        enrollment.setOrgUnit( organisationUnitA.getUid() );
         enrollment.setTrackedEntityInstance( maleA.getUid() );
         enrollment.setProgram( programA.getUid() );
         enrollment.setDateOfIncident( new Date() );
