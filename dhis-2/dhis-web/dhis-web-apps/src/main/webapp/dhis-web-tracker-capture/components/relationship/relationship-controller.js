@@ -171,7 +171,6 @@ trackerCapture.controller('RelationshipController',
 .controller('AddRelationshipController', 
     function($scope, 
             $rootScope,
-            $timeout,
             CurrentSelection,
             OperatorFactory,
             AttributesFactory,
@@ -382,6 +381,11 @@ trackerCapture.controller('RelationshipController',
     };
     
     $scope.jumpToPage = function(){
+        console.log(' am I here... ');
+        if($scope.pager && $scope.pager.page && $scope.pager.pageCount && $scope.pager.page > $scope.pager.pageCount){
+            $scope.pager.page = $scope.pager.pageCount;
+        }
+        
         $scope.search($scope.selectedSearchMode);
     };
     
@@ -391,6 +395,7 @@ trackerCapture.controller('RelationshipController',
     };
     
     $scope.getPage = function(page){    
+        console.log(' am I here... ');
         $scope.pager.page = page;
         $scope.search($scope.selectedSearchMode);
     };
