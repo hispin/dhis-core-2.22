@@ -267,6 +267,32 @@ public class ExpressionServiceTest
         assertTrue( dataElements.size() == 2 );
         assertTrue( dataElements.contains( dataElementA ) );
         assertTrue( dataElements.contains( dataElementB ) );
+        
+        dataElements = expressionService.getDataElementsInExpression( expressionG );
+
+        assertTrue( dataElements.size() == 3 );
+        assertTrue( dataElements.contains( dataElementA ) );
+        assertTrue( dataElements.contains( dataElementB ) );
+        assertTrue( dataElements.contains( dataElementC ) );
+    }
+
+    @Test
+    public void testGetDataElementTotalsInExpression()
+    {
+        Set<DataElement> dataElements = expressionService.getDataElementTotalsInExpression( expressionG );
+
+        assertTrue( dataElements.size() == 2 );
+        assertTrue( dataElements.contains( dataElementB ) );
+        assertTrue( dataElements.contains( dataElementC ) );
+    }
+
+    @Test
+    public void testGetDataElementsWithOptionCombosInExpression()
+    {
+        Set<DataElement> dataElements = expressionService.getDataElementsWithOptionCombosInExpression( expressionG );
+
+        assertTrue( dataElements.size() == 1 );
+        assertTrue( dataElements.contains( dataElementA ) );
     }
 
     @Test
