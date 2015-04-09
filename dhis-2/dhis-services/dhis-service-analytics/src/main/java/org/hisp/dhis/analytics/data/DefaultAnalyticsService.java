@@ -293,11 +293,7 @@ public class DefaultAnalyticsService
             // Get indicator values
             // -----------------------------------------------------------------
 
-            DataQueryParams dataSourceParams = params.instance();
-            dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
-            dataSourceParams.removeDimension( DATASET_DIM_ID );
-
-            dataSourceParams = getQueryIndicatorsReplacedByDataElements( dataSourceParams, indicatorIndex );
+            DataQueryParams dataSourceParams = getQueryIndicatorsReplacedByDataElements( params, indicatorIndex );
 
             Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( dataSourceParams );
 
