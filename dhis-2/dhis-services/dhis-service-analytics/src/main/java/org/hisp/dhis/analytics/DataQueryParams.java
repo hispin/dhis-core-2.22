@@ -940,7 +940,7 @@ public class DataQueryParams
             int cocInx = params.getCategoryOptionComboDimensionIndex();
             
             String de = keys.get( deInx );
-            String coc = keys.get( cocInx );
+            String coc = cocInx != -1 ? keys.get( cocInx ) : null;
 
             DataElementOperand operand = new DataElementOperand( de, coc );
             
