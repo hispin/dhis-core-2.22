@@ -231,20 +231,6 @@ public class DefaultExpressionService
     {
         return getDataElementsInExpressionInternal( OPERAND_PATTERN, expression );
     }
-
-    @Override
-    @Transactional
-    public Set<DataElement> getDataElementTotalsInExpression( String expression )
-    {
-        return getDataElementsInExpressionInternal( DATA_ELEMENT_TOTAL_PATTERN, expression );
-    }
-
-    @Override
-    @Transactional
-    public Set<DataElement> getDataElementsWithOptionCombosInExpression( String expression )
-    {
-        return getDataElementsInExpressionInternal( OPTION_COMBO_OPERAND_PATTERN, expression );
-    }
     
     private Set<DataElement> getDataElementsInExpressionInternal( Pattern pattern, String expression )
     {
@@ -395,6 +381,56 @@ public class DefaultExpressionService
         {
             Set<DataElement> numerator = getDataElementsInExpression( indicator.getNumerator() );
             Set<DataElement> denominator = getDataElementsInExpression( indicator.getDenominator() );
+            
+            if ( numerator != null )
+            {
+                dataElements.addAll( numerator );
+            }
+            
+            if ( denominator != null )
+            {
+                dataElements.addAll( denominator );
+            }
+        }
+        
+        return dataElements;
+    }
+
+    @Override
+    @Transactional
+    public Set<DataElement> getDataElementTotalsInIndicators( Collection<Indicator> indicators )
+    {
+        Set<DataElement> dataElements = new HashSet<>();
+        
+        for ( Indicator indicator : indicators )
+        {
+            Set<DataElement> numerator = getDataElementsInExpressionInternal( DATA_ELEMENT_TOTAL_PATTERN, indicator.getNumerator() );
+            Set<DataElement> denominator = getDataElementsInExpressionInternal( DATA_ELEMENT_TOTAL_PATTERN, indicator.getDenominator() );
+            
+            if ( numerator != null )
+            {
+                dataElements.addAll( numerator );
+            }
+            
+            if ( denominator != null )
+            {
+                dataElements.addAll( denominator );
+            }
+        }
+        
+        return dataElements;
+    }
+
+    @Override
+    @Transactional
+    public Set<DataElement> getDataElementWithOptionCombosInIndicators( Collection<Indicator> indicators )
+    {
+        Set<DataElement> dataElements = new HashSet<>();
+        
+        for ( Indicator indicator : indicators )
+        {
+            Set<DataElement> numerator = getDataElementsInExpressionInternal( OPTION_COMBO_OPERAND_PATTERN, indicator.getNumerator() );
+            Set<DataElement> denominator = getDataElementsInExpressionInternal( OPTION_COMBO_OPERAND_PATTERN, indicator.getDenominator() );
             
             if ( numerator != null )
             {
