@@ -2776,37 +2776,38 @@ Ext.onReady( function() {
 					{id: 'FinancialApril', name: GIS.i18n.financial_april}
 				],
 				relativePeriods: [
+					{id: 'THIS_WEEK', name: GIS.i18n.this_week},
 					{id: 'LAST_WEEK', name: GIS.i18n.last_week},
+					{id: 'THIS_MONTH', name: GIS.i18n.this_month},
 					{id: 'LAST_MONTH', name: GIS.i18n.last_month},
+					{id: 'THIS_BIMONTH', name: GIS.i18n.this_bimonth},
 					{id: 'LAST_BIMONTH', name: GIS.i18n.last_bimonth},
+					{id: 'THIS_QUARTER', name: GIS.i18n.this_quarter},
 					{id: 'LAST_QUARTER', name: GIS.i18n.last_quarter},
+					{id: 'THIS_SIX_MONTH', name: GIS.i18n.this_sixmonth},
 					{id: 'LAST_SIX_MONTH', name: GIS.i18n.last_sixmonth},
 					{id: 'THIS_FINANCIAL_YEAR', name: GIS.i18n.this_financial_year},
 					{id: 'LAST_FINANCIAL_YEAR', name: GIS.i18n.last_financial_year},
 					{id: 'THIS_YEAR', name: GIS.i18n.this_year},
 					{id: 'LAST_YEAR', name: GIS.i18n.last_year}
 				],
-				relativePeriodsMap: {
-					'LAST_WEEK': {id: 'LAST_WEEK', name: GIS.i18n.last_week},
-					'LAST_MONTH': {id: 'LAST_MONTH', name: GIS.i18n.last_month},
-					'LAST_BIMONTH': {id: 'LAST_BIMONTH', name: GIS.i18n.last_bimonth},
-					'LAST_QUARTER': {id: 'LAST_QUARTER', name: GIS.i18n.last_quarter},
-					'LAST_SIX_MONTH': {id: 'LAST_SIX_MONTH', name: GIS.i18n.last_sixmonth},
-					'LAST_FINANCIAL_YEAR': {id: 'LAST_FINANCIAL_YEAR', name: GIS.i18n.last_financial_year},
-					'THIS_YEAR': {id: 'THIS_YEAR', name: GIS.i18n.this_year},
-					'LAST_YEAR': {id: 'LAST_YEAR', name: GIS.i18n.last_year}
-				},
+				relativePeriodsMap: {},
 				integratedRelativePeriodsMap: {
+					'THIS_WEEK': 'THIS_WEEK',
 					'LAST_WEEK': 'LAST_WEEK',
 					'LAST_4_WEEKS': 'LAST_WEEK',
 					'LAST_12_WEEKS': 'LAST_WEEK',
+					'THIS_MONTH': 'THIS_MONTH',
 					'LAST_MONTH': 'LAST_MONTH',
 					'LAST_3_MONTHS': 'LAST_MONTH',
 					'LAST_12_MONTHS': 'LAST_MONTH',
+					'THIS_BIMONTH': 'THIS_BIMONTH',
 					'LAST_BIMONTH': 'LAST_BIMONTH',
 					'LAST_6_BIMONTHS': 'LAST_BIMONTH',
+					'THIS_QUARTER': 'THIS_QUARTER',
 					'LAST_QUARTER': 'LAST_QUARTER',
 					'LAST_4_QUARTERS': 'LAST_QUARTER',
+					'THIS_SIX_MONTH': 'THIS_SIX_MONTH',
 					'LAST_SIX_MONTH': 'LAST_SIX_MONTH',
 					'LAST_2_SIXMONTHS': 'LAST_SIX_MONTH',
 					'LAST_FINANCIAL_YEAR': 'LAST_FINANCIAL_YEAR',
@@ -2816,6 +2817,13 @@ Ext.onReady( function() {
 					'LAST_5_YEARS': 'LAST_YEAR'
 				}
 			};
+
+                // relativePeriodsMap
+            for (var i = 0, obj; i < conf.period.relativePeriods.length; i++) {
+                obj = conf.period.relativePeriods[i];
+
+                conf.period.relativePeriodsMap[obj.id] = obj.name;
+            }
 
             conf.url = {};
 
