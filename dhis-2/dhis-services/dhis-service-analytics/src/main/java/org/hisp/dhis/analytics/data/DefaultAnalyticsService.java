@@ -1243,9 +1243,7 @@ public class DefaultAnalyticsService
      */
     private DataQueryParams getQueryIndicatorsReplacedByDataElements( DataQueryParams params, int indicatorIndex )
     {
-        DataQueryParams dataSourceParams = params.instance();
-        dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
-        dataSourceParams.removeDimension( DATASET_DIM_ID );
+        DataQueryParams dataSourceParams = params.instance().removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID );
         
         List<Indicator> indicators = asTypedList( dataSourceParams.getIndicators() );
         List<NameableObject> dataElements = asList( expressionService.getDataElementsInIndicators( indicators ) );
