@@ -106,6 +106,7 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IllegalQueryException;
+import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.constant.ConstantService;
@@ -285,8 +286,6 @@ public class DefaultAnalyticsService
         {
             int indicatorIndex = params.getIndicatorDimensionIndex();
             List<Indicator> indicators = asTypedList( params.getIndicators() );
-
-            expressionService.explodeExpressions( indicators );
 
             // -----------------------------------------------------------------
             // Get indicator values
@@ -1225,34 +1224,68 @@ public class DefaultAnalyticsService
      */
     private Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( DataQueryParams params )
     {
-        DataQueryParams dataSourceParams = getQueryIndicatorsReplacedByDataElements( params );
+        Map<String, Double> aggregatedDataTotalsMap = getAggregatedDataValueMapTotals( params );
+        Map<String, Double> aggregatedDataOptionCombosMap = getAggregatedDataValueMapOptionCombos( params );
+        
+        MapMap<String, DataElementOperand, Double> permOperandValueMap = new MapMap<>();
 
-        Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( dataSourceParams );
-
-        return DataQueryParams.getPermutationOperandValueMap( aggregatedDataMap );
+        DataQueryParams.putPermutationOperandValueMap( permOperandValueMap, aggregatedDataTotalsMap, false );
+        DataQueryParams.putPermutationOperandValueMap( permOperandValueMap, aggregatedDataOptionCombosMap, true );
+        
+        return permOperandValueMap;
     }
     
     /**
-     * Returns a new instance of the given query where indicators are replaced
-     * with the data elements part of the indicator expressions.
+     * Returns a mapping of dimension keys and aggregated values for the data
+     * element totals part of the indicators in the given query.
      *
      * @param params the data query parameters.
-     * @param indicatorIndex the index of the indicator dimension in the given query.
-     * @return the data query parameters.
+     * @return a mapping of dimension keys and aggregated values.
      */
-    private DataQueryParams getQueryIndicatorsReplacedByDataElements( DataQueryParams params )
+    private Map<String, Double> getAggregatedDataValueMapTotals( DataQueryParams params )
     {
         List<Indicator> indicators = asTypedList( params.getIndicators() );
-        List<NameableObject> dataElements = asList( expressionService.getDataElementsInIndicators( indicators ) );
+        List<NameableObject> dataElements = asList( expressionService.getDataElementTotalsInIndicators( indicators ) );
 
-        DataQueryParams dataSourceParams = params.instance().removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID, INDICATOR_DIM_ID );
+        if ( !dataElements.isEmpty() )
+        {
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID, INDICATOR_DIM_ID );
+            
+            dataSourceParams.getDimensions().add( DataQueryParams.DE_IN_INDEX, new BaseDimensionalObject( 
+                DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
+    
+            return getAggregatedDataValueMap( dataSourceParams );
+        }
         
-        dataSourceParams.getDimensions().add( DataQueryParams.DE_IN_INDEX, new BaseDimensionalObject( 
-            DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
-        dataSourceParams.getDimensions().add( DataQueryParams.CO_IN_INDEX, new BaseDimensionalObject( 
-            CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<NameableObject>() ) );
+        return new HashMap<>();
+    }
 
-        return dataSourceParams;
+    /**
+     * Returns a mapping of dimension keys and aggregated values for the data
+     * elements with category option combinations part of the indicators in the 
+     * given query.
+     *
+     * @param params the data query parameters.
+     * @return a mapping of dimension keys and aggregated values.
+     */
+    private Map<String, Double> getAggregatedDataValueMapOptionCombos( DataQueryParams params )
+    {
+        List<Indicator> indicators = asTypedList( params.getIndicators() );
+        List<NameableObject> dataElements = asList( expressionService.getDataElementWithOptionCombosInIndicators( indicators ) );
+
+        if ( !dataElements.isEmpty() )
+        {
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID, INDICATOR_DIM_ID );
+            
+            dataSourceParams.getDimensions().add( DataQueryParams.DE_IN_INDEX, new BaseDimensionalObject( 
+                DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
+            dataSourceParams.getDimensions().add( DataQueryParams.CO_IN_INDEX, new BaseDimensionalObject( 
+                CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<NameableObject>() ) );
+    
+            return getAggregatedDataValueMap( dataSourceParams );
+        }
+        
+        return new HashMap<>();
     }
 
     /**
