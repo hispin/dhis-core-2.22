@@ -145,6 +145,8 @@ function showAddGroup()
         text : i18n_save,
         click : function()
         {
+			jQuery( '#addDataElementGroupForm #shortName' ).closest('tr').show();
+			jQuery( '#addDataElementGroupForm #code' ).closest('tr').show();
 			if( jQuery( '#addDataElementGroupForm #name' ).val() == "" ){
 				markValid( "addDataElementGroupForm #shortName" );
 				markInvalid( "addDataElementGroupForm #name", i18n_this_field_is_required );
@@ -156,18 +158,9 @@ function showAddGroup()
 			else
 			{
 				jQuery.postJSON( "validateDataElementGroup.action", {
-					name : function()
-					{
-						return jQuery( '#addDataElementGroupForm #name' ).val();
-					}
-					,shortName : function()
-					{
-						return jQuery( '#addDataElementGroupForm #shortName' ).val();
-					}
-					,code : function()
-					{
-						return jQuery( '#addDataElementGroupForm #code' ).val();
-					}
+					name : jQuery( '#addDataElementGroupForm #name' ).val()
+					,shortName : jQuery( '#addDataElementGroupForm #shortName' ).val()
+					,code : jQuery( '#addDataElementGroupForm #code' ).val()
 				}, function( json )
 				{
 					if ( json.response == 'success' )
@@ -181,10 +174,14 @@ function showAddGroup()
 							code : jQuery( '#addDataElementGroupForm #code' ).val()
 						}, function( json )
 						{
-							dataElementGroups[json.dataElementGroup.id] = json.dataElementGroup.name;
+							var id = json.dataElementGroup.id;
+							dataElementGroups[id] = json.dataElementGroup.name;
+							dataElementGroupShortNames[id] = json.dataElementGroup.name;
+							dataElementGroupCodes[id] = json.dataElementGroup.shortName;
 							loadAvailableGroups();
-							loadAvailableDataElements();
 							jQuery( "#view_1 #selectedDataElements" ).empty();
+							$("#dataElementGroups option:contains('" + jQuery( '#addDataElementGroupForm #name' ).val() + "')").attr("selected",true);
+							loadAvailableDataElements();
 							jQuery( '#addDataElementGroupForm' ).dialog( 'close' );
 						} );
 					} else
@@ -402,11 +399,12 @@ function deleteDataElemenGroupView2()
 function updateGroupMembers()
 {
     var id = jQuery( "#view_1 #dataElementGroups" ).val();
+	var name = dataElementGroups[id];
 	var shortName = dataElementGroupShortNames[id];
 	var code = dataElementGroupCodes[id];
 
-    jQuery.getJSON( "updateDataElementGroupEditor.action?id=" + id + "&"
-			+ "shortName=" + shortName + "&code=" + code + "&"
+    jQuery.getJSON( "updateDataElementGroupEditor.action?id=" + id
+			+ "&name=" + name + "&shortName=" + shortName + "&code=" + code + "&"
             + toQueryString( '#view_1 #selectedDataElements', 'deSelected' ), function( json )
     {
     	setHeaderDelayMessage( i18n_update_success );
