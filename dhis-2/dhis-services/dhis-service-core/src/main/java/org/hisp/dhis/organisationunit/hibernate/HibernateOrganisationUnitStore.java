@@ -108,7 +108,6 @@ public class HibernateOrganisationUnitStore
     @SuppressWarnings( "unchecked" )
     public Collection<OrganisationUnit> getByCodes( Collection<String> codes )
     {
-
         if ( codes == null || codes.isEmpty() )
         {
             return new ArrayList<>();

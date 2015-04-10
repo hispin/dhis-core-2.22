@@ -249,6 +249,10 @@ public class QueryPlannerTest
         assertEquals( pesB, paramsB.getPeriods() );
     }
     
+    /**
+     * Data element dimension must be at index 0 and category option combo 
+     * dimension must be at index 1 in map.
+     */
     @Test
     public void testGetPermutationOperandValueMap()
     {
@@ -259,16 +263,16 @@ public class QueryPlannerTest
         params.enableCategoryOptionCombos();
         
         Map<String, Double> aggregatedDataMap = new HashMap<>();
-        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1" + DIMENSION_SEP + coc.getUid(), 1d );
-        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2" + DIMENSION_SEP + coc.getUid(), 2d );
-        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1" + DIMENSION_SEP + coc.getUid(), 3d );
-        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2" + DIMENSION_SEP + coc.getUid(), 4d );
-        aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1" + DIMENSION_SEP + coc.getUid(), 5d );
-        aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2" + DIMENSION_SEP + coc.getUid(), 6d );
-        aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1" + DIMENSION_SEP + coc.getUid(), 7d );
-        aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2" + DIMENSION_SEP + coc.getUid(), 8d );
+        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1", 1d );
+        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 2d );
+        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 3d );
+        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 4d );
+        aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1", 5d );
+        aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 6d );
+        aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 7d );
+        aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 8d );
         
-        Map<String, Map<DataElementOperand, Double>> permutationMap = DataQueryParams.getPermutationOperandValueMap( aggregatedDataMap, params );
+        Map<String, Map<DataElementOperand, Double>> permutationMap = DataQueryParams.getPermutationOperandValueMap( aggregatedDataMap );
         
         assertNotNull( permutationMap );
         
