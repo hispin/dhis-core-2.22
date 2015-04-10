@@ -676,18 +676,6 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public void explodeAndSubstituteExpressions( Collection<Indicator> indicators, Integer days )
-    {
-        if ( indicators != null && !indicators.isEmpty() )
-        {
-            substituteExpressions( indicators, days );
-
-            explodeExpressions( indicators );
-        }
-    }
-
-    @Override
-    @Transactional
     public void substituteExpressions( Collection<Indicator> indicators, Integer days )
     {
         if ( indicators != null && !indicators.isEmpty() )
@@ -700,36 +688,6 @@ public class DefaultExpressionService
         }                
     }
     
-    @Override
-    @Transactional
-    public void explodeExpressions( Collection<Indicator> indicators )
-    {
-        if ( indicators != null && !indicators.isEmpty() )
-        {
-            Set<String> dataElementTotals = new HashSet<>();
-            
-            for ( Indicator indicator : indicators )
-            {
-                dataElementTotals.addAll( getDataElementTotalUids( indicator.getNumerator() ) );
-                dataElementTotals.addAll( getDataElementTotalUids( indicator.getDenominator() ) );
-            }
-            
-            if ( !dataElementTotals.isEmpty() )
-            {
-                final ListMap<String, String> dataElementMap = dataElementService.getDataElementCategoryOptionComboMap( dataElementTotals );
-                
-                if ( !dataElementMap.isEmpty() )
-                {
-                    for ( Indicator indicator : indicators )
-                    {
-                        indicator.setExplodedNumerator( explodeExpression( indicator.getExplodedNumeratorFallback(), dataElementMap ) );
-                        indicator.setExplodedDenominator( explodeExpression( indicator.getExplodedDenominatorFallback(), dataElementMap ) );
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     @Transactional
     public void explodeValidationRuleExpressions( Collection<ValidationRule> validationRules )
