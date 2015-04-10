@@ -942,34 +942,37 @@ public class DataQueryParams
     // -------------------------------------------------------------------------
 
     /**
-     * Returns a mapping of permutation keys and mappings of data element operands
-     * and values, based on the given mapping of dimension option keys and 
+     * Populates a mapping of permutation keys and mappings of data element operands
+     * and values based on the given mapping of dimension option keys and 
      * aggregated values. The data element dimension will be at index 0 and the
-     * category option combo dimension will be at index 1.
+     * category option combo dimension will be at index 1, if category option
+     * combinations is enabled.
+     * 
+     * @param permutationMap the map to populate with permutations.
+     * @param aggregatedDataMap the aggregated data map.
+     * @param cocEnabled indicates whether the given aggregated data map includes
+     *        a category option combination dimension.
      */
-    public static Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( Map<String, Double> aggregatedDataMap )
+    public static void putPermutationOperandValueMap( MapMap<String, DataElementOperand, Double> permutationMap, 
+        Map<String, Double> aggregatedDataMap, boolean cocEnabled )
     {
-        MapMap<String, DataElementOperand, Double> valueMap = new MapMap<>();
-        
         for ( String key : aggregatedDataMap.keySet() )
         {
             List<String> keys = new ArrayList<>( Arrays.asList( key.split( DIMENSION_SEP ) ) );
             
             String de = keys.get( DE_IN_INDEX );
-            String coc = keys.get( CO_IN_INDEX );
+            String coc = cocEnabled ? keys.get( CO_IN_INDEX ) : null;
 
             DataElementOperand operand = new DataElementOperand( de, coc );
             
-            ListUtils.removeAll( keys, DE_IN_INDEX, CO_IN_INDEX );
+            ListUtils.removeAll( keys, DE_IN_INDEX, ( cocEnabled ? CO_IN_INDEX : -1 ) );
             
             String permKey = StringUtils.join( keys, DIMENSION_SEP );
             
             Double value = aggregatedDataMap.get( key );
             
-            valueMap.putEntry( permKey, operand, value );            
+            permutationMap.putEntry( permKey, operand, value );            
         }
-        
-        return valueMap;
     }
 
     /**
