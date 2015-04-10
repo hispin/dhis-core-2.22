@@ -298,7 +298,7 @@ public class DefaultAnalyticsService
 
             List<List<DimensionItem>> dimensionItemPermutations = params.getDimensionItemPermutations();
 
-            Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = getPermutationOperandValueMap( params, indicatorIndex );
+            Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = getPermutationOperandValueMap( params );
 
             Map<String, Double> constantMap = constantService.getConstantMap();
 
@@ -1222,15 +1222,14 @@ public class DefaultAnalyticsService
      * aggregated values.
      * 
      * @param params the data query parameters.
-     * @param indicatorIndex the indicator dimension index for the given parameters.
      */
-    private Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( DataQueryParams params, int indicatorIndex )
+    private Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( DataQueryParams params )
     {
-        DataQueryParams dataSourceParams = getQueryIndicatorsReplacedByDataElements( params, indicatorIndex );
+        DataQueryParams dataSourceParams = getQueryIndicatorsReplacedByDataElements( params );
 
         Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( dataSourceParams );
 
-        return DataQueryParams.getPermutationOperandValueMap( aggregatedDataMap, dataSourceParams );
+        return DataQueryParams.getPermutationOperandValueMap( aggregatedDataMap );
     }
     
     /**
@@ -1241,15 +1240,17 @@ public class DefaultAnalyticsService
      * @param indicatorIndex the index of the indicator dimension in the given query.
      * @return the data query parameters.
      */
-    private DataQueryParams getQueryIndicatorsReplacedByDataElements( DataQueryParams params, int indicatorIndex )
+    private DataQueryParams getQueryIndicatorsReplacedByDataElements( DataQueryParams params )
     {
-        DataQueryParams dataSourceParams = params.instance().removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID );
-        
-        List<Indicator> indicators = asTypedList( dataSourceParams.getIndicators() );
+        List<Indicator> indicators = asTypedList( params.getIndicators() );
         List<NameableObject> dataElements = asList( expressionService.getDataElementsInIndicators( indicators ) );
 
-        dataSourceParams.getDimensions().set( indicatorIndex, new BaseDimensionalObject( DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
-        dataSourceParams.enableCategoryOptionCombos();
+        DataQueryParams dataSourceParams = params.instance().removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID, INDICATOR_DIM_ID );
+        
+        dataSourceParams.getDimensions().add( DataQueryParams.DE_IN_INDEX, new BaseDimensionalObject( 
+            DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
+        dataSourceParams.getDimensions().add( DataQueryParams.CO_IN_INDEX, new BaseDimensionalObject( 
+            CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<NameableObject>() ) );
 
         return dataSourceParams;
     }

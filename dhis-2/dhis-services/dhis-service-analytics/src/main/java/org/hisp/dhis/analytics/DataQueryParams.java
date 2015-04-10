@@ -97,6 +97,9 @@ public class DataQueryParams
     public static final String DISPLAY_NAME_PROGRAM_INDICATOR = "Program indicator";
     public static final String DISPLAY_NAME_LONGITUDE = "Longitude";
     public static final String DISPLAY_NAME_LATITUDE = "Latitude";
+
+    public static final int DE_IN_INDEX = 0;
+    public static final int CO_IN_INDEX = 1;
     
     public static final List<String> DATA_DIMS = Arrays.asList( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID );
     public static final List<String> FIXED_DIMS = Arrays.asList( DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
@@ -941,10 +944,10 @@ public class DataQueryParams
     /**
      * Returns a mapping of permutation keys and mappings of data element operands
      * and values, based on the given mapping of dimension option keys and 
-     * aggregated values.
+     * aggregated values. The data element dimension will be at index 0 and the
+     * category option combo dimension will be at index 1.
      */
-    public static Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( 
-        Map<String, Double> aggregatedDataMap, DataQueryParams params )
+    public static Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( Map<String, Double> aggregatedDataMap )
     {
         MapMap<String, DataElementOperand, Double> valueMap = new MapMap<>();
         
@@ -952,15 +955,12 @@ public class DataQueryParams
         {
             List<String> keys = new ArrayList<>( Arrays.asList( key.split( DIMENSION_SEP ) ) );
             
-            int deInx = params.getDataElementDimensionIndex();
-            int cocInx = params.getCategoryOptionComboDimensionIndex();
-            
-            String de = keys.get( deInx );
-            String coc = cocInx != -1 ? keys.get( cocInx ) : null;
+            String de = keys.get( DE_IN_INDEX );
+            String coc = keys.get( CO_IN_INDEX );
 
             DataElementOperand operand = new DataElementOperand( de, coc );
             
-            ListUtils.removeAll( keys, deInx, cocInx );
+            ListUtils.removeAll( keys, DE_IN_INDEX, CO_IN_INDEX );
             
             String permKey = StringUtils.join( keys, DIMENSION_SEP );
             
