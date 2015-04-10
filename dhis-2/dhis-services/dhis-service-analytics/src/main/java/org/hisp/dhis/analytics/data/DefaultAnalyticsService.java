@@ -285,21 +285,22 @@ public class DefaultAnalyticsService
         if ( params.getIndicators() != null )
         {
             int indicatorIndex = params.getIndicatorDimensionIndex();
+            
             List<Indicator> indicators = asTypedList( params.getIndicators() );
+
+            Period filterPeriod = params.getFilterPeriod();
+
+            Map<String, Double> constantMap = constantService.getConstantMap();
 
             // -----------------------------------------------------------------
             // Get indicator values
             // -----------------------------------------------------------------
-
-            Period filterPeriod = params.getFilterPeriod();
 
             Map<String, Map<String, Integer>> permutationOrgUnitTargetMap = getOrgUnitTargetMap( params, indicators );
 
             List<List<DimensionItem>> dimensionItemPermutations = params.getDimensionItemPermutations();
 
             Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = getPermutationOperandValueMap( params );
-
-            Map<String, Double> constantMap = constantService.getConstantMap();
 
             for ( Indicator indicator : indicators )
             {
