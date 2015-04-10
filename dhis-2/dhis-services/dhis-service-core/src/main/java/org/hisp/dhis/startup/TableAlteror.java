@@ -851,6 +851,12 @@ public class TableAlteror
         executeSql( "update relativeperiods set thisquarter = false where thisquarter is null" );
         executeSql( "update relativeperiods set thissixmonth = false where thissixmonth is null" );
         executeSql( "update relativeperiods set thisweek = false where thisweek is null" );
+
+        executeSql( "update relativeperiods set lastmonth = false where lastmonth is null" );
+        executeSql( "update relativeperiods set lastbimonth = false where lastbimonth is null" );
+        executeSql( "update relativeperiods set lastquarter = false where lastquarter is null" );
+        executeSql( "update relativeperiods set lastsixmonth = false where lastsixmonth is null" );
+        executeSql( "update relativeperiods set lastweek = false where lastweek is null" );
     }
     
     private void upgradeDataValuesWithAttributeOptionCombo()

@@ -412,6 +412,22 @@ public class DataQueryParams
     }
 
     /**
+     * Removes the dimensions with the given identifiers.
+     */
+    public DataQueryParams removeDimensions( String... dimension )
+    {
+        if ( dimension != null )
+        {
+            for ( String dim : dimension )
+            {
+                this.dimensions.remove( new BaseDimensionalObject( dim ) );
+            }
+        }            
+        
+        return this;
+    }
+
+    /**
      * Removes the dimension or filter with the given identifier.
      */
     public DataQueryParams removeDimensionOrFilter( String dimension )
