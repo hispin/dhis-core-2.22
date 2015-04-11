@@ -1525,15 +1525,7 @@ Ext.onReady( function() {
             },
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
-				data: [
-					{id: 'COUNT', text: NS.i18n.count},
-					{id: 'AVERAGE', text: NS.i18n.average},
-					{id: 'SUM', text: NS.i18n.sum},
-					{id: 'STDDEV', text: NS.i18n.stddev},
-					{id: 'VARIANCE', text: NS.i18n.variance},
-					{id: 'MIN', text: NS.i18n.min},
-					{id: 'MAX', text: NS.i18n.max}
-				]
+				data: ns.core.conf.aggregationType.data
 			}),
             resetData: function() {
                 this.setDisabled();
@@ -4769,6 +4761,11 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
+                    relativePeriodId: rp[rp.push('THIS_WEEK') - 1],
+                    boxLabel: NS.i18n.this_week
+                },
+                {
+                    xtype: 'checkbox',
                     relativePeriodId: rp[rp.push('LAST_WEEK') - 1],
                     boxLabel: NS.i18n.last_week
                 },
@@ -4801,6 +4798,11 @@ Ext.onReady( function() {
                     xtype: 'label',
                     text: NS.i18n.months,
                     cls: 'ns-label-period-heading'
+                },
+                {
+                    xtype: 'checkbox',
+                    relativePeriodId: rp[rp.push('THIS_MONTH') - 1],
+                    boxLabel: NS.i18n.this_month
                 },
                 {
                     xtype: 'checkbox',
@@ -4840,6 +4842,11 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
+                    relativePeriodId: rp[rp.push('THIS_BIMONTH') - 1],
+                    boxLabel: NS.i18n.this_bimonth
+                },
+                {
+                    xtype: 'checkbox',
                     relativePeriodId: rp[rp.push('LAST_BIMONTH') - 1],
                     boxLabel: NS.i18n.last_bimonth
                 },
@@ -4865,6 +4872,11 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
+                    relativePeriodId: rp[rp.push('THIS_QUARTER') - 1],
+                    boxLabel: NS.i18n.this_quarter
+                },
+                {
+                    xtype: 'checkbox',
                     relativePeriodId: rp[rp.push('LAST_QUARTER') - 1],
                     boxLabel: NS.i18n.last_quarter
                 },
@@ -4887,6 +4899,11 @@ Ext.onReady( function() {
                     xtype: 'label',
                     text: NS.i18n.sixmonths,
                     cls: 'ns-label-period-heading'
+                },
+                {
+                    xtype: 'checkbox',
+                    relativePeriodId: rp[rp.push('THIS_SIX_MONTH') - 1],
+                    boxLabel: NS.i18n.this_sixmonth
                 },
                 {
                     xtype: 'checkbox',
