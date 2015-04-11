@@ -38,6 +38,7 @@
 </script>
 
 <h3>$i18n.getString( "create_new_program_rule" )</h3>
+<h5>$encoder.htmlEncode($program.displayName)</h5>
 									
 <form id="programRuleForm" name="programRuleForm" action="addProgramRule.action" method="post" class="inputForm">
 
