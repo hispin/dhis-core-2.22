@@ -131,8 +131,7 @@ public class SystemController
 
             TaskId taskId = new TaskId( taskCategory, currentUserService.getCurrentUser() );
 
-            // TODO Support DataIntegrityReport (make task summary generic).
-            // TODO Also avoid null pointer on fetching unfinished task
+            // TODO Make task summary generic. (We use tasks for more than importing data).
             if ( taskCategory.equals( TaskCategory.DATAINTEGRITY ) )
             {
                 DataIntegrityReport dataIntegrityReport = (DataIntegrityReport) notifier.getTaskSummary( taskId );
