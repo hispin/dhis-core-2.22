@@ -175,7 +175,6 @@ public class OrganisationUnit
      * @param shortName
      * @param openingDate
      * @param closedDate
-     * @param active
      * @param comment
      */
     public OrganisationUnit( String name, String shortName, String code, Date openingDate, Date closedDate,
@@ -195,7 +194,6 @@ public class OrganisationUnit
      * @param shortName
      * @param openingDate
      * @param closedDate
-     * @param active
      * @param comment
      */
     public OrganisationUnit( String name, OrganisationUnit parent, String shortName, String code, Date openingDate,
