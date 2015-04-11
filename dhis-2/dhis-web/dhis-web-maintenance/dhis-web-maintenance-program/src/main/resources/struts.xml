@@ -1274,6 +1274,49 @@
         /dhis-web-commons/ajax/jsonResponseError.vm
       </result>
     </action>
+    
+    <!-- Program Rule -->    
+    
+     <action name="programRule"
+      class="org.hisp.dhis.trackedentity.action.programrule.GetProgramRuleListAction">
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-program/programRule.vm</param>
+      <param name="menu">/dhis-web-maintenance-program/menu.vm</param>
+      <param name="javascripts">javascript/programRule.js</param>
+      <param name="requiredAuthorities">F_PROGRAM_RULE_MANAGEMENT</param>
+    </action>
+    
+    <action name="showAddProgramRuleForm" class="org.hisp.dhis.trackedentity.action.programrule.ShowAddProgramRuleFormAction">
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-program/addProgramRule.vm</param>
+      <param name="javascripts">javascript/programRule.js</param>
+      <param name="requiredAuthorities">F_PROGRAM_RULE_ADD</param>
+    </action> 
+    
+    <action name="showUpdateProgramRuleForm" class="org.hisp.dhis.trackedentity.action.programrule.GetProgramRuleAction">
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-program/updateProgramRule.vm</param>
+      <param name="javascripts">javascript/programRule.js</param>
+      <param name="requiredAuthorities">F_PROGRAM_RULE_UPDATE</param>
+    </action>
+    
+    <action name="validateProgramRule"
+      class="org.hisp.dhis.trackedentity.action.programrule.ValidateProgramRuleAction">
+      <result name="success" type="velocity-json">
+        /dhis-web-commons/ajax/jsonResponseSuccess.vm
+      </result>
+      <result name="error" type="velocity-json">
+        /dhis-web-commons/ajax/jsonResponseError.vm
+      </result>
+    </action> 
+    
+    <action name="getProgramRule"
+      class="org.hisp.dhis.trackedentity.action.programrule.GetProgramRuleAction">
+      <result name="success" type="velocity-json">
+        /dhis-web-commons/ajax/jsonProgramRule.vm
+      </result>
+      <param name="onExceptionReturn">plainTextError</param>
+    </action>
 
   </package>
 </struts>

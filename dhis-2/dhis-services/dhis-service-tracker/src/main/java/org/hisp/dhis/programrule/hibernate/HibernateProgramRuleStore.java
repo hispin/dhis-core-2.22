@@ -30,6 +30,7 @@ package org.hisp.dhis.programrule.hibernate;
 
 import java.util.Collection;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.program.Program;
@@ -48,5 +49,23 @@ public class HibernateProgramRuleStore
     public Collection<ProgramRule> get( Program program )
     {
         return getCriteria( Restrictions.eq( "program", program ) ).list();
+    }
+    
+    @Override
+    public ProgramRule getByName( String name, Program program )
+    {
+        return (ProgramRule) getCriteria( Restrictions.eq( "name", name ), Restrictions.eq( "program", program ) )
+            .uniqueResult();
+    }
+    
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Collection<ProgramRule> get( Program program, String key )
+    {
+        return getSharingCriteria()
+            .add( Restrictions.eq( "program", program ) )
+            .add( Restrictions.like( "name", "%" + key + "%" ).ignoreCase())
+            .addOrder( Order.asc( "name" ) )
+            .list();
     }
 }

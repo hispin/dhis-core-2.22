@@ -498,7 +498,21 @@ var validationRules = {
             "number" : true
         }
     },
-    "trackedEntityInstanceReminder" : {
+    "programRule" : {
+        "name" : {
+            "required" : true,
+            "rangelength" : [ 2,160 ]
+        },
+        "description" : {
+            "required" : true,
+            "rangelength" : [ 2, 160 ]
+        },
+        "condition" : {
+            "required" : true,
+            "rangelength" : [ 2, 255 ]
+        }
+    },
+	"trackedEntityInstanceReminder" : {
         "name" : {
             "required" : true,
             "rangelength" : [2,160]
