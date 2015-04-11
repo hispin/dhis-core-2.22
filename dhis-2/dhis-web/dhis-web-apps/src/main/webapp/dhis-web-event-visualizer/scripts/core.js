@@ -658,10 +658,11 @@ Ext.onReady( function() {
 					{id: 'FinancialOct', name: NS.i18n.financial_oct},
 					{id: 'FinancialJuly', name: NS.i18n.financial_july},
 					{id: 'FinancialApril', name: NS.i18n.financial_april}
-				]
+				],
+                relativePeriods: []
 			};
 
-            // aggregation type
+                // aggregation type
             conf.aggregationType = {
                 data: [
 					{id: 'COUNT', name: NS.i18n.count, text: NS.i18n.count},
