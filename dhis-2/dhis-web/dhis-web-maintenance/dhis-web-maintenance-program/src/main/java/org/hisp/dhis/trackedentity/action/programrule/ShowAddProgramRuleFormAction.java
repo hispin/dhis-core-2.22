@@ -1,4 +1,4 @@
-package org.hisp.dhis.programrule;
+package org.hisp.dhis.trackedentity.action.programrule;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,78 +28,76 @@ package org.hisp.dhis.programrule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hisp.dhis.program.Program;
-import org.springframework.transaction.annotation.Transactional;
+import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.programrule.ProgramRuleVariable;
+import org.hisp.dhis.programrule.ProgramRuleVariableService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.Action;
 
 /**
- * @author markusbekken
+ * @author Tran Chau
+ * @version $Id$
  */
-@Transactional
-public class DefaultProgramRuleService
-    implements ProgramRuleService
+public class ShowAddProgramRuleFormAction
+    implements Action
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private ProgramRuleStore programRuleStore;
+    @Autowired
+    private ProgramService programService;
+    
+    @Autowired
+    private ProgramRuleVariableService variableService;
 
-    public void setProgramRuleStore( ProgramRuleStore programRuleStore )
+    // -------------------------------------------------------------------------
+    // Input/Output
+    // -------------------------------------------------------------------------
+
+    private int id;
+
+    public int getId()
     {
-        this.programRuleStore = programRuleStore;
+        return id;
+    }
+
+    public void setId( int id )
+    {
+        this.id = id;
+    }
+
+    private Program program;
+
+    public Program getProgram()
+    {
+        return program;
+    }
+
+    private List<ProgramRuleVariable> ruleVariables;
+
+    public List<ProgramRuleVariable> getRuleVariables()
+    {
+        return ruleVariables;
     }
 
     // -------------------------------------------------------------------------
-    // ProgramRule implementation
+    // Action implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public int addProgramRule( ProgramRule programRule )
+    public String execute()
+        throws Exception
     {
-        return programRuleStore.save( programRule );
-    }
+        program = programService.getProgram( id );
 
-    @Override
-    public void deleteProgramRule( ProgramRule programRule )
-    {
-        programRuleStore.delete( programRule );
-    }
-
-    @Override
-    public void updateProgramRule( ProgramRule programRule )
-    {
-        programRuleStore.update( programRule );
-    }
-
-    @Override
-    public ProgramRule getProgramRule( int id )
-    {
-        return programRuleStore.get( id );
-    }
-    
-    @Override
-    public ProgramRule getProgramRuleByName( String name, Program program )
-    {
-        return programRuleStore.getByName( name, program );
-    }
-    
-    @Override
-    public Collection<ProgramRule> getAllProgramRule()
-    {
-        return programRuleStore.getAll();
-    }
-
-    @Override
-    public Collection<ProgramRule> getProgramRule( Program program )
-    {
-        return programRuleStore.get( program );
-    }
-    
-    @Override
-    public Collection<ProgramRule> getProgramRules( Program program, String key )
-    {
-        return programRuleStore.get( program, key );
+        ruleVariables = new ArrayList<>( variableService.getProgramRuleVariable( program ));
+            
+        return SUCCESS;
     }
 }

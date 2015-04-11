@@ -70,6 +70,15 @@ public interface ProgramRuleService
     ProgramRule getProgramRule( int id );
 
     /**
+     * Returns a {@link ProgramRule}.
+     *
+     * @param name the name of the ProgramRule to return.
+     * @param program {@link Program}.
+     * @return the ProgramRule with the given name
+     */
+    ProgramRule getProgramRuleByName( String name, Program program );
+
+    /**
      * Returns all {@link ProgramRule}.
      *
      * @return a collection of all ProgramRule, or an empty collection if
@@ -84,4 +93,13 @@ public interface ProgramRuleService
      * @return ProgramRule list
      */
     Collection<ProgramRule> getProgramRule( Program program );
+
+    /**
+     * Get validation by {@link Program}
+     *
+     * @param program Program
+     * @param key Search Program Rule by key
+     * @return ProgramRule list
+     */
+    Collection<ProgramRule> getProgramRules( Program program, String key );
 }

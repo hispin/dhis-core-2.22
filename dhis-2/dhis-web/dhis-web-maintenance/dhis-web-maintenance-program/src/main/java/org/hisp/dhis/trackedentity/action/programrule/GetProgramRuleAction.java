@@ -1,7 +1,5 @@
-package org.hisp.dhis.programrule;
-
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2014, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,79 +25,75 @@ package org.hisp.dhis.programrule;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.hisp.dhis.trackedentity.action.programrule;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.hisp.dhis.program.Program;
-import org.springframework.transaction.annotation.Transactional;
+import org.hisp.dhis.programrule.ProgramRule;
+import org.hisp.dhis.programrule.ProgramRuleService;
+import org.hisp.dhis.programrule.ProgramRuleVariable;
+import org.hisp.dhis.programrule.ProgramRuleVariableService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.Action;
 
 /**
- * @author markusbekken
+ * @author Chau Thu Tran
+ *
+ * @version $ ValidationProgramRuleAction.java Mar 29, 2015 10:19:42 PM $
  */
-@Transactional
-public class DefaultProgramRuleService
-    implements ProgramRuleService
+public class GetProgramRuleAction
+    implements Action
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private ProgramRuleStore programRuleStore;
-
-    public void setProgramRuleStore( ProgramRuleStore programRuleStore )
-    {
-        this.programRuleStore = programRuleStore;
-    }
+    @Autowired
+    private ProgramRuleService programRuleService;
+    
+    @Autowired
+    private ProgramRuleVariableService variableService;
 
     // -------------------------------------------------------------------------
-    // ProgramRule implementation
+    // Input/Output
+    // -------------------------------------------------------------------------
+
+    private Integer id;
+
+    public void setId( Integer id )
+    {
+        this.id = id;
+    }
+
+    private ProgramRule programRule;
+
+    public ProgramRule getProgramRule()
+    {
+        return programRule;
+    }
+
+    private List<ProgramRuleVariable> ruleVariables;
+
+    public List<ProgramRuleVariable> getRuleVariables()
+    {
+        return ruleVariables;
+    }
+    
+    // -------------------------------------------------------------------------
+    // Action implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public int addProgramRule( ProgramRule programRule )
+    public String execute()
+        throws Exception
     {
-        return programRuleStore.save( programRule );
+        programRule = programRuleService.getProgramRule( id );
+       
+        ruleVariables = new ArrayList<>( variableService.getProgramRuleVariable( programRule.getProgram() ));
+        
+        return SUCCESS;
     }
 
-    @Override
-    public void deleteProgramRule( ProgramRule programRule )
-    {
-        programRuleStore.delete( programRule );
-    }
-
-    @Override
-    public void updateProgramRule( ProgramRule programRule )
-    {
-        programRuleStore.update( programRule );
-    }
-
-    @Override
-    public ProgramRule getProgramRule( int id )
-    {
-        return programRuleStore.get( id );
-    }
-    
-    @Override
-    public ProgramRule getProgramRuleByName( String name, Program program )
-    {
-        return programRuleStore.getByName( name, program );
-    }
-    
-    @Override
-    public Collection<ProgramRule> getAllProgramRule()
-    {
-        return programRuleStore.getAll();
-    }
-
-    @Override
-    public Collection<ProgramRule> getProgramRule( Program program )
-    {
-        return programRuleStore.get( program );
-    }
-    
-    @Override
-    public Collection<ProgramRule> getProgramRules( Program program, String key )
-    {
-        return programRuleStore.get( program, key );
-    }
 }

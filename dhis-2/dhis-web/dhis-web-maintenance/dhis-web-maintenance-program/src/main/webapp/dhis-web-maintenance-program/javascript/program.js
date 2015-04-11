@@ -292,3 +292,12 @@ function moveDownPropertyList() {
     }
   }
 }
+
+//-----------------------------------------------------------------------------
+// Program Rule
+//-----------------------------------------------------------------------------
+
+function programRule( context )
+{
+	location.href = 'programRule.action?id=' + context.id;
+}
