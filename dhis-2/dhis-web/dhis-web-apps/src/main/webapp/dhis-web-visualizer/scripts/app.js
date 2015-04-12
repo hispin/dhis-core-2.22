@@ -5767,6 +5767,26 @@ Ext.onReady( function() {
                                         }
                                     }
                                 ]
+                            },
+                            {
+                                text: 'Advanced',
+                                iconCls: 'ns-menu-item-advanced',
+                                menu: [
+                                    {
+                                        text: 'JRXML',
+                                        iconCls: 'ns-menu-item-datasource',
+                                        handler: function() {
+                                            openPlainDataSource(ns.core.init.contextPath + '/api/analytics.jrxml' + getParamString(), true);
+                                        }
+                                    },
+                                    {
+                                        text: 'Raw data SQL',
+                                        iconCls: 'ns-menu-item-datasource',
+                                        handler: function() {
+                                            openPlainDataSource(ns.core.init.contextPath + '/api/analytics/debug/sql' + getParamString(), true);
+                                        }
+                                    }
+                                ]
                             }
                         ];
 
