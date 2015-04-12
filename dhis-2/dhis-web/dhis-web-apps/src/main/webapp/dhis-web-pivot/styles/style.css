@@ -639,6 +639,7 @@ table.pivot.fontsize-small td {
 .ns-menu-item-image,
 .ns-menu-item-tablelayout,
 .ns-menu-item-datasource,
+.ns-menu-item-advanced,
 .ns-menu-item-scheme,
 .ns-menu-item-selected,
 .ns-menu-item-unselected {
@@ -653,6 +654,9 @@ table.pivot.fontsize-small td {
 }
 .ns-menu-item-datasource {
     background-image:url('../images/dl_datasource.png');
+}
+.ns-menu-item-advanced {
+    background-image:url('../images/dl_advanced.png');
 }
 .ns-menu-item-scheme {
     background-image:url('../images/dl_scheme.png');
