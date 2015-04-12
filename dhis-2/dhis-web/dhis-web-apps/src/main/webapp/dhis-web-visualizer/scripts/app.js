@@ -203,8 +203,8 @@ Ext.onReady( function() {
 			window,
 
 			margin = 1,
-			defaultWidth = 160,
-			defaultHeight = 200;
+			defaultWidth = 200,
+			defaultHeight = 220;
 
 		getStore = function(data) {
 			var config = {};
@@ -267,7 +267,7 @@ Ext.onReady( function() {
 
 		dimension = Ext.create('Ext.ux.form.MultiSelect', {
 			cls: 'ns-toolbar-multiselect-leftright',
-			width: defaultWidth,
+			width: defaultWidth - 50,
 			height: (defaultHeight * 2) + margin,
 			style: 'margin-right:' + margin + 'px; margin-bottom:0px',
 			valueField: 'id',
@@ -309,7 +309,7 @@ Ext.onReady( function() {
 				height: 25,
 				items: {
 					xtype: 'label',
-					text: NS.i18n.series,
+					text: NS.i18n.series_dimensions,
 					cls: 'ns-toolbar-multiselect-leftright-label'
 				}
 			},
@@ -361,7 +361,7 @@ Ext.onReady( function() {
 				height: 25,
 				items: {
 					xtype: 'label',
-					text: NS.i18n.category,
+					text: NS.i18n.category_dimensions,
 					cls: 'ns-toolbar-multiselect-leftright-label'
 				}
 			},
@@ -413,7 +413,7 @@ Ext.onReady( function() {
 				height: 25,
 				items: {
 					xtype: 'label',
-					text: NS.i18n.filter,
+					text: NS.i18n.report_filter,
 					cls: 'ns-toolbar-multiselect-leftright-label'
 				}
 			},
