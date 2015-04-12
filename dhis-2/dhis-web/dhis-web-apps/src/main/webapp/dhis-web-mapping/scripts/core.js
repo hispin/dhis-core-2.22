@@ -3048,20 +3048,25 @@ Ext.onReady( function() {
 
 			util.array = {};
 
-			util.array.sort = function(array, direction, key) {
-				// accepts [number], [string], [{prop: number}], [{prop: string}]
+			util.array.sort = function(array, direction, key, emptyFirst) {
+				// supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
 
-				if (!util.object.getLength(array)) {
-					return array;
+				if (!support.prototype.array.getLength(array)) {
+					return;
 				}
 
-				key = key || 'name';
-                direction = direction || 'ASC';
+				key = !!key || Ext.isNumber(key) ? key : 'name';
 
 				array.sort( function(a, b) {
 
 					// if object, get the property values
-					if (Ext.isObject(a) && Ext.isObject(b) && key) {
+					if (Ext.isObject(a) && Ext.isObject(b)) {
+						a = a[key];
+						b = b[key];
+					}
+
+					// if array, get from the right index
+					if (Ext.isArray(a) && Ext.isArray(b)) {
 						a = a[key];
 						b = b[key];
 					}
@@ -3084,7 +3089,15 @@ Ext.onReady( function() {
 						return direction === 'DESC' ? b - a : a - b;
 					}
 
-					return 0;
+                    else if (a === undefined || a === null) {
+                        return emptyFirst ? -1 : 1;
+                    }
+
+                    else if (b === undefined || b === null) {
+                        return emptyFirst ? 1 : -1;
+                    }
+
+					return -1;
 				});
 
 				return array;

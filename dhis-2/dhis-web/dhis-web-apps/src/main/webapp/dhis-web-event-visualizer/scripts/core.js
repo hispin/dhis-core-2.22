@@ -1234,7 +1234,7 @@ Ext.onReady( function() {
 				return array.length;
 			};
 
-			support.prototype.array.sort = function(array, direction, key) {
+			support.prototype.array.sort = function(array, direction, key, emptyFirst) {
 				// supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
 
 				if (!support.prototype.array.getLength(array)) {
@@ -1274,6 +1274,14 @@ Ext.onReady( function() {
 					else if (Ext.isNumber(a) && Ext.isNumber(b)) {
 						return direction === 'DESC' ? b - a : a - b;
 					}
+
+                    else if (a === undefined || a === null) {
+                        return emptyFirst ? -1 : 1;
+                    }
+
+                    else if (b === undefined || b === null) {
+                        return emptyFirst ? 1 : -1;
+                    }
 
 					return -1;
 				});
