@@ -546,13 +546,13 @@ Ext.onReady( function() {
 			}
 
 			// sort organisation unit levels
-			gis.util.array.sort(init.organisationUnitLevels, 'ASC', 'level');
+			util.array.sort(init.organisationUnitLevels, 'ASC', 'level');
 
 			// sort indicator groups
-			gis.util.array.sort(init.indicatorGroups);
+			util.array.sort(init.indicatorGroups);
 
 			// sort data element groups
-			gis.util.array.sort(init.dataElementGroups);
+			util.array.sort(init.dataElementGroups);
 		}());
 
 		// store
