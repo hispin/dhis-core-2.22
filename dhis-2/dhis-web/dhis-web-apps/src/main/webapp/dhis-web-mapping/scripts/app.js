@@ -3229,7 +3229,12 @@ Ext.onReady( function() {
 
             windowWidth = 450,
             windowBorder = 12,
-            bodyPadding = 2;
+            bodyPadding = 2,
+
+            legendBodyBorder = 1,
+            legendBodyPadding = 1,
+            fieldLabelWidth = 105,
+            gridPadding = 1;
 
 		legendSetStore = Ext.create('Ext.data.Store', {
 			fields: ['id', 'name'],
@@ -3430,11 +3435,143 @@ Ext.onReady( function() {
 				addLegend,
 				reset,
 				data = [],
-                legendBodyBorder = 1,
-                legendBodyPadding = 1,
-                fieldLabelWidth = 105,
-                gridPadding = 1;
 
+                LegendEditWindow;
+
+            // edit legend panel
+            LegendEditWindow = function(record) {
+                var editLegendName,
+                    editStartValue,
+                    editEndValue,
+                    editColor,
+                    editCancel,
+                    editUpdate,
+                    showUpdateLegend,
+                    validateForm,
+                    editWindow;
+
+                editLegendName = Ext.create('Ext.form.field.Text', {
+                    cls: 'gis-textfield',
+                    width: windowWidth - windowBorder - bodyPadding - (2 * legendBodyBorder) - (2 * legendBodyPadding) + 4,
+                    height: 23,
+                    fieldStyle: 'padding-left: 3px; border-color: #bbb',
+                    labelStyle: 'padding-top: 5px; padding-left: 3px',
+                    fieldLabel: GIS.i18n.legend_name,
+                    value: record.data.name
+                });
+
+                editStartValue = Ext.create('Ext.form.field.Number', {
+                    width: 163 + 2,
+                    height: 23,
+                    allowDecimals: true,
+                    style: 'margin-bottom: 0px',
+                    value: record.data.startValue
+                });
+
+                editEndValue = Ext.create('Ext.form.field.Number', {
+                    width: 163 + 2,
+                    height: 23,
+                    allowDecimals: true,
+                    style: 'margin-bottom: 0px; margin-left: 1px',
+                    value: record.data.endValue
+                });
+
+                editColor = Ext.create('Ext.ux.button.ColorButton', {
+                    width: windowWidth - windowBorder - bodyPadding - (2 * legendBodyBorder) - (2 * legendBodyPadding) - fieldLabelWidth + 4,
+                    height: 23,
+                    style: 'border-radius: 1px',
+                    value: record.data.color.replace('#', '')
+                });
+
+                validateEditLegendForm = function() {
+                    if (!(editLegendName.getValue() && Ext.isNumber(editStartValue.getValue()) && Ext.isNumber(editEndValue.getValue()) && editColor.getValue())) {
+                        return;
+                    }
+
+                    if (editStartValue.getValue() >= editEndValue.getValue()) {
+                        return;
+                    }
+
+                    return true;
+                };
+
+                editCancel = Ext.create('Ext.button.Button', {
+                    text: 'Cancel',
+                    handler: function() {
+                        editWindow.destroy();
+                    }
+                });
+
+                editUpdate = Ext.create('Ext.button.Button', {
+                    text: 'Update',
+                    handler: function() {
+                        if (!validateEditLegendForm()) {
+                            return;
+                        }
+
+                        record.set('name', editLegendName.getValue());
+                        record.set('startValue', editStartValue.getValue());
+                        record.set('endValue', editEndValue.getValue());
+                        record.set('color', '#' + editColor.getValue());
+
+                        editWindow.destroy();
+                        window.isDirty = true;
+                        tmpLegendStore.sort('startValue', 'ASC');
+                    }
+                });
+
+                editWindow = Ext.create('Ext.window.Window', {
+                    title: 'Edit legend (' + record.data.name + ')',
+                    width: windowWidth,
+                    modal: true,
+                    shadow: true,
+                    resizable: false,
+                    bodyStyle: 'background: #fff; padding: 1px',
+                    bbar: [
+                        editCancel,
+                        '->',
+                        editUpdate
+                    ],
+                    items: [
+                        editLegendName,
+                        {
+                            layout: 'hbox',
+                            cls: 'gis-container-inner',
+                            bodyStyle: 'background: transparent',
+                            items: [
+                                {
+                                    html: GIS.i18n.start_end_value + ':',
+                                    width: fieldLabelWidth,
+                                    bodyStyle: 'background:transparent; padding-top:3px; padding-left:3px'
+                                },
+                                editStartValue,
+                                editEndValue
+                            ]
+                        },
+                        {
+                            layout: 'column',
+                            cls: 'gis-container-inner',
+                            bodyStyle: 'background: transparent',
+                            items: [
+                                {
+                                    html: GIS.i18n.legend_symbolizer + ':',
+                                    width: fieldLabelWidth,
+                                    bodyStyle: 'background:transparent; padding-top:3px; padding-left:3px'
+                                },
+                                editColor
+                            ]
+                        }
+                    ]
+                });
+
+                return editWindow;
+            };
+
+            showUpdateLegend = function(record) {
+                LegendEditWindow(record).showAt(window.getPosition()[0], window.getPosition()[1] + 55);
+            };
+
+            // legend panel
 			tmpLegendStore = Ext.create('Ext.data.ArrayStore', {
 				fields: ['id', 'name', 'startValue', 'endValue', 'color']
 			});
@@ -3519,6 +3656,8 @@ Ext.onReady( function() {
 						startValue.reset();
 						endValue.reset();
 						color.reset();
+
+                        window.isDirty = true;
 					}
 				}
 			});
@@ -3535,7 +3674,7 @@ Ext.onReady( function() {
 					{
 						dataIndex: 'name',
 						sortable: false,
-						width: 256
+						width: 236
 					},
 					{
 						sortable: false,
@@ -3557,8 +3696,18 @@ Ext.onReady( function() {
 					{
 						xtype: 'actioncolumn',
 						sortable: false,
-						width: 20,
+						width: 40,
 						items: [
+							{
+								iconCls: 'gis-grid-row-icon-edit',
+								getClass: function() {
+									return 'tooltip-legendset-edit';
+								},
+								handler: function(grid, rowIndex, colIndex, col, event) {
+									var record = this.up('grid').store.getAt(rowIndex);
+									showUpdateLegend(record);
+								}
+							},
 							{
 								iconCls: 'gis-grid-row-icon-delete',
 								getClass: function() {
@@ -3747,6 +3896,7 @@ Ext.onReady( function() {
 			legendSetPanel = new LegendSetPanel();
 			window.removeAll();
 			window.add(legendSetPanel);
+            window.isDirty = false;
 
 			info.show();
 			cancel.hide();
@@ -3875,7 +4025,12 @@ Ext.onReady( function() {
 			listeners: {
 				show: function() {
 					this.setPosition(269, 33);
-				}
+				},
+                beforeclose: function() {
+                    if (window.isDirty) {
+                        return confirm('The legend set has unsaved modifications. Close anyway?');
+                    }
+                }
 			}
 		});
 
