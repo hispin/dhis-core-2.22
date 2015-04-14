@@ -1,5 +1,11 @@
-function autoUpload() {
-    document.getElementById('uploadPackageForm').addEventListener('change', function(e) {
+/* global jQuery */
+jQuery(function autoUpload() {
+    var uploadForm = document.getElementById('uploadPackageForm')
+
+    //If settings are not valid the form is not available.
+    if (uploadForm === null) { return; }
+
+    uploadForm.addEventListener('change', function(e) {
         var fd = new FormData(document.getElementById('uploadPackageForm'));
         var xhr = new XMLHttpRequest();
         xhr.addEventListener('progress', function(e) {
@@ -31,6 +37,4 @@ function autoUpload() {
         xhr.open('post', 'addApp.action', true);
         xhr.send(fd);
     }, false);
-}
-
-$( document ).ready( autoUpload );
+});
