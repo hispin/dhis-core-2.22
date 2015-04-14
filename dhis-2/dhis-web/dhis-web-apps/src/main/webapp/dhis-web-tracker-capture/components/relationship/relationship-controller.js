@@ -171,6 +171,7 @@ trackerCapture.controller('RelationshipController',
 .controller('AddRelationshipController', 
     function($scope, 
             $rootScope,
+            DateUtils,
             CurrentSelection,
             OperatorFactory,
             AttributesFactory,
@@ -264,6 +265,7 @@ trackerCapture.controller('RelationshipController',
         $scope.queryUrl = null;
         $scope.programUrl = null;
         $scope.attributeUrl = {url: null, hasValue: false};
+        $scope.sortColumn = {};
     }
     
     //listen for selections
@@ -271,6 +273,29 @@ trackerCapture.controller('RelationshipController',
         var relationshipInfo = CurrentSelection.getRelationshipInfo();
         $scope.teiForRelationship = relationshipInfo.tei;
     });
+    
+    //sortGrid
+    $scope.sortGrid = function(gridHeader){
+        if ($scope.sortColumn && $scope.sortColumn.id === gridHeader.id){
+            $scope.reverse = !$scope.reverse;
+            return;
+        }        
+        $scope.sortColumn = gridHeader;
+        if($scope.sortColumn.valueType === 'date'){
+            $scope.reverse = true;
+        }
+        else{
+            $scope.reverse = false;    
+        }
+    };
+    
+    $scope.d2Sort = function(tei){        
+        if($scope.sortColumn && $scope.sortColumn.valueType === 'date'){            
+            var d = tei[$scope.sortColumn.id];         
+            return DateUtils.getDate(d);
+        }
+        return tei[$scope.sortColumn.id];
+    };
     
     $scope.search = function(mode){ 
         
@@ -338,7 +363,12 @@ trackerCapture.controller('RelationshipController',
             //process tei grid
             $scope.trackedEntityList = TEIGridService.format(data,false, $scope.optionSets);
             $scope.showTrackedEntityDiv = true;
-            $scope.teiFetched = true;            
+            $scope.teiFetched = true;
+            
+            if(!$scope.sortColumn.id){                                      
+                $scope.sortGrid({id: 'created', name: $translate('registration_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: false});
+            }
+            
         });
     };
     
