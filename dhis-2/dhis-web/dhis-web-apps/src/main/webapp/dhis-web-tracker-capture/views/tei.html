@@ -27,7 +27,7 @@
                     </tr>                        
                 </thead>
                 <tbody id="list">
-                    <tr ng-repeat="trackedEntity in trackedEntityList.rows" 
+                    <tr ng-repeat="trackedEntity in trackedEntityList.rows| orderBy:d2Sort:reverse" 
                         ng-click="selectedTei.trackedEntityInstance ? assignRelationship(trackedEntity) : showDashboard(trackedEntity)"
                         ng-if="selectedTei.trackedEntityInstance ? trackedEntity.id !== selectedTei.trackedEntityInstance : true"
                         title="{{selectedTei.trackedEntityInstance ? 'select' : 'go_to_dashboard'| translate}}">
