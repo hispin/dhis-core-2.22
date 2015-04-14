@@ -107,7 +107,7 @@
   $.fn.selected.defaults = {
     iterator: 'objects',
     handler: function( item ) {
-      return $('<option/>').val(item.id).text(item.name);
+      return $('<option/>').val(item.id).text(item.displayName);
     },
     defaultMoveSelected: function( sel ) {
       $(sel).find(':selected').trigger('dblclick');
@@ -165,7 +165,9 @@
         data: {
           paging: true,
           pageSize: 100 + context.target.children().length,
-          page: context.page
+          page: context.page,
+          translate: true,
+          fields: 'id,displayName'
         },
         dataType: 'json'
       };
@@ -218,7 +220,9 @@
       var request = {
         url: context.url,
         data: {
-          paging: false
+          paging: false,
+          translate: true,
+          fields: 'id,displayName'
         },
         dataType: 'json'
       };
