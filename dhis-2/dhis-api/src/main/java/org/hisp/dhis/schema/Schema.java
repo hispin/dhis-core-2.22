@@ -151,6 +151,7 @@ public class Schema implements Ordered, Klass
         this.metadata = true;
     }
 
+    @Override
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
     public Class<?> getKlass()
