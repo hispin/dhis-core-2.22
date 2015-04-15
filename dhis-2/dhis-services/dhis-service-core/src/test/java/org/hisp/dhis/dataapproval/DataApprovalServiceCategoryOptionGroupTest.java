@@ -28,9 +28,18 @@ package org.hisp.dhis.dataapproval;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL;
-import static org.junit.Assert.*;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS;
+import static org.hisp.dhis.system.util.CollectionUtils.asSet;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import org.hisp.dhis.DhisTest;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -68,15 +77,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import static org.hisp.dhis.system.util.CollectionUtils.asSet;
 
 /**
  * @author Jim Grace
@@ -493,12 +493,6 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         systemSettingManager.saveSystemSetting( KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS, true );
         systemSettingManager.saveSystemSetting( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, true );
-    }
-
-    @Override
-    public void tearDownTest()
-    {
-        jdbcTemplate.execute( "DROP TABLE _orgunitstructure;" );
     }
 
     @Override

@@ -220,6 +220,18 @@ public class HibernateDbmsManager
         dropTable( "aggregatedorgunitdatavalue" );
         dropTable( "aggregatedorgunitindicatorvalue" );
         dropTable( "aggregatedorgunitdatasetcompleteness" );
+        
+        dropTable( "_categoryoptioncomboname" );
+        dropTable( "_categoryoptiongroupsetstructure" );
+        dropTable( "_categorystructure" );
+        dropTable( "_dataelementcategoryoptioncombo" );
+        dropTable( "_dataelementgroupsetstructure" );
+        dropTable( "_dataelementstructure" );
+        dropTable( "_dateperiodstructure" );
+        dropTable( "_indicatorgroupsetstructure" );
+        dropTable( "_organisationunitgroupsetstructure" );
+        dropTable( "_orgunitstructure" );
+        dropTable( "_periodstructure" );
 
         log.debug( "Cleared database contents" );
 
