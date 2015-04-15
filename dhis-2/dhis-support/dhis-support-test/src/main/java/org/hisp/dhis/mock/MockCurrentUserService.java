@@ -44,17 +44,25 @@ public class MockCurrentUserService
     implements CurrentUserService
 {
     private User currentUser;
+
+    private boolean superUserFlag;
     
     public MockCurrentUserService( User currentUser )
     {
         this.currentUser = currentUser;
     }
-    
+
     public MockCurrentUserService( Set<OrganisationUnit> organisationUnits, Set<OrganisationUnit> dataViewOrganisationUnits, String... auths )
+    {
+        this( true, organisationUnits, dataViewOrganisationUnits, auths );
+    }
+
+    public MockCurrentUserService( boolean superUserFlag, Set<OrganisationUnit> organisationUnits, Set<OrganisationUnit> dataViewOrganisationUnits, String... auths )
     {
         UserAuthorityGroup userRole = new UserAuthorityGroup();
         userRole.getAuthorities().addAll( Arrays.asList( auths ) );
 
+        this.superUserFlag = superUserFlag;
         UserCredentials credentials = new UserCredentials();
         credentials.setUsername( "currentUser" );
         credentials.getUserAuthorityGroups().add( userRole );
@@ -83,7 +91,7 @@ public class MockCurrentUserService
     @Override
     public boolean currentUserIsSuper()
     {
-        return true;
+        return superUserFlag;
     }
 
     @Override

@@ -92,6 +92,14 @@ public class HibernateGenericStore<T>
     @Autowired
     protected CurrentUserService currentUserService;
 
+    /**
+     * Allows rewiring (e.g. by a unit test)
+     */
+    public void setCurrentUserService( CurrentUserService currentUserService )
+    {
+        this.currentUserService = currentUserService;
+    }
+
     @Autowired
     protected AclService aclService;
 

@@ -120,13 +120,19 @@ public class HibernateDbmsManager
         emptyTable( "chart_categorydimensions" );
         emptyTable( "chart" );
 
+        emptyTable( "categoryoptiongroupusergroupaccesses" );
+        emptyTable( "categoryoptiongroupsetusergroupaccesses" );
+        emptyTable( "dataelementcategoryoptionusergroupaccesses" );
+        emptyTable( "usergroupaccess" );
+
+        emptyTable( "users_catdimensionconstraints" );
         emptyTable( "userrolemembers" );
         emptyTable( "userroledataset" );
         emptyTable( "userroleauthorities" );
         emptyTable( "usergroupmembers" );
         emptyTable( "usergroup" );
-        emptyTable( "users" );
-        emptyTable( "userinfo" );
+        emptyTable( "userdatavieworgunits" );
+        emptyTable( "usermembership" );
         emptyTable( "userrole" );
 
         emptyTable( "orgunitgroupsetmembers" );
@@ -170,6 +176,7 @@ public class HibernateDbmsManager
         emptyTable( "categorycombos_categories" );
         emptyTable( "categories_categoryoptions" );
 
+        emptyTable( "categoryoption_organisationunits" );
         emptyTable( "orgunitgroupsetmembers" );
         emptyTable( "orgunitgroupmembers" );
         emptyTable( "orgunitgroupset" );
@@ -200,6 +207,11 @@ public class HibernateDbmsManager
 
         emptyTable( "optionvalue" );
         emptyTable( "optionset" );
+
+        emptyTable( "systemsetting" );
+
+        emptyTable( "users" );
+        emptyTable( "userinfo" );
 
         dropTable( "aggregateddatavalue" );
         dropTable( "aggregatedindicatorvalue" );
