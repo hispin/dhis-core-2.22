@@ -116,7 +116,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
     private OrganisationUnitService organisationUnitService;
 
     @Autowired
-    protected IdentifiableObjectManager _identifiableObjectManager;
+    protected IdentifiableObjectManager identifiableObjectManager;
 
     @Autowired
     private SystemSettingManager systemSettingManager;
@@ -271,7 +271,6 @@ public class DataApprovalServiceCategoryOptionGroupTest
     @Override
     public void setUpTest() throws Exception
     {
-        identifiableObjectManager = _identifiableObjectManager;
         userService = _userService;
 
         // ---------------------------------------------------------------------

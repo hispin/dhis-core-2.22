@@ -85,7 +85,7 @@ public class RegistrationMultiEventsServiceTest
     private SessionFactory sessionFactory;
     
     @Autowired 
-    private IdentifiableObjectManager _identifiableObjectManager;
+    private IdentifiableObjectManager identifiableObjectManager;
     
     @Autowired
     private UserService _userService;
@@ -118,7 +118,6 @@ public class RegistrationMultiEventsServiceTest
     protected void setUpTest()
         throws Exception
     {
-        identifiableObjectManager = _identifiableObjectManager;
         userService = _userService;
 
         organisationUnitA = createOrganisationUnit( 'A' );
