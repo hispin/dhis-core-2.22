@@ -28,7 +28,13 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -40,10 +46,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import static org.junit.Assert.*;
+import com.google.common.collect.Lists;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -58,13 +61,7 @@ public class QueryServiceTest
     private QueryService queryService;
 
     @Autowired
-    private IdentifiableObjectManager _identifiableObjectManager;
-
-    @Override
-    protected void setUpTest() throws Exception
-    {
-        this.identifiableObjectManager = _identifiableObjectManager;
-    }
+    private IdentifiableObjectManager identifiableObjectManager;
 
     private void createDataElements()
     {

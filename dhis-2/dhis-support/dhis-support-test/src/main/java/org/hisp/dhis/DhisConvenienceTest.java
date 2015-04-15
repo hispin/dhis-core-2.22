@@ -53,7 +53,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.DimensionalObject;
-import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -85,12 +84,12 @@ import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
-import org.hisp.dhis.programrule.ProgramRule;
-import org.hisp.dhis.programrule.ProgramRuleAction;
-import org.hisp.dhis.programrule.ProgramRuleVariable;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
+import org.hisp.dhis.programrule.ProgramRule;
+import org.hisp.dhis.programrule.ProgramRuleAction;
+import org.hisp.dhis.programrule.ProgramRuleVariable;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewType;
@@ -149,8 +148,6 @@ public abstract class DhisConvenienceTest
 
     protected UserService userService;
     
-    protected IdentifiableObjectManager identifiableObjectManager;
-
     static
     {
         DateTime dateTime = new DateTime( 1970, 1, 1, 0, 0 );
@@ -1554,7 +1551,6 @@ public abstract class DhisConvenienceTest
      */
     protected User createUserAndInjectSecurityContext( Set<OrganisationUnit> organisationUnits, Set<OrganisationUnit> dataViewOrganisationUnits, boolean allAuth, String... auths )
     {
-        Assert.notNull( identifiableObjectManager, "IdentifiableObjectManager must be injected in test" );
         Assert.notNull( userService, "UserService must be injected in test" );
 
         UserAuthorityGroup userAuthorityGroup = new UserAuthorityGroup();
@@ -1573,7 +1569,7 @@ public abstract class DhisConvenienceTest
             }
         }
 
-        identifiableObjectManager.save( userAuthorityGroup );
+        userService.addUserAuthorityGroup( userAuthorityGroup );
 
         User user = createUser( 'A' );
 
