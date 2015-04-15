@@ -433,8 +433,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Factory for fetching OrgUnit */
-.factory('OrgUnitFactory', function($http) {    
-    var orgUnit, orgUnitPromise, rootOrgUnitPromise, myOrgUnitsPromise;    
+.factory('OrgUnitFactory', function($http, SessionStorageService) {    
+    var orgUnit, orgUnitPromise, rootOrgUnitPromise;
+    var roles = SessionStorageService.get('USER_ROLES');
     return {
         get: function(uid){            
             if( orgUnit !== uid ){
@@ -444,28 +445,29 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 });
             }
             return orgUnitPromise;
-        },        
-        getRoot: function(){
+        },    
+        getSearchTreeRoot: function(){
             if(!rootOrgUnitPromise){
-                rootOrgUnitPromise = $http.get( '../api/organisationUnits.json?filter=level:eq:1&fields=id,name,children[id,name,children[id,name]]&paging=false' ).then(function(response){
+                
+                var url = '../api/me.json?fields=organisationUnits[id,name,children[id,name,children[id,name]]]&paging=false';
+                
+                if( roles && roles.userCredentials && roles.userCredentials.userRoles && roles.userCredentials.userRoles.authorities ){
+                    if( roles.userCredentials.userRoles.authorities.indexOf('ALL') !== -1 || 
+                            roles.userCredentials.userRoles.authorities.indexOf('F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS') !== -1 ){                        
+                        url = '../api/organisationUnits.json?filter=level:eq:1&fields=id,name,children[id,name,children[id,name]]&paging=false';                        
+                    }
+                }                
+                rootOrgUnitPromise = $http.get( url ).then(function(response){
                     return response.data;
                 });
             }
             return rootOrgUnitPromise;
-        },
-        getMine: function(){
-            if(!myOrgUnitsPromise){
-                myOrgUnitsPromise = $http.get('../api/me/organisationUnits').then(function(response){
-                    return response.data;
-                });
-            }
-            return myOrgUnitsPromise;
         }
     }; 
 })
 
 /* service to deal with TEI registration and update */
-.service('RegistrationService', function(DialogService, TEIService, $q){
+.service('RegistrationService', function(TEIService, $q){
     return {
         registerOrUpdate: function(tei, optionSets, attributesById){
             if(tei){
