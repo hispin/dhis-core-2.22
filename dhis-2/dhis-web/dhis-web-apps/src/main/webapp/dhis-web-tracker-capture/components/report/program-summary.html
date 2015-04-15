@@ -9,7 +9,7 @@
         <ul>
         </ul>
     </div>
-    <img id="ouwt_loader" src="../images/ajax-loader-bar.gif" alt="{{'loading_tree' | translate}}"/>
+    <img id="ouwt_loader" src="../images/ajax-loader-bar.gif" alt="{{'loading_tree'| translate}}"/>
     <!--- selected org unit begins -->
     <input type="text" selected-org-unit ng-model="selectedOrgUnit.name" ng-hide=true>
     <!--- selected org unit ends  -->
@@ -36,46 +36,68 @@
             <div ng-switch-default> 
 
                 <!-- report begins -->
-                <div class="vertical-spacing">                    
-                    <table class="table table-compact table-striped">
-                        <thead>
-                            <tr>
-                                <th>{{selectedProgram.trackedEntity.name}}</th>
-                                <th>{{selectedProgram.name}} {{'_records'| translate}}</th>
-                            </tr>
-                        </thead>
-                        <tr ng-repeat="tei in teiList">
-                            <td>
-                                <span ng-repeat="gridColumn in gridColumns" ng-if="gridColumn.displayInListNoProgram">
-                                    <span class="bold">{{gridColumn.name}}:</span> {{tei[gridColumn.id]}}<br>
-                                </span>
-                            </td>
-                            <td>
-                                <span class='bold inline-block' ng-if='!dhis2Events[tei.id]'>{{'no_visit_made'| translate}}</span>
-                                <div class="inline-block" ng-repeat="ev in dhis2Events[tei.id] | orderBy: 'eventDate'">                                    
-                                    <span class="block align-center">{{ev.orgUnitName}}</span>                   
-                                    <div class="empty-event-container" 
-                                         title="{{'no_data'| translate}}"
-                                         ng-class="{'{{ev.statusColor}}': true}"
-                                         ng-if='!ev.dataValues'>
-                                        {{ev.name}}<br/>
-                                        {{ev.eventDate}}
-                                    </div>
-                                    <div class="event-container" 
-                                         title="{{'details'| translate}}"
-                                         ng-class="{'{{ev.statusColor}}': true}"
-                                         ng-if='ev.dataValues'
-                                         ng-click="showEventDetails(ev, tei)">
-                                        {{ev.name}}<br/>
-                                        {{ev.eventDate}}
-                                    </div>                                    
-                                    <i class="fa fa-arrow-right" ng-show="$index < dhis2Events[tei.id].length - 1"></i>
-                                </div>                                             
-                            </td>
-                        </tr>
-                    </table>
+                <div class="vertical-spacing">
+                    <tabset>                        
+                        <tab ng-repeat="stage in programStages | orderBy: 'sortOrder'" heading="{{stage.name}}">
+                            <table class="table table-bordered vertical-spacing">
+                                <thead>                        
+                                    <tr>
+                                        <th class="active">
+                                            {{selectedProgram.trackedEntity.name}}
+                                        </th>
+                                        <th class="active">
+                                            {{'event_date' | translate}}
+                                        </th>
+                                        <th class="active">
+                                            {{'event_orgunit_name'| translate}}
+                                        </th>
+                                        <th class="active" ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
+                                            {{prStDe.dataElement.name}}
+                                        </th>                                        
+                                    </tr>                        
+                                </thead>
+                                <tbody ng-repeat="tei in teiList" ng-if="dhis2Events[tei.id].length > 0">
+                                    <tr ng-repeat="ev in dhis2Events[tei.id] | filter: {programStage: stage.id} | orderBy: 'eventDate'">
+                                        <td rowspan="{{dhis2Events[tei.id].length}}" ng-if="$index === 0">
+                                            <span ng-repeat="gridColumn in gridColumns" ng-if="gridColumn.displayInListNoProgram">
+                                                <span class="bold">{{gridColumn.name}}:</span> {{tei[gridColumn.id]}}<br>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{ev.eventDate}}
+                                        </td>
+                                        <td>
+                                            {{ev.orgUnitName}}
+                                        </td>
+                                        <td ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
+                                            {{ev[prStDe.dataElement.id]}}
+                                        </td>                                                                       
+                                    </tr>
+                                </tbody>
+                                <tbody ng-repeat="tei in teiList" ng-if="!dhis2Events[tei.id]">
+                                    <tr>
+                                        <td>
+                                            <span ng-repeat="gridColumn in gridColumns" ng-if="gridColumn.displayInListNoProgram">
+                                                <span class="bold">{{gridColumn.name}}:</span> {{tei[gridColumn.id]}}<br>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{'no_data' | translate}}
+                                        </td>
+                                        <td>
+                                            {{'no_data' | translate}}
+                                        </td>
+                                        <td ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
+                                            {{'no_data' | translate}}
+                                        </td>                                                                       
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </tab>
+                    </tabset>
                 </div>
                 <!-- report ends -->
+                
             </div>
         </div> 
     </div>
