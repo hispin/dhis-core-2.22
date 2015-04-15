@@ -305,12 +305,6 @@ public class DataApprovalServiceTest
     }
 
     @Override
-    public void tearDownTest()
-    {
-        jdbcTemplate.execute( "DROP TABLE _orgunitstructure;" );
-    }
-
-    @Override
     public boolean emptyDatabaseAfterTest()
     {
         return true;
