@@ -31,8 +31,6 @@ package org.hisp.dhis.resourcetable.statement;
 import java.util.List;
 
 import org.amplecode.quick.Statement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 
 /**
@@ -41,8 +39,6 @@ import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 public class CreateCategoryOptionGroupSetTableStatement
     implements Statement
 {
-    private static final Log log = LogFactory.getLog( CreateCategoryOptionGroupSetTableStatement.class );
-
     private static final String LONG_TEXT_COLUMN_TYPE = "VARCHAR (250)";
     
     public static final String TABLE_NAME = "_categoryoptiongroupsetstructure";
@@ -70,8 +66,6 @@ public class CreateCategoryOptionGroupSetTableStatement
         }
         
         statement += "PRIMARY KEY ( categoryoptioncomboid ) )";
-                
-        log.info( "Create category option group set table SQL: " + statement );
         
         return statement;
     }
