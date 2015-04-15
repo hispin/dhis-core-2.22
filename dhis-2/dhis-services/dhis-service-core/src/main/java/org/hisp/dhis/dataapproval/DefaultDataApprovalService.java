@@ -189,17 +189,17 @@ public class DefaultDataApprovalService
                 da.setDataApprovalLevel( status.getDataApproval().getDataApprovalLevel() );
             }
 
-            if ( status == null || !status.getState().isApproved() ||
+            if ( status == null || !status.getPermissions().isMayUnapprove() )
+            {
+                log.warn( "unapproveData: data may not be unapproved, state " + ( status == null ? "(null)" : status.getState().name() ) + " " + da );
+
+                throw new DataMayNotBeUnapprovedException();
+            }
+
+            if ( !status.getState().isApproved() ||
                 da.getDataApprovalLevel().getLevel() < status.getDataApprovalLevel().getLevel() )
             {
                 continue; // Already unapproved at or below this level
-            }
-
-            if ( !status.getPermissions().isMayUnapprove() )
-            {
-                log.warn( "unapproveData: data may not be unapproved, state " + status.getState().name() + " " + da );
-
-                throw new DataMayNotBeUnapprovedException();
             }
 
             checkedList.add ( da );
@@ -245,7 +245,8 @@ public class DefaultDataApprovalService
                 da.setDataApprovalLevel( status.getDataApproval().getDataApprovalLevel() );
             }
 
-            if ( status != null && ( status.getState().isAccepted() && da.getDataApprovalLevel().getLevel() == status.getDataApprovalLevel().getLevel() || 
+            if ( status != null && status.getState() != null && status.getDataApprovalLevel() != null &&
+                ( status.getState().isAccepted() && da.getDataApprovalLevel().getLevel() == status.getDataApprovalLevel().getLevel() ||
                 da.getDataApprovalLevel().getLevel() > status.getDataApprovalLevel().getLevel() ) )
             {
                 continue; // Already accepted at, or approved above, this level
