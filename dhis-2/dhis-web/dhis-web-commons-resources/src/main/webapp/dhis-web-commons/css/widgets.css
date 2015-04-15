@@ -933,6 +933,7 @@ input:-moz-placeholder
 .tipText
 {
 	color: #777;
+	font-weight: normal;
 }
 
 .fa-question-circle

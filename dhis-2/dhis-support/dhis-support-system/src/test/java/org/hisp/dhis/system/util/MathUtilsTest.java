@@ -49,6 +49,8 @@ import org.junit.Test;
  */
 public class MathUtilsTest
 {
+    private static final double DELTA = 0.01;
+    
     @Test
     public void testExpressionIsTrue()
     {
@@ -66,7 +68,7 @@ public class MathUtilsTest
     {
         double[] array = { 5.0, 2.0, 6.0, 12.0 };
         
-        assertEquals( 2.0, MathUtils.getMin( array ), 0.01 );
+        assertEquals( 2.0, MathUtils.getMin( array ), DELTA );
     }
 
     @Test
@@ -74,7 +76,7 @@ public class MathUtilsTest
     {
         double[] array = { 5.0, 2.0, 12.0, 6.0 };
         
-        assertEquals( 12.0, MathUtils.getMax( array ), 0.01 );
+        assertEquals( 12.0, MathUtils.getMax( array ), DELTA );
     }
 
     @Test
@@ -289,36 +291,47 @@ public class MathUtilsTest
     @Test
     public void testGetAverage()
     {
-        assertEquals( 7.5, MathUtils.getAverage( Arrays.asList( 5.0, 5.0, 10.0, 10.0 ) ), 0.01 );
+        assertEquals( 7.5, MathUtils.getAverage( Arrays.asList( 5.0, 5.0, 10.0, 10.0 ) ), DELTA );
     }
     
     @Test
     public void testGetRounded()
     {
-        assertEquals( 10, MathUtils.getRounded( 10.00 ), 0.01 );
-        assertEquals( 10, MathUtils.getRounded( 10 ), 0.01 );
-        assertEquals( 0.53, MathUtils.getRounded( 0.5281 ), 0.01 );
-        assertEquals( 0.5, MathUtils.getRounded( 0.5 ), 0.01 );
-        assertEquals( 0, MathUtils.getRounded( 0 ), 0.01 );
-        assertEquals( -0.43, MathUtils.getRounded( -0.43123 ), 0.01 );
-        assertEquals( -10, MathUtils.getRounded( -10.00 ), 0.01 );        
+        assertEquals( 10, MathUtils.getRounded( 10.00 ), DELTA );
+        assertEquals( 10, MathUtils.getRounded( 10 ), DELTA );
+        assertEquals( 0.53, MathUtils.getRounded( 0.5281 ), DELTA );
+        assertEquals( 0.5, MathUtils.getRounded( 0.5 ), DELTA );
+        assertEquals( 0, MathUtils.getRounded( 0 ), DELTA );
+        assertEquals( -0.43, MathUtils.getRounded( -0.43123 ), DELTA );
+        assertEquals( -10, MathUtils.getRounded( -10.00 ), DELTA );        
     }
     
     @Test
     public void testFunctionExpression()
     {
-        assertEquals( 3d, MathUtils.calculateExpression( "1+2" ), 0.01 );
-        assertEquals( 3d, MathUtils.calculateExpression( "abs(3)" ), 0.01 );
-        assertEquals( 3d, MathUtils.calculateExpression( "abs(-3)" ), 0.01 );
-        assertEquals( 3d, MathUtils.calculateExpression( "abs(3-6)" ), 0.01 );
-        assertEquals( 5d, MathUtils.calculateExpression( "sqrt(25)" ), 0.01 );
-        assertEquals( 1d, MathUtils.calculateExpression( "mod(7,2)" ), 0.01 );
+        assertEquals( 3d, MathUtils.calculateExpression( "1+2" ), DELTA );
+        assertEquals( 3d, MathUtils.calculateExpression( "abs(3)" ), DELTA );
+        assertEquals( 3d, MathUtils.calculateExpression( "abs(-3)" ), DELTA );
+        assertEquals( 3d, MathUtils.calculateExpression( "abs(3-6)" ), DELTA );
+        assertEquals( 5d, MathUtils.calculateExpression( "sqrt(25)" ), DELTA );
+        assertEquals( 1d, MathUtils.calculateExpression( "mod(7,2)" ), DELTA );
     }
     
     @Test
     public void testCalculateExpression()
     {
-        assertEquals( 84d, MathUtils.calculateExpression( "70/1000*12*100" ), 0.01 );
-        assertEquals( 1158d, MathUtils.calculateExpression( "70+1000-12+100" ), 0.01 );        
+        assertEquals( 84d, MathUtils.calculateExpression( "70/1000*12*100" ), DELTA );
+        assertEquals( 1158d, MathUtils.calculateExpression( "70+1000-12+100" ), DELTA );        
+    }
+    
+    @Test
+    public void testCalculateExpressionOneIfZeroOrPositive()
+    {
+        assertEquals( 1d, MathUtils.calculateExpression( "oizp(314)" ), DELTA );
+        assertEquals( 1d, MathUtils.calculateExpression( "oizp(0)" ), DELTA );
+        assertEquals( 0d, MathUtils.calculateExpression( "oizp(-3)" ), DELTA );
+        assertEquals( 5d, MathUtils.calculateExpression( "4 + oizp(314)" ), DELTA );
+        assertEquals( 4d, MathUtils.calculateExpression( "oizp(0) + 3" ), DELTA );
+        assertEquals( 5d, MathUtils.calculateExpression( "oizp(-3) + 5" ), DELTA );
     }
 }
