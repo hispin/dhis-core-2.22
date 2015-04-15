@@ -51,6 +51,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.chart.Chart;
+import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.constant.Constant;
@@ -714,6 +715,39 @@ public abstract class DhisConvenienceTest
     public static OrganisationUnit createOrganisationUnit( char uniqueCharacter, OrganisationUnit parent )
     {
         OrganisationUnit unit = createOrganisationUnit( uniqueCharacter );
+
+        unit.setParent( parent );
+        parent.getChildren().add( unit );
+
+        return unit;
+    }
+
+    /**
+     * @param name The name, short name and code of the organisation unit.
+     */
+    public static OrganisationUnit createOrganisationUnit( String name )
+    {
+        OrganisationUnit unit = new OrganisationUnit();
+        unit.setAutoFields();
+
+        unit.setUid( CodeGenerator.generateCode() );
+        unit.setName( name );
+        unit.setShortName( name );
+        unit.setCode( name );
+        unit.setOpeningDate( date );
+        unit.setClosedDate( date );
+        unit.setComment( "Comment " + name );
+
+        return unit;
+    }
+
+    /**
+     * @param name   The name, short name and code of the organisation unit.
+     * @param parent The parent.
+     */
+    public static OrganisationUnit createOrganisationUnit( String name, OrganisationUnit parent )
+    {
+        OrganisationUnit unit = createOrganisationUnit( name );
 
         unit.setParent( parent );
         parent.getChildren().add( unit );
