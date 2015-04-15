@@ -65,7 +65,7 @@ public class IdentifiableObjectManagerTest
     private DataElementService dataElementService;
 
     @Autowired
-    private IdentifiableObjectManager _identifiableObjectManager;
+    private IdentifiableObjectManager identifiableObjectManager;
 
     @Autowired
     private UserService _userService;
@@ -73,7 +73,6 @@ public class IdentifiableObjectManagerTest
     @Override
     protected void setUpTest() throws Exception
     {
-        this.identifiableObjectManager = _identifiableObjectManager;
         this.userService = _userService;
     }
 

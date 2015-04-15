@@ -83,7 +83,7 @@ public class RegistrationSingleEventServiceTest
     private EnrollmentService enrollmentService;
     
     @Autowired 
-    private IdentifiableObjectManager _identifiableObjectManager;
+    private IdentifiableObjectManager identifiableObjectManager;
     
     @Autowired
     private UserService _userService;
@@ -104,7 +104,6 @@ public class RegistrationSingleEventServiceTest
     @Override
     protected void setUpTest() throws Exception
     {
-        identifiableObjectManager = _identifiableObjectManager;
         userService = _userService;
 
         organisationUnitA = createOrganisationUnit( 'A' );
