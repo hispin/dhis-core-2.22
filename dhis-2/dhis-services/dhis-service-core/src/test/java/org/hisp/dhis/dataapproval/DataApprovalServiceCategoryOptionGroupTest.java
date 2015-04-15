@@ -33,6 +33,8 @@ import static org.hisp.dhis.setting.SystemSettingManager.KEY_HIDE_UNAPPROVED_DAT
 import static org.hisp.dhis.system.util.CollectionUtils.asSet;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -819,29 +821,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // Approve ChinaA1_1 at level 4
         // ---------------------------------------------------------------------
 
-        assertEquals( true, approve( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unapprove( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, approve( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unapprove( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( globalUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( globalReadEverything, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( globalUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( globalReadEverything, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaAgencyBUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaAgencyBUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaPartner2User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaPartner2User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, approve( chinaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( chinaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         // ---------------------------------------------------------------------
         // ChinaA1_1 is approved at level 4
@@ -940,29 +942,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         //TODO: test approving at wrong levels
 
-        assertEquals( true, approve( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( true, unapprove( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertTrue( approve( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertTrue( unapprove( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
 
-        assertEquals( true, approve( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( true, unapprove( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertTrue( approve( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertTrue( unapprove( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
 
-        assertEquals( false, approve( globalUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( false, approve( globalReadEverything, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( globalUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( globalReadEverything, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
 
-        assertEquals( false, approve( brazilInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( false, approve( chinaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( false, approve( indiaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( brazilInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( chinaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( indiaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
 
-        assertEquals( false, approve( brazilAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( false, approve( chinaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( false, approve( chinaAgencyBUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( false, approve( indiaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( brazilAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( chinaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( chinaAgencyBUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( indiaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
 
-        assertEquals( false, approve( brazilPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( false, approve( chinaPartner2User, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
-        assertEquals( false, approve( indiaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( brazilPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( chinaPartner2User, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertFalse( approve( indiaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
 
-        assertEquals( true, approve( chinaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
+        assertTrue( approve( chinaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_2Combo ) );
 
         // ---------------------------------------------------------------------
         // ChinaA1_1 is approved at level 4
@@ -1060,29 +1062,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // Accept ChinaA1_1 at level 4
         // ---------------------------------------------------------------------
 
-        assertEquals( true, accept( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unaccept( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unaccept( superUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, accept( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unaccept( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unaccept( globalConsultant, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( globalUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( globalReadEverything, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( globalUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( globalReadEverything, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaInteragencyUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaAgencyBUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaAgencyBUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaPartner2User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaPartner2User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaPartner1User, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, accept( chinaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( chinaAgencyAUser, partnerLevel4, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         // ---------------------------------------------------------------------
         // ChinaA1_1 is accepted at level 4
@@ -1179,29 +1181,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // ---------------------------------------------------------------------
         // Approve ChinaA1_1 at level 3
         // ---------------------------------------------------------------------
-        assertEquals( true, approve( superUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unapprove( superUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( superUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( superUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, approve( globalConsultant, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unapprove( globalConsultant, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( globalConsultant, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( globalConsultant, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( globalUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( globalReadEverything, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( globalUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( globalReadEverything, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaAgencyBUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaAgencyBUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaPartner2User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaPartner2User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, approve( chinaAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( chinaAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         // ---------------------------------------------------------------------
         // ChinaA1_1 is approved at level 3
@@ -1299,29 +1301,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // Accept ChinaA1_1 at level 3
         // ---------------------------------------------------------------------
 
-        assertEquals( true, accept( superUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unaccept( superUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( superUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unaccept( superUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, accept( globalConsultant, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unaccept( globalConsultant, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( globalConsultant, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unaccept( globalConsultant, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( globalUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( globalReadEverything, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( globalUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( globalReadEverything, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaAgencyBUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaAgencyBUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaAgencyAUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaPartner2User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaPartner2User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaPartner1User, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, accept( chinaInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( chinaInteragencyUser, agencyLevel3, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         // ---------------------------------------------------------------------
         // ChinaA1_1 is accepted at level 3
@@ -1419,29 +1421,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // Approve ChinaA1_1 at level 2
         // ---------------------------------------------------------------------
 
-        assertEquals( true, approve( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unapprove( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, approve( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unapprove( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( globalUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( globalReadEverything, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( globalUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( globalReadEverything, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaAgencyBUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaAgencyBUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaPartner2User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaPartner2User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, approve( chinaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( chinaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         // ---------------------------------------------------------------------
         // ChinaA1_1 is approved at level 2
@@ -1539,29 +1541,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // Accept ChinaA1_1 at level 2
         // ---------------------------------------------------------------------
 
-        assertEquals( true, accept( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unaccept( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unaccept( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, accept( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unaccept( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unaccept( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( globalReadEverything, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( globalReadEverything, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaAgencyBUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaAgencyBUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, accept( brazilPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( chinaPartner2User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, accept( indiaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( brazilPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( chinaPartner2User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( accept( indiaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, accept( globalUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( globalUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         // ---------------------------------------------------------------------
         // ChinaA1_1 is accepted at level 2
@@ -1659,29 +1661,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // Approve ChinaA1_1 at level 1
         // ---------------------------------------------------------------------
 
-        assertEquals( true, approve( superUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unapprove( superUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( superUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( superUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, approve( globalConsultant, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, unapprove( globalConsultant, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( globalConsultant, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( globalConsultant, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( globalReadEverything, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( globalReadEverything, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaAgencyBUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaAgencyBUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, approve( brazilPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( chinaPartner2User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, approve( indiaPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( brazilPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( chinaPartner2User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( approve( indiaPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, approve( globalUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( globalUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         // ---------------------------------------------------------------------
         // ChinaA1_1 is approved at level 1
@@ -1771,29 +1773,29 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // Unapprove ChinaA1_1 at level 1
         // ---------------------------------------------------------------------
 
-        assertEquals( true, unapprove( superUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, approve( superUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( superUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( superUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, unapprove( globalConsultant, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, approve( globalConsultant, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( globalConsultant, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( approve( globalConsultant, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, unapprove( globalReadEverything, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( globalReadEverything, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, unapprove( brazilInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, unapprove( chinaInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, unapprove( indiaInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( brazilInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( chinaInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( indiaInteragencyUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, unapprove( brazilAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, unapprove( chinaAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, unapprove( chinaAgencyBUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, unapprove( indiaAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( brazilAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( chinaAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( chinaAgencyBUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( indiaAgencyAUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( false, unapprove( brazilPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, unapprove( chinaPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, unapprove( chinaPartner2User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( false, unapprove( indiaPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( brazilPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( chinaPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( chinaPartner2User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertFalse( unapprove( indiaPartner1User, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, unapprove( globalUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unapprove( globalUser, globalLevel1, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         assertArrayEquals( new String[] {
                 "ou=Brazil mechanism=BrazilA1 level=4 UNAPPROVED_READY approve=T unapprove=F accept=F unaccept=F read=T",
@@ -1808,30 +1810,30 @@ public class DataApprovalServiceCategoryOptionGroupTest
         // Unaccept ChinaA1_1 at level 2
         // ---------------------------------------------------------------------
 
-        assertEquals( true, unaccept( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, accept( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unaccept( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( superUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
-        assertEquals( true, unaccept( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-        assertEquals( true, accept( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( unaccept( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+        assertTrue( accept( globalConsultant, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 
         //TODO: Fix and test:
-//        assertEquals( false, accept( globalReadEverything, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( accept( globalReadEverything, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 //
-//        assertEquals( false, unaccept( brazilInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-//        assertEquals( false, unaccept( chinaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-//        assertEquals( false, unaccept( indiaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( brazilInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( chinaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( indiaInteragencyUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 //
-//        assertEquals( false, unaccept( brazilAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-//        assertEquals( false, unaccept( chinaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-//        assertEquals( false, unaccept( chinaAgencyBUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-//        assertEquals( false, unaccept( indiaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( brazilAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( chinaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( chinaAgencyBUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( indiaAgencyAUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 //
-//        assertEquals( false, unaccept( brazilPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-//        assertEquals( false, unaccept( chinaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-//        assertEquals( false, unaccept( chinaPartner2User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
-//        assertEquals( false, unaccept( indiaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( brazilPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( chinaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( chinaPartner2User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertFalse( unaccept( indiaPartner1User, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 //
-//        assertEquals( true, unaccept( globalUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
+//        assertTrue( unaccept( globalUser, countryLevel2, dataSetA, periodA, china, chinaA1_1Combo ) );
 //
 //        generateAllApprovalsAndPermissions();
     }
