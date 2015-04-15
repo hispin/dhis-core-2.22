@@ -123,6 +123,7 @@ public class HibernateDbmsManager
         emptyTable( "categoryoptiongroupusergroupaccesses" );
         emptyTable( "categoryoptiongroupsetusergroupaccesses" );
         emptyTable( "dataelementcategoryoptionusergroupaccesses" );
+        emptyTable( "usergroupusergroupaccesses" );
         emptyTable( "usergroupaccess" );
 
         emptyTable( "users_catdimensionconstraints" );
