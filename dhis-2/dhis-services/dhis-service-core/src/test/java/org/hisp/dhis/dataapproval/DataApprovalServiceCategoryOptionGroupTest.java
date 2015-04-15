@@ -74,7 +74,6 @@ import org.hisp.dhis.user.UserGroupAccess;
 import org.hisp.dhis.user.UserGroupAccessService;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.UserService;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -720,7 +719,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
     // Tests
     // -------------------------------------------------------------------------
 
-    @Ignore // TODO: Enabling this test causes DataApprovalServiceTest to fail. Determine why and Fix.
+    //@Ignore // TODO: Enabling this test causes DataApprovalServiceTest to fail. Determine why and Fix.
     @Test
     public void test()
     {
