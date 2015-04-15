@@ -82,7 +82,7 @@ import static org.hisp.dhis.system.util.CollectionUtils.asSet;
  * @author Jim Grace
  */
 public class DataApprovalServiceCategoryOptionGroupTest
-        extends DhisTest
+    extends DhisTest
 {
     private static final String ACCESS_NONE = "--------";
     private static final String ACCESS_READ = "r-------";
@@ -203,7 +203,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
     // Set up/tear down helper methods
     // -------------------------------------------------------------------------
 
-    private CurrentUserService mockCurrentUserService( String userName, boolean superUserFlag, OrganisationUnit orgUnit, String... auths )
+    private CurrentUserService getMockCurrentUserService( String userName, boolean superUserFlag, OrganisationUnit orgUnit, String... auths )
     {
         CurrentUserService mockCurrentUserService = new MockCurrentUserService( superUserFlag, asSet( orgUnit ), asSet( orgUnit ), auths );
 
@@ -218,7 +218,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         for ( UserAuthorityGroup role : credentials.getUserAuthorityGroups() )
         {
-            role.setName( CodeGenerator.generateCode() ); // Give the role an arbitrary name.
+            role.setName( CodeGenerator.generateCode() ); // Give the role an arbitrary name
 
             userService.addUserAuthorityGroup( role );
         }
@@ -229,7 +229,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
         return mockCurrentUserService;
     }
 
-    private UserGroup userGroup( String userGroupName, Set<User> users )
+    private UserGroup getUserGroup( String userGroupName, Set<User> users )
     {
         UserGroup userGroup = new UserGroup();
         userGroup.setAutoFields();
@@ -242,10 +242,10 @@ public class DataApprovalServiceCategoryOptionGroupTest
         return userGroup;
     }
 
-    private void setPrivateAccess(BaseIdentifiableObject object, UserGroup... userGroups)
+    private void setPrivateAccess( BaseIdentifiableObject object, UserGroup... userGroups )
     {
         object.setPublicAccess( ACCESS_NONE );
-        object.setUser( userA ); // Needed for sharing to work!
+        object.setUser( userA ); // Needed for sharing to work
 
         for ( UserGroup group : userGroups )
         {
@@ -328,35 +328,35 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         dateA = new Date();
 
-        superUser = mockCurrentUserService( "SuperUser", true, global, UserAuthorityGroup.AUTHORITY_ALL );
-        globalConsultant = mockCurrentUserService( "GlobalConsultant", false, global, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        globalUser = mockCurrentUserService( "GlobalUser", false, global, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        globalReadEverything = mockCurrentUserService( "GlobalReadEverything", false, global, DataApproval.AUTH_VIEW_UNAPPROVED_DATA );
-        brazilInteragencyUser = mockCurrentUserService( "BrazilInteragencyUser", false, brazil, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        chinaInteragencyUser = mockCurrentUserService( "ChinaInteragencyUser", false, china, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        indiaInteragencyUser = mockCurrentUserService( "IndiaInteragencyUser", false, india, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        brazilAgencyAUser = mockCurrentUserService( "BrazilAgencyAUser", false, brazil, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        chinaAgencyAUser = mockCurrentUserService( "ChinaAgencyAUser", false, china, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        chinaAgencyBUser = mockCurrentUserService( "ChinaAgencyBUser", false, china, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        indiaAgencyAUser = mockCurrentUserService( "IndiaAgencyAUser", false, india, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        brazilPartner1User = mockCurrentUserService( "BrazilPartner1User", false, brazil, DataApproval.AUTH_APPROVE );
-        chinaPartner1User = mockCurrentUserService( "ChinaPartner1User", false, china, DataApproval.AUTH_APPROVE );
-        chinaPartner2User = mockCurrentUserService( "ChinaPartner2User", false, china, DataApproval.AUTH_APPROVE );
-        indiaPartner1User = mockCurrentUserService( "IndiaPartner1User", false, india, DataApproval.AUTH_APPROVE );
+        superUser = getMockCurrentUserService( "SuperUser", true, global, UserAuthorityGroup.AUTHORITY_ALL );
+        globalConsultant = getMockCurrentUserService( "GlobalConsultant", false, global, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
+        globalUser = getMockCurrentUserService( "GlobalUser", false, global, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        globalReadEverything = getMockCurrentUserService( "GlobalReadEverything", false, global, DataApproval.AUTH_VIEW_UNAPPROVED_DATA );
+        brazilInteragencyUser = getMockCurrentUserService( "BrazilInteragencyUser", false, brazil, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        chinaInteragencyUser = getMockCurrentUserService( "ChinaInteragencyUser", false, china, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        indiaInteragencyUser = getMockCurrentUserService( "IndiaInteragencyUser", false, india, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        brazilAgencyAUser = getMockCurrentUserService( "BrazilAgencyAUser", false, brazil, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        chinaAgencyAUser = getMockCurrentUserService( "ChinaAgencyAUser", false, china, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        chinaAgencyBUser = getMockCurrentUserService( "ChinaAgencyBUser", false, china, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        indiaAgencyAUser = getMockCurrentUserService( "IndiaAgencyAUser", false, india, DataApproval.AUTH_APPROVE, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+        brazilPartner1User = getMockCurrentUserService( "BrazilPartner1User", false, brazil, DataApproval.AUTH_APPROVE );
+        chinaPartner1User = getMockCurrentUserService( "ChinaPartner1User", false, china, DataApproval.AUTH_APPROVE );
+        chinaPartner2User = getMockCurrentUserService( "ChinaPartner2User", false, china, DataApproval.AUTH_APPROVE );
+        indiaPartner1User = getMockCurrentUserService( "IndiaPartner1User", false, india, DataApproval.AUTH_APPROVE );
         currentMockUserService = null;
 
-        UserGroup globalUsers = userGroup( "GlobalUsers", asSet( globalUser.getCurrentUser(), globalConsultant.getCurrentUser(), globalReadEverything.getCurrentUser() ) );
-        UserGroup brazilInteragencyUsers = userGroup( "BrazilInteragencyUsers", asSet( brazilInteragencyUser.getCurrentUser() ) );
-        UserGroup chinaInteragencyUsers = userGroup( "ChinaInteragencyUsers", asSet( chinaInteragencyUser.getCurrentUser() ) );
-        UserGroup indiaInteragencyUsers = userGroup( "IndiaInteragencyUsers", asSet( indiaInteragencyUser.getCurrentUser() ) );
-        UserGroup brazilAgencyAUsers = userGroup( "BrazilAgencyAUsers", asSet( brazilAgencyAUser.getCurrentUser() ) );
-        UserGroup chinaAgencyAUsers = userGroup( "ChinaAgencyAUsers", asSet( chinaAgencyAUser.getCurrentUser() ) );
-        UserGroup chinaAgencyBUsers = userGroup( "ChinaAgencyBUsers", asSet( chinaAgencyBUser.getCurrentUser() ) );
-        UserGroup indiaAgencyAUsers = userGroup( "IndiaAgencyAUsers", asSet( indiaAgencyAUser.getCurrentUser() ) );
-        UserGroup brazilPartner1Users = userGroup( "BrazilPartner1Users", asSet( brazilPartner1User.getCurrentUser() ) );
-        UserGroup chinaPartner1Users = userGroup( "ChinaPartner1Users", asSet( chinaPartner1User.getCurrentUser() ) );
-        UserGroup chinaPartner2Users = userGroup( "ChinaPartner2Users", asSet( chinaPartner2User.getCurrentUser() ) );
-        UserGroup indiaPartner1Users = userGroup( "IndiaPartner1Users", asSet( indiaPartner1User.getCurrentUser() ) );
+        UserGroup globalUsers = getUserGroup( "GlobalUsers", asSet( globalUser.getCurrentUser(), globalConsultant.getCurrentUser(), globalReadEverything.getCurrentUser() ) );
+        UserGroup brazilInteragencyUsers = getUserGroup( "BrazilInteragencyUsers", asSet( brazilInteragencyUser.getCurrentUser() ) );
+        UserGroup chinaInteragencyUsers = getUserGroup( "ChinaInteragencyUsers", asSet( chinaInteragencyUser.getCurrentUser() ) );
+        UserGroup indiaInteragencyUsers = getUserGroup( "IndiaInteragencyUsers", asSet( indiaInteragencyUser.getCurrentUser() ) );
+        UserGroup brazilAgencyAUsers = getUserGroup( "BrazilAgencyAUsers", asSet( brazilAgencyAUser.getCurrentUser() ) );
+        UserGroup chinaAgencyAUsers = getUserGroup( "ChinaAgencyAUsers", asSet( chinaAgencyAUser.getCurrentUser() ) );
+        UserGroup chinaAgencyBUsers = getUserGroup( "ChinaAgencyBUsers", asSet( chinaAgencyBUser.getCurrentUser() ) );
+        UserGroup indiaAgencyAUsers = getUserGroup( "IndiaAgencyAUsers", asSet( indiaAgencyAUser.getCurrentUser() ) );
+        UserGroup brazilPartner1Users = getUserGroup( "BrazilPartner1Users", asSet( brazilPartner1User.getCurrentUser() ) );
+        UserGroup chinaPartner1Users = getUserGroup( "ChinaPartner1Users", asSet( chinaPartner1User.getCurrentUser() ) );
+        UserGroup chinaPartner2Users = getUserGroup( "ChinaPartner2Users", asSet( chinaPartner2User.getCurrentUser() ) );
+        UserGroup indiaPartner1Users = getUserGroup( "IndiaPartner1Users", asSet( indiaPartner1User.getCurrentUser() ) );
 
         brazilA1 = new DataElementCategoryOption( "BrazilA1" );
         chinaA1_1 = new DataElementCategoryOption( "ChinaA1_1" );
@@ -530,7 +530,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
         return combo.getName().substring( 1, combo.getName().length() - 1);
     }
 
-    private String statusString( DataApprovalStatus status )
+    private String getStatusString( DataApprovalStatus status )
     {
         DataApproval a = status.getDataApproval();
         String approval = a == null ? "approval=null" :
@@ -564,7 +564,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
      * @param attributeOptionCombo Approval attribute option combination
      * @return A String representing the state, level, and allowed user actions
      */
-    private String statusAndPermissions( CurrentUserService mockUserService, DataSet dataSet,
+    private String getStatusAndPermissions( CurrentUserService mockUserService, DataSet dataSet,
                                          Period period, OrganisationUnit organisationUnit,
                                          DataElementCategoryOptionCombo attributeOptionCombo )
     {
@@ -572,7 +572,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         DataApprovalStatus status = dataApprovalService.getDataApprovalStatusAndPermissions( dataSet, period, organisationUnit, attributeOptionCombo );
 
-        return statusString( status );
+        return getStatusString( status );
     }
 
     private String[] userApprovalsAndPermissions( CurrentUserService mockUserService, DataSet dataSet, Period period, OrganisationUnit orgUnit )
@@ -585,7 +585,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         for ( DataApprovalStatus status : approvals )
         {
-            approvalStrings.add( statusString ( status ) );
+            approvalStrings.add( getStatusString ( status ) );
         }
 
         Collections.sort( approvalStrings );
@@ -679,8 +679,6 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
     // -------------------------------------------------------------------------
     // Generate test code helper methods
-    //
-    // (used to help automate writing new test cases)
     // -------------------------------------------------------------------------
 
     private void generateUserApprovalsAndPermissions( CurrentUserService mockUserService, DataSet dataSet, Period period, OrganisationUnit orgUnit )
