@@ -31,8 +31,6 @@ package org.hisp.dhis.resourcetable.statement;
 import java.util.List;
 
 import org.amplecode.quick.Statement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 
 /**
@@ -41,8 +39,6 @@ import org.hisp.dhis.dataelement.DataElementGroupSet;
 public class CreateDataElementGroupSetTableStatement
     implements Statement
 {
-    private static final Log log = LogFactory.getLog( CreateDataElementGroupSetTableStatement.class );
-    
     private static final String LONG_TEXT_COLUMN_TYPE = "VARCHAR (250)";
     
     public static final String TABLE_NAME = "_dataelementgroupsetstructure";
@@ -71,8 +67,6 @@ public class CreateDataElementGroupSetTableStatement
         }
         
         statement += "PRIMARY KEY ( dataelementid ) )";
-                
-        log.info( "Create data element group set table SQL: " + statement );
         
         return statement;
     }

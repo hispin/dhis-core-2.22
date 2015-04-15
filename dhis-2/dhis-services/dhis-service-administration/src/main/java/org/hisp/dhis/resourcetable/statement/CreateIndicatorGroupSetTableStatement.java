@@ -31,8 +31,6 @@ package org.hisp.dhis.resourcetable.statement;
 import java.util.List;
 
 import org.amplecode.quick.Statement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 
 /**
@@ -41,8 +39,6 @@ import org.hisp.dhis.indicator.IndicatorGroupSet;
 public class CreateIndicatorGroupSetTableStatement
     implements Statement
 {
-    private static final Log log = LogFactory.getLog( CreateIndicatorGroupSetTableStatement.class );
-
     private static final String LONG_TEXT_COLUMN_TYPE = "VARCHAR (250)";
     
     public static final String TABLE_NAME = "_indicatorgroupsetstructure";
@@ -50,8 +46,7 @@ public class CreateIndicatorGroupSetTableStatement
     private List<IndicatorGroupSet> groupSets;    
 
     private String quote;
-    
-    
+        
     public CreateIndicatorGroupSetTableStatement( List<IndicatorGroupSet> groupSets, String quote )
     {
         this.groupSets = groupSets;
@@ -72,8 +67,6 @@ public class CreateIndicatorGroupSetTableStatement
         }
         
         statement += "PRIMARY KEY ( indicatorid ) )";
-                
-        log.info( "Create indicator group set table SQL: " + statement );
         
         return statement;
     }
