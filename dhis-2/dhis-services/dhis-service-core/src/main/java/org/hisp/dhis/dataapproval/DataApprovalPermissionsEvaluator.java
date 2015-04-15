@@ -165,7 +165,6 @@ class DataApprovalPermissionsEvaluator
         int dataLevel = ( dal != null ? dal.getLevel() : maxApprovalLevel );
 
         boolean approvableAtNextHigherLevel = s.isApproved() && dal != null && dataLevel > 1;
-//            && dal.getOrgUnitLevel() == dataApprovalLevelService.getDataApprovalLevelByLevelNumber( dataLevel - 1 ).getOrgUnitLevel();
 
         int approveLevel = approvableAtNextHigherLevel ? dataLevel - 1 : dataLevel; // Level (if any) at which data could next be approved.
 
