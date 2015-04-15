@@ -116,7 +116,7 @@ public class Schema implements Ordered, Klass
     /**
      * Is this class considered metadata, this is mainly used for our metadata importer/exporter.
      */
-    private boolean metadata;
+    private boolean metadata = true;
 
     /**
      * Are any properties on this class being persisted, if false, this file does not have any hbm file attached to it.
@@ -148,7 +148,6 @@ public class Schema implements Ordered, Klass
         this.nameableObject = NameableObject.class.isAssignableFrom( klass );
         this.singular = singular;
         this.plural = plural;
-        this.metadata = true;
     }
 
     @Override
