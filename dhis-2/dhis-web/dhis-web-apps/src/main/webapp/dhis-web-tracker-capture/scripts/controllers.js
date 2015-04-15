@@ -211,7 +211,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             
             $scope.attributeUrl = EntityQueryFactory.getAttributesQuery($scope.attributes, $scope.enrollment);
             
-            if(!$scope.attributeUrl.hasValue && !$scope.selectedProgram){
+            if(!$scope.attributeUrl.hasValue){
                 $scope.emptySearchAttribute = true;
                 $scope.teiFetched = false;   
                 $scope.teiCount = null;
@@ -369,7 +369,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     };   
     
     //Get orgunits for the logged in user
-    OrgUnitFactory.getRoot().then(function(response) {  
+    OrgUnitFactory.getSearchTreeRoot().then(function(response) {  
         $scope.orgUnits = response.organisationUnits;
         $scope.selectedSearchingOrgUnit = $scope.orgUnits && $scope.orgUnits.length && $scope.orgUnits[0] ? $scope.orgUnits[0] : null;
         angular.forEach($scope.orgUnits, function(ou){
