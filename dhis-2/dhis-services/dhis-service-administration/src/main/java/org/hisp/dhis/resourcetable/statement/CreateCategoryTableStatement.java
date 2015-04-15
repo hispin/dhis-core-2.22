@@ -31,8 +31,6 @@ package org.hisp.dhis.resourcetable.statement;
 import java.util.List;
 
 import org.amplecode.quick.Statement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dataelement.DataElementCategory;
 
 /**
@@ -41,8 +39,6 @@ import org.hisp.dhis.dataelement.DataElementCategory;
 public class CreateCategoryTableStatement
     implements Statement
 {
-    private static final Log log = LogFactory.getLog( CreateCategoryTableStatement.class );
-    
     private static final String LONG_TEXT_COLUMN_TYPE = "VARCHAR (250)";
     
     public static final String TABLE_NAME = "_categorystructure";
@@ -71,8 +67,6 @@ public class CreateCategoryTableStatement
         }
 
         statement += "PRIMARY KEY ( categoryoptioncomboid ) )";
-                
-        log.info( "Create category structure table SQL: " + statement );
         
         return statement;
     }        

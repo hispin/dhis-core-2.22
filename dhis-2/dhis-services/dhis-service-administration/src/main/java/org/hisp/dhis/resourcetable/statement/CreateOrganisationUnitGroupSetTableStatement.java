@@ -31,8 +31,6 @@ package org.hisp.dhis.resourcetable.statement;
 import java.util.List;
 
 import org.amplecode.quick.Statement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 
 /**
@@ -41,8 +39,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 public class CreateOrganisationUnitGroupSetTableStatement
     implements Statement
 {
-    private static final Log log = LogFactory.getLog( CreateOrganisationUnitGroupSetTableStatement.class );
-    
     public static final String TABLE_NAME = "_organisationunitgroupsetstructure";
 
     private static final String LONG_TEXT_COLUMN_TYPE = "VARCHAR (250)";
@@ -71,8 +67,6 @@ public class CreateOrganisationUnitGroupSetTableStatement
         }
         
         statement += "PRIMARY KEY ( organisationunitid ) )";
-        
-        log.info( "Create organisation unit group set table SQL: " + statement );
         
         return statement;
     }

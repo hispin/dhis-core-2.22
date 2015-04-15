@@ -30,7 +30,6 @@ package org.hisp.dhis.resourcetable.jdbc;
 
 import java.util.List;
 
-import org.amplecode.quick.Statement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -180,9 +179,11 @@ public class JdbcResourceTableStore
             // Do nothing, table does not exist
         }
         
-        Statement statement = new CreateCategoryOptionGroupSetTableStatement( groupSets, statementBuilder.getColumnQuote() );
+        final String statement = new CreateCategoryOptionGroupSetTableStatement( groupSets, statementBuilder.getColumnQuote() ).getStatement();
         
-        jdbcTemplate.execute( statement.getStatement() );
+        log.info( "Create category option group set table SQL: " + statement );           
+        
+        jdbcTemplate.execute( statement );
     }
     
     // -------------------------------------------------------------------------
@@ -201,9 +202,11 @@ public class JdbcResourceTableStore
             // Do nothing, table does not exist
         }
         
-        Statement statement = new CreateDataElementGroupSetTableStatement( groupSets, statementBuilder.getColumnQuote() );
+        final String statement = new CreateDataElementGroupSetTableStatement( groupSets, statementBuilder.getColumnQuote() ).getStatement();
         
-        jdbcTemplate.execute( statement.getStatement() );
+        log.info( "Create data element group set table SQL: " + statement );
+        
+        jdbcTemplate.execute( statement );
     }
 
     @Override
@@ -254,9 +257,11 @@ public class JdbcResourceTableStore
             // Do nothing, table does not exist
         }
         
-        Statement statement = new CreateIndicatorGroupSetTableStatement( groupSets, statementBuilder.getColumnQuote() );
+        final String statement = new CreateIndicatorGroupSetTableStatement( groupSets, statementBuilder.getColumnQuote() ).getStatement();
+
+        log.info( "Create indicator group set table SQL: " + statement );
         
-        jdbcTemplate.execute( statement.getStatement() );
+        jdbcTemplate.execute( statement );
     }
 
     @Override
@@ -307,9 +312,11 @@ public class JdbcResourceTableStore
             // Do nothing, table does not exist
         }
         
-        Statement statement = new CreateOrganisationUnitGroupSetTableStatement( groupSets, statementBuilder.getColumnQuote() );
+        final String statement = new CreateOrganisationUnitGroupSetTableStatement( groupSets, statementBuilder.getColumnQuote() ).getStatement();
+
+        log.info( "Create organisation unit group set table SQL: " + statement );
         
-        jdbcTemplate.execute( statement.getStatement() );
+        jdbcTemplate.execute( statement );
     }
     
     @Override
@@ -360,9 +367,11 @@ public class JdbcResourceTableStore
             // Do nothing, table does not exist
         }
         
-        Statement statement = new CreateCategoryTableStatement( categories, statementBuilder.getColumnQuote() );
+        final String statement = new CreateCategoryTableStatement( categories, statementBuilder.getColumnQuote() ).getStatement();
+
+        log.info( "Create category structure table SQL: " + statement );
         
-        jdbcTemplate.execute( statement.getStatement() );
+        jdbcTemplate.execute( statement );
     }
 
     @Override
