@@ -40,6 +40,7 @@ import org.apache.commons.validator.routines.DoubleValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.expression.Operator;
+import org.hisp.dhis.system.math.OneIfZeroOrPositiveFunction;
 import org.nfunk.jep.JEP;
 
 /**
@@ -48,6 +49,8 @@ import org.nfunk.jep.JEP;
 public class MathUtils
 {
     public static final Double ZERO = new Double( 0 );
+    
+    public static final String ONEIFZEROORPOSITIVE_FUNCTION_NAME = "oizp";
     
     private static DoubleValidator DOUBLE_VALIDATOR = new DoubleValidator();
     private static IntegerValidator INT_VALIDATOR = new IntegerValidator();
@@ -146,6 +149,7 @@ public class MathUtils
         final JEP parser = new JEP();
         parser.addStandardFunctions();
         parser.addStandardConstants();
+        parser.addFunction( ONEIFZEROORPOSITIVE_FUNCTION_NAME, new OneIfZeroOrPositiveFunction() );
         return parser;
     }
     
