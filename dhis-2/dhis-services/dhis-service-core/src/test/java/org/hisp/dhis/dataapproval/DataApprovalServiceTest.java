@@ -105,6 +105,9 @@ public class DataApprovalServiceTest
     protected UserService _userService;
 
     @Autowired
+    protected CurrentUserService currentUserService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
     
     // -------------------------------------------------------------------------
@@ -307,6 +310,14 @@ public class DataApprovalServiceTest
     public boolean emptyDatabaseAfterTest()
     {
         return true;
+    }
+
+    @Override
+    public void tearDownTest()
+    {
+        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
+        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
+        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
     }
 
     // ---------------------------------------------------------------------
