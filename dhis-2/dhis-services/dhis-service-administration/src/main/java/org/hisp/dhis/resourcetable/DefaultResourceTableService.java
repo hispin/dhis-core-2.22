@@ -519,7 +519,7 @@ public class DefaultResourceTableService
     @Transactional
     public void generateDataElementCategoryOptionComboTable()
     {
-        resourceTableStore.createAndGenerateDataElementCategoryOptionCombo();
+        resourceTableStore.createAndPopulateDataElementCategoryOptionCombo();
 
         log.info( "Data element category option combo table generated" );
     }

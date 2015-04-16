@@ -523,7 +523,7 @@ public class JdbcResourceTableStore
     // -------------------------------------------------------------------------
 
     @Override
-    public void createAndGenerateDataElementCategoryOptionCombo()
+    public void createAndPopulateDataElementCategoryOptionCombo()
     {
         try
         {
