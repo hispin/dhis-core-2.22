@@ -193,6 +193,8 @@ public interface SystemSettingManager
     
     boolean systemNotificationEmailValid();
 
+    boolean hideUnapprovedDataInAnalytics();
+    
     String googleAnalyticsUA();
 
     Integer credentialsExpires();
