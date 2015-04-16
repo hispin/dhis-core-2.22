@@ -516,8 +516,9 @@ Ext.onReady( function() {
 	NS.isDebug = false;
 	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	NS.getCore = function(init) {
-        var conf = {},
+	NS.getCore = function(ns) {
+        var init = ns.init,
+            conf = {},
             api = {},
             support = {},
             service = {},
@@ -1233,6 +1234,26 @@ Ext.onReady( function() {
 
 				return array.length;
 			};
+
+            support.prototype.array.getMaxLength = function(array, suppressWarning) {
+				if (!Ext.isArray(array)) {
+					if (!suppressWarning) {
+						console.log('support.prototype.array.getLength: not an array');
+					}
+
+					return null;
+				}
+
+                var maxLength = 0;
+
+                for (var i = 0; i < array.length; i++) {
+                    if (Ext.isString(array[i]) && array[i].length > maxLength) {
+                        maxLength = array[i].length;
+                    }
+                }
+
+                return maxLength;
+            };
 
 			support.prototype.array.sort = function(array, direction, key, emptyFirst) {
 				// supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
@@ -2828,6 +2849,8 @@ Ext.onReady( function() {
                     getDefaultStore,
                     getDefaultNumericAxis,
                     getDefaultCategoryAxis,
+                    getFormatedSeriesTitle,
+                    getPieSeriesTitle,
                     getDefaultSeriesTitle,
                     getDefaultSeries,
                     getDefaultTrendLines,
@@ -3158,6 +3181,76 @@ Ext.onReady( function() {
 
                     return axis;
                 };
+
+                getFormatedSeriesTitle = function(titles) {
+                    var itemLength = ns.dashboard ? 23 : 30,
+                        charLength = ns.dashboard ? 5 : 6,
+                        numberOfItems = titles.length,
+                        numberOfChars,
+                        totalItemLength = numberOfItems * itemLength,
+                        //minLength = 5,
+                        maxLength = support.prototype.array.getMaxLength(titles),
+                        fallbackLength = 10,
+                        maxWidth = ns.app.centerRegion.getWidth(),
+                        width,
+                        validateTitles;
+
+                    getValidatedTitles = function(titles, len) {
+                        var numberOfItems = titles.length,
+                            newTitles,
+                            fallbackTitles;
+
+                        fallbackLength = len < fallbackLength ? len : fallbackLength;
+
+                        for (var i = len, width; i > 0; i--) {
+                            newTitles = [];
+
+                            for (var j = 0, title, numberOfChars, newTitle; j < titles.length; j++) {
+                                title = titles[j];
+
+                                newTitles.push(title.length > i ? (title.slice(0, i) + '..') : title);
+                            }
+
+                            numberOfChars = newTitles.join('').length;
+                            width = totalItemLength + (numberOfChars * charLength);
+
+                            if (i === fallbackLength) {
+                                fallbackTitles = Ext.clone(newTitles);
+                            }
+
+                            if (width < maxWidth) {
+                                return newTitles;
+                            }
+                        }
+
+                        return fallbackTitles;
+                    };
+
+                    return getValidatedTitles(titles, maxLength);
+                };
+
+                getPieSeriesTitle = function(store) {
+                    var a = [];
+
+                    if (Ext.isObject(xLayout.legendStyle) && Ext.isArray(xLayout.legendStyle.labelNames)) {
+                        return xLayout.legendStyle.labelNames;
+                    }
+                    else {
+                        var id = store.domainFields[0];
+
+                        store.each( function(r) {
+                            a.push(r.data[id]);
+
+                            //if (Ext.isString(name) && Ext.isObject(xLayout.legendStyle) && Ext.isNumber(xLayout.legendStyle.labelMaxLength)) {
+                                //var mxl = parseInt(xLayout.legendStyle.labelMaxLength);
+
+                                //name = name.length > mxl ? name.substr(0, mxl) + '..' : name;
+                            //}
+                        });
+                    }
+
+                    return getFormatedSeriesTitle(a);
+				};
 
                 getDefaultSeriesTitle = function(store) {
                     var a = [],
@@ -3556,34 +3649,47 @@ Ext.onReady( function() {
                 getDefaultChart = function(config) {
                     var chart,
                         store = config.store || {},
+                        width = ns.app.centerRegion.getWidth(),
+                        height = ns.app.centerRegion.getHeight(),
+                        isLineBased = Ext.Array.contains(['line', 'area'], xLayout.type),
                         defaultConfig = {
-                            animate: true,
+                            //animate: true,
+                            animate: false,
                             shadow: false,
-                            insetPadding: 35,
-                            width: centerRegion.getWidth() - 15,
-                            height: centerRegion.getHeight() - 40,
+                            insetPadding: ns.dashboard ? 17 : 35,
+                            insetPaddingObject: {
+                                top: ns.dashboard ? 12 : 32,
+                                right: ns.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
+                                bottom: ns.dashboard ? 2 : 10,
+                                left: ns.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
+                            },
+                            width: ns.dashboard ? width : width - 15,
+                            height: ns.dashboard ? height : height - 40,
                             theme: 'dv1'
                         };
-
+                        
                     // legend
                     if (!xLayout.hideLegend) {
-                        defaultConfig.legend = getDefaultLegend(store);
+                        defaultConfig.legend = getDefaultLegend(store, config);
 
                         if (defaultConfig.legend.position === 'right') {
-                            defaultConfig.insetPadding = 40;
+                            defaultConfig.insetPaddingObject.top = ns.dashboard ? 22 : 40;
+                            defaultConfig.insetPaddingObject.right = ns.dashboard ? 5 : 40;
                         }
                     }
 
                     // title
-                    if (!xLayout.hideTitle) {
-                        defaultConfig.items = [getDefaultChartTitle(store)];
+                    if (xLayout.hideTitle) {
+                        defaultConfig.insetPadding = ns.dashboard ? 1 : 10;
+                        defaultConfig.insetPaddingObject.top = ns.dashboard ? 3 : 10;
                     }
                     else {
-                        defaultConfig.insetPadding = 10;
+                        defaultConfig.items = [getDefaultChartTitle(store)];
                     }
 
                     Ext.apply(defaultConfig, config);
 
+                    // chart
                     chart = Ext.create('Ext.chart.Chart', defaultConfig);
 
                     chart.setChartSize = getDefaultChartSizeHandler();
@@ -3595,7 +3701,7 @@ Ext.onReady( function() {
                         chart.setTitlePosition();
                     };
 
-                    chart.on('afterrender', function() {
+                    chart.on('resize', function() {
                         chart.setTitlePosition();
                     });
 
@@ -3858,12 +3964,34 @@ Ext.onReady( function() {
 
                     // Label
                     if (xLayout.showValues) {
+                        var labelFont = conf.chart.style.fontFamily,
+                            labelColor;
+
+                        if (Ext.isObject(xLayout.seriesStyle)) {
+                            var style = xLayout.seriesStyle;
+
+                            // color
+                            labelColor = style.labelColor || labelColor;
+
+                            if (style.labelFont) {
+                                labelFont = style.labelFont;
+                            }
+                            else {
+                                labelFont = style.labelFontWeight ? style.labelFontWeight + ' ' : 'normal ';
+                                labelFont += style.labelFontSize ? parseFloat(style.labelFontSize) + 'px ' : '11px ';
+                                labelFont +=  style.labelFontFamily ? style.labelFontFamily : conf.chart.style.fontFamily;
+                            }
+                        }
+
                         label.display = 'middle';
-                        label.contrast = true;
-                        label.font = '14px ' + conf.chart.style.fontFamily;
+                        label.contrast = !labelColor;
+                        label.font = labelFont;
+                        label.fill = labelColor;
                         label.renderer = function(value) {
-                            var record = store.getAt(store.findExact(conf.finals.data.domain, value));
-                            return record.data[store.rangeFields[0]];
+                            var record = store.getAt(store.findExact(conf.finals.data.domain, value)),
+                                v = record.data[store.rangeFields[0]];
+                                
+                            return support.prototype.number.prettyPrint(v);
                         };
                     }
 
@@ -3871,7 +3999,7 @@ Ext.onReady( function() {
                     series = [{
                         type: 'pie',
                         field: store.rangeFields[0],
-                        donut: 7,
+                        donut: 5,
                         showInLegend: true,
                         highlight: {
                             segment: {
@@ -3887,9 +4015,14 @@ Ext.onReady( function() {
                             trackMouse: true,
                             cls: 'dv-chart-tips',
                             renderer: function(item) {
-                                this.update('<div style="text-align:center"><div style="font-size:17px; font-weight:bold">' + item.data[store.rangeFields[0]] + '</div><div style="font-size:10px">' + item.data[conf.finals.data.domain] + '</div></div>');
+                                var value = support.prototype.number.prettyPrint(item.data[store.rangeFields[0]]),
+                                    data = item.data[conf.finals.data.domain];
+                                    
+                                this.update('<div style="text-align:center"><div style="font-size:17px; font-weight:bold">' + value + '</div><div style="font-size:10px">' + data + '</div></div>');
                             }
-                        }
+                        },
+                        shadowAttributes: false,
+                        title: getPieSeriesTitle(store)
                     }];
 
                     // Theme
@@ -3904,16 +4037,17 @@ Ext.onReady( function() {
                         }
                     });
 
-                    // Chart
+                    // chart
                     chart = getDefaultChart({
                         store: store,
-                        series: series
+                        series: series,
+                        insetPaddingObject: {
+                            top: ns.dashboard ? 15 : 40,
+                            right: ns.dashboard ? 2 : 30,
+                            bottom: ns.dashboard ? 13: 30,
+                            left: ns.dashboard ? 7 : 30
+                        }
                     });
-
-                    //chart.legend.position = 'right';
-                    //chart.legend.isVertical = true;
-                    chart.insetPadding = 40;
-                    chart.shadow = true;
 
                     return chart;
                 };

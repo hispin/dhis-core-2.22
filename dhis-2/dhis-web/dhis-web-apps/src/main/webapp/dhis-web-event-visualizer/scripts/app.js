@@ -843,7 +843,7 @@ Ext.onReady( function() {
                         optionSetId = optionSetId || container.dataElement.optionSet.id;
                         pageSize = pageSize || 100;
 
-                        dhis2.er.store.get('optionSets', optionSetId).done( function(obj) {
+                        dhis2.ev.store.get('optionSets', optionSetId).done( function(obj) {
                             if (Ext.isObject(obj) && Ext.isArray(obj.options) && obj.options.length) {
                                 var data = [];
 
@@ -984,7 +984,7 @@ Ext.onReady( function() {
                         var me = this,
                             records = [];
 
-                        dhis2.er.store.get('optionSets', container.dataElement.optionSet.id).done( function(obj) {
+                        dhis2.ev.store.get('optionSets', container.dataElement.optionSet.id).done( function(obj) {
                             if (Ext.isObject(obj) && Ext.isArray(obj.options) && obj.options.length) {
                                 records = container.getRecordsByCode(obj.options, codeArray);
 
@@ -5824,6 +5824,8 @@ Ext.onReady( function() {
 			if (!updateGui) {
 				return;
 			}
+            
+			ns.app.viewport.chartType.setChartType(layout.type);
 
             setLayout(layout);
 		};
@@ -7680,7 +7682,8 @@ Ext.onReady( function() {
 
 				NS.instances.push(ns);
 
-				ns.core = NS.getCore(init);
+                ns.init = init;
+				ns.core = NS.getCore(ns);
 				extendCore(ns.core);
 
 				dimConf = ns.core.conf.finals.dimension;
