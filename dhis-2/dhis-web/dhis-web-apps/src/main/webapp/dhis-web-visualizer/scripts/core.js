@@ -3201,7 +3201,7 @@ Ext.onReady( function() {
                             shadow: false,
                             insetPadding: ns.dashboard ? 17 : 35,
                             insetPaddingObject: {
-                                top: ns.dashboard ? 12 : 22,
+                                top: ns.dashboard ? 12 : 32,
                                 right: ns.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
                                 bottom: ns.dashboard ? 2 : 10,
                                 left: ns.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
@@ -3210,7 +3210,7 @@ Ext.onReady( function() {
                             height: ns.dashboard ? height : height - 40,
                             theme: 'dv1'
                         };
-
+                        
                     // legend
                     if (!xLayout.hideLegend) {
                         defaultConfig.legend = getDefaultLegend(store, config);
@@ -3531,8 +3531,10 @@ Ext.onReady( function() {
                         label.font = labelFont;
                         label.fill = labelColor;
                         label.renderer = function(value) {
-                            var record = store.getAt(store.findExact(conf.finals.data.domain, value));
-                            return record.data[store.rangeFields[0]];
+                            var record = store.getAt(store.findExact(conf.finals.data.domain, value)),
+                                v = record.data[store.rangeFields[0]];
+                                
+                            return support.prototype.number.prettyPrint(v);
                         };
                     }
 
@@ -3556,7 +3558,10 @@ Ext.onReady( function() {
                             trackMouse: true,
                             cls: 'dv-chart-tips',
                             renderer: function(item) {
-                                this.update('<div style="text-align:center"><div style="font-size:17px; font-weight:bold">' + item.data[store.rangeFields[0]] + '</div><div style="font-size:10px">' + item.data[conf.finals.data.domain] + '</div></div>');
+                                var value = support.prototype.number.prettyPrint(item.data[store.rangeFields[0]]),
+                                    data = item.data[conf.finals.data.domain];
+                                    
+                                this.update('<div style="text-align:center"><div style="font-size:17px; font-weight:bold">' + value + '</div><div style="font-size:10px">' + data + '</div></div>');
                             }
                         },
                         shadowAttributes: false,
@@ -3580,10 +3585,10 @@ Ext.onReady( function() {
                         store: store,
                         series: series,
                         insetPaddingObject: {
-                            top: 15,
-                            right: 2,
-                            bottom: 13,
-                            left: 7
+                            top: ns.dashboard ? 15 : 40,
+                            right: ns.dashboard ? 2 : 30,
+                            bottom: ns.dashboard ? 13: 30,
+                            left: ns.dashboard ? 7 : 30
                         }
                     });
 

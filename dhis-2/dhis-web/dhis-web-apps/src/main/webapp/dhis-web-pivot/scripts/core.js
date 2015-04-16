@@ -1671,6 +1671,10 @@ Ext.onReady( function() {
 					delete layout.showRowSubTotals;
 				}
 
+				if (layout.showDimensionLabels) {
+					delete layout.showDimensionLabels;
+				}
+
 				if (!layout.hideEmptyRows) {
 					delete layout.hideEmptyRows;
 				}
