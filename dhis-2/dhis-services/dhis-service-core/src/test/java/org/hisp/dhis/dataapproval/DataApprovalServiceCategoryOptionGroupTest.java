@@ -130,6 +130,9 @@ public class DataApprovalServiceCategoryOptionGroupTest
     protected UserService _userService;
 
     @Autowired
+    protected CurrentUserService currentUserService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     // -------------------------------------------------------------------------
@@ -500,6 +503,16 @@ public class DataApprovalServiceCategoryOptionGroupTest
         return true;
     }
 
+    @Override
+    public void tearDownTest()
+    {
+        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
+        setDependency( dataApprovalStore, "currentUserService", currentUserService, CurrentUserService.class );
+        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
+        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setDependency( hibernateCategoryOptionGroupStore, "currentUserService", currentUserService, CurrentUserService.class );
+    }
+
     // -------------------------------------------------------------------------
     // Test helper methods
     // -------------------------------------------------------------------------
@@ -719,7 +732,6 @@ public class DataApprovalServiceCategoryOptionGroupTest
     // Tests
     // -------------------------------------------------------------------------
 
-    //@Ignore // TODO: Enabling this test causes DataApprovalServiceTest to fail. Determine why and Fix.
     @Test
     public void test()
     {
