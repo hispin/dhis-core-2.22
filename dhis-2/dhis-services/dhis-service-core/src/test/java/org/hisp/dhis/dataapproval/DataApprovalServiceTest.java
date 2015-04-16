@@ -521,7 +521,6 @@ public class DataApprovalServiceTest
         assertNull( level );
     }
 
-    @Ignore //TODO enable, fails randomly with DataMayNotBeApprovedException
     @Test
     public void testAddDuplicateDataApproval() throws Exception
     {
@@ -545,7 +544,6 @@ public class DataApprovalServiceTest
         dataApprovalService.approveData( asList( dataApprovalB ) ); // Redundant, so call is ignored.
     }
 
-    @Ignore //TODO enable, fails randomly with DataMayNotBeApprovedException
     @Test
     public void testDeleteDataApproval() throws Exception
     {
@@ -1232,7 +1230,6 @@ public class DataApprovalServiceTest
         assertFalse( dataApprovalService.getDataApprovalStatusAndPermissions( dataSetA, periodA, organisationUnitF, defaultCombo ).getPermissions().isMayUnapprove());
     }
 
-    @Ignore //Enable this test, fails at line 1270 randomly
     @Test
     public void testMayUnapproveWithAcceptAuthority() throws Exception
     {
