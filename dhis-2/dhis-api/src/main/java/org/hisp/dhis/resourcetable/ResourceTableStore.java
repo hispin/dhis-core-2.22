@@ -133,7 +133,7 @@ public interface ResourceTableStore
     /**
      * Creates and generates table.
      */
-    void createAndGenerateDataElementCategoryOptionCombo();
+    void createAndPopulateDataElementCategoryOptionCombo();
     
     /**
      * Creates and populates data approval minimum level table.
