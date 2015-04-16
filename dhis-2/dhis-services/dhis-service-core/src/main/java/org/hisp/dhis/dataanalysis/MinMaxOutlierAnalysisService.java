@@ -107,7 +107,7 @@ public class MinMaxOutlierAnalysisService
             categoryOptionCombos.addAll( dataElement.getCategoryCombo().getOptionCombos() );
         }
 
-        log.info( "Starting min-max analysis, no of data elements: " + elements.size() + ", no of org units: " + organisationUnits.size() );
+        log.debug( "Starting min-max analysis, no of data elements: " + elements.size() + ", no of org units: " + organisationUnits.size() );
         
         return dataAnalysisStore.getMinMaxViolations( elements, categoryOptionCombos, periods, organisationUnits, MAX_OUTLIERS );
     }
