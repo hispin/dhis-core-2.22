@@ -30,7 +30,6 @@ package org.hisp.dhis.commons.action;
 
 import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -38,7 +37,6 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.version.Version;
 import org.hisp.dhis.version.VersionService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,17 +54,26 @@ public class GetOrganisationUnitTreeAction
     // Dependencies
     // -------------------------------------------------------------------------
 
-    @Autowired
     private CurrentUserService currentUserService;
 
-    @Autowired
+    public void setCurrentUserService( CurrentUserService currentUserService )
+    {
+        this.currentUserService = currentUserService;
+    }
+
     private OrganisationUnitService organisationUnitService;
 
-    @Autowired
+    public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
+    {
+        this.organisationUnitService = organisationUnitService;
+    }
+
     private VersionService versionService;
 
-    @Autowired
-    protected I18nService i18nService;
+    public void setVersionService( VersionService versionService )
+    {
+        this.versionService = versionService;
+    }
 
     // -------------------------------------------------------------------------
     // Input & Output
@@ -170,8 +177,6 @@ public class GetOrganisationUnitTreeAction
             rootOrganisationUnits = new ArrayList<>( organisationUnitService.getRootOrganisationUnits() );
         }
 
-        i18nService.internationalise( rootOrganisationUnits );
-
         if ( byName != null )
         {
             List<OrganisationUnit> organisationUnitByName = organisationUnitService.getOrganisationUnitByName( byName );
@@ -191,8 +196,6 @@ public class GetOrganisationUnitTreeAction
                     }
                     while ( (parent = parent.getParent()) != null );
                 }
-
-                i18nService.internationalise( organisationUnits );
 
                 return "partial";
             }
@@ -214,8 +217,6 @@ public class GetOrganisationUnitTreeAction
                 }
             }
 
-            i18nService.internationalise( organisationUnits );
-
             return "partial";
         }
 
@@ -227,8 +228,6 @@ public class GetOrganisationUnitTreeAction
             {
                 organisationUnits.addAll( parent.getChildren() );
             }
-
-            i18nService.internationalise( organisationUnits );
 
             return "partial";
         }
@@ -252,7 +251,6 @@ public class GetOrganisationUnitTreeAction
         }
 
         Collections.sort( rootOrganisationUnits, IdentifiableObjectNameComparator.INSTANCE );
-        i18nService.internationalise( organisationUnits );
 
         return SUCCESS;
     }
