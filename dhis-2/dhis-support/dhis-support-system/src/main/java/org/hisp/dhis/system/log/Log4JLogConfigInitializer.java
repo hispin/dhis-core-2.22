@@ -50,12 +50,12 @@ public class Log4JLogConfigInitializer
 {    
     private static final PatternLayout PATTERN_LAYOUT = new PatternLayout( "* %-5p %d{ISO8601} %m (%F [%t])%n" );
     
-    private static final String MAX_FILE_SIZE = "25MB";
-    private static final int MAX_BACKUP_FILES = 3;
+    private static final String MAX_FILE_SIZE = "50MB";
 
     private static final String LOG_DIR = "logs";
     private static final String ANALYTICS_TABLE_LOGGER_FILENAME = "dhis-analytics-table.log";
     private static final String DATA_SYNC_LOGGER_FILENAME = "dhis-data-sync.log";
+    private static final String GENERAL_LOGGER_FILENAME = "dhis.log";
 
     private static final Log log = LogFactory.getLog( Log4JLogConfigInitializer.class );
     
@@ -76,6 +76,8 @@ public class Log4JLogConfigInitializer
         configureLoggers( ANALYTICS_TABLE_LOGGER_FILENAME, Lists.newArrayList( "org.hisp.dhis.resourcetable", "org.hisp.dhis.analytics.table" ) );
         
         configureLoggers( DATA_SYNC_LOGGER_FILENAME, Lists.newArrayList( "org.hisp.dhis.dxf2.synch" ) );
+        
+        configureRootLogger( GENERAL_LOGGER_FILENAME );
     }
     
     /**
@@ -101,6 +103,22 @@ public class Log4JLogConfigInitializer
     }
     
     /**
+     * Configures a root file logger.
+     * 
+     * @param filename the filename to output logging to.
+     */
+    private void configureRootLogger( String filename )
+    {
+        String file = getLogFile( filename );
+        
+        RollingFileAppender appender = getRollingFileAppender( file );
+        
+        Logger.getRootLogger().addAppender( appender );
+        
+        log.info( "Added root logger using file: " + file );
+    }
+    
+    /**
      * Returns a rolling file appender.
      * 
      * @param file the file to output to, including path and filename.
@@ -112,7 +130,6 @@ public class Log4JLogConfigInitializer
         appender.setThreshold( Level.INFO );
         appender.setFile( file );
         appender.setMaxFileSize( MAX_FILE_SIZE );
-        appender.setMaxBackupIndex( MAX_BACKUP_FILES );
         appender.setLayout( PATTERN_LAYOUT );
         appender.activateOptions();
         
