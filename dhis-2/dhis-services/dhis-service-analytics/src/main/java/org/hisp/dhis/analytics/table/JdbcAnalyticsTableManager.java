@@ -105,6 +105,15 @@ public class JdbcAnalyticsTableManager
     {
         return ANALYTICS_TABLE_NAME;
     }
+
+    @Override
+    public void preCreateTables()
+    {
+        if ( isApprovalEnabled() )
+        {
+            resourceTableService.generateDataApprovalMinLevelTable();
+        }        
+    }
     
     @Override
     public void createTable( AnalyticsTable table )

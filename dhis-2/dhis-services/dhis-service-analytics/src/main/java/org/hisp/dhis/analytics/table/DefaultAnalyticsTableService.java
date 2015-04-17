@@ -112,8 +112,13 @@ public class DefaultAnalyticsTableService
         final List<AnalyticsTable> tables = tableManager.getTables( earliest );
         final String tableName = tableManager.getTableName();
         
-        clock.logTime( "Table update start: " + tableName + ", partitions: " + tables + ", last years: " + lastYears + ", earliest: " + earliest );        
-        notifier.notify( taskId, "Creating analytics tables, processes: " + processNo + ", org unit levels: " + orgUnitLevelNo );
+        clock.logTime( "Table update start: " + tableName + ", partitions: " + tables + ", last years: " + lastYears + ", earliest: " + earliest );
+        notifier.notify( taskId, "Performing pre-create table work, processes: " + processNo + ", org unit levels: " + orgUnitLevelNo );
+        
+        tableManager.preCreateTables();
+        
+        clock.logTime( "Performed pre-create table work" );
+        notifier.notify( taskId, "Creating analytics tables" );
         
         createTables( tables );
         
@@ -178,11 +183,6 @@ public class DefaultAnalyticsTableService
         resourceTableService.generatePeriodTable();
         resourceTableService.generateDatePeriodTable();
         resourceTableService.generateDataElementCategoryOptionComboTable();
-        
-        if ( systemSettingManager.hideUnapprovedDataInAnalytics() )
-        {
-            resourceTableService.generateDataApprovalMinLevelTable();
-        }
         
         resourceTableService.createAllSqlViews();
     }
