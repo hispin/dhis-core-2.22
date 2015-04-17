@@ -601,7 +601,7 @@ trackerCapture.controller('RelationshipController',
                 if(attribute.valueType === 'date'){
                     val = DateUtils.formatFromUserToApi(val);
                 }
-                if(attribute.valueType === 'optionSet' &&
+                if(attribute.optionSetValue &&
                         attribute.optionSet &&
                         attribute.optionSet.id &&                
                         $scope.optionSets[attribute.optionSet.id] &&

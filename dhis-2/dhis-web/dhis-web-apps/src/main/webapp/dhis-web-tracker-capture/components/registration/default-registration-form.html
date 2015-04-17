@@ -6,7 +6,16 @@
         </td>
         <td>
             <ng-form name="innerForm">
-                <span ng-switch="attribute.valueType">
+                <span ng-if="attribute.optionSetValue">
+                    <input type="text"
+                            name="foo"
+                            class="form-control"
+                            ng-model="selectedTei[attribute.id]"                                                 
+                            typeahead="option.name as option.name for option in optionSets[attributesById[attribute.id].optionSet.id].options | filter:$viewValue | limitTo:20" 
+                            typeahead-open-on-focus                                           
+                            ng-disabled="editingDisabled" ng-required="attribute.mandatory || attribute.unique"/>
+                </span>
+                <span ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
                     <span ng-switch-when="date">
                         <input type="text" 
                                placeholder="{{dhis2CalendarFormat.keyDateFormat}}" 
@@ -36,16 +45,7 @@
                             <option value="false">{{'no'| translate}}</option>
                             <option value="true">{{'yes'| translate}}</option>
                         </select>
-                    </span>
-                    <span ng-switch-when="optionSet">
-                        <input type="text"
-                               name="foo"
-                               class="form-control"
-                               ng-model="selectedTei[attribute.id]"                                                 
-                               typeahead="option.name as option.name for option in optionSets[attributesById[attribute.id].optionSet.id].options | filter:$viewValue | limitTo:20" 
-                               typeahead-open-on-focus                                           
-                               ng-disabled="editingDisabled" ng-required="attribute.mandatory || attribute.unique"/>
-                    </span>
+                    </span>                    
                     <span ng-switch-when="number">
                         <input type="text" 
                                name="foo" 

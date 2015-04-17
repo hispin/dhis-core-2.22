@@ -37,7 +37,12 @@
                     {{attribute.name}}
                 </td>
                 <td>
-                    <div ng-switch="attribute.valueType">
+                    <div ng-if="attribute.optionSetValue">
+                        <select multiple ui-select2  ng-model="attribute.value" data-placeholder="{{'please_select'| translate}}" style="width:100%;">
+                            <option ng-repeat="option in attribute.optionSet.options" value="{{option.code}}">{{option.name}}</option>
+                        </select>
+                    </div>
+                    <div ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
                         <div ng-switch-when="number">
                             <div class="dataelement-filter">                                                
                                 <div class="filter-operator">
@@ -76,11 +81,6 @@
                                 </div>                            
                             </div> 
                         </div>                        
-                        <div ng-switch-when="optionSet">
-                            <select multiple ui-select2  ng-model="attribute.value" data-placeholder="{{'please_select'| translate}}" style="width:100%;">
-                                <option ng-repeat="option in attribute.optionSet.options" value="{{option.code}}">{{option.name}}</option>
-                            </select>
-                        </div>
                         <div ng-switch-when="bool">
                             <select multiple ui-select2  ng-model="attribute.value" data-placeholder="{{'please_select'| translate}}" style="width:100%;">
                                 <option ng-repeat="option in boolOperators" value="{{option}}">{{option| translate}}</option>

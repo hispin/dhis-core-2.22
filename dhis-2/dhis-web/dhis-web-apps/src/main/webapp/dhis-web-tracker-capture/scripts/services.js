@@ -650,7 +650,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         get: function(entityUid, optionSets, attributesById){
             var promise = $http.get( '../api/trackedEntityInstances/' +  entityUid + '.json').then(function(response){
                 var tei = response.data;
-                angular.forEach(tei.attributes, function(att){
+                angular.forEach(tei.attributes, function(att){                    
                     if(attributesById[att.attribute]){
                         att.displayName = attributesById[att.attribute].name;
                     }
@@ -891,8 +891,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             val = DateUtils.formatFromUserToApi(val);
                         }                        
                     }
-                    if(type === 'optionSet' && 
-                            attsById[att.attribute] && 
+                    if(attsById[att.attribute] && 
+                            attsById[att.attribute].optionSetValue && 
                             attsById[att.attribute].optionSet && 
                             attsById[att.attribute].optionSet.id && 
                             optionSets[attsById[att.attribute].optionSet.id]){
@@ -1252,7 +1252,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 var val = row[i];
                                 
                                 if(attributes[grid.headers[i].name] && 
-                                        attributes[grid.headers[i].name].valueType === 'optionSet' && 
+                                        attributes[grid.headers[i].name].optionSetValue && 
                                         optionSets &&    
                                         attributes[grid.headers[i].name].optionSet &&
                                         optionSets[attributes[grid.headers[i].name].optionSet.id] ){
@@ -1507,7 +1507,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 if(dhis2Event[prStDe.dataElement.id]){                    
                     var value = dhis2Event[prStDe.dataElement.id];
                     
-                    if( value && prStDe.dataElement.type === 'string' && prStDe.dataElement.optionSet && optionSets[prStDe.dataElement.optionSet.id]){
+                    if( value && prStDe.dataElement.optionSetValue && prStDe.dataElement.optionSet && optionSets[prStDe.dataElement.optionSet.id]){
                         value = OptionSetService.getCode(optionSets[prStDe.dataElement.optionSet.id].options, value);
                     }                    
                     if( value && prStDe.dataElement.type === 'date'){
