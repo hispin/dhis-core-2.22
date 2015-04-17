@@ -1020,3 +1020,47 @@ ul.tree ul li:last-child:before {
     display: table-cell;
     vertical-align: middle;
 }
+
+div.event-paging 
+{ 
+    width:100%;
+    background-color: #ebf0f6;
+    float:right;
+    text-align: right; 
+    height:16px; 
+}
+
+div.event-paging span, div.event-paging a 
+{
+    font-weight: bold;
+    padding: 0 5px;
+    font-size: 12px;
+}
+
+div.event-paging a
+{
+    text-decoration: none; 
+    color: #FF9900;
+}
+
+div.event-paging a.active
+{
+    text-decoration: none; 
+    color: #000;
+    cursor: default;
+}
+
+div.event-paging a:hover
+{
+    color: #000;
+}
+
+div.event-paging span.page 
+{
+    color:#000;
+}
+
+div.event-paging span.seperator 
+{
+    display:none;
+}

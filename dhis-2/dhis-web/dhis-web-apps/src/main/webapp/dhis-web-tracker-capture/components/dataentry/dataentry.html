@@ -3,7 +3,7 @@
         {{dataentryWidget.title| translate}}        
 
         <span class="pull-right widget-link">
-            <a href ng-click="filterEvents = !filterEvents" title="{{filterEvents ? 'list_events'  : 'filter_events' | translate}}" ng-show="eventFilteringRequired"><span ng-if="!filterEvents"><i class="fa fa-filter vertical-center"></i></span><span ng-if="filterEvents"><i class="fa fa-list vertical-center"></i></span></a>
+            <a href ng-click="filterEvents = !filterEvents" title="{{filterEvents ? 'list_events' : 'filter_events'| translate}}" ng-show="eventFilteringRequired"><span ng-if="!filterEvents"><i class="fa fa-filter vertical-center"></i></span><span ng-if="filterEvents"><i class="fa fa-list vertical-center"></i></span></a>
             <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}" class="small-horizonal-spacing"><i class="fa fa-info-circle vertical-center"></i></a>
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(dataentryWidget)">
                 <span ng-show="dataentryWidget.expand"><i class="fa fa-chevron-up vertical-center" title="{{'collapse'| translate}}"></i></span>
@@ -29,30 +29,15 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="active" style="vertical-align:middle" ng-repeat="stage in programStages| orderBy:'sortOrder':reverse">
-                            {{stage.name}}
-                            <div ng-if="eventsByStage[stage.id].length > 1 && filterEvents" class="inline-block small-horizonal-spacing">
-                                <select class="form-control-inline" 
-                                        ng-model="currentPeriod[stage.id]" 
-                                        ng-change="showDataEntryForEvent(currentPeriod[stage.id])"
-                                        ng-options="period.name for period in eventPeriods[stage.id]">
-                                </select>
-                            </div>
-
-                            <!-- event add/filter icon begins -->
-                            <span class='pull-right'>
-                                <span ng-if="stageNeedsEvent(stage)">
-                                    <a href title="{{'create_new_event'| translate}}" ng-click="showCreateEvent(stage)" style="vertical-align:middle"><i class="fa fa-plus"></i></a>
-                                </span>
-                            </span>
-                            <!-- event add/filter icon ends -->
+                        <th class="active" style="vertical-align:middle" ng-repeat="stage in programStages | orderBy:'sortOrder':reverse">                            
+                            {{stage.name}}                            
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td ng-repeat="stage in programStages| orderBy:'sortOrder':reverse">
-                            <div class="inline-block" ng-repeat="dhis2Event in eventsByStage[stage.id] | orderBy:sortEventsByDate:reverse">
+                            <div class="inline-block" ng-repeat="dhis2Event in eventsByStage[stage.id]">
                                 <div class="event-container" 
                                      ng-class="getEventStyle(dhis2Event)" 
                                      ng-show="!currentPeriod[stage.id] || !filterEvents || currentPeriod[stage.id] && currentPeriod[stage.id].event === dhis2Event.event"
@@ -62,17 +47,25 @@
                                     <span ng-if="eventsByStage[stage.id].length > 1 && !filterEvents">[{{$index + 1}}]</span>
                                 </div>
                             </div>
+                            <span ng-if="eventsByStage[stage.id].length > 1 && filterEvents">
+                                <span ng-if="currentEvent.programStage !== stage.id">
+                                    <div class="event-paging">
+                                        <a href class="event-paging" ng-click="showDataEntryForEvent(eventsByStage[stage.id][0])">{{'show_more' | translate}}</a>
+                                    </div>                                    
+                                </span>
+                                <event-paginator ng-if="stage.id === currentEvent.programStage"></event-paginator>                             
+                            </span>
                         </td>                        
                     </tr>
                 </tbody>                
             </table>
         </div>
-        
+
         <div ng-if="!selectedEnrollment || !selectedEnrollment.enrollment" class="alert alert-danger">{{'not_yet_enrolled_data_entry'| translate}}</div>
 
         <form name="outerForm" novalidate>
             <div ng-if="currentEvent">
-                
+
                 <!-- event dates/scheduling begin -->
                 <div class="row" ng-if="!currentStage.periodType">
                     <div class="col-md-6">
@@ -147,7 +140,7 @@
                     <div class="clear vertical-spacing" ng-if="!displayCustomForm" ng-include="'components/dataentry/default-form.html'"></div>
                 </div>            
                 <!-- data entry form ends -->
-                
+
                 <!-- data entry/event buttons begins -->
                 <div class="form-group">
                     <div class='row'><hr></div>
@@ -172,7 +165,7 @@
                        class="btn btn-danger">{{'delete'| translate}}</a>
                 </div>
                 <!-- data entry/event buttons ends -->
-                
+
             </div>
         </form>
 
@@ -195,16 +188,16 @@
             <table class="table table-striped dhis2-table-hover">
                 <tr ng-repeat="note in currentEvent.notes">
                     <td class="overflow-ellipsis">
-                <d2-pop-over content="note" template="popover.html" details="{{'details'| translate}}">
-                    <div>{{note.value}}</div>
-                </d2-pop-over>
-                <script type="text/ng-template" id="popover.html">
-                    <p>{{content.value}}</p>
-                    <hr>
-                    <p><strong>{{'created_by' | translate}}: </strong>{{content.storedBy}}</p>
-                    <p><strong>{{'date' | translate}}: </strong>{{content.storedDate}}</p>                           
-                </script>
-                </td> 
+                        <d2-pop-over content="note" template="popover.html" details="{{'details'| translate}}">
+                            <div>{{note.value}}</div>
+                        </d2-pop-over>
+                        <script type="text/ng-template" id="popover.html">
+                            <p>{{content.value}}</p>
+                            <hr>
+                            <p><strong>{{'created_by' | translate}}: </strong>{{content.storedBy}}</p>
+                            <p><strong>{{'date' | translate}}: </strong>{{content.storedDate}}</p>                           
+                        </script>
+                    </td> 
                 </tr>
             </table>
         </div>
