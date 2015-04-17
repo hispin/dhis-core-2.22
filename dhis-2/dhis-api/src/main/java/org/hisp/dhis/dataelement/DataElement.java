@@ -515,6 +515,17 @@ public class DataElement
     {
         return legendSet != null;
     }
+
+    // -------------------------------------------------------------------------
+    // Helper getters
+    // -------------------------------------------------------------------------
+
+    @JsonProperty
+    @JsonView( { DetailedView.class } )
+    public boolean isOptionSetValue()
+    {
+        return optionSet != null;
+    }
     
     // -------------------------------------------------------------------------
     // Getters and setters
