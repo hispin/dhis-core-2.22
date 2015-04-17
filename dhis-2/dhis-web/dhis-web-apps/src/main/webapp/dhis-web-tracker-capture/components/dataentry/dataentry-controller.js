@@ -263,7 +263,7 @@ trackerCapture.controller('DataEntryController',
             if( prStDe ){                
                 var val = dataValue.value;
                 if(prStDe.dataElement){           
-                    if(val && prStDe.dataElement.type === 'string' && prStDe.dataElement.optionSet && $scope.optionSets[prStDe.dataElement.optionSet.id].options  ){
+                    if(val && prStDe.dataElement.optionSetValue && $scope.optionSets[prStDe.dataElement.optionSet.id].options  ){
                         val = OptionSetService.getName($scope.optionSets[prStDe.dataElement.optionSet.id].options, val);
                     }
                     if(val && prStDe.dataElement.type === 'date'){
@@ -319,7 +319,7 @@ trackerCapture.controller('DataEntryController',
                 if(prStDe.dataElement.type === 'date'){                    
                     value = DateUtils.formatFromUserToApi(value);
                 }
-                if(prStDe.dataElement.type === 'string'){                    
+                if(prStDe.dataElement.optionSetValue){                    
                     if(prStDe.dataElement.optionSet && $scope.optionSets[prStDe.dataElement.optionSet.id] &&  $scope.optionSets[prStDe.dataElement.optionSet.id].options ) {
                         value = OptionSetService.getCode($scope.optionSets[prStDe.dataElement.optionSet.id].options, value);
                     }                    

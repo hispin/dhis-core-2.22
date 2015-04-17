@@ -73,7 +73,41 @@
                 </td>
                 <td >
                     <ng-form name="innerForm">
-                        <div ng-switch="eventGridColumn.type">
+                        <div ng-if="prStDes[eventGridColumn.id].dataElement.optionSetValue">
+                            <span ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length >= 7">
+                                <input type="text"
+                                       class="typeahead"
+                                       placeholder="&#xf0d7;&nbsp;&nbsp;"                                                 
+                                       ng-model="currentEvent[eventGridColumn.id]"                                                                    
+                                       typeahead="option.name as option.name for option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter:$viewValue | limitTo:20" 
+                                       typeahead-open-on-focus   
+                                       typeahead-editable=false
+                                       d2-typeahead-validation
+                                       ng-required={{eventGridColumn.compulsory}}
+                                       name="foo" 
+                                       input-field-id={{eventGridColumn.id}} 
+                                       style="width:99%;"/>
+                            </span>                                    
+                            <span ng-if="selectedProgram.dataEntryMethod && optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length < 7">                                    
+                                <label>
+                                    <input type="radio" 
+                                           name="foo"  
+                                           input-field-id={{eventGridColumn.id}}   
+                                           ng-required={{eventGridColumn.compulsory}}
+                                           ng-model="currentEvent[eventGridColumn.id]"
+                                           value=""> {{'no_value' | translate}}<br>
+                                </label>                                    
+                                <label ng-repeat="option in  optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options">
+                                    <input type="radio" 
+                                           name={{eventGridColumn.id}}   
+                                           input-field-id={{eventGridColumn.id}}    
+                                           ng-required={{eventGridColumn.compulsory}}
+                                           ng-model="currentEvent[eventGridColumn.id]"
+                                           value={{option.name}}> {{option.name}}<br>                                        
+                                </label>
+                            </span>
+                        </div>
+                        <div ng-if="!prStDes[eventGridColumn.id].dataElement.optionSetValue" ng-switch="eventGridColumn.type">
                             <div ng-switch-when="int">
                                 <input type="text"                                         
                                        d2-number-validation 
@@ -85,48 +119,12 @@
                                        style="width:99%;"/>
                             </div>
                             <div ng-switch-when="string">                                
-                                <div class="container-fluid" ng-if="prStDes[eventGridColumn.id].dataElement.optionSet">
-                                    <span ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length >= 7">
-                                        <input type="text"
-                                               class="typeahead"
-                                               placeholder="&#xf0d7;&nbsp;&nbsp;"                                                 
-                                               ng-model="currentEvent[eventGridColumn.id]"                                                                    
-                                               typeahead="option.name as option.name for option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter:$viewValue | limitTo:20" 
-                                               typeahead-open-on-focus   
-                                               typeahead-editable=false
-                                               d2-typeahead-validation
-                                               ng-required={{eventGridColumn.compulsory}}
-                                               name="foo" 
-                                               input-field-id={{eventGridColumn.id}} 
-                                               style="width:99%;"/>
-                                    </span>                                    
-                                    <span ng-if="selectedProgram.dataEntryMethod && optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length < 7">                                    
-                                        <label>
-                                            <input type="radio" 
-                                                   name="foo"  
-                                                   input-field-id={{eventGridColumn.id}}   
-                                                   ng-required={{eventGridColumn.compulsory}}
-                                                   ng-model="currentEvent[eventGridColumn.id]"
-                                                   value=""> {{'no_value' | translate}}<br>
-                                        </label>                                    
-                                        <label ng-repeat="option in  optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options">
-                                            <input type="radio" 
-                                                   name={{eventGridColumn.id}}   
-                                                   input-field-id={{eventGridColumn.id}}    
-                                                   ng-required={{eventGridColumn.compulsory}}
-                                                   ng-model="currentEvent[eventGridColumn.id]"
-                                                   value={{option.name}}> {{option.name}}<br>                                        
-                                        </label>
-                                    </span>
-                                </div>
-                                <div ng-if="!prStDes[eventGridColumn.id].dataElement.optionSet">
-                                    <input type="text"                                             
-                                        ng-model="currentEvent[eventGridColumn.id]"                                        
-                                        ng-required={{eventGridColumn.compulsory}}
-                                        name="foo" 
-                                        input-field-id={{eventGridColumn.id}} 
-                                        style="width:99%;"/>
-                                </div>                                
+                                <input type="text"                                             
+                                    ng-model="currentEvent[eventGridColumn.id]"                                        
+                                    ng-required={{eventGridColumn.compulsory}}
+                                    name="foo" 
+                                    input-field-id={{eventGridColumn.id}} 
+                                    style="width:99%;"/>                                
                             </div>
                             <div ng-switch-when="bool">
                                 <select ng-model="currentEvent[eventGridColumn.id]"                                                                
