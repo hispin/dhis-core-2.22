@@ -4,6 +4,7 @@ trackerCapture.controller('DataEntryController',
         function($scope,
                 $modal,
                 $filter,
+                Paginator,
                 DateUtils,
                 EventUtils,
                 orderByFilter,
@@ -89,6 +90,7 @@ trackerCapture.controller('DataEntryController',
     $scope.getEvents = function(){
         DHIS2EventFactory.getEventsByProgram($scope.selectedEntity.trackedEntityInstance, $scope.selectedProgram.id).then(function(events){
             if(angular.isObject(events)){
+                var eLen = 0;
                 angular.forEach(events, function(dhis2Event){                    
                     if(dhis2Event.enrollment === $scope.selectedEnrollment.enrollment && dhis2Event.orgUnit){
                         if(dhis2Event.notes){
@@ -121,10 +123,11 @@ trackerCapture.controller('DataEntryController',
                                 $scope.showDataEntry($scope.currentEvent, true);
                             }
                         }
+                        eLen++;
                     }
                 });
             }
-            sortEventsByStage();                        
+            sortEventsByStage();
         });          
     };
     
@@ -195,12 +198,17 @@ trackerCapture.controller('DataEntryController',
             }            
         }, function () {
         });
-    };
-    
-    $scope.showDataEntry = function(event, rightAfterEnrollment){  
-        
+    };    
+       
+    $scope.showDataEntry = function(event, rightAfterEnrollment){        
         if(event){
-
+            
+            Paginator.setItemCount( $scope.eventsByStage[event.programStage].length );
+            Paginator.setPage( $scope.eventsByStage[event.programStage].indexOf( event ) );
+            Paginator.setPageCount( Paginator.getItemCount() );
+            Paginator.setPageSize( 1 );
+            Paginator.setToolBarDisplay( 5 );
+        
             if($scope.currentEvent && !rightAfterEnrollment && $scope.currentEvent.event === event.event){
                 //clicked on the same stage, do toggling
                 $scope.currentEvent = null;
@@ -742,16 +750,27 @@ trackerCapture.controller('DataEntryController',
                     return DateUtils.getDate(event.sortingDate);
                 }, true);
                 
+                $scope.eventsByStage[key] = sortedEvents;
+                
                 var periods = PeriodService.getPeriods(sortedEvents, stage, $scope.selectedEnrollment).occupiedPeriods;
+                
                 $scope.eventPeriods[key] = periods;
                 $scope.currentPeriod[key] = periods.length > 0 ? periods[0] : null;  
-                $scope.eventFilteringRequired = $scope.eventFilteringRequired ? $scope.eventFilteringRequired : periods.length > 1;
-                
+                $scope.eventFilteringRequired = $scope.eventFilteringRequired ? $scope.eventFilteringRequired : periods.length > 1;                
             }
         }
     };
     
-    $scope.showDataEntryForEvent = function(period){        
+    $scope.showLastEventInStage = function(stageId){
+        var ev = $scope.eventsByStage[stageId][$scope.eventsByStage[stageId].length-1];
+        $scope.showDataEntryForEvent(ev);
+    };
+    
+    $scope.showDataEntryForEvent = function(event){
+        
+        var period = {event: event.event, stage: event.programStage, name: event.sortingDate};
+        $scope.currentPeriod[event.programStage] = period;
+        
         var event = null;
         for(var i=0; i<$scope.eventsByStage[period.stage].length; i++){
             if($scope.eventsByStage[period.stage][i].event === period.event){

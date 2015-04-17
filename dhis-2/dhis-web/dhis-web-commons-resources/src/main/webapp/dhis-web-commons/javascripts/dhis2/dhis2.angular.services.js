@@ -728,9 +728,17 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     this.getPageCount = function () {
         return this.pageCount;
     };
+    
+    this.setToolBarDisplay = function(toolBarDisplay){
+        this.toolBarDisplay = toolBarDisplay;
+    };
 
+    this.getToolBarDisplay = function(){
+        return this.toolBarDisplay;
+    };
+    
     this.lowerLimit = function() { 
-        var pageCountLimitPerPageDiff = this.getPageCount() - this.toolBarDisplay;
+        var pageCountLimitPerPageDiff = this.getPageCount() - this.getToolBarDisplay();
 
         if (pageCountLimitPerPageDiff < 0) { 
             return 0; 
@@ -740,7 +748,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             return pageCountLimitPerPageDiff; 
         } 
 
-        var low = this.getPage() - (Math.ceil(this.toolBarDisplay/2) - 1); 
+        var low = this.getPage() - (Math.ceil(this.getToolBarDisplay()/2) - 1); 
 
         return Math.max(low, 0);
     };
