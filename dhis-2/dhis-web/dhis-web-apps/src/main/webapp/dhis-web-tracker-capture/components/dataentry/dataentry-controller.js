@@ -90,7 +90,6 @@ trackerCapture.controller('DataEntryController',
     $scope.getEvents = function(){
         DHIS2EventFactory.getEventsByProgram($scope.selectedEntity.trackedEntityInstance, $scope.selectedProgram.id).then(function(events){
             if(angular.isObject(events)){
-                var eLen = 0;
                 angular.forEach(events, function(dhis2Event){                    
                     if(dhis2Event.enrollment === $scope.selectedEnrollment.enrollment && dhis2Event.orgUnit){
                         if(dhis2Event.notes){
@@ -123,7 +122,6 @@ trackerCapture.controller('DataEntryController',
                                 $scope.showDataEntry($scope.currentEvent, true);
                             }
                         }
-                        eLen++;
                     }
                 });
             }
