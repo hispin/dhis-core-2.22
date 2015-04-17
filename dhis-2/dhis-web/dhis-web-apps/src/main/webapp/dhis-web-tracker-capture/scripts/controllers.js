@@ -371,7 +371,6 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     //Get orgunits for the logged in user
     OrgUnitFactory.getSearchTreeRoot().then(function(response) {  
         $scope.orgUnits = response.organisationUnits;
-        $scope.selectedSearchingOrgUnit = $scope.orgUnits && $scope.orgUnits.length && $scope.orgUnits[0] ? $scope.orgUnits[0] : null;
         angular.forEach($scope.orgUnits, function(ou){
             ou.show = true;
             angular.forEach(ou.children, function(o){                    
