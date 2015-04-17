@@ -25,8 +25,50 @@
                     {{attribute.name}}
                 </td>
                 <td>
-                    <ng-form name="innerForm">     
-                        <div ng-switch="attribute.valueType">
+                    <ng-form name="innerForm">
+                        <div ng-if="attribute.optionSetValue">
+                            <div ng-if="!selectedProgramForRelative">
+                                <input type="text"
+                                   name="foo"
+                                   class="form-control"
+                                   ng-model="attribute.value"                                                 
+                                   typeahead="option.name as option.name for option in optionSets[attribute.optionSet.id].options | filter:$viewValue | limitTo:20" 
+                                   typeahead-open-on-focus
+                                   ng-required="attribute.mandatory"/>
+                            </div>
+                            <div ng-if="selectedProgramForRelative">
+                                <div ng-if="!selectedProgramForRelative.dataEntryMethod || optionSets[attribute.optionSet.id].options.length >= 7">
+                                    <input type="text" 
+                                       name="foo"
+                                       class="form-control"
+                                       ng-model="attribute.value"                                                 
+                                       typeahead="option.name as option.name for option in optionSets[attribute.optionSet.id].options | filter:$viewValue | limitTo:20" 
+                                       typeahead-open-on-focus
+                                       typeahead-editable=false
+                                       ng-required="attribute.mandatory"/>
+                                </div>
+                                <div ng-if="selectedProgramForRelative.dataEntryMethod && optionSets.optionSet[attribute.optionSet.id].options.length < 7">
+                                    <label>                                        
+                                        <input type="radio"
+                                            name={{attribute.id}}
+                                            ng-required="attribute.mandatory"
+                                            ng-model="attribute.value"
+                                            value=""> {{'no_value' | translate}}<br>                                       
+                                    </label><br>
+                                    <span ng-repeat="option in optionSets[attribute.optionSet.id].options">
+                                        <label>
+                                            <input type="radio"
+                                                name={{attribute.id}}
+                                                ng-required="attribute.mandatory"
+                                                ng-model="attribute.value" 
+                                                value={{option.name}}> {{option.name}}
+                                        </label><br>
+                                    </span>                                            
+                                </div>
+                            </div>                                
+                            <span ng-show="outerForm.submitted && innerForm.foo.$invalid" class="error">{{'required'| translate}}</span>
+                        </div>
+                        <div ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
                             <div ng-switch-when="date">
                                 <input type="text" placeholder="{{dhis2CalendarFormat.keyDateFormat}}" name="foo" class="form-control" d2-date ng-model="attribute.value" ng-required="attribute.mandatory" />
                                 <span ng-show="outerForm.submitted && innerForm.foo.$invalid" class="error">{{'required'| translate}}</span>
@@ -41,48 +83,6 @@
                                     <option value="false">{{'no'| translate}}</option>
                                     <option value="true">{{'yes'| translate}}</option>
                                 </select>
-                                <span ng-show="outerForm.submitted && innerForm.foo.$invalid" class="error">{{'required'| translate}}</span>
-                            </div>                            
-                            <div ng-switch-when="optionSet">
-                                <div ng-if="!selectedProgramForRelative">
-                                    <input type="text"
-                                       name="foo"
-                                       class="form-control"
-                                       ng-model="attribute.value"                                                 
-                                       typeahead="option.name as option.name for option in optionSets[attribute.optionSet.id].options | filter:$viewValue | limitTo:20" 
-                                       typeahead-open-on-focus
-                                       ng-required="attribute.mandatory"/>
-                                </div>
-                                <div ng-if="selectedProgramForRelative">
-                                    <div ng-if="!selectedProgramForRelative.dataEntryMethod || optionSets[attribute.optionSet.id].options.length >= 7">
-                                        <input type="text" 
-                                           name="foo"
-                                           class="form-control"
-                                           ng-model="attribute.value"                                                 
-                                           typeahead="option.name as option.name for option in optionSets[attribute.optionSet.id].options | filter:$viewValue | limitTo:20" 
-                                           typeahead-open-on-focus
-                                           typeahead-editable=false
-                                           ng-required="attribute.mandatory"/>
-                                    </div>
-                                    <div ng-if="selectedProgramForRelative.dataEntryMethod && optionSets.optionSet[attribute.optionSet.id].options.length < 7">
-                                        <label>                                        
-                                            <input type="radio"
-                                                name={{attribute.id}}
-                                                ng-required="attribute.mandatory"
-                                                ng-model="attribute.value"
-                                                value=""> {{'no_value' | translate}}<br>                                       
-                                        </label><br>
-                                        <span ng-repeat="option in optionSets[attribute.optionSet.id].options">
-                                            <label>
-                                                <input type="radio"
-                                                    name={{attribute.id}}
-                                                    ng-required="attribute.mandatory"
-                                                    ng-model="attribute.value" 
-                                                    value={{option.name}}> {{option.name}}
-                                            </label><br>
-                                        </span>                                            
-                                    </div>
-                                </div>                                
                                 <span ng-show="outerForm.submitted && innerForm.foo.$invalid" class="error">{{'required'| translate}}</span>
                             </div>
                             <div ng-switch-when="number">
