@@ -49,6 +49,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.resourcetable.ResourceTableService;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.timer.SystemTimer;
 import org.hisp.dhis.system.timer.Timer;
@@ -85,6 +86,9 @@ public abstract class AbstractJdbcTableManager
     
     @Autowired
     protected DataApprovalLevelService dataApprovalLevelService;
+    
+    @Autowired
+    protected ResourceTableService resourceTableService;
    
     @Autowired
     protected StatementBuilder statementBuilder;
@@ -108,6 +112,14 @@ public abstract class AbstractJdbcTableManager
      * </ul>
      */
     protected abstract List<String[]> getDimensionColumns( AnalyticsTable table );
+    
+    /**
+     * Override to perform work before tables are being generated.
+     */
+    @Override
+    public void preCreateTables()
+    {
+    }
     
     // -------------------------------------------------------------------------
     // Implementation
