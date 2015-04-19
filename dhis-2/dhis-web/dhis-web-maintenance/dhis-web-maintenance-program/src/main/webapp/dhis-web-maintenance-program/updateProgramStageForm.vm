@@ -139,7 +139,7 @@
 
 			<tr>
 				<td><label for="description">$i18n.getString( "description" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
-				<td><input type="text" id="description" name="description" value="$encoder.htmlEncode( $programStage.description )" /></td>
+				<td><textarea id="description" name="description">$!encoder.htmlEncode( $programStage.description )</textarea></td>
 			</tr> 
 			
 			#if($programStage.program.type==1)

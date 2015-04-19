@@ -17,14 +17,14 @@
 	
     <property name="shortName" />
     
-    <property name="description" />
+    <property name="description" type="text" />
 
     <many-to-one name="program" class="org.hisp.dhis.program.Program" 
         column="programid" foreign-key="fk_programindicator_program" not-null="true" />
 
     <property name="valueType" />
     
-    <property name="expression" />
+    <property name="expression" type="text" />
     
     <property name="rootDate" />
     

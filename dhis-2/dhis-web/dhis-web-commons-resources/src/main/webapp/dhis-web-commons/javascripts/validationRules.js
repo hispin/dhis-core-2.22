@@ -480,8 +480,7 @@ var validationRules = {
             "rangelength" : [2,160]
         },
         "description" : {
-            "required" : true,
-            "rangelength" : [2,254]
+            "required" : true
         },
         "reportDateDescription" : {
             "required" : true,
@@ -548,8 +547,7 @@ var validationRules = {
             "required" : true
         },
         "expression" : {
-            "required" : true,
-            "maxlength" : 254
+            "required" : true
         },
         "valueType" : {
             "required" : true
