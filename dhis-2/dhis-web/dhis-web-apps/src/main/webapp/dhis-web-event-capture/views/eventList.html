@@ -14,7 +14,7 @@
         <div ng-switch-default>
             <h4>
                 {{'registered_events'| translate}}<span class="small-horizonal-spacing" ng-if="pager.total">({{'total' | translate}}:  {{pager.total}})</span>
-                <button class="button button-std pull-right not-printable"
+                <button class="button button-std pull-right hideInPrint"
                         ng-show="dhis2Events.length"
                         ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid"                                        
                         ng-click="showHideColumns()">
@@ -53,7 +53,7 @@
                                     <!-- sort icon ends -->
 
                                     <!-- filter icon begins -->
-                                    <span class='pull-right not-printable'>
+                                    <span class='pull-right hideInPrint'>
                                         <span ng-show="eventGridColumn.type !='date' && eventGridColumn.type !='int'">
                                             <a href ng-click="searchInGrid(eventGridColumn)" title="{{'search'| translate}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [filterText[eventGridColumn.id] == undefined || filterText[eventGridColumn.id] == '']"><i class="fa fa-search"></i></span></a>
                                         </span>
