@@ -18,8 +18,13 @@ trackerCapture.controller('ProgramStatisticsController',
     //Paging
     $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};
     
+    function resetParams(){
+        $scope.reportStarted = false;
+        $scope.dataReady = false;
+    }
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {      
+        resetParams();
         $scope.selectedProgram = null;
         if( angular.isObject($scope.selectedOrgUnit)){        
             $scope.loadPrograms($scope.selectedOrgUnit);
@@ -40,8 +45,7 @@ trackerCapture.controller('ProgramStatisticsController',
     //watch for selection of program
     $scope.$watch('selectedProgram', function() {   
         if( angular.isObject($scope.selectedProgram)){            
-            $scope.reportStarted = false;
-            $scope.dataReady = false;
+            resetParams();
         }
     });
     
