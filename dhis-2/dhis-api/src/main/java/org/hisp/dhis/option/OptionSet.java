@@ -99,6 +99,18 @@ public class OptionSet
         return result;
     }
 
+    public List<String> getOptionCodes()
+    {
+        List<String> codes = new ArrayList<>();
+        
+        for ( Option option : options )
+        {
+            codes.add( option.getCode() );
+        }
+        
+        return codes;
+    }
+    
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------

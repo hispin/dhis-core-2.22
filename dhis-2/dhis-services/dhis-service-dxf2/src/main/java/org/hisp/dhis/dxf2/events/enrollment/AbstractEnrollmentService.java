@@ -767,14 +767,13 @@ public abstract class AbstractEnrollmentService
         {
             if ( userService.getUserCredentialsByUsername( attribute.getValue() ) == null )
             {
-                importConflicts.add( new ImportConflict( "Attribute.value",
-                    "Value is not pointing to a valid username." ) );
+                importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid username." ) );
             }
         }
         else if ( TrackedEntityAttribute.TYPE_OPTION_SET.equals( teAttribute.getValueType() )
-            && !teAttribute.getOptionSet().getOptions().contains( attribute.getValue() ) )
+            && !teAttribute.getOptionSet().getOptionCodes().contains( attribute.getValue() ) )
         {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid option." ) );
+            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid option code." ) );
         }
 
         return importConflicts;
