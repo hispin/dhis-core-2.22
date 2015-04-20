@@ -34,6 +34,10 @@ trackerCapture.controller('ProgramSummaryController',
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {      
         $scope.selectedProgram = null;
+        $scope.reportStarted = false;
+        $scope.dataReady = false;  
+        $scope.programStages = null;
+        $scope.stagesById = [];
         if( angular.isObject($scope.selectedOrgUnit)){            
             $scope.loadPrograms($scope.selectedOrgUnit);
         }
@@ -50,8 +54,7 @@ trackerCapture.controller('ProgramSummaryController',
         }        
     };
     
-    $scope.getSelectedProgram = function(program){        
-        $scope.selectedProgram = program;
+    $scope.$watch('selectedProgram', function() {        
         $scope.programStages = null;
         $scope.stagesById = [];
         if( angular.isObject($scope.selectedProgram)){            
@@ -65,7 +68,7 @@ trackerCapture.controller('ProgramSummaryController',
                 });
             });
         }
-    };
+    });
     
     $scope.generateReport = function(program, report, ouMode){
         
