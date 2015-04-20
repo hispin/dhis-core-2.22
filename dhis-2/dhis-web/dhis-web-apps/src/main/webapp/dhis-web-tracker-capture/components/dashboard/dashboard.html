@@ -1,5 +1,5 @@
 <div class="container-1-1">    
-    <div class="col-sm-12 vertical-spacing  not-printable">
+    <div class="col-sm-12 vertical-spacing  hideInPrint">
 
         <button type="button" class="btn btn-default" ng-click="back()">{{'back'| translate}}</button>
         
@@ -38,7 +38,7 @@
                     smaller-widgets={{ dashboardWidgets  | filter: {parent: 'smallerWidget'} }} 
                     class="row connectedSortable empty-dashboard-container">
                     <div class="col-sm-12" id={{biggerWidget.title}} ng-repeat="biggerWidget in dashboardWidgets | orderBy:'order' | filter: {parent: 'biggerWidget'}"">
-                        <div ng-show="biggerWidget.show" ng-include="biggerWidget.view" ng-class="{true: 'not-printable'} [biggerWidget.title != 'report']"></div>
+                        <div ng-show="biggerWidget.show" ng-include="biggerWidget.view" ng-class="{true: 'hideInPrint'} [biggerWidget.title != 'report']"></div>
                     </div>                                       
                 </div>                
             </div>            
@@ -49,7 +49,7 @@
                     smaller-widgets={{ dashboardWidgets  | filter: {parent: 'smallerWidget'} }} 
                     class="row connectedSortable empty-dashboard-container">                   
                     <div class="col-sm-12" id={{smallerWidget.title}} ng-repeat="smallerWidget in dashboardWidgets  | orderBy:'order' | filter: {parent: 'smallerWidget'}">                        
-                        <div ng-show="smallerWidget.show" ng-include="smallerWidget.view" ng-class="{true: 'not-printable'} [smallerWidget.title != 'report']"></div>
+                        <div ng-show="smallerWidget.show" ng-include="smallerWidget.view" ng-class="{true: 'hideInPrint'} [smallerWidget.title != 'report']"></div>
                     </div>                   
                 </div>
             </div>

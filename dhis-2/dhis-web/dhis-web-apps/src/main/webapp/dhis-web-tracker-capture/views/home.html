@@ -75,7 +75,7 @@
                 <span ng-if='showRegistrationDiv'>
                     {{selectedProgram.trackedEntity.name}} {{'register'| translate}}
                 </span>
-                <div class="pull-right not-printable">
+                <div class="pull-right hideInPrint">
                     <div class="btn-group" dropdown is-open="status.isopen">
                         <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="trackedEntityList.rows.length <= 0">
                             <i class="fa fa-cog" title="{{'settings'| translate}}"></i>
@@ -124,7 +124,7 @@
             <!-- program selection ends -->
 
             <!-- simple/advanced search begins -->
-            <div id="searchDropDownParent" class="input-group col-md-4 not-printable">
+            <div id="searchDropDownParent" class="input-group col-md-4 hideInPrint">
                 <input type="text" placeholder="{{'type_your_search_criteria_here'| translate}}" ng-model="searchText" class="form-control expanded" d2-enter="search(searchMode.freeText)" ng-class="{true: 'invalid - input'} [!searchText && emptySearchText]" ng-focus="showHideSearch()" ng-disabled="showRegistrationDiv">
                 <div class="input-group-btn">
                     <button class="btn btn-default search-dropdown-button trim" type="button" title="{{'advanced_search'| translate}}" data-toggle="dropdown" ng-click="showHideSearch()" ng-disabled="showRegistrationDiv"><i class="fa fa-caret-down"></i></button>
@@ -139,7 +139,7 @@
             <!-- simple/advanced search ends -->
 
             <!--search/registration buttons begin-->
-            <div class="col-md-4 trim not-printable">            
+            <div class="col-md-4 trim hideInPrint">            
                 <button type="button" 
                         class="btn btn-success"
                         ng-disabled="showRegistrationDiv"
