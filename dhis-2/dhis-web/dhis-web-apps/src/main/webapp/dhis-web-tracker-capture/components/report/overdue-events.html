@@ -18,7 +18,7 @@
     <div class="row top-bar">        
         <div class="col-sm-12">            
             {{'overdue_events'| translate}}
-            <div class="pull-right not-printable">
+            <div class="pull-right hideInPrint">
                 <div class="btn-group" dropdown is-open="status.isopen">
                     <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="!overdueEvents.length">
                         <i class="fa fa-cog" title="{{'settings'| translate}}"></i>
@@ -109,7 +109,7 @@
             <div ng-switch-default>
                 <!-- report begins -->
 
-                <div class='pull-right vertical-spacing not-printable'>
+                <div class='pull-right vertical-spacing hideInPrint'>
                     <button type="button"
                             class="btn btn-primary"
                             onclick="javascript:window.print()">
@@ -132,13 +132,13 @@
                                     <!-- sort icon begins -->
                                     <span ng-click="sortGrid(gridColumn)">
                                         {{gridColumn.name}}
-                                        <i ng-if="sortHeader == gridColumn.id && reverse" class="fa fa-sort-desc not-printable"></i>
-                                        <i ng-if="sortHeader == gridColumn.id && !reverse" class="fa fa-sort-asc not-printable"></i>
+                                        <i ng-if="sortHeader == gridColumn.id && reverse" class="fa fa-sort-desc hideInPrint"></i>
+                                        <i ng-if="sortHeader == gridColumn.id && !reverse" class="fa fa-sort-asc hideInPrint"></i>
                                     </span>
                                     <!-- sort icon ends -->
 
                                     <!-- filter icon begins -->
-                                    <span class='pull-right not-printable'>
+                                    <span class='pull-right hideInPrint'>
                                         <span ng-show="gridColumn.type != 'date' && gridColumn.type != 'int'">
                                             <a href ng-click="searchInGrid(gridColumn)" title="{{'search'| translate}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [filterText[gridColumn.id] == undefined || filterText[gridColumn.id] == '']"><i class="fa fa-search"></i></span></a>
                                         </span>
@@ -149,7 +149,7 @@
                                     <!-- filter icon ends -->
 
                                     <!-- filter input field begins -->
-                                    <span ng-show="gridColumn.showFilter" class="not-printable">  
+                                    <span ng-show="gridColumn.showFilter" class="hideInPrint">  
                                         <span ng-switch="gridColumn.type">
                                             <span ng-switch-when="int">
                                                 <input style="width: 45%;" placeholder="{{'lower_limit'| translate}}" type="number" ng-model="filterText[gridColumn.id].start" ng-blur="searchInGrid(gridColumn)">
