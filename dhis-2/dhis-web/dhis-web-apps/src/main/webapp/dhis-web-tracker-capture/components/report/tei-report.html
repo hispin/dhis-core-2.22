@@ -1,5 +1,5 @@
 <div class="panel panel-info" ng-controller="TeiReportController">
-    <div class="panel-heading handle bold not-printable">
+    <div class="panel-heading handle bold hideInPrint">
         {{reportWidget.title| translate}}        
         <span class="pull-right widget-link">
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(reportWidget)">
@@ -11,7 +11,7 @@
     </div>
     <div ng-show="reportWidget.expand" class="panel-body dashboard-widget-container">        
         <div ng-if="!dataExists" class="alert alert-warning">{{'no_data_report'| translate}}</div>
-        <div ng-if="dataExists" class="remove-default-padding not-printable">
+        <div ng-if="dataExists" class="remove-default-padding hideInPrint">
             <table class="table table-striped dhis2-table-hover">
                 <tr ng-click="showProgramReportDetails(pr)" ng-repeat="pr in programs" ng-if="report[pr.id].enrollments" title="{{'details'| translate}}">                   
                     <td>
