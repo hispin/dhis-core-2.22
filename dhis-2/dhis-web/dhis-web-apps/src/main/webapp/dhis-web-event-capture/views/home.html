@@ -44,7 +44,7 @@
                     </select>      
                 </td>
                 <td style='padding-left: 10px;'>
-                    <button class="button button-std not-printable"
+                    <button class="button button-std hideInPrint"
                             ng-show="selectedProgramStage" 
                             ng-click="showEventRegistration()" 
                             ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid">
@@ -52,7 +52,7 @@
                     </button>  
                 </td>
                 <td ng-if="dhis2Events.length > 0" style='padding-left: 10px;'>
-                    <button class="button button-std not-printable"
+                    <button class="button button-std hideInPrint"
                             onclick="javascript:window.print()">
                         <span ng-if="!eventRegistration && !editingEventInFull">{{'print_list'| translate}}</span>
                         <span ng-if="eventRegistration">{{'print_form'| translate}}</span>
