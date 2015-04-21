@@ -43,7 +43,7 @@ public class AnnotationUtils
      * annotation of the given class.
      * 
      * @param target the target object.
-     * @param annotationClass the annotation class.
+     * @param annotationType the annotation class type.
      * @return a list of methods annotated with the given annotation.
      */
     public static List<Method> getAnnotatedMethods( Object target, Class<? extends Annotation> annotationType )

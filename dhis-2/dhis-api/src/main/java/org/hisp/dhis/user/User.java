@@ -355,6 +355,11 @@ public class User
         return false;
     }
 
+    public static String getSafeUsername( User user )
+    {
+        return user != null && user.getUsername() != null ? user.getUsername() : "[Unknown]";
+    }
+    
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
