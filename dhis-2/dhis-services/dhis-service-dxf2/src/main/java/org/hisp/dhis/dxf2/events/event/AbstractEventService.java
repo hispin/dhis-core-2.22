@@ -53,7 +53,6 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
@@ -79,6 +78,7 @@ import org.hisp.dhis.system.util.CachingMap;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.DebugUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityComment;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityCommentService;
@@ -133,9 +133,6 @@ public abstract class AbstractEventService
     @Autowired
     protected TrackedEntityInstanceService entityInstanceService;
     
-    @Autowired
-    private org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService trackedEntityInstanceService;
-
     @Autowired
     protected TrackedEntityCommentService commentService;
 
@@ -458,7 +455,7 @@ public abstract class AbstractEventService
             throw new IllegalQueryException( "Org unit is specified but does not exist: " + orgUnit );
         }
         
-        TrackedEntityInstance tei = trackedEntityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
+        TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
         
         if ( StringUtils.isNotEmpty( trackedEntityInstance ) && tei == null )
         {

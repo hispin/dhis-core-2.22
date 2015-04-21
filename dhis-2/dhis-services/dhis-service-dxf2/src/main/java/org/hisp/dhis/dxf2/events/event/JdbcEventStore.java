@@ -189,19 +189,6 @@ public class JdbcEventStore
     {
         List<Integer> orgUnitIds = getIdList( organisationUnits );
 
-        Integer trackedEntityInstanceId = null;
-
-        if ( params.getTrackedEntityInstance() != null )
-        {
-            org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = entityInstanceService
-                .getTrackedEntityInstance( params.getTrackedEntityInstance().getTrackedEntityInstance() );
-
-            if ( entityInstance != null )
-            {
-                trackedEntityInstanceId = entityInstance.getId();
-            }
-        }
-
         SqlHelper hlp = new SqlHelper();
 
         String sql =
@@ -235,9 +222,9 @@ public class JdbcEventStore
             "left join trackedentitydatavalue pdv on psi.programstageinstanceid=pdv.programstageinstanceid " +
             "left join dataelement de on pdv.dataelementid=de.dataelementid ";
         
-        if ( trackedEntityInstanceId != null )
+        if ( params.getTrackedEntityInstance() != null )
         {
-            sql += hlp.whereAnd() + " tei.trackedentityinstanceid=" + trackedEntityInstanceId + " ";
+            sql += hlp.whereAnd() + " tei.trackedentityinstanceid=" + params.getTrackedEntityInstance().getId() + " ";
         }
 
         if ( params.getProgram() != null )
