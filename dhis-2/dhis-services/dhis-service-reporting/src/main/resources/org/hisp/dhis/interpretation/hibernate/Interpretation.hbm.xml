@@ -11,7 +11,8 @@
     </id>
 
     <property name="uid" column="uid" length="11" />
-    <property name="lastUpdated" type="timestamp" />
+    
+    <property name="lastUpdated" type="timestamp" index="interpretation_lastupdated" />
 
     <many-to-one name="chart" class="org.hisp.dhis.chart.Chart" column="chartid"
       foreign-key="fk_interpretation_chartid" />
