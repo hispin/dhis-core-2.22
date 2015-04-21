@@ -64,6 +64,8 @@ public class TableCreator
         
         createSilently( "CREATE INDEX messageconversation_lastmessage ON messageconversation (lastmessage)", "messageconversation_lastmessage" );
         createSilently( "CREATE INDEX interpretation_lastupdated ON interpretation (lastupdated)", "interpretation_lastupdated" );
+        createSilently( "CREATE INDEX programstageinstance_executiondate ON programstageinstance (executiondate)", "programstageinstance_executiondate" );
+
     }
 
     // -------------------------------------------------------------------------

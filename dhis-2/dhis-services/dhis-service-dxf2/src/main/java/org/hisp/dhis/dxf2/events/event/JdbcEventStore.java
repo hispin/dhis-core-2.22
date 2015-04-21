@@ -205,22 +205,20 @@ public class JdbcEventStore
         SqlHelper hlp = new SqlHelper();
 
         String sql =
-            "select pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
-            "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
-            "psi.uid as psi_uid, psi.status as psi_status, ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, " +
-            "psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
+            "select psi.uid as psi_uid, psi.status as psi_status, psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
             "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, " +
+            "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
+            "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
+            "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.uid as tei_uid, " +
             "psinote.trackedentitycommentid as psinote_id, psinote.commenttext as psinote_value, " +
             "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby, " +
             "pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
-            "de.uid as de_uid, de.code as de_code, tei.uid as tei_uid " +
+            "de.uid as de_uid, de.code as de_code " +
             "from programstageinstance psi " +
             "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
             "inner join program p on p.programid=pi.programid " +
             "inner join programstage ps on ps.programid=p.programid " +
-            "left join programstageinstancecomments psic on psi.programstageinstanceid=psic.programstageinstanceid " +
-            "left join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid " +
-            "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid ";
+            "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid ";            
 
         if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
         {
@@ -230,11 +228,13 @@ public class JdbcEventStore
         {
             sql += "left join organisationunit ou on (tei.organisationunitid=ou.organisationunitid) ";
         }
-
+        
         sql +=
+            "left join programstageinstancecomments psic on psi.programstageinstanceid=psic.programstageinstanceid " +
+            "left join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid " +
             "left join trackedentitydatavalue pdv on psi.programstageinstanceid=pdv.programstageinstanceid " +
             "left join dataelement de on pdv.dataelementid=de.dataelementid ";
-
+        
         if ( trackedEntityInstanceId != null )
         {
             sql += hlp.whereAnd() + " tei.trackedentityinstanceid=" + trackedEntityInstanceId + " ";
