@@ -36,7 +36,7 @@
     <many-to-one name="lastSender" class="org.hisp.dhis.user.User" column="lastsenderid"
       foreign-key="fk_messageconversation_userid" />
 
-    <property name="lastMessage" column="lastmessage" />
+    <property name="lastMessage" column="lastmessage" index="messageconversation_lastmessage" />
 
   </class>
 </hibernate-mapping>
