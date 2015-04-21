@@ -28,8 +28,6 @@ package org.hisp.dhis.startup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.aggregation.AggregatedDataValueService;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +39,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class TableCreator
     extends AbstractStartupRoutine
 {
-    private Log log = LogFactory.getLog( TableCreator.class );
-    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -61,28 +57,5 @@ public class TableCreator
     public void execute()
     {
         aggregatedDataValueService.createDataMart();
-        
-        createSilently( "CREATE INDEX messageconversation_lastmessage ON messageconversation (lastmessage)", "messageconversation_lastmessage" );
-        createSilently( "CREATE INDEX interpretation_lastupdated ON interpretation (lastupdated)", "interpretation_lastupdated" );
-        createSilently( "CREATE INDEX programstageinstance_executiondate ON programstageinstance (executiondate)", "programstageinstance_executiondate" );
-
-    }
-
-    // -------------------------------------------------------------------------
-    // Supportive methods
-    // -------------------------------------------------------------------------
-
-    private void createSilently( final String sql, final String name )
-    {
-        try
-        {
-            jdbcTemplate.execute( sql );
-            
-            log.info( "Created table/index " + name );
-        }
-        catch ( Exception ex )
-        {
-            log.debug( "Table/index " + name + " exists" );
-        }
     }
 }
