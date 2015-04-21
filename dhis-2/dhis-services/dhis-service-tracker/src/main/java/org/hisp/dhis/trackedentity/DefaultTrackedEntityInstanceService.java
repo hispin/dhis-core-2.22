@@ -180,8 +180,7 @@ public class DefaultTrackedEntityInstanceService
         {
             if ( !organisationUnit.hasLevel() )
             {
-                organisationUnit
-                    .setLevel( organisationUnitService.getLevelOfOrganisationUnit( organisationUnit.getId() ) );
+                organisationUnit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( organisationUnit.getId() ) );
             }
         }
         

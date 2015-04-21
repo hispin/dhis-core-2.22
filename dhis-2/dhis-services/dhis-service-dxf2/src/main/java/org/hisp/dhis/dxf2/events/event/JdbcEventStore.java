@@ -213,10 +213,10 @@ public class JdbcEventStore
             "psinote.trackedentitycommentid as psinote_id, psinote.commenttext as psinote_value, " +
             "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby, " +
             "pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, de.uid as de_uid, de.code as de_code " +
-            "from program p " +
-            "left join programstage ps on ps.programid=p.programid " +
-            "left join programstageinstance psi on ps.programstageid=psi.programstageid " +
-            "left join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
+            "from programstageinstance psi " +
+            "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
+            "inner join program p on p.programid=pi.programid " +
+            "inner join programstage ps on ps.programid=p.programid " +
             "left join programstageinstancecomments psic on psi.programstageinstanceid=psic.programstageinstanceid " +
             "left join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
 
