@@ -553,7 +553,7 @@ public abstract class AbstractEventService
             dueDate = DateUtils.parseDate( event.getDueDate() );
         }
 
-        String storedBy = getStoredBy( event, null, currentUserService.getCurrentUsername() );
+        String storedBy = getStoredBy( event, null, currentUserService.getCurrentUser() );
 
         if ( event.getStatus() == EventStatus.ACTIVE )
         {
@@ -650,7 +650,7 @@ public abstract class AbstractEventService
             return;
         }
 
-        saveTrackedEntityComment( programStageInstance, event, getStoredBy( event, null, currentUserService.getCurrentUsername() ) );
+        saveTrackedEntityComment( programStageInstance, event, getStoredBy( event, null, currentUserService.getCurrentUser() ) );
     }
 
     @Override
@@ -845,13 +845,13 @@ public abstract class AbstractEventService
         return true;
     }
 
-    private String getStoredBy( Event event, ImportSummary importSummary, String defaultUsername )
+    private String getStoredBy( Event event, ImportSummary importSummary, User fallbackUser )
     {
         String storedBy = event.getStoredBy();
 
         if ( storedBy == null )
         {
-            storedBy = defaultUsername;
+            storedBy = User.getSafeUsername( fallbackUser );
         }
         else if ( storedBy.length() >= 31 )
         {
@@ -862,7 +862,7 @@ public abstract class AbstractEventService
                         + " is more than 31 characters, using current username instead" ) );
             }
 
-            storedBy = defaultUsername;
+            storedBy = User.getSafeUsername( fallbackUser );
         }
         return storedBy;
     }
@@ -981,7 +981,7 @@ public abstract class AbstractEventService
 
         Date dueDate = DateUtils.parseDate( event.getDueDate() );
 
-        String storedBy = getStoredBy( event, importSummary, user.getUsername() );
+        String storedBy = getStoredBy( event, importSummary, user );
 
         if ( !dryRun )
         {
