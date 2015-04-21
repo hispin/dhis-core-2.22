@@ -38,4 +38,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 public interface EventStore
 {
     List<Event> getEvents( EventSearchParams params, List<OrganisationUnit> organisationUnits );
+    
+    int getEventCount( EventSearchParams params, List<OrganisationUnit> organisationUnits );
 }

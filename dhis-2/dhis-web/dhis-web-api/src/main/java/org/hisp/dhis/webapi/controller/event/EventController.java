@@ -42,8 +42,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
-import org.hisp.dhis.common.Pager;
-import org.hisp.dhis.common.PagerUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dxf2.common.IdSchemes;
@@ -166,13 +164,6 @@ public class EventController
             }
         }
 
-        if ( options.hasPaging() )
-        {
-            Pager pager = new Pager( options.getPage(), events.getEvents().size(), options.getPageSize() );
-            events.setPager( pager );
-            events.setEvents( PagerUtils.pageCollection( events.getEvents(), pager ) );
-        }
-
         if ( !skipMeta && params.getProgram() != null )
         {
             events.setMetaData( getMetaData( params.getProgram() ) );
@@ -210,19 +201,10 @@ public class EventController
         @RequestParam Map<String, String> parameters,
         IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
-        WebOptions options = new WebOptions( parameters );
-
         EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode, 
             trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize );
         
         Events events = eventService.getEvents( params );
-
-        if ( options.hasPaging() )
-        {
-            Pager pager = new Pager( options.getPage(), events.getEvents().size(), options.getPageSize() );
-            events.setPager( pager );
-            events.setEvents( PagerUtils.pageCollection( events.getEvents(), pager ) );
-        }
 
         OutputStream outputStream = response.getOutputStream();
         response.setContentType( "application/csv" );
@@ -262,13 +244,6 @@ public class EventController
             orgUnit, ouMode, null, startDate, endDate, null, null, null, null, null );
         
         EventRows eventRows = eventRowService.getEventRows( params );
-
-        if ( options.hasPaging() )
-        {
-            Pager pager = new Pager( options.getPage(), eventRows.getEventRows().size(), options.getPageSize() );
-            eventRows.setPager( pager );
-            eventRows.setEventRows( PagerUtils.pageCollection( eventRows.getEventRows(), pager ) );
-        }
 
         model.addAttribute( "model", eventRows );
         model.addAttribute( "viewClass", options.getViewClass( "detailed" ) );
