@@ -38,10 +38,6 @@ public class PathUtils
 
     private static final char FILE_SEPARATOR = '/';
 
-    // -------------------------------------------------------------------------
-    //
-    // -------------------------------------------------------------------------
-
     public static String getClassPath( Class<?> clazz )
     {
         return clazz.getName().replace( PACKAGE_SEPARATOR, FILE_SEPARATOR );

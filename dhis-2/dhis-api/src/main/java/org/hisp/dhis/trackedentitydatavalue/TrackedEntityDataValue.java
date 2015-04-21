@@ -65,28 +65,15 @@ public class TrackedEntityDataValue
     {
     }
 
-    public TrackedEntityDataValue( ProgramStageInstance programStageInstance, DataElement dataElement )
-    {
-        this.programStageInstance = programStageInstance;
-        this.dataElement = dataElement;
-    }
-
-    public TrackedEntityDataValue( ProgramStageInstance programStageInstance, DataElement dataElement, Date timeStamp )
-    {
-        this.programStageInstance = programStageInstance;
-        this.dataElement = dataElement;
-        this.timestamp = timeStamp;
-    }
-
     public TrackedEntityDataValue( ProgramStageInstance programStageInstance, DataElement dataElement, String value )
     {
         this.dataElement = dataElement;
         this.programStageInstance = programStageInstance;
+        this.timestamp = new Date();
         this.value = value;
     }
 
-    public TrackedEntityDataValue( ProgramStageInstance programStageInstance, DataElement dataElement, Date timeStamp,
-        String value )
+    public TrackedEntityDataValue( ProgramStageInstance programStageInstance, DataElement dataElement, Date timeStamp, String value )
     {
         this.programStageInstance = programStageInstance;
         this.dataElement = dataElement;
