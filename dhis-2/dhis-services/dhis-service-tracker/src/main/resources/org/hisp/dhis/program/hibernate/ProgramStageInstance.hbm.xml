@@ -24,7 +24,7 @@
 
     <property name="dueDate" column="duedate" />
 
-    <property name="executionDate" column="executiondate" type="timestamp" />
+    <property name="executionDate" column="executiondate" type="timestamp" index="programstageinstance_executiondate" />
 
     <many-to-one name="organisationUnit"
       class="org.hisp.dhis.organisationunit.OrganisationUnit" column="organisationunitid"
