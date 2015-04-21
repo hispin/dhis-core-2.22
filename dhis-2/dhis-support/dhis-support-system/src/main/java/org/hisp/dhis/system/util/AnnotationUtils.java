@@ -46,18 +46,20 @@ public class AnnotationUtils
      * @param annotationClass the annotation class.
      * @return a list of methods annotated with the given annotation.
      */
-    public static List<Method> getAnnotatedMethods( Object target, Class<? extends Annotation> annotationClass )
+    public static List<Method> getAnnotatedMethods( Object target, Class<? extends Annotation> annotationType )
     {
         final List<Method> methods = new ArrayList<>();
         
-        if ( target == null || annotationClass == null )
+        if ( target == null || annotationType == null )
         {
             return methods;
         }
         
         for ( Method method : target.getClass().getMethods() )
         {
-            if ( method.isAnnotationPresent( annotationClass ) )
+            Annotation a = org.springframework.core.annotation.AnnotationUtils.findAnnotation( method, annotationType );
+            
+            if ( a != null )
             {
                 methods.add( method );
             }
