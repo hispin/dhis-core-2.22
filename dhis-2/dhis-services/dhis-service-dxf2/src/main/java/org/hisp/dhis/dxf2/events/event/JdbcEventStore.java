@@ -83,6 +83,7 @@ public class JdbcEventStore
         log.debug( "Event query SQL: " + sql );
 
         Event event = new Event();
+        
         event.setEvent( "not_valid" );
 
         Set<String> notes = new HashSet<>();
@@ -205,19 +206,19 @@ public class JdbcEventStore
 
         String sql =
             "select pa.uid as tei_uid, pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
-                "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, pa.uid as pa_uid, " +
-                "psi.uid as psi_uid, psi.status as psi_status, ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, " +
-                "psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
-                "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, " +
-                "psinote.trackedentitycommentid as psinote_id, psinote.commenttext as psinote_value, " +
-                "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby, " +
-                "pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, de.uid as de_uid, de.code as de_code " +
-                "from program p " +
-                "left join programstage ps on ps.programid=p.programid " +
-                "left join programstageinstance psi on ps.programstageid=psi.programstageid " +
-                "left join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
-                "left join programstageinstancecomments psic on psi.programstageinstanceid=psic.programstageinstanceid " +
-                "left join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
+            "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, pa.uid as pa_uid, " +
+            "psi.uid as psi_uid, psi.status as psi_status, ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, " +
+            "psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
+            "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, " +
+            "psinote.trackedentitycommentid as psinote_id, psinote.commenttext as psinote_value, " +
+            "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby, " +
+            "pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, de.uid as de_uid, de.code as de_code " +
+            "from program p " +
+            "left join programstage ps on ps.programid=p.programid " +
+            "left join programstageinstance psi on ps.programstageid=psi.programstageid " +
+            "left join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
+            "left join programstageinstancecomments psic on psi.programstageinstanceid=psic.programstageinstanceid " +
+            "left join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
 
         if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
         {
@@ -227,13 +228,13 @@ public class JdbcEventStore
         {
             sql +=
                 "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid " +
-                    "left join organisationunit ou on (tei.organisationunitid=ou.organisationunitid) ";
+                "left join organisationunit ou on (tei.organisationunitid=ou.organisationunitid) ";
         }
 
         sql +=
             "left join trackedentitydatavalue pdv on psi.programstageinstanceid=pdv.programstageinstanceid " +
-                "left join dataelement de on pdv.dataelementid=de.dataelementid " +
-                "left join trackedentityinstance pa on pa.trackedentityinstanceid=pi.trackedentityinstanceid ";
+            "left join dataelement de on pdv.dataelementid=de.dataelementid " +
+            "left join trackedentityinstance pa on pa.trackedentityinstanceid=pi.trackedentityinstanceid ";
 
         if ( trackedEntityInstanceId != null )
         {
@@ -309,13 +310,13 @@ public class JdbcEventStore
             }
             else if ( params.getEventStatus() == EventStatus.SCHEDULE )
             {
-                sql += "and psi.executiondate is null and date(now()) <= date(psi.duedate) and psi.status = '" + EventStatus.SCHEDULE
-                    .name() + "' ";
+                sql += "and psi.executiondate is null and date(now()) <= date(psi.duedate) and psi.status = '" + 
+                    EventStatus.SCHEDULE.name() + "' ";
             }
             else if ( params.getEventStatus() == EventStatus.OVERDUE )
             {
-                sql += "and psi.executiondate is null and date(now()) > date(psi.duedate) and psi.status = '" + EventStatus.SCHEDULE.name
-                    () + "' ";
+                sql += "and psi.executiondate is null and date(now()) > date(psi.duedate) and psi.status = '" + 
+                    EventStatus.SCHEDULE.name() + "' ";
             }
             else
             {
