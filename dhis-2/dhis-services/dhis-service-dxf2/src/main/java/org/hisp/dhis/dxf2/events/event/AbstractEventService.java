@@ -49,6 +49,7 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dxf2.common.IdSchemes;
@@ -419,9 +420,18 @@ public abstract class AbstractEventService
             }
         }
 
+        Events events = new Events();
+        
+        if ( params.isPaging() )
+        {
+            int count = eventStore.getEventCount( params, organisationUnits );
+            
+            Pager pager = new Pager( params.getPageWithDefault(), count, params.getPageSizeWithDefault() );
+            events.setPager( pager );
+        }
+        
         List<Event> eventList = eventStore.getEvents( params, organisationUnits );
 
-        Events events = new Events();
         events.setEvents( eventList );
 
         return events;

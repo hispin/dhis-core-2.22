@@ -185,6 +185,17 @@ public class JdbcEventStore
         return events;
     }
 
+    public int getEventCount( EventSearchParams params, List<OrganisationUnit> organisationUnits )
+    {
+        String sql = getEventSelectQuery( params, organisationUnits );
+        
+        sql = sql.replaceFirst( "select .*? from", "select count(*) from" );
+
+        log.info( "Event query count SQL: " + sql );
+
+        return jdbcTemplate.queryForObject( sql, Integer.class );
+    }
+    
     /**
      * Query is based on three sub queries on event, data value and comment, which 
      * are joined using program stage instance id. The purpose of the separate
@@ -194,7 +205,8 @@ public class JdbcEventStore
     {
         String sql = "select * from (";
         
-        sql += getEventQuery( params, organisationUnits );
+        sql += getEventSelectQuery( params, organisationUnits );
+        sql += getEventPagingQuery( params );
         
         sql += ") as event left join (";
         
@@ -209,7 +221,7 @@ public class JdbcEventStore
         return sql;
     }
     
-    private String getEventQuery( EventSearchParams params, List<OrganisationUnit> organisationUnits )
+    private String getEventSelectQuery( EventSearchParams params, List<OrganisationUnit> organisationUnits )
     {
         List<Integer> orgUnitIds = getIdList( organisationUnits );
 
@@ -324,20 +336,21 @@ public class JdbcEventStore
             }
         }
 
-        sql += " order by psi.lastupdated desc ";
+        return sql;
+    }
 
-        // ---------------------------------------------------------------------
-        // Paging
-        // ---------------------------------------------------------------------
+    private String getEventPagingQuery( EventSearchParams params )
+    {
+        String sql = "order by psi.lastupdated desc ";
 
         if ( params.isPaging() )
         {
-            sql += "limit " + params.getPageSizeWithDefault() + " offset " + params.getOffset();
+            sql += "limit " + params.getPageSizeWithDefault() + " offset " + params.getOffset() + " ";
         }
 
         return sql;
     }
-
+    
     private String getDataValueQuery()
     {
         String sql =
