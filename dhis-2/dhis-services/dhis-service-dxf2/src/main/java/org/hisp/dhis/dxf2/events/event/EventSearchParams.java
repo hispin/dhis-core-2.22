@@ -44,6 +44,9 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstance;
  */
 public class EventSearchParams
 {
+    public static final int DEFAULT_PAGE = 1;
+    public static final int DEFAULT_PAGE_SIZE = 50;
+    
     private Program program;
     
     private ProgramStage programStage;
@@ -91,12 +94,12 @@ public class EventSearchParams
 
     public int getPageWithDefault()
     {
-        return page != null && page > 0 ? page : 1;
+        return page != null && page > 0 ? page : DEFAULT_PAGE;
     }
     
     public int getPageSizeWithDefault()
     {
-        return pageSize != null && pageSize >= 0 ? pageSize : 100;
+        return pageSize != null && pageSize >= 0 ? pageSize : DEFAULT_PAGE_SIZE;
     }
 
     public int getOffset()
