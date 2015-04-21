@@ -308,6 +308,8 @@ public class TableAlteror
         executeSql( "ALTER TABLE programindicator ALTER expression TYPE text" );
         executeSql( "ALTER TABLE programstage ALTER description TYPE text" );
         
+        executeSql( "drop index index_patientdatavalue" );
+        
         updateProgramStageList();
         updateProgramAttributeList();
         
