@@ -70,10 +70,17 @@ public class Timer
         return time;
     }
 
-    public long getMilliSec()
+    public long getTimeInMs()
     {
         long endTime = System.nanoTime();
         long time = ( endTime - startTime ) / 1000000;
+        return time;
+    }
+
+    public long getTimeInS()
+    {
+        long endTime = System.nanoTime();
+        long time = ( endTime - startTime ) / 1000000000;
         return time;
     }
     
