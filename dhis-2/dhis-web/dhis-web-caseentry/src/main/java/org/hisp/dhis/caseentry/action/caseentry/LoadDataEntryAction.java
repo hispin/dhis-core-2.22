@@ -376,7 +376,7 @@ public class LoadDataEntryAction
                 String value = entityInstanceDataValue.getValue();
                 Option option = optionService.getOptionByCode( optionSet, value );
                 
-                TrackedEntityDataValue instanceDataValue = new TrackedEntityDataValue(entityInstanceDataValue.getProgramStageInstance(), entityInstanceDataValue.getDataElement());
+                TrackedEntityDataValue instanceDataValue = new TrackedEntityDataValue( entityInstanceDataValue.getProgramStageInstance(), entityInstanceDataValue.getDataElement(), null );
                 instanceDataValue.setValue( option.getName() );
                 entityInstanceDataValueMap.put( key, instanceDataValue );
             }
