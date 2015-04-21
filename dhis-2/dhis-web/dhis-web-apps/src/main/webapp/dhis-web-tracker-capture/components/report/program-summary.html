@@ -38,7 +38,10 @@
                 <!-- report begins -->
                 <div class="vertical-spacing">
                     <tabset>                        
-                        <tab ng-repeat="stage in programStages | orderBy: 'sortOrder'" heading="{{stage.name}}">
+                        <tab ng-repeat="stage in programStages | orderBy: 'sortOrder'">
+                            <tab-heading>
+                                <span class="bold">{{stage.name}}</span>
+                            </tab-heading>
                             <table class="table table-bordered vertical-spacing">
                                 <thead>                        
                                     <tr>
