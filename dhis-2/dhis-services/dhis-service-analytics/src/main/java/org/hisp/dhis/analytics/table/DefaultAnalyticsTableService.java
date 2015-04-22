@@ -97,7 +97,7 @@ public class DefaultAnalyticsTableService
         int processNo = getProcessNo();
         int orgUnitLevelNo = organisationUnitService.getMaxOfOrganisationUnitLevels();
         
-        Clock clock = new Clock().startClock().logTime( "Starting update, processes: " + processNo + ", org unit levels: " + orgUnitLevelNo );
+        Clock clock = new Clock( log ).startClock().logTime( "Starting update, processes: " + processNo + ", org unit levels: " + orgUnitLevelNo );
         
         String validState = tableManager.validState();
         
@@ -112,7 +112,7 @@ public class DefaultAnalyticsTableService
         final List<AnalyticsTable> tables = tableManager.getTables( earliest );
         final String tableName = tableManager.getTableName();
         
-        clock.logTime( "Table update start: " + tableName + ", partitions: " + tables + ", last years: " + lastYears + ", earliest: " + earliest );
+        clock.logTime( "Table update start: " + tableName + ", processes: " + processNo + ", partitions: " + tables + ", last years: " + lastYears + ", earliest: " + earliest );
         notifier.notify( taskId, "Performing pre-create table work, processes: " + processNo + ", org unit levels: " + orgUnitLevelNo );
         
         tableManager.preCreateTables();
