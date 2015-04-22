@@ -1,9 +1,11 @@
 /* global angular, trackerCapture */
 
 trackerCapture.controller('DataEntryController',
-        function($scope,
+        function($rootScope,
+                $scope,
                 $modal,
                 $filter,
+                $timeout,
                 Paginator,
                 DateUtils,
                 EventUtils,
@@ -88,45 +90,48 @@ trackerCapture.controller('DataEntryController',
     });
     
     $scope.getEvents = function(){
-        DHIS2EventFactory.getEventsByProgram($scope.selectedEntity.trackedEntityInstance, $scope.selectedProgram.id).then(function(events){
-            if(angular.isObject(events)){
-                angular.forEach(events, function(dhis2Event){                    
-                    if(dhis2Event.enrollment === $scope.selectedEnrollment.enrollment && dhis2Event.orgUnit){
-                        if(dhis2Event.notes){
-                            dhis2Event.notes = orderByFilter(dhis2Event.notes, '-storedDate');
-                            angular.forEach(dhis2Event.notes, function(note){
-                                note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
-                            });
-                        }
-                    
-                        var eventStage = $scope.stagesById[dhis2Event.programStage];
-                        if(angular.isObject(eventStage)){
+        
+        var events = CurrentSelection.getSelectedTeiEvents();
+        events = $filter('filter')(events, {program: $scope.selectedProgram.id});
+        
+        if(angular.isObject(events)){
+            angular.forEach(events, function(dhis2Event){                    
+                if(dhis2Event.enrollment === $scope.selectedEnrollment.enrollment && dhis2Event.orgUnit){
+                    if(dhis2Event.notes){
+                        dhis2Event.notes = orderByFilter(dhis2Event.notes, '-storedDate');
+                        angular.forEach(dhis2Event.notes, function(note){
+                            note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
+                        });
+                    }
 
-                            dhis2Event.name = eventStage.name; 
-                            dhis2Event.reportDateDescription = eventStage.reportDateDescription;
-                            dhis2Event.dueDate = DateUtils.formatFromApiToUser(dhis2Event.dueDate);
-                            dhis2Event.sortingDate = dhis2Event.dueDate;
+                    var eventStage = $scope.stagesById[dhis2Event.programStage];
+                    if(angular.isObject(eventStage)){
 
-                            if(dhis2Event.eventDate){
-                                dhis2Event.eventDate = DateUtils.formatFromApiToUser(dhis2Event.eventDate);
-                                dhis2Event.sortingDate = dhis2Event.eventDate;
-                                dhis2Event.editingNotAllowed = setEventEditing(dhis2Event, eventStage);
-                            }                       
+                        dhis2Event.name = eventStage.name; 
+                        dhis2Event.reportDateDescription = eventStage.reportDateDescription;
+                        dhis2Event.dueDate = DateUtils.formatFromApiToUser(dhis2Event.dueDate);
+                        dhis2Event.sortingDate = dhis2Event.dueDate;
 
-                            dhis2Event.statusColor = EventUtils.getEventStatusColor(dhis2Event);
-                            dhis2Event = processEvent(dhis2Event, eventStage);
-                            $scope.eventsByStage[dhis2Event.programStage].push(dhis2Event);
-                            
-                            if($scope.currentStage && $scope.currentStage.id === dhis2Event.programStage){
-                                $scope.currentEvent = dhis2Event;                                
-                                $scope.showDataEntry($scope.currentEvent, true);
-                            }
+                        if(dhis2Event.eventDate){
+                            dhis2Event.eventDate = DateUtils.formatFromApiToUser(dhis2Event.eventDate);
+                            dhis2Event.sortingDate = dhis2Event.eventDate;
+                            dhis2Event.editingNotAllowed = setEventEditing(dhis2Event, eventStage);
+                        }                       
+
+                        dhis2Event.statusColor = EventUtils.getEventStatusColor(dhis2Event);
+                        dhis2Event = processEvent(dhis2Event, eventStage);
+                        $scope.eventsByStage[dhis2Event.programStage].push(dhis2Event);
+
+                        if($scope.currentStage && $scope.currentStage.id === dhis2Event.programStage){
+                            $scope.currentEvent = dhis2Event;                                
+                            $scope.showDataEntry($scope.currentEvent, true);
                         }
                     }
-                });
-            }
-            sortEventsByStage();
-        });          
+                }
+            });
+        }
+        
+        sortEventsByStage(null);                  
     };
     
     var setEventEditing = function(dhis2Event, stage){
@@ -191,7 +196,8 @@ trackerCapture.controller('DataEntryController',
                 }
                 
                 $scope.eventsByStage[newEvent.programStage].push(newEvent);
-                sortEventsByStage();
+                $scope.currentEvent = newEvent;
+                sortEventsByStage('ADD');
                 $scope.showDataEntry(newEvent, false);
             }            
         }, function () {
@@ -302,6 +308,19 @@ trackerCapture.controller('DataEntryController',
         return event;
     };
     
+    function updateCurrentEventInStage(){
+        
+        var index = -1;
+        for(var i=0; i<$scope.eventsByStage[$scope.currentEvent.programStage].length && index === -1; i++){
+            if($scope.eventsByStage[$scope.currentEvent.programStage][i].event === $scope.currentEvent.event){
+                index = i;
+            }
+        }
+        if(index !== -1){
+            $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1,$scope.currentEvent);
+        }
+        
+    };
     $scope.saveDatavalue = function(prStDe){
 
         //check for input validity
@@ -344,18 +363,12 @@ trackerCapture.controller('DataEntryController',
                                         }
                                     ]
                      };
-            DHIS2EventFactory.updateForSingleValue(ev).then(function(response){
-                var index = -1;
-                for(var i=0; i<$scope.eventsByStage[$scope.currentEvent.programStage].length && index === -1; i++){
-                    if($scope.eventsByStage[$scope.currentEvent.programStage][i].event === $scope.currentEvent.event){
-                        index = i;
-                    }
-                }
-                if(index !== -1){
-                    $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1,$scope.currentEvent);
-                }
+            DHIS2EventFactory.updateForSingleValue(ev).then(function(response){                
+                updateCurrentEventInStage();
+                sortEventsByStage('UPDATE');
+                
                 $scope.currentElement.saved = true;
-                $scope.currentEventOriginal = angular.copy($scope.currentEvent);
+                $scope.currentEventOriginal = angular.copy($scope.currentEvent);                
             });
             
         }
@@ -383,7 +396,10 @@ trackerCapture.controller('DataEntryController',
                                         }
                                     ]
                      };
-            DHIS2EventFactory.updateForSingleValue(ev).then(function(response){
+            DHIS2EventFactory.updateForSingleValue(ev).then(function(response){                
+                updateCurrentEventInStage();
+                sortEventsByStage('UPDATE');
+                
                 $scope.updateSuccess = true;
             });            
         }        
@@ -421,7 +437,10 @@ trackerCapture.controller('DataEntryController',
             $scope.invalidDate = false;
             $scope.eventDateSaved = true;
             $scope.currentEvent.statusColor = EventUtils.getEventStatusColor($scope.currentEvent);
-            sortEventsByStage();
+            $scope.currentEvent.visited = true;
+            
+            updateCurrentEventInStage();
+            sortEventsByStage('UPDATE');
         });
     };
     
@@ -471,7 +490,9 @@ trackerCapture.controller('DataEntryController',
             $scope.currentEvent.sortingDate = $scope.currentEvent.dueDate;            
             $scope.currentEvent.statusColor = EventUtils.getEventStatusColor($scope.currentEvent);            
             $scope.schedulingEnabled = !$scope.schedulingEnabled;
-            sortEventsByStage();
+            
+            updateCurrentEventInStage();
+            sortEventsByStage('UPDATE');
         });
                       
     };
@@ -506,6 +527,9 @@ trackerCapture.controller('DataEntryController',
             if(type === 'LAT' || type === 'LATLNG'){
                 $scope.longitudeSaved = true;
             }
+            
+            updateCurrentEventInStage();
+            sortEventsByStage('UPDATE');
         });
     };
     
@@ -530,6 +554,9 @@ trackerCapture.controller('DataEntryController',
 
             DHIS2EventFactory.updateForNote(e).then(function(data){
                 $scope.note = ''; 
+                
+                updateCurrentEventInStage();
+                sortEventsByStage('UPDATE');
             });
         }        
     };    
@@ -608,7 +635,8 @@ trackerCapture.controller('DataEntryController',
                 }
                 
                 setStatusColor();
-                sortEventsByStage();
+                updateCurrentEventInStage();
+                sortEventsByStage('UPDATE');
                 
                 setEventEditing($scope.currentEvent, $scope.currentStage);
                 
@@ -663,7 +691,8 @@ trackerCapture.controller('DataEntryController',
                 
                 setStatusColor();
                 setEventEditing($scope.currentEvent, $scope.currentStage);
-                sortEventsByStage();
+                updateCurrentEventInStage();
+                sortEventsByStage('UPDATE');
             });
         });
     };
@@ -703,9 +732,9 @@ trackerCapture.controller('DataEntryController',
                         index = i;
                     }
                 }
-                $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1);
+                $scope.eventsByStage[$scope.currentEvent.programStage].splice(index,1);                
+                sortEventsByStage('REMOVE');
                 $scope.currentEvent = null;
-                sortEventsByStage();
             });
         });
     };
@@ -734,7 +763,7 @@ trackerCapture.controller('DataEntryController',
         return DateUtils.getDate(d);                
     };
     
-    var sortEventsByStage = function(){
+    var sortEventsByStage = function(operation){
         
         $scope.eventFilteringRequired = false;
         
@@ -757,6 +786,50 @@ trackerCapture.controller('DataEntryController',
                 $scope.eventFilteringRequired = $scope.eventFilteringRequired ? $scope.eventFilteringRequired : periods.length > 1;                
             }
         }
+        
+        if(operation !== null){
+            
+            var evs = CurrentSelection.getSelectedTeiEvents();
+            
+            if( operation ===  'ADD' ){  
+                console.log('the current event is:  ', $scope.currentEvent);
+                var ev = EventUtils.reconstruct($scope.currentEvent, $scope.currentStage, $scope.optionSets);
+                ev.enrollment = $scope.currentEvent.enrollment;
+                ev.visited = $scope.currentEvent.visited;
+                evs.push(ev);
+            }   
+            if( operation === 'UPDATE' ){                
+                var ev = EventUtils.reconstruct($scope.currentEvent, $scope.currentStage, $scope.optionSets);
+                ev.enrollment = $scope.currentEvent.enrollment;
+                ev.visited = $scope.currentEvent.visited;
+                var index = -1;
+                for(var i=0; i<evs.length && index === -1; i++){
+                    if(evs[i].event === $scope.currentEvent.event){
+                        index = i;
+                    }
+                }
+                if(index !== -1){
+                    evs[index] = ev;
+                }            
+            }
+            if( operation === 'REMOVE' ){
+                var index = -1;
+                for(var i=0; i<evs.length && index === -1; i++){
+                    if(evs[i].event === $scope.currentEvent.event){
+                        index = i;
+                    }
+                }
+                if(index !== -1){
+                    evs.splice(index,1);
+                }                        
+            }
+            
+            CurrentSelection.setSelectedTeiEvents( evs );
+            
+            $timeout(function() { 
+                $rootScope.$broadcast('tei-report-widget', {});            
+            }, 100);
+        }        
     };
     
     $scope.showLastEventInStage = function(stageId){
