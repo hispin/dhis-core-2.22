@@ -259,7 +259,7 @@ public class DefaultAnalyticsTableService
             }
         }
         
-        log.info( "No of indexes: " + indexes.size() );
+        log.info( "No of analytics table indexes: " + indexes.size() );
         
         List<Future<?>> futures = new ArrayList<>();
 

@@ -1,4 +1,4 @@
-package org.hisp.dhis.analytics.scheduling;
+package org.hisp.dhis.analytics.table.scheduling;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -36,6 +36,8 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsTableService;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.TaskId;
@@ -52,6 +54,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AnalyticsTableTask
     implements Runnable
 {
+    private static final Log log = LogFactory.getLog( AnalyticsTableTask.class );
+    
     @Resource(name="org.hisp.dhis.analytics.AnalyticsTableService")
     private AnalyticsTableService analyticsTableService;
 
@@ -119,7 +123,7 @@ public class AnalyticsTableTask
     public void run()
     {
         final Date startTime = new Date();
-        final Clock clock = new Clock().startClock();
+        final Clock clock = new Clock( log ).startClock();
         
         notifier.clear( taskId ).notify( taskId, "Analytics table update process started" );
 
@@ -152,6 +156,7 @@ public class AnalyticsTableTask
                 eventAnalyticsTableService.update( lastYears, taskId );
             }
             
+            clock.logTime( "Analytics tables updated" );
             notifier.notify( taskId, INFO, "Analytics tables updated: " + clock.time(), true );
         }
         catch ( RuntimeException ex )
