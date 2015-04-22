@@ -39,13 +39,21 @@ import org.apache.commons.logging.LogFactory;
 public class Clock
     extends StopWatch
 {
-    private static final Log log = LogFactory.getLog( Clock.class );
-    
     private static final String SEPARATOR = ": ";
+    
+    private static final Log defaultLog = LogFactory.getLog( Clock.class );
+    
+    private Log log;
     
     public Clock()
     {
         super();
+    }
+
+    public Clock( Log log )
+    {
+        super();
+        this.log = log;
     }
     
     public Clock startClock()
@@ -68,7 +76,16 @@ public class Clock
         
         String time = DurationFormatUtils.formatDurationHMS( super.getSplitTime() ); 
         
-        log.info( message + SEPARATOR + time );
+        String msg = message + SEPARATOR + time;
+        
+        if ( log != null )
+        {
+            log.info( msg );
+        }
+        else
+        {
+            defaultLog.info( msg );
+        }
         
         return this;
     }
