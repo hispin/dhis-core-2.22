@@ -134,6 +134,9 @@ trackerCapture.controller('ProgramSummaryController',
                             }  
                             $scope.dhis2Events[ev.trackedEntityInstance] = [ev];
                         }
+                        
+                        $scope.stagesById[ev.programStage].hasData = true;
+                        
                     }
                 });
                 $scope.reportStarted = false;
