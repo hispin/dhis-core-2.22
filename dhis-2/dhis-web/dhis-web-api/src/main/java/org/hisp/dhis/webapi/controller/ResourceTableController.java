@@ -28,7 +28,7 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.analytics.scheduling.AnalyticsTableTask;
+import org.hisp.dhis.analytics.table.scheduling.AnalyticsTableTask;
 import org.hisp.dhis.resourcetable.scheduling.ResourceTableTask;
 import org.hisp.dhis.scheduling.DataMartTask;
 import org.hisp.dhis.scheduling.TaskCategory;
