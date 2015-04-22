@@ -4984,50 +4984,89 @@ Ext.onReady( function() {
 					this.isPending = false;
 					dataSearch.hideFilter();
 				},
+                storage: {},
+                addToStorage: function(dimensionId, filter, data) {
+                    filter = 'cache_' + (Ext.isString(filter) || Ext.isNumber(filter) ? filter : '');
+
+                    if (!dimensionId) {
+                        return;
+                    }
+
+                    if (!this.storage.hasOwnProperty(dimensionId)) {
+                        this.storage[dimensionId] = {};
+                    }
+
+                    if (!this.storage[dimensionId][filter]) {
+                        this.storage[dimensionId][filter] = data;
+                    }
+                },
+                getFromStorage: function(dimensionId, filter) {
+                    filter = 'cache_' + (Ext.isString(filter) || Ext.isNumber(filter) ? filter : '');
+
+                    if (this.storage.hasOwnProperty(dimensionId)) {
+                        if (this.storage[dimensionId].hasOwnProperty(filter)) {
+                            return this.storage[dimensionId][filter];
+                        }
+                    }
+
+                    return;
+                },
 				loadPage: function(filter, append, noPaging, fn) {
 					var store = this,
 						params = {},
-						path;
+						path,
+                        cacheData;
 
 					filter = filter || indicatorFilter.getValue() || null;
 
-					if (!append) {
-						this.lastPage = null;
-						this.nextPage = 1;
-					}
+                    // check session cache
+                    cacheData = store.getFromStorage(dimension.id, filter);
 
-					if (store.nextPage === store.lastPage) {
-						return;
-					}
-
-					path = '/dimensions/' + dimension.id + '/items.json' + (filter ? '?filter=name:like:' + filter : '');
-
-					if (noPaging) {
-						params.paging = false;
-					}
-					else {
-						params.page = store.nextPage;
-						params.pageSize = 50;
-					}
-
-					store.isPending = true;
-                    ns.core.web.mask.show(available.boundList);
-
-					Ext.Ajax.request({
-						url: ns.core.init.contextPath + '/api' + path,
-						params: params,
-						success: function(r) {
-							var response = Ext.decode(r.responseText),
-								data = response.items || [],
-								pager = response.pager;
-
-							store.loadStore(data, pager, append, fn);
-						},
-						callback: function() {
-							store.isPending = false;
-                            ns.core.web.mask.hide(available.boundList);
+                    if (!append && cacheData) {
+                        store.loadStore(cacheData, {}, append, fn);
+                    }
+                    else {
+						if (!append) {
+							this.lastPage = null;
+							this.nextPage = 1;
 						}
-					});
+
+						if (store.nextPage === store.lastPage) {
+							return;
+						}
+
+						path = '/dimensions/' + dimension.id + '/items.json' + (filter ? '?filter=name:like:' + filter : '');
+
+						if (noPaging) {
+							params.paging = false;
+						}
+						else {
+							params.page = store.nextPage;
+							params.pageSize = 50;
+						}
+
+						store.isPending = true;
+						ns.core.web.mask.show(available.boundList);
+
+						Ext.Ajax.request({
+							url: ns.core.init.contextPath + '/api' + path,
+							params: params,
+							success: function(r) {
+								var response = Ext.decode(r.responseText),
+									data = response.items || [],
+									pager = response.pager;
+
+                                // add to session cache
+                                store.addToStorage(dimension.id, filter, data);
+
+								store.loadStore(data, pager, append, fn);
+							},
+							callback: function() {
+								store.isPending = false;
+								ns.core.web.mask.hide(available.boundList);
+							}
+						});
+					}
 				},
 				loadStore: function(data, pager, append, fn) {
 					pager = pager || {};
