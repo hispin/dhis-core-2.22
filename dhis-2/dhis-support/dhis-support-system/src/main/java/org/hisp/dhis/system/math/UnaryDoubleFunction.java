@@ -28,23 +28,45 @@ package org.hisp.dhis.system.math;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Stack;
+
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.function.PostfixMathCommand;
+
 /**
- * JEP function which returns 1 if the argument is a zero or positive number, 0
- * otherwise.
+ * Abstract JEP function for a single, numerical argument.
  * 
  * @author Lars Helge Overland
  */
-public class OneIfZeroOrPositiveFunction
-    extends UnaryDoubleFunction
+public abstract class UnaryDoubleFunction
+    extends PostfixMathCommand
 {
-    public OneIfZeroOrPositiveFunction()
+    public UnaryDoubleFunction()
     {
         super();
-    }
 
-    @Override
-    public Double eval( double arg )
-    {
-        return ( arg >= 0 ) ? 1d : 0d;
+        numberOfParameters = 1;
     }
+    
+    @Override
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
+    public void run( Stack inStack ) throws ParseException 
+    {
+        checkStack( inStack );
+        
+        Object param = inStack.pop();
+        
+        if ( param == null || !( param instanceof Double ) )
+        {
+            throw new ParseException( "Invalid parameter type, must be double: " + param );
+        }
+        
+        double arg = ( (Double) param ).doubleValue();
+        
+        Double result = eval( arg );
+        
+        inStack.push( result );
+    }
+    
+    public abstract Double eval( double arg );
 }
