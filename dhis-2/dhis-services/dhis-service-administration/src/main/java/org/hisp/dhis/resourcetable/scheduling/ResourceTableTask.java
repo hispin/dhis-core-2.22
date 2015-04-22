@@ -106,8 +106,6 @@ public class ResourceTableTask
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    //TODO use DefaultAnalyticsTableService generateAll ?
-    
     private void generateAll()
     {
         resourceTableService.dropAllSqlViews();
