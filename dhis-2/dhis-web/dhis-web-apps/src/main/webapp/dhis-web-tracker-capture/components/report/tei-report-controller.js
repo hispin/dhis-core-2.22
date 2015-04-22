@@ -3,14 +3,14 @@
 //conroller for tei report
 trackerCapture.controller('TeiReportController',
         function($scope,
+                $filter,
                 CurrentSelection,
                 SessionStorageService,
                 DateUtils,
                 EventUtils,
                 TEIService,
                 ProgramStageFactory,
-                EnrollmentService,
-                DHIS2EventFactory) {  
+                EnrollmentService) {  
     $scope.showProgramReportDetailsDiv = false;
     $scope.enrollmentsByProgram = [];
 
@@ -36,57 +36,61 @@ trackerCapture.controller('TeiReportController',
         
     });
     
+    $scope.$on('tei-report-widget', function(event, args) {
+        $scope.getEvents();        
+    });
+    
     $scope.getEvents = function(){
         
         $scope.dataFetched = false;
         $scope.dataExists = false;
-        var programId = null;
-        
-        if($scope.selectedProgram){
-            programId = $scope.selectedProgram.id;
-        }
         
         $scope.report = [];
         angular.forEach($scope.programs, function(pr){
             $scope.report[pr.id] = {};
         });
         
-        DHIS2EventFactory.getEventsByProgram($scope.selectedTei.trackedEntityInstance, programId).then(function(eventList){
-            angular.forEach(eventList, function(ev){
-                if(ev.program && $scope.report[ev.program] && ev.orgUnit){       
-                    ev.visited = true;
-                    ev.dueDate = DateUtils.formatFromApiToUser(ev.dueDate);  
-                    ev.sortingDate = ev.dueDate;
-                    ev.name = $scope.programStageNames[ev.programStage].name;
-                    ev.programName = $scope.programNames[ev.program].name;                    
-                    if(!$scope.report[ev.program].enrollments){
-                        $scope.report[ev.program] = {enrollments: {}};
-                    }
-                    ev.statusColor = EventUtils.getEventStatusColor(ev); 
-                    
-                    if(ev.eventDate){
-                        ev.eventDate = DateUtils.format(ev.eventDate);
-                        ev.sortingDate = ev.eventDate;
+        var eventList = CurrentSelection.getSelectedTeiEvents();        
+        if($scope.selectedProgram && $scope.selectedProgram.id){
+            eventList = $filter('filter')(eventList, {program: $scope.selectedProgram.id});
+        }
+        
+        angular.forEach(eventList, function(ev){
+            if(ev.program && $scope.report[ev.program] && ev.orgUnit){       
+                ev.visited = true;
+                ev.dueDate = DateUtils.formatFromApiToUser(ev.dueDate);  
+                ev.sortingDate = ev.dueDate;
+                ev.name = $scope.programStageNames[ev.programStage].name;
+                ev.programName = $scope.programNames[ev.program].name;                    
+                if(!$scope.report[ev.program].enrollments){
+                    $scope.report[ev.program] = {enrollments: {}};
+                }
+                ev.statusColor = EventUtils.getEventStatusColor(ev); 
+
+                if(ev.eventDate){
+                    ev.eventDate = DateUtils.format(ev.eventDate);
+                    ev.sortingDate = ev.eventDate;
+                }
+                else{
+                    ev.visited = false;
+                }                 
+
+                if(ev.enrollment){
+                    if($scope.report[ev.program].enrollments[ev.enrollment]){
+                        $scope.report[ev.program].enrollments[ev.enrollment].push(ev);
                     }
                     else{
-                        ev.visited = false;
-                    }                 
-
-                    if(ev.enrollment){
-                        if($scope.report[ev.program].enrollments[ev.enrollment]){
-                            $scope.report[ev.program].enrollments[ev.enrollment].push(ev);
-                        }
-                        else{
-                            $scope.report[ev.program].enrollments[ev.enrollment]= [ev];
-                        }
-                    }                    
-                    if(!$scope.dataExists){
-                        $scope.dataExists = true;
+                        $scope.report[ev.program].enrollments[ev.enrollment]= [ev];
                     }
-                }                
-            });
-            $scope.dataFetched = true;
+                }                    
+                if(!$scope.dataExists){
+                    $scope.dataExists = true;
+                }
+            }                
         });
+        
+        $scope.dataFetched = true;
+        
     };
     
     $scope.showProgramReportDetails = function(pr){
