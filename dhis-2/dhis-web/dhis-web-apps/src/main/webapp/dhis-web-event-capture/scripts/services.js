@@ -179,28 +179,49 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
     };
     
     return {
-        
-        getAll: function(){
+        getProgramsByOu: function(ou, selectedProgram){
             var roles = SessionStorageService.get('USER_ROLES');
             var userRoles = roles && roles.userCredentials && roles.userCredentials.userRoles ? roles.userCredentials.userRoles : [];
-            var ou = SessionStorageService.get('SELECTED_OU');
             var def = $q.defer();
             
             ECStorageService.currentStore.open().done(function(){
                 ECStorageService.currentStore.getAll('programs').done(function(prs){
-                    var programs = [];                    
-                    angular.forEach(prs, function(pr){
+                    var programs = [];
+                    angular.forEach(prs, function(pr){                            
                         if(pr.organisationUnits.hasOwnProperty( ou.id ) && userHasValidRole(pr, userRoles)){
                             programs.push(pr);
                         }
                     });
+                    
+                    if(programs.length === 0){
+                        selectedProgram = null;
+                    }
+                    else if(programs.length === 1){
+                        selectedProgram = programs[0];
+                    } 
+                    else{
+                        if(selectedProgram){
+                            var continueLoop = true;
+                            for(var i=0; i<programs.length && continueLoop; i++){
+                                if(programs[i].id === selectedProgram.id){                                
+                                    selectedProgram = programs[i];
+                                    continueLoop = false;
+                                }
+                            }
+                            if(continueLoop){
+                                selectedProgram = null;
+                            }
+                        }
+                    }
+                    
                     $rootScope.$apply(function(){
-                        def.resolve(programs);
-                    });                    
+                        def.resolve({programs: programs, selectedProgram: selectedProgram});
+                    });                      
                 });
             });
+            
             return def.promise;
-        }        
+        }
     };
 })
 
