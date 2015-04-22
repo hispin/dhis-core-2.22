@@ -334,4 +334,15 @@ public class MathUtilsTest
         assertEquals( 4d, MathUtils.calculateExpression( "oizp(0) + 3" ), DELTA );
         assertEquals( 5d, MathUtils.calculateExpression( "oizp(-3) + 5" ), DELTA );
     }
+
+    @Test
+    public void testCalculateExpressionZeroIfNegative()
+    {
+        assertEquals( 314d, MathUtils.calculateExpression( "zing(314)" ), DELTA );
+        assertEquals( 0d, MathUtils.calculateExpression( "zing(0)" ), DELTA );
+        assertEquals( 0d, MathUtils.calculateExpression( "zing(-3)" ), DELTA );
+        assertEquals( -3d, MathUtils.calculateExpression( "zing(0) - 3" ), DELTA );
+        assertEquals( 5d, MathUtils.calculateExpression( "zing(-3) + 5" ), DELTA );
+        assertEquals( -2d, MathUtils.calculateExpression( "zing(-3) - 2" ), DELTA );
+    }
 }

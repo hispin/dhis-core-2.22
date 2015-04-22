@@ -100,7 +100,7 @@
 <p></p>
 <table>
 	<tr>
-        <th>$i18n.getString( "expression" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) oizp(x)</span></th>
+        <th>$i18n.getString( "expression" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) oizp(x) zing(x)</span></th>
       </tr>	
 	<tr>
 		<td>
