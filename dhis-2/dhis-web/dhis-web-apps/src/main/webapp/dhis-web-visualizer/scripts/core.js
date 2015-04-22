@@ -1370,7 +1370,7 @@ Ext.onReady( function() {
 			support.prototype.number.prettyPrint = function(number, separator) {
 				separator = separator || 'space';
 
-                if (!number) {
+                if (!(Ext.isNumber(number) || Ext.isString(number))) {
                     return;
                 }
 
@@ -1540,18 +1540,18 @@ Ext.onReady( function() {
 					dimensionNameIdsMap: {},
 
 						// for param string
-					dimensionNameSortedIdsMap: {}
+					dimensionNameSortedIdsMap: {},
 
 					// sort table by column
 					//sortableIdObjects: []
+
+                    dimensionNameAxisMap: {}
 				};
 
 				Ext.applyIf(xLayout, layout);
 
 				// columns, rows, filters
 				if (layout.columns) {
-                    //layout.columns = support.prototype.array.uniqueByProperty(layout.columns, 'dimension');
-
 					for (var i = 0, dim, items, xDim; i < layout.columns.length; i++) {
 						dim = layout.columns[i];
 						items = dim.items;
@@ -1559,13 +1559,11 @@ Ext.onReady( function() {
 
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
-						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
-
-						xDim.items = [];
-						xDim.ids = [];
+						xDim.dimensionName = dimConf.objectNameMap[dim.dimension].dimensionName;
 
 						if (items) {
 							xDim.items = items;
+							xDim.ids = [];
 
 							for (var j = 0; j < items.length; j++) {
 								xDim.ids.push(items[j].id);
@@ -1579,17 +1577,17 @@ Ext.onReady( function() {
 
 						xLayout.axisDimensions.push(xDim);
 						xLayout.axisObjectNames.push(xDim.objectName);
-						xLayout.axisDimensionNames.push(dimConf.objectNameMap.hasOwnProperty(xDim.objectName) ? dimConf.objectNameMap[xDim.objectName].dimensionName || xDim.objectName : xDim.objectName);
+						xLayout.axisDimensionNames.push(dimConf.objectNameMap[xDim.objectName].dimensionName);
 
 						xLayout.objectNameDimensionsMap[xDim.objectName] = xDim;
 						xLayout.objectNameItemsMap[xDim.objectName] = xDim.items;
 						xLayout.objectNameIdsMap[xDim.objectName] = xDim.ids;
+
+                        xLayout.dimensionNameAxisMap[xDim.dimensionName] = xLayout.columns;
 					}
 				}
 
 				if (layout.rows) {
-                    //layout.rows = support.prototype.array.uniqueByProperty(layout.rows, 'dimension');
-
 					for (var i = 0, dim, items, xDim; i < layout.rows.length; i++) {
 						dim = Ext.clone(layout.rows[i]);
 						items = dim.items;
@@ -1597,13 +1595,11 @@ Ext.onReady( function() {
 
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
-						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
-
-						xDim.items = [];
-						xDim.ids = [];
+						xDim.dimensionName = dimConf.objectNameMap[dim.dimension].dimensionName;
 
 						if (items) {
 							xDim.items = items;
+							xDim.ids = [];
 
 							for (var j = 0; j < items.length; j++) {
 								xDim.ids.push(items[j].id);
@@ -1617,17 +1613,17 @@ Ext.onReady( function() {
 
 						xLayout.axisDimensions.push(xDim);
 						xLayout.axisObjectNames.push(xDim.objectName);
-						xLayout.axisDimensionNames.push(dimConf.objectNameMap.hasOwnProperty(xDim.objectName) ? dimConf.objectNameMap[xDim.objectName].dimensionName || xDim.objectName : xDim.objectName);
+						xLayout.axisDimensionNames.push(dimConf.objectNameMap[xDim.objectName].dimensionName);
 
 						xLayout.objectNameDimensionsMap[xDim.objectName] = xDim;
 						xLayout.objectNameItemsMap[xDim.objectName] = xDim.items;
 						xLayout.objectNameIdsMap[xDim.objectName] = xDim.ids;
+
+                        xLayout.dimensionNameAxisMap[xDim.dimensionName] = xLayout.rows;
 					}
 				}
 
 				if (layout.filters) {
-                    //layout.filters = support.prototype.array.uniqueByProperty(layout.filters, 'dimension');
-
 					for (var i = 0, dim, items, xDim; i < layout.filters.length; i++) {
 						dim = layout.filters[i];
 						items = dim.items;
@@ -1635,13 +1631,11 @@ Ext.onReady( function() {
 
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
-						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
-
-						xDim.items = [];
-						xDim.ids = [];
+						xDim.dimensionName = dimConf.objectNameMap[dim.dimension].dimensionName;
 
 						if (items) {
 							xDim.items = items;
+							xDim.ids = [];
 
 							for (var j = 0; j < items.length; j++) {
 								xDim.ids.push(items[j].id);
@@ -1652,11 +1646,13 @@ Ext.onReady( function() {
 
 						xLayout.filterDimensions.push(xDim);
 						xLayout.filterObjectNames.push(xDim.objectName);
-						xLayout.filterDimensionNames.push(dimConf.objectNameMap.hasOwnProperty(xDim.objectName) ? dimConf.objectNameMap[xDim.objectName].dimensionName || xDim.objectName : xDim.objectName);
+						xLayout.filterDimensionNames.push(dimConf.objectNameMap[xDim.objectName].dimensionName);
 
 						xLayout.objectNameDimensionsMap[xDim.objectName] = xDim;
 						xLayout.objectNameItemsMap[xDim.objectName] = xDim.items;
 						xLayout.objectNameIdsMap[xDim.objectName] = xDim.ids;
+
+                        xLayout.dimensionNameAxisMap[xDim.dimensionName] = xLayout.filters;
 					}
 				}
 
@@ -2117,7 +2113,9 @@ Ext.onReady( function() {
 						idIndexOrder = [];
 
 					// idIndexOrder
-					for (var i = 0; i < axisDimensionNames.length; i++) {
+					for (var i = 0, dimName, index; i < axisDimensionNames.length; i++) {
+                        dimName = axisDimensionNames[i];
+                        //index = response.nameHeaderMap.hasOwnProperty(
 						idIndexOrder.push(response.nameHeaderMap[axisDimensionNames[i]].index);
 
 						// If co exists in response and is not added in layout, add co after dx
