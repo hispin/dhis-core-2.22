@@ -42,60 +42,66 @@
                             <tab-heading>
                                 <span class="bold">{{stage.name}}</span>
                             </tab-heading>
-                            <table class="table table-bordered vertical-spacing">
-                                <thead>                        
-                                    <tr>
-                                        <th class="active">
-                                            {{selectedProgram.trackedEntity.name}}
-                                        </th>
-                                        <th class="active">
-                                            {{'event_date' | translate}}
-                                        </th>
-                                        <th class="active">
-                                            {{'event_orgunit_name'| translate}}
-                                        </th>
-                                        <th class="active" ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
-                                            {{prStDe.dataElement.name}}
-                                        </th>                                        
-                                    </tr>                        
-                                </thead>
-                                <tbody ng-repeat="tei in teiList" ng-if="dhis2Events[tei.id].length > 0">
-                                    <tr ng-repeat="ev in dhis2Events[tei.id] | filter: {programStage: stage.id} | orderBy: 'eventDate'">
-                                        <td rowspan="{{dhis2Events[tei.id].length}}" ng-if="$index === 0">
-                                            <span ng-repeat="gridColumn in gridColumns" ng-if="gridColumn.displayInListNoProgram">
-                                                <span class="bold">{{gridColumn.name}}:</span> {{tei[gridColumn.id]}}<br>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {{ev.eventDate}}
-                                        </td>
-                                        <td>
-                                            {{ev.orgUnitName}}
-                                        </td>
-                                        <td ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
-                                            {{ev[prStDe.dataElement.id]}}
-                                        </td>                                                                       
-                                    </tr>
-                                </tbody>
-                                <tbody ng-repeat="tei in teiList" ng-if="!dhis2Events[tei.id]">
-                                    <tr>
-                                        <td>
-                                            <span ng-repeat="gridColumn in gridColumns" ng-if="gridColumn.displayInListNoProgram">
-                                                <span class="bold">{{gridColumn.name}}:</span> {{tei[gridColumn.id]}}<br>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {{'no_data' | translate}}
-                                        </td>
-                                        <td>
-                                            {{'no_data' | translate}}
-                                        </td>
-                                        <td ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
-                                            {{'no_data' | translate}}
-                                        </td>                                                                       
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div ng-if="stage.hasData">
+                                <table class="table table-bordered vertical-spacing">
+                                    <thead>                        
+                                        <tr>
+                                            <th class="active">
+                                                {{selectedProgram.trackedEntity.name}}
+                                            </th>
+                                            <th class="active">
+                                                {{'event_date' | translate}}
+                                            </th>
+                                            <th class="active">
+                                                {{'event_orgunit_name'| translate}}
+                                            </th>
+                                            <th class="active" ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
+                                                {{prStDe.dataElement.name}}
+                                            </th>                                        
+                                        </tr>                        
+                                    </thead>
+                                    <tbody ng-repeat="tei in teiList" ng-if="dhis2Events[tei.id].length > 0">
+                                        <tr ng-repeat="ev in dhis2Events[tei.id] | filter: {programStage: stage.id} | orderBy: 'eventDate'">
+                                            <td rowspan="{{dhis2Events[tei.id].length}}" ng-if="$index === 0">
+                                                <span ng-repeat="gridColumn in gridColumns" ng-if="gridColumn.displayInListNoProgram">
+                                                    <span class="bold">{{gridColumn.name}}:</span> {{tei[gridColumn.id]}}<br>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{ev.eventDate}}
+                                            </td>
+                                            <td>
+                                                {{ev.orgUnitName}}
+                                            </td>
+                                            <td ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
+                                                {{ev[prStDe.dataElement.id]}}
+                                            </td>                                                                       
+                                        </tr>
+                                    </tbody>
+                                    <tbody ng-repeat="tei in teiList" ng-if="!dhis2Events[tei.id]">
+                                        <tr>
+                                            <td>
+                                                <span ng-repeat="gridColumn in gridColumns" ng-if="gridColumn.displayInListNoProgram">
+                                                    <span class="bold">{{gridColumn.name}}:</span> {{tei[gridColumn.id]}}<br>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{'no_data' | translate}}
+                                            </td>
+                                            <td>
+                                                {{'no_data' | translate}}
+                                            </td>
+                                            <td ng-if="prStDe.displayInReports" ng-repeat="prStDe in stage.programStageDataElements">
+                                                {{'no_data' | translate}}
+                                            </td>                                                                       
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div ng-if="!stage.hasData">
+                                <div class="small-vertical-spacing alert alert-default">{{'no_data_found'| translate}}</div>
+                            </div>
+                            
                         </tab>
                     </tabset>
                 </div>
