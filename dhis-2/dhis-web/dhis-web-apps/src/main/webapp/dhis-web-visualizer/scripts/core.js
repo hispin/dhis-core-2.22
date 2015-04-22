@@ -1370,6 +1370,10 @@ Ext.onReady( function() {
 			support.prototype.number.prettyPrint = function(number, separator) {
 				separator = separator || 'space';
 
+                if (!number) {
+                    return;
+                }
+
 				if (separator === 'none') {
 					return number;
 				}
