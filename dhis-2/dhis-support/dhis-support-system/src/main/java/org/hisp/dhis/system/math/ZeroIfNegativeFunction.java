@@ -29,15 +29,15 @@ package org.hisp.dhis.system.math;
  */
 
 /**
- * JEP function which returns 1 if the argument is a zero or positive number, 0
- * otherwise.
+ * JEP function which returns the value if the argument is a zero or positive 
+ * number, 0 otherwise.
  * 
  * @author Lars Helge Overland
  */
-public class OneIfZeroOrPositiveFunction
+public class ZeroIfNegativeFunction
     extends UnaryDoubleFunction
 {
-    public OneIfZeroOrPositiveFunction()
+    public ZeroIfNegativeFunction()
     {
         super();
     }
@@ -45,6 +45,6 @@ public class OneIfZeroOrPositiveFunction
     @Override
     public Double eval( double arg )
     {
-        return ( arg >= 0 ) ? 1d : 0d;
+        return Math.max( 0d, arg );
     }
 }
