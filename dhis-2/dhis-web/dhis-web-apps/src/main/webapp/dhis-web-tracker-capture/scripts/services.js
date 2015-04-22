@@ -1161,6 +1161,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.attributesById = null;
     this.ouLevels = null;
     this.sortedTeiIds = [];
+    this.selectedTeiEvents = null;
     
     this.set = function(currentSelection){  
         this.currentSelection = currentSelection;        
@@ -1202,6 +1203,13 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
     this.getSortedTeiIds = function(){
         return this.sortedTeiIds;
+    };
+    
+    this.setSelectedTeiEvents = function(selectedTeiEvents){
+        this.selectedTeiEvents = selectedTeiEvents;
+    };
+    this.getSelectedTeiEvents = function(){
+        return this.selectedTeiEvents;
     };
 })
 
