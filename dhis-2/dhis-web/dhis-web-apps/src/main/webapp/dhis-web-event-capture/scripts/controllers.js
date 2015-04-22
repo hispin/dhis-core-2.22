@@ -98,7 +98,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.loadPrograms = function() {
         
         $scope.resetOu = false;
-        $scope.selectedProgram = null;
         $scope.selectedProgramStage = null;
         $scope.programValidations = [];
         $scope.dhis2Events = [];
@@ -115,13 +114,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         if (angular.isObject($scope.selectedOrgUnit)) {    
             
-            ProgramFactory.getAll().then(function(programs){
-                $scope.programs = programs;                
-                
-                if(angular.isObject($scope.programs) && $scope.programs.length === 1){
-                    $scope.selectedProgram = $scope.programs[0];
-                    $scope.getProgramDetails();
-                }                
+            ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
+                $scope.programs = response.programs;
+                $scope.selectedProgram = response.selectedProgram;
+                $scope.getProgramDetails();
             });
         }    
     };
