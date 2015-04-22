@@ -789,7 +789,7 @@ public class DefaultDataValueSetService
 
             if ( valueValid != null )
             {
-                summary.getConflicts().add( new ImportConflict( dataValue.getValue(), i18n.getString( valueValid ) + ", must match data element type: " + dataElement ) );
+                summary.getConflicts().add( new ImportConflict( dataValue.getValue(), i18n.getString( valueValid ) + ", must match data element type: " + dataElement.getUid() ) );
                 continue;
             }
 
@@ -843,7 +843,7 @@ public class DefaultDataValueSetService
 
             if ( zeroInsignificant )
             {
-                summary.getConflicts().add( new ImportConflict( internalValue.getValue(), "Value is zero and not significant, must match data element: " + dataElement ) );
+                summary.getConflicts().add( new ImportConflict( internalValue.getValue(), "Value is zero and not significant, must match data element: " + dataElement.getUid() ) );
                 continue;
             }
 
