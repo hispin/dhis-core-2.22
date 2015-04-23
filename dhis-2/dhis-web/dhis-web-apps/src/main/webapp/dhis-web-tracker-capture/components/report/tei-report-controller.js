@@ -50,7 +50,7 @@ trackerCapture.controller('TeiReportController',
             $scope.report[pr.id] = {};
         });
         
-        var eventList = CurrentSelection.getSelectedTeiEvents();        
+        var eventList = angular.copy( CurrentSelection.getSelectedTeiEvents() );        
         if($scope.selectedProgram && $scope.selectedProgram.id){
             eventList = $filter('filter')(eventList, {program: $scope.selectedProgram.id});
         }
@@ -113,18 +113,21 @@ trackerCapture.controller('TeiReportController',
         
         //get program stage for the selected program
         //they are needed to assign data element names for event data values
-        $scope.programStages = [];  
+        $scope.stagesById = [];  
         $scope.allowProvidedElsewhereExists = [];
-        angular.forEach($scope.selectedProgram.programStages, function(st){
-            ProgramStageFactory.get(st.id).then(function(stage){
-                $scope.programStages[stage.id] = stage;
+        
+        ProgramStageFactory.getByProgram($scope.selectedProgram).then(function(stages){
+            $scope.programStages = stages;
+            angular.forEach(stages, function(stage){
                 var providedElsewhereExists = false;
                 for(var i=0; i<stage.programStageDataElements.length && !providedElsewhereExists; i++){                
                     if(stage.programStageDataElements[i].allowProvidedElsewhere){
                         providedElsewhereExists = true;
-                        $scope.allowProvidedElsewhereExists[st.id] = true;
+                        $scope.allowProvidedElsewhereExists[stage.id] = true;
                     }                
                 }
+
+                $scope.stagesById[stage.id] = stage;
             });
         });
         
