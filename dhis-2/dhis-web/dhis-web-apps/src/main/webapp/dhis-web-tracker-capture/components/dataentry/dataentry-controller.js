@@ -954,6 +954,9 @@ trackerCapture.controller('DataEntryController',
                 dataValues: [],
                 status: 'ACTIVE'
             };            
+        
+        newEvent.status = newEvent.eventDate ? 'ACTIVE' : 'SCHEDULE';
+        
         newEvents.events.push(newEvent);
         DHIS2EventFactory.create(newEvents).then(function(data){
             if (data.importSummaries[0].status === 'ERROR') {
