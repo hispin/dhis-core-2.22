@@ -25,10 +25,7 @@
 	});
 	
 	var i18n_add_source_field = '$encoder.jsEscape( $i18n.getString( "add_source_field" ) , "'" )';
-	var i18n_display_text = '$encoder.jsEscape( $i18n.getString( "display_text" ) , "'" )';
-	var i18n_shows_a_key_data_box = '$encoder.jsEscape( $i18n.getString( "shows_a_key_data_box" ) , "'" )';
 	var i18n_hide_field = '$encoder.jsEscape( $i18n.getString( "hide_field" ) , "'" )';
-	var i18n_assign_variable = '$encoder.jsEscape( $i18n.getString( "assign_variable" ) , "'" )';
 	var i18n_show_warning = '$encoder.jsEscape( $i18n.getString( "show_warning" ) , "'" )';
 	var i18n_show_error = '$encoder.jsEscape( $i18n.getString( "show_error" ) , "'" )';
 	var i18n_this_field_is_required = '$encoder.jsEscape( $i18n.getString( "this_field_is_required" ) , "'")';
@@ -73,37 +70,54 @@
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<fieldset style="height:100%;">
-					<div style="height:80px;border:1px solid black; overflow: auto;">
-						<table id='sourceFieldList' style="height:80px;width:100%" >
-							<col width="50%" />
-							<col width="50%" />
-							#set($idx = 0 )
-							#foreach($ruleVariable in $ruleVariables)
-								#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
-									+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
-									+ ',"dataElement":{ "id":"' + $ruleVariable.dataElement.id + '"}'
-									+ ',"program":{"id":"' + $ruleVariable.program.id + '"}'
-									+ ',"programStage":{"id":"' + "$!ruleVariable.programStage.id" + '"}}' )
-								#set($clazz = "listAlternateRow")
-								#if( $idx % 2 == 0 )
-									#set($clazz = "listRow")
-								#end		
-								#set($idx = $idx + 1 )
-								<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
-									<td>$encoder.htmlEncode($ruleVariable.dataElement.displayName)</td>
-									<td><input type='button' deId='$ruleVariable.dataElement.uid' realValue='$ruleVariable.name' value='$$ruleVariable.name' style='width:150px;' onclick='insertVariable(this)'/></td>
-								</tr>
-							#end
-						</table>
-					</div><br>
-					<input type="button" id="addMoreVariableBtn" value="+ $i18n.getString('add_source_field')" onclick="javascript:addSourceFieldForm();"/>
-				</fieldset>
+				
+				<div style="height:150px; border:1px solid black; overflow-y: auto;">
+					<table id='sourceFieldList' style="height:100px;width:100%" >
+						<col width="50%" />
+						<col width="50%" />
+						#set($idx = 0 )
+						#foreach($ruleVariable in $ruleVariables)
+							#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
+								+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
+								+ ',"dataElement":{ "id":"' + $ruleVariable.dataElement.id + '"}'
+								+ ',"program":{"id":"' + $ruleVariable.program.id + '"}'
+								+ ',"programStage":{"id":"' + "$!ruleVariable.programStage.id" + '"}}' )
+							#set($clazz = "listAlternateRow")
+							#if( $idx % 2 == 0 )
+								#set($clazz = "listRow")
+							#end		
+							#set($idx = $idx + 1 )
+							<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
+								<td>$!encoder.htmlEncode($ruleVariable.dataElement.displayName)</td>
+								<td><input type='button' deId='$ruleVariable.dataElement.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:150px;' onclick='insertVariable(this)'/></td>
+							</tr>
+						#end
+					</table>
+				</div>
+				<br>
+				<input type="button" id="addMoreVariableBtn" value="+ $i18n.getString('add_source_field')" onclick="javascript:addSourceFieldForm();"/>
 			</td>			
 			<td colspan='2'>
-				<fieldset>
-					<textarea size="10" id='condition' name='condition' style="width:98%;border:none"></textarea>
+				<fieldset style="width:80%;">
+					<textarea size="10" id='condition' name='condition' style="width:405px;border:none;height:150px;"></textarea>
 				</fieldset>
+				<br>								
+				<input type='button' class="small-button" onclick='insertOperator( "+" );' value="+" />
+				<input type='button' class="small-button" onclick='insertOperator( "-" );' value="-" />
+				<input type='button' class="small-button" onclick='insertOperator( "*" );' value="*" />
+				<input type='button' class="small-button" onclick='insertOperator( "/" );' value="/" />
+				<input type='button' class="small-button" onclick='insertOperator( "%" );' value="%" />
+				&nbsp;&nbsp;&nbsp;						
+				<input type='button' class="small-button" onclick='insertOperator( ">" );' value=">" />
+				<input type='button' class="small-button" onclick='insertOperator( ">=" );' value=">=" />
+				<input type='button' class="small-button" onclick='insertOperator( "<" );' value="<" />
+				<input type='button' class="small-button" onclick='insertOperator( "<=" );' value="<=" />
+				<input type='button' class="small-button" onclick='insertOperator( "==" );' value="==" />
+				<input type='button' class="small-button" onclick='insertOperator( "!=" );' value="!=" />
+				&nbsp;&nbsp;&nbsp;
+				<input type='button' class="small-button" onclick='insertOperator( "!" );' value="!" />
+				<input type='button' class="small-button" onclick='insertOperator( "&&" );' value="&&" />
+				<input type='button' class="small-button" onclick='insertOperator( "||" );' value="||" />
 			</td>
 		</tr>
 		
