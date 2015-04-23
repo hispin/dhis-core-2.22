@@ -37,6 +37,8 @@ package org.hisp.dhis.system.math;
 public class ZeroIfNegativeFunction
     extends UnaryDoubleFunction
 {
+    public static final String NAME = "zing";
+    
     public ZeroIfNegativeFunction()
     {
         super();

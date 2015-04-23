@@ -37,6 +37,8 @@ package org.hisp.dhis.system.math;
 public class OneIfZeroOrPositiveFunction
     extends UnaryDoubleFunction
 {
+    public static final String NAME = "oizp";
+    
     public OneIfZeroOrPositiveFunction()
     {
         super();
