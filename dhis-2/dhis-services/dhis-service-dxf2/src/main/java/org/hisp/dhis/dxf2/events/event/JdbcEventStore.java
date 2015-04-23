@@ -236,7 +236,7 @@ public class JdbcEventStore
             "from programstageinstance psi " +
             "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
             "inner join program p on p.programid=pi.programid " +
-            "inner join programstage ps on ps.programid=p.programid " +
+            "inner join programstage ps on ps.programstageid=psi.programstageid " +
             "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid ";            
 
         if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
