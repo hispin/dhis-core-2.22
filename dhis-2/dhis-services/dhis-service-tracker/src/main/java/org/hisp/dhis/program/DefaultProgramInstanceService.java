@@ -518,7 +518,6 @@ public class DefaultProgramInstanceService
         {
             if ( programStage.getAutoGenerateEvent() )
             {
-                System.out.println("The stage is:  " + programStage.toString());
                 ProgramStageInstance programStageInstance = generateEvent( programInstance, programStage,
                     programInstance.getEnrollmentDate(), programInstance.getDateOfIncident(), organisationUnit );
 
