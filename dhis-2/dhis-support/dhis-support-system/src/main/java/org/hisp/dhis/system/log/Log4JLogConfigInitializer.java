@@ -54,6 +54,7 @@ public class Log4JLogConfigInitializer
 
     private static final String LOG_DIR = "logs";
     private static final String ANALYTICS_TABLE_LOGGER_FILENAME = "dhis-analytics-table.log";
+    private static final String DATA_EXCHANGE_LOGGER_FILENAME = "dhis-data-exchange.log";
     private static final String DATA_SYNC_LOGGER_FILENAME = "dhis-data-sync.log";
     private static final String GENERAL_LOGGER_FILENAME = "dhis.log";
 
@@ -74,6 +75,8 @@ public class Log4JLogConfigInitializer
         locationManager.buildDirectory( LOG_DIR );
         
         configureLoggers( ANALYTICS_TABLE_LOGGER_FILENAME, Lists.newArrayList( "org.hisp.dhis.resourcetable", "org.hisp.dhis.analytics.table" ) );
+        
+        configureLoggers( DATA_EXCHANGE_LOGGER_FILENAME, Lists.newArrayList( "org.hisp.dhis.dxf2" ) );
         
         configureLoggers( DATA_SYNC_LOGGER_FILENAME, Lists.newArrayList( "org.hisp.dhis.dxf2.synch" ) );
         
