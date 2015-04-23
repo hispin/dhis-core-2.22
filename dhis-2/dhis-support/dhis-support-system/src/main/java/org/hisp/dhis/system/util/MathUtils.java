@@ -51,9 +51,6 @@ public class MathUtils
 {
     public static final Double ZERO = new Double( 0 );
     
-    public static final String ONEIFZEROORPOSITIVE_FUNCTION_NAME = "oizp";
-    public static final String ZEROIFNEGATIVE_FUNCTION_NAME = "zing";
-    
     private static DoubleValidator DOUBLE_VALIDATOR = new DoubleValidator();
     private static IntegerValidator INT_VALIDATOR = new IntegerValidator();
     
@@ -151,8 +148,8 @@ public class MathUtils
         final JEP parser = new JEP();
         parser.addStandardFunctions();
         parser.addStandardConstants();
-        parser.addFunction( ONEIFZEROORPOSITIVE_FUNCTION_NAME, new OneIfZeroOrPositiveFunction() );
-        parser.addFunction( ZEROIFNEGATIVE_FUNCTION_NAME, new ZeroIfNegativeFunction() );
+        parser.addFunction( OneIfZeroOrPositiveFunction.NAME, new OneIfZeroOrPositiveFunction() );
+        parser.addFunction( ZeroIfNegativeFunction.NAME, new ZeroIfNegativeFunction() );
         return parser;
     }
     
