@@ -71,37 +71,54 @@
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<fieldset style="height:100%;">
-					<div style="height:80px;border:1px solid black; overflow-y: auto;">
-						<table id='sourceFieldList' style="height:80px;width:100%" >
-							<col width="50%" />
-							<col width="50%" />
-							#set($idx = 0 )
-							#foreach($ruleVariable in $ruleVariables)
-								#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
-									+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
-									+ ',"dataElement":{ "id":"' + $ruleVariable.dataElement.id + '"}'
-									+ ',"program":{"id":"' + $ruleVariable.program.id + '"}'
-									+ ',"programStage":{"id":"' + "$!ruleVariable.programStage.id" + '"}}' )
-								#set($clazz = "listAlternateRow")
-								#if( $idx % 2 == 0 )
-									#set($clazz = "listRow")
-								#end		
-								#set($idx = $idx + 1 )
-								<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
-									<td>$!encoder.htmlEncode($ruleVariable.dataElement.displayName)</td>
-									<td><input type='button' deId='$ruleVariable.dataElement.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:150px;' onclick='insertVariable(this)'/></td>
-								</tr>
-							#end
-						</table>
-					</div><br>
-					<input type="button" id="addMoreVariableBtn" value="+ $i18n.getString('add_source_field')" onclick="javascript:addSourceFieldForm();"/>
-				</fieldset>
+				
+				<div style="height:180px; border:1px solid black; overflow-y: auto;">
+					<table id='sourceFieldList' style="height:100px;width:100%" >
+						<col width="50%" />
+						<col width="50%" />
+						#set($idx = 0 )
+						#foreach($ruleVariable in $ruleVariables)
+							#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
+								+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
+								+ ',"dataElement":{ "id":"' + $ruleVariable.dataElement.id + '"}'
+								+ ',"program":{"id":"' + $ruleVariable.program.id + '"}'
+								+ ',"programStage":{"id":"' + "$!ruleVariable.programStage.id" + '"}}' )
+							#set($clazz = "listAlternateRow")
+							#if( $idx % 2 == 0 )
+								#set($clazz = "listRow")
+							#end		
+							#set($idx = $idx + 1 )
+							<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
+								<td>$!encoder.htmlEncode($ruleVariable.dataElement.displayName)</td>
+								<td><input type='button' deId='$ruleVariable.dataElement.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:150px;' onclick='insertVariable(this)'/></td>
+							</tr>
+						#end
+					</table>
+				</div>
+				<br>
+				<input type="button" id="addMoreVariableBtn" value="+ $i18n.getString('add_source_field')" onclick="javascript:addSourceFieldForm();"/>
 			</td>			
 			<td colspan='2'>
-				<fieldset>
-					<textarea size="10" id='condition' name='condition' style="width:98%;border:none">$programRule.condition</textarea>
+				<fieldset style="width:80%;">
+					<textarea size="10" id='condition' name='condition' style="width:405px;border:none;height:150px;"></textarea>
 				</fieldset>
+				<br>								
+				<input type='button' class="small-button" onclick='insertVariable( this );' value="+" />
+				<input type='button' class="small-button" onclick='insertVariable( this );' value="-" />
+				<input type='button' class="small-button" onclick='insertVariable( this );' value="*" />
+				<input type='button' class="small-button" onclick='insertVariable( this);' value="/" />
+				<input type='button' class="small-button" onclick='insertVariable( this );' value="%" />
+				&nbsp;&nbsp;&nbsp;						
+				<input type='button' class="small-button" onclick='insertVariable( this );' value=">" />
+				<input type='button' class="small-button" onclick='insertVariable( this );' value=">=" />
+				<input type='button' class="small-button" onclick='insertVariable( this );' value="<" />
+				<input type='button' class="small-button" onclick='insertVariable( this );' value="<=" />
+				<input type='button' class="small-button" onclick='insertVariable( this );' value="==" />
+				<input type='button' class="small-button" onclick='insertVariable( this );' value="!=" />
+				&nbsp;&nbsp;&nbsp;
+				<input type='button' class="small-button" onclick='insertOperator( "!" );' value="!" />
+				<input type='button' class="small-button" onclick='insertOperator( "&&" );' value="&&" />
+				<input type='button' class="small-button" onclick='insertOperator( "||" );' value="||" />
 			</td>
 		</tr>
 		
@@ -118,34 +135,8 @@
 					<col width="20%">
 					<col width="60%">
 					<col width="20%">
-					<tbody id='actionTB'>
-						#set($idx = 0 )
-						#foreach( $action in $programRule.programRuleActions )
-						
-							#set($clazz = "class='listAlternateRow'")
-							#if( $idx % 2 == 0 )
-								#set($clazz = "class='listRow'")
-							#end		
-							#set($idx = $idx + 1 )
-							
-							<tr $clazz id="$action.uid">								
-								<td>
-									<select class='actionList' style='width:100%'>
-										<option value='HIDEFIELD' #if($action.programRuleActionType=='HIDEFIELD') selected #end>$i18n.getString("hide_field")</option>
-										<option value='SHOWWARNING' #if($action.programRuleActionType=='SHOWWARNING') selected #end>$i18n.getString("show_warning")</option>
-										<option value='SHOWERROR' #if($action.programRuleActionType=='SHOWERROR') selected #end>$i18n.getString("show_error")</option>
-									</select>
-								</td>
-								<td><input type='text' class='content' style='width:97%;' value='$encoder.htmlEncode($action.content)'/></td>
-								<td>
-									<select class='actionDEs' style='width:100%;'>
-										<option value="$programRule.dataElement.uid">$encoder.htmlEncode($action.dataElement.displayName)</option>
-									</select>
-								</td>
-								<td><input type='button' value='-' onclick='javascript:removeActionRow(this)';></td>
-							</tr>
-						#end
-						</tbody>
+					<tbody id='actionTB'></tbody>
+					<tr>
 						<td><input type="button" value="+ $i18n.getString('add_more_action')" onclick="addMoreAction();"></td>
 					</tr>
 				</table>
