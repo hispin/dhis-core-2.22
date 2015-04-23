@@ -188,7 +188,7 @@ function addProgramRuleVariable()
 
 function addVariableButton( name, deId )
 {
-	return "<input type='button' deId='" + deId + "' realValue='" + name + "' value='$" + name + "' style='width:150px;' onclick='insertVariable(this)'/>";
+	return "<input type='button' deId='" + deId + "' realValue='" + name + "' value='#{" + name + "}' style='width:150px;' onclick='insertVariable(this)'/>";
 }
 
 function insertVariable(_this)
@@ -328,7 +328,6 @@ function saveAction( programRuleId )
 	
 }
 
-/* 
 
 $( document ).ajaxStop(function() {
 	if( status == 1 )
@@ -337,7 +336,7 @@ $( document ).ajaxStop(function() {
 		window.location.href='programRule.action?id=' + getFieldValue('programLocalId');
 	}
 }); 
-*/
+
 
 // --
 // Add new - Program Rule
@@ -385,10 +384,7 @@ function addMoreAction()
 	}
 	var row = "<tr " + clazz + ">"
 			+ "<td><select class='actionList' style='width:100%'>"
-			+ "	<option value='DISPLAYTEXT'>" + i18n_display_text + "</option>"
-			+ "	<option value='DISPLAYKEYVALUEPAIR'>" + i18n_shows_a_key_data_box + "</option>"
 			+ "	<option value='HIDEFIELD'>" + i18n_hide_field + "</option>"
-			+ "	<option value='ASSIGNVARIABLE'>" + i18n_assign_variable + "</option>"
 			+ "	<option value='SHOWWARNING'>" + i18n_show_warning + "</option>"
 			+ "	<option value='SHOWERROR'>" + i18n_show_error + "</option>"
 			+ "</select>"
