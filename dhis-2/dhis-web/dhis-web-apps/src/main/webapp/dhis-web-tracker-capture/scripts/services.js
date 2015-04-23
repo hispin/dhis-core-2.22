@@ -1471,8 +1471,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 program: program.id,
                                 programStage: stage.id,
                                 orgUnit: orgUnit.id,
-                                enrollment: enrollment.enrollment,                                
-                                status: 'SCHEDULE'
+                                enrollment: enrollment.enrollment
                             };
                         if(stage.periodType){
                             var periods = getEventDuePeriod(null, stage, enrollment);
@@ -1492,6 +1491,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             }
                         }
 
+                        newEvent.status = newEvent.eventDate ? 'ACTIVE' : 'SCHEDULE';
+                        
                         dhis2Events.events.push(newEvent);    
                     }
                 });
