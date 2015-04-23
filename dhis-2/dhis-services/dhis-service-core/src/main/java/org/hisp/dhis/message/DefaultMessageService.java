@@ -318,8 +318,10 @@ public class DefaultMessageService
             return null;
         }
 
-        mc.setFollowUp( mc.isFollowUp( currentUserService.getCurrentUser() ) );
-        mc.setRead( mc.isRead( currentUserService.getCurrentUser() ) );
+        User user = currentUserService.getCurrentUser();
+
+        mc.setFollowUp( mc.isFollowUp( user ) );
+        mc.setRead( mc.isRead( user ) );
 
         return messageConversationStore.getByUid( uid );
     }
