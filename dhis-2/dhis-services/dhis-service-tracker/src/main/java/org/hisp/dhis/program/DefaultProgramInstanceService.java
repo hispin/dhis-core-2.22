@@ -287,11 +287,11 @@ public class DefaultProgramInstanceService
         for ( Program program : programs )
         {
             List<TrackedEntityAttribute> atttributes = program.getTrackedEntityAttributes();
-            
+
             while ( iterAttribute.hasNext() )
             {
                 TrackedEntityAttributeValue attributeValue = iterAttribute.next();
-                
+
                 if ( !atttributes.contains( attributeValue.getAttribute() ) )
                 {
                     iterAttribute.remove();
@@ -471,7 +471,8 @@ public class DefaultProgramInstanceService
     public ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance entityInstance, Program program,
         Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit )
     {
-        return enrollTrackedEntityInstance( CodeGenerator.generateCode(), entityInstance, program, enrollmentDate, dateOfIncident, organisationUnit );
+        return enrollTrackedEntityInstance( CodeGenerator.generateCode(), entityInstance, program, enrollmentDate,
+            dateOfIncident, organisationUnit );
     }
 
     @Override
@@ -689,12 +690,15 @@ public class DefaultProgramInstanceService
             programStageInstance = new ProgramStageInstance();
             programStageInstance.setProgramInstance( programInstance );
             programStageInstance.setProgramStage( programStage );
+            programStageInstance.setOrganisationUnit( orgunit );
             programStageInstance.setDueDate( dueDate );
+            programStageInstance.setStatus( EventStatus.SCHEDULE );
 
-            if ( programInstance.getProgram().isSingleEvent() )
+            if ( programStage.getOpenAfterEnrollment() || programInstance.getProgram().isSingleEvent()
+                || programStage.getPeriodType() != null )
             {
-                programStageInstance.setOrganisationUnit( orgunit );
                 programStageInstance.setExecutionDate( dueDate );
+                programStageInstance.setStatus( EventStatus.ACTIVE );
             }
         }
 
@@ -836,7 +840,7 @@ public class DefaultProgramInstanceService
                 && rm.getWhenToSend() != null
                 && rm.getWhenToSend() == status
                 && (rm.getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_DHIS_MESSAGE || rm
-                .getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH) )
+                    .getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH) )
             {
                 int id = messageService.sendMessage( programInstance.getProgram().getDisplayName(),
                     reminderService.getMessageFromTemplate( rm, programInstance, format ), null,
