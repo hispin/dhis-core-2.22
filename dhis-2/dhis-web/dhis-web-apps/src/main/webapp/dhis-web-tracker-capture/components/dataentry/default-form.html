@@ -153,7 +153,7 @@
                                 <ng-form name="dataEntryInnerForm">
                                     <div ng-switch="prStDes[de.dataElement.id].dataElement.type">
                                         <div ng-switch-when="int">
-                                            <input type="number"
+                                            <input type="text"
                                                    ng-class='getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false)'
                                                    ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]" 
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}}
