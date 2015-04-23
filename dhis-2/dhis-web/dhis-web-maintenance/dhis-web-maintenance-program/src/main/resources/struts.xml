@@ -1290,6 +1290,7 @@
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/addProgramRule.vm</param>
       <param name="javascripts">javascript/programRule.js</param>
+      <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAM_RULE_ADD</param>
     </action> 
     
@@ -1297,6 +1298,7 @@
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/updateProgramRule.vm</param>
       <param name="javascripts">javascript/programRule.js</param>
+      <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAM_RULE_UPDATE</param>
     </action>
     
