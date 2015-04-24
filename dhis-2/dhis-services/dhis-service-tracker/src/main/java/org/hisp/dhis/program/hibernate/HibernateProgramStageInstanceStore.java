@@ -252,7 +252,18 @@ public class HibernateProgramStageInstanceStore
 
         return grid;
     }
-    
+
+    @Override
+    public long getProgramStageInstanceCountLastUpdatedAfter( Date time )
+    {
+        Number rs = (Number) getCriteria()
+            .add( Restrictions.ge( "lastUpdated", time ) )
+            .setProjection( Projections.rowCount() )
+            .uniqueResult();
+
+        return rs != null ? rs.longValue() : 0;
+    }
+
     @Override
     public int averageNumberCompleted( Program program, Collection<Integer> orgunitIds, Date after, Date before,
         int status )
