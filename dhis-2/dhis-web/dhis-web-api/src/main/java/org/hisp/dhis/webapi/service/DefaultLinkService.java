@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.schema.Property;
+import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -120,6 +122,35 @@ public class DefaultLinkService implements LinkService
         else
         {
             generateLink( object, hrefBase, deepScan );
+        }
+    }
+
+    @Override
+    public void generateSchemaLinks( List<Schema> schemas )
+    {
+        for ( Schema schema : schemas )
+        {
+            generateSchemaLinks( schema );
+        }
+    }
+
+    @Override
+    public void generateSchemaLinks( Schema schema )
+    {
+        generateSchemaLinks( schema, contextService.getServletPath() );
+    }
+
+    @Override
+    public void generateSchemaLinks( Schema schema, String hrefBase )
+    {
+        for ( Property property : schema.getProperties() )
+        {
+            Schema klassSchema = schemaService.getDynamicSchema( property.getKlass() );
+
+            if ( property.is( PropertyType.REFERENCE ) )
+            {
+                property.setHref( hrefBase + "/schemas/" + klassSchema.getSingular() );
+            }
         }
     }
 

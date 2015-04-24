@@ -36,6 +36,7 @@ import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.schema.Schemas;
+import org.hisp.dhis.webapi.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,10 +68,16 @@ public class SchemaController
     @Autowired
     private RenderService renderService;
 
+    @Autowired
+    private LinkService linkService;
+
     @RequestMapping
     public @ResponseBody Schemas getSchemas()
     {
-        return new Schemas( schemaService.getSortedSchemas() );
+        Schemas schemas = new Schemas( schemaService.getSortedSchemas() );
+        linkService.generateSchemaLinks( schemas.getSchemas() );
+
+        return schemas;
     }
 
     @RequestMapping( value = "/{type}", method = RequestMethod.GET )
@@ -80,6 +87,7 @@ public class SchemaController
 
         if ( schema != null )
         {
+            linkService.generateSchemaLinks( schema );
             return schema;
         }
 
