@@ -65,6 +65,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.system.util.TextUtils;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -510,7 +511,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, "1.1" );
         }
         
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
 
         // ---------------------------------------------------------------------
         // Constants
@@ -531,7 +532,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, "1.1" );
         }
 
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
 
         // ---------------------------------------------------------------------
         // Org unit groups
@@ -552,7 +553,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, "1.1" );
         }
 
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
         
         // ---------------------------------------------------------------------
         // Days
@@ -609,7 +610,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, DataElementOperand.getPrettyName( dataElement, categoryOptionCombo ) );
         }
         
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
         
         // ---------------------------------------------------------------------
         // Constants
@@ -632,7 +633,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, constant.getDisplayName() );
         }
 
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
 
         // ---------------------------------------------------------------------
         // Org unit groups
@@ -655,7 +656,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, group.getDisplayName() );
         }
 
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
 
         // ---------------------------------------------------------------------
         // Days
@@ -669,7 +670,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, DAYS_DESCRIPTION );
         }
 
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
 
         return expression;
     }
@@ -749,7 +750,7 @@ public class DefaultExpressionService
             }
         }
 
-        return appendTail( matcher, sb );
+        return TextUtils.appendTail( matcher, sb );
     }
 
     @Override
@@ -785,7 +786,7 @@ public class DefaultExpressionService
             }
         }
 
-        return appendTail( matcher, sb );
+        return TextUtils.appendTail( matcher, sb );
     }
 
     @Override
@@ -815,7 +816,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, replacement );
         }
 
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
 
         // ---------------------------------------------------------------------
         // Org unit groups
@@ -837,7 +838,7 @@ public class DefaultExpressionService
             //TODO sub tree
         }
 
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
         
         // ---------------------------------------------------------------------
         // Days
@@ -853,7 +854,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, replacement );
         }
         
-        return appendTail( matcher, sb );
+        return TextUtils.appendTail( matcher, sb );
     }
 
     @Override
@@ -914,7 +915,7 @@ public class DefaultExpressionService
             return null;
         }
         
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
         
         // ---------------------------------------------------------------------
         // Constants
@@ -932,7 +933,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, replacement );
         }
         
-        expression = appendTail( matcher, sb );
+        expression = TextUtils.appendTail( matcher, sb );
 
         // ---------------------------------------------------------------------
         // Org unit groups
@@ -950,7 +951,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, replacement );
         }
 
-        expression = appendTail( matcher, sb );        
+        expression = TextUtils.appendTail( matcher, sb );        
         
         // ---------------------------------------------------------------------
         // Days
@@ -966,7 +967,7 @@ public class DefaultExpressionService
             matcher.appendReplacement( sb, replacement );
         }
         
-        return appendTail( matcher, sb );
+        return TextUtils.appendTail( matcher, sb );
     }
 
     @Override
@@ -991,11 +992,6 @@ public class DefaultExpressionService
     // Supportive methods
     // -------------------------------------------------------------------------
     
-    private String appendTail( Matcher matcher, StringBuffer sb )
-    {
-        matcher.appendTail( sb );
-        return sb.toString();
-    }
     
     private boolean operandIsTotal( Matcher matcher )
     {
