@@ -1037,9 +1037,11 @@ div.event-paging
 { 
     width:100%;
     background-color: #ebf0f6;
-    float:right;
-    text-align: right; 
+    float:left;
+    text-align: left;
     height:16px; 
+    margin-top: 5px;
+    border-radius: 4px;
 }
 
 div.event-paging span, div.event-paging a 
