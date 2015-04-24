@@ -29,6 +29,9 @@ package org.hisp.dhis.webapi.service;
  */
 
 import org.hisp.dhis.common.Pager;
+import org.hisp.dhis.schema.Schema;
+
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -50,7 +53,7 @@ public interface LinkService
      * <p/>
      * Uses hrefBase from ContextService.getServletPath().
      *
-     * @param object Object (can be collection) to set HREFs on
+     * @param object   Object (can be collection) to set HREFs on
      * @param deepScan Generate links also on deeper levels (only one level down)
      * @see javax.servlet.http.HttpServletRequest
      * @see ContextService
@@ -66,4 +69,10 @@ public interface LinkService
      * @see javax.servlet.http.HttpServletRequest
      */
     <T> void generateLinks( T object, String hrefBase, boolean deepScan );
+
+    void generateSchemaLinks( List<Schema> schemas );
+
+    void generateSchemaLinks( Schema schema );
+
+    void generateSchemaLinks( Schema schema, String hrefBase );
 }
