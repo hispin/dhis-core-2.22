@@ -292,9 +292,13 @@ public class DefaultProgramIndicatorService
                 {
                     matcher.appendReplacement( description, "Incident date" );
                 }
-                else if ( uid.equals( ProgramIndicator.VALUE_COUNT ) )
+                else if ( uid.equals( ProgramIndicator.VAR_VALUE_COUNT ) )
                 {
                     matcher.appendReplacement( description, "Value count" );
+                }
+                else if ( uid.equals( ProgramIndicator.VAR_ZERO_POS_VALUE_COUNT ) )
+                {
+                    matcher.appendReplacement( description, "Zero or positive value count" );
                 }
             }
         }
@@ -437,6 +441,7 @@ public class DefaultProgramIndicatorService
         Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
 
         int valueCount = 0;
+        int zeroPosValueCount = 0;
         
         while ( matcher.find() )
         {
@@ -471,7 +476,8 @@ public class DefaultProgramIndicatorService
 
                     matcher.appendReplacement( buffer, value );
                     
-                    valueCount++;                    
+                    valueCount++;
+                    zeroPosValueCount = isZeroOrPositive( value ) ? ( zeroPosValueCount + 1 ) : zeroPosValueCount;
                 }
                 else
                 {
@@ -499,6 +505,7 @@ public class DefaultProgramIndicatorService
                         matcher.appendReplacement( buffer, value );
                         
                         valueCount++;
+                        zeroPosValueCount = isZeroOrPositive( value ) ? ( zeroPosValueCount + 1 ) : zeroPosValueCount;
                     }
                     else
                     {
@@ -559,11 +566,25 @@ public class DefaultProgramIndicatorService
         
         while ( matcher.find() )
         {
-            matcher.appendReplacement( buffer, String.valueOf( valueCount ) );
+            String var = matcher.group( 1 );
+            
+            if ( ProgramIndicator.VAR_VALUE_COUNT.equals( var ) )
+            {
+                matcher.appendReplacement( buffer, String.valueOf( valueCount ) );
+            }
+            else if ( ProgramIndicator.VAR_ZERO_POS_VALUE_COUNT.equals( var ) )
+            {
+                matcher.appendReplacement( buffer, String.valueOf( zeroPosValueCount ) );
+            }            
         }
         
         expression = TextUtils.appendTail( matcher, buffer );
         
         return MathUtils.calculateExpression( expression );
+    }
+
+    private boolean isZeroOrPositive( String value )
+    {
+        return MathUtils.isNumeric( value ) && Double.valueOf( value ) >= 0d;
     }
 }
