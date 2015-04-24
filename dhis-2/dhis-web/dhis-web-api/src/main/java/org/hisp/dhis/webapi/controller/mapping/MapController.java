@@ -64,7 +64,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
-import static org.hisp.dhis.webapi.utils.ContextUtils.DATE_PATTERN;
+import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
