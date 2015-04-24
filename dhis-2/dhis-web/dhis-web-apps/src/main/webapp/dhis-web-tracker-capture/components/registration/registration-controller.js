@@ -160,8 +160,15 @@ trackerCapture.controller('RegistrationController',
                             }
                             else{
                                 enrollment.enrollment = data.reference;
-                                $scope.selectedEnrollment = enrollment;
-                                notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
+                                $scope.selectedEnrollment = enrollment;                                                                
+                                var dhis2Events = EventUtils.autoGenerateEvents($scope.tei.trackedEntityInstance, $scope.selectedProgram, $scope.selectedOrgUnit, enrollment);
+                                if(dhis2Events.events.length > 0){
+                                    DHIS2EventFactory.create(dhis2Events).then(function(data){
+                                        notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
+                                    });
+                                }else{
+                                    notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
+                                }                            
                             }
                         });
                     }
