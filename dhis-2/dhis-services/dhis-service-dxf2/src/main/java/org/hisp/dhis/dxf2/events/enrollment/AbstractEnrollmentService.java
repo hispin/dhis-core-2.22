@@ -465,11 +465,11 @@ public abstract class AbstractEnrollmentService
 
         if ( programInstance.getStatus() != enrollment.getStatus().getValue() )
         {
-            if ( enrollment.getStatus().equals( EnrollmentStatus.CANCELLED ) )
+            if ( EnrollmentStatus.CANCELLED == enrollment.getStatus() )
             {
                 programInstanceService.cancelProgramInstanceStatus( programInstance );
             }
-            else if ( enrollment.getStatus().equals( EnrollmentStatus.COMPLETED ) )
+            else if ( EnrollmentStatus.COMPLETED == enrollment.getStatus() )
             {
                 programInstanceService.completeProgramInstanceStatus( programInstance );
             }
