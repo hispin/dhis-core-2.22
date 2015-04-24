@@ -116,6 +116,14 @@ public interface ProgramStageInstanceService
     List<ProgramStageInstance> getProgramStageInstances( TrackedEntityInstance entityInstance, EventStatus status );
 
     /**
+     * Gets the number of ProgramStageInstances added since the given number of days.
+     *
+     * @param days number of days.
+     * @return the number of ProgramStageInstances.
+     */
+    long getProgramStageInstanceCount( int days );
+
+    /**
      * Retrieve scheduled list of entityInstances registered
      *
      * @return A SchedulingProgramObject list

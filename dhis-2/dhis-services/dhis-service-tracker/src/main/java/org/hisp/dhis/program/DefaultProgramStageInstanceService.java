@@ -165,6 +165,15 @@ public class DefaultProgramStageInstanceService
     }
 
     @Override
+    public long getProgramStageInstanceCount( int days )
+    {
+        Calendar cal = PeriodType.createCalendarInstance();
+        cal.add( Calendar.DAY_OF_YEAR, ( days * -1 ) );
+
+        return programStageInstanceStore.getProgramStageInstanceCountLastUpdatedAfter( cal.getTime() );
+    }
+
+    @Override
     public Collection<SchedulingProgramObject> getSendMesssageEvents()
     {
         return programStageInstanceStore.getSendMesssageEvents();

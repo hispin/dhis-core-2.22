@@ -34,6 +34,7 @@ import java.util.Map;
 
 import org.hisp.dhis.common.Objects;
 import org.hisp.dhis.datavalue.DataValueService;
+import org.hisp.dhis.program.ProgramStageInstanceService;
 import org.hisp.dhis.statistics.StatisticsProvider;
 import org.hisp.dhis.system.util.EnumMapWrapper;
 import org.hisp.dhis.user.UserInvitationStatus;
@@ -74,6 +75,13 @@ public class GetStatisticsAction
         this.dataValueService = dataValueService;
     }
 
+    private ProgramStageInstanceService programStageInstanceService;
+
+    public void setProgramStageInstanceService( ProgramStageInstanceService programStageInstanceService )
+    {
+        this.programStageInstanceService = programStageInstanceService;
+    }
+
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -104,6 +112,13 @@ public class GetStatisticsAction
     public Map<Integer, Integer> getDataValueCount()
     {
         return dataValueCount;
+    }
+
+    private Map<Integer, Long> eventCount = new HashMap<>();
+
+    public Map<Integer, Long> getEventCount()
+    {
+        return eventCount;
     }
     
     // -------------------------------------------------------------------------
@@ -142,7 +157,12 @@ public class GetStatisticsAction
         dataValueCount.put( 1, dataValueService.getDataValueCount( 1 ) );
         dataValueCount.put( 7, dataValueService.getDataValueCount( 7 ) );
         dataValueCount.put( 30, dataValueService.getDataValueCount( 30 ) );
-        
+
+        eventCount.put( 0, programStageInstanceService.getProgramStageInstanceCount( 0 ) );
+        eventCount.put( 1, programStageInstanceService.getProgramStageInstanceCount( 1 ) );
+        eventCount.put( 7, programStageInstanceService.getProgramStageInstanceCount( 7 ) );
+        eventCount.put( 30, programStageInstanceService.getProgramStageInstanceCount( 30 ) );
+
         return SUCCESS;
     }
 }
