@@ -30,7 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import static org.hisp.dhis.common.DimensionalObjectUtils.getUniqueDimensions;
 import static org.hisp.dhis.common.DimensionalObjectUtils.toDimension;
-import static org.hisp.dhis.webapi.utils.ContextUtils.DATE_PATTERN;
+import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
 
 import java.io.IOException;
 import java.util.Date;

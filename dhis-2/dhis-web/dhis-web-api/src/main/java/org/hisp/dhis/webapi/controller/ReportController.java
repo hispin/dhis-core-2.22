@@ -59,7 +59,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
-import static org.hisp.dhis.webapi.utils.ContextUtils.DATE_PATTERN;
+import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
