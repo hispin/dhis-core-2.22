@@ -470,7 +470,7 @@ public class ProgramIndicatorServiceTest
         programIndicatorService.addProgramIndicator( indicatorI );
         programIndicatorService.addProgramIndicator( indicatorJ );
 
-        String valueINT = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorA);
+        String valueINT = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorA );
         assertEquals( "10.0", valueINT );
 
         String valueDATE = programIndicatorService.getProgramIndicatorValue( programInstance,  indicatorB  );
