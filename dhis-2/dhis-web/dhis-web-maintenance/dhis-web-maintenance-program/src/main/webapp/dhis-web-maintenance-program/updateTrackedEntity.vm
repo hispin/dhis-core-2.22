@@ -26,7 +26,7 @@
 	
     <tbody>
 		<tr>
-			<td><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+			<td style="width:200px"><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
 			<td><input type="text" id="name" name="name" class="{validate:{required:true,rangelength:[2,160]}}" value='$encoder.htmlEncode($trackedEntity.name)' /></td>
 			<td></td>
 		</tr>   
