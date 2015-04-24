@@ -145,10 +145,9 @@ public class DefaultLinkService implements LinkService
     {
         for ( Property property : schema.getProperties() )
         {
-            Schema klassSchema = schemaService.getDynamicSchema( property.getKlass() );
-
-            if ( property.is( PropertyType.REFERENCE ) )
+            if ( PropertyType.REFERENCE == property.getPropertyType() )
             {
+                Schema klassSchema = schemaService.getDynamicSchema( property.getKlass() );
                 property.setHref( hrefBase + "/schemas/" + klassSchema.getSingular() );
 
                 if ( klassSchema.haveApiEndpoint() )
@@ -156,6 +155,17 @@ public class DefaultLinkService implements LinkService
                     property.setApiEndpoint( hrefBase + klassSchema.getApiEndpoint() );
                 }
             }
+            else if ( PropertyType.REFERENCE == property.getItemPropertyType() )
+            {
+                Schema klassSchema = schemaService.getDynamicSchema( property.getItemKlass() );
+                property.setHref( hrefBase + "/schemas/" + klassSchema.getSingular() );
+
+                if ( klassSchema.haveApiEndpoint() )
+                {
+                    property.setApiEndpoint( hrefBase + klassSchema.getApiEndpoint() );
+                }
+            }
+
         }
     }
 
