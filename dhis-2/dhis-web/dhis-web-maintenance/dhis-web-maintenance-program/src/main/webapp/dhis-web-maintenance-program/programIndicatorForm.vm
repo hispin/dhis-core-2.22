@@ -39,6 +39,7 @@
 						<option value="V{incident_date}">$i18n.getString( "incident_date" )</option>
 						<option value="V{enrollment_date}">$i18n.getString( "date_of_enrollment" )</option>
 						<option value="V{current_date}">$i18n.getString( "current_date" )</option>
+						<option value="V{value_count}">$i18n.getString( "value_count" )</option>
 					</select>
 				</td>
 			</tr>

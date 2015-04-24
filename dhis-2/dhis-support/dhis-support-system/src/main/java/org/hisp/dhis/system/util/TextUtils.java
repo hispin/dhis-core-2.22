@@ -461,4 +461,18 @@ public class TextUtils
     {
         return object != null ? object.toString() : null;
     }
+
+    /**
+     * Invokes append tail on matcher with the given string buffer, and returns
+     * the string buffer as a string.
+     * 
+     * @param matcher the matcher.
+     * @param sb the string buffer.
+     * @return a string.
+     */
+    public static String appendTail( Matcher matcher, StringBuffer sb )
+    {
+        matcher.appendTail( sb );
+        return sb.toString();
+    }    
 }
