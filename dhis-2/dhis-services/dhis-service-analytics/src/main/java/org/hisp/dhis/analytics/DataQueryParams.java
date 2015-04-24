@@ -707,7 +707,7 @@ public class DataQueryParams
     {
         List<DimensionItem[]> dimensionOptions = new ArrayList<>();
         
-        List<String> ignoreDims = Arrays.asList( DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, INDICATOR_DIM_ID );
+        List<String> ignoreDims = Arrays.asList( DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, INDICATOR_DIM_ID, DATASET_DIM_ID );
         
         for ( DimensionalObject dimension : dimensions )
         {

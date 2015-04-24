@@ -89,7 +89,7 @@ public class ReadMessageAction
     public String execute()
         throws Exception
     {
-        if( id == null )
+        if ( id == null )
         {
             return ERROR;
         }
@@ -98,7 +98,7 @@ public class ReadMessageAction
 
         conversation = messageService.getMessageConversation( id );
 
-        if( conversation == null )
+        if ( conversation == null )
         {
             return ERROR;
         }
