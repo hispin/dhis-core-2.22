@@ -428,7 +428,7 @@ public class DefaultProgramIndicatorService
 
     private Double getValue( ProgramInstance programInstance, ProgramIndicator indicator )
     {
-        StringBuffer description = new StringBuffer();
+        StringBuffer buffer = new StringBuffer();
 
         Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( indicator.getExpression() );
 
@@ -463,7 +463,7 @@ public class DefaultProgramIndicatorService
                         value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
                     }
 
-                    matcher.appendReplacement( description, value );
+                    matcher.appendReplacement( buffer, value );
                     
                 }
                 else
@@ -487,7 +487,7 @@ public class DefaultProgramIndicatorService
                         {
                             value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
                         }
-                        matcher.appendReplacement( description, value );
+                        matcher.appendReplacement( buffer, value );
                     }
                     else
                     {
@@ -505,7 +505,7 @@ public class DefaultProgramIndicatorService
                 
                 if ( constant != null )
                 {
-                    matcher.appendReplacement( description, String.valueOf( constant.getValue() ) );
+                    matcher.appendReplacement( buffer, String.valueOf( constant.getValue() ) );
                 }
                 else
                 {
@@ -532,14 +532,13 @@ public class DefaultProgramIndicatorService
 
                 if ( date != null )
                 {
-                    matcher.appendReplacement( description, DateUtils.daysBetween( currentDate, date ) + "" );
+                    matcher.appendReplacement( buffer, DateUtils.daysBetween( currentDate, date ) + "" );
                 }
             }
-
         }
 
-        matcher.appendTail( description );
+        matcher.appendTail( buffer );
 
-        return MathUtils.calculateExpression( description.toString() );
+        return MathUtils.calculateExpression( buffer.toString() );
     }
 }
