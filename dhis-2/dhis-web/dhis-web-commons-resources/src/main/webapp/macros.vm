@@ -284,7 +284,7 @@ jQuery(function() {
 	<td>
 		<select id="$!args.id" name="$name">
     #if( $args.mandatory != true )
-      <option value="">---</option>
+      <option value="">[ $i18n.getString( "please_select" ) ]</option>
     #end
 		#foreach( $choice in $args.attribute.optionSet.options )
 			<option value="$choice.code" #if( $args.value == $choice.code )selected="selected"#end>$choice.displayName</option>
