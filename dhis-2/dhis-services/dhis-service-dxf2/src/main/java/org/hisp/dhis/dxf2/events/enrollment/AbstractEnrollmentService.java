@@ -388,7 +388,6 @@ public abstract class AbstractEnrollmentService
         }
 
         OrganisationUnit organisationUnit = getOrganisationUnit( enrollment.getOrgUnit() );
-        System.err.println( "Enrollment: " + organisationUnit );
 
         ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( enrollment.getEnrollment(), entityInstance, program,
             enrollment.getDateOfEnrollment(), enrollment.getDateOfIncident(), organisationUnit );
