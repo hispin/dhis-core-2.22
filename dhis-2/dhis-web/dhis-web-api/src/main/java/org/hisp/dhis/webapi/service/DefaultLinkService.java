@@ -150,6 +150,11 @@ public class DefaultLinkService implements LinkService
             if ( property.is( PropertyType.REFERENCE ) )
             {
                 property.setHref( hrefBase + "/schemas/" + klassSchema.getSingular() );
+
+                if ( klassSchema.haveApiEndpoint() )
+                {
+                    property.setApiEndpoint( hrefBase + klassSchema.getApiEndpoint() );
+                }
             }
         }
     }
