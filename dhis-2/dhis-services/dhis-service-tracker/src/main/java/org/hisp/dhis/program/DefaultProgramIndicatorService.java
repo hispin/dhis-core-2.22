@@ -45,6 +45,7 @@ import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.system.util.TextUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
@@ -259,7 +260,6 @@ public class DefaultProgramIndicatorService
                     matcher.appendReplacement( description, programStageName + ProgramIndicator.SEPARATOR_ID + dataelementName );
                 }
             }
-
             else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
                 TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid );
@@ -292,13 +292,16 @@ public class DefaultProgramIndicatorService
                 {
                     matcher.appendReplacement( description, "Incident date" );
                 }
+                else if ( uid.equals( ProgramIndicator.VALUE_COUNT ) )
+                {
+                    matcher.appendReplacement( description, "Value count" );
+                }
             }
         }
 
         matcher.appendTail( description );
 
         return description.toString();
-
     }
 
     @Override
@@ -329,7 +332,6 @@ public class DefaultProgramIndicatorService
                     return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
                 }
             }
-
             else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
                 TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid );
@@ -430,8 +432,12 @@ public class DefaultProgramIndicatorService
     {
         StringBuffer buffer = new StringBuffer();
 
-        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( indicator.getExpression() );
+        String expression = indicator.getExpression();
+        
+        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
 
+        int valueCount = 0;
+        
         while ( matcher.find() )
         {
             String key = matcher.group( 1 );
@@ -465,6 +471,7 @@ public class DefaultProgramIndicatorService
 
                     matcher.appendReplacement( buffer, value );
                     
+                    valueCount++;                    
                 }
                 else
                 {
@@ -483,11 +490,15 @@ public class DefaultProgramIndicatorService
                     if ( attributeValue != null )
                     {
                         String value = attributeValue.getValue();
+                        
                         if( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_DATE ))
                         {
                             value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
                         }
+                        
                         matcher.appendReplacement( buffer, value );
+                        
+                        valueCount++;
                     }
                     else
                     {
@@ -529,7 +540,7 @@ public class DefaultProgramIndicatorService
                 {
                     date = currentDate;
                 }
-
+                
                 if ( date != null )
                 {
                     matcher.appendReplacement( buffer, DateUtils.daysBetween( currentDate, date ) + "" );
@@ -537,8 +548,22 @@ public class DefaultProgramIndicatorService
             }
         }
 
-        matcher.appendTail( buffer );
+        expression = TextUtils.appendTail( matcher, buffer );
 
-        return MathUtils.calculateExpression( buffer.toString() );
+        // ---------------------------------------------------------------------
+        // Value count variable
+        // ---------------------------------------------------------------------
+
+        buffer = new StringBuffer();
+        matcher = ProgramIndicator.VALUECOUNT_PATTERN.matcher( expression );
+        
+        while ( matcher.find() )
+        {
+            matcher.appendReplacement( buffer, String.valueOf( valueCount ) );
+        }
+        
+        expression = TextUtils.appendTail( matcher, buffer );
+        
+        return MathUtils.calculateExpression( expression );
     }
 }
