@@ -64,8 +64,14 @@ public class DateUtils
     };
 
     //TODO replace with FastDateParser, SimpleDateFormat is not thead-safe
+
+    /**
+     * Used by web API and utility methods.
+     */
+    public static final String DATE_PATTERN = "yyyy-MM-dd";    
+    public static final String TIMESTAMP_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
     
-    public static final SimpleDateFormat LONG_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+    public static final SimpleDateFormat LONG_DATE_FORMAT = new SimpleDateFormat( TIMESTAMP_PATTERN );
     public static final SimpleDateFormat ACCESS_DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd HH:mm:ss" );
     public static final SimpleDateFormat HTTP_DATE_FORMAT = new SimpleDateFormat( "EEE, dd MMM yyyy HH:mm:ss" );
 

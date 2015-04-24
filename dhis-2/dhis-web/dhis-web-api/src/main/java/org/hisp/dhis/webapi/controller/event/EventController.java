@@ -83,6 +83,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
@@ -139,10 +141,10 @@ public class EventController
         @RequestParam( required = false ) String trackedEntityInstance,
         @RequestParam( required = false ) String orgUnit,
         @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date lastUpdated,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date lastUpdated,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean skipMeta,
@@ -190,10 +192,10 @@ public class EventController
         @RequestParam( required = false ) String trackedEntityInstance,
         @RequestParam( required = false ) String orgUnit,
         @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date lastUpdated,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date lastUpdated,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) String attachment,
@@ -234,8 +236,8 @@ public class EventController
         @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( required = false ) ProgramStatus programStatus,
         @RequestParam( required = false ) EventStatus eventStatus,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
+        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
         @RequestParam Map<String, String> parameters, Model model, HttpServletRequest request )
     {
         WebOptions options = new WebOptions( parameters );
