@@ -38,6 +38,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     <property name="statisticsProvider" ref="org.hisp.dhis.statistics.StatisticsProvider" />
     <property name="userService" ref="org.hisp.dhis.user.UserService" />
     <property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
+    <property name="programStageInstanceService" ref="org.hisp.dhis.program.ProgramStageInstanceService" />
   </bean>
 
   <!-- Databrowser Grid -->
