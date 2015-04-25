@@ -1931,10 +1931,20 @@ Ext.onReady( function() {
 							var info = Ext.decode(r.responseText),
 								divStyle = 'padding:3px';
 
-							html += '<div style="' + divStyle + '"><b>Data was updated: </b>' + info.intervalSinceLastAnalyticsTableSuccess + ' <b>ago</b></div>';
-							html += '<div style="' + divStyle + '"><b>Version: </b>' + info.version + '</div>';
-							html += '<div style="' + divStyle + '"><b>Revision: </b>' + info.revision + '</div>';
-							html += '<div style="' + divStyle + '"><b>Build time: </b>' + info.buildTime.slice(0,19).replace('T', ' ') + '</div>';
+							if (Ext.isObject(info)) {
+								html += '<div style="' + divStyle + '"><b>Data was updated: </b>' + info.intervalSinceLastAnalyticsTableSuccess + ' <b>ago</b></div>';
+								html += '<div style="' + divStyle + '"><b>Version: </b>' + info.version + '</div>';
+								html += '<div style="' + divStyle + '"><b>Revision: </b>' + info.revision + '</div>';
+								html += '<div style="' + divStyle + '"><b>Build time: </b>' + info.buildTime.slice(0,19).replace('T', ' ') + '</div>';
+							}
+							else {
+								html += 'No system info found';
+							}
+
+							w.update(html);
+						},
+						failure: function(r) {
+							html += r.status + '\n' + r.statusText + '\n' + r.responseText;
 
 							w.update(html);
 						}
