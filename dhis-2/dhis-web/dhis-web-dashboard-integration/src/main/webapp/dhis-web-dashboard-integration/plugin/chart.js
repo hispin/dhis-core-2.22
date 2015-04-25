@@ -1175,6 +1175,10 @@ Ext.onReady(function() {
 
                     layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
 
+                    if (Ext.isString(config.displayProperty)) {
+                        layout.displayProperty = config.displayProperty;
+                    }
+
                     // style
                     if (Ext.isObject(config.domainAxisStyle)) {
                         layout.domainAxisStyle = config.domainAxisStyle;
@@ -2229,7 +2233,8 @@ Ext.onReady(function() {
                     paramString = '?',
                     addCategoryDimension = false,
                     map = xLayout.dimensionNameItemsMap,
-                    dx = dimConf.indicator.dimensionName;
+                    dx = dimConf.indicator.dimensionName,
+                    displayProperty = xLayout.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name';
 
                 for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
                     dimName = axisDimensionNames[i];
@@ -2273,7 +2278,7 @@ Ext.onReady(function() {
                 }
 
                 // display property
-                paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+                paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
                 return paramString;
             };

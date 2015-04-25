@@ -1914,6 +1914,46 @@ Ext.onReady( function() {
 		return;
 	};
 
+	InfoWindow = function() {
+		var html = '',
+			window;
+
+		window = Ext.create('Ext.window.Window', {
+			title: 'System info',
+			bodyStyle: 'background:#fff; padding:6px',
+			modal: true,
+			hideOnBlur: true,
+			listeners: {
+				show: function(w) {
+					Ext.Ajax.request({
+						url: ns.core.init.contextPath + '/api/system/info.json',
+						success: function(r) {
+							var info = Ext.decode(r.responseText),
+								divStyle = 'padding:3px';
+
+							html += '<div style="' + divStyle + '"><b>Data was updated: </b>' + info.intervalSinceLastAnalyticsTableSuccess + ' <b>ago</b></div>';
+							html += '<div style="' + divStyle + '"><b>Version: </b>' + info.version + '</div>';
+							html += '<div style="' + divStyle + '"><b>Revision: </b>' + info.revision + '</div>';
+							html += '<div style="' + divStyle + '"><b>Build time: </b>' + info.buildTime.slice(0,19).replace('T', ' ') + '</div>';
+
+							w.update(html);
+						}
+					});
+
+					if (ns.app.infoButton.rendered) {
+						ns.core.web.window.setAnchorPosition(w, ns.app.infoButton);
+
+						if (!w.hasHideOnBlurHandler) {
+							ns.core.web.window.addHideOnBlurHandler(w);
+						}
+					}
+				}
+			}
+		});
+
+		return window;
+	};
+
 	// core
 	extendCore = function(core) {
         var conf = core.conf,
@@ -6007,6 +6047,23 @@ Ext.onReady( function() {
 			}
 		});
 
+		infoButton = Ext.create('Ext.button.Button', {
+			text: NS.i18n.info,
+			handler: function() {
+				if (ns.app.infoWindow && ns.app.infoWindow.destroy) {
+					ns.app.infoWindow.destroy();
+				}
+
+				ns.app.infoWindow = InfoWindow();
+				ns.app.infoWindow.show();
+			},
+			listeners: {
+				added: function() {
+					ns.app.infoButton = this;
+				}
+			}
+		});
+
 		defaultButton = Ext.create('Ext.button.Button', {
 			text: NS.i18n.table,
 			iconCls: 'ns-button-icon-table',
@@ -6092,6 +6149,12 @@ Ext.onReady( function() {
 					favoriteButton,
 					downloadButton,
 					shareButton,
+					{
+						xtype: 'tbseparator',
+						height: 18,
+						style: 'border-color:transparent; border-right-color:#d1d1d1; margin-right:4px',
+					},
+					infoButton,
 					'->',
 					defaultButton,
 					{

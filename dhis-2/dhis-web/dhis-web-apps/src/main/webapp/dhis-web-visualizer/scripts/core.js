@@ -891,6 +891,8 @@ Ext.onReady( function() {
 
                 // parentGraphMap: object
 
+                // displayProperty: string ('name') // 'name', 'shortname', null
+
                 getValidatedDimensionArray = function(dimensionArray) {
 					var dimensionArray = Ext.clone(dimensionArray);
 
@@ -1133,6 +1135,10 @@ Ext.onReady( function() {
                     layout.title = Ext.isString(config.title) &&  !Ext.isEmpty(config.title) ? config.title : null;
 
                     layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
+
+                    if (Ext.isString(config.displayProperty)) {
+                        layout.displayProperty = config.displayProperty;
+                    }
 
                     // style
                     if (Ext.isObject(config.domainAxisStyle)) {
@@ -2222,7 +2228,8 @@ Ext.onReady( function() {
                     addCategoryDimension = false,
                     map = xLayout.dimensionNameItemsMap,
                     dx = dimConf.indicator.dimensionName,
-                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'];
+                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                    displayProperty = xLayout.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name';
 
                 for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
                     dimName = axisDimensionNames[i];
@@ -2271,7 +2278,7 @@ Ext.onReady( function() {
 				}
 
                 // display property
-                paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+                paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
                 return paramString;
             };
