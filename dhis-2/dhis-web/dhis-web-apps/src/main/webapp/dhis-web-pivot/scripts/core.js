@@ -358,6 +358,8 @@ Ext.onReady( function() {
 
 				// topLimit: integer (100) //5, 10, 20, 50, 100
 
+                // displayProperty: string ('name') // 'name', 'shortname', null
+
 				getValidatedDimensionArray = function(dimensionArray) {
 					var dimensionArray = Ext.clone(dimensionArray);
 
@@ -522,6 +524,10 @@ Ext.onReady( function() {
 					layout.cumulative = Ext.isBoolean(config.cumulative) ? config.cumulative : false;
 					layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
 					layout.topLimit = Ext.isNumber(config.topLimit) ? config.topLimit : 0;
+
+                    if (Ext.isString(config.displayProperty)) {
+                        layout.displayProperty = config.displayProperty;
+                    }
 
 					if (!validateSpecialCases()) {
 						return;
@@ -1947,7 +1953,8 @@ Ext.onReady( function() {
 					map = xLayout.dimensionNameItemsMap,
 					dx = dimConf.indicator.dimensionName,
 					co = dimConf.category.dimensionName,
-                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'];
+                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                    displayProperty = xLayout.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name';
 
 				for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
 					dimName = axisDimensionNames[i];
@@ -2000,7 +2007,7 @@ Ext.onReady( function() {
 				}
 
                 // display property
-                paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+                paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
 				return paramString;
 			};
