@@ -810,6 +810,9 @@ public class TableAlteror
         
         executeSql( "update categoryoptioncombo set ignoreapproval = false where ignoreapproval is null" );
 
+        executeSql( "alter table version alter column versionkey set not null" );
+        executeSql( "alter table version add constraint version_versionkey_key unique(versionkey)" );
+
         upgradeDataValuesWithAttributeOptionCombo();
         upgradeCompleteDataSetRegistrationsWithAttributeOptionCombo();
         upgradeMapViewsToAnalyticalObject();
