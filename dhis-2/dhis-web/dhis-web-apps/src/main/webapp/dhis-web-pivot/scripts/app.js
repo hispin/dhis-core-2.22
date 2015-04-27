@@ -1914,14 +1914,15 @@ Ext.onReady( function() {
 		return;
 	};
 
-	InfoWindow = function() {
+	AboutWindow = function() {
 		var html = '',
 			window;
 
 		window = Ext.create('Ext.window.Window', {
-			title: 'System info',
+			title: NS.i18n.about,
 			bodyStyle: 'background:#fff; padding:6px',
 			modal: true,
+            resizable: false,
 			hideOnBlur: true,
 			listeners: {
 				show: function(w) {
@@ -1932,7 +1933,7 @@ Ext.onReady( function() {
 								divStyle = 'padding:3px';
 
 							if (Ext.isObject(info)) {
-								html += '<div style="' + divStyle + '"><b>Data was updated: </b>' + info.intervalSinceLastAnalyticsTableSuccess + ' <b>ago</b></div>';
+								html += '<div style="' + divStyle + '"><b>Data was updated: </b>' + info.intervalSinceLastAnalyticsTableSuccess + ' ago</div>';
 								html += '<div style="' + divStyle + '"><b>Version: </b>' + info.version + '</div>';
 								html += '<div style="' + divStyle + '"><b>Revision: </b>' + info.revision + '</div>';
 								html += '<div style="' + divStyle + '"><b>Build time: </b>' + info.buildTime.slice(0,19).replace('T', ' ') + '</div>';
@@ -1947,16 +1948,17 @@ Ext.onReady( function() {
 							html += r.status + '\n' + r.statusText + '\n' + r.responseText;
 
 							w.update(html);
-						}
-					});
+						},
+                        callback: function() {
+                            if (ns.app.aboutButton.rendered) {
+                                ns.core.web.window.setAnchorPosition(w, ns.app.aboutButton);
 
-					if (ns.app.infoButton.rendered) {
-						ns.core.web.window.setAnchorPosition(w, ns.app.infoButton);
-
-						if (!w.hasHideOnBlurHandler) {
-							ns.core.web.window.addHideOnBlurHandler(w);
-						}
-					}
+                                if (!w.hasHideOnBlurHandler) {
+                                    ns.core.web.window.addHideOnBlurHandler(w);
+                                }
+                            }
+                        }
+					});					
 				}
 			}
 		});
@@ -2765,6 +2767,7 @@ Ext.onReady( function() {
             favoriteUrlItem,
             apiUrlItem,
             shareButton,
+            aboutButton,
             defaultButton,
             centerRegion,
             setGui,
@@ -6057,19 +6060,20 @@ Ext.onReady( function() {
 			}
 		});
 
-		infoButton = Ext.create('Ext.button.Button', {
-			text: NS.i18n.info,
+		aboutButton = Ext.create('Ext.button.Button', {
+			text: NS.i18n.about,
+            menu: {},
 			handler: function() {
-				if (ns.app.infoWindow && ns.app.infoWindow.destroy) {
-					ns.app.infoWindow.destroy();
+				if (ns.app.aboutWindow && ns.app.aboutWindow.destroy) {
+					ns.app.aboutWindow.destroy();
 				}
 
-				ns.app.infoWindow = InfoWindow();
-				ns.app.infoWindow.show();
+				ns.app.aboutWindow = AboutWindow();
+				ns.app.aboutWindow.show();
 			},
 			listeners: {
 				added: function() {
-					ns.app.infoButton = this;
+					ns.app.aboutButton = this;
 				}
 			}
 		});
@@ -6159,12 +6163,6 @@ Ext.onReady( function() {
 					favoriteButton,
 					downloadButton,
 					shareButton,
-					{
-						xtype: 'tbseparator',
-						height: 18,
-						style: 'border-color:transparent; border-right-color:#d1d1d1; margin-right:4px',
-					},
-					infoButton,
 					'->',
 					defaultButton,
 					{
@@ -6365,7 +6363,8 @@ Ext.onReady( function() {
 							}
 						}
 					},
-					{
+                    aboutButton,
+                    {
 						xtype: 'button',
 						text: NS.i18n.home,
 						handler: function() {
