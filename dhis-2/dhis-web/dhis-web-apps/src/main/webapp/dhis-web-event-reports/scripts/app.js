@@ -1665,6 +1665,8 @@ Ext.onReady( function() {
                     store.add(record);
                 }
             }
+
+            onCollapseDataDimensionsChange(collapseDataDimensions.getValue());
         };
 
         removeDimension = function(id, excludedStores) {
@@ -1751,7 +1753,7 @@ Ext.onReady( function() {
 
         toggleDataItems = function(param) {
             var stores = [colStore, rowStore, filterStore, fixedFilterStore],
-                collapse = Ext.isObject(param) && param.collapseDataItems ? param.collapseDataItems : param,
+                collapse = Ext.isObject(param) && Ext.isDefined(param.collapseDataItems) ? param.collapseDataItems : param,
                 keys = ['ou', 'pe', 'dates'],
                 dy = ['dy'],
                 keys;
@@ -4562,7 +4564,7 @@ Ext.onReady( function() {
                 element.name = element.name || element.displayName;
                 recordMap[element.id] = element;
 
-                // dont add ux if dim is selected as value
+                // dont create ux if dim is selected as value
                 if (element.id !== aggWindow.value.getValue()) {
                     ux = addUxFromDataElement(element);
 
