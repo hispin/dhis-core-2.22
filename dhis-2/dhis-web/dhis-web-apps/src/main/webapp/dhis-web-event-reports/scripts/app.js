@@ -7,6 +7,7 @@ Ext.onReady( function() {
 		FavoriteWindow,
 		SharingWindow,
 		InterpretationWindow,
+        AboutWindow,
 
 		extendCore,
 		createViewport,
@@ -3764,10 +3765,11 @@ Ext.onReady( function() {
 								divStyle = 'padding:3px';
 
 							if (Ext.isObject(info)) {
-								html += '<div style="' + divStyle + '"><b>Data was updated: </b>' + info.intervalSinceLastAnalyticsTableSuccess + ' ago</div>';
-								html += '<div style="' + divStyle + '"><b>Version: </b>' + info.version + '</div>';
-								html += '<div style="' + divStyle + '"><b>Revision: </b>' + info.revision + '</div>';
-								html += '<div style="' + divStyle + '"><b>Build time: </b>' + info.buildTime.slice(0,19).replace('T', ' ') + '</div>';
+								html += '<div style="' + divStyle + '"><b>' + NS.i18n.time_since_last_data_update + ': </b>' + info.intervalSinceLastAnalyticsTableSuccess + '</div>';
+								html += '<div style="' + divStyle + '"><b>' + NS.i18n.version + ': </b>' + info.version + '</div>';
+								html += '<div style="' + divStyle + '"><b>' + NS.i18n.revision + ': </b>' + info.revision + '</div>';
+								html += '<div style="' + divStyle + '"><b>' + NS.i18n.build_time + ': </b>' + info.buildTime.slice(0,19).replace('T', ' ') + '</div>';
+                                html += '<div style="' + divStyle + '"><b>' + NS.i18n.username + ': </b>' + ns.core.init.userAccount.username + '</div>';
 							}
 							else {
 								html += 'No system info found';
