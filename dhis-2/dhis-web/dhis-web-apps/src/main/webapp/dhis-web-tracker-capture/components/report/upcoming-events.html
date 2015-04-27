@@ -152,29 +152,28 @@
                     <table class="listTable dhis2-table-striped-border dhis2-table-hover">               
                         <thead>                        
                             <tr>
-                                <th ng-show="gridColumn.show" ng-repeat="gridColumn in gridColumns">
+                                 <th ng-repeat="gridColumn in gridColumns | filter:{show: true}">
 
                                     <!-- sort icon begins -->
                                     <span ng-click="sortGrid(gridColumn)">
-                                        {{gridColumn.name| translate}}
-                                        <i ng-if="sortHeader === gridColumn.id && reverse" class="fa fa-sort-desc"></i>
-                                        <i ng-if="sortHeader === gridColumn.id && !reverse" class="fa fa-sort-asc"></i>
+                                        <span ng-class="{true: 'red'} [sortColumn.id === gridColumn.id]"><i class="fa fa-sort hideInPrint"></i></span>
+                                        {{gridColumn.name}}
                                     </span>
                                     <!-- sort icon ends -->
 
                                     <!-- filter icon begins -->
-                                    <span class='pull-right'>
-                                        <span ng-show="gridColumn.type !== 'date' && gridColumn.type !== 'int'">
-                                            <a href ng-click="searchInGrid(gridColumn)" title="{{'search'| translate}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [filterText[gridColumn.id] === undefined || filterText[gridColumn.id] === '']"><i class="fa fa-search"></i></span></a>
+                                    <span class='pull-right hideInPrint'>
+                                        <span ng-if="gridColumn.type != 'date' && gridColumn.type != 'int'">
+                                            <a href ng-click="searchInGrid(gridColumn)" title="{{'search'| translate}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [filterText[gridColumn.id] == undefined || filterText[gridColumn.id] == '']"><i class="fa fa-search"></i></span></a>
                                         </span>
-                                        <span ng-show="gridColumn.type === 'date' || gridColumn.type === 'int'">
-                                            <a href ng-click="searchInGrid(gridColumn)" title="{{'search'| translate}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [(filterText[gridColumn.id].start === undefined || filterText[gridColumn.id].start === '') && (filterText[gridColumn.id].end === undefined || filterText[gridColumn.id].end === '')]"><i class="fa fa-search"></i></span></a>
+                                        <span ng-if="gridColumn.type === 'date' || gridColumn.type === 'int'">
+                                            <a href ng-click="searchInGrid(gridColumn)" title="{{'search'| translate}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [(filterText[gridColumn.id].start == undefined || filterText[gridColumn.id].start == '') && (filterText[gridColumn.id].end == undefined || filterText[gridColumn.id].end == '')]"><i class="fa fa-search"></i></span></a>
                                         </span>                                                    
                                     </span>
                                     <!-- filter icon ends -->
 
                                     <!-- filter input field begins -->
-                                    <span ng-show="gridColumn.showFilter">  
+                                    <span ng-if="gridColumn.showFilter" class="hideInPrint">  
                                         <span ng-switch="gridColumn.type">
                                             <span ng-switch-when="int">
                                                 <input style="width: 45%;" placeholder="{{'lower_limit'| translate}}" type="number" ng-model="filterText[gridColumn.id].start" ng-blur="searchInGrid(gridColumn)">
@@ -182,11 +181,11 @@
                                             </span>
                                             <span ng-switch-when="date">
                                                 <input style="width: 70%;" placeholder="{{'start_date'| translate}}" type="text" ng-model="filterText[gridColumn.id].start" data-d2-date readonly="readonly">
-                                                <span ng-hide="filterText[gridColumn.id].start === undefined || filterText[gridColumn.id].start === ''">
+                                                <span ng-hide="filterText[gridColumn.id].start == undefined || filterText[gridColumn.id].start == ''">
                                                     <a href ng-click='removeStartFilterText(gridColumn.id)'><span class='black'><i class="fa fa-trash-o"></i></span></a>                                                        
                                                 </span>
                                                 <input style="width: 70%;" placeholder="{{'end_date'| translate}}" type="text" ng-model="filterText[gridColumn.id].end" data-d2-date readonly="readonly">
-                                                <span ng-hide="filterText[gridColumn.id].end === undefined || filterText[gridColumn.id].end === ''">
+                                                <span ng-hide="filterText[gridColumn.id].end == undefined || filterText[gridColumn.id].end == ''">
                                                     <a href ng-click='removeEndFilterText(gridColumn.id)'><span class='black'><i class="fa fa-trash-o"></i></span></a>                                                        
                                                 </span> 
                                             </span>
@@ -196,22 +195,25 @@
                                         </span>                                                    
                                     </span>
                                     <!-- filter input field ends -->
-
+                                    
                                 </th>
                             </tr>                        
                         </thead>
                         <tbody id="list">
-                            <tr ng-repeat="upcomingEvent in upcomingEvents| orderBy:sortHeader:reverse | gridFilter:filterText:filterTypes"
+                            <tr ng-repeat="upcomingEvent in upcomingEvents | orderBy:[d2Sort, 'trackedEntityInstance']:reverse | gridFilter:filterText:filterTypes"
                                 ng-click="showDashboard(upcomingEvent.trackedEntityInstance)"
                                 title="{{'go_to_dashboard'| translate}}">
-                                <td ng-show="gridColumn.show"                                            
-                                    ng-repeat="gridColumn in gridColumns" ng-if='displayMode.onlyMarkedFollowup ? upcomingEvent.followup:true'>                                                
-                                    {{upcomingEvent[gridColumn.id]}}                                                
-                                </td>                                
+                                <td ng-repeat="gridColumn in gridColumns | filter:{show: true, eventCol: false}" 
+                                    ng-if='displayMode.onlyMarkedFollowup ? overdueEvent.followup:true'>                                                
+                                    {{upcomingEvent[gridColumn.id]}}
+                                </td>
+                                <td ng-repeat="gridColumn in gridColumns | filter:{show: true, eventCol: true}" ng-if='displayMode.onlyMarkedFollowup ? overdueEvent.followup:true'>                                                
+                                    {{upcomingEvent[gridColumn.id]}}
+                                </td>                               
                             </tr>
                         </tbody>        
                     </table>
-                    <serverside-paginator></serverside-paginator>
+                    <!--<serverside-paginator></serverside-paginator>-->
                 </div>
                 <!-- report ends -->
             </div>
