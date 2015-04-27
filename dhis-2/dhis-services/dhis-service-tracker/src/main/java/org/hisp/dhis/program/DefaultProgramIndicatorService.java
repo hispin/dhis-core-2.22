@@ -181,9 +181,17 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
+    public String getProgramIndicatorValue( ProgramStageInstance programStageInstance, ProgramIndicator programIndicator )
+    {
+        Double value = getValue( null, programStageInstance, programIndicator );
+
+        return value != null ? String.valueOf( value ) : null;
+    }
+    
+    @Override
     public String getProgramIndicatorValue( ProgramInstance programInstance, ProgramIndicator programIndicator )
     {
-        Double value = getValue( programInstance, programIndicator );
+        Double value = getValue( programInstance, null, programIndicator );
 
         if ( value != null )
         {
@@ -432,7 +440,16 @@ public class DefaultProgramIndicatorService
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private Double getValue( ProgramInstance programInstance, ProgramIndicator indicator )
+    /**
+     * Get value for the given arguments. If programStageInstance argument is null, 
+     * the program stage instance will be retrieved based on the given program
+     * instance in combination with the program stage from the indicator expression.
+     * 
+     * @param programInstance the program instance, can be null.
+     * @param programStageInstance the program stage instance, can be null.
+     * @param indicator the indicator, must be not null.
+     */
+    private Double getValue( ProgramInstance programInstance, ProgramStageInstance programStageInstance, ProgramIndicator indicator )
     {
         StringBuffer buffer = new StringBuffer();
 
@@ -456,11 +473,11 @@ public class DefaultProgramIndicatorService
 
                 if ( programStage != null && dataElement != null )
                 {
-                    ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance(
-                        programInstance, programStage );
+                    ProgramStageInstance psi = programStageInstance != null ?
+                        programStageInstance :
+                        programStageInstanceService.getProgramStageInstance( programInstance, programStage );
 
-                    TrackedEntityDataValue dataValue = dataValueService.getTrackedEntityDataValue(
-                        programStageInstance, dataElement );
+                    TrackedEntityDataValue dataValue = dataValueService.getTrackedEntityDataValue( psi, dataElement );
 
                     if ( dataValue == null )
                     {
