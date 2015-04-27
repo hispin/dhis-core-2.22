@@ -2583,56 +2583,6 @@ Ext.onReady( function() {
 		return window;
 	};
 
-	GIS.app.AboutWindow = function() {
-		var html = '',
-			window;
-
-		window = Ext.create('Ext.window.Window', {
-			title: GIS.i18n.about,
-			bodyStyle: 'background:#fff; padding:6px',
-			modal: true,
-            resizable: false,
-			hideOnBlur: true,
-			listeners: {
-				show: function(w) {
-					Ext.Ajax.request({
-						url: gis.init.contextPath + '/api/system/info.json',
-						success: function(r) {
-							var info = Ext.decode(r.responseText),
-								divStyle = 'padding:3px';
-
-							if (Ext.isObject(info)) {
-								html += '<div style="' + divStyle + '"><b>Data was updated: </b>' + info.intervalSinceLastAnalyticsTableSuccess + ' ago</div>';
-								html += '<div style="' + divStyle + '"><b>Version: </b>' + info.version + '</div>';
-								html += '<div style="' + divStyle + '"><b>Revision: </b>' + info.revision + '</div>';
-								html += '<div style="' + divStyle + '"><b>Build time: </b>' + info.buildTime.slice(0,19).replace('T', ' ') + '</div>';
-							}
-							else {
-								html += 'No system info found';
-							}
-
-							w.update(html);
-						},
-						failure: function(r) {
-							html += r.status + '\n' + r.statusText + '\n' + r.responseText;
-
-							w.update(html);
-						},
-                        callback: function() {
-                            gis.util.gui.window.setAnchorPosition(w, gis.viewport.aboutButton);
-
-                            //if (!w.hasHideOnBlurHandler) {
-                                //ns.core.web.window.addHideOnBlurHandler(w);
-                            //}
-                        }
-					});
-				}
-			}
-		});
-
-		return window;
-	};
-
     GIS.app.MapControlPanel = function(name, fn) {
 		var button,
 			panel;
@@ -4252,6 +4202,57 @@ Ext.onReady( function() {
 
 		return;
     };
+
+	GIS.app.AboutWindow = function() {
+		var html = '',
+			window;
+
+		window = Ext.create('Ext.window.Window', {
+			title: GIS.i18n.about,
+			bodyStyle: 'background:#fff; padding:6px',
+			modal: true,
+            resizable: false,
+			hideOnBlur: true,
+			listeners: {
+				show: function(w) {
+					Ext.Ajax.request({
+						url: gis.init.contextPath + '/api/system/info.json',
+						success: function(r) {
+							var info = Ext.decode(r.responseText),
+								divStyle = 'padding:3px';
+
+							if (Ext.isObject(info)) {
+								html += '<div style="' + divStyle + '"><b>' + GIS.i18n.time_since_last_data_update + ': </b>' + info.intervalSinceLastAnalyticsTableSuccess + '</div>';
+								html += '<div style="' + divStyle + '"><b>' + GIS.i18n.version + ': </b>' + info.version + '</div>';
+								html += '<div style="' + divStyle + '"><b>' + GIS.i18n.revision + ': </b>' + info.revision + '</div>';
+								html += '<div style="' + divStyle + '"><b>' + GIS.i18n.build_time + ': </b>' + info.buildTime.slice(0,19).replace('T', ' ') + '</div>';
+                                html += '<div style="' + divStyle + '"><b>' + GIS.i18n.username + ': </b>' + gis.init.userAccount.username + '</div>';
+							}
+							else {
+								html += 'No system info found';
+							}
+
+							w.update(html);
+						},
+						failure: function(r) {
+							html += r.status + '\n' + r.statusText + '\n' + r.responseText;
+
+							w.update(html);
+						},
+                        callback: function() {
+                            gis.util.gui.window.setAnchorPosition(w, gis.viewport.aboutButton);
+
+                            //if (!w.hasHideOnBlurHandler) {
+                                //ns.core.web.window.addHideOnBlurHandler(w);
+                            //}
+                        }
+					});
+				}
+			}
+		});
+
+		return window;
+	};
 
 	GIS.app.LayerWidgetEvent = function(layer) {
 
