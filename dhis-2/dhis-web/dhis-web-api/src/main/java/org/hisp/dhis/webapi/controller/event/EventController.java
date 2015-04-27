@@ -242,8 +242,8 @@ public class EventController
     {
         WebOptions options = new WebOptions( parameters );
 
-        EventSearchParams params = eventService.getFromUrl( program, null, programStatus, false, 
-            orgUnit, ouMode, null, startDate, endDate, null, null, null, null, null );
+        EventSearchParams params = eventService.getFromUrl( program, null, programStatus, null, 
+            orgUnit, ouMode, null, startDate, endDate, eventStatus, null, null, null, null );
         
         EventRows eventRows = eventRowService.getEventRows( params );
 
