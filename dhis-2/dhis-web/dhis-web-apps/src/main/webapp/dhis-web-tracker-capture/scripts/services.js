@@ -999,7 +999,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         	var pg = pager ? pager.page : 1;
             pgSize = pgSize > 1 ? pgSize  : 1;
             pg = pg > 1 ? pg : 1; 
-            var url = '../api/events/eventRows.json?' + 'orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&program=' + program + '&programStatus=' + programStatus + '&eventStatus='+ eventStatus + '&pageSize=' + pgSize + '&page=' + pg;
+            var url = '../api/events/eventRows.json?' + 'orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&program=' + program + '&programStatus=' + programStatus + '&eventStatus='+ eventStatus;
             if(startDate && endDate){
                 url = url + '&startDate=' + startDate + '&endDate=' + endDate ;
             }

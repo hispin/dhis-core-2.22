@@ -5,7 +5,7 @@ trackerCapture.controller('OverdueEventsController',
                 $modal,
                 $location,
                 $translate,
-                orderByFilter,
+                $filter,
                 DateUtils,
                 Paginator,
                 EventReportService,
@@ -132,11 +132,14 @@ trackerCapture.controller('OverdueEventsController',
                 });
                 
                 //sort overdue events by their due dates - this is default
-                $scope.overdueEvents = orderByFilter($scope.overdueEvents, '-dueDate');
-                $scope.overdueEvents.reverse();
-
+                if(!$scope.sortColumn.id){                                      
+                    $scope.sortGrid({id: 'dueDate', name: $translate('due_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: true});
+                    $scope.reverse = false;
+                }
+        
                 $scope.reportFinished = true;
                 $scope.reportStarted = false;
+                
             });
         }
     };    
@@ -146,8 +149,10 @@ trackerCapture.controller('OverdueEventsController',
         if (angular.isObject($scope.selectedProgram)){
             
             $scope.programStages = [];
+            $scope.sortColumn = {};
             $scope.filterTypes = {};
             $scope.filterText = {};
+            $scope.reverse = false;
 
             angular.forEach($scope.selectedProgram.programStages, function(stage){
                 $scope.programStages[stage.id] = stage;
@@ -156,12 +161,16 @@ trackerCapture.controller('OverdueEventsController',
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){            
                 var grid = TEIGridService.generateGridColumns(atts, $scope.selectedOuMode);
                 $scope.gridColumns = grid.columns;
+                
+                angular.forEach($scope.gridColumns, function(col){
+                    col.eventCol = false;
+                });
 
-                $scope.gridColumns.push({name: $translate('event_orgunit_name'), id: 'orgUnitName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true});
+                $scope.gridColumns.push({name: $translate('event_orgunit_name'), id: 'orgUnitName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
                 $scope.filterTypes['orgUnitName'] = 'string';
-                $scope.gridColumns.push({name: $translate('event_name'), id: 'eventName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true});
+                $scope.gridColumns.push({name: $translate('event_name'), id: 'eventName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
                 $scope.filterTypes['eventName'] = 'string';
-                $scope.gridColumns.push({name: $translate('due_date'), id: 'dueDate', type: 'date', displayInListNoProgram: false, showFilter: false, show: true});
+                $scope.gridColumns.push({name: $translate('due_date'), id: 'dueDate', type: 'date', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
                 $scope.filterTypes['dueDate'] = 'date';
                 $scope.filterText['dueDate']= {};                
             });
@@ -197,21 +206,31 @@ trackerCapture.controller('OverdueEventsController',
         }, function () {
         });
     };
-    
+
+    //sortGrid
     $scope.sortGrid = function(gridHeader){
-        if ($scope.sortHeader === gridHeader.id){
+        if ($scope.sortColumn && $scope.sortColumn.id === gridHeader.id){
             $scope.reverse = !$scope.reverse;
             return;
         }        
-        $scope.sortHeader = gridHeader.id;
-        $scope.reverse = false;
-        
-        $scope.overdueEvents = orderByFilter($scope.overdueEvents, $scope.sortHeader);
-        
-        if($scope.reverse){
-            $scope.overdueEvents.reverse();
+        $scope.sortColumn = gridHeader;
+        if($scope.sortColumn.valueType === 'date'){
+            $scope.reverse = true;
+        }
+        else{
+            $scope.reverse = false;    
         }
     };
+    
+    
+    $scope.d2Sort = function(overDueEvent){ 
+        if($scope.sortColumn && $scope.sortColumn.valueType === 'date'){            
+            var d = overDueEvent[$scope.sortColumn.id];         
+            return DateUtils.getDate(d);
+        }
+        return overDueEvent[$scope.sortColumn.id];
+    };
+    
     
     $scope.searchInGrid = function(gridColumn){
         
