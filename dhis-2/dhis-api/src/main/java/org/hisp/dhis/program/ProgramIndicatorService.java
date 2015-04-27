@@ -103,8 +103,18 @@ public interface ProgramIndicatorService
     Collection<ProgramIndicator> getAllProgramIndicators();
 
     /**
-     * Calculate an program indicator value based on program instance and an
-     * indicator defined for a TrackedEntityInstance
+     * Calculate a program indicator value based on program stage instance and an
+     * indicator.
+     *
+     * @param programInstance  ProgramInstance
+     * @param programIndicator ProgramIndicator
+     * @return Indicator value
+     */
+    String getProgramIndicatorValue( ProgramStageInstance programStageInstance, ProgramIndicator programIndicator );
+    
+    /**
+     * Calculate a program indicator value based on program instance and an
+     * indicator.
      *
      * @param programInstance  ProgramInstance
      * @param programIndicator ProgramIndicator
