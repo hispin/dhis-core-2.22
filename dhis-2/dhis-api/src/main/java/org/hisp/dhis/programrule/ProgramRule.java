@@ -54,14 +54,14 @@ public class ProgramRule
     extends BaseIdentifiableObject
 {
     /**
-     * The program that the rule belongs to
+     * The description of the program rule
      */
-    private Program program;
+    private String description;
     
     /**
      * The program that the rule belongs to
      */
-    private String description;
+    private Program program;
     
     /**
      * The programStage that the rule belongs to
@@ -98,7 +98,7 @@ public class ProgramRule
     {
         this();
         this.name = name;
-        this.setDescription( description );
+        this.description = description;
         this.program = program;
         this.programStage = programStage;
         this.programRuleActions = programRuleActions;
@@ -110,6 +110,18 @@ public class ProgramRule
     // Getters and setters
     // -------------------------------------------------------------------------
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
+    
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -173,18 +185,6 @@ public class ProgramRule
         this.priority = priority;
     }
 
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription( String description )
-    {
-        this.description = description;
-    }
-    
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
