@@ -424,7 +424,8 @@ Ext.onReady( function() {
 			};
 
 			util.gui.window.addHideOnBlurHandler = function(w) {
-				var el = Ext.get(Ext.query('.x-mask')[0]);
+				var maskElements = Ext.query('.x-mask'),
+                    el = Ext.get(maskElements[maskElements.length - 1]);
 
 				el.on('click', function() {
 					if (w.hideOnBlur) {
@@ -436,7 +437,8 @@ Ext.onReady( function() {
 			};
 
 			util.gui.window.addDestroyOnBlurHandler = function(w) {
-				var el = Ext.get(Ext.query('.x-mask')[0]);
+				var maskElements = Ext.query('.x-mask'),
+                    el = Ext.get(maskElements[maskElements.length - 1]);
 
 				el.on('click', function() {
 					if (w.destroyOnBlur) {
@@ -1949,7 +1951,7 @@ Ext.onReady( function() {
 				}
 			],
 			listeners: {
-				show: function() {
+				show: function(w) {
 					if (!this.isRendered) {
 						this.isRendered = true;
 
@@ -2576,7 +2578,16 @@ Ext.onReady( function() {
 				show: function(w) {
 					var pos = gis.viewport.favoriteWindow.getPosition();
 					w.setPosition(pos[0] + 5, pos[1] + 5);
-				}
+
+					if (!w.hasDestroyOnBlurHandler) {
+						gis.util.gui.window.addDestroyOnBlurHandler(w);
+					}
+
+                    gis.viewport.favoriteWindow.destroyOnBlur = false;
+				},
+                destroy: function() {
+                    gis.viewport.favoriteWindow.destroyOnBlur = true;
+                }
 			}
 		});
 
@@ -2796,6 +2807,7 @@ Ext.onReady( function() {
 				resizable: false,
 				modal: true,
 				items: nameTextfield,
+				destroyOnBlur: true,
 				bbar: [
 					cancelButton,
 					'->',
@@ -2804,6 +2816,12 @@ Ext.onReady( function() {
 				listeners: {
 					show: function() {
 						this.setPosition(favoriteWindow.x + 14, favoriteWindow.y + 67);
+
+                        if (!w.hasDestroyOnBlurHandler) {
+                            gis.util.gui.window.addDestroyOnBlurHandler(w);
+                        }
+
+                        gis.viewport.favoriteWindow.destroyOnBlur = true;
 
 						nameTextfield.focus(false, 500);
 					}
@@ -3160,6 +3178,7 @@ Ext.onReady( function() {
 			resizable: false,
 			modal: true,
 			width: windowWidth,
+			destroyOnBlur: true,
 			items: [
 				{
 					xtype: 'panel',
@@ -3180,8 +3199,12 @@ Ext.onReady( function() {
 				grid
 			],
 			listeners: {
-				show: function() {
+				show: function(w) {
 					this.setPosition(199, 33);
+
+					if (!w.hasDestroyOnBlurHandler) {
+						gis.util.gui.window.addDestroyOnBlurHandler(w);
+					}
 
 					searchTextfield.focus(false, 500);
 				}
@@ -4012,6 +4035,7 @@ Ext.onReady( function() {
 			width: windowWidth,
 			modal: true,
 			items: new LegendSetPanel(),
+            destroyOnBlur: true,
 			bbar: {
 				height: 27,
 				items: [
@@ -4023,8 +4047,12 @@ Ext.onReady( function() {
 				]
 			},
 			listeners: {
-				show: function() {
+				show: function(w) {
 					this.setPosition(269, 33);
+
+					if (!w.hasDestroyOnBlurHandler) {
+						gis.util.gui.window.addDestroyOnBlurHandler(w);
+					}
 				},
                 beforeclose: function() {
                     if (window.isDirty) {
@@ -4101,6 +4129,7 @@ Ext.onReady( function() {
             bodyStyle: 'padding:1px',
 			resizable: true,
 			modal: true,
+            destroyOnBlur: true,
 			items: [
 				name,
 				format
@@ -4110,8 +4139,12 @@ Ext.onReady( function() {
 				button
 			],
 			listeners: {
-				show: function() {
+				show: function(w) {
 					this.setPosition(253, 33);
+
+					if (!w.hasDestroyOnBlurHandler) {
+						gis.util.gui.window.addDestroyOnBlurHandler(w);
+					}
 				}
 			}
 		});
@@ -4169,6 +4202,7 @@ Ext.onReady( function() {
                 width: 500,
                 resizable: true,
                 modal: true,
+                destroyOnBlur: true,
                 items: [
                     textArea
                 ],
@@ -4183,8 +4217,12 @@ Ext.onReady( function() {
 					]
 				},
                 listeners: {
-                    show: function() {
+                    show: function(w) {
                         this.setPosition(325, 33);
+
+                        if (!w.hasDestroyOnBlurHandler) {
+                            gis.util.gui.window.addDestroyOnBlurHandler(w);
+                        }
 
 						document.body.oncontextmenu = true;
                     },
@@ -4209,7 +4247,7 @@ Ext.onReady( function() {
 			bodyStyle: 'background:#fff; padding:6px',
 			modal: true,
             resizable: false,
-			hideOnBlur: true,
+			destroyOnBlur: true,
 			listeners: {
 				show: function(w) {
 					Ext.Ajax.request({
@@ -4247,6 +4285,10 @@ Ext.onReady( function() {
                             //}
                         }
 					});
+
+					if (!w.hasDestroyOnBlurHandler) {
+						gis.util.gui.window.addDestroyOnBlurHandler(w);
+					}
 				},
                 hide: function() {
                     document.body.oncontextmenu = function() {
@@ -8853,6 +8895,10 @@ Ext.onReady( function() {
 					listeners: {
 						show: function(w) {
 							this.setPosition(215, 33);
+
+                            if (!w.hasDestroyOnBlurHandler) {
+                                gis.util.gui.window.addDestroyOnBlurHandler(w);
+                            }
 						}
 					}
 				});
@@ -8893,6 +8939,10 @@ Ext.onReady( function() {
 					listeners: {
 						show: function(w) {
                             this.setPosition(325, 33);
+
+                            if (!w.hasDestroyOnBlurHandler) {
+                                gis.util.gui.window.addDestroyOnBlurHandler(w);
+                            }
 
 							document.body.oncontextmenu = true;
 						},
@@ -8938,6 +8988,10 @@ Ext.onReady( function() {
 					listeners: {
 						show: function(w) {
                             this.setPosition(325, 33);
+
+                            if (!w.hasDestroyOnBlurHandler) {
+                                gis.util.gui.window.addDestroyOnBlurHandler(w);
+                            }
 
 							document.body.oncontextmenu = true;
 						},
