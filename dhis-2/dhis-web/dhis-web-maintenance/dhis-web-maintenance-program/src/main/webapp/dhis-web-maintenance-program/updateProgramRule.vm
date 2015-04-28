@@ -43,34 +43,37 @@
 <input type='hidden' id='programLocalId' name='programLocalId' value="$programRule.program.id" />
 <input type='hidden' id='programRuleId' name='programRuleId' value="$programRule.uid" />
 
-<table width="70%">
-	<col width="10%">
-	<col width="40%">
-	<col width="25%">
-	<col width="25%">
+<table class="mainPageTable">
+	<col width="50%">
+	<col width="50%">
 	<thead>
       <tr>
-        <th colspan="4">$i18n.getString( "program_rule_details" )</th>
+        <th>$i18n.getString( "program_rule_details" )</th>
       </tr>
     </thead>
     
 	<tbody>
 		<tr>
-			<td><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-			<td colspan='3'><input type="text" id="name" name="name" style="width:98%" value='$programRule.name' ></td>
-		</tr>	
-		
-		<tr>
-			<td><label for="description">$i18n.getString( "description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-			<td colspan='3'><input type="text" id="description" name="description" style="width:98%" value='$programRule.description' /></td>
+			<td>
+				<table width="100%">
+					<tr>
+						<td><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+						<td><input type="text" id="name" name="name" style="width:98%" ></td>
+					</tr>					
+					<tr>
+						<td><label for="description">$i18n.getString( "description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+						<td><input type="text" id="description" name="description" style="width:98%" /></td>
+					</tr>
+				</table>
+			</td>	
+			<td></td>
 		</tr>
-		
 		<tr>
-			<th colspan="2">1. $i18n.getString("source_fields")</th>
-			<th colspan="2">2. $i18n.getString("expression_evaluate_the_source_fields") <em title="$i18n.getString( "required" )" class="required">*</em></th>
+			<th>1. $i18n.getString("source_fields")</th>
+			<th>2. $i18n.getString("expression_evaluate_the_source_fields") <em title="$i18n.getString( "required" )" class="required">*</em></th>
 		</tr>
 		<tr>
-			<td colspan='2'>
+			<td>
 				
 				<div style="height:180px; border:1px solid black; overflow-y: auto;">
 					<table id='sourceFieldList' style="height:100px;width:100%" >
@@ -98,9 +101,9 @@
 				<br>
 				<input type="button" id="addMoreVariableBtn" value="+ $i18n.getString('add_source_field')" onclick="javascript:addSourceFieldForm();"/>
 			</td>			
-			<td colspan='2'>
-				<fieldset style="width:80%;">
-					<textarea size="10" id='condition' name='condition' style="width:405px;border:none;height:150px;"></textarea>
+			<td>
+				<fieldset style="width:95%;">
+					<textarea size="10" id='condition' name='condition' style="width:98%;border:none;height:150px;">$programRule.condition</textarea>
 				</fieldset>
 				<br>								
 				<input type='button' class="small-button" onclick='insertVariable( this );' value="+" />
@@ -123,18 +126,18 @@
 		</tr>
 		
 		<tr>
-			<th colspan="3">3. $i18n.getString("actions_that_is_executed_when_expression_is_true") <em title="$i18n.getString( "required" )" class="required">*</em>
+			<th colspan="2">3. $i18n.getString("actions_that_is_executed_when_expression_is_true") <em title="$i18n.getString( "required" )" class="required">*</em>
 			</th>
-			<td>
-				<input type="hidden" id="hasAction" name="hasAction" class="{validate:{required:true}}" >
-			</td>
 		</tr>
 		<tr>
-			<td colspan="4">
+			<td><input type="hidden" id="hasAction" name="hasAction" class="{validate:{required:true}}" ></td>
+		</tr>
+		<tr>
+			<td colspan="2">
 				<table width="100%">
-					<col width="20%">
-					<col width="60%">
-					<col width="20%">
+					<col width="30%">
+					<col width="40%">
+					<col width="30%">
 					<tbody id='actionTB'></tbody>
 					<tr>
 						<td><input type="button" value="+ $i18n.getString('add_more_action')" onclick="addMoreAction();"></td>
@@ -147,7 +150,7 @@
 <br>
 <table>
 	<tr>
-		<td colspan='3'>
+		<td colspan='2'>
 			<input type="submit" value="$i18n.getString( 'update' )" style="width:10em">
 			<input type="button" value="$i18n.getString( 'cancel' )" onclick="window.location.href='programRule.action?id=$programRule.program.id'" style="width:10em">
 		</td>
