@@ -166,7 +166,20 @@ trackerCapture.controller('TeiReportController',
         $scope.showProgramReportDetailsDiv = false;
     };
     
-    $scope.print = function(){
+    $scope.print = function(divName){
         $scope.showProgramReportDetailsDiv = false;
+        var printContents = document.getElementById(divName).innerHTML;
+        var popupWin = window.open('', '_blank', 'fullscreen=1');
+        popupWin.document.open();
+        popupWin.document.write('<html>\n\
+                                        <head>\n\
+                                                <link rel="stylesheet" type="text/css" href="../dhis-web-commons/bootstrap/css/bootstrap.min.css" />\n\
+                                                <link rel="stylesheet" type="text/css" href="../dhis-web-commons/css/print.css" />\n\
+                                                <link rel="stylesheet" type="text/css" href="styles/style.css" />\n\
+                                                <link rel="stylesheet" type="text/css" href="styles/print.css" />\n\
+                                        </head>\n\
+                                        <body onload="window.print()">' + printContents + 
+                                '</html>');
+        popupWin.document.close();       
     };
 });
