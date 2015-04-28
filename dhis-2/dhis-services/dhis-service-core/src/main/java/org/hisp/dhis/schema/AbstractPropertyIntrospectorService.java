@@ -238,6 +238,9 @@ public abstract class AbstractPropertyIntrospectorService
                 property.setOwner( !collection.isInverse() );
                 property.setManyToMany( collectionPersister.isManyToMany() );
 
+                property.setMin( 0 );
+                property.setMax( Integer.MAX_VALUE );
+
                 if ( property.isOwner() )
                 {
                     property.setOwningRole( collectionType.getRole() );
@@ -274,10 +277,14 @@ public abstract class AbstractPropertyIntrospectorService
 
                 property.setUnique( column.isUnique() );
                 property.setRequired( !column.isNullable() );
+                property.setMin( 0 );
+                property.setMax( column.getLength() );
                 property.setLength( column.getLength() );
 
                 if ( TextType.class.isInstance( type ) )
                 {
+                    property.setMin( 0 );
+                    property.setMax( Integer.MAX_VALUE );
                     property.setLength( Integer.MAX_VALUE );
                 }
             }

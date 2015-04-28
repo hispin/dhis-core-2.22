@@ -98,9 +98,6 @@ public class TrackedEntityInstanceController
     private FieldFilterService fieldFilterService;
 
     @Autowired
-    private ObjectFilterService objectFilterService;
-
-    @Autowired
     private ContextService contextService;
 
     // -------------------------------------------------------------------------
