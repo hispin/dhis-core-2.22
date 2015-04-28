@@ -16,12 +16,12 @@
 
     &identifiableProperties;
 
-    <property name="name" column="name" length="230" />
+    <property name="name" column="name" not-null="true" length="230" />
 
 	<many-to-one name="programRule" class="org.hisp.dhis.programrule.ProgramRule" 
 		column="programruleid" foreign-key="fk_programruleaction_programrule" />
 
-    <property name="programRuleActionType" column="actiontype">
+    <property name="programRuleActionType" column="actiontype" not-null="true">
         <type name="org.hibernate.type.EnumType">
             <param name="enumClass">org.hisp.dhis.programrule.ProgramRuleActionType</param>
             <param name="type">12</param>

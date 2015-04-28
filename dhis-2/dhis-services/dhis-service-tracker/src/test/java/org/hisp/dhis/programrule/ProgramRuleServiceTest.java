@@ -56,7 +56,6 @@ public class ProgramRuleServiceTest
     private ProgramRuleVariable programRuleVariableA;
     private ProgramRuleVariable programRuleVariableB;
     
-    
     @Autowired
     private ProgramService programService;
     

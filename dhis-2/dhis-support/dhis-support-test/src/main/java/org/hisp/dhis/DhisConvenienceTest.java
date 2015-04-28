@@ -89,7 +89,9 @@ import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.programrule.ProgramRule;
 import org.hisp.dhis.programrule.ProgramRuleAction;
+import org.hisp.dhis.programrule.ProgramRuleActionType;
 import org.hisp.dhis.programrule.ProgramRuleVariable;
+import org.hisp.dhis.programrule.ProgramRuleVariableSourceType;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewType;
@@ -1125,7 +1127,11 @@ public abstract class DhisConvenienceTest
         OrganisationUnit unit )
     {
         Set<OrganisationUnit> units = new HashSet<>();
-        units.add( unit );
+        
+        if ( unit != null )
+        {
+            units.add( unit );
+        }
         
         return createProgram( uniqueCharacter, programStages, null, units );
     }
@@ -1168,18 +1174,11 @@ public abstract class DhisConvenienceTest
         
         return program;
     }
-    
-    public static ProgramRule createProgramRule ( char uniqueCharacter )
+        
+    public static ProgramRule createProgramRule ( char uniqueCharacter, Program parentProgram )
     {
         ProgramRule programRule = new ProgramRule();
         programRule.setName( "ProgramRule" + uniqueCharacter );
-    
-        return programRule;
-    }
-    
-    public static ProgramRule createProgramRule ( char uniqueCharacter, Program parentProgram )
-    {
-        ProgramRule programRule = createProgramRule( uniqueCharacter );
         programRule.setProgram( parentProgram );
     
         return programRule;
@@ -1189,6 +1188,7 @@ public abstract class DhisConvenienceTest
     {
         ProgramRuleAction programRuleAction = new ProgramRuleAction();
         programRuleAction.setName( "ProgramRuleAction" + uniqueCharacter );
+        programRuleAction.setProgramRuleActionType( ProgramRuleActionType.HIDEFIELD );
     
         return programRuleAction;
     }
@@ -1201,18 +1201,12 @@ public abstract class DhisConvenienceTest
         return programRuleAction;
     }
     
-    public static ProgramRuleVariable createProgramRuleVariable ( char uniqueCharacter )
+    public static ProgramRuleVariable createProgramRuleVariable ( char uniqueCharacter, Program parentProgram )
     {
         ProgramRuleVariable programRuleVariable = new ProgramRuleVariable();
         programRuleVariable.setName( "ProgramRuleVariable" + uniqueCharacter );
-    
-        return programRuleVariable;
-    }
-    
-    public static ProgramRuleVariable createProgramRuleVariable ( char uniqueCharacter, Program parentProgram )
-    {
-        ProgramRuleVariable programRuleVariable = createProgramRuleVariable( uniqueCharacter );
         programRuleVariable.setProgram( parentProgram );
+        programRuleVariable.setSourceType( ProgramRuleVariableSourceType.DATAELEMENT_CURRENT_EVENT );
         
         return programRuleVariable;
     }

@@ -33,6 +33,8 @@ import java.util.Collection;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,6 +47,7 @@ public class ProgramRuleActionServiceTest
     private ProgramRule programRuleB;
     private ProgramRule programRuleC;
     private DataElement dataElementA;
+    private Program programA;
     
     @Autowired
     private ProgramRuleService programRuleService;
@@ -54,15 +57,20 @@ public class ProgramRuleActionServiceTest
     
     @Autowired
     private ProgramRuleActionService actionService;
+
+    @Autowired
+    private ProgramService programService;
     
     @Override
     public void setUpTest()
     {
-        programRuleA = createProgramRule( 'A' );
-        programRuleB = createProgramRule( 'B' );
-        programRuleC = createProgramRule( 'C' );
+        programA = createProgram( 'A', null, null );
+        programRuleA = createProgramRule( 'A', programA );
+        programRuleB = createProgramRule( 'B', programA );
+        programRuleC = createProgramRule( 'C', programA );
         dataElementA = createDataElement( 'A' );
         
+        programService.addProgram( programA );
         programRuleService.addProgramRule( programRuleA );
         programRuleService.addProgramRule( programRuleB );
         programRuleService.addProgramRule( programRuleC );
