@@ -28,18 +28,6 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dataelement.DataElement;
@@ -73,7 +61,6 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,7 +70,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -141,10 +137,10 @@ public class EventController
         @RequestParam( required = false ) String trackedEntityInstance,
         @RequestParam( required = false ) String orgUnit,
         @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
+        @RequestParam( required = false ) Date startDate,
+        @RequestParam( required = false ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date lastUpdated,
+        @RequestParam( required = false ) Date lastUpdated,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean skipMeta,
@@ -153,9 +149,9 @@ public class EventController
     {
         WebOptions options = new WebOptions( parameters );
 
-        EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode, 
+        EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode,
             trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize );
-        
+
         Events events = eventService.getEvents( params );
 
         if ( options.hasLinks() )
@@ -192,10 +188,10 @@ public class EventController
         @RequestParam( required = false ) String trackedEntityInstance,
         @RequestParam( required = false ) String orgUnit,
         @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
+        @RequestParam( required = false ) Date startDate,
+        @RequestParam( required = false ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date lastUpdated,
+        @RequestParam( required = false ) Date lastUpdated,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) String attachment,
@@ -203,9 +199,9 @@ public class EventController
         @RequestParam Map<String, String> parameters,
         IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
-        EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode, 
+        EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode,
             trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize );
-        
+
         Events events = eventService.getEvents( params );
 
         OutputStream outputStream = response.getOutputStream();
@@ -236,15 +232,15 @@ public class EventController
         @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( required = false ) ProgramStatus programStatus,
         @RequestParam( required = false ) EventStatus eventStatus,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
+        @RequestParam( required = false ) Date startDate,
+        @RequestParam( required = false ) Date endDate,
         @RequestParam Map<String, String> parameters, Model model, HttpServletRequest request )
     {
         WebOptions options = new WebOptions( parameters );
 
-        EventSearchParams params = eventService.getFromUrl( program, null, programStatus, null, 
+        EventSearchParams params = eventService.getFromUrl( program, null, programStatus, null,
             orgUnit, ouMode, null, startDate, endDate, eventStatus, null, null, null, null );
-        
+
         EventRows eventRows = eventRowService.getEventRows( params );
 
         model.addAttribute( "model", eventRows );
