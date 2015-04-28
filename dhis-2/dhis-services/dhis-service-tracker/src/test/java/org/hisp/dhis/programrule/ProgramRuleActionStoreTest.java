@@ -27,42 +27,49 @@ package org.hisp.dhis.programrule;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
-import org.junit.Test;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementStore;
+import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramService;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProgramRuleActionStoreTest
     extends DhisSpringTest
 {
-    public ProgramRule programRuleA; 
-    
-    public DataElement dataElementA;
-    
+    private ProgramRule programRuleA;
+    private DataElement dataElementA;    
+    private Program programA;
     
     @Autowired
     public ProgramRuleStore programRuleStore;
     
     @Autowired
-    public DataElementStore dataElementStore;
+    public DataElementService dataElementService;
     
     @Autowired
     public ProgramRuleActionStore actionStore;
+
+    @Autowired
+    private ProgramService programService;
     
     @Override
     public void setUpTest()
     {
-        programRuleA = createProgramRule( 'A' );
+        programA = createProgram( 'A', null, null );
+        programRuleA = createProgramRule( 'A', programA );
         dataElementA = createDataElement( 'A' );
         
+        programService.addProgram( programA );
         programRuleStore.save( programRuleA );
-        dataElementStore.save( dataElementA );
+        dataElementService.addDataElement( dataElementA );
     }
     
     @Test

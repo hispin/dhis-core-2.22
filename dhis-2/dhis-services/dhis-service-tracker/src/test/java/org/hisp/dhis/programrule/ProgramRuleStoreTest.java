@@ -27,6 +27,7 @@ package org.hisp.dhis.programrule;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -43,9 +44,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ProgramRuleStoreTest
     extends DhisSpringTest
 {
-    public Program programA; 
-    
-    public ProgramStage programStageA;
+    private Program programA;    
+    private ProgramStage programStageA;
     
     @Autowired
     public ProgramStore programStore;
@@ -59,7 +59,7 @@ public class ProgramRuleStoreTest
     @Override
     public void setUpTest()
     {
-        programA = createProgram('A', null, null);
+        programA = createProgram('A', null, null );
         programStageA = createProgramStage( 'A', 0 );
         
         programStore.save( programA );

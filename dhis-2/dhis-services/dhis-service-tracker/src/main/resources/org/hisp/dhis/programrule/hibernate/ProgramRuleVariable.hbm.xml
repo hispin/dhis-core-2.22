@@ -16,12 +16,12 @@
 
     &identifiableProperties;
 
-    <property name="name" column="name" length="230" />
+    <property name="name" column="name" not-null="true" length="230" />
 
     <many-to-one name="program" class="org.hisp.dhis.program.Program" 
-       	column="programid" foreign-key="fk_programrulevariable_program" />
+       	column="programid" foreign-key="fk_programrulevariable_program" not-null="true" />
     
-    <property name="sourceType" column="sourcetype">
+    <property name="sourceType" column="sourcetype" not-null="true">
         <type name="org.hibernate.type.EnumType">
             <param name="enumClass">org.hisp.dhis.programrule.ProgramRuleVariableSourceType</param>
             <param name="type">12</param>
