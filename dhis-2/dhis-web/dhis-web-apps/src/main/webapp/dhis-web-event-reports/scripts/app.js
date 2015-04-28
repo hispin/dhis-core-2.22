@@ -1755,6 +1755,7 @@ Ext.onReady( function() {
             var stores = [colStore, rowStore, filterStore, fixedFilterStore],
                 collapse = Ext.isObject(param) && Ext.isDefined(param.collapseDataItems) ? param.collapseDataItems : param,
                 keys = ['ou', 'pe', 'dates'],
+                dimensionKeys = Ext.Array.pluck(ns.core.init.dimensions || [], 'id'),
                 dy = ['dy'],
                 keys;
 
@@ -1773,7 +1774,7 @@ Ext.onReady( function() {
 
             // keys
             if (collapse) { // included keys
-                keys = ['ou', 'pe', 'dates', 'dy'];
+                keys = ['ou', 'pe', 'dates', 'dy'].concat(dimensionKeys);
             }
             else { // excluded keys
                 keys = ['dy'];
