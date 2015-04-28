@@ -1470,7 +1470,7 @@ Ext.onReady(function() {
             styleEl = document.createElement("style");
 
         styleEl.setAttribute("type", "text/css");
-        
+
         if (id) {
            styleEl.setAttribute("id", id);
         }
@@ -1583,12 +1583,14 @@ Ext.onReady(function() {
                     else if (!window) {
                         var layers = gis.util.map.getRenderedVectorLayers().reverse(),
                             html = '<div id="legendWrapper">';
-                            
-                        for (var i = 0, layer; i < layers.length; i++) {
-                            layer = layers[i];
 
-                            html += '<div style="font-size:10px; font-weight:bold">' + layer.name + '</div>' + layer.core.updateLegend().innerHTML + (i < layers.length - 1 ? '<div style="padding:5px"></div>' : '');
-                        }
+                        for (var i = 0, layer, innerHTML; i < layers.length; i++) {
+                            layer = layers[i];
+                            innerHTML = layer.core.updateLegend().innerHTML;
+
+                            if (innerHTML) {
+                                html += '<div style="font-size:10px; font-weight:bold">' + layer.name + '</div>' + innerHTML + (i < layers.length - 1 ? '<div style="padding:5px"></div>' : '');
+                            }
 
                         html += '</div>';
 
@@ -1605,10 +1607,10 @@ Ext.onReady(function() {
                                 show: function() {
                                     var el = this.getEl(),
                                         legendEl = el.first().first(),
-                                        xy = Ext.get(olmap.buttonControls[0].div).getAnchorXY();                                        
+                                        xy = Ext.get(olmap.buttonControls[0].div).getAnchorXY();
 
                                     el.setStyle('opacity', 0.92);
-                                    
+
                                     this.setHeight(legendEl.getHeight() + 8 + 9);
 
                                     this.setPosition(xy[0] - this.getWidth(), xy[1] - 1);
@@ -6087,7 +6089,7 @@ Ext.onReady(function() {
             },
 
             updateLegend: function() {
-
+                return {};
             },
 
             CLASS_NAME: "mapfish.GeoStat.Event"
@@ -6291,7 +6293,7 @@ Ext.onReady(function() {
             },
 
             updateLegend: function() {
-
+                return {};
             },
 
             CLASS_NAME: "mapfish.GeoStat.Boundary"

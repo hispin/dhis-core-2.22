@@ -1886,7 +1886,7 @@ Ext.onReady( function() {
 
                 // collapse data dimensions?
                 (function() {
-                    var keys = xLayout.collapseDataDimensions ? ['dy', 'pe', 'ou'] : ['dy'],
+                    var keys = xLayout.collapseDataDimensions ? ['dy', 'pe', 'ou'].concat(Ext.Array.pluck(init.dimensions, 'id')) : ['dy'],
                         dimensionsToRemove = [];
 
                     // find dimensions to remove
@@ -3667,7 +3667,7 @@ Ext.onReady( function() {
                             height: ns.dashboard ? height : height - 40,
                             theme: 'dv1'
                         };
-                        
+
                     // legend
                     if (!xLayout.hideLegend) {
                         defaultConfig.legend = getDefaultLegend(store, config);
@@ -3990,7 +3990,7 @@ Ext.onReady( function() {
                         label.renderer = function(value) {
                             var record = store.getAt(store.findExact(conf.finals.data.domain, value)),
                                 v = record.data[store.rangeFields[0]];
-                                
+
                             return support.prototype.number.prettyPrint(v);
                         };
                     }
@@ -4017,7 +4017,7 @@ Ext.onReady( function() {
                             renderer: function(item) {
                                 var value = support.prototype.number.prettyPrint(item.data[store.rangeFields[0]]),
                                     data = item.data[conf.finals.data.domain];
-                                    
+
                                 this.update('<div style="text-align:center"><div style="font-size:17px; font-weight:bold">' + value + '</div><div style="font-size:10px">' + data + '</div></div>');
                             }
                         },
