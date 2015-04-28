@@ -53,13 +53,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 public class ProgramRuleVariable
     extends BaseIdentifiableObject
 {
-    private static final long serialVersionUID = -2807997671779497354L;
-
     /**
      * The program that the variable belongs to
      */
     private Program program;
-
 
     /**
      * The source of the variables content. Allowed values are:
