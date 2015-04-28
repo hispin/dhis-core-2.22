@@ -391,7 +391,7 @@ function addMoreAction()
 			+ "</td>"
 			+ "<td><input type='text' class='content' style='width:97%;'/></td>"
 			+ "<td>" + dataElementSelector + "</td>"
-			+ "<td><input type='button' value='-' onclick='javascript:removeActionRow(this)';></td>"
+			+ "<td><input class='small-button' type='button' value='-' onclick='javascript:removeActionRow(this)';></td>"
 			+ "</tr>";
 	table.append(row);
 }
