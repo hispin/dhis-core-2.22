@@ -41,16 +41,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author markusbekken
  */
-
+@JacksonXmlRootElement( localName = "programRuleAction", namespace = DxfNamespaces.DXF_2_0 )
 public class ProgramRuleAction
     extends BaseIdentifiableObject
 {
-    private static final long serialVersionUID = -2807997671779497354L;
-
     /**
      * The programRule that the action belongs to
      */
@@ -89,7 +88,7 @@ public class ProgramRuleAction
     private ProgramRuleActionType programRuleActionType;
     
     /**
-     * the dataelement that is affected by the ruleAction. 
+     * The dataelement that is affected by the ruleAction. 
      * Used for 
      *       hidefield
      *       showwarning

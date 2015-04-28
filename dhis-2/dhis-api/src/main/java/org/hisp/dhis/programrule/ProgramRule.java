@@ -44,16 +44,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author markusbekken
  */
-
+@JacksonXmlRootElement( localName = "programRule", namespace = DxfNamespaces.DXF_2_0 )
 public class ProgramRule
     extends BaseIdentifiableObject
 {
-    private static final long serialVersionUID = -2807997671779497354L;
-    
     /**
      * The program that the rule belongs to
      */
