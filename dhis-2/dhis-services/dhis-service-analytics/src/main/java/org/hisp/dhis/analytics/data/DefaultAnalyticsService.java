@@ -48,9 +48,9 @@ import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.DimensionalObject.INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.LATITUDE_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.LONGITUDE_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObjectUtils.toDimension;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifier;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifiers;
@@ -110,24 +110,23 @@ import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.constant.ConstantService;
+import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
-import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementOperandService;
-import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
-import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
@@ -177,16 +176,7 @@ public class DefaultAnalyticsService
     private IdentifiableObjectManager idObjectManager;
     
     @Autowired
-    private DataElementService dataElementService;
-
-    @Autowired
-    private DataElementCategoryService categoryService;
-
-    @Autowired
     private OrganisationUnitService organisationUnitService;
-
-    @Autowired
-    private OrganisationUnitGroupService organisationUnitGroupService;
 
     @Autowired
     private ExpressionService expressionService;
@@ -915,7 +905,7 @@ public class DefaultAnalyticsService
                 {
                     String groupUid = DimensionalObjectUtils.getUidFromGroupParam( uid );
                     
-                    DataElementGroup group = dataElementService.getDataElementGroup( groupUid );
+                    DataElementGroup group = idObjectManager.get( DataElementGroup.class, groupUid );
                     
                     if ( group != null )
                     {
@@ -1087,7 +1077,7 @@ public class DefaultAnalyticsService
                 {
                     String uid = DimensionalObjectUtils.getUidFromGroupParam( ou );
 
-                    OrganisationUnitGroup group = organisationUnitGroupService.getOrganisationUnitGroup( uid );
+                    OrganisationUnitGroup group = idObjectManager.get( OrganisationUnitGroup.class, uid );
 
                     if ( group != null )
                     {
@@ -1160,44 +1150,44 @@ public class DefaultAnalyticsService
             return ListUtils.getList( object );
         }
 
-        OrganisationUnitGroupSet ougs = organisationUnitGroupService.getOrganisationUnitGroupSet( dimension );
+        OrganisationUnitGroupSet ougs = idObjectManager.get( OrganisationUnitGroupSet.class, dimension );
 
         if ( ougs != null && ougs.isDataDimension() )
         {
-            List<NameableObject> ous = !allItems ? asList( organisationUnitGroupService.getOrganisationUnitGroupsByUid( items ) ) : ougs.getItems();
+            List<NameableObject> ous = !allItems ? asList( idObjectManager.getByUidOrdered( OrganisationUnitGroup.class, items ) ) : ougs.getItems();
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.ORGANISATIONUNIT_GROUPSET, null, ougs.getDisplayName(), ous );
 
             return ListUtils.getList( object );
         }
 
-        DataElementGroupSet degs = dataElementService.getDataElementGroupSet( dimension );
+        DataElementGroupSet degs = idObjectManager.get( DataElementGroupSet.class, dimension );
 
         if ( degs != null && degs.isDataDimension() )
         {
-            List<NameableObject> des = !allItems ? asList( dataElementService.getDataElementGroupsByUid( items ) ) : degs.getItems();
+            List<NameableObject> des = !allItems ? asList( idObjectManager.getByUidOrdered( DataElementGroup.class, items ) ) : degs.getItems();
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.DATAELEMENT_GROUPSET, null, degs.getDisplayName(), des );
 
             return ListUtils.getList( object );
         }
 
-        CategoryOptionGroupSet cogs = categoryService.getCategoryOptionGroupSet( dimension );
+        CategoryOptionGroupSet cogs = idObjectManager.get( CategoryOptionGroupSet.class, dimension );
 
         if ( cogs != null && cogs.isDataDimension() )
         {
-            List<NameableObject> cogz = !allItems ? asList( categoryService.getCategoryOptionGroupsByUid( items ) ) : cogs.getItems();
+            List<NameableObject> cogz = !allItems ? asList( idObjectManager.getByUidOrdered( CategoryOptionGroup.class, items ) ) : cogs.getItems();
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORYOPTION_GROUPSET, null, cogs.getDisplayName(), cogz );
 
             return ListUtils.getList( object );
         }
 
-        DataElementCategory dec = categoryService.getDataElementCategory( dimension );
+        DataElementCategory dec = idObjectManager.get( DataElementCategory.class, dimension );
 
         if ( dec != null && dec.isDataDimension() )
         {
-            List<NameableObject> decos = !allItems ? asList( categoryService.getDataElementCategoryOptionsByUid( items ) ) : dec.getItems();
+            List<NameableObject> decos = !allItems ? asList( idObjectManager.getByUidOrdered( DataElementCategoryOption.class, items ) ) : dec.getItems();
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORY, null, dec.getDisplayName(), decos );
 
