@@ -28,13 +28,11 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
-
 import org.hisp.dhis.common.DeleteNotAllowedException;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MaintenanceModeException;
 import org.hisp.dhis.dataapproval.exceptions.DataApprovalException;
+import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.webapi.controller.exception.NotAuthenticatedException;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -42,11 +40,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import java.beans.PropertyEditorSupport;
+import java.util.Date;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -54,6 +59,19 @@ import org.springframework.web.client.HttpStatusCodeException;
 @ControllerAdvice
 public class CrudControllerAdvice
 {
+    @InitBinder
+    protected void initBinder( WebDataBinder binder )
+    {
+        binder.registerCustomEditor( Date.class, new PropertyEditorSupport()
+        {
+            @Override
+            public void setAsText( String value ) throws IllegalArgumentException
+            {
+                setValue( DateUtils.parseDate( value ) );
+            }
+        } );
+    }
+
     @ExceptionHandler
     public ResponseEntity<String> notAuthenticatedExceptionHandler( NotAuthenticatedException ex )
     {
@@ -95,25 +113,25 @@ public class CrudControllerAdvice
     {
         return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.CONFLICT );
     }
-    
+
     @ExceptionHandler( MaintenanceModeException.class )
     public ResponseEntity<String> maintenanceModeExceptionHandler( MaintenanceModeException ex )
     {
         return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.SERVICE_UNAVAILABLE );
     }
-    
+
     @ExceptionHandler( DataApprovalException.class )
     public void dataApprovalExceptionHandler( DataApprovalException ex, HttpServletResponse response )
     {
         ContextUtils.conflictResponse( response, ex.getClass().getName() ); //TODO fix message
     }
-    
+
     private HttpHeaders getHeaders()
     {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.TEXT_PLAIN );
         headers.setCacheControl( "max-age=0, no-cache, no-store" );
-        return headers;        
+        return headers;
     }
 }
 
