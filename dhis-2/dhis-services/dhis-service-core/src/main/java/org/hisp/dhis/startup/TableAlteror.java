@@ -268,6 +268,10 @@ public class TableAlteror
         executeSql( "ALTER TABLE program ALTER description TYPE text" );
         executeSql( "ALTER TABLE trackedentityattribute ALTER description TYPE text" );
         executeSql( "ALTER TABLE trackedentityattributegroup ALTER description TYPE text" );
+        executeSql( "ALTER TABLE programrule ALTER condition TYPE text" );
+        executeSql( "ALTER TABLE programruleaction ALTER content TYPE text" );
+        executeSql( "ALTER TABLE programruleaction ALTER data TYPE text" );
+        
 
         executeSql( "ALTER TABLE minmaxdataelement RENAME minvalue TO minimumvalue" );
         executeSql( "ALTER TABLE minmaxdataelement RENAME maxvalue TO maximumvalue" );
@@ -413,7 +417,6 @@ public class TableAlteror
         executeSql( "ALTER TABLE validationrulegroup DROP COLUMN uuid" );
 
         // replace null with false for boolean fields
-
         executeSql( "update dataset set fieldcombinationrequired = false where fieldcombinationrequired is null" );
         executeSql( "update chart set hidelegend = false where hidelegend is null" );
         executeSql( "update chart set regression = false where regression is null" );
@@ -742,7 +745,7 @@ public class TableAlteror
         executeSql( "ALTER TABLE dataelementgroupset ALTER COLUMN datadimension SET NOT NULL" );
         executeSql( "UPDATE orgunitgroupset SET datadimension=true WHERE datadimension IS NULL" );
         executeSql( "ALTER TABLE orgunitgroupset ALTER COLUMN datadimension SET NOT NULL" );
-
+        
         // set attribute defaults
         executeSql( "UPDATE attribute SET dataelementattribute=false WHERE dataelementattribute IS NULL" );
         executeSql( "UPDATE attribute SET dataelementgroupattribute=false WHERE dataelementgroupattribute IS NULL" );
@@ -765,6 +768,9 @@ public class TableAlteror
         // update attribute.code, set to null if code=''
         executeSql( "UPDATE attribute SET code=NULL WHERE code=''" );
 
+        //update programruleaction:
+        executeSql( "ALTER TABLE programruleaction DROP COLUMN name" );
+        
         // data approval
         executeSql( "UPDATE dataapproval SET accepted=false WHERE accepted IS NULL" );
         executeSql( "ALTER TABLE dataapproval ALTER COLUMN accepted SET NOT NULL" );

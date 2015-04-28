@@ -16,8 +16,6 @@
 
     &identifiableProperties;
 
-    <property name="name" column="name" not-null="true" length="230" />
-
 	<many-to-one name="programRule" class="org.hisp.dhis.programrule.ProgramRule" 
 		column="programruleid" foreign-key="fk_programruleaction_programrule" />
 
@@ -33,8 +31,8 @@
 
     <property name="location" />
    
-    <property name="content" />
+    <property name="content" type="text" />
     
-    <property name="data" />
+    <property name="data" type="text" />
   </class>
 </hibernate-mapping>
