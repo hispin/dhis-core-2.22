@@ -53,7 +53,7 @@ public final class SchemaUtils
             property.setItemPropertyType( getPropertyType( property.getItemKlass() ) );
         }
 
-        if ( property.getGetterMethod() != null )
+        if ( property.isWritable() )
         {
             if ( property.getGetterMethod().isAnnotationPresent( org.hisp.dhis.schema.annotation.Property.class ) )
             {
@@ -64,16 +64,44 @@ public final class SchemaUtils
             {
                 PropertyRange propertyRange = property.getGetterMethod().getAnnotation( PropertyRange.class );
 
-                if ( propertyRange.max() <= property.getMax() )
+                if ( property.getMax() == null || propertyRange.max() <= property.getMax() )
                 {
                     property.setMax( propertyRange.max() );
                 }
 
-                if ( propertyRange.min() >= property.getMin() && propertyRange.min() <= property.getMax() )
+                if ( property.getMin() == null || (propertyRange.min() >= property.getMin() && propertyRange.min() <= property.getMax()) )
                 {
                     property.setMin( propertyRange.min() > property.getMax() ? property.getMax() : propertyRange.min() );
                 }
             }
+
+            if ( property.getMin() == null )
+            {
+                property.setMin( 0 );
+            }
+
+            if ( property.getMax() == null )
+            {
+                property.setMax( Integer.MAX_VALUE );
+            }
+
+            switch ( property.getPropertyType() )
+            {
+                // min-max for these property types make no sense, so just clear it out
+                case REFERENCE:
+                case BOOLEAN:
+                case DATE:
+                case CONSTANT:
+                {
+                    property.setMin( null );
+                    property.setMax( null );
+                }
+            }
+        }
+        else
+        {
+            property.setMin( null );
+            property.setMax( null );
         }
     }
 
