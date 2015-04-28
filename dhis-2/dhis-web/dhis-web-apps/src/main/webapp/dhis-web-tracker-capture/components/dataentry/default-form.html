@@ -37,7 +37,7 @@
                             <label>                                        
                                 <input type="radio"
                                     ng-class='getInputNotifcationClass(prStDe.dataElement.id,true)'
-                                    name={{currentEvent[prStDe.dataElement.id]}}
+                                    name={{prStDe.dataElement.id}}
                                     ng-required={{prStDe.compulsory}} 
                                     ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
                                     ng-model="currentEvent[prStDe.dataElement.id]"
@@ -48,7 +48,7 @@
                                 <label>
                                     <input type="radio"
                                         ng-class='getInputNotifcationClass(prStDe.dataElement.id,true)'
-                                        name={{currentEvent[prStDe.dataElement.id]}}
+                                        name={{prStDe.dataElement.id}}
                                         ng-required={{prStDe.compulsory}} 
                                         ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
                                         ng-model="currentEvent[prStDe.dataElement.id]"
