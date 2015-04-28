@@ -2,7 +2,7 @@
 var d2Services = angular.module('d2Services', ['ngResource'])
 
 /* Factory for loading translation strings */
-.factory('i18nLoader', function ($q, $http, SessionStorageService, DialogService) {
+.factory('i18nLoader', function ($q, $http, SessionStorageService) {
  
     var getTranslationStrings = function(locale){
         var defaultUrl = 'i18n/i18n_app.properties';
@@ -19,13 +19,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         var promise = $http.get(url).then(function(response){
             tx= {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
             return tx;
-        }, function(){
-            var dialogOptions = {
-                headerText: 'missing_translation_file',
-                bodyText: 'missing_translation_using_default'
-            };
-
-            DialogService.showDialog({}, dialogOptions);
+        }, function(){            
             var p = $http.get(defaultUrl).then(function(response){
                 tx= {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
                 return tx;
