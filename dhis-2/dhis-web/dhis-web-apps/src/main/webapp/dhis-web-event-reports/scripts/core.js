@@ -1353,7 +1353,7 @@ Ext.onReady( function() {
 
                 // collapse data dimensions?
                 (function() {
-                    var keys = xLayout.collapseDataDimensions ? ['dy', 'pe', 'ou'] : ['dy'],
+                    var keys = xLayout.collapseDataDimensions ? ['dy', 'pe', 'ou'].concat(Ext.Array.pluck(init.dimensions, 'id')) : ['dy'],
                         dimensionsToRemove = [];
 
                     // find dimensions to remove
