@@ -1180,6 +1180,7 @@ public abstract class DhisConvenienceTest
         ProgramRule programRule = new ProgramRule();
         programRule.setName( "ProgramRule" + uniqueCharacter );
         programRule.setProgram( parentProgram );
+        programRule.setCondition("true");
     
         return programRule;
     }
