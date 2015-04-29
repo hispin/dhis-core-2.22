@@ -28,14 +28,20 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
+import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.schema.SchemaValidator;
 import org.hisp.dhis.dxf2.schema.ValidationViolation;
 import org.hisp.dhis.dxf2.schema.ValidationViolations;
+import org.hisp.dhis.node.NodeUtils;
+import org.hisp.dhis.node.types.CollectionNode;
+import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.schema.Schemas;
+import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,6 +56,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -71,24 +78,51 @@ public class SchemaController
     @Autowired
     private LinkService linkService;
 
+    @Autowired
+    private FieldFilterService fieldFilterService;
+
+    @Autowired
+    protected ContextService contextService;
+
     @RequestMapping
-    public @ResponseBody Schemas getSchemas()
+    public @ResponseBody RootNode getSchemas()
     {
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+
+        if ( fields.isEmpty() )
+        {
+            fields.add( "*,properties[*,constants[*]]" );
+        }
+
         Schemas schemas = new Schemas( schemaService.getSortedSchemas() );
         linkService.generateSchemaLinks( schemas.getSchemas() );
 
-        return schemas;
+        RootNode rootNode = NodeUtils.createRootNode( "schemas" );
+        CollectionNode collectionNode = fieldFilterService.filter( Schema.class, schemas.getSchemas(), fields );
+        collectionNode.setWrapping( false );
+        rootNode.addChild( collectionNode );
+
+        return rootNode;
     }
 
     @RequestMapping( value = "/{type}", method = RequestMethod.GET )
-    public @ResponseBody Schema getSchema( @PathVariable String type )
+    public @ResponseBody RootNode getSchema( @PathVariable String type )
     {
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+
+        if ( fields.isEmpty() )
+        {
+            fields.add( "*,properties[*,constants[*]]" );
+        }
+
         Schema schema = getSchemaFromType( type );
 
         if ( schema != null )
         {
             linkService.generateSchemaLinks( schema );
-            return schema;
+
+            CollectionNode collectionNode = fieldFilterService.filter( Schema.class, Arrays.asList( schema ), fields );
+            return NodeUtils.createRootNode( collectionNode.getChildren().get( 0 ) );
         }
 
         throw new HttpClientErrorException( HttpStatus.NOT_FOUND, "Type " + type + " does not exist." );
