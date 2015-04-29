@@ -233,6 +233,11 @@ public class Property implements Ordered, Klass
     private String href;
 
     /**
+     * Points to relative Web-API endpoint (if exposed).
+     */
+    private String relativeApiEndpoint;
+
+    /**
      * Used by LinkService to link to the API endpoint containing this type.
      */
     private String apiEndpoint;
@@ -659,6 +664,18 @@ public class Property implements Ordered, Klass
     public void setHref( String href )
     {
         this.href = href;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getRelativeApiEndpoint()
+    {
+        return relativeApiEndpoint;
+    }
+
+    public void setRelativeApiEndpoint( String relativeApiEndpoint )
+    {
+        this.relativeApiEndpoint = relativeApiEndpoint;
     }
 
     @JsonProperty

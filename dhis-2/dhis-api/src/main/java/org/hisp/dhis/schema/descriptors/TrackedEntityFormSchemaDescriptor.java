@@ -52,7 +52,7 @@ public class TrackedEntityFormSchemaDescriptor implements SchemaDescriptor
     public Schema getSchema()
     {
         Schema schema = new Schema( TrackedEntityForm.class, SINGULAR, PLURAL );
-        schema.setApiEndpoint( API_ENDPOINT );
+        schema.setRelativeApiEndpoint( API_ENDPOINT );
         schema.setOrder( 1490 );
         schema.setMetadata( false );
 
