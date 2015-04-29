@@ -48,15 +48,31 @@ public class ExpressionUtils
         JEXL.setSilent( false );
     }
     
+    /**
+     * Evaluates the given expression. The given variables will be substituted 
+     * in the expression.
+     * 
+     * @param expression the expression.
+     * @param vars the variables, can be null.
+     * @return the result of the evaluation.
+     */
     public static Object evaluate( String expression, Map<String, Object> vars )
     {
         Expression exp = JEXL.createExpression( expression );
         
-        JexlContext context = vars != null ? new MapContext( vars ) : new MapContext( vars );
+        JexlContext context = vars != null ? new MapContext( vars ) : new MapContext();
                 
         return exp.evaluate( context );
     }
-    
+
+    /**
+     * Evaluates the given expression to true or false. The given variables will 
+     * be substituted in the expression.
+     * 
+     * @param expression the expression.
+     * @param vars the variables, can be null.
+     * @return true or false.
+     */
     public static boolean isTrue( String expression, Map<String, Object> vars )
     {
         Boolean result = (Boolean) evaluate( expression, vars );
