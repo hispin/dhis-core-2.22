@@ -39,6 +39,15 @@ import org.hisp.dhis.node.types.SimpleNode;
  */
 public final class NodeUtils
 {
+    public static RootNode createRootNode( String name )
+    {
+        RootNode rootNode = new RootNode( name );
+        rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
+        rootNode.setNamespace( DxfNamespaces.DXF_2_0 );
+
+        return rootNode;
+    }
+
     public static RootNode createRootNode( Node node )
     {
         RootNode rootNode = new RootNode( node );

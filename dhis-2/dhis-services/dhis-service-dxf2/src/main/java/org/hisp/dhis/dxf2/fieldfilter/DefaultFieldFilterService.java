@@ -239,10 +239,13 @@ public class DefaultFieldFilterService implements FieldFilterService
                     }
                     else
                     {
-                        for ( Object collectionObject : collection )
+                        if ( collection != null )
                         {
-                            SimpleNode simpleNode = child.addChild( new SimpleNode( property.getName(), collectionObject ) );
-                            simpleNode.setProperty( property );
+                            for ( Object collectionObject : collection )
+                            {
+                                SimpleNode simpleNode = child.addChild( new SimpleNode( property.getName(), collectionObject ) );
+                                simpleNode.setProperty( property );
+                            }
                         }
                     }
                 }
