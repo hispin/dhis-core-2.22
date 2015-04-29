@@ -266,7 +266,7 @@ public class DefaultDataApprovalLevelService
         {
             Set<Integer> userOrgUnitLevels = new HashSet<>();
 
-            int lowestNumberOrgUnitLevel = 99999999;
+            int lowestNumberOrgUnitLevel = APPROVAL_LEVEL_UNAPPROVED;
 
             for ( OrganisationUnit orgUnit : user.getOrganisationUnits() )
             {
