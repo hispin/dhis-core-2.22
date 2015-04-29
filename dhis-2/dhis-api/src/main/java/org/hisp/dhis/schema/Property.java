@@ -233,7 +233,7 @@ public class Property implements Ordered, Klass
     private String href;
 
     /**
-     * Used by linkService to link to the API endpoint containing this type.
+     * Used by LinkService to link to the API endpoint containing this type.
      */
     private String apiEndpoint;
 
