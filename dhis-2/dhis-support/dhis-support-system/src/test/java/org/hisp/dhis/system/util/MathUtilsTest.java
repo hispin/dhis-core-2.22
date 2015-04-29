@@ -52,7 +52,7 @@ public class MathUtilsTest
     private static final double DELTA = 0.01;
     
     @Test
-    public void testExpressionIsTrue()
+    public void testExpressionIsTrueLeftRight()
     {
         assertFalse( expressionIsTrue( 20.0, equal_to, 10.0 ) );
         assertTrue( expressionIsTrue( 20.0, not_equal_to, 10.0 ) );
@@ -61,6 +61,18 @@ public class MathUtilsTest
         assertFalse( expressionIsTrue( 30.0, less_than, 15.0 ) );
         assertTrue( expressionIsTrue( 40.0, less_than_or_equal_to, 50.0 ) );
         assertFalse( expressionIsTrue( 0.0, greater_than_or_equal_to, 20.0 ) );
+    }
+
+    @Test
+    public void testExpressionIsTrue()
+    {
+        assertFalse( expressionIsTrue( "20.1 < 10.0" ) );
+        assertFalse( expressionIsTrue( "1 == 0" ) );
+        assertFalse( expressionIsTrue( "5 > 6" ) );
+
+        assertTrue( expressionIsTrue( "20.1 > 10.0" ) );
+        assertTrue( expressionIsTrue( "2 == 2" ) );
+        assertTrue( expressionIsTrue( "5 < 6" ) );
     }
     
     @Test
