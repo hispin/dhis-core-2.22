@@ -52,7 +52,7 @@ public class ReportTableSchemaDescriptor implements SchemaDescriptor
     public Schema getSchema()
     {
         Schema schema = new Schema( ReportTable.class, SINGULAR, PLURAL );
-        schema.setApiEndpoint( API_ENDPOINT );
+        schema.setRelativeApiEndpoint( API_ENDPOINT );
         schema.setShareable( true );
         schema.setOrder( 1340 );
 

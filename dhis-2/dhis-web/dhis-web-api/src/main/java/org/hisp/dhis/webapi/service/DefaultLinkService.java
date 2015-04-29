@@ -74,7 +74,7 @@ public class DefaultLinkService implements LinkService
             return;
         }
 
-        String endpoint = contextService.getServletPath() + schema.getApiEndpoint();
+        String endpoint = contextService.getServletPath() + schema.getRelativeApiEndpoint();
 
         if ( pager.getPage() < pager.getPageCount() )
         {
@@ -145,6 +145,11 @@ public class DefaultLinkService implements LinkService
     {
         schema.setHref( hrefBase + "/schemas/" + schema.getSingular() );
 
+        if ( schema.haveApiEndpoint() )
+        {
+            schema.setApiEndpoint( hrefBase + schema.getRelativeApiEndpoint() );
+        }
+
         for ( Property property : schema.getProperties() )
         {
             if ( PropertyType.REFERENCE == property.getPropertyType() )
@@ -154,7 +159,8 @@ public class DefaultLinkService implements LinkService
 
                 if ( klassSchema.haveApiEndpoint() )
                 {
-                    property.setApiEndpoint( hrefBase + klassSchema.getApiEndpoint() );
+                    property.setRelativeApiEndpoint( klassSchema.getRelativeApiEndpoint() );
+                    property.setApiEndpoint( hrefBase + klassSchema.getRelativeApiEndpoint() );
                 }
             }
             else if ( PropertyType.REFERENCE == property.getItemPropertyType() )
@@ -164,7 +170,8 @@ public class DefaultLinkService implements LinkService
 
                 if ( klassSchema.haveApiEndpoint() )
                 {
-                    property.setApiEndpoint( hrefBase + klassSchema.getApiEndpoint() );
+                    property.setRelativeApiEndpoint( klassSchema.getRelativeApiEndpoint() );
+                    property.setApiEndpoint( hrefBase + klassSchema.getRelativeApiEndpoint() );
                 }
             }
 
@@ -265,7 +272,7 @@ public class DefaultLinkService implements LinkService
             }
 
             Method setHref = object.getClass().getMethod( "setHref", String.class );
-            setHref.invoke( object, hrefBase + schema.getApiEndpoint() + "/" + value );
+            setHref.invoke( object, hrefBase + schema.getRelativeApiEndpoint() + "/" + value );
         }
         catch ( NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored )
         {

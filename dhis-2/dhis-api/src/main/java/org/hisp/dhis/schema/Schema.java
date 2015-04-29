@@ -109,7 +109,12 @@ public class Schema implements Ordered, Klass
     private boolean shareable;
 
     /**
-     * Points to Web-API endpoint (if exposed).
+     * Points to relative Web-API endpoint (if exposed).
+     */
+    private String relativeApiEndpoint;
+
+    /**
+     * Used by LinkService to link to the API endpoint containing this type.
      */
     private String apiEndpoint;
 
@@ -268,6 +273,18 @@ public class Schema implements Ordered, Klass
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getRelativeApiEndpoint()
+    {
+        return relativeApiEndpoint;
+    }
+
+    public void setRelativeApiEndpoint( String relativeApiEndpoint )
+    {
+        this.relativeApiEndpoint = relativeApiEndpoint;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getApiEndpoint()
     {
         return apiEndpoint;
@@ -280,7 +297,7 @@ public class Schema implements Ordered, Klass
 
     public boolean haveApiEndpoint()
     {
-        return getApiEndpoint() != null;
+        return getRelativeApiEndpoint() != null || getApiEndpoint() != null;
     }
 
     @JsonProperty
@@ -450,7 +467,7 @@ public class Schema implements Ordered, Klass
     public int hashCode()
     {
         return Objects.hashCode( klass, identifiableObject, nameableObject, singular, plural, namespace, name,
-            collectionName, shareable, apiEndpoint, metadata, authorities, propertyMap, order, authorityMap );
+            collectionName, shareable, relativeApiEndpoint, metadata, authorities, propertyMap, order, authorityMap );
     }
 
     @Override
@@ -471,7 +488,7 @@ public class Schema implements Ordered, Klass
             && Objects.equal( this.nameableObject, other.nameableObject ) && Objects.equal( this.singular, other.singular )
             && Objects.equal( this.plural, other.plural ) && Objects.equal( this.namespace, other.namespace )
             && Objects.equal( this.name, other.name ) && Objects.equal( this.collectionName, other.collectionName )
-            && Objects.equal( this.shareable, other.shareable ) && Objects.equal( this.apiEndpoint, other.apiEndpoint )
+            && Objects.equal( this.shareable, other.shareable ) && Objects.equal( this.relativeApiEndpoint, other.relativeApiEndpoint )
             && Objects.equal( this.metadata, other.metadata ) && Objects.equal( this.authorities, other.authorities )
             && Objects.equal( this.propertyMap, other.propertyMap ) && Objects.equal( this.order, other.order )
             && Objects.equal( this.authorityMap, other.authorityMap );
@@ -490,7 +507,7 @@ public class Schema implements Ordered, Klass
             .add( "name", name )
             .add( "collectionName", collectionName )
             .add( "shareable", shareable )
-            .add( "apiEndpoint", apiEndpoint )
+            .add( "relativeApiEndpoint", relativeApiEndpoint )
             .add( "metadata", metadata )
             .add( "authorities", authorities )
             .add( "propertyMap", propertyMap )
