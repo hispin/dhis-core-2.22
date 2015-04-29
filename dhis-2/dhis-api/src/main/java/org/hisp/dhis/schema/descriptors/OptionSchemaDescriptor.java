@@ -52,7 +52,7 @@ public class OptionSchemaDescriptor implements SchemaDescriptor
     public Schema getSchema()
     {
         Schema schema = new Schema( Option.class, SINGULAR, PLURAL );
-        schema.setApiEndpoint( API_ENDPOINT );
+        schema.setRelativeApiEndpoint( API_ENDPOINT );
         schema.setShareable( false );
         schema.setOrder( 1040 );
 

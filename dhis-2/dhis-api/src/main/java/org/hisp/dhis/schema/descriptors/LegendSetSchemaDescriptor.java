@@ -49,7 +49,7 @@ public class LegendSetSchemaDescriptor implements SchemaDescriptor
     public Schema getSchema()
     {
         Schema schema = new Schema( LegendSet.class, SINGULAR, PLURAL );
-        schema.setApiEndpoint( API_ENDPOINT );
+        schema.setRelativeApiEndpoint( API_ENDPOINT );
         schema.setOrder( 1080 );
 
         return schema;

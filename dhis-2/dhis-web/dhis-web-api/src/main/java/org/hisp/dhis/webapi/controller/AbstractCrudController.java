@@ -490,7 +490,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
             if ( summary.getImportCount().getImported() == 1 && summary.getLastImported() != null )
             {
-                response.setHeader( "Location", contextService.getApiPath() + getSchema().getApiEndpoint()
+                response.setHeader( "Location", contextService.getApiPath() + getSchema().getRelativeApiEndpoint()
                     + "/" + summary.getLastImported() );
             }
         }
@@ -520,7 +520,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
             if ( summary.getImportCount().getImported() == 1 && summary.getLastImported() != null )
             {
-                response.setHeader( "Location", contextService.getApiPath() + getSchema().getApiEndpoint()
+                response.setHeader( "Location", contextService.getApiPath() + getSchema().getRelativeApiEndpoint()
                     + "/" + summary.getLastImported() );
             }
         }

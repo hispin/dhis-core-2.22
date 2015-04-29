@@ -52,7 +52,7 @@ public class TrackedEntityAttributeSchemaDescriptor implements SchemaDescriptor
     public Schema getSchema()
     {
         Schema schema = new Schema( TrackedEntityAttribute.class, SINGULAR, PLURAL );
-        schema.setApiEndpoint( API_ENDPOINT );
+        schema.setRelativeApiEndpoint( API_ENDPOINT );
         schema.setShareable( true );
         schema.setOrder( 1490 );
 

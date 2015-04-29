@@ -52,7 +52,7 @@ public class TrackedEntityAttributeGroupSchemaDescriptor implements SchemaDescri
     public Schema getSchema()
     {
         Schema schema = new Schema( TrackedEntityAttributeGroup.class, SINGULAR, PLURAL );
-        schema.setApiEndpoint( API_ENDPOINT );
+        schema.setRelativeApiEndpoint( API_ENDPOINT );
         schema.setOrder( 1500 );
 
         schema.getAuthorities().add( new Authority( AuthorityType.CREATE,
