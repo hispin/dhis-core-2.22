@@ -360,6 +360,8 @@ Ext.onReady( function() {
 
                 // displayProperty: string ('name') // 'name', 'shortname', null
 
+                // userOrganisationUnit: string
+
 				getValidatedDimensionArray = function(dimensionArray) {
 					var dimensionArray = Ext.clone(dimensionArray);
 
@@ -529,6 +531,11 @@ Ext.onReady( function() {
                         layout.displayProperty = config.displayProperty;
                     }
 
+                    if (Ext.isString(config.userOrganisationUnit)) {
+                        layout.userOrganisationUnit = config.userOrganisationUnit;
+                    }
+
+                    // validate
 					if (!validateSpecialCases()) {
 						return;
 					}
@@ -2008,6 +2015,11 @@ Ext.onReady( function() {
 
                 // display property
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
+
+                // user organisation unit
+                if (Ext.isString(xLayout.userOrganisationUnit)) {
+					paramString += '&userOrganisationUnit=' + xLayout.userOrganisationUnit;
+				}
 
 				return paramString;
 			};
