@@ -114,6 +114,11 @@ public class Schema implements Ordered, Klass
     private String apiEndpoint;
 
     /**
+     * Used by LinkService to link to the Schema describing this type (if reference).
+     */
+    private String href;
+
+    /**
      * Is this class considered metadata, this is mainly used for our metadata importer/exporter.
      */
     private boolean metadata = true;
@@ -276,6 +281,18 @@ public class Schema implements Ordered, Klass
     public boolean haveApiEndpoint()
     {
         return getApiEndpoint() != null;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getHref()
+    {
+        return href;
+    }
+
+    public void setHref( String href )
+    {
+        this.href = href;
     }
 
     @JsonProperty

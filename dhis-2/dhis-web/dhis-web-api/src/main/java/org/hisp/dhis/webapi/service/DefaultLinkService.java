@@ -143,6 +143,8 @@ public class DefaultLinkService implements LinkService
     @Override
     public void generateSchemaLinks( Schema schema, String hrefBase )
     {
+        schema.setHref( hrefBase + "/schemas/" + schema.getSingular() );
+
         for ( Property property : schema.getProperties() )
         {
             if ( PropertyType.REFERENCE == property.getPropertyType() )
