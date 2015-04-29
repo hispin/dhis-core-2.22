@@ -188,7 +188,7 @@ function addProgramRuleVariable()
 
 function addVariableButton( name, deId )
 {
-	return "<input type='button' deId='" + deId + "' realValue='" + name + "' value='#{" + name + "}' style='width:150px;' onclick='insertVariable(this)'/>";
+	return "<input type='button' deId='" + deId + "' realValue='" + name + "' value='#{" + name + "}' style='width:100%;' onclick='insertVariable(this)'/>";
 }
 
 function insertVariable(_this)
