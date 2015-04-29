@@ -81,6 +81,7 @@ public class StdDevOutlierAnalysisService
         loop : for ( DataElement dataElement : dataElements )
         {
             // TODO filter periods with data element period type
+            // TODO use _orgunitstructure to find org units instead of in clause
             
             if ( dataElement.getType().equals( DataElement.VALUE_TYPE_INT ) )
             {
