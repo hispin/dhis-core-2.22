@@ -2585,7 +2585,10 @@ Ext.onReady( function() {
                     // update viewport
                     ns.app.centerRegion.update();
                     ns.app.centerRegion.removeAll();
-                    ns.app.centerRegion.add(ns.app.chart);
+                    ns.app.centerRegion.add(response.rows.length ? ns.app.chart : {
+                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555',
+                        html: NS.i18n.no_values_found_for_current_selection + '.'
+                    });
 
                     // after render
                     if (NS.isSessionStorage) {
