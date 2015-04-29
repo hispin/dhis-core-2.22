@@ -48,6 +48,12 @@ public class CollectionNode extends AbstractNode
         super( name, NodeType.COLLECTION );
     }
 
+    public CollectionNode( String name, boolean wrapping )
+    {
+        super( name, NodeType.COLLECTION );
+        this.wrapping = wrapping;
+    }
+
     public boolean isWrapping()
     {
         return wrapping;
