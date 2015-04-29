@@ -141,8 +141,8 @@ public class DefaultDataApprovalService
                     da.setDataApprovalLevel( status.getDataApproval().getDataApprovalLevel() );
                 }
             }
-
-            if ( status != null && status.getState().isApproved() &&
+            
+            if ( status != null && status.getState().isApproved() && da.getDataApprovalLevel() != null &&
                 da.getDataApprovalLevel().getLevel() >= status.getDataApprovalLevel().getLevel() )
             {
                 continue; // Already approved at or above this level
@@ -152,6 +152,15 @@ public class DefaultDataApprovalService
             {
                 log.warn( "approveData: data may not be approved, state " +
                     ( status == null ? "(null)" : status.getState().name() ) + " " + da );
+
+                throw new DataMayNotBeApprovedException();
+            }
+
+            if ( organisationUnitService.getLevelOfOrganisationUnit( da.getOrganisationUnit() ) != da.getDataApprovalLevel().getOrgUnitLevel() )
+            {
+                log.warn( "approveData: org unit " + da.getOrganisationUnit().getUid() + " '" + da.getOrganisationUnit().getName() +
+                    "' has wrong org unit level " + organisationUnitService.getLevelOfOrganisationUnit( da.getOrganisationUnit() ) +
+                    " for approval level " + da.getDataApprovalLevel().getLevel());
 
                 throw new DataMayNotBeApprovedException();
             }
@@ -196,8 +205,8 @@ public class DefaultDataApprovalService
                 throw new DataMayNotBeUnapprovedException();
             }
 
-            if ( !status.getState().isApproved() ||
-                da.getDataApprovalLevel().getLevel() < status.getDataApprovalLevel().getLevel() )
+            if ( !status.getState().isApproved() || ( da.getDataApprovalLevel() != null &&
+                da.getDataApprovalLevel().getLevel() < status.getDataApprovalLevel().getLevel() ) )
             {
                 continue; // Already unapproved at or below this level
             }
@@ -306,7 +315,7 @@ public class DefaultDataApprovalService
                 da.setDataApprovalLevel( status.getDataApproval().getDataApprovalLevel() );
             }
 
-            if ( status == null || ( !status.getState().isAccepted() && da.getDataApprovalLevel().getLevel() == status.getDataApprovalLevel().getLevel() ) || 
+            if ( status == null || ( !status.getState().isAccepted() && da.getDataApprovalLevel() != null && da.getDataApprovalLevel().getLevel() == status.getDataApprovalLevel().getLevel() ) ||
                 da.getDataApprovalLevel().getLevel() < status.getDataApprovalLevel().getLevel() )
             {
                 continue; // Already unaccepted at or not approved up to this level

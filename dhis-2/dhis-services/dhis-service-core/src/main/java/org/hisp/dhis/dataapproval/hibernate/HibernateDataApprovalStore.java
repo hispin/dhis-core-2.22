@@ -275,21 +275,43 @@ public class HibernateDataApprovalStore
             categoryComboIds = TextUtils.getCommaDelimitedString( catComboIds );
         }
 
-        int orgUnitLevel = 1;
+        List<DataApprovalLevel> approvalLevels = dataApprovalLevelService.getAllDataApprovalLevels();
+
+        if ( CollectionUtils.isEmpty( approvalLevels ) )
+        {
+            log.warn( " No approval levels configured." );
+
+            return new ArrayList<>(); // Unapprovable.
+        }
+
+        int orgUnitLevel;
         String orgUnitJoinOn;
+        String highestApprovedOrgUnitCompare;
 
         if ( orgUnit != null )
         {
             orgUnitLevel = organisationUnitService.getLevelOfOrganisationUnit( orgUnit );
             orgUnitJoinOn = "o.organisationunitid = " + orgUnit.getId();
+            highestApprovedOrgUnitCompare = "da.organisationunitid = o.organisationunitid ";
         }
         else
         {
-            for ( DataApprovalLevel dal : dataApprovalLevelService.getAllDataApprovalLevels() )
+            highestApprovedOrgUnitCompare = "";
+            orgUnitLevel = 0;
+
+            for ( DataApprovalLevel dal : approvalLevels )
             {
-                orgUnitLevel = dal.getOrgUnitLevel(); // Get lowest (last level -> greatest number) level.
+                if ( dal.getOrgUnitLevel() != orgUnitLevel )
+                {
+                    orgUnitLevel = dal.getOrgUnitLevel(); // Remember lowest (last level -> greatest number) level.
+
+                    highestApprovedOrgUnitCompare += ( highestApprovedOrgUnitCompare.length() == 0 ? "(" : " or" )
+                        + " da.organisationunitid = o.idlevel" + orgUnitLevel;
+                }
             }
-            
+
+            highestApprovedOrgUnitCompare += ") ";
+
             orgUnitJoinOn = "o.level = " + orgUnitLevel;
         }
 
@@ -314,17 +336,15 @@ public class HibernateDataApprovalStore
 
         int orgUnitLevelAbove = 0;
 
-        List<DataApprovalLevel> approvalLevels = dataApprovalLevelService.getAllDataApprovalLevels();
-
-        if ( CollectionUtils.isEmpty( approvalLevels ) )
-        {
-            log.warn( " No approval levels configured." );
-
-            return new ArrayList<>(); // Unapprovable.
-        }
+        int highestApprovalOrgUnitLevel = 99999999;
 
         for ( DataApprovalLevel dal : approvalLevels )
         {
+            if ( dal.getOrgUnitLevel() < highestApprovalOrgUnitLevel )
+            {
+                highestApprovalOrgUnitLevel = dal.getOrgUnitLevel();
+            }
+
             if ( dal.getOrgUnitLevel() < orgUnitLevel )
             {
                 orgUnitLevelAbove = dal.getOrgUnitLevel(); // Keep getting the lowest org unit level above ours.
@@ -337,6 +357,16 @@ public class HibernateDataApprovalStore
 
             if ( dal.getOrgUnitLevel() > orgUnitLevel ) // If there is a lower (higher number) approval orgUnit level.
             {
+                String coOrgUnitConstraint = ""; // Constrain lower level orgUnit by categoryOption orgUnit(s) (if any).
+
+                if ( !isDefaultCombo )
+                {
+                    for ( int i = 1; i <= dal.getOrgUnitLevel(); i++ )
+                    {
+                        coOrgUnitConstraint += ( i == 1 ? "" : "or " ) + "( o2.level = " + i + " and ous.idlevel" + i + " = c_o.organisationunitid ) ";
+                    }
+                }
+
                 boolean acceptanceRequiredForApproval = (Boolean) systemSettingManager.getSystemSetting( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, false );
 
                 readyBelowSubquery = "not exists (select 1 from _orgunitstructure ous " +
@@ -348,14 +378,20 @@ public class HibernateDataApprovalStore
                         ( acceptanceRequiredForApproval ? "and da.accepted " : "" ) +
                     ") " +
                     "and ous.idlevel" + orgUnitLevel + " = o.organisationunitid " +
-                    "and ous.level = " + dal.getOrgUnitLevel() + ") ";
+                    "and ous.level = " + dal.getOrgUnitLevel() + " " +
+                    ( isDefaultCombo ? "" :
+                        "and ( not exists ( select 1 from categoryoption_organisationunits c_o where c_o.categoryoptionid = cocco.categoryoptionid ) " +
+                            "or exists ( select 1 from categoryoption_organisationunits c_o " +
+                            "join _orgunitstructure o2 on o2.organisationunitid = c_o.organisationunitid " +
+                            "where c_o.categoryoptionid = cocco.categoryoptionid and (" + coOrgUnitConstraint + ") ) ) " ) +
+                    ")";
                 break;
             }
         }
 
         String approvedAboveSubquery = "false"; // Not approved above if this is the highest (lowest number) approval orgUnit level.
 
-        if ( orgUnitLevelAbove > 0 )
+        if ( orgUnitLevelAbove > 0 && orgUnit != null )
         {
             approvedAboveSubquery = "exists(select 1 from dataapproval da " +
                 "join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
@@ -365,18 +401,12 @@ public class HibernateDataApprovalStore
 
         final String sql =
             "select cocco.categoryoptioncomboid, o.organisationunitid, " +
-            "(select min(coalesce(dal.level, 0)) from period p " +
+            "(select min(coalesce(dal.level + case when da.accepted then .0 else .1 end, 0)) from period p " +
                 "left join dataapproval da on da.datasetid in (" + dataSetIds + ") and da.periodid = p.periodid " +
                 "left join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
                 "where p.periodid in (" + periodIds + ") " +
-                "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and da.organisationunitid = o.organisationunitid " +
-            ") as highest_approved_level, " +
-            "(select substring(min(concat(100000 + coalesce(dal.level, 0), coalesce(da.accepted, FALSE))) from 7) from period p " +
-                "left join dataapproval da on da.datasetid in (" + dataSetIds + ") and da.periodid = p.periodid " +
-                "left join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
-                "where p.periodid in (" + periodIds + ") " +
-                "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and da.organisationunitid = o.organisationunitid " +
-            ") as accepted_at_highest_level, " +
+                "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and " + highestApprovedOrgUnitCompare +
+            ") as highest_approved, " +
             readyBelowSubquery + " as ready_below, " +
             approvedAboveSubquery + " as approved_above " +
             "from categoryoptioncombos_categoryoptions cocco " +
@@ -410,14 +440,14 @@ public class HibernateDataApprovalStore
         {
             final Integer aoc = rowSet.getInt( 1 );
             final Integer ouId = rowSet.getInt( 2 );
-            final Integer level = rowSet.getInt( 3 );
-            final String acceptedString = rowSet.getString( 4 );
-            final boolean readyBelow = rowSet.getBoolean( 5 );
-            final boolean approvedAbove = rowSet.getBoolean( 6 );
+            final Double highestApproved = rowSet.getDouble( 3 );
+            final boolean readyBelow = rowSet.getBoolean( 4 );
+            final boolean approvedAbove = rowSet.getBoolean( 5 );
 
-            final boolean accepted = ( acceptedString == null ? false : acceptedString.substring( 0, 1 ).equalsIgnoreCase( "t" ) );
+            final int level = highestApproved == null ? 0 : highestApproved.intValue();
+            final boolean accepted = ( highestApproved == level );
 
-            DataApprovalLevel statusLevel = ( level == null || level == 0 ? null : levelMap.get( level ) ); // null if not approved
+            DataApprovalLevel statusLevel = ( level == 0 ? null : levelMap.get( level ) ); // null if not approved
             DataApprovalLevel daLevel = ( statusLevel == null ? lowestApprovalLevelForOrgUnit : statusLevel );
 
             DataElementCategoryOptionCombo optionCombo = ( aoc == null || aoc == 0 ? null : optionComboCache.get( aoc, new Callable<DataElementCategoryOptionCombo>()
@@ -458,9 +488,9 @@ public class HibernateDataApprovalStore
                 statusList.add( new DataApprovalStatus( state, da, statusLevel, null ) );
     
                 log.debug( "Get approval result: level " + level + " dataApprovalLevel " + ( daLevel != null ? daLevel.getLevel() : "[none]" )
-                        + " approved " + ( statusLevel != null )
-                        + " readyBelow " + readyBelow + " approvedAbove " + approvedAbove
-                        + " accepted " + accepted + " state " + ( state != null ? state.name() : "[none]" ) + " " + da );
+                    + " approved " + ( statusLevel != null )
+                    + " readyBelow " + readyBelow + " approvedAbove " + approvedAbove
+                    + " accepted " + accepted + " state " + ( state != null ? state.name() : "[none]" ) + " " + da );
             }
         }
 
