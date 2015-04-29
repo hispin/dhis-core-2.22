@@ -387,6 +387,8 @@ Ext.onReady( function() {
 
 				// topLimit: integer (100) //5, 10, 20, 50, 100
 
+                // userOrganisationUnit: string
+
 				getValidatedDimensionArray = function(dimensionArray) {
 					var dimensionArray = Ext.clone(dimensionArray);
 
@@ -548,6 +550,10 @@ Ext.onReady( function() {
 
                     if (Ext.isString(config.displayProperty)) {
                         layout.displayProperty = config.displayProperty;
+                    }
+
+                    if (Ext.isString(config.userOrganisationUnit)) {
+                        layout.userOrganisationUnit = config.userOrganisationUnit;
                     }
 
 					if (!validateSpecialCases()) {
@@ -2014,6 +2020,11 @@ Ext.onReady( function() {
 
                 // display property
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
+
+                // user organisation unit
+                if (Ext.isString(xLayout.userOrganisationUnit)) {
+					paramString += '&userOrganisationUnit=' + xLayout.userOrganisationUnit;
+				}
 
 				return paramString;
 			};
