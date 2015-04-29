@@ -584,6 +584,11 @@
         <version>2.4.2</version>
       </dependency>
       <dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>commons-jexl</artifactId>
+	    <version>2.1.1</version>
+      </dependency>
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.12</version>
@@ -781,6 +786,7 @@
         <artifactId>postgresql</artifactId>
         <version>9.3-1102-jdbc41</version>
       </dependency>
+      
       <!--Reporting -->
       <dependency>
         <groupId>net.sf.jasperreports</groupId>
