@@ -44,7 +44,7 @@ function selectedOrganisationUnitXML__( xml )
 			<td>
 				<div style="width:100%">	
 					<div id="selectionTreeContainer" style="display:none;">
-						#if( $hideCtrls )
+						#if( $showCtrls )
 						<div id="selectionCtrl">
 							<input type="button" value="$i18n.getString( 'select_at_level' )" onclick="selectOrganisationUnitAtLevel()" style="width:10em"/>
 							<select id="levelList" name="levelList" style="width:10em"/>

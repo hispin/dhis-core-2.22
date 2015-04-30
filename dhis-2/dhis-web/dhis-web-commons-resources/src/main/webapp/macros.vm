@@ -88,7 +88,9 @@
 </li>
 #end
 
-#macro( organisationUnitSelectionTree $cleanAll $multipleSelectionAllowed $required $hideCtrls )
+#macro( organisationUnitSelectionTree $cleanAll $multipleSelectionAllowed $required $showCtrls )
+#if( "$!showCtrls" == "" ) #set( $showCtrls = true ) #end
+
 #if( $multipleSelectionAllowed )
 	#parse( "/dhis-web-commons/oust/selectionTreeMultipleSelect.vm" )
 #else
