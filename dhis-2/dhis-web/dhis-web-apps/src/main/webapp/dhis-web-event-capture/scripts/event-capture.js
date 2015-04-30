@@ -177,7 +177,7 @@ function getUserRoles()
     var def = $.Deferred();
 
     $.ajax({
-        url: '../api/me.json?fields=id,name,userCredentials[userRoles[id]]',
+        url: '../api/me.json?fields=id,name,userCredentials[userRoles[id,authorities]]',
         type: 'GET'
     }).done(function(response) {
         SessionStorageService.set('USER_ROLES', response);

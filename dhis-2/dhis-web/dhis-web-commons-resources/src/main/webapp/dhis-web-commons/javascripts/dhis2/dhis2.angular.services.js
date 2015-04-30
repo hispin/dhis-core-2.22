@@ -69,6 +69,30 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     };
 })
 
+.service('AuthorityService', function() {
+    var getAuthorities = function(roles){
+        var authority = {};
+        if( roles && roles.userCredentials && roles.userCredentials.userRoles ){
+            angular.forEach(roles.userCredentials.userRoles, function(role){
+                angular.forEach(role.authorities, function(auth){
+                    authority[auth] = true;
+                });
+            });
+        }
+        return authority;
+    };
+    
+    return {
+        getEventCaptureAuthorities: function(roles){
+            var auth = getAuthorities(roles);
+            var authority = {};
+            authority.canDeleteEvent = auth['F_TRACKED_ENTITY_DATAVALUE_DELETE'] || auth['ALL'] ? true:false;
+            authority.canAddOrUpdateEvent = auth['F_TRACKED_ENTITY_DATAVALUE_ADD'] || auth['ALL'] ? true:false;
+            return authority;
+        }
+    };
+})
+
 /* Factory for loading external data */
 .factory('ExternalDataFactory', function($http) {
 
