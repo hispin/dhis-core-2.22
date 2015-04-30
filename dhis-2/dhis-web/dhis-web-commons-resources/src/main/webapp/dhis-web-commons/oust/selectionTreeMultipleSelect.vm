@@ -44,14 +44,18 @@ function selectedOrganisationUnitXML__( xml )
 			<td>
 				<div style="width:100%">	
 					<div id="selectionTreeContainer" style="display:none;">
-						<input type="button" value="$i18n.getString( 'select_at_level' )" onclick="selectOrganisationUnitAtLevel()" style="width:10em"/>
-						<select id="levelList" name="levelList" style="width:10em"/>
-						<input type="button" value="$i18n.getString( 'unselect_at_level' )" onclick="unSelectOrganisationUnitAtLevel()" style="width:10em"/>
-						<input type="button" value="$i18n.getString( 'unselect_all' )" onclick="unSelectAllTree()" style="width:10em"/><br>
-						<input type="button" value="$i18n.getString( 'select_in_group' )" onclick="selectOrganisationUnitByGroup()" style="width:10em">
-						<select id="groupList" name="groupList" style="width:10em"/>
-						<input type="button" value="$i18n.getString( 'unselect_in_group' )" onclick="unSelectOrganisationUnitByGroup()" style="width:10em">	
-						<input type="button" value="$i18n.getString( 'select_children' )" onclick="selectChildren()" style="width:10em"/>	
+						#if( $hideCtrls )
+						<div id="selectionCtrl">
+							<input type="button" value="$i18n.getString( 'select_at_level' )" onclick="selectOrganisationUnitAtLevel()" style="width:10em"/>
+							<select id="levelList" name="levelList" style="width:10em"/>
+							<input type="button" value="$i18n.getString( 'unselect_at_level' )" onclick="unSelectOrganisationUnitAtLevel()" style="width:10em"/>
+							<input type="button" value="$i18n.getString( 'unselect_all' )" onclick="unSelectAllTree()" style="width:10em"/><br>
+							<input type="button" value="$i18n.getString( 'select_in_group' )" onclick="selectOrganisationUnitByGroup()" style="width:10em">
+							<select id="groupList" name="groupList" style="width:10em"/>
+							<input type="button" value="$i18n.getString( 'unselect_in_group' )" onclick="unSelectOrganisationUnitByGroup()" style="width:10em">
+							<input type="button" value="$i18n.getString( 'select_children' )" onclick="selectChildren()" style="width:10em"/>
+						</div>
+						#end
 						<div id="selectionTree"></div>
 					</div>
 				</div>
