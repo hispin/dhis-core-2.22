@@ -19,7 +19,10 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         var promise = $http.get(url).then(function(response){
             tx= {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
             return tx;
-        }, function(){            
+        }, function(){
+        	
+        	setHeaderDelayMessage($translate('No translation file is found for the selected locale. Using default translation (English).'));
+        	            
             var p = $http.get(defaultUrl).then(function(response){
                 tx= {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
                 return tx;
