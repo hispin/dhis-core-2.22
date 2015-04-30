@@ -12,19 +12,20 @@
     </div>
 </div>
 
-<div class="page" id="mainPage">    
+<div class="page" id="mainPage">
     
     <div ng-if="!selectedOrgUnit">
         <img src="../images/ajax-loader-bar.gif" alt="{{'in_progress'| translate}}" ng-if="!selectedOrgUnit"/><br>
         {{'loading_metadata'| translate}}
-    </div> 
+    </div>
     
-    <!-- selection begins-->
-    <div ng-show="selectedOrgUnit">
+    <div ng-show="selectedOrgUnit && userAuthority.canAddOrUpdateEvent">
+        
         <h3>
             {{'event_capture'| translate}}
         </h3>
         
+        <!-- selection begins-->
         <table>
             <tr>
                 <td><label>{{'registering_unit'| translate}}</label></td>
@@ -60,33 +61,35 @@
                     </button>  
                 </td> 
             </tr>                       
-        </table>
-    </div>
-    <!-- selection ends -->
-    <div id="hideTypeAheadPopUp" ng-hide="true"></div>
-    <!-- event grid begins -->
-    <div ng-include="'views/eventList.html'"></div>
-    <!-- event grid ends -->
+        </table>        
+        <!-- selection ends -->
+        
+        <div id="hideTypeAheadPopUp" ng-hide="true"></div>
+        <!-- event grid begins -->
+        <div ng-include="'views/eventList.html'"></div>
+        <!-- event grid ends -->
 
-    <!-- event update in full / registration begins-->
-    <div>                
+        <!-- event update in full / registration begins-->            
         <form name="outerForm" novalidate>
             <div ng-if="editingEventInFull || eventRegistration">
                 <h3>
                     <span ng-if="editingEventInFull">{{'event_details'| translate}}</span>                       
                     <span ng-if="eventRegistration">{{'new_event'| translate}}</span>                            
-                </h3>                            
-
+                </h3>
                 <div class="bordered-div" ng-if="displayCustomForm">
                     <div ng-include="'views/ec-custom-form.html'"></div>  
                 </div>
-
                 <div class="bordered-div container-default-form" ng-if="!displayCustomForm">
                     <div ng-include="'views/defaultForm.html'"></div>                
                 </div>
-
             </div>
         </form>
+        <!-- event update / registration ends -->
+        
     </div>
-    <!-- event update / registration ends -->                
-</div>            
+    
+    <div ng-if="selectedOrgUnit && !userAuthority.canAddOrUpdateEvent">
+        <h1>{{'lacking_required_authority_to_add_update_event' | translate}}</h1>
+    </div>
+    
+</div>

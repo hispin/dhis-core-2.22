@@ -30,7 +30,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 ErrorMessageService,
                 CurrentSelection,
                 ModalService,
-                DialogService) {
+                DialogService,
+                AuthorityService) {
     //selected org unit
     $scope.selectedOrgUnit = '';
     $scope.treeLoaded = false;    
@@ -70,6 +71,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         if(angular.isObject($scope.selectedOrgUnit)){
             SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);
+            
+            $scope.userAuthority = AuthorityService.getEventCaptureAuthorities(SessionStorageService.get('USER_ROLES'));
             
             //get ouLevels
             ECStorageService.currentStore.open().done(function(){
@@ -125,13 +128,15 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.getProgramDetails = function(){        
         
         $scope.selectedProgramStage = null;
+        $scope.eventFetched = false;
         
         //Filtering
         $scope.reverse = false;
         $scope.sortHeader = {};
-        $scope.filterText = {}; 
+        $scope.filterText = {};
         
-        if( $scope.selectedProgram && 
+        if( $scope.userAuthority && $scope.userAuthority.canAddOrUpdateEvent &&
+                $scope.selectedProgram && 
                 $scope.selectedProgram.programStages && 
                 $scope.selectedProgram.programStages[0] && 
                 $scope.selectedProgram.programStages[0].id){ 
