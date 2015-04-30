@@ -1,6 +1,6 @@
-<div ng-if="selectedProgramStage && !eventRegistration && !editingEventInFull">                    
-    <img src="../images/ajax-loader-bar.gif" ng-if="!eventFetched"/>
-    <div ng-switch="dhis2Events.length">                        
+<div ng-if="selectedProgramStage && !eventRegistration && !editingEventInFull">
+    <i ng-if="!eventFetched" class="fa fa-spinner fa-spin fa-2x"></i>
+    <div ng-if="eventFetched" ng-switch="dhis2Events.length">                        
         <div ng-switch-when="undefined">
             <h4>
                 {{'empty_event_list'| translate}}
@@ -27,7 +27,7 @@
                 <ul id="contextMenuItems" class="contextMenuItems">
                     <li><a href ng-click="showEditEventInFull()"><i class="fa fa-edit"></i>&nbsp;&nbsp;{{'edit'| translate}}</a></li>
                     <li><a href ng-click="showEditEventInGrid()"><i class="fa fa-edit"></i>&nbsp;&nbsp;{{'edit_in_grid'| translate}}</a></li>
-                    <li><a href ng-click="removeEvent()"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;{{'remove'| translate}}</a></li>                                       
+                    <li ng-if="userAuthority.canDeleteEvent"><a href ng-click="removeEvent()"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;{{'remove'| translate}}</a></li>                                       
                 </ul>
             </div>
             <!-- context menu ends -->                            
