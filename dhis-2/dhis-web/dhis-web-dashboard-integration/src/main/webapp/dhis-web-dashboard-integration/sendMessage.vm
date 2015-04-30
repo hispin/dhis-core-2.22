@@ -43,7 +43,7 @@ jQuery(function() {
 <tr>
 <td style="width:80px">$i18n.getString( "to_org_unit" )</td>
 <td>
-#organisationUnitSelectionTree( true true false true )
+#organisationUnitSelectionTree( true true false false )
 </td>
 </tr>
 #else
