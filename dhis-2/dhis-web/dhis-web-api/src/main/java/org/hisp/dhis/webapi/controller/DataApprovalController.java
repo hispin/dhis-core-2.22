@@ -223,13 +223,10 @@ public class DataApprovalController
         {
             for ( OrganisationUnit organisationUnit : organisationUnits )
             {
-                if ( organisationUnit.getDataSets().contains( dataSet ) )
+                for ( Period period : periods )
                 {
-                    for ( Period period : periods )
-                    {
-                        dataApprovalStateResponses.add(
-                            getDataApprovalStateResponse( dataSet, organisationUnit, period ) );
-                    }
+                    dataApprovalStateResponses.add(
+                        getDataApprovalStateResponse( dataSet, organisationUnit, period ) );
                 }
             }
         }
