@@ -341,7 +341,7 @@ public class JdbcEventStore
 
     private String getEventPagingQuery( EventSearchParams params )
     {
-        String sql = "order by psi.lastupdated desc ";
+        String sql = "order by psi.programstageinstanceid desc ";
 
         if ( params.isPaging() )
         {
