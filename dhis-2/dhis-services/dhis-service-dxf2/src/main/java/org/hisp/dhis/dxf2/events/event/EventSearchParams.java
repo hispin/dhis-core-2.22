@@ -75,6 +75,10 @@ public class EventSearchParams
     
     private Integer pageSize;
 
+    private boolean totalPages;
+    
+    private boolean skipPaging;
+    
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -106,7 +110,17 @@ public class EventSearchParams
     {
         return ( getPageWithDefault() - 1 ) * getPageSizeWithDefault();
     }
-    
+
+    /**
+     * Sets paging properties to default values.
+     */
+    public void setDefaultPaging()
+    {
+        this.page = DEFAULT_PAGE;
+        this.pageSize = DEFAULT_PAGE_SIZE;
+        this.skipPaging = false;
+    }
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -249,5 +263,25 @@ public class EventSearchParams
     public void setPageSize( Integer pageSize )
     {
         this.pageSize = pageSize;
+    }
+
+    public boolean isTotalPages()
+    {
+        return totalPages;
+    }
+
+    public void setTotalPages( boolean totalPages )
+    {
+        this.totalPages = totalPages;
+    }
+
+    public boolean isSkipPaging()
+    {
+        return skipPaging;
+    }
+
+    public void setSkipPaging( boolean skipPaging )
+    {
+        this.skipPaging = skipPaging;
     }
 }
