@@ -495,7 +495,7 @@ public class DefaultCaseAggregationConditionService
             DataElementCategoryOptionCombo attributeOptioncombo = categoryService.getDefaultDataElementCategoryOptionCombo();
             for( CaseAggregationCondition caseAggregationCondition : caseAggregationConditions )
             {
-                String sql = aggregationConditionStore.parseExpressionToSql(false, caseAggregationCondition, attributeOptioncombo.getId(), _orgunitIds );
+                String sql = aggregationConditionStore.parseExpressionToSql(true, caseAggregationCondition, attributeOptioncombo.getId(), _orgunitIds );
     
                 for ( Period period : periods )
                 {
