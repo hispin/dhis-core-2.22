@@ -420,11 +420,21 @@ public abstract class AbstractEventService
             }
         }
 
+        if ( !params.isPaging() && !params.isSkipPaging() )
+        {
+            params.setDefaultPaging();
+        }
+
         Events events = new Events();
         
         if ( params.isPaging() )
         {
-            int count = eventStore.getEventCount( params, organisationUnits );
+            int count = 0;
+            
+            if ( params.isTotalPages() )
+            {
+                count = eventStore.getEventCount( params, organisationUnits );
+            }
             
             Pager pager = new Pager( params.getPageWithDefault(), count, params.getPageSizeWithDefault() );
             events.setPager( pager );
@@ -440,7 +450,7 @@ public abstract class AbstractEventService
     @Override
     public EventSearchParams getFromUrl( String program, String programStage, ProgramStatus programStatus, Boolean followUp, String orgUnit,
         OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate, 
-        EventStatus status, Date lastUpdated, IdSchemes idSchemes, Integer page, Integer pageSize )
+        EventStatus status, Date lastUpdated, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging )
     {
         EventSearchParams params = new EventSearchParams();
 
@@ -486,6 +496,8 @@ public abstract class AbstractEventService
         params.setIdSchemes( idSchemes );
         params.setPage( page );
         params.setPageSize( pageSize );
+        params.setTotalPages( totalPages );
+        params.setSkipPaging( skipPaging );
         
         return params;
     }

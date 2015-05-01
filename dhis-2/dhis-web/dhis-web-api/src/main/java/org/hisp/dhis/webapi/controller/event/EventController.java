@@ -141,16 +141,18 @@ public class EventController
         @RequestParam( required = false ) Date endDate,
         @RequestParam( required = false ) EventStatus status,
         @RequestParam( required = false ) Date lastUpdated,
+        @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
-        @RequestParam( required = false ) boolean skipMeta,
+        @RequestParam( required = false ) boolean totalPages,
+        @RequestParam( required = false ) boolean skipPaging,
         @RequestParam( required = false ) String attachment,
         @RequestParam Map<String, String> parameters, IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request )
     {
         WebOptions options = new WebOptions( parameters );
 
         EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode,
-            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize );
+            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize, totalPages, skipPaging );
 
         Events events = eventService.getEvents( params );
 
@@ -194,13 +196,15 @@ public class EventController
         @RequestParam( required = false ) Date lastUpdated,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
+        @RequestParam( required = false ) boolean totalPages,
+        @RequestParam( required = false ) boolean skipPaging,
         @RequestParam( required = false ) String attachment,
         @RequestParam( required = false, defaultValue = "false" ) boolean skipHeader,
         @RequestParam Map<String, String> parameters,
         IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
         EventSearchParams params = eventService.getFromUrl( program, programStage, programStatus, followUp, orgUnit, ouMode,
-            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize );
+            trackedEntityInstance, startDate, endDate, status, lastUpdated, idSchemes, page, pageSize, totalPages, skipPaging );
 
         Events events = eventService.getEvents( params );
 
@@ -234,12 +238,14 @@ public class EventController
         @RequestParam( required = false ) EventStatus eventStatus,
         @RequestParam( required = false ) Date startDate,
         @RequestParam( required = false ) Date endDate,
+        @RequestParam( required = false ) boolean totalPages,
+        @RequestParam( required = false ) boolean skipPaging,
         @RequestParam Map<String, String> parameters, Model model, HttpServletRequest request )
     {
         WebOptions options = new WebOptions( parameters );
 
         EventSearchParams params = eventService.getFromUrl( program, null, programStatus, null,
-            orgUnit, ouMode, null, startDate, endDate, eventStatus, null, null, null, null );
+            orgUnit, ouMode, null, startDate, endDate, eventStatus, null, null, null, null, totalPages, skipPaging );
 
         EventRows eventRows = eventRowService.getEventRows( params );
 
