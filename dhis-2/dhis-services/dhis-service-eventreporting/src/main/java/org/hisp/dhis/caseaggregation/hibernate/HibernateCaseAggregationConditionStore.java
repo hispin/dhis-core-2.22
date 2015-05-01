@@ -365,22 +365,23 @@ public class HibernateCaseAggregationConditionStore
         String aggregateDeName, Integer optionComboId, String optionComboName,  int attributeOptioncomboId, Integer deSumId,
         Collection<Integer> orgunitIds )
     {
-        String sql = "SELECT '" + aggregateDeId + "' as dataelementid, '" + optionComboId
+        String select = "SELECT '" + aggregateDeId + "' as dataelementid, '" + optionComboId
             + "' as categoryoptioncomboid, '" + attributeOptioncomboId
             + "' as attributeoptioncomboid, ou.organisationunitid as sourceid, '" + PARAM_PERIOD_ID + "' as periodid,'"
             + CaseAggregationCondition.AUTO_STORED_BY + "' as storedby, ";
 
         if ( isInsert )
         {
-            sql = "INSERT INTO datavalue (dataelementid, categoryoptioncomboid, attributeoptioncomboid, sourceid, periodid, storedby, lastupdated, followup, created, value) "
-                + sql + " now(), false, now(), ";
+            select = "INSERT INTO datavalue (dataelementid, categoryoptioncomboid, attributeoptioncomboid, sourceid, periodid, storedby, lastupdated, followup, created, value) "
+                + select + " now(), false, now(), ";
         }
         else
         {
-            sql += "'" + PARAM_PERIOD_ISO_DATE + "' as periodIsoDate,'" + aggregateDeName + "' as dataelementname, '"
+            select += "'" + PARAM_PERIOD_ISO_DATE + "' as periodIsoDate,'" + aggregateDeName + "' as dataelementname, '"
                 + optionComboName + "' as categoryoptioncomboname, ou.name as organisationunitname, ";
         }
 
+        String sql = select + " ( select ";
         if ( operator.equals( CaseAggregationCondition.AGGRERATION_COUNT )
             || operator.equals( CaseAggregationCondition.AGGRERATION_SUM ) )
         {
@@ -408,23 +409,20 @@ public class HibernateCaseAggregationConditionStore
                     sql += " programinstance as pi ";
                     sql += " INNER JOIN trackedentityinstance p on p.trackedentityinstanceid=pi.trackedentityinstanceid ";
                     sql += " INNER JOIN programstageinstance psi ON pi.programinstanceid=psi.programinstanceid ";
-                    sql += " INNER JOIN organisationunit ou ON ou.organisationunitid=psi.organisationunitid ";
                 }
                 else if ( hasEntityInstance )
                 {
                     sql += " programinstance as pi INNER JOIN trackedentityinstance p on p.trackedentityinstanceid=pi.trackedentityinstanceid ";
-                    sql += " INNER JOIN organisationunit ou ON ou.organisationunitid=p.organisationunitid ";
                 }
                 else
                 {
                     sql += " programinstance as pi ";
                     sql += " INNER JOIN programstageinstance psi ON pi.programinstanceid=psi.programinstanceid ";
-                    sql += " INNER JOIN organisationunit ou ON ou.organisationunitid=psi.organisationunitid ";
                 }
 
                 sql += " WHERE " + createSQL( caseExpression, operator, orgunitIds );
 
-                sql += "GROUP BY ou.organisationunitid, ou.name";
+                sql += "GROUP BY ou.organisationunitid ) from organisationunit ou where ou.organisationunitid in ( " + TextUtils.getCommaDelimitedString( orgunitIds ) + " ) ";
             }
         }
         else
@@ -433,8 +431,6 @@ public class HibernateCaseAggregationConditionStore
             sql += "FROM trackedentitydatavalue pdv ";
             sql += "    INNER JOIN programstageinstance psi  ";
             sql += "            ON psi.programstageinstanceid = pdv.programstageinstanceid ";
-            sql += "    INNER JOIN organisationunit ou ";
-            sql += "            ON ou.organisationunitid=psi.organisationunitid ";
             sql += "WHERE executiondate >='" + PARAM_PERIOD_START_DATE + "'  ";
             sql += "    AND executiondate <='" + PARAM_PERIOD_END_DATE + "' AND pdv.dataelementid=" + deSumId;
 
@@ -443,10 +439,10 @@ public class HibernateCaseAggregationConditionStore
                 sql += " AND " + createSQL( caseExpression, operator, orgunitIds );
             }
 
-            sql += "GROUP BY ou.organisationunitid, ou.name";
+            sql += "GROUP BY ou.organisationunitid ) from organisationunit ou where ou.organisationunitid in ( " + TextUtils.getCommaDelimitedString( orgunitIds ) + " ) ";
             
         }
-        
+      
         return sql;
     }
 
@@ -821,7 +817,7 @@ public class HibernateCaseAggregationConditionStore
         
         sql = sql.replaceAll( CaseAggregationCondition.CURRENT_DATE, "now()");
         
-        return sql + " ) ";
+        return sql + " )  and psi.organisationunitid=ou.organisationunitid ";
     }
 
     /**
