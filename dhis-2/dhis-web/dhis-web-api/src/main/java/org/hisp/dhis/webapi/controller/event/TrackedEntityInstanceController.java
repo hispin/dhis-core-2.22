@@ -28,7 +28,16 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
+import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IllegalQueryException;
@@ -40,7 +49,6 @@ import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.node.types.CollectionNode;
@@ -68,14 +76,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
+import com.google.common.collect.Lists;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -123,6 +124,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
+        @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
         Model model,
         HttpServletResponse response ) throws Exception
@@ -130,7 +132,7 @@ public class TrackedEntityInstanceController
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
-            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, skipPaging );
+            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.NO_CACHE );
         Grid grid = instanceService.getTrackedEntityInstances( params );
@@ -159,6 +161,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
+        @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
         Model model,
         HttpServletResponse response ) throws Exception
@@ -166,7 +169,7 @@ public class TrackedEntityInstanceController
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
-            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, skipPaging );
+            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.NO_CACHE );
         Grid grid = instanceService.getTrackedEntityInstances( params );
@@ -192,6 +195,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
+        @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
         Model model,
         HttpServletResponse response ) throws Exception
@@ -199,7 +203,7 @@ public class TrackedEntityInstanceController
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
-            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, skipPaging );
+            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.NO_CACHE );
         Grid grid = instanceService.getTrackedEntityInstances( params );
@@ -225,6 +229,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
+        @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
         Model model,
         HttpServletResponse response ) throws Exception
@@ -232,7 +237,7 @@ public class TrackedEntityInstanceController
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
-            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, skipPaging );
+            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.NO_CACHE );
         Grid grid = instanceService.getTrackedEntityInstances( params );
