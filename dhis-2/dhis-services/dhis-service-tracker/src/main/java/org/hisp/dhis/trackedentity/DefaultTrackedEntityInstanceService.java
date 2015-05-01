@@ -264,8 +264,13 @@ public class DefaultTrackedEntityInstanceService
 
         if ( params.isPaging() )
         {
-            int count = trackedEntityInstanceStore.getTrackedEntityInstanceCount( params );
-
+            int count = 0;
+            
+            if ( params.isTotalPages() )
+            {
+                count = trackedEntityInstanceStore.getTrackedEntityInstanceCount( params );
+            }
+            
             Pager pager = new Pager( params.getPageWithDefault(), count, params.getPageSizeWithDefault() );
             metaData.put( PAGER_META_KEY, pager );
         }
@@ -378,7 +383,7 @@ public class DefaultTrackedEntityInstanceService
     public TrackedEntityInstanceQueryParams getFromUrl( String query, Set<String> attribute, Set<String> filter,
         Set<String> ou, OrganisationUnitSelectionMode ouMode, String program, ProgramStatus programStatus,
         Boolean followUp, Date programStartDate, Date programEndDate, String trackedEntity, EventStatus eventStatus,
-        Date eventStartDate, Date eventEndDate, boolean skipMeta, Integer page, Integer pageSize, boolean skipPaging )
+        Date eventStartDate, Date eventEndDate, boolean skipMeta, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging )
     {
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
 
@@ -447,6 +452,7 @@ public class DefaultTrackedEntityInstanceService
         params.setSkipMeta( skipMeta );
         params.setPage( page );
         params.setPageSize( pageSize );
+        params.setTotalPages( totalPages );
         params.setSkipPaging( skipPaging );
 
         return params;

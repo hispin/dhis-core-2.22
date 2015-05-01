@@ -151,6 +151,11 @@ public class TrackedEntityInstanceQueryParams
     private Integer pageSize;
     
     /**
+     * Indicates whether to include the total number of pages in the paging response.
+     */
+    private boolean totalPages;
+    
+    /**
      * Indicates whether paging should be skipped.
      */
     private boolean skipPaging;
@@ -688,6 +693,16 @@ public class TrackedEntityInstanceQueryParams
     public void setPageSize( Integer pageSize )
     {
         this.pageSize = pageSize;
+    }
+
+    public boolean isTotalPages()
+    {
+        return totalPages;
+    }
+
+    public void setTotalPages( boolean totalPages )
+    {
+        this.totalPages = totalPages;
     }
 
     public boolean isSkipPaging()
