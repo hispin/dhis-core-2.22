@@ -41,7 +41,7 @@ function caseAggregationResult()
 	{
 		if( confirm(i18n_confirm_data_values_aggregated_saved_into_database_directly) )
 		{
-			runAggregate(autoSave);
+			previewAggregate(autoSave);
 		}
 	}
 	else
@@ -50,7 +50,7 @@ function caseAggregationResult()
 	}
 }
 
-function runAggregate(autoSave)
+/* function runAggregate(autoSave)
 {
 	hideById('caseAggregationForm');
 	hideById('caseAggregationResult');
@@ -62,14 +62,14 @@ function runAggregate(autoSave)
 			dataSetId: getFieldValue('dataSetId'),
 			startDate: getFieldValue('startDate'),
 			endDate: getFieldValue('endDate'),
-			autoSave: getFieldValue('autoSave')
+			autoSave: false
 		}
 		, function(){
 			$( "#loaderDiv" ).hide();
-			showById('caseAggregationForm');
+			showById('caseAggregationForm');			
 			setHeaderDelayMessage(i18n_aggregate_successfully);
 		});
-}
+} */
 
 function previewAggregate(autoSave)
 {
@@ -82,11 +82,17 @@ function previewAggregate(autoSave)
 			dataSetId: getFieldValue('dataSetId'),
 			startDate: getFieldValue('startDate'),
 			endDate: getFieldValue('endDate'),
-			autoSave: getFieldValue('autoSave')
+			autoSave: false
 		}
 		, function(){
 			$( "#loaderDiv" ).hide();
-			showById('caseAggregationResult');
+			if(autoSave=="true"){
+				showById('caseAggregationForm');
+				saveAggregateDataValues( true );
+			}
+			else{
+				showById('caseAggregationResult');
+			}
 		});
 }
 

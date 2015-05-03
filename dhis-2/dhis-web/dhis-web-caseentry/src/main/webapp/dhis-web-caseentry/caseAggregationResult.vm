@@ -45,7 +45,11 @@
 						#elseif($velocityCount==7)
 							#set($periodid=$col)
 						#elseif($velocityCount==11)
-							#set($value=$col)
+							#if( $!col )
+								#set($value=$col)
+							#else
+								#set($value="0")
+							#end
 						#end
 					#end
 					#set($item=$dataelementid + '_' + $categoryoptioncomboid + '_' + $periodid + '_' + $organisationunitid + '_' + $value)
@@ -54,7 +58,14 @@
 					</td>
 					
 					#foreach( $col in $row )	
-						#if( $velocityCount > 7 )
+						#if($velocityCount==11)
+							#if( $!col )
+								#set($val=$col)
+							#else
+								#set($val="0")	
+							#end				
+							<td>$val</td> 
+						#elseif( $velocityCount > 7 )						
 							<td>$col</td> 
 						#end
 					#end
