@@ -63,6 +63,7 @@ public class TableCreator
         aggregatedDataValueService.createDataMart();
         
         createSilently( "create unique index dataapproval_unique on dataapproval(datasetid,periodid,organisationunitid,attributeoptioncomboid,dataapprovallevelid)", "dataapproval_unique" );
+        createSilently( "create index in_datavalueaudit on datavalueaudit(dataelementid,periodid,organisationunitid,categoryoptioncomboid,attributeoptioncomboid)", "in_datavalueaudit" );
     }
     
     private void createSilently( final String sql, final String name )
