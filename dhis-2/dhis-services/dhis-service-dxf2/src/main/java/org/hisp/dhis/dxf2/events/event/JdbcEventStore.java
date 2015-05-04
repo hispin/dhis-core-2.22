@@ -203,7 +203,7 @@ public class JdbcEventStore
      */
     private String buildSql( EventSearchParams params, List<OrganisationUnit> organisationUnits )
     {
-        String sql = "select * from ((";
+        String sql = "select * from (";
         
         sql += getEventSelectQuery( params, organisationUnits );
         
@@ -219,7 +219,7 @@ public class JdbcEventStore
         
         sql += ") as cm on event.psi_id=cm.psic_id";
         
-        sql += ") order by psi_uid desc ";
+        sql += " order by psi_uid desc ";
         
         return sql;
     }
