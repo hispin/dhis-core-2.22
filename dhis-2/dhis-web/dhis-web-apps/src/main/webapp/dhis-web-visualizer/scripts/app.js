@@ -1239,7 +1239,7 @@ Ext.onReady( function() {
 							params: Ext.encode(favorite),
 							failure: function(r) {
 								ns.core.web.mask.show();
-                                alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                                ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
 							},
 							success: function(r) {
 								var id = r.getAllResponseHeaders().location.split('/').pop();
@@ -1271,7 +1271,7 @@ Ext.onReady( function() {
 							method: 'GET',
 							failure: function(r) {
 								ns.core.web.mask.show();
-                                alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                                ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
 							},
 							success: function(r) {
 								chart = Ext.decode(r.responseText);
@@ -1284,7 +1284,7 @@ Ext.onReady( function() {
 									params: Ext.encode(chart),
 									failure: function(r) {
 										ns.core.web.mask.show();
-                                        alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                                        ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
 									},
 									success: function(r) {
 										if (ns.app.layout && ns.app.layout.id && ns.app.layout.id === id) {
@@ -1495,7 +1495,7 @@ Ext.onReady( function() {
 										}
 									}
 									else {
-										alert(NS.i18n.please_create_a_table_first);
+										ns.alert(NS.i18n.please_create_a_table_first);
 									}
 								}
 							}
@@ -1514,7 +1514,7 @@ Ext.onReady( function() {
 										method: 'GET',
 										failure: function(r) {
 											ns.app.viewport.mask.hide();
-                                            alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                                            ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
 										},
 										success: function(r) {
 											var sharing = Ext.decode(r.responseText),
@@ -1793,7 +1793,7 @@ Ext.onReady( function() {
 
 		getBody = function() {
 			if (!ns.core.init.user) {
-				alert('User is not assigned to any organisation units');
+				ns.alert('User is not assigned to any organisation units');
 				return;
 			}
 
@@ -2157,7 +2157,7 @@ Ext.onReady( function() {
 					form = Ext.query('#exportForm')[0];
 
 				if (!(Ext.isArray(svg) && svg.length)) {
-					alert('Browser does not support SVG');
+					ns.alert('Browser does not support SVG');
 					return;
 				}
 
@@ -2245,54 +2245,6 @@ Ext.onReady( function() {
 					height = panel.getHeight() - fill - (ms[i].hasToolbar ? 25 : 0);
 					ms[i].setHeight(height);
 				}
-			};
-
-			// window
-			web.window = web.window || {};
-
-			web.window.setAnchorPosition = function(w, target) {
-				var vpw = ns.app.viewport.getWidth(),
-					targetx = target ? target.getPosition()[0] : 4,
-					winw = w.getWidth(),
-					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
-
-				if ((targetx + winw) > vpw) {
-					w.setPosition((vpw - winw - 2), y);
-				}
-				else {
-					w.setPosition(targetx, y);
-				}
-			};
-
-			web.window.addHideOnBlurHandler = function(w) {
-				var el = Ext.get(Ext.query('.x-mask')[0]);
-
-				el.on('click', function() {
-					if (w.hideOnBlur) {
-						w.hide();
-					}
-				});
-
-				w.hasHideOnBlurHandler = true;
-			};
-
-			web.window.addDestroyOnBlurHandler = function(w) {
-				var el = Ext.get(Ext.query('.x-mask')[0]);
-
-				el.on('click', function() {
-					if (w.destroyOnBlur) {
-						w.destroy();
-					}
-				});
-
-				w.hasDestroyOnBlurHandler = true;
-			};
-
-			// message
-			web.message = web.message || {};
-
-			web.message.alert = function(message) {
-				alert(message);
 			};
 
 			// url
@@ -2479,7 +2431,7 @@ Ext.onReady( function() {
 
             web.chart.loadChart = function(id) {
 				if (!Ext.isString(id)) {
-					alert('Invalid chart id');
+					console.log('Invalid chart id');
 					return;
 				}
 
@@ -2489,10 +2441,10 @@ Ext.onReady( function() {
 						web.mask.hide(ns.app.centerRegion);
 
                         if (Ext.Array.contains([403], r.status)) {
-                            alert(NS.i18n.you_do_not_have_access_to_all_items_in_this_favorite);
+                            ns.alert(NS.i18n.you_do_not_have_access_to_all_items_in_this_favorite);
                         }
                         else {
-                            alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                            ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
                         }
 					},
 					success: function(r) {
@@ -2541,7 +2493,7 @@ Ext.onReady( function() {
 							web.analytics.validateUrl(init.contextPath + '/api/analytics.json' + paramString);
 						}
                         else {
-                            alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                            ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
 						}
 					},
 					success: function(r) {
@@ -6914,15 +6866,6 @@ Ext.onReady( function() {
 				NS.instances.push(ns);
 
                 ns.init = init;
-                ns.alert = function(msg, isAlert) {
-                    if (isAlert) {
-                        alert(msg);
-                    }
-                    else {
-                        console.log(msg);
-                    }
-                };
-
 				ns.core = NS.getCore(ns);
 				extendCore(ns.core);
 
@@ -7041,7 +6984,7 @@ Ext.onReady( function() {
                                                         Ext.get('init').update(NS.i18n.initializing + '..');
                                                     },
                                                     failure: function() {
-                                                        alert('No translations found for system locale (' + keyUiLocale + ') or default locale (' + defaultKeyUiLocale + ').');
+                                                        ns.alert('No translations found for system locale (' + keyUiLocale + ') or default locale (' + defaultKeyUiLocale + ').');
                                                     },
                                                     callback: fn
                                                 });
@@ -7064,7 +7007,7 @@ Ext.onReady( function() {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
                                                 if (!init.organisationUnitLevels.length) {
-                                                    alert('No organisation unit levels');
+                                                    ns.alert('No organisation unit levels');
                                                 }
 
                                                 fn();
@@ -7095,7 +7038,7 @@ Ext.onReady( function() {
                                                     init.user.ouc = ouc;
                                                 }
                                                 else {
-                                                    alert('User is not assigned to any organisation units');
+                                                    ns.alert('User is not assigned to any organisation units');
                                                 }
 
                                                 fn();

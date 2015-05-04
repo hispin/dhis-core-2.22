@@ -71,7 +71,7 @@ Ext.onReady(function() {
             styleEl = document.createElement("style");
 
         styleEl.setAttribute("type", "text/css");
-        
+
         if (id) {
            styleEl.setAttribute("id", id);
         }
@@ -168,7 +168,7 @@ Ext.onReady(function() {
             var ak=this,au=ak.chart,S=au.axes,ao=au.getChartStore(),V=ao.getCount(),u=ak.chart.surface,am={},R=ak.group,K=ak.showMarkers,aA=ak.markerGroup,D=au.shadow,C=ak.shadowGroups,X=ak.shadowAttributes,O=ak.smooth,q=C.length,ar=["M"],T=["M"],d=["M"],b=["M"],J=au.markerIndex,ai=[].concat(ak.axis),ah,av=[],ag={},aa=[],v={},I=false,Q=[],az=ak.markerStyle,Z=ak.style,t=ak.colorArrayStyle,P=t&&t.length||0,L=Ext.isNumber,aw=ak.seriesIdx,g=ak.getAxesForXAndYFields(),l=g.xAxis,ay=g.yAxis,ac,h,ab,ad,A,c,ae,H,G,f,e,s,r,W,N,M,at,m,F,E,aB,n,p,B,a,Y,af,z,aq,w,ap,o,ax,an,al,U,k,aj;if(ak.fireEvent("beforedraw",ak)===false){return}if(!V||ak.seriesIsHidden){aj=this.items;if(aj){for(N=0,at=aj.length;N<at;++N){if(aj[N].sprite){aj[N].sprite.hide(true)}}}return}an=Ext.apply(az||{},ak.markerConfig);U=an.type;delete an.type;al=Z;if(!al["stroke-width"]){al["stroke-width"]=0.5}if(J&&aA&&aA.getCount()){for(N=0;N<J;N++){E=aA.getAt(N);aA.remove(E);aA.add(E);aB=aA.getAt(aA.getCount()-2);E.setAttributes({x:0,y:0,translate:{x:aB.attr.translation.x,y:aB.attr.translation.y}},true)}}ak.unHighlightItem();ak.cleanHighlights();ak.setBBox();am=ak.bbox;ak.clipRect=[am.x,am.y,am.width,am.height];for(N=0,at=ai.length;N<at;N++){m=S.get(ai[N]);if(m){F=m.calcEnds();if(m.position=="top"||m.position=="bottom"){z=F.from;aq=F.to}else{w=F.from;ap=F.to}}}if(ak.xField&&!L(z)&&(l=="bottom"||l=="top")&&!S.get(l)){m=Ext.create("Ext.chart.axis.Axis",{chart:au,fields:[].concat(ak.xField)}).calcEnds();z=m.from;aq=m.to}if(ak.yField&&!L(w)&&(ay=="right"||ay=="left")&&!S.get(ay)){m=Ext.create("Ext.chart.axis.Axis",{chart:au,fields:[].concat(ak.yField)}).calcEnds();w=m.from;ap=m.to}if(isNaN(z)){z=0;Y=am.width/((V-1)||1)}else{Y=am.width/((aq-z)||(V-1)||1)}if(isNaN(w)){w=0;af=am.height/((V-1)||1)}else{af=am.height/((ap-w)||(V-1)||1)}ak.eachRecord(function(j,x){p=j.get(ak.xField);if(typeof p=="string"||typeof p=="object"&&!Ext.isDate(p)||l&&S.get(l)&&S.get(l).type=="Category"){if(p in ag){p=ag[p]}else{p=ag[p]=x}}B=j.get(ak.yField);if(typeof B=="undefined"||(typeof B=="string"&&!B)){if(Ext.isDefined(Ext.global.console)){Ext.global.console.warn("[Ext.chart.series.Line]  Skipping a store element with an undefined value at ",j,p,B)}return}if(typeof B=="object"&&!Ext.isDate(B)||ay&&S.get(ay)&&S.get(ay).type=="Category"){B=x}Q.push(x);av.push(p);aa.push(B)});at=av.length;if(at>am.width){a=ak.shrink(av,aa,am.width);av=a.x;aa=a.y}ak.items=[];k=0;at=av.length;for(N=0;N<at;N++){p=av[N];B=aa[N];if(B===false){if(T.length==1){T=[]}I=true;ak.items.push(false);continue}else{H=(am.x+(p-z)*Y).toFixed(2);G=((am.y+am.height)-(B-w)*af).toFixed(2);if(I){I=false;T.push("M")}T=T.concat([H,G])}if((typeof r=="undefined")&&(typeof G!="undefined")){r=G;s=H}if(!ak.line||au.resizing){ar=ar.concat([H,am.y+am.height/2])}if(au.animate&&au.resizing&&ak.line){ak.line.setAttributes({path:ar},true);if(ak.fillPath){ak.fillPath.setAttributes({path:ar,opacity:0.2},true)}if(ak.line.shadows){ac=ak.line.shadows;for(M=0,q=ac.length;M<q;M++){h=ac[M];h.setAttributes({path:ar},true)}}}if(K){E=aA.getAt(k++);if(!E){E=Ext.chart.Shape[U](u,Ext.apply({group:[R,aA],x:0,y:0,translate:{x:+(f||H),y:e||(am.y+am.height/2)},value:'"'+p+", "+B+'"',zIndex:4000},an));E._to={translate:{x:+H,y:+G}}}else{E.setAttributes({value:'"'+p+", "+B+'"',x:0,y:0,hidden:false},true);E._to={translate:{x:+H,y:+G}}}}ak.items.push({series:ak,value:[p,B],point:[H,G],sprite:E,storeItem:ao.getAt(Q[N])});f=H;e=G}if(T.length<=1){return}if(ak.smooth){b=Ext.draw.Draw.smooth(T,L(O)?O:ak.defaultSmoothness)}d=O?b:T;if(au.markerIndex&&ak.previousPath){ad=ak.previousPath;if(!O){Ext.Array.erase(ad,1,2)}}else{ad=T}if(!ak.line){ak.line=u.add(Ext.apply({type:"path",group:R,path:ar,stroke:al.stroke||al.fill},al||{}));if(D){ak.line.setAttributes(Ext.apply({},ak.shadowOptions),true)}ak.line.setAttributes({fill:"none",zIndex:3000});if(!al.stroke&&P){ak.line.setAttributes({stroke:t[aw%P]},true)}if(D){ac=ak.line.shadows=[];for(ab=0;ab<q;ab++){ah=X[ab];ah=Ext.apply({},ah,{path:ar});h=u.add(Ext.apply({},{type:"path",group:C[ab]},ah));ac.push(h)}}}if(ak.fill){c=d.concat([["L",H,am.y+am.height],["L",s,am.y+am.height],["L",s,r]]);if(!ak.fillPath){ak.fillPath=u.add({group:R,type:"path",opacity:al.opacity||0.3,fill:al.fill||t[aw%P],path:ar})}}W=K&&aA.getCount();if(au.animate){A=ak.fill;o=ak.line;ae=ak.renderer(o,false,{path:d},N,ao);Ext.apply(ae,al||{},{stroke:al.stroke||al.fill});delete ae.fill;o.show(true);if(au.markerIndex&&ak.previousPath){ak.animation=ax=ak.onAnimate(o,{to:ae,from:{path:ad}})}else{ak.animation=ax=ak.onAnimate(o,{to:ae})}if(D){ac=o.shadows;for(M=0;M<q;M++){ac[M].show(true);if(au.markerIndex&&ak.previousPath){ak.onAnimate(ac[M],{to:{path:d},from:{path:ad}})}else{ak.onAnimate(ac[M],{to:{path:d}})}}}if(A){ak.fillPath.show(true);ak.onAnimate(ak.fillPath,{to:Ext.apply({},{path:c,fill:al.fill||t[aw%P],"stroke-width":0},al||{})})}if(K){k=0;for(N=0;N<at;N++){if(ak.items[N]){n=aA.getAt(k++);if(n){ae=ak.renderer(n,ao.getAt(N),n._to,N,ao);ak.onAnimate(n,{to:Ext.apply(ae,an||{})});n.show(true)}}}for(;k<W;k++){n=aA.getAt(k);n.hide(true)}}}else{ae=ak.renderer(ak.line,false,{path:d,hidden:false},N,ao);Ext.apply(ae,al||{},{stroke:al.stroke||al.fill});delete ae.fill;ak.line.setAttributes(ae,true);if(D){ac=ak.line.shadows;for(M=0;M<q;M++){ac[M].setAttributes({path:d,hidden:false},true)}}if(ak.fill){ak.fillPath.setAttributes({path:c,hidden:false},true)}if(K){k=0;for(N=0;N<at;N++){if(ak.items[N]){n=aA.getAt(k++);if(n){ae=ak.renderer(n,ao.getAt(N),n._to,N,ao);n.setAttributes(Ext.apply(an||{},ae||{}),true);n.show(true)}}}for(;k<W;k++){n=aA.getAt(k);n.hide(true)}}}if(au.markerIndex){if(ak.smooth){Ext.Array.erase(T,1,2)}else{Ext.Array.splice(T,1,0,T[1],T[2])}ak.previousPath=T}ak.renderLabels();ak.renderCallouts();ak.fireEvent("draw",ak);
         }
     });
-    
+
     Ext.override(Ext.chart.Legend, {
         updatePosition: function() {
             var me = this,
@@ -573,13 +573,17 @@ Ext.onReady(function() {
 	DV.isDebug = false;
 	DV.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	DV.getCore = function(init) {
-        var conf = {},
+	DV.getCore = function(ns) {
+        var init = ns.init,
+            conf = {},
             api = {},
             support = {},
             service = {},
             web = {},
             dimConf;
+
+        // tmp
+        ns.alert = function() {};
 
 		// conf
         (function() {
@@ -730,7 +734,7 @@ Ext.onReady(function() {
                 west_fill_accordion_indicator: 56,
                 west_fill_accordion_dataelement: 59,
                 west_fill_accordion_dataset: 31,
-                west_fill_accordion_period: 284,
+                west_fill_accordion_period: 303,
                 west_fill_accordion_organisationunit: 58,
                 west_maxheight_accordion_indicator: 350,
                 west_maxheight_accordion_dataelement: 350,
@@ -781,6 +785,13 @@ Ext.onReady(function() {
                 }
             };
 
+			conf.report = {
+				digitGroupSeparator: {
+					'comma': ',',
+					'space': ' '
+				}
+			};
+
             conf.url = {
                 analysisFields: [
                     '*',
@@ -830,12 +841,12 @@ Ext.onReady(function() {
 
 				return function() {
 					if (!Ext.isObject(config)) {
-						console.log('Record: config is not an object: ' + config);
+						console.log('api.layout.Record: config is not an object: ' + config);
 						return;
 					}
 
 					if (!Ext.isString(config.id)) {
-						alert('Record: id is not text: ' + config);
+						console.log('api.layout.Record: id is not text: ' + config, true);
 						return;
 					}
 
@@ -913,6 +924,8 @@ Ext.onReady(function() {
 
                 // sortOrder: number
 
+                // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
+
                 // rangeAxisMaxValue: number
 
                 // rangeAxisMinValue: number
@@ -938,6 +951,8 @@ Ext.onReady(function() {
                 // userOrganisationUnitChildren: boolean (false)
 
                 // parentGraphMap: object
+
+                // displayProperty: string ('name') // 'name', 'shortname', null
 
                 getValidatedDimensionArray = function(dimensionArray) {
 					var dimensionArray = Ext.clone(dimensionArray);
@@ -1044,19 +1059,19 @@ Ext.onReady(function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								web.message.alert(DV.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
+								ns.alert(DV.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								web.message.alert(DV.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
+								ns.alert(DV.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								web.message.alert(DV.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
+								ns.alert(DV.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
 								return;
 							}
 						}
@@ -1064,27 +1079,33 @@ Ext.onReady(function() {
 
 					// dc and in
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.indicator.objectName]) {
-						web.message.alert('Indicators and detailed data elements cannot be specified together');
+						ns.alert('Indicators and detailed data elements cannot be specified together', true);
 						return;
 					}
 
 					// dc and de
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataElement.objectName]) {
-						web.message.alert('Detailed data elements and totals cannot be specified together');
+						ns.alert('Detailed data elements and totals cannot be specified together', true);
 						return;
 					}
 
 					// dc and ds
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataSet.objectName]) {
-						web.message.alert('Data sets and detailed data elements cannot be specified together');
+						ns.alert('Data sets and detailed data elements cannot be specified together', true);
 						return;
 					}
 
 					// dc and co
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.category.objectName]) {
-						web.message.alert('Categories and detailed data elements cannot be specified together');
+						ns.alert('Categories and detailed data elements cannot be specified together', true);
 						return;
 					}
+
+                    // in and aggregation type
+                    if (objectNameDimensionMap[dimConf.indicator.objectName] && config.aggregationType !== 'DEFAULT') {
+                        ns.alert('Indicators and aggregation types cannot be specified together', true);
+                        return;
+                    }
 
 					return true;
 				};
@@ -1095,7 +1116,7 @@ Ext.onReady(function() {
 
 					// config must be an object
 					if (!(config && Ext.isObject(config))) {
-						alert('Layout: config is not an object (' + init.el + ')');
+						ns.alert('Layout: config is not an object (' + init.el + ')', true);
 						return;
 					}
 
@@ -1105,12 +1126,12 @@ Ext.onReady(function() {
 
 					// at least one dimension specified as column and row
 					if (!config.columns) {
-						alert('No series items selected');
+						ns.alert('No series items selected');
 						return;
 					}
 
 					if (!config.rows) {
-						alert('No category items selected');
+						ns.alert('No category items selected');
 						return;
 					}
 
@@ -1125,7 +1146,7 @@ Ext.onReady(function() {
 
 					// at least one period
 					if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						alert('At least one period must be specified as series, category or filter');
+						ns.alert('At least one period must be specified as series, category or filter');
 						return;
 					}
 
@@ -1159,6 +1180,7 @@ Ext.onReady(function() {
                     layout.baseLineTitle = Ext.isString(config.baseLineLabel) && !Ext.isEmpty(config.baseLineLabel) ? config.baseLineLabel :
                         (Ext.isString(config.baseLineTitle) && !Ext.isEmpty(config.baseLineTitle) ? config.baseLineTitle : null);
                     layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
+                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'DEFAULT';
 
 					layout.rangeAxisMaxValue = Ext.isNumber(config.rangeAxisMaxValue) ? config.rangeAxisMaxValue : null;
 					layout.rangeAxisMinValue = Ext.isNumber(config.rangeAxisMinValue) ? config.rangeAxisMinValue : null;
@@ -1259,13 +1281,13 @@ Ext.onReady(function() {
 						console.log('Response: no valid headers');
 						return;
 					}
-                    
+
 					if (!(Ext.isArray(config.rows) && config.rows.length > 0)) {
-                        init.alert('No values found');
-						return;
+                        //console.log('No values found');
+						//return;
 					}
 
-					if (config.headers.length !== config.rows[0].length) {
+					if (config.rows.length && config.headers.length !== config.rows[0].length) {
 						console.log('Response: headers.length !== rows[0].length');
 					}
 
@@ -1315,19 +1337,25 @@ Ext.onReady(function() {
                 return maxLength;
             };
 
-			support.prototype.array.sort = function(array, direction, key) {
-				// accepts [number], [string], [{prop: number}], [{prop: string}]
+			support.prototype.array.sort = function(array, direction, key, emptyFirst) {
+				// supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
 
 				if (!support.prototype.array.getLength(array)) {
 					return;
 				}
 
-				key = key || 'name';
+				key = !!key || Ext.isNumber(key) ? key : 'name';
 
 				array.sort( function(a, b) {
 
 					// if object, get the property values
-					if (Ext.isObject(a) && Ext.isObject(b) && key) {
+					if (Ext.isObject(a) && Ext.isObject(b)) {
+						a = a[key];
+						b = b[key];
+					}
+
+					// if array, get from the right index
+					if (Ext.isArray(a) && Ext.isArray(b)) {
 						a = a[key];
 						b = b[key];
 					}
@@ -1350,7 +1378,15 @@ Ext.onReady(function() {
 						return direction === 'DESC' ? b - a : a - b;
 					}
 
-					return 0;
+                    else if (a === undefined || a === null) {
+                        return emptyFirst ? -1 : 1;
+                    }
+
+                    else if (b === undefined || b === null) {
+                        return emptyFirst ? 1 : -1;
+                    }
+
+					return -1;
 				});
 
 				return array;
@@ -1393,6 +1429,23 @@ Ext.onReady(function() {
 				}
 
 				return null;
+			};
+
+                // number
+			support.prototype.number = {};
+
+			support.prototype.number.prettyPrint = function(number, separator) {
+				separator = separator || 'space';
+
+                if (!(Ext.isNumber(number) || Ext.isString(number))) {
+                    return;
+                }
+
+				if (separator === 'none') {
+					return number;
+				}
+
+				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.report.digitGroupSeparator[separator]);
 			};
 
 				// str
@@ -1554,18 +1607,18 @@ Ext.onReady(function() {
 					dimensionNameIdsMap: {},
 
 						// for param string
-					dimensionNameSortedIdsMap: {}
+					dimensionNameSortedIdsMap: {},
 
 					// sort table by column
 					//sortableIdObjects: []
+
+                    dimensionNameAxisMap: {}
 				};
 
 				Ext.applyIf(xLayout, layout);
 
 				// columns, rows, filters
 				if (layout.columns) {
-                    //layout.columns = support.prototype.array.uniqueByProperty(layout.columns, 'dimension');
-
 					for (var i = 0, dim, items, xDim; i < layout.columns.length; i++) {
 						dim = layout.columns[i];
 						items = dim.items;
@@ -1573,13 +1626,11 @@ Ext.onReady(function() {
 
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
-						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
-
-						xDim.items = [];
-						xDim.ids = [];
+						xDim.dimensionName = dimConf.objectNameMap[dim.dimension].dimensionName;
 
 						if (items) {
 							xDim.items = items;
+							xDim.ids = [];
 
 							for (var j = 0; j < items.length; j++) {
 								xDim.ids.push(items[j].id);
@@ -1593,17 +1644,17 @@ Ext.onReady(function() {
 
 						xLayout.axisDimensions.push(xDim);
 						xLayout.axisObjectNames.push(xDim.objectName);
-						xLayout.axisDimensionNames.push(dimConf.objectNameMap.hasOwnProperty(xDim.objectName) ? dimConf.objectNameMap[xDim.objectName].dimensionName || xDim.objectName : xDim.objectName);
+						xLayout.axisDimensionNames.push(dimConf.objectNameMap[xDim.objectName].dimensionName);
 
 						xLayout.objectNameDimensionsMap[xDim.objectName] = xDim;
 						xLayout.objectNameItemsMap[xDim.objectName] = xDim.items;
 						xLayout.objectNameIdsMap[xDim.objectName] = xDim.ids;
+
+                        xLayout.dimensionNameAxisMap[xDim.dimensionName] = xLayout.columns;
 					}
 				}
 
 				if (layout.rows) {
-                    //layout.rows = support.prototype.array.uniqueByProperty(layout.rows, 'dimension');
-
 					for (var i = 0, dim, items, xDim; i < layout.rows.length; i++) {
 						dim = Ext.clone(layout.rows[i]);
 						items = dim.items;
@@ -1611,13 +1662,11 @@ Ext.onReady(function() {
 
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
-						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
-
-						xDim.items = [];
-						xDim.ids = [];
+						xDim.dimensionName = dimConf.objectNameMap[dim.dimension].dimensionName;
 
 						if (items) {
 							xDim.items = items;
+							xDim.ids = [];
 
 							for (var j = 0; j < items.length; j++) {
 								xDim.ids.push(items[j].id);
@@ -1631,17 +1680,17 @@ Ext.onReady(function() {
 
 						xLayout.axisDimensions.push(xDim);
 						xLayout.axisObjectNames.push(xDim.objectName);
-						xLayout.axisDimensionNames.push(dimConf.objectNameMap.hasOwnProperty(xDim.objectName) ? dimConf.objectNameMap[xDim.objectName].dimensionName || xDim.objectName : xDim.objectName);
+						xLayout.axisDimensionNames.push(dimConf.objectNameMap[xDim.objectName].dimensionName);
 
 						xLayout.objectNameDimensionsMap[xDim.objectName] = xDim;
 						xLayout.objectNameItemsMap[xDim.objectName] = xDim.items;
 						xLayout.objectNameIdsMap[xDim.objectName] = xDim.ids;
+
+                        xLayout.dimensionNameAxisMap[xDim.dimensionName] = xLayout.rows;
 					}
 				}
 
 				if (layout.filters) {
-                    //layout.filters = support.prototype.array.uniqueByProperty(layout.filters, 'dimension');
-
 					for (var i = 0, dim, items, xDim; i < layout.filters.length; i++) {
 						dim = layout.filters[i];
 						items = dim.items;
@@ -1649,13 +1698,11 @@ Ext.onReady(function() {
 
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
-						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
-
-						xDim.items = [];
-						xDim.ids = [];
+						xDim.dimensionName = dimConf.objectNameMap[dim.dimension].dimensionName;
 
 						if (items) {
 							xDim.items = items;
+							xDim.ids = [];
 
 							for (var j = 0; j < items.length; j++) {
 								xDim.ids.push(items[j].id);
@@ -1666,11 +1713,13 @@ Ext.onReady(function() {
 
 						xLayout.filterDimensions.push(xDim);
 						xLayout.filterObjectNames.push(xDim.objectName);
-						xLayout.filterDimensionNames.push(dimConf.objectNameMap.hasOwnProperty(xDim.objectName) ? dimConf.objectNameMap[xDim.objectName].dimensionName || xDim.objectName : xDim.objectName);
+						xLayout.filterDimensionNames.push(dimConf.objectNameMap[xDim.objectName].dimensionName);
 
 						xLayout.objectNameDimensionsMap[xDim.objectName] = xDim;
 						xLayout.objectNameItemsMap[xDim.objectName] = xDim.items;
 						xLayout.objectNameIdsMap[xDim.objectName] = xDim.ids;
+
+                        xLayout.dimensionNameAxisMap[xDim.dimensionName] = xLayout.filters;
 					}
 				}
 
@@ -1979,6 +2028,10 @@ Ext.onReady(function() {
 					delete layout.legend;
 				}
 
+				if (layout.aggregationType === 'DEFAULT') {
+					delete layout.aggregationType;
+				}
+
                 // default true
 
 				if (layout.showValues) {
@@ -2127,7 +2180,9 @@ Ext.onReady(function() {
 						idIndexOrder = [];
 
 					// idIndexOrder
-					for (var i = 0; i < axisDimensionNames.length; i++) {
+					for (var i = 0, dimName, index; i < axisDimensionNames.length; i++) {
+                        dimName = axisDimensionNames[i];
+                        //index = response.nameHeaderMap.hasOwnProperty(
 						idIndexOrder.push(response.nameHeaderMap[axisDimensionNames[i]].index);
 
 						// If co exists in response and is not added in layout, add co after dx
@@ -2192,7 +2247,7 @@ Ext.onReady(function() {
 
 				message = message || 'Loading..';
 
-				if (component.mask) {
+				if (component.mask && component.mask.destroy) {
 					component.mask.destroy();
 					component.mask = null;
 				}
@@ -2217,18 +2272,96 @@ Ext.onReady(function() {
 					return null;
 				}
 
-				if (component.mask) {
+				if (component.mask && component.mask.destroy) {
 					component.mask.destroy();
 					component.mask = null;
 				}
 			};
 
+			// window
+			web.window = {};
+
+			web.window.setAnchorPosition = function(w, target) {
+				var vpw = ns.app.viewport.getWidth(),
+					targetx = target ? target.getPosition()[0] : 4,
+					winw = w.getWidth(),
+					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
+
+				if ((targetx + winw) > vpw) {
+					w.setPosition((vpw - winw - 2), y);
+				}
+				else {
+					w.setPosition(targetx, y);
+				}
+			};
+
+			web.window.addHideOnBlurHandler = function(w) {
+				var maskElements = Ext.query('.x-mask'),
+                    el = Ext.get(maskElements[0]);
+
+				el.on('click', function() {
+					if (w.hideOnBlur) {
+						w.hide();
+					}
+				});
+
+				w.hasHideOnBlurHandler = true;
+			};
+
+			web.window.addDestroyOnBlurHandler = function(w) {
+				var maskElements = Ext.query('.x-mask'),
+                    el = Ext.get(maskElements[0]);
+
+				el.on('click', function() {
+					if (w.destroyOnBlur) {
+						w.destroy();
+					}
+				});
+
+				w.hasDestroyOnBlurHandler = true;
+			};
+
 			// message
 			web.message = {};
 
-			web.message.alert = function(message) {
-				console.log(message);
-			};
+			web.message.alert = function(msg, type) {
+                var config = {},
+                    window;
+
+                if (!msg) {
+                    return;
+                }
+
+                type = type || 'error';
+
+				config.title = type === 'error' ? DV.i18n.error : (type === 'warning' ? DV.i18n.warning : DV.i18n.info);
+				config.iconCls = 'ns-window-title-messagebox ' + type;
+
+                // html
+                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+
+                // bodyStyle
+                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+
+                // destroy handler
+                config.modal = true;
+                config.destroyOnBlur = true;
+
+                // listeners
+                config.listeners = {
+                    show: function(w) {
+                        w.setPosition(w.getPosition()[0], w.getPosition()[1] / 2);
+
+						if (!w.hasDestroyOnBlurHandler) {
+							web.window.addDestroyOnBlurHandler(w);
+						}
+                    }
+                };
+
+                window = Ext.create('Ext.window.Window', config);
+
+                window.show();
+            };
 
 			// analytics
 			web.analytics = {};
@@ -2241,6 +2374,7 @@ Ext.onReady(function() {
                     addCategoryDimension = false,
                     map = xLayout.dimensionNameItemsMap,
                     dx = dimConf.indicator.dimensionName,
+                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
                     displayProperty = xLayout.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name';
 
                 for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
@@ -2284,6 +2418,11 @@ Ext.onReady(function() {
                     }
                 }
 
+				// aggregation type
+				if (Ext.Array.contains(aggTypes, xLayout.aggregationType)) {
+					paramString += '&aggregationType=' + xLayout.aggregationType;
+				}
+
                 // display property
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
@@ -2303,7 +2442,7 @@ Ext.onReady(function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                alert(msg);
+                ns.alert(msg, 'warning');
 			};
 
 			// chart
@@ -2625,7 +2764,10 @@ Ext.onReady(function() {
                         fields: store.numericFields,
                         minimum: minimum < 0 ? minimum : 0,
                         label: {
-                            renderer: Ext.util.Format.numberRenderer(renderer),
+                            //renderer: Ext.util.Format.numberRenderer(renderer),
+                            renderer: function(v) {
+                                return support.prototype.number.prettyPrint(v);
+                            },
                             style: {},
                             rotate: {}
                         },
@@ -2917,7 +3059,8 @@ Ext.onReady(function() {
                             font: labelFont,
                             fill: labelColor,
                             renderer: function(n) {
-                                return n === '0.0' ? '' : n;
+                                n = n === '0.0' ? '' : n;
+                                return support.prototype.number.prettyPrint(n);
                             }
                         };
                     }
@@ -3007,7 +3150,7 @@ Ext.onReady(function() {
                         renderer: function(si, item) {
                             if (item.value) {
                                 var value = item.value[1] === '0.0' ? '-' : item.value[1];
-                                this.update('<div style="font-size:17px; font-weight:bold">' + value + '</div><div style="font-size:10px">' + si.data[conf.finals.data.domain] + '</div>');
+                                this.update('<div style="font-size:17px; font-weight:bold">' + support.prototype.number.prettyPrint(value) + '</div><div style="font-size:10px">' + si.data[conf.finals.data.domain] + '</div>');
                             }
                         }
                     };
@@ -3039,7 +3182,8 @@ Ext.onReady(function() {
                         padding = 0,
                         positions = ['top', 'right', 'bottom', 'left'],
                         series = chartConfig.series,
-                        labelMarkerSize = xLayout.legendStyle ? xLayout.legendStyle.labelMarkerSize : null;
+                        labelMarkerSize = xLayout.legendStyle && xLayout.legendStyle.labelMarkerSize ? xLayout.legendStyle.labelMarkerSize : null,
+                        chartConfig;
 
                     for (var i = 0, title; i < series.length; i++) {
                         title = series[i].title;
@@ -3085,7 +3229,8 @@ Ext.onReady(function() {
                         padding = 3;
                     }
 
-                    return Ext.create('Ext.chart.Legend', {
+                    // chart
+                    chartConfig = {
                         position: position,
                         isVertical: isVertical,
                         boxStroke: '#ffffff',
@@ -3093,9 +3238,14 @@ Ext.onReady(function() {
                         padding: padding,
                         itemSpacing: 3,
                         labelFont: labelFont,
-                        labelColor: labelColor,
-                        labelMarkerSize: labelMarkerSize
-                    });
+                        labelColor: labelColor
+                    };
+
+                    if (labelMarkerSize) {
+                        chartConfig.labelMarkerSize = labelMarkerSize;
+                    }
+
+                    return Ext.create('Ext.chart.Legend', chartConfig);
                 };
 
                 getDefaultChartTitle = function(store) {
@@ -3206,10 +3356,10 @@ Ext.onReady(function() {
                             shadow: false,
                             insetPadding: ns.dashboard ? 17 : 35,
                             insetPaddingObject: {
-                                top: ns.dashboard ? 12 : 22,
-                                right: ns.dashboard ? (isLineBased ? 5 : 3) : 10,
+                                top: ns.dashboard ? 12 : 32,
+                                right: ns.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
                                 bottom: ns.dashboard ? 2 : 10,
-                                left: ns.dashboard ? (isLineBased ? 15 : 7) : 17
+                                left: ns.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
                             },
                             width: ns.dashboard ? width : width - 15,
                             height: ns.dashboard ? height : height - 40,
@@ -3395,7 +3545,7 @@ Ext.onReady(function() {
                         colors = conf.chart.theme.dv1.slice(0, store.rangeFields.length),
                         seriesTitles = getDefaultSeriesTitle(store);
 
-                    // series
+                    // Series
                     for (var i = 0, line; i < store.rangeFields.length; i++) {
                         line = {
                             type: 'line',
@@ -3536,8 +3686,10 @@ Ext.onReady(function() {
                         label.font = labelFont;
                         label.fill = labelColor;
                         label.renderer = function(value) {
-                            var record = store.getAt(store.findExact(conf.finals.data.domain, value));
-                            return record.data[store.rangeFields[0]];
+                            var record = store.getAt(store.findExact(conf.finals.data.domain, value)),
+                                v = record.data[store.rangeFields[0]];
+
+                            return support.prototype.number.prettyPrint(v);
                         };
                     }
 
@@ -3561,7 +3713,10 @@ Ext.onReady(function() {
                             trackMouse: true,
                             cls: 'dv-chart-tips',
                             renderer: function(item) {
-                                this.update('<div style="text-align:center"><div style="font-size:17px; font-weight:bold">' + item.data[store.rangeFields[0]] + '</div><div style="font-size:10px">' + item.data[conf.finals.data.domain] + '</div></div>');
+                                var value = support.prototype.number.prettyPrint(item.data[store.rangeFields[0]]),
+                                    data = item.data[conf.finals.data.domain];
+
+                                this.update('<div style="text-align:center"><div style="font-size:17px; font-weight:bold">' + value + '</div><div style="font-size:10px">' + data + '</div></div>');
                             }
                         },
                         shadowAttributes: false,
@@ -3585,10 +3740,10 @@ Ext.onReady(function() {
                         store: store,
                         series: series,
                         insetPaddingObject: {
-                            top: 15,
-                            right: 2,
-                            bottom: 13,
-                            left: 7
+                            top: ns.dashboard ? 15 : 40,
+                            right: ns.dashboard ? 2 : 30,
+                            bottom: ns.dashboard ? 13: 30,
+                            left: ns.dashboard ? 7 : 30
                         }
                     });
 
@@ -3801,7 +3956,9 @@ Ext.onReady(function() {
 			}
 		}());
 
-		// instance
+		// alert
+        ns.alert = web.message.alert;
+
 		return {
 			conf: conf,
 			api: api,
@@ -4000,18 +4157,19 @@ Ext.onReady(function() {
                 },
                 el = Ext.get(init.el);
 
-            ns.plugin = init.plugin;
-            ns.dashboard = init.dashboard;
-            ns.crossDomain = init.crossDomain;
-            ns.skipMask = init.skipMask;
-            ns.skipFade = init.skipFade;
+			// message
+			web.message = web.message || {};
 
-			init.el = config.el;
+			web.message.alert = function(text) {
+                var div = Ext.get(init.el);
 
-            if (!ns.skipFade && el) {
-                el.setStyle('opacity', 0);
-            }
+                if (div) {
+                    div.setStyle('opacity', 1);
+                    div.update('<div class="ns-plugin-alert">' + text + '</div>');
+                }
+            };
 
+            // chart
 			web.chart = web.chart || {};
 
             web.chart.loadChart = function(obj) {
@@ -4126,19 +4284,19 @@ Ext.onReady(function() {
                     ns.app.chart = ns.core.web.chart.createChart(ns, legendSet);
 
                     // fade
-                    if (!ns.skipFade) {
-                        ns.app.chart.on('afterrender', function() {
-                            Ext.defer( function() {
-                                var el = Ext.get(init.el);
+                    //if (!ns.skipFade) {
+                        //ns.app.chart.on('afterrender', function() {
+                            //Ext.defer( function() {
+                                //var el = Ext.get(init.el);
 
-                                if (el) {
-                                    el.fadeIn({
-                                        duration: 400
-                                    });
-                                }
-                            }, 300 );
-                        });
-                    }
+                                //if (el) {
+                                    //el.fadeIn({
+                                        //duration: 400
+                                    //});
+                                //}
+                            //}, 300 );
+                        //});
+                    //}
 
                     // update viewport
                     ns.app.centerRegion.removeAll();
@@ -4186,7 +4344,22 @@ Ext.onReady(function() {
                     fn();
                 }
 			};
-		};
+
+            // ns
+            ns.plugin = init.plugin;
+            ns.dashboard = init.dashboard;
+            ns.crossDomain = init.crossDomain;
+            ns.skipMask = init.skipMask;
+            ns.skipFade = init.skipFade;
+
+            ns.alert = web.message.alert;
+
+			init.el = config.el;
+
+            //if (!ns.skipFade && el) {
+                //el.setStyle('opacity', 0);
+            //}
+        };
 
 		createViewport = function() {
 			var el = Ext.get(ns.core.init.el),
@@ -4235,19 +4408,10 @@ Ext.onReady(function() {
             init.skipMask = Ext.isBoolean(config.skipMask) ? config.skipMask : false;
             init.skipFade = Ext.isBoolean(config.skipFade) ? config.skipFade : false;
 
-            // alert
-            init.alert = function(text) {
-                var div = Ext.get(config.el);
-
-                if (div) {
-                    div.setStyle('opacity', 1);
-                    div.update('<div class="ns-plugin-alert">' + text + '</div>');
-                }
-            };
-
             // init
+            ns.init = init;
             DV.instances.push(ns);
-			ns.core = DV.getCore(Ext.clone(init));
+			ns.core = DV.getCore(ns);
 			extendInstance(ns);
 
 			ns.app.viewport = createViewport();
