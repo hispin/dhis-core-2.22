@@ -509,13 +509,14 @@ Ext.onReady( function() {
 
 	// namespace
 	DV = {};
+    var NS = DV;
 
-	DV.instances = [];
-	DV.i18n = {};
-	DV.isDebug = false;
-	DV.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
+	NS.instances = [];
+	NS.i18n = {};
+	NS.isDebug = false;
+	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	DV.getCore = function(ns) {
+	NS.getCore = function(ns) {
         var init = ns.init,
             conf = {},
             api = {},
@@ -523,6 +524,9 @@ Ext.onReady( function() {
             service = {},
             web = {},
             dimConf;
+
+        // tmp
+        ns.alert = function() {};
 
 		// conf
         (function() {
@@ -543,19 +547,19 @@ Ext.onReady( function() {
                 dimension: {
                     data: {
                         value: 'data',
-                        name: DV.i18n.data,
+                        name: NS.i18n.data,
                         dimensionName: 'dx',
                         objectName: 'dx'
                     },
                     indicator: {
                         value: 'indicator',
-                        name: DV.i18n.indicator,
+                        name: NS.i18n.indicator,
                         dimensionName: 'dx',
                         objectName: 'in'
                     },
                     dataElement: {
                         value: 'dataelement',
-                        name: DV.i18n.data_element,
+                        name: NS.i18n.data_element,
                         dimensionName: 'dx',
                         objectName: 'de'
                     },
@@ -567,18 +571,18 @@ Ext.onReady( function() {
                     },
                     dataSet: {
                         value: 'dataset',
-                        name: DV.i18n.dataset,
+                        name: NS.i18n.dataset,
                         dimensionName: 'dx',
                         objectName: 'ds'
                     },
                     category: {
-                        name: DV.i18n.assigned_categories,
+                        name: NS.i18n.assigned_categories,
                         dimensionName: 'co',
                         objectName: 'co',
                     },
                     period: {
                         value: 'period',
-                        name: DV.i18n.period,
+                        name: NS.i18n.period,
                         dimensionName: 'pe',
                         objectName: 'pe',
                     },
@@ -590,7 +594,7 @@ Ext.onReady( function() {
                     },
                     organisationUnit: {
                         value: 'organisationUnits',
-                        name: DV.i18n.organisation_units,
+                        name: NS.i18n.organisation_units,
                         dimensionName: 'ou',
                         objectName: 'ou',
                     },
@@ -651,17 +655,17 @@ Ext.onReady( function() {
 
 			conf.period = {
 				periodTypes: [
-					{id: 'Daily', name: DV.i18n.daily},
-					{id: 'Weekly', name: DV.i18n.weekly},
-					{id: 'Monthly', name: DV.i18n.monthly},
-					{id: 'BiMonthly', name: DV.i18n.bimonthly},
-					{id: 'Quarterly', name: DV.i18n.quarterly},
-					{id: 'SixMonthly', name: DV.i18n.sixmonthly},
-					{id: 'SixMonthlyApril', name: DV.i18n.sixmonthly_april},
-					{id: 'Yearly', name: DV.i18n.yearly},
-					{id: 'FinancialOct', name: DV.i18n.financial_oct},
-					{id: 'FinancialJuly', name: DV.i18n.financial_july},
-					{id: 'FinancialApril', name: DV.i18n.financial_april}
+					{id: 'Daily', name: NS.i18n.daily},
+					{id: 'Weekly', name: NS.i18n.weekly},
+					{id: 'Monthly', name: NS.i18n.monthly},
+					{id: 'BiMonthly', name: NS.i18n.bimonthly},
+					{id: 'Quarterly', name: NS.i18n.quarterly},
+					{id: 'SixMonthly', name: NS.i18n.sixmonthly},
+					{id: 'SixMonthlyApril', name: NS.i18n.sixmonthly_april},
+					{id: 'Yearly', name: NS.i18n.yearly},
+					{id: 'FinancialOct', name: NS.i18n.financial_oct},
+					{id: 'FinancialJuly', name: NS.i18n.financial_july},
+					{id: 'FinancialApril', name: NS.i18n.financial_april}
 				]
 			};
 
@@ -780,12 +784,12 @@ Ext.onReady( function() {
 
 				return function() {
 					if (!Ext.isObject(config)) {
-						ns.alert('Record: config is not an object: ' + config, true);
+						console.log('api.layout.Record: config is not an object: ' + config);
 						return;
 					}
 
 					if (!Ext.isString(config.id)) {
-						ns.alert('Record: id is not text: ' + config, true);
+						console.log('api.layout.Record: id is not text: ' + config, true);
 						return;
 					}
 
@@ -998,19 +1002,19 @@ Ext.onReady( function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(DV.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter', true);
+								ns.alert(NS.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(DV.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter', true);
+								ns.alert(NS.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(DV.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter', true);
+								ns.alert(NS.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
 								return;
 							}
 						}
@@ -1372,7 +1376,7 @@ Ext.onReady( function() {
 
                 // number
 			support.prototype.number = {};
-                        
+
 			support.prototype.number.prettyPrint = function(number, separator) {
 				separator = separator || 'space';
 
@@ -2186,7 +2190,7 @@ Ext.onReady( function() {
 
 				message = message || 'Loading..';
 
-				if (component.mask) {
+				if (component.mask && component.mask.destroy) {
 					component.mask.destroy();
 					component.mask = null;
 				}
@@ -2211,11 +2215,96 @@ Ext.onReady( function() {
 					return null;
 				}
 
-				if (component.mask) {
+				if (component.mask && component.mask.destroy) {
 					component.mask.destroy();
 					component.mask = null;
 				}
 			};
+
+			// window
+			web.window = {};
+
+			web.window.setAnchorPosition = function(w, target) {
+				var vpw = ns.app.viewport.getWidth(),
+					targetx = target ? target.getPosition()[0] : 4,
+					winw = w.getWidth(),
+					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
+
+				if ((targetx + winw) > vpw) {
+					w.setPosition((vpw - winw - 2), y);
+				}
+				else {
+					w.setPosition(targetx, y);
+				}
+			};
+
+			web.window.addHideOnBlurHandler = function(w) {
+				var maskElements = Ext.query('.x-mask'),
+                    el = Ext.get(maskElements[0]);
+
+				el.on('click', function() {
+					if (w.hideOnBlur) {
+						w.hide();
+					}
+				});
+
+				w.hasHideOnBlurHandler = true;
+			};
+
+			web.window.addDestroyOnBlurHandler = function(w) {
+				var maskElements = Ext.query('.x-mask'),
+                    el = Ext.get(maskElements[0]);
+
+				el.on('click', function() {
+					if (w.destroyOnBlur) {
+						w.destroy();
+					}
+				});
+
+				w.hasDestroyOnBlurHandler = true;
+			};
+
+			// message
+			web.message = {};
+
+			web.message.alert = function(msg, type) {
+                var config = {},
+                    window;
+
+                if (!msg) {
+                    return;
+                }
+
+                type = type || 'error';
+
+				config.title = type === 'error' ? NS.i18n.error : (type === 'warning' ? NS.i18n.warning : NS.i18n.info);
+				config.iconCls = 'ns-window-title-messagebox ' + type;
+
+                // html
+                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+
+                // bodyStyle
+                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+
+                // destroy handler
+                config.modal = true;
+                config.destroyOnBlur = true;
+
+                // listeners
+                config.listeners = {
+                    show: function(w) {
+                        w.setPosition(w.getPosition()[0], w.getPosition()[1] / 2);
+
+						if (!w.hasDestroyOnBlurHandler) {
+							web.window.addDestroyOnBlurHandler(w);
+						}
+                    }
+                };
+
+                window = Ext.create('Ext.window.Window', config);
+
+                window.show();
+            };
 
 			// analytics
 			web.analytics = {};
@@ -2296,7 +2385,7 @@ Ext.onReady( function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                ns.alert(msg);
+                ns.alert(msg, 'warning');
 			};
 
 			// chart
@@ -2435,7 +2524,7 @@ Ext.onReady( function() {
                             }
 
                             trendLineFields.push(regressionKey);
-                            xResponse.metaData.names[regressionKey] = DV.i18n.trend + ' (Total)';
+                            xResponse.metaData.names[regressionKey] = NS.i18n.trend + ' (Total)';
                         }
                         else {
                             for (var i = 0; i < failSafeColumnIds.length; i++) {
@@ -2452,7 +2541,7 @@ Ext.onReady( function() {
                                 }
 
                                 trendLineFields.push(regressionKey);
-                                xResponse.metaData.names[regressionKey] = DV.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
+                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
                             }
                         }
                     }
@@ -2565,7 +2654,7 @@ Ext.onReady( function() {
                         return Ext.Array.max(values);
                     };
 
-                    if (DV.isDebug) {
+                    if (NS.isDebug) {
                         console.log("data", data);
                         console.log("rangeFields", store.rangeFields);
                         console.log("domainFields", store.domainFields);
@@ -2969,7 +3058,7 @@ Ext.onReady( function() {
                         },
                         showMarkers: false,
                         title: function() {
-                            var title = (Ext.isString(xLayout.targetLineTitle) ? xLayout.targetLineTitle : DV.i18n.target) + ' (' + xLayout.targetLineValue + ')',
+                            var title = (Ext.isString(xLayout.targetLineTitle) ? xLayout.targetLineTitle : NS.i18n.target) + ' (' + xLayout.targetLineValue + ')',
                                 ls = xLayout.legendStyle;
                             return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
                         }()
@@ -2990,7 +3079,7 @@ Ext.onReady( function() {
                         },
                         showMarkers: false,
                         title: function() {
-                            var title = (Ext.isString(xLayout.baseLineTitle) ? xLayout.baseLineTitle : DV.i18n.base) + ' (' + xLayout.baseLineValue + ')',
+                            var title = (Ext.isString(xLayout.baseLineTitle) ? xLayout.baseLineTitle : NS.i18n.base) + ' (' + xLayout.baseLineValue + ')',
                                 ls = xLayout.legendStyle;
                             return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
                         }()
@@ -3219,7 +3308,7 @@ Ext.onReady( function() {
                             height: ns.dashboard ? height : height - 40,
                             theme: 'dv1'
                         };
-                        
+
                     // legend
                     if (!xLayout.hideLegend) {
                         defaultConfig.legend = getDefaultLegend(store, config);
@@ -3542,7 +3631,7 @@ Ext.onReady( function() {
                         label.renderer = function(value) {
                             var record = store.getAt(store.findExact(conf.finals.data.domain, value)),
                                 v = record.data[store.rangeFields[0]];
-                                
+
                             return support.prototype.number.prettyPrint(v);
                         };
                     }
@@ -3569,7 +3658,7 @@ Ext.onReady( function() {
                             renderer: function(item) {
                                 var value = support.prototype.number.prettyPrint(item.data[store.rangeFields[0]]),
                                     data = item.data[conf.finals.data.domain];
-                                    
+
                                 this.update('<div style="text-align:center"><div style="font-size:17px; font-weight:bold">' + value + '</div><div style="font-size:10px">' + data + '</div></div>');
                             }
                         },
@@ -3810,7 +3899,9 @@ Ext.onReady( function() {
 			}
 		}());
 
-		// instance
+		// alert
+        ns.alert = web.message.alert;
+
 		return {
 			conf: conf,
 			api: api,

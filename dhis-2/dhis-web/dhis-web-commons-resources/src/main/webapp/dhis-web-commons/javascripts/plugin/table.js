@@ -15,7 +15,7 @@ Ext.onReady( function() {
             styleEl = document.createElement("style");
 
         styleEl.setAttribute("type", "text/css");
-        
+
         if (id) {
            styleEl.setAttribute("id", id);
         }
@@ -47,13 +47,17 @@ Ext.onReady( function() {
 	PT.isDebug = false;
 	PT.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	PT.getCore = function(init) {
-        var conf = {},
+	PT.getCore = function(ns) {
+        var init = ns.init,
+            conf = {},
             api = {},
             support = {},
             service = {},
             web = {},
             dimConf;
+
+        // tmp
+        ns.alert = function() {};
 
 		// conf
 		(function() {
@@ -162,7 +166,8 @@ Ext.onReady( function() {
 					{id: 'FinancialOct', name: PT.i18n.financial_oct},
 					{id: 'FinancialJuly', name: PT.i18n.financial_july},
 					{id: 'FinancialApril', name: PT.i18n.financial_april}
-				]
+				],
+                relativePeriods: []
 			};
 
 			conf.layout = {
@@ -173,7 +178,7 @@ Ext.onReady( function() {
 				west_fill_accordion_indicator: 56,
 				west_fill_accordion_dataelement: 59,
 				west_fill_accordion_dataset: 31,
-				west_fill_accordion_period: 284,
+				west_fill_accordion_period: 303,
 				west_fill_accordion_organisationunit: 58,
 				west_maxheight_accordion_indicator: 400,
 				west_maxheight_accordion_dataelement: 400,
@@ -207,10 +212,10 @@ Ext.onReady( function() {
 				multiselect_fill_reportingrates: 315
 			};
 
-			conf.pivot = {
+			conf.report = {
 				digitGroupSeparator: {
 					'comma': ',',
-					'space': ' '
+					'space': '&nbsp;'
 				},
 				displayDensity: {
                     'xcompact': '2px',
@@ -282,7 +287,7 @@ Ext.onReady( function() {
 					}
 
 					if (!Ext.isString(config.id)) {
-						alert('Record: id is not text: ' + config);
+						console.log('api.layout.Record: id is not text: ' + config);
 						return;
 					}
 
@@ -357,7 +362,7 @@ Ext.onReady( function() {
 
 				// hideEmptyRows: boolean (false)
 
-                // aggregationType: string ('default') - 'default', 'count', 'sum'
+                // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
 
 				// showHierarchy: boolean (false)
 
@@ -386,6 +391,8 @@ Ext.onReady( function() {
 				// sortOrder: integer (0) //-1, 0, 1
 
 				// topLimit: integer (100) //5, 10, 20, 50, 100
+
+                // displayProperty: string ('name') // 'name', 'shortname', null
 
                 // userOrganisationUnit: string
 
@@ -425,19 +432,19 @@ Ext.onReady( function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								web.message.alert(PT.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
+								ns.alert(PT.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								web.message.alert(PT.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
+								ns.alert(PT.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								web.message.alert(PT.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
+								ns.alert(PT.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
 								return;
 							}
 						}
@@ -445,27 +452,33 @@ Ext.onReady( function() {
 
 					// dc and in
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.indicator.objectName]) {
-						web.message.alert('Indicators and detailed data elements cannot be specified together');
+						ns.alert('Indicators and detailed data elements cannot be specified together');
 						return;
 					}
 
 					// dc and de
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataElement.objectName]) {
-						web.message.alert('Detailed data elements and totals cannot be specified together');
+						ns.alert('Detailed data elements and totals cannot be specified together');
 						return;
 					}
 
 					// dc and ds
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataSet.objectName]) {
-						web.message.alert('Data sets and detailed data elements cannot be specified together');
+						ns.alert('Data sets and detailed data elements cannot be specified together');
 						return;
 					}
 
 					// dc and co
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.category.objectName]) {
-						web.message.alert('Assigned categories and detailed data elements cannot be specified together');
+						ns.alert('Assigned categories and detailed data elements cannot be specified together');
 						return;
 					}
+
+                    // in and aggregation type
+                    if (objectNameDimensionMap[dimConf.indicator.objectName] && config.aggregationType !== 'DEFAULT') {
+                        ns.alert('Indicators and aggregation types cannot be specified together', true);
+                        return;
+                    }
 
 					return true;
 				};
@@ -476,7 +489,7 @@ Ext.onReady( function() {
 
 					// config must be an object
 					if (!(config && Ext.isObject(config))) {
-						alert('Layout: config is not an object (' + init.el + ')');
+						console.log('Layout: config is not an object (' + init.el + ')');
 						return;
 					}
 
@@ -486,7 +499,7 @@ Ext.onReady( function() {
 
 					// at least one dimension specified as column or row
 					if (!(config.columns || config.rows)) {
-						alert(PT.i18n.at_least_one_dimension_must_be_specified_as_row_or_column);
+						ns.alert(PT.i18n.at_least_one_dimension_must_be_specified_as_row_or_column);
 						return;
 					}
 
@@ -501,7 +514,7 @@ Ext.onReady( function() {
 
 					// at least one period
 					if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						alert(PT.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
+						ns.alert(PT.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
 						return;
 					}
 
@@ -526,7 +539,7 @@ Ext.onReady( function() {
 					layout.showRowSubTotals = Ext.isBoolean(config.rowSubTotals) ? config.rowSubTotals : (Ext.isBoolean(config.showRowSubTotals) ? config.showRowSubTotals : true);
 					layout.showDimensionLabels = Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
 					layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
-                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'default';
+                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'DEFAULT';
 
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
 
@@ -556,6 +569,7 @@ Ext.onReady( function() {
                         layout.userOrganisationUnit = config.userOrganisationUnit;
                     }
 
+                    // validate
 					if (!validateSpecialCases()) {
 						return;
 					}
@@ -621,11 +635,11 @@ Ext.onReady( function() {
 					}
 
 					if (!(Ext.isArray(config.rows) && config.rows.length > 0)) {
-                        init.alert('No values found');
-						return;
+						//console.log('No values found');
+						//return;
 					}
 
-					if (config.headers.length !== config.rows[0].length) {
+					if (config.rows.length > 0 && config.headers.length !== config.rows[0].length) {
 						console.log('Response: headers.length !== rows[0].length');
 					}
 
@@ -655,19 +669,25 @@ Ext.onReady( function() {
 				return array.length;
 			};
 
-			support.prototype.array.sort = function(array, direction, key) {
-				// accepts [number], [string], [{key: number}], [{key: string}]
+			support.prototype.array.sort = function(array, direction, key, emptyFirst) {
+				// supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
 
 				if (!support.prototype.array.getLength(array)) {
 					return;
 				}
 
-				key = key || 'name';
+				key = !!key || Ext.isNumber(key) ? key : 'name';
 
 				array.sort( function(a, b) {
 
 					// if object, get the property values
-					if (Ext.isObject(a) && Ext.isObject(b) && key) {
+					if (Ext.isObject(a) && Ext.isObject(b)) {
+						a = a[key];
+						b = b[key];
+					}
+
+					// if array, get from the right index
+					if (Ext.isArray(a) && Ext.isArray(b)) {
 						a = a[key];
 						b = b[key];
 					}
@@ -689,6 +709,14 @@ Ext.onReady( function() {
 					else if (Ext.isNumber(a) && Ext.isNumber(b)) {
 						return direction === 'DESC' ? b - a : a - b;
 					}
+
+                    else if (a === undefined || a === null) {
+                        return emptyFirst ? -1 : 1;
+                    }
+
+                    else if (b === undefined || b === null) {
+                        return emptyFirst ? 1 : -1;
+                    }
 
 					return -1;
 				});
@@ -773,7 +801,7 @@ Ext.onReady( function() {
 					return number;
 				}
 
-				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.pivot.digitGroupSeparator[separator]);
+				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.report.digitGroupSeparator[separator]);
 			};
 
 			// color
@@ -1690,6 +1718,10 @@ Ext.onReady( function() {
 					delete layout.showRowSubTotals;
 				}
 
+				if (layout.showDimensionLabels) {
+					delete layout.showDimensionLabels;
+				}
+
 				if (!layout.hideEmptyRows) {
 					delete layout.hideEmptyRows;
 				}
@@ -1718,6 +1750,10 @@ Ext.onReady( function() {
 					delete layout.sorting;
 				}
 
+				if (layout.aggregationType === 'DEFAULT') {
+					delete layout.aggregationType;
+				}
+
 				delete layout.parentGraphMap;
 				delete layout.reportingPeriod;
 				delete layout.organisationUnit;
@@ -1726,7 +1762,6 @@ Ext.onReady( function() {
 				delete layout.cumulative;
 				delete layout.sortOrder;
 				delete layout.topLimit;
-                delete layout.aggregationType;
 
 				return layout;
 			};
@@ -1940,12 +1975,89 @@ Ext.onReady( function() {
 				}
 			};
 
+			// window
+			web.window = web.window || {};
+
+			web.window.setAnchorPosition = function(w, target) {
+				var vpw = ns.app.viewport.getWidth(),
+					targetx = target ? target.getPosition()[0] : 4,
+					winw = w.getWidth(),
+					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
+
+				if ((targetx + winw) > vpw) {
+					w.setPosition((vpw - winw - 2), y);
+				}
+				else {
+					w.setPosition(targetx, y);
+				}
+			};
+
+			web.window.addHideOnBlurHandler = function(w) {
+				var el = Ext.get(Ext.query('.x-mask')[0]);
+
+				el.on('click', function() {
+					if (w.hideOnBlur) {
+						w.hide();
+					}
+				});
+
+				w.hasHideOnBlurHandler = true;
+			};
+
+			web.window.addDestroyOnBlurHandler = function(w) {
+				var maskElements = Ext.query('.x-mask'),
+                    el = Ext.get(maskElements[0]);
+
+				el.on('click', function() {
+					if (w.destroyOnBlur) {
+						w.destroy();
+					}
+				});
+
+				w.hasDestroyOnBlurHandler = true;
+			};
+
 			// message
 			web.message = {};
 
-			web.message.alert = function(message) {
-				console.log(message);
-			};
+			web.message.alert = function(msg, type) {
+                var config = {},
+                    window;
+
+                if (!msg) {
+                    return;
+                }
+
+                type = type || 'error';
+
+				config.title = type === 'error' ? PT.i18n.error : (type === 'warning' ? PT.i18n.warning : PT.i18n.info);
+				config.iconCls = 'ns-window-title-messagebox ' + type;
+
+                // html
+                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+
+                // bodyStyle
+                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+
+                // destroy handler
+                config.modal = true;
+                config.destroyOnBlur = true;
+
+                // listeners
+                config.listeners = {
+                    show: function(w) {
+                        w.setPosition(w.getPosition()[0], w.getPosition()[1] / 2);
+
+						if (!w.hasDestroyOnBlurHandler) {
+							web.window.addDestroyOnBlurHandler(w);
+						}
+                    }
+                };
+
+                window = Ext.create('Ext.window.Window', config);
+
+                window.show();
+            };
 
 			// analytics
 			web.analytics = {};
@@ -1959,14 +2071,7 @@ Ext.onReady( function() {
 					map = xLayout.dimensionNameItemsMap,
 					dx = dimConf.indicator.dimensionName,
 					co = dimConf.category.dimensionName,
-                    aggTypes = {
-                        'count': 'COUNT',
-                        'sum': 'SUM',
-                        'stddev': 'STDDEV',
-                        'variance': 'VARIANCE',
-                        'min': 'MIN',
-                        'max': 'MAX'
-                    },
+                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
                     displayProperty = xLayout.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name';
 
 				for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
@@ -2014,9 +2119,10 @@ Ext.onReady( function() {
 					paramString += '&hierarchyMeta=true';
 				}
 
-                if (aggTypes.hasOwnProperty(xLayout.aggregationType)) {
-                    paramString += '&aggregationType=' + aggTypes[xLayout.aggregationType];
-                }
+				// aggregation type
+				if (Ext.Array.contains(aggTypes, xLayout.aggregationType)) {
+					paramString += '&aggregationType=' + xLayout.aggregationType;
+				}
 
                 // display property
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
@@ -2042,7 +2148,7 @@ Ext.onReady( function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                alert(msg);
+                ns.alert(msg, 'warning');
 			};
 
 			// pivot
@@ -2055,6 +2161,8 @@ Ext.onReady( function() {
 					valueMap = xResponse.idValueMap,
 					direction = xLayout.sorting ? xLayout.sorting.direction : 'DESC',
 					layout;
+
+                id = Ext.isString(id) ? id.replace('#', '') : id;
 
 				dim.ids = [];
 
@@ -2210,8 +2318,6 @@ Ext.onReady( function() {
 					rowSpan = config.rowSpan ? 'rowspan="' + config.rowSpan + '" ' : '';
                     htmlValue = getHtmlValue(config);
 					htmlValue = config.type !== 'dimension' ? support.prototype.number.prettyPrint(htmlValue, xLayout.digitGroupSeparator) : htmlValue;
-					displayDensity = conf.pivot.displayDensity[config.displayDensity] || conf.pivot.displayDensity[xLayout.displayDensity];
-					fontSize = conf.pivot.fontSize[config.fontSize] || conf.pivot.fontSize[xLayout.fontSize];
 
 					cls += config.hidden ? ' td-hidden' : '';
 					cls += config.collapsed ? ' td-collapsed' : '';
@@ -2242,7 +2348,7 @@ Ext.onReady( function() {
 						//html += '</div></div></div></td>';
 					//}
 					//else {
-						html += 'style="' + (bgColor && isValue ? 'color:' + bgColor + '; ' : '') + 'padding:' + displayDensity + '; font-size:' + fontSize + ';"' + '>' + htmlValue + '</td>';
+						html += 'style="' + (bgColor && isValue ? 'color:' + bgColor + '; ' : '') + '">' + htmlValue + '</td>';
 					//}
 
 					return html;
@@ -2886,13 +2992,19 @@ Ext.onReady( function() {
 				};
 
 				getHtml = function() {
-					var s = '<table id="' + xLayout.tableUuid + '" class="pivot">';
+                    var cls = 'pivot',
+                        table;
+
+                    cls += xLayout.displayDensity && xLayout.displayDensity !== 'normal' ? ' displaydensity-' + xLayout.displayDensity : '';
+                    cls += xLayout.fontSize && xLayout.fontSize !== 'normal' ? ' fontsize-' + xLayout.fontSize : '';
+
+					table = '<table id="' + xLayout.tableUuid + '" class="' + cls + '">';
 
 					for (var i = 0; i < htmlArray.length; i++) {
-						s += '<tr>' + htmlArray[i].join('') + '</tr>';
+						table += '<tr>' + htmlArray[i].join('') + '</tr>';
 					}
 
-					return s += '</table>';
+					return table += '</table>';
 				};
 
 				// get html
@@ -2940,7 +3052,9 @@ Ext.onReady( function() {
 			}
 		}());
 
-		// instance
+		// alert
+		ns.alert = web.message.alert;
+
 		return {
 			conf: conf,
 			api: api,
@@ -3082,12 +3196,15 @@ Ext.onReady( function() {
         var css = '',
             arrowUrl = config.dashboard ? init.contextPath + '/dhis-web-commons/javascripts/plugin/images/arrowupdown.png' : '//dhis2-cdn.org/v217/plugin/images/arrowupdown.png';
 
-        css += 'table.pivot { font-family: arial,sans-serif,ubuntu,consolas; } \n';
+        css += 'table.pivot { font-family: arial,sans-serif,ubuntu,consolas; border-collapse: collapse; border-spacing: 0px; border: 0 none; } \n';
         css += '.td-nobreak { white-space: nowrap; } \n';
         css += '.td-hidden { display: none; } \n';
         css += '.td-collapsed { display: none; } \n';
-        css += 'table.pivot { border-collapse: collapse; border-spacing: 0px; border: 0 none; } \n';
-        css += '.pivot td { font-family: arial, sans-serif, helvetica neue, helvetica !important; padding: 5px; border: 1px solid #b2b2b2; } \n';
+        css += 'table.pivot.displaydensity-comfortable td { padding: 7px } \n';
+        css += 'table.pivot.displaydensity-compact td { padding: 3px } \n';
+        css += 'table.pivot.fontsize-large td { font-size: 13px } \n';
+        css += 'table.pivot.fontsize-small td { font-size: 10px } \n';
+        css += '.pivot td { font-family: arial, sans-serif, helvetica neue, helvetica !important; padding: 5px; border: 1px solid #b2b2b2; font-size: 11px } \n';
         css += '.pivot-dim { background-color: #dae6f8; text-align: center; } \n';
         css += '.pivot-dim.highlighted { background-color: #c5d8f6; } \n';
         css += '.pivot-dim-subtotal { background-color: #cad6e8; text-align: center; } \n';
@@ -3167,23 +3284,20 @@ Ext.onReady( function() {
                 headers = {
                     'Content-Type': headerMap[type],
                     'Accepts': headerMap[type]
-                };
+                },
+                el = Ext.get(init.el);
 
-            ns.plugin = init.plugin;
-            ns.dashboard = init.dashboard;
-            ns.crossDomain = init.crossDomain;
-            ns.skipMask = init.skipMask;
-            ns.skipFade = init.skipFade;
+			// message
+			web.message = web.message || {};
 
-			init.el = config.el;
+			web.message.alert = function(text) {
+                var div = Ext.get(init.el);
 
-            if (!ns.skipFade) {
-                var el = Ext.get(init.el);
-
-                if (el) {
-                    el.setStyle('opacity', 0);
+                if (div) {
+                    div.setStyle('opacity', 1);
+                    div.update('<div class="ns-plugin-alert">' + text + '</div>');
                 }
-            }
+            };
 
 			// mouse events
 			web.events = web.events || {};
@@ -3393,17 +3507,17 @@ Ext.onReady( function() {
 				ns.app.centerRegion.update(getTitleHtml(layout.name) + table.html);
 
                 // fade
-                if (!ns.skipFade) {
-                    Ext.defer(function() {
-                        var el = Ext.get(init.el);
+                //if (!ns.skipFade) {
+                    //Ext.defer(function() {
+                        //var el = Ext.get(init.el);
 
-                        if (el) {
-                            el.fadeIn({
-                                duration: 400
-                            });
-                        }
-                    }, 300 );
-                }
+                        //if (el) {
+                            //el.fadeIn({
+                                //duration: 400
+                            //});
+                        //}
+                    //}, 300 );
+                //}
 
 				// after render
 				ns.app.layout = layout;
@@ -3461,6 +3575,21 @@ Ext.onReady( function() {
 				//// re-create table
 				//web.pivot.createTable(layout, null, response, false);
 			//};
+
+			// ns
+            ns.plugin = init.plugin;
+            ns.dashboard = init.dashboard;
+            ns.crossDomain = init.crossDomain;
+            ns.skipMask = init.skipMask;
+            ns.skipFade = init.skipFade;
+
+            ns.alert = web.message.alert;
+
+			init.el = config.el;
+
+            //if (!ns.skipFade && el) {
+				//el.setStyle('opacity', 0);
+            //}
 		};
 
 		createViewport = function() {
@@ -3486,18 +3615,10 @@ Ext.onReady( function() {
             init.skipMask = Ext.isBoolean(config.skipMask) ? config.skipMask : false;
             init.skipFade = Ext.isBoolean(config.skipFade) ? config.skipFade : false;
 
-            // alert
-            init.alert = function(text) {
-                var div = Ext.get(config.el);
-
-                if (div) {
-                    div.setStyle('opacity', 1);
-                    div.update('<div class="ns-plugin-alert">' + text + '</div>');
-                }
-            };
-
-            // init
-			ns.core = PT.getCore(Ext.clone(init));
+			// init
+            ns.init = init;
+            PT.instances.push(ns);
+			ns.core = PT.getCore(ns);
 			extendInstance(ns);
 
 			ns.app.viewport = createViewport();
