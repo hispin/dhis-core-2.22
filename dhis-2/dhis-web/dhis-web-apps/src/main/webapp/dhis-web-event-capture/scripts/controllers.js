@@ -72,7 +72,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         if(angular.isObject($scope.selectedOrgUnit)){
             SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);
             
-            $scope.userAuthority = AuthorityService.getEventCaptureAuthorities(SessionStorageService.get('USER_ROLES'));
+            $scope.userAuthority = AuthorityService.getUserAuthorities(SessionStorageService.get('USER_ROLES'));
             
             //get ouLevels
             ECStorageService.currentStore.open().done(function(){
