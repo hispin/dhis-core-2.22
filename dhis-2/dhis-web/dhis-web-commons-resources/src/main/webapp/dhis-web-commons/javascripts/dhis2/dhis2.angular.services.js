@@ -83,11 +83,16 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     };
     
     return {
-        getEventCaptureAuthorities: function(roles){
+        getUserAuthorities: function(roles){
             var auth = getAuthorities(roles);
             var authority = {};
             authority.canDeleteEvent = auth['F_TRACKED_ENTITY_DATAVALUE_DELETE'] || auth['ALL'] ? true:false;
             authority.canAddOrUpdateEvent = auth['F_TRACKED_ENTITY_DATAVALUE_ADD'] || auth['ALL'] ? true:false;
+            authority.canSearchTei = auth['F_TRACKED_ENTITY_INSTANCE_SEARCH'] || auth['ALL'] ? true:false;
+            authority.canDeleteTei = auth['F_TRACKED_ENTITY_INSTANCE_DELETE'] || auth['ALL'] ? true:false;
+            authority.canRegisterTei = auth['F_TRACKED_ENTITY_INSTANCE_ADD'] || auth['ALL'] ? true:false;
+            authority.canEnrollTei = auth['F_PROGRAM_ENROLLMENT'] || auth['ALL'] ? true:false;
+            authority.canUnEnrollTei = auth['F_PROGRAM_UNENROLLMENT'] || auth['ALL'] ? true:false;
             return authority;
         }
     };
