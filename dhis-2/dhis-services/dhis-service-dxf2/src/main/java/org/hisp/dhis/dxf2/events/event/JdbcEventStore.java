@@ -203,9 +203,10 @@ public class JdbcEventStore
      */
     private String buildSql( EventSearchParams params, List<OrganisationUnit> organisationUnits )
     {
-        String sql = "select * from (";
+        String sql = "select * from ((";
         
         sql += getEventSelectQuery( params, organisationUnits );
+        
         sql += getEventPagingQuery( params );
         
         sql += ") as event left join (";
@@ -217,6 +218,8 @@ public class JdbcEventStore
         sql += getCommentQuery();
         
         sql += ") as cm on event.psi_id=cm.psic_id";
+        
+        sql += ") order by psi_uid desc ";
         
         return sql;
     }
@@ -341,7 +344,7 @@ public class JdbcEventStore
 
     private String getEventPagingQuery( EventSearchParams params )
     {
-        String sql = "order by psi.programstageinstanceid desc ";
+        String sql = " ";
 
         if ( params.isPaging() )
         {
