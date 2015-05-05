@@ -217,9 +217,9 @@ public class JdbcEventStore
         
         sql += getCommentQuery();
         
-        sql += ") as cm on event.psi_id=cm.psic_id";
+        sql += ") as cm on event.psi_id=cm.psic_id ";
         
-        sql += " order by psi_uid desc ";
+        sql += "order by psi_uid desc ";
         
         return sql;
     }
