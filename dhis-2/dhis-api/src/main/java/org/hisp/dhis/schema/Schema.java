@@ -43,6 +43,7 @@ import org.hisp.dhis.common.NameableObject;
 import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -145,6 +146,16 @@ public class Schema implements Ordered, Klass
      * @see org.hisp.dhis.schema.Property
      */
     private Map<String, Property> propertyMap = Maps.newHashMap();
+
+    /**
+     * Map of all persisted properties, cached on first request.
+     */
+    private Map<String, Property> persistedProperties;
+
+    /**
+     * Map of all persisted properties, cached on first request.
+     */
+    private Map<String, Property> nonPersistedProperties;
 
     /**
      * Used for sorting of schema list when doing metadata import/export.
@@ -392,6 +403,42 @@ public class Schema implements Ordered, Klass
     public void setPropertyMap( Map<String, Property> propertyMap )
     {
         this.propertyMap = propertyMap;
+    }
+
+    public Map<String, Property> getPersistedProperties()
+    {
+        if ( persistedProperties == null )
+        {
+            persistedProperties = new HashMap<>();
+
+            for ( Map.Entry<String, Property> entry : getPropertyMap().entrySet() )
+            {
+                if ( entry.getValue().isPersisted() )
+                {
+                    persistedProperties.put( entry.getKey(), entry.getValue() );
+                }
+            }
+        }
+
+        return persistedProperties;
+    }
+
+    public Map<String, Property> getNonPersistedProperties()
+    {
+        if ( nonPersistedProperties == null )
+        {
+            nonPersistedProperties = new HashMap<>();
+
+            for ( Map.Entry<String, Property> entry : getPropertyMap().entrySet() )
+            {
+                if ( !entry.getValue().isPersisted() )
+                {
+                    nonPersistedProperties.put( entry.getKey(), entry.getValue() );
+                }
+            }
+        }
+
+        return nonPersistedProperties;
     }
 
     public void addProperty( Property property )
