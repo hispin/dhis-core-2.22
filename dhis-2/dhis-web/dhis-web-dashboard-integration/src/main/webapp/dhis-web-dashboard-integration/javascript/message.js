@@ -25,8 +25,17 @@ function read( id )
 }
 
 function userCount() {
+    var ignoreTree = $("#ignoreTree").val();
+    var recipients = $("#recipients").val();
+
     return $.ajax({
-        url: '../dhis-web-commons/oust/usercount.action'
+        url: 'userCount.action',
+        type: 'POST',
+        method: 'POST',
+        data: {
+            ignoreTree: ignoreTree,
+            recipients: recipients
+        }
     });
 }
 

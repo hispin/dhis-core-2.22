@@ -5,11 +5,11 @@
   <!-- Dashboard -->
 
   <bean id="org.hisp.dhis.dashboard.action.InitAction" class="org.hisp.dhis.dashboard.action.InitAction"
-	scope="prototype">
+    scope="prototype">
     <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
-	<property name="interpretationService" ref="org.hisp.dhis.interpretation.InterpretationService" />	
+    <property name="interpretationService" ref="org.hisp.dhis.interpretation.InterpretationService" />
   </bean>
-  
+
   <!-- Message -->
 
   <bean id="org.hisp.dhis.dashboard.message.action.GetMessagesAction" class="org.hisp.dhis.dashboard.message.action.GetMessagesAction"
@@ -18,7 +18,7 @@
   </bean>
 
   <bean id="org.hisp.dhis.dashboard.message.action.GetMessageOptionsAction" class="org.hisp.dhis.dashboard.message.action.GetMessageOptionsAction"
-    scope="prototype"/>
+    scope="prototype" />
 
   <bean id="org.hisp.dhis.dashboard.message.action.SendMessageAction" class="org.hisp.dhis.dashboard.message.action.SendMessageAction"
     scope="prototype">
@@ -37,13 +37,13 @@
   <bean id="org.hisp.dhis.dashboard.message.action.ReadMessageAction" class="org.hisp.dhis.dashboard.message.action.ReadMessageAction"
     scope="prototype">
     <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
-	<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+    <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
   </bean>
 
   <bean id="org.hisp.dhis.dashboard.message.action.UnreadMessageAction" class="org.hisp.dhis.dashboard.message.action.UnreadMessageAction"
     scope="prototype">
     <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
-	<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+    <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
   </bean>
 
   <bean id="org.hisp.dhis.dashboard.message.action.RemoveMessageAction" class="org.hisp.dhis.dashboard.message.action.RemoveMessageAction"
@@ -51,21 +51,23 @@
     <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
     <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dashboard.message.action.ToggleFollowUpAction" class="org.hisp.dhis.dashboard.message.action.ToggleFollowUpAction"
-	scope="prototype">
+    scope="prototype">
     <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
     <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
   </bean>
-  
+
+  <bean id="org.hisp.dhis.dashboard.message.action.UserCountAction" class="org.hisp.dhis.dashboard.message.action.UserCountAction" scope="prototype" />
+
   <!-- Interpretations -->
-  
+
   <bean id="org.hisp.dhis.dashboard.interpretation.action.GetInterpretationsAction" class="org.hisp.dhis.dashboard.interpretation.action.GetInterpretationsAction"
-	scope="prototype"/>
+    scope="prototype" />
 
   <!-- Profile -->
 
   <bean id="org.hisp.dhis.dashboard.profile.action.GetUserAction" class="org.hisp.dhis.dashboard.profile.action.GetUserAction"
-    scope="prototype"/>
+    scope="prototype" />
 
 </beans>
