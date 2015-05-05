@@ -211,6 +211,13 @@
       <param name="onExceptionReturn">plainTextError</param>
     </action>
 
+    <action name="usercount" class="org.hisp.dhis.oust.action.GetUserCountAction">
+      <result name="success" type="velocity-json">
+        /dhis-web-commons/ouwt/userCount.vm
+      </result>
+      <param name="onExceptionReturn">plainTextError</param>
+    </action>
+
   </package>
 
   <!-- Organisation Unit Web Tree -->

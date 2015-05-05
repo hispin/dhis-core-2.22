@@ -255,6 +255,8 @@
     </property>
   </bean>
 
+  <bean id="org.hisp.dhis.oust.action.GetUserCountAction" class="org.hisp.dhis.oust.action.GetUserCountAction" scope="prototype"></bean>
+
   <!-- Security import -->
   <import resource="security.xml" />
 
