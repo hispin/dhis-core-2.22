@@ -110,6 +110,11 @@
       <param name="onExceptionReturn">plainTextError</param>
     </action>
 
+    <action name="userCount" class="org.hisp.dhis.dashboard.message.action.UserCountAction">
+      <result name="success" type="velocity-json">/dhis-web-dashboard-integration/jsonUserCount.vm</result>
+      <param name="onExceptionReturn">plainTextError</param>
+    </action>
+
     <!-- Interpretation -->
 
     <action name="interpretation" class="org.hisp.dhis.dashboard.action.NoAction">
