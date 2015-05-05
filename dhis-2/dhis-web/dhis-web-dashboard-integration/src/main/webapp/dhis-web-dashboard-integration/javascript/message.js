@@ -1,6 +1,13 @@
 function submitMessage()
 {
-    $( "#messageForm" ).submit();
+    userCount().done(function(o) {
+        if( o.userCount > 200 ) {
+            i18n_selected_more_than_200_user = i18n_selected_more_than_200_user.replace("{userCount}", o.userCount);
+            setHeaderDelayMessage(i18n_selected_more_than_200_user)
+        } else {
+            $( "#messageForm" ).submit();
+        }
+    });
 }
 
 function removeMessage( id )
@@ -16,6 +23,12 @@ function toggleRowSelected( element )
 function read( id )
 {
     window.location.href = "readMessage.action?id=" + id;
+}
+
+function userCount() {
+    return $.ajax({
+        url: '../dhis-web-commons/oust/usercount.action'
+    });
 }
 
 function validateMessage()
