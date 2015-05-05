@@ -2,8 +2,7 @@ function submitMessage()
 {
     userCount().done(function(o) {
         if( o.userCount > 200 ) {
-            i18n_selected_more_than_200_user = i18n_selected_more_than_200_user.replace("{userCount}", o.userCount);
-            setHeaderDelayMessage(i18n_selected_more_than_200_user)
+            setHeaderDelayMessage(i18n_selected_more_than_200_user.replace("{userCount}", o.userCount))
         } else {
             $( "#messageForm" ).submit();
         }
