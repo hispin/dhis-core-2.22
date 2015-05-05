@@ -28,23 +28,22 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hisp.dhis.common.BaseLinkableObject;
-import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.event.EventStatus;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.BaseLinkableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.event.EventStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @JacksonXmlRootElement( localName = "event", namespace = DxfNamespaces.DXF_2_0 )
-public class Event 
+public class Event
     extends BaseLinkableObject
 {
     private String event;
@@ -60,13 +59,13 @@ public class Event
     private EventStatus enrollmentStatus;
 
     private String orgUnit;
-    
+
     private String orgUnitName;
 
     private String trackedEntityInstance;
 
     private String eventDate;
-    
+
     private String dueDate;
 
     private String storedBy;
@@ -76,11 +75,11 @@ public class Event
     private List<DataValue> dataValues = new ArrayList<>();
 
     private List<Note> notes = new ArrayList<>();
-    
+
     private Boolean followup;
-    
+
     private String created;
-    
+
     private String lastUpdated;
 
     public Event()
@@ -182,7 +181,7 @@ public class Event
     {
         this.orgUnitName = orgUnitName;
     }
-    
+
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
     public String getTrackedEntityInstance()
@@ -206,7 +205,7 @@ public class Event
     {
         this.eventDate = eventDate;
     }
-    
+
     @JsonProperty( required = false )
     @JacksonXmlProperty( isAttribute = true )
     public String getDueDate()
@@ -268,9 +267,9 @@ public class Event
     {
         this.notes = notes;
     }
-    
+
     @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Boolean getFollowup()
     {
         return followup;
@@ -282,7 +281,7 @@ public class Event
     }
 
     @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getCreated()
     {
         return created;
@@ -294,7 +293,7 @@ public class Event
     }
 
     @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getLastUpdated()
     {
         return lastUpdated;
@@ -303,7 +302,7 @@ public class Event
     public void setLastUpdated( String lastUpdated )
     {
         this.lastUpdated = lastUpdated;
-    }    
+    }
 
     @Override
     public boolean equals( Object o )
@@ -313,18 +312,7 @@ public class Event
 
         Event event1 = (Event) o;
 
-        if ( coordinate != null ? !coordinate.equals( event1.coordinate ) : event1.coordinate != null ) return false;
-        if ( dataValues != null ? !dataValues.equals( event1.dataValues ) : event1.dataValues != null ) return false;
         if ( event != null ? !event.equals( event1.event ) : event1.event != null ) return false;
-        if ( eventDate != null ? !eventDate.equals( event1.eventDate ) : event1.eventDate != null ) return false;
-        if ( dueDate != null ? !dueDate.equals( event1.dueDate ) : event1.dueDate != null ) return false;
-        if ( orgUnit != null ? !orgUnit.equals( event1.orgUnit ) : event1.orgUnit != null ) return false;
-        if ( trackedEntityInstance != null ? !trackedEntityInstance.equals( event1.trackedEntityInstance ) : event1.trackedEntityInstance != null )
-            return false;
-        if ( program != null ? !program.equals( event1.program ) : event1.program != null ) return false;
-        if ( programStage != null ? !programStage.equals( event1.programStage ) : event1.programStage != null ) return false;
-        if ( status != event1.status ) return false;
-        if ( storedBy != null ? !storedBy.equals( event1.storedBy ) : event1.storedBy != null ) return false;
 
         return true;
     }
@@ -332,18 +320,7 @@ public class Event
     @Override
     public int hashCode()
     {
-        int result = event != null ? event.hashCode() : 0;
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (program != null ? program.hashCode() : 0);
-        result = 31 * result + (programStage != null ? programStage.hashCode() : 0);
-        result = 31 * result + (orgUnit != null ? orgUnit.hashCode() : 0);
-        result = 31 * result + (trackedEntityInstance != null ? trackedEntityInstance.hashCode() : 0);
-        result = 31 * result + (eventDate != null ? eventDate.hashCode() : 0);
-        result = 31 * result + (dueDate != null ? dueDate.hashCode() : 0);
-        result = 31 * result + (storedBy != null ? storedBy.hashCode() : 0);
-        result = 31 * result + (coordinate != null ? coordinate.hashCode() : 0);
-        result = 31 * result + (dataValues != null ? dataValues.hashCode() : 0);
-        return result;
+        return event != null ? event.hashCode() : 0;
     }
 
     @Override
