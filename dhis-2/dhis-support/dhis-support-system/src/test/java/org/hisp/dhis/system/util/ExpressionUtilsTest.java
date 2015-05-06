@@ -72,10 +72,12 @@ public class ExpressionUtilsTest
         assertTrue( ExpressionUtils.isTrue( "v2 < 18", vars ) );
         assertTrue( ExpressionUtils.isTrue( "v3 == 'goat'", vars ) );
         assertTrue( ExpressionUtils.isTrue( "v4 == 'horse'", vars ) );
+        assertTrue( ExpressionUtils.isTrue( "v4 == \"horse\"", vars ) );
 
         assertFalse( ExpressionUtils.isTrue( "v1 < 1", vars ) );
         assertFalse( ExpressionUtils.isTrue( "v2 > 18", vars ) );
         assertFalse( ExpressionUtils.isTrue( "v3 == 'cow'", vars ) );
         assertFalse( ExpressionUtils.isTrue( "v4 == 'goat'", vars ) );
+        assertFalse( ExpressionUtils.isTrue( "v4 == \"goat\"", vars ) );
     }
 }
