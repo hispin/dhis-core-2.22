@@ -421,6 +421,9 @@
 				<value>relationshiptype</value>
 				<value>programstagesection</value>
 				<value>programvalidation</value>
+				<value>programrule</value>
+				<value>programruleaction</value>
+				<value>programrulevariable</value>
 			</list>
 		</property>
 	</bean>
