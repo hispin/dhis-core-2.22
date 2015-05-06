@@ -117,6 +117,9 @@ dhis2.util.jqTextFilter = function( key, not ) {
   }
 };
 
+/**
+ * Generates a valid UUID.
+ */
 dhis2.util.uuid = function() {
   var S4 = function() {
     return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -125,7 +128,9 @@ dhis2.util.uuid = function() {
   return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 };
 
-
+/**
+ * Generates a valid UID.
+ */
 dhis2.util.uid = function() {
   var letters = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   var allowedChars = "0123456789" + letters;
@@ -142,7 +147,6 @@ dhis2.util.uid = function() {
   
   return uid;
 };
-
 
 /**
  * Normalizes an argument object returned from a jQuery promise. If the argument
