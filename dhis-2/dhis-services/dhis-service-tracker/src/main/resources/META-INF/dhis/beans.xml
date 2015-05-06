@@ -415,6 +415,7 @@
 				<value>trackedentityinstancereminder</value>
 				<value>program</value>
 				<value>programstage</value>
+				<value>programstagesection</value>
 				<value>programstagedataelement</value>
 				<value>programinstance</value>
 				<value>programstageinstance</value>
