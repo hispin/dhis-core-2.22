@@ -28,19 +28,26 @@ package org.hisp.dhis.schema;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Sets;
 import com.google.common.primitives.Primitives;
+
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
+
+import static org.hisp.dhis.schema.PropertyType.*;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public final class SchemaUtils
 {
+    private static final Set<PropertyType> PROPS_IGNORE_MINMAX = Sets.newHashSet( REFERENCE, BOOLEAN, DATE, CONSTANT );
+    
     public static void updatePropertyTypes( Property property )
     {
         Assert.notNull( property );
@@ -85,17 +92,10 @@ public final class SchemaUtils
                 property.setMax( Integer.MAX_VALUE );
             }
 
-            switch ( property.getPropertyType() )
+            if ( PROPS_IGNORE_MINMAX.contains( property.getPropertyType() ) )
             {
-                // min-max for these property types make no sense, so just clear it out
-                case REFERENCE:
-                case BOOLEAN:
-                case DATE:
-                case CONSTANT:
-                {
-                    property.setMin( null );
-                    property.setMax( null );
-                }
+                property.setMin( null );
+                property.setMax( null );
             }
         }
         else
