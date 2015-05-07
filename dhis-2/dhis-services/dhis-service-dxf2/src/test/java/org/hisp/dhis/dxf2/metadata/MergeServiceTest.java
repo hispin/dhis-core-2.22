@@ -59,7 +59,7 @@ public class MergeServiceTest
     public void simpleReplace()
     {
         Date date = new Date();
-        Simple source = new Simple( "string", 10, date, false );
+        Simple source = new Simple( "string", 10, date, false, 123, 2.5f );
         Simple target = new Simple();
 
         mergeService.merge( source, target, MergeStrategy.REPLACE );
@@ -68,14 +68,15 @@ public class MergeServiceTest
         assertEquals( 10, (int) target.getInteger() );
         assertEquals( date, target.getDate() );
         assertEquals( false, target.getBool() );
+        assertEquals( 123, target.getAnInt() );
     }
 
     @Test
     public void simpleMerge()
     {
         Date date = new Date();
-        Simple source = new Simple( null, 10, date, null );
-        Simple target = new Simple( "hello", 20, date, true );
+        Simple source = new Simple( null, 10, date, null, 123, 2.5f );
+        Simple target = new Simple( "hello", 20, date, true, 123, 2.5f );
 
         mergeService.merge( source, target, MergeStrategy.MERGE );
 
@@ -91,9 +92,9 @@ public class MergeServiceTest
         Date date = new Date();
 
         SimpleCollection source = new SimpleCollection( "name" );
-        source.getSimples().add( new Simple( "simple", 10, date, false ) );
-        source.getSimples().add( new Simple( "simple", 20, date, false ) );
-        source.getSimples().add( new Simple( "simple", 30, date, false ) );
+        source.getSimples().add( new Simple( "simple", 10, date, false, 123, 2.5f ) );
+        source.getSimples().add( new Simple( "simple", 20, date, false, 123, 2.5f ) );
+        source.getSimples().add( new Simple( "simple", 30, date, false, 123, 2.5f ) );
 
         SimpleCollection target = new SimpleCollection( "target" );
 
