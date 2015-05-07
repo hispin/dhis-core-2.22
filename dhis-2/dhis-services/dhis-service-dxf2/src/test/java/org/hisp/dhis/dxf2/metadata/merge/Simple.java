@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.metadata;
+package org.hisp.dhis.dxf2.metadata.merge;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,19 +28,81 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.MergeStrategy;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
+import java.util.Date;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface MergeService
+public class Simple
 {
-    /**
-     * Merges source object into target object, requires a "schema friendly" class.
-     *
-     * @param source        Source object to merge from
-     * @param target        Target object to merge into
-     * @param mergeStrategy Strategy to use
-     */
-    <T> void merge( T source, T target, MergeStrategy mergeStrategy );
+    private String string;
+
+    private Integer integer;
+
+    private Date date;
+
+    private Boolean bool;
+
+    public Simple()
+    {
+    }
+
+    public Simple( String string, Integer integer, Date date, Boolean bool )
+    {
+        this.string = string;
+        this.integer = integer;
+        this.date = date;
+        this.bool = bool;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty
+    public String getString()
+    {
+        return string;
+    }
+
+    public void setString( String string )
+    {
+        this.string = string;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty
+    public Integer getInteger()
+    {
+        return integer;
+    }
+
+    public void setInteger( Integer integer )
+    {
+        this.integer = integer;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty
+    public Date getDate()
+    {
+        return date;
+    }
+
+    public void setDate( Date date )
+    {
+        this.date = date;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty
+    public Boolean getBool()
+    {
+        return bool;
+    }
+
+    public void setBool( Boolean bool )
+    {
+        this.bool = bool;
+    }
 }

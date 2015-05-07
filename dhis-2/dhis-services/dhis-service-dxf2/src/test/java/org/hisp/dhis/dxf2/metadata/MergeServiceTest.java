@@ -28,19 +28,42 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.dxf2.metadata.merge.Simple;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface MergeService
+public class MergeServiceTest
+    extends DhisSpringTest
 {
-    /**
-     * Merges source object into target object, requires a "schema friendly" class.
-     *
-     * @param source        Source object to merge from
-     * @param target        Target object to merge into
-     * @param mergeStrategy Strategy to use
-     */
-    <T> void merge( T source, T target, MergeStrategy mergeStrategy );
+    @Autowired
+    private MergeService mergeService;
+
+    @Override
+    public void setUpTest()
+    {
+
+    }
+
+    @Test
+    public void simpleReplace()
+    {
+        Date date = new Date();
+        Simple source = new Simple( "string", 10, date, false );
+        Simple target = new Simple();
+
+        mergeService.merge( source, target, MergeStrategy.REPLACE );
+
+        Assert.assertEquals( "string", target.getString() );
+        Assert.assertEquals( 10, (int) target.getInteger() );
+        Assert.assertEquals( date, target.getDate() );
+        Assert.assertEquals( false, target.getBool() );
+    }
 }

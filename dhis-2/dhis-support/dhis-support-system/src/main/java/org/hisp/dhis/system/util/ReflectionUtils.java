@@ -28,7 +28,11 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.PredicateUtils.alwaysTrue;
+import javassist.util.proxy.ProxyFactory;
+import org.hibernate.collection.spi.PersistentCollection;
+import org.hisp.dhis.system.util.functional.Function1;
+import org.hisp.dhis.system.util.functional.Predicate;
+import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -40,16 +44,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import javassist.util.proxy.ProxyFactory;
-
-import org.hibernate.collection.spi.PersistentCollection;
-import org.hisp.dhis.system.util.functional.Function1;
-import org.hisp.dhis.system.util.functional.Predicate;
-import org.springframework.util.StringUtils;
+import static org.hisp.dhis.system.util.PredicateUtils.alwaysTrue;
 
 /**
  * @author Lars Helge Overland
@@ -417,6 +418,19 @@ public class ReflectionUtils
         }
 
         return null;
+    }
+
+    public static Map<String, Method> getMethodMap( Class<?> klass )
+    {
+        Map<String, Method> methodMap = new HashMap<>();
+        List<Method> methods = getAllMethods( klass );
+
+        for ( Method method : methods )
+        {
+            methodMap.put( method.getName(), method );
+        }
+
+        return methodMap;
     }
 
     public static List<Method> getAllMethods( Class<?> clazz )

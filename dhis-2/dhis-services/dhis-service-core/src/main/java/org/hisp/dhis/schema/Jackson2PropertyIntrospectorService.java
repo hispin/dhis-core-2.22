@@ -89,10 +89,10 @@ public class Jackson2PropertyIntrospectorService
 
         for ( Property property : properties )
         {
-            Method method = property.getGetterMethod();
-            JsonProperty jsonProperty = method.getAnnotation( JsonProperty.class );
+            Method getterMethod = property.getGetterMethod();
+            JsonProperty jsonProperty = getterMethod.getAnnotation( JsonProperty.class );
 
-            String fieldName = getFieldName( method );
+            String fieldName = getFieldName( getterMethod );
             property.setName( !StringUtils.isEmpty( jsonProperty.value() ) ? jsonProperty.value() : fieldName );
 
             if ( property.getGetterMethod() != null )
@@ -133,15 +133,15 @@ public class Jackson2PropertyIntrospectorService
                 property.setSetterMethod( hibernateProperty.getSetterMethod() );
             }
 
-            if ( method.isAnnotationPresent( Description.class ) )
+            if ( property.getGetterMethod().isAnnotationPresent( Description.class ) )
             {
-                Description description = method.getAnnotation( Description.class );
+                Description description = property.getGetterMethod().getAnnotation( Description.class );
                 property.setDescription( description.value() );
             }
 
-            if ( method.isAnnotationPresent( JacksonXmlProperty.class ) )
+            if ( property.getGetterMethod().isAnnotationPresent( JacksonXmlProperty.class ) )
             {
-                JacksonXmlProperty jacksonXmlProperty = method.getAnnotation( JacksonXmlProperty.class );
+                JacksonXmlProperty jacksonXmlProperty = getterMethod.getAnnotation( JacksonXmlProperty.class );
 
                 if ( StringUtils.isEmpty( jacksonXmlProperty.localName() ) )
                 {
@@ -160,7 +160,7 @@ public class Jackson2PropertyIntrospectorService
                 property.setAttribute( jacksonXmlProperty.isAttribute() );
             }
 
-            Class<?> returnType = method.getReturnType();
+            Class<?> returnType = property.getGetterMethod().getReturnType();
             property.setKlass( Primitives.wrap( returnType ) );
 
             if ( Collection.class.isAssignableFrom( returnType ) )
@@ -168,7 +168,7 @@ public class Jackson2PropertyIntrospectorService
                 property.setCollection( true );
                 property.setCollectionName( property.getName() );
 
-                Type type = method.getGenericReturnType();
+                Type type = property.getGetterMethod().getGenericReturnType();
 
                 if ( ParameterizedType.class.isInstance( type ) )
                 {
@@ -202,9 +202,9 @@ public class Jackson2PropertyIntrospectorService
 
             if ( property.isCollection() )
             {
-                if ( method.isAnnotationPresent( JacksonXmlElementWrapper.class ) )
+                if ( property.getGetterMethod().isAnnotationPresent( JacksonXmlElementWrapper.class ) )
                 {
-                    JacksonXmlElementWrapper jacksonXmlElementWrapper = method.getAnnotation( JacksonXmlElementWrapper.class );
+                    JacksonXmlElementWrapper jacksonXmlElementWrapper = getterMethod.getAnnotation( JacksonXmlElementWrapper.class );
                     property.setCollectionWrapping( jacksonXmlElementWrapper.useWrapping() );
 
                     // TODO what if element-wrapper have different namespace?
@@ -261,18 +261,25 @@ public class Jackson2PropertyIntrospectorService
         return StringUtils.uncapitalize( name );
     }
 
-    private static List<Property> collectProperties( Class<?> klass )
+    private List<Property> collectProperties( Class<?> klass )
     {
-        List<Method> allMethods = ReflectionUtils.getAllMethods( klass );
+        Map<String, Method> methodMap = ReflectionUtils.getMethodMap( klass );
         List<Property> properties = Lists.newArrayList();
 
-        for ( Method method : allMethods )
+        for ( Method method : methodMap.values() )
         {
             if ( method.isAnnotationPresent( JsonProperty.class ) )
             {
                 if ( method.getGenericParameterTypes().length == 0 )
                 {
-                    properties.add( new Property( klass, method, null ) );
+                    String fieldName = getFieldName( method );
+                    String setterName = "set" + StringUtils.capitalize( fieldName );
+
+                    Property property = new Property( klass, method, null );
+                    property.setFieldName( fieldName );
+                    property.setSetterMethod( methodMap.get( setterName ) );
+
+                    properties.add( property );
                 }
             }
         }
