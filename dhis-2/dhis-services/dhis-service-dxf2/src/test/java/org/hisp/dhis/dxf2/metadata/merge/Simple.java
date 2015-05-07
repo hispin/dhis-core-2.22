@@ -46,16 +46,22 @@ public class Simple
 
     private Boolean bool;
 
+    private int anInt;
+
+    private float aFloat;
+
     public Simple()
     {
     }
 
-    public Simple( String string, Integer integer, Date date, Boolean bool )
+    public Simple( String string, Integer integer, Date date, Boolean bool, int anInt, float aFloat )
     {
         this.string = string;
         this.integer = integer;
         this.date = date;
         this.bool = bool;
+        this.anInt = anInt;
+        this.aFloat = aFloat;
     }
 
     @JsonProperty
@@ -104,5 +110,29 @@ public class Simple
     public void setBool( Boolean bool )
     {
         this.bool = bool;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty
+    public int getAnInt()
+    {
+        return anInt;
+    }
+
+    public void setAnInt( int anInt )
+    {
+        this.anInt = anInt;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty
+    public float getaFloat()
+    {
+        return aFloat;
+    }
+
+    public void setaFloat( float aFloat )
+    {
+        this.aFloat = aFloat;
     }
 }
