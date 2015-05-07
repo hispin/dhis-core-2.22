@@ -32,11 +32,13 @@ import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.metadata.merge.Simple;
 import org.hisp.dhis.dxf2.metadata.merge.SimpleCollection;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -62,10 +64,10 @@ public class MergeServiceTest
 
         mergeService.merge( source, target, MergeStrategy.REPLACE );
 
-        Assert.assertEquals( "string", target.getString() );
-        Assert.assertEquals( 10, (int) target.getInteger() );
-        Assert.assertEquals( date, target.getDate() );
-        Assert.assertEquals( false, target.getBool() );
+        assertEquals( "string", target.getString() );
+        assertEquals( 10, (int) target.getInteger() );
+        assertEquals( date, target.getDate() );
+        assertEquals( false, target.getBool() );
     }
 
     @Test
@@ -77,10 +79,10 @@ public class MergeServiceTest
 
         mergeService.merge( source, target, MergeStrategy.MERGE );
 
-        Assert.assertEquals( "hello", target.getString() );
-        Assert.assertEquals( 10, (int) target.getInteger() );
-        Assert.assertEquals( date, target.getDate() );
-        Assert.assertEquals( true, target.getBool() );
+        assertEquals( "hello", target.getString() );
+        assertEquals( 10, (int) target.getInteger() );
+        assertEquals( date, target.getDate() );
+        assertEquals( true, target.getBool() );
     }
 
     @Test
@@ -88,7 +90,7 @@ public class MergeServiceTest
     {
         Date date = new Date();
 
-        SimpleCollection source = new SimpleCollection( "source" );
+        SimpleCollection source = new SimpleCollection( "name" );
         source.getSimples().add( new Simple( "simple", 10, date, false ) );
         source.getSimples().add( new Simple( "simple", 20, date, false ) );
         source.getSimples().add( new Simple( "simple", 30, date, false ) );
@@ -97,6 +99,11 @@ public class MergeServiceTest
 
         mergeService.merge( source, target, MergeStrategy.MERGE );
 
-        Assert.assertEquals( 3, target.getSimples().size() );
+        assertEquals( "name", target.getName() );
+        assertEquals( 3, target.getSimples().size() );
+
+        assertTrue( target.getSimples().contains( source.getSimples().get( 0 ) ) );
+        assertTrue( target.getSimples().contains( source.getSimples().get( 1 ) ) );
+        assertTrue( target.getSimples().contains( source.getSimples().get( 2 ) ) );
     }
 }
