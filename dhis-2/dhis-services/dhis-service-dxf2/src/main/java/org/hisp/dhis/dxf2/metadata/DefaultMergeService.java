@@ -55,45 +55,29 @@ public class DefaultMergeService implements MergeService
         }
 
         Schema schema = schemaService.getDynamicSchema( source.getClass() );
+        System.err.println( "p: " + schema.getPropertyMap().keySet() );
 
         for ( Property property : schema.getProperties() )
         {
             if ( property.isCollection() )
             {
-                Collection<?> sourceObject = ReflectionUtils.invokeMethod( source, property.getGetterMethod() );
+                Collection sourceObject = ReflectionUtils.invokeMethod( source, property.getGetterMethod() );
+                Collection targetObject = ReflectionUtils.invokeMethod( target, property.getGetterMethod() );
 
                 if ( sourceObject == null )
                 {
                     continue;
                 }
 
-                sourceObject.clear();
-
-                if ( property.isOwner() )
+                if ( targetObject == null )
                 {
-                    if ( property.isManyToMany() )
-                    {
-                        Collection targetObject = ReflectionUtils.invokeMethod( target, property.getGetterMethod() );
-                        sourceObject.addAll( targetObject );
-                    }
-                    else
-                    {
-                        // one-to-many
-                    }
-                }
-                else
-                {
-                    if ( property.isManyToMany() )
-                    {
-                        Schema owningSchema = schemaService.getDynamicSchema( property.getItemKlass() );
-                    }
-                    else
-                    {
-                        // one-to-many
-                    }
+                    targetObject = ReflectionUtils.newCollectionInstance( property.getKlass() );
                 }
 
-                ReflectionUtils.invokeMethod( source, property.getSetterMethod(), sourceObject );
+                targetObject.clear();
+                targetObject.addAll( sourceObject );
+
+                ReflectionUtils.invokeMethod( target, property.getSetterMethod(), targetObject );
             }
             else
             {
