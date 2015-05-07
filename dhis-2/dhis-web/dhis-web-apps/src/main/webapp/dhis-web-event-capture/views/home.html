@@ -52,7 +52,7 @@
                         {{'register_event'| translate}}
                     </button>  
                 </td>
-                <td ng-if="dhis2Events.length > 0" style='padding-left: 10px;'>
+                <td ng-if="dhis2Events.length > 0 || eventRegistration || editingEventInFull" style='padding-left: 10px;'>
                     <button class="button button-std hideInPrint"
                             onclick="javascript:window.print()">
                         <span ng-if="!eventRegistration && !editingEventInFull">{{'print_list'| translate}}</span>
