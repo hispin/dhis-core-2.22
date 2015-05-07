@@ -55,7 +55,6 @@ public class DefaultMergeService implements MergeService
         }
 
         Schema schema = schemaService.getDynamicSchema( source.getClass() );
-        System.err.println( "p: " + schema.getPropertyMap().keySet() );
 
         for ( Property property : schema.getProperties() )
         {
