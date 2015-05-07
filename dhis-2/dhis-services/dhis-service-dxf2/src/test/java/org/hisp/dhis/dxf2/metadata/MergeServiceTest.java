@@ -66,4 +66,19 @@ public class MergeServiceTest
         Assert.assertEquals( date, target.getDate() );
         Assert.assertEquals( false, target.getBool() );
     }
+
+    @Test
+    public void simpleMerge()
+    {
+        Date date = new Date();
+        Simple source = new Simple( null, 10, date, null );
+        Simple target = new Simple( "hello", 20, date, true );
+
+        mergeService.merge( source, target, MergeStrategy.MERGE );
+
+        Assert.assertEquals( "hello", target.getString() );
+        Assert.assertEquals( 10, (int) target.getInteger() );
+        Assert.assertEquals( date, target.getDate() );
+        Assert.assertEquals( true, target.getBool() );
+    }
 }
