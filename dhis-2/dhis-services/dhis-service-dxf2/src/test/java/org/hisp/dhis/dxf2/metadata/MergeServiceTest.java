@@ -31,6 +31,7 @@ package org.hisp.dhis.dxf2.metadata;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.metadata.merge.Simple;
+import org.hisp.dhis.dxf2.metadata.merge.SimpleCollection;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +81,22 @@ public class MergeServiceTest
         Assert.assertEquals( 10, (int) target.getInteger() );
         Assert.assertEquals( date, target.getDate() );
         Assert.assertEquals( true, target.getBool() );
+    }
+
+    @Test
+    public void simpleCollection()
+    {
+        Date date = new Date();
+
+        SimpleCollection source = new SimpleCollection( "source" );
+        source.getSimples().add( new Simple( "simple", 10, date, false ) );
+        source.getSimples().add( new Simple( "simple", 20, date, false ) );
+        source.getSimples().add( new Simple( "simple", 30, date, false ) );
+
+        SimpleCollection target = new SimpleCollection( "target" );
+
+        mergeService.merge( source, target, MergeStrategy.MERGE );
+
+        Assert.assertEquals( 3, target.getSimples().size() );
     }
 }
