@@ -28,14 +28,14 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.system.util.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collection;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -81,20 +81,31 @@ public class DefaultMergeService implements MergeService
                         // one-to-many
                     }
                 }
+                else
+                {
+                    if ( property.isManyToMany() )
+                    {
+                        Schema owningSchema = schemaService.getDynamicSchema( property.getItemKlass() );
+                    }
+                    else
+                    {
+                        // one-to-many
+                    }
+                }
 
                 ReflectionUtils.invokeMethod( source, property.getSetterMethod(), sourceObject );
             }
             else
             {
-                Object targetObject = ReflectionUtils.invokeMethod( target, property.getGetterMethod() );
+                Object sourceObject = ReflectionUtils.invokeMethod( source, property.getGetterMethod() );
 
                 if ( mergeStrategy.isReplace() )
                 {
-                    ReflectionUtils.invokeMethod( source, property.getSetterMethod(), targetObject );
+                    ReflectionUtils.invokeMethod( target, property.getSetterMethod(), sourceObject );
                 }
-                else if ( mergeStrategy.isMerge() && targetObject != null )
+                else if ( mergeStrategy.isMerge() && sourceObject != null )
                 {
-                    ReflectionUtils.invokeMethod( source, property.getSetterMethod(), targetObject );
+                    ReflectionUtils.invokeMethod( target, property.getSetterMethod(), sourceObject );
                 }
             }
         }
