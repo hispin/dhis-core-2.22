@@ -40,6 +40,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -127,7 +128,7 @@ public class DefaultSchemaService implements SchemaService
 
         schema = new Schema( klass, name, name + "s" );
         schema.setDisplayName( beautify( schema.getName() ) );
-        schema.setPropertyMap( Maps.newHashMap( propertyIntrospectorService.getPropertiesMap( schema.getKlass() ) ) );
+        schema.setPropertyMap( new HashMap<>( propertyIntrospectorService.getPropertiesMap( schema.getKlass() ) ) );
         schema.setMetadata( false );
 
         updateSelf( schema );
