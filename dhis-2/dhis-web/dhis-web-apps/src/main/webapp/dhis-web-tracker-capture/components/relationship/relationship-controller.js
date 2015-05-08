@@ -171,6 +171,7 @@ trackerCapture.controller('RelationshipController',
 .controller('AddRelationshipController', 
     function($scope, 
             $rootScope,
+            $translate,
             DateUtils,
             CurrentSelection,
             OperatorFactory,
@@ -193,6 +194,7 @@ trackerCapture.controller('RelationshipController',
     $scope.relatedProgramRelationship = relatedProgramRelationship;
     $scope.selectedTei = selectedTei;
     $scope.programs = selections.prs;
+    $scope.attributesById = CurrentSelection.getAttributesById();
     
     $scope.selectedRelationship = {};
     $scope.relationship = {};
