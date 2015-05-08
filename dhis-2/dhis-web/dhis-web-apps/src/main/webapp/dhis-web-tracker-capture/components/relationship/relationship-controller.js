@@ -493,6 +493,12 @@ trackerCapture.controller('RelationshipController',
         $rootScope.showAddRelationshipDiv = !$rootScope.showAddRelationshipDiv;
     };
     
+    
+    $scope.back = function(){
+        $scope.teiForRelationship = null;
+        $rootScope.showAddRelationshipDiv = !$rootScope.showAddRelationshipDiv;
+    };
+    
     $scope.addRelationship = function(){
         if($scope.selectedTei && $scope.teiForRelationship && $scope.relationship.selected){            
             var tei = angular.copy($scope.selectedTei);

@@ -47,6 +47,7 @@
                 <option>{{relationship.selected.bIsToA}}</option>
             </select>
             <div class='relationship-container' ng-show="teiForRelationship">
+                <button class="btn btn-warning" type="button" ng-click="back()">{{'back' | translate}}</button>
                 <table class="table table-striped table-compact table-borderless">
                     <tr ng-repeat="gridColumn in gridColumns">
                         <td>
@@ -56,7 +57,7 @@
                             {{teiForRelationship[gridColumn.id]}}                                                
                         </td> 
                     </tr>
-                </table>
+                </table>                
             </div>
             <div class='relationship-container' ng-show="!teiForRelationship">
 
