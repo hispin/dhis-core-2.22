@@ -6672,7 +6672,7 @@ Ext.onReady( function() {
                     var optionSetHeaders = [];
 
                     for (var i = 0; i < xResponse.headers.length; i++) {
-                        if (Ext.isString(xResponse.headers[i].optionSet)) {
+                        if (xResponse.headers[i].optionSet) {
                             optionSetHeaders.push(xResponse.headers[i]);
                         }
                     }
@@ -6700,10 +6700,12 @@ Ext.onReady( function() {
                         // execute
                         for (var i = 0, header, optionSetId, dataElementId; i < optionSetHeaders.length; i++) {
                             header = optionSetHeaders[i];
-                            optionSetId = header.optionSet;
+                            optionSetIds = Ext.Array.from(header.optionSet);
                             dataElementId = header.name;
 
-                            getOptions(optionSetId, dataElementId);
+                            for (var j = 0; j < optionSetIds.length; j++) {
+                                getOptions(optionSetIds[j], dataElementId);
+                            }
                         }
                     }
                     else {
@@ -6712,7 +6714,7 @@ Ext.onReady( function() {
                 };
 
                 success = function() {
-                    
+
                     // timing
                     ns.app.dateTotal = new Date();
 
@@ -6762,7 +6764,7 @@ Ext.onReady( function() {
                     ns.app.centerRegion.removeAll(true);
                     ns.app.centerRegion.add(chart);
 
-                    success();                    
+                    success();
                 };
 
                 getSXLayout = function() {
