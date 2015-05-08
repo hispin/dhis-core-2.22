@@ -791,8 +791,7 @@ trackerCapture.controller('DataEntryController',
             
             var evs = CurrentSelection.getSelectedTeiEvents();
             
-            if( operation ===  'ADD' ){  
-                console.log('the current event is:  ', $scope.currentEvent);
+            if( operation ===  'ADD' ){
                 var ev = EventUtils.reconstruct($scope.currentEvent, $scope.currentStage, $scope.optionSets);
                 ev.enrollment = $scope.currentEvent.enrollment;
                 ev.visited = $scope.currentEvent.visited;
