@@ -7,6 +7,36 @@ Ext.onReady( function() {
 
     Ext.isIE11 = Ext.isIE && (/rv:11.0/.test(Ext.userAgent));
 
+    Ext.util.CSS.createStyleSheet = function(cssText, id) {
+        var ss,
+            head = document.getElementsByTagName("head")[0],
+            styleEl = document.createElement("style");
+
+        styleEl.setAttribute("type", "text/css");
+
+        if (id) {
+           styleEl.setAttribute("id", id);
+        }
+
+        if (Ext.isIE && !Ext.isIE11) {
+           head.appendChild(styleEl);
+           ss = styleEl.styleSheet;
+           ss.cssText = cssText;
+        }
+        else {
+            try {
+                styleEl.appendChild(document.createTextNode(cssText));
+            }
+            catch(e) {
+               styleEl.cssText = cssText;
+            }
+            head.appendChild(styleEl);
+            ss = styleEl.styleSheet ? styleEl.styleSheet : (styleEl.sheet || document.styleSheets[document.styleSheets.length-1]);
+        }
+        this.cacheStyleSheet(ss);
+        return ss;
+    };
+
 	// namespace
 	PT = {};
 	var NS = PT;
@@ -3024,13 +3054,12 @@ Ext.onReady( function() {
 		// alert
 		ns.alert = web.message.alert;
 
-		return {
-			conf: conf,
-			api: api,
-			support: support,
-			service: service,
-			web: web,
-			init: init
-		};
+		ns.conf = conf;
+		ns.api = api;
+		ns.support = support;
+		ns.service = service;
+		ns.web = web;
+
+		return ns;
 	};
 });

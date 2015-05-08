@@ -4161,11 +4161,9 @@ Ext.onReady(function() {
 			web.message = web.message || {};
 
 			web.message.alert = function(text) {
-                var div = Ext.get(init.el);
-
-                if (div) {
-                    div.setStyle('opacity', 1);
-                    div.update('<div class="ns-plugin-alert">' + text + '</div>');
+                if (el) {
+                    el.setStyle('opacity', 1);
+                    el.update('<div class="ns-plugin-alert">' + text + '</div>');
                 }
             };
 
@@ -4355,10 +4353,6 @@ Ext.onReady(function() {
             ns.alert = web.message.alert;
 
 			init.el = config.el;
-
-            //if (!ns.skipFade && el) {
-                //el.setStyle('opacity', 0);
-            //}
         };
 
 		createViewport = function() {

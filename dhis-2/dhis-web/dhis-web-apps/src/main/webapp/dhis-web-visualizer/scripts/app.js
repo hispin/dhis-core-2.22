@@ -2532,7 +2532,7 @@ Ext.onReady( function() {
                 fn = function() {
 
                     // create chart
-                    ns.app.chart = ns.core.web.chart.createChart(ns ,legendSet);
+                    ns.app.chart = ns.core.web.chart.createChart(ns, legendSet);
 
                     // update viewport
                     ns.app.centerRegion.update();
