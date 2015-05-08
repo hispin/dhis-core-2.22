@@ -84,10 +84,14 @@ public class ProgramRuleVariable
     private TrackedEntityAttribute attribute;
 
     /**
-     * The data element that is linked to the variable. Must de defined if the
+     * The data element that is linked to the variable. Must be defined if the
      * sourceType is one of the following:
-     * dataelement_newest_event_program_stage dataelement_newest_event_program
-     * dataelement_current_event
+     * 
+     * <ul>
+     * <li>dataelement_newest_event_program_stage</li>
+     * <li>dataelement_newest_event_program</li>
+     * <li>dataelement_current_event</li>
+     * </ul>
      */
     private DataElement dataElement;
 
@@ -107,11 +111,11 @@ public class ProgramRuleVariable
     }
 
     public ProgramRuleVariable( String name, 
-            Program program, 
-            ProgramRuleVariableSourceType sourceType,
-            TrackedEntityAttribute attribute,
-            DataElement dataElement,
-            ProgramStage programStage)
+        Program program, 
+        ProgramRuleVariableSourceType sourceType,
+        TrackedEntityAttribute attribute,
+        DataElement dataElement,
+        ProgramStage programStage)
     {
         this();
         this.name = name;
