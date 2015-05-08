@@ -517,7 +517,7 @@ Ext.onReady( function() {
 	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
 	NS.getCore = function(ns) {
-        var init = ns.init,
+        var init = ns.core.init,
             conf = {},
             api = {},
             support = {},
@@ -689,11 +689,11 @@ Ext.onReady( function() {
                 west_fill_accordion_indicator: 56,
                 west_fill_accordion_dataelement: 59,
                 west_fill_accordion_dataset: 31,
-                west_fill_accordion_period: 300,
+                west_fill_accordion_period: 330,
                 west_fill_accordion_organisationunit: 58,
                 west_maxheight_accordion_indicator: 450,
                 west_maxheight_accordion_dataset: 350,
-                west_maxheight_accordion_period: 405,
+                west_maxheight_accordion_period: 513,
                 west_maxheight_accordion_organisationunit: 500,
                 west_scrollbarheight_accordion_indicator: 300,
                 west_scrollbarheight_accordion_dataset: 250,
@@ -1036,7 +1036,7 @@ Ext.onReady( function() {
 
                     // period
                     if (!Ext.Array.contains(objectNames, 'pe') && !(config.startDate && config.endDate)) {
-                        alert('At least one fixed period, one relative period or start/end dates must be specified');
+                        ns.alert('At least one fixed period, one relative period or start/end dates must be specified');
                         return;
                     }
 
@@ -1136,6 +1136,23 @@ Ext.onReady( function() {
 					//layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
 					//layout.topLimit = Ext.isNumber(config.topLimit) ? config.topLimit : 0;
 
+                    // style
+                    if (Ext.isObject(config.domainAxisStyle)) {
+                        layout.domainAxisStyle = config.domainAxisStyle;
+                    }
+
+                    if (Ext.isObject(config.rangeAxisStyle)) {
+                        layout.rangeAxisStyle = config.rangeAxisStyle;
+                    }
+
+                    if (Ext.isObject(config.legendStyle)) {
+                        layout.legendStyle = config.legendStyle;
+                    }
+
+                    if (Ext.isObject(config.seriesStyle)) {
+                        layout.seriesStyle = config.seriesStyle;
+                    }
+
 					if (!validateSpecialCases()) {
 						return;
 					}
@@ -1201,12 +1218,12 @@ Ext.onReady( function() {
 					}
 
 					if (!(Ext.isArray(config.rows) && config.rows.length > 0)) {
-						alert('No values found');
-						return;
+						//alert('No values found');
+						//return;
 					}
 
-					if (config.headers.length !== config.rows[0].length) {
-						console.log('Response: headers.length !== rows[0].length');
+					if (config.rows.length && config.headers.length !== config.rows[0].length) {
+						console.log('api.response.Response: headers.length !== rows[0].length');
 					}
 
 					return config;
@@ -1234,26 +1251,6 @@ Ext.onReady( function() {
 
 				return array.length;
 			};
-
-            support.prototype.array.getMaxLength = function(array, suppressWarning) {
-				if (!Ext.isArray(array)) {
-					if (!suppressWarning) {
-						console.log('support.prototype.array.getLength: not an array');
-					}
-
-					return null;
-				}
-
-                var maxLength = 0;
-
-                for (var i = 0; i < array.length; i++) {
-                    if (Ext.isString(array[i]) && array[i].length > maxLength) {
-                        maxLength = array[i].length;
-                    }
-                }
-
-                return maxLength;
-            };
 
 			support.prototype.array.sort = function(array, direction, key, emptyFirst) {
 				// supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
@@ -1310,6 +1307,32 @@ Ext.onReady( function() {
 				return array;
 			};
 
+            support.prototype.array.sortArrayByArray = function(array, reference, isNotDistinct) {
+                var tmp = [];
+
+                // copy and clear
+                for (var i = 0; i < array.length; i++) {
+                    tmp[tmp.length] = array[i];
+                }
+
+                array.length = 0;
+
+                // sort
+                for (var i = 0; i < reference.length; i++) {
+                    for (var j = 0; j < tmp.length; j++) {
+                        if (tmp[j] === reference[i]) {
+                            array.push(tmp[j]);
+
+                            if (!isNotDistinct) {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return array;
+            };
+
             support.prototype.array.uniqueByProperty = function(array, property) {
                 var names = [],
                     uniqueItems = [];
@@ -1324,6 +1347,64 @@ Ext.onReady( function() {
                 }
 
                 return uniqueItems;
+            };
+
+            support.prototype.array.getNameById = function(array, value, idProperty, nameProperty) {
+                if (!(Ext.isArray(array) && value)) {
+                    return;
+                }
+
+                idProperty = idProperty || 'id';
+                nameProperty = nameProperty || 'name';
+
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i][idProperty] === value) {
+                        return array[i][nameProperty];
+                    }
+                }
+
+                return;
+            };
+
+            support.prototype.array.cleanFalsy = function(array) {
+                if (!Ext.isArray(array)) {
+                    return [];
+                }
+
+                if (!array.length) {
+                    return array;
+                }
+
+                for (var i = 0; i < array.length; i++) {
+                    array[i] = array[i] || null;
+                }
+
+                var a = Ext.clean(array);
+                array = null;
+
+                return a;
+            };
+
+            support.prototype.array.pluckIf = function(array, pluckProperty, valueProperty, value, type) {
+                var a = [];
+
+                if (!(Ext.isArray(array) && array.length)) {
+                    return a;
+                }
+
+                pluckProperty = pluckProperty || 'name';
+                valueProperty = valueProperty || pluckProperty;
+
+                for (var i = 0; i < array.length; i++) {
+                    if (Ext.isDefined(type) && typeof array[i][valueProperty] === type) {
+                        a.push(array[i][pluckProperty]);
+                    }
+                    else if (Ext.isDefined(value) && array[i][valueProperty] === value) {
+                        a.push(array[i][pluckProperty]);
+                    }
+                }
+
+                return a;
             };
 
             support.prototype.array.getObjectMap = function(array, idProperty, nameProperty, namePrefix) {
@@ -1366,6 +1447,26 @@ Ext.onReady( function() {
                         }
                     }
                 }
+            };
+
+            support.prototype.array.getMaxLength = function(array, suppressWarning) {
+				if (!Ext.isArray(array)) {
+					if (!suppressWarning) {
+						console.log('support.prototype.array.getLength: not an array');
+					}
+
+					return null;
+				}
+
+                var maxLength = 0;
+
+                for (var i = 0; i < array.length; i++) {
+                    if (Ext.isString(array[i]) && array[i].length > maxLength) {
+                        maxLength = array[i].length;
+                    }
+                }
+
+                return maxLength;
             };
 
 				// object
@@ -1668,6 +1769,10 @@ Ext.onReady( function() {
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
 
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
+
 						xDim.items = [];
 						xDim.ids = [];
 
@@ -1706,6 +1811,10 @@ Ext.onReady( function() {
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
 
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
+
 						xDim.items = [];
 						xDim.ids = [];
 
@@ -1743,6 +1852,10 @@ Ext.onReady( function() {
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
+
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
 
 						xDim.items = [];
 						xDim.ids = [];
@@ -2428,6 +2541,7 @@ Ext.onReady( function() {
 				var emptyId = '[N/A]',
                     meta = ['ou', 'pe'],
                     ouHierarchy,
+                    md,
                     names,
 					headers,
                     booleanNameMap = {
@@ -2436,13 +2550,15 @@ Ext.onReady( function() {
                     };
 
 				response = Ext.clone(response);
+                md = response.metaData;
 				headers = response.headers;
-                ouHierarchy = response.metaData.ouHierarchy,
-                names = response.metaData.names;
+                ouHierarchy = md.ouHierarchy,
+                names = md.names;
                 names[emptyId] = emptyId;
 
-                response.metaData.booleanNames = {};
-                response.metaData.optionNames = {};
+                md.optionNames = {};
+                md.booleanNames = {};
+
 				response.nameHeaderMap = {};
 				response.idValueMap = {};
 
@@ -2467,10 +2583,12 @@ Ext.onReady( function() {
 
                                 fullId = header.name + id;
                                 parsedId = parseFloat(id);
+
                                 displayId = Ext.isNumber(parsedId) ? parsedId : (names[id] || id);
 
 								// update names
-                                names[fullId] = (isMeta ? '' : header.column + ' ') + displayId;
+                                //names[fullId] = (isMeta ? '' : header.column + ' ') + displayId;
+                                names[fullId] = displayId;
 
 								// update rows
                                 response.rows[j][i] = fullId;
@@ -2484,6 +2602,23 @@ Ext.onReady( function() {
 
                             support.prototype.array.sort(objects, 'ASC', 'sortingId');
                             header.ids = Ext.Array.pluck(objects, 'id');
+                        }
+                        else if (header.name === 'pe') {
+                            var selectedItems = xLayout.dimensionNameIdsMap['pe'],
+                                isRelative = false;
+
+                            for (var j = 0; j < selectedItems.length; j++) {
+                                if (Ext.Array.contains(conf.period.relativePeriods, selectedItems[j])) {
+                                    isRelative = true;
+                                    break;
+                                }
+                            }
+
+                            header.ids = Ext.clone(md[header.name]);
+
+                            if (!isRelative) {
+                                support.prototype.array.sortArrayByArray(header.ids, xLayout.dimensionNameIdsMap['pe'])
+                            }
                         }
                         else {
 							var objects = [];
@@ -2546,13 +2681,17 @@ Ext.onReady( function() {
 
 				// idValueMap: vars
 				var valueHeaderIndex = response.nameHeaderMap[conf.finals.dimension.value.value].index,
-					dx = dimConf.data.dimensionName,
+					dy = dimConf.data.dimensionName,
 					axisDimensionNames = xLayout.axisDimensionNames,
 					idIndexOrder = [];
 
 				// idValueMap: idIndexOrder
-				for (var i = 0; i < axisDimensionNames.length; i++) {
-					idIndexOrder.push(response.nameHeaderMap[axisDimensionNames[i]].index);
+				for (var i = 0, dimensionName; i < axisDimensionNames.length; i++) {
+                    dimensionName = axisDimensionNames[i];
+
+                    if (response.nameHeaderMap.hasOwnProperty(dimensionName)) {
+                        idIndexOrder.push(response.nameHeaderMap[dimensionName].index);
+                    }
 				}
 
 				// idValueMap
@@ -2569,6 +2708,7 @@ Ext.onReady( function() {
 
 				return response;
 			};
+
         }());
 
 		// web
@@ -2585,7 +2725,7 @@ Ext.onReady( function() {
 
 				message = message || 'Loading..';
 
-				if (component.mask) {
+				if (component.mask && component.mask.destroy) {
 					component.mask.destroy();
 					component.mask = null;
 				}
@@ -2606,18 +2746,106 @@ Ext.onReady( function() {
 					return null;
 				}
 
-				if (component.mask) {
+				if (component.mask && component.mask.destroy) {
 					component.mask.destroy();
 					component.mask = null;
 				}
 			};
 
-			// message
-			web.message = {};
+			// window
+			web.window = web.window || {};
 
-			web.message.alert = function(message) {
-				console.log(message);
+			web.window.setAnchorPosition = function(w, target) {
+				var vpw = ns.app.viewport.getWidth(),
+					targetx = target ? target.getPosition()[0] : 4,
+					winw = w.getWidth(),
+					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
+
+				if ((targetx + winw) > vpw) {
+					w.setPosition((vpw - winw - 2), y);
+				}
+				else {
+					w.setPosition(targetx, y);
+				}
 			};
+
+			web.window.addHideOnBlurHandler = function(w) {
+				var masks = Ext.query('.x-mask');
+
+                for (var i = 0, el; i < masks.length; i++) {
+                    el = Ext.get(masks[i]);
+
+                    if (el.getWidth() == Ext.getBody().getWidth()) {
+                        el.on('click', function() {
+                            if (w.hideOnBlur) {
+                                w.hide();
+                            }
+                        });
+                    }
+                }
+
+				w.hasHideOnBlurHandler = true;
+			};
+
+			web.window.addDestroyOnBlurHandler = function(w) {
+				var masks = Ext.query('.x-mask');
+
+                for (var i = 0, el; i < masks.length; i++) {
+                    el = Ext.get(masks[i]);
+
+                    if (el.getWidth() == Ext.getBody().getWidth()) {
+                        el.on('click', function() {
+                            if (w.destroyOnBlur) {
+                                w.destroy();
+                            }
+                        });
+                    }
+                }
+
+				w.hasDestroyOnBlurHandler = true;
+			};
+
+			// message
+			web.message = web.message || {};
+
+			web.message.alert = function(msg, type) {
+                var config = {},
+                    window;
+
+                if (!msg) {
+                    return;
+                }
+
+                type = type || 'error';
+
+				config.title = type === 'error' ? NS.i18n.error : (type === 'warning' ? NS.i18n.warning : NS.i18n.info);
+				config.iconCls = 'ns-window-title-messagebox ' + type;
+
+                // html
+                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+
+                // bodyStyle
+                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+
+                // destroy handler
+                config.modal = true;
+                config.destroyOnBlur = true;
+
+                // listeners
+                config.listeners = {
+                    show: function(w) {
+                        w.setPosition(w.getPosition()[0], w.getPosition()[1] / 2);
+
+						if (!w.hasDestroyOnBlurHandler) {
+							web.window.addDestroyOnBlurHandler(w);
+						}
+                    }
+                };
+
+                window = Ext.create('Ext.window.Window', config);
+
+                window.show();
+            };
 
 			// analytics
 			web.analytics = {};
@@ -2744,7 +2972,7 @@ Ext.onReady( function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                alert(msg);
+                ns.alert(msg, 'warning');
 			};
 
 			// report
@@ -2945,7 +3173,7 @@ Ext.onReady( function() {
                                 }
 
                                 trendLineFields.push(regressionKey);
-                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')';
+                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
                             }
                         }
                     }
@@ -3072,7 +3300,13 @@ Ext.onReady( function() {
                 };
 
                 getDefaultNumericAxis = function(store) {
-                    var typeConf = conf.finals.chart,
+                    var labelFont = 'normal 11px ' + conf.chart.style.fontFamily,
+                        labelColor = 'black',
+                        labelRotation = 0,
+                        titleFont = 'bold 12px ' + conf.chart.style.fontFamily,
+                        titleColor = 'black',
+
+                        typeConf = conf.finals.chart,
                         minimum = store.getMinimum(),
                         maximum,
                         numberOfDecimals,
@@ -3113,9 +3347,7 @@ Ext.onReady( function() {
                             style: {},
                             rotate: {}
                         },
-                        labelTitle: {
-                            font: 'bold 13px ' + conf.chart.style.fontFamily
-                        },
+                        labelTitle: {},
                         grid: {
                             odd: {
                                 opacity: 1,
@@ -3154,30 +3386,112 @@ Ext.onReady( function() {
                         axis.title = xLayout.rangeAxisTitle;
                     }
 
+                    // style
+                    if (Ext.isObject(xLayout.rangeAxisStyle)) {
+                        var style = xLayout.rangeAxisStyle;
+
+                        // label
+                        labelColor = style.labelColor || labelColor;
+
+                        if (style.labelFont) {
+                            labelFont = style.labelFont;
+                        }
+                        else {
+                            labelFont = style.labelFontWeight ? style.labelFontWeight + ' ' : 'normal ';
+                            labelFont += style.labelFontSize ? parseFloat(style.labelFontSize) + 'px ' : '11px ';
+                            labelFont +=  style.labelFontFamily ? style.labelFontFamily : conf.chart.style.fontFamily;
+                        }
+
+                        // rotation
+                        if (Ext.isNumber(parseFloat(style.labelRotation))) {
+                            labelRotation = 360 - parseFloat(style.labelRotation);
+                        }
+
+                        // title
+                        titleColor = style.titleColor || titleColor;
+
+                        if (style.titleFont) {
+                            titleFont = style.titleFont;
+                        }
+                        else {
+                            titleFont = style.titleFontWeight ? style.titleFontWeight + ' ' : 'bold ';
+                            titleFont += style.titleFontSize ? parseFloat(style.titleFontSize) + 'px ' : '12px ';
+                            titleFont +=  style.titleFontFamily ? style.titleFontFamily : conf.chart.style.fontFamily;
+                        }
+                    }
+
+                    axis.label.style.fill = labelColor;
+                    axis.label.style.font = labelFont;
+                    axis.label.rotate.degrees = labelRotation;
+
+                    axis.labelTitle.fill = titleColor;
+                    axis.labelTitle.font = titleFont;
+
                     return axis;
                 };
 
                 getDefaultCategoryAxis = function(store) {
-                    var axis = {
-                        type: 'Category',
-                        position: 'bottom',
-                        fields: store.domainFields,
-                        label: {
-                            rotate: {
-                                degrees: 320
+                    var labelFont = 'normal 11px ' + conf.chart.style.fontFamily,
+                        labelColor = 'black',
+                        labelRotation = 315,
+                        titleFont = 'bold 12px ' + conf.chart.style.fontFamily,
+                        titleColor = 'black',
+
+                        axis = {
+                            type: 'Category',
+                            position: 'bottom',
+                            fields: store.domainFields,
+                            label: {
+                                rotate: {},
+                                style: {}
                             },
-                            style: {
-                                fontSize: '11px'
-                            }
-                        }
-                    };
+                            labelTitle: {}
+                        };
 
                     if (xLayout.domainAxisTitle) {
                         axis.title = xLayout.domainAxisTitle;
-                        axis.labelTitle = {
-                            font: 'bold 13px ' + conf.chart.style.fontFamily
-                        };
                     }
+
+                    // style
+                    if (Ext.isObject(xLayout.domainAxisStyle)) {
+                        var style = xLayout.domainAxisStyle;
+
+                        // label
+                        labelColor = style.labelColor || labelColor;
+
+                        if (style.labelFont) {
+                            labelFont = style.labelFont;
+                        }
+                        else {
+                            labelFont = style.labelFontWeight ? style.labelFontWeight + ' ' : 'normal ';
+                            labelFont += style.labelFontSize ? parseFloat(style.labelFontSize) + 'px ' : '11px ';
+                            labelFont +=  style.labelFontFamily ? style.labelFontFamily : conf.chart.style.fontFamily;
+                        }
+
+                        // rotation
+                        if (Ext.isNumber(parseFloat(style.labelRotation))) {
+                            labelRotation = 360 - parseFloat(style.labelRotation);
+                        }
+
+                        // title
+                        titleColor = style.titleColor || titleColor;
+
+                        if (style.titleFont) {
+                            titleFont = style.titleFont;
+                        }
+                        else {
+                            titleFont = style.titleFontWeight ? style.titleFontWeight + ' ' : 'bold ';
+                            titleFont += style.titleFontSize ? parseFloat(style.titleFontSize) + 'px ' : '12px ';
+                            titleFont +=  style.titleFontFamily ? style.titleFontFamily : conf.chart.style.fontFamily;
+                        }
+                    }
+
+                    axis.label.style.fill = labelColor;
+                    axis.label.style.font = labelFont;
+                    axis.label.rotate.degrees = labelRotation;
+
+                    axis.labelTitle.fill = titleColor;
+                    axis.labelTitle.font = titleFont;
 
                     return axis;
                 };
@@ -3355,7 +3669,11 @@ Ext.onReady( function() {
                                 radius: 0,
                                 fill: strokeColor
                             },
-                            title: xResponse.metaData.names[store.trendLineFields[i]]
+                            title: function() {
+                                var title = xResponse.metaData.names[store.trendLineFields[i]],
+                                    ls = xLayout.legendStyle;
+                                return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
+                            }()
                         });
                     }
 
@@ -3375,7 +3693,11 @@ Ext.onReady( function() {
                             stroke: '#000'
                         },
                         showMarkers: false,
-                        title: (Ext.isString(xLayout.targetLineTitle) ? xLayout.targetLineTitle : NS.i18n.target) + ' (' + xLayout.targetLineValue + ')'
+                        title: function() {
+                            var title = (Ext.isString(xLayout.targetLineTitle) ? xLayout.targetLineTitle : NS.i18n.target) + ' (' + xLayout.targetLineValue + ')',
+                                ls = xLayout.legendStyle;
+                            return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
+                        }()
                     };
                 };
 
@@ -3392,7 +3714,11 @@ Ext.onReady( function() {
                             stroke: '#000'
                         },
                         showMarkers: false,
-                        title: (Ext.isString(xLayout.baseLineTitle) ? xLayout.baseLineTitle : NS.i18n.base) + ' (' + xLayout.baseLineValue + ')'
+                        title: function() {
+                            var title = (Ext.isString(xLayout.baseLineTitle) ? xLayout.baseLineTitle : NS.i18n.base) + ' (' + xLayout.baseLineValue + ')',
+                                ls = xLayout.legendStyle;
+                            return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
+                        }()
                     };
                 };
 
@@ -3422,72 +3748,83 @@ Ext.onReady( function() {
                     });
                 };
 
-                getDefaultLegend = function(store) {
-                    var itemLength = 30,
-                        charLength = 7,
-                        numberOfItems,
+                getDefaultLegend = function(store, chartConfig) {
+                    var itemLength = ns.dashboard ? 24 : 30,
+                        charLength = ns.dashboard ? 4 : 6,
+                        numberOfItems = 0,
                         numberOfChars = 0,
-                        str = '',
                         width,
                         isVertical = false,
+                        labelFont = '11px ' + conf.chart.style.fontFamily,
+                        labelColor = 'black';
                         position = 'top',
-                        fontSize = 12,
                         padding = 0,
-                        positions = ['top', 'right', 'bottom', 'left'];
+                        positions = ['top', 'right', 'bottom', 'left'],
+                        series = chartConfig.series,
+                        labelMarkerSize = xLayout.legendStyle && xLayout.legendStyle.labelMarkerSize ? xLayout.legendStyle.labelMarkerSize : null,
+                        chartConfig;
 
-                    if (xLayout.type === conf.finals.chart.pie) {
-                        numberOfItems = store.getCount();
-                        store.each(function(r) {
-                            str += r.data[store.domainFields[0]];
-                        });
-                    }
-                    else {
-                        numberOfItems = store.rangeFields.length;
+                    for (var i = 0, title; i < series.length; i++) {
+                        title = series[i].title;
 
-                        for (var i = 0, name, ids; i < store.rangeFields.length; i++) {
-                            if (store.rangeFields[i].indexOf('#') !== -1) {
-                                ids = store.rangeFields[i].split('#');
-                                name = xResponse.metaData.names[ids[0]] + ' ' + xResponse.metaData.names[ids[1]];
-                            }
-                            else {
-                                name = xResponse.metaData.names[store.rangeFields[i]];
-                            }
-
-                            str += name;
+                        if (Ext.isString(title)) {
+                            numberOfItems += 1;
+                            numberOfChars += title.length;
+                        }
+                        else if (Ext.isArray(title)) {
+                            numberOfItems += title.length;
+                            numberOfChars += title.toString().split(',').join('').length;
                         }
                     }
-
-                    numberOfChars = str.length;
 
                     width = (numberOfItems * itemLength) + (numberOfChars * charLength);
 
-                    if (width > centerRegion.getWidth() - 50) {
-                        isVertical = true;
+                    if (width > ns.app.centerRegion.getWidth() - 6) {
                         position = 'right';
                     }
 
-                    if (position === 'right') {
-                        padding = 5;
-                    }
+                    // style
+                    if (Ext.isObject(xLayout.legendStyle)) {
+                        var style = xLayout.legendStyle;
 
-                    // legend
-                    if (xLayout.legend) {
-                        if (Ext.Array.contains(positions, xLayout.legend.position)) {
-                            position = xLayout.legend.position;
+                        labelColor = style.labelColor || labelColor;
+
+                        if (Ext.Array.contains(positions, style.position)) {
+                            position = style.position;
                         }
 
-                        fontSize = parseInt(xLayout.legend.fontSize) || fontSize;
-                        fontSize = fontSize + 'px';
+                        if (style.labelFont) {
+                            labelFont = style.labelFont;
+                        }
+                        else {
+                            labelFont = style.labelFontWeight ? style.labelFontWeight + ' ' : 'normal ';
+                            labelFont += style.labelFontSize ? parseFloat(style.labelFontSize) + 'px ' : '11px ';
+                            labelFont += style.labelFontFamily ? style.labelFontFamily : conf.chart.style.fontFamily;
+                        }
                     }
 
-                    return Ext.create('Ext.chart.Legend', {
+                    // padding
+                    if (position === 'right') {
+                        padding = 3;
+                    }
+
+                    // chart
+                    chartConfig = {
                         position: position,
                         isVertical: isVertical,
-                        labelFont: fontSize + ' ' + conf.chart.style.fontFamily,
                         boxStroke: '#ffffff',
                         boxStrokeWidth: 0,
-                        padding: padding
-                    });
+                        padding: padding,
+                        itemSpacing: 3,
+                        labelFont: labelFont,
+                        labelColor: labelColor
+                    };
+
+                    if (labelMarkerSize) {
+                        chartConfig.labelMarkerSize = labelMarkerSize;
+                    }
+
+                    return Ext.create('Ext.chart.Legend', chartConfig);
                 };
 
                 getDefaultChartTitle = function(store) {
@@ -3612,11 +3949,14 @@ Ext.onReady( function() {
                 };
 
                 getDefaultChartSizeHandler = function() {
+                    var width = ns.app.centerRegion.getWidth(),
+                        height = ns.app.centerRegion.getHeight();
+
                     return function() {
 						this.animate = false;
-                        this.setWidth(centerRegion.getWidth() - 15);
-                        this.setHeight(centerRegion.getHeight() - 40);
-                        this.animate = true;
+                        this.setWidth(ns.dashboard ? width : width - 15);
+                        this.setHeight(ns.dashboard ? height : height - 40);
+                        this.animate = !ns.dashboard;
                     };
                 };
 
@@ -3860,7 +4200,7 @@ Ext.onReady( function() {
                             },
                             markerConfig: {
                                 type: 'circle',
-                                radius: 4
+                                radius: ns.dashboard ? 3 : 4
                             },
                             tips: getDefaultTips(),
                             title: seriesTitles[i]
@@ -4057,6 +4397,8 @@ Ext.onReady( function() {
                         axes = [],
                         series = [],
                         seriesTitles = getDefaultSeriesTitle(store),
+                        labelFont = 'normal 9px sans-serif',
+                        labelColor = '#333',
                         chart;
 
                     // axes
@@ -4092,23 +4434,41 @@ Ext.onReady( function() {
                         series.push(obj);
                     }
 
+                    // style
+                    if (Ext.isObject(xLayout.seriesStyle)) {
+                        var style = xLayout.seriesStyle;
+
+                        // label
+                        labelColor = style.labelColor || labelColor;
+
+                        if (style.labelFont) {
+                            labelFont = style.labelFont;
+                        }
+                        else {
+                            labelFont = style.labelFontWeight ? style.labelFontWeight + ' ' : 'normal ';
+                            labelFont += style.labelFontSize ? parseFloat(style.labelFontSize) + 'px ' : '9px ';
+                            labelFont +=  style.labelFontFamily ? style.labelFontFamily : conf.chart.style.fontFamily;
+                        }
+                    }
+
+                    // chart
                     chart = getDefaultChart({
                         store: store,
                         axes: axes,
                         series: series,
-                        theme: 'Category2'
+                        theme: 'Category2',
+                        insetPaddingObject: {
+                            top: 20,
+                            right: 2,
+                            bottom: 15,
+                            left: 7
+                        },
+                        seriesStyle: {
+                            labelColor: labelColor,
+                            labelFont: labelFont
+                        }
                     });
-
-                    chart.insetPadding = 40;
-                    chart.height = centerRegion.getHeight() - 80;
-
-                    chart.setChartSize = function() {
-                        this.animate = false;
-                        this.setWidth(centerRegion.getWidth());
-                        this.setHeight(centerRegion.getHeight() - 80);
-                        this.animate = true;
-                    };
-
+                    
                     return chart;
                 };
 
@@ -4147,14 +4507,15 @@ Ext.onReady( function() {
 			}
 		}());
 
-		// instance
-		return {
-			conf: conf,
-			api: api,
-			support: support,
-			service: service,
-			web: web,
-			init: init
-		};
+		// alert
+		ns.alert = web.message.alert;
+
+		ns.core.conf = conf;
+		ns.core.api = api;
+		ns.core.support = support;
+		ns.core.service = service;
+		ns.core.web = web;
+
+		return ns;
 	};
 });
