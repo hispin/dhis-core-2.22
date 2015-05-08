@@ -49,8 +49,15 @@ public enum PropertyType
     PHONENUMBER,
     GEOLOCATION,
     COLOR,
+    CONSTANT,
+
     COMPLEX,
     COLLECTION,
-    REFERENCE,
-    CONSTANT
+    REFERENCE;
+
+    public boolean isSimple()
+    {
+        return IDENTIFIER == this || TEXT == this || NUMBER == this || INTEGER == this || EMAIL == this || PASSWORD == this || URL == this
+            || DATE == this || PHONENUMBER == this || GEOLOCATION == this || COLOR == this || CONSTANT == this;
+    }
 }
