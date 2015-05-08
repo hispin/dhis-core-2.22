@@ -36,6 +36,7 @@ import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.program.ProgramStageSection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -88,18 +89,29 @@ public class ProgramRuleAction
     private ProgramRuleActionType programRuleActionType;
     
     /**
-     * The dataelement that is affected by the ruleAction. 
-     * Used for 
-     *       hidefield
-     *       showwarning
-     *       showerror
+     * The data element that is affected by the rule action. 
+     * Used for:
+     * 
+     * <ul>
+     * <li>hidefield</li>
+     * <li>showwarning</li>
+     * <li>showerror</li>
+     * </ul>
      */
     private DataElement dataElement;
     
     /**
+     * The program stage section that is affected by the rule action.
+     */
+    private ProgramStageSection programStageSection;
+    
+    /**
      * Used to determine which widget to display data for the two action types:
-     *       displaytext
-     *       displaykeydata
+     * 
+     * <ul>
+     * <li>displaytext</li>
+     * <li>displaykeydata</li>
+     * </ul>
      */
     private String location;
 
@@ -178,6 +190,19 @@ public class ProgramRuleAction
     }
 
     @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public ProgramStageSection getProgramStageSection()
+    {
+        return programStageSection;
+    }
+
+    public void setProgramStageSection( ProgramStageSection programStageSection )
+    {
+        this.programStageSection = programStageSection;
+    }
+
+    @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getLocation()
     {
@@ -227,6 +252,7 @@ public class ProgramRuleAction
                 programRule = programRuleAction.getProgramRule();
                 programRuleActionType = programRuleAction.getProgramRuleActionType();
                 dataElement = programRuleAction.getDataElement();
+                programStageSection = programRuleAction.getProgramStageSection();
                 location = programRuleAction.getLocation();
                 content = programRuleAction.getContent();
                 data = programRuleAction.getData();
@@ -236,6 +262,7 @@ public class ProgramRuleAction
                 programRule = programRuleAction.getProgramRule() == null ? programRule : programRuleAction.getProgramRule();
                 programRuleActionType = programRuleAction.getProgramRuleActionType() == null ? programRuleActionType : programRuleAction.getProgramRuleActionType();
                 dataElement = programRuleAction.getDataElement() == null ? dataElement : programRuleAction.getDataElement();
+                programStageSection = programRuleAction.getProgramStageSection() == null ? programStageSection : programRuleAction.getProgramStageSection();
                 location = programRuleAction.getLocation() == null ? location : programRuleAction.getLocation();
                 content = programRuleAction.getContent() == null ? content : programRuleAction.getContent();
                 data = programRuleAction.getData() == null ? data : programRuleAction.getData();            
