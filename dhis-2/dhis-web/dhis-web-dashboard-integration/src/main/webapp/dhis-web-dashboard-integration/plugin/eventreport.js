@@ -15,11 +15,6 @@ Ext.onReady( function() {
             styleEl = document.createElement("style");
 
         styleEl.setAttribute("type", "text/css");
-        var ss,
-            head = document.getElementsByTagName("head")[0],
-            styleEl = document.createElement("style");
-
-        styleEl.setAttribute("type", "text/css");
 
         if (id) {
            styleEl.setAttribute("id", id);
@@ -49,27 +44,33 @@ Ext.onReady( function() {
 
 	ER.instances = [];
 	ER.i18n = {};
-	ER.isDebug = false;
+	ER.isDebug = true;
 	ER.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
     // core
-	ER.getCore = function(init) {
-        var conf = {},
+	ER.getCore = function(ns) {
+        var init = ns.core.init,
+            conf = {},
             api = {},
             support = {},
             service = {},
             web = {},
             dimConf;
 
+        // tmp
+        ns.alert = function() {};
+
 		// conf
 		(function() {
+
+            // finals
 			conf.finals = {
 				dimension: {
 					data: {
 						value: 'data',
 						name: ER.i18n.data || 'Data',
-						dimensionName: 'dx',
-						objectName: 'dx',
+						dimensionName: 'dy',
+						objectName: 'dy',
 						warning: {
 							filter: '...'//ER.i18n.wm_multiple_filter_ind_de
 						}
@@ -152,6 +153,7 @@ Ext.onReady( function() {
 			dimConf.objectNameMap[dimConf.organisationUnit.objectName] = dimConf.organisationUnit;
 			dimConf.objectNameMap[dimConf.dimension.objectName] = dimConf.dimension;
 
+            // period
 			conf.period = {
 				periodTypes: [
 					{id: 'Daily', name: ER.i18n.daily},
@@ -164,16 +166,63 @@ Ext.onReady( function() {
 					{id: 'FinancialOct', name: ER.i18n.financial_oct},
 					{id: 'FinancialJuly', name: ER.i18n.financial_july},
 					{id: 'FinancialApril', name: ER.i18n.financial_april}
-				]
+				],
+                relativePeriods: [
+                    'THIS_WEEK',
+                    'LAST_WEEK',
+                    'LAST_4_WEEKS',
+                    'LAST_12_WEEKS',
+                    'LAST_52_WEEKS',
+                    'THIS_MONTH',
+                    'LAST_MONTH',
+                    'LAST_3_MONTHS',
+                    'LAST_6_MONTHS',
+                    'LAST_12_MONTHS',
+                    'THIS_BIMONTH',
+                    'LAST_BIMONTH',
+                    'LAST_6_BIMONTHS',
+                    'THIS_QUARTER',
+                    'LAST_QUARTER',
+                    'LAST_4_QUARTERS',
+                    'THIS_SIX_MONTH',
+                    'LAST_SIX_MONTH',
+                    'LAST_2_SIXMONTHS',
+                    'THIS_FINANCIAL_YEAR',
+                    'LAST_FINANCIAL_YEAR',
+                    'LAST_5_FINANCIAL_YEARS',
+                    'THIS_YEAR',
+                    'LAST_YEAR',
+                    'LAST_5_YEARS'
+                ]
 			};
 
+                // aggregation type
+            conf.aggregationType = {
+                data: [
+					{id: 'COUNT', name: ER.i18n.count, text: ER.i18n.count},
+					{id: 'AVERAGE', name: ER.i18n.average, text: ER.i18n.average},
+					{id: 'SUM', name: ER.i18n.sum, text: ER.i18n.sum},
+					{id: 'STDDEV', name: ER.i18n.stddev, text: ER.i18n.stddev},
+					{id: 'VARIANCE', name: ER.i18n.variance, text: ER.i18n.variance},
+					{id: 'MIN', name: ER.i18n.min, text: ER.i18n.min},
+					{id: 'MAX', name: ER.i18n.max, text: ER.i18n.max}
+                ],
+                idNameMap: {}
+            };
+
+            for (var i = 0, obj; i < conf.aggregationType.data.length; i++) {
+                obj = conf.aggregationType.data[i];
+                conf.aggregationType.idNameMap[obj.id] = obj.text;
+            }
+
+            // gui layout
 			conf.layout = {
 				west_width: 452,
 				west_fill: 2,
                 west_fill_accordion_indicator: 56,
                 west_fill_accordion_dataelement: 59,
                 west_fill_accordion_dataset: 31,
-                west_fill_accordion_period: 307,
+                west_fill_accordion_period: 330,
                 west_fill_accordion_organisationunit: 58,
                 west_maxheight_accordion_indicator: 450,
                 west_maxheight_accordion_dataset: 350,
@@ -202,35 +251,33 @@ Ext.onReady( function() {
 				multiselect_fill_reportingrates: 315
 			};
 
+            // report
 			conf.report = {
 				digitGroupSeparator: {
 					'comma': ',',
-					'space': ' '
+					'space': '&nbsp;'
 				},
 				displayDensity: {
-                    'xcompact': '2px',
-					'compact': '4px',
-					'normal': '6px',
-					'comfortable': '8px',
-                    'xcomfortable': '10px'
+					'compact': '3px',
+					'normal': '5px',
+					'comfortable': '10px',
 				},
 				fontSize: {
-					'xsmall': '9px',
 					'small': '10px',
 					'normal': '11px',
-					'large': '12px',
-					'xlarge': '14px'
+					'large': '13px'
 				}
 			};
 
+            // url
             conf.url = {
                 analysisFields: [
                     '*',
                     'program[id,name]',
                     'programStage[id,name]',
-                    'columns[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    'rows[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    'filters[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
+                    'columns[dimension,filter,legendSet[id,name],items[id,' + init.namePropertyUrl + ']]',
+                    'rows[dimension,filter,legendSet[id,name],items[id,' + init.namePropertyUrl + ']]',
+                    'filters[dimension,filter,legendSet[id,name],items[id,' + init.namePropertyUrl + ']]',
                     '!lastUpdated',
                     '!href',
                     '!created',
@@ -272,12 +319,12 @@ Ext.onReady( function() {
 
 				return function() {
 					if (!Ext.isObject(config)) {
-						ns.alert('Record: config is not an object: ' + config, true);
+						console.log('api.layout.Record: config is not an object: ' + config);
 						return;
 					}
 
 					if (!Ext.isString(config.id)) {
-						ns.alert('Record: id is not text: ' + config, true);
+						console.log('api.layout.Record: id is not text: ' + config);
 						return;
 					}
 
@@ -306,7 +353,7 @@ Ext.onReady( function() {
 					}
 
 					if (config.dimension !== conf.finals.dimension.category.objectName) {
-						var records = [];
+						//var records = [];
 
 						//if (!Ext.isArray(config.items)) {
 							//console.log('Dimension: items is not an array: ' + config);
@@ -330,8 +377,7 @@ Ext.onReady( function() {
 			};
 
 			api.layout.Layout = function(config, applyConfig) {
-				var config = Ext.clone(config),
-					layout = {},
+				var layout = {},
 					getValidatedDimensionArray,
 					validateSpecialCases;
 
@@ -353,7 +399,9 @@ Ext.onReady( function() {
 
 				// hideEmptyRows: boolean (false)
 
-                // countType: string ('events') - 'events', 'tracked_entity_instance'
+                // collapseDataDimensions: boolean (false)
+
+                // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_INSTANCE', 'ENROLLMENT'
 
                 // aggregationType: string ('default') - 'default', 'count', 'sum'
 
@@ -419,21 +467,21 @@ Ext.onReady( function() {
 					if (layout.filters && layout.filters.length) {
 						for (var i = 0; i < layout.filters.length; i++) {
 
-							// indicators as filter
+							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(ER.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter', true);
+								ns.alert(ER.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
 								return;
 							}
 
-							// categories as filter
+							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(ER.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter', true);
+								ns.alert(ER.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
 								return;
 							}
 
-							// data sets as filter
+							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(ER.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter', true);
+								ns.alert(ER.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
 								return;
 							}
 						}
@@ -441,25 +489,25 @@ Ext.onReady( function() {
 
 					// dc and in
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.indicator.objectName]) {
-						ns.alert('Indicators and detailed data elements cannot be specified together', true);
+						ns.alert('Indicators and detailed data elements cannot be specified together');
 						return;
 					}
 
 					// dc and de
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataElement.objectName]) {
-						ns.alert('Detailed data elements and totals cannot be specified together', true);
+						ns.alert('Detailed data elements and totals cannot be specified together');
 						return;
 					}
 
 					// dc and ds
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataSet.objectName]) {
-						ns.alert('Data sets and detailed data elements cannot be specified together', true);
+						ns.alert('Data sets and detailed data elements cannot be specified together');
 						return;
 					}
 
 					// dc and co
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.category.objectName]) {
-						ns.alert('Categories and detailed data elements cannot be specified together', true);
+						ns.alert('Categories and detailed data elements cannot be specified together');
 						return;
 					}
 
@@ -472,7 +520,7 @@ Ext.onReady( function() {
 
 					// config must be an object
 					if (!(config && Ext.isObject(config))) {
-						ns.alert('Layout: config is not an object (' + init.el + ')', true);
+						console.log('Layout: config is not an object (' + init.el + ')');
 						return;
 					}
 
@@ -497,7 +545,7 @@ Ext.onReady( function() {
 
 					// at least one period
 					//if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						//ns.alert(ER.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
+						//alert(ER.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
 						//return;
 					//}
 
@@ -525,35 +573,42 @@ Ext.onReady( function() {
                         layout.endDate = config.endDate;
                     }
 
-					// properties
+					// options
 					layout.showColTotals = Ext.isBoolean(config.colTotals) ? config.colTotals : (Ext.isBoolean(config.showColTotals) ? config.showColTotals : true);
 					layout.showRowTotals = Ext.isBoolean(config.rowTotals) ? config.rowTotals : (Ext.isBoolean(config.showRowTotals) ? config.showRowTotals : true);
 					layout.showColSubTotals = Ext.isBoolean(config.colSubTotals) ? config.colSubTotals : (Ext.isBoolean(config.showColSubTotals) ? config.showColSubTotals : true);
 					layout.showRowSubTotals = Ext.isBoolean(config.rowSubTotals) ? config.rowSubTotals : (Ext.isBoolean(config.showRowSubTotals) ? config.showRowSubTotals : true);
 					layout.showDimensionLabels = Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
 					layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
-					layout.countType = Ext.isString(config.countType) && !Ext.isEmpty(config.countType) ? config.countType : 'events';
-                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'default';
-
+                    layout.hideNaData = Ext.isBoolean(config.hideNaData) ? config.hideNaData : false;
+					layout.outputType = Ext.isString(config.outputType) && !Ext.isEmpty(config.outputType) ? config.outputType : 'EVENT';
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
-
 					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : 'normal';
 					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : 'normal';
 					layout.digitGroupSeparator = Ext.isString(config.digitGroupSeparator) && !Ext.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : 'space';
 					layout.legendSet = Ext.isObject(config.legendSet) && Ext.isString(config.legendSet.id) ? config.legendSet : null;
 
-					layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
+                    // value
+                    if ((Ext.isObject(config.value) && Ext.isString(config.value.id)) || Ext.isString(config.value)) {
+                        layout.value = Ext.isString(config.value) ? {id: config.value} : config.value;
+                    }
 
+                    // aggregation type
+                    if (layout.value && Ext.isString(config.aggregationType)) {
+                        layout.aggregationType = config.aggregationType;
+                    }
+
+					layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
 					layout.sorting = Ext.isObject(config.sorting) && Ext.isDefined(config.sorting.id) && Ext.isString(config.sorting.direction) ? config.sorting : null;
 
 					layout.reportingPeriod = Ext.isObject(config.reportParams) && Ext.isBoolean(config.reportParams.paramReportingPeriod) ? config.reportParams.paramReportingPeriod : (Ext.isBoolean(config.reportingPeriod) ? config.reportingPeriod : false);
 					layout.organisationUnit =  Ext.isObject(config.reportParams) && Ext.isBoolean(config.reportParams.paramOrganisationUnit) ? config.reportParams.paramOrganisationUnit : (Ext.isBoolean(config.organisationUnit) ? config.organisationUnit : false);
 					layout.parentOrganisationUnit =  Ext.isObject(config.reportParams) && Ext.isBoolean(config.reportParams.paramParentOrganisationUnit) ? config.reportParams.paramParentOrganisationUnit : (Ext.isBoolean(config.parentOrganisationUnit) ? config.parentOrganisationUnit : false);
 
-					layout.regression = Ext.isBoolean(config.regression) ? config.regression : false;
-					layout.cumulative = Ext.isBoolean(config.cumulative) ? config.cumulative : false;
-					layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
-					layout.topLimit = Ext.isNumber(config.topLimit) ? config.topLimit : 0;
+					//layout.regression = Ext.isBoolean(config.regression) ? config.regression : false;
+					//layout.cumulative = Ext.isBoolean(config.cumulative) ? config.cumulative : false;
+					//layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
+					//layout.topLimit = Ext.isNumber(config.topLimit) ? config.topLimit : 0;
 
 					if (!validateSpecialCases()) {
 						return;
@@ -620,11 +675,11 @@ Ext.onReady( function() {
 					}
 
 					if (!(Ext.isArray(config.rows) && config.rows.length > 0)) {
-						init.alert('No values found');
-						return;
+						//alert('No values found');
+						//return;
 					}
 
-					if (config.headers.length !== config.rows[0].length) {
+					if (config.rows.length > 0 && config.headers.length !== config.rows[0].length) {
 						console.log('Response: headers.length !== rows[0].length');
 					}
 
@@ -654,7 +709,7 @@ Ext.onReady( function() {
 				return array.length;
 			};
 
-			support.prototype.array.sort = function(array, direction, key) {
+			support.prototype.array.sort = function(array, direction, key, emptyFirst) {
 				// supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
 
 				if (!support.prototype.array.getLength(array)) {
@@ -695,11 +750,45 @@ Ext.onReady( function() {
 						return direction === 'DESC' ? b - a : a - b;
 					}
 
+                    else if (a === undefined || a === null) {
+                        return emptyFirst ? -1 : 1;
+                    }
+
+                    else if (b === undefined || b === null) {
+                        return emptyFirst ? 1 : -1;
+                    }
+
 					return -1;
 				});
 
 				return array;
 			};
+
+            support.prototype.array.sortArrayByArray = function(array, reference, isNotDistinct) {
+                var tmp = [];
+
+                // copy and clear
+                for (var i = 0; i < array.length; i++) {
+                    tmp[tmp.length] = array[i];
+                }
+
+                array.length = 0;
+
+                // sort
+                for (var i = 0; i < reference.length; i++) {
+                    for (var j = 0; j < tmp.length; j++) {
+                        if (tmp[j] === reference[i]) {
+                            array.push(tmp[j]);
+
+                            if (!isNotDistinct) {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return array;
+            };
 
             support.prototype.array.uniqueByProperty = function(array, property) {
                 var names = [],
@@ -792,6 +881,29 @@ Ext.onReady( function() {
                 }
 
                 return o;
+            };
+
+            support.prototype.array.getObjectDataById = function(array, sourceArray, properties, idProperty) {
+                array = Ext.Array.from(array);
+                sourceArray = Ext.Array.from(sourceArray);
+                properties = Ext.Array.from(properties);
+                idProperty = idProperty || 'id';
+
+                for (var i = 0, obj; i < array.length; i++) {
+                    obj = array[i];
+
+                    for (var j = 0, sourceObj; j < sourceArray.length; j++) {
+                        sourceObj = sourceArray[j];
+
+                        if (Ext.isString(obj[idProperty]) && sourceObj[idProperty] && obj[idProperty].indexOf(sourceObj.id) !== -1) {
+                            for (var k = 0, property; k < properties.length; k++) {
+                                property = properties[k];
+
+                                obj[property] = sourceObj[property];
+                            }
+                        }
+                    }
+                }
             };
 
                 // object
@@ -1014,7 +1126,7 @@ Ext.onReady( function() {
 					return name;
 				}
 
-				name += metaData.optionNames[id] || metaData.names[id];
+				name += metaData.booleanNames[id] || metaData.optionNames[id] || metaData.names[id] || id;
 
 				return name;
 			};
@@ -1086,6 +1198,10 @@ Ext.onReady( function() {
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
 
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
+
 						xDim.items = [];
 						xDim.ids = [];
 
@@ -1124,6 +1240,10 @@ Ext.onReady( function() {
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
 
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
+
 						xDim.items = [];
 						xDim.ids = [];
 
@@ -1161,6 +1281,10 @@ Ext.onReady( function() {
 						xDim.dimension = dim.dimension;
 						xDim.objectName = dim.dimension;
 						xDim.dimensionName = dimConf.objectNameMap.hasOwnProperty(dim.dimension) ? dimConf.objectNameMap[dim.dimension].dimensionName || dim.dimension : dim.dimension;
+
+                        if (dim.legendSet) {
+                            xDim.legendSet = dim.legendSet;
+                        }
 
 						xDim.items = [];
 						xDim.ids = [];
@@ -1287,6 +1411,32 @@ Ext.onReady( function() {
 					return headerNames;
 				};
 
+                // collapse data dimensions?
+                (function() {
+                    var keys = xLayout.collapseDataDimensions ? ['dy', 'pe', 'ou'].concat(Ext.Array.pluck(init.dimensions, 'id')) : ['dy'],
+                        dimensionsToRemove = [];
+
+                    // find dimensions to remove
+                    for (var i = 0, dim; i < dimensions.length; i++) {
+                        dim = dimensions[i];
+
+                        if (xLayout.collapseDataDimensions && !Ext.Array.contains(keys, dim.dimension)) {
+                            dimensionsToRemove.push(dim);
+                        }
+                        else if (!xLayout.collapseDataDimensions && Ext.Array.contains(keys, dim.dimension)) {
+                            dimensionsToRemove.push(dim);
+                        }
+                    }
+
+                    // remove dimensions
+                    for (var i = 0, dim; i < dimensionsToRemove.length; i++) {
+                        removeDimensionFromXLayout(dimensionsToRemove[i].dimension);
+                    }
+
+                    // update dimensions array
+                    dimensions = Ext.Array.clean([].concat(xLayout.columns || [], xLayout.rows || [], xLayout.filters || []));
+                }());
+
                 // items
                 for (var i = 0, dim, header; i < dimensions.length; i++) {
                     dim = dimensions[i];
@@ -1295,18 +1445,19 @@ Ext.onReady( function() {
                     optionMap = {};
 
                     if (header) {
-                        for (var j = 0, id; j < header.ids.length; j++) {
+                        for (var j = 0, id, name; j < header.ids.length; j++) {
                             id = header.ids[j];
+                            name = xResponse.metaData.booleanNames[id] || xResponse.metaData.optionNames[id] || xResponse.metaData.names[id] || id;
 // TODO, items used?
                             dim.items.push({
                                 id: id,
-                                name: xResponse.metaData.optionNames[id] || xResponse.metaData.names[id] || id
+                                name: name
                             });
                         }
                     }
                 }
 
-                // restore order for options
+                // restore item order
                 for (var i = 0, orgDim; i < originalDimensions.length; i++) {
                     orgDim = originalDimensions[i];
 
@@ -1315,6 +1466,7 @@ Ext.onReady( function() {
                         continue;
                     }
 
+                    // user specified options/legends
                     if (Ext.isString(orgDim.filter)) {
                         var a = orgDim.filter.split(':');
 
@@ -1343,9 +1495,24 @@ Ext.onReady( function() {
                             }
                         }
                     }
+                    // no specified legends -> sort by start value
+                    else if (orgDim.legendSet && orgDim.legendSet.id) {
+                        for (var j = 0, dim, items; j < dimensions.length; j++) {
+                            dim = dimensions[j];
+
+                            if (dim.dimension === orgDim.dimension && dim.items && dim.items.length) {
+
+                                // get start/end value
+                                support.prototype.array.getObjectDataById(dim.items, init.idLegendSetMap[orgDim.legendSet.id].legends, ['startValue', 'endValue']);
+
+                                // sort by start value
+                                support.prototype.array.sort(dim.items, 'ASC', 'startValue');
+                            }
+                        }
+                    }
                 }
 
-                // Re-layout
+                // re-layout
                 layout = api.layout.Layout(xLayout);
 
                 if (layout) {
@@ -1623,7 +1790,7 @@ Ext.onReady( function() {
 						if (leafUuids.length === nSpan) {
 							for (var j = (i - nSpan) + 1, leaf; j <= i; j++) {
 								leaf = aAllFloorObjectsLast[j];
-								leaf.uuids = leaf.uuids.concat(Ext.clone(leafUuids));
+								leaf.uuids = leaf.uuids.concat(leafUuids);
 							}
 
 							leafUuids = [];
@@ -1729,6 +1896,10 @@ Ext.onReady( function() {
 					delete layout.hideEmptyRows;
 				}
 
+				if (!layout.hideNaData) {
+					delete layout.hideNaData;
+				}
+
 				if (!layout.showHierarchy) {
 					delete layout.showHierarchy;
 				}
@@ -1789,16 +1960,24 @@ Ext.onReady( function() {
 				var emptyId = '[N/A]',
                     meta = ['ou', 'pe'],
                     ouHierarchy,
+                    md,
                     names,
-					headers;
+					headers,
+                    booleanNameMap = {
+                        'true': ER.i18n.yes || 'Yes',
+                        'false': ER.i18n.no || 'No'
+                    };
 
 				response = Ext.clone(response);
+                md = response.metaData;
 				headers = response.headers;
-                ouHierarchy = response.metaData.ouHierarchy,
-                names = response.metaData.names;
+                ouHierarchy = md.ouHierarchy,
+                names = md.names;
                 names[emptyId] = emptyId;
 
-                response.metaData.optionNames = {};
+                md.optionNames = {};
+                md.booleanNames = {};
+
 				response.nameHeaderMap = {};
 				response.idValueMap = {};
 
@@ -1815,13 +1994,20 @@ Ext.onReady( function() {
 
                             for (var j = 0, id, fullId, parsedId, displayId; j < response.rows.length; j++) {
                                 id = response.rows[j][i] || emptyId;
+
+                                // hide NA data
+                                if (xLayout.hideNaData && id === emptyId) {
+                                    continue;
+                                }
+
                                 fullId = header.name + id;
                                 parsedId = parseFloat(id);
 
                                 displayId = Ext.isNumber(parsedId) ? parsedId : (names[id] || id);
 
 								// update names
-                                names[fullId] = (isMeta ? '' : header.column + ' ') + displayId;
+                                //names[fullId] = (isMeta ? '' : header.column + ' ') + displayId;
+                                names[fullId] = displayId;
 
 								// update rows
                                 response.rows[j][i] = fullId;
@@ -1836,11 +2022,34 @@ Ext.onReady( function() {
                             support.prototype.array.sort(objects, 'ASC', 'sortingId');
                             header.ids = Ext.Array.pluck(objects, 'id');
                         }
+                        else if (header.name === 'pe') {
+                            var selectedItems = xLayout.dimensionNameIdsMap['pe'],
+                                isRelative = false;
+
+                            for (var j = 0; j < selectedItems.length; j++) {
+                                if (Ext.Array.contains(conf.period.relativePeriods, selectedItems[j])) {
+                                    isRelative = true;
+                                    break;
+                                }
+                            }
+
+                            header.ids = Ext.clone(md[header.name]);
+
+                            if (!isRelative) {
+                                support.prototype.array.sortArrayByArray(header.ids, xLayout.dimensionNameIdsMap['pe'])
+                            }
+                        }
                         else {
 							var objects = [];
 
-                            for (var j = 0, id, fullId, name, isHierarchy; j < response.rows.length; j++) {
-                                id = response.rows[j][i] || emptyId;
+                            for (var k = 0, id, fullId, name, isHierarchy; k < response.rows.length; k++) {
+                                id = response.rows[k][i] || emptyId;
+
+                                // hide NA data
+                                if (xLayout.hideNaData && id === emptyId) {
+                                    continue;
+                                }
+
                                 fullId = header.name + id;
                                 isHierarchy = service.layout.isHierarchy(xLayout, response, id);
 
@@ -1853,12 +2062,18 @@ Ext.onReady( function() {
                                 names[fullId] = name;
 
                                 // update rows
-                                response.rows[j][i] = fullId;
+                                response.rows[k][i] = fullId;
 
                                 // update ou hierarchy
                                 if (isHierarchy) {
 									ouHierarchy[fullId] = ouHierarchy[id];
 								}
+
+                                // update boolean metadata
+                                if (header.type === 'java.lang.Boolean') {
+                                    response.metaData.booleanNames[id] = booleanNameMap[id];
+                                    response.metaData.booleanNames[fullId] = booleanNameMap[id];
+                                }
 
 								objects.push({
 									id: fullId,
@@ -1866,7 +2081,11 @@ Ext.onReady( function() {
 								});
                             }
 
-                            support.prototype.array.sort(objects, 'ASC', 'sortingId');
+                            // sort if not option set
+                            if (!header.optionSet) {
+                                support.prototype.array.sort(objects, 'ASC', 'sortingId');
+                            }
+
                             header.ids = Ext.Array.pluck(objects, 'id');
                         }
                     }
@@ -1881,13 +2100,17 @@ Ext.onReady( function() {
 
 				// idValueMap: vars
 				var valueHeaderIndex = response.nameHeaderMap[conf.finals.dimension.value.value].index,
-					dx = dimConf.data.dimensionName,
+					dy = dimConf.data.dimensionName,
 					axisDimensionNames = xLayout.axisDimensionNames,
 					idIndexOrder = [];
 
 				// idValueMap: idIndexOrder
-				for (var i = 0; i < axisDimensionNames.length; i++) {
-					idIndexOrder.push(response.nameHeaderMap[axisDimensionNames[i]].index);
+				for (var i = 0, dimensionName; i < axisDimensionNames.length; i++) {
+                    dimensionName = axisDimensionNames[i];
+
+                    if (response.nameHeaderMap.hasOwnProperty(dimensionName)) {
+                        idIndexOrder.push(response.nameHeaderMap[dimensionName].index);
+                    }
 				}
 
 				// idValueMap
@@ -1918,6 +2141,9 @@ Ext.onReady( function() {
                     nameMap = {},
                     ouIndex;
 
+                metaData.optionNames = {};
+                metaData.booleanNames = {};
+
                 nameMap['pe'] = 'eventdate';
                 nameMap['ou'] = 'ouname';
 
@@ -1939,7 +2165,7 @@ Ext.onReady( function() {
 					if (header.type === 'java.lang.Double') {
 						for (var j = 0, value; j < xResponse.rows.length; j++) {
                             value = xResponse.rows[j][i];
-							xResponse.rows[j][i] = value ? parseFloat(value) : value;
+							xResponse.rows[j][i] = parseFloat(value) || value;
 						}
 					}
 
@@ -1971,7 +2197,7 @@ Ext.onReady( function() {
 
 				return xResponse;
 			};
-		}());
+        }());
 
 		// web
 		(function() {
@@ -2008,11 +2234,95 @@ Ext.onReady( function() {
 					return null;
 				}
 
-				if (component.mask) {
+				if (component.mask && component.mask.destroy) {
 					component.mask.destroy();
 					component.mask = null;
 				}
 			};
+
+			// window
+			web.window = web.window || {};
+
+			web.window.setAnchorPosition = function(w, target) {
+				var vpw = ns.app.viewport.getWidth(),
+					targetx = target ? target.getPosition()[0] : 4,
+					winw = w.getWidth(),
+					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
+
+				if ((targetx + winw) > vpw) {
+					w.setPosition((vpw - winw - 2), y);
+				}
+				else {
+					w.setPosition(targetx, y);
+				}
+			};
+
+			web.window.addHideOnBlurHandler = function(w) {
+				var el = Ext.get(Ext.query('.x-mask')[0]);
+
+				el.on('click', function() {
+					if (w.hideOnBlur) {
+						w.hide();
+					}
+				});
+
+				w.hasHideOnBlurHandler = true;
+			};
+
+			web.window.addDestroyOnBlurHandler = function(w) {
+				var maskElements = Ext.query('.x-mask'),
+                    el = Ext.get(maskElements[0]);
+
+				el.on('click', function() {
+					if (w.destroyOnBlur) {
+						w.destroy();
+					}
+				});
+
+				w.hasDestroyOnBlurHandler = true;
+			};
+
+			// message
+			web.message = {};
+
+			web.message.alert = function(msg, type) {
+                var config = {},
+                    window;
+
+                if (!msg) {
+                    return;
+                }
+
+                type = type || 'error';
+
+				config.title = type === 'error' ? ER.i18n.error : (type === 'warning' ? ER.i18n.warning : ER.i18n.info);
+				config.iconCls = 'ns-window-title-messagebox ' + type;
+
+                // html
+                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+
+                // bodyStyle
+                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+
+                // destroy handler
+                config.modal = true;
+                config.destroyOnBlur = true;
+
+                // listeners
+                config.listeners = {
+                    show: function(w) {
+                        w.setPosition(w.getPosition()[0], w.getPosition()[1] / 2);
+
+						if (!w.hasDestroyOnBlurHandler) {
+							web.window.addDestroyOnBlurHandler(w);
+						}
+                    }
+                };
+
+                window = Ext.create('Ext.window.Window', config);
+
+                window.show();
+            };
 
 			// analytics
 			web.analytics = {};
@@ -2020,7 +2330,7 @@ Ext.onReady( function() {
 			web.analytics.getParamString = function(view, format, skipPaging) {
                 var paramString,
                     dimensions = Ext.Array.clean([].concat(view.columns || [], view.rows || [])),
-                    ignoreKeys = ['longitude', 'latitude'],
+                    ignoreKeys = ['dy', 'longitude', 'latitude'],
                     dataTypeMap = {
                         'aggregated_values': 'aggregate',
                         'individual_cases': 'query'
@@ -2054,6 +2364,13 @@ Ext.onReady( function() {
 								paramString += encodeURIComponent(item.id) + ((j < (dim.items.length - 1)) ? ';' : '');
 							}
 						}
+                        else if (Ext.isObject(dim.legendSet) && dim.legendSet.id) {
+                            paramString += '-' + dim.legendSet.id;
+
+                            if (dim.filter) {
+                                paramString += ':' + encodeURIComponent(dim.filter);
+                            }
+                        }
 						else {
 							paramString += dim.filter ? ':' + encodeURIComponent(dim.filter) : '';
 						}
@@ -2075,11 +2392,31 @@ Ext.onReady( function() {
                                 paramString += j < dim.items.length - 1 ? ';' : '';
                             }
                         }
+                        else if (Ext.isObject(dim.legendSet) && dim.legendSet.id) {
+                            paramString += '-' + dim.legendSet.id;
+
+                            if (dim.filter) {
+                                paramString += ':' + encodeURIComponent(dim.filter);
+                            }
+                        }
                         else {
                             paramString += dim.filter ? ':' + encodeURIComponent(dim.filter) : '';
                         }
 					}
 				}
+
+                // value
+                if (Ext.isString(view.value)) {
+                    paramString += '&value=' + view.value;
+				}
+                else if (Ext.isObject(view.value) && Ext.isString(view.value.id)) {
+                    paramString += '&value=' + view.value.id;
+                }
+
+                // aggregation type
+                if (view.aggregationType) {
+                    paramString += '&aggregationType=' + view.aggregationType;
+                }
 
                 // dates
                 if (view.startDate && view.endDate) {
@@ -2094,11 +2431,9 @@ Ext.onReady( function() {
                     paramString += '&limit=' + view.topLimit + '&sortOrder=' + (view.sortOrder < 0 ? 'ASC' : 'DESC');
                 }
 
-                // count type
-                if (view.dataType === 'aggregated_values' && view.countType) {
-                    if (view.countType === 'tracked_entity_instances') {
-                        paramString += '&uniqueInstances=true';
-                    }
+                // output type
+                if (view.dataType === 'aggregated_values' && view.outputType) {
+                    paramString += '&outputType=' + view.outputType;
                 }
 
                 // sorting
@@ -2117,6 +2452,11 @@ Ext.onReady( function() {
                 // display property
                 paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
+                // collapse data items
+                if (view.collapseDataDimensions) {
+                    paramString += '&collapseDataDimensions=true';
+                }
+
                 return paramString;
             };
 
@@ -2133,7 +2473,7 @@ Ext.onReady( function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                ns.alert(msg);
+                ns.alert(msg, 'warning');
 			};
 
 			// report
@@ -2201,11 +2541,13 @@ Ext.onReady( function() {
 					getTotalHtmlArray,
 					getHtml,
 					getUniqueFactor = function(xAxis) {
+						var unique;
+
 						if (!xAxis) {
 							return null;
 						}
 
-						var unique = xAxis.xItems.unique;
+						unique = xAxis.xItems.unique;
 
 						if (unique) {
 							return unique.length < 2 ? 1 : (xAxis.size / unique[0].length);
@@ -2270,8 +2612,6 @@ Ext.onReady( function() {
 					rowSpan = config.rowSpan ? 'rowspan="' + config.rowSpan + '" ' : '';
 					htmlValue = config.collapsed ? '' : config.htmlValue || config.value || '';
 					htmlValue = config.type !== 'dimension' ? support.prototype.number.prettyPrint(htmlValue, xLayout.digitGroupSeparator) : htmlValue;
-					displayDensity = conf.report.displayDensity[config.displayDensity] || conf.report.displayDensity[xLayout.displayDensity];
-					fontSize = conf.report.fontSize[config.fontSize] || conf.report.fontSize[xLayout.fontSize];
 
 					cls += config.hidden ? ' td-hidden' : '';
 					cls += config.collapsed ? ' td-collapsed' : '';
@@ -2315,7 +2655,7 @@ Ext.onReady( function() {
 					//}
 					//else {
 						//html += 'style="padding:' + displayDensity + '; font-size:' + fontSize + ';"' + '>' + htmlValue + '</td>';
-                        html += 'style="' + (bgColor && isValue ? 'color:' + bgColor + '; ' : '') + 'padding:' + displayDensity + '; font-size:' + fontSize + ';"' + '>' + htmlValue + '</td>';
+                        html += 'style="' + (bgColor && isValue ? 'color:' + bgColor + '; ' : '') + '">' + htmlValue + '</td>';
 					//}
 
 					return html;
@@ -2352,13 +2692,14 @@ Ext.onReady( function() {
                             cls: config.cls ? ' ' + config.cls : 'pivot-empty',
                             colSpan: config.colSpan ? config.colSpan : 1,
                             rowSpan: config.rowSpan ? config.rowSpan : 1,
-                            htmlValue: config.htmlValue ? config.htmlValue : '&nbsp;'
+                            htmlValue: config.htmlValue ? config.htmlValue : ''
                         });
                     };
 
                     getEmptyHtmlArray = function(i) {
                         var a = [];
 
+                        // if not the intersection cell
                         if (i < xColAxis.dims - 1) {
                             if (xRowAxis && xRowAxis.dims) {
                                 for (var j = 0; j < xRowAxis.dims - 1; j++) {
@@ -2378,21 +2719,38 @@ Ext.onReady( function() {
                                 for (var j = 0; j < xRowAxis.dims - 1; j++) {
                                     a.push(getEmptyNameTdConfig({
                                         cls: 'pivot-dim-label',
-                                        htmlValue: dimConf.objectNameMap[xLayout.rowObjectNames[j]].name
+                                        htmlValue: dimConf.objectNameMap[xLayout.rowObjectNames[j]] ? dimConf.objectNameMap[xLayout.rowObjectNames[j]].name : 'missing col name'
                                     }));
                                 }
                             }
 
                             a.push(getEmptyNameTdConfig({
                                 cls: 'pivot-dim-label',
-                                htmlValue: dimConf.objectNameMap[xLayout.rowObjectNames[j]].name + ' / ' + dimConf.objectNameMap[xLayout.columnObjectNames[i]].name
+                                htmlValue: (xRowAxis ? dimConf.objectNameMap[xLayout.rowObjectNames[j]].name : '') + (xColAxis && xRowAxis ? '&nbsp;/&nbsp;' : '') + (xColAxis ? dimConf.objectNameMap[xLayout.columnObjectNames[i]].name : '')
                             }));
                         }
 
                         return a;
                     };
 
-					if (!(xColAxis && Ext.isObject(xColAxis))) {
+					if (!xColAxis) {
+
+                        // show row dimension labels
+                        if (xRowAxis && xLayout.showDimensionLabels) {
+                            var dimLabelHtml = [];
+
+                            // labels from row object names
+                            for (var i = 0; i < xLayout.rowObjectNames.length; i++) {
+                                dimLabelHtml.push(getEmptyNameTdConfig({
+                                    cls: 'pivot-dim-label',
+                                    htmlValue: dimConf.objectNameMap[xLayout.rowObjectNames[i]].name
+                                }));
+                            }
+
+                            // pivot-transparent-column unnecessary
+                            a.push(dimLabelHtml);
+                        }
+
 						return a;
 					}
 
@@ -2424,6 +2782,7 @@ Ext.onReady( function() {
 
 							// sortable column headers. last dim only.
 							if (i === xColAxis.dims - 1 && doSortableColumnHeaders()) {
+
 								//condoId = xColAxis.ids[j].split('-').join('');
 								condoId = xColAxis.ids[j];
 							}
@@ -2496,7 +2855,6 @@ Ext.onReady( function() {
 								obj = xRowAxis.objects.all[j][i];
 								obj.type = 'dimension';
 								obj.cls = 'pivot-dim ' + (service.layout.isHierarchy(xLayout, xResponse, obj.id) ? ' align-left' : '');
-								obj.noBreak = true;
 								obj.hidden = !(obj.rowSpan || obj.colSpan);
 								obj.htmlValue = service.layout.getItemName(xLayout, xResponse, obj.id, true);
 
@@ -2525,6 +2883,15 @@ Ext.onReady( function() {
 							}
 						}
 					}
+                    else {
+                        if (xLayout.showDimensionLabels) {
+                            axisAllObjects.push([{
+                                type: 'transparent',
+                                cls: 'pivot-transparent-row'
+                            }]);
+                        }
+                    }
+
 	//axisAllObjects = [ [ dim, dim ]
 	//				     [ dim, dim ]
 	//				     [ dim, dim ]
@@ -2802,9 +3169,9 @@ Ext.onReady( function() {
 					for (var i = 0, row; i < xValueObjects.length; i++) {
 						row = [];
 
-						if (xRowAxis) {
+						//if (xRowAxis) {
 							row = row.concat(axisAllObjects[i]);
-						}
+						//}
 
 						row = row.concat(xValueObjects[i]);
 
@@ -2948,13 +3315,19 @@ Ext.onReady( function() {
 				};
 
 				getHtml = function() {
-					var s = '<table id="' + xLayout.tableUuid + '" class="pivot">';
+                    var cls = 'pivot',
+                        table;
+
+                    cls += xLayout.displayDensity && xLayout.displayDensity !== 'normal' ? ' displaydensity-' + xLayout.displayDensity : '';
+                    cls += xLayout.fontSize && xLayout.fontSize !== 'normal' ? ' fontsize-' + xLayout.fontSize : '';
+
+					table = '<table id="' + xLayout.tableUuid + '" class="' + cls + '">';
 
 					for (var i = 0; i < htmlArray.length; i++) {
-						s += '<tr>' + htmlArray[i].join('') + '</tr>';
+						table += '<tr>' + htmlArray[i].join('') + '</tr>';
 					}
 
-					return s += '</table>';
+					return table += '</table>';
 				};
 
 				// get html
@@ -3004,30 +3377,25 @@ Ext.onReady( function() {
 					rows = xResponse.rows,
                     names = xResponse.metaData.names,
                     optionNames = xResponse.metaData.optionNames,
-                    pager = xResponse.metaData.pager || {
-                        page: 1,
-                        pageSize: 50
-                    },
+                    pager = xResponse.metaData.pager,
                     count = pager.page * pager.pageSize - pager.pageSize
-					tableCls = 'pivot',
-                    fontSize = conf.report.fontSize[layout.fontSize],
-                    displayDensity = conf.report.displayDensity[layout.displayDensity],
+					cls = 'pivot',
 					html = '';
 
 				xResponse.sortableIdObjects = [];
 
-				tableCls += layout.displayDensity ? ' ' + layout.displayDensity : '';
-				tableCls += layout.fontSize ? ' ' + layout.fontSize : '';
+                cls += layout.displayDensity && layout.displayDensity !== 'normal' ? ' displaydensity-' + layout.displayDensity : '';
+                cls += layout.fontSize && layout.fontSize !== 'normal' ? ' fontsize-' + layout.fontSize : '';
 
-				html += '<table class="' + tableCls + '"><tr>';
-                html += '<td class="pivot-dim pivot-dim-subtotal" style="font-size:' + fontSize + '; padding:' + displayDensity + '">' + '#' + '</td>';
+				html += '<table class="' + cls + '"><tr>';
+                html += '<td class="pivot-dim pivot-dim-subtotal">' + '#' + '</td>';
 
 				// get header indexes
 				for (var i = 0, header, uuid; i < dimensionHeaders.length; i++) {
 					header = dimensionHeaders[i];
 					uuid = Ext.data.IdGenerator.get('uuid').generate();
 
-					html += '<td id="' + uuid + '" class="pivot-dim td-sortable" style="font-size:' + fontSize + '; padding:' + displayDensity + '">' + header.column + '</td>';
+					html += '<td id="' + uuid + '" class="pivot-dim td-sortable">' + header.column + '</td>';
 
 					xResponse.sortableIdObjects.push({
 						id: header.name,
@@ -3041,7 +3409,7 @@ Ext.onReady( function() {
 				for (var i = 0, row; i < rows.length; i++) {
 					row = rows[i];
 					html += '<tr>';
-                    html += '<td class="pivot-value align-right" style="font-size:' + fontSize + '; padding:' + displayDensity + '">' + (count + (i + 1)) + '</td>';
+                    html += '<td class="pivot-value align-right">' + (count + (i + 1)) + '</td>';
 
 					for (var j = 0, str, header, name; j < dimensionHeaders.length; j++) {
 						header = dimensionHeaders[j];
@@ -3061,7 +3429,7 @@ Ext.onReady( function() {
 							//}
 						//}
 
-						html += '<td class="pivot-value align-left" style="font-size:' + fontSize + '; padding:' + displayDensity + '">' + name + '</td>';
+						html += '<td class="pivot-value align-left">' + name + '</td>';
 					}
 
 					html += '</tr>';
@@ -3097,23 +3465,24 @@ Ext.onReady( function() {
 			}
 
 			// legend set map
-			//init.idLegendSetMap = {};
+			init.idLegendSetMap = {};
 
-			//for (var i = 0, set; i < init.legendSets.length; i++) {
-				//set = init.legendSets[i];
-				//init.idLegendSetMap[set.id] = set;
-			//}
+			for (var i = 0, set; i < init.legendSets.length; i++) {
+				set = init.legendSets[i];
+				init.idLegendSetMap[set.id] = set;
+			}
 		}());
 
-		// instance
-		return {
-			conf: conf,
-			api: api,
-			support: support,
-			service: service,
-			web: web,
-			init: init
-		};
+		// alert
+		ns.alert = web.message.alert;
+
+		ns.core.conf = conf;
+		ns.core.api = api;
+		ns.core.support = support;
+		ns.core.service = service;
+		ns.core.web = web;
+
+		return ns;
 	};
 
 	// PLUGIN
@@ -3325,7 +3694,7 @@ Ext.onReady( function() {
                     init.user.ouc = ouc;
                 }
                 else {
-                    ns.alert('User is not assigned to any organisation units');
+                    alert('User is not assigned to any organisation units');
                 }
 
                 fn();
@@ -3367,11 +3736,14 @@ Ext.onReady( function() {
         var css = '',
             arrowUrl = config.dashboard ? '../dhis-web-commons/javascripts/plugin/images/arrowupdown.png' : '//dhis2-cdn.org/v217/plugin/images/arrowupdown.png';
 
-        css += 'table.pivot { font-family: arial,sans-serif,ubuntu,consolas; } \n';
+        css += 'table.pivot { font-family: arial,sans-serif,ubuntu,consolas; border-collapse: collapse; border-spacing: 0px; border: 0 none; font-size: 11px } \n';
         css += '.td-nobreak { white-space: nowrap; } \n';
         css += '.td-hidden { display: none; } \n';
         css += '.td-collapsed { display: none; } \n';
-        css += 'table.pivot { border-collapse: collapse; border-spacing: 0px; border: 0 none; } \n';
+        css += 'table.pivot.displaydensity-comfortable td { padding: 7px } \n';
+        css += 'table.pivot.displaydensity-compact td { padding: 3px } \n';
+        css += 'table.pivot.fontsize-large td { font-size: 13px } \n';
+        css += 'table.pivot.fontsize-small td { font-size: 10px } \n';
         css += '.pivot td { font-family: arial, sans-serif, helvetica neue, helvetica !important; padding: 5px; border: 1px solid #b2b2b2; } \n';
         css += '.pivot-dim { background-color: #dae6f8; text-align: center; } \n';
         css += '.pivot-dim.highlighted { background-color: #c5d8f6; } \n';
@@ -3406,7 +3778,7 @@ Ext.onReady( function() {
         css += '.td-sortable { background-image: url("' + arrowUrl + '"); background-repeat: no-repeat; background-position: right center; padding-right: 15px !important; } \n';
 
         // alert
-        css += '.ns-plugin-alert { width: 90%; padding: 5%; color: #777 } \n';
+        css += '.ns-plugin-alert { width: 90%; padding: 3%; color: #777; font-size: 11px } \n';
 
         Ext.util.CSS.createStyleSheet(css);
     };
@@ -3437,7 +3809,7 @@ Ext.onReady( function() {
 			return true;
 		};
 
-        extendInstance = function(pt) {
+        extendInstance = function(ns) {
             var init = ns.core.init,
                 conf = ns.core.conf,
 				api = ns.core.api,
@@ -3456,17 +3828,8 @@ Ext.onReady( function() {
                 },
                 el = Ext.get(init.el);
 
-            ns.plugin = init.plugin;
-            ns.dashboard = init.dashboard;
-            ns.crossDomain = init.crossDomain;
-            ns.skipMask = init.skipMask;
-            ns.skipFade = init.skipFade;
-
+            // init
 			init.el = config.el;
-
-            if (!ns.skipFade && el) {
-                el.setStyle('opacity', 0);
-            }
 
 			// mouse events
 			web.events = web.events || {};
@@ -3596,21 +3959,22 @@ Ext.onReady( function() {
                 success = function(r) {
                     var response = api.response.Response((r.responseText ? Ext.decode(r.responseText) : r));
 
-                    if (!response) {
-                        if (!ns.skipMask) {
-                            web.mask.hide(ns.app.centerRegion);
-                        }
-                        return;
-                    }
+                    //if (response) {
 
                     // add to dimConf, TODO
                     for (var i = 0, map = dimConf.objectNameMap, header; i < response.headers.length; i++) {
                         header = response.headers[i];
+
                         map[header.name] = map[header.name] || {
                             id: header.name,
                             dimensionName: header.name,
                             name: header.column
                         };
+                    }
+                    //}
+
+                    if (!ns.skipMask) {
+                        web.mask.show(ns.app.centerRegion, 'Creating table..');
                     }
 
                     ns.app.paramString = paramString;
@@ -3713,7 +4077,7 @@ Ext.onReady( function() {
                         table = getHtml(xLayout, xResponse);
 
                         if (table.tdCount > 20000 || (layout.hideEmptyRows && table.tdCount > 10000)) {
-                            ns.alert('Table has too many cells. Please reduce the table and try again.');
+                            alert('Table has too many cells. Please reduce the table and try again.');
 
                             if (!ns.skipMask) {
                                 web.mask.hide(ns.app.centerRegion);
@@ -3731,17 +4095,17 @@ Ext.onReady( function() {
                         ns.app.centerRegion.update(getTitleHtml(layout.name) + table.html);
 
                         // fade
-                        if (!ns.skipFade) {
-                            Ext.defer( function() {
-                                var el = Ext.get(init.el);
+                        //if (!ns.skipFade) {
+                            //Ext.defer( function() {
+                                //var el = Ext.get(init.el);
 
-                                if (el) {
-                                    el.fadeIn({
-                                        duration: 400
-                                    });
-                                }
-                            }, 300 );
-                        }
+                                //if (el) {
+                                    //el.fadeIn({
+                                        //duration: 400
+                                    //});
+                                //}
+                            //}, 300 );
+                        //}
 
                         // after render
                         ns.app.layout = layout;
@@ -3786,8 +4150,6 @@ Ext.onReady( function() {
                     };
 
                     // execute
-					response = response || ns.app.response;
-
                     getXResponse();
 				};
 
@@ -3841,6 +4203,14 @@ Ext.onReady( function() {
                     getOptionSets(xResponse, getReport);
 				};
 
+                if (!response.rows.length) {
+                    ns.app.centerRegion.update('<div style="padding:20px; border:0 none; background:transparent; color:#555">No values found for the current selection.</div>');
+
+                    web.mask.hide(ns.app.centerRegion);
+
+                    return;
+                }
+
 				map[layout.dataType]();
 			};
 
@@ -3877,6 +4247,20 @@ Ext.onReady( function() {
 				// re-create table
 				web.report.createReport(layout, null, response, false);
 			};
+
+            // instance
+            ns.plugin = init.plugin;
+            ns.dashboard = init.dashboard;
+            ns.crossDomain = init.crossDomain;
+            ns.skipMask = init.skipMask;
+            ns.skipFade = init.skipFade;
+
+            ns.alert = function(text) {
+                if (el) {
+                    el.setStyle('opacity', 1);
+                    el.update('<div class="ns-plugin-alert">' + text + '</div>');
+                }
+            };
         };
 
 		createViewport = function() {
@@ -3902,29 +4286,10 @@ Ext.onReady( function() {
             init.skipMask = Ext.isBoolean(config.skipMask) ? config.skipMask : false;
             init.skipFade = Ext.isBoolean(config.skipFade) ? config.skipFade : false;
 
-            // alerts
-            ns.alert = function(text, isLog) {
-                if (isLog) {
-                    console.log(text);
-                }
-                else {
-                    if (text) {
-                        alert(text);
-                    }
-                }
-            };
-
-            init.alert = function(text) {
-                var div = Ext.get(config.el);
-
-                if (div) {
-                    div.setStyle('opacity', 1);
-                    div.update('<div class="ns-plugin-alert">' + text + '</div>');
-                }
-            };
-
             // init
-			ns.core = ER.getCore(Ext.clone(init));
+            ER.instances.push(ns);
+            ns.core.init = init;
+			ER.getCore(ns);
 			extendInstance(ns);
 
 			ns.app.viewport = createViewport();
