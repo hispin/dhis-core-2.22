@@ -1568,6 +1568,8 @@ Ext.onReady( function() {
 		});
 
         onValueSelect = function(id) {
+            id = id || value.getValue();
+
             if (id === defaultValueId) {
                 aggregationType.setDisabled();
             }
@@ -1640,7 +1642,7 @@ Ext.onReady( function() {
         });
 
         onCollapseDataDimensionsChange = function(value) {
-            toggleDataItems(value);
+            //toggleDataItems(value);
             toggleValueGui(value);
         };
 
@@ -1700,7 +1702,7 @@ Ext.onReady( function() {
                 }
             }
 
-            //onCollapseDataDimensionsChange(collapseDataDimensions.getValue()); // not supported in EV yet
+            onCollapseDataDimensionsChange(collapseDataDimensions.getValue()); // not supported in EV yet
         };
 
         removeDimension = function(id, excludedStores) {
@@ -1769,12 +1771,17 @@ Ext.onReady( function() {
 			}
 		};
 
-		reset = function(isAll) {
+		reset = function(isAll, skipValueStore) {
 			colStore.removeAll();
 			rowStore.removeAll();
 			fixedFilterStore.removeAll();
 			filterStore.removeAll();
-            valueStore.removeAll();
+
+            if (!skipValueStore) {
+                valueStore.removeAll();
+                valueStore.addDefaultData();
+            }
+
             value.clearValue();
 
 			if (!isAll) {
@@ -1872,6 +1879,12 @@ Ext.onReady( function() {
                 }
 
                 return config;
+            },
+            setValueConfig: function(valueId, aggType) {
+                value.setValue(valueId);
+                onValueSelect();
+
+                aggregationType.setValue(aggType);
             },
             getOptions: function() {
                 return {
@@ -4254,7 +4267,9 @@ Ext.onReady( function() {
 			}
 
             // favorite
-			if (layout && layout.dataType === 'aggregated_values') {
+			if (layout) {
+
+                aggWindow.reset(true, true);
 
                 // start end dates
 				if (layout.startDate && layout.endDate) {
@@ -4267,7 +4282,8 @@ Ext.onReady( function() {
                         dim = layout.columns[i];
                         record = recordMap[dim.dimension];
 
-						aggWindow.addDimension(record || extendDim(Ext.clone(dim)), aggWindow.colStore, null, true);
+						//aggWindow.addDimension(record || extendDim(Ext.clone(dim)), aggWindow.colStore, null, true);
+                        aggWindow.colStore.add(record || extendDim(Ext.clone(dim)));
 					}
 				}
 
@@ -4277,7 +4293,8 @@ Ext.onReady( function() {
                         dim = layout.rows[i];
                         record = recordMap[dim.dimension];
 
-						aggWindow.addDimension(record || extendDim(Ext.clone(dim)), aggWindow.rowStore, null, true);
+						//aggWindow.addDimension(record || extendDim(Ext.clone(dim)), aggWindow.rowStore, null, true);
+                        aggWindow.rowStore.add(record || extendDim(Ext.clone(dim)));
 					}
 				}
 
@@ -4288,9 +4305,15 @@ Ext.onReady( function() {
 						record = recordMap[dim.dimension];
 						store = Ext.Array.contains(includeKeys, element.type) || element.optionSet ? aggWindow.filterStore : aggWindow.fixedFilterStore;
 
-                        aggWindow.addDimension(record || extendDim(Ext.clone(dim)), store, null, true);
+                        //aggWindow.addDimension(record || extendDim(Ext.clone(dim)), store, null, true);
+                        store.add(record || extendDim(Ext.clone(dim)));
 					}
 				}
+
+                // value
+                if (layout.value && layout.aggregationType) {
+                    aggWindow.setValueConfig(layout.value.id, layout.aggregationType);
+                }
 
                 // collapse data dimensions
                 aggWindow.collapseDataDimensions.setValue(layout.collapseDataDimensions);
