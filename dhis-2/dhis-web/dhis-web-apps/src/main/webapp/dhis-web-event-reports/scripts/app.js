@@ -1370,7 +1370,7 @@ Ext.onReady( function() {
         fixedFilterStore = getStore({name: 'fixedFilterStore'});
         filterStore = getStore({name: 'filterStore'});
         valueStore = getStore({name: 'valueStore'});
-nissa = rowStore;
+
         // store functions
         valueStore.addDefaultData = function() {
             if (!this.getById(defaultValueId)) {
@@ -1534,6 +1534,8 @@ nissa = rowStore;
 		});
 
         onValueSelect = function(id) {
+            id = id || value.getValue();
+
             if (id === defaultValueId) {
                 aggregationType.setDisabled();
             }
@@ -1735,12 +1737,17 @@ nissa = rowStore;
 			}
 		};
 
-		reset = function(isAll) {
+		reset = function(isAll, skipValueStore) {
 			colStore.removeAll();
 			rowStore.removeAll();
 			fixedFilterStore.removeAll();
 			filterStore.removeAll();
-            valueStore.removeAll();
+
+            if (!skipValueStore) {
+                valueStore.removeAll();
+                valueStore.addDefaultData();
+            }
+
             value.clearValue();
 
 			if (!isAll) {
@@ -1839,6 +1846,12 @@ nissa = rowStore;
                 }
 
                 return config;
+            },
+            setValueConfig: function(valueId, aggType) {
+                value.setValue(valueId);
+                onValueSelect();
+
+                aggregationType.setValue(aggType);
             },
             getOptions: function() {
                 return {
@@ -4592,7 +4605,7 @@ nissa = rowStore;
             // favorite
 			if (layout && layout.dataType === 'aggregated_values') {
 
-                aggWindow.reset(true);
+                aggWindow.reset(true, true);
 
                 // start end dates
 				if (layout.startDate && layout.endDate) {
@@ -4632,6 +4645,11 @@ nissa = rowStore;
                         store.add(record || extendDim(Ext.clone(dim)));
 					}
 				}
+
+                // value
+                if (layout.value && layout.aggregationType) {
+                    aggWindow.setValueConfig(layout.value.id, layout.aggregationType);
+                }
 
                 // collapse data dimensions
                 aggWindow.collapseDataDimensions.setValue(layout.collapseDataDimensions);
