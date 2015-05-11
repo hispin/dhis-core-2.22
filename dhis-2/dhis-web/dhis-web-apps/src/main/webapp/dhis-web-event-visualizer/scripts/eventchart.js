@@ -925,9 +925,8 @@ Ext.onReady( function() {
 				}();
 			};
 
-			api.layout.Layout = function(config) {
-				var config = Ext.clone(config),
-					layout = {},
+			api.layout.Layout = function(config, applyConfig) {
+				var layout = {},
 					getValidatedDimensionArray,
 					validateSpecialCases;
 
@@ -1240,7 +1239,7 @@ Ext.onReady( function() {
 						return;
 					}
 
-					return layout;
+                    return Ext.apply(layout, applyConfig);
 				}();
 			};
 
@@ -3950,7 +3949,10 @@ Ext.onReady( function() {
                         text = xLayout.startDate + ' - ' + xLayout.endDate;
                     }
 
-                    if (xLayout.title) {
+                    if (ns.dashboard && Ext.isString(xLayout.name)) {
+                        text = xLayout.name;
+                    }
+                    else if (xLayout.title) {
                         text += (text.length ? ', ' : '') + xLayout.title;
                     }
                     else if (xLayout.type === conf.finals.chart.pie) {
@@ -4034,7 +4036,7 @@ Ext.onReady( function() {
                     }
 
                     // aggregation type
-                    if (Ext.isObject(layout.value) && layout.value.id && layout.aggregationType) {
+                    if (!ns.dashboard && Ext.isObject(layout.value) && layout.value.id && layout.aggregationType) {
                         var value = layout.value.id;
 
                         text += text.length ? ', ' : '';
