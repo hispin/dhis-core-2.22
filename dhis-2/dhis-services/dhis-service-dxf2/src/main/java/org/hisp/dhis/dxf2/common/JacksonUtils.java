@@ -89,8 +89,7 @@ public class JacksonUtils
 
         // Register view classes
 
-        viewClasses.put( "default", BasicView.class );
-        viewClasses.put( "basic", BasicView.class );
+        viewClasses.put( "default", ExportView.class );
         viewClasses.put( "export", ExportView.class );
     }
 
