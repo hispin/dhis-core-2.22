@@ -3515,6 +3515,9 @@ Ext.onReady( function() {
 			stage,
             onStageSelect,
             loadDataElements,
+			dataElementLabel,
+            dataElementSearch,
+            dataElementFilter,
             dataElementAvailable,
             dataElementSelected,
             addUxFromDataElement,
@@ -3946,6 +3949,9 @@ Ext.onReady( function() {
                 ns.app.aggregateLayoutWindow.value.resetData();
             }
 
+            dataElementSearch.enable();
+            dataElementSearch.hideFilter();
+
 			loadDataElements(stageId, layout);
 		};
 
@@ -4006,7 +4012,86 @@ Ext.onReady( function() {
             }
 		};
 
+        dataElementLabel = Ext.create('Ext.form.Label', {
+            text: NS.i18n.available,
+            cls: 'ns-toolbar-multiselect-left-label',
+            style: 'margin-right:5px'
+        });
+
+        dataElementSearch = Ext.create('Ext.button.Button', {
+            width: 22,
+            height: 22,
+            cls: 'ns-button-icon',
+            disabled: true,
+            style: 'background: url(images/search_14.png) 3px 3px no-repeat',
+            showFilter: function() {
+                dataElementLabel.hide();
+                this.hide();
+                dataElementFilter.show();
+                dataElementFilter.reset();
+            },
+            hideFilter: function() {
+                dataElementLabel.show();
+                this.show();
+                dataElementFilter.hide();
+                dataElementFilter.reset();
+            },
+            handler: function() {
+                this.showFilter();
+            }
+        });
+
+        dataElementFilter = Ext.create('Ext.form.field.Trigger', {
+            cls: 'ns-trigger-filter',
+            emptyText: 'Filter available..',
+            height: 22,
+            width: 170,
+            hidden: true,
+            enableKeyEvents: true,
+            fieldStyle: 'height:22px; border-right:0 none',
+            style: 'height:22px',
+            onTriggerClick: function() {
+				if (this.getValue()) {
+					this.reset();
+					this.onKeyUpHandler();
+				}
+            },
+            onKeyUpHandler: function() {
+                var store = dataElementsByStageStore,
+                    value = this.getValue(),
+                    name;
+
+                if (value === '') {
+                    store.clearFilter();
+                    return;
+                }
+
+                store.filterBy(function(r) {
+                    name = r.data.name || '';
+                    return name.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+                });
+            },
+            listeners: {
+                keyup: {
+                    fn: function(cmp) {
+                        cmp.onKeyUpHandler();
+                    },
+                    buffer: 100
+                },
+                show: function(cmp) {
+                    cmp.focus(false, 50);
+                },
+                focus: function(cmp) {
+                    cmp.addCls('ns-trigger-filter-focused');
+                },
+                blur: function(cmp) {
+                    cmp.removeCls('ns-trigger-filter-focused');
+                }
+            }
+        });
+
 		dataElementAvailable = Ext.create('Ext.ux.form.MultiSelect', {
+			cls: 'ns-toolbar-multiselect-left',
 			width: accBaseWidth,
             height: 180,
 			valueField: 'id',
@@ -4014,12 +4099,9 @@ Ext.onReady( function() {
             style: 'margin-bottom:1px',
 			store: dataElementsByStageStore,
 			tbar: [
-				{
-					xtype: 'label',
-                    text: 'Available data items',
-                    style: 'padding-left:6px; color:#222',
-					cls: 'ns-toolbar-multiselect-left-label'
-				},
+				dataElementLabel,
+                dataElementSearch,
+                dataElementFilter,
 				'->',
 				{
 					xtype: 'button',
@@ -5871,6 +5953,8 @@ Ext.onReady( function() {
 
             dataElementsByStageStore.removeAll();
             dataElementSelected.removeAll();
+
+            dataElementSearch.hideFilter();
 
             startDate.reset();
             endDate.reset();
