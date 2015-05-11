@@ -30,14 +30,13 @@ package org.hisp.dhis.webapi.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.IdSchemes;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,7 +52,6 @@ import java.util.Date;
 import java.util.Set;
 
 import static org.hisp.dhis.webapi.utils.ContextUtils.*;
-import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
 
 @Controller
 @RequestMapping( value = DataValueSetController.RESOURCE_PATH )
@@ -74,8 +72,8 @@ public class DataValueSetController
     public void getDataValueSetXml(
         @RequestParam Set<String> dataSet,
         @RequestParam( required = false ) String period,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
+        @RequestParam( required = false ) Date startDate,
+        @RequestParam( required = false ) Date endDate,
         @RequestParam Set<String> orgUnit,
         @RequestParam( required = false ) boolean children,
         IdSchemes idSchemes, HttpServletResponse response ) throws IOException
@@ -105,8 +103,8 @@ public class DataValueSetController
     public void getDataValueSetJson(
         @RequestParam Set<String> dataSet,
         @RequestParam( required = false ) String period,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
+        @RequestParam( required = false ) Date startDate,
+        @RequestParam( required = false ) Date endDate,
         @RequestParam Set<String> orgUnit,
         @RequestParam( required = false ) boolean children,
         IdSchemes idSchemes, HttpServletResponse response ) throws IOException
@@ -136,8 +134,8 @@ public class DataValueSetController
     public void getDataValueSetCsv(
         @RequestParam Set<String> dataSet,
         @RequestParam( required = false ) String period,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date endDate,
+        @RequestParam( required = false ) Date startDate,
+        @RequestParam( required = false ) Date endDate,
         @RequestParam Set<String> orgUnit,
         @RequestParam( required = false ) boolean children,
         IdSchemes idSchemes,

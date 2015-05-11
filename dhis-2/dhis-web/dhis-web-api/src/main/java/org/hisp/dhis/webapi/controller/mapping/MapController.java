@@ -49,7 +49,6 @@ import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,8 +62,6 @@ import java.awt.image.BufferedImage;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
-
-import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -195,7 +192,7 @@ public class MapController
 
     @RequestMapping( value = { "/{uid}/data", "/{uid}/data.png" }, method = RequestMethod.GET )
     public void getMapData( @PathVariable String uid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         @RequestParam( value = "ou", required = false ) String ou,
         @RequestParam( required = false ) Integer width,
         @RequestParam( required = false ) Integer height,

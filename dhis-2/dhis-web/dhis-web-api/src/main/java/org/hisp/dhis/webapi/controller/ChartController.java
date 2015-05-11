@@ -28,17 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObjectUtils.getUniqueDimensions;
-import static org.hisp.dhis.common.DimensionalObjectUtils.toDimension;
-import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.DimensionService;
@@ -64,12 +53,20 @@ import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Set;
+
+import static org.hisp.dhis.common.DimensionalObjectUtils.getUniqueDimensions;
+import static org.hisp.dhis.common.DimensionalObjectUtils.toDimension;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -166,7 +163,7 @@ public class ChartController
     @RequestMapping( value = { "/{uid}/data", "/{uid}/data.png" }, method = RequestMethod.GET )
     public void getChart(
         @PathVariable( "uid" ) String uid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         @RequestParam( value = "ou", required = false ) String ou,
         @RequestParam( value = "width", defaultValue = "800", required = false ) int width,
         @RequestParam( value = "height", defaultValue = "500", required = false ) int height,

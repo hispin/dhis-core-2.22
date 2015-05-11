@@ -45,7 +45,6 @@ import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +58,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
-import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -141,7 +139,7 @@ public class ReportController
     public void getReportAsPdf( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
         @RequestParam( value = "pe", required = false ) String period,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         getReport( request, response, uid, organisationUnitUid, period, date, "pdf", ContextUtils.CONTENT_TYPE_PDF, false );
@@ -151,7 +149,7 @@ public class ReportController
     public void getReportAsXls( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
         @RequestParam( value = "pe", required = false ) String period,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         getReport( request, response, uid, organisationUnitUid, period, date, "xls", ContextUtils.CONTENT_TYPE_EXCEL, true );
@@ -161,7 +159,7 @@ public class ReportController
     public void getReportAsHtml( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
         @RequestParam( value = "pe", required = false ) String period,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         getReport( request, response, uid, organisationUnitUid, period, date, "html", ContextUtils.CONTENT_TYPE_HTML, false );

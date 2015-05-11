@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller.event;
 
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.enrollment.Enrollment;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentService;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentStatus;
@@ -39,7 +40,6 @@ import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -48,7 +48,6 @@ import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,7 +61,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +84,7 @@ public class EnrollmentController
 
     @Autowired
     private IdentifiableObjectManager manager;
-    
+
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
@@ -99,8 +97,8 @@ public class EnrollmentController
         @RequestParam( value = "orgUnit", required = false ) String orgUnitUid,
         @RequestParam( value = "program", required = false ) String programUid,
         @RequestParam( value = "trackedEntityInstance", required = false ) String trackedEntityInstanceUid,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date startDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
+        @RequestParam( required = false ) Date startDate,
+        @RequestParam( required = false ) Date endDate,
         @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( value = "status", required = false ) EnrollmentStatus status,
         @RequestParam Map<String, String> parameters, Model model ) throws NotFoundException
@@ -112,7 +110,7 @@ public class EnrollmentController
         {
             OrganisationUnit organisationUnit = getOrganisationUnit( orgUnitUid );
             List<OrganisationUnit> organisationUnits = getOrganisationUnits( organisationUnit, ouMode );
-            
+
             Program program = getProgram( programUid );
 
             enrollments = status != null ?
@@ -327,11 +325,11 @@ public class EnrollmentController
 
         return organisationUnit;
     }
-    
+
     private List<OrganisationUnit> getOrganisationUnits( OrganisationUnit rootOrganisationUnit, OrganisationUnitSelectionMode ouMode )
     {
         List<OrganisationUnit> organisationUnits = new ArrayList<>();
-        
+
         if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( ouMode ) )
         {
             organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( rootOrganisationUnit.getUid() ) );
@@ -345,8 +343,8 @@ public class EnrollmentController
         {
             organisationUnits.add( rootOrganisationUnit );
         }
-        
-        return organisationUnits;        
+
+        return organisationUnits;
     }
 
     private Program getProgram( String id ) throws NotFoundException
