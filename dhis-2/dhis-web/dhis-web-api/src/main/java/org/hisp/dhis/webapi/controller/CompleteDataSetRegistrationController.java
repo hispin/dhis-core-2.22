@@ -143,7 +143,7 @@ public class CompleteDataSetRegistrationController
         CompleteDataSetRegistrations completeDataSetRegistrations = getCompleteDataSetRegistrations( dataSet, period,
             startDate, endDate, orgUnit, children );
 
-        JacksonUtils.toJsonWithView( response.getOutputStream(), completeDataSetRegistrations, BasicView.class );
+        JacksonUtils.toJson( response.getOutputStream(), completeDataSetRegistrations );
     }
 
     private CompleteDataSetRegistrations getCompleteDataSetRegistrations( Set<String> dataSet, String period,

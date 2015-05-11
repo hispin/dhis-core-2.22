@@ -91,9 +91,7 @@ public class JacksonUtils
 
         viewClasses.put( "default", BasicView.class );
         viewClasses.put( "basic", BasicView.class );
-        viewClasses.put( "detailed", DetailedView.class );
         viewClasses.put( "export", ExportView.class );
-        viewClasses.put( "dimensional", DimensionalView.class );
     }
 
     /**

@@ -31,7 +31,6 @@ package org.hisp.dhis.webapi.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.view.BasicView;
 import org.hisp.dhis.dataapproval.DataApproval;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
@@ -229,7 +228,7 @@ public class DataApprovalController
             }
         }
 
-        JacksonUtils.toJsonWithView( response.getOutputStream(), dataApprovalStateResponses, BasicView.class );
+        JacksonUtils.toJson( response.getOutputStream(), dataApprovalStateResponses );
     }
 
     private DataApprovalStateResponse getDataApprovalStateResponse( DataSet dataSet,
