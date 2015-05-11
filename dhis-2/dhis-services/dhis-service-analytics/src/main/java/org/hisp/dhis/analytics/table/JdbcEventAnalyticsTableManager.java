@@ -40,6 +40,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 
 import org.hisp.dhis.analytics.AnalyticsTable;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
@@ -224,10 +225,8 @@ public class JdbcEventAnalyticsTableManager
     public List<String[]> getDimensionColumns( AnalyticsTable table )
     {
         final String dbl = statementBuilder.getDoubleColumnType();
-        final String text = "character varying(255)";
         final String numericClause = " and value " + statementBuilder.getRegexpMatch() + " '"
             + MathUtils.NUMERIC_LENIENT_REGEXP + "'";
-        final String doubleSelect = "cast(value as " + dbl + ")";
 
         List<String[]> columns = new ArrayList<>();
 
@@ -261,9 +260,10 @@ public class JdbcEventAnalyticsTableManager
 
         for ( DataElement dataElement : table.getProgram().getAllDataElements() )
         {
-            String dataType = dataElement.isNumericType() ? dbl : text;
+            ValueType valueType = ValueType.getFromDataElement( dataElement );
+            String dataType = getColumnType( valueType );
             String dataClause = dataElement.isNumericType() ? numericClause : "";
-            String select = dataElement.isNumericType() ? doubleSelect : "value";
+            String select = getSelectClause( valueType );
 
             String sql = "(select " + select + " from trackedentitydatavalue where programstageinstanceid=psi.programstageinstanceid " + 
                 "and dataelementid=" + dataElement.getId() + dataClause + ") as " + quote( dataElement.getUid() );
@@ -275,9 +275,10 @@ public class JdbcEventAnalyticsTableManager
         for ( DataElement dataElement : table.getProgram().getDataElementsWithLegendSet() )
         {
             String column = quote( dataElement.getUid() + PartitionUtils.SEP + dataElement.getLegendSet().getUid() );
+            String select = getSelectClause( ValueType.getFromDataElement( dataElement ) );
             
             String sql = "(select l.uid from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
-                "inner join trackedentitydatavalue dv on l.startvalue <= " + doubleSelect + " and l.endvalue > " + doubleSelect + " " +
+                "inner join trackedentitydatavalue dv on l.startvalue <= " + select + " and l.endvalue > " + select + " " +
                 "and lsl.legendsetid=" + dataElement.getLegendSet().getId() + " and dv.programstageinstanceid=psi.programstageinstanceid " + 
                 "and dv.dataelementid=" + dataElement.getId() + numericClause + ") as " + column;
                 
@@ -287,9 +288,10 @@ public class JdbcEventAnalyticsTableManager
 
         for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributes() )
         {
-            String dataType = attribute.isNumericType() ? dbl : text;
+            ValueType valueType = ValueType.getFromAttribute( attribute );
+            String dataType = getColumnType( valueType );
             String dataClause = attribute.isNumericType() ? numericClause : "";
-            String select = attribute.isNumericType() ? doubleSelect : "value";
+            String select = getSelectClause( valueType );
 
             String sql = "(select " + select + " from trackedentityattributevalue where trackedentityinstanceid=pi.trackedentityinstanceid " + 
                 "and trackedentityattributeid=" + attribute.getId() + dataClause + ") as " + quote( attribute.getUid() );
@@ -301,9 +303,10 @@ public class JdbcEventAnalyticsTableManager
         for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributesWithLegendSet() )
         {
             String column = quote( attribute.getUid() + PartitionUtils.SEP + attribute.getLegendSet().getUid() );
+            String select = getSelectClause( ValueType.getFromAttribute( attribute ) );
             
             String sql = "(select l.uid from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
-                "inner join trackedentityattributevalue av on l.startvalue <= " + doubleSelect + " and l.endvalue > " + doubleSelect + " " +
+                "inner join trackedentityattributevalue av on l.startvalue <= " + select + " and l.endvalue > " + select + " " +
                 "and lsl.legendsetid=" + attribute.getLegendSet().getId() + " and av.trackedentityinstanceid=pi.trackedentityinstanceid " +
                 "and av.trackedentityattributeid=" + attribute.getId() + numericClause + ") as " + column;
             
@@ -378,5 +381,44 @@ public class JdbcEventAnalyticsTableManager
     public Future<?> vacuumTablesAsync( ConcurrentLinkedQueue<AnalyticsTable> tables )
     {
         return null; // Not needed
+    }
+    
+    /**
+     * Returns the database column type based on the given value type.
+     */
+    private String getColumnType( ValueType valueType )
+    {
+        if ( Double.class.equals( valueType.getJavaClass() ) )
+        {
+            return statementBuilder.getDoubleColumnType();
+        }
+        else if ( Integer.class.equals( valueType.getJavaClass() ) )
+        {
+            return "integer";
+        }
+        else
+        {
+            return "character varying(255)";
+        }
+    }
+    
+    /**
+     * Returns the select clause, potentially with a cast statement, based on the
+     * given value type.
+     */
+    private String getSelectClause( ValueType valueType )
+    {
+        if ( Double.class.equals( valueType.getJavaClass() ) )
+        {
+            return "cast(value as " + statementBuilder.getDoubleColumnType() + ")";
+        }
+        else if ( Integer.class.equals( valueType.getJavaClass() ) )
+        {
+            return "cast(value as integer)";
+        }
+        else
+        {
+            return "value";
+        }
     }
 }
