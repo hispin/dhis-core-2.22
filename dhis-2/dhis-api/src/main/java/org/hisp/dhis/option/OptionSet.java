@@ -111,6 +111,19 @@ public class OptionSet
         return codes;
     }
     
+    public Option getOptionByCode( String code )
+    {
+        for ( Option option : options )
+        {
+            if ( option != null && option.getCode().equals( code ) )
+            {
+                return option;
+            }
+        }
+        
+        return null;
+    }
+    
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
