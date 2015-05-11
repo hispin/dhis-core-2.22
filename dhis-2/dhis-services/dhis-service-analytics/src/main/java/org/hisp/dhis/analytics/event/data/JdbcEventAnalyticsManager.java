@@ -59,6 +59,8 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.jdbc.StatementBuilder;
+import org.hisp.dhis.legend.Legend;
+import org.hisp.dhis.option.Option;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.system.util.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,8 @@ public class JdbcEventAnalyticsManager
     private static final Log log = LogFactory.getLog( JdbcEventAnalyticsManager.class );
     
     private static final String QUERY_ERR_MSG = "Query failed, likely because the requested analytics table does not exist";
+    private static final String ITEM_NAME_SEP = ": ";
+    private static final String NA = "[N/A]";
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -170,8 +174,9 @@ public class JdbcEventAnalyticsManager
             
             for ( QueryItem queryItem : params.getItems() )
             {
-                String itemValue = rowSet.getString( queryItem.getItemName() );                
-                grid.addValue( itemValue );
+                String itemValue = rowSet.getString( queryItem.getItemName() );
+                String gridValue = params.isCollapseDataDimensions() ? getCollapsedDataItemValue( params, queryItem, itemValue ) : itemValue;
+                grid.addValue( gridValue );
             }
             
             if ( params.hasValueDimension() )
@@ -551,5 +556,37 @@ public class JdbcEventAnalyticsManager
         String fixedCols = StringUtils.join( columns, ", " );
         
         return StringUtils.defaultIfEmpty( fixedCols + ", ", fixedCols );
+    }
+
+    /**
+     * Returns an item value for the given query, query item and value. Assumes that
+     * data dimensions are collapsed for the given query. Returns the short name
+     * of the given query item followed by the item value. If the given query item
+     * has a legend set, the item value is treated as an id and substituted with
+     * the matching legend name. If the given query item has an option set, the 
+     * item value is treated as a code and substituted with the matching option 
+     * name.
+     */
+    private String getCollapsedDataItemValue( EventQueryParams params, QueryItem item, String itemValue )
+    {
+        String value = item.getItem().getDisplayShortName() + ITEM_NAME_SEP;
+        
+        Legend legend = null;
+        Option option = null;
+        
+        if ( item.hasLegendSet() && ( legend = item.getLegendSet().getLegendByUid( itemValue ) ) != null )
+        {
+            return value + legend.getDisplayName();
+        }        
+        else if ( item.hasOptionSet() && ( option = item.getOptionSet().getOptionByCode( itemValue ) ) != null )
+        {
+            return value + option.getDisplayName();
+        }
+        else
+        {
+            itemValue = StringUtils.defaultString( itemValue, NA );
+            
+            return value + itemValue;
+        }
     }
 }

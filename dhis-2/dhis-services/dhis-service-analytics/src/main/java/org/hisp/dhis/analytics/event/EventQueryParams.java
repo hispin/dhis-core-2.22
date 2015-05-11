@@ -46,6 +46,7 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.legend.Legend;
+import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.Program;
@@ -227,6 +228,24 @@ public class EventQueryParams
         }
         
         return legends;
+    }
+    
+    /**
+     * Get option sets part of items.
+     */
+    public Set<OptionSet> getItemOptionSets()
+    {
+        Set<OptionSet> optionSets = new HashSet<>();
+        
+        for ( QueryItem item : items )
+        {
+            if ( item.hasOptionSet() )
+            {
+                optionSets.add( item.getOptionSet() );
+            }
+        }
+        
+        return optionSets;
     }
     
     public boolean isOrganisationUnitMode( String mode )

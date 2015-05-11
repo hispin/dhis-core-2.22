@@ -120,6 +120,11 @@ public class QueryItem
         return legendSet != null;
     }
     
+    public boolean hasOptionSet()
+    {
+        return optionSet != null;
+    }
+    
     public String getLegendSetUid()
     {
         return legendSet != null ? legendSet.getUid() : null;

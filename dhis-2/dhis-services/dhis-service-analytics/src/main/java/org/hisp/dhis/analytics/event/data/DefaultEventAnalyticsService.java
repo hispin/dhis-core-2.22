@@ -191,8 +191,10 @@ public class DefaultEventAnalyticsService
         {
             for ( QueryItem item : params.getItems() )
             {
+                //TODO use ValueType for type
+
                 String legendSet = item.hasLegendSet() ? item.getLegendSet().getUid() : null;
-                
+
                 grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSetUid(), legendSet ) );
             }
         }

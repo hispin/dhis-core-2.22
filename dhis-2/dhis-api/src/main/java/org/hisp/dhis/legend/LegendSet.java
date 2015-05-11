@@ -78,6 +78,19 @@ public class LegendSet
     {
         legends.clear();
     }
+    
+    public Legend getLegendByUid( String uid )
+    {
+        for ( Legend legend : legends )
+        {
+            if ( legend != null && legend.getUid().equals( uid ) )
+            {
+                return legend;
+            }
+        }
+        
+        return null;
+    }
 
     // -------------------------------------------------------------------------
     // Getters and setters
