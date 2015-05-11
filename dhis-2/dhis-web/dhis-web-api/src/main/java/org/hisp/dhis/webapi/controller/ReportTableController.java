@@ -28,16 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObjectUtils.getUniqueDimensions;
-import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
-import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
-
-import java.util.Date;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.MergeStrategy;
@@ -58,13 +48,20 @@ import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.Set;
+
+import static org.hisp.dhis.common.DimensionalObjectUtils.getUniqueDimensions;
+import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -86,7 +83,7 @@ public class ReportTableController
 
     @Autowired
     private MappingService mappingService;
-    
+
     @Autowired
     private LegendService legendService;
 
@@ -156,7 +153,7 @@ public class ReportTableController
     @RequestMapping( value = "/{uid}/data", method = RequestMethod.GET ) // For json, jsonp
     public String getReportTableData( @PathVariable( "uid" ) String uid, Model model,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletResponse response ) throws Exception
     {
         model.addAttribute( "model", getReportTableGrid( uid, organisationUnitUid, date ) );
@@ -168,7 +165,7 @@ public class ReportTableController
     @RequestMapping( value = "/{uid}/data.html", method = RequestMethod.GET )
     public void getReportTableHtml( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletResponse response ) throws Exception
     {
         Grid grid = getReportTableGrid( uid, organisationUnitUid, date );
@@ -182,7 +179,7 @@ public class ReportTableController
     @RequestMapping( value = "/{uid}/data.html+css", method = RequestMethod.GET )
     public void getReportTableHtmlCss( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletResponse response ) throws Exception
     {
         Grid grid = getReportTableGrid( uid, organisationUnitUid, date );
@@ -196,7 +193,7 @@ public class ReportTableController
     @RequestMapping( value = "/{uid}/data.xml", method = RequestMethod.GET )
     public void getReportTableXml( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletResponse response ) throws Exception
     {
         Grid grid = getReportTableGrid( uid, organisationUnitUid, date );
@@ -210,7 +207,7 @@ public class ReportTableController
     @RequestMapping( value = "/{uid}/data.pdf", method = RequestMethod.GET )
     public void getReportTablePdf( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletResponse response ) throws Exception
     {
         Grid grid = getReportTableGrid( uid, organisationUnitUid, date );
@@ -224,7 +221,7 @@ public class ReportTableController
     @RequestMapping( value = "/{uid}/data.xls", method = RequestMethod.GET )
     public void getReportTableXls( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletResponse response ) throws Exception
     {
         Grid grid = getReportTableGrid( uid, organisationUnitUid, date );
@@ -238,7 +235,7 @@ public class ReportTableController
     @RequestMapping( value = "/{uid}/data.csv", method = RequestMethod.GET )
     public void getReportTableCsv( @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String organisationUnitUid,
-        @RequestParam( value = "date", required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date date,
+        @RequestParam( value = "date", required = false ) Date date,
         HttpServletResponse response ) throws Exception
     {
         Grid grid = getReportTableGrid( uid, organisationUnitUid, date );
@@ -274,7 +271,7 @@ public class ReportTableController
         reportTable.populateAnalyticalProperties();
 
         Set<OrganisationUnit> roots = currentUserService.getCurrentUser().getDataViewOrganisationUnitsWithFallback();
-        
+
         for ( OrganisationUnit organisationUnit : reportTable.getOrganisationUnits() )
         {
             reportTable.getParentGraphMap().put( organisationUnit.getUid(), organisationUnit.getParentGraph( roots ) );
