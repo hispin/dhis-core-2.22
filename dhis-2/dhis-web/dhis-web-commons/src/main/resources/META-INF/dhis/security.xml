@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
   <bean id="mappedRedirectStrategy" class="org.hisp.dhis.security.MappedRedirectStrategy">
     <property name="redirectMap">
@@ -59,16 +59,19 @@
       authentication-success-handler-ref="defaultAuthenticationSuccessHandler" />
 
     <sec:form-login default-target-url="/" always-use-default-target="false"
+      username-parameter="j_username" password-parameter="j_password"
       authentication-failure-handler-ref="securityExceptionTranslationHandler"
       login-processing-url="/dhis-web-commons-security/login.action"
       login-page="/dhis-web-commons/security/login.action"
       authentication-success-handler-ref="defaultAuthenticationSuccessHandler" />
 
-    <sec:headers>
+    <sec:headers defaults-disabled="true">
       <sec:content-type-options />
       <sec:frame-options />
       <sec:xss-protection />
     </sec:headers>
+
+    <sec:csrf disabled="true"/>
 
     <sec:http-basic />
     <sec:logout logout-url="/dhis-web-commons-security/logout.action" />
