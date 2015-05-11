@@ -2750,7 +2750,7 @@ Ext.onReady( function() {
 			text: NS.i18n.next,
 			handler: function() {
 				var value = searchTextfield.getValue(),
-					url = value ? ns.core.init.contextPath + '/api/eventCharts/query/' + value + '.json?viewClass=sharing&links=false' : null,
+					url = value ? ns.core.init.contextPath + '/api/eventCharts.json?fields=id,name,access&filter=name:like:' + value : null;
 					store = ns.app.stores.eventChart;
 
 				store.page = store.page + 1;
