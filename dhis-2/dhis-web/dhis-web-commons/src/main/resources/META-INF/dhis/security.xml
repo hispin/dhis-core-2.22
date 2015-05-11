@@ -71,7 +71,7 @@
       <sec:xss-protection />
     </sec:headers>
 
-    <sec:csrf disabled="true"/>
+    <sec:csrf disabled="true" />
 
     <sec:http-basic />
     <sec:logout logout-url="/dhis-web-commons-security/logout.action" />
@@ -352,5 +352,7 @@
   </bean>
 
   <bean id="appsSystemAuthoritiesProvider" class="org.hisp.dhis.security.authority.AppsSystemAuthoritiesProvider" />
+
+  <bean class="org.hisp.dhis.security.bpp.DefaultRolesPrefixPostProcessor" />
 
 </beans>
