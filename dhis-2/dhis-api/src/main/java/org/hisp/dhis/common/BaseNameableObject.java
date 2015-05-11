@@ -35,7 +35,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.common.view.ShortNameView;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 
 /**
@@ -163,7 +162,7 @@ public class BaseNameableObject
 
     @Override
     @JsonProperty
-    @JsonView( { ShortNameView.class, DetailedView.class, ExportView.class } )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( isAttribute = true )
     @PropertyRange( min = 1 )
     public String getShortName()

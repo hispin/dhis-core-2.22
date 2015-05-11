@@ -41,7 +41,6 @@ import org.hisp.dhis.common.view.BasicView;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.common.view.ShortNameView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,7 +91,6 @@ public class JacksonUtils
 
         viewClasses.put( "default", BasicView.class );
         viewClasses.put( "basic", BasicView.class );
-        viewClasses.put( "shortName", ShortNameView.class );
         viewClasses.put( "detailed", DetailedView.class );
         viewClasses.put( "export", ExportView.class );
         viewClasses.put( "dimensional", DimensionalView.class );
