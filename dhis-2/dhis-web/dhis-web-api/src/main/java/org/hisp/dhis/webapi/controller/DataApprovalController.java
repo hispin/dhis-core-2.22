@@ -28,20 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -74,7 +60,6 @@ import org.hisp.dhis.webapi.utils.InputUtils;
 import org.hisp.dhis.webapi.webdomain.approval.Approval;
 import org.hisp.dhis.webapi.webdomain.approval.Approvals;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,9 +67,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.collect.Lists.newArrayList;
+
 /**
  * This controller uses both /dataApprovals and /dataAcceptances.
- * 
+ *
  * @author Lars Helge Overland
  */
 @Controller
@@ -171,7 +169,7 @@ public class DataApprovalController
 
         DataApprovalStatus status = dataApprovalService
             .getDataApprovalStatusAndPermissions( dataSet, period, organisationUnit, combo );
-        
+
         DataApprovalPermissions permissions = status.getPermissions();
         permissions.setState( status.getState().toString() );
 
@@ -182,8 +180,8 @@ public class DataApprovalController
     public void getApproval(
         @RequestParam Set<String> ds,
         @RequestParam( required = false ) String pe,
-        @RequestParam @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date startDate,
-        @RequestParam @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
+        @RequestParam Date startDate,
+        @RequestParam Date endDate,
         @RequestParam Set<String> ou,
         @RequestParam( required = false ) boolean children,
         HttpServletResponse response )
@@ -234,7 +232,7 @@ public class DataApprovalController
         JacksonUtils.toJsonWithView( response.getOutputStream(), dataApprovalStateResponses, BasicView.class );
     }
 
-    private DataApprovalStateResponse getDataApprovalStateResponse( DataSet dataSet, 
+    private DataApprovalStateResponse getDataApprovalStateResponse( DataSet dataSet,
         OrganisationUnit organisationUnit, Period period )
     {
         DataElementCategoryOptionCombo combo = categoryService.getDefaultDataElementCategoryOptionCombo();
@@ -248,19 +246,19 @@ public class DataApprovalController
 
         String state = status.getState().toString();
 
-        return new DataApprovalStateResponse( dataSet, period, organisationUnit, state, 
+        return new DataApprovalStateResponse( dataSet, period, organisationUnit, state,
             createdDate, createdByUsername, status.getPermissions() );
     }
 
     @RequestMapping( value = APPROVALS_PATH + "/categoryOptionCombos", method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_JSON )
-    public void getApprovalByCategoryOptionCombos( 
-        @RequestParam Set<String> ds, 
+    public void getApprovalByCategoryOptionCombos(
+        @RequestParam Set<String> ds,
         @RequestParam String pe,
-        @RequestParam(required = false) String ou,
+        @RequestParam( required = false ) String ou,
         HttpServletResponse response ) throws IOException
     {
         Set<DataSet> dataSets = new HashSet<>( objectManager.getByUid( DataSet.class, ds ) );
-        
+
         Period period = PeriodType.getPeriodFromIsoString( pe );
 
         if ( period == null )
@@ -268,7 +266,7 @@ public class DataApprovalController
             ContextUtils.conflictResponse( response, "Illegal period identifier: " + pe );
             return;
         }
-        
+
         OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( ou );
 
         List<DataApprovalStatus> statusList = dataApprovalService.getUserDataApprovalsAndPermissions( dataSets, period, orgUnit );
@@ -278,32 +276,32 @@ public class DataApprovalController
         for ( DataApprovalStatus status : statusList )
         {
             Map<String, Object> item = new HashMap<String, Object>();
-            
+
             DataApproval approval = status.getDataApproval();
-            
+
             Map<String, String> approvalLevel = new HashMap<>();
-            
+
             if ( status.getDataApprovalLevel() != null )
             {
                 approvalLevel.put( "id", status.getDataApprovalLevel().getUid() );
                 approvalLevel.put( "level", String.valueOf( status.getDataApprovalLevel().getLevel() ) );
             }
-            
+
             if ( approval != null )
             {
                 item.put( "id", approval.getAttributeOptionCombo().getUid() );
                 item.put( "level", approvalLevel );
-                item.put( "ou",  approval.getOrganisationUnit().getUid() );
+                item.put( "ou", approval.getOrganisationUnit().getUid() );
                 item.put( "accepted", approval.isAccepted() );
                 item.put( "permissions", status.getPermissions() );
-                
+
                 list.add( item );
             }
         }
-        
+
         JacksonUtils.toJson( response.getOutputStream(), list );
     }
-    
+
     // -------------------------------------------------------------------------
     // Post, approval
     // -------------------------------------------------------------------------
@@ -497,7 +495,7 @@ public class DataApprovalController
         {
             ContextUtils.conflictResponse( response, "Approval must have data sets and periods" );
         }
-        
+
         dataApprovalService.acceptData( getDataApprovalList( approvals ) );
     }
 
@@ -509,13 +507,13 @@ public class DataApprovalController
         {
             ContextUtils.conflictResponse( response, "Approval must have data sets and periods" );
         }
-        
+
         dataApprovalService.unacceptData( getDataApprovalList( approvals ) );
     }
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_ACCEPT_DATA_LOWER_LEVELS')" )
     @RequestMapping( value = MULTIPLE_ACCEPTANCES_RESOURCE_PATH, method = RequestMethod.POST )
-    public void acceptApprovalMultiple( @RequestBody DataApprovalStateRequests dataApprovalStateRequests, 
+    public void acceptApprovalMultiple( @RequestBody DataApprovalStateRequests dataApprovalStateRequests,
         HttpServletResponse response )
     {
         List<DataApproval> dataApprovalList = new ArrayList<>();
@@ -555,7 +553,7 @@ public class DataApprovalController
                 return;
             }
 
-            User user = dataApprovalStateRequest.getAb() == null ? 
+            User user = dataApprovalStateRequest.getAb() == null ?
                 currentUserService.getCurrentUser() : userService.getUserCredentialsByUsername( dataApprovalStateRequest.getAb() ).getUser();
 
             Date approvalDate = (dataApprovalStateRequest.getAd() == null) ? new Date() : dataApprovalStateRequest.getAd();
@@ -563,7 +561,7 @@ public class DataApprovalController
             dataApprovalList.addAll( getApprovalsAsList( dataApprovalLevel, dataSet,
                 period, organisationUnit, false, approvalDate, user ) );
         }
-        
+
         dataApprovalService.acceptData( dataApprovalList );
     }
 
@@ -710,7 +708,7 @@ public class DataApprovalController
             {
                 OrganisationUnit unit = organisationUnitService.getOrganisationUnit( approval.getOu() );
                 DataElementCategoryOptionCombo optionCombo = categoryService.getDataElementCategoryOptionCombo( approval.getAoc() );
-                
+
                 for ( Period period : periods )
                 {
                     if ( dataSetOptionCombos != null && dataSetOptionCombos.contains( optionCombo ) )
@@ -721,7 +719,7 @@ public class DataApprovalController
                 }
             }
         }
-        
+
         return list;
     }
 }

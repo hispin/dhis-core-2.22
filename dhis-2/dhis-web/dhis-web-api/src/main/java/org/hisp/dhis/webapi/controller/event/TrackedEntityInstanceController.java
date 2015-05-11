@@ -28,16 +28,7 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.DateUtils.DATE_PATTERN;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IllegalQueryException;
@@ -62,7 +53,6 @@ import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,7 +66,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -115,12 +110,12 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) String program,
         @RequestParam( required = false ) ProgramStatus programStatus,
         @RequestParam( required = false ) Boolean followUp,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date programStartDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date programEndDate,
+        @RequestParam( required = false ) Date programStartDate,
+        @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
         @RequestParam( required = false ) EventStatus eventStatus,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date eventStartDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date eventEndDate,
+        @RequestParam( required = false ) Date eventStartDate,
+        @RequestParam( required = false ) Date eventEndDate,
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
@@ -152,12 +147,12 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) String program,
         @RequestParam( required = false ) ProgramStatus programStatus,
         @RequestParam( required = false ) Boolean followUp,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date programStartDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date programEndDate,
+        @RequestParam( required = false ) Date programStartDate,
+        @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
         @RequestParam( required = false ) EventStatus eventStatus,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date eventStartDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date eventEndDate,
+        @RequestParam( required = false ) Date eventStartDate,
+        @RequestParam( required = false ) Date eventEndDate,
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
@@ -186,12 +181,12 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) String program,
         @RequestParam( required = false ) ProgramStatus programStatus,
         @RequestParam( required = false ) Boolean followUp,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date programStartDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date programEndDate,
+        @RequestParam( required = false ) Date programStartDate,
+        @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
         @RequestParam( required = false ) EventStatus eventStatus,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date eventStartDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date eventEndDate,
+        @RequestParam( required = false ) Date eventStartDate,
+        @RequestParam( required = false ) Date eventEndDate,
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
@@ -220,12 +215,12 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) String program,
         @RequestParam( required = false ) ProgramStatus programStatus,
         @RequestParam( required = false ) Boolean followUp,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date programStartDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date programEndDate,
+        @RequestParam( required = false ) Date programStartDate,
+        @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
         @RequestParam( required = false ) EventStatus eventStatus,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date eventStartDate,
-        @RequestParam( required = false ) @DateTimeFormat( pattern = DATE_PATTERN ) Date eventEndDate,
+        @RequestParam( required = false ) Date eventStartDate,
+        @RequestParam( required = false ) Date eventEndDate,
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
