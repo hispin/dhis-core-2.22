@@ -1335,6 +1335,16 @@ Ext.onReady( function() {
 				return array;
 			};
 
+            support.prototype.array.deleteObjectKey = function(array, key) {
+                if (!(Ext.isArray(array) && Ext.isDefined(key))) {
+                    return;
+                }
+
+                for (var i = 0; i < array.length; i++) {
+                    delete array[i][key];
+                }
+            };
+
 				// object
 			support.prototype.object = {};
 
@@ -2500,9 +2510,19 @@ Ext.onReady( function() {
 
                     // sort order
                     if (xLayout.sortOrder) {
-                        var sortingKey = isStacked ? dataTotalKey : failSafeColumnIds[0];
+                        var valueKey = isStacked ? dataTotalKey : failSafeColumnIds[0],
+                            sortKey = 'sorting_' + "sdklfjlsdkfjsdflk";
 
-                        support.prototype.array.sort(data, xLayout.sortOrder === -1 ? 'ASC' : 'DESC', sortingKey);
+                        // create sort key
+                        for (var ii = 0, rec; ii < data.length; ii++) {
+                            rec = data[ii];
+                            rec[sortKey] = rec[valueKey] === '0.0' ? null : rec[valueKey];
+                        }
+
+                        support.prototype.array.sort(data, xLayout.sortOrder === -1 ? 'ASC' : 'DESC', sortKey, (xLayout.sortOrder === -1));
+
+                        // remove sort key
+                        support.prototype.array.deleteObjectKey(data, sortKey);
                     }
 
                     // trend lines
