@@ -35,12 +35,12 @@
 			</tr>
 		</table>
 			
-		<table class="listTable">
+		<table class="listTable" id='programRuleTB'>
 			<col>          
 			<thead>
 			  <tr>
 				<th>$i18n.getString( "name" )</th>
-				<th>$i18n.getString( "description" )</th>
+				<th class='{sorter: false}'>$i18n.getString( "description" )</th>
 			  </tr>
 			</thead>
 			<tbody id="list">
@@ -74,4 +74,6 @@
 
 <script type="text/javascript">
 	var i18n_confirm_delete = '$encoder.jsEscape( $i18n.getString( "confirm_delete_program_rule" ) , "'" )';
+	
+	tableSorter( 'programRuleTB' );
 </script>

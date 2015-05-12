@@ -230,22 +230,25 @@ function closeVariableForm()
 var status = 0; 
 function validateProgramRule()
 {
-	status = 1;
+	status = 0; 
 	var valid = true;
 	$("#actionTB tr").find(".content").each(function(){
 		if( $(this).val() == "" )
 		{
+			var message = $(this).closest('tr').find('.actionList option:selected').attr("errorMessage");
 			$(this).css('background-color', 'pink');
-			$(this).attr('placeholder', 'i18n_please_enter_action_description');
+			$(this).attr('placeholder', message);
 			unLockScreen();
 			valid = false;
 			return;
 		}
-	})
+	});
 	
 	if( valid ) {
+		status = 1;
 		addProgramRule();
 	}
+	return valid;
 }
 
 function addProgramRule()
@@ -307,6 +310,7 @@ function saveAction( programRuleId )
 			"programRuleActionType": row.find(".actionList").val(),
 			"programRule":{ "id":programRuleId },
 			"dataElement":{ "id": row.find(".actionDEs").val() },
+			"programStageSection":{ "id": row.find(".actionSections").val() },
 			"content": row.find(".content").val()
 		}
 		
@@ -383,17 +387,32 @@ function addMoreAction()
 		clazz = "class='listRow'";
 	}
 	var row = "<tr " + clazz + ">"
-			+ "<td><select class='actionList' style='width:100%'>"
-			+ "	<option value='HIDEFIELD'>" + i18n_hide_field + "</option>"
-			+ "	<option value='SHOWWARNING'>" + i18n_show_warning + "</option>"
-			+ "	<option value='SHOWERROR'>" + i18n_show_error + "</option>"
+			+ "<td><select class='actionList' style='width:100%' onchange='actionListToggle(this)'>"
+			+ "	<option value='SHOWERROR' errorMessage='" + i18n_please_enter_error_message + "' >" + i18n_show_error + "</option>"
+			+ "	<option value='SHOWWARNING' errorMessage='" + i18n_please_enter_warning_message + "' >" + i18n_show_warning + "</option>"
+			+ "	<option value='HIDEFIELD' errorMessage='" + i18n_please_enter_alert_message_when_hiding_a_field + "' >" + i18n_hide_field + "</option>"
+			+ "	<option value='HIDESECTION' errorMessage='" + i18n_please_enter_alert_message_when_hiding_a_section + "' >" + i18n_hide_section + "</option>"
 			+ "</select>"
 			+ "</td>"
 			+ "<td><input type='text' class='content' style='width:97%;'/></td>"
-			+ "<td>" + dataElementSelector + "</td>"
+			+ "<td><span class='deCell'>" + dataElementSelector + "</span><span class='sectionCell' style='display:none;'>" + sectionSelector + "</td>"
 			+ "<td><input class='small-button' type='button' value='-' onclick='javascript:removeActionRow(this)';></td>"
 			+ "</tr>";
 	table.append(row);
+}
+
+function actionListToggle(_this)
+{
+	var selected = _this.value;
+	var row = $(_this).closest('tr');
+	if( selected == 'HIDESECTION' ){
+		row.find('.deCell').hide();
+		row.find('.sectionCell').show();
+	}
+	else{
+		row.find('.sectionCell').hide();
+		row.find('.deCell').show();
+	}
 }
 
 function removeActionRow(_this)
