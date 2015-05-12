@@ -650,7 +650,6 @@ dhis2.db.renderItems = function( $d, dashboardItem, width, prepend )
                 labelFont: '9px sans-serif'
             },
             legendStyle: {
-                labelMaxLength: 10,
                 labelFont: 'normal 10px sans-serif',
                 labelColor: '#222',
                 labelMarkerSize: 10,

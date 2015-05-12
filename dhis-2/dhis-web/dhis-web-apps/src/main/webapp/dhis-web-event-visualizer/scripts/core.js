@@ -3573,12 +3573,12 @@ Ext.onReady( function() {
                     else {
                         for (var i = 0, id, name, mxl, ids; i < store.rangeFields.length; i++) {
                             id = failSafeColumnIdMap[store.rangeFields[i]];
-                            name = md.booleanNames[id] || md.optionNames[id] || md.names[id];
+                            name = '' + (md.booleanNames[id] || md.optionNames[id] || md.names[id] || id);
 
                             if (ls && ls.labelMaxLength) {
                                 var mxl = parseInt(ls.labelMaxLength);
 
-                                if (Ext.isNumber(mxl)) {
+                                if (Ext.isNumber(mxl) && name.length > mxl) {
                                     name = name.substr(0, mxl) + '..';
                                 }
                             }
@@ -3601,12 +3601,12 @@ Ext.onReady( function() {
                     else {
                         for (var i = 0, id, name; i < rowIds.length; i++) {
                             id = rowIds[i];
-                            name = md.booleanNames[id] || md.optionNames[id] || md.names[id] || id;
+                            name = '' + (md.booleanNames[id] || md.optionNames[id] || md.names[id] || id);
 
                             if (ls && ls.labelMaxLength) {
                                 var mxl = parseInt(ls.labelMaxLength);
 
-                                if (Ext.isNumber(mxl)) {
+                                if (Ext.isNumber(mxl) && name.length > mxl) {
                                     name = name.substr(0, mxl) + '..';
                                 }
                             }
