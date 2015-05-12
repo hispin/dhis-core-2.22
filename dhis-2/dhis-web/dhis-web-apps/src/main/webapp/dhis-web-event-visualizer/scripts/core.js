@@ -3142,7 +3142,7 @@ Ext.onReady( function() {
                     // sort order
                     if (xLayout.sortOrder) {
                         var valueKey = isStacked ? dataTotalKey : failSafeColumnIds[0],
-                            sortKey = 'sorting_' + "sdklfjlsdkfjsdflk";
+                            sortKey = 'sorting_' + Ext.data.IdGenerator.get('uuid').generate();
 
                         // create sort key
                         for (var ii = 0, rec; ii < data.length; ii++) {
@@ -3562,43 +3562,21 @@ Ext.onReady( function() {
                     return getValidatedTitles(titles, maxLength);
                 };
 
-                getPieSeriesTitle = function(store) {
-                    var a = [];
-
-                    if (Ext.isObject(xLayout.legendStyle) && Ext.isArray(xLayout.legendStyle.labelNames)) {
-                        return xLayout.legendStyle.labelNames;
-                    }
-                    else {
-                        var id = store.domainFields[0];
-
-                        store.each( function(r) {
-                            a.push(r.data[id]);
-
-                            //if (Ext.isString(name) && Ext.isObject(xLayout.legendStyle) && Ext.isNumber(xLayout.legendStyle.labelMaxLength)) {
-                                //var mxl = parseInt(xLayout.legendStyle.labelMaxLength);
-
-                                //name = name.length > mxl ? name.substr(0, mxl) + '..' : name;
-                            //}
-                        });
-                    }
-
-                    return getFormatedSeriesTitle(a);
-				};
-
                 getDefaultSeriesTitle = function(store) {
                     var a = [],
-                        md = xResponse.metaData;
+                        md = xResponse.metaData,
+                        ls = Ext.isObject(xLayout.legendStyle) ? xLayout.legendStyle : null;
 
-                    if (Ext.isObject(xLayout.legend) && Ext.isArray(xLayout.legend.seriesNames)) {
-                        return xLayout.legend.seriesNames;
+                    if (ls && Ext.isArray(ls.labelNames)) {
+                        return ls.labelNames;
                     }
                     else {
                         for (var i = 0, id, name, mxl, ids; i < store.rangeFields.length; i++) {
                             id = failSafeColumnIdMap[store.rangeFields[i]];
                             name = md.booleanNames[id] || md.optionNames[id] || md.names[id];
 
-                            if (Ext.isObject(xLayout.legend) && xLayout.legend.maxLength) {
-                                var mxl = parseInt(xLayout.legend.maxLength);
+                            if (ls && ls.labelMaxLength) {
+                                var mxl = parseInt(ls.labelMaxLength);
 
                                 if (Ext.isNumber(mxl)) {
                                     name = name.substr(0, mxl) + '..';
@@ -3609,7 +3587,35 @@ Ext.onReady( function() {
                         }
                     }
 
-                    return a;
+                    return getFormatedSeriesTitle(a);
+				};
+                
+                getPieSeriesTitle = function(store) {
+                    var a = [],
+                        md = xResponse.metaData,
+                        ls = Ext.isObject(xLayout.legendStyle) ? xLayout.legendStyle : null;
+
+                    if (ls && Ext.isArray(ls.labelNames)) {
+                        return ls.labelNames;
+                    }
+                    else {
+                        for (var i = 0, id, name; i < rowIds.length; i++) {
+                            id = rowIds[i];
+                            name = md.booleanNames[id] || md.optionNames[id] || md.names[id] || id;
+
+                            if (ls && ls.labelMaxLength) {
+                                var mxl = parseInt(ls.labelMaxLength);
+
+                                if (Ext.isNumber(mxl)) {
+                                    name = name.substr(0, mxl) + '..';
+                                }
+                            }
+
+                            a.push(name);
+                        }
+                    }
+
+                    return getFormatedSeriesTitle(a);
 				};
 
                 getDefaultSeries = function(store) {
