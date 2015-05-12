@@ -54,7 +54,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -93,7 +92,7 @@ public class GeoFeatureController
 
     @Autowired
     private RenderService renderService;
-    
+
     @Autowired
     private CurrentUserService currentUserService;
 
@@ -101,11 +100,12 @@ public class GeoFeatureController
     public void getGeoFeaturesJson(
         @RequestParam String ou,
         @RequestParam( required = false ) DisplayProperty displayProperty,
+        @RequestParam( defaultValue = "false", value = "includeGroupSets" ) boolean rpIncludeGroupSets,
         @RequestParam Map<String, String> parameters,
         HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         WebOptions options = new WebOptions( parameters );
-        boolean includeGroupSets = "detailed".equals( options.getViewClass() );
+        boolean includeGroupSets = "detailed".equals( options.getViewClass() ) || rpIncludeGroupSets;
 
         List<GeoFeature> features = getGeoFeatures( ou, displayProperty, request, response, includeGroupSets );
         if ( features == null ) return;
@@ -119,11 +119,12 @@ public class GeoFeatureController
         @RequestParam String ou,
         @RequestParam( required = false ) DisplayProperty displayProperty,
         @RequestParam( defaultValue = "callback" ) String callback,
+        @RequestParam( defaultValue = "false", value = "includeGroupSets" ) boolean rpIncludeGroupSets,
         @RequestParam Map<String, String> parameters,
         HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         WebOptions options = new WebOptions( parameters );
-        boolean includeGroupSets = "detailed".equals( options.getViewClass() );
+        boolean includeGroupSets = "detailed".equals( options.getViewClass() ) || rpIncludeGroupSets;
 
         List<GeoFeature> features = getGeoFeatures( ou, displayProperty, request, response, includeGroupSets );
         if ( features == null ) return;
@@ -137,7 +138,7 @@ public class GeoFeatureController
         Set<String> set = new HashSet<>();
         set.add( ou );
 
-        DataQueryParams params = analyticsService.getFromUrl( set, null, AggregationType.SUM, null, 
+        DataQueryParams params = analyticsService.getFromUrl( set, null, AggregationType.SUM, null,
             false, false, false, false, false, false, displayProperty, null, null, null );
 
         DimensionalObject dim = params.getDimension( DimensionalObject.ORGUNIT_DIM_ID );
@@ -158,7 +159,7 @@ public class GeoFeatureController
         List<GeoFeature> features = new ArrayList<>();
 
         Set<OrganisationUnit> roots = currentUserService.getCurrentUser().getDataViewOrganisationUnitsWithFallback();
-        
+
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
             GeoFeature feature = new GeoFeature();
