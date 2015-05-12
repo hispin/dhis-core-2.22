@@ -2511,7 +2511,7 @@ Ext.onReady( function() {
                     // sort order
                     if (xLayout.sortOrder) {
                         var valueKey = isStacked ? dataTotalKey : failSafeColumnIds[0],
-                            sortKey = 'sorting_' + "sdklfjlsdkfjsdflk";
+                            sortKey = 'sorting_' + Ext.data.IdGenerator.get('uuid').generate();
 
                         // create sort key
                         for (var ii = 0, rec; ii < data.length; ii++) {
