@@ -47,6 +47,10 @@
 	</p>
 </div>
 
+#if ( $keyConfig.selfRegistrationAllowed() )
+<div class="header-box" align="center"><a href="account.action">Create an account</a></div>
+#end
+
 </form>
 </div>
 </div>
