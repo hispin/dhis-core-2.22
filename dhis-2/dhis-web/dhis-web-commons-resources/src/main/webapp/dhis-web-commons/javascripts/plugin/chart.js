@@ -4306,7 +4306,7 @@ Ext.onReady(function() {
                     chart;
 
                 success = function() {
-                    
+
                     ns.app.layout = layout;
                     ns.app.xLayout = xLayout;
                     ns.app.response = response;
@@ -4358,7 +4358,7 @@ Ext.onReady(function() {
                     ns.app.centerRegion.removeAll(true);
                     ns.app.centerRegion.update('');
                     ns.app.centerRegion.add({
-                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555',
+                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555; font-size:11px',
                         html: 'No values found for the current selection.'
                     });
 

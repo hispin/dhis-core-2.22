@@ -3672,7 +3672,7 @@ Ext.onReady( function() {
 
                     return getFormatedSeriesTitle(a);
 				};
-                
+
                 getPieSeriesTitle = function(store) {
                     var a = [],
                         md = xResponse.metaData,
@@ -5156,7 +5156,7 @@ Ext.onReady( function() {
                         console.log("app", ns.app);
                     }
                 };
-                
+
                 getReport = function() {
                     if (!xLayout && !ns.skipMask) {
                         web.mask.hide(ns.app.centerRegion);
@@ -5204,7 +5204,7 @@ Ext.onReady( function() {
                     ns.app.centerRegion.removeAll(true);
                     ns.app.centerRegion.update('');
                     ns.app.centerRegion.add({
-                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555',
+                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555; font-size:11px',
                         html: 'No values found for the current selection.'
                     });
 
