@@ -4294,12 +4294,35 @@ Ext.onReady(function() {
 					config,
                     ind = ns.core.conf.finals.dimension.indicator.objectName,
                     legendSet,
-                    fn;
+                    getReport,
+                    success,
+                    chart;
 
-                fn = function() {
+                success = function() {
+                    
+                    ns.app.layout = layout;
+                    ns.app.xLayout = xLayout;
+                    ns.app.response = response;
+                    ns.app.xResponse = xResponse;
+
+                    ns.app.chart = chart;
+
+                    if (!ns.skipMask) {
+                        web.mask.hide(ns.app.centerRegion);
+                    }
+
+                    if (DV.isDebug) {
+                        console.log('layout', ns.app.layout);
+                        console.log('xLayout', ns.app.xLayout);
+                        console.log('response', ns.app.response);
+                        console.log('xResponse', ns.app.xResponse);
+                    }
+                };
+
+                getReport = function() {
 
                     // create chart
-                    ns.app.chart = ns.core.web.chart.createChart(ns, legendSet);
+                    chart = ns.core.web.chart.createChart(ns, legendSet);
 
                     // fade
                     //if (!ns.skipFade) {
@@ -4320,47 +4343,48 @@ Ext.onReady(function() {
                     ns.app.centerRegion.removeAll();
                     ns.app.centerRegion.add(ns.app.chart);
 
-                    if (!ns.skipMask) {
-                        web.mask.hide(ns.app.centerRegion);
-                    }
-
-                    if (DV.isDebug) {
-                        console.log('layout', ns.app.layout);
-                        console.log('xLayout', ns.app.xLayout);
-                        console.log('response', ns.app.response);
-                        console.log('xResponse', ns.app.xResponse);
-                    }
+                    success();
                 };
 
-				if (!xLayout) {
-					xLayout = service.layout.getExtendedLayout(layout);
-				}
-
-				// extend response
-				xResponse = service.response.getExtendedResponse(xLayout, response);
-
-				// references
-				ns.app.layout = layout;
-				ns.app.xLayout = xLayout;
-				ns.app.response = response;
-				ns.app.xResponse = xResponse;
-
-                // legend set
-                if (xLayout.type === 'gauge' && Ext.Array.contains(xLayout.axisObjectNames, ind) && xLayout.objectNameIdsMap[ind].length) {
-                    Ext.Ajax.request({
-                        url: ns.core.init.contextPath + '/api/indicators/' + xLayout.objectNameIdsMap[ind][0] + '.json?fields=legendSet[legends[id,name,startValue,endValue,color]]',
-                        disableCaching: false,
-                        success: function(r) {
-                            legendSet = Ext.decode(r.responseText).legendSet;
-                        },
-                        callback: function() {
-                            fn();
-                        }
+                // execute
+                if (!response.rows.length) {
+                    ns.app.centerRegion.removeAll(true);
+                    ns.app.centerRegion.update('');
+                    ns.app.centerRegion.add({
+                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555',
+                        html: 'No values found for the current selection.'
                     });
+
+                    success();
                 }
                 else {
-                    fn();
+                    if (!xLayout) {
+                        xLayout = service.layout.getExtendedLayout(layout);
+                    }
+
+                    // extend response
+                    xResponse = service.response.getExtendedResponse(xLayout, response);
+
+                    // legend set
+                    if (xLayout.type === 'gauge' && Ext.Array.contains(xLayout.axisObjectNames, ind) && xLayout.objectNameIdsMap[ind].length) {
+                        Ext.Ajax.request({
+                            url: ns.core.init.contextPath + '/api/indicators/' + xLayout.objectNameIdsMap[ind][0] + '.json?fields=legendSet[legends[id,name,startValue,endValue,color]]',
+                            disableCaching: false,
+                            success: function(r) {
+                                legendSet = Ext.decode(r.responseText).legendSet;
+                            },
+                            callback: function() {
+                                getReport();
+                            }
+                        });
+                    }
+                    else {
+                        getReport();
+                    }
                 }
+
+                
+
 			};
 
             // ns
