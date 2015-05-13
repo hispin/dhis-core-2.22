@@ -5087,6 +5087,7 @@ Ext.onReady( function() {
                     xRowAxis,
                     chart,
                     getOptionSets,
+                    success,
                     getReport,
                     getSXLayout,
                     getXResponse;
@@ -5134,16 +5135,33 @@ Ext.onReady( function() {
                     }
                 };
 
+                success = function() {
+                    ns.app.layout = layout;
+                    ns.app.xLayout = xLayout;
+                    ns.app.response = response;
+                    ns.app.xResponse = xResponse;
+
+                    ns.app.chart = chart;
+
+                    if (!ns.skipMask) {
+                        web.mask.hide(ns.app.centerRegion);
+                    }
+
+                    if (EV.isDebug) {
+                        console.log("layout", layout);
+                        console.log("response", response);
+                        console.log("xResponse", xResponse);
+                        console.log("xLayout", xLayout);
+                        console.log("core", ns.core);
+                        console.log("app", ns.app);
+                    }
+                };
+                
                 getReport = function() {
                     if (!xLayout && !ns.skipMask) {
                         web.mask.hide(ns.app.centerRegion);
                         return;
                     }
-
-                    ns.app.layout = layout;
-                    ns.app.xLayout = xLayout;
-                    ns.app.response = response;
-                    ns.app.xResponse = xResponse;
 
                     chart = web.report.aggregate.createChart(layout, xLayout, xResponse, ns.app.centerRegion);
 
@@ -5165,21 +5183,7 @@ Ext.onReady( function() {
                     ns.app.centerRegion.removeAll();
                     ns.app.centerRegion.add(chart);
 
-                    // after render
-                    ns.app.chart = chart;
-
-                    if (!ns.skipMask) {
-                        web.mask.hide(ns.app.centerRegion);
-                    }
-
-                    if (EV.isDebug) {
-                        console.log("layout", layout);
-                        console.log("response", response);
-                        console.log("xResponse", xResponse);
-                        console.log("xLayout", xLayout);
-                        console.log("core", ns.core);
-                        console.log("app", ns.app);
-                    }
+                    success();
                 };
 
                 getSXLayout = function() {
@@ -5196,9 +5200,19 @@ Ext.onReady( function() {
                 };
 
                 // execute
-                response = response || ns.app.response;
+                if (!response.rows.length) {
+                    ns.app.centerRegion.removeAll(true);
+                    ns.app.centerRegion.update('');
+                    ns.app.centerRegion.add({
+                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555',
+                        html: 'No values found for the current selection.'
+                    });
 
-                getXResponse();
+                    success();
+                }
+                else {
+                    getXResponse();
+                }
 			};
         };
 
