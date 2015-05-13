@@ -1580,7 +1580,7 @@ Ext.onReady( function() {
 
                     params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
-                    return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params + '&viewClass=detailed';
+                    return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params + '&includeGroupSets=true';
                 }(),
                 success,
                 failure;
