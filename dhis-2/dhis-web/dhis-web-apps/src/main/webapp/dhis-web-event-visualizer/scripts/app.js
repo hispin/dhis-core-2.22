@@ -6710,6 +6710,10 @@ Ext.onReady( function() {
 						var layoutConfig = Ext.decode(r.responseText),
 							layout = api.layout.Layout(layoutConfig);
 
+                        if (!layout) {
+                            return;
+                        }
+
 						web.report.getData(layout, true);
 					}
 				});
