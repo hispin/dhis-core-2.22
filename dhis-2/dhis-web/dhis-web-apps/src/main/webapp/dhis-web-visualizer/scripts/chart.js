@@ -2458,10 +2458,8 @@ Ext.onReady(function() {
 			// chart
 			web.chart = {};
 
-			web.chart.createChart = function(ns, legendSet) {
-                var xLayout = ns.app.xLayout,
-                    xResponse = ns.app.xResponse,
-                    columnIds = xLayout.columnDimensionNames[0] ? xLayout.dimensionNameIdsMap[xLayout.columnDimensionNames[0]] : [],
+			web.chart.createChart = function(xLayout, xResponse, legendSet) {
+                var columnIds = xLayout.columnDimensionNames[0] ? xLayout.dimensionNameIdsMap[xLayout.columnDimensionNames[0]] : [],
                     failSafeColumnIds = [],
                     failSafeColumnIdMap = {},
                     createFailSafeColumnIds = function() {
@@ -4322,7 +4320,7 @@ Ext.onReady(function() {
                 getReport = function() {
 
                     // create chart
-                    chart = ns.core.web.chart.createChart(ns, legendSet);
+                    chart = ns.core.web.chart.createChart(xLayout, xResponse, legendSet);
 
                     // fade
                     //if (!ns.skipFade) {
@@ -4341,7 +4339,7 @@ Ext.onReady(function() {
 
                     // update viewport
                     ns.app.centerRegion.removeAll();
-                    ns.app.centerRegion.add(ns.app.chart);
+                    ns.app.centerRegion.add(chart);
 
                     success();
                 };
@@ -4382,9 +4380,6 @@ Ext.onReady(function() {
                         getReport();
                     }
                 }
-
-                
-
 			};
 
             // ns

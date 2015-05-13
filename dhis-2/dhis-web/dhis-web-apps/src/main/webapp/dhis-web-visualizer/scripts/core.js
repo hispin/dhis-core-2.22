@@ -2401,10 +2401,8 @@ Ext.onReady( function() {
 			// chart
 			web.chart = {};
 
-			web.chart.createChart = function(ns, legendSet) {
-                var xLayout = ns.app.xLayout,
-                    xResponse = ns.app.xResponse,
-                    columnIds = xLayout.columnDimensionNames[0] ? xLayout.dimensionNameIdsMap[xLayout.columnDimensionNames[0]] : [],
+			web.chart.createChart = function(xLayout, xResponse, legendSet) {
+                var columnIds = xLayout.columnDimensionNames[0] ? xLayout.dimensionNameIdsMap[xLayout.columnDimensionNames[0]] : [],
                     failSafeColumnIds = [],
                     failSafeColumnIdMap = {},
                     createFailSafeColumnIds = function() {
