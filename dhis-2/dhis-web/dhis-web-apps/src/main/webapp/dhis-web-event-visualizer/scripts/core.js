@@ -1045,7 +1045,7 @@ Ext.onReady( function() {
 
 					// column
 					if (!config.columns) {
-						alert('No series items selected');
+						ns.alert('No series items selected');
 						return;
 					}
 
@@ -1057,7 +1057,7 @@ Ext.onReady( function() {
 
 					// row
 					if (!config.rows) {
-						alert('No category items selected');
+						ns.alert('No category items selected');
 						return;
 					}
 

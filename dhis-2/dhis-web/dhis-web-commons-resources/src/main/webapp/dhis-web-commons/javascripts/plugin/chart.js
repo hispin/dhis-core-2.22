@@ -1059,19 +1059,19 @@ Ext.onReady(function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(DV.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
+								ns.alert(DV.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter.');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(DV.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
+								ns.alert(DV.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter.');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(DV.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
+								ns.alert(DV.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter.');
 								return;
 							}
 						}
@@ -1079,31 +1079,31 @@ Ext.onReady(function() {
 
 					// dc and in
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.indicator.objectName]) {
-						ns.alert('Indicators and detailed data elements cannot be specified together', true);
+						ns.alert('Indicators and detailed data elements cannot be specified together.', true);
 						return;
 					}
 
 					// dc and de
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataElement.objectName]) {
-						ns.alert('Detailed data elements and totals cannot be specified together', true);
+						ns.alert('Detailed data elements and totals cannot be specified together.', true);
 						return;
 					}
 
 					// dc and ds
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataSet.objectName]) {
-						ns.alert('Data sets and detailed data elements cannot be specified together', true);
+						ns.alert('Data sets and detailed data elements cannot be specified together.', true);
 						return;
 					}
 
 					// dc and co
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.category.objectName]) {
-						ns.alert('Categories and detailed data elements cannot be specified together', true);
+						ns.alert('Categories and detailed data elements cannot be specified together.', true);
 						return;
 					}
 
                     // in and aggregation type
                     if (objectNameDimensionMap[dimConf.indicator.objectName] && config.aggregationType !== 'DEFAULT') {
-                        ns.alert('Indicators and aggregation types cannot be specified together', true);
+                        ns.alert('Indicators and aggregation types cannot be specified together.', true);
                         return;
                     }
 
@@ -1126,12 +1126,12 @@ Ext.onReady(function() {
 
 					// at least one dimension specified as column and row
 					if (!config.columns) {
-						ns.alert('No series items selected');
+						ns.alert('No series items selected.');
 						return;
 					}
 
 					if (!config.rows) {
-						ns.alert('No category items selected');
+						ns.alert('No category items selected.');
 						return;
 					}
 
@@ -1146,7 +1146,7 @@ Ext.onReady(function() {
 
 					// at least one period
 					if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						ns.alert('At least one period must be specified as series, category or filter');
+						ns.alert('At least one period must be specified as series, category or filter.');
 						return;
 					}
 
@@ -4182,7 +4182,7 @@ Ext.onReady(function() {
                     'Content-Type': headerMap[type],
                     'Accepts': headerMap[type]
                 },
-                el = Ext.get(init.el);
+                el = Ext.get(config.el);
 
 			// message
 			web.message = web.message || {};
