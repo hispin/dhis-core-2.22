@@ -32,7 +32,6 @@ import com.google.common.collect.Lists;
 import org.hisp.dhis.dxf2.objectfilter.ops.Op;
 import org.hisp.dhis.dxf2.objectfilter.ops.OpStatus;
 import org.hisp.dhis.dxf2.parser.ParserService;
-import org.hisp.dhis.query.QueryService;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
@@ -53,9 +52,6 @@ public class DefaultObjectFilterService implements ObjectFilterService
 
     @Autowired
     private SchemaService schemaService;
-
-    @Autowired
-    private QueryService queryService;
 
     @Override
     public <T> List<T> filter( List<T> objects, List<String> filters )
