@@ -28,23 +28,24 @@ package org.hisp.dhis.programrule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author markusbekken
@@ -57,20 +58,21 @@ public class ProgramRule
      * The description of the program rule
      */
     private String description;
-    
+
     /**
      * The program that the rule belongs to
      */
     private Program program;
-    
+
     /**
      * The programStage that the rule belongs to
      */
     private ProgramStage programStage;
-    
+
     /**
      * The collection of actions that will be triggered if the the rule is triggered.
      */
+    @Scanned
     private Set<ProgramRuleAction> programRuleActions;
 
     /**
@@ -93,7 +95,7 @@ public class ProgramRule
         this.setAutoFields();
         this.programRuleActions = new HashSet<ProgramRuleAction>();
     }
-    
+
     public ProgramRule( String name, String description, Program program, ProgramStage programStage, Set<ProgramRuleAction> programRuleActions, String condition, Integer priority )
     {
         this();
@@ -105,7 +107,7 @@ public class ProgramRule
         this.condition = condition;
         this.priority = priority;
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -121,7 +123,7 @@ public class ProgramRule
     {
         this.description = description;
     }
-    
+
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -147,10 +149,12 @@ public class ProgramRule
     {
         this.programStage = programStage;
     }
-    
+
     @JsonProperty
     @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "programRuleActions", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programRuleAction", namespace = DxfNamespaces.DXF_2_0 )
     public Set<ProgramRuleAction> getProgramRuleActions()
     {
         return programRuleActions;
@@ -172,7 +176,7 @@ public class ProgramRule
     {
         this.condition = condition;
     }
-    
+
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Integer getPriority()
