@@ -1,61 +1,29 @@
+<script>
+  $(document).ready(function() {
+    $('#urAvailable').selected({
+      url: '../api/userRoles.json?canIssue=true',
+      target: $('#urSelected'),
+      search: $('#urAvailableSearch'),
+      iterator: 'userRoles'
+    });
+  });
+</script>
+
 <h3>$i18n.getString( "assign_program_to_userroles" )</h3>
 
 <h4>$encoder.htmlEncode($program.displayName)</h4>
 
-<form name="userRole" action="defineProgramUserrole.action" method="POST" onsubmit="selectAllById( 'userRoleIds' );">
-<input type="hidden" name="id" value="$program.id"/>
-<table>
-	<colgroup>
-		<col style='width:500px'/>
-		<col/>
-		<col style='width:500px'/>
-	</colgroup>
-	<tr>
-		<th>$i18n.getString( "available" )</th>
-		<th></th>
-		<th>$i18n.getString( "selected" )</th>
-	</tr>
-	<tr>
-		<td>
-			<select style="height:200px;width:100%;" size="15" id="availableList" name="availableList" multiple="multiple" style="min-width:20em;height:20em" ondblclick="moveSelectedById( 'availableList', 'userRoleIds' )">
-            </select>
-		</td>
-		<td>
-			<input type="button" value="&gt;" onclick="moveSelectedById( 'availableList', 'userRoleIds' )" class="filterButton" /><br/>
-			<input type="button" value="&lt;" onclick="moveSelectedById( 'userRoleIds', 'availableList' )" class="filterButton" /><br/>
-			<input type="button" value="&gt;&gt;" onclick="moveAllById( 'availableList', 'userRoleIds' )" class='filterButton' /><br/>
-			<input type="button" value="&lt;&lt;" onclick="moveAllById( 'userRoleIds', 'availableList' )" class='filterButton' />
-		</td>
-		<td>
-			<select style="height:200px;width:100%;" id="userRoleIds" name="userRoleIds" multiple="multiple" style="min-width:20em;height:20em" ondblclick="moveSelectedById( 'userRoleIds', 'availableList' )">
-			#foreach ( $userRole in $program.userRoles )
-              <option value="$userRole.id">$encoder.htmlEncode( $userRole.name )</option>
-            #end
-			</select>
-        </td>
-	</tr>
-</table>
-<br>
-<input type="submit" value="$i18n.getString( 'ok' )" style="width:100px"/>
-<input type="button" value="$i18n.getString( 'cancel' )"  style="width:100px" onclick="window.location = 'program.action'"/>
-</form>
+<form name="userRole" action="defineProgramUserrole.action" method="POST" onsubmit="$('#urSelected').find('option').attr('selected', 'selected')">
+  <input type="hidden" name="id" value="$program.id"/>
 
-<script>
-	$(document).ready(function(){
-		sortList('availableList', 'ASC');
-		sortList('selectedList', 'ASC');
-		
-		jQuery("#availableList").dhisAjaxSelect({
-			source: '../dhis-web-commons-ajax-json/getUserRoles.action',
-			iterator: 'userRoles',
-			connectedTo: 'selectedList',
-			handler: function(item){
-				var option = jQuery( "<option/>" );
-				option.attr( "value", item.id );
-				option.text( item.name );
-				
-				return option;
-			}
-		});
-	});
-</script>
+  #jqSelected({
+    "prefix": "ur",
+    "i18n_available": "available",
+    "i18n_selected": "selected",
+    "objects": $!program.userRoles
+  })
+
+  <br>
+  <input type="submit" value="$i18n.getString( 'ok' )" style="width:100px"/>
+  <input type="button" value="$i18n.getString( 'cancel' )" style="width:100px" onclick="window.location = 'program.action'"/>
+</form>
