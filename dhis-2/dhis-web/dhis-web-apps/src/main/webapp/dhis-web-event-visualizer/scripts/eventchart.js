@@ -1118,7 +1118,7 @@ Ext.onReady( function() {
 
                     // period
                     if (!Ext.Array.contains(objectNames, 'pe') && !(config.startDate && config.endDate)) {
-                        ns.alert('At least one fixed period, one relative period or start/end dates must be specified');
+                        ns.alert('At least one fixed period, one relative period or start/end dates must be specified.');
                         return;
                     }
 
@@ -1128,7 +1128,7 @@ Ext.onReady( function() {
 
 					// column
 					if (!config.columns) {
-						alert('No series items selected');
+						ns.alert('No series items selected.');
 						return;
 					}
 
@@ -1140,7 +1140,7 @@ Ext.onReady( function() {
 
 					// row
 					if (!config.rows) {
-						alert('No category items selected');
+						ns.alert('No category items selected.');
 						return;
 					}
 
@@ -4963,15 +4963,17 @@ Ext.onReady( function() {
                     'Content-Type': headerMap[type],
                     'Accepts': headerMap[type]
                 },
-                el = Ext.get(init.el);
+                el = Ext.get(config.el);
 
-            ns.plugin = init.plugin;
-            ns.dashboard = init.dashboard;
-            ns.crossDomain = init.crossDomain;
-            ns.skipMask = init.skipMask;
-            ns.skipFade = init.skipFade;
+			// message
+			web.message = web.message || {};
 
-			init.el = config.el;
+			web.message.alert = function(text) {
+                if (el) {
+                    el.setStyle('opacity', 1);
+                    el.update('<div class="ns-plugin-alert">' + text + '</div>');
+                }
+            };
 
 			// report
 			web.report = web.report || {};
@@ -5214,6 +5216,17 @@ Ext.onReady( function() {
                     getXResponse();
                 }
 			};
+
+            // ns
+            ns.plugin = init.plugin;
+            ns.dashboard = init.dashboard;
+            ns.crossDomain = init.crossDomain;
+            ns.skipMask = init.skipMask;
+            ns.skipFade = init.skipFade;
+
+            ns.alert = web.message.alert;
+
+			init.el = config.el;
         };
 
 		createViewport = function() {
