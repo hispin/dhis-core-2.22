@@ -3334,10 +3334,10 @@ Ext.onReady(function() {
                 };
 
                 getDefaultChartSizeHandler = function() {
-                    var width = ns.app.centerRegion.getWidth(),
-                        height = ns.app.centerRegion.getHeight();
-
                     return function() {
+                        var width = ns.app.centerRegion.getWidth(),
+                            height = ns.app.centerRegion.getHeight();
+                            
 						this.animate = false;
                         this.setWidth(ns.dashboard ? width : width - 15);
                         this.setHeight(ns.dashboard ? height : height - 40);
