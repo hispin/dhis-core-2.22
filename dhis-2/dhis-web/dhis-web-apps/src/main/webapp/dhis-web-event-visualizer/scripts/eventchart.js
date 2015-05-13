@@ -5166,19 +5166,19 @@ Ext.onReady( function() {
                     chart = web.report.aggregate.createChart(layout, xLayout, xResponse, ns.app.centerRegion);
 
                     // fade
-                    if (!ns.skipFade) {
-                        chart.on('afterrender', function() {
-                            Ext.defer( function() {
-                                var el = Ext.get(init.el);
+                    //if (!ns.skipFade) {
+                        //chart.on('afterrender', function() {
+                            //Ext.defer( function() {
+                                //var el = Ext.get(init.el);
 
-                                if (el) {
-                                    el.fadeIn({
-                                        duration: 400
-                                    });
-                                }
-                            }, 300 );
-                        });
-                    }
+                                //if (el) {
+                                    //el.fadeIn({
+                                        //duration: 400
+                                    //});
+                                //}
+                            //}, 300 );
+                        //});
+                    //}
 
                     ns.app.centerRegion.removeAll();
                     ns.app.centerRegion.add(chart);
