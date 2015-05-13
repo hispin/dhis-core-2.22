@@ -2538,7 +2538,7 @@ Ext.onReady( function() {
                     ns.app.centerRegion.update();
                     ns.app.centerRegion.removeAll();
                     ns.app.centerRegion.add(response.rows.length ? ns.app.chart : {
-                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555',
+                        bodyStyle: 'padding:20px; border:0 none; background:transparent; color: #555; font-size:11px',
                         html: NS.i18n.no_values_found_for_current_selection + '.'
                     });
 
