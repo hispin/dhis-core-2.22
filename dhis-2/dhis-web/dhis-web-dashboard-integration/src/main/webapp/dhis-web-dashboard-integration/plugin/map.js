@@ -1470,11 +1470,6 @@ Ext.onReady(function() {
             styleEl = document.createElement("style");
 
         styleEl.setAttribute("type", "text/css");
-        var ss,
-            head = document.getElementsByTagName("head")[0],
-            styleEl = document.createElement("style");
-
-        styleEl.setAttribute("type", "text/css");
 
         if (id) {
            styleEl.setAttribute("id", id);
@@ -1596,7 +1591,6 @@ Ext.onReady(function() {
                             if (innerHTML) {
                                 html += '<div style="font-size:10px; font-weight:bold">' + layer.name + '</div>' + innerHTML + (i < layers.length - 1 ? '<div style="padding:5px"></div>' : '');
                             }
-                        }
 
                         html += '</div>';
 
@@ -2533,12 +2527,10 @@ Ext.onReady(function() {
                 }
 
                 if (Ext.Array.contains([403], r.status)) {
-                    gis.alert(GIS.i18n.you_do_not_have_access_to_all_items_in_this_favorite);
+                    alert(GIS.i18n.you_do_not_have_access_to_all_items_in_this_favorite);
                 }
                 else {
-                    if (r.status && r.statusText && r.responseText) {
-                        gis.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
-                    }
+                    alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
                 }
             };
 
@@ -2562,7 +2554,7 @@ Ext.onReady(function() {
                 if (gis.olmap.mask && !gis.skipMask) {
                     gis.olmap.mask.hide();
                 }
-                gis.alert(GIS.i18n.favorite_outdated_create_new);
+                alert(GIS.i18n.favorite_outdated_create_new);
                 return;
             }
 
@@ -2745,7 +2737,7 @@ Ext.onReady(function() {
                 }
 
                 if (!rows.length) {
-                    gis.alert('No event coordinates found');
+                    alert('No event coordinates found');
                     if (gis.olmap.mask && !gis.skipMask) {
                         gis.olmap.mask.hide();
                     }
@@ -2796,9 +2788,7 @@ Ext.onReady(function() {
                     url: gis.init.contextPath + '/api/analytics/events/query/' + view.program.id + '.json' + paramString,
                     disableCaching: false,
                     failure: function(r) {
-                        if (r.status && r.statusText && r.responseText) {
-                            gis.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
-                        }
+                        alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
                     },
                     success: function(r) {
                         success(Ext.decode(r.responseText));
@@ -2988,7 +2978,7 @@ Ext.onReady(function() {
 
                     params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
-                    return gis.init.contextPath + '/api/geoFeatures.' + (isJsonp ? 'jsonp' : 'json') + params + '&viewClass=detailed';
+                    return gis.init.contextPath + '/api/geoFeatures.' + (isJsonp ? 'jsonp' : 'json') + params + '&includeGroupSets=true';
                 }(),
                 success,
                 failure;
@@ -3002,7 +2992,7 @@ Ext.onReady(function() {
                     if (gis.olmap.mask && !gis.skipMask) {
                         gis.olmap.mask.hide();
                     }
-                    gis.alert(GIS.i18n.invalid_coordinates);
+                    alert(GIS.i18n.invalid_coordinates);
                     return;
                 }
 
@@ -3010,7 +3000,7 @@ Ext.onReady(function() {
                     if (gis.olmap.mask && !gis.skipMask) {
                         gis.olmap.mask.hide();
                     }
-                    gis.alert(GIS.i18n.no_valid_coordinates_found);
+                    alert(GIS.i18n.no_valid_coordinates_found);
                     return;
                 }
 
@@ -3023,7 +3013,7 @@ Ext.onReady(function() {
                 if (gis.olmap.mask && !gis.skipMask) {
                     gis.olmap.mask.hide();
                 }
-                gis.alert(GIS.i18n.coordinates_could_not_be_loaded);
+                alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
             if (isJsonp) {
@@ -3288,7 +3278,7 @@ Ext.onReady(function() {
                     if (gis.olmap.mask && !gis.skipMask) {
                         gis.olmap.mask.hide();
                     }
-                    gis.alert(GIS.i18n.invalid_coordinates);
+                    alert(GIS.i18n.invalid_coordinates);
                     return;
                 }
 
@@ -3296,7 +3286,7 @@ Ext.onReady(function() {
                     if (gis.olmap.mask && !gis.skipMask) {
                         gis.olmap.mask.hide();
                     }
-                    gis.alert(GIS.i18n.no_valid_coordinates_found);
+                    alert(GIS.i18n.no_valid_coordinates_found);
                     return;
                 }
 
@@ -3338,7 +3328,7 @@ Ext.onReady(function() {
                 if (gis.olmap.mask && !gis.skipMask) {
                     gis.olmap.mask.hide();
                 }
-                gis.alert(GIS.i18n.coordinates_could_not_be_loaded);
+                alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
             if (isJsonp) {
@@ -3516,8 +3506,7 @@ Ext.onReady(function() {
                     }
                     return gis.conf.finals.widget.loadtype_organisationunit;
                 }
-            }
-            else {
+            } else {
                 if (doExecute) {
                     loadOrganisationUnits(view);
                 }
@@ -3547,8 +3536,7 @@ Ext.onReady(function() {
                     }
                     return gis.conf.finals.widget.loadtype_organisationunit;
                 }
-            }
-            else {
+            } else {
                 if (doExecute) {
                     loadData(view);
                 }
@@ -3576,8 +3564,7 @@ Ext.onReady(function() {
                     }
                     return gis.conf.finals.widget.loadtype_organisationunit;
                 }
-            }
-            else {
+            } else {
                 if (doExecute) {
                     loadData(view);
                 }
@@ -3640,7 +3627,7 @@ Ext.onReady(function() {
                     if (gis.olmap.mask && !gis.skipMask) {
                         gis.olmap.mask.hide();
                     }
-                    gis.alert(GIS.i18n.invalid_coordinates);
+                    alert(GIS.i18n.invalid_coordinates);
                     return;
                 }
 
@@ -3648,7 +3635,7 @@ Ext.onReady(function() {
                     if (gis.olmap.mask && !gis.skipMask) {
                         gis.olmap.mask.hide();
                     }
-                    gis.alert(GIS.i18n.no_valid_coordinates_found);
+                    alert(GIS.i18n.no_valid_coordinates_found);
                     return;
                 }
 
@@ -3661,7 +3648,7 @@ Ext.onReady(function() {
                 if (gis.olmap.mask && !gis.skipMask) {
                     gis.olmap.mask.hide();
                 }
-                gis.alert(GIS.i18n.coordinates_could_not_be_loaded);
+                alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
             if (isJsonp) {
@@ -3799,15 +3786,12 @@ Ext.onReady(function() {
                         success(r);
                     }
                 });
-            }
-            else {
+            } else {
                 Ext.Ajax.request({
                     url: gis.init.contextPath + '/api/analytics.json' + paramString,
                     disableCaching: false,
                     failure: function(r) {
-                        if (r.status && r.statusText && r.responseText) {
-                            gis.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
-                        }
+                        alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
                     },
                     success: function(r) {
                         success(Ext.decode(r.responseText));
@@ -4871,7 +4855,7 @@ Ext.onReady(function() {
                     }
 
                     if (!ouDim) {
-                        gis.alert('No organisation units specified');
+                        alert('No organisation units specified');
                         return;
                     }
 
@@ -5033,12 +5017,12 @@ Ext.onReady(function() {
                     var headers = [];
 
                     if (!(config && Ext.isObject(config))) {
-                        gis.alert('Data response invalid', config);
+                        alert('Data response invalid', config);
                         return false;
                     }
 
                     if (!(config.headers && Ext.isArray(config.headers))) {
-                        gis.alert('Data response invalid', config);
+                        alert('Data response invalid', config);
                         return false;
                     }
 
@@ -5053,7 +5037,7 @@ Ext.onReady(function() {
                     config.headers = headers;
 
                     if (!config.headers.length) {
-                        gis.alert('No valid response headers', config);
+                        alert('No valid response headers', config);
                         return;
                     }
 
@@ -5063,7 +5047,7 @@ Ext.onReady(function() {
                     }
 
                     if (config.headers.length !== config.rows[0].length) {
-                        gis.alert('Data invalid', config);
+                        alert('Data invalid', config);
                         return false;
                     }
 
@@ -6835,7 +6819,7 @@ Ext.onReady(function() {
                     init.user.ou = ou;
                     init.user.ouc = ouc;
                 } else {
-                    gis.alert('User is not assigned to any organisation units');
+                    alert('User is not assigned to any organisation units');
                 }
 
                 fn();
@@ -7050,14 +7034,11 @@ Ext.onReady(function() {
             createViewport,
             afterRender,
             initialize,
-            gis = {
-                core: {},
-                app: {}
-            };
+            gis;
 
         validateConfig = function() {
             if (!Ext.isString(config.url)) {
-                gis.alert('Invalid url (' + config.el + ')');
+                alert('Invalid url (' + config.el + ')');
                 return;
             }
 
@@ -7066,14 +7047,14 @@ Ext.onReady(function() {
             }
 
             if (!Ext.isString(config.el)) {
-                gis.alert('Invalid html element id (' + config.el + ')');
+                alert('Invalid html element id (' + config.el + ')');
                 return;
             }
 
             config.id = config.id || config.uid;
 
             if (config.id && !Ext.isString(config.id)) {
-                gis.alert('Invalid map id (' + config.el + ')');
+                alert('Invalid map id (' + config.el + ')');
                 return;
             }
 
@@ -7120,8 +7101,6 @@ Ext.onReady(function() {
                 centerRegion,
                 eastRegion,
                 el = Ext.get(gis.el),
-                elWidth = el ? el.getWidth() : 0,
-                elHeight = el ? el.getHeight() : 0,
                 eastWidth = gis.map.hideLegend ? 0 : (gis.plugin ? 120 : 200),
                 trash = [];
 
@@ -7129,7 +7108,7 @@ Ext.onReady(function() {
             if (gis.dashboard) {
                 items.push(northRegion = Ext.create('Ext.panel.Panel', {
                     region: 'north',
-                    width: elWidth,
+                    width: el.getWidth(),
                     height: 19,
                     bodyStyle: 'background-color: #fff; border: 0 none; font: bold 12px LiberationSans, arial, sans-serif; color: #333; text-align: center; line-height: 14px; letter-spacing: -0.1px',
                     html: ''
@@ -7141,7 +7120,7 @@ Ext.onReady(function() {
                 region: 'center',
                 map: gis.olmap,
                 bodyStyle: 'border: 1px solid #d0d0d0',
-                width: elWidth - eastWidth
+                width: el.getWidth() - eastWidth
             }));
 
             // east
@@ -7221,8 +7200,8 @@ Ext.onReady(function() {
 
             viewport = Ext.create('Ext.panel.Panel', {
                 renderTo: el,
-                width: elWidth,
-                height: elHeight,
+                width: el.getWidth(),
+                height: el.getHeight(),
                 cls: 'gis-plugin',
                 layout: 'border',
                 bodyStyle: 'border: 0 none',
@@ -7239,18 +7218,15 @@ Ext.onReady(function() {
             viewport.eastRegion = eastRegion;
 
             viewport.centerRegion.trash = trash;
+            viewport.centerRegion.getEl().on('mouseleave', function() {
+                for (var i = 0, cmp; i < trash.length; i++) {
+                    cmp = viewport.centerRegion.trash[i];
 
-            if (viewport.centerRegion.getEl()) {
-                viewport.centerRegion.getEl().on('mouseleave', function() {
-                    for (var i = 0, cmp; i < trash.length; i++) {
-                        cmp = viewport.centerRegion.trash[i];
-
-                        if (cmp && cmp.destroy) {
-                            cmp.destroy();
-                        }
+                    if (cmp && cmp.destroy) {
+                        cmp.destroy();
                     }
-                });
-            }
+                }
+            });
 
             return viewport;
         };
@@ -7286,11 +7262,9 @@ Ext.onReady(function() {
 
                 if (!base || base === 'none' || base === 'off') {
                     gis.layer.googleStreets.setVisibility(false);
-                }
-                else if (base === 'gh' || base === 'googlehybrid') {
+                } else if (base === 'gh' || base === 'googlehybrid') {
                     gis.olmap.setBaseLayer(gis.layer.googleHybrid);
-                }
-                else if (base === 'osm' || base === 'openstreetmap') {
+                } else if (base === 'osm' || base === 'openstreetmap') {
                     gis.olmap.setBaseLayer(gis.layer.openStreetMap);
                 }
             }
@@ -7314,22 +7288,13 @@ Ext.onReady(function() {
             init.skipMask = Ext.isBoolean(config.skipMask) ? config.skipMask : false;
             init.skipFade = Ext.isBoolean(config.skipFade) ? config.skipFade : false;
 
-            // instance
+            // alert
+            //init.alert = function(text) {
+                //Ext.get(config.el).setStyle('opacity', 1);
+                //Ext.get(config.el).update('<div class="ns-plugin-alert">' + text + '</div>');
+            //};
+
             gis = GIS.core.getInstance(init);
-
-            // alerts
-            gis.alert = function(text, isLog) {
-                if (isLog) {
-                    console.log(text);
-                }
-                else {
-                    if (text) {
-                        alert(text);
-                    }
-                }
-            };
-
-            // extend instance
             extendInstance(gis);
 
             // google maps
@@ -7407,11 +7372,9 @@ Ext.onReady(function() {
                 };
             }
 
-            if (gis.viewport.centerRegion.getEl()) {
-                gis.olmap.mask = Ext.create('Ext.LoadMask', gis.viewport.centerRegion.getEl(), {
-                    msg: 'Loading'
-                });
-            }
+            gis.olmap.mask = Ext.create('Ext.LoadMask', gis.viewport.centerRegion.getEl(), {
+                msg: 'Loading'
+            });
 
             GIS.core.MapLoader(gis).load();
         }();
