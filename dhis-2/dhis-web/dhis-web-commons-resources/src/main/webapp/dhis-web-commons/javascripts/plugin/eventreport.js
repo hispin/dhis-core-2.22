@@ -4208,7 +4208,7 @@ Ext.onReady( function() {
 				};
 
                 if (!response.rows.length) {
-                    ns.app.centerRegion.update('<div style="padding:20px; border:0 none; background:transparent; color:#555">No values found for the current selection.</div>');
+                    ns.app.centerRegion.update('<div style="padding:20px; border:0 none; background:transparent; color:#555; font-size:11px">No values found for the current selection.</div>');
 
                     web.mask.hide(ns.app.centerRegion);
 
