@@ -2929,50 +2929,59 @@ Ext.onReady( function() {
                 };
 
                 getDefaultSeriesTitle = function(store) {
-                    var a = [];
+                    var a = [],
+                        ls = Ext.isObject(xLayout.legendStyle) ? xLayout.legendStyle : null;
 
-                    if (Ext.isObject(xLayout.legendStyle) && Ext.isArray(xLayout.legendStyle.labelNames)) {
-                        return xLayout.legendStyle.labelNames;
+                    if (ls && Ext.isArray(ls.labelNames)) {
+                        return ls.labelNames;
                     }
                     else {
                         for (var i = 0, id, name, mxl, ids; i < store.rangeFields.length; i++) {
                             id = failSafeColumnIdMap[store.rangeFields[i]];
                             name = xResponse.metaData.names[id];
 
-                            //if (Ext.isString(name) && Ext.isObject(xLayout.legendStyle) && Ext.isNumber(xLayout.legendStyle.labelMaxLength)) {
-                                //var mxl = parseInt(xLayout.legendStyle.labelMaxLength);
+                            if (ls && ls.labelMaxLength) {
+                                var mxl = parseInt(ls.labelMaxLength);
 
-                                //name = name.length > mxl ? name.substr(0, mxl) + '..' : name;
-                            //}
+                                if (Ext.isNumber(mxl) && name.length > mxl) {
+                                    name = name.substr(0, mxl) + '..';
+                                }
+                            }
 
                             a.push(name);
                         }
                     }
 
-                    return getFormatedSeriesTitle(a);
+                    return ns.dashboard ? getFormatedSeriesTitle(a) : a;
 				};
 
                 getPieSeriesTitle = function(store) {
-                    var a = [];
+                    var a = [],
+                        ls = Ext.isObject(xLayout.legendStyle) ? xLayout.legendStyle : null;
 
-                    if (Ext.isObject(xLayout.legendStyle) && Ext.isArray(xLayout.legendStyle.labelNames)) {
-                        return xLayout.legendStyle.labelNames;
+                    if (ls && Ext.isArray(ls.labelNames)) {
+                        return ls.labelNames;
                     }
                     else {
-                        var id = store.domainFields[0];
+                        var id = store.domainFields[0],
+                            name;
 
                         store.each( function(r) {
-                            a.push(r.data[id]);
+                            name = r.data[id];
 
-                            //if (Ext.isString(name) && Ext.isObject(xLayout.legendStyle) && Ext.isNumber(xLayout.legendStyle.labelMaxLength)) {
-                                //var mxl = parseInt(xLayout.legendStyle.labelMaxLength);
+                            if (ls && ls.labelMaxLength) {
+                                var mxl = parseInt(ls.labelMaxLength);
 
-                                //name = name.length > mxl ? name.substr(0, mxl) + '..' : name;
-                            //}
+                                if (Ext.isNumber(mxl) && name.length > mxl) {
+                                    name = name.substr(0, mxl) + '..';
+                                }
+                            }
+
+                            a.push(name);
                         });
                     }
 
-                    return getFormatedSeriesTitle(a);
+                    return ns.dashboard ? getFormatedSeriesTitle(a) : a;
 				};
 
                 getDefaultSeries = function(store) {
