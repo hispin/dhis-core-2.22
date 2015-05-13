@@ -28,27 +28,25 @@ package org.hisp.dhis.trackedentity.action.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserService;
 
-import com.opensymphony.xwork2.Action;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Chau Thu Tran
- * 
  * @version DefineProgramUserroleAction.java 12:43:40 PM Feb 19, 2013 $
  */
 public class DefineProgramUserroleAction
     implements Action
 {// -------------------------------------------------------------------------
- // Dependency
- // -------------------------------------------------------------------------
+    // Dependency
+    // -------------------------------------------------------------------------
 
     private ProgramService programService;
 
@@ -75,11 +73,11 @@ public class DefineProgramUserroleAction
         this.id = id;
     }
 
-    private Collection<Integer> userRoleIds = new HashSet<>();
+    private Collection<String> urSelected = new HashSet<>();
 
-    public void setUserRoleIds( Collection<Integer> userRoleIds )
+    public void setUrSelected( Collection<String> urSelected )
     {
-        this.userRoleIds = userRoleIds;
+        this.urSelected = urSelected;
     }
 
     // -------------------------------------------------------------------------
@@ -92,14 +90,14 @@ public class DefineProgramUserroleAction
     {
         Program program = programService.getProgram( id );
 
-        Set<UserAuthorityGroup> userAutorities = new HashSet<>();
+        Set<UserAuthorityGroup> userAuthorities = new HashSet<>();
 
-        for ( Integer userRoleId : this.userRoleIds )
+        for ( String id : urSelected )
         {
-            userAutorities.add( userService.getUserAuthorityGroup( userRoleId ) );
+            userAuthorities.add( userService.getUserAuthorityGroup( id ) );
         }
 
-        program.setUserRoles( userAutorities );
+        program.setUserRoles( userAuthorities );
 
         programService.updateProgram( program );
 
