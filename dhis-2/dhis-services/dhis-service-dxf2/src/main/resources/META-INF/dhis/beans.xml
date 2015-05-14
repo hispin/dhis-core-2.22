@@ -246,6 +246,10 @@
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.program.Program" />
   </bean>
 
+  <bean id="programIndicatorImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.program.ProgramIndicator" />
+  </bean>
+
   <bean id="programStageImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.program.ProgramStage" />
   </bean>
