@@ -65,6 +65,8 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
+import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.util.ConcurrentUtils;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.SystemUtils;
@@ -105,7 +107,10 @@ public class DefaultCaseAggregationConditionService
     
     @Autowired
     private DataElementCategoryService categoryService;
-
+    
+    @Autowired
+    private Notifier notifier;
+    
     // -------------------------------------------------------------------------
     // Getters && Setters
     // -------------------------------------------------------------------------
@@ -423,15 +428,23 @@ public class DefaultCaseAggregationConditionService
     }
     
     @Override
-    public void aggregate( List<CaseAggregateSchedule> caseAggregateSchedules, String taskStrategy )
-    {       
-        ConcurrentLinkedQueue<CaseAggregateSchedule> datasetQ = new ConcurrentLinkedQueue<>(
+    public void aggregate( List<CaseAggregateSchedule> caseAggregateSchedules, String taskStrategy, TaskId taskId )
+    {   
+        // Generate the periods
+        
+        for( CaseAggregateSchedule  schedule : caseAggregateSchedules ){
+            List<Period> periods = new ArrayList<>(aggregationConditionStore.getPeriods( schedule.getPeriodTypeName(),
+                taskStrategy ));
+            periodService.reloadPeriods( periods );
+        }
+        
+        ConcurrentLinkedQueue<CaseAggregateSchedule> queryBuilderQ = new ConcurrentLinkedQueue<>(
             caseAggregateSchedules );
         List<Future<?>> futures = new ArrayList<>();
 
         for ( int i = 0; i < getProcessNo(); i++ )
         { 
-            Future<?> future = aggregateValueManager( datasetQ, taskStrategy );
+            Future<?> future = aggregateValueManager( queryBuilderQ, taskStrategy, taskId );
             if ( future != null )
             {
                 futures.add( future );
@@ -555,21 +568,25 @@ public class DefaultCaseAggregationConditionService
     
     @Async
     private Future<?> aggregateValueManager( ConcurrentLinkedQueue<CaseAggregateSchedule> caseAggregateSchedule,
-        String taskStrategy )
+        String taskStrategy, TaskId taskId )
     {
         int attributeOptioncomboId = categoryService.getDefaultDataElementCategoryOptionCombo().getId();
         
         taskLoop: while ( true )
         {
-            CaseAggregateSchedule dataSet = caseAggregateSchedule.poll();
-            if ( dataSet == null )
+            CaseAggregateSchedule condition = caseAggregateSchedule.poll();
+            if ( condition == null )
             {
                 break taskLoop;
             }
 
-            Collection<Period> periods = aggregationConditionStore.getPeriods( dataSet.getPeriodTypeName(),
+            Collection<Period> periods = aggregationConditionStore.getPeriods( condition.getPeriodTypeName(),
                 taskStrategy );
-            aggregationConditionStore.runAggregate( null, dataSet, periods, attributeOptioncomboId );
+            if( taskId != null )
+            {
+                notifier.notify( taskId, "Importing data for " + condition.getCaseAggregateName() );
+            }
+            aggregationConditionStore.runAggregate( null, condition, periods, attributeOptioncomboId );
         }
 
         return null;

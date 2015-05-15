@@ -33,9 +33,9 @@ package org.hisp.dhis.caseaggregation;
  */
 public class CaseAggregateSchedule
 {
-    private Integer dataSetId;
+    private Integer caseAggregateId;
 
-    private String dataSetName;
+    private String caseAggregateName;
 
     private String periodTypeName;
 
@@ -43,31 +43,31 @@ public class CaseAggregateSchedule
     {        
     }
 
-    public CaseAggregateSchedule( Integer dataSetId, String dataSetName, String periodTypeName )
+    public CaseAggregateSchedule( Integer caseAggregateId, String caseAggregateName, String periodTypeName )
     {
-        this.dataSetId = dataSetId;
-        this.dataSetName = dataSetName;
+        this.caseAggregateId = caseAggregateId;
+        this.caseAggregateName = caseAggregateName;
         this.periodTypeName = periodTypeName;
     }
 
-    public Integer getDataSetId()
+    public Integer getCaseAggregateId()
     {
-        return dataSetId;
+        return caseAggregateId;
     }
 
-    public void setDataSetId( Integer dataSetId )
+    public void setCaseAggregateId( Integer caseAggregateId )
     {
-        this.dataSetId = dataSetId;
+        this.caseAggregateId = caseAggregateId;
     }
 
-    public String getDataSetName()
+    public String getCaseAggregateName()
     {
-        return dataSetName;
+        return caseAggregateName;
     }
 
-    public void setDataSetName( String dataSetName )
+    public void setCaseAggregateName( String caseAggregateName )
     {
-        this.dataSetName = dataSetName;
+        this.caseAggregateName = caseAggregateName;
     }
 
     public String getPeriodTypeName()
