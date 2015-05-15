@@ -72,6 +72,7 @@ import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueService;
@@ -145,6 +146,9 @@ public class HibernateCaseAggregationConditionStore
     
     @Autowired
     private OrganisationUnitService orgunitService;
+
+    @Autowired
+    private DataElementCategoryService categoryService;
     
     // -------------------------------------------------------------------------
     // Implementation Methods
@@ -299,18 +303,18 @@ public class HibernateCaseAggregationConditionStore
                 
                 DataValue dataValue = dataValueService.getDataValue( dataElement, period, source, optionCombo );
                 
-                if ( dataValue == null && value != 0 )
+                if ( dataValue == null )
                 {
                     dataValue = new DataValue( dataElement, period, source, optionCombo, attributeOptionCombo );
                     dataValue.setValue( value + "" );
                     dataValue.setStoredBy( row.getString("storedby") );
                     dataValueService.addDataValue( dataValue );
                 }
-                else if ( dataValue != null && value == 0 )
+                else if ( dataValue != null && value == 0 && !dataElement.isZeroIsSignificant() )
                 {
                     dataValueService.deleteDataValue( dataValue );
                 }
-                else if ( dataValue != null && value != 0 )
+                else if ( dataValue != null )
                 {
                     dataValue.setValue( value + "" );
                     dataValueService.updateDataValue( dataValue );
@@ -327,9 +331,8 @@ public class HibernateCaseAggregationConditionStore
     public void insertAggregateValue( String sql, int dataElementId, int optionComboId, Collection<Integer> orgunitIds,
         Period period )
     {
-        try
+         try
         {
-            period = periodService.reloadPeriod( period );
             final String deleteDataValueSql = "delete from datavalue where dataelementid=" + dataElementId
                 + " and categoryoptioncomboid=" + optionComboId + " and sourceid in ("
                 + TextUtils.getCommaDelimitedString( orgunitIds ) + ") " + "and periodid = " + period.getId();
@@ -343,7 +346,7 @@ public class HibernateCaseAggregationConditionStore
             ex.printStackTrace();
         }
     }
-
+    
     @Override
     public String parseExpressionToSql( boolean isInsert, CaseAggregationCondition aggregationCondition,
         int attributeOptionComboId, Collection<Integer> orgunitIds )
@@ -447,7 +450,7 @@ public class HibernateCaseAggregationConditionStore
     }
 
     @Override
-    public void runAggregate( Collection<Integer> orgunitIds, CaseAggregateSchedule dataSet, Collection<Period> periods, int attributeOptioncomboId )
+    public void runAggregate( Collection<Integer> orgunitIds, CaseAggregateSchedule condition, Collection<Period> periods, int attributeOptioncomboId )
     {
         Collection<Integer> _orgunitIds = getServiceOrgunit();
 
@@ -461,19 +464,15 @@ public class HibernateCaseAggregationConditionStore
             orgunitIds.retainAll( _orgunitIds );
         }
         
-        if ( orgunitIds.size() > 0 )
+        if (  !orgunitIds.isEmpty()  )
         {
             String sql = "select caseaggregationconditionid, aggregationdataelementid, optioncomboid, "
-                + "cagg.aggregationexpression as caseexpression, cagg.operator as caseoperator, cagg.desum as desumid "
-                + "from caseaggregationcondition cagg inner join datasetmembers dm "
-                + "on cagg.aggregationdataelementid=dm.dataelementid inner join dataset ds "
-                + "on ds.datasetid = dm.datasetid inner join periodtype pt "
-                + "on pt.periodtypeid=ds.periodtypeid inner join dataelement de "
-                + "on de.dataelementid=dm.dataelementid where ds.datasetid = " + dataSet.getDataSetId();
-    
+                + "aggregationexpression as caseexpression, operator as caseoperator, desum as desumid "
+                + "from caseaggregationcondition where caseaggregationconditionid = " + condition.getCaseAggregateId();
+            
             SqlRowSet rs = jdbcTemplate.queryForRowSet( sql );
     
-             while ( rs.next() )
+            if ( rs.next() )
             {
                  String caseExpression = rs.getString( "caseexpression" );
                  int dataElementId = rs.getInt( "aggregationdataelementid" );
@@ -485,11 +484,7 @@ public class HibernateCaseAggregationConditionStore
                 for ( Period period : periods )
                 {
                     String insertSql = replacePeriodSql( insertParamsSql, period );
-                    
-                    if ( !orgunitIds.isEmpty() )
-                    { 
-                        insertAggregateValue( insertSql, dataElementId, optionComboId, _orgunitIds, period );
-                    }
+                    insertAggregateValue( insertSql, dataElementId, optionComboId, _orgunitIds, period );
                 }
     
             }

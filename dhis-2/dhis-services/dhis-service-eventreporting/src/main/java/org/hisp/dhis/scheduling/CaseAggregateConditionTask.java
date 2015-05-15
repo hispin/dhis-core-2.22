@@ -41,6 +41,8 @@ import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.util.Clock;
 import org.hisp.dhis.system.util.SystemUtils;
+import org.hisp.dhis.user.CurrentUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
@@ -79,14 +81,11 @@ public class CaseAggregateConditionTask
     {
         this.notifier = notifier;
     }
+    
+    @Autowired
+    private CurrentUserService currentUserService;
 
-    private TaskId taskId;
-
-    public void setTaskId( TaskId taskId )
-    {
-        this.taskId = taskId;
-    }
-
+   
     // -------------------------------------------------------------------------
     // Runnable implementation
     // -------------------------------------------------------------------------
@@ -94,7 +93,11 @@ public class CaseAggregateConditionTask
     @Override
     public void run()
     {
-        final int cpuCores = SystemUtils.getCpuCores();
+        final int cpuCores = SystemUtils.getCpuCores();        
+
+        TaskId taskId = new TaskId( TaskCategory.AGGREGATE_QUERY_BUILDER, currentUserService.getCurrentUser() );
+        notifier.clear( taskId );
+        
         Clock clock = new Clock().startClock().logTime(
             "Aggregate process started, number of CPU cores: " + cpuCores + ", " + SystemUtils.getMemoryString() );
         notifier.clear( taskId ).notify( taskId, "Aggregate process started" );
@@ -102,24 +105,22 @@ public class CaseAggregateConditionTask
         String taskStrategy = (String) systemSettingManager.getSystemSetting(
             KEY_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY, DEFAULT_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY );
 
-        // Get datasets which are used in case-aggregate-query-builder formula
-        
-        String datasetSQL = "select distinct( dm.datasetid ) as datasetid, pt.name as periodtypename, ds.name as datasetname";
-        datasetSQL += "      from caseaggregationcondition cagg inner join datasetmembers dm ";
-        datasetSQL += "            on cagg.aggregationdataelementid=dm.dataelementid inner join dataset ds ";
-        datasetSQL += "            on ds.datasetid = dm.datasetid inner join periodtype pt ";
-        datasetSQL += "            on pt.periodtypeid=ds.periodtypeid ";
+        String sql = "select cagg.caseaggregationconditionid as caseaggregationconditionid, cagg.name as caseaggregationconditionname, pt.name as periodtypename ";
+        sql += "from caseaggregationcondition cagg inner join datasetmembers dm  ";
+        sql += " on cagg.aggregationdataelementid=dm.dataelementid inner join dataset ds  ";
+        sql += " on ds.datasetid = dm.datasetid inner join periodtype pt  ";
+        sql += "  on pt.periodtypeid=ds.periodtypeid";
 
-        SqlRowSet rsDataset = jdbcTemplate.queryForRowSet( datasetSQL );
+        SqlRowSet rsCondition = jdbcTemplate.queryForRowSet( sql );
         List<CaseAggregateSchedule> caseAggregateSchedule = new ArrayList<>();
-        while ( rsDataset.next() )
+        while ( rsCondition.next() )
         {
-            CaseAggregateSchedule dataSet = new CaseAggregateSchedule( rsDataset.getInt( "datasetid" ),
-                rsDataset.getString( "datasetname" ), rsDataset.getString( "periodtypename" ) );
-            caseAggregateSchedule.add( dataSet );
+            CaseAggregateSchedule condition = new CaseAggregateSchedule( rsCondition.getInt( "caseaggregationconditionid" ),
+                rsCondition.getString( "caseaggregationconditionname"), rsCondition.getString( "periodtypename" ) );
+          caseAggregateSchedule.add( condition );
         }
-
-        aggregationConditionService.aggregate( caseAggregateSchedule, taskStrategy );
+        
+        aggregationConditionService.aggregate( caseAggregateSchedule, taskStrategy, taskId );
 
         clock.logTime( "Improrted aggregate data completed " );
 

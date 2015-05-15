@@ -955,11 +955,6 @@
     <property name="systemSettingManager">
       <ref bean="org.hisp.dhis.setting.SystemSettingManager" />
     </property>
-    <property name="currentUserService">
-      <ref bean="org.hisp.dhis.user.CurrentUserService" />
-    </property>
-    <property name="notifier" ref="notifier" />
-    <property name="aggregateConditionTask" ref="aggregateQueryBuilder" />
   </bean>
 
   <!-- Program Indicator -->
