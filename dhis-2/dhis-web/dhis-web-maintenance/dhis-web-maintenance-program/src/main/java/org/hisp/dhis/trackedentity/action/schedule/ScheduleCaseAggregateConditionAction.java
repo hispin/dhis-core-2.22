@@ -34,11 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager;
-import org.hisp.dhis.scheduling.CaseAggregateConditionTask;
-import org.hisp.dhis.scheduling.TaskCategory;
-import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.hisp.dhis.user.CurrentUserService;
 
@@ -61,13 +57,6 @@ public class ScheduleCaseAggregateConditionAction
     public void setSchedulingManager( CaseAggregateConditionSchedulingManager schedulingManager )
     {
         this.schedulingManager = schedulingManager;
-    }
-
-    private CurrentUserService currentUserService;
-
-    public void setCurrentUserService( CurrentUserService currentUserService )
-    {
-        this.currentUserService = currentUserService;
     }
 
     private SystemSettingManager systemSettingManager;
@@ -113,32 +102,14 @@ public class ScheduleCaseAggregateConditionAction
         this.taskStrategy = taskStrategy;
     }
 
-    private CaseAggregateConditionTask aggregateConditionTask;
-
-    public void setAggregateConditionTask( CaseAggregateConditionTask aggregateConditionTask )
-    {
-        this.aggregateConditionTask = aggregateConditionTask;
-    }
-
-    private Notifier notifier;
-
-    public void setNotifier( Notifier notifier )
-    {
-        this.notifier = notifier;
-    }
-
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
-
+ 
     @Override
     public String execute()
         throws Exception
     {
-        TaskId taskId = new TaskId( TaskCategory.AGGREGATE_QUERY_BUILDER, currentUserService.getCurrentUser() );
-        notifier.clear( taskId );
-        aggregateConditionTask.setTaskId( taskId );
-        
         if ( execute )
         {
             schedulingManager.executeTasks();

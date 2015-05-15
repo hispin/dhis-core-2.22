@@ -40,6 +40,7 @@ import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.Program;
+import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
@@ -193,7 +194,7 @@ public interface CaseAggregationConditionService
      *        of each dataset. There are four options, include last month, last
      *        3 month, last 6 month and last 12 month
      */
-    void aggregate( List<CaseAggregateSchedule> caseAggregateSchedules, String taskStrategy );
+    void aggregate( List<CaseAggregateSchedule> caseAggregateSchedules, String taskStrategy, TaskId taskId );
     
     /**
      * Insert value aggregated from a {@link CaseAggregationCondition}
