@@ -343,15 +343,18 @@ public class LoadFormAction
 
             for ( int i = 0; i < orderedCategoryCombos.size(); i++ )
             {
+                DataElementCategoryCombo categoryCombo = orderedCategoryCombos.get( i );
+                String name = !categoryCombo.isDefault() ? categoryCombo.getName() : dataSetCopy.getName();
+                
                 Section section = new Section();
                 section.setUid( CodeGenerator.generateCode() );
                 section.setId( i );
-                section.setName( orderedCategoryCombos.get( i ).getName() );
+                section.setName( name );
                 section.setSortOrder( i );
                 section.setDataSet( dataSet );
                 dataSet.getSections().add( section );
 
-                section.getDataElements().addAll( orderedDataElements.get( orderedCategoryCombos.get( i ) ) );
+                section.getDataElements().addAll( orderedDataElements.get( categoryCombo ) );
                 section.setIndicators( new ArrayList<>( dataSet.getIndicators() ) );
             }
 

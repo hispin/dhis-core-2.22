@@ -207,13 +207,13 @@ input[type=text],input[type=password],input[type=email],textarea
 #leftBar
 {
   height: 100%;
-  background-color: #f7f7f7;
+  background-color: #f3f3f3;
   width: 235px;
   position: fixed;
   top: 46px;
   left: 0;
   padding-top: 6px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #dadada;
   box-shadow: #ddd 0 0 2px 0;
   z-index: 10;
 }
