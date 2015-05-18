@@ -97,6 +97,8 @@ public class TrackedEntityInstanceReminderServiceTest
 
     private ProgramInstance programInstance;
 
+    private ProgramStageInstance programStageInstance;
+
     private TrackedEntityInstanceReminder reminderA;
 
     private TrackedEntityInstanceReminder reminderB;
@@ -173,6 +175,9 @@ public class TrackedEntityInstanceReminderServiceTest
 
         programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, new Date(),
             new Date(), organisationUnit );
+
+        programStageInstance = programStageInstanceService.createProgramStageInstance( programInstance, stageA,
+            new Date(), new Date(), organisationUnit );
     }
 
     @Test
@@ -185,8 +190,6 @@ public class TrackedEntityInstanceReminderServiceTest
     @Test
     public void testGetMessageFromTemplateByProgramStage()
     {
-        ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance(
-            programInstance, stageA );
         String message = reminderService.getMessageFromTemplate( reminderA, programStageInstance, mockFormat );
         assertEquals( "Test program message template", message );
     }

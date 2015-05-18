@@ -5,7 +5,6 @@ trackerCapture.controller('OverdueEventsController',
                 $modal,
                 $location,
                 $translate,
-                $filter,
                 DateUtils,
                 Paginator,
                 EventReportService,
@@ -100,7 +99,6 @@ trackerCapture.controller('OverdueEventsController',
             $scope.overdueEvents = [];
             
             EventReportService.getEventReport($scope.selectedOrgUnit.id, $scope.selectedOuMode, $scope.selectedProgram.id, null, null, 'ACTIVE','OVERDUE', $scope.pager).then(function(data){                     
-                
                 if( data.pager ){
                     $scope.pager = data.pager;
                     $scope.pager.toolBarDisplay = 5;
@@ -121,12 +119,11 @@ trackerCapture.controller('OverdueEventsController',
                     overdueEvent.dueDate = DateUtils.formatFromApiToUser(row.dueDate);
                     overdueEvent.event = row.event;
                     overdueEvent.eventName = $scope.programStages[row.programStage].name;
-                    overdueEvent.orgUnitName = row.eventOrgUnitName;                    
+                    overdueEvent.orgUnitName = row.orgUnitName;                    
                     overdueEvent.followup = row.followup;
                     overdueEvent.program = row.program;
                     overdueEvent.programStage = row.programStage;
                     overdueEvent.trackedEntityInstance = row.trackedEntityInstance;
-                    overdueEvent.created = DateUtils.formatFromApiToUser(row.registrationDate);;
                     $scope.overdueEvents.push(overdueEvent);
                     
                 });
@@ -139,7 +136,6 @@ trackerCapture.controller('OverdueEventsController',
         
                 $scope.reportFinished = true;
                 $scope.reportStarted = false;
-                
             });
         }
     };    

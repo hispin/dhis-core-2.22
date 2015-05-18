@@ -47,7 +47,7 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('selectedOrgUnit', function($timeout, storage) {        
+.directive('selectedOrgUnit', function($timeout) {        
 
     return {        
         restrict: 'A',        

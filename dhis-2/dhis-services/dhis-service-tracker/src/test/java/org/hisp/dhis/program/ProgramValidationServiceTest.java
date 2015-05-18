@@ -147,11 +147,13 @@ public class ProgramValidationServiceTest
         TrackedEntityInstance entityInstance = createTrackedEntityInstance( 'A', organisationUnit );
         entityInstanceService.addTrackedEntityInstance( entityInstance );
 
-        ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, new Date(),
-            new Date(), organisationUnit );
+        ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program,
+            new Date(), new Date(), organisationUnit );
 
-        stageInstanceA = programStageInstanceService.getProgramStageInstance( programInstance, stageA );
-        stageInstanceB = programStageInstanceService.getProgramStageInstance( programInstance, stageB );
+        stageInstanceA = programStageInstanceService.createProgramStageInstance( programInstance, stageA, new Date(),
+            new Date(), organisationUnit );
+        stageInstanceB = programStageInstanceService.createProgramStageInstance( programInstance, stageB, new Date(),
+            new Date(), organisationUnit );
 
         Set<ProgramStageInstance> programStageInstances = new HashSet<>();
         programStageInstances.add( stageInstanceA );
@@ -169,18 +171,18 @@ public class ProgramValidationServiceTest
         dataValueService.saveTrackedEntityDataValue( dataValueD );
 
         ProgramExpression programExpressionA = new ProgramExpression( "["
-            + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT + stageA.getUid() + "."
-            + dataElementA.getUid() + "]", "A" );
+            + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT + stageA.getUid()
+            + "." + dataElementA.getUid() + "]", "A" );
         ProgramExpression programExpressionB = new ProgramExpression( "["
-            + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT + stageA.getUid() + "."
-            + dataElementB.getUid() + "]", "B" );
+            + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT + stageA.getUid()
+            + "." + dataElementB.getUid() + "]", "B" );
 
         ProgramExpression programExpressionC = new ProgramExpression( "["
-            + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT + stageB.getUid() + "."
-            + dataElementA.getUid() + "]", "C" );
+            + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT + stageB.getUid()
+            + "." + dataElementA.getUid() + "]", "C" );
         ProgramExpression programExpressionD = new ProgramExpression( "["
-            + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT + stageB.getUid() + "."
-            + dataElementB.getUid() + "]", "D" );
+            + ProgramExpression.OBJECT_PROGRAM_STAGE_DATAELEMENT + ProgramExpression.SEPARATOR_OBJECT + stageB.getUid()
+            + "." + dataElementB.getUid() + "]", "D" );
 
         validationA = new ProgramValidation( "A", programExpressionA, programExpressionB, program );
         validationA.setOperator( Operator.valueOf( "equal_to" ) );

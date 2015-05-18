@@ -236,10 +236,10 @@ public class CaseAggregationConditionServiceTest
         ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program,
             today.toDate(), today.toDate(), organisationUnit );
 
-        ProgramStageInstance stageInstanceA = programStageInstanceService.getProgramStageInstance( programInstance,
-            stageA );
-        ProgramStageInstance stageInstanceB = programStageInstanceService.getProgramStageInstance( programInstance,
-            stageB );
+        ProgramStageInstance stageInstanceA = programStageInstanceService.createProgramStageInstance( programInstance,
+            stageA, today.toDate(), today.toDate(), organisationUnit );
+        ProgramStageInstance stageInstanceB = programStageInstanceService.createProgramStageInstance( programInstance,
+            stageB, today.toDate(), today.toDate(), organisationUnit );
 
         TrackedEntityDataValue dataValueA = new TrackedEntityDataValue( stageInstanceA, dataElementA, "A" );
         TrackedEntityDataValue dataValueB = new TrackedEntityDataValue( stageInstanceA, dataElementB, "B" );
@@ -395,8 +395,8 @@ public class CaseAggregationConditionServiceTest
         dataElements.add( dataElementC );
         dataElements.add( dataElementD );
 
-        assertTrue( equals( aggConditionServiceService.getCaseAggregationConditions( dataElements , null, null, null ), conditionA,
-            conditionB ) );
+        assertTrue( equals( aggConditionServiceService.getCaseAggregationConditions( dataElements, null, null, null ),
+            conditionA, conditionB ) );
     }
 
     @Test

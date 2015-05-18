@@ -64,6 +64,29 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         return {year: moment(dateValue, calendarSetting.momentFormat).year(), month: moment(dateValue, calendarSetting.momentFormat).month(), week: moment(dateValue, calendarSetting.momentFormat).week(), day: moment(dateValue, calendarSetting.momentFormat).day()};
     };
     
+    function processPeriodsForEvent(periods,event){
+        //console.log('the event:  ', event.sortingDate, ' - ', periods);
+        var index = -1;
+        var occupied = null;
+        for(var i=0; i<periods.length && index === -1; i++){
+            //console.log(event.sortingDate, ' - ', periods[i].startDate, ' - ', periods[i].endDate);
+            if(moment(periods[i].endDate).isSame(event.sortingDate) ||
+                    moment(periods[i].startDate).isSame(event.sortingDate) ||
+                    moment(periods[i].endDate).isAfter(event.sortingDate) && moment(event.sortingDate).isAfter(periods[i].endDate)){
+                index = i;
+                occupied = angular.copy(periods[i]);
+                //console.log('Found it:  ', event.sortingDate, ' - ', periods[i].startDate, ' - ', periods[i].endDate);
+            }
+        }
+        
+        if(index !== -1){
+            periods.splice(index,1);
+        }
+        
+        //console.log('the returned period:  ', periods);
+        return {available: periods, occupied: occupied};
+    };
+    
     this.getPeriods = function(events, stage, enrollment){
      
         if(!stage){
@@ -88,7 +111,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         else{
 
             var startDate = DateUtils.format( moment(referenceDate, calendarSetting.momentFormat).add(offset, 'days') );
-            var periodOffset = splitDate(DateUtils.getToday()).year - splitDate(startDate).year;
+            var periodOffset = splitDate(startDate).year - splitDate(DateUtils.getToday()).year;
             var eventDateOffSet = moment(referenceDate, calendarSetting.momentFormat).add('d', offset)._d;
             eventDateOffSet = $filter('date')(eventDateOffSet, calendarSetting.keyDateFormat);        
             
@@ -99,18 +122,27 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 p.endDate = DateUtils.formatFromApiToUser(p.endDate);
                 p.startDate = DateUtils.formatFromApiToUser(p.startDate);
                 
-                if(moment(p.endDate).isAfter(eventDateOffSet)){
+                /*if(moment(p.endDate).isAfter(eventDateOffSet)){
                     availablePeriods[p.endDate] = p;
-                }                
+                }*/   
+                if(moment(p.endDate).isAfter(eventDateOffSet)){
+                    //availablePeriods[p.endDate] = p;
+                    availablePeriods.push( p );
+                }
             });                
 
             //get occupied periods
             angular.forEach(events, function(event){
-                var p = availablePeriods[event.sortingDate];
+                var ps = processPeriodsForEvent(availablePeriods, event);
+                availablePeriods = ps.available;
+                if(ps.occupied){
+                    occupiedPeriods.push(ps.occupied);
+                }
+                /*var p = availablePeriods[event.sortingDate];
                 if(p){
                     occupiedPeriods.push({event: event.event, name: p.name, stage: stage.id, eventDate: event.sortingDate});
                     delete availablePeriods[event.sortingDate];
-                }                    
+                }*/                    
             });
         }
         return {occupiedPeriods: occupiedPeriods, availablePeriods: availablePeriods};
@@ -991,18 +1023,33 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* factory for handling event reports */
-.factory('EventReportService', function($http, $q) {   
+.factory('EventReportService', function($http) {   
     
     return {        
-        getEventReport: function(orgUnit, ouMode, program, startDate, endDate, programStatus, eventStatus, pager){ 
-            var pgSize = pager ? pager.pageSize : 50;
-        	var pg = pager ? pager.page : 1;
-            pgSize = pgSize > 1 ? pgSize  : 1;
-            pg = pg > 1 ? pg : 1; 
-            var url = '../api/events/eventRows.json?' + 'orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&program=' + program + '&programStatus=' + programStatus + '&eventStatus='+ eventStatus;
+        getEventReport: function(orgUnit, ouMode, program, startDate, endDate, programStatus, eventStatus, pager){
+            
+            var url = '../api/events/eventRows.json?' + 'orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&program=' + program;
+            
+            if( programStatus ){
+                url = url + '&programStatus=' + programStatus;
+            }
+            
+            if( eventStatus ){
+                url = url + '&status=' + eventStatus;
+            }
+            
             if(startDate && endDate){
                 url = url + '&startDate=' + startDate + '&endDate=' + endDate ;
             }
+            
+            if( pager ){
+                var pgSize = pager ? pager.pageSize : 50;
+                var pg = pager ? pager.page : 1;
+                pgSize = pgSize > 1 ? pgSize  : 1;
+                pg = pg > 1 ? pg : 1;
+                url = url + '&pageSize=' + pgSize + '&page=' + pg + '&totalPages=true';
+            } 
+            
             var promise = $http.get( url ).then(function(response){
                 return response.data;
             });            

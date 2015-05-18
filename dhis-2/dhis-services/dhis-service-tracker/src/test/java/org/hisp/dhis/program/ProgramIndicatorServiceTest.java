@@ -75,7 +75,7 @@ public class ProgramIndicatorServiceTest
 
     @Autowired
     private TrackedEntityAttributeService attributeService;
-    
+
     @Autowired
     private TrackedEntityInstanceService entityInstanceService;
 
@@ -93,19 +93,18 @@ public class ProgramIndicatorServiceTest
 
     @Autowired
     private TrackedEntityDataValueService dataValueService;
-    
+
     @Autowired
     private DataElementService dataElementService;
 
     @Autowired
     private ProgramStageDataElementService programStageDataElementService;
-  
+
     @Autowired
     private TrackedEntityAttributeValueService attributeValueService;
 
     @Autowired
     private ProgramStageInstanceService programStageInstanceService;
-    
 
     @Autowired
     private ConstantService constantService;
@@ -113,34 +112,49 @@ public class ProgramIndicatorServiceTest
     private Date incidenDate;
 
     private Date enrollmentDate;
-    
+
     private ProgramStage psA;
+
     private ProgramStage psB;
 
     private Program programA;
+
     private Program programB;
 
     private ProgramInstance programInstance;
-    
-    private DataElement deA;    
+
+    private DataElement deA;
+
     private DataElement deB;
-    
+
     private TrackedEntityAttribute atA;
+
     private TrackedEntityAttribute atB;
+
     private TrackedEntityAttribute atC;
+
     private TrackedEntityAttribute atD;
 
     private ProgramIndicator indicatorA;
+
     private ProgramIndicator indicatorB;
+
     private ProgramIndicator indicatorC;
+
     private ProgramIndicator indicatorD;
+
     private ProgramIndicator indicatorE;
+
     private ProgramIndicator indicatorF;
+
     private ProgramIndicator indicatorG;
+
     private ProgramIndicator indicatorH;
+
     private ProgramIndicator indicatorI;
+
     private ProgramIndicator indicatorJ;
-    
+
     @Override
     public void setUpTest()
     {
@@ -148,9 +162,9 @@ public class ProgramIndicatorServiceTest
         organisationUnitService.addOrganisationUnit( organisationUnit );
 
         // ---------------------------------------------------------------------
-        // Program 
+        // Program
         // ---------------------------------------------------------------------
-        
+
         programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnit );
         programService.addProgram( programA );
 
@@ -172,17 +186,17 @@ public class ProgramIndicatorServiceTest
         programService.addProgram( programB );
 
         // ---------------------------------------------------------------------
-        // Program Stage DE 
+        // Program Stage DE
         // ---------------------------------------------------------------------
-       
+
         deA = createDataElement( 'A' );
         deA.setDomainType( DataElementDomain.TRACKER );
-	deA.setType( DataElement.VALUE_TYPE_NUMBER );
-		
+        deA.setType( DataElement.VALUE_TYPE_NUMBER );
+
         deB = createDataElement( 'B' );
-        deB.setDomainType( DataElementDomain.TRACKER );  
-	deB.setType( DataElement.VALUE_TYPE_DATE );
-        
+        deB.setDomainType( DataElementDomain.TRACKER );
+        deB.setType( DataElement.VALUE_TYPE_DATE );
+
         dataElementService.addDataElement( deA );
         dataElementService.addDataElement( deB );
 
@@ -198,67 +212,70 @@ public class ProgramIndicatorServiceTest
 
         // ---------------------------------------------------------------------
         // TrackedEntityInstance & Enrollment
-        // ---------------------------------------------------------------------       
-        
+        // ---------------------------------------------------------------------
+
         TrackedEntityInstance entityInstance = createTrackedEntityInstance( 'A', organisationUnit );
         entityInstanceService.addTrackedEntityInstance( entityInstance );
 
         incidenDate = DateUtils.getMediumDate( "2014-10-22" );
         enrollmentDate = DateUtils.getMediumDate( "2014-12-31" );
 
-        programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, programA, enrollmentDate, incidenDate,
-            organisationUnit );
+        programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, programA, enrollmentDate,
+            incidenDate, organisationUnit );
 
         incidenDate = DateUtils.getMediumDate( "2014-10-22" );
         enrollmentDate = DateUtils.getMediumDate( "2014-12-31" );
 
-        programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, programA, enrollmentDate, incidenDate,
-            organisationUnit );
-        
-        //TODO enroll twice?
-        
+        programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, programA, enrollmentDate,
+            incidenDate, organisationUnit );
+
+        // TODO enroll twice?
+
         // ---------------------------------------------------------------------
         // TrackedEntityAttribute
-        // ---------------------------------------------------------------------       
-        
+        // ---------------------------------------------------------------------
+
         atA = createTrackedEntityAttribute( 'A', TrackedEntityAttribute.TYPE_NUMBER );
         atB = createTrackedEntityAttribute( 'B', TrackedEntityAttribute.TYPE_NUMBER );
         atC = createTrackedEntityAttribute( 'C', TrackedEntityAttribute.TYPE_DATE );
         atD = createTrackedEntityAttribute( 'D', TrackedEntityAttribute.TYPE_DATE );
-        
+
         attributeService.addTrackedEntityAttribute( atA );
         attributeService.addTrackedEntityAttribute( atB );
         attributeService.addTrackedEntityAttribute( atC );
         attributeService.addTrackedEntityAttribute( atD );
-        
-      
+
         TrackedEntityAttributeValue attributeValueA = new TrackedEntityAttributeValue( atA, entityInstance, "1" );
         TrackedEntityAttributeValue attributeValueB = new TrackedEntityAttributeValue( atB, entityInstance, "2" );
-        TrackedEntityAttributeValue attributeValueC = new TrackedEntityAttributeValue( atC, entityInstance, "2015-01-01" );
-        TrackedEntityAttributeValue attributeValueD = new TrackedEntityAttributeValue( atD, entityInstance, "2015-01-03" );
+        TrackedEntityAttributeValue attributeValueC = new TrackedEntityAttributeValue( atC, entityInstance,
+            "2015-01-01" );
+        TrackedEntityAttributeValue attributeValueD = new TrackedEntityAttributeValue( atD, entityInstance,
+            "2015-01-03" );
 
         attributeValueService.addTrackedEntityAttributeValue( attributeValueA );
         attributeValueService.addTrackedEntityAttributeValue( attributeValueB );
         attributeValueService.addTrackedEntityAttributeValue( attributeValueC );
         attributeValueService.addTrackedEntityAttributeValue( attributeValueD );
-        
+
         // ---------------------------------------------------------------------
         // TrackedEntityDataValue
-        // ---------------------------------------------------------------------       
-       
-        ProgramStageInstance stageInstanceA = programStageInstanceService.getProgramStageInstance( programInstance, psA );
-        ProgramStageInstance stageInstanceB = programStageInstanceService.getProgramStageInstance( programInstance, psB );
+        // ---------------------------------------------------------------------
+
+        ProgramStageInstance stageInstanceA = programStageInstanceService.createProgramStageInstance( programInstance,
+            psA, enrollmentDate, incidenDate, organisationUnit );
+        ProgramStageInstance stageInstanceB = programStageInstanceService.createProgramStageInstance( programInstance,
+            psB, enrollmentDate, incidenDate, organisationUnit );
 
         Set<ProgramStageInstance> programStageInstances = new HashSet<>();
         programStageInstances.add( stageInstanceA );
         programStageInstances.add( stageInstanceB );
-        programInstance.setProgramStageInstances( programStageInstances );        
-        
+        programInstance.setProgramStageInstances( programStageInstances );
+
         TrackedEntityDataValue dataValueA = new TrackedEntityDataValue( stageInstanceA, deA, "3" );
         TrackedEntityDataValue dataValueB = new TrackedEntityDataValue( stageInstanceA, deB, "2015-03-01" );
         TrackedEntityDataValue dataValueC = new TrackedEntityDataValue( stageInstanceB, deA, "5" );
-        TrackedEntityDataValue dataValueD = new TrackedEntityDataValue( stageInstanceB, deB, "2015-03-15" );        
-        
+        TrackedEntityDataValue dataValueD = new TrackedEntityDataValue( stageInstanceB, deB, "2015-03-15" );
+
         dataValueService.saveTrackedEntityDataValue( dataValueA );
         dataValueService.saveTrackedEntityDataValue( dataValueB );
         dataValueService.saveTrackedEntityDataValue( dataValueC );
@@ -266,74 +283,74 @@ public class ProgramIndicatorServiceTest
 
         // ---------------------------------------------------------------------
         // Constant
-        // ---------------------------------------------------------------------       
-                
+        // ---------------------------------------------------------------------
+
         Constant constantA = createConstant( 'A', 7.0 );
         constantService.saveConstant( constantA );
-        
+
         // ---------------------------------------------------------------------
         // ProgramIndicator
-        // ---------------------------------------------------------------------       
-       
-        indicatorA = new ProgramIndicator( "IndicatorA", "IndicatorDesA", programA, VALUE_TYPE_INT, "( " + KEY_PROGRAM_VARIABLE + "{"
-            + ProgramIndicator.ENROLLMENT_DATE + "} - " + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.INCIDENT_DATE + "} )  / " 
-            + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}" );
+        // ---------------------------------------------------------------------
+
+        indicatorA = new ProgramIndicator( "IndicatorA", "IndicatorDesA", programA, VALUE_TYPE_INT, "( "
+            + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.ENROLLMENT_DATE + "} - " + KEY_PROGRAM_VARIABLE + "{"
+            + ProgramIndicator.INCIDENT_DATE + "} )  / " + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid()
+            + "}" );
         indicatorA.setUid( "UID-DATE" );
         indicatorA.setShortName( "DATE" );
 
-        indicatorB = new ProgramIndicator( "IndicatorB", "IndicatorDesB", programA, ProgramIndicator.VALUE_TYPE_DATE, "70" );
+        indicatorB = new ProgramIndicator( "IndicatorB", "IndicatorDesB", programA, ProgramIndicator.VALUE_TYPE_DATE,
+            "70" );
         indicatorB.setRootDate( ProgramIndicator.INCIDENT_DATE );
         indicatorB.setUid( "UID-INT" );
         indicatorB.setShortName( "INT" );
 
-        indicatorC = new ProgramIndicator( "IndicatorC", "IndicatorDesB", programB, ProgramIndicator.VALUE_TYPE_INT, "0" );
+        indicatorC = new ProgramIndicator( "IndicatorC", "IndicatorDesB", programB, ProgramIndicator.VALUE_TYPE_INT,
+            "0" );
         indicatorC.setUid( "UID-C" );
         indicatorC.setShortName( "C" );
-        
-        indicatorD = new ProgramIndicator( "IndicatorD", "IndicatorDesD", programB, ProgramIndicator.VALUE_TYPE_INT, "0 + A + 4 + " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{"
-            + ProgramIndicator.INCIDENT_DATE + "}" );
+
+        indicatorD = new ProgramIndicator( "IndicatorD", "IndicatorDesD", programB, ProgramIndicator.VALUE_TYPE_INT,
+            "0 + A + 4 + " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.INCIDENT_DATE + "}" );
         indicatorD.setUid( "UID-D" );
         indicatorD.setShortName( "D" );
-        
-        String expressionE = KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} + " + 
-            KEY_DATAELEMENT + "{" + psB.getUid() + "." + deA.getUid() + "} - " + 
-            KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + KEY_ATTRIBUTE + "{" + atB.getUid() + "}";
-        
-        indicatorE = new ProgramIndicator( "IndicatorE", "IndicatorDesE", programB, VALUE_TYPE_INT, expressionE );
-        
-        String expressionF = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + 
-            KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + KEY_ATTRIBUTE + "{" + atB.getUid() + "}";
-        
-        indicatorF = new ProgramIndicator( "IndicatorF", "IndicatorDesF", programB, VALUE_TYPE_INT, expressionF );
-        
-        String expressionG = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " +
-            KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + 
-            KEY_ATTRIBUTE + "{" + atB.getUid() + "} * " +
-            KEY_CONSTANT + "{" + constantA.getUid() + "}";
-        
-        indicatorG = new ProgramIndicator( "IndicatorG", "IndicatorDesG", programB, VALUE_TYPE_INT, expressionG );
-        
-        String expressionH = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - " + 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "}";
-        
-        indicatorH = new ProgramIndicator( "IndicatorH", "IndicatorDesH", programB, VALUE_TYPE_INT, expressionH );        
-        
-        String expressionI = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - " + 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + 
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "}";
-        
-        indicatorI = new ProgramIndicator( "IndicatorI", "IndicatorDesI", programB, VALUE_TYPE_DATE, expressionI ); 
-        indicatorI.setRootDate( ProgramIndicator.INCIDENT_DATE );        
 
-        String expressionJ = "(" + KEY_ATTRIBUTE + "{" + atC.getUid() + "}  - " + 
-            KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.ENROLLMENT_DATE + "} ) + " +           
-            KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} * " + 
-            ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}";
-        
-        indicatorJ = new ProgramIndicator( "IndicatorJ", "IndicatorDesJ", programB, VALUE_TYPE_DATE, expressionJ ); 
+        String expressionE = KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} + " + KEY_DATAELEMENT + "{"
+            + psB.getUid() + "." + deA.getUid() + "} - " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + KEY_ATTRIBUTE
+            + "{" + atB.getUid() + "}";
+
+        indicatorE = new ProgramIndicator( "IndicatorE", "IndicatorDesE", programB, VALUE_TYPE_INT, expressionE );
+
+        String expressionF = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + KEY_DATAELEMENT
+            + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} + "
+            + KEY_ATTRIBUTE + "{" + atB.getUid() + "}";
+
+        indicatorF = new ProgramIndicator( "IndicatorF", "IndicatorDesF", programB, VALUE_TYPE_INT, expressionF );
+
+        String expressionG = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + KEY_DATAELEMENT
+            + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} + "
+            + KEY_ATTRIBUTE + "{" + atB.getUid() + "} * " + KEY_CONSTANT + "{" + constantA.getUid() + "}";
+
+        indicatorG = new ProgramIndicator( "IndicatorG", "IndicatorDesG", programB, VALUE_TYPE_INT, expressionG );
+
+        String expressionH = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - "
+            + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_DATAELEMENT + "{"
+            + psA.getUid() + "." + deA.getUid() + "}";
+
+        indicatorH = new ProgramIndicator( "IndicatorH", "IndicatorDesH", programB, VALUE_TYPE_INT, expressionH );
+
+        String expressionI = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - "
+            + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_DATAELEMENT + "{"
+            + psA.getUid() + "." + deA.getUid() + "}";
+
+        indicatorI = new ProgramIndicator( "IndicatorI", "IndicatorDesI", programB, VALUE_TYPE_DATE, expressionI );
+        indicatorI.setRootDate( ProgramIndicator.INCIDENT_DATE );
+
+        String expressionJ = "(" + KEY_ATTRIBUTE + "{" + atC.getUid() + "}  - " + KEY_PROGRAM_VARIABLE + "{"
+            + ProgramIndicator.ENROLLMENT_DATE + "} ) + " + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid()
+            + "} * " + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}";
+
+        indicatorJ = new ProgramIndicator( "IndicatorJ", "IndicatorDesJ", programB, VALUE_TYPE_DATE, expressionJ );
         indicatorJ.setRootDate( ProgramIndicator.INCIDENT_DATE );
     }
 
@@ -440,24 +457,25 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetProgramStageDataElementsInExpression()
     {
-        Set<ProgramStageDataElement> elements = programIndicatorService.getProgramStageDataElementsInExpression( indicatorE );
-        
+        Set<ProgramStageDataElement> elements = programIndicatorService
+            .getProgramStageDataElementsInExpression( indicatorE );
+
         assertEquals( 2, elements.size() );
-        
+
         assertTrue( elements.contains( new ProgramStageDataElement( psA, deA ) ) );
         assertTrue( elements.contains( new ProgramStageDataElement( psB, deA ) ) );
     }
-    
+
     @Test
     public void testGetAttributesInExpression()
     {
         Set<TrackedEntityAttribute> attributes = programIndicatorService.getAttributesInExpression( indicatorE );
-        
+
         assertEquals( 2, attributes.size() );
         assertTrue( attributes.contains( atA ) );
         assertTrue( attributes.contains( atB ) );
     }
-    
+
     @Test
     public void testGetProgramIndicatorValue()
     {
@@ -473,12 +491,12 @@ public class ProgramIndicatorServiceTest
         String valueINT = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorA );
         assertEquals( "10.0", valueINT );
 
-        String valueDATE = programIndicatorService.getProgramIndicatorValue( programInstance,  indicatorB  );
+        String valueDATE = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorB );
         assertEquals( DateUtils.getMediumDateString( enrollmentDate ), valueDATE );
-        
+
         String valueE = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorE );
-        assertEquals( "9.0", valueE  );
-        
+        assertEquals( "9.0", valueE );
+
         String valueF = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorF );
         assertEquals( "17.0", valueF );
 
@@ -497,7 +515,7 @@ public class ProgramIndicatorServiceTest
         assertEquals( "10.0", indicatorMap.get( "IndicatorA" ) );
         assertEquals( DateUtils.getMediumDateString( enrollmentDate ), indicatorMap.get( "IndicatorB" ) );
     }
-    
+
     @Test
     public void testGetExpressionDescription()
     {
@@ -505,13 +523,13 @@ public class ProgramIndicatorServiceTest
         programIndicatorService.addProgramIndicator( indicatorA );
 
         String description = programIndicatorService.getExpressionDescription( indicatorB.getExpression() );
-        assertEquals( "70", description);
-        
+        assertEquals( "70", description );
+
         description = programIndicatorService.getExpressionDescription( indicatorA.getExpression() );
-        assertEquals( "( Enrollment date - Incident date )  / ConstantA", description);
-        
+        assertEquals( "( Enrollment date - Incident date )  / ConstantA", description );
+
     }
-    
+
     @Test
     public void testExpressionIsValid()
     {
@@ -521,6 +539,7 @@ public class ProgramIndicatorServiceTest
 
         assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorB.getExpression() ) );
         assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorA.getExpression() ) );
-        assertEquals( ProgramIndicator.EXPRESSION_NOT_WELL_FORMED, programIndicatorService.expressionIsValid( indicatorD.getExpression() ) );
-    }    
+        assertEquals( ProgramIndicator.EXPRESSION_NOT_WELL_FORMED,
+            programIndicatorService.expressionIsValid( indicatorD.getExpression() ) );
+    }
 }

@@ -41,6 +41,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.dxf2.events.report.EventRow;
+import org.hisp.dhis.dxf2.events.trackedentity.Attribute;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
@@ -184,6 +186,98 @@ public class JdbcEventStore
 
         return events;
     }
+    
+    public List<EventRow> getEventRows( EventSearchParams params, List<OrganisationUnit> organisationUnits )
+    {
+        List<EventRow> eventRows = new ArrayList<>();
+
+        String sql = buildSql( params, organisationUnits );
+
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
+
+        log.debug( "Event query SQL: " + sql );
+
+        EventRow eventRow = new EventRow();
+
+        eventRow.setEvent( "not_valid" );
+
+        Set<String> notes = new HashSet<>();
+
+        IdSchemes idSchemes = ObjectUtils.firstNonNull( params.getIdSchemes(), new IdSchemes() );
+
+        while ( rowSet.next() )
+        {
+            if ( rowSet.getString( "psi_uid" ) == null )
+            {
+                continue;
+            }
+
+            if ( !eventRow.getEvent().equals( rowSet.getString( "psi_uid" ) ) )
+            {
+                eventRow = new EventRow();
+
+                eventRow.setEvent( rowSet.getString( "psi_uid" ) );
+                eventRow.setTrackedEntityInstance( rowSet.getString( "tei_uid" ) );
+
+                eventRow.setProgram( IdSchemes.getValue( rowSet.getString( "p_uid" ), rowSet.getString( "p_code" ),
+                    idSchemes.getProgramIdScheme() ) );
+                eventRow.setProgramStage( IdSchemes.getValue( rowSet.getString( "ps_uid" ),
+                    rowSet.getString( "ps_code" ), idSchemes.getProgramStageIdScheme() ) );
+                eventRow.setOrgUnit( IdSchemes.getValue( rowSet.getString( "ou_uid" ), rowSet.getString( "ou_code" ),
+                    idSchemes.getOrgUnitIdScheme() ) );
+
+                if ( rowSet.getInt( "p_type" ) != Program.SINGLE_EVENT_WITHOUT_REGISTRATION )
+                {
+                    eventRow.setEnrollment( rowSet.getString( "pi_uid" ) );
+                    eventRow.setFollowup( rowSet.getBoolean( "pi_followup" ) );
+                }
+
+                eventRow.setTrackedEntityInstance( rowSet.getString( "tei_uid" ) );
+                eventRow.setOrgUnitName( rowSet.getString( "ou_name" ) );
+                eventRow.setDueDate( DateUtils.getLongDateString( rowSet.getDate( "psi_duedate" ) ) );
+                eventRow.setEventDate( DateUtils.getLongDateString( rowSet.getDate( "psi_executiondate" ) ) );
+
+                eventRows.add( eventRow );
+            }
+
+            if ( rowSet.getString( "pav_value" ) != null && rowSet.getString( "ta_uid" ) != null )
+            {
+                Attribute attribute = new Attribute();
+                attribute.setValue( rowSet.getString( "pav_value" ) );
+                attribute.setDisplayName( rowSet.getString( "ta_name" ) );
+                attribute.setType( rowSet.getString( "ta_valuetype" ) );
+                attribute.setAttribute( rowSet.getString( "ta_uid" ) );
+
+                eventRow.getAttributes().add( attribute );
+            }
+
+            if ( rowSet.getString( "pdv_value" ) != null && rowSet.getString( "de_uid" ) != null )
+            {
+                DataValue dataValue = new DataValue();
+                dataValue.setValue( rowSet.getString( "pdv_value" ) );
+                dataValue.setProvidedElsewhere( rowSet.getBoolean( "pdv_providedelsewhere" ) );
+                dataValue.setDataElement( IdSchemes.getValue( rowSet.getString( "de_uid" ),
+                    rowSet.getString( "de_code" ), idSchemes.getDataElementIdScheme() ) );
+
+                dataValue.setStoredBy( rowSet.getString( "pdv_storedby" ) );
+
+                eventRow.getDataValues().add( dataValue );
+            }
+
+            if ( rowSet.getString( "psinote_value" ) != null && !notes.contains( rowSet.getString( "psinote_id" ) ) )
+            {
+                Note note = new Note();
+                note.setValue( rowSet.getString( "psinote_value" ) );
+                note.setStoredDate( rowSet.getString( "psinote_storeddate" ) );
+                note.setStoredBy( rowSet.getString( "psinote_storedby" ) );
+
+                eventRow.getNotes().add( note );
+                notes.add( rowSet.getString( "psinote_id" ) );
+            }
+        }
+
+        return eventRows;
+    }
 
     public int getEventCount( EventSearchParams params, List<OrganisationUnit> organisationUnits )
     {
@@ -211,6 +305,10 @@ public class JdbcEventStore
         
         sql += ") as event left join (";
         
+        sql += getAttributeValueQuery();
+
+        sql += ") as att on event.tei_id=att.pav_id left join (";
+        
         sql += getDataValueQuery();
         
         sql += ") as dv on event.psi_id=dv.pdv_id left join (";
@@ -235,7 +333,7 @@ public class JdbcEventStore
             "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, " +
             "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
             "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
-            "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.uid as tei_uid " +
+            "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid " +
             "from programstageinstance psi " +
             "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
             "inner join program p on p.programid=pi.programid " +
@@ -373,6 +471,15 @@ public class JdbcEventStore
             "from programstageinstancecomments psic " +
             "inner join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
         
+        return sql;
+    }
+    
+    private String getAttributeValueQuery()
+    {
+        String sql = "select pav.trackedentityinstanceid as pav_id, pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype "
+            + "from trackedentityattributevalue pav "
+            + "inner join trackedentityattribute ta on pav.trackedentityattributeid=ta.trackedentityattributeid ";
+
         return sql;
     }
 }
