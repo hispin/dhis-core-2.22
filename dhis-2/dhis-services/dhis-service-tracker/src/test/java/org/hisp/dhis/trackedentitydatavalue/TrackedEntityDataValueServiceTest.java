@@ -143,7 +143,7 @@ public class TrackedEntityDataValueServiceTest
         programStages.add( stageB );
         program.setProgramStages( programStages );
         programService.updateProgram( program );
-        
+
         DateTime yesterDate = DateTime.now();
         yesterDate.withTimeAtStartOfDay();
         yesterDate.minusDays( 1 );
@@ -153,12 +153,14 @@ public class TrackedEntityDataValueServiceTest
         tomorrowDate.withTimeAtStartOfDay();
         tomorrowDate.plusDays( 1 );
         tomorrow = tomorrowDate.toDate();
-        
-        programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, yesterday, yesterday,
-            organisationUnit );
 
-        stageInstanceA = programStageInstanceService.getProgramStageInstance( programInstance, stageA );
-        stageInstanceB = programStageInstanceService.getProgramStageInstance( programInstance, stageB );
+        programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, yesterday,
+            yesterday, organisationUnit );
+
+        stageInstanceA = programStageInstanceService.createProgramStageInstance( programInstance, stageA, yesterday,
+            yesterday, organisationUnit );
+        stageInstanceB = programStageInstanceService.createProgramStageInstance( programInstance, stageB, yesterday,
+            yesterday, organisationUnit );
 
         dataValueA = new TrackedEntityDataValue( stageInstanceA, dataElementA, "A" );
         dataValueB = new TrackedEntityDataValue( stageInstanceA, dataElementB, "B" );
@@ -259,7 +261,8 @@ public class TrackedEntityDataValueServiceTest
         programStageInstances.add( stageInstanceA );
         programStageInstances.add( stageInstanceB );
 
-        Collection<TrackedEntityDataValue> dataValues = dataValueService.getTrackedEntityDataValues( programStageInstances );
+        Collection<TrackedEntityDataValue> dataValues = dataValueService
+            .getTrackedEntityDataValues( programStageInstances );
         assertEquals( 4, dataValues.size() );
         assertTrue( dataValues.contains( dataValueA ) );
         assertTrue( dataValues.contains( dataValueB ) );
@@ -298,8 +301,8 @@ public class TrackedEntityDataValueServiceTest
         dataElements.add( dataElementA );
         dataElements.add( dataElementB );
 
-        Collection<TrackedEntityDataValue> dataValues = dataValueService.getTrackedEntityDataValues( entityInstance, dataElements,
-            yesterday, tomorrow );
+        Collection<TrackedEntityDataValue> dataValues = dataValueService.getTrackedEntityDataValues( entityInstance,
+            dataElements, yesterday, tomorrow );
 
         dataValues = dataValueService.getTrackedEntityDataValues( dataElementB );
         assertEquals( 2, dataValues.size() );

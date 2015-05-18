@@ -54,6 +54,8 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.events.report.EventRow;
+import org.hisp.dhis.dxf2.events.report.EventRows;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
@@ -445,6 +447,41 @@ public abstract class AbstractEventService
         events.setEvents( eventList );
 
         return events;
+    }
+    
+    @Override
+    public EventRows getEventRows( EventSearchParams params )
+    {
+        List<OrganisationUnit> organisationUnits = new ArrayList<>();
+        
+        OrganisationUnit orgUnit = params.getOrgUnit();
+        OrganisationUnitSelectionMode orgUnitSelectionMode = params.getOrgUnitSelectionMode();
+        
+        if ( params.getOrgUnit() != null )
+        {
+            if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( orgUnitSelectionMode ) )
+            {
+                organisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( orgUnit.getUid() ) );
+            }
+            else if ( OrganisationUnitSelectionMode.CHILDREN.equals( orgUnitSelectionMode ) )
+            {
+                organisationUnits.add( orgUnit );
+                organisationUnits.addAll( orgUnit.getChildren() );
+            }
+            else // SELECTED
+            {
+                organisationUnits.add( orgUnit );
+            }
+        }
+
+        EventRows eventRows = new EventRows();        
+        
+        
+        List<EventRow> eventRowList = eventStore.getEventRows( params, organisationUnits );
+
+        eventRows.setEventRows( eventRowList );
+
+        return eventRows;
     }
     
     @Override

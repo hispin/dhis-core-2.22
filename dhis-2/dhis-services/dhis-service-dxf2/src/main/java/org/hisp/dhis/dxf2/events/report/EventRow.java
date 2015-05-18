@@ -35,6 +35,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import org.hisp.dhis.common.BaseLinkableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.dxf2.events.event.DataValue;
 import org.hisp.dhis.dxf2.events.event.Note;
 import org.hisp.dhis.dxf2.events.trackedentity.Attribute;
 
@@ -52,8 +53,6 @@ public class EventRow
 {
     private String trackedEntityInstance;
     
-    private List<Attribute> attributes = new ArrayList<>();
-    
     private String event;
     
     private String program;
@@ -62,17 +61,19 @@ public class EventRow
 
     private String enrollment;
     
-    private String eventOrgUnitName;
+    private String orgUnit;
     
-    private String registrationOrgUnit;
-    
-    private String registrationDate;
+    private String orgUnitName;
     
     private String eventDate;
     
     private String dueDate;
     
     private Boolean followup;
+    
+    private List<Attribute> attributes = new ArrayList<>();    
+    
+    private List<DataValue> dataValues = new ArrayList<>();
     
     private List<Note> notes = new ArrayList<>();
 
@@ -103,6 +104,18 @@ public class EventRow
     {
         this.attributes = attributes;
     }    
+    
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public List<DataValue> getDataValues()
+    {
+        return dataValues;
+    }
+
+    public void setDataValues( List<DataValue> dataValues )
+    {
+        this.dataValues = dataValues;
+    }
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
@@ -154,38 +167,26 @@ public class EventRow
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
-    public String getRegistrationOrgUnit()
+    public String getOrgUnit()
     {
-        return registrationOrgUnit;
+        return orgUnit;
     }
 
-    public void setRegistrationOrgUnit( String registrationOrgUnit )
+    public void setOrgUnit( String orgUnit )
     {
-        this.registrationOrgUnit = registrationOrgUnit;
-    }
-    
-    @JsonProperty
-    @JacksonXmlProperty( isAttribute = true )
-    public String getRegistrationDate()
-    {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate( String registrationDate )
-    {
-        this.registrationDate = registrationDate;
-    }
+        this.orgUnit = orgUnit;
+    }    
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
-    public String getEventOrgUnitName()
+    public String getOrgUnitName()
     {
-        return eventOrgUnitName;
+        return orgUnitName;
     }
 
-    public void setEventOrgUnitName( String eventOrgUnitName )
+    public void setOrgUnitName( String orgUnitName )
     {
-        this.eventOrgUnitName = eventOrgUnitName;
+        this.orgUnitName = orgUnitName;
     }    
 
     @JsonProperty( required = true )
@@ -252,16 +253,15 @@ public class EventRow
             return false;
         if ( attributes != null ? !attributes.equals( eventRow1.attributes ) : eventRow1.attributes != null ) 
             return false;
-        
+        if ( dataValues != null ? !dataValues.equals( eventRow1.dataValues ) : eventRow1.dataValues != null ) 
+            return false;        
         if ( eventDate != null ? !eventDate.equals( eventRow1.eventDate ) : eventRow1.eventDate != null )
             return false;
         if ( dueDate != null ? !dueDate.equals( eventRow1.dueDate ) : eventRow1.dueDate != null )
             return false;
-        if ( eventOrgUnitName != null ? !eventOrgUnitName.equals( eventRow1.eventOrgUnitName ) : eventRow1.eventOrgUnitName != null )
+        if ( orgUnitName != null ? !orgUnitName.equals( eventRow1.orgUnitName ) : eventRow1.orgUnitName != null )
             return false;        
-        if ( registrationOrgUnit != null ? !registrationOrgUnit.equals( eventRow1.registrationOrgUnit ) : eventRow1.registrationOrgUnit != null )
-            return false;
-        if ( registrationDate != null ? !registrationDate.equals( eventRow1.registrationDate ) : eventRow1.registrationDate != null )
+        if ( orgUnit != null ? !orgUnit.equals( eventRow1.orgUnit ) : eventRow1.orgUnit != null )
             return false;
         if ( trackedEntityInstance != null ? !trackedEntityInstance.equals( eventRow1.trackedEntityInstance )
             : eventRow1.trackedEntityInstance != null )
@@ -279,11 +279,11 @@ public class EventRow
     {
         int result = event != null ? event.hashCode() : 0;
         result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
+        result = 31 * result + (dataValues != null ? dataValues.hashCode() : 0);
         result = 31 * result + (program != null ? program.hashCode() : 0);
         result = 31 * result + (programStage != null ? programStage.hashCode() : 0);
-        result = 31 * result + (eventOrgUnitName != null ? eventOrgUnitName.hashCode() : 0);
-        result = 31 * result + (registrationOrgUnit != null ? registrationOrgUnit.hashCode() : 0);
-        result = 31 * result + (registrationDate != null ? registrationDate.hashCode() : 0);
+        result = 31 * result + (orgUnitName != null ? orgUnitName.hashCode() : 0);
+        result = 31 * result + (orgUnit != null ? orgUnit.hashCode() : 0);
         result = 31 * result + (trackedEntityInstance != null ? trackedEntityInstance.hashCode() : 0);
         result = 31 * result + (eventDate != null ? eventDate.hashCode() : 0);
         result = 31 * result + (dueDate != null ? dueDate.hashCode() : 0);
@@ -296,11 +296,11 @@ public class EventRow
         return "Event{" + 
             "event='" + event + '\'' +
             ", attributes=" + attributes +
+            ", dataValues=" + dataValues +
             ", program='" + program + '\'' + 
             ", programStage='" + programStage + '\'' + 
-            ", eventOrgUnitName='" + eventOrgUnitName + '\'' + 
-            ", registrationOrgUnit='" + registrationOrgUnit + '\'' +
-            ", registrationDate='" + registrationDate + '\'' +
+            ", eventOrgUnitName='" + orgUnitName + '\'' + 
+            ", registrationOrgUnit='" + orgUnit + '\'' +
             ", trackedEntityInstance='" + trackedEntityInstance + '\'' + 
             ", eventDate='" + eventDate + '\'' + 
             ", dueDate='" + dueDate + '\'' +            

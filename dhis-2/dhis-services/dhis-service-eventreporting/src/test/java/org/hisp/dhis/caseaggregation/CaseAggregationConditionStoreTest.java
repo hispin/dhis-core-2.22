@@ -248,13 +248,13 @@ public class CaseAggregationConditionStoreTest
 
         DateTime today = DateTime.now();
         today.withTimeAtStartOfDay();
-        ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, today.toDate(),
-            today.toDate(), organisationUnit );
+        ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program,
+            today.toDate(), today.toDate(), organisationUnit );
 
-        ProgramStageInstance stageInstanceA = programStageInstanceService.getProgramStageInstance( programInstance,
-            stageA );
-        ProgramStageInstance stageInstanceB = programStageInstanceService.getProgramStageInstance( programInstance,
-            stageB );
+        ProgramStageInstance stageInstanceA = programStageInstanceService.createProgramStageInstance( programInstance,
+            stageA, today.toDate(), today.toDate(), organisationUnit );
+        ProgramStageInstance stageInstanceB = programStageInstanceService.createProgramStageInstance( programInstance,
+            stageB, today.toDate(), today.toDate(), organisationUnit );
 
         TrackedEntityDataValue dataValueA = new TrackedEntityDataValue( stageInstanceA, dataElementA, "A" );
         TrackedEntityDataValue dataValueB = new TrackedEntityDataValue( stageInstanceA, dataElementB, "B" );

@@ -144,7 +144,7 @@ public class TrackedEntityDataValueStoreTest
         program.setProgramStages( programStages );
         programService.updateProgram( program );
 
-         DateTime yesterDate = DateTime.now();
+        DateTime yesterDate = DateTime.now();
         yesterDate.withTimeAtStartOfDay();
         yesterDate.minusDays( 1 );
         yesterday = yesterDate.toDate();
@@ -153,13 +153,14 @@ public class TrackedEntityDataValueStoreTest
         tomorrowDate.withTimeAtStartOfDay();
         tomorrowDate.plusDays( 1 );
         tomorrow = tomorrowDate.toDate();
-        
 
-        programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, yesterday, yesterday,
-            organisationUnit );
+        programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, yesterday,
+            yesterday, organisationUnit );
 
-        stageInstanceA = programStageInstanceService.getProgramStageInstance( programInstance, stageA );
-        stageInstanceB = programStageInstanceService.getProgramStageInstance( programInstance, stageB );
+        stageInstanceA = programStageInstanceService.createProgramStageInstance( programInstance, stageA, yesterday,
+            yesterday, organisationUnit );
+        stageInstanceB = programStageInstanceService.createProgramStageInstance( programInstance, stageB, yesterday,
+            yesterday, organisationUnit );
 
         dataValueA = new TrackedEntityDataValue( stageInstanceA, dataElementA, "A" );
         dataValueB = new TrackedEntityDataValue( stageInstanceA, dataElementB, "B" );

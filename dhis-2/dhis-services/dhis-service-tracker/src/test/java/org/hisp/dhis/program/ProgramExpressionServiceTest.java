@@ -98,13 +98,12 @@ public class ProgramExpressionServiceTest
     private ProgramStageInstance stageInstance;
 
     private DataElement dataElementA;
-    
-    private DataElement dataElementB;
-    
-    private ProgramStage stageA;
-    
-    private ProgramStage stageB;
 
+    private DataElement dataElementB;
+
+    private ProgramStage stageA;
+
+    private ProgramStage stageB;
 
     @Override
     public void setUpTest()
@@ -138,9 +137,10 @@ public class ProgramExpressionServiceTest
         TrackedEntityInstance entityInstance = createTrackedEntityInstance( 'A', organisationUnit );
         entityInstanceService.addTrackedEntityInstance( entityInstance );
 
-        ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, new Date(),
-            new Date(), organisationUnit );
-        stageInstance = programStageInstanceService.getProgramStageInstance( programInstance, stageA );
+        ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program,
+            new Date(), new Date(), organisationUnit );
+        ProgramStageInstance stageInstance = programStageInstanceService.createProgramStageInstance( programInstance,
+            stageA, new Date(), new Date(), organisationUnit );
 
         TrackedEntityDataValue dataValueA = new TrackedEntityDataValue( stageInstance, dataElementA, "1" );
         TrackedEntityDataValue dataValueB = new TrackedEntityDataValue( stageInstance, dataElementB, "2" );
