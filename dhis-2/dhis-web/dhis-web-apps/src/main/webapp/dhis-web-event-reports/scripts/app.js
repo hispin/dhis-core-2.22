@@ -7415,7 +7415,7 @@ Ext.onReady( function() {
 		caseButton = Ext.create('Ext.button.Button', {
             width: 224,
 			param: 'individual_cases',
-            text: '<b>Individual cases</b><br/>Show case-based event report',
+            text: '<b>Events</b><br/>Show individual event overview',
             style: 'margin-right:1px',
 			listeners: {
 				mouseout: function(cmp) {
