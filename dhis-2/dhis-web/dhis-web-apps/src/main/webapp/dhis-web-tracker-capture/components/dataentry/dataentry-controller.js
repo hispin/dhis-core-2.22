@@ -84,6 +84,11 @@ trackerCapture.controller('DataEntryController',
                     $scope.stagesById[stage.id] = stage;
                     $scope.eventsByStage[stage.id] = [];
                 });
+                
+                $scope.programStages = orderByFilter($scope.programStages, '-sortOrder').reverse();
+                if(!$scope.currentStage){
+                    $scope.currentStage = $scope.programStages[0];
+                }
                 $scope.getEvents();                
             });
         }
@@ -123,15 +128,15 @@ trackerCapture.controller('DataEntryController',
                         $scope.eventsByStage[dhis2Event.programStage].push(dhis2Event);
 
                         if($scope.currentStage && $scope.currentStage.id === dhis2Event.programStage){
-                            $scope.currentEvent = dhis2Event;                                
-                            $scope.showDataEntry($scope.currentEvent, true);
+                            $scope.currentEvent = dhis2Event; 
                         }
                     }
                 }
             });
-        }
-        
-        sortEventsByStage(null);                  
+            
+            sortEventsByStage(null);
+            $scope.showDataEntry($scope.currentEvent, true);            
+        }                          
     };
     
     var setEventEditing = function(dhis2Event, stage){
@@ -255,7 +260,10 @@ trackerCapture.controller('DataEntryController',
         $scope.customForm = CustomFormService.getForProgramStage($scope.currentStage, $scope.prStDes);
         $scope.displayCustomForm = $scope.customForm ? true:false;        
 
-        $scope.currentEventOriginal = angular.copy($scope.currentEvent);        
+        $scope.currentEventOriginal = angular.copy($scope.currentEvent); 
+        
+        var period = {event: $scope.currentEvent.event, stage: $scope.currentEvent.programStage, name: $scope.currentEvent.sortingDate};
+        $scope.currentPeriod[$scope.currentEvent.programStage] = period;
     };
     
     var processEvent = function(event, stage){

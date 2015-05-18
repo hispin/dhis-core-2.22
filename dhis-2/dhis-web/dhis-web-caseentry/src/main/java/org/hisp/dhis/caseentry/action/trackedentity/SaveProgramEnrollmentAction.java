@@ -41,7 +41,9 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageInstance;
+import org.hisp.dhis.program.ProgramStageInstanceService;
 import org.hisp.dhis.program.comparator.ProgramStageInstanceVisitDateComparator;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
@@ -79,7 +81,14 @@ public class SaveProgramEnrollmentAction
     {
         this.programInstanceService = programInstanceService;
     }
-    
+
+    private ProgramStageInstanceService programStageInstanceService;
+
+    public void setProgramStageInstanceService( ProgramStageInstanceService programStageInstanceService )
+    {
+        this.programStageInstanceService = programStageInstanceService;
+    }
+
     private SelectionTreeManager selectionTreeManager;
 
     public void setSelectionTreeManager( SelectionTreeManager selectionTreeManager )
@@ -162,15 +171,13 @@ public class SaveProgramEnrollmentAction
             return INPUT;
         }
 
-       
-
         Date enrollment = (enrollmentDate == null || enrollmentDate.isEmpty()) ? null : format
             .parseDate( enrollmentDate );
 
         Date incident = (dateOfIncident == null || dateOfIncident.isEmpty()) ? null : format.parseDate( dateOfIncident );
 
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( entityInstance, program,
-            ProgramInstance.STATUS_ACTIVE );
+        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( entityInstance,
+            program, ProgramInstance.STATUS_ACTIVE );
 
         if ( programInstances.iterator().hasNext() )
         {
@@ -184,8 +191,22 @@ public class SaveProgramEnrollmentAction
         if ( programInstance == null )
         {
             OrganisationUnit orgunit = selectionTreeManager.getReloadedSelectedOrganisationUnit();
-            
-            programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, enrollment, incident, orgunit );
+
+            programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program, enrollment,
+                incident, orgunit );
+
+            // ---------------------------------------------------------------------
+            // Generate events for program instance
+            // ---------------------------------------------------------------------
+
+            for ( ProgramStage programStage : program.getProgramStages() )
+            {
+                if ( programStage.getAutoGenerateEvent() )
+                {
+                    programStageInstanceService.createProgramStageInstance( programInstance, programStage, enrollment,
+                        incident, orgunit );
+                }
+            }
         }
 
         // ---------------------------------------------------------------------
@@ -204,8 +225,7 @@ public class SaveProgramEnrollmentAction
         // Get the active event of program-instance
         // ---------------------------------------------------------------------
 
-        List<ProgramStageInstance> programStageInstances = new ArrayList<>(
-            programInstance.getProgramStageInstances() );
+        List<ProgramStageInstance> programStageInstances = new ArrayList<>( programInstance.getProgramStageInstances() );
         Collections.sort( programStageInstances, new ProgramStageInstanceVisitDateComparator() );
 
         activeProgramStageInstance = programInstance.getActiveProgramStageInstance();

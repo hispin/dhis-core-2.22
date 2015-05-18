@@ -28,15 +28,10 @@ package org.hisp.dhis.dxf2.events.report;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.dxf2.events.event.Event;
 import org.hisp.dhis.dxf2.events.event.EventSearchParams;
 import org.hisp.dhis.dxf2.events.event.EventService;
-import org.hisp.dhis.dxf2.events.event.Events;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -62,7 +57,7 @@ public class AbstractEventRowService
     @Override
     public EventRows getEventRows( EventSearchParams params )
     {
-        List<EventRow> eventRowList = new ArrayList<EventRow>();
+        /*List<EventRow> eventRowList = new ArrayList<EventRow>();
         EventRows eventRows = new EventRows();
         
         Events events = eventService.getEvents( params );
@@ -88,8 +83,10 @@ public class AbstractEventRowService
             }
         }
 
-        eventRows.setEventRows( eventRowList );
-
+        eventRows.setEventRows( eventRowList );*/
+       
+        EventRows eventRows = eventService.getEventRows( params );
+        
         return eventRows;
     }
 }

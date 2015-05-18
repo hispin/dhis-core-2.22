@@ -135,8 +135,8 @@ public class EnrollmentServiceTest
     @Test
     public void testGetEnrollments()
     {
-        programInstanceService.enrollTrackedEntityInstance( maleA, programA, null, null, organisationUnitA );
-        programInstanceService.enrollTrackedEntityInstance( femaleA, programA, null, null, organisationUnitA );
+        programInstanceService.enrollTrackedEntityInstance( maleA, programA, new Date(), new Date(), organisationUnitA );
+        programInstanceService.enrollTrackedEntityInstance( femaleA, programA, new Date(), new Date(), organisationUnitA );
 
         assertEquals( 2, enrollmentService.getEnrollments().getEnrollments().size() );
     }
@@ -144,8 +144,8 @@ public class EnrollmentServiceTest
     @Test
     public void testGetEnrollmentsByPatient()
     {
-        programInstanceService.enrollTrackedEntityInstance( maleA, programA, null, null, organisationUnitA );
-        programInstanceService.enrollTrackedEntityInstance( femaleA, programA, null, null, organisationUnitA );
+        programInstanceService.enrollTrackedEntityInstance( maleA, programA, new Date(), new Date(), organisationUnitA );
+        programInstanceService.enrollTrackedEntityInstance( femaleA, programA, new Date(), new Date(), organisationUnitA );
 
         assertEquals( 1, enrollmentService.getEnrollments( maleA ).getEnrollments().size() );
         assertEquals( 1, enrollmentService.getEnrollments( femaleA ).getEnrollments().size() );
@@ -155,8 +155,8 @@ public class EnrollmentServiceTest
     public void testGetEnrollmentsByPerson()
     {
 
-        programInstanceService.enrollTrackedEntityInstance( maleA, programA, null, null, organisationUnitA );
-        programInstanceService.enrollTrackedEntityInstance( femaleA, programA, null, null, organisationUnitA );
+        programInstanceService.enrollTrackedEntityInstance( maleA, programA, new Date(), new Date(), organisationUnitA );
+        programInstanceService.enrollTrackedEntityInstance( femaleA, programA, new Date(), new Date(), organisationUnitA );
 
         TrackedEntityInstance male = trackedEntityInstanceService.getTrackedEntityInstance( maleA );
         TrackedEntityInstance female = trackedEntityInstanceService.getTrackedEntityInstance( femaleA );
@@ -168,8 +168,8 @@ public class EnrollmentServiceTest
     @Test
     public void testGetEnrollmentsByStatus()
     {
-        ProgramInstance piMale = programInstanceService.enrollTrackedEntityInstance( maleA, programA, null, null, organisationUnitA );
-        ProgramInstance piFemale = programInstanceService.enrollTrackedEntityInstance( femaleA, programA, null, null, organisationUnitA );
+        ProgramInstance piMale = programInstanceService.enrollTrackedEntityInstance( maleA, programA, new Date(), new Date(), organisationUnitA );
+        ProgramInstance piFemale = programInstanceService.enrollTrackedEntityInstance( femaleA, programA, new Date(), new Date(), organisationUnitA );
 
         assertEquals( 2, enrollmentService.getEnrollments( EnrollmentStatus.ACTIVE ).getEnrollments().size() );
         assertEquals( 0, enrollmentService.getEnrollments( EnrollmentStatus.CANCELLED ).getEnrollments().size() );

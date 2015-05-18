@@ -515,7 +515,8 @@
 		scope="prototype">
 		<property name="entityInstanceService" ref="org.hisp.dhis.trackedentity.TrackedEntityInstanceService" />
 		<property name="programService" ref="org.hisp.dhis.program.ProgramService" />
-		<property name="programInstanceService" ref="org.hisp.dhis.program.ProgramInstanceService" /> 
+		<property name="programInstanceService" ref="org.hisp.dhis.program.ProgramInstanceService" />
+		<property name="programStageInstanceService" ref="org.hisp.dhis.program.ProgramStageInstanceService" /> 
 		<property name="selectionTreeManager" ref="org.hisp.dhis.oust.manager.SelectionTreeManager" />
 	</bean>
 

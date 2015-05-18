@@ -86,6 +86,7 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
+import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.programrule.ProgramRule;
 import org.hisp.dhis.programrule.ProgramRuleAction;
@@ -1262,6 +1263,12 @@ public abstract class DhisConvenienceTest
         entityInstance.setOrganisationUnit( organisationUnit );
 
         return entityInstance;
+    }
+    
+    public static ProgramStageInstance createProgramStageInstance()
+    {
+        ProgramStageInstance programStageInstance = new ProgramStageInstance();
+        return programStageInstance;
     }
 
     public static TrackedEntityInstance createTrackedEntityInstance( char uniqueChar, OrganisationUnit organisationUnit,

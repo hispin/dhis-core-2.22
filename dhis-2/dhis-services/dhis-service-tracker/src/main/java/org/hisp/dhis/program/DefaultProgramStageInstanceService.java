@@ -49,6 +49,7 @@ import org.hisp.dhis.sms.SmsSender;
 import org.hisp.dhis.sms.SmsServiceException;
 import org.hisp.dhis.sms.outbound.OutboundSms;
 import org.hisp.dhis.system.grid.ListGrid;
+import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
@@ -143,7 +144,7 @@ public class DefaultProgramStageInstanceService
     {
         return programStageInstanceStore.get( programInstance, programStage );
     }
-    
+
     @Override
     public void updateProgramStageInstance( ProgramStageInstance programStageInstance )
     {
@@ -227,8 +228,8 @@ public class DefaultProgramStageInstanceService
         double percent = 0.0;
         if ( totalCompleted != 0 )
         {
-           int stageCompleted =  programStageInstanceStore.averageNumberCompleted( program, orgunitIds, startDate, endDate,
-                ProgramInstance.STATUS_ACTIVE );
+            int stageCompleted = programStageInstanceStore.averageNumberCompleted( program, orgunitIds, startDate,
+                endDate, ProgramInstance.STATUS_ACTIVE );
             percent = (stageCompleted + 0.0) / totalCompleted;
         }
         grid.addValue( MathUtils.getRounded( percent ) ).addEmptyValues( 6 );
@@ -361,7 +362,7 @@ public class DefaultProgramStageInstanceService
         // ---------------------------------------------------------------------
 
         updateProgramStageInstance( programStageInstance );
-        
+
         // ---------------------------------------------------------------------
         // Check Completed status for all of ProgramStageInstance of
         // ProgramInstance
@@ -459,6 +460,46 @@ public class DefaultProgramStageInstanceService
         return programStageInstance;
     }
 
+    public ProgramStageInstance createProgramStageInstance( ProgramInstance programInstance, ProgramStage programStage,
+        Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit )
+    {
+        ProgramStageInstance programStageInstance = null;
+        Date currentDate = new Date();
+        Date dateCreatedEvent;
+
+        if ( programStage.getGeneratedByEnrollmentDate() )
+        {
+            dateCreatedEvent = enrollmentDate;
+        }
+        else
+        {
+            dateCreatedEvent = dateOfIncident;
+        }
+
+        Date dueDate = DateUtils.getDateAfterAddition( dateCreatedEvent, programStage.getMinDaysFromStart() );
+
+        if ( !programInstance.getProgram().getIgnoreOverdueEvents() || dueDate.before( currentDate ) )
+        {
+            programStageInstance = new ProgramStageInstance();
+            programStageInstance.setProgramInstance( programInstance );
+            programStageInstance.setProgramStage( programStage );
+            programStageInstance.setOrganisationUnit( organisationUnit );
+            programStageInstance.setDueDate( dueDate );
+            programStageInstance.setStatus( EventStatus.SCHEDULE );
+
+            if ( programStage.getOpenAfterEnrollment() || programInstance.getProgram().isSingleEvent()
+                || programStage.getPeriodType() != null )
+            {
+                programStageInstance.setExecutionDate( dueDate );
+                programStageInstance.setStatus( EventStatus.ACTIVE );
+            }
+
+            addProgramStageInstance( programStageInstance );
+        }
+
+        return programStageInstance;
+    }
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
@@ -488,15 +529,14 @@ public class DefaultProgramStageInstanceService
 
         return outboundSms;
     }
-    
+
     private Collection<OutboundSms> sendMessages( ProgramStageInstance programStageInstance, int status,
         I18nFormat format )
     {
         TrackedEntityInstance entityInstance = programStageInstance.getProgramInstance().getEntityInstance();
         Collection<OutboundSms> outboundSmsList = new HashSet<>();
 
-        Collection<TrackedEntityInstanceReminder> reminders = programStageInstance.getProgramStage()
-            .getReminders();
+        Collection<TrackedEntityInstanceReminder> reminders = programStageInstance.getProgramStage().getReminders();
         for ( TrackedEntityInstanceReminder rm : reminders )
         {
             if ( rm != null
@@ -516,28 +556,27 @@ public class DefaultProgramStageInstanceService
     }
 
     private Collection<MessageConversation> sendMessageConversations( ProgramStageInstance programStageInstance,
-         int status, I18nFormat format )
-     {
-         Collection<MessageConversation> messageConversations = new HashSet<>();
+        int status, I18nFormat format )
+    {
+        Collection<MessageConversation> messageConversations = new HashSet<>();
 
-         Collection<TrackedEntityInstanceReminder> reminders = programStageInstance.getProgramStage()
-             .getReminders();
-         for ( TrackedEntityInstanceReminder rm : reminders )
-         {
-             if ( rm != null
-                 && rm.getWhenToSend() != null
-                 && rm.getWhenToSend() == status
-                 && (rm.getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_DHIS_MESSAGE || rm
-                     .getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH) )
-             {
-                 int id = messageService.sendMessage( programStageInstance.getProgramStage().getDisplayName(),
-                     reminderService.getMessageFromTemplate( rm, programStageInstance, format ), null,
-                     reminderService.getUsers( rm, programStageInstance.getProgramInstance().getEntityInstance() ),
-                     null, false, true );
-                 messageConversations.add( messageService.getMessageConversation( id ) );
-             }
-         }
+        Collection<TrackedEntityInstanceReminder> reminders = programStageInstance.getProgramStage().getReminders();
+        for ( TrackedEntityInstanceReminder rm : reminders )
+        {
+            if ( rm != null
+                && rm.getWhenToSend() != null
+                && rm.getWhenToSend() == status
+                && (rm.getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_DHIS_MESSAGE || rm
+                    .getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH) )
+            {
+                int id = messageService.sendMessage( programStageInstance.getProgramStage().getDisplayName(),
+                    reminderService.getMessageFromTemplate( rm, programStageInstance, format ), null,
+                    reminderService.getUsers( rm, programStageInstance.getProgramInstance().getEntityInstance() ),
+                    null, false, true );
+                messageConversations.add( messageService.getMessageConversation( id ) );
+            }
+        }
 
-         return messageConversations;
-     }
+        return messageConversations;
+    }
 }

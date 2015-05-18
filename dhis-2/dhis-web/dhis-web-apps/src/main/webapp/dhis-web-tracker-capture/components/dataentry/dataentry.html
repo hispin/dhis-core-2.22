@@ -45,7 +45,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td ng-repeat="stage in programStages| orderBy:'sortOrder':reverse">
+                        <td ng-repeat="stage in programStages">
                             <div class="inline-block" ng-repeat="dhis2Event in eventsByStage[stage.id]">
                                 <div class="event-container" 
                                      ng-class="getEventStyle(dhis2Event)" 
@@ -76,7 +76,8 @@
             <div ng-if="currentEvent">
 
                 <!-- event dates/scheduling begin -->
-                <div class="row" ng-if="!currentStage.periodType">
+                <!--<div class="row" ng-if="!currentStage.periodType">-->
+                <div class="row">
                     <div class="col-md-6">
                         {{currentEvent.reportDateDescription}}
                         <input type="text"
