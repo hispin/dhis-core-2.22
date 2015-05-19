@@ -56,35 +56,7 @@ public class AbstractEventRowService
 
     @Override
     public EventRows getEventRows( EventSearchParams params )
-    {
-        /*List<EventRow> eventRowList = new ArrayList<EventRow>();
-        EventRows eventRows = new EventRows();
-        
-        Events events = eventService.getEvents( params );
-
-        for ( Event event : events.getEvents() )
-        {
-            if ( event.getTrackedEntityInstance() != null )
-            {
-                TrackedEntityInstance tei = trackedEntityInstanceService.getTrackedEntityInstance( event.getTrackedEntityInstance() );
-                
-                EventRow eventRow = new EventRow();
-                eventRow.setTrackedEntityInstance( event.getTrackedEntityInstance() );
-                eventRow.setAttributes( tei.getAttributes() );
-                eventRow.setEvent( event.getEvent() );
-                eventRow.setProgram( params.getProgram().getUid() );
-                eventRow.setProgramStage( event.getProgramStage() );                
-                eventRow.setRegistrationOrgUnit( tei.getOrgUnit() );
-                eventRow.setRegistrationDate( tei.getCreated() );
-                eventRow.setEventOrgUnitName( event.getOrgUnitName() );
-                eventRow.setDueDate( event.getDueDate() );
-                eventRow.setFollowup( event.getFollowup() );
-                eventRowList.add( eventRow );
-            }
-        }
-
-        eventRows.setEventRows( eventRowList );*/
-       
+    {               
         EventRows eventRows = eventService.getEventRows( params );
         
         return eventRows;
