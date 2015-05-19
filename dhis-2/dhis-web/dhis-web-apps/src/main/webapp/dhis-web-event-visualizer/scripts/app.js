@@ -656,31 +656,55 @@ Ext.onReady( function() {
             }
         });
 
-        Ext.define('Ext.ux.panel.DataElementBooleanContainer', {
+		Ext.define('Ext.ux.panel.DataElementBooleanContainer', {
 			extend: 'Ext.container.Container',
 			alias: 'widget.dataelementbooleanpanel',
 			layout: 'column',
             bodyStyle: 'border:0 none',
             style: 'margin: ' + margin,
             getRecord: function() {
-                var record = {};
+                var items = this.valueCmp.getValue(),
+					record = {
+                        dimension: this.dataElement.id,
+                        name: this.dataElement.name
+                    };
 
-                record.dimension = this.dataElement.id;
-                record.name = this.dataElement.name;
+                // array or object
+                for (var i = 0; i < items.length; i++) {
+                    if (Ext.isObject(items[i])) {
+                        items[i] = items[i].code;
+                    }
+                }
 
-                if (this.valueCmp.getValue()) {
-					record.filter = 'EQ:' + this.valueCmp.getValue();
-				}
+                if (items.length) {
+                    record.filter = 'IN:' + items.join(';');
+                }
 
-				return record;
+                return record;
             },
             setRecord: function(record) {
-				if (record.filter) {
-					this.valueCmp.setValue(record.filter.split(':')[1]);
+				if (Ext.isString(record.filter) && record.filter.length) {
+					var a = record.filter.split(':');
+					this.valueCmp.setOptionValues(a[1].split(';'));
+				}
+            },
+            getRecordsByCode: function(options, codeArray) {
+                var records = [];
+
+                for (var i = 0; i < options.length; i++) {
+                    for (var j = 0; j < codeArray.length; j++) {
+                        if (options[i].code === codeArray[j]) {
+                            records.push(options[i]);
+                        }
+                    }
                 }
+
+                return records;
             },
             initComponent: function() {
-                var container = this;
+                var container = this,
+                    idProperty = 'id',
+                    nameProperty = 'name';
 
                 this.nameCmp = Ext.create('Ext.form.Label', {
                     text: this.dataElement.name,
@@ -708,20 +732,143 @@ Ext.onReady( function() {
                     }
                 });
 
-                this.valueCmp = Ext.create('Ext.form.field.ComboBox', {
+                this.operatorCmp = Ext.create('Ext.form.field.ComboBox', {
                     valueField: 'id',
                     displayField: 'name',
                     queryMode: 'local',
                     editable: false,
-                    width: nameCmpWidth,
                     style: 'margin-bottom:0',
-                    value: 'true',
+                    width: operatorCmpWidth,
+                    value: 'IN',
                     store: {
                         fields: ['id', 'name'],
                         data: [
-                            {id: 'true', name: EV.i18n.yes},
-                            {id: 'false', name: EV.i18n.no}
+                            {id: 'IN', name: 'One of'}
                         ]
+                    }
+                });
+
+                this.getData = function(idArray) {
+                    var data = [], yes = {}, no = {};
+
+                    yes[idProperty] = 'true';
+                    yes[nameProperty] = NS.i18n.yes;
+                    no[idProperty] = 'false';
+                    no[nameProperty] = NS.i18n.no;
+
+                    for (var i = 0; i < idArray.length; i++) {
+                        if (idArray[i] === 'true' || idArray[i] === true) {
+                            data.push(yes);
+                        }
+                        else if (idArray[i] === 'false' || idArray[i] === false) {
+                            data.push(no);
+                        }
+                    }
+
+                    return data;
+                };
+
+                this.searchStore = Ext.create('Ext.data.Store', {
+					fields: [idProperty, nameProperty],
+					data: container.getData(['true', 'false'])
+				});
+
+                // function
+                this.filterSearchStore = function(isLayout) {
+                    var selected = container.valueCmp.getValue();
+
+                    // hack, using internal method to activate dropdown before filtering
+                    if (isLayout) {
+                        container.searchCmp.onTriggerClick();
+                        container.searchCmp.collapse();
+                    }
+
+                    // filter
+                    container.searchStore.clearFilter();
+
+                    container.searchStore.filterBy(function(record) {
+                        return !Ext.Array.contains(selected, record.data[idProperty]);
+                    });
+                };
+
+                this.searchCmp = Ext.create('Ext.form.field.ComboBox', {
+                    multiSelect: true,
+                    width: operatorCmpWidth,
+                    style: 'margin-bottom:0',
+                    emptyText: 'Select..',
+                    valueField: idProperty,
+                    displayField: nameProperty,
+                    queryMode: 'local',
+                    listConfig: {
+                        minWidth: nameCmpWidth - operatorCmpWidth
+                    },
+                    store: this.searchStore,
+                    listeners: {
+						select: function() {
+                            var id = Ext.Array.from(this.getValue())[0];
+
+                            // value
+                            if (container.valueStore.findExact(idProperty, id) === -1) {
+                                container.valueStore.add(container.searchStore.getAt(container.searchStore.findExact(idProperty, id)).data);
+                            }
+
+                            // search
+                            this.select([]);
+
+                            // filter
+                            container.filterSearchStore();
+						},
+                        expand: function() {
+                            container.filterSearchStore();
+                        }
+					}
+                });
+
+                this.valueStore = Ext.create('Ext.data.Store', {
+					fields: [idProperty, nameProperty],
+                    listeners: {
+                        add: function() {
+                            container.valueCmp.select(this.getRange());
+                        },
+                        remove: function() {
+                            container.valueCmp.select(this.getRange());
+                        }
+                    }
+                });
+
+                this.valueCmp = Ext.create('Ext.form.field.ComboBox', {
+                    multiSelect: true,
+                    style: 'margin-bottom:0',
+					width: nameCmpWidth - operatorCmpWidth - operatorCmpWidth,
+                    valueField: idProperty,
+                    displayField: nameProperty,
+                    emptyText: 'No selected items',
+                    editable: false,
+                    hideTrigger: true,
+                    store: container.valueStore,
+                    queryMode: 'local',
+                    listConfig: {
+                        minWidth: 266,
+                        cls: 'ns-optionselector'
+                    },
+                    setOptionValues: function(codeArray) {
+                        container.valueStore.removeAll();
+                        container.valueStore.loadData(container.getData(codeArray));
+
+                        this.setValue(codeArray);
+                        container.filterSearchStore(true);
+                        container.searchCmp.blur();
+                    },
+					listeners: {
+                        change: function(cmp, newVal, oldVal) {
+                            newVal = Ext.Array.from(newVal);
+                            oldVal = Ext.Array.from(oldVal);
+
+                            if (newVal.length < oldVal.length) {
+                                var id = Ext.Array.difference(oldVal, newVal)[0];
+                                container.valueStore.removeAt(container.valueStore.findExact(idProperty, id));
+                            }
+                        }
                     }
                 });
 
@@ -736,6 +883,8 @@ Ext.onReady( function() {
                             this.removeCmp
                         ]
                     },
+                    this.operatorCmp,
+                    this.searchCmp,
                     this.valueCmp
                 ];
 
