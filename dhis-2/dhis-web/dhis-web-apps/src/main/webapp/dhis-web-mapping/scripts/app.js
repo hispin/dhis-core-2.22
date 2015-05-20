@@ -2814,7 +2814,7 @@ Ext.onReady( function() {
 					id ? updateButton : createButton
 				],
 				listeners: {
-					show: function() {
+					show: function(w) {
 						this.setPosition(favoriteWindow.x + 14, favoriteWindow.y + 67);
 
                         if (!w.hasDestroyOnBlurHandler) {
