@@ -92,15 +92,30 @@ function removeProgram( context ) {
 }
 
 function relationshipTypeOnchange() {
-  clearListById('relationshipSide');
+  
+  clearListById('relationshipFromA');
+  var relationshipSide = jQuery("#relationshipFromA");
   var relationshipType = jQuery('#relationshipTypeId option:selected');
   if( relationshipType.val() != "" ) {
+  
+	enable('relationshipFromA');
+	enable('relatedProgramId');
+	enable('relationshipText');
+	
     var aIsToB = relationshipType.attr('aIsToB');
     var bIsToA = relationshipType.attr('bIsToA');
 
-    var relationshipSide = jQuery("#relationshipFromA");
     relationshipSide.append('<option value="false">' + aIsToB + '</option>');
     relationshipSide.append('<option value="true">' + bIsToA + '</option>');
+  }
+  else
+  {
+	clearListById('relationshipFromA'); 
+	jQuery('#relatedProgramId').val(""); 
+	
+	disable('relationshipFromA');
+	disable('relatedProgramId');
+	disable('relationshipText');
   }
 }
 

@@ -274,20 +274,23 @@ public class AddProgramAction
             program.setIgnoreOverdueEvents( false );
         }
 
-        if ( relatedProgramId != null )
-        {
-            Program relatedProgram = programService.getProgram( relatedProgramId );
-            program.setRelatedProgram( relatedProgram );
-        }
-
         if ( relationshipTypeId != null )
         {
             RelationshipType relationshipType = relationshipTypeService.getRelationshipType( relationshipTypeId );
             program.setRelationshipType( relationshipType );
+            program.setRelationshipFromA( relationshipFromA );
+            program.setRelationshipText( relationshipText ); 
+            
+            Program relatedProgram = programService.getProgram( relatedProgramId );
+            program.setRelatedProgram( relatedProgram );
         }
-
-        program.setRelationshipFromA( relationshipFromA );
-        program.setRelationshipText( relationshipText );
+        else
+        {
+            program.setRelationshipType( null );
+            program.setRelationshipFromA( null );
+            program.setRelationshipText( null );
+            program.setRelatedProgram( null );
+        }
 
         if ( trackedEntityId != null )
         {
