@@ -2,13 +2,14 @@
 	jQuery( document ).ready( function()
 	{
 		validation2( 'updateProgramForm', function( form )
-		{
+		{	
 			enable('dateOfEnrollmentDescription');
 			enable('dateOfIncidentDescription');
 			form.submit();
 		},{
 			'beforeValidateHandler' : function()
 			{
+		
 				#tblDynamicAttributesJavascript()
 
 				var selectedPropertyIds = jQuery( "#selectedPropertyIds" );
@@ -51,6 +52,7 @@
 				else{
 					compulsaryIdentifier.append( "<option value='0' selected='true'></option>");
 				}
+				
 			},
 			'rules' : getValidationRules( "program" )
 		});
@@ -177,11 +179,6 @@
 		</tr>
 		
 		<tr name='nonAnonymous'>
-			<td><label for="relationshipText">$i18n.getString("shortcut_link_label_eg_add_child")</label></td>
-			<td><input type='text' id='relationshipText' name='relationshipText' value='$!program.relationshipText' ></td>
-		</tr>
-		
-		<tr name='nonAnonymous'>
 			<td><label for="relationshipTypeId">$i18n.getString("relationship_description")</label></td>
 			<td>
 				<select type='text' id='relationshipTypeId' name='relationshipTypeId' onchange='relationshipTypeOnchange()' >
@@ -194,21 +191,26 @@
 		</tr>
 		
 		<tr name='nonAnonymous'>
+			<td><label for="relationshipText">$i18n.getString("shortcut_link_label_eg_add_child") <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+			<td><input type='text' id='relationshipText' name='relationshipText' value='$!program.relationshipText' #if($program.relationshipType) #else disabled #end class="{validate:{required:true}}" ></td>
+		</tr>
+		
+		<tr name='nonAnonymous'>
 			<td><label for="relationshipFromA">$i18n.getString("who_is_the_new_relative_to_the_existing_tracked_entity_instance")</label></td>
 			<td>
-				<select id='relationshipFromA' name='relationshipFromA'>
+				<select id='relationshipFromA' name='relationshipFromA' #if($program.relationshipType) #else disabled #end>
 					#if($!program.relationshipType)
-						<option value='false' #if($!program.relationshipFromA=='true') selected #end>$!program.relationshipType.aIsToB</option>
-						<option value='true' #if($!program.relationshipFromA=='false') selected #end>$!program.relationshipType.bIsToA</option>
+						<option value='false' #if($!program.relationshipFromA=='false') selected #end>$!program.relationshipType.aIsToB</option>
+						<option value='true' #if($!program.relationshipFromA=='true') selected #end>$!program.relationshipType.bIsToA</option>
 					#end
 				</select>
 			</td>
 		</tr>
 		
 		<tr name='nonAnonymous'>
-			<td><label for="relatedProgramId">$i18n.getString("program_for_new_relative_to_be_enrolled_in")</label></td>
+			<td><label for="relatedProgramId">$i18n.getString("program_for_new_relative_to_be_enrolled_in") <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 			<td>
-				<select type='text' id='relatedProgramId' name='relatedProgramId' >
+				<select type='text' id='relatedProgramId' name='relatedProgramId' class="{validate:{required:true}}" #if($program.relationshipType) #else disabled #end >
 					<option value=''>[$i18n.getString("please_select")]</option>
 					#set( $relatedProgram = $program.relatedProgram)
 					#foreach($program in $programs)
