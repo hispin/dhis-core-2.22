@@ -28,6 +28,7 @@ package org.hisp.dhis.dataadmin.action.constant;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
 
@@ -69,6 +70,27 @@ public class UpdateConstantAction
         this.name = name;
     }
 
+    private String shortName;
+
+    public void setShortName( String shortName )
+    {
+        this.shortName = shortName;
+    }
+
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+
+    private String description;
+
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
+    
     private String value;
 
     public void setValue( String value )
@@ -86,6 +108,9 @@ public class UpdateConstantAction
         Constant constant = constantService.getConstant( id );
 
         constant.setName( name );
+        constant.setShortName( StringUtils.trimToNull( shortName ) );
+        constant.setCode( StringUtils.trimToNull( code ) );
+        constant.setDescription( StringUtils.trimToNull( description ) );
         constant.setValue( Double.parseDouble( value ) );
 
         constantService.updateConstant( constant );
