@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.hisp.dhis.common.GenericNameableObjectStore;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -47,9 +47,9 @@ public class DefaultConstantService
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private GenericIdentifiableObjectStore<Constant> constantStore;
+    private GenericNameableObjectStore<Constant> constantStore;
 
-    public void setConstantStore( GenericIdentifiableObjectStore<Constant> constantStore )
+    public void setConstantStore( GenericNameableObjectStore<Constant> constantStore )
     {
         this.constantStore = constantStore;
     }
@@ -94,6 +94,20 @@ public class DefaultConstantService
         return constantStore.getByName( constantName );
     }
 
+
+    @Override
+    public Constant getConstantByShortName( String shortName )
+    {
+        return constantStore.getByShortName( shortName );
+    }
+
+    @Override
+    public Constant getConstantByCode( String code )
+    {
+        return constantStore.getByCode( code );
+    }
+
+    
     @Override
     public Collection<Constant> getAllConstants()
     {

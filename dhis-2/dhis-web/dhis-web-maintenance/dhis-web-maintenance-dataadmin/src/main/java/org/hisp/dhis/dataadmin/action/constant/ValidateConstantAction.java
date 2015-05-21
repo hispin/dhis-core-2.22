@@ -30,6 +30,7 @@ package org.hisp.dhis.dataadmin.action.constant;
 
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
+import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.i18n.I18n;
 
 import com.opensymphony.xwork2.Action;
@@ -81,6 +82,20 @@ public class ValidateConstantAction
         this.name = name;
     }
 
+    private String shortName;
+
+    public void setShortName( String shortName )
+    {
+        this.shortName = shortName;
+    }
+
+    private String code;
+
+    public void setCode( String code )
+    {
+        this.code = code;
+    }
+
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -106,6 +121,30 @@ public class ValidateConstantAction
             if ( match != null && (id == null || match.getId() != id) )
             {
                 message = i18n.getString( "name_in_use" );
+
+                return ERROR;
+            }
+        }
+        
+        if ( shortName != null )
+        {
+            Constant match = constantService.getConstantByShortName( shortName );
+
+            if ( match != null && (id == null || match.getId() != id) )
+            {
+                message = i18n.getString( "short_name_in_use" );
+
+                return ERROR;
+            }
+        }
+        
+        if ( code != null && !code.trim().isEmpty() )
+        {
+            Constant match = constantService.getConstantByCode( code );
+
+            if ( match != null && (id == null || match.getId() != id) )
+            {
+                message = i18n.getString( "code_in_use" );
 
                 return ERROR;
             }
