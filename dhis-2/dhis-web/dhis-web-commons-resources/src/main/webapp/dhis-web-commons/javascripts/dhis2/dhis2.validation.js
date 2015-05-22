@@ -104,7 +104,7 @@ dhis2.validation.isNegativeNumber = function(value) {
  */
 dhis2.validation.isPercentage = function(value) {
   return dhis2.validation.isInt(value) && parseInt(value) >= 0 && parseInt(value) <= 100;
-}
+};
 
 /**
  * Returns true if the provided string argument is to be considered a unit

@@ -3190,7 +3190,11 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       });      
 
       typeaheadCtrl.getMatchesAsync = function(inputValue) {
-
+      	        
+        if(inputValue === '' && modelCtrl.$dirty && modelCtrl.$invalid){
+            modelCtrl.$setValidity('required', false);
+        }
+        
         var locals = {$viewValue: inputValue};
         isLoadingSetter(originalScope, true);
         $q.when(parserResult.source(scope, locals)).then(function(matches) {
@@ -3261,13 +3265,12 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         } else {
           /*modelCtrl.$setValidity('editable', false);
           return undefined;*/         
-          if(inputValue){ //make sure empty values - though not part of the drop down - are accepted
-          	
+          if(inputValue){ //make sure empty values - though not part of the drop down - are accepted          	
           	if(isRequired){
-          		modelCtrl.$setValidity('editable', false);
+                    modelCtrl.$setValidity('optionValidator', false);
           	}
           	else{
-          		modelCtrl.$setValidity('editable', true);
+                    modelCtrl.$setValidity('optionValidator', true);
           	}
             //modelCtrl.$setValidity('editable', false);            
             return undefined;
@@ -3276,7 +3279,6 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       });
       
       modelCtrl.$formatters.push(function (modelValue) {
-
         var candidateViewValue, emptyViewValue;
         var locals = {};
 
@@ -3297,7 +3299,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
           return candidateViewValue!== emptyViewValue ? candidateViewValue : modelValue;
         }
       });
-
+      
       typeaheadCtrl.select = function (activeIdx) {
         //called from within the $digest() cycle
         var locals = {};
@@ -3306,7 +3308,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         locals[parserResult.itemName] = item = typeaheadCtrl.matches[activeIdx].model;
         model = parserResult.modelMapper(originalScope, locals);
         $setModelValue(originalScope, model);
-        modelCtrl.$setValidity('editable', true);
+        modelCtrl.$setValidity('optionValidator', true);        
 
         onSelectCallback(originalScope, {
           $item: item,
