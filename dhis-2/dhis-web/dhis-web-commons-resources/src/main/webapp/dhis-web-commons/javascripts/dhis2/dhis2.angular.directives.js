@@ -1,3 +1,5 @@
+/* global moment, angular, directive, dhis2, selection */
+
 'use strict';
 
 /* Directives */
@@ -29,19 +31,6 @@ var d2Directives = angular.module('d2Directives', [])
                     $("#searchField").val(ui.item.value);
                     selection.findByName();
                 }
-            });
-        }
-    };
-})
-
-.directive('inputValidator', function() {
-    
-    return {
-        require: 'ngModel',
-        link: function (scope, element, attrs, ctrl) {  
-
-            ctrl.$parsers.push(function (value) {
-                return parseFloat(value || '');
             });
         }
     };
@@ -114,88 +103,6 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('d2NumberValidation', function(ErrorMessageService, $translate) {
-    
-    return {
-        require: 'ngModel',
-        restrict: 'A',
-        link: function (scope, element, attrs, ctrl) {
-            
-            function checkValidity(numberType, value){
-                var isValid = false;
-                switch(numberType){
-                    case "number":
-                        isValid = dhis2.validation.isNumber(value);
-                        break;
-                    case "posInt":
-                        isValid = dhis2.validation.isPositiveInt(value);
-                        break;
-                    case "negInt":
-                        isValid = dhis2.validation.isNegativeInt(value);
-                        break;
-                    case "zeroPositiveInt":
-                        isValid = dhis2.validation.isZeroOrPositiveInt(value);
-                        break;
-                    case "int":
-                        isValid = dhis2.validation.isInt(value);
-                        break;
-                    default:
-                        isValid = true;
-                }
-                return isValid;
-            }
-            
-            var errorMessages = ErrorMessageService.getErrorMessages();
-            var fieldName = attrs.inputFieldId;
-            var numberType = attrs.numberType;
-            var isRequired = attrs.ngRequired === 'true';
-            var msg = $translate(numberType)+ ' ' + $translate('required');
-           
-            ctrl.$parsers.unshift(function(value) {
-            	if(value){
-                    var isValid = checkValidity(numberType, value);                    
-                    if(!isValid){
-                        errorMessages[fieldName] = $translate('value_must_be_' + numberType);
-                    }
-                    else{
-                        if(isRequired){
-                            errorMessages[fieldName] = msg;
-                        }
-                        else{
-                            errorMessages[fieldName] = "";
-                        }
-                    }
-                    
-                    ErrorMessageService.setErrorMessages(errorMessages);
-                	ctrl.$setValidity(fieldName, isValid);
-                    return value;
-                }
-                
-                if(value === ''){
-                    if(isRequired){
-                        errorMessages[fieldName] = msg;
-                    }
-                    else{
-                        ctrl.$setValidity(fieldName, true);
-                        errorMessages[fieldName] = "";
-                    }
-                    
-                    ErrorMessageService.setErrorMessages(errorMessages);
-                    return undefined;
-                }              
-            });
-           
-            ctrl.$formatters.unshift(function(value) {                
-                if(value){
-                    var isValid = checkValidity(numberType, value);
-                    ctrl.$setValidity(fieldName, isValid);
-                    return value;
-                }
-            });
-        }
-    };
-})
-
 .directive('typeaheadOpenOnFocus', function () {
   	
   	return {
@@ -213,21 +120,6 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('d2TypeaheadValidation', function() {
-    
-    return {
-        require: ['typeahead', 'ngModel'],
-        restrict: 'A',
-        link: function (scope, element, attrs, ctrls) {
-            element.bind('blur', function () {                
-                if(ctrls[1].$viewValue && !ctrls[1].$modelValue && ctrls[0].active === -1){
-                    ctrls[1].$setViewValue();
-                    ctrls[1].$render();
-                }                
-            });
-        }
-    };
-})
 
 .directive('d2PopOver', function($compile, $templateCache){
     
@@ -311,7 +203,7 @@ var d2Directives = angular.module('d2Directives', [])
         controller: function ($scope, Paginator) {
             $scope.paginator = Paginator;
         },
-        templateUrl: '../dhis-web-commons/paging/serverside-pagination.html'
+        templateUrl: '../dhis-web-commons/angular-forms/serverside-pagination.html'
     };
 })
 
@@ -672,15 +564,11 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('d2Date', function(DateUtils, CalendarService, ErrorMessageService, $translate, $parse) {
+.directive('d2Date', function(CalendarService, $parse) {
     return {
         restrict: 'A',
         require: 'ngModel',        
-        link: function(scope, element, attrs, ctrl) {    
-            
-            var errorMessages = ErrorMessageService.getErrorMessages();
-            var fieldName = attrs.inputFieldId;
-            var isRequired = attrs.ngRequired === 'true';
+        link: function(scope, element, attrs, ctrl) {
             var calendarSetting = CalendarService.getSetting();            
             var dateFormat = 'yyyy-mm-dd';
             if(calendarSetting.keyDateFormat === 'dd-MM-yyyy'){
@@ -701,49 +589,12 @@ var d2Directives = angular.module('d2Directives', [])
                 duration: "fast",
                 showAnim: "",
                 renderer: $.calendars.picker.themeRollerRenderer,
-                onSelect: function(date) {
+                onSelect: function() {
                     $(this).change();
                 }
             })
-            .change(function() {                
-                if(this.value){                    
-                    var rawDate = this.value;
-                    var convertedDate = DateUtils.format(this.value);
-
-                    var isValid = rawDate == convertedDate;
-                    
-                    if(!isValid){
-                        errorMessages[fieldName] = $translate('date_required');
-                    }
-                    else{
-                        if(isRequired){
-                            errorMessages[fieldName] = $translate('required');
-                        }
-                        else{
-                            errorMessages[fieldName] = "";
-                        }
-                        if(maxDate === 0){                    
-                            isValid = !moment(convertedDate, calendarSetting.momentFormat).isAfter(DateUtils.getToday());
-                            if(!isValid){
-                                errorMessages[fieldName] = $translate('future_date_not_allowed');                            
-                            }                           
-                        }
-                    }                                        
-                    ctrl.$setViewValue(this.value);
-                    ctrl.$setValidity(fieldName, isValid);
-                }
-                else{
-                    if(!isRequired){
-                        ctrl.$setViewValue(this.value);
-                        ctrl.$setValidity(fieldName, !isRequired);
-                        errorMessages[fieldName] = "";
-                    }
-                    else{
-                        errorMessages[fieldName] = $translate('required');                        
-                    }
-                }
-                
-                ErrorMessageService.setErrorMessages(errorMessages);
+            .change(function(){
+                ctrl.$setViewValue(this.value);
                 this.focus();
                 scope.$apply();
             });    
