@@ -10,7 +10,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         function($scope,
                 $modal,
                 $timeout,
-                $translate,
                 $anchorScroll,
                 orderByFilter,
                 SessionStorageService,
@@ -27,7 +26,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 GridColumnService,
                 CustomFormService,
                 ECStorageService,
-                ErrorMessageService,
                 CurrentSelection,
                 ModalService,
                 DialogService,
@@ -162,19 +160,19 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.filterTypes['event_date'] = 'date';
                 $scope.filterText['event_date']= {};
 
-                var errorMessages = {};
-                errorMessages['eventDate'] = $translate('required');
+                //var errorMessages = {};
+                //errorMessages['eventDate'] = $translate('required');
                 angular.forEach($scope.selectedProgramStage.programStageDataElements, function(prStDe){
                     $scope.prStDes[prStDe.dataElement.id] = prStDe;
 
-                    errorMessages[prStDe.dataElement.id] = "";
+                    /*errorMessages[prStDe.dataElement.id] = "";
                     if(prStDe.compulsory){
                         var msg = $translate('required');
                         if(prStDe.dataElement.type === 'int'){
                             msg = $translate(prStDe.dataElement.numberType)+ ' ' + $translate('required');
                         }
                         errorMessages[prStDe.dataElement.id] = msg;
-                    }
+                    }*/
 
                     $scope.newDhis2Event[prStDe.dataElement.id] = '';                    
 
@@ -201,8 +199,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     $scope.newDhis2Event.coordinate = {};
                 }
                 $scope.newDhis2Event.eventDate = '';
-
-                ErrorMessageService.setErrorMessages(errorMessages);
 
                 ProgramValidationService.getByProgram($scope.selectedProgram.id).then(function(pvs){
                     $scope.programValidations = pvs;
@@ -794,7 +790,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.showMap = function(event){
         var modalInstance = $modal.open({
-            templateUrl: '../dhis-web-commons/coordinatecapture/map.html',
+            templateUrl: '../dhis-web-commons/angular-forms/map.html',
             controller: 'MapController',
             windowClass: 'modal-full-window',
             resolve: {
@@ -831,6 +827,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     $scope.isFormInvalid = function(){
+        
         if($scope.outerForm.submitted){
             return $scope.outerForm.$invalid;
         }
@@ -857,11 +854,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         return formIsInvalid;
     };
-    
-    $scope.getErrorMessage = function(id){
-        return ErrorMessageService.get(id);
-    };
-    
+
     $scope.formHasUnsavedData = function(){        
         if(angular.isObject($scope.currentEvent) && angular.isObject($scope.currentEventOriginialValue)){
             return !angular.equals($scope.currentEvent, $scope.currentEventOriginialValue);
@@ -880,4 +873,11 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             $( "#orgUnitTree" ).removeClass( "disable-clicks" );
         }
     });
+    
+    $scope.interacted = function(field) {
+        if(field){
+            return $scope.outerForm.submitted || field.$dirty;
+        }        
+        return false;        
+    };
 });

@@ -68,6 +68,7 @@ scripts/event-capture.js
 ../dhis-web-commons/javascripts/angular/plugins/angularLocalStorage.js
 ../dhis-web-commons/javascripts/angular/plugins/angular-translate.min.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.directives.js
+../dhis-web-commons/javascripts/dhis2/dhis2.angular.validations.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.filters.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.services.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.controllers.js
@@ -105,9 +106,10 @@ styles/style.css
 ../icons/function-log-out.png
 ../icons/function-about-dhis2.png
 
-../dhis-web-commons/paging/serverside-pagination.html
-../dhis-web-commons/customform/custom-form.html
-../dhis-web-commons/coordinatecapture/map.html
+../dhis-web-commons/angular-forms/serverside-pagination.html
+../dhis-web-commons/angular-forms/custom-form.html
+../dhis-web-commons/angular-forms/map.html
+../dhis-web-commons/angular-forms/error-messages.html
 
 
 views/column-modal.html
