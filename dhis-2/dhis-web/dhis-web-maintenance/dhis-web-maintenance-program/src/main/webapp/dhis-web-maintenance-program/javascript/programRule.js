@@ -200,7 +200,7 @@ function getVariableJson( variableName, sourceType, dataElementId, programStageI
 {
 	var json_Data = '{ '
 		+ '"name": "' + variableName + '",'
-		+ '"sourceType": "' +  sourceType + '",'
+		+ '"programRuleVariableSourceType": "' +  sourceType + '",'
 		+ '"dataElement": { "id" : "' + dataElementId + '"},'
 		+ '"program": { "id" :"' + getFieldValue("programId") + '"},'
 		+ '"programStage": { "id" :  "' + programStageId + '"}'
