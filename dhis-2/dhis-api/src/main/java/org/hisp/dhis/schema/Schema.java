@@ -135,6 +135,11 @@ public class Schema implements Ordered, Klass
     private boolean persisted;
 
     /**
+     * Should new instances always be default private, even if the user can create public instances.
+     */
+    private boolean defaultPrivate;
+
+    /**
      * List of authorities required for doing operations on this class.
      */
     private List<Authority> authorities = Lists.newArrayList();
@@ -345,6 +350,18 @@ public class Schema implements Ordered, Klass
     public void setPersisted( boolean persisted )
     {
         this.persisted = persisted;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isDefaultPrivate()
+    {
+        return defaultPrivate;
+    }
+
+    public void setDefaultPrivate( boolean defaultPrivate )
+    {
+        this.defaultPrivate = defaultPrivate;
     }
 
     @JsonProperty

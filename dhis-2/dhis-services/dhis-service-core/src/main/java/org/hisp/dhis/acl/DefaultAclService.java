@@ -29,7 +29,6 @@ package org.hisp.dhis.acl;
  */
 
 import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.dashboard.Dashboard;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.schema.AuthorityType;
 import org.hisp.dhis.schema.Schema;
@@ -261,8 +260,8 @@ public class DefaultAclService implements AclService
     @Override
     public <T extends IdentifiableObject> boolean defaultPublic( Class<T> klass )
     {
-        // TODO this is quite nasty, should probably be added to schema
-        return !Dashboard.class.isAssignableFrom( klass );
+        Schema schema = schemaService.getSchema( klass );
+        return schema == null || !schema.isDefaultPrivate();
     }
 
     @Override
