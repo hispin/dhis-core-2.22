@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC
-  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"
-  [<!ENTITY identifiableProperties SYSTEM "classpath://org/hisp/dhis/common/identifiableProperties.hbm">]
-  >
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"
+    [<!ENTITY identifiableProperties SYSTEM "classpath://org/hisp/dhis/common/identifiableProperties.hbm">]
+    >
 
 <hibernate-mapping>
   <class name="org.hisp.dhis.organisationunit.OrganisationUnit" table="organisationunit">
@@ -26,9 +26,9 @@
     </set>
 
     <many-to-one name="parent" class="org.hisp.dhis.organisationunit.OrganisationUnit" column="parentid"
-      foreign-key="fk_parentid" index="in_parentid" />
+        foreign-key="fk_parentid" index="in_parentid" />
 
-    <property name="uuid" unique="true" length="36" />
+    <property name="uuid" unique="true" length="36"/>
 
     <property name="description" type="text" />
 
@@ -48,12 +48,6 @@
       <cache usage="read-write" />
       <key column="sourceid" />
       <many-to-many class="org.hisp.dhis.dataset.DataSet" column="datasetid" />
-    </set>
-
-    <set name="programs" table="program_organisationunits" inverse="true">
-      <cache usage="read-write" />
-      <key column="organisationunitid" />
-      <many-to-many class="org.hisp.dhis.program.Program" column="programid" />
     </set>
 
     <set name="groups" table="orgunitgroupmembers" inverse="true">
