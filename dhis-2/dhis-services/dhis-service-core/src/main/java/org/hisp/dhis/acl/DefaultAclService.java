@@ -258,10 +258,16 @@ public class DefaultAclService implements AclService
     }
 
     @Override
-    public <T extends IdentifiableObject> boolean defaultPublic( Class<T> klass )
+    public <T extends IdentifiableObject> boolean defaultPrivate( Class<T> klass )
     {
         Schema schema = schemaService.getSchema( klass );
-        return schema == null || !schema.isDefaultPrivate();
+        return schema != null && schema.isDefaultPrivate();
+    }
+
+    @Override
+    public <T extends IdentifiableObject> boolean defaultPublic( Class<T> klass )
+    {
+        return !defaultPrivate( klass );
     }
 
     @Override

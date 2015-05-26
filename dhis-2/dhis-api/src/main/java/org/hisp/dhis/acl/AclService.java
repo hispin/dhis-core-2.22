@@ -177,6 +177,14 @@ public interface AclService
     <T extends IdentifiableObject> boolean canExternalize( User user, Class<T> klass );
 
     /**
+     * Is the default for this type to be private?
+     *
+     * @param klass Type to check
+     * @return Result of test
+     */
+    <T extends IdentifiableObject> boolean defaultPrivate( Class<T> klass );
+
+    /**
      * Is the default for this type to be public?
      *
      * @param klass Type to check
