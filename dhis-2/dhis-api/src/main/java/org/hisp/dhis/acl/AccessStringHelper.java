@@ -35,7 +35,7 @@ package org.hisp.dhis.acl;
  */
 public class AccessStringHelper
 {
-    public static enum Permission
+    public enum Permission
     {
         READ( 'r', 0 ), WRITE( 'w', 1 );
 
@@ -43,7 +43,7 @@ public class AccessStringHelper
 
         private int position;
 
-        private Permission( char value, int position )
+        Permission( char value, int position )
         {
             this.value = value;
             this.position = position;
