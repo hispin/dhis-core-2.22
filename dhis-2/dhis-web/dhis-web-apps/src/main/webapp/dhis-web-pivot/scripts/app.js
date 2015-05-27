@@ -6955,7 +6955,7 @@ Ext.onReady( function() {
 
                                         // approval levels
                                         requests.push({
-                                            url: contextPath + '/api/dataApprovalLevels.json?fields=id,name&paging=false',
+                                            url: contextPath + '/api/dataApprovalLevels.json?fields=id,name&paging=false&order=level:asc',
                                             success: function(r) {
                                                 init.dataApprovalLevels = Ext.decode(r.responseText).dataApprovalLevels || [];
                                                 fn();
