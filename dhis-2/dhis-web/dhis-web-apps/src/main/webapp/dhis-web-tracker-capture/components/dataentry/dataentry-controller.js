@@ -27,6 +27,7 @@ trackerCapture.controller('DataEntryController',
     $scope.eventPeriods = [];
     $scope.currentPeriod = [];
     $scope.filterEvents = true;
+    $scope.showHelpText = {};
     
     var userProfile = SessionStorageService.get('USER_PROFILE');
     var storedBy = userProfile && userProfile.username ? userProfile.username : '';

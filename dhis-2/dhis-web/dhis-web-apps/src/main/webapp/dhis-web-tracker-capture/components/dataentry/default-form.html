@@ -16,6 +16,10 @@
         <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements">
             <td class="col-md-5">
                 {{prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name}}
+                <a ng-if="prStDes[prStDe.dataElement.id].dataElement.description" Title="{{prStDes[prStDe.dataElement.id].dataElement.description}}" ng-init="showHelpText[prStDe.dataElement.id] = false;" ng-click="showHelpText[prStDe.dataElement.id] = !showHelpText[prStDe.dataElement.id]">
+                    <span class="glyphicon glyphicon-info-sign" ></span>
+                    <span ng-show="showHelpText[prStDe.dataElement.id]" ><br>{{prStDes[prStDe.dataElement.id].dataElement.description}}</span>
+                </a>     
             </td>
             <td class="col-md-5">
                 <ng-form name="dataEntryInnerForm">
@@ -148,6 +152,10 @@
                         <tr class="col-md-12" ng-repeat="de in section.programStageDataElements">
                             <td class="col-md-5">
                                 {{prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name}}
+                                <a ng-if="prStDes[de.dataElement.id].dataElement.description" Title="{{prStDes[de.dataElement.id].dataElement.description}}" ng-init="showHelpText[de.dataElement.id] = false;" ng-click="showHelpText[de.dataElement.id] = !showHelpText[de.dataElement.id]">
+                                    <span class="glyphicon glyphicon-info-sign" ></span>
+                                    <span ng-show="showHelpText[de.dataElement.id]" ><br>{{prStDes[de.dataElement.id].dataElement.description}}</span>
+                                </a>                            
                             </td>
                             <td class="col-md-5">
                                 <ng-form name="dataEntryInnerForm">
