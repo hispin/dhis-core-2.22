@@ -363,6 +363,8 @@ Ext.onReady( function() {
 
                 // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
 
+                // dataApprovalLevel: object
+
 				// showHierarchy: boolean (false)
 
 				// displayDensity: string ('normal') - 'compact', 'normal', 'comfortable'
@@ -539,6 +541,7 @@ Ext.onReady( function() {
 					layout.showDimensionLabels = Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
 					layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
                     layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'DEFAULT';
+					layout.dataApprovalLevel = Ext.isObject(config.dataApprovalLevel) && Ext.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
 
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
 
@@ -1753,6 +1756,10 @@ Ext.onReady( function() {
 					delete layout.aggregationType;
 				}
 
+				if (layout.dataApprovalLevel && layout.dataApprovalLevel.id === 'DEFAULT') {
+					delete layout.dataApprovalLevel;
+				}
+
 				delete layout.parentGraphMap;
 				delete layout.reportingPeriod;
 				delete layout.organisationUnit;
@@ -2129,6 +2136,11 @@ Ext.onReady( function() {
                 // user organisation unit
                 if (Ext.isString(xLayout.userOrganisationUnit)) {
 					paramString += '&userOrganisationUnit=' + xLayout.userOrganisationUnit;
+				}
+
+				// data approval level
+				if (Ext.isObject(xLayout.dataApprovalLevel) && Ext.isString(xLayout.dataApprovalLevel.id) && xLayout.dataApprovalLevel.id !== 'DEFAULT') {
+					paramString += '&approvalLevel=' + xLayout.dataApprovalLevel.id;
 				}
 
 				return paramString;
