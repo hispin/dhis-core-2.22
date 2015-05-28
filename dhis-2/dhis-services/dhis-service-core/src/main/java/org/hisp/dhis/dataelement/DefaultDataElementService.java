@@ -154,7 +154,7 @@ public class DefaultDataElementService
     @Override
     public List<DataElement> getDataElementsByUid( Collection<String> uids )
     {
-        return dataElementStore.getByUid( uids );
+        return i18n( i18nService, dataElementStore.getByUid( uids ) );
     }
 
     @Override
@@ -471,7 +471,7 @@ public class DefaultDataElementService
     @Override
     public List<DataElementGroup> getDataElementGroupsByUid( Collection<String> uids )
     {
-        return dataElementGroupStore.getByUid( uids );
+        return i18n( i18nService, dataElementGroupStore.getByUid( uids ) );
     }
 
     @Override
@@ -697,7 +697,7 @@ public class DefaultDataElementService
     @Override
     public List<DataElementGroupSet> getDataElementGroupSetsByUid( Collection<String> uids )
     {
-        return dataElementGroupSetStore.getByUid( uids );
+        return i18n( i18nService, dataElementGroupSetStore.getByUid( uids ) );
     }
 
     @Override

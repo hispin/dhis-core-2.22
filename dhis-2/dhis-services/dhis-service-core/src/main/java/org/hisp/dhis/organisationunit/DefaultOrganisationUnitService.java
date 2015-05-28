@@ -238,7 +238,7 @@ public class DefaultOrganisationUnitService
     @Override
     public List<OrganisationUnit> getOrganisationUnitsByUid( Collection<String> uids )
     {
-        return new ArrayList<>( i18n( i18nService, organisationUnitStore.getByUid( uids ) ) );
+        return i18n( i18nService, organisationUnitStore.getByUid( uids ) );
     }
 
     @Override

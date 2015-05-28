@@ -546,6 +546,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
+    @Ignore
     public void testDeleteDataApproval() throws Exception
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
