@@ -28,13 +28,12 @@ package org.hisp.dhis.user.action.usergroup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 
-import com.opensymphony.xwork2.Action;
+import java.util.List;
 
 public class ValidateUserGroupAction
     implements Action
@@ -90,20 +89,20 @@ public class ValidateUserGroupAction
     public String execute()
         throws Exception
     {
-
         if ( name != null )
         {
             List<UserGroup> matches = userGroupService.getUserGroupByName( name );
-            if( matches != null && matches.size() > 0 )
+
+            if ( matches != null && matches.size() > 0 )
             {
                 UserGroup match = matches.get( 0 );
-                
-            if ( match != null && (id == null || match.getId() != id) )
-            {
-                message = i18n.getString( "name_in_use" );
 
-                return ERROR;
-            }
+                if ( match != null && (id == null || match.getId() != id) )
+                {
+                    message = i18n.getString( "name_in_use" );
+
+                    return ERROR;
+                }
             }
         }
 

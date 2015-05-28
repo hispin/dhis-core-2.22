@@ -1,32 +1,32 @@
 <script type="text/javascript">
-    $( document ).ready( function() {    
-        validation2( 'addUserGroupForm', function( form ) {
-            form.submit();
-        }, {
-            'beforeValidateHandler': function() {
-                $( '#usersSelected' ).find( 'option' ).attr( 'selected', 'selected' );
-                $( '#userGroupsSelected' ).find( 'option' ).attr( 'selected', 'selected' );
-                #tblDynamicAttributesJavascript()
-            },
-            'rules': getValidationRules( 'userGroup' )
-        } );
-		
-		checkValueIsExist("name", "validateUserGroup.action");
-		
-        $( '#usersAvailable' ).selected( {
-            url: '../api/users.json',
-            target: $( '#usersSelected' ),
-            search: $( '#usersAvailableSearch' ),
-            iterator: 'users'
-        });
-		
-		$( '#userGroupsAvailable' ).selected( {
-            url: '../api/userGroups.json',
-            target: $( '#userGroupsSelected' ),
-            search: $( '#userGroupsAvailableSearch' ),
-            iterator: 'userGroups'
-        });
+  $(document).ready(function() {
+    validation2('addUserGroupForm', function(form) {
+      form.submit();
+    }, {
+      'beforeValidateHandler': function() {
+        $('#usersSelected').find('option').attr('selected', 'selected');
+        $('#userGroupsSelected').find('option').attr('selected', 'selected');
+        #tblDynamicAttributesJavascript()
+      },
+      'rules': getValidationRules('userGroup')
     });
+
+    checkValueIsExist("name", "validateUserGroup.action");
+
+    $('#usersAvailable').selected({
+      url: '../api/users.json',
+      target: $('#usersSelected'),
+      search: $('#usersAvailableSearch'),
+      iterator: 'users'
+    });
+
+    $('#userGroupsAvailable').selected({
+      url: '../api/userGroups.json',
+      target: $('#userGroupsSelected'),
+      search: $('#userGroupsAvailableSearch'),
+      iterator: 'userGroups'
+    });
+  });
 </script>
 
 <h3>$i18n.getString( "add_user_group" )</h3>
@@ -56,7 +56,6 @@
     "i18n_selected": "group_members"
 })
 
-
 #jqSelected({
   "prefix": "userGroups",
   "i18n_available": "available_managed_user_groups",
@@ -65,8 +64,8 @@
 
 
 <p>
-    <input type="submit" value="$i18n.getString( 'add' )" style="width:10em"/>
-    <input type="button" value="$i18n.getString( 'cancel' )" onclick="dhis2.commons.redirectCurrentPage( 'getAllUserGroups.action' )" style="width:10em"/>
+  <input type="submit" value="$i18n.getString( 'add' )" style="width:10em"/>
+  <input type="button" value="$i18n.getString( 'cancel' )" onclick="dhis2.commons.redirectCurrentPage( 'getAllUserGroups.action' )" style="width:10em"/>
 </p>
 
 </form>
