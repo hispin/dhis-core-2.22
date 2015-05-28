@@ -101,9 +101,9 @@ public interface DataElementCategoryService
      * Retrieves the DataElementCategories with the given uids.
      * 
      * @param uids the uids of the DataElementCategories to retrieve.
-     * @return a collection of DataElementCategories.
+     * @return a list of DataElementCategories.
      */
-    Collection<DataElementCategory> getDataElementCategoriesByUid( Collection<String> uids );
+    List<DataElementCategory> getDataElementCategoriesByUid( Collection<String> uids );
 
     /**
      * Retrieves the DataElementCategory with the given name.
@@ -207,9 +207,9 @@ public interface DataElementCategoryService
      * Retrieves the DataElementCategoryOptions with the given uids.
      * 
      * @param uids the uids of the DataElementCategoryOption to retrieve.
-     * @return a Collection of DataElementCategoryOptions.
+     * @return a list of DataElementCategoryOptions.
      */
-    Collection<DataElementCategoryOption> getDataElementCategoryOptionsByUid( Collection<String> uids );
+    List<DataElementCategoryOption> getDataElementCategoryOptionsByUid( Collection<String> uids );
 
     /**
      * Retrieves the DataElementCategoryOption with the given name.
@@ -414,7 +414,14 @@ public interface DataElementCategoryService
      */
     Collection<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombos( Collection<Integer> identifiers );
 
-    Collection<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombosByUid( Collection<String> uids );
+    /**
+     * Retrieves the DataElementCategoryOptionCombos with the given uids.
+     * 
+     * @param uids the uids of the
+     *        DataElementCategoryOptionCombos.
+     * @return a List of DataElementCategoryOptionCombos.
+     */
+    List<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombosByUid( Collection<String> uids );
 
     /**
      * Retrieves the DataElementCategoryOptionCombo with the given Collection of

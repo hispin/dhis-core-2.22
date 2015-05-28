@@ -29,6 +29,7 @@ package org.hisp.dhis.i18n;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
@@ -46,7 +47,7 @@ public class I18nUtils
         return object;
     }
     
-    public static <T> Collection<T> i18n( I18nService i18nService, Collection<T> objects )
+    public static <T> List<T> i18n( I18nService i18nService, List<T> objects )
     {
         i18nService.internationalise( objects );        
         return objects;
@@ -58,7 +59,7 @@ public class I18nUtils
         return object;
     }
     
-    public static <T> Collection<T> i18n( I18nService i18nService, Locale locale, Collection<T> objects )
+    public static <T> List<T> i18n( I18nService i18nService, Locale locale, List<T> objects )
     {
         i18nService.internationalise( objects, locale );        
         return objects;
