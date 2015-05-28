@@ -40,8 +40,8 @@ import org.apache.commons.validator.routines.DoubleValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.expression.Operator;
-import org.hisp.dhis.system.math.OneIfZeroOrPositiveFunction;
-import org.hisp.dhis.system.math.ZeroIfNegativeFunction;
+import org.hisp.dhis.commons.math.OneIfZeroOrPositiveFunction;
+import org.hisp.dhis.commons.math.ZeroIfNegativeFunction;
 import org.nfunk.jep.JEP;
 
 /**
@@ -675,7 +675,7 @@ public class MathUtils
      * deviations and average.
      * 
      * @param stdDev the standard deviation.
-     * @param stdDevNo the number of standard deviations.
+     * @param stdDevFactor the number of standard deviations.
      * @param average the average.
      * @return a double.
      */

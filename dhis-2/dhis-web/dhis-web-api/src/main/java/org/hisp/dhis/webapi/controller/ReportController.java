@@ -40,7 +40,7 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.report.Report;
 import org.hisp.dhis.report.ReportService;
 import org.hisp.dhis.schema.descriptors.ReportSchemaDescriptor;
-import org.hisp.dhis.system.util.CodecUtils;
+import org.hisp.dhis.util.CodecUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
 import org.joda.time.DateTime;
@@ -57,7 +57,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
-import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
+import static org.hisp.dhis.util.CodecUtils.filenameEncode;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>

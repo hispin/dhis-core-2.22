@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.system.util.Filter;
+import org.hisp.dhis.commons.filter.Filter;
 
 /**
  * @author mortenoh

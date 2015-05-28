@@ -29,11 +29,12 @@ package org.hisp.dhis.system.util;
  */
 
 import static org.junit.Assert.assertEquals;
-import static org.hisp.dhis.system.util.TextUtils.*;
+import static org.hisp.dhis.util.TextUtils.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.hisp.dhis.util.TextUtils;
 import org.junit.Test;
 
 /**

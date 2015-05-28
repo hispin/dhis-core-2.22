@@ -30,7 +30,7 @@ package org.hisp.dhis.program;
 
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.system.util.CollectionUtils;
+import org.hisp.dhis.util.CollectionUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;

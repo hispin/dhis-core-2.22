@@ -39,7 +39,7 @@ import org.hisp.dhis.oust.manager.SelectionTreeManager;
 import org.hisp.dhis.period.CalendarPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.filter.PastAndCurrentPeriodFilter;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.util.FilterUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.UserCredentials;
 

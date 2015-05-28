@@ -51,7 +51,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.system.util.CollectionUtils;
+import org.hisp.dhis.util.CollectionUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.transaction.annotation.Transactional;
 

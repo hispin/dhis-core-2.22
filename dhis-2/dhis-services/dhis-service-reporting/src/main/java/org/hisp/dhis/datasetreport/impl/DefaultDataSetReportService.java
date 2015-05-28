@@ -65,7 +65,7 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.system.grid.ListGrid;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.util.FilterUtils;
 
 /**
  * @author Abyot Asalefew

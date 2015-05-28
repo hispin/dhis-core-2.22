@@ -41,7 +41,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.OutputStream;
 import java.util.Locale;
 
-import static org.hisp.dhis.system.util.StreamUtils.ENCODING_UTF8;
+import static org.hisp.dhis.util.StreamUtils.ENCODING_UTF8;
 
 /**
  * @author Lars Helge Overland

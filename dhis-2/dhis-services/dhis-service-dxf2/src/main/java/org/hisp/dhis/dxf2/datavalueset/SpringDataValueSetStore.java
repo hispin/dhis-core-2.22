@@ -39,7 +39,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.StreamUtils;
+import org.hisp.dhis.util.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -55,7 +55,7 @@ import java.util.Set;
 
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.system.util.DateUtils.getLongGmtDateString;
-import static org.hisp.dhis.system.util.TextUtils.getCommaDelimitedString;
+import static org.hisp.dhis.util.TextUtils.getCommaDelimitedString;
 
 /**
  * @author Lars Helge Overland

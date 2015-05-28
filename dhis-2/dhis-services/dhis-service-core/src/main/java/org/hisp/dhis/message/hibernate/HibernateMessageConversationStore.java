@@ -40,7 +40,7 @@ import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.message.MessageConversation;
 import org.hisp.dhis.message.MessageConversationStore;
 import org.hisp.dhis.message.UserMessage;
-import org.hisp.dhis.system.util.SqlHelper;
+import org.hisp.dhis.util.SqlHelper;
 import org.hisp.dhis.user.User;
 import org.springframework.jdbc.core.RowMapper;
 

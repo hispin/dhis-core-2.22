@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.importexport.mapping.NameMappingUtil;
 import org.hisp.dhis.system.process.OpenSessionThread;
-import org.hisp.dhis.system.util.StreamUtils;
+import org.hisp.dhis.util.StreamUtils;
 
 /**
  * @author Lars Helge Overland

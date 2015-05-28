@@ -43,7 +43,7 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
-import org.hisp.dhis.system.util.UniqueArrayList;
+import org.hisp.dhis.util.UniqueArrayList;
 import org.joda.time.DateTime;
 
 /**

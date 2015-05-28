@@ -30,7 +30,7 @@ package org.hisp.dhis.dxf2.events.event;
 
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdList;
 import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
-import static org.hisp.dhis.system.util.TextUtils.getCommaDelimitedString;
+import static org.hisp.dhis.util.TextUtils.getCommaDelimitedString;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.SqlHelper;
+import org.hisp.dhis.util.SqlHelper;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -30,7 +30,7 @@ package org.hisp.dhis.system.filter;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.system.util.Filter;
+import org.hisp.dhis.commons.filter.Filter;
 
 public class DataElementPeriodTypeAllowAverageFilter
     implements Filter<DataElement>

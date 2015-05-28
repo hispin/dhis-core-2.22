@@ -46,7 +46,7 @@ import org.hisp.dhis.importexport.ImportParams;
 import org.hisp.dhis.importexport.Importer;
 import org.hisp.dhis.importexport.XMLConverter;
 import org.hisp.dhis.importexport.importer.GroupMemberImporter;
-import org.hisp.dhis.system.util.Counter;
+import org.hisp.dhis.util.Counter;
 
 /**
  * @author Lars Helge Overland

@@ -28,7 +28,7 @@ package org.hisp.dhis.de.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.ListUtils.getCollection;
+import static org.hisp.dhis.util.ListUtils.getCollection;
 
 import java.util.ArrayList;
 import java.util.Collections;

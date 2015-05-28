@@ -29,9 +29,6 @@ package org.hisp.dhis.system.grid;
  */
 
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
-import static org.hisp.dhis.system.util.CsvUtils.NEWLINE;
-import static org.hisp.dhis.system.util.CsvUtils.SEPARATOR_B;
-import static org.hisp.dhis.system.util.CsvUtils.csvEncode;
 import static org.hisp.dhis.system.util.PDFUtils.addTableToDocument;
 import static org.hisp.dhis.system.util.PDFUtils.closeDocument;
 import static org.hisp.dhis.system.util.PDFUtils.getEmptyCell;
@@ -41,6 +38,9 @@ import static org.hisp.dhis.system.util.PDFUtils.getTextCell;
 import static org.hisp.dhis.system.util.PDFUtils.getTitleCell;
 import static org.hisp.dhis.system.util.PDFUtils.openDocument;
 import static org.hisp.dhis.system.util.PDFUtils.resetPaddings;
+import static org.hisp.dhis.util.CsvUtils.csvEncode;
+import static org.hisp.dhis.util.CsvUtils.SEPARATOR_B;
+import static org.hisp.dhis.util.CsvUtils.NEWLINE;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -72,14 +72,14 @@ import org.apache.velocity.VelocityContext;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.NameableObjectUtils;
-import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.Encoder;
 import org.hisp.dhis.system.util.ExcelUtils;
-import org.hisp.dhis.system.util.ListUtils;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.system.util.StreamUtils;
-import org.hisp.dhis.system.util.TextUtils;
+import org.hisp.dhis.util.CodecUtils;
+import org.hisp.dhis.util.Encoder;
+import org.hisp.dhis.util.ListUtils;
+import org.hisp.dhis.util.StreamUtils;
+import org.hisp.dhis.util.TextUtils;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
@@ -239,7 +239,7 @@ public class GridUtils
         {
             Grid grid = grids.get( i );
             
-            String sheetName = CodecUtils.filenameEncode( StringUtils.defaultIfEmpty( grid.getTitle(), XLS_SHEET_PREFIX + ( i + 1 ) ) );
+            String sheetName = CodecUtils.filenameEncode( StringUtils.defaultIfEmpty( grid.getTitle(), XLS_SHEET_PREFIX + (i + 1) ) );
 
             toXlsInternal( grid, workbook, sheetName, i );
         }

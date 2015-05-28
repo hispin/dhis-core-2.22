@@ -36,8 +36,8 @@ import org.hisp.dhis.dataintegrity.DataIntegrityService;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.notification.NotificationLevel;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.system.timer.SystemTimer;
-import org.hisp.dhis.system.timer.Timer;
+import org.hisp.dhis.commons.timer.SystemTimer;
+import org.hisp.dhis.commons.timer.Timer;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.ArrayList;

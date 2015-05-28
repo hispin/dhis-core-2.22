@@ -36,7 +36,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
-import org.hisp.dhis.system.util.StreamUtils;
+import org.hisp.dhis.util.StreamUtils;
 import org.hisp.dhis.util.ContextUtils;
 import org.springframework.core.io.ClassPathResource;
 

@@ -42,7 +42,7 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.schema.descriptors.EventChartSchemaDescriptor;
-import org.hisp.dhis.system.util.CodecUtils;
+import org.hisp.dhis.util.CodecUtils;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;

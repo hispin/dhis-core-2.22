@@ -54,7 +54,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
-import org.hisp.dhis.system.util.ListUtils;
+import org.hisp.dhis.util.ListUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

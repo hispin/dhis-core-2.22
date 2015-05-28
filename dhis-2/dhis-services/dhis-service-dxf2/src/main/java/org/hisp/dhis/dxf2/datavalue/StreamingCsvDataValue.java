@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hisp.dhis.system.util.TextUtils.valueOf;
+import static org.hisp.dhis.util.TextUtils.valueOf;
 
 /**
  * @author Lars Helge Overland

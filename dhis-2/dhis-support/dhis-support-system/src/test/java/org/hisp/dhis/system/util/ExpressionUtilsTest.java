@@ -34,6 +34,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hisp.dhis.util.ExpressionUtils;
 import org.junit.Test;
 
 /**

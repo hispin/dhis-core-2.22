@@ -71,7 +71,7 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodStore;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.reporttable.ReportTable;
-import org.hisp.dhis.system.util.LoggingHashMap;
+import org.hisp.dhis.util.LoggingHashMap;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
