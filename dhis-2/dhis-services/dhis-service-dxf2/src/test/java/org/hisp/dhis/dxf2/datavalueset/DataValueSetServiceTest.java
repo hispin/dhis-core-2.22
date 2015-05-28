@@ -348,7 +348,6 @@ public class DataValueSetServiceTest
         
         ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
 
-        System.out.println("upd " + summary);
         assertEquals( 0, summary.getConflicts().size() );
         assertEquals( 0, summary.getImportCount().getImported() );
         assertEquals( 0, summary.getImportCount().getUpdated() );
