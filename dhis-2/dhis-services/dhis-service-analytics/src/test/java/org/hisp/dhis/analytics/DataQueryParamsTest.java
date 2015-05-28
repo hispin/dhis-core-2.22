@@ -47,7 +47,7 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.system.util.ListUtils;
+import org.hisp.dhis.util.ListUtils;
 import org.junit.Test;
 
 /**

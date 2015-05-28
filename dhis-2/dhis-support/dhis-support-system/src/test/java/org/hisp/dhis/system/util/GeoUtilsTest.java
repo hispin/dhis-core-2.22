@@ -28,8 +28,8 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.GeoUtils.getBoxShape;
-import static org.hisp.dhis.system.util.GeoUtils.replaceUnsafeSvgText;
+import static org.hisp.dhis.util.GeoUtils.getBoxShape;
+import static org.hisp.dhis.util.GeoUtils.replaceUnsafeSvgText;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;

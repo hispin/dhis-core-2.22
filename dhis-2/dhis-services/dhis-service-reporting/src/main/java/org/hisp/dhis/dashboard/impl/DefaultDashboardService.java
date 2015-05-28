@@ -42,7 +42,7 @@ import org.hisp.dhis.eventreport.EventReport;
 import org.hisp.dhis.mapping.Map;
 import org.hisp.dhis.report.Report;
 import org.hisp.dhis.reporttable.ReportTable;
-import org.hisp.dhis.system.util.TextUtils;
+import org.hisp.dhis.util.TextUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

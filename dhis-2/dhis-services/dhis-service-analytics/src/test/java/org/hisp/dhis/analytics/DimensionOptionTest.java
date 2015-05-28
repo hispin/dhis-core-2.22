@@ -32,7 +32,7 @@ import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.system.util.TextUtils.EMPTY;
+import static org.hisp.dhis.util.TextUtils.EMPTY;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

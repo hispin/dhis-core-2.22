@@ -39,8 +39,8 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.system.util.Filter;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.util.FilterUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;

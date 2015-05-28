@@ -28,7 +28,7 @@ package org.hisp.dhis.dataadmin.action.databrowser;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.TextUtils.nullIfEmpty;
+import static org.hisp.dhis.util.TextUtils.nullIfEmpty;
 
 import java.util.ArrayList;
 import java.util.Collection;

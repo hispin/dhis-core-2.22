@@ -28,10 +28,10 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.system.util.Filter;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserCredentials;
+import org.hisp.dhis.commons.filter.Filter;
 
 /**
  * @author Lars Helge Overland

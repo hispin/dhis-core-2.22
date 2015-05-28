@@ -32,7 +32,7 @@ import org.amplecode.cave.process.Process;
 import org.amplecode.quick.StatementManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.system.util.DebugUtils;
+import org.hisp.dhis.util.DebugUtils;
 
 /**
  * @author Lars Helge Overland

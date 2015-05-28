@@ -28,11 +28,11 @@ package org.hisp.dhis.importexport.dhis14.xml.converter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.CsvUtils.NEWLINE;
-import static org.hisp.dhis.system.util.CsvUtils.SEPARATOR_B;
-import static org.hisp.dhis.system.util.CsvUtils.csvEncode;
-import static org.hisp.dhis.system.util.CsvUtils.getCsvEndValue;
-import static org.hisp.dhis.system.util.CsvUtils.getCsvValue;
+import static org.hisp.dhis.util.CsvUtils.NEWLINE;
+import static org.hisp.dhis.util.CsvUtils.SEPARATOR_B;
+import static org.hisp.dhis.util.CsvUtils.csvEncode;
+import static org.hisp.dhis.util.CsvUtils.getCsvEndValue;
+import static org.hisp.dhis.util.CsvUtils.getCsvValue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -66,8 +66,8 @@ import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.MimicingHashMap;
-import org.hisp.dhis.system.util.StreamUtils;
+import org.hisp.dhis.util.MimicingHashMap;
+import org.hisp.dhis.util.StreamUtils;
 
 /**
  * @author Lars Helge Overland

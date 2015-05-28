@@ -34,7 +34,7 @@ import java.util.Set;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementDomain;
-import org.hisp.dhis.system.util.Filter;
+import org.hisp.dhis.commons.filter.Filter;
 
 /**
  * @author Lars Helge Overland

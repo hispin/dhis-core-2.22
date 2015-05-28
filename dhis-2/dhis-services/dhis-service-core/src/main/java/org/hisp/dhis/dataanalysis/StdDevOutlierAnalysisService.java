@@ -43,7 +43,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.datavalue.DeflatedDataValue;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.system.util.ConversionUtils;
+import org.hisp.dhis.util.ConversionUtils;
 import org.hisp.dhis.system.util.MathUtils;
 
 /**

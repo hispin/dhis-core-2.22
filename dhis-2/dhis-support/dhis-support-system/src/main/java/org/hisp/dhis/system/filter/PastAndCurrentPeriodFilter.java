@@ -31,7 +31,7 @@ package org.hisp.dhis.system.filter;
 import java.util.Date;
 
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.system.util.Filter;
+import org.hisp.dhis.commons.filter.Filter;
 
 /**
  * @author Lars Helge Overland

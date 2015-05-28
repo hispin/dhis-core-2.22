@@ -38,7 +38,7 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.system.filter.DataElementStringTypeFilter;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.util.FilterUtils;
 
 import com.opensymphony.xwork2.Action;
 

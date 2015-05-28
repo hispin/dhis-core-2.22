@@ -45,7 +45,7 @@ import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.system.util.TextUtils;
+import org.hisp.dhis.util.TextUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;

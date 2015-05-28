@@ -44,7 +44,7 @@ import org.hisp.dhis.reporttable.ReportParams;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.system.filter.PastAndCurrentPeriodFilter;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.util.FilterUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

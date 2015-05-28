@@ -1,20 +1,5 @@
 package org.hisp.dhis.result;
 
-import java.io.Writer;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.system.grid.GridUtils;
-import org.hisp.dhis.system.util.CodecUtils;
-import org.hisp.dhis.util.ContextUtils;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -42,6 +27,21 @@ import com.opensymphony.xwork2.Result;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+import java.io.Writer;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.hisp.dhis.common.Grid;
+import org.hisp.dhis.system.grid.GridUtils;
+import org.hisp.dhis.util.CodecUtils;
+import org.hisp.dhis.util.ContextUtils;
+
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
 
 /**
  * @author Lars Helge Overland

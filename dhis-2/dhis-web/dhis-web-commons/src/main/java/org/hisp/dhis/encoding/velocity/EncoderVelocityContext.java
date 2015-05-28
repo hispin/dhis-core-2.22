@@ -29,7 +29,7 @@ package org.hisp.dhis.encoding.velocity;
  */
 
 import org.apache.velocity.VelocityContext;
-import org.hisp.dhis.system.util.Encoder;
+import org.hisp.dhis.util.Encoder;
 
 /**
  * @author Torgeir Lorange Ostby

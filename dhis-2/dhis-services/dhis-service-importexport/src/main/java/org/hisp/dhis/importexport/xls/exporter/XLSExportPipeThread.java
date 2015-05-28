@@ -37,7 +37,7 @@ import org.hisp.dhis.importexport.ExportParams;
 import org.hisp.dhis.importexport.XLSConverter;
 import org.hisp.dhis.system.process.OpenSessionThread;
 import org.hisp.dhis.system.util.ExcelUtils;
-import org.hisp.dhis.system.util.StreamUtils;
+import org.hisp.dhis.util.StreamUtils;
 
 /**
  * @author Dang Duy Hieu

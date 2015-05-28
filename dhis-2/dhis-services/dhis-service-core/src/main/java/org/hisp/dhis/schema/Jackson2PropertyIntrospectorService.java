@@ -38,7 +38,7 @@ import com.google.common.primitives.Primitives;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.annotation.Description;
-import org.hisp.dhis.system.util.ReflectionUtils;
+import org.hisp.dhis.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;

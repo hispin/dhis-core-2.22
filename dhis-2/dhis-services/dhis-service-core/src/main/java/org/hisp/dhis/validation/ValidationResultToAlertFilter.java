@@ -28,7 +28,7 @@ package org.hisp.dhis.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.system.util.Filter;
+import org.hisp.dhis.commons.filter.Filter;
 
 public class ValidationResultToAlertFilter
     implements Filter<ValidationResult>

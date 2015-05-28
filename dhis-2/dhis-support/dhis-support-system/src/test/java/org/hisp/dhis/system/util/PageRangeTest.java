@@ -30,6 +30,7 @@ package org.hisp.dhis.system.util;
 
 import java.util.List;
 
+import org.hisp.dhis.util.PageRange;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

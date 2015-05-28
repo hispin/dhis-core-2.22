@@ -29,7 +29,7 @@ package org.hisp.dhis.result;
  */
 
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
+import static org.hisp.dhis.util.CodecUtils.filenameEncode;
 
 import java.io.OutputStream;
 import java.util.List;

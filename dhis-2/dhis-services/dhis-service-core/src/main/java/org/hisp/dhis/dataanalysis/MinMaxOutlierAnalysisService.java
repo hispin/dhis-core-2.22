@@ -47,9 +47,9 @@ import org.hisp.dhis.minmax.MinMaxDataElementService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.filter.DataElementTypeFilter;
-import org.hisp.dhis.system.util.ConversionUtils;
-import org.hisp.dhis.system.util.Filter;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.util.ConversionUtils;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.util.FilterUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.joda.time.DateTime;
 

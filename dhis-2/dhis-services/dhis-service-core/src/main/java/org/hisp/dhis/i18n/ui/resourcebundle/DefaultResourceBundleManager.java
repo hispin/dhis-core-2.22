@@ -30,7 +30,7 @@ package org.hisp.dhis.i18n.ui.resourcebundle;
 
 import org.hisp.dhis.common.comparator.LocaleNameComparator;
 import org.hisp.dhis.i18n.locale.LocaleManager;
-import org.hisp.dhis.system.util.PathUtils;
+import org.hisp.dhis.util.PathUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;

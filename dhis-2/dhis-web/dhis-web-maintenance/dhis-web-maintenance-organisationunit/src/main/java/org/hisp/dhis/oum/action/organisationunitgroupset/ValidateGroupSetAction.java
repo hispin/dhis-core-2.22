@@ -33,7 +33,7 @@ import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
-import org.hisp.dhis.system.util.ListUtils;
+import org.hisp.dhis.util.ListUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

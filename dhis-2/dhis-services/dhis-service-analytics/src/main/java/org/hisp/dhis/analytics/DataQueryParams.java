@@ -77,8 +77,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.system.util.CollectionUtils;
-import org.hisp.dhis.system.util.ListUtils;
+import org.hisp.dhis.util.CollectionUtils;
+import org.hisp.dhis.util.ListUtils;
 import org.hisp.dhis.system.util.MathUtils;
 
 /**

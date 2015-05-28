@@ -28,7 +28,7 @@ package org.hisp.dhis.datamart.crosstab.jdbc;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.TextUtils.getCommaDelimitedString;
+import static org.hisp.dhis.util.TextUtils.getCommaDelimitedString;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

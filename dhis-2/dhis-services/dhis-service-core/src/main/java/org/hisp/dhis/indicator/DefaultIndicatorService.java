@@ -41,8 +41,8 @@ import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.i18n.I18nService;
-import org.hisp.dhis.system.util.Filter;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.util.FilterUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

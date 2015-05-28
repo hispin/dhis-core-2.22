@@ -28,7 +28,7 @@ package org.hisp.dhis.schema.descriptors;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.filter.MetaDataFilter;
+import org.hisp.dhis.commons.filter.MetaDataFilter;
 import org.hisp.dhis.schema.Authority;
 import org.hisp.dhis.schema.AuthorityType;
 import org.hisp.dhis.schema.Schema;

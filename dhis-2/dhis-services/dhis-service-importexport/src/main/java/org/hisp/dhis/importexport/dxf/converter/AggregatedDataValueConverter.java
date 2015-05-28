@@ -28,7 +28,7 @@ package org.hisp.dhis.importexport.dxf.converter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.util.ConversionUtils.getIdentifiers;
 
 import java.util.Collection;
 
