@@ -45,7 +45,7 @@ import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
+import static org.hisp.dhis.util.CodecUtils.filenameEncode;
 import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
 import static org.hisp.dhis.util.ContextUtils.*;
 

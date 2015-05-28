@@ -31,8 +31,8 @@ package org.hisp.dhis.system.filter;
 import java.util.Arrays;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.hisp.dhis.system.util.Filter;
 import org.hisp.dhis.user.UserAuthorityGroup;
+import org.hisp.dhis.commons.filter.Filter;
 
 /**
  * @author Lars Helge Overland

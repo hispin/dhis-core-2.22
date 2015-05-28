@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hisp.dhis.util.ListUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

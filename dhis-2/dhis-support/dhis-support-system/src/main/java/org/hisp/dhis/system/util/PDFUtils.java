@@ -30,7 +30,7 @@ package org.hisp.dhis.system.util;
 
 import static com.lowagie.text.Element.ALIGN_CENTER;
 import static com.lowagie.text.Element.ALIGN_LEFT;
-import static org.hisp.dhis.system.util.TextUtils.nullIfEmpty;
+import static org.hisp.dhis.util.TextUtils.nullIfEmpty;
 
 import java.io.OutputStream;
 import java.util.Calendar;

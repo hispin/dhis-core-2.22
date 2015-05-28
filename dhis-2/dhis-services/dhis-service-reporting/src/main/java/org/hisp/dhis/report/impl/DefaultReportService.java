@@ -49,11 +49,11 @@ import org.hisp.dhis.report.ReportService;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.Encoder;
-import org.hisp.dhis.system.util.Filter;
-import org.hisp.dhis.system.util.FilterUtils;
-import org.hisp.dhis.system.util.JRExportUtils;
-import org.hisp.dhis.system.util.StreamUtils;
+import org.hisp.dhis.util.Encoder;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.util.FilterUtils;
+import org.hisp.dhis.util.JRExportUtils;
+import org.hisp.dhis.util.StreamUtils;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,8 +69,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hisp.dhis.system.util.ConversionUtils.getIdentifiers;
-import static org.hisp.dhis.system.util.TextUtils.getCommaDelimitedString;
+import static org.hisp.dhis.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.util.TextUtils.getCommaDelimitedString;
 
 /**
  * @author Lars Helge Overland

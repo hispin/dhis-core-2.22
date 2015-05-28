@@ -29,8 +29,8 @@ package org.hisp.dhis.system.filter;
  */
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.system.util.Filter;
-import org.hisp.dhis.system.util.GeoUtils;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.util.GeoUtils;
 
 public class OrganisationUnitPolygonCoveringCoordinateFilter
     implements Filter<OrganisationUnit>

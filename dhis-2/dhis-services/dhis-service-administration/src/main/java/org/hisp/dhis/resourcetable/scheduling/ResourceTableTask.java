@@ -38,8 +38,8 @@ import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.NotificationLevel;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.system.util.Clock;
-import org.hisp.dhis.system.util.DebugUtils;
+import org.hisp.dhis.util.Clock;
+import org.hisp.dhis.util.DebugUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 

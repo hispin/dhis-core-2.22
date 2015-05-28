@@ -30,7 +30,7 @@ package org.hisp.dhis.dataapproval;
 
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS;
-import static org.hisp.dhis.system.util.CollectionUtils.asSet;
+import static org.hisp.dhis.util.CollectionUtils.asSet;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

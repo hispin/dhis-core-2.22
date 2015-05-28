@@ -28,8 +28,8 @@ package org.hisp.dhis.importexport.action.dxf2;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.filter.MetaDataFilter;
-import org.hisp.dhis.filter.MetaDataFilterService;
+import org.hisp.dhis.commons.filter.MetaDataFilter;
+import org.hisp.dhis.commons.filter.MetaDataFilterService;
 
 import com.opensymphony.xwork2.Action;
 

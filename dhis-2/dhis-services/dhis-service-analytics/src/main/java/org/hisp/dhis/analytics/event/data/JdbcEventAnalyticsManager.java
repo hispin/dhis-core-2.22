@@ -38,10 +38,10 @@ import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
-import static org.hisp.dhis.system.util.TextUtils.getQuotedCommaDelimitedString;
-import static org.hisp.dhis.system.util.TextUtils.removeLastComma;
-import static org.hisp.dhis.system.util.TextUtils.removeLastOr;
-import static org.hisp.dhis.system.util.TextUtils.trimEnd;
+import static org.hisp.dhis.util.TextUtils.getQuotedCommaDelimitedString;
+import static org.hisp.dhis.util.TextUtils.removeLastComma;
+import static org.hisp.dhis.util.TextUtils.removeLastOr;
+import static org.hisp.dhis.util.TextUtils.trimEnd;
 
 import java.util.Arrays;
 import java.util.List;

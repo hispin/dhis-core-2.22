@@ -34,8 +34,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.hisp.dhis.DhisConvenienceTest;
+
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.util.FilterUtils;
 import org.junit.Test;
 
 /**

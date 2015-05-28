@@ -56,7 +56,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.CalendarPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.system.util.DebugUtils;
+import org.hisp.dhis.util.DebugUtils;
 import org.hisp.dhis.system.util.MathUtils;
 
 /**

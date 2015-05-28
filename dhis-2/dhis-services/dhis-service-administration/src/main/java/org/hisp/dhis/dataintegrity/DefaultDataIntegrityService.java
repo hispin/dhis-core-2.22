@@ -29,7 +29,7 @@ package org.hisp.dhis.dataintegrity;
  */
 
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-import static org.hisp.dhis.system.util.ListUtils.getDuplicates;
+import static org.hisp.dhis.util.ListUtils.getDuplicates;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,8 +73,8 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.filter.OrganisationUnitGroupWithoutGroupSetFilter;
-import org.hisp.dhis.system.util.Filter;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.util.FilterUtils;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
 import org.springframework.transaction.annotation.Transactional;

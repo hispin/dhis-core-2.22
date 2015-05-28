@@ -54,9 +54,9 @@ import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.system.callable.IdentifiableObjectCallable;
-import org.hisp.dhis.system.util.CachingMap;
-import org.hisp.dhis.system.util.Filter;
-import org.hisp.dhis.system.util.FilterUtils;
+import org.hisp.dhis.util.CachingMap;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.util.FilterUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
