@@ -139,7 +139,7 @@ public class DefaultOrganisationUnitGroupService
     @Override
     public List<OrganisationUnitGroup> getOrganisationUnitGroupsByUid( Collection<String> uids )
     {
-        return organisationUnitGroupStore.getByUid( uids );
+        return i18n( i18nService, organisationUnitGroupStore.getByUid( uids ) );
     }
 
     @Override
@@ -276,7 +276,7 @@ public class DefaultOrganisationUnitGroupService
     @Override
     public List<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsByUid( Collection<String> uids )
     {
-        return organisationUnitGroupSetStore.getByUid( uids );
+        return i18n( i18nService, organisationUnitGroupSetStore.getByUid( uids ) );
     }
 
     @Override

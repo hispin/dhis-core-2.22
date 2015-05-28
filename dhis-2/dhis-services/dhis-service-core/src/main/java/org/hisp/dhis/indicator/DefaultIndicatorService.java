@@ -150,7 +150,7 @@ public class DefaultIndicatorService
     @Override
     public List<Indicator> getIndicatorsByUid( Collection<String> uids )
     {
-        return indicatorStore.getByUid( uids );
+        return i18n( i18nService, indicatorStore.getByUid( uids ) );
     }
 
     @Override

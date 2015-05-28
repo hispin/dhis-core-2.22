@@ -174,9 +174,9 @@ public class DefaultDataElementCategoryService
     }
 
     @Override
-    public Collection<DataElementCategory> getDataElementCategoriesByUid( Collection<String> uids )
+    public List<DataElementCategory> getDataElementCategoriesByUid( Collection<String> uids )
     {
-        return categoryStore.getByUid( uids );
+        return i18n( i18nService, categoryStore.getByUid( uids ) );
     }
 
     @Override
@@ -202,7 +202,7 @@ public class DefaultDataElementCategoryService
     @Override
     public Collection<DataElementCategory> getDisaggregationDataDimensionCategoriesNoAcl()
     {
-        return categoryStore.getCategoriesNoAcl( DataElementCategoryCombo.DIMENSION_TYPE_DISAGGREGATION, true );
+        return i18n( i18nService, categoryStore.getCategoriesNoAcl( DataElementCategoryCombo.DIMENSION_TYPE_DISAGGREGATION, true ) );
     }
 
     @Override
@@ -214,7 +214,7 @@ public class DefaultDataElementCategoryService
     @Override
     public Collection<DataElementCategory> getAttributeDataDimensionCategoriesNoAcl()
     {
-        return categoryStore.getCategoriesNoAcl( DataElementCategoryCombo.DIMENSION_TYPE_ATTTRIBUTE, true );
+        return i18n( i18nService, categoryStore.getCategoriesNoAcl( DataElementCategoryCombo.DIMENSION_TYPE_ATTTRIBUTE, true ) );
     }
 
     @Override
@@ -322,9 +322,9 @@ public class DefaultDataElementCategoryService
     }
 
     @Override
-    public Collection<DataElementCategoryOption> getDataElementCategoryOptionsByUid( Collection<String> uids )
+    public List<DataElementCategoryOption> getDataElementCategoryOptionsByUid( Collection<String> uids )
     {
-        return categoryOptionStore.getByUid( uids );
+        return i18n( i18nService, categoryOptionStore.getByUid( uids ) );
     }
 
     @Override
@@ -566,7 +566,7 @@ public class DefaultDataElementCategoryService
     }
 
     @Override
-    public Collection<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombosByUid( Collection<String> uids )
+    public List<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombosByUid( Collection<String> uids )
     {
         return categoryOptionComboStore.getByUid( uids );
     }
