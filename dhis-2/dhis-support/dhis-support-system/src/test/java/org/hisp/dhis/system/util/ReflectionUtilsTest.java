@@ -32,11 +32,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.hisp.dhis.util.ReflectionUtils.getClassName;
-import static org.hisp.dhis.util.ReflectionUtils.getId;
-import static org.hisp.dhis.util.ReflectionUtils.getProperty;
-import static org.hisp.dhis.util.ReflectionUtils.isCollection;
-import static org.hisp.dhis.util.ReflectionUtils.setProperty;
+import static org.hisp.dhis.system.util.ReflectionUtils.getClassName;
+import static org.hisp.dhis.system.util.ReflectionUtils.getId;
+import static org.hisp.dhis.system.util.ReflectionUtils.getProperty;
+import static org.hisp.dhis.system.util.ReflectionUtils.isCollection;
+import static org.hisp.dhis.system.util.ReflectionUtils.setProperty;
 
 import java.util.ArrayList;
 import java.util.Collection;
