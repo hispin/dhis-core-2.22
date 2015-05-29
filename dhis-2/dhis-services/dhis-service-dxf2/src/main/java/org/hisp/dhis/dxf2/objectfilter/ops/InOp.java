@@ -36,6 +36,7 @@ import java.util.Collection;
 public class InOp extends Op
 {
     @Override
+    @SuppressWarnings("unchecked")
     public OpStatus evaluate( Object object )
     {
         Collection<String> items = getValue( Collection.class );

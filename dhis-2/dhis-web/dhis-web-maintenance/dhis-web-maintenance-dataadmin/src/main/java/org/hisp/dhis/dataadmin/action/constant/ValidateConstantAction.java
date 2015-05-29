@@ -30,14 +30,12 @@ package org.hisp.dhis.dataadmin.action.constant;
 
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.i18n.I18n;
 
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author Dang Duy Hieu
- * @version $Id$
  */
 public class ValidateConstantAction
     implements Action
