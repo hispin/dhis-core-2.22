@@ -35,7 +35,7 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.PredicateUtils;
-import org.hisp.dhis.system.util.ReflectionUtils;
+import org.hisp.dhis.util.ReflectionUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
 import javax.servlet.http.HttpServletRequest;
