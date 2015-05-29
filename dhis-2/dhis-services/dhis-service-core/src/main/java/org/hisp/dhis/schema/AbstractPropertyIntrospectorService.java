@@ -156,7 +156,7 @@ public abstract class AbstractPropertyIntrospectorService
                 if ( SetType.class.isInstance( collection.getType() ) )
                 {
                     SetType setType = (SetType) collection.getType();
-                    Joinable joinable = setType.getAssociatedJoinable( sessionFactoryImplementor );
+                    setType.getAssociatedJoinable( sessionFactoryImplementor );
                 }
             }
         }
