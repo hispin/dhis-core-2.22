@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.hisp.dhis.system.util.ReflectionUtils.*;
+import static org.hisp.dhis.util.ReflectionUtils.*;
 
 /**
  * @author Oyvind Brucker

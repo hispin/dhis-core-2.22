@@ -36,6 +36,7 @@ import java.util.Map;
 import org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.Scheduler;
+import org.hisp.dhis.user.CurrentUserService;
 
 import com.opensymphony.xwork2.Action;
 
