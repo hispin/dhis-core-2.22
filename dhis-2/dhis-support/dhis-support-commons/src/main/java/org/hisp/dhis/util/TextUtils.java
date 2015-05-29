@@ -146,6 +146,11 @@ public class TextUtils
      */
     public static String subString( String string, int beginIndex, int length )
     {
+        if ( string == null )
+        {
+            return null;
+        }
+        
         final int endIndex = beginIndex + length;
         
         if ( beginIndex >= string.length()  )
