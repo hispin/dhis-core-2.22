@@ -32,7 +32,7 @@ import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
-import org.hisp.dhis.util.ReflectionUtils;
+import org.hisp.dhis.system.util.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
