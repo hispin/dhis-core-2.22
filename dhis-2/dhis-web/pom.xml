@@ -30,6 +30,16 @@
     <module>dhis-web-apps</module>
     <module>dhis-web-portal</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <useWarCompression>false</useWarCompression>
+      </properties>
+    </profile>
+  </profiles>
+
   <build>
     <plugins>
       <plugin>
@@ -43,7 +53,7 @@
             <compress>${useWarCompression}</compress>
           </archive>
         </configuration>
-      </plugin>	
+      </plugin>
       <plugin>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
