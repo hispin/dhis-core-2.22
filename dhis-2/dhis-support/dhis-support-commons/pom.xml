@@ -15,13 +15,17 @@
   <name>DHIS Support Commons</name>
 
   <dependencies>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>javax.servlet</groupId>-->
+      <!--<artifactId>servlet-api</artifactId>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -43,10 +47,10 @@
       <groupId>net.sf.jasperreports</groupId>
       <artifactId>jasperreports</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.javassist</groupId>-->
+      <!--<artifactId>javassist</artifactId>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.scijava</groupId>
       <artifactId>jep</artifactId>
