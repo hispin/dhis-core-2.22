@@ -40,7 +40,7 @@ import org.hisp.dhis.node.annotation.NodeCollection;
 import org.hisp.dhis.node.annotation.NodeComplex;
 import org.hisp.dhis.node.annotation.NodeRoot;
 import org.hisp.dhis.node.annotation.NodeSimple;
-import org.hisp.dhis.util.ReflectionUtils;
+import org.hisp.dhis.system.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
