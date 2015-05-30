@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Requires maven to be on the classpath
-# Skips test phase
+# Invokes the dev profile which skips tests and disables compression of war artifacts for a speedy build
 
-mvn clean install -DskipTests=true -DuseWarCompression=false
-mvn clean install -DskipTests=true -DuseWarCompression=false -f dhis-web/pom.xml
+mvn clean install -Pdev
+mvn clean install -Pdev -f dhis-web/pom.xml
