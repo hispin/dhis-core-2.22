@@ -259,6 +259,7 @@
 
   <dependencyManagement>
     <dependencies>
+
       <!--DHIS -->
       <dependency>
         <groupId>org.hisp.dhis</groupId>
@@ -356,6 +357,7 @@
         <artifactId>dhis-support-external</artifactId>
         <version>${project.version}</version>
       </dependency>
+
       <!-- Spring -->
       <dependency>
         <groupId>org.springframework</groupId>
@@ -1007,9 +1009,9 @@
         </exclusions>
       </dependency>
       <dependency>
-      	<groupId>xml-apis</groupId>
-      	<artifactId>xml-apis</artifactId>
-      	<version>1.4.01</version>
+        <groupId>xml-apis</groupId>
+        <artifactId>xml-apis</artifactId>
+        <version>1.4.01</version>
       </dependency>
       <dependency>
         <groupId>com.jcraft</groupId>
