@@ -31,6 +31,7 @@ package org.hisp.dhis.system.log;
 import java.io.File;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
@@ -39,8 +40,6 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.hisp.dhis.external.location.LocationManager;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.google.inject.internal.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -73,7 +72,7 @@ public class Log4JLogConfigInitializer
         }
         
         locationManager.buildDirectory( LOG_DIR );
-        
+
         configureLoggers( ANALYTICS_TABLE_LOGGER_FILENAME, Lists.newArrayList( "org.hisp.dhis.resourcetable", "org.hisp.dhis.analytics.table" ) );
         
         configureLoggers( DATA_EXCHANGE_LOGGER_FILENAME, Lists.newArrayList( "org.hisp.dhis.dxf2" ) );
