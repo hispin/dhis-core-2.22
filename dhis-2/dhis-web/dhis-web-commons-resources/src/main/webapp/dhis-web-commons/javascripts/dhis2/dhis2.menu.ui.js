@@ -1107,7 +1107,12 @@
                                         setHeaderLink(systemSettings.startModule);
                                     })
                                     .error(function (e) {
-                                        console && console.log(e);
+                                        console && console.info && console.info('Unable to load usersettings, falling back to default');
+
+                                        addUserStyleStylesheet(getStylesheetUrl());
+                                        setHeaderLogo(undefined, systemSettings.keyCustomTopMenuLogo);
+                                        setHeaderTitle(systemSettings.applicationTitle);
+                                        setHeaderLink(systemSettings.startModule);
                                     });
                             })
                             .error(function() {
