@@ -122,10 +122,10 @@ public class JdbcEventStore
 
                 event.setStoredBy( rowSet.getString( "psi_completeduser" ) );
                 event.setOrgUnitName( rowSet.getString( "ou_name" ) );
-                event.setDueDate( DateUtils.getLongDateString( rowSet.getDate( "psi_duedate" ) ) );
-                event.setEventDate( DateUtils.getLongDateString( rowSet.getDate( "psi_executiondate" ) ) );
-                event.setCreated( DateUtils.getLongDateString( rowSet.getDate( "psi_created" ) ) );
-                event.setLastUpdated( DateUtils.getLongDateString( rowSet.getDate( "psi_lastupdated" ) ) );
+                event.setDueDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_duedate" ) ) );
+                event.setEventDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_executiondate" ) ) );
+                event.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_created" ) ) );
+                event.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_lastupdated" ) ) );
 
                 if ( rowSet.getBoolean( "ps_capturecoordinates" ) )
                 {
@@ -234,8 +234,8 @@ public class JdbcEventStore
 
                 eventRow.setTrackedEntityInstance( rowSet.getString( "tei_uid" ) );
                 eventRow.setOrgUnitName( rowSet.getString( "ou_name" ) );
-                eventRow.setDueDate( DateUtils.getLongDateString( rowSet.getDate( "psi_duedate" ) ) );
-                eventRow.setEventDate( DateUtils.getLongDateString( rowSet.getDate( "psi_executiondate" ) ) );
+                eventRow.setDueDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_duedate" ) ) );
+                eventRow.setEventDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_executiondate" ) ) );
 
                 eventRows.add( eventRow );
             }
