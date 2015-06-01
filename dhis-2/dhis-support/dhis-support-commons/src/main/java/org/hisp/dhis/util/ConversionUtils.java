@@ -31,11 +31,7 @@ package org.hisp.dhis.util;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,57 +72,6 @@ public class ConversionUtils
     }
 
     /**
-     * Creates a collection of the identifiers of the objects passed as argument.
-     * The object are assumed to have a <code>int getId()</code> method.
-     *
-     * @param clazz   the clazz of the argument objects.
-     * @param objects for which to get the identifiers.
-     */
-    public static Collection<String> getUids( Class<?> clazz, Collection<?> objects )
-    {
-        try
-        {
-            Collection<String> identifiers = new ArrayList<>();
-
-            Method method = clazz.getMethod( "getUid", new Class[0] );
-
-            for ( Object object : objects )
-            {
-                String identifier = (String) method.invoke( object, new Object[0] );
-
-                identifiers.add( identifier );
-            }
-
-            return identifiers;
-        }
-        catch ( Exception ex )
-        {
-            throw new RuntimeException( "Failed to convert objects", ex );
-        }
-    }
-
-    /**
-     * Returns the identifier of the argument object. The object is assumed to
-     * have a <code>int getId()</code> method.
-     *
-     * @param object the object.
-     * @return the identifier of the argument object.
-     */
-    public static Integer getIdentifier( Object object )
-    {
-        try
-        {
-            Method method = object.getClass().getMethod( "getId", new Class[0] );
-
-            return (Integer) method.invoke( object, new Object[0] );
-        }
-        catch ( Exception ex )
-        {
-            throw new RuntimeException( "Failed to convert object", ex );
-        }
-    }
-
-    /**
      * Creates a collection of Integers out of a collection of Strings.
      *
      * @param strings the collection of Strings.
@@ -145,119 +90,6 @@ public class ConversionUtils
         }
 
         return integers;
-    }
-
-    /**
-     * Creates an array of Integers out of an array of Strings.
-     *
-     * @param strings the array of Strings.
-     * @return an array of Integers, an empty array if input is null.
-     */
-    public static Integer[] getIntegerArray( String[] strings )
-    {
-        if ( strings == null )
-        {
-            return new Integer[0];
-        }
-
-        Integer[] integers = new Integer[strings.length];
-
-        for ( int i = 0; i < strings.length; i++ )
-        {
-            integers[i] = Integer.valueOf( strings[i] );
-        }
-        return integers;
-    }
-
-    /**
-     * Parses the string argument as a signed decimal integer. Null is returedn
-     * if the argument is null or has zero length.
-     *
-     * @param string the string to parse.
-     * @return an integer or null.
-     */
-    public static Integer parseInt( String string )
-    {
-        if ( string == null || string.isEmpty() )
-        {
-            return null;
-        }
-
-        return Integer.parseInt( string );
-    }
-
-    /**
-     * Creates a Set of objects out of a Collection of objects.
-     *
-     * @param objects the Collection of objects.
-     * @return a Set of objects.
-     */
-    public static <T> Set<T> getSet( Collection<T> objects )
-    {
-        Set<T> set = new HashSet<>();
-
-        for ( T object : objects )
-        {
-            set.add( object );
-        }
-
-        return set;
-    }
-
-    /**
-     * Creates a List of objects out of a Collection of objects.
-     *
-     * @param objects the Collection of objects.
-     * @return a List of objects.
-     */
-    public static <T> List<T> getList( Collection<T> objects )
-    {
-        List<T> list = new ArrayList<>();
-
-        for ( T object : objects )
-        {
-            list.add( object );
-        }
-
-        return list;
-    }
-
-    /**
-     * Creates a List out of an array of objects.
-     *
-     * @param objects the array of objects.
-     * @return a List of objects.
-     */
-    @SafeVarargs
-    public static final <T> List<T> getList( final T... objects )
-    {
-        final List<T> list = new ArrayList<>();
-
-        for ( T object : objects )
-        {
-            list.add( object );
-        }
-
-        return list;
-    }
-
-    /**
-     * Returns a Map based on an argument Collection of objects where the key is
-     * the object identifier and the value if the object itself.
-     *
-     * @param collection the Collection of objects.
-     * @return a Map with identifier object pairs.
-     */
-    public static <T> Map<Integer, T> getIdentifierMap( Collection<T> collection )
-    {
-        Map<Integer, T> map = new HashMap<>();
-
-        for ( T object : collection )
-        {
-            map.put( getIdentifier( object ), object );
-        }
-
-        return map;
     }
 
     /**
@@ -299,38 +131,5 @@ public class ConversionUtils
         }
 
         return null;
-    }
-
-    /**
-     * Wraps an object in a set.
-     *
-     * @param object the object to wrap.
-     * @return a set with the given object as element.
-     */
-    public static <T> Set<T> wrap( T object )
-    {
-        Set<T> set = new HashSet<>();
-        set.add( object );
-        return set;
-    }
-
-    /**
-     * Casts the elements in the given collection to the desired return type. It
-     * is the caller's responsibility that the types legally can be casted.
-     *
-     * @param collection the collection.
-     * @return a collection.
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> Collection<T> cast( Collection<? super T> collection )
-    {
-        Collection<T> list = new ArrayList<>();
-
-        for ( Object o : collection )
-        {
-            list.add( (T) o );
-        }
-
-        return list;
     }
 }
