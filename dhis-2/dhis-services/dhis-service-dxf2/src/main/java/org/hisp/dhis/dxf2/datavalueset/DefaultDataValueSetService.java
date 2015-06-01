@@ -35,7 +35,6 @@ import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
 import static org.hisp.dhis.system.util.DateUtils.parseDate;
-import static org.hisp.dhis.util.ConversionUtils.wrap;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -99,6 +98,7 @@ import org.hisp.dhis.util.DebugUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.csvreader.CsvReader;
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -197,8 +197,8 @@ public class DefaultDataValueSetService
 
         period_ = periodService.reloadPeriod( period_ );
 
-        dataValueSetStore.writeDataValueSetXml( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, wrap( period_ ),
-            wrap( orgUnit_ ), out, idSchemes );
+        dataValueSetStore.writeDataValueSetXml( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, Sets.newHashSet( period_ ),
+            Sets.newHashSet( orgUnit_ ), out, idSchemes );
     }
 
     @Override
@@ -263,8 +263,8 @@ public class DefaultDataValueSetService
 
         period_ = periodService.reloadPeriod( period_ );
 
-        dataValueSetStore.writeDataValueSetJson( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, wrap( period_ ),
-            wrap( orgUnit_ ), outputStream, idSchemes );
+        dataValueSetStore.writeDataValueSetJson( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, Sets.newHashSet( period_ ),
+            Sets.newHashSet( orgUnit_ ), outputStream, idSchemes );
     }
 
     @Override
@@ -335,8 +335,8 @@ public class DefaultDataValueSetService
 
         period_ = periodService.reloadPeriod( period_ );
 
-        dataValueSetStore.writeDataValueSetCsv( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, wrap( period_ ),
-            wrap( orgUnit_ ), writer, idSchemes );
+        dataValueSetStore.writeDataValueSetCsv( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, Sets.newHashSet( period_ ),
+            Sets.newHashSet( orgUnit_ ), writer, idSchemes );
     }
 
     @Override

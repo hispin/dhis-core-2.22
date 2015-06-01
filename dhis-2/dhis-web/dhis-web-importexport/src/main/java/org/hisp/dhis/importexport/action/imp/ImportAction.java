@@ -31,7 +31,6 @@ package org.hisp.dhis.importexport.action.imp;
 import static org.hisp.dhis.importexport.action.util.ImportExportInternalProcessUtil.getCurrentRunningProcessImportFormat;
 import static org.hisp.dhis.importexport.action.util.ImportExportInternalProcessUtil.setCurrentImportFileName;
 import static org.hisp.dhis.importexport.action.util.ImportExportInternalProcessUtil.setCurrentRunningProcessType;
-import static org.hisp.dhis.util.ConversionUtils.getList;
 import static org.hisp.dhis.util.InternalProcessUtil.PROCESS_KEY_IMPORT;
 import static org.hisp.dhis.util.InternalProcessUtil.setCurrentRunningProcess;
 
@@ -53,6 +52,7 @@ import org.hisp.dhis.importexport.ImportType;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.user.CurrentUserService;
 
+import com.google.common.collect.Lists;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -66,7 +66,7 @@ public class ImportAction
 
     private static final Log log = LogFactory.getLog( ImportAction.class );
 
-    private static final List<String> ALLOWED_CONTENT_TYPES = getList( "application/x-zip-compressed",
+    private static final List<String> ALLOWED_CONTENT_TYPES = Lists.newArrayList( "application/x-zip-compressed",
         "application/zip", "application/x-gzip", "application/octet-stream",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/xml" );
 
