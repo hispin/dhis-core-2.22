@@ -29,6 +29,7 @@ package org.hisp.dhis.mock;
  */
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -86,6 +87,12 @@ public class MockCurrentUserService
     public User getCurrentUser()
     {
         return currentUser;
+    }
+
+    @Override
+    public Set<OrganisationUnit> getCurrentUserOrganisationUnits()
+    {
+        return currentUser != null ? currentUser.getOrganisationUnits() : new HashSet<OrganisationUnit>();
     }
 
     @Override
