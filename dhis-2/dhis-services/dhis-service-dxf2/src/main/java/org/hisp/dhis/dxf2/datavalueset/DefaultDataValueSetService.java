@@ -197,8 +197,8 @@ public class DefaultDataValueSetService
 
         period_ = periodService.reloadPeriod( period_ );
 
-        dataValueSetStore.writeDataValueSetXml( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, Sets.newHashSet( period_ ),
-            Sets.newHashSet( orgUnit_ ), out, idSchemes );
+        dataValueSetStore.writeDataValueSetXml( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, newHashSet( period_ ),
+            newHashSet( orgUnit_ ), out, idSchemes );
     }
 
     @Override
@@ -263,8 +263,8 @@ public class DefaultDataValueSetService
 
         period_ = periodService.reloadPeriod( period_ );
 
-        dataValueSetStore.writeDataValueSetJson( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, Sets.newHashSet( period_ ),
-            Sets.newHashSet( orgUnit_ ), outputStream, idSchemes );
+        dataValueSetStore.writeDataValueSetJson( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, newHashSet( period_ ),
+            newHashSet( orgUnit_ ), outputStream, idSchemes );
     }
 
     @Override
@@ -335,8 +335,8 @@ public class DefaultDataValueSetService
 
         period_ = periodService.reloadPeriod( period_ );
 
-        dataValueSetStore.writeDataValueSetCsv( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, Sets.newHashSet( period_ ),
-            Sets.newHashSet( orgUnit_ ), writer, idSchemes );
+        dataValueSetStore.writeDataValueSetCsv( newHashSet( dataSet_ ), completeDate, period_, orgUnit_, newHashSet( period_ ),
+            newHashSet( orgUnit_ ), writer, idSchemes );
     }
 
     @Override
