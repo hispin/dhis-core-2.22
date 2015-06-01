@@ -55,7 +55,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -169,9 +168,14 @@ public class DefaultDataValueSetService
             params.getDataSets().addAll( identifiableObjectManager.getByUid( DataSet.class, dataSets ) );
         }
         
-        if ( periods != null )
+        if ( periods != null && !periods.isEmpty() )
         {
             params.getPeriods().addAll( periodService.reloadIsoPeriods( new ArrayList<String>( periods ) ) );
+        }
+        else if ( startDate != null && endDate != null )
+        {
+            List<Period> pes = new ArrayList<Period>( periodService.getPeriodsBetweenDates( startDate, endDate ) );
+            params.getPeriods().addAll( periodService.reloadPeriods( pes ) );
         }
         
         if ( organisationUnits != null )
@@ -185,8 +189,6 @@ public class DefaultDataValueSetService
             }
         }
 
-        params.setStartDate( startDate );
-        params.setEndDate( endDate );
         params.setIncludeChildren( includeChildren );
         params.setIdSchemes( idSchemes );
         
@@ -208,7 +210,7 @@ public class DefaultDataValueSetService
             violation = "At least one valid data set must be specified";
         }
         
-        if ( params.getPeriods().isEmpty() && ( params.getStartDate() == null || params.getEndDate() == null ) )
+        if ( params.getPeriods().isEmpty() ) 
         {
             violation = "At least one valid period or start/end dates must be specified";
         }
@@ -243,99 +245,23 @@ public class DefaultDataValueSetService
     {
         validate( params );
 
-        DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo(); //TODO
-
-        CompleteDataSetRegistration registration = registrationService
-            .getCompleteDataSetRegistration( params.getFirstDataSet(), params.getFirstPeriod(), params.getFirstOrganisationUnit(), optionCombo );
-
-        Date completeDate = registration != null ? registration.getDate() : null;
-
-        dataValueSetStore.writeDataValueSetXml( params.getDataSets(), completeDate, params.getFirstPeriod(), params.getFirstOrganisationUnit(), 
-            params.getPeriods(), params.getOrganisationUnits(), out, params.getIdSchemes() );
+        dataValueSetStore.writeDataValueSetXml( params, getCompleteDate( params ), out );
     }
-
-    @Override
-    public void writeDataValueSetXml( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits,
-        boolean includeChildren, OutputStream out, IdSchemes idSchemes )
-    {
-        Set<DataSet> ds = new HashSet<>( dataSetService.getDataSetsByUid( dataSets ) );
-        Set<Period> pe = new HashSet<>( periodService.getPeriodsBetweenDates( startDate, endDate ) );
-        Set<OrganisationUnit> ou = new HashSet<>( organisationUnitService.getOrganisationUnitsByUid( orgUnits ) );
-
-        if ( ds.isEmpty() )
-        {
-            throw new IllegalArgumentException( "At least one data set must be specified" );
-        }
-
-        if ( pe.isEmpty() )
-        {
-            throw new IllegalArgumentException( "At least one period must be specified" );
-        }
-
-        if ( ou.isEmpty() )
-        {
-            throw new IllegalArgumentException( "At least one organisation unit must be specified" );
-        }
-
-        if ( includeChildren )
-        {
-            ou = new HashSet<>( organisationUnitService.getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( ou ) ) );
-        }
-
-        dataValueSetStore.writeDataValueSetXml( ds, null, null, null, pe, ou, out, idSchemes );
-    }
-
+    
     @Override
     public void writeDataValueSetJson( DataExportParams params, OutputStream out )
     {
         validate( params );
 
-        DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo(); //TODO
-
-        CompleteDataSetRegistration registration = registrationService
-            .getCompleteDataSetRegistration( params.getFirstDataSet(), params.getFirstPeriod(), params.getFirstOrganisationUnit(), optionCombo );
-
-        Date completeDate = registration != null ? registration.getDate() : null;
-
-        dataValueSetStore.writeDataValueSetJson( params.getDataSets(), completeDate, params.getFirstPeriod(), params.getFirstOrganisationUnit(), 
-            params.getPeriods(), params.getOrganisationUnits(), out, params.getIdSchemes() );
+        dataValueSetStore.writeDataValueSetJson( params, getCompleteDate( params ), out );
     }
 
     @Override
     public void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes )
     {
+        //TODO validate
+        
         dataValueSetStore.writeDataValueSetJson( lastUpdated, outputStream, idSchemes );
-    }
-
-    @Override
-    public void writeDataValueSetJson( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits,
-        boolean includeChildren, OutputStream outputStream, IdSchemes idSchemes )
-    {
-        Set<DataSet> ds = new HashSet<>( dataSetService.getDataSetsByUid( dataSets ) );
-        Set<Period> pe = new HashSet<>( periodService.getPeriodsBetweenDates( startDate, endDate ) );
-        Set<OrganisationUnit> ou = new HashSet<>( organisationUnitService.getOrganisationUnitsByUid( orgUnits ) );
-
-        if ( ds.isEmpty() )
-        {
-            throw new IllegalArgumentException( "At least one data set must be specified" );
-        }
-
-        if ( pe.isEmpty() )
-        {
-            throw new IllegalArgumentException( "At least one period must be specified" );
-        }
-
-        if ( ou.isEmpty() )
-        {
-            throw new IllegalArgumentException( "At least one organisation unit must be specified" );
-        }
-
-        if ( includeChildren )
-        {
-            ou = new HashSet<>( organisationUnitService.getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( ou ) ) );
-        }
-
-        dataValueSetStore.writeDataValueSetJson( ds, null, null, null, pe, ou, outputStream, idSchemes );
     }
 
     @Override
@@ -343,46 +269,22 @@ public class DefaultDataValueSetService
     {
         validate( params );
         
-        DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo(); //TODO
-
-        CompleteDataSetRegistration registration = registrationService
-            .getCompleteDataSetRegistration( params.getFirstDataSet(), params.getFirstPeriod(), params.getFirstOrganisationUnit(), optionCombo );
-
-        Date completeDate = registration != null ? registration.getDate() : null;
-
-        dataValueSetStore.writeDataValueSetCsv( params.getDataSets(), completeDate, params.getFirstPeriod(), params.getFirstOrganisationUnit(), 
-            params.getPeriods(), params.getOrganisationUnits(), writer, params.getIdSchemes() );
+        dataValueSetStore.writeDataValueSetCsv( params, getCompleteDate( params ), writer );
     }
 
-    @Override
-    public void writeDataValueSetCsv( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits,
-        boolean includeChildren, Writer writer, IdSchemes idSchemes )
+    private Date getCompleteDate( DataExportParams params )
     {
-        Set<DataSet> ds = new HashSet<>( dataSetService.getDataSetsByUid( dataSets ) );
-        Set<Period> pe = new HashSet<>( periodService.getPeriodsBetweenDates( startDate, endDate ) );
-        Set<OrganisationUnit> ou = new HashSet<>( organisationUnitService.getOrganisationUnitsByUid( orgUnits ) );
-
-        if ( ds.isEmpty() )
+        if ( params.isSingleDataValueSet() )
         {
-            throw new IllegalArgumentException( "At least one data set must be specified" );
+            DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo(); //TODO
+    
+            CompleteDataSetRegistration registration = registrationService
+                .getCompleteDataSetRegistration( params.getFirstDataSet(), params.getFirstPeriod(), params.getFirstOrganisationUnit(), optionCombo );
+    
+            return registration != null ? registration.getDate() : null;
         }
-
-        if ( pe.isEmpty() )
-        {
-            throw new IllegalArgumentException( "At least one period must be specified" );
-        }
-
-        if ( ou.isEmpty() )
-        {
-            throw new IllegalArgumentException( "At least one organisation unit must be specified" );
-        }
-
-        if ( includeChildren )
-        {
-            ou = new HashSet<>( organisationUnitService.getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( ou ) ) );
-        }
-
-        dataValueSetStore.writeDataValueSetCsv( ds, null, null, null, pe, ou, writer, idSchemes );
+        
+        return null;
     }
 
     //--------------------------------------------------------------------------
