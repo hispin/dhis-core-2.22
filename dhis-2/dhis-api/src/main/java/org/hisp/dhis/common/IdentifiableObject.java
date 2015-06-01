@@ -41,7 +41,7 @@ import java.util.Set;
 public interface IdentifiableObject
     extends ImportableObject, LinkableObject, Comparable<IdentifiableObject>, Mergeable<IdentifiableObject>
 {
-    final String[] I18N_PROPERTIES = { "name" };
+    String[] I18N_PROPERTIES = { "name" };
 
     int getId();
 
