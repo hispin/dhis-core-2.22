@@ -133,7 +133,7 @@ public class SpringDataValueSetStore
     private void writeDataValueSet( String sql, Set<DataSet> dataSets, Date completeDate, Period period,
         OrganisationUnit orgUnit, final DataValueSet dataValueSet )
     {
-        dataValueSet.setDataSet( (dataSets != null && dataSets.size() == 1) ? dataSets.iterator().next().getUid() : null );
+        dataValueSet.setDataSet( ( dataSets != null && dataSets.size() == 1 ) ? dataSets.iterator().next().getUid() : null );
         dataValueSet.setCompleteDate( getLongGmtDateString( completeDate ) );
         dataValueSet.setPeriod( period != null ? period.getIsoDate() : null );
         dataValueSet.setOrgUnit( orgUnit != null ? orgUnit.getUid() : null );
