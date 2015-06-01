@@ -28,7 +28,6 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.CollectionUtils.asSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -366,13 +365,13 @@ public class OrganisationUnitServiceTest
         OrganisationUnit unit4 = createOrganisationUnit( '4' );
         organisationUnitService.addOrganisationUnit( unit4 );
         
-        assertTrue( unit1.isDescendant( asSet( unit1 ) ) );
-        assertTrue( unit2.isDescendant( asSet( unit1 ) ) );
-        assertTrue( unit3.isDescendant( asSet( unit1 ) ) );
-        assertTrue( unit2.isDescendant( asSet( unit1, unit3 ) ) );
+        assertTrue( unit1.isDescendant( Sets.newHashSet( unit1 ) ) );
+        assertTrue( unit2.isDescendant( Sets.newHashSet( unit1 ) ) );
+        assertTrue( unit3.isDescendant( Sets.newHashSet( unit1 ) ) );
+        assertTrue( unit2.isDescendant( Sets.newHashSet( unit1, unit3 ) ) );
         
-        assertFalse( unit2.isDescendant( asSet( unit3 ) ) );
-        assertFalse( unit4.isDescendant( asSet( unit1 ) ) );
+        assertFalse( unit2.isDescendant( Sets.newHashSet( unit3 ) ) );
+        assertFalse( unit4.isDescendant( Sets.newHashSet( unit1 ) ) );
     }
 
     @Test

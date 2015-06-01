@@ -30,7 +30,6 @@ package org.hisp.dhis.dataapproval;
 
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS;
-import static org.hisp.dhis.util.CollectionUtils.asSet;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -77,6 +76,8 @@ import org.hisp.dhis.user.UserService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author Jim Grace
@@ -208,7 +209,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
     private CurrentUserService getMockCurrentUserService( String userName, boolean superUserFlag, OrganisationUnit orgUnit, String... auths )
     {
-        CurrentUserService mockCurrentUserService = new MockCurrentUserService( superUserFlag, asSet( orgUnit ), asSet( orgUnit ), auths );
+        CurrentUserService mockCurrentUserService = new MockCurrentUserService( superUserFlag, Sets.newHashSet( orgUnit ), Sets.newHashSet( orgUnit ), auths );
 
         User user = mockCurrentUserService.getCurrentUser();
 
@@ -347,18 +348,18 @@ public class DataApprovalServiceCategoryOptionGroupTest
         indiaPartner1User = getMockCurrentUserService( "IndiaPartner1User", false, india, DataApproval.AUTH_APPROVE );
         currentMockUserService = null;
 
-        UserGroup globalUsers = getUserGroup( "GlobalUsers", asSet( globalUser.getCurrentUser(), globalConsultant.getCurrentUser(), globalReadEverything.getCurrentUser() ) );
-        UserGroup brazilInteragencyUsers = getUserGroup( "BrazilInteragencyUsers", asSet( brazilInteragencyUser.getCurrentUser() ) );
-        UserGroup chinaInteragencyUsers = getUserGroup( "ChinaInteragencyUsers", asSet( chinaInteragencyUser.getCurrentUser() ) );
-        UserGroup indiaInteragencyUsers = getUserGroup( "IndiaInteragencyUsers", asSet( indiaInteragencyUser.getCurrentUser() ) );
-        UserGroup brazilAgencyAUsers = getUserGroup( "BrazilAgencyAUsers", asSet( brazilAgencyAUser.getCurrentUser() ) );
-        UserGroup chinaAgencyAUsers = getUserGroup( "ChinaAgencyAUsers", asSet( chinaAgencyAUser.getCurrentUser() ) );
-        UserGroup chinaAgencyBUsers = getUserGroup( "ChinaAgencyBUsers", asSet( chinaAgencyBUser.getCurrentUser() ) );
-        UserGroup indiaAgencyAUsers = getUserGroup( "IndiaAgencyAUsers", asSet( indiaAgencyAUser.getCurrentUser() ) );
-        UserGroup brazilPartner1Users = getUserGroup( "BrazilPartner1Users", asSet( brazilPartner1User.getCurrentUser() ) );
-        UserGroup chinaPartner1Users = getUserGroup( "ChinaPartner1Users", asSet( chinaPartner1User.getCurrentUser() ) );
-        UserGroup chinaPartner2Users = getUserGroup( "ChinaPartner2Users", asSet( chinaPartner2User.getCurrentUser() ) );
-        UserGroup indiaPartner1Users = getUserGroup( "IndiaPartner1Users", asSet( indiaPartner1User.getCurrentUser() ) );
+        UserGroup globalUsers = getUserGroup( "GlobalUsers", Sets.newHashSet( globalUser.getCurrentUser(), globalConsultant.getCurrentUser(), globalReadEverything.getCurrentUser() ) );
+        UserGroup brazilInteragencyUsers = getUserGroup( "BrazilInteragencyUsers", Sets.newHashSet( brazilInteragencyUser.getCurrentUser() ) );
+        UserGroup chinaInteragencyUsers = getUserGroup( "ChinaInteragencyUsers", Sets.newHashSet( chinaInteragencyUser.getCurrentUser() ) );
+        UserGroup indiaInteragencyUsers = getUserGroup( "IndiaInteragencyUsers", Sets.newHashSet( indiaInteragencyUser.getCurrentUser() ) );
+        UserGroup brazilAgencyAUsers = getUserGroup( "BrazilAgencyAUsers", Sets.newHashSet( brazilAgencyAUser.getCurrentUser() ) );
+        UserGroup chinaAgencyAUsers = getUserGroup( "ChinaAgencyAUsers", Sets.newHashSet( chinaAgencyAUser.getCurrentUser() ) );
+        UserGroup chinaAgencyBUsers = getUserGroup( "ChinaAgencyBUsers", Sets.newHashSet( chinaAgencyBUser.getCurrentUser() ) );
+        UserGroup indiaAgencyAUsers = getUserGroup( "IndiaAgencyAUsers", Sets.newHashSet( indiaAgencyAUser.getCurrentUser() ) );
+        UserGroup brazilPartner1Users = getUserGroup( "BrazilPartner1Users", Sets.newHashSet( brazilPartner1User.getCurrentUser() ) );
+        UserGroup chinaPartner1Users = getUserGroup( "ChinaPartner1Users", Sets.newHashSet( chinaPartner1User.getCurrentUser() ) );
+        UserGroup chinaPartner2Users = getUserGroup( "ChinaPartner2Users", Sets.newHashSet( chinaPartner2User.getCurrentUser() ) );
+        UserGroup indiaPartner1Users = getUserGroup( "IndiaPartner1Users", Sets.newHashSet( indiaPartner1User.getCurrentUser() ) );
 
         brazilA1 = new DataElementCategoryOption( "BrazilA1" );
         chinaA1_1 = new DataElementCategoryOption( "ChinaA1_1" );
@@ -367,12 +368,12 @@ public class DataApprovalServiceCategoryOptionGroupTest
         chinaB2 = new DataElementCategoryOption( "ChinaB2" );
         indiaA1 = new DataElementCategoryOption( "IndiaA1" );
 
-        brazilA1.setOrganisationUnits( asSet( brazil ) );
-        chinaA1_1.setOrganisationUnits( asSet( china ) );
-        chinaA1_2.setOrganisationUnits( asSet( china ) );
-        chinaA2.setOrganisationUnits( asSet( china ) );
-        chinaB2.setOrganisationUnits( asSet( china ) );
-        indiaA1.setOrganisationUnits( asSet( india ) );
+        brazilA1.setOrganisationUnits( Sets.newHashSet( brazil ) );
+        chinaA1_1.setOrganisationUnits( Sets.newHashSet( china ) );
+        chinaA1_2.setOrganisationUnits( Sets.newHashSet( china ) );
+        chinaA2.setOrganisationUnits( Sets.newHashSet( china ) );
+        chinaB2.setOrganisationUnits( Sets.newHashSet( china ) );
+        indiaA1.setOrganisationUnits( Sets.newHashSet( india ) );
 
         categoryService.addDataElementCategoryOption( brazilA1 );
         categoryService.addDataElementCategoryOption( chinaA1_1 );
@@ -585,7 +586,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
     {
         setUser( mockUserService );
 
-        List<DataApprovalStatus> approvals = dataApprovalService.getUserDataApprovalsAndPermissions( asSet( dataSet ), period, orgUnit );
+        List<DataApprovalStatus> approvals = dataApprovalService.getUserDataApprovalsAndPermissions( Sets.newHashSet( dataSet ), period, orgUnit );
 
         List<String> approvalStrings = new ArrayList<>();
 

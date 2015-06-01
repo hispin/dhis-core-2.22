@@ -120,46 +120,6 @@ public class CollectionUtils
     }
 
     /**
-     * Returns the given arguments as an ordered List.
-     *
-     * @param items the items.
-     * @param <T> the type.
-     * @return an ordered List of the supplied items.
-     */
-    @SafeVarargs
-    public static <T> List<T> asList( final T... items )
-    {
-        List<T> list = new ArrayList<>();
-
-        for ( T item : items )
-        {
-            list.add( item );
-        }
-
-        return list;
-    }
-
-    /**
-     * Returns the given arguments as a Set.
-     *
-     * @param items the items.
-     * @param <T> the type.
-     * @return a Set of the supplied items.
-     */
-    @SafeVarargs
-    public static final <T> Set<T> asSet( final T... items )
-    {
-        Set<T> set = new HashSet<>();
-
-        for ( T item : items )
-        {
-            set.add( item );
-        }
-
-        return set;
-    }
-
-    /**
      * Constructs a Map Entry (key, value). Used to construct a Map with asMap.
      *
      * @param key map entry key
