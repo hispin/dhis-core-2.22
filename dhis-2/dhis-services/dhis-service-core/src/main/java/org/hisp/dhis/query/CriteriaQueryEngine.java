@@ -50,12 +50,12 @@ import java.util.Map;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryEngine<T>
+public class CriteriaQueryEngine<T> implements QueryEngine<T>
 {
     @Autowired
-    private final List<HibernateGenericStore<? extends IdentifiableObject>> hibernateGenericStores = new ArrayList<>();
+    private final List<HibernateGenericStore<T>> hibernateGenericStores = new ArrayList<>();
 
-    private Map<Class<?>, HibernateGenericStore<? extends IdentifiableObject>> stores = new HashMap<>();
+    private Map<Class<?>, HibernateGenericStore<T>> stores = new HashMap<>();
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -276,7 +276,7 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
             return;
         }
 
-        for ( HibernateGenericStore<? extends IdentifiableObject> store : hibernateGenericStores )
+        for ( HibernateGenericStore<T> store : hibernateGenericStores )
         {
             stores.put( store.getClazz(), store );
         }
