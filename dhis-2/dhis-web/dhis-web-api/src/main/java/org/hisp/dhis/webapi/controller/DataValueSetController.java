@@ -33,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -45,7 +46,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.common.collect.Sets;
+
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -53,6 +57,9 @@ import java.util.Set;
 
 import static org.hisp.dhis.webapi.utils.ContextUtils.*;
 
+/**
+ * @author Lars Helge Overland
+ */
 @Controller
 @RequestMapping( value = DataValueSetController.RESOURCE_PATH )
 public class DataValueSetController
@@ -80,6 +87,9 @@ public class DataValueSetController
     {
         response.setContentType( CONTENT_TYPE_XML );
 
+        DataExportParams params = dataValueSetService.getFromUrl( dataSet, Sets.newHashSet( period ), 
+            startDate, endDate, orgUnit, children, idSchemes );
+        
         boolean isSingleDataValueSet = dataSet.size() == 1 && period != null && orgUnit.size() == 1;
 
         if ( isSingleDataValueSet )
@@ -89,7 +99,7 @@ public class DataValueSetController
 
             log.debug( "Get XML data value set for data set: " + ds + ", period: " + period + ", org unit: " + ou );
 
-            dataValueSetService.writeDataValueSetXml( ds, period, ou, response.getOutputStream(), idSchemes );
+            dataValueSetService.writeDataValueSetXml( params, response.getOutputStream() );
         }
         else
         {
@@ -111,6 +121,9 @@ public class DataValueSetController
     {
         response.setContentType( CONTENT_TYPE_JSON );
 
+        DataExportParams params = dataValueSetService.getFromUrl( dataSet, Sets.newHashSet( period ), 
+            startDate, endDate, orgUnit, children, idSchemes );
+        
         boolean isSingleDataValueSet = dataSet.size() == 1 && period != null && orgUnit.size() == 1;
 
         if ( isSingleDataValueSet )
@@ -120,7 +133,7 @@ public class DataValueSetController
 
             log.debug( "Get JSON data value set for data set: " + ds + ", period: " + period + ", org unit: " + ou );
 
-            dataValueSetService.writeDataValueSetJson( ds, period, ou, response.getOutputStream(), idSchemes );
+            dataValueSetService.writeDataValueSetJson( params, response.getOutputStream() );
         }
         else
         {
@@ -143,6 +156,9 @@ public class DataValueSetController
     {
         response.setContentType( CONTENT_TYPE_CSV );
 
+        DataExportParams params = dataValueSetService.getFromUrl( dataSet, Sets.newHashSet( period ), 
+            startDate, endDate, orgUnit, children, idSchemes );
+        
         boolean isSingleDataValueSet = dataSet.size() == 1 && period != null && orgUnit.size() == 1;
 
         if ( isSingleDataValueSet )
@@ -152,7 +168,7 @@ public class DataValueSetController
 
             log.debug( "Get CSV data value set for data set: " + ds + ", period: " + period + ", org unit: " + ou );
 
-            dataValueSetService.writeDataValueSetCsv( ds, period, ou, response.getWriter(), idSchemes );
+            dataValueSetService.writeDataValueSetCsv( params, response.getWriter() );
         }
         else
         {
