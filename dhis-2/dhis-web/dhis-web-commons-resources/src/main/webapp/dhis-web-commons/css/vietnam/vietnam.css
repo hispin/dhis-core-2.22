@@ -210,11 +210,10 @@ input[type=text],input[type=password],input[type=email],textarea
   background-color: #f7f7f7;
   width: 235px;
   position: fixed;
-  top: 46px;
+  top: 45px;
   left: 0px;
-  padding-top: 6px;
-  border-right: 1px solid #ddd;
-  box-shadow: #ddd 0 0 2px 0;
+  padding-top: 7px;
+  border-right: 1px solid #e1e1e1;
   z-index: 10;
 }
 

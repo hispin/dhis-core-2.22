@@ -210,11 +210,10 @@ input[type=text],input[type=password],input[type=email],textarea
   background-color: #f7f7f7;
   width: 235px;
   position: fixed;
-  top: 46px;
+  top: 45px;
   left: 0;
-  padding-top: 6px;
+  padding-top: 7px;
   border-right: 1px solid #ddd;
-  box-shadow: #ddd 0 0 2px 0;
   z-index: 10;
 }
 
@@ -251,7 +250,7 @@ input[type=text],input[type=password],input[type=email],textarea
 #leftBarContents a:hover
 {
   text-decoration: none;
-  background-color: #ededed;
+  background-color: #eaeaea;
   border-radius: 4px;
 }
 
