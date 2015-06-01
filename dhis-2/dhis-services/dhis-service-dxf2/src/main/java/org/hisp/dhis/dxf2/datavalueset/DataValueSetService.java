@@ -48,17 +48,22 @@ import java.util.Set;
  */
 public interface DataValueSetService
 {
-    void writeDataValueSetXml( String dataSet, String period, String orgUnit, OutputStream out, IdSchemes idSchemes );
+    DataExportParams getFromUrl( Set<String> dataSets, Set<String> periods, Date startDate, Date endDate, 
+        Set<String> organisationUnits, boolean includeChildren, IdSchemes idSchemes );
+    
+    void validate( DataExportParams params );
+    
+    void writeDataValueSetXml( DataExportParams params, OutputStream out );
 
     void writeDataValueSetXml( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits, boolean includeChildren, OutputStream out, IdSchemes idSchemes );
 
-    void writeDataValueSetJson( String ds, String period, String ou, OutputStream outputStream, IdSchemes idSchemes );
+    void writeDataValueSetJson( DataExportParams params, OutputStream out );
 
     void writeDataValueSetJson( Set<String> dataSet, Date startDate, Date endDate, Set<String> ous, boolean includeChildren, OutputStream outputStream, IdSchemes idSchemes );
 
     void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes );
 
-    void writeDataValueSetCsv( String dataSet, String period, String orgUnit, Writer writer, IdSchemes idSchemes );
+    void writeDataValueSetCsv( DataExportParams params, Writer writer );
 
     void writeDataValueSetCsv( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits, boolean includeChildren, Writer writer, IdSchemes idSchemes );
 
