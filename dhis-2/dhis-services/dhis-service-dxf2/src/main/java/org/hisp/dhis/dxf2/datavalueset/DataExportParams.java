@@ -28,7 +28,6 @@ package org.hisp.dhis.dxf2.datavalueset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,6 +35,8 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+
+import com.google.common.base.MoreObjects;
 
 /**
  * @author Lars Helge Overland
@@ -45,10 +46,6 @@ public class DataExportParams
     private Set<DataSet> dataSets = new HashSet<>();
     
     private Set<Period> periods = new HashSet<>();
-    
-    private Date startDate;
-    
-    private Date endDate;
     
     private Set<OrganisationUnit> organisationUnits = new HashSet<>();
 
@@ -83,6 +80,26 @@ public class DataExportParams
         return organisationUnits != null && !organisationUnits.isEmpty() ? organisationUnits.iterator().next() : null;
     }
     
+    /**
+     * Indicates whether this parameters represents a single data value set, implying
+     * that it contains exactly one of data sets, periods and organisation units.
+     */
+    public boolean isSingleDataValueSet()
+    {
+        return dataSets.size() == 1 && periods.size() == 1 && organisationUnits.size() == 1;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper( this ).
+            add( "data sets", dataSets ).
+            add( "periods", periods ).
+            add( "org units", organisationUnits ).
+            add( "children", includeChildren ).
+            add( "id schemes", idSchemes ).toString();            
+    }
+    
     // -------------------------------------------------------------------------
     // Get and set methods
     // -------------------------------------------------------------------------
@@ -105,26 +122,6 @@ public class DataExportParams
     public void setPeriods( Set<Period> periods )
     {
         this.periods = periods;
-    }
-
-    public Date getStartDate()
-    {
-        return startDate;
-    }
-
-    public void setStartDate( Date startDate )
-    {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate()
-    {
-        return endDate;
-    }
-
-    public void setEndDate( Date endDate )
-    {
-        this.endDate = endDate;
     }
 
     public Set<OrganisationUnit> getOrganisationUnits()

@@ -55,17 +55,11 @@ public interface DataValueSetService
     
     void writeDataValueSetXml( DataExportParams params, OutputStream out );
 
-    void writeDataValueSetXml( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits, boolean includeChildren, OutputStream out, IdSchemes idSchemes );
-
     void writeDataValueSetJson( DataExportParams params, OutputStream out );
-
-    void writeDataValueSetJson( Set<String> dataSet, Date startDate, Date endDate, Set<String> ous, boolean includeChildren, OutputStream outputStream, IdSchemes idSchemes );
 
     void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes );
 
     void writeDataValueSetCsv( DataExportParams params, Writer writer );
-
-    void writeDataValueSetCsv( Set<String> dataSets, Date startDate, Date endDate, Set<String> orgUnits, boolean includeChildren, Writer writer, IdSchemes idSchemes );
 
     RootNode getDataValueSetTemplate( DataSet dataSet, Period period, List<String> orgUnits, boolean writeComments, String ouScheme, String deScheme );
 
