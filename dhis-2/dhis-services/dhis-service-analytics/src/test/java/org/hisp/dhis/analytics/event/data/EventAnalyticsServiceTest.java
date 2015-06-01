@@ -28,7 +28,6 @@ package org.hisp.dhis.analytics.event.data;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.CollectionUtils.asSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -70,6 +69,8 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -145,7 +146,7 @@ public class EventAnalyticsServiceTest
         attributeService.addTrackedEntityAttribute( atA );
         attributeService.addTrackedEntityAttribute( atB );
                 
-        prA = createProgram( 'A', new HashSet<ProgramStage>(), asSet( atA, atB ), asSet( ouA, ouB ) );
+        prA = createProgram( 'A', new HashSet<ProgramStage>(), Sets.newHashSet( atA, atB ), Sets.newHashSet( ouA, ouB ) );
         programService.addProgram( prA );
         
         psA = createProgramStage( 'A', 0 );
