@@ -87,6 +87,8 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.DateUtils;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -149,6 +151,10 @@ public class HibernateCaseAggregationConditionStore
 
     @Autowired
     private DataElementCategoryService categoryService;
+    
+
+    @Autowired
+    private TrackedEntityAttributeService attributeService;
     
     // -------------------------------------------------------------------------
     // Implementation Methods
@@ -445,7 +451,7 @@ public class HibernateCaseAggregationConditionStore
             sql += "GROUP BY ou.organisationunitid ) from organisationunit ou where ou.organisationunitid in ( " + TextUtils.getCommaDelimitedString( orgunitIds ) + " ) ";
             
         }
-      
+System.out.println("\n\n " + sql + "\n\n");
         return sql;
     }
 
@@ -812,7 +818,17 @@ public class HibernateCaseAggregationConditionStore
         
         sql = sql.replaceAll( CaseAggregationCondition.CURRENT_DATE, "now()");
         
-        return sql + " )  and psi.organisationunitid=ou.organisationunitid ";
+        sql += " ) ";
+        if( hasDataelementCriteria( caseExpression ) )
+        {
+            sql += " and psi.organisationunitid=ou.organisationunitid ";
+        }
+        else
+        {
+            sql += " and pi.organisationunitid=ou.organisationunitid ";
+        }
+        
+        return sql;
     }
 
     /**
@@ -896,7 +912,15 @@ public class HibernateCaseAggregationConditionStore
 
             if ( isExist )
             {
-                sql += " AND _pav.value ";
+                TrackedEntityAttribute attribute =attributeService.getTrackedEntityAttribute( Integer.parseInt( attributeId ) );
+                if ( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_NUMBER ) )
+                {
+                    sql += " AND cast( _pav.value as " + statementBuilder.getDoubleColumnType() + " )  ";
+                }
+                else
+                {
+                    sql += " AND _pav.value ";
+                }
             }
         }
 
@@ -953,7 +977,7 @@ public class HibernateCaseAggregationConditionStore
         String sql = " EXISTS ( SELECT * FROM programinstance as _pi inner join trackedentityinstance _p on _p.trackedentityinstanceid=_pi.trackedentityinstanceid "
             + "WHERE _pi.trackedentityinstanceid=pi.trackedentityinstanceid AND _pi.programid="
             + programId
-            + " AND _p.organisationunitid in ("
+            + " AND _pi.organisationunitid in ("
             + TextUtils.getCommaDelimitedString( orgunitIds )
             + ") AND _pi.enrollmentdate >= '"
             + PARAM_PERIOD_START_DATE
