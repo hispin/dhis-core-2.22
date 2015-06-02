@@ -21,7 +21,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             return tx;
         }, function () {
 
-            setHeaderDelayMessage($translate('No translation file is found for the selected locale. Using default translation (English).'));
+            setHeaderDelayMessage('No translation file is found for the selected locale. Using default translation (English).');
 
             var p = $http.get(defaultUrl).then(function (response) {
                 tx = {locale: locale, keys: dhis2.util.parseJavaProperties(response.data)};
@@ -255,9 +255,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                             newInputField = '<input type="text" ' +
                                     this.getAttributesAsString(attributes) +
-                                    ' d2-validation ' +
-                                    ' ng-model="currentEvent.' + fieldId + '"' +
-                                    ' ng-model-options="{ updateOn: \'blur\' }"' +
+                                    ' ng-model="currentEvent.' + fieldId + '"' +                                    
                                     ' input-field-id="' + fieldId + '"' +
                                     ' d2-date ' +
                                     ' d2-date-validator ' +
@@ -278,8 +276,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             var prStDe = programStageDataElements[fieldId];
 
                             var commonInputFieldProperty = this.getAttributesAsString(attributes) +
-                                    ' ng-model="currentEvent.' + fieldId + '" ' +
-                                    ' ng-model-options="{ updateOn: \'blur\' }"' +
+                                    ' ng-model="currentEvent.' + fieldId + '" ' +                                   
                                     ' input-field-id="' + fieldId + '"' +
                                     ' ng-class="getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id,true)"' +
                                     ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
@@ -295,8 +292,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             ' d2-typeahead-validator ' +
                                             ' class="typeahead" ' +
                                             ' placeholder="&#xf0d7;&nbsp;&nbsp;" ' +
-                                            ' ng-blur="saveDatavalue(prStDes.' + fieldId + ')"' +
-                                            ' typeahead-open-on-focus ' +
+                                            ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
+                                            ' typeahead-focus-first="false"' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else {
@@ -305,12 +302,12 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                         newInputField = '<input type="number" ' +
                                                 ' d2-number-validator ' +
                                                 ' number-type="' + prStDe.dataElement.numberType + '" ' +
-                                                ' ng-blur="saveDatavalue(prStDes.' + fieldId + ')"' +
+                                                ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
                                     else if (prStDe.dataElement.type === "bool") {
                                         newInputField = '<select ' +
-                                                ' ng-change="saveDatavalue(prStDes.' + fieldId + ')" ' +
+                                                ' ng-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')" ' +
                                                 commonInputFieldProperty + '>' +
                                                 '<option value="">{{\'please_select\'| translate}}</option>' +
                                                 '<option value="false">{{\'no\'| translate}}</option>' +
@@ -324,17 +321,17 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' d2-date ' +
                                                 ' d2-date-validator ' +
                                                 ' max-date="' + maxDate + '"' +
-                                                ' blur-or-change="saveDatavalue(prStDes.' + fieldId + ')"' +
+                                                ' blur-or-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
                                     else if (prStDe.dataElement.type.type === "trueOnly") {
                                         newInputField = '<input type="checkbox" ' +
-                                                ' ng-change="saveDatavalue(prStDes.' + fieldId + ')"' +
+                                                ' ng-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId +')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
                                     else {
                                         newInputField = '<input type="text" ' +
-                                                ' ng-blur="saveDatavalue(prStDes.' + fieldId + ')"' +
+                                                ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
                                 }
@@ -402,12 +399,12 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             if (att.optionSetValue) {
                                 var optionSetId = att.optionSet.id;
                                 newInputField = '<input type="text" ' +
-                                        ' d2-typeahead-validation ' +
                                         ' class="typeahead" ' +
                                         ' placeholder="&#xf0d7;&nbsp;&nbsp;" ' +
                                         ' typeahead-editable="false" ' +
+                                        ' d2-typeahead-validator ' +
                                         ' typeahead="option.name as option.name for option in optionSets.' + optionSetId + '.options | filter:$viewValue | limitTo:50"' +
-                                        ' typeahead-open-on-focus ' +
+                                        ' typeahead-focus-first="false"' +
                                         ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                         commonInputFieldProperty + ' >';
 
@@ -490,8 +487,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     ' max-date="' + inMaxDate + '"> ';
                         }
                     }
-
-                    newInputField = newInputField + ' <span ng-show="outerForm.submitted && outerForm.' + fieldName + '.$invalid" class="required">{{\'required\' | translate}}</span> ';
+                    
+                    newInputField = newInputField + ' <div ng-messages="outerForm.' + fieldName + '.$error" class="required" ng-if="interacted(outerForm.' + fieldName + ')" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html"></div>';                    
 
                     htmlCode = htmlCode.replace(inputField, newInputField);
                 }

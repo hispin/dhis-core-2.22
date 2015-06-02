@@ -32,6 +32,7 @@ var d2Controllers = angular.module('d2Controllers', [])
 .controller('MapController',
         function($scope, 
                 $modalInstance,
+                CurrentSelection,
                 DHIS2URL,                
                 location) {
     
@@ -45,7 +46,8 @@ var d2Controllers = angular.module('d2Controllers', [])
         $modalInstance.close();
     };
     
-    $scope.captureCoordinate = function(){        
+    $scope.captureCoordinate = function(){
+        $scope.location = CurrentSelection.getLocation();
         $modalInstance.close($scope.location);
-    };
+    }; 
 });
