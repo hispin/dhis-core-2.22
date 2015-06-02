@@ -83,7 +83,7 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
     public Query getQueryFromUrl( Class<?> klass, List<String> filters, List<Order> orders )
     {
         Query query = Query.from( schemaService.getDynamicSchema( klass ) );
-        query.add( getRestrictions( query.getSchema(), filters ) );
+        query.add( getCriterions( query.getSchema(), filters ) );
         query.addOrders( orders );
 
         return query;
@@ -93,25 +93,25 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
     // Helpers
     //--------------------------------------------------------------------------
 
-    private List<Restriction> getRestrictions( Schema schema, List<String> filters )
+    private List<Criterion> getCriterions( Schema schema, List<String> filters )
     {
-        List<Restriction> restrictions = new ArrayList<>();
-        List<String> candidates = getRestrictionCandidates( schema, filters );
+        List<Criterion> criterions = new ArrayList<>();
+        List<String> candidates = getCandidates( schema, filters );
 
         if ( candidates.isEmpty() )
         {
-            return restrictions;
+            return criterions;
         }
 
         for ( String candidate : candidates )
         {
-            restrictions.add( getRestriction( schema, candidate ) );
+            criterions.add( getRestriction( schema, candidate ) );
         }
 
-        return restrictions;
+        return criterions;
     }
 
-    private List<String> getRestrictionCandidates( Schema schema, List<String> filters )
+    private List<String> getCandidates( Schema schema, List<String> filters )
     {
         List<String> candidates = new ArrayList<>();
 

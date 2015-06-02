@@ -46,7 +46,7 @@ public class Query
 
     private List<Order> orders = new ArrayList<>();
 
-    private List<Restriction> restrictions = new ArrayList<>();
+    private List<Criterion> criterions = new ArrayList<>();
 
     private Integer firstResult;
 
@@ -72,19 +72,9 @@ public class Query
         return orders;
     }
 
-    public void setOrders( List<Order> orders )
+    public List<Criterion> getCriterions()
     {
-        this.orders = orders;
-    }
-
-    public List<Restriction> getRestrictions()
-    {
-        return restrictions;
-    }
-
-    public void setRestrictions( List<Restriction> restrictions )
-    {
-        this.restrictions = restrictions;
+        return criterions;
     }
 
     public Integer getFirstResult()
@@ -110,11 +100,18 @@ public class Query
     }
 
     // Builder
-    public Query add( Restriction... restrictions )
+    public Query add( Criterion... criterions )
     {
-        for ( Restriction restriction : restrictions )
+        for ( Criterion criterion : criterions )
         {
-            if ( restriction == null || !schema.haveProperty( restriction.getPath() ) )
+            if ( !Restriction.class.isInstance( criterion ) )
+            {
+                continue;
+            }
+
+            Restriction restriction = (Restriction) criterion;
+
+            if ( !schema.haveProperty( restriction.getPath() ) )
             {
                 continue;
             }
@@ -125,15 +122,15 @@ public class Query
                 continue;
             }
 
-            this.restrictions.add( restriction );
+            this.criterions.add( restriction );
         }
 
         return this;
     }
 
-    public Query add( Collection<Restriction> restrictions )
+    public Query add( Collection<Criterion> criterions )
     {
-        this.restrictions.addAll( restrictions );
+        this.criterions.addAll( criterions );
         return this;
     }
 
@@ -191,7 +188,7 @@ public class Query
             .add( "firstResult", firstResult )
             .add( "maxResults", maxResults )
             .add( "orders", orders )
-            .add( "restrictions", restrictions )
+            .add( "criterions", criterions )
             .toString();
     }
 }

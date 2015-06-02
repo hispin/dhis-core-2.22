@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class Restriction
+public class Restriction implements Criterion
 {
     /**
      * Path to property you want to restrict only, one first-level properties are currently supported.
