@@ -11,8 +11,8 @@
     <li data-enabled="canManageTemplateMessage"><a data-target-fn="programReminder"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_template_reminder_message" )</a></li> 
 	<li data-enabled="canManageProgramRule"><a data-target-fn="programRule"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_program_rule" )</a></li>
     <li data-enabled="canUpdate"><a data-target-fn="validationCriteria"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_validation_criteria" )</a></li>
-    <li data-enabled="canUpdate"><a data-target-fn="programValidationManagement"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_validation_rule" )</a></li>
-    <li data-enabled="canUpdate"><a data-target-fn="programIndicatorManagementForm"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_program_indicator" )</a></li>
+    <li data-enabled="canUpdate"><a data-target-fn="programValidationManagement"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_validation_rules" )</a></li>
+    <li data-enabled="canUpdate"><a data-target-fn="programIndicatorManagementForm"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_program_indicators" )</a></li>
     <li data-enabled="canManage"><a data-target-fn="showSharingDialogWithContext"><i class="fa fa-share"></i>&nbsp;&nbsp;$i18n.getString( "sharing_settings" )</a></li>
     <li data-enabled="canUpdate"><a data-target-fn="translateWithContext"><i class="fa fa-globe"></i>&nbsp;&nbsp;$i18n.getString( "translation_translate" )</a></li>
     <li data-enabled="canDelete"><a data-target-fn="removeProgram"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;$i18n.getString( "remove" )</a></li>
