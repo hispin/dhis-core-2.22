@@ -1,103 +1,111 @@
-<div id="tabs" style="width:670px">
-	<ul>
-		<li><a href="#tab-1">$i18n.getString("dataelements")</a></li>
-		#if($program.type!='3')
-			<li><a href="#tab-2">$i18n.getString("program_variables")</a></li>
-			<li><a href="#tab-3">$i18n.getString("attributes")</a></li>
-		#end
-		<li><a href="#tab-4">$i18n.getString("constant")</a></li>
-	</ul>	
-	
-	<div id="tab-1">
-	  <table style="width:100%">
-        <tr>
-			<td>
-				<input type='text' id='txtSearchValue' name='txtSearchValue' onKeyUp="filterIndicatorSelect(event, this.value, 'dataElements');" placeholder="$i18n.getString('filter')" />
-				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchValue', '');" />			
-			</td>
-        </tr>
-        <tr>
-			<td>
-				<select multiple id="dataElements" name="dataElements" size="8" style="width:100%" ondblclick="insertDataElement(this);"></select>
-			</td>
-		</tr>
-      </table>
-	</div>
-	
-#if($program.type!='3')
-	<div id="tab-2">
-		<table style="width:100%">
-		  <tr>
-		    <td>
-			  <input type='text' id='txtSearchPropertyValue' name='txtSearchValue' onKeyUp="filterIndicatorSelect(event, this.value, 'programProperty');" placeholder="$i18n.getString('filter')" />
-			  <input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchPropertyValue', '');" />			
-			</td>
-        </tr>
-		<tr>
-			<td>
-				<select multiple id="programProperty" name="programProperty" size="10" style="width:100%" ondblclick="insertInfo(this, false);" >
-					<option value="V{incident_date}">$i18n.getString( "incident_date" )</option>
-					<option value="V{enrollment_date}">$i18n.getString( "date_of_enrollment" )</option>
-					<option value="V{current_date}">$i18n.getString( "current_date" )</option>
-					<option value="V{value_count}">$i18n.getString( "value_count" )</option>
-					<option value="V{zero_pos_value_count}">$i18n.getString( "zero_pos_value_count" )</option>
-				</select>
-			</td>
-		</tr>
-		</table>
-	</div>
-
-	<div id="tab-3">
-		<table style="width:100%">
-        <tr>
-			<td>
-				<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterIndicatorSelect(event, this.value, 'attributes');" placeholder="$i18n.getString('filter')" />
-				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" />			
-			</td>
-        </tr>
-        <tr>
-			<td>
-				<select multiple id="attributes" name="attributes" size="8" style="width:100%" ondblclick="insertData(this,'A');">
-					#foreach( $programAttribute in $program.programAttributes )
-						#if( $programAttribute.attribute.valueType=='number' )
-							<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
-						#end
-					#end
-				</select>
-			</td>
-		</tr>
-      </table>
-	</div>
-	
-#end
-
-	<div id="tab-4">
-		<table style="width:100%">
-        <tr>
-			<td>
-				<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterIndicatorSelect(event, this.value, 'constants');" placeholder="$i18n.getString('filter')" />
-				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchContsValue', '');" />			
-			</td>
-        </tr>
-        <tr>
-			<td>
-				<select multiple id="constants" name="constants" size="8" style="width:100%" ondblclick="insertData(this,'C');">
-					#foreach( $constant in $constants )
-						<option value='$constant.uid'>$encoder.htmlEncode($constant.displayName)</option>
-					#end
-				</select>
-			</td>
-		</tr>
-      </table>
-	</div>
-	
-</div>
-
-<p></p>
 <table>
 	<tr>
-        <th>$i18n.getString( "expression" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) oizp(x) zing(x)</span></th>
-      </tr>	
+		<th>$i18n.getString( "expression_items" )</th>
+	</tr>	
+	<tr>
+		<td>
+	
+		<div id="tabs" style="width:670px; margin: 1px 0;">
+			<ul>
+				<li><a href="#tab-1">$i18n.getString("dataelements")</a></li>
+				#if($program.type!='3')
+					<li><a href="#tab-2">$i18n.getString("attributes")</a></li>
+					<li><a href="#tab-3">$i18n.getString("variables")</a></li>
+				#end
+				<li><a href="#tab-4">$i18n.getString("constants")</a></li>
+			</ul>	
+			
+			<div id="tab-1">
+			  <table style="width:100%">
+		        <tr>
+					<td>
+						<input type='text' id='txtSearchValue' name='txtSearchValue' onKeyUp="filterIndicatorSelect(event, this.value, 'dataElements');" placeholder="$i18n.getString('filter')" />
+						<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchValue', '');" />			
+					</td>
+		        </tr>
+		        <tr>
+					<td>
+						<select multiple id="dataElements" name="dataElements" size="8" style="width:100%" ondblclick="insertDataElement(this);"></select>
+					</td>
+				</tr>
+		      </table>
+			</div>
+			
+		#if($program.type!='3')
+		
+			<div id="tab-2">
+				<table style="width:100%">
+		        <tr>
+					<td>
+						<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterIndicatorSelect(event, this.value, 'attributes');" placeholder="$i18n.getString('filter')" />
+						<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" />			
+					</td>
+		        </tr>
+		        <tr>
+					<td>
+						<select multiple id="attributes" name="attributes" size="8" style="width:100%" ondblclick="insertData(this,'A');">
+							#foreach( $programAttribute in $program.programAttributes )
+								#if( $programAttribute.attribute.valueType=='number' )
+									<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
+								#end
+							#end
+						</select>
+					</td>
+				</tr>
+		      </table>
+			</div>
+			
+			<div id="tab-3">
+				<table style="width:100%">
+				  <tr>
+				    <td>
+					  <input type='text' id='txtSearchPropertyValue' name='txtSearchValue' onKeyUp="filterIndicatorSelect(event, this.value, 'programProperty');" placeholder="$i18n.getString('filter')" />
+					  <input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchPropertyValue', '');" />			
+					</td>
+		        </tr>
+				<tr>
+					<td>
+						<select multiple id="programProperty" name="programProperty" size="8" style="width:100%" ondblclick="insertInfo(this, false);" >
+							<option value="V{incident_date}">$i18n.getString( "incident_date" )</option>
+							<option value="V{enrollment_date}">$i18n.getString( "date_of_enrollment" )</option>
+							<option value="V{current_date}">$i18n.getString( "current_date" )</option>
+							<option value="V{value_count}">$i18n.getString( "value_count" )</option>
+							<option value="V{zero_pos_value_count}">$i18n.getString( "zero_pos_value_count" )</option>
+						</select>
+					</td>
+				</tr>
+				</table>
+			</div>
+			
+		#end
+		
+			<div id="tab-4">
+				<table style="width:100%">
+		        <tr>
+					<td>
+						<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterIndicatorSelect(event, this.value, 'constants');" placeholder="$i18n.getString('filter')" />
+						<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchContsValue', '');" />			
+					</td>
+		        </tr>
+		        <tr>
+					<td>
+						<select multiple id="constants" name="constants" size="8" style="width:100%" ondblclick="insertData(this,'C');">
+							#foreach( $constant in $constants )
+								<option value='$constant.uid'>$encoder.htmlEncode($constant.displayName)</option>
+							#end
+						</select>
+					</td>
+				</tr>
+		      </table>
+			</div>
+			
+		</div>
+		
+		</td>
+	</tr>
+	<tr>
+        <th style="padding-top:15px">$i18n.getString( "expression" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) oizp(x) zing(x)</span></th>
+    </tr>	
 	<tr>
 		<td>
 			<textarea style="width:662px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
@@ -114,8 +122,8 @@
 		</td>
 	</tr>	
 	<tr>
-        <th>$i18n.getString( "description" )</th>
-      </tr>	
+        <th style="padding-top:4px">$i18n.getString( "expression_description" )</th>
+    </tr>	
 	<tr>
 		<td>
 			<div id='aggregationDescription' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!description)</div>			
@@ -124,6 +132,6 @@
 	</tr>
 </table>		
 
-<script>
+<script type="text/javascript">
 	$('#tabs').tabs();
 </script>
