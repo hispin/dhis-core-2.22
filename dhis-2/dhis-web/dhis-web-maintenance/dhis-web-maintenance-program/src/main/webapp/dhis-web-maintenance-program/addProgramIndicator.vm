@@ -33,7 +33,7 @@ jQuery( document ).ready( function()
     </thead>
 	<tbody>
 		<tr>
-			<td><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+			<td style="width:80px"><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 			<td><input type="text" id="name" name="name" ></td>
 			<td></td>
 		</tr>	
@@ -78,10 +78,10 @@ jQuery( document ).ready( function()
 
 #parse( "/dhis-web-maintenance-program/programIndicatorForm.vm" )
 
-<p>
+<div style="margin-top:25px">
 	<input type="submit" value="$i18n.getString( 'add' )" style="width:10em">
 	<input type="button" value="$i18n.getString( 'cancel' )" style="width:10em" onclick="window.location.href='programIndicator.action?programId=$program.id'" >
-</p>	
+</div>	
 	
 </form>
 

@@ -507,7 +507,20 @@ public class ProgramIndicatorServiceTest
 
         assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorB.getExpression() ) );
         assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorA.getExpression() ) );
-        assertEquals( ProgramIndicator.EXPRESSION_NOT_WELL_FORMED,
-            programIndicatorService.expressionIsValid( indicatorD.getExpression() ) );
+        assertEquals( ProgramIndicator.EXPRESSION_NOT_WELL_FORMED, programIndicatorService.expressionIsValid( indicatorD.getExpression() ) );
+    }
+
+    @Test
+    public void testFilterIsValid()
+    {
+        String filterA = KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "}  - " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} > 10";
+        String filterB = KEY_ATTRIBUTE + "{" + atA.getUid() + "} == " + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} - 5";
+        String filterC = KEY_ATTRIBUTE + "{invaliduid} == 100";
+        String filterD = KEY_ATTRIBUTE + "{" + atA.getUid() + "} + 200";
+        
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.filterIsValid( filterA ) );
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.filterIsValid( filterB ) );
+        assertEquals( ProgramIndicator.INVALID_IDENTIFIERS_IN_EXPRESSION, programIndicatorService.filterIsValid( filterC ) );
+        assertEquals( ProgramIndicator.FILTER_NOT_EVALUATING_TO_TRUE_OR_FALSE, programIndicatorService.filterIsValid( filterD ) );        
     }
 }

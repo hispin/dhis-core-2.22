@@ -120,7 +120,7 @@
     </tr>	
 	<tr>
 		<td>
-			<textarea style="width:665px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
+			<textarea style="width:665px" id="expression" name="expression" onkeyup="getExpressionDescription('expression')">$!encoder.htmlEncode($!programIndicator.expression)</textarea>
 		</td>
 	</tr>	
 	<tr>
@@ -139,7 +139,7 @@
 	<tr>
 		<td>
 			<div id='expression-description' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!description)</div>			
-			<input type="hidden" id="checkExpression" name="checkExpression" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
+			<input type="hidden" id="expression-check" name="expression-check" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
 		</td>
 	</tr>
 </table>
@@ -151,7 +151,8 @@
 		<th>$i18n.getString( "filter" )</th>
 	</tr>
 	<tr>
-		<td><div class="message message-info" style="margin-top:10px">The filter is applied to events and filters the data source used for the calculation</div></td> 
+		<td><div class="message message-info" style="margin-top:10px">The filter is applied to events and filters the data source used for the calculation of the indicator.
+			The filter must evaluate to either true or false.</div></td> 
 	</tr>	
 	<tr>
 		<td>
@@ -242,7 +243,7 @@
     </tr>	
 	<tr>
 		<td>
-			<textarea style="width:665px" id="filter" name="filter" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.filter)</textarea>
+			<textarea style="width:665px" id="filter" name="filter" onkeyup="getExpressionDescription('filter')">$!encoder.htmlEncode($!programIndicator.filter)</textarea>
 		</td>
 	</tr>	
 	<tr>
@@ -261,7 +262,7 @@
 	<tr>
 		<td>
 			<div id='filter-description' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!description)</div>			
-			<input type="hidden" id="checkExpression" name="checkExpression" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
+			<input type="hidden" id="filter-check" name="filter-check" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
 		</td>
 	</tr>
 </table>
