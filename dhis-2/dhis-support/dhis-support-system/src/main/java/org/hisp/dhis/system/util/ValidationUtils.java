@@ -33,7 +33,6 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.datavalue.DataValue;
-import org.jdom.Verifier;
 
 import java.awt.geom.Point2D;
 import java.util.Locale;
@@ -51,6 +50,7 @@ public class ValidationUtils
     private static Pattern POINT_PATTERN = Pattern.compile( "\\[(.+),\\s?(.+)\\]" );
     private static Pattern DIGIT_PATTERN = Pattern.compile( ".*\\d.*" );
     private static Pattern UPPERCASE_PATTERN = Pattern.compile( ".*[A-Z].*" );
+    private static Pattern HEX_COLOR_PATTERN = Pattern.compile( "^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" );
 
     private static int VALUE_MAX_LENGTH = 50000;
     private static int LONG_MAX = 180;
@@ -398,7 +398,7 @@ public class ValidationUtils
         
         return null;
     }
-    
+
     /**
      * Checks to see if given parameter is a valid hex color string (#xxx and #xxxxxx, xxx, xxxxxx).
      *
@@ -407,29 +407,6 @@ public class ValidationUtils
      */
     public static boolean isValidHexColor( String value )
     {
-        if ( value == null )
-        {
-            return false;
-        }
-
-        if ( value.startsWith( "#" ) )
-        {
-            value = value.substring( 1 );
-        }
-
-        if ( !(value.length() == 3 || value.length() == 6) )
-        {
-            return false;
-        }
-
-        for ( char aChar : value.toCharArray() )
-        {
-            if ( !Verifier.isHexDigit( aChar ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return value != null && HEX_COLOR_PATTERN.matcher( value ).matches();
     }
 }
