@@ -31,6 +31,7 @@ package org.hisp.dhis.util;
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.JexlException;
 import org.apache.commons.jexl2.MapContext;
 
 import java.util.Map;
@@ -75,8 +76,30 @@ public class ExpressionUtils
      */
     public static boolean isTrue( String expression, Map<String, Object> vars )
     {
-        Boolean result = (Boolean) evaluate( expression, vars );
+        Object result = evaluate( expression, vars );
         
-        return result != null ? result : false;
-    }    
+        return ( result != null && result instanceof Boolean ) ? (Boolean) result : false;
+    }
+    
+    /**
+     * Indicates whether the given expression is valid and evaluates to true or
+     * false.
+     * 
+     * @param expression the expression.
+     * @param vars the variables, can be null.
+     * @return true or false.
+     */
+    public static boolean isBoolean( String expression, Map<String, Object> vars )
+    {
+        try
+        {
+            Object result = evaluate( expression, vars );
+            
+            return ( result instanceof Boolean );
+        }
+        catch ( JexlException ex )
+        {
+            return false;
+        }
+    }
 }
