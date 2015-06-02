@@ -146,7 +146,7 @@ public class EventController
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
-        @RequestParam( required = false ) boolean addAttributes,
+        @RequestParam( required = false ) boolean includeAttributes,
         @RequestParam( required = false ) String attachment,
         @RequestParam Map<String, String> parameters, IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request )
     {
@@ -199,7 +199,7 @@ public class EventController
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
-        @RequestParam( required = false ) boolean addAttributes,
+        @RequestParam( required = false ) boolean includeAttributes,
         @RequestParam( required = false ) String attachment,
         @RequestParam( required = false, defaultValue = "false" ) boolean skipHeader,
         @RequestParam Map<String, String> parameters,
@@ -242,13 +242,13 @@ public class EventController
         @RequestParam( required = false ) Date endDate,
         @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
-        @RequestParam( required = false ) boolean addAttributes,
+        @RequestParam( required = false ) boolean includeAttributes,
         @RequestParam Map<String, String> parameters, Model model, HttpServletRequest request )
     {
         WebOptions options = new WebOptions( parameters );
 
         EventSearchParams params = eventService.getFromUrl( program, null, programStatus, null,
-            orgUnit, ouMode, null, startDate, endDate, eventStatus, null, null, null, null, totalPages, skipPaging, addAttributes );
+            orgUnit, ouMode, null, startDate, endDate, eventStatus, null, null, null, null, totalPages, skipPaging, includeAttributes );
 
         EventRows eventRows = eventRowService.getEventRows( params );
 
