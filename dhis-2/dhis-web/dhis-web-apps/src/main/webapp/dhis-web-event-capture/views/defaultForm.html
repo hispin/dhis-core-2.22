@@ -31,7 +31,7 @@
                            ng-model="currentEvent.eventDate"
                            ng-disabled="editingEventInFull"    
                            ng-required="true" 
-                           ng-model-options="{ updateOn: 'blur' }"
+                           
                            d2-date-validator
                            name="eventDate" 
                            input-field-id='eventDate' 
@@ -46,7 +46,7 @@
                 <td>
                     <input type="number" 
                            ng-model="currentEvent.coordinate.latitude"   
-                           ng-model-options="{ updateOn: 'blur' }"
+                           
                            name="latitude"
                            d2-coordinate-validator
                            ng-required="false"
@@ -62,7 +62,7 @@
                 <td>
                     <input type="number" 
                            ng-model="currentEvent.coordinate.longitude"   
-                           ng-model-options="{ updateOn: 'blur' }"
+                           
                            name="longitude" 
                            d2-coordinate-validator
                            ng-required="false"
@@ -82,15 +82,14 @@
                                 <input type="text"
                                        class="typeahead"
                                        placeholder="&#xf0d7;&nbsp;&nbsp;"                                                 
-                                       ng-model="currentEvent[eventGridColumn.id]"   
-                                       ng-model-options="{ updateOn: 'blur' }"
+                                       ng-model="currentEvent[eventGridColumn.id]"                                          
                                        typeahead="option.name as option.name for option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter:$viewValue | limitTo:20" 
-                                       typeahead-open-on-focus   
+                                       typeahead-focus-first="false"  
                                        typeahead-editable=false
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
                                        input-field-id={{eventGridColumn.id}} 
-                                       style="width:99%;"/>
+                                       style="width:98%;"/>
                             </span>                                    
                             <span ng-if="selectedProgram.dataEntryMethod && optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length < 7">                                    
                                 <label>
@@ -116,20 +115,29 @@
                                 <input type="number"                                         
                                        d2-number-validator
                                        number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
-                                       ng-model="currentEvent[eventGridColumn.id]"                       
-                                       ng-model-options="{ updateOn: 'blur' }"
+                                       ng-model="currentEvent[eventGridColumn.id]"                                        
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
                                        input-field-id={{eventGridColumn.id}} 
                                        style="width:99%;"/>
                             </div>
-                            <div ng-switch-when="string">                                
-                                <input type="text"                                             
-                                    ng-model="currentEvent[eventGridColumn.id]"                                        
-                                    ng-required={{eventGridColumn.compulsory}}
-                                    name="foo" 
-                                    input-field-id={{eventGridColumn.id}} 
-                                    style="width:99%;"/>                                
+                            <div ng-switch-when="string">     
+                                <span ng-if="eventGridColumn.textType==='longText'">
+                                    <textarea rows="3"
+                                        ng-model="currentEvent[eventGridColumn.id]"                                        
+                                        ng-required={{eventGridColumn.compulsory}}
+                                        name="foo" 
+                                        input-field-id={{eventGridColumn.id}} 
+                                        style="width:99%;"/>                  
+                                </span>
+                                <span ng-if="eventGridColumn.textType!=='longText'">
+                                    <input type="text"                                             
+                                        ng-model="currentEvent[eventGridColumn.id]"                                        
+                                        ng-required={{eventGridColumn.compulsory}}
+                                        name="foo" 
+                                        input-field-id={{eventGridColumn.id}} 
+                                        style="width:99%;"/>                  
+                                </span>                                              
                             </div>
                             <div ng-switch-when="bool">
                                 <select ng-model="currentEvent[eventGridColumn.id]"                                                                
@@ -147,7 +155,7 @@
                                        placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
                                        d2-date
                                        max-date="prStDes[eventGridColumn.id].allowFutureDate ? '' : 0" 
-                                       ng-model-options="{ updateOn: 'blur' }"
+                                       
                                        d2-date-validator
                                        ng-model="currentEvent[eventGridColumn.id]"                                                               
                                        ng-required={{eventGridColumn.compulsory}}
@@ -162,10 +170,9 @@
                                        name="foo" 
                                        input-field-id={{eventGridColumn.id}} />
                             </div>
-                        </div>
-                        <!--<span ng-show="innerForm.foo.$invalid && innerForm.foo.$dirty || currentEvent[eventGridColumn.id] && innerForm.foo.$invalid || outerForm.submitted && innerForm.foo.$invalid" class="required">{{getErrorMessage(eventGridColumn.id)}}</span>                        -->
+                        </div>                        
                         <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
-                       </div>
+                        </div>
                     </ng-form>                    
                 </td>
             </tr>        
@@ -195,7 +202,7 @@
                            ng-model="currentEvent.eventDate"
                            ng-disabled="editingEventInFull"    
                            ng-required="true" 
-                           ng-model-options="{ updateOn: 'blur' }"
+                           
                            d2-date-validator
                            name="eventDate" 
                            input-field-id='eventDate' 
@@ -211,7 +218,7 @@
                 <td>
                     <input type="number" 
                            ng-model="currentEvent.coordinate.latitude"   
-                           ng-model-options="{ updateOn: 'blur' }"
+                           
                            name="latitude"
                            d2-coordinate-validator
                            ng-required="false"
@@ -227,7 +234,7 @@
                 <td>
                     <input type="number" 
                            ng-model="currentEvent.coordinate.longitude"   
-                           ng-model-options="{ updateOn: 'blur' }"
+                           
                            name="longitude" 
                            d2-coordinate-validator
                            ng-required="false"
@@ -263,7 +270,7 @@
                                                d2-number-validator 
                                                number-type={{prStDes[de.dataElement.id].dataElement.numberType}}
                                                ng-model="currentEvent[de.dataElement.id]" 
-                                               ng-model-options="{ updateOn: 'blur' }"
+                                               
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                name="foo" 
                                                input-field-id={{de.dataElement.id}} 
@@ -271,20 +278,19 @@
                                     </div>
                                     <div ng-switch-when="string">
                                         <div class="container-fluid" ng-if="prStDes[de.dataElement.id].dataElement.optionSet">                                
-                                            <span ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options.length > 8">
+                                            <div class="overflow-visible" ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options.length > 8">
                                                 <input type="text"
                                                        class="typeahead"
                                                        placeholder="&#xf0d7;&nbsp;&nbsp;"                                                         
-                                                       ng-model="currentEvent[de.dataElement.id]" 
-                                                       ng-model-options="{ updateOn: 'blur' }"
+                                                       ng-model="currentEvent[de.dataElement.id]"
                                                        typeahead="option.name as option.name for option in optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options | filter:$viewValue | limitTo:20" 
-                                                       typeahead-open-on-focus   
-                                                       typeahead-editable="false"
+                                                       typeahead-focus-first="false"  
+                                                       typeahead-editable=false
                                                        ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                        name="foo" 
                                                        input-field-id={{de.dataElement.id}} 
-                                                       style="width:99%;"/>
-                                            </span>
+                                                       style="width:98%;"/>
+                                            </div>
                                             <span ng-if="selectedProgram.dataEntryMethod && prStDes[de.dataElement.id].dataElement.optionSet.options.length < 7">                                    
                                                 <label>
                                                     <input type="radio" 
@@ -307,7 +313,7 @@
                                         <div ng-if="!prStDes[de.dataElement.id].dataElement.optionSet">
                                             <input type="text"                                                  
                                                 ng-model="currentEvent[de.dataElement.id]"
-                                                ng-model-options="{ updateOn: 'blur' }"
+                                                
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                 name="foo" 
                                                 input-field-id={{de.dataElement.id}} 
@@ -316,7 +322,7 @@
                                     </div>
                                     <div ng-switch-when="bool">
                                         <select ng-model="currentEvent[de.dataElement.id]"      
-                                                ng-model-options="{ updateOn: 'blur' }"
+                                                
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                 name="foo" 
                                                 input-field-id={{de.dataElement.id}} 
@@ -331,7 +337,7 @@
                                                placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
                                                d2-date
                                                max-date="prStDes[de.dataElement.id].allowFutureDate ? '' : 0"   
-                                               ng-model-options="{ updateOn: 'blur' }"
+                                               
                                                d2-date-validator
                                                ng-model="currentEvent[de.dataElement.id]"                                                               
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}

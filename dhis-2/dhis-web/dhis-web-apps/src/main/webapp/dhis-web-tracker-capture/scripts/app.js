@@ -7,6 +7,7 @@ var trackerCapture = angular.module('trackerCapture',
          'ngRoute', 
          'ngCookies',
          'ngSanitize',
+         'ngMessages',
          'trackerCaptureServices',
          'trackerCaptureFilters',
          'trackerCaptureDirectives', 
@@ -55,6 +56,7 @@ var trackerCapture = angular.module('trackerCapture',
     });  
     
     $translateProvider.preferredLanguage('en');
+    $translateProvider.useSanitizeValueStrategy('escaped');
     $translateProvider.useLoader('i18nLoader');
     
 });

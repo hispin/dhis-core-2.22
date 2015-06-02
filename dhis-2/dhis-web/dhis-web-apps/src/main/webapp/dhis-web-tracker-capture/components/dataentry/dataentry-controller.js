@@ -20,7 +20,7 @@ trackerCapture.controller('DataEntryController',
                 CustomFormService,
                 PeriodService) {
     //Data entry form
-    $scope.dataEntryOuterForm = {};
+    $scope.outerForm = {};
     $scope.displayCustomForm = false;
     $scope.currentElement = {};
     $scope.schedulingEnabled = false;
@@ -49,7 +49,7 @@ trackerCapture.controller('DataEntryController',
     $scope.showEventColors = false;    
       
     //listen for the selected items
-    $scope.$on('dashboardWidgets', function() {        
+    $scope.$on('dashboardWidgets', function() {
         $scope.showDataEntryDiv = false;
         $scope.showEventCreationDiv = false;
         $scope.currentEvent = null;
@@ -112,7 +112,6 @@ trackerCapture.controller('DataEntryController',
 
                     var eventStage = $scope.stagesById[dhis2Event.programStage];
                     if(angular.isObject(eventStage)){
-
                         dhis2Event.name = eventStage.name; 
                         dhis2Event.reportDateDescription = eventStage.reportDateDescription;
                         dhis2Event.dueDate = DateUtils.formatFromApiToUser(dhis2Event.dueDate);
@@ -125,7 +124,7 @@ trackerCapture.controller('DataEntryController',
                         }                       
 
                         dhis2Event.statusColor = EventUtils.getEventStatusColor(dhis2Event);
-                        dhis2Event = processEvent(dhis2Event, eventStage);
+                        dhis2Event = EventUtils.processEvent(dhis2Event, eventStage, $scope.optionSets, $scope.prStDes);
                         $scope.eventsByStage[dhis2Event.programStage].push(dhis2Event);
 
                         if($scope.currentStage && $scope.currentStage.id === dhis2Event.programStage){
@@ -267,56 +266,6 @@ trackerCapture.controller('DataEntryController',
         $scope.currentPeriod[$scope.currentEvent.programStage] = period;
     };
     
-    var processEvent = function(event, stage){
-        
-        event.providedElsewhere = [];
-        
-        angular.forEach(event.dataValues, function(dataValue){
-            
-            var prStDe = $scope.prStDes[dataValue.dataElement];
-            
-            if( prStDe ){                
-                var val = dataValue.value;
-                if(prStDe.dataElement){           
-                    if(val && prStDe.dataElement.optionSetValue && $scope.optionSets[prStDe.dataElement.optionSet.id].options  ){
-                        val = OptionSetService.getName($scope.optionSets[prStDe.dataElement.optionSet.id].options, val);
-                    }
-                    if(val && prStDe.dataElement.type === 'date'){
-                        val = DateUtils.formatFromApiToUser(val);
-                    }
-                    if(prStDe.dataElement.type === 'trueOnly'){
-                        if(val === 'true'){
-                            val = true;
-                        }
-                        else{
-                            val = '';
-                        }
-                    }
-                }    
-                event[dataValue.dataElement] = val;
-                if(dataValue.providedElsewhere){
-                    event.providedElsewhere[dataValue.dataElement] = dataValue.providedElsewhere;
-                }
-            }
-            
-        });
-        
-        if(stage.captureCoordinates){
-            event.coordinate = {latitude: event.coordinate.latitude ? event.coordinate.latitude : '',
-                                     longitude: event.coordinate.longitude ? event.coordinate.longitude : ''};
-        }        
-        
-        event.allowProvidedElsewhereExists = false;        
-        for(var i=0; i<stage.programStageDataElements.length; i++){
-            if(stage.programStageDataElements[i].allowProvidedElsewhere){
-                event.allowProvidedElsewhereExists = true;
-                break;
-            }
-        }
-        
-        return event;
-    };
-    
     function updateCurrentEventInStage(){
         
         var index = -1;
@@ -330,16 +279,23 @@ trackerCapture.controller('DataEntryController',
         }
         
     };
-    $scope.saveDatavalue = function(prStDe){
-
+    $scope.saveDatavalue = function(prStDe, field){
+        
+        //console.log('the field:  ', field);
+        $scope.currentElement = {};
+        
         //check for input validity
-        $scope.dataEntryOuterForm.submitted = true;        
-        if( $scope.dataEntryOuterForm.$invalid ){            
+        //$scope.outerForm.submitted = true;            
+        $scope.updateSuccess = false;
+        if( field.$invalid ){ 
+            //console.log('form is invalid...');
+            $scope.currentElement = {id: prStDe.dataElement.id, saved: false};
             return false;
         }
-
+        
         //input is valid        
         var value = $scope.currentEvent[prStDe.dataElement.id];
+        //var value = inputField.$viewValue;
         
         if($scope.currentEventOriginal[prStDe.dataElement.id] !== value){
             
@@ -353,8 +309,6 @@ trackerCapture.controller('DataEntryController',
                     }                    
                 }
             }
-
-            $scope.updateSuccess = false;
 
             $scope.currentElement = {id: prStDe.dataElement.id, saved: false};
 
@@ -866,7 +820,7 @@ trackerCapture.controller('DataEntryController',
     
     $scope.showMap = function(event){
         var modalInstance = $modal.open({
-            templateUrl: '../dhis-web-commons/coordinatecapture/map.html',
+            templateUrl: '../dhis-web-commons/angular-forms/map.html',
             controller: 'MapController',
             windowClass: 'modal-full-window',
             resolve: {
@@ -884,6 +838,14 @@ trackerCapture.controller('DataEntryController',
             }
         }, function () {
         });
+    };
+    
+    $scope.interacted = function(field) {
+        var status = false;
+        if(field){            
+            status = $scope.outerForm.submitted || field.$dirty;
+        }        
+        return status;        
     };
     
 })

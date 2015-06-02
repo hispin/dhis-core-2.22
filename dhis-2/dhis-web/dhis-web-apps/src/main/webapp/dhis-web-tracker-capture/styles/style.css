@@ -178,7 +178,7 @@ div.paging a.active
 }
 
 .input-error {
-    background-color: #fffe8c;
+    background-color: #ff8a8a;
 }
 
 .input-success {
@@ -795,6 +795,7 @@ input[type=number], input[type=text], input[type=email], input[type=password], t
 }
 .dropdown-menu {
     margin: -5px 0 0 0;
+    z-index: 2000 !important;
 }
 
 .btn-link {
@@ -1003,7 +1004,7 @@ ul.tree ul li:last-child:before {
 .map_context_menu{
     background-color:white;
     border:1px solid gray;
-    z-index: 1000;
+    z-index: 2000;
 }
 .map_context_menu_item{
     padding:3px 6px;

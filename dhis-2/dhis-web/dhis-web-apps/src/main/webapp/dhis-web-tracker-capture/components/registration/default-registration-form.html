@@ -1,5 +1,5 @@
 <h3 ng-if="widget !== 'PROFILE'">{{'profile'| translate}}</h3>
-<table class="table-borderless table-striped">
+<table class="dhis2-list-table-striped dhis2-table-hover">
     <tr ng-repeat="attribute in attributes">
         <td>
             {{attribute.name}}<span ng-if="attribute.mandatory || attribute.unique" class="required">*</span>
@@ -9,10 +9,12 @@
                 <span ng-if="attribute.optionSetValue">
                     <input type="text"
                             name="foo"
-                            class="form-control"
-                            ng-model="selectedTei[attribute.id]"                                                 
+                            class="form-control typeahead"
+                            ng-model="selectedTei[attribute.id]"                              
+                            placeholder="&#xf0d7;&nbsp;&nbsp;"
                             typeahead="option.name as option.name for option in optionSets[attributesById[attribute.id].optionSet.id].options | filter:$viewValue | limitTo:20" 
-                            typeahead-open-on-focus                                           
+                            typeahead-focus-first="false"  
+                            typeahead-editable=false                                         
                             ng-disabled="editingDisabled" ng-required="attribute.mandatory || attribute.unique"/>
                 </span>
                 <span ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
@@ -22,6 +24,7 @@
                                name="foo" 
                                class="form-control" 
                                d2-date
+                               d2-date-validator
                                max-date="attribute.allowFutureDate ? '' : 0"
                                ng-model="selectedTei[attribute.id]"
                                ng-disabled="editingDisabled" 
@@ -47,7 +50,7 @@
                         </select>
                     </span>                    
                     <span ng-switch-when="number">
-                        <input type="text" 
+                        <input type="number" 
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
@@ -70,9 +73,10 @@
                                ng-disabled="editingDisabled" 
                                ng-required="attribute.mandatory || attribute.unique"/>                                    
                     </span>
-                </span>
-            </ng-form>
-            <span ng-show="outerForm.submitted && innerForm.foo.$invalid" class="error">{{'required'| translate}}</span>
+                </span>                
+                <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                </div>
+            </ng-form>            
         </td>
     </tr>           
 </table>

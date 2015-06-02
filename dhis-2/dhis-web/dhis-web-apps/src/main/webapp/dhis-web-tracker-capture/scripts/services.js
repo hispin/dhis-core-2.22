@@ -1028,7 +1028,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     return {        
         getEventReport: function(orgUnit, ouMode, program, startDate, endDate, programStatus, eventStatus, pager){
             
-            var url = '../api/events/eventRows.json?' + 'orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&program=' + program;
+            var url = '../api/events/eventRows.json?' + 'orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&program=' + program + '&addAttributes=true';
             
             if( programStatus ){
                 url = url + '&programStatus=' + programStatus;
@@ -1340,8 +1340,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             var columns = attributes ? angular.copy(attributes) : [];
        
             //also add extra columns which are not part of attributes (orgunit for example)
-            columns.push({id: 'orgUnitName', name: $translate('registering_unit'), valueType: 'string', displayInListNoProgram: false});
-            columns.push({id: 'created', name: $translate('registration_date'), valueType: 'date', displayInListNoProgram: false});
+            columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'string', displayInListNoProgram: false});
+            columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'date', displayInListNoProgram: false});
 
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){
@@ -1596,6 +1596,58 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             
             return e;
+        },
+        processEvent: function(event, stage, optionSets, prStDes){
+            event.providedElsewhere = {};
+            angular.forEach(event.dataValues, function(dataValue){
+                
+                var prStDe = prStDes[dataValue.dataElement];
+
+                if( prStDe ){                
+                    var val = dataValue.value;
+                    if(prStDe.dataElement){                               
+                        if(val && prStDe.dataElement.type === 'int' ){
+                            if( dhis2.validation.isNumber(val)  ){                            
+                                //val = parseInt(val);
+                                val = new Number(val);
+                            }
+                        }
+                        if(val && prStDe.dataElement.optionSetValue && optionSets[prStDe.dataElement.optionSet.id].options  ){
+                            val = OptionSetService.getName(optionSets[prStDe.dataElement.optionSet.id].options, val);
+                        }
+                        if(val && prStDe.dataElement.type === 'date'){
+                            val = DateUtils.formatFromApiToUser(val);
+                        }
+                        if(prStDe.dataElement.type === 'trueOnly'){
+                            if(val === 'true'){
+                                val = true;
+                            }
+                            else{
+                                val = '';
+                            }
+                        }
+                    }    
+                    event[dataValue.dataElement] = val;
+                    if(dataValue.providedElsewhere){
+                        event.providedElsewhere[dataValue.dataElement] = dataValue.providedElsewhere;
+                    }
+                }
+
+            });        
+
+            if(stage.captureCoordinates){
+                event.coordinate = {latitude: event.coordinate.latitude ? event.coordinate.latitude : '',
+                                         longitude: event.coordinate.longitude ? event.coordinate.longitude : ''};
+            }        
+
+            event.allowProvidedElsewhereExists = false;        
+            for(var i=0; i<stage.programStageDataElements.length; i++){
+                if(stage.programStageDataElements[i].allowProvidedElsewhere){
+                    event.allowProvidedElsewhereExists = true;
+                    break;
+                }
+            }
+            return event;
         }
     };
 });
