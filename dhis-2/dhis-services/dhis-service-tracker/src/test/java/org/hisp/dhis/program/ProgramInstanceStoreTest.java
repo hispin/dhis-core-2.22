@@ -49,8 +49,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ ProgramInstanceStoreTest.java Nov 13, 2013 1:34:55 PM $
  */
 public class ProgramInstanceStoreTest
     extends DhisSpringTest

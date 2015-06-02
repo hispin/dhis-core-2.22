@@ -49,8 +49,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version DefaultProgramExpressionService.java 3:06:24 PM Nov 8, 2012 $
  */
 @Transactional
 public class DefaultProgramExpressionService

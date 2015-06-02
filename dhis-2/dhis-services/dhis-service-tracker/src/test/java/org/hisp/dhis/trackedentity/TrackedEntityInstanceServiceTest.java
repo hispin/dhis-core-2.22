@@ -52,8 +52,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ TrackedEntityInstanceServiceTest.java Nov 5, 2013 10:35:31 AM $
  */
 public class TrackedEntityInstanceServiceTest
     extends DhisSpringTest

@@ -32,6 +32,9 @@ import java.util.Iterator;
 
 import org.hisp.dhis.system.deletion.DeletionHandler;
 
+/**
+ * @author Lars Helge Overland
+ */
 public class ProgramStageDeletionHandler
     extends DeletionHandler
 {

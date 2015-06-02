@@ -32,9 +32,11 @@ import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityStore;
 
+/**
+ * @author Lars Helge Overland
+ */
 public class HibernateTrackedEntityStore
     extends HibernateIdentifiableObjectStore<TrackedEntity>
     implements TrackedEntityStore
 {
-
 }

@@ -36,7 +36,6 @@ import org.hisp.dhis.program.ProgramStageStore;
 
 /**
  * @author Chau Thu Tran
- * @version $ HibernateProgramStageStore.java Apr 8, 2013 1:30:00 PM $
  */
 public class HibernateProgramStageStore
     extends HibernateIdentifiableObjectStore<ProgramStage>

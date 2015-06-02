@@ -35,8 +35,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version RelationshipDeletionHandler.java Sep 30, 2010 1:20:23 PM
  */
 public class RelationshipDeletionHandler
     extends DeletionHandler
@@ -75,6 +73,5 @@ public class RelationshipDeletionHandler
                 relationshipSevice.deleteRelationship( relationship );
             }
         }
-    }
-    
+    }    
 }

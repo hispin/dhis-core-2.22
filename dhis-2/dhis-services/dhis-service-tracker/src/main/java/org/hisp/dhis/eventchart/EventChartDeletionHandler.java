@@ -37,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * @version $Id$
  */
 public class EventChartDeletionHandler
     extends DeletionHandler

@@ -35,8 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version DefaultProgramStageSectionService.java 11:19:35 AM Aug 22, 2012 $
  */
 @Transactional
 public class DefaultProgramStageSectionService

@@ -45,7 +45,6 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 
 /**
  * @author Chau Thu Tran
- * @version $ DefaultProgramDataEntryService.java May 26, 2011 3:59:43 PM $
  */
 public class DefaultProgramDataEntryService
     implements ProgramDataEntryService

@@ -38,7 +38,6 @@ import org.hisp.dhis.program.ProgramValidationStore;
 
 /**
  * @author Chau Thu Tran
- * @version $ HibernateProgramValidationStore.java Apr 28, 2011 10:43:09 AM $
  */
 public class HibernateProgramValidationStore
     extends HibernateIdentifiableObjectStore<ProgramValidation>

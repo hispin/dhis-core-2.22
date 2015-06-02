@@ -44,7 +44,6 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueStore;
 
 /**
  * @author Abyot Asalefew Gizaw
- * @version $Id$
  */
 public class HibernateTrackedEntityDataValueStore
     extends HibernateGenericStore<TrackedEntityDataValue>

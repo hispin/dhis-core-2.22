@@ -34,6 +34,9 @@ import org.hisp.dhis.system.deletion.DeletionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+/**
+ * @author Chau Thu Tran
+ */
 public class TrackedEntityInstanceDeletionHandler
     extends DeletionHandler
 {

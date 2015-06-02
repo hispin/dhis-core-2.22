@@ -43,8 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ RelationshipStoreTest.java Nov 13, 2013 1:34:55 PM $
  */
 public class RelationshipStoreTest
     extends DhisSpringTest
