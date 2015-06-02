@@ -83,6 +83,8 @@ public class ProgramIndicator
     private String valueType;
 
     private String expression;
+    
+    private String filter;
 
     private String rootDate;
 
@@ -148,6 +150,19 @@ public class ProgramIndicator
     public void setExpression( String expression )
     {
         this.expression = expression;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getFilter()
+    {
+        return filter;
+    }
+
+    public void setFilter( String filter )
+    {
+        this.filter = filter;
     }
 
     @JsonProperty

@@ -1,4 +1,4 @@
-<div id="tabs">
+<div id="tabs" style="width:670px">
 	<ul>
 		<li><a href="#tab-1">$i18n.getString("dataelements")</a></li>
 		#if($program.type!='3')
@@ -9,19 +9,19 @@
 	</ul>	
 	
 	<div id="tab-1">
-	  <table>
+	  <table style="width:100%">
         <tr>
 			<td><label for="dataelement">$i18n.getString( "dataelement" )</label></td>
 		</tr>
         <tr>
 			<td>
-				<input type='text' id='txtSearchValue' name='txtSearchValue' onKeyUp="filterDE(event, this.value, 'dataElements');" style='width:265px;'/>
-				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchValue', '');" style='width:50px'>			
+				<input type='text' id='txtSearchValue' name='txtSearchValue' onKeyUp="filterDE(event, this.value, 'dataElements');" />
+				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchValue', '');" />			
 			</td>
         </tr>
         <tr>
 			<td>
-				<select multiple id="dataElements" name="dataElements" size="8" style="width:652px" ondblclick="insertDataElement(this);"></select>
+				<select multiple id="dataElements" name="dataElements" size="8" style="width:100%" ondblclick="insertDataElement(this);"></select>
 			</td>
 		</tr>
       </table>
@@ -29,13 +29,13 @@
 	
 #if($program.type!='3')
 	<div id="tab-2">
-		<table>
+		<table style="width:100%">
 			<tr>
 				<td><label for="programProperty">$i18n.getString('program_properties')</label></td>
 			</tr>
 			<tr>
 				<td>
-					<select multiple id="programProperty" name="programProperty" size="10" style="width:652px" ondblclick="insertInfo(this, false);" >
+					<select multiple id="programProperty" name="programProperty" size="10" style="width:100%" ondblclick="insertInfo(this, false);" >
 						<option value="V{incident_date}">$i18n.getString( "incident_date" )</option>
 						<option value="V{enrollment_date}">$i18n.getString( "date_of_enrollment" )</option>
 						<option value="V{current_date}">$i18n.getString( "current_date" )</option>
@@ -48,19 +48,19 @@
 	</div>
 
 	<div id="tab-3">
-		<table>
+		<table style="width:100%">
         <tr>
 			<td><label for="attributes">$i18n.getString( "attribute" )</label></td>
 		</tr>
         <tr>
 			<td>
-				<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterAttr(event, this.value, 'attributes');" style='width:265px;'/>
-				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" style='width:50px'>			
+				<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterAttr(event, this.value, 'attributes');" />
+				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" />			
 			</td>
         </tr>
         <tr>
 			<td>
-				<select multiple id="attributes" name="attributes" size="8" style="width:652px" ondblclick="insertData(this,'A');">
+				<select multiple id="attributes" name="attributes" size="8" style="width:100%" ondblclick="insertData(this,'A');">
 					#foreach( $programAttribute in $program.programAttributes )
 						#if( $programAttribute.attribute.valueType=='number' )
 							<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
@@ -75,19 +75,19 @@
 #end
 
 	<div id="tab-4">
-		<table>
+		<table style="width:100%">
         <tr>
 			<td><label for="constant">$i18n.getString( "constant" )</label></td>
 		</tr>
         <tr>
 			<td>
-				<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterAttr(event, this.value, 'attributes');" style='width:265px;'/>
-				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" style='width:50px'>			
+				<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterAttr(event, this.value, 'attributes');" />
+				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" />			
 			</td>
         </tr>
         <tr>
 			<td>
-				<select multiple id="constants" name="constants" size="8" style="width:652px" ondblclick="insertData(this,'C');">
+				<select multiple id="constants" name="constants" size="8" style="width:100%" ondblclick="insertData(this,'C');">
 					#foreach( $constant in $constants )
 						<option value='$constant.uid'>$encoder.htmlEncode($constant.displayName)</option>
 					#end
@@ -106,7 +106,7 @@
       </tr>	
 	<tr>
 		<td>
-			<textarea style="width:660px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
+			<textarea style="width:662px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
 		</td>
 	</tr>	
 	<tr>
