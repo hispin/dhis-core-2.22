@@ -26,6 +26,8 @@
     
     <property name="expression" type="text" />
     
+    <property name="filter" type="text" />
+    
     <property name="rootDate" />
     
   </class>
