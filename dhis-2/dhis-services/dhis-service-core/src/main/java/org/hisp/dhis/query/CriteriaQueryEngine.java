@@ -37,12 +37,10 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.hibernate.HibernateGenericStore;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
-import org.hisp.dhis.system.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,6 +168,7 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
         return criteria;
     }
 
+    @SuppressWarnings( "unchecked" )
     private Criterion getHibernateCriterion( Schema schema, Restriction restriction )
     {
         if ( restriction == null || restriction.getOperator() == null )
@@ -183,7 +182,7 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
 
         for ( Object parameter : restriction.getParameters() )
         {
-            parameters.add( getValue( property, parameter ) );
+            parameters.add( QueryUtils.getValue( property.getKlass(), parameter ) );
         }
 
         if ( parameters.isEmpty() )
@@ -286,69 +285,5 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
     {
         initStoreMap();
         return stores.get( klass );
-    }
-
-    private Object getValue( Property property, Object objectValue )
-    {
-        Class<?> klass = property.getKlass();
-
-        if ( !String.class.isInstance( objectValue ) )
-        {
-            return objectValue;
-        }
-
-        String value = (String) objectValue;
-
-        if ( klass.isInstance( value ) )
-        {
-            return value;
-        }
-
-        if ( Boolean.class.isAssignableFrom( klass ) )
-        {
-            try
-            {
-                return Boolean.valueOf( value );
-            }
-            catch ( Exception ignored )
-            {
-            }
-        }
-        else if ( Integer.class.isAssignableFrom( klass ) )
-        {
-            try
-            {
-                return Integer.valueOf( value );
-            }
-            catch ( Exception ignored )
-            {
-            }
-        }
-        else if ( Float.class.isAssignableFrom( klass ) )
-        {
-            try
-            {
-                return Float.valueOf( value );
-            }
-            catch ( Exception ignored )
-            {
-            }
-        }
-        else if ( Double.class.isAssignableFrom( klass ) )
-        {
-            try
-            {
-                return Double.valueOf( value );
-            }
-            catch ( Exception ignored )
-            {
-            }
-        }
-        else if ( Date.class.isAssignableFrom( klass ) )
-        {
-            return DateUtils.parseDate( value );
-        }
-
-        return null;
     }
 }
