@@ -127,10 +127,9 @@
                                     <ng-form name="innerFormGrid">
                                         <div ng-switch="eventGridColumn.type">
                                             <div ng-switch-when="int">
-                                                <input type="text" 
+                                                <input type="number" 
                                                        program-stage-data-element={{prStDes[eventGridColumn.id]}}
-                                                       d2-validation 
-                                                       d2-number-validation
+                                                       d2-number-validator
                                                        number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
                                                        ng-model="currentEvent[eventGridColumn.id]" 
                                                        ng-blur="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
@@ -144,7 +143,6 @@
                                             <div ng-switch-when="string">                                        
                                                 <div ng-if="eventGridColumn.id == 'uid'">
                                                     <input type="text"
-                                                           d2-validation 
                                                            ng-model="currentEvent[eventGridColumn.id]"                                                                    
                                                            ng-disabled=true 
                                                            name="foo" 
@@ -161,7 +159,6 @@
                                                                typeahead="option.name as option.name for option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter:$viewValue | limitTo:20" 
                                                                typeahead-open-on-focus
                                                                typeahead-editable="false" 
-                                                               d2-typeahead-validation 
                                                                ng-required={{eventGridColumn.compulsory}}
                                                                ng-disabled="eventGridColumn.id == 'uid'"
                                                                input-field-id={{eventGridColumn.id}} 
@@ -176,7 +173,6 @@
                                                                 <input type="radio" 
                                                                        input-field-id={{eventGridColumn.id}} 
                                                                        name="foo"
-                                                                       d2-validation 
                                                                        ng-required={{eventGridColumn.compulsory}}
                                                                        ng-model="currentEvent[eventGridColumn.id]" 
                                                                        ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
@@ -186,7 +182,6 @@
                                                                 <input type="radio" 
                                                                        input-field-id={{eventGridColumn.id}} 
                                                                        name={{eventGridColumn.id}}   
-                                                                       d2-validation 
                                                                        ng-required={{eventGridColumn.compulsory}}
                                                                        ng-model="currentEvent[eventGridColumn.id]" 
                                                                        ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)"
@@ -198,7 +193,6 @@
                                                     </div>
                                                     <div ng-if="!optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id]">
                                                         <input type="text" 
-                                                            d2-validation    
                                                             ng-model="currentEvent[eventGridColumn.id]" 
                                                             ng-blur="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
                                                             ng-required={{eventGridColumn.compulsory}}
@@ -213,8 +207,7 @@
                                                 </div>
                                             </div>                                        
                                             <div ng-switch-when="bool">
-                                                <select d2-validation 
-                                                        ng-model="currentEvent[eventGridColumn.id]" 
+                                                <select ng-model="currentEvent[eventGridColumn.id]" 
                                                         ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
                                                         ng-required={{eventGridColumn.compulsory}}
                                                         input-field-id={{eventGridColumn.id}} 
@@ -232,7 +225,7 @@
                                                        placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
                                                        d2-date
                                                        max-date="prStDes[eventGridColumn.id].allowFutureDate ? '' : 0" 
-                                                       d2-validation 
+                                                       d2-date-validator
                                                        ng-model="currentEvent[eventGridColumn.id]"
                                                        blur-or-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
                                                        ng-required={{eventGridColumn.compulsory}}
@@ -256,8 +249,9 @@
                                                        ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
                                                        />
                                             </div>
-                                        </div>
-                                        <span ng-show="currentEvent[eventGridColumn.id] && innerFormGrid.foo.$invalid || outerForm.submitted && innerFormGrid.foo.$invalid" class="required">{{getErrorMessage(eventGridColumn.id)}}</span>
+                                        </div>                                        
+                                        <div ng-messages="innerFormGrid.foo.$error" ng-if="interacted(innerFormGrid.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
+                                        </div>                                    
                                     </ng-form>
                                 </div>
                                 <!-- Visible when event is under editing in grid -->

@@ -160,20 +160,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.filterTypes['event_date'] = 'date';
                 $scope.filterText['event_date']= {};
 
-                //var errorMessages = {};
-                //errorMessages['eventDate'] = $translate('required');
                 angular.forEach($scope.selectedProgramStage.programStageDataElements, function(prStDe){
                     $scope.prStDes[prStDe.dataElement.id] = prStDe;
-
-                    /*errorMessages[prStDe.dataElement.id] = "";
-                    if(prStDe.compulsory){
-                        var msg = $translate('required');
-                        if(prStDe.dataElement.type === 'int'){
-                            msg = $translate(prStDe.dataElement.numberType)+ ' ' + $translate('required');
-                        }
-                        errorMessages[prStDe.dataElement.id] = msg;
-                    }*/
-
                     $scope.newDhis2Event[prStDe.dataElement.id] = '';                    
 
                     //generate grid headers using program stage data elements
@@ -875,9 +863,15 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     });
     
     $scope.interacted = function(field) {
-        if(field){
-            return $scope.outerForm.submitted || field.$dirty;
-        }        
-        return false;        
+        var status = false;
+        if(field){            
+            status = $scope.outerForm.submitted || field.$dirty;
+        }
+        return status;        
+    };
+    
+    $scope.clearSelectedOption = function($event, id) {
+        $event.stopPropagation(); 
+        $scope.currentEvent[id] = undefined;
     };
 });

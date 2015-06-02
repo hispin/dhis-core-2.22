@@ -19,7 +19,7 @@
                     ng-model="currentEvent.eventDate"
                     ng-disabled="editingEventInFull"    
                     ng-required="true" 
-                    ng-model-options="{ updateOn: 'blur' }"
+                    
                     d2-date-validator
                     name="eventDate" 
                     input-field-id='eventDate' 
@@ -34,7 +34,7 @@
         <td>
             <input type="number" 
                    ng-model="currentEvent.coordinate.latitude"   
-                   ng-model-options="{ updateOn: 'blur' }"
+                   
                    name="latitude"
                    d2-coordinate-validator
                    ng-required="false"
@@ -50,7 +50,7 @@
         <td>
             <input type="number" 
                    ng-model="currentEvent.coordinate.longitude"   
-                   ng-model-options="{ updateOn: 'blur' }"
+                   
                    name="longitude" 
                    d2-coordinate-validator
                    ng-required="false"

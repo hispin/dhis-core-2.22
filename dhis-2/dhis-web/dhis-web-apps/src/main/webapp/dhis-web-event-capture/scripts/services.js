@@ -64,12 +64,20 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
 .service('CurrentSelection', function(){
 
     this.ouLevels = null;     
+    this.location = null;
     
     this.setOuLevels = function(ouLevels){
         this.ouLevels = ouLevels;
     };
     this.getOuLevels = function(){
         return this.ouLevels;
+    };
+    
+    this.setLocation = function(location){
+        this.location = location;
+    };
+    this.getLocation = function(){
+        return this.location;
     };
 })
 
@@ -118,6 +126,7 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
                 for(var i=0; i<options.length; i++){                    
                     if( key === options[i].code){
                         return options[i].name;
+                        //return options[i];
                     }
                 }
             }            

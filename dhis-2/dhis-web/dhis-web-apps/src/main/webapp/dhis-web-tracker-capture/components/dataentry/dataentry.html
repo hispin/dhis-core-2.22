@@ -76,8 +76,7 @@
             <div ng-if="currentEvent">
 
                 <!-- event dates/scheduling begin -->
-                <!--<div class="row" ng-if="!currentStage.periodType">-->
-                <div class="row">
+                <div class="row" ng-if="!currentStage.periodType">
                     <div class="col-md-6">
                         {{currentEvent.reportDateDescription}}
                         <input type="text"
@@ -120,12 +119,12 @@
                                class="form-control" 
                                ng-class="{'input-success': latitudeSaved}" 
                                name="latitude"
-                               min="-90"
-                               max="90"
+                               d2-coordinate-validator
                                ng-blur="saveCoordinate('LAT')"
                                ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed"    
                                ng-required="false"/>
-                        <span ng-show="outerForm.latitude.$invalid" class="required">{{'value_must_be_between'| translate}} [-90 ... 90]</span>
+                        <div ng-messages="outerForm.latitude.$error" ng-if="interacted(outerForm.latitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
+                        </div>
                     </div>
                     <div class="col-md-6">
                         {{'longitude'| translate}}<span><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>                    
@@ -134,19 +133,19 @@
                                class="form-control" 
                                ng-class="{'input-success': longitudeSaved}"
                                name="longitude" 
-                               min="-180"
-                               max="180"
+                               d2-coordinate-validator
                                ng-blur="saveCoordinate('LNG')"
                                ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed" 
                                ng-required="false"/>
-                        <span ng-show="outerForm.longitude.$invalid" class="required">{{'value_must_be_between'| translate}}[-180 ... 180]</span>
+                        <div ng-messages="outerForm.longitude.$error" ng-if="interacted(outerForm.longitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
+                        </div>
                     </div>
                 </div>
                 <!-- coordinates begin -->
 
                 <!-- data entry form begins -->
                 <div ng-if="currentEvent.eventDate">                            
-                    <div class="clear vertical-spacing" ng-if="displayCustomForm" ng-include="'../dhis-web-commons/customform/custom-form.html'"></div>  
+                    <div class="clear vertical-spacing" ng-if="displayCustomForm" ng-include="'../dhis-web-commons/angular-forms/custom-form.html'"></div>  
                     <div class="clear vertical-spacing" ng-if="!displayCustomForm" ng-include="'components/dataentry/default-form.html'"></div>
                 </div>            
                 <!-- data entry form ends -->

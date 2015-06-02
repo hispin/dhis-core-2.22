@@ -32,7 +32,7 @@
                                    name="foo"
                                    class="form-control"
                                    ng-model="attribute.value"                                                 
-                                   typeahead="option.name as option.name for option in optionSets[attribute.optionSet.id].options | filter:$viewValue | limitTo:20" 
+                                   typeahead="option.name as option.name for option in optionSets[attribute.optionSet.id].options| filter:$viewValue | limitTo:20" 
                                    typeahead-open-on-focus
                                    ng-required="attribute.mandatory"/>
                             </div>
@@ -42,7 +42,7 @@
                                        name="foo"
                                        class="form-control"
                                        ng-model="attribute.value"                                                 
-                                       typeahead="option.name as option.name for option in optionSets[attribute.optionSet.id].options | filter:$viewValue | limitTo:20" 
+                                       typeahead="option.name as option.name for option in optionSets[attribute.optionSet.id].options| filter:$viewValue | limitTo:20" 
                                        typeahead-open-on-focus
                                        typeahead-editable=false
                                        ng-required="attribute.mandatory"/>

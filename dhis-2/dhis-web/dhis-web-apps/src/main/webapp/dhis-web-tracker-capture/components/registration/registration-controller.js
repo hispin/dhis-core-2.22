@@ -201,6 +201,14 @@ trackerCapture.controller('RegistrationController',
         }, 100);
     };
     
+    $scope.interacted = function(field) {
+        var status = false;
+        if(field){            
+            status = $scope.outerForm.submitted || field.$dirty;
+        }
+        return status;        
+    };
+    
     var goToDashboard = function(destination, teiId){
         //reset form
         $scope.selectedTei = {};
