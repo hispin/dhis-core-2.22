@@ -65,8 +65,7 @@
                     </div>
                     <div ng-if="!prStDe.dataElement.optionSetValue" ng-switch="prStDe.dataElement.type">
                         <div ng-switch-when="int">
-                            <input type="number"
-                                   string-to-number
+                            <input type="number"                                   
                                    number-type={{prStDe.dataElement.numberType}}
                                    ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                    ng-model="currentEvent[prStDe.dataElement.id]"                                    

@@ -65,17 +65,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
     
     function processPeriodsForEvent(periods,event){
-        //console.log('the event:  ', event.sortingDate, ' - ', periods);
         var index = -1;
         var occupied = null;
         for(var i=0; i<periods.length && index === -1; i++){
-            //console.log(event.sortingDate, ' - ', periods[i].startDate, ' - ', periods[i].endDate);
             if(moment(periods[i].endDate).isSame(event.sortingDate) ||
                     moment(periods[i].startDate).isSame(event.sortingDate) ||
                     moment(periods[i].endDate).isAfter(event.sortingDate) && moment(event.sortingDate).isAfter(periods[i].endDate)){
                 index = i;
                 occupied = angular.copy(periods[i]);
-                //console.log('Found it:  ', event.sortingDate, ' - ', periods[i].startDate, ' - ', periods[i].endDate);
             }
         }
         
@@ -83,7 +80,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             periods.splice(index,1);
         }
         
-        //console.log('the returned period:  ', periods);
         return {available: periods, occupied: occupied};
     };
     
@@ -122,11 +118,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 p.endDate = DateUtils.formatFromApiToUser(p.endDate);
                 p.startDate = DateUtils.formatFromApiToUser(p.startDate);
                 
-                /*if(moment(p.endDate).isAfter(eventDateOffSet)){
-                    availablePeriods[p.endDate] = p;
-                }*/   
-                if(moment(p.endDate).isAfter(eventDateOffSet)){
-                    //availablePeriods[p.endDate] = p;
+                if(moment(p.endDate).isAfter(eventDateOffSet)){                    
                     availablePeriods.push( p );
                 }
             });                
@@ -138,11 +130,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 if(ps.occupied){
                     occupiedPeriods.push(ps.occupied);
                 }
-                /*var p = availablePeriods[event.sortingDate];
-                if(p){
-                    occupiedPeriods.push({event: event.event, name: p.name, stage: stage.id, eventDate: event.sortingDate});
-                    delete availablePeriods[event.sortingDate];
-                }*/                    
             });
         }
         return {occupiedPeriods: occupiedPeriods, availablePeriods: availablePeriods};
@@ -914,7 +901,15 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }                
             }
             else{
-                if(val){
+                if(val){                    
+                    if( type === 'number' ){
+                        if(dhis2.validation.isNumber(val)){                            
+                            val = new Number(val);
+                        }
+                        else{
+                            val = new Number('0');
+                        }
+                    }
                     if(type === 'date'){
                         if(destination === 'USER'){
                             val = DateUtils.formatFromApiToUser(val);
@@ -1608,8 +1603,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     if(prStDe.dataElement){                               
                         if(val && prStDe.dataElement.type === 'int' ){
                             if( dhis2.validation.isNumber(val)  ){                            
-                                //val = parseInt(val);
-                                val = new Number(val);
+                                val = parseInt(val);
+                                //val = new Number(val);
                             }
                         }
                         if(val && prStDe.dataElement.optionSetValue && optionSets[prStDe.dataElement.optionSet.id].options  ){
