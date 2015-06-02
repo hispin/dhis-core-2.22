@@ -1164,7 +1164,7 @@
                     function requestUserStyle() {
                         var currentUserStyleUrl = [baseUrl, 'api', 'userSettings', 'currentStyle'].join('/');
 
-                        return $http.get(currentUserStyleUrl, {responseType: 'text', cache: true});
+                        return $http.get(currentUserStyleUrl, {responseType: 'text', cache: true, headers: {'Accept': 'text/plain'}});
                     }
 
                     function getStyleLogoUrl(styleName) {
