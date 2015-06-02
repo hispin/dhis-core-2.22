@@ -20,7 +20,7 @@
                             <!-- sort icon begins -->                                
                             <span ng-hide="gridColumn.showFilter" class="bold pointer" title="{{'sort'| translate}}">
                                 <span ng-class="{true: 'red'} [sortColumn.id === gridColumn.id]"><i class="fa fa-sort"></i></span>
-                                {{gridColumn.name}}
+                                {{gridColumn.name | translate}}
                             </span>
                             <!-- sort icon ends -->                            
                         </th>                              

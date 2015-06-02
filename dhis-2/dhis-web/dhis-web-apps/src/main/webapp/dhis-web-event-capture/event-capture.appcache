@@ -35,7 +35,7 @@ CACHE:
 ../dhis-web-commons/javascripts/angular/angular-route.js
 ../dhis-web-commons/javascripts/angular/angular-cookies.js
 ../dhis-web-commons/javascripts/angular/angular-animate.js        
-../dhis-web-commons/javascripts/angular/ui-bootstrap-tpls-0.10.0-draggable-modal.js
+../dhis-web-commons/javascripts/angular/ui-bootstrap.js
 
 ../dhis-web-commons/javascripts/moment/moment-with-langs.min.js
 

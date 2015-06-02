@@ -42,7 +42,7 @@
                 <td>
                     <div ng-if="attribute.optionSetValue">
                         <select multiple ui-select2  ng-model="attribute.value" data-placeholder="{{'please_select'| translate}}" style="width:100%;">
-                            <option ng-repeat="option in optionSets[attribute.optionSet.id].options | filter:$viewValue | limitTo:100" value="{{option.code}}">{{option.name}}</option>
+                            <option ng-repeat="option in optionSets[attribute.optionSet.id].options| filter:$viewValue | limitTo:100" value="{{option.code}}">{{option.name}}</option>
                         </select>
                     </div>
                     <div ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
