@@ -1009,15 +1009,6 @@
     </property>
   </bean>
 
-  <bean
-    id="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorDescriptionAction"
-    class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorDescriptionAction"
-    scope="prototype">
-    <property name="programIndicatorService">
-      <ref bean="org.hisp.dhis.program.ProgramIndicatorService" />
-    </property>
-  </bean>
-
   <!-- Program reminder -->
 
   <bean
