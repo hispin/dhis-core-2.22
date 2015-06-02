@@ -131,18 +131,20 @@ public interface ProgramIndicatorService
     Map<String, String> getProgramIndicatorValues( ProgramInstance programInstance );
 
     /**
-     * Get description of an indicator expression
+     * Get description of an indicator expression.
      *
-     * @param expression A expression string
+     * @param expression An expression string
      * @return The description
      */
     String getExpressionDescription( String expression );
 
     /**
-     * Get description of an indicator expression
-     *
-     * @param expression A expression string
-     * @return The expression is valid or not
+     * Indicates whether the given program indicator expression is valid.
+     * 
+     * @param expression An expression string.
+     * @return the string {@link ProgramIndicator.VALID} if valid, if not any of
+     *         {@link ProgramIndicator.EXPRESSION_NOT_WELL_FORMED},
+     *         {@link ProgramIndicator.INVALID_VARIABLES_IN_EXPRESSION}.
      */
     String expressionIsValid( String expression );
     

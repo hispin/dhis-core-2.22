@@ -94,26 +94,24 @@ function insertOperator( value ) {
 }
 
 function getConditionDescription() {
-	var  expression = getFieldValue('expression');
+	var expression = getFieldValue('expression');
 	if( expression == '' )
 	{
 		setInnerHTML('aggregationDescription', '');
 	}
 	else
 	{
-	  $.postJSON('getProgramIndicatorDescription.action',
-		{
-		  expression: expression
+		$.getJSON('../api/programIndicators/expression/description', {
+			expression: expression
 		}, function( json ) {
-			if( json.response =='error' ){
-				setFieldValue('checkExpression','');
-				$('#aggregationDescription').css('color','red');
-			}
-			else{
+			if( json.valid ){
 				setFieldValue('checkExpression', json.message);
-				$('#aggregationDescription').css('color','black');
+				setInnerHTML('aggregationDescription', json.description);
 			}
-			setInnerHTML('aggregationDescription', json.message);
+			else {
+				setFieldValue('checkExpression','');
+				setInnerHTML('aggregationDescription', json.message);
+			}
 		});
 	}
 }
