@@ -33,6 +33,7 @@ import static org.hisp.dhis.system.util.ValidationUtils.dataValueIsValid;
 import static org.hisp.dhis.system.util.ValidationUtils.emailIsValid;
 import static org.hisp.dhis.system.util.ValidationUtils.getLatitude;
 import static org.hisp.dhis.system.util.ValidationUtils.getLongitude;
+import static org.hisp.dhis.system.util.ValidationUtils.isValidHexColor;
 import static org.hisp.dhis.system.util.ValidationUtils.passwordIsValid;
 import static org.hisp.dhis.system.util.ValidationUtils.dataValueIsZeroAndInsignificant;
 import static org.junit.Assert.assertEquals;
@@ -174,5 +175,19 @@ public class ValidationUtilsTest
         assertNull( dataValueIsValid( "2013-04-01", de ) );
         assertNotNull( dataValueIsValid( "2012304-01", de ) );
         assertNotNull( dataValueIsValid( "Date", de ) );        
+    }
+
+    @Test
+    public void testIsValidHexColor() {
+        assertFalse( isValidHexColor( "abcpqr" ) );
+        assertFalse( isValidHexColor( "#qwerty" ) );
+        assertFalse( isValidHexColor( "FFAB#O") );
+
+        assertTrue( isValidHexColor( "#FF0" ) );
+        assertTrue( isValidHexColor( "#FF0000" ) );
+        assertTrue( isValidHexColor( "FFFFFF" ) );
+        assertTrue( isValidHexColor( "ffAAb4" ) );
+        assertTrue( isValidHexColor( "#4a6" ) );
+        assertTrue( isValidHexColor ( "abc" ) );
     }
 }
