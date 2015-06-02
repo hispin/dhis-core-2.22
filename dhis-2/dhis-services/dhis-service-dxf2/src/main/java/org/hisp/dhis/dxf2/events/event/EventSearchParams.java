@@ -80,7 +80,7 @@ public class EventSearchParams
 
     private boolean skipPaging;
 
-    private boolean addAttributes;
+    private boolean includeAttributes;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -288,14 +288,14 @@ public class EventSearchParams
         this.skipPaging = skipPaging;
     }
 
-    public boolean isAddAttributes()
+    public boolean isIncludeAttributes()
     {
-        return addAttributes;
+        return includeAttributes;
     }
 
-    public void setAddAttributes( boolean addAttributes )
+    public void setIncludeAttributes( boolean includeAttributes )
     {
-        this.addAttributes = addAttributes;
+        this.includeAttributes = includeAttributes;
     }
 
 }

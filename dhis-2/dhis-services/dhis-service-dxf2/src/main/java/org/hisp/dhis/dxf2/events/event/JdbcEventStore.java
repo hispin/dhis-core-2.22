@@ -301,7 +301,7 @@ public class JdbcEventStore
 
         sql += ") as event left join (";
 
-        if ( params.isAddAttributes() )
+        if ( params.isIncludeAttributes() )
         {
             sql += getAttributeValueQuery();
 
