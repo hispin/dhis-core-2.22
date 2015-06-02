@@ -37,9 +37,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version TrackedEntityAttributeValueDeletionHandler.java Sep 30, 2010 1:34:28
- *          PM
  */
 public class TrackedEntityAttributeValueDeletionHandler
     extends DeletionHandler

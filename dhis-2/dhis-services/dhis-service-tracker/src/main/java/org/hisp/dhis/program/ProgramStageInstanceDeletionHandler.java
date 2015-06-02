@@ -34,9 +34,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $Id: ProgramStageInstanceDeletionHandler.java Nov 30, 2011 10:20:41
- *          AM $
  */
 public class ProgramStageInstanceDeletionHandler
     extends DeletionHandler

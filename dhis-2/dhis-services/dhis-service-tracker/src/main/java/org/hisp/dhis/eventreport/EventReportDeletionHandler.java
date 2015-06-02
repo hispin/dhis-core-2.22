@@ -37,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * @version $Id$
  */
 public class EventReportDeletionHandler
     extends DeletionHandler
@@ -63,6 +62,7 @@ public class EventReportDeletionHandler
     public void deleteProgramStage( ProgramStage programStage )
     {
         Collection<EventReport> charts = eventReportService.getAllEventReprots();
+        
         for( EventReport chart : charts )
         {
             if( chart.getProgramStage().equals( programStage ))
@@ -76,6 +76,7 @@ public class EventReportDeletionHandler
     public void deleteProgram( Program program )
     {
         Collection<EventReport> charts = eventReportService.getAllEventReprots();
+        
         for( EventReport chart : charts )
         {
             if( chart.getProgram().equals( program ))

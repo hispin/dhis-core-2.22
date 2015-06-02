@@ -43,8 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ TrackedEntityAuditStoreTest.java Nov 6, 2013 8:52:24 AM $
  */
 public class TrackedEntityAuditStoreTest
     extends DhisSpringTest

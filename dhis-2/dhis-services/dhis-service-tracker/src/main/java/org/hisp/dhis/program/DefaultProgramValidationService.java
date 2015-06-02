@@ -48,7 +48,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Chau Thu Tran
- * @version $ DefaultProgramValidationService.java Apr 28, 2011 10:36:50 AM $
  */
 @Transactional
 public class DefaultProgramValidationService

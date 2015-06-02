@@ -36,8 +36,6 @@ import org.hisp.dhis.system.deletion.DeletionHandler;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version ProgramStageDataElementDeletionHandler.java Oct 5, 2010 11:06:03 PM
  */
 public class ProgramStageDataElementDeletionHandler
     extends DeletionHandler

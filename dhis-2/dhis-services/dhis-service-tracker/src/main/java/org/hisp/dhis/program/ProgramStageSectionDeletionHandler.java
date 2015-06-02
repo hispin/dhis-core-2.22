@@ -32,8 +32,6 @@ import org.hisp.dhis.system.deletion.DeletionHandler;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version ProgramStageSectionDeletionHandler.java 3:14:59 PM Oct 1, 2012 $
  */
 public class ProgramStageSectionDeletionHandler
     extends DeletionHandler

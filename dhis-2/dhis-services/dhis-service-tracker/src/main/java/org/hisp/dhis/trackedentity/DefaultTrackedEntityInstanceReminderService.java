@@ -50,9 +50,6 @@ import org.hisp.dhis.user.UserService;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ DefaultTrackedEntityInstanceReminderService.java Aug 7, 2013
- *          9:54:59 AM $
  */
 public class DefaultTrackedEntityInstanceReminderService
     implements TrackedEntityInstanceReminderService

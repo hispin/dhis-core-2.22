@@ -38,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Chau Thu Tran
- * @version $Id$
  */
 @Transactional
 public class DefaultTrackedEntityAttributeGroupService
