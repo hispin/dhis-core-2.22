@@ -5,21 +5,21 @@
 	<tr>
 		<td>
 	
-		<div id="tabs" style="width:670px; margin: 1px 0;">
+		<div id="expression-tabs" style="width:670px; margin: 1px 0;">
 			<ul>
-				<li><a href="#tab-1">$i18n.getString("dataelements")</a></li>
+				<li><a href="#expression-tab1">$i18n.getString("data_elements")</a></li>
 				#if($program.type!='3')
-					<li><a href="#tab-2">$i18n.getString("attributes")</a></li>
-					<li><a href="#tab-3">$i18n.getString("variables")</a></li>
+					<li><a href="#expression-tab2">$i18n.getString("attributes")</a></li>
+					<li><a href="#expression-tab3">$i18n.getString("variables")</a></li>
 				#end
-				<li><a href="#tab-4">$i18n.getString("constants")</a></li>
+				<li><a href="#expression-tab4">$i18n.getString("constants")</a></li>
 			</ul>	
 			
-			<div id="tab-1">
+			<div id="expression-tab1">
 			  <table style="width:100%">
 		        <tr>
 					<td>
-						<input type='text' id='txtSearchValue' name='txtSearchValue' onKeyUp="filterIndicatorSelect(event, this.value, 'dataElements');" placeholder="$i18n.getString('filter')" />
+						<input type='text' id='txtSearchValue' name='txtSearchValue' onKeyUp="filterExpressionSelect(event, this.value, 'dataElements');" placeholder="$i18n.getString('filter')" />
 						<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchValue', '');" />			
 					</td>
 		        </tr>
@@ -33,11 +33,11 @@
 			
 		#if($program.type!='3')
 		
-			<div id="tab-2">
+			<div id="expression-tab2">
 				<table style="width:100%">
 		        <tr>
 					<td>
-						<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterIndicatorSelect(event, this.value, 'attributes');" placeholder="$i18n.getString('filter')" />
+						<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterExpressionSelect(event, this.value, 'attributes');" placeholder="$i18n.getString('filter')" />
 						<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" />			
 					</td>
 		        </tr>
@@ -55,11 +55,11 @@
 		      </table>
 			</div>
 			
-			<div id="tab-3">
+			<div id="expression-tab3">
 				<table style="width:100%">
 				  <tr>
 				    <td>
-					  <input type='text' id='txtSearchPropertyValue' name='txtSearchValue' onKeyUp="filterIndicatorSelect(event, this.value, 'programProperty');" placeholder="$i18n.getString('filter')" />
+					  <input type='text' id='txtSearchPropertyValue' name='txtSearchValue' onKeyUp="filterExpressionSelect(event, this.value, 'programProperty');" placeholder="$i18n.getString('filter')" />
 					  <input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchPropertyValue', '');" />			
 					</td>
 		        </tr>
@@ -79,11 +79,11 @@
 			
 		#end
 		
-			<div id="tab-4">
+			<div id="expression-tab4">
 				<table style="width:100%">
 		        <tr>
 					<td>
-						<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterIndicatorSelect(event, this.value, 'constants');" placeholder="$i18n.getString('filter')" />
+						<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterExpressionSelect(event, this.value, 'constants');" placeholder="$i18n.getString('filter')" />
 						<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchContsValue', '');" />			
 					</td>
 		        </tr>
@@ -133,5 +133,5 @@
 </table>		
 
 <script type="text/javascript">
-	$('#tabs').tabs();
+	$('#expression-tabs').tabs();
 </script>

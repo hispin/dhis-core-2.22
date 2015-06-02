@@ -308,7 +308,7 @@
       <param name="page">
         /dhis-web-maintenance-program/addProgramStageForm.vm
       </param>
-      <param name="javascripts">javascript/commons.js,javascript/programStage.js</param>
+      <param name="javascripts">javascript/programStage.js</param>
       <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAMSTAGE_ADD</param>
     </action>
@@ -345,7 +345,7 @@
       <param name="page">
         /dhis-web-maintenance-program/updateProgramStageForm.vm
       </param>
-      <param name="javascripts">javascript/commons.js,javascript/programStage.js</param>
+      <param name="javascripts">javascript/programStage.js</param>
       <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAMSTAGE_ADD</param>
     </action>
@@ -393,7 +393,7 @@
         /dhis-web-maintenance-program/programStageSection.vm
       </param>
       <param name="menu">/dhis-web-maintenance-program/menu.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/programStageSection.js</param>
+      <param name="javascripts">javascript/programStageSection.js</param>
       <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAMSTAGE_SECTION_MANAGEMENT</param>
     </action>
@@ -404,7 +404,7 @@
       <param name="page">
         /dhis-web-maintenance-program/addProgramStageSectionForm.vm
       </param>
-      <param name="javascripts">javascript/commons.js,javascript/programStageSection.js</param>
+      <param name="javascripts">javascript/programStageSection.js</param>
       <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAMSTAGE_SECTION_ADD</param>
     </action>
@@ -422,7 +422,7 @@
       <param name="page">
         /dhis-web-maintenance-program/updateProgramStageSectionForm.vm
       </param>
-      <param name="javascripts">javascript/commons.js,javascript/programStageSection.js</param>
+      <param name="javascripts">javascript/programStageSection.js</param>
       <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAMSTAGE_SECTION_ADD</param>
     </action>
@@ -458,7 +458,7 @@
       <param name="page">
         /dhis-web-maintenance-program/programStageSectionSortOder.vm
       </param>
-      <param name="javascripts">javascript/commons.js,javascript/programStageSection.js</param>
+      <param name="javascripts">javascript/programStageSection.js</param>
       <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_PROGRAMSTAGE_SECTION_MANAGEMENT</param>
     </action>
@@ -704,7 +704,7 @@
       class="org.hisp.dhis.trackedentity.action.caseaggregation.ShowAddCaseAggregationConditionFormAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/addCaseAggregation.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/caseaggregation.js</param>
+      <param name="javascripts">javascript/caseaggregation.js</param>
       <param name="stylesheets">style/basic.css</param>
     </action>
 
@@ -712,7 +712,7 @@
       class="org.hisp.dhis.trackedentity.action.caseaggregation.ShowUpdateCaseAggregationConditionFormAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/updateCaseAggregation.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/caseaggregation.js</param>
+      <param name="javascripts">javascript/caseaggregation.js</param>
       <param name="stylesheets">style/basic.css</param>
     </action>
 
@@ -1027,7 +1027,7 @@
       class="org.hisp.dhis.trackedentity.action.program.GetProgramAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/addProgramIndicator.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/programIndicator.js</param>
+      <param name="javascripts">javascript/programIndicator.js</param>
       <param name="requiredAuthorities">F_ADD_PROGRAM_INDICATOR</param>
     </action>
 
@@ -1042,7 +1042,7 @@
       class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/updateProgramIndicator.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/programIndicator.js</param>
+      <param name="javascripts">javascript/programIndicator.js</param>
       <param name="requiredAuthorities">F_ADD_PROGRAM_INDICATOR</param>
     </action>
 
@@ -1087,7 +1087,7 @@
       class="org.hisp.dhis.trackedentity.action.trackedentityinstancereminder.ShowAddProgramReminderAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/addProgramReminder.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/programReminder.js</param>
+      <param name="javascripts">javascript/programReminder.js</param>
       <param name="requiredAuthorities">F_TRACKED_ENTITY_INSTANCE_REMINDER_MANAGEMENT</param>
     </action>
 
@@ -1102,7 +1102,7 @@
       class="org.hisp.dhis.trackedentity.action.trackedentityinstancereminder.GetInstanceReminderAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/updateProgramReminder.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/programReminder.js</param>
+      <param name="javascripts">javascript/programReminder.js</param>
       <param name="requiredAuthorities">F_TRACKED_ENTITY_INSTANCE_REMINDER_MANAGEMENT</param>
     </action>
 
@@ -1154,7 +1154,7 @@
       class="org.hisp.dhis.trackedentity.action.trackedentityinstancereminder.ShowAddProgramStageReminderAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/addProgramStageReminder.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/programStageReminder.js</param>
+      <param name="javascripts">javascript/programStageReminder.js</param>
       <param name="requiredAuthorities">F_TRACKED_ENTITY_INSTANCE_REMINDER_MANAGEMENT</param>
     </action>
 
@@ -1169,7 +1169,7 @@
       class="org.hisp.dhis.trackedentity.action.trackedentityinstancereminder.GetProgramStageReminderAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/updateProgramStageReminder.vm</param>
-      <param name="javascripts">javascript/commons.js,javascript/programStageReminder.js</param>
+      <param name="javascripts">javascript/programStageReminder.js</param>
       <param name="requiredAuthorities">F_TRACKED_ENTITY_INSTANCE_REMINDER_MANAGEMENT</param>
     </action>
 

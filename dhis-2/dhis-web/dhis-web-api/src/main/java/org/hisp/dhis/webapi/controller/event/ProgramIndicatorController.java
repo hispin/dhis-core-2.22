@@ -89,7 +89,7 @@ public class ProgramIndicatorController
     public void validateFilter( @RequestParam String filter, HttpServletResponse response )
         throws IOException
     {
-        Boolean result = ExpressionUtils.isBoolean( filter, null );
+        boolean result = ExpressionUtils.isBoolean( filter, null );
         
         ValidationResult validation = new ValidationResult();
         validation.setValid( result );

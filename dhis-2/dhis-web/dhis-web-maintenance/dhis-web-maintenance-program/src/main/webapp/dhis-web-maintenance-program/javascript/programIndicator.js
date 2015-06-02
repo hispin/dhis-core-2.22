@@ -39,6 +39,24 @@ function removeProgramIndicator( context ) {
   removeItem(context.id, context.name, i18n_confirm_delete, 'removeProgramIndicator.action');
 }
 
+function filterExpressionSelect( event, value, fieldName ) {
+	var field = byId(fieldName);
+	
+	for ( var index = 0; index < field.options.length; index++ )
+    {
+		var option = field.options[index];
+		
+		if ( value.length == 0 || option.text.toLowerCase().indexOf( value.toLowerCase() ) != -1 )
+		{
+			option.style.display = "block";
+		}
+		else
+		{
+			option.style.display = "none";
+		}
+    }	    
+}
+
 function getTrackedEntityDataElements() {
   clearListById('dataElements');
   clearListById('deSumId');
