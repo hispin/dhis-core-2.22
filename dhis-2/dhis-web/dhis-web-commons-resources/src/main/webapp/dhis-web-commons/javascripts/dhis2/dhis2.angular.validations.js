@@ -8,27 +8,27 @@ d2Directives.directive('d2NumberValidator', function() {
             function setValidity(numberType, isRequired){
                 if(numberType === 'number'){
                     ngModel.$validators.number = function(value) { 
-                        return !value ? !isRequired : dhis2.validation.isNumber(value);
+                        return value === 'null' || !value ? !isRequired : dhis2.validation.isNumber(value);
                     };
                 }
                 else if(numberType === 'posInt'){
                     ngModel.$validators.posInt = function(value) { 
-                        return !value ? !isRequired : dhis2.validation.isPositiveInt(value);
+                        return value === 'null' || !value ? !isRequired : dhis2.validation.isPositiveInt(value);
                     };
                 }
                 else if(numberType === 'negInt'){
                     ngModel.$validators.negInt = function(value) {
-                        return !value ? !isRequired : dhis2.validation.isNegativeInt(value);
+                        return value === 'null' || !value ? !isRequired : dhis2.validation.isNegativeInt(value);
                     };
                 }
                 else if(numberType === 'zeroPositiveInt'){
                     ngModel.$validators.zeroPositiveInt = function(value) { 
-                        return !value ? !isRequired : dhis2.validation.isZeroOrPositiveInt(value);
+                        return value === 'null' || !value ? !isRequired : dhis2.validation.isZeroOrPositiveInt(value);
                     };
                 }
                 else if(numberType === 'int'){
                     ngModel.$validators.int = function(value) {
-                        return !value ? !isRequired : dhis2.validation.isInt(value);
+                        return value === 'null' || !value ? !isRequired : dhis2.validation.isInt(value);
                     };
                 }
             }
@@ -99,16 +99,6 @@ d2Directives.directive('d2NumberValidator', function() {
                 }
                 return value >= -180 && value <= 180;
             };
-        }
-    };
-})
-
-.directive('d2TypeaheadValidator', function() {
-    
-    return {
-        require: ['typeahead', 'ngModel'],
-        restrict: 'A',
-        link: function (scope, element, attrs, ctrls) {
         }
     };
 });
