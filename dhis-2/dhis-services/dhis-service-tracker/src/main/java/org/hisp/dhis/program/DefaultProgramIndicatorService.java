@@ -45,6 +45,7 @@ import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.util.ExpressionUtils;
 import org.hisp.dhis.util.TextUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -318,7 +319,43 @@ public class DefaultProgramIndicatorService
     @Override
     public String expressionIsValid( String expression )
     {
-        StringBuffer description = new StringBuffer();
+        String expr = getSubstitutedExpression( expression );
+        
+        if ( ProgramIndicator.INVALID_IDENTIFIERS_IN_EXPRESSION.equals( expr ) )
+        {
+            return expr;
+        }
+        
+        if ( MathUtils.expressionHasErrors( expr ) )
+        {
+            return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
+        }
+
+        return ProgramIndicator.VALID;
+    }
+    
+    @Override
+    public String filterIsValid( String filter )
+    {
+        String expr = getSubstitutedExpression( filter );
+
+        if ( ProgramIndicator.INVALID_IDENTIFIERS_IN_EXPRESSION.equals( expr ) )
+        {
+            return expr;
+        }
+        
+        return ExpressionUtils.isBoolean( expr, null ) ? ProgramIndicator.VALID : ProgramIndicator.FILTER_NOT_EVALUATING_TO_TRUE_OR_FALSE;
+    }    
+    
+    /**
+     * Generates an expression where all items are substituted with a sample value
+     * in order to maintain a valid expression syntax.
+     * 
+     * @param expression the expression.
+     */
+    private String getSubstitutedExpression( String expression )
+    {
+        StringBuffer expr = new StringBuffer();
 
         Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
         
@@ -336,7 +373,7 @@ public class DefaultProgramIndicatorService
 
                 if ( programStage != null && dataElement != null )
                 {
-                    matcher.appendReplacement( description, String.valueOf( 1 ) );
+                    matcher.appendReplacement( expr, String.valueOf( 1 ) );
                 }
                 else
                 {
@@ -349,7 +386,7 @@ public class DefaultProgramIndicatorService
                 
                 if ( attribute != null )
                 {
-                    matcher.appendReplacement( description, String.valueOf( 1 ) );
+                    matcher.appendReplacement( expr, String.valueOf( 1 ) );
                 }
                 else
                 {
@@ -362,7 +399,7 @@ public class DefaultProgramIndicatorService
                 
                 if ( constant != null )
                 {
-                    matcher.appendReplacement( description, String.valueOf( constant.getValue() ) );
+                    matcher.appendReplacement( expr, String.valueOf( constant.getValue() ) );
                 }
                 else
                 {
@@ -371,22 +408,13 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
-                matcher.appendReplacement( description, String.valueOf( 0 ) );
+                matcher.appendReplacement( expr, String.valueOf( 0 ) );
             }
         }
         
-        matcher.appendTail( description );
+        matcher.appendTail( expr );
 
-        // ---------------------------------------------------------------------
-        // Well-formed expression
-        // ---------------------------------------------------------------------
-
-        if ( MathUtils.expressionHasErrors( description.toString() ) )
-        {
-            return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
-        }
-
-        return ProgramIndicator.VALID;
+        return expr.toString();
     }
 
     @Override
