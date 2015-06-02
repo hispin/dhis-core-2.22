@@ -121,6 +121,13 @@ public class AddProgramIndicatorAction
         this.expression = expression;
     }
 
+    private String filter;
+
+    public void setFilter( String filter )
+    {
+        this.filter = filter;
+    }
+
     private String rootDate;
 
     public void setRootDate( String rootDate )
@@ -143,6 +150,7 @@ public class AddProgramIndicatorAction
         {
             Pattern pattern = Pattern.compile( "[(+|-|*|\\)]+" );
             Matcher matcher = pattern.matcher( expression );
+            
             if ( matcher.find() && matcher.start() != 0 )
             {
                 expression = "+" + expression;
@@ -150,12 +158,19 @@ public class AddProgramIndicatorAction
         }
 
         Program program = programService.getProgram( programId );
-        ProgramIndicator programIndicator = new ProgramIndicator( name, description, program, valueType, expression );
-        programIndicator.setShortName( shortName );
-        programIndicator.setCode( code );
-        programIndicator.setRootDate( rootDate );
+        
+        ProgramIndicator indicator = new ProgramIndicator();
+        indicator.setName( name );
+        indicator.setShortName( shortName );
+        indicator.setCode( code );
+        indicator.setDescription( description );
+        indicator.setProgram( program );
+        indicator.setValueType( valueType );
+        indicator.setExpression( expression );
+        indicator.setFilter( filter );
+        indicator.setRootDate( rootDate );
 
-        programIndicatorService.addProgramIndicator( programIndicator );
+        programIndicatorService.addProgramIndicator( indicator );
 
         return SUCCESS;
     }

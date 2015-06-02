@@ -84,6 +84,7 @@ import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageInstance;
@@ -1246,6 +1247,23 @@ public abstract class DhisConvenienceTest
         return programStage;
     }
 
+    public static ProgramIndicator createProgramIndicator( char uniqueCharacter, Program program, String expression )
+    {
+        ProgramIndicator indicator = new ProgramIndicator();
+        indicator.setAutoFields();
+        indicator.setName( "Indicator" + uniqueCharacter );
+        indicator.setShortName( "IndicatorShort" + uniqueCharacter  );
+        indicator.setCode( "IndicatorCode" + uniqueCharacter  );
+        indicator.setDescription( "IndicatorDescription" + uniqueCharacter );
+        indicator.setProgram( program );
+        indicator.setValueType( ProgramIndicator.VALUE_TYPE_INT );
+        indicator.setExpression( expression );
+        indicator.setFilter( null );
+        indicator.setRootDate( ProgramIndicator.INCIDENT_DATE );
+        
+        return indicator;
+    }
+    
     public static TrackedEntity createTrackedEntity( char uniqueChar )
     {
         TrackedEntity trackedEntity = new TrackedEntity();
