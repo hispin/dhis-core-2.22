@@ -2,15 +2,15 @@
 
 <table style="margin-top:10px">
 	<tr>
-		<td><div class="message message-info">The expression defines how the indicator is calculated</div></td> 
+		<th>$i18n.getString( "expression" )</th>
 	</tr>
 	<tr>
-		<th>$i18n.getString( "expression_items" )</th>
+		<td><div class="message message-info" style="margin-top:10px">The expression defines how the indicator is calculated</div></td> 
 	</tr>
 	<tr>
 		<td>
 	
-		<div id="expression-tabs" style="width:670px; margin: 1px 0;">
+		<div id="expression-tabs" style="width:670px">
 			<ul>
 				<li><a href="#expression-tab1">$i18n.getString("data_elements")</a></li>
 				#if($program.type!='3')
@@ -146,17 +146,17 @@
 
 <!-- Filter -->
 
-<table style="margin-top:30px">
+<table style="margin-top:20px">
 	<tr>
-		<td><div class="message message-info">The filter is applied to events and filters the data source used for the calculation</div></td> 
+		<th>$i18n.getString( "filter" )</th>
 	</tr>
 	<tr>
-		<th>$i18n.getString( "filter_items" )</th>
+		<td><div class="message message-info" style="margin-top:10px">The filter is applied to events and filters the data source used for the calculation</div></td> 
 	</tr>	
 	<tr>
 		<td>
 	
-		<div id="filter-tabs" style="width:670px; margin: 1px 0;">
+		<div id="filter-tabs" style="width:670px">
 			<ul>
 				<li><a href="#filter-tab1">$i18n.getString("data_elements")</a></li>
 				#if($program.type!='3')
