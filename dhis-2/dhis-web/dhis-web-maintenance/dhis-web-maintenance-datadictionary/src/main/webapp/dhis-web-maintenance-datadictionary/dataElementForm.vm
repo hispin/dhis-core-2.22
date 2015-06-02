@@ -267,15 +267,12 @@
 #end
 
 <p>
-    #if( $update )
+  #if( $update )
     <input type="submit" value="$i18n.getString( 'save' )" style="width:10em" />
-    #else
+  #else
     <input type="submit" value="$i18n.getString( 'add' )" style="width:10em" />
-    #end
+  #end
 	<input type="button" value="$i18n.getString( 'cancel' )" onclick="dhis2.commons.redirectCurrentPage( 'dataElement.action' )" style="width:10em" />
-	#if( $update )
-	<input type="button" value="$i18n.getString( 'clone' )" onclick="window.location.href='showAddDataElementForm.action?id=$!dataElement.id'" style="width:10em" />
-	#end
 </p>
 
 </form>
