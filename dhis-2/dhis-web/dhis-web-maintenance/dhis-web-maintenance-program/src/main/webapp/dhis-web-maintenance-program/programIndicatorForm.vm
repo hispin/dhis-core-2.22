@@ -25,7 +25,7 @@
 		        </tr>
 		        <tr>
 					<td>
-						<select multiple id="dataElements" name="dataElements" size="8" style="width:100%" ondblclick="insertDataElement(this);"></select>
+						<select multiple id="dataElements" name="dataElements" size="7" style="width:100%" ondblclick="insertDataElement(this);"></select>
 					</td>
 				</tr>
 		      </table>
@@ -43,7 +43,7 @@
 		        </tr>
 		        <tr>
 					<td>
-						<select multiple id="attributes" name="attributes" size="8" style="width:100%" ondblclick="insertData(this,'A');">
+						<select multiple id="attributes" name="attributes" size="7" style="width:100%" ondblclick="insertData(this,'A');">
 							#foreach( $programAttribute in $program.programAttributes )
 								#if( $programAttribute.attribute.valueType=='number' )
 									<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
@@ -65,7 +65,7 @@
 		        </tr>
 				<tr>
 					<td>
-						<select multiple id="programProperty" name="programProperty" size="8" style="width:100%" ondblclick="insertInfo(this, false);" >
+						<select multiple id="programProperty" name="programProperty" size="7" style="width:100%" ondblclick="insertInfo(this, false);" >
 							<option value="V{incident_date}">$i18n.getString( "incident_date" )</option>
 							<option value="V{enrollment_date}">$i18n.getString( "date_of_enrollment" )</option>
 							<option value="V{current_date}">$i18n.getString( "current_date" )</option>
@@ -89,7 +89,7 @@
 		        </tr>
 		        <tr>
 					<td>
-						<select multiple id="constants" name="constants" size="8" style="width:100%" ondblclick="insertData(this,'C');">
+						<select multiple id="constants" name="constants" size="7" style="width:100%" ondblclick="insertData(this,'C');">
 							#foreach( $constant in $constants )
 								<option value='$constant.uid'>$encoder.htmlEncode($constant.displayName)</option>
 							#end

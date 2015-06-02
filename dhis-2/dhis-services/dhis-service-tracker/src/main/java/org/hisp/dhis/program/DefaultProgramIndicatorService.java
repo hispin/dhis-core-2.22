@@ -341,7 +341,7 @@ public class DefaultProgramIndicatorService
                 }
                 else
                 {
-                    return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
+                    return ProgramIndicator.INVALID_IDENTIFIERS_IN_EXPRESSION;
                 }
             }
             else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
@@ -354,7 +354,7 @@ public class DefaultProgramIndicatorService
                 }
                 else
                 {
-                    return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
+                    return ProgramIndicator.INVALID_IDENTIFIERS_IN_EXPRESSION;
                 }
             }
             else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
@@ -367,7 +367,7 @@ public class DefaultProgramIndicatorService
                 }
                 else
                 {
-                    return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
+                    return ProgramIndicator.INVALID_IDENTIFIERS_IN_EXPRESSION;
                 }
             }
             else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )

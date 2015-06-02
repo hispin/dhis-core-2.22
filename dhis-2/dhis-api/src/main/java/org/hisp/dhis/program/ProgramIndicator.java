@@ -77,6 +77,7 @@ public class ProgramIndicator
     public static final String VALID = "valid";
 
     public static final String EXPRESSION_NOT_WELL_FORMED = "expression_not_well_formed";
+    public static final String INVALID_IDENTIFIERS_IN_EXPRESSION = "invalid_identifiers_in_expression";
 
     private Program program;
     
