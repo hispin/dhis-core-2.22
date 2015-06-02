@@ -45,40 +45,43 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 public class EventSearchParams
 {
     public static final int DEFAULT_PAGE = 1;
+
     public static final int DEFAULT_PAGE_SIZE = 50;
-    
+
     private Program program;
-    
+
     private ProgramStage programStage;
-    
+
     private ProgramStatus programStatus;
-    
+
     private Boolean followUp;
-    
+
     private OrganisationUnit orgUnit;
-    
+
     private OrganisationUnitSelectionMode orgUnitSelectionMode;
-    
+
     private TrackedEntityInstance trackedEntityInstance;
-    
+
     private Date startDate;
-    
+
     private Date endDate;
-    
+
     private EventStatus eventStatus;
-    
+
     private Date lastUpdated;
-    
+
     private IdSchemes idSchemes;
 
     private Integer page;
-    
+
     private Integer pageSize;
 
     private boolean totalPages;
-    
+
     private boolean skipPaging;
-    
+
+    private boolean addAttributes;
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -100,7 +103,7 @@ public class EventSearchParams
     {
         return page != null && page > 0 ? page : DEFAULT_PAGE;
     }
-    
+
     public int getPageSizeWithDefault()
     {
         return pageSize != null && pageSize >= 0 ? pageSize : DEFAULT_PAGE_SIZE;
@@ -108,7 +111,7 @@ public class EventSearchParams
 
     public int getOffset()
     {
-        return ( getPageWithDefault() - 1 ) * getPageSizeWithDefault();
+        return (getPageWithDefault() - 1) * getPageSizeWithDefault();
     }
 
     /**
@@ -284,4 +287,15 @@ public class EventSearchParams
     {
         this.skipPaging = skipPaging;
     }
+
+    public boolean isAddAttributes()
+    {
+        return addAttributes;
+    }
+
+    public void setAddAttributes( boolean addAttributes )
+    {
+        this.addAttributes = addAttributes;
+    }
+
 }

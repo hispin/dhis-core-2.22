@@ -487,7 +487,7 @@ public abstract class AbstractEventService
     @Override
     public EventSearchParams getFromUrl( String program, String programStage, ProgramStatus programStatus, Boolean followUp, String orgUnit,
         OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate, 
-        EventStatus status, Date lastUpdated, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging )
+        EventStatus status, Date lastUpdated, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging, boolean addAttributes )
     {
         EventSearchParams params = new EventSearchParams();
 
@@ -535,6 +535,7 @@ public abstract class AbstractEventService
         params.setPageSize( pageSize );
         params.setTotalPages( totalPages );
         params.setSkipPaging( skipPaging );
+        params.setAddAttributes( addAttributes );
         
         return params;
     }
