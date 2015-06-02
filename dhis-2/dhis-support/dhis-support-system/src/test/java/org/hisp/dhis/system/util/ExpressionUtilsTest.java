@@ -83,4 +83,24 @@ public class ExpressionUtilsTest
         assertFalse( ExpressionUtils.isTrue( "v4 == 'goat'", vars ) );
         assertFalse( ExpressionUtils.isTrue( "v4 == \"goat\"", vars ) );
     }
+    
+    @Test
+    public void testIsBoolean()
+    {
+        Map<String, Object> vars = new HashMap<String, Object>();
+        
+        vars.put( "uA2hsh8j26j", "FEMALE" );
+        vars.put( "v2", "12" );
+        
+        assertTrue( ExpressionUtils.isBoolean( "2 > 1", null ) );
+        assertTrue( ExpressionUtils.isBoolean( "(2 * 3) == 6", null ) );
+        assertTrue( ExpressionUtils.isBoolean( "\"a\" == \"a\"", null ) );
+        assertTrue( ExpressionUtils.isBoolean( "'b' == 'b'", null ) );
+        assertTrue( ExpressionUtils.isBoolean( "('b' == 'b') && ('c' == 'c')", null ) );
+        assertTrue( ExpressionUtils.isBoolean( "'goat' == 'goat'", null ) );
+
+        assertFalse( ExpressionUtils.isBoolean( "4", null ) );
+        assertFalse( ExpressionUtils.isBoolean( "3 + 2", null ) );
+        assertFalse( ExpressionUtils.isBoolean( "someinvalid expr", null ) );
+    }
 }

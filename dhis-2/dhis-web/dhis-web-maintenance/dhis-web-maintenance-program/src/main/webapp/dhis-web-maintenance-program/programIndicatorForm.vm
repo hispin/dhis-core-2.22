@@ -108,7 +108,7 @@
     </tr>	
 	<tr>
 		<td>
-			<textarea style="width:662px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
+			<textarea style="width:665px" id="expression" name="expression" onkeyup='getConditionDescription();' >$!encoder.htmlEncode($!programIndicator.expression)</textarea>
 		</td>
 	</tr>	
 	<tr>
