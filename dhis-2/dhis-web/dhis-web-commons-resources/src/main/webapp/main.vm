@@ -122,7 +122,7 @@
 
       <span id="showLeftBar">
         <a href="javascript:dhis2.leftBar.showAnimated()" title="$i18n.getString( 'show_menu' )">
-          <img src="../images/show_menu.png" width="16" height="16" alt="$i18n.getString( 'show_menu' )"/></a>
+          <i class="fa fa-arrow-right leftBarIcon"></i></a>
       </span>
     </div>
 
@@ -134,11 +134,11 @@
     <div id="leftBar">
       <div id="hideLeftBar">
         <a href="index.action" title="$i18n.getString( 'show_main_menu' )" id="showMainMenuLink">
-          <img src="../images/home_small.png" width="16" height="16" /></a>
+          <i class="fa fa-home leftBarIcon"></i></a>
         <a href="javascript:dhis2.leftBar.hideAnimated()" title="$i18n.getString( 'hide_menu' )" id="hideMainMenuLink">
-          <img src="../images/hide_menu.png" width="16" height="16" /></a>
+          <i class="fa fa-arrow-left leftBarIcon"></i></a>
         <a href="javascript:dhis2.leftBar.extendAnimated()" title="$i18n.getString( 'extend_menu' )" id="extendMainMenuLink">
-          <img src="../images/extend_menu.png" width="16" height="16" /></a>
+          <i class="fa fa-arrow-right leftBarIcon"></i></a>
       </div>
 
       <div id="leftBarContents">
@@ -166,7 +166,7 @@
 
     <div id="rightBar">
       <span id="hideRightBar"><a href="javascript:hideHelpContent()" title="$i18n.getString( 'close' )">
-        <img id="hideRightBarImg" src="../images/hide.png" alt="$i18n.getString( 'close' )"/></a>
+        <i class="fa fa-times leftBarIcon"></i></a>
       </span>
       <div id="rightBarContents"></div>
     </div>
