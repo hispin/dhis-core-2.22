@@ -57,9 +57,9 @@ function filterExpressionSelect( event, value, fieldName ) {
     }	    
 }
 
-function getTrackedEntityDataElements() {
-  clearListById('dataElements');
-  clearListById('deSumId');
+function getTrackedEntityDataElements( type ) {
+  var fieldId = type + '-data-elements';
+  clearListById(fieldId);
   var programStageId = getFieldValue('programStageId');
 
   jQuery.getJSON('getTrackedEntityDataElements.action',
@@ -68,7 +68,7 @@ function getTrackedEntityDataElements() {
       programStageId: programStageId
     }
     , function( json ) {
-      var dataElements = jQuery('#dataElements');
+      var dataElements = jQuery('#' + fieldId);
       for( i in json.dataElements ) {
         if( json.dataElements[i].type == 'int' || json.dataElements[i].type == 'date' ) {
           dataElements.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + "' suggested='" + json.dataElements[i].optionset + "'>" + json.dataElements[i].name + "</option>");
@@ -77,45 +77,55 @@ function getTrackedEntityDataElements() {
     });
 }
 
-function insertDataElement( element ) {
-  var programStageId = getFieldValue('programStageId');
-  var dataElementId = element.options[element.selectedIndex].value;
+function insertDataElement( type ) {
+  var psFieldId = type + '-program-stage',
+      deFieldId = type + '-data-elements',
+      areaId = type,
+      programStageId = getFieldValue(psFieldId),
+      dataElementId = getFieldValue(deFieldId);
 
-  insertTextCommon('expression', "#{" + programStageId + "." + dataElementId + "}");
+  insertTextCommon(areaId, "#{" + programStageId + "." + dataElementId + "}");
   getConditionDescription();
 }
 
-function insertData( element, key ){
-   var attributeId = element.options[element.selectedIndex].value;
+function insertAttribute( type ){
+  var atFieldId = type + '-attributes',
+      areaId = type,
+      attributeId = getFieldValue(atFieldId);
 
-  insertTextCommon('expression', key + "{" + attributeId + "}");
+  insertTextCommon(areaId, "A{" + attributeId + "}");
   getConditionDescription();
 }
 
-function insertInfo( element, isProgramStageProperty ) {
-  var id = "";
-  if( isProgramStageProperty ) {
-    id = getFieldValue('programStageId');
-  }
-  else {
-    id = getFieldValue('programId');
-  }
+function insertVariable( type ){
+  var varFieldId = type + '-variables',
+      areaId = type,
+      variableId = getFieldValue(varFieldId);
 
-  value = element.options[element.selectedIndex].value.replace('*', id);
-  insertTextCommon('expression', value);
+  insertTextCommon(areaId, "V{" + variableId + "}");
   getConditionDescription();
 }
 
-function insertOperator( value ) {
-  insertTextCommon('expression', ' ' + value + ' ');
+function insertConstant( type ){
+  var coFieldId = type + '-constants',
+      areaId = type,
+      constantId = getFieldValue(coFieldId);
+
+  insertTextCommon(areaId, "C{" + constantId + "}");
+  getConditionDescription();
+}
+
+function insertOperator( type, value ) {
+  insertTextCommon(type, ' ' + value + ' ');
   getConditionDescription();
 }
 
 function getConditionDescription() {
 	var expression = getFieldValue('expression');
+	
 	if( expression == '' )
 	{
-		setInnerHTML('aggregationDescription', '');
+		setInnerHTML('expression-description', '');
 	}
 	else
 	{
@@ -124,11 +134,11 @@ function getConditionDescription() {
 		}, function( json ) {
 			if( json.valid ){
 				setFieldValue('checkExpression', json.message);
-				setInnerHTML('aggregationDescription', json.description);
+				setInnerHTML('expression-description', json.description);
 			}
 			else {
 				setFieldValue('checkExpression','');
-				setInnerHTML('aggregationDescription', json.message);
+				setInnerHTML('expression-description', json.message);
 			}
 		});
 	}

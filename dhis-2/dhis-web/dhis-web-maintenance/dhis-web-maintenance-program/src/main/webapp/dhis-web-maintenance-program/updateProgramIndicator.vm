@@ -77,18 +77,6 @@ jQuery( document ).ready( function()
 		</td>
 		<td></td>
 	</tr>
-	<tr>
-			<td><label for="programStageId">$i18n.getString( "program_stage" ) </label></td>
-			<td>
-				<select id="programStageId" name="programStageId" onChange="getTrackedEntityDataElements();">
-					<option value=''>[$i18n.getString('please_select')]</option>
-					#foreach( $programStage in $programIndicator.program.programStages )
-					<option value='$programStage.uid'>$encoder.htmlEncode($programStage.displayName)</option>
-					#end
-				</select>
-			</td>
-			<td></td>
-		</tr>
 </table>
 <br>
 	

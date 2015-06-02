@@ -86,6 +86,13 @@ public class GetProgramIndicatorAction
     {
         return description;
     }
+    
+    private String filter;
+    
+    public String getFilter()
+    {
+        return filter;
+    }
 
     private List<Constant> constants;
 
@@ -105,6 +112,8 @@ public class GetProgramIndicatorAction
         programIndicator = programIndicatorService.getProgramIndicator( id );
 
         description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );
+        
+        filter = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
 
         constants = new ArrayList<>( constantService.getAllConstants() );
         
