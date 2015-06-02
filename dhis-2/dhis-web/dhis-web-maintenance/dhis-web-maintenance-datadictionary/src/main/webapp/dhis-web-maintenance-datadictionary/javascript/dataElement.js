@@ -145,3 +145,7 @@ function domainTypeChange( domainType ) {
 function showUpdateDataElementForm( context ) {
   location.href = 'showUpdateDataElementForm.action?id=' + context.id + '&update=true';
 }
+
+function showCloneDataElementForm( context ) {
+  location.href = 'showAddDataElementForm.action?id=' + context.id;
+}
