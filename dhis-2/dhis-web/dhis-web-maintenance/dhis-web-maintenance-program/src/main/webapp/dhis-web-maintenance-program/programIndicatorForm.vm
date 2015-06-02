@@ -12,7 +12,7 @@
 	  <table style="width:100%">
         <tr>
 			<td>
-				<input type='text' id='txtSearchValue' name='txtSearchValue' onKeyUp="filterDE(event, this.value, 'dataElements');" placeholder="$i18n.getString('filter')" />
+				<input type='text' id='txtSearchValue' name='txtSearchValue' onKeyUp="filterIndicatorSelect(event, this.value, 'dataElements');" placeholder="$i18n.getString('filter')" />
 				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchValue', '');" />			
 			</td>
         </tr>
@@ -27,17 +27,23 @@
 #if($program.type!='3')
 	<div id="tab-2">
 		<table style="width:100%">
-			<tr>
-				<td>
-					<select multiple id="programProperty" name="programProperty" size="10" style="width:100%" ondblclick="insertInfo(this, false);" >
-						<option value="V{incident_date}">$i18n.getString( "incident_date" )</option>
-						<option value="V{enrollment_date}">$i18n.getString( "date_of_enrollment" )</option>
-						<option value="V{current_date}">$i18n.getString( "current_date" )</option>
-						<option value="V{value_count}">$i18n.getString( "value_count" )</option>
-						<option value="V{zero_pos_value_count}">$i18n.getString( "zero_pos_value_count" )</option>
-					</select>
-				</td>
-			</tr>
+		  <tr>
+		    <td>
+			  <input type='text' id='txtSearchPropertyValue' name='txtSearchValue' onKeyUp="filterIndicatorSelect(event, this.value, 'programProperty');" placeholder="$i18n.getString('filter')" />
+			  <input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchPropertyValue', '');" />			
+			</td>
+        </tr>
+		<tr>
+			<td>
+				<select multiple id="programProperty" name="programProperty" size="10" style="width:100%" ondblclick="insertInfo(this, false);" >
+					<option value="V{incident_date}">$i18n.getString( "incident_date" )</option>
+					<option value="V{enrollment_date}">$i18n.getString( "date_of_enrollment" )</option>
+					<option value="V{current_date}">$i18n.getString( "current_date" )</option>
+					<option value="V{value_count}">$i18n.getString( "value_count" )</option>
+					<option value="V{zero_pos_value_count}">$i18n.getString( "zero_pos_value_count" )</option>
+				</select>
+			</td>
+		</tr>
 		</table>
 	</div>
 
@@ -45,7 +51,7 @@
 		<table style="width:100%">
         <tr>
 			<td>
-				<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterAttr(event, this.value, 'attributes');" placeholder="$i18n.getString('filter')" />
+				<input type='text' id='txtSearchAttrValue' name='txtSearchAttrValue' onKeyUp="filterIndicatorSelect(event, this.value, 'attributes');" placeholder="$i18n.getString('filter')" />
 				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" />			
 			</td>
         </tr>
@@ -69,8 +75,8 @@
 		<table style="width:100%">
         <tr>
 			<td>
-				<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterAttr(event, this.value, 'attributes');" placeholder="$i18n.getString('filter')" />
-				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchAttrValue', '');" />			
+				<input type='text' id='txtSearchContsValue' name='txtSearchAttrValue' onKeyUp="filterIndicatorSelect(event, this.value, 'constants');" placeholder="$i18n.getString('filter')" />
+				<input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('txtSearchContsValue', '');" />			
 			</td>
         </tr>
         <tr>
