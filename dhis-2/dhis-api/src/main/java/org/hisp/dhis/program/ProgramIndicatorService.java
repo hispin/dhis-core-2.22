@@ -147,6 +147,16 @@ public interface ProgramIndicatorService
      *         {@link ProgramIndicator.INVALID_VARIABLES_IN_EXPRESSION}.
      */
     String expressionIsValid( String expression );
+
+    /**
+     * Indicates whether the given program indicator expression is valid.
+     * 
+     * @param expression An expression string.
+     * @return the string {@link ProgramIndicator.VALID} if valid, if not any of
+     *         {@link ProgramIndicator.FILTER_NOT_EVALUATING_TO_TRUE_OR_FALSE},
+     *         {@link ProgramIndicator.INVALID_VARIABLES_IN_EXPRESSION}.
+     */
+    String filterIsValid( String filter );
     
     /**
      * Get all {@link ProgramStageDataElement} part of the expression of the 

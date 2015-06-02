@@ -85,7 +85,7 @@ function insertDataElement( type ) {
       dataElementId = getFieldValue(deFieldId);
 
   insertTextCommon(areaId, "#{" + programStageId + "." + dataElementId + "}");
-  getConditionDescription();
+  getExpressionDescription( type );
 }
 
 function insertAttribute( type ){
@@ -94,7 +94,7 @@ function insertAttribute( type ){
       attributeId = getFieldValue(atFieldId);
 
   insertTextCommon(areaId, "A{" + attributeId + "}");
-  getConditionDescription();
+  getExpressionDescription( type );
 }
 
 function insertVariable( type ){
@@ -103,7 +103,7 @@ function insertVariable( type ){
       variableId = getFieldValue(varFieldId);
 
   insertTextCommon(areaId, "V{" + variableId + "}");
-  getConditionDescription();
+  getExpressionDescription( type );
 }
 
 function insertConstant( type ){
@@ -112,33 +112,33 @@ function insertConstant( type ){
       constantId = getFieldValue(coFieldId);
 
   insertTextCommon(areaId, "C{" + constantId + "}");
-  getConditionDescription();
+  getExpressionDescription( type );
 }
 
 function insertOperator( type, value ) {
   insertTextCommon(type, ' ' + value + ' ');
-  getConditionDescription();
+  getExpressionDescription( type );
 }
 
-function getConditionDescription() {
-	var expression = getFieldValue('expression');
+function getExpressionDescription( type ) {
+	var expression = getFieldValue( type );
 	
 	if( expression == '' )
 	{
-		setInnerHTML('expression-description', '');
+		setInnerHTML(type + '-description', '');
 	}
 	else
 	{
-		$.getJSON('../api/programIndicators/expression/description', {
+		$.getJSON('../api/programIndicators/' + type + '/description', {
 			expression: expression
 		}, function( json ) {
 			if( json.valid ){
-				setFieldValue('checkExpression', json.message);
-				setInnerHTML('expression-description', json.description);
+				setFieldValue(type + '-check', json.message);
+				setInnerHTML(type + '-description', json.description);
 			}
 			else {
-				setFieldValue('checkExpression','');
-				setInnerHTML('expression-description', json.message);
+				setFieldValue(type + '-check','');
+				setInnerHTML(type + '-description', json.message);
 			}
 		});
 	}
