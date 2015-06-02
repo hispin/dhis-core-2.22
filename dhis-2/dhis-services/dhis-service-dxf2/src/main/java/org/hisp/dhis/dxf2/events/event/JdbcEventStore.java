@@ -301,9 +301,12 @@ public class JdbcEventStore
 
         sql += ") as event left join (";
 
-        sql += getAttributeValueQuery();
+        if ( params.isAddAttributes() )
+        {
+            sql += getAttributeValueQuery();
 
-        sql += ") as att on event.tei_id=att.pav_id left join (";
+            sql += ") as att on event.tei_id=att.pav_id left join (";
+        }
 
         sql += getDataValueQuery();
 
