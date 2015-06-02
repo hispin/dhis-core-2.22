@@ -32,8 +32,6 @@ import org.hisp.dhis.common.GenericStore;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version DefaultTrackedEntityCommentService.java 9:45:40 AM Aug 17, 2012 $
  */
 public class DefaultTrackedEntityCommentService
     implements TrackedEntityCommentService

@@ -34,8 +34,6 @@ import org.hisp.dhis.system.deletion.DeletionHandler;
 
 /**
  * @author Chau Thu Tran
- * @version $ ProgramValidationDeletionHandler.java Aug 25, 2011 12:55:08 PM $
- * 
  */
 public class ProgramValidationDeletionHandler
     extends DeletionHandler

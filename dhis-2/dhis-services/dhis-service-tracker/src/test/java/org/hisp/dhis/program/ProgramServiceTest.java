@@ -46,7 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class ProgramServiceTest
     extends DhisSpringTest

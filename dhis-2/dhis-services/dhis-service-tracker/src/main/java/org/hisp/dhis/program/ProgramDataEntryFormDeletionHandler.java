@@ -36,8 +36,6 @@ import org.hisp.dhis.system.deletion.DeletionHandler;
 
 /**
  * @author Chau Thu Tran
- * @version $ ProgramDataEntryDeletionHandler.java Aug 25, 2011 3:02:00 PM $
- * 
  */
 public class ProgramDataEntryFormDeletionHandler
     extends DeletionHandler

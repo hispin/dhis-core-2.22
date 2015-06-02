@@ -40,7 +40,6 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 
 /**
  * @author Quang Nguyen
- * @version $Id$
  */
 public class ProgramInstanceDeletionHandler
     extends DeletionHandler

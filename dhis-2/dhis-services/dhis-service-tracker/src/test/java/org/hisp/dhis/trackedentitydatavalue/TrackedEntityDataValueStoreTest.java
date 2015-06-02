@@ -58,8 +58,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ TrackedEntityDataValueStoreTest.java Nov 5, 2013 3:11:48 PM $
  */
 public class TrackedEntityDataValueStoreTest
     extends DhisSpringTest

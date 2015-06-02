@@ -39,8 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version DefaultTrackedEntityAuditService.java 9:08:54 AM Sep 26, 2012 $
  */
 @Transactional
 public class DefaultTrackedEntityAuditService

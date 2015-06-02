@@ -53,8 +53,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ ProgramValidationServiceTest.java Nov 5, 2013 3:11:48 PM $
  */
 public class ProgramValidationServiceTest
     extends DhisSpringTest

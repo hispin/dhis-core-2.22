@@ -35,7 +35,6 @@ import java.util.Collection;
 
 /**
  * @author Viet Nguyen
- * @version $Id$
  */
 @Transactional
 public class DefaultProgramStageDataElementService

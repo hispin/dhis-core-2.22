@@ -48,7 +48,6 @@ import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 /**
  * @author Abyot Asalefew
- * @version $Id$
  */
 @Transactional
 public class DefaultProgramService

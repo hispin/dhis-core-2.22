@@ -33,11 +33,9 @@ import org.hisp.dhis.hibernate.EnumUserType;
 
 /**
  * @author Chau Thu Tran
- *
- * @version $ EventStatusUserType.java Jun 20, 2014 7:38:45 PM $
  */
 public class EventStatusUserType
-extends EnumUserType<EventStatus>
+    extends EnumUserType<EventStatus>
 {
   public  EventStatusUserType()
   {

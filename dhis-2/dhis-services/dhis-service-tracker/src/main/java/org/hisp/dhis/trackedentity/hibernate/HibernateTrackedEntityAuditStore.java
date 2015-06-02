@@ -40,8 +40,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityAuditStore;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version HibernateTrackedEntityAuditStore.java 9:12:20 AM Sep 26, 2012 $
  */
 public class HibernateTrackedEntityAuditStore
     extends HibernateGenericStore<TrackedEntityAudit>
