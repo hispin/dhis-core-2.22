@@ -78,7 +78,7 @@ public class QueryTest
         query.add( Restrictions.like( "name", "anc" ) );
         query.add( Restrictions.eq( "code", "anc" ) );
 
-        assertEquals( 3, query.getRestrictions().size() );
+        assertEquals( 3, query.getCriterions().size() );
     }
 
     @Test
@@ -94,7 +94,7 @@ public class QueryTest
         query.add( new Restriction( "lastUpdated", Operator.BETWEEN, new Date() ) );
         query.add( new Restriction( "lastUpdated", Operator.BETWEEN, new Date(), 1, 2, 3, 4 ) );
 
-        assertEquals( 0, query.getRestrictions().size() );
+        assertEquals( 0, query.getCriterions().size() );
     }
 
     @Test

@@ -91,7 +91,7 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
 
         // create a copy of this query using only the restrictions
         Query countQuery = Query.from( query.getSchema() );
-        countQuery.add( query.getRestrictions() );
+        countQuery.add( query.getCriterions() );
 
         if ( schema == null )
         {
@@ -131,8 +131,15 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
             criteria.setMaxResults( query.getMaxResults() );
         }
 
-        for ( Restriction restriction : query.getRestrictions() )
+        for ( org.hisp.dhis.query.Criterion criterion : query.getCriterions() )
         {
+            if ( !Restriction.class.isInstance( criterion ) )
+            {
+                continue;
+            }
+
+            Restriction restriction = (Restriction) criterion;
+
             if ( !restrictions.containsKey( restriction.getOperator() ) )
             {
                 restrictions.put( restriction.getOperator(), new ArrayList<Restriction>() );
