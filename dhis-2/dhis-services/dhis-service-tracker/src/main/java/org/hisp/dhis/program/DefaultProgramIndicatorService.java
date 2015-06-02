@@ -232,8 +232,7 @@ public class DefaultProgramIndicatorService
             
             if ( value != null )
             {
-                result.put( programIndicator.getDisplayName(),
-                    getProgramIndicatorValue( programInstance, programIndicator ) );
+                result.put( programIndicator.getDisplayName(), value );
             }
         }
 

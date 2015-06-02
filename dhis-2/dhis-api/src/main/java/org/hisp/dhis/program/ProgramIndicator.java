@@ -98,17 +98,6 @@ public class ProgramIndicator
         setAutoFields();
     }
 
-    public ProgramIndicator( String name, String description, Program program, String valueType, String expression )
-    {
-        this();
-        this.name = name;
-        this.description = description;
-        this.program = program;
-        program.getProgramIndicators().add( this );
-        this.valueType = valueType;
-        this.expression = expression;
-    }
-
     // -------------------------------------------------------------------------
     // Getters && Setters
     // -------------------------------------------------------------------------
