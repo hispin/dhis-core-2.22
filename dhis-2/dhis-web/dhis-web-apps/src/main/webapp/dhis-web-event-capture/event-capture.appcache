@@ -34,7 +34,9 @@ CACHE:
 ../dhis-web-commons/javascripts/angular/angular-resource.js
 ../dhis-web-commons/javascripts/angular/angular-route.js
 ../dhis-web-commons/javascripts/angular/angular-cookies.js
-../dhis-web-commons/javascripts/angular/angular-animate.js        
+../dhis-web-commons/javascripts/angular/angular-animate.js
+../dhis-web-commons/javascripts/angular/angular-sanitize.js   
+../dhis-web-commons/javascripts/angular/angular-messages.js        
 ../dhis-web-commons/javascripts/angular/ui-bootstrap.js
 
 ../dhis-web-commons/javascripts/moment/moment-with-langs.min.js
@@ -88,6 +90,7 @@ scripts/notes-controller.js
 ../dhis-web-commons/css/light_blue/light_blue.css
 ../dhis-web-commons/css/widgets.css
 ../dhis-web-commons/css/menu.css
+../dhis-web-commons/css/print.css
 
 styles/style.css
 
