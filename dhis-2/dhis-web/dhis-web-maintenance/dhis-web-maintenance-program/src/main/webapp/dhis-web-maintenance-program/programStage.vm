@@ -4,7 +4,7 @@
 
 <div id="contextMenu" class="contextMenu" style="width: 230px;">
   <ul id="contextMenuItems" class="contextMenuItems">
-    <li data-enabled="canManageTemplateMessage"><a data-target-fn="programStageReminder"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_template_reminder_message" )</a></li>
+    <li data-enabled="canManageTemplateMessage"><a data-target-fn="programStageReminder"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_template_reminder_messages" )</a></li>
     <li><a data-target-fn="showUpdateProgramStageForm"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "edit" )</a></li>
     <li><a data-target-fn="programStageSectionList"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "section_management" )</a></li>
     <li><a data-target-fn="viewDataEntryForm"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "design_data_entry_form" )</a></li>
