@@ -15,8 +15,6 @@ jQuery( document ).ready( function()
 	checkValueIsExist( "name", "validateProgramIndicator.action",{id:getFieldValue('id')} );	
 	checkValueIsExist( "shortName", "validateProgramIndicator.action",{id:getFieldValue('id')} );	
 	checkValueIsExist( "code", "validateProgramIndicator.action",{id:getFieldValue('id')} );
-		
-	setFieldValue('checkExpression',$('#aggregationDescription').html() );
 });
 </script>
 

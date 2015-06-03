@@ -115,12 +115,12 @@
 	</tr>
 	<tr>
         <th style="padding-top:15px">$i18n.getString( "expression" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) oizp(x) zing(x)</span></th>
-    </tr>	
+    </tr>
 	<tr>
 		<td>
 			<textarea style="width:665px" id="expression" name="expression" onkeyup="getExpressionDescription('expression')">$!encoder.htmlEncode($!programIndicator.expression)</textarea>
 		</td>
-	</tr>	
+	</tr>
 	<tr>
 		<td style="padding-top:4px">
 			<a class="greyButtonLink" href="javascript:insertOperator( 'expression', '(' )" title="$i18n.getString( 'left_brackets' )">&#40;</a>
@@ -130,14 +130,13 @@
 			<a class="greyButtonLink" href="javascript:insertOperator( 'expression', '+' )" title="$i18n.getString( 'plus' )">&#43;</a>
 			<a class="greyButtonLink" href="javascript:insertOperator( 'expression', '-' )" title="$i18n.getString( 'minus' )">&#45;</a><br><br>
 		</td>
-	</tr>	
+	</tr>
 	<tr>
         <th style="padding-top:4px">$i18n.getString( "expression_description" )</th>
     </tr>	
 	<tr>
 		<td>
-			<div id='expression-description' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!description)</div>			
-			<input type="hidden" id="expression-check" name="expression-check" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
+			<div id='expression-description' style="padding: 5px 0 20px 0" class="{validate:{required:true}}">$!encoder.htmlEncode($!description)</div>
 		</td>
 	</tr>
 </table>
@@ -267,8 +266,7 @@
     </tr>	
 	<tr>
 		<td>
-			<div id='filter-description' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!description)</div>			
-			<input type="hidden" id="filter-check" name="filter-check" title="$i18n.getString('expression_is_not_well_formed')" class="{validate:{required:true}}"  />
+			<div id='filter-description' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!description)</div>
 		</td>
 	</tr>
 </table>
