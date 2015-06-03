@@ -16,7 +16,7 @@
 <table class="mainPageTable">
 	<tr>
 		<td style="text-align:right">
-			<input type="button" value="$i18n.getString( 'add_new' )" onclick="window.location.href='showAddProgramIndicator.action?id=$program.id'" style="width:100px"><br>
+			<input type="button" value="$i18n.getString( 'add_new' )" onclick="window.location.href='showAddProgramIndicator.action?programId=$program.id'" style="width:100px"><br>
 			<input type="button" value="$i18n.getString( 'back' )" onclick="window.location.href='program.action'" style="width:100px">
 		</td>
 	</tr>
@@ -35,7 +35,8 @@
 				<tbody id="list">
 					#set( $mark = false )
 					#foreach( $programIndicator in $programIndicators )
-						<tr id="tr${programIndicator.id}" data-id="$!programIndicator.id" data-uid="$!programIndicator.uid" data-type="ProgramIndicator" data-name="$encoder.htmlEncode( $!programIndicator.displayName )"
+						<tr id="tr${programIndicator.id}" data-id="$!programIndicator.id" data-uid="$!programIndicator.uid" 
+							data-type="ProgramIndicator" data-name="$encoder.htmlEncode( $!programIndicator.displayName )" data-program="$program.id"
 						    data-can-manage="$security.canManage( $programIndicator )"
 						    data-can-update="$security.canUpdate( $programIndicator )"
 						    data-can-delete="$security.canDelete( $programIndicator )">

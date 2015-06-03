@@ -20,8 +20,6 @@ jQuery( document ).ready( function()
 });
 </script>
 
-#set($program = $programIndicator.program)
-
 <h3>$i18n.getString( "update_program_indicator" ) #openHelp( "program_indicator" )</h3>
 		
 <h4>$encoder.htmlEncode($program.displayName)</h4>
