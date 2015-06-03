@@ -109,6 +109,16 @@ public class Query extends Criteria
         return this;
     }
 
+    public Disjunction addDisjunction()
+    {
+        return new Disjunction( schema );
+    }
+
+    public Conjunction addConjunction()
+    {
+        return new Conjunction( schema );
+    }
+
     public Query forceDefaultOrder()
     {
         orders.clear();

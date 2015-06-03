@@ -35,7 +35,7 @@ import org.hisp.dhis.schema.Schema;
  */
 public class Disjunction extends Junction
 {
-    public Disjunction( Schema schema, Type type )
+    public Disjunction( Schema schema )
     {
         super( schema, Type.OR );
     }
