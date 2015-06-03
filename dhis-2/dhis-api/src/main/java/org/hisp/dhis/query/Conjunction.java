@@ -35,7 +35,7 @@ import org.hisp.dhis.schema.Schema;
  */
 public class Conjunction extends Junction
 {
-    public Conjunction( Schema schema, Type type )
+    public Conjunction( Schema schema )
     {
         super( schema, Type.AND );
     }
