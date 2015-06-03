@@ -46,6 +46,6 @@ public interface GmlImportService
     MetaData fromGml( InputStream inputStream )
         throws IOException, TransformerException;
 
-    public void importGml( InputStream inputStream, String userUid, ImportOptions importOptions, TaskId taskId )
+    void importGml( InputStream inputStream, String userUid, ImportOptions importOptions, TaskId taskId )
         throws IOException, TransformerException;
 }
