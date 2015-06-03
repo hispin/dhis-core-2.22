@@ -37,7 +37,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
  * @author Lars Helge Overland
  */
 public enum ValueType
-{   
+{
     TEXT( String.class ),
     LONG_TEXT( String.class ),
     LETTER( String.class ),

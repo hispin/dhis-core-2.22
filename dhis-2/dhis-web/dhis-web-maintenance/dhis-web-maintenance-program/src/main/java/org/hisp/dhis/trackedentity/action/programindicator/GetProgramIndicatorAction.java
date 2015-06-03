@@ -30,6 +30,7 @@ package org.hisp.dhis.trackedentity.action.programindicator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
@@ -37,6 +38,9 @@ import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
+import org.hisp.dhis.system.filter.AggregatableTrackedEntityAttributeValueFilter;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.util.FilterUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
@@ -94,7 +98,14 @@ public class GetProgramIndicatorAction
         return filter;
     }
 
-    private List<Constant> constants;
+    private List<TrackedEntityAttribute> attributes = new ArrayList<>();
+    
+    public List<TrackedEntityAttribute> getAttributes()
+    {
+        return attributes;
+    }
+
+    private List<Constant> constants = new ArrayList<>();
 
     public List<Constant> getConstants()
     {
@@ -115,6 +126,10 @@ public class GetProgramIndicatorAction
         
         filter = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
 
+        attributes = new ArrayList<>( programIndicator.getProgram().getTrackedEntityAttributes() );
+        
+        FilterUtils.filter( attributes, AggregatableTrackedEntityAttributeValueFilter.INSTANCE );
+        
         constants = new ArrayList<>( constantService.getAllConstants() );
         
         Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );

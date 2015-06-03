@@ -28,28 +28,23 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 import java.util.Set;
 
 import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementDomain;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Lars Helge Overland
- */
-public class AggregatableDataElementFilter
-    implements Filter<DataElement>
+public class AggregatableTrackedEntityAttributeValueFilter
+    implements Filter<TrackedEntityAttribute>
 {
-    public static final AggregatableDataElementFilter INSTANCE = new AggregatableDataElementFilter();
+    public static final AggregatableTrackedEntityAttributeValueFilter INSTANCE = new AggregatableTrackedEntityAttributeValueFilter();
     
-    private static Set<String> TYPES = Sets.newHashSet( DataElement.VALUE_TYPE_BOOL, DataElement.VALUE_TYPE_INT, DataElement.VALUE_TYPE_STRING );
-    
+    private static final Set<String> TYPES = Sets.newHashSet( TrackedEntityAttribute.TYPE_NUMBER, TrackedEntityAttribute.TYPE_BOOL );
+
     @Override
-    public boolean retain( DataElement object )
+    public boolean retain( TrackedEntityAttribute object )
     {
-        return object != null && TYPES.contains( object.getType() ) && DataElementDomain.AGGREGATE.equals( object.getDomainType() );
+        return object != null && TYPES.contains( object.getValueType() );
     }
 }
