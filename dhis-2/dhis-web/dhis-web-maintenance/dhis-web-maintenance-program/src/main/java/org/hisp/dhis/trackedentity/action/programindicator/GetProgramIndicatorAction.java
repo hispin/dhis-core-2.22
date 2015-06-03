@@ -101,13 +101,20 @@ public class GetProgramIndicatorAction
         return program;
     }
 
-    private String description;
-
-    public String getDescription()
-    {
-        return description;
-    }
+    private String expressionDescription;
     
+    public String getExpressionDescription()
+    {
+        return expressionDescription;
+    }
+
+    private String filterDescription;
+    
+    public String getFilterDescription()
+    {
+        return filterDescription;
+    }
+
     private String filter;
     
     public String getFilter()
@@ -141,7 +148,8 @@ public class GetProgramIndicatorAction
         {
             programIndicator = programIndicatorService.getProgramIndicator( id );
             program = programIndicator.getProgram();
-            description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );        
+            expressionDescription = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );
+            filterDescription = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
             filter = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
             attributes = new ArrayList<>( program.getTrackedEntityAttributes() );
         }

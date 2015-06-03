@@ -136,7 +136,7 @@
     </tr>	
 	<tr>
 		<td>
-			<div id='expression-description' style="padding: 5px 0 20px 0" class="{validate:{required:true}}">$!encoder.htmlEncode($!description)</div>
+			<div id='expression-description' style="padding: 5px 0 20px 0" class="{validate:{required:true}}">$!encoder.htmlEncode($!expressionDescription)</div>
 		</td>
 	</tr>
 </table>
@@ -266,7 +266,7 @@
     </tr>	
 	<tr>
 		<td>
-			<div id='filter-description' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!description)</div>
+			<div id='filter-description' style="padding: 5px 0 20px 0">$!encoder.htmlEncode($!filterDescription)</div>
 		</td>
 	</tr>
 </table>
