@@ -30,7 +30,6 @@ package org.hisp.dhis.trackedentity.action.programindicator;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
