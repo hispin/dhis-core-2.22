@@ -27,7 +27,7 @@
 						<select id="expression-program-stage" onChange="getTrackedEntityDataElements('expression');" style="width:35%;margin-right:20px;">
 							<option value=''>[ $i18n.getString('select_program_stage') ]</option>
 							#foreach( $programStage in $program.programStages )
-							<option value='$programStage.uid'>$programStage.displayName</option>
+								<option value='$programStage.uid'>$programStage.displayName</option>
 							#end
 						</select>
 						<input type='text' id='expression-de-search' onKeyUp="filterExpressionSelect(event, this.value, 'expression-data-elements');" placeholder="$i18n.getString('filter')" />
@@ -56,10 +56,8 @@
 		        <tr>
 					<td>
 						<select multiple id="expression-attributes" name="expression-attributes" size="7" style="width:100%" ondblclick="insertAttribute(this,'A');">
-							#foreach( $programAttribute in $program.programAttributes )
-								#if( $programAttribute.attribute.valueType=='number' )
-									<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
-								#end
+							#foreach( $programAttribute in $attributes )
+								<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
 							#end
 						</select>
 					</td>
@@ -173,7 +171,7 @@
 						<select id="filter-program-stage" onChange="getTrackedEntityDataElements('filter');" style="width:35%;margin-right:20px;">
 							<option value=''>[ $i18n.getString('select_program_stage') ]</option>
 							#foreach( $programStage in $program.programStages )
-							<option value='$programStage.uid'>$programStage.displayName</option>
+								<option value='$programStage.uid'>$programStage.displayName</option>
 							#end
 						</select>
 						<input type='text' id='filter-de-search' onKeyUp="filterExpressionSelect(event, this.value, 'filter-data-elements');" placeholder="$i18n.getString('filter')" />
@@ -202,9 +200,7 @@
 					<td>
 						<select multiple id="filter-attributes" name="filter-attributes" size="7" style="width:100%" ondblclick="insertAttribute('filter');">
 							#foreach( $programAttribute in $program.programAttributes )
-								#if( $programAttribute.attribute.valueType=='number' )
-									<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
-								#end
+								<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
 							#end
 						</select>
 					</td>
