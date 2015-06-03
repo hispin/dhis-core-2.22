@@ -1416,6 +1416,45 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         return dueDate;
     };
     
+    function formatDataElementValue(val, dataElement, optionSets, destination){
+                               
+        if(val && dataElement.type === 'int' ){
+            if( dhis2.validation.isNumber(val)  ){                            
+                val = parseInt(val);
+                //val = new Number(val);
+            }
+        }
+        if(val && dataElement.optionSetValue && optionSets[dataElement.optionSet.id].options  ){
+            if(destination === 'USER'){
+                val = OptionSetService.getName(optionSets[dataElement.optionSet.id].options, val);
+            }
+            else{
+                val = OptionSetService.getCode(optionSets[dataElement.optionSet.id].options, val);
+            }
+            
+        }
+        if(val && dataElement.type === 'date'){
+            if(destination === 'USER'){
+                val = DateUtils.formatFromApiToUser(val);
+            }
+            else{
+                val = DateUtils.formatFromUserToApi(val);
+            }            
+        }
+        if(dataElement.type === 'trueOnly'){
+            
+            if(destination === 'USER'){
+                val = val === 'true' ? true : '';
+            }
+            else{
+                val = val === true ? 'true' : '';
+            }            
+        }
+         
+        return val;
+        
+    };
+    
     var getEventDuePeriod = function(eventsByStage, programStage, enrollment){ 
         
         var evs = [];                
@@ -1556,23 +1595,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 
             angular.forEach(programStage.programStageDataElements, function(prStDe){
                 if(dhis2Event[prStDe.dataElement.id]){                    
-                    var value = dhis2Event[prStDe.dataElement.id];
-                    
-                    if( value && prStDe.dataElement.optionSetValue && prStDe.dataElement.optionSet && optionSets[prStDe.dataElement.optionSet.id]){
-                        value = OptionSetService.getCode(optionSets[prStDe.dataElement.optionSet.id].options, value);
-                    }                    
-                    if( value && prStDe.dataElement.type === 'date'){
-                        value = DateUtils.formatFromUserToApi(value);
-                    }
-                    if( prStDe.dataElement.type === 'trueOnly' ){
-                        if(value){
-                            value = 'true';
-                        }
-                        else{
-                            value = '';
-                        }
-                    }
-                    
+                    var value = formatDataElementValue(dhis2Event[prStDe.dataElement.id], prStDe.dataElement, optionSets, 'API');                    
                     var val = {value: value, dataElement: prStDe.dataElement.id};
                     if(dhis2Event.providedElsewhere[prStDe.dataElement.id]){
                         val.providedElsewhere = dhis2Event.providedElsewhere[prStDe.dataElement.id];
@@ -1600,27 +1623,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
                 if( prStDe ){                
                     var val = dataValue.value;
-                    if(prStDe.dataElement){                               
-                        if(val && prStDe.dataElement.type === 'int' ){
-                            if( dhis2.validation.isNumber(val)  ){                            
-                                val = parseInt(val);
-                                //val = new Number(val);
-                            }
-                        }
-                        if(val && prStDe.dataElement.optionSetValue && optionSets[prStDe.dataElement.optionSet.id].options  ){
-                            val = OptionSetService.getName(optionSets[prStDe.dataElement.optionSet.id].options, val);
-                        }
-                        if(val && prStDe.dataElement.type === 'date'){
-                            val = DateUtils.formatFromApiToUser(val);
-                        }
-                        if(prStDe.dataElement.type === 'trueOnly'){
-                            if(val === 'true'){
-                                val = true;
-                            }
-                            else{
-                                val = '';
-                            }
-                        }
+                    if(prStDe.dataElement){
+                        val = formatDataElementValue(val, prStDe.dataElement, optionSets, 'USER');                        
                     }    
                     event[dataValue.dataElement] = val;
                     if(dataValue.providedElsewhere){
