@@ -25,7 +25,7 @@
 		        <tr>
 					<td>
 						<select id="expression-program-stage" onChange="getTrackedEntityDataElements('expression');" style="width:35%;margin-right:20px;">
-							<option value=''>[ $i18n.getString('select_program_stage') ]</option>
+							<option>[ $i18n.getString('select_program_stage') ]</option>
 							#foreach( $programStage in $program.programStages )
 								<option value='$programStage.uid'>$programStage.displayName</option>
 							#end
@@ -55,9 +55,9 @@
 		        </tr>
 		        <tr>
 					<td>
-						<select multiple id="expression-attributes" name="expression-attributes" size="7" style="width:100%" ondblclick="insertAttribute(this,'A');">
+						<select multiple id="expression-attributes" name="expression-attributes" size="7" style="width:100%" ondblclick="insertAttribute('expression');">
 							#foreach( $programAttribute in $attributes )
-								<option value='$programAttribute.attribute.uid'>$encoder.htmlEncode($programAttribute.attribute.displayName)</option>
+								<option value='$programAttribute.uid'>$encoder.htmlEncode($programAttribute.displayName)</option>
 							#end
 						</select>
 					</td>

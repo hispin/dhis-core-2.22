@@ -35,8 +35,10 @@ import java.util.List;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
+import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.system.filter.AggregatableTrackedEntityAttributeValueFilter;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.util.FilterUtils;
@@ -46,7 +48,6 @@ import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
- * @version $ DeleteProgramIndicatorAction Apr 16, 2013 3:24:51 PM $
  */
 public class GetProgramIndicatorAction
     implements Action
@@ -64,6 +65,9 @@ public class GetProgramIndicatorAction
 
     @Autowired
     private ConstantService constantService;
+    
+    @Autowired
+    private ProgramService programService;
 
     // -------------------------------------------------------------------------
     // Setters
@@ -75,12 +79,26 @@ public class GetProgramIndicatorAction
     {
         this.id = id;
     }
+    
+    private Integer programId;
+
+    public void setProgramId( Integer programId )
+    {
+        this.programId = programId;
+    }
 
     private ProgramIndicator programIndicator;
 
     public ProgramIndicator getProgramIndicator()
     {
         return programIndicator;
+    }
+
+    private Program program;
+    
+    public Program getProgram()
+    {
+        return program;
     }
 
     private String description;
@@ -119,21 +137,24 @@ public class GetProgramIndicatorAction
     public String execute()
         throws Exception
     {
-        programIndicator = programIndicatorService.getProgramIndicator( id );
+        if ( id != null )
+        {
+            programIndicator = programIndicatorService.getProgramIndicator( id );
+            description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );        
+            filter = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
+        }
+        
+        if ( programId != null )
+        {            
+            program = programService.getProgram( programId );
+            attributes = new ArrayList<>( program.getTrackedEntityAttributes() );
+            constants = new ArrayList<>( constantService.getAllConstants() );
 
-        description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );
-        
-        filter = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
-
-        attributes = new ArrayList<>( programIndicator.getProgram().getTrackedEntityAttributes() );
-        
-        FilterUtils.filter( attributes, AggregatableTrackedEntityAttributeValueFilter.INSTANCE );
-        
-        constants = new ArrayList<>( constantService.getAllConstants() );
-        
-        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
+            FilterUtils.filter( attributes, AggregatableTrackedEntityAttributeValueFilter.INSTANCE );
+            Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
+            Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
+        }
         
         return SUCCESS;
     }
-
 }
