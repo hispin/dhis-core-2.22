@@ -10,7 +10,7 @@ $(function() {
 // -----------------------------------------------------------------------------
 
 function showUpdateProgramIndicator( context ) {
-  location.href = 'showUpdateProgramIndicator.action?id=' + context.id + '&programId=' + context.program;
+  location.href = 'showUpdateProgramIndicator.action?id=' + context.id;
 }
 
 function removeIndicator( context ) {
@@ -133,11 +133,9 @@ function getExpressionDescription( type ) {
 			expression: expression
 		}, function( json ) {
 			if( json.valid ){
-				setFieldValue(type + '-check', json.message);
 				setInnerHTML(type + '-description', json.description);
 			}
 			else {
-				setFieldValue(type + '-check','');
 				setInnerHTML(type + '-description', json.message);
 			}
 		});
