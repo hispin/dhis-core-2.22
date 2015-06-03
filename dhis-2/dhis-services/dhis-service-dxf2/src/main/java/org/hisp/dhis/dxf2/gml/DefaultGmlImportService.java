@@ -143,6 +143,12 @@ public class DefaultGmlImportService
         importService.importMetaData( userUid, fromGml( inputStream ), importOptions, taskId );
     }
 
+    @Override
+    public void importGml( MetaData metaData, String userUid, ImportOptions importOptions, TaskId taskId )
+    {
+        importService.importMetaData( userUid, metaData, importOptions, taskId );
+    }
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
