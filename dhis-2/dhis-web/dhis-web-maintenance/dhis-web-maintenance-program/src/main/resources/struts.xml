@@ -1024,7 +1024,7 @@
     </action>
 
     <action name="showAddProgramIndicator"
-      class="org.hisp.dhis.trackedentity.action.program.GetProgramAction">
+      class="org.hisp.dhis.trackedentity.action.programindicator.GetProgramIndicatorAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-program/addProgramIndicator.vm</param>
       <param name="javascripts">javascript/programIndicator.js</param>

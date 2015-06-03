@@ -33,8 +33,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.constant.Constant;
-import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
@@ -45,7 +43,6 @@ import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
@@ -87,9 +84,6 @@ public class GetProgramAction
     {
         this.periodService = periodService;
     }
-
-    @Autowired
-    private ConstantService constantService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -154,13 +148,6 @@ public class GetProgramAction
         return programIndicators;
     }
 
-    private List<Constant> constants;
-
-    public List<Constant> getConstants()
-    {
-        return constants;
-    }
-
     private List<PeriodType> periodTypes = new ArrayList<>();
 
     public List<PeriodType> getPeriodTypes()
@@ -187,10 +174,6 @@ public class GetProgramAction
         programIndicators = new ArrayList<>( program.getProgramIndicators() );
 
         Collections.sort( programIndicators, IdentifiableObjectNameComparator.INSTANCE );
-
-        constants = new ArrayList<>( constantService.getAllConstants() );
-
-        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
 
         return SUCCESS;
     }

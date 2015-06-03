@@ -10,7 +10,7 @@ $(function() {
 // -----------------------------------------------------------------------------
 
 function showUpdateProgramIndicator( context ) {
-  location.href = 'showUpdateProgramIndicator.action?id=' + context.id;
+  location.href = 'showUpdateProgramIndicator.action?id=' + context.id + '&programId=' + context.program;
 }
 
 function removeIndicator( context ) {
