@@ -140,20 +140,22 @@ public class GetProgramIndicatorAction
         if ( id != null )
         {
             programIndicator = programIndicatorService.getProgramIndicator( id );
+            program = programIndicator.getProgram();
             description = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );        
             filter = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
+            attributes = new ArrayList<>( program.getTrackedEntityAttributes() );
         }
-        
-        if ( programId != null )
+        else if ( programId != null )
         {            
             program = programService.getProgram( programId );
             attributes = new ArrayList<>( program.getTrackedEntityAttributes() );
-            constants = new ArrayList<>( constantService.getAllConstants() );
-
-            FilterUtils.filter( attributes, AggregatableTrackedEntityAttributeValueFilter.INSTANCE );
-            Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
-            Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
         }
+        
+        constants = new ArrayList<>( constantService.getAllConstants() );
+
+        FilterUtils.filter( attributes, AggregatableTrackedEntityAttributeValueFilter.INSTANCE );
+        Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
         
         return SUCCESS;
     }

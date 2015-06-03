@@ -35,8 +35,7 @@
 				<tbody id="list">
 					#set( $mark = false )
 					#foreach( $programIndicator in $programIndicators )
-						<tr id="tr${programIndicator.id}" data-id="$!programIndicator.id" data-uid="$!programIndicator.uid" 
-							data-type="ProgramIndicator" data-name="$encoder.htmlEncode( $!programIndicator.displayName )" data-program="$program.id"
+						<tr id="tr${programIndicator.id}" data-id="$!programIndicator.id" data-uid="$!programIndicator.uid" data-type="ProgramIndicator" data-name="$encoder.htmlEncode( $!programIndicator.displayName )"
 						    data-can-manage="$security.canManage( $programIndicator )"
 						    data-can-update="$security.canUpdate( $programIndicator )"
 						    data-can-delete="$security.canDelete( $programIndicator )">
