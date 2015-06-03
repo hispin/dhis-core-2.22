@@ -255,8 +255,8 @@
 			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', '+' )" title="$i18n.getString( 'plus' )">&#43;</a>
 			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', '-' )" title="$i18n.getString( 'minus' )">&#45;</a>&nbsp;&#124;&nbsp;
 			
-			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', 'and' )" title="$i18n.getString( 'and' )">$i18n.getString( 'and_title' )</a>
-			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', 'or' )" title="$i18n.getString( 'or' )">$i18n.getString( 'or_title' )</a>
+			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', 'and' )" title="$i18n.getString( 'and_title' )">$i18n.getString( 'and_title' )</a>
+			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', 'or' )" title="$i18n.getString( 'or_title' )">$i18n.getString( 'or_title' )</a>
 			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', '&#61;&#61;' )" title="$i18n.getString( 'equal_to_title' )">&#61;&#61;</a>
 			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', '&#33&#61;' )" title="$i18n.getString( 'not_equal_to_title' )">&#33;&#61;</a>
 			<a class="greyButtonLink" href="javascript:insertOperator( 'filter', '&#60;' )" title="$i18n.getString( 'less_than_title' )">&#60;</a>
