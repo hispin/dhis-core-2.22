@@ -40,7 +40,10 @@ public class AggregatableTrackedEntityAttributeValueFilter
 {
     public static final AggregatableTrackedEntityAttributeValueFilter INSTANCE = new AggregatableTrackedEntityAttributeValueFilter();
     
-    private static final Set<String> TYPES = Sets.newHashSet( TrackedEntityAttribute.TYPE_NUMBER, TrackedEntityAttribute.TYPE_BOOL );
+    private static final Set<String> TYPES = Sets.newHashSet( TrackedEntityAttribute.TYPE_NUMBER, 
+        TrackedEntityAttribute.TYPE_BOOL, TrackedEntityAttribute.TYPE_OPTION_SET );
+    
+    //TODO Option set is not robust as it might contain any value type, needs to change with new Enum is in place
 
     @Override
     public boolean retain( TrackedEntityAttribute object )
