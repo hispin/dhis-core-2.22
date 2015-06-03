@@ -59,6 +59,7 @@ public abstract class Criteria
         {
             if ( !Restriction.class.isInstance( criterion ) )
             {
+                this.criterions.add( criterion ); // if conjunction/disjunction just add it and move forward
                 continue;
             }
 
