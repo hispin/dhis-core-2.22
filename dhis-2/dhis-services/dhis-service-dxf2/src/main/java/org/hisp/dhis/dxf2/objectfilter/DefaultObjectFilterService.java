@@ -164,9 +164,6 @@ public class DefaultObjectFilterService implements ObjectFilterService
         return true;
     }
 
-    /**
-     * Filters through every operator treating multiple of same operator as OR.
-     */
     private boolean evaluateFilterOps( Object value, FilterOps filterOps )
     {
         for ( Op op : filterOps.getFilters() )
