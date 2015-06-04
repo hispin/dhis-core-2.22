@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static org.hisp.dhis.util.GeoUtils.replaceUnsafeSvgText;
+import static org.hisp.dhis.system.util.GeoUtils.replaceUnsafeSvgText;
 
 @Controller
 @RequestMapping
