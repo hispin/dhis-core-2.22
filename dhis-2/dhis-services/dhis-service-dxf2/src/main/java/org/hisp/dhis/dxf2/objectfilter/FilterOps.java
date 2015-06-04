@@ -28,40 +28,28 @@ package org.hisp.dhis.dxf2.objectfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.hisp.dhis.dxf2.objectfilter.ops.Op;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
-* @author Morten Olav Hansen <mortenoh@gmail.com>
-*/
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
+ */
 public class FilterOps
 {
-    private Map<String, List<Op>> filters = Maps.newHashMap();
+    private List<Op> filters = new ArrayList<>();
 
     FilterOps()
     {
     }
 
-    public void addFilter( String opStr, Op op )
-    {
-        if ( !filters.containsKey( opStr ) )
-        {
-            filters.put( opStr, Lists.<Op>newArrayList() );
-        }
-
-        filters.get( opStr ).add( op );
-    }
-
-    public Map<String, List<Op>> getFilters()
+    public List<Op> getFilters()
     {
         return filters;
     }
 
-    public void setFilters( Map<String, List<Op>> filters )
+    public void setFilters( List<Op> filters )
     {
         this.filters = filters;
     }
