@@ -643,4 +643,40 @@ public class QueryServiceTest
         assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
         assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
     }
+
+    @Test
+    public void testIsNull()
+    {
+        createDataElements();
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.add( Restrictions.isNull( "categoryCombo" ) );
+
+        Result result = queryService.query( query );
+
+        assertEquals( 6, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
+    }
+
+    @Test
+    public void testIsNullUrl()
+    {
+        createDataElements();
+        Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "categoryCombo:null" ), Lists.<Order>newArrayList() );
+        Result result = queryService.query( query );
+
+        assertEquals( 6, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
+    }
 }

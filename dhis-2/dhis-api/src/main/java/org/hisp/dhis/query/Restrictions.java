@@ -91,6 +91,11 @@ public final class Restrictions
         return new Restriction( path, Operator.IN, values );
     }
 
+    public static Restriction isNull( String path )
+    {
+        return new Restriction( path, Operator.NULL );
+    }
+
     private Restrictions()
     {
     }

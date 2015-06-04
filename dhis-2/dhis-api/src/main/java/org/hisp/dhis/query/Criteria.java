@@ -70,8 +70,8 @@ public abstract class Criteria
                 continue;
             }
 
-            if ( restriction.getParameters().size() > restriction.getOperator().getMax()
-                || restriction.getParameters().size() < restriction.getOperator().getMin() )
+            if ( (restriction.getOperator().getMax() != null && restriction.getParameters().size() > restriction.getOperator().getMax())
+                || (restriction.getOperator().getMin() != null && restriction.getParameters().size() < restriction.getOperator().getMin()) )
             {
                 continue;
             }
