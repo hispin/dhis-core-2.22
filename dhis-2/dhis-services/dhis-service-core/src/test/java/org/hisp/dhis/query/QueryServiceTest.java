@@ -525,6 +525,22 @@ public class QueryServiceTest
     }
 
     @Test
+    public void testNumberTypeBoolOrInt()
+    {
+        createDataElements();
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+
+        Disjunction disjunction = query.disjunction();
+        disjunction.add( Restrictions.eq( "numberType", DataElement.VALUE_TYPE_BOOL ) );
+        disjunction.add( Restrictions.eq( "numberType", DataElement.VALUE_TYPE_INT ) );
+        query.add( disjunction );
+
+        Result result = queryService.query( query );
+
+        assertEquals( 4, result.size() );
+    }
+
+    @Test
     public void testDoubleEqDisjunction()
     {
         createDataElements();
@@ -545,6 +561,24 @@ public class QueryServiceTest
 
     @Test
     public void testDateRange()
+    {
+        createDataElements();
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+
+        query.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
+        query.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
+
+        Result result = queryService.query( query );
+
+        assertEquals( 3, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+    }
+
+    @Test
+    public void testDateRangeWithConjunction()
     {
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
