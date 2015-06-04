@@ -525,7 +525,46 @@ public class QueryServiceTest
     }
 
     @Test
+    public void testNumberTypeNumber()
+    {
+        createDataElements();
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+
+        Disjunction disjunction = query.disjunction();
+        disjunction.add( Restrictions.eq( "numberType", DataElement.VALUE_TYPE_NUMBER ) );
+        query.add( disjunction );
+
+        Result result = queryService.query( query );
+
+        assertEquals( 2, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+    }
+
+    @Test
     public void testNumberTypeBoolOrInt()
+    {
+        createDataElements();
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+
+        Disjunction disjunction = query.disjunction();
+        disjunction.add( Restrictions.eq( "numberType", DataElement.VALUE_TYPE_BOOL ) );
+        disjunction.add( Restrictions.eq( "numberType", DataElement.VALUE_TYPE_INT ) );
+        query.add( disjunction );
+
+        Result result = queryService.query( query );
+
+        assertEquals( 4, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
+    }
+
+    @Test
+    public void testNumberTypeBoolOrIntOrNumber()
     {
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
@@ -539,6 +578,13 @@ public class QueryServiceTest
         Result result = queryService.query( query );
 
         assertEquals( 6, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
     }
 
     @Test
