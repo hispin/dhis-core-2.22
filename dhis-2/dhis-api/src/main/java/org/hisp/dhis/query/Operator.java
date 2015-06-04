@@ -43,6 +43,7 @@ public enum Operator
     LT( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
     GE( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
     LE( Typed.from( String.class, Boolean.class, Number.class, Date.class ), 1 ),
+    NULL( Typed.from( String.class, Boolean.class, Number.class, Date.class ) ),
     BETWEEN( Typed.from( String.class, Number.class, Date.class ), 2 ),
     LIKE( Typed.from( String.class ), 1 ),
     ILIKE( Typed.from( String.class ), 1 ),

@@ -140,7 +140,7 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
 
         String[] split = filter.split( ":" );
 
-        if ( split.length != 3 )
+        if ( split.length < 3 )
         {
             return null;
         }
@@ -201,6 +201,10 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
             case "in":
             {
                 return Restrictions.in( split[0], parseInOperator( split[2] ) );
+            }
+            case "null":
+            {
+                return Restrictions.isNull( split[0] );
             }
         }
 

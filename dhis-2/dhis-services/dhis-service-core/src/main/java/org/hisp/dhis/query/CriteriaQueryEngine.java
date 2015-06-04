@@ -146,7 +146,12 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
         if ( Restriction.class.isInstance( criterion ) )
         {
             Restriction restriction = (Restriction) criterion;
-            junction.add( getHibernateCriterion( schema, restriction ) );
+            Criterion hibernateCriterion = getHibernateCriterion( schema, restriction );
+
+            if ( hibernateCriterion != null )
+            {
+                junction.add( hibernateCriterion );
+            }
         }
         else if ( Junction.class.isInstance( criterion ) )
         {
@@ -175,7 +180,12 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
         if ( Restriction.class.isInstance( criterion ) )
         {
             Restriction restriction = (Restriction) criterion;
-            criteria.add( getHibernateCriterion( schema, restriction ) );
+            Criterion hibernateCriterion = getHibernateCriterion( schema, restriction );
+
+            if ( hibernateCriterion != null )
+            {
+                criteria.add( hibernateCriterion );
+            }
         }
         else if ( Junction.class.isInstance( criterion ) )
         {
@@ -199,6 +209,7 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
         }
     }
 
+    // TODO verify parameters length
     @SuppressWarnings( "unchecked" )
     private Criterion getHibernateCriterion( Schema schema, Restriction restriction )
     {
@@ -214,11 +225,6 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
         for ( Object parameter : restriction.getParameters() )
         {
             parameters.add( QueryUtils.getValue( property.getKlass(), parameter ) );
-        }
-
-        if ( parameters.isEmpty() )
-        {
-            return null;
         }
 
         switch ( restriction.getOperator() )
@@ -267,6 +273,10 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
                 }
 
                 return Restrictions.in( property.getFieldName(), (Collection<?>) parameters.get( 0 ) );
+            }
+            case NULL:
+            {
+                return Restrictions.isNull( property.getFieldName() );
             }
         }
 

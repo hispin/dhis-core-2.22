@@ -57,6 +57,11 @@ public class Filters
         {
             Op op = OpFactory.create( operator );
 
+            if ( op == null )
+            {
+                return;
+            }
+
             if ( op.wantValue() )
             {
                 if ( value == null )
