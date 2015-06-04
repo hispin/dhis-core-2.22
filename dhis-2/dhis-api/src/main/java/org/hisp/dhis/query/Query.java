@@ -111,10 +111,26 @@ public class Query extends Criteria
 
     public Disjunction addDisjunction()
     {
+        Disjunction disjunction = new Disjunction( schema );
+        add( disjunction );
+
+        return disjunction;
+    }
+
+    public Disjunction disjunction()
+    {
         return new Disjunction( schema );
     }
 
     public Conjunction addConjunction()
+    {
+        Conjunction conjunction = new Conjunction( schema );
+        add( conjunction );
+
+        return conjunction;
+    }
+
+    public Conjunction conjunction()
     {
         return new Conjunction( schema );
     }
