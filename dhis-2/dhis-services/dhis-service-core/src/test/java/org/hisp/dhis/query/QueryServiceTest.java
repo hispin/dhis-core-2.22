@@ -531,13 +531,14 @@ public class QueryServiceTest
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         Disjunction disjunction = query.disjunction();
+        disjunction.add( Restrictions.eq( "numberType", DataElement.VALUE_TYPE_NUMBER ) );
         disjunction.add( Restrictions.eq( "numberType", DataElement.VALUE_TYPE_BOOL ) );
         disjunction.add( Restrictions.eq( "numberType", DataElement.VALUE_TYPE_INT ) );
         query.add( disjunction );
 
         Result result = queryService.query( query );
 
-        assertEquals( 4, result.size() );
+        assertEquals( 6, result.size() );
     }
 
     @Test
