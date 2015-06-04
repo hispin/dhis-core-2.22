@@ -30,7 +30,6 @@ package org.hisp.dhis.query;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -119,8 +118,6 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
 
     private Criteria buildCriteria( Criteria criteria, Query query )
     {
-        Map<Operator, List<Restriction>> restrictions = new HashMap<>();
-
         if ( query.getFirstResult() != null )
         {
             criteria.setFirstResult( query.getFirstResult() );
@@ -133,38 +130,7 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
 
         for ( org.hisp.dhis.query.Criterion criterion : query.getCriterions() )
         {
-            if ( !Restriction.class.isInstance( criterion ) )
-            {
-                continue;
-            }
-
-            Restriction restriction = (Restriction) criterion;
-
-            if ( !restrictions.containsKey( restriction.getOperator() ) )
-            {
-                restrictions.put( restriction.getOperator(), new ArrayList<Restriction>() );
-            }
-
-            restrictions.get( restriction.getOperator() ).add( restriction );
-        }
-
-        for ( Map.Entry<Operator, List<Restriction>> restriction : restrictions.entrySet() )
-        {
-            if ( restriction.getValue().size() == 1 )
-            {
-                criteria.add( getHibernateCriterion( query.getSchema(), restriction.getValue().get( 0 ) ) );
-            }
-            else
-            {
-                Disjunction disjunction = Restrictions.disjunction();
-
-                for ( Restriction r : restriction.getValue() )
-                {
-                    disjunction.add( getHibernateCriterion( query.getSchema(), r ) );
-                }
-
-                criteria.add( disjunction );
-            }
+            addCriterion( criteria, criterion, query.getSchema() );
         }
 
         for ( Order order : query.getOrders() )
@@ -173,6 +139,64 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
         }
 
         return criteria;
+    }
+
+    private void addJunction( org.hibernate.criterion.Junction junction, org.hisp.dhis.query.Criterion criterion, Schema schema )
+    {
+        if ( Restriction.class.isInstance( criterion ) )
+        {
+            Restriction restriction = (Restriction) criterion;
+            junction.add( getHibernateCriterion( schema, restriction ) );
+        }
+        else if ( Junction.class.isInstance( criterion ) )
+        {
+            org.hibernate.criterion.Junction j = null;
+
+            if ( Disjunction.class.isInstance( criterion ) )
+            {
+                j = Restrictions.disjunction();
+            }
+            else if ( Conjunction.class.isInstance( criterion ) )
+            {
+                j = Restrictions.conjunction();
+            }
+
+            junction.add( j );
+
+            for ( org.hisp.dhis.query.Criterion c : ((Junction) criterion).getCriterions() )
+            {
+                addJunction( junction, c, schema );
+            }
+        }
+    }
+
+    private void addCriterion( Criteria criteria, org.hisp.dhis.query.Criterion criterion, Schema schema )
+    {
+        if ( Restriction.class.isInstance( criterion ) )
+        {
+            Restriction restriction = (Restriction) criterion;
+            criteria.add( getHibernateCriterion( schema, restriction ) );
+        }
+        else if ( Junction.class.isInstance( criterion ) )
+        {
+            org.hibernate.criterion.Junction junction = null;
+
+            if ( Disjunction.class.isInstance( criterion ) )
+            {
+                junction = Restrictions.disjunction();
+            }
+            else if ( Conjunction.class.isInstance( criterion ) )
+            {
+                junction = Restrictions.conjunction();
+            }
+
+            criteria.add( junction );
+
+            for ( org.hisp.dhis.query.Criterion c : ((Junction) criterion).getCriterions() )
+            {
+                addJunction( junction, c, schema );
+            }
+        }
     }
 
     @SuppressWarnings( "unchecked" )

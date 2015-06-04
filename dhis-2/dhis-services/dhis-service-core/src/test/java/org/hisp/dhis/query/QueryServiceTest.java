@@ -62,11 +62,22 @@ public class QueryServiceTest
     private void createDataElements()
     {
         DataElement dataElementA = createDataElement( 'A' );
+        dataElementA.setNumberType( DataElement.VALUE_TYPE_NUMBER );
+
         DataElement dataElementB = createDataElement( 'B' );
+        dataElementB.setNumberType( DataElement.VALUE_TYPE_BOOL );
+
         DataElement dataElementC = createDataElement( 'C' );
+        dataElementC.setNumberType( DataElement.VALUE_TYPE_INT );
+
         DataElement dataElementD = createDataElement( 'D' );
+        dataElementD.setNumberType( DataElement.VALUE_TYPE_NUMBER );
+
         DataElement dataElementE = createDataElement( 'E' );
+        dataElementE.setNumberType( DataElement.VALUE_TYPE_BOOL );
+
         DataElement dataElementF = createDataElement( 'F' );
+        dataElementF.setNumberType( DataElement.VALUE_TYPE_INT );
 
         dataElementA.setCreated( Year.parseYear( "2001" ).getStart() );
         dataElementB.setCreated( Year.parseYear( "2002" ).getStart() );
@@ -495,5 +506,60 @@ public class QueryServiceTest
         assertEquals( "deabcdefghD", result.getItems().get( 3 ).getUid() );
         assertEquals( "deabcdefghE", result.getItems().get( 4 ).getUid() );
         assertEquals( "deabcdefghF", result.getItems().get( 5 ).getUid() );
+    }
+
+    @Test
+    public void testDoubleEqConjunction()
+    {
+        createDataElements();
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+
+        Conjunction conjunction = query.conjunction();
+        conjunction.add( Restrictions.eq( "id", "deabcdefghD" ) );
+        conjunction.add( Restrictions.eq( "id", "deabcdefghF" ) );
+        query.add( conjunction );
+
+        Result result = queryService.query( query );
+
+        assertEquals( 0, result.size() );
+    }
+
+    @Test
+    public void testDoubleEqDisjunction()
+    {
+        createDataElements();
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+
+        Disjunction disjunction = query.disjunction();
+        disjunction.add( Restrictions.eq( "id", "deabcdefghD" ) );
+        disjunction.add( Restrictions.eq( "id", "deabcdefghF" ) );
+        query.add( disjunction );
+
+        Result result = queryService.query( query );
+
+        assertEquals( 2, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghF" ) );
+    }
+
+    @Test
+    public void testDateRange()
+    {
+        createDataElements();
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+
+        Conjunction conjunction = query.conjunction();
+        conjunction.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
+        conjunction.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
+        query.add( conjunction );
+
+        Result result = queryService.query( query );
+
+        assertEquals( 3, result.size() );
+
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( result.getItems(), "deabcdefghD" ) );
     }
 }
