@@ -57,5 +57,10 @@ public abstract class Op
         return QueryUtils.getValue( klass, value );
     }
 
+    public <T> T getValue( Class<T> klass, Object value )
+    {
+        return QueryUtils.getValue( klass, value );
+    }
+
     public abstract OpStatus evaluate( Object object );
 }
