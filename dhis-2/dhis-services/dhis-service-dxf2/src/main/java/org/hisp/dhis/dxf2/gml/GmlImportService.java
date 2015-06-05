@@ -62,6 +62,24 @@ public interface GmlImportService
         throws IOException, TransformerException;
 
     /**
+     * Pre-process a GML document. The process, in short, entails the following:
+     * <ol>
+     *     <li>Parse the GML payload and transform it into DXF2 format</li>
+     *     <li>Get the given identifiers (uid, code or name) from the parsed payload and fetch
+     *     the corresponding entities from the DB</li>
+     *     <li>Merge the geospatial data given in the input GML into DB entities and return</li>
+     * </ol>
+     *
+     * The result of this process in returned in a {@link GmlPreProcessingResult} which
+     * encapsulates the returned {@link MetaData} object or the exception in cause of parse
+     * failure due to IO errors or malformed input.
+     *
+     * @param gmlInputStream the InputStream providing the GML input.
+     * @return a GmlPreProcessingResult representing the end result of the process.
+     */
+    GmlPreProcessingResult preProcessGml( InputStream gmlInputStream );
+
+    /**
      * Imports GML data and merges the geospatial data updates into the database.
      * See {@link #fromGml(InputStream)} for details on the underlying process.
      *
