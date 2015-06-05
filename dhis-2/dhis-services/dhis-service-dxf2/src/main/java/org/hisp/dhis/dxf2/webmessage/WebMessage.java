@@ -47,11 +47,12 @@ import com.google.common.base.MoreObjects;
 public class WebMessage
 {
     /**
-     * Message status, currently two statuses are available: OK, ERROR.
+     * Message status, currently two statuses are available: OK, ERROR. Default
+     * value is OK.
      *
      * @see WebMessageStatus
      */
-    protected WebMessageStatus status;
+    protected WebMessageStatus status = WebMessageStatus.OK;
 
     /**
      * Internal code for this message. Should be used to help with third party clients which
@@ -60,7 +61,7 @@ public class WebMessage
     protected Integer code;
 
     /**
-     * HTTP status code.
+     * HTTP status code. Default value is 200.
      */
     protected Integer httpStatusCode = HttpStatus.OK.value();
 
@@ -90,13 +91,10 @@ public class WebMessage
 
     public WebMessage()
     {
-        this.status = WebMessageStatus.OK;
-        this.httpStatusCode = HttpStatus.OK.value();
     }
 
     public WebMessage( WebMessageStatus status )
     {
-        this.status = status;
         this.httpStatusCode = HttpStatus.OK.value();
     }
 
