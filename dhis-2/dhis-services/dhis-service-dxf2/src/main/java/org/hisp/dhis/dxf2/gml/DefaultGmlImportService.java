@@ -150,6 +150,7 @@ public class DefaultGmlImportService
         return GmlPreProcessingResult.success( metaData );
     }
 
+    // TODO Remove this (and refactor unit test to use preProcessGml)
     @Override
     public MetaData fromGml( InputStream inputStream )
         throws IOException, TransformerException
