@@ -83,6 +83,10 @@ public class WebMessage
      */
     protected WebMessageResponse response;
 
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------     
+
     public WebMessage()
     {
         this.status = WebMessageStatus.OK;
@@ -98,6 +102,24 @@ public class WebMessage
         this.status = status;
         this.httpStatusCode = httpStatusCode;
     }
+
+    // -------------------------------------------------------------------------
+    // Logic
+    // -------------------------------------------------------------------------     
+    
+    public boolean okStatus()
+    {
+        return WebMessageStatus.OK.equals( status );
+    }
+
+    public boolean errorStatus()
+    {
+        return WebMessageStatus.ERROR.equals( status );
+    }
+    
+    // -------------------------------------------------------------------------
+    // Get and set methods
+    // -------------------------------------------------------------------------     
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )

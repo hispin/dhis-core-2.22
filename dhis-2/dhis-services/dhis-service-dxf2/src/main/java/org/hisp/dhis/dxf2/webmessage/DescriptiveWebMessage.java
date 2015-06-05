@@ -1,4 +1,4 @@
-package org.hisp.dhis.webapi.webdomain;
+package org.hisp.dhis.dxf2.webmessage;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,42 +28,20 @@ package org.hisp.dhis.webapi.webdomain;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.webmessage.WebMessage;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ValidationResult
-{
-    private Boolean valid;
-    
-    private String message;
-    
+public class DescriptiveWebMessage
+    extends WebMessage
+{    
     private String description;
 
-    public ValidationResult()
+    public DescriptiveWebMessage()
     {
+        super();
     }
     
-    @JsonProperty
-    public Boolean isValid()
-    {
-        return valid;
-    }
-
-    public void setValid( Boolean valid )
-    {
-        this.valid = valid;
-    }
-    
-    @JsonProperty
-    public String getMessage()
-    {
-        return message;
-    }
-
-    public void setMessage( String message )
-    {
-        this.message = message;
-    }
-
     @JsonProperty
     public String getDescription()
     {
