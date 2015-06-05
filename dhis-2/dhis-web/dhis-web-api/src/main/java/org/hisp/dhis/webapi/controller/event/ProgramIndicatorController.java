@@ -32,7 +32,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.webmessage.DescriptiveWebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
@@ -40,7 +40,6 @@ import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.schema.descriptors.ProgramIndicatorSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.dxf2.webmessage.DescriptiveWebMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -57,9 +56,6 @@ public class ProgramIndicatorController
     private ProgramIndicatorService programIndicatorService;
 
     @Autowired
-    private RenderService renderService;
-    
-    @Autowired
     private I18nManager i18nManager;
 
     @RequestMapping( value = "/expression/description", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
@@ -70,19 +66,18 @@ public class ProgramIndicatorController
         
         String result = programIndicatorService.expressionIsValid( expression );
         
-        DescriptiveWebMessage validation = new DescriptiveWebMessage();
-        validation.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
-        validation.setMessage( i18n.getString( result ) );
+        DescriptiveWebMessage message = new DescriptiveWebMessage();
+        message.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
+        message.setMessage( i18n.getString( result ) );
         
-        if ( validation.okStatus() )
+        if ( message.okStatus() )
         {
             String description = programIndicatorService.getExpressionDescription( expression );
             
-            validation.setDescription( description );
+            message.setDescription( description );
         }
         
-        response.setContentType( MediaType.APPLICATION_JSON_VALUE );
-        renderService.toJson( response.getOutputStream(), validation, DescriptiveWebMessage.class );
+        webMessageService.sendJson( message, response );
     }
 
     @RequestMapping( value = "/filter/description", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
@@ -93,18 +88,17 @@ public class ProgramIndicatorController
         
         String result = programIndicatorService.filterIsValid( expression );
         
-        DescriptiveWebMessage validation = new DescriptiveWebMessage();
-        validation.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
-        validation.setMessage( i18n.getString( result ) );
+        DescriptiveWebMessage message = new DescriptiveWebMessage();
+        message.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
+        message.setMessage( i18n.getString( result ) );
         
-        if ( validation.okStatus() )
+        if ( message.okStatus() )
         {
             String description = programIndicatorService.getExpressionDescription( expression );
             
-            validation.setDescription( description );
+            message.setDescription( description );
         }
         
-        response.setContentType( MediaType.APPLICATION_JSON_VALUE );
-        renderService.toJson( response.getOutputStream(), validation, DescriptiveWebMessage.class );
+        webMessageService.sendJson( message, response );
     }
 }
