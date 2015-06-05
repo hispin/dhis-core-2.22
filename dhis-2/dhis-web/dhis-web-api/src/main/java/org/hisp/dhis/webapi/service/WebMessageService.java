@@ -30,8 +30,6 @@ package org.hisp.dhis.webapi.service;
 
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessage;
-import org.hisp.dhis.dxf2.webmessage.WebMessageResponse;
-import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -61,9 +59,8 @@ public class WebMessageService
         {
             renderService.toJson( response.getOutputStream(), message );
         }
-        catch ( IOException ex )
+        catch ( IOException ignored )
         {
-            ex.printStackTrace();
         }
     }
 
@@ -76,9 +73,8 @@ public class WebMessageService
         {
             renderService.toXml( response.getOutputStream(), message );
         }
-        catch ( IOException ex )
+        catch ( IOException ignored )
         {
-            ex.printStackTrace();
         }
     }
 
@@ -100,11 +96,11 @@ public class WebMessageService
 
         if ( isCompatibleWith( type, MediaType.APPLICATION_JSON ) )
         {
-            sendJson( webMessage, response  );
+            sendJson( webMessage, response );
         }
         else if ( isCompatibleWith( type, MediaType.APPLICATION_XML ) )
         {
-            sendXml( webMessage, response  );
+            sendXml( webMessage, response );
         }
     }
 
