@@ -95,7 +95,7 @@ public class WebMessage
 
     public WebMessage( WebMessageStatus status )
     {
-        this.httpStatusCode = HttpStatus.OK.value();
+        this.status = status;
     }
 
     public WebMessage( WebMessageStatus status, Integer httpStatusCode )
