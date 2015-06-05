@@ -123,7 +123,7 @@ function insertOperator( type, value ) {
 function getExpressionDescription( type ) {
 	var expression = getFieldValue( type );
 	
-	if( expression == '' )
+	if( !expression || expression == '' )
 	{
 		setInnerHTML(type + '-description', '');
 	}
@@ -132,7 +132,7 @@ function getExpressionDescription( type ) {
 		$.getJSON('../api/programIndicators/' + type + '/description', {
 			expression: expression
 		}, function( json ) {
-			if( json.valid ){
+			if( 'OK' == json.status ){
 				setInnerHTML(type + '-description', json.description);
 			}
 			else {

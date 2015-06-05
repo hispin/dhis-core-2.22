@@ -33,13 +33,14 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.schema.descriptors.ProgramIndicatorSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.webapi.webdomain.ValidationResult;
+import org.hisp.dhis.dxf2.webmessage.DescriptiveWebMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -69,11 +70,11 @@ public class ProgramIndicatorController
         
         String result = programIndicatorService.expressionIsValid( expression );
         
-        ValidationResult validation = new ValidationResult();
-        validation.setValid( ProgramIndicator.VALID.equals( result ) );
+        DescriptiveWebMessage validation = new DescriptiveWebMessage();
+        validation.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
         validation.setMessage( i18n.getString( result ) );
         
-        if ( validation.isValid() )
+        if ( validation.okStatus() )
         {
             String description = programIndicatorService.getExpressionDescription( expression );
             
@@ -81,7 +82,7 @@ public class ProgramIndicatorController
         }
         
         response.setContentType( MediaType.APPLICATION_JSON_VALUE );
-        renderService.toJson( response.getOutputStream(), validation, ValidationResult.class );
+        renderService.toJson( response.getOutputStream(), validation, DescriptiveWebMessage.class );
     }
 
     @RequestMapping( value = "/filter/description", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
@@ -92,11 +93,11 @@ public class ProgramIndicatorController
         
         String result = programIndicatorService.filterIsValid( expression );
         
-        ValidationResult validation = new ValidationResult();
-        validation.setValid( ProgramIndicator.VALID.equals( result ) );
+        DescriptiveWebMessage validation = new DescriptiveWebMessage();
+        validation.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
         validation.setMessage( i18n.getString( result ) );
         
-        if ( validation.isValid() )
+        if ( validation.okStatus() )
         {
             String description = programIndicatorService.getExpressionDescription( expression );
             
@@ -104,6 +105,6 @@ public class ProgramIndicatorController
         }
         
         response.setContentType( MediaType.APPLICATION_JSON_VALUE );
-        renderService.toJson( response.getOutputStream(), validation, ValidationResult.class );
+        renderService.toJson( response.getOutputStream(), validation, DescriptiveWebMessage.class );
     }
 }
