@@ -28,14 +28,18 @@ package org.hisp.dhis.importexport.action.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.gml.GmlImportService;
+import org.hisp.dhis.dxf2.gml.GmlPreProcessingResult;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.system.notification.NotificationLevel;
+import org.hisp.dhis.system.notification.Notifier;
+import org.springframework.web.util.HtmlUtils;
+import org.xml.sax.SAXParseException;
 
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -50,11 +54,14 @@ public class ImportMetaDataGmlTask
 
     private String userUid;
 
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
     private GmlImportService gmlImportService;
+
+    private Notifier notifier;
 
     private ImportOptions importOptions;
 
@@ -64,11 +71,12 @@ public class ImportMetaDataGmlTask
     // Constructors
     // -------------------------------------------------------------------------
 
-    public ImportMetaDataGmlTask( String userUid, GmlImportService gmlImportService,
+    public ImportMetaDataGmlTask( String userUid, GmlImportService gmlImportService, Notifier notifier,
         ImportOptions importOptions, InputStream inputStream, TaskId taskId )
     {
         this.userUid = userUid;
         this.gmlImportService = gmlImportService;
+        this.notifier = notifier;
         this.importOptions = importOptions;
         this.inputStream = inputStream;
         this.taskId = taskId;
@@ -83,15 +91,37 @@ public class ImportMetaDataGmlTask
     {
         importOptions.setImportStrategy( "update" ); // Force update only for GML import
 
-        try
-        {
-            gmlImportService.importGml( inputStream, userUid, importOptions, taskId );
-        }
-        catch ( IOException | TransformerException e )
-        {
-            log.error( "Unable to read GML data from input stream", e );
+        GmlPreProcessingResult gmlPreProcessingResult = gmlImportService.preProcessGml( inputStream );
 
-            throw new RuntimeException( "Failed to parse GML input stream", e );
+        if ( !gmlPreProcessingResult.isSuccess() )
+        {
+            Throwable throwable = gmlPreProcessingResult.getThrowable();
+            String message = createErrorMessage( throwable );
+
+            notifier.notify( taskId, NotificationLevel.ERROR, message, false );
+            log.error( "GML import failed: " + message, throwable );
+
+            return;
         }
+
+        gmlImportService.importGml( gmlPreProcessingResult.getResultMetaData(), userUid, importOptions, taskId );
+    }
+
+    private String createErrorMessage( Throwable throwable )
+    {
+        String message = "";
+        Throwable rootThrowable = ExceptionUtils.getRootCause( throwable );
+
+        if ( rootThrowable instanceof SAXParseException )
+        {
+            SAXParseException e = (SAXParseException) rootThrowable;
+            message += "Syntax error on line " + e.getLineNumber() + ". " + e.getMessage();
+        }
+        else
+        {
+            message += rootThrowable.getMessage();
+        }
+
+        return HtmlUtils.htmlEscape( message );
     }
 }

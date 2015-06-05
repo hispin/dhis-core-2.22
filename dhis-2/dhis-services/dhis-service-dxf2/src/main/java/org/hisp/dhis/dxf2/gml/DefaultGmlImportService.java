@@ -32,6 +32,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
+import org.apache.commons.io.IOUtils;
+import org.hibernate.Hibernate;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.MergeStrategy;
@@ -88,13 +90,91 @@ public class DefaultGmlImportService
     // GmlImportService implementation
     // -------------------------------------------------------------------------
 
+    @Transactional
+    @Override
+    public GmlPreProcessingResult preProcessGml( InputStream inputStream )
+    {
+        InputStream dxfStream = null;
+        MetaData metaData = null;
+
+        try
+        {
+            dxfStream = transformGml( inputStream );
+            metaData = renderService.fromXml( dxfStream, MetaData.class );
+        }
+        catch ( IOException | TransformerException e )
+        {
+            return GmlPreProcessingResult.failure( e );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( dxfStream );
+        }
+
+        Map<String, OrganisationUnit> uidMap  = Maps.newHashMap(), codeMap = Maps.newHashMap(), nameMap = Maps.newHashMap();
+
+        matchAndFilterOnIdentifiers( metaData.getOrganisationUnits(), uidMap, codeMap, nameMap );
+
+        Map<String, OrganisationUnit> persistedUidMap  = getMatchingPersistedOrgUnits( uidMap.keySet(),  IdentifiableProperty.UID );
+        Map<String, OrganisationUnit> persistedCodeMap = getMatchingPersistedOrgUnits( codeMap.keySet(), IdentifiableProperty.CODE );
+        Map<String, OrganisationUnit> persistedNameMap = getMatchingPersistedOrgUnits( nameMap.keySet(), IdentifiableProperty.NAME );
+
+        Iterator<OrganisationUnit> persistedIterator = Iterators.concat( persistedUidMap.values().iterator(),
+            persistedCodeMap.values().iterator(), persistedNameMap.values().iterator() );
+
+        while ( persistedIterator.hasNext() )
+        {
+            OrganisationUnit persisted = persistedIterator.next(), imported = null;
+
+            if ( !Strings.isNullOrEmpty( persisted.getUid() ) && uidMap.containsKey( persisted.getUid() ) )
+            {
+                imported = uidMap.get( persisted.getUid() );
+            }
+            else if ( !Strings.isNullOrEmpty( persisted.getCode() ) && codeMap.containsKey( persisted.getCode() ) )
+            {
+                imported = codeMap.get( persisted.getCode() );
+            }
+            else if ( !Strings.isNullOrEmpty( persisted.getName() ) && nameMap.containsKey( persisted.getName() ) )
+            {
+                imported = nameMap.get( persisted.getName() );
+            }
+
+            if ( imported == null || imported.getCoordinates() == null || imported.getFeatureType() == null )
+            {
+                continue; // Failed to dereference a persisted entity for this org unit or geo data incomplete/missing, therefore ignore
+            }
+
+            mergeNonGeoData( persisted, imported );
+        }
+
+        return GmlPreProcessingResult.success( metaData );
+    }
+
     @Override
     public MetaData fromGml( InputStream inputStream )
         throws IOException, TransformerException
     {
-        InputStream dxfStream = transformGml( inputStream );
-        MetaData metaData = renderService.fromXml( dxfStream, MetaData.class );
-        dxfStream.close();
+        InputStream dxfStream;
+        MetaData metaData;
+
+        try
+        {
+            dxfStream = transformGml( inputStream );
+        }
+        catch (Exception e)
+        {
+            dxfStream = null;
+        }
+
+        if(dxfStream != null)
+        {
+            metaData = renderService.fromXml( dxfStream, MetaData.class );
+            dxfStream.close();
+        }
+        else
+        {
+            return null;
+        }
 
         Map<String, OrganisationUnit> uidMap  = Maps.newHashMap(), codeMap = Maps.newHashMap(), nameMap = Maps.newHashMap();
 
@@ -143,6 +223,7 @@ public class DefaultGmlImportService
         importService.importMetaData( userUid, fromGml( inputStream ), importOptions, taskId );
     }
 
+    @Transactional
     @Override
     public void importGml( MetaData metaData, String userUid, ImportOptions importOptions, TaskId taskId )
     {

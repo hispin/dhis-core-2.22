@@ -117,4 +117,6 @@ public class GmlImportServiceTest
         assertEquals( 1, units.get( "Blindern").getCoordinatesAsList().get( 0 ).getNumberOfCoordinates() );
         assertEquals( 76, units.get( "Forskningsparken" ).getCoordinatesAsList().get(0).getNumberOfCoordinates() );
     }
+
+    // TODO Add test for GmlImportService#preProcessGml(InputStream)
 }

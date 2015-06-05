@@ -77,7 +77,7 @@ public class SpringScheduler
     {
         taskExecutor.execute( task );
     }
-    
+
     @Override
     public boolean scheduleTask( String key, Runnable task, String cronExpr )
     {        
