@@ -32,10 +32,13 @@ import org.hisp.dhis.common.DeleteNotAllowedException;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MaintenanceModeException;
 import org.hisp.dhis.dataapproval.exceptions.DataApprovalException;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.webapi.controller.exception.NotAuthenticatedException;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
+import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,6 +51,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import java.beans.PropertyEditorSupport;
@@ -59,6 +63,9 @@ import java.util.Date;
 @ControllerAdvice
 public class CrudControllerAdvice
 {
+    @Autowired
+    private WebMessageService webMessageService;
+
     @InitBinder
     protected void initBinder( WebDataBinder binder )
     {
@@ -126,6 +133,12 @@ public class CrudControllerAdvice
         ContextUtils.conflictResponse( response, ex.getClass().getName() ); //TODO fix message
     }
 
+    @ExceptionHandler( WebMessageException.class )
+    public void webMessageExceptionHandler( WebMessageException ex, HttpServletResponse response, HttpServletRequest request )
+    {
+        webMessageService.send( ex.getWebMessage(), response, request );
+    }
+
     private HttpHeaders getHeaders()
     {
         HttpHeaders headers = new HttpHeaders();
@@ -134,4 +147,3 @@ public class CrudControllerAdvice
         return headers;
     }
 }
-
