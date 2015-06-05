@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.webmessage;
  */
 
 import org.hisp.dhis.common.DxfNamespaces;
+import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -61,7 +62,7 @@ public class WebMessage
     /**
      * HTTP status code.
      */
-    protected Integer httpStatusCode = 200;
+    protected Integer httpStatusCode = HttpStatus.OK.value();
 
     /**
      * Non-technical message, should be simple and could possibly be used to display message
@@ -90,11 +91,13 @@ public class WebMessage
     public WebMessage()
     {
         this.status = WebMessageStatus.OK;
+        this.httpStatusCode = HttpStatus.OK.value();
     }
 
     public WebMessage( WebMessageStatus status )
     {
         this.status = status;
+        this.httpStatusCode = HttpStatus.OK.value();
     }
 
     public WebMessage( WebMessageStatus status, Integer httpStatusCode )
