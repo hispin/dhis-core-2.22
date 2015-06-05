@@ -72,9 +72,7 @@ public class ProgramIndicatorController
         
         if ( message.okStatus() )
         {
-            String description = programIndicatorService.getExpressionDescription( expression );
-            
-            message.setDescription( description );
+            message.setDescription( programIndicatorService.getExpressionDescription( expression ) );
         }
         
         webMessageService.sendJson( message, response );
@@ -94,9 +92,7 @@ public class ProgramIndicatorController
         
         if ( message.okStatus() )
         {
-            String description = programIndicatorService.getExpressionDescription( expression );
-            
-            message.setDescription( description );
+            message.setDescription( programIndicatorService.getExpressionDescription( expression ) );
         }
         
         webMessageService.sendJson( message, response );

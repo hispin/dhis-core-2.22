@@ -32,6 +32,9 @@ import org.hisp.dhis.dxf2.webmessage.WebMessage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * @author Lars Helge Overland
+ */
 public class DescriptiveWebMessage
     extends WebMessage
 {    
