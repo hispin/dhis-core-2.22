@@ -61,7 +61,7 @@ public class WebMessage
     /**
      * HTTP status code.
      */
-    protected Integer httpStatusCode;
+    protected Integer httpStatusCode = 200;
 
     /**
      * Non-technical message, should be simple and could possibly be used to display message
