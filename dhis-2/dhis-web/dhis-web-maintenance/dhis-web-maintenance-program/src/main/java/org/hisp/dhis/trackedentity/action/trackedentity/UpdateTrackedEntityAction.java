@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
@@ -98,9 +99,8 @@ public class UpdateTrackedEntityAction
     {
         TrackedEntity trackedEntity = trackedEntityService.getTrackedEntity( id );
 
-        trackedEntity.setName( name );
-
-        trackedEntity.setDescription( description );
+        trackedEntity.setName( StringUtils.trimToNull( name ) );
+        trackedEntity.setDescription( StringUtils.trimToNull( description ) );
         
         if ( jsonAttributeValues != null )
         {
