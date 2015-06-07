@@ -463,7 +463,11 @@ public class BaseIdentifiableObject
 
         publicAccess = AccessStringHelper.DEFAULT;
         externalAccess = false;
-        userGroupAccesses.clear();
+        
+        if ( userGroupAccesses != null )
+        {
+            userGroupAccesses.clear();
+        }
     }
 
     /**
@@ -496,6 +500,7 @@ public class BaseIdentifiableObject
     public static Map<String, Integer> getCodeMap( Collection<? extends BaseIdentifiableObject> objects )
     {
         Map<String, Integer> map = new HashMap<>();
+        
         for ( BaseIdentifiableObject object : objects )
         {
             String code = object.getCode();
@@ -503,6 +508,7 @@ public class BaseIdentifiableObject
 
             map.put( code, internalId );
         }
+        
         return map;
     }
 
@@ -515,6 +521,7 @@ public class BaseIdentifiableObject
     public static Map<String, Integer> getNameMap( Collection<? extends BaseIdentifiableObject> objects )
     {
         Map<String, Integer> map = new HashMap<>();
+        
         for ( BaseIdentifiableObject object : objects )
         {
             String name = object.getName();
@@ -522,6 +529,7 @@ public class BaseIdentifiableObject
 
             map.put( name, internalId );
         }
+        
         return map;
     }
 
@@ -574,7 +582,10 @@ public class BaseIdentifiableObject
         publicAccess = other.getPublicAccess() == null ? publicAccess : other.getPublicAccess();
         externalAccess = other.getExternalAccess();
 
-        userGroupAccesses.clear();
-        userGroupAccesses.addAll( other.getUserGroupAccesses() );
+        if ( userGroupAccesses != null )
+        {
+            userGroupAccesses.clear();
+            userGroupAccesses.addAll( other.getUserGroupAccesses() );
+        }
     }
 }

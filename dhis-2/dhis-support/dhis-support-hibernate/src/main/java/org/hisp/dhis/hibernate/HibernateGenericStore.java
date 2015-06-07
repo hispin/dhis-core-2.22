@@ -93,7 +93,7 @@ public class HibernateGenericStore<T>
     protected CurrentUserService currentUserService;
 
     /**
-     * Allows rewiring (e.g. by a unit test)
+     * Allows injection (e.g. by a unit test)
      */
     public void setCurrentUserService( CurrentUserService currentUserService )
     {
@@ -338,7 +338,11 @@ public class HibernateGenericStore<T>
             if ( clearSharing )
             {
                 identifiableObject.setPublicAccess( AccessStringHelper.DEFAULT );
-                identifiableObject.getUserGroupAccesses().clear();
+                
+                if ( identifiableObject.getUserGroupAccesses() != null )
+                {
+                    identifiableObject.getUserGroupAccesses().clear();
+                }
             }
 
             if ( identifiableObject.getUser() == null )
