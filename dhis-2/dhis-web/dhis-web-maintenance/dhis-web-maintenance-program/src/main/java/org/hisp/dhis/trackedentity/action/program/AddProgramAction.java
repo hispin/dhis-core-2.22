@@ -29,6 +29,8 @@ package org.hisp.dhis.trackedentity.action.program;
  */
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
@@ -253,11 +255,11 @@ public class AddProgramAction
 
         Program program = new Program();
 
-        program.setName( name );
-        program.setDescription( description );
+        program.setName( StringUtils.trimToNull( name ) );
+        program.setDescription( StringUtils.trimToNull( description ) );
         program.setVersion( 1 );
-        program.setDateOfEnrollmentDescription( dateOfEnrollmentDescription );
-        program.setDateOfIncidentDescription( dateOfIncidentDescription );
+        program.setDateOfEnrollmentDescription( StringUtils.trimToNull( dateOfEnrollmentDescription ) );
+        program.setDateOfIncidentDescription( StringUtils.trimToNull( dateOfIncidentDescription ) );
         program.setType( type );
         program.setDisplayIncidentDate( displayIncidentDate );
         program.setOnlyEnrollOnce( onlyEnrollOnce );

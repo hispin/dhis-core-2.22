@@ -31,6 +31,7 @@ package org.hisp.dhis.trackedentity.action.programindicator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 
@@ -152,14 +153,14 @@ public class UpdateProgramIndicatorAction
 
         ProgramIndicator indicator = programIndicatorService.getProgramIndicator( id );
 
-        indicator.setName( name );
-        indicator.setShortName( shortName );
-        indicator.setCode( code );
-        indicator.setDescription( description );
-        indicator.setValueType( valueType );
-        indicator.setExpression( expression );
-        indicator.setFilter( filter );
-        indicator.setRootDate( rootDate );
+        indicator.setName( StringUtils.trimToNull( name ) );
+        indicator.setShortName( StringUtils.trimToNull( shortName ) );
+        indicator.setCode( StringUtils.trimToNull( code ) );
+        indicator.setDescription( StringUtils.trimToNull( description ) );
+        indicator.setValueType( StringUtils.trimToNull( valueType ) );
+        indicator.setExpression( StringUtils.trimToNull( expression ) );
+        indicator.setFilter( StringUtils.trimToNull( filter ) );
+        indicator.setRootDate( StringUtils.trimToNull( rootDate ) );
 
         programIndicatorService.updateProgramIndicator( indicator );
 
