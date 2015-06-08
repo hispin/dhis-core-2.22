@@ -29,7 +29,6 @@ package org.hisp.dhis.dxf2.events.trackedentity;
  */
 
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -38,6 +37,7 @@ import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
+import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.relationship.Relationship;
@@ -199,6 +199,19 @@ public abstract class AbstractTrackedEntityInstanceService
     // -------------------------------------------------------------------------
 
     @Override
+    public ImportSummaries addTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances )
+    {
+        ImportSummaries importSummaries = new ImportSummaries();
+
+        for ( TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
+        {
+            importSummaries.addImportSummary( addTrackedEntityInstance( trackedEntityInstance ) );
+        }
+
+        return importSummaries;
+    }
+
+    @Override
     public ImportSummary addTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance )
     {
         ImportSummary importSummary = new ImportSummary();
@@ -235,6 +248,19 @@ public abstract class AbstractTrackedEntityInstanceService
     // -------------------------------------------------------------------------
     // UPDATE
     // -------------------------------------------------------------------------
+
+    @Override
+    public ImportSummaries updateTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances )
+    {
+        ImportSummaries importSummaries = new ImportSummaries();
+
+        for ( TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
+        {
+            importSummaries.addImportSummary( updateTrackedEntityInstance( trackedEntityInstance ) );
+        }
+
+        return importSummaries;
+    }
 
     @Override
     public ImportSummary updateTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance )
