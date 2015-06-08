@@ -91,6 +91,12 @@ public final class WebMessageUtils
         return createWebMessage( message, WebMessageStatus.ERROR, HttpServletResponse.SC_NOT_FOUND );
     }
 
+    public static WebMessage notFound( Class<?> klass, String id )
+    {
+        String message = klass.getSimpleName() + " with id " + id + " could not be found.";
+        return createWebMessage( message, WebMessageStatus.ERROR, HttpServletResponse.SC_NOT_FOUND );
+    }
+
     public static WebMessage notFound( String message, String devMessage )
     {
         return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpServletResponse.SC_NOT_FOUND );
