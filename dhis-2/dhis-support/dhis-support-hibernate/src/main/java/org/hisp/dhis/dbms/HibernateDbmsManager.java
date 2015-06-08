@@ -244,6 +244,7 @@ public class HibernateDbmsManager
     @Override
     public void clearSession()
     {
+        sessionFactory.getCurrentSession().flush();
         sessionFactory.getCurrentSession().clear();
     }
 
