@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.events.trackedentity;
  */
 
 import com.google.common.collect.Lists;
+import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -98,6 +99,9 @@ public abstract class AbstractTrackedEntityInstanceService
 
     @Autowired
     protected UserService userService;
+
+    @Autowired
+    protected SessionFactory sessionFactory;
 
     // -------------------------------------------------------------------------
     // READ
@@ -202,10 +206,19 @@ public abstract class AbstractTrackedEntityInstanceService
     public ImportSummaries addTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances )
     {
         ImportSummaries importSummaries = new ImportSummaries();
+        int counter = 0;
 
         for ( TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
         {
             importSummaries.addImportSummary( addTrackedEntityInstance( trackedEntityInstance ) );
+
+            if ( counter % FLUSH_FREQUENCY == 0 )
+            {
+                sessionFactory.getCurrentSession().flush();
+                sessionFactory.getCurrentSession().clear();
+            }
+
+            counter++;
         }
 
         return importSummaries;
@@ -253,10 +266,19 @@ public abstract class AbstractTrackedEntityInstanceService
     public ImportSummaries updateTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances )
     {
         ImportSummaries importSummaries = new ImportSummaries();
+        int counter = 0;
 
         for ( TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
         {
             importSummaries.addImportSummary( updateTrackedEntityInstance( trackedEntityInstance ) );
+
+            if ( counter % FLUSH_FREQUENCY == 0 )
+            {
+                sessionFactory.getCurrentSession().flush();
+                sessionFactory.getCurrentSession().clear();
+            }
+
+            counter++;
         }
 
         return importSummaries;

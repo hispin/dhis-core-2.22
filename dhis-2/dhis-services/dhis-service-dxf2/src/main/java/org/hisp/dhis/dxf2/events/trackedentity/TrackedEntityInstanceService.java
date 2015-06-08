@@ -41,6 +41,8 @@ import java.util.List;
  */
 public interface TrackedEntityInstanceService
 {
+    int FLUSH_FREQUENCY = 20;
+
     // -------------------------------------------------------------------------
     // READ
     // -------------------------------------------------------------------------
