@@ -52,10 +52,10 @@ import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
+import org.hisp.dhis.system.callable.IdentifiableObjectSearchCallable;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
@@ -63,6 +63,7 @@ import org.hisp.dhis.trackedentitycomment.TrackedEntityComment;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityCommentService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.UserService;
+import org.hisp.dhis.util.CachingMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -94,9 +95,6 @@ public abstract class AbstractEnrollmentService
     protected org.hisp.dhis.trackedentity.TrackedEntityInstanceService teiService;
 
     @Autowired
-    protected TrackedEntityAttributeService trackedEntityAttributeService;
-
-    @Autowired
     protected TrackedEntityAttributeValueService trackedEntityAttributeValueService;
 
     @Autowired
@@ -116,6 +114,12 @@ public abstract class AbstractEnrollmentService
 
     @Autowired
     protected SessionFactory sessionFactory;
+
+    private CachingMap<String, OrganisationUnit> organisationUnitCache = new CachingMap<>();
+
+    private CachingMap<String, Program> programCache = new CachingMap<>();
+
+    private CachingMap<String, TrackedEntityAttribute> trackedEntityAttributeCache = new CachingMap<>();
 
     // -------------------------------------------------------------------------
     // READ
@@ -713,7 +717,7 @@ public abstract class AbstractEnrollmentService
 
         for ( String key : attributeValueMap.keySet() )
         {
-            TrackedEntityAttribute attribute = trackedEntityAttributeService.getTrackedEntityAttribute( key );
+            TrackedEntityAttribute attribute = getTrackedEntityAttribute( key );
 
             if ( attribute != null )
             {
@@ -749,36 +753,10 @@ public abstract class AbstractEnrollmentService
         return entityInstance;
     }
 
-    private Program getProgram( String id )
-    {
-        Program program = programService.getProgram( id );
-
-        if ( program == null )
-        {
-            throw new IllegalArgumentException( "Program does not exist." );
-        }
-
-        return program;
-
-    }
-
-    private OrganisationUnit getOrganisationUnit( String id )
-    {
-        OrganisationUnit organisationUnit = manager.search( OrganisationUnit.class, id );
-
-        if ( organisationUnit == null )
-        {
-            throw new IllegalArgumentException( "OrganisationUnit does not exist." );
-        }
-
-        return organisationUnit;
-    }
-
     private List<ImportConflict> validateAttributeType( Attribute attribute )
     {
         List<ImportConflict> importConflicts = Lists.newArrayList();
-        TrackedEntityAttribute teAttribute = trackedEntityAttributeService.getTrackedEntityAttribute( attribute
-            .getAttribute() );
+        TrackedEntityAttribute teAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
 
         if ( teAttribute == null )
         {
@@ -844,5 +822,20 @@ public abstract class AbstractEnrollmentService
 
             programInstanceService.updateProgramInstance( programInstance );
         }
+    }
+
+    private OrganisationUnit getOrganisationUnit( String id )
+    {
+        return organisationUnitCache.get( id, new IdentifiableObjectSearchCallable<>( manager, OrganisationUnit.class, id ) );
+    }
+
+    private Program getProgram( String id )
+    {
+        return programCache.get( id, new IdentifiableObjectSearchCallable<>( manager, Program.class, id ) );
+    }
+
+    private TrackedEntityAttribute getTrackedEntityAttribute( String id )
+    {
+        return trackedEntityAttributeCache.get( id, new IdentifiableObjectSearchCallable<>( manager, TrackedEntityAttribute.class, id ) );
     }
 }
