@@ -28,21 +28,20 @@ package org.hisp.dhis.dxf2.webmessage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.DxfNamespaces;
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @JacksonXmlRootElement( localName = "webMessage", namespace = DxfNamespaces.DXF_2_0 )
 @JsonPropertyOrder( {
-    "status", "code", "httpStatusCode", "message", "devMessage", "response"
+    "status", "code", "httpStatus", "httpStatusCode", "message", "devMessage", "response"
 } )
 public class WebMessage
 {
@@ -59,6 +58,11 @@ public class WebMessage
      * should not have to resort to string parsing of message to know what is happening.
      */
     protected Integer code;
+
+    /**
+     * HTTP status.
+     */
+    protected String httpStatus = HttpStatus.OK.getReasonPhrase();
 
     /**
      * HTTP status code. Default value is 200.
@@ -101,13 +105,13 @@ public class WebMessage
     public WebMessage( WebMessageStatus status, Integer httpStatusCode )
     {
         this.status = status;
-        this.httpStatusCode = httpStatusCode;
+        setHttpStatusCode( httpStatusCode );
     }
 
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------     
-    
+
     public boolean okStatus()
     {
         return WebMessageStatus.OK.equals( status );
@@ -117,7 +121,7 @@ public class WebMessage
     {
         return WebMessageStatus.ERROR.equals( status );
     }
-    
+
     // -------------------------------------------------------------------------
     // Get and set methods
     // -------------------------------------------------------------------------     
@@ -148,6 +152,13 @@ public class WebMessage
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
+    public String getHttpStatus()
+    {
+        return httpStatus;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
     public Integer getHttpStatusCode()
     {
         return httpStatusCode;
@@ -155,6 +166,14 @@ public class WebMessage
 
     public void setHttpStatusCode( Integer httpStatusCode )
     {
+        try
+        {
+            this.httpStatus = HttpStatus.valueOf( httpStatusCode ).getReasonPhrase();
+        }
+        catch ( IllegalArgumentException ignored )
+        {
+        }
+
         this.httpStatusCode = httpStatusCode;
     }
 
