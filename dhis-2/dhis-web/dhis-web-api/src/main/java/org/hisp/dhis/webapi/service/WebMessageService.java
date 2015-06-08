@@ -28,17 +28,16 @@ package org.hisp.dhis.webapi.service;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * WebMessage service methods.
@@ -103,10 +102,22 @@ public class WebMessageService
         {
             sendXml( webMessage, response );
         }
+        else
+        {
+            sendJson( webMessage, response ); // default to json
+        }
     }
 
     private boolean isCompatibleWith( String type, MediaType mediaType )
     {
-        return !StringUtils.isEmpty( type ) && MediaType.parseMediaType( type ).isCompatibleWith( mediaType );
+        try
+        {
+            return !StringUtils.isEmpty( type ) && MediaType.parseMediaType( type ).isCompatibleWith( mediaType );
+        }
+        catch ( Exception ignored )
+        {
+        }
+
+        return false;
     }
 }
