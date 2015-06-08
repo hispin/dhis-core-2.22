@@ -42,6 +42,7 @@ import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
+import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -337,6 +338,19 @@ public abstract class AbstractEnrollmentService
     // -------------------------------------------------------------------------
 
     @Override
+    public ImportSummaries addEnrollments( List<Enrollment> enrollments )
+    {
+        ImportSummaries importSummaries = new ImportSummaries();
+
+        for ( Enrollment enrollment : enrollments )
+        {
+            importSummaries.addImportSummary( addEnrollment( enrollment ) );
+        }
+
+        return importSummaries;
+    }
+
+    @Override
     public ImportSummary addEnrollment( Enrollment enrollment )
     {
         ImportSummary importSummary = new ImportSummary();
@@ -416,6 +430,19 @@ public abstract class AbstractEnrollmentService
     // -------------------------------------------------------------------------
     // UPDATE
     // -------------------------------------------------------------------------
+
+    @Override
+    public ImportSummaries updateEnrollments( List<Enrollment> enrollments )
+    {
+        ImportSummaries importSummaries = new ImportSummaries();
+
+        for ( Enrollment enrollment : enrollments )
+        {
+            importSummaries.addImportSummary( updateEnrollment( enrollment ) );
+        }
+
+        return importSummaries;
+    }
 
     @Override
     public ImportSummary updateEnrollment( Enrollment enrollment )

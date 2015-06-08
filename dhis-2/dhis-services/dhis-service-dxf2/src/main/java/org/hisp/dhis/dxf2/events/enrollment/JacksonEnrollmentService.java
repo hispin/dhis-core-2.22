@@ -169,15 +169,8 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
             }
         }
 
-        for ( Enrollment enrollment : create.getEnrollments() )
-        {
-            importSummaries.addImportSummary( addEnrollment( enrollment ) );
-        }
-
-        for ( Enrollment enrollment : update.getEnrollments() )
-        {
-            importSummaries.addImportSummary( updateEnrollment( enrollment ) );
-        }
+        importSummaries.addImportSummaries( addEnrollments( create.getEnrollments() ) );
+        importSummaries.addImportSummaries( updateEnrollments( update.getEnrollments() ) );
 
         return importSummaries;
     }

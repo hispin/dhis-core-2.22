@@ -82,7 +82,7 @@ public interface EnrollmentService
     Enrollments getEnrollments( Program program, OrganisationUnit organisationUnit );
 
     Enrollments getEnrollments( Program program, OrganisationUnit organisationUnit, Date startDate, Date endDate );
-    
+
     Enrollments getEnrollments( Program program, List<OrganisationUnit> organisationUnits, Date startDate, Date endDate );
 
     Enrollments getEnrollments( Collection<ProgramInstance> programInstances );
@@ -99,6 +99,8 @@ public interface EnrollmentService
 
     ImportSummaries addEnrollmentsXml( InputStream inputStream, ImportStrategy strategy ) throws IOException;
 
+    ImportSummaries addEnrollments( List<Enrollment> enrollments );
+
     ImportSummary addEnrollment( Enrollment enrollment );
 
     // -------------------------------------------------------------------------
@@ -108,6 +110,8 @@ public interface EnrollmentService
     ImportSummary updateEnrollmentJson( String id, InputStream inputStream ) throws IOException;
 
     ImportSummary updateEnrollmentXml( String id, InputStream inputStream ) throws IOException;
+
+    ImportSummaries updateEnrollments( List<Enrollment> enrollments );
 
     ImportSummary updateEnrollment( Enrollment enrollment );
 
