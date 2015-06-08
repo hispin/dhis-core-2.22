@@ -36,6 +36,7 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
@@ -95,7 +96,7 @@ public abstract class AbstractTrackedEntityInstanceService
     protected UserService userService;
 
     @Autowired
-    protected SessionFactory sessionFactory;
+    protected DbmsManager dbmsManager;
 
     private CachingMap<String, OrganisationUnit> organisationUnitCache = new CachingMap<>();
 
@@ -213,8 +214,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
-                sessionFactory.getCurrentSession().flush();
-                sessionFactory.getCurrentSession().clear();
+                dbmsManager.clearSession();
             }
 
             counter++;
@@ -273,8 +273,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
-                sessionFactory.getCurrentSession().flush();
-                sessionFactory.getCurrentSession().clear();
+                dbmsManager.clearSession();
             }
 
             counter++;
