@@ -34,6 +34,7 @@ import org.hisp.dhis.importexport.ImportStrategy;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -58,6 +59,8 @@ public interface TrackedEntityInstanceService
 
     ImportSummaries addTrackedEntityInstanceJson( InputStream inputStream, ImportStrategy strategy ) throws IOException;
 
+    ImportSummaries addTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances );
+
     ImportSummary addTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance );
 
     // -------------------------------------------------------------------------
@@ -67,6 +70,8 @@ public interface TrackedEntityInstanceService
     ImportSummary updateTrackedEntityInstanceXml( String id, InputStream inputStream ) throws IOException;
 
     ImportSummary updateTrackedEntityInstanceJson( String id, InputStream inputStream ) throws IOException;
+
+    ImportSummaries updateTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances );
 
     ImportSummary updateTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance );
 
