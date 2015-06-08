@@ -28,18 +28,8 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,6 +42,7 @@ import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.events.report.EventRow;
@@ -77,9 +68,7 @@ import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.callable.IdentifiableObjectCallable;
 import org.hisp.dhis.system.notification.NotificationLevel;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.util.CachingMap;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.util.DebugUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
@@ -89,12 +78,23 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.util.CachingMap;
+import org.hisp.dhis.util.DebugUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -135,7 +135,7 @@ public abstract class AbstractEventService
 
     @Autowired
     protected TrackedEntityInstanceService entityInstanceService;
-    
+
     @Autowired
     protected TrackedEntityCommentService commentService;
 
@@ -150,6 +150,9 @@ public abstract class AbstractEventService
 
     @Autowired
     protected SessionFactory sessionFactory;
+
+    @Autowired
+    protected DbmsManager dbmsManager;
 
     @Autowired
     protected IdentifiableObjectManager manager;
@@ -186,8 +189,7 @@ public abstract class AbstractEventService
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
-                sessionFactory.getCurrentSession().flush();
-                sessionFactory.getCurrentSession().clear();
+                dbmsManager.clearSession();
             }
 
             counter++;
@@ -401,10 +403,10 @@ public abstract class AbstractEventService
     public Events getEvents( EventSearchParams params )
     {
         List<OrganisationUnit> organisationUnits = new ArrayList<>();
-        
+
         OrganisationUnit orgUnit = params.getOrgUnit();
         OrganisationUnitSelectionMode orgUnitSelectionMode = params.getOrgUnitSelectionMode();
-        
+
         if ( params.getOrgUnit() != null )
         {
             if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( orgUnitSelectionMode ) )
@@ -428,35 +430,35 @@ public abstract class AbstractEventService
         }
 
         Events events = new Events();
-        
+
         if ( params.isPaging() )
         {
             int count = 0;
-            
+
             if ( params.isTotalPages() )
             {
                 count = eventStore.getEventCount( params, organisationUnits );
             }
-            
+
             Pager pager = new Pager( params.getPageWithDefault(), count, params.getPageSizeWithDefault() );
             events.setPager( pager );
         }
-        
+
         List<Event> eventList = eventStore.getEvents( params, organisationUnits );
 
         events.setEvents( eventList );
 
         return events;
     }
-    
+
     @Override
     public EventRows getEventRows( EventSearchParams params )
     {
         List<OrganisationUnit> organisationUnits = new ArrayList<>();
-        
+
         OrganisationUnit orgUnit = params.getOrgUnit();
         OrganisationUnitSelectionMode orgUnitSelectionMode = params.getOrgUnitSelectionMode();
-        
+
         if ( params.getOrgUnit() != null )
         {
             if ( OrganisationUnitSelectionMode.DESCENDANTS.equals( orgUnitSelectionMode ) )
@@ -474,19 +476,19 @@ public abstract class AbstractEventService
             }
         }
 
-        EventRows eventRows = new EventRows();        
-        
-        
+        EventRows eventRows = new EventRows();
+
+
         List<EventRow> eventRowList = eventStore.getEventRows( params, organisationUnits );
 
         eventRows.setEventRows( eventRowList );
 
         return eventRows;
     }
-    
+
     @Override
     public EventSearchParams getFromUrl( String program, String programStage, ProgramStatus programStatus, Boolean followUp, String orgUnit,
-        OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate, 
+        OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate,
         EventStatus status, Date lastUpdated, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging, boolean includeAttributes )
     {
         EventSearchParams params = new EventSearchParams();
@@ -506,19 +508,19 @@ public abstract class AbstractEventService
         }
 
         OrganisationUnit ou = organisationUnitService.getOrganisationUnit( orgUnit );
-        
+
         if ( StringUtils.isNotEmpty( orgUnit ) && ou == null )
         {
             throw new IllegalQueryException( "Org unit is specified but does not exist: " + orgUnit );
         }
-        
+
         TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
-        
+
         if ( StringUtils.isNotEmpty( trackedEntityInstance ) && tei == null )
         {
             throw new IllegalQueryException( "Tracked entity instance is specified but does not exist: " + trackedEntityInstance );
         }
-        
+
         params.setProgram( pr );
         params.setProgramStage( ps );
         params.setOrgUnit( ou );
@@ -536,10 +538,10 @@ public abstract class AbstractEventService
         params.setTotalPages( totalPages );
         params.setSkipPaging( skipPaging );
         params.setIncludeAttributes( includeAttributes );
-        
+
         return params;
     }
-    
+
     @Override
     public Event getEvent( String uid )
     {

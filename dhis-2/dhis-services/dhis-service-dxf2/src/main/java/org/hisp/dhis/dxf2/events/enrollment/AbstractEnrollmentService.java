@@ -37,6 +37,7 @@ import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.events.event.Note;
 import org.hisp.dhis.dxf2.events.trackedentity.Attribute;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
@@ -113,7 +114,7 @@ public abstract class AbstractEnrollmentService
     protected UserService userService;
 
     @Autowired
-    protected SessionFactory sessionFactory;
+    protected DbmsManager dbmsManager;
 
     private CachingMap<String, OrganisationUnit> organisationUnitCache = new CachingMap<>();
 
@@ -357,8 +358,7 @@ public abstract class AbstractEnrollmentService
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
-                sessionFactory.getCurrentSession().flush();
-                sessionFactory.getCurrentSession().clear();
+                dbmsManager.clearSession();
             }
 
             counter++;
@@ -460,8 +460,7 @@ public abstract class AbstractEnrollmentService
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
-                sessionFactory.getCurrentSession().flush();
-                sessionFactory.getCurrentSession().clear();
+                dbmsManager.clearSession();
             }
 
             counter++;
