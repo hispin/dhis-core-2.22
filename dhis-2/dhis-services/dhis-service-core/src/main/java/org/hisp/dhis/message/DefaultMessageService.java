@@ -304,13 +304,6 @@ public class DefaultMessageService
     @Override
     public MessageConversation getMessageConversation( String uid )
     {
-        /*
-         * TODO:
-         * This is a temporary workaround to ensure transient fields followUp and read
-         * are set correctly (and not just to false). Issue should be tackled in
-         * HibernateIdentifiableObjectStore and/or HibernateMessageConversationStore.
-         */
-
         MessageConversation mc = messageConversationStore.getByUid( uid );
 
         if ( mc == null )
@@ -365,7 +358,6 @@ public class DefaultMessageService
         Collection<MessageConversation> conversations = messageConversationStore.getMessageConversations( messageConversationUids );
 
         // Set transient properties
-        // TODO See getMessageConversation(String)
 
         for ( MessageConversation mc : conversations )
         {

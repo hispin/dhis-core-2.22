@@ -34,6 +34,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -83,6 +85,10 @@ public class MessageConversation
     private transient boolean read;
 
     private transient boolean followUp;
+    
+    private transient String userSurname;
+    
+    private transient String userFirstname;
 
     private transient String lastSenderSurname;
 
@@ -108,7 +114,6 @@ public class MessageConversation
     // --------------------------------------------------------------------------
     // Logic
     // --------------------------------------------------------------------------
-
 
     @Override
     public String toString()
@@ -272,12 +277,23 @@ public class MessageConversation
     {
         userMessages.clear();
     }
-
-    public String getLastSenderName()
+    
+    public String getSenderDisplayName()
     {
-        boolean hasName = lastSenderFirstname != null || lastSenderSurname != null;
+        boolean hasUser = userFirstname != null || userSurname != null;
+        
+        String displayName = hasUser ? ( userFirstname + " " + userSurname ) : StringUtils.EMPTY;
+        
+        boolean hasLastSender = lastSenderFirstname != null || lastSenderSurname != null;
 
-        return hasName ? (lastSenderFirstname + " " + lastSenderSurname) : null;
+        String lastSenderName = hasLastSender ? ( lastSenderFirstname + " " + lastSenderSurname ) : StringUtils.EMPTY;
+        
+        if ( hasLastSender && !lastSenderName.equals( displayName ) )
+        {
+            displayName += ", " + lastSenderName;
+        }
+        
+        return StringUtils.trimToNull( displayName );
     }
 
     public Set<User> getTopRecipients()
@@ -407,6 +423,30 @@ public class MessageConversation
     public void setFollowUp( boolean followUp )
     {
         this.followUp = followUp;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getUserSurname()
+    {
+        return userSurname;
+    }
+
+    public void setUserSurname( String userSurname )
+    {
+        this.userSurname = userSurname;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getUserFirstname()
+    {
+        return userFirstname;
+    }
+
+    public void setUserFirstname( String userFirstname )
+    {
+        this.userFirstname = userFirstname;
     }
 
     @JsonProperty

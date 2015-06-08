@@ -72,12 +72,13 @@ public class HibernateMessageConversationStore
     {
         SqlHelper sh = new SqlHelper();
 
-        String sql = "select mc.messageconversationid, mc.uid, mc.subject, mc.lastmessage, ui.surname, ui.firstname, um.isread, um.isfollowup, (" +
+        String sql = "select mc.messageconversationid, mc.uid, mc.subject, ui.surname, ui.firstname, mc.lastmessage, ls.surname, ls.firstname, um.isread, um.isfollowup, (" +
             "select count(messageconversationid) from messageconversation_messages mcm where mcm.messageconversationid=mc.messageconversationid) as messagecount " +
             ", mc.created, mc.lastupdated from messageconversation mc " +
             "inner join messageconversation_usermessages mu on mc.messageconversationid=mu.messageconversationid " +
             "inner join usermessage um on mu.usermessageid=um.usermessageid " +
-            "left join userinfo ui on mc.lastsenderid=ui.userinfoid ";
+            "left join userinfo ui on mc.userid=ui.userinfoid " +
+            "left join userinfo ls on mc.lastsenderid=ls.userinfoid ";
 
         if ( user != null )
         {
@@ -112,14 +113,16 @@ public class HibernateMessageConversationStore
                 conversation.setId( resultSet.getInt( 1 ) );
                 conversation.setUid( resultSet.getString( 2 ) );
                 conversation.setSubject( resultSet.getString( 3 ) );
-                conversation.setLastMessage( resultSet.getDate( 4 ) );
-                conversation.setLastSenderSurname( resultSet.getString( 5 ) );
-                conversation.setLastSenderFirstname( resultSet.getString( 6 ) );
-                conversation.setRead( resultSet.getBoolean( 7 ) );
-                conversation.setFollowUp( resultSet.getBoolean( 8 ) );
-                conversation.setMessageCount( resultSet.getInt( 9 ) );
-                conversation.setCreated( resultSet.getTimestamp( 10 ) );
-                conversation.setLastUpdated( resultSet.getTimestamp( 11 ) );
+                conversation.setUserSurname( resultSet.getString( 4 ) );
+                conversation.setUserFirstname( resultSet.getString( 5 ) );
+                conversation.setLastMessage( resultSet.getDate( 6 ) );
+                conversation.setLastSenderSurname( resultSet.getString( 7 ) );
+                conversation.setLastSenderFirstname( resultSet.getString( 8 ) );
+                conversation.setRead( resultSet.getBoolean( 9 ) );
+                conversation.setFollowUp( resultSet.getBoolean( 10 ) );
+                conversation.setMessageCount( resultSet.getInt( 11 ) );
+                conversation.setCreated( resultSet.getTimestamp( 12 ) );
+                conversation.setLastUpdated( resultSet.getTimestamp( 13 ) );
 
                 return conversation;
             }
