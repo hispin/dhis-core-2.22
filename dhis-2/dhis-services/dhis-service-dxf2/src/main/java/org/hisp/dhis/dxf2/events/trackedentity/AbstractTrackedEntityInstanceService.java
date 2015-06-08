@@ -44,16 +44,16 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.relationship.Relationship;
 import org.hisp.dhis.relationship.RelationshipService;
 import org.hisp.dhis.relationship.RelationshipType;
+import org.hisp.dhis.system.callable.IdentifiableObjectSearchCallable;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
-import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.user.UserService;
+import org.hisp.dhis.util.CachingMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -80,13 +80,7 @@ public abstract class AbstractTrackedEntityInstanceService
     protected TrackedEntityAttributeValueService attributeValueService;
 
     @Autowired
-    protected TrackedEntityAttributeService trackedEntityAttributeService;
-
-    @Autowired
     protected RelationshipService relationshipService;
-
-    @Autowired
-    protected TrackedEntityService trackedEntityService;
 
     @Autowired
     protected TrackedEntityAttributeValueService trackedEntityAttributeValueService;
@@ -102,6 +96,12 @@ public abstract class AbstractTrackedEntityInstanceService
 
     @Autowired
     protected SessionFactory sessionFactory;
+
+    private CachingMap<String, OrganisationUnit> organisationUnitCache = new CachingMap<>();
+
+    private CachingMap<String, TrackedEntity> trackedEntityCache = new CachingMap<>();
+
+    private CachingMap<String, TrackedEntityAttribute> trackedEntityAttributeCache = new CachingMap<>();
 
     // -------------------------------------------------------------------------
     // READ
@@ -133,8 +133,7 @@ public abstract class AbstractTrackedEntityInstanceService
         trackedEntityInstance.setTrackedEntity( entityInstance.getTrackedEntity().getUid() );
         trackedEntityInstance.setCreated( entityInstance.getCreated().toString() );
 
-        Collection<Relationship> relationships = relationshipService
-            .getRelationshipsForTrackedEntityInstance( entityInstance );
+        Collection<Relationship> relationships = relationshipService.getRelationshipsForTrackedEntityInstance( entityInstance );
 
         for ( Relationship entityRelationship : relationships )
         {
@@ -186,11 +185,11 @@ public abstract class AbstractTrackedEntityInstanceService
 
         org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = new org.hisp.dhis.trackedentity.TrackedEntityInstance();
 
-        OrganisationUnit organisationUnit = manager.get( OrganisationUnit.class, trackedEntityInstance.getOrgUnit() );
+        OrganisationUnit organisationUnit = getOrganisationUnit( trackedEntityInstance.getOrgUnit() );
         Assert.notNull( organisationUnit );
         entityInstance.setOrganisationUnit( organisationUnit );
 
-        TrackedEntity trackedEntity = trackedEntityService.getTrackedEntity( trackedEntityInstance.getTrackedEntity() );
+        TrackedEntity trackedEntity = getTrackedEntity( trackedEntityInstance.getTrackedEntity() );
         entityInstance.setTrackedEntity( trackedEntity );
         entityInstance.setUid( CodeGenerator.isValidCode( trackedEntityInstance.getTrackedEntityInstance() ) ?
             trackedEntityInstance.getTrackedEntityInstance() : CodeGenerator.generateCode() );
@@ -369,7 +368,7 @@ public abstract class AbstractTrackedEntityInstanceService
             return importConflicts;
         }
 
-        TrackedEntity trackedEntity = trackedEntityService.getTrackedEntity( trackedEntityInstance.getTrackedEntity() );
+        TrackedEntity trackedEntity = getTrackedEntity( trackedEntityInstance.getTrackedEntity() );
 
         if ( trackedEntity == null )
         {
@@ -546,7 +545,7 @@ public abstract class AbstractTrackedEntityInstanceService
             return importConflicts;
         }
 
-        TrackedEntityAttribute teAttribute = trackedEntityAttributeService.getTrackedEntityAttribute( attribute.getAttribute() );
+        TrackedEntityAttribute teAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
 
         if ( teAttribute == null )
         {
@@ -588,5 +587,20 @@ public abstract class AbstractTrackedEntityInstanceService
         }
 
         return importConflicts;
+    }
+
+    private OrganisationUnit getOrganisationUnit( String id )
+    {
+        return organisationUnitCache.get( id, new IdentifiableObjectSearchCallable<>( manager, OrganisationUnit.class, id ) );
+    }
+
+    private TrackedEntity getTrackedEntity( String id )
+    {
+        return trackedEntityCache.get( id, new IdentifiableObjectSearchCallable<>( manager, TrackedEntity.class, id ) );
+    }
+
+    private TrackedEntityAttribute getTrackedEntityAttribute( String id )
+    {
+        return trackedEntityAttributeCache.get( id, new IdentifiableObjectSearchCallable<>( manager, TrackedEntityAttribute.class, id ) );
     }
 }

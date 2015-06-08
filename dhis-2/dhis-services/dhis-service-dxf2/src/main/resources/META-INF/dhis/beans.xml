@@ -42,10 +42,15 @@
 
   <bean id="org.hisp.dhis.dxf2.events.report.EventRowService" class="org.hisp.dhis.dxf2.events.report.AbstractEventRowService" />
 
-  <bean id="org.hisp.dhis.dxf2.events.person.PersonService"
-    class="org.hisp.dhis.dxf2.events.trackedentity.JacksonTrackedEntityInstanceService" />
+  <bean id="org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService"
+    class="org.hisp.dhis.dxf2.events.trackedentity.JacksonTrackedEntityInstanceService" scope="prototype">
+    <aop:scoped-proxy proxy-target-class="false" />
+  </bean>
 
-  <bean id="org.hisp.dhis.dxf2.events.enrollment.EnrollmentService" class="org.hisp.dhis.dxf2.events.enrollment.JacksonEnrollmentService" />
+  <bean id="org.hisp.dhis.dxf2.events.enrollment.EnrollmentService"
+    class="org.hisp.dhis.dxf2.events.enrollment.JacksonEnrollmentService" scope="prototype">
+    <aop:scoped-proxy proxy-target-class="false" />
+  </bean>
 
   <bean id="pdfDataEntryFormService" class="org.hisp.dhis.dxf2.pdfform.DefaultPdfDataEntryFormService" scope="prototype" />
 
@@ -261,11 +266,11 @@
   <bean id="programStageSectionImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.program.ProgramStageSection" />
   </bean>
-  
+
   <bean id="programRuleImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.programrule.ProgramRule" />
   </bean>
-  
+
   <bean id="programRuleActionImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.programrule.ProgramRuleAction" />
   </bean>
