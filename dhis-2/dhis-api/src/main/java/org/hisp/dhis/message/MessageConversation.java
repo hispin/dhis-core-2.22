@@ -293,7 +293,7 @@ public class MessageConversation
             displayName += ", " + lastSenderName;
         }
         
-        return StringUtils.trimToNull( displayName );
+        return StringUtils.trimToNull( StringUtils.substring( displayName, 0, 28 ) );
     }
 
     public Set<User> getTopRecipients()

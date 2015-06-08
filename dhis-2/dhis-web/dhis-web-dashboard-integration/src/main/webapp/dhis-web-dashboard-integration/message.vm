@@ -47,7 +47,7 @@
                     </td>
                     <td style="width:40px;padding-left:5px;" onclick="toggleFollowUp( '${conversation.id}' )" class="followup-icon">
                         <img id="followUp${conversation.id}" #if( $conversation.followUp ) src="../images/marked.png"#else src="../images/unmarked.png"#end></td>
-                    <td style="width:220px" onclick="read( '${conversation.uid}' )">
+                    <td style="width:225px" onclick="read( '${conversation.uid}' )">
                         #if( $conversation.senderDisplayName )$!encoder.htmlEncode( $conversation.senderDisplayName )#else $i18n.getString( "system_notification" )#end
                         #if( $conversation.messageCount > 1 ) <span class="normal">(${conversation.messageCount})</span>#end
                     </td>
