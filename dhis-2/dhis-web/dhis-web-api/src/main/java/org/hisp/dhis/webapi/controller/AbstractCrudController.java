@@ -35,7 +35,6 @@ import com.google.common.base.Enums;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.acl.AclService;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -53,6 +52,7 @@ import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
 import org.hisp.dhis.dxf2.objectfilter.ObjectFilterService;
 import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
@@ -73,11 +73,10 @@ import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.service.LinkService;
 import org.hisp.dhis.webapi.service.WebMessageService;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,9 +91,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
@@ -148,7 +145,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
     @Autowired
     protected QueryService queryService;
-    
+
     @Autowired
     protected WebMessageService webMessageService;
 
@@ -251,15 +248,14 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     @RequestMapping( value = "/{uid}", method = RequestMethod.PATCH )
     public void partialUpdateObject(
         @PathVariable( "uid" ) String pvUid, @RequestParam Map<String, String> rpParameters,
-        HttpServletRequest request, HttpServletResponse response ) throws IOException, InvocationTargetException, IllegalAccessException
+        HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         WebOptions options = new WebOptions( rpParameters );
         List<T> entities = getEntity( pvUid, options );
 
         if ( entities.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( getEntityClass(), pvUid ) );
         }
 
         T persistedObject = entities.get( 0 );
@@ -351,14 +347,12 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( entities.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( getEntityClass(), pvUid ) );
         }
 
         if ( !getSchema().haveProperty( pvProperty ) )
         {
-            ContextUtils.notFoundResponse( response, "Property " + pvProperty + " does not exist on " + getEntityName() );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Property " + pvProperty + " does not exist on " + getEntityName() ) );
         }
 
         Property property = getSchema().getProperty( pvProperty );
@@ -378,8 +372,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( object == null )
         {
-            ContextUtils.badRequestResponse( response, "Unknown payload format." );
-            return;
+            throw new WebMessageException( WebMessageUtils.badRequest( "Unknown payload format." ) );
         }
 
         Object value = property.getGetterMethod().invoke( object );
@@ -420,7 +413,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( entities.isEmpty() )
         {
-            throw new NotFoundException( uid );
+            throw new WebMessageException( WebMessageUtils.notFound( getEntityClass(), uid ) );
         }
 
         entities = objectFilterService.filter( entities, filters );
@@ -545,8 +538,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( objects.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( getEntityClass(), pvUid ) );
         }
 
         if ( !aclService.canUpdate( currentUserService.getCurrentUser(), objects.get( 0 ) ) )
@@ -577,8 +569,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( objects.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( getEntityClass(), pvUid ) );
         }
 
         if ( !aclService.canUpdate( currentUserService.getCurrentUser(), objects.get( 0 ) ) )
@@ -613,8 +604,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( objects.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( getEntityClass(), pvUid ) );
         }
 
         if ( !aclService.canDelete( currentUserService.getCurrentUser(), objects.get( 0 ) ) )
@@ -680,22 +670,19 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( objects.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( getEntityClass(), pvUid ) );
         }
 
         if ( !getSchema().haveProperty( pvProperty ) )
         {
-            ContextUtils.notFoundResponse( response, "Property " + pvProperty + " does not exist on " + getEntityName() );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Property " + pvProperty + " does not exist on " + getEntityName() ) );
         }
 
         Property property = getSchema().getProperty( pvProperty );
 
         if ( !property.isCollection() || !property.isIdentifiableObject() )
         {
-            ContextUtils.conflictResponse( response, "Only adds within identifiable collection are allowed." );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Only adds within identifiable collection are allowed." ) );
         }
 
         IdentifiableObject inverseObject = manager.getNoAcl( (Class<? extends IdentifiableObject>) property.getItemKlass(), pvItemId );
@@ -703,8 +690,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( inverseObject == null )
         {
-            ContextUtils.notFoundResponse( response, "Collection " + pvProperty + " does not have an item with ID: " + pvItemId );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Collection " + pvProperty + " does not have an item with ID: " + pvItemId ) );
         }
 
         Collection<IdentifiableObject> collection;
@@ -756,22 +742,19 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( objects.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( getEntityClass(), pvUid ) );
         }
 
         if ( !getSchema().haveProperty( pvProperty ) )
         {
-            ContextUtils.notFoundResponse( response, "Property " + pvProperty + " does not exist on " + getEntityName() );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Property " + pvProperty + " does not exist on " + getEntityName() ) );
         }
 
         Property property = getSchema().getProperty( pvProperty );
 
         if ( !property.isCollection() || !property.isIdentifiableObject() )
         {
-            ContextUtils.conflictResponse( response, "Only deletes within identifiable collection are allowed." );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Only deletes within identifiable collection are allowed." ) );
         }
 
         Collection<IdentifiableObject> collection;
@@ -800,8 +783,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( !collection.contains( inverseObject ) )
         {
-            ContextUtils.notFoundResponse( response, "Collection " + pvProperty + " does not have an item with ID: " + pvItemId );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Collection " + pvProperty + " does not have an item with ID: " + pvItemId ) );
         }
 
         collection.remove( inverseObject );
@@ -1092,7 +1074,15 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
     protected boolean isCompatibleWith( String type, MediaType mediaType )
     {
-        return !StringUtils.isEmpty( type ) && MediaType.parseMediaType( type ).isCompatibleWith( mediaType );
+        try
+        {
+            return !StringUtils.isEmpty( type ) && MediaType.parseMediaType( type ).isCompatibleWith( mediaType );
+        }
+        catch ( Exception ignored )
+        {
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------
