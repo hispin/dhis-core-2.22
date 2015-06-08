@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.events.enrollment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
@@ -112,6 +113,9 @@ public abstract class AbstractEnrollmentService
 
     @Autowired
     protected UserService userService;
+
+    @Autowired
+    protected SessionFactory sessionFactory;
 
     // -------------------------------------------------------------------------
     // READ
@@ -341,10 +345,19 @@ public abstract class AbstractEnrollmentService
     public ImportSummaries addEnrollments( List<Enrollment> enrollments )
     {
         ImportSummaries importSummaries = new ImportSummaries();
+        int counter = 0;
 
         for ( Enrollment enrollment : enrollments )
         {
             importSummaries.addImportSummary( addEnrollment( enrollment ) );
+
+            if ( counter % FLUSH_FREQUENCY == 0 )
+            {
+                sessionFactory.getCurrentSession().flush();
+                sessionFactory.getCurrentSession().clear();
+            }
+
+            counter++;
         }
 
         return importSummaries;
@@ -435,10 +448,19 @@ public abstract class AbstractEnrollmentService
     public ImportSummaries updateEnrollments( List<Enrollment> enrollments )
     {
         ImportSummaries importSummaries = new ImportSummaries();
+        int counter = 0;
 
         for ( Enrollment enrollment : enrollments )
         {
             importSummaries.addImportSummary( updateEnrollment( enrollment ) );
+
+            if ( counter % FLUSH_FREQUENCY == 0 )
+            {
+                sessionFactory.getCurrentSession().flush();
+                sessionFactory.getCurrentSession().clear();
+            }
+
+            counter++;
         }
 
         return importSummaries;
