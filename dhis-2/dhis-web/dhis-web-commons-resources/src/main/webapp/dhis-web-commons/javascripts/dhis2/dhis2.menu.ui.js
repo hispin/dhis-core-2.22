@@ -1076,6 +1076,13 @@
                     '</div>'].join('')
                 };
 
+                /**
+                 * @description
+                 * Priority of the color scheme that is being loaded is as follows
+                 * 1. /api/userSettings/currentStyle
+                 * 2. /api/systemSettings {currentStyle property on the systemSettings object}
+                 * 3. The default style as defined in this function using the `defaultStyle` variable
+                 */
                 function d2HeaderBarController($scope, $http) {
                     var ctrl = $scope;
                     var baseUrl = dhis2.settings.getBaseUrl();
@@ -1093,52 +1100,66 @@
 
                     function initialise() {
                         getSystemSettings()
-                            .success(function(systemSettings) {
-
-                                saveToLocalStorage(systemSettings);
-
-                                requestUserStyle()
-                                    .success(function (userStyleUrl) {
-                                        var userStyleName = getStyleName(userStyleUrl);
-
-                                        addUserStyleStylesheet(getStylesheetUrl(userStyleUrl));
-                                        setHeaderLogo(userStyleName, systemSettings.keyCustomTopMenuLogo);
-                                        setHeaderTitle(systemSettings.applicationTitle);
-                                        setHeaderLink(systemSettings.startModule);
-                                    })
-                                    .error(function (e) {
-                                        console && console.info && console.info('Unable to load usersettings, falling back to default');
-
-                                        addUserStyleStylesheet(getStylesheetUrl());
-                                        setHeaderLogo(undefined, systemSettings.keyCustomTopMenuLogo);
-                                        setHeaderTitle(systemSettings.applicationTitle);
-                                        setHeaderLink(systemSettings.startModule);
-                                    });
-                            })
-                            .error(function() {
-                                var logo, title, link;
-
-                                //Unable to load system settings defaulting to base styles
-                                addUserStyleStylesheet(getStylesheetUrl());
-
-                                //Load values from localStorage if they are available
-                                if (islocalStorageSupported()) {
-                                    logo = localStorage.getItem('dhis2.menu.ui.headerBar.logo')
-                                    title = localStorage.getItem('dhis2.menu.ui.headerBar.title');
-                                    link = localStorage.getItem('dhis2.menu.ui.headerBar.link');
-                                }
-
-                                //Set values to local storage values or fallback to the defaults
-                                setHeaderLogo(logo);
-                                setHeaderTitle(title);
-                                setHeaderLink(link);
+                            .then(getHeaderBarData)
+                            .catch(loadDataFromLocalStorageIfAvailable)
+                            .then(saveToLocalStorage)
+                            .then(function (headerData) {
+                                setHeaderData(headerData.userStyleUrl, headerData.logo, headerData.title, headerData.link);
                             });
+                    }
+
+                    function getHeaderBarData(systemSettings) {
+                        return requestUserStyle()
+                            .catch(function () {
+                                console && console.info && console.info('Unable to load usersettings, falling back to systemSettings');
+                                localStorage.setItem('dhis2.menu.ui.headerBar.userStyle', systemSettings.currentStyle);
+                                return systemSettings.currentStyle;
+                            })
+                            .then(function (userStyleUrl) {
+                                return {
+                                    userStyleUrl: userStyleUrl || systemSettings.currentStyle,
+                                    logo: systemSettings.keyCustomTopMenuLogo,
+                                    title: systemSettings.applicationTitle,
+                                    link: systemSettings.startModule
+                                };
+                            });
+                    }
+
+                    function loadDataFromLocalStorageIfAvailable() {
+                        var logo, title, link, userStyle;
+
+                        //Load values from localStorage if they are available
+                        if (islocalStorageSupported()) {
+                            logo = localStorage.getItem('dhis2.menu.ui.headerBar.logo');
+                            title = localStorage.getItem('dhis2.menu.ui.headerBar.title');
+                            link = localStorage.getItem('dhis2.menu.ui.headerBar.link');
+                            userStyle = localStorage.getItem('dhis2.menu.ui.headerBar.userStyle');
+                        }
+
+                        return {
+                            userStyleUrl: getStylesheetUrl(userStyle),
+                            logo: logo,
+                            title: title,
+                            link: link
+                        };
+                    }
+
+                    function setHeaderData(userStyleUrl, logo, title, link) {
+                        var userStyleName = getStyleName(userStyleUrl);
+
+                        addUserStyleStylesheet(getStylesheetUrl(userStyleUrl));
+                        setHeaderLogo(userStyleName, logo);
+                        setHeaderTitle(title);
+                        setHeaderLink(link);
                     }
 
                     function getSystemSettings() {
                         var settingsUrl = [baseUrl, 'api', 'systemSettings'].join('/');
 
-                        return $http.get(settingsUrl, {responseType: 'json', cache: true});
+                        return $http.get(settingsUrl, {responseType: 'json', cache: true})
+                            .then(function (response) {
+                                return response.data || {};
+                            });
                     }
 
                     function setHeaderLogo(userStyleName, customTopMenuLogo) {
@@ -1164,7 +1185,10 @@
                     function requestUserStyle() {
                         var currentUserStyleUrl = [baseUrl, 'api', 'userSettings', 'currentStyle'].join('/');
 
-                        return $http.get(currentUserStyleUrl, {responseType: 'text', cache: true, headers: {'Accept': 'text/plain'}});
+                        return $http.get(currentUserStyleUrl, {responseType: 'text', cache: true, headers: {'Accept': 'text/plain'}})
+                            .then(function (response) {
+                                return response.data.trim();
+                            });
                     }
 
                     function getStyleLogoUrl(styleName) {
@@ -1201,12 +1225,15 @@
                         }
                     }
 
-                    function saveToLocalStorage(systemSettings) {
+                    function saveToLocalStorage(headerData) {
                         if (islocalStorageSupported()) {
-                            localStorage.setItem('dhis2.menu.ui.headerBar.logo', getStyleLogoUrl(defaultStyle))
-                            localStorage.setItem('dhis2.menu.ui.headerBar.title', systemSettings.applicationTitle);
-                            localStorage.setItem('dhis2.menu.ui.headerBar.link', systemSettings.startModule);
+                            localStorage.setItem('dhis2.menu.ui.headerBar.userStyle', headerData.userStyleUrl);
+                            localStorage.setItem('dhis2.menu.ui.headerBar.logo', headerData.logo);
+                            localStorage.setItem('dhis2.menu.ui.headerBar.title', headerData.title);
+                            localStorage.setItem('dhis2.menu.ui.headerBar.link', headerData.link);
                         }
+
+                        return headerData;
                     }
                 }
             });
