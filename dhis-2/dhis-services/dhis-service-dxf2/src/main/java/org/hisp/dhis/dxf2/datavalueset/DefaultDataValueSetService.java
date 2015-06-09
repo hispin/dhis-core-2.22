@@ -159,7 +159,7 @@ public class DefaultDataValueSetService
 
     @Override
     public DataExportParams getFromUrl( Set<String> dataSets, Set<String> periods, Date startDate, Date endDate, 
-        Set<String> organisationUnits, boolean includeChildren, IdSchemes idSchemes )
+        Set<String> organisationUnits, boolean includeChildren, Date lastUpdated, Integer limit, IdSchemes idSchemes )
     {
         DataExportParams params = new DataExportParams();
         
@@ -190,6 +190,8 @@ public class DefaultDataValueSetService
         }
 
         params.setIncludeChildren( includeChildren );
+        params.setLastUpdated( lastUpdated );
+        params.setLimit( limit );
         params.setIdSchemes( idSchemes );
         
         return params;
@@ -228,6 +230,11 @@ public class DefaultDataValueSetService
             }
         }
 
+        if ( params.hasLimit() && params.getLimit() < 0 )
+        {
+            violation = "Limit cannot be less than zero: " + params.getLimit();
+        }
+        
         if ( violation != null )
         {
             log.warn( "Validation failed: " + violation );
@@ -258,9 +265,7 @@ public class DefaultDataValueSetService
 
     @Override
     public void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes )
-    {
-        //TODO validate
-        
+    {        
         dataValueSetStore.writeDataValueSetJson( lastUpdated, outputStream, idSchemes );
     }
 

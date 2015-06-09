@@ -153,7 +153,7 @@ public class ExportDataValueAction
         HttpServletResponse response = ServletActionContext.getResponse();
 
         DataExportParams params = dataValueSetService.getFromUrl( selectedDataSets, null, 
-            getMediumDate( startDate ), getMediumDate( endDate ), orgUnits, true, idSchemes );
+            getMediumDate( startDate ), getMediumDate( endDate ), orgUnits, true, null, null, idSchemes );
         
         if ( FORMAT_CSV.equals( exportFormat ) )
         {

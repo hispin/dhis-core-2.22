@@ -79,12 +79,14 @@ public class DataValueSetController
         @RequestParam( required = false ) Date endDate,
         @RequestParam Set<String> orgUnit,
         @RequestParam( required = false ) boolean children,
+        @RequestParam( required = false ) Date lastUpdated,
+        @RequestParam( required = false ) Integer limit,
         IdSchemes idSchemes, HttpServletResponse response ) throws IOException
     {
         response.setContentType( CONTENT_TYPE_XML );
 
         DataExportParams params = dataValueSetService.getFromUrl( dataSet, period, 
-            startDate, endDate, orgUnit, children, idSchemes );
+            startDate, endDate, orgUnit, children, lastUpdated, limit, idSchemes );
         
         dataValueSetService.writeDataValueSetXml( params, response.getOutputStream() );
     }
@@ -97,12 +99,14 @@ public class DataValueSetController
         @RequestParam( required = false ) Date endDate,
         @RequestParam Set<String> orgUnit,
         @RequestParam( required = false ) boolean children,
+        @RequestParam( required = false ) Date lastUpdated,
+        @RequestParam( required = false ) Integer limit,
         IdSchemes idSchemes, HttpServletResponse response ) throws IOException
     {
         response.setContentType( CONTENT_TYPE_JSON );
 
         DataExportParams params = dataValueSetService.getFromUrl( dataSet, period, 
-            startDate, endDate, orgUnit, children, idSchemes );
+            startDate, endDate, orgUnit, children, lastUpdated, limit, idSchemes );
         
         dataValueSetService.writeDataValueSetJson( params, response.getOutputStream() );
     }
@@ -115,13 +119,15 @@ public class DataValueSetController
         @RequestParam( required = false ) Date endDate,
         @RequestParam Set<String> orgUnit,
         @RequestParam( required = false ) boolean children,
+        @RequestParam( required = false ) Date lastUpdated,
+        @RequestParam( required = false ) Integer limit,
         IdSchemes idSchemes,
         HttpServletResponse response ) throws IOException
     {
         response.setContentType( CONTENT_TYPE_CSV );
 
         DataExportParams params = dataValueSetService.getFromUrl( dataSet, period, 
-            startDate, endDate, orgUnit, children, idSchemes );
+            startDate, endDate, orgUnit, children, lastUpdated, limit, idSchemes );
         
         dataValueSetService.writeDataValueSetCsv( params, response.getWriter() );
     }
