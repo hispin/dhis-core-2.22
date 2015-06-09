@@ -151,7 +151,6 @@ public class DefaultGmlImportService
         return GmlPreProcessingResult.success( metaData );
     }
 
-    @Transactional
     @Override
     public void importGml( MetaData metaData, String userUid, ImportOptions importOptions, TaskId taskId )
     {
