@@ -659,7 +659,7 @@ Ext.onReady( function() {
                                                                 for (var i = 0; i < r.rows.length; i++) {
                                                                     records.push({
                                                                         name: r.metaData.names[r.rows[i][dxIndex]],
-                                                                        value: parseFloat(r.rows[i][valueIndex])
+                                                                        value: Ext.isNumeric ? parseFloat(r.rows[i][valueIndex]) : r.rows[i][valueIndex]
                                                                     });
                                                                 }
 
@@ -2792,6 +2792,7 @@ Ext.onReady( function() {
 					{id: 'LAST_YEAR', name: GIS.i18n.last_year}
 				],
 				relativePeriodsMap: {},
+                relativePeriodRecordsMap: {},
 				integratedRelativePeriodsMap: {
 					'THIS_WEEK': 'THIS_WEEK',
 					'LAST_WEEK': 'LAST_WEEK',
@@ -2818,11 +2819,15 @@ Ext.onReady( function() {
 				}
 			};
 
-                // relativePeriodsMap
+                // relativePeriodsMap / records
             for (var i = 0, obj; i < conf.period.relativePeriods.length; i++) {
                 obj = conf.period.relativePeriods[i];
 
                 conf.period.relativePeriodsMap[obj.id] = obj.name;
+                conf.period.relativePeriodRecordsMap[obj.id] = {
+                    id: obj.id,
+                    name: obj.name
+                };
             }
 
             conf.url = {};
