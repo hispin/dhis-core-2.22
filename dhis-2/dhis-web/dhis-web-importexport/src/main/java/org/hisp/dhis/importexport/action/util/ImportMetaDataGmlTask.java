@@ -93,35 +93,45 @@ public class ImportMetaDataGmlTask
 
         GmlPreProcessingResult gmlPreProcessingResult = gmlImportService.preProcessGml( inputStream );
 
-        if ( !gmlPreProcessingResult.isSuccess() )
+        if ( gmlPreProcessingResult.isSuccess() )
         {
-            Throwable throwable = gmlPreProcessingResult.getThrowable();
-            String message = createErrorMessage( throwable );
-
-            notifier.notify( taskId, NotificationLevel.ERROR, message, false );
-            log.error( "GML import failed: " + message, throwable );
-
-            return;
-        }
-
-        gmlImportService.importGml( gmlPreProcessingResult.getResultMetaData(), userUid, importOptions, taskId );
-    }
-
-    private String createErrorMessage( Throwable throwable )
-    {
-        String message = "";
-        Throwable rootThrowable = ExceptionUtils.getRootCause( throwable );
-
-        if ( rootThrowable instanceof SAXParseException )
-        {
-            SAXParseException e = (SAXParseException) rootThrowable;
-            message += "Syntax error on line " + e.getLineNumber() + ". " + e.getMessage();
+            gmlImportService.importGml( gmlPreProcessingResult.getResultMetaData(), userUid, importOptions, taskId );
         }
         else
         {
-            message += rootThrowable.getMessage();
+            Throwable throwable = gmlPreProcessingResult.getThrowable();
+
+            notifier.notify( taskId, NotificationLevel.ERROR, createNotifierErrorMessage( throwable ), false );
+            log.error( "GML import failed during pre-processing", throwable );
+        }
+    }
+
+    private String createNotifierErrorMessage( Throwable throwable )
+    {
+        StringBuilder sb = new StringBuilder( "GML import failed: " );
+
+        Throwable rootThrowable = ExceptionUtils.getRootCause( throwable );
+        if ( rootThrowable instanceof SAXParseException )
+        {
+            SAXParseException e = (SAXParseException) rootThrowable;
+            sb.append( e.getMessage() );
+
+            if ( e.getLineNumber() >= 0 )
+            {
+                sb.append( " On line " ).append( e.getLineNumber() );
+
+                if ( e.getColumnNumber() >= 0 )
+                {
+                    sb.append( " column " ).append( e.getColumnNumber() );
+                }
+            }
+            sb.append( "." );
+        }
+        else
+        {
+            sb.append( rootThrowable.getMessage() );
         }
 
-        return HtmlUtils.htmlEscape( message );
+        return HtmlUtils.htmlEscape( sb.toString() );
     }
 }
