@@ -31,6 +31,7 @@ package org.hisp.dhis.importexport.action.util;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.impl.io.MalformedByteSequenceException;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.gml.GmlImportService;
 import org.hisp.dhis.dxf2.gml.GmlPreProcessingResult;
@@ -111,6 +112,7 @@ public class ImportMetaDataGmlTask
         StringBuilder sb = new StringBuilder( "GML import failed: " );
 
         Throwable rootThrowable = ExceptionUtils.getRootCause( throwable );
+
         if ( rootThrowable instanceof SAXParseException )
         {
             SAXParseException e = (SAXParseException) rootThrowable;
@@ -125,11 +127,19 @@ public class ImportMetaDataGmlTask
                     sb.append( " column " ).append( e.getColumnNumber() );
                 }
             }
-            sb.append( "." );
+        }
+        else if ( rootThrowable instanceof MalformedByteSequenceException )
+        {
+            sb.append( "Malformed GML file." );
         }
         else
         {
             sb.append( rootThrowable.getMessage() );
+        }
+
+        if ( sb.charAt( sb.length() - 1 ) != '.' )
+        {
+            sb.append( '.' );
         }
 
         return HtmlUtils.htmlEscape( sb.toString() );
