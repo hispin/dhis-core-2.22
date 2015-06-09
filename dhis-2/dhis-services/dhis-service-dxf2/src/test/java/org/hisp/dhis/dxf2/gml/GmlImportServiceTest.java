@@ -74,7 +74,7 @@ public class GmlImportServiceTest
     // -------------------------------------------------------------------------
 
     @Test
-    public void fromGmlTest()
+    public void preProcessGmlTest()
         throws Exception
     {
         GmlPreProcessingResult result = gmlImportService.preProcessGml( inputStream );
