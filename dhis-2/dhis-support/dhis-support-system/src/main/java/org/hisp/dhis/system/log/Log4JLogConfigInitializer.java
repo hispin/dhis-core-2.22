@@ -28,10 +28,11 @@ package org.hisp.dhis.system.log;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import java.io.File;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
@@ -40,6 +41,8 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.hisp.dhis.external.location.LocationManager;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -56,6 +59,7 @@ public class Log4JLogConfigInitializer
     private static final String DATA_EXCHANGE_LOGGER_FILENAME = "dhis-data-exchange.log";
     private static final String DATA_SYNC_LOGGER_FILENAME = "dhis-data-sync.log";
     private static final String GENERAL_LOGGER_FILENAME = "dhis.log";
+    private static final String LOG4J_CONF_PROP = "log4j.configuration";
 
     private static final Log log = LogFactory.getLog( Log4JLogConfigInitializer.class );
     
@@ -71,6 +75,12 @@ public class Log4JLogConfigInitializer
             return;
         }
         
+        if ( isNotBlank( System.getProperty( LOG4J_CONF_PROP ) ) )
+        {
+            log.info( "Aborting default log config, external config set through system prop " + LOG4J_CONF_PROP + ": " + System.getProperty( LOG4J_CONF_PROP ) );
+            return;
+        }
+        
         locationManager.buildDirectory( LOG_DIR );
 
         configureLoggers( ANALYTICS_TABLE_LOGGER_FILENAME, Lists.newArrayList( "org.hisp.dhis.resourcetable", "org.hisp.dhis.analytics.table" ) );
@@ -81,7 +91,7 @@ public class Log4JLogConfigInitializer
         
         configureRootLogger( GENERAL_LOGGER_FILENAME );
     }
-    
+        
     /**
      * Configures rolling file loggers.
      * 
