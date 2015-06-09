@@ -175,7 +175,7 @@ public class SpringDataValueSetStore
         String ouScheme = idSchemes.getOrgUnitIdScheme().toString().toLowerCase();
         String ocScheme = idSchemes.getCategoryOptionComboIdScheme().toString().toLowerCase();
 
-        return
+        String sql =
             "select de." + deScheme + " as deid, pe.startdate as pestart, pt.name as ptname, ou." + ouScheme + " as ouid, " +
             "coc." + ocScheme + " as cocid, aoc." + ocScheme + " as aocid, " +
             "dv.value, dv.storedby, dv.created, dv.lastupdated, dv.comment, dv.followup " +
@@ -188,7 +188,19 @@ public class SpringDataValueSetStore
             "join categoryoptioncombo aoc on (dv.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
             "where de.dataelementid in (" + getCommaDelimitedString( getIdentifiers( getDataElements( params.getDataSets() ) ) ) + ") " +
             "and dv.periodid in (" + getCommaDelimitedString( getIdentifiers( params.getPeriods() ) ) + ") " +
-            "and dv.sourceid in (" + getCommaDelimitedString( getIdentifiers( params.getOrganisationUnits() ) ) + ")";
+            "and dv.sourceid in (" + getCommaDelimitedString( getIdentifiers( params.getOrganisationUnits() ) ) + ") ";
+        
+        if ( params.hasLastUpdated() )
+        {
+            sql += "and dv.lastupdated >= '" + getLongGmtDateString( params.getLastUpdated() ) + "' ";
+        }
+        
+        if ( params.hasLimit() )
+        {
+            sql += "limit " + params.getLimit();
+        }
+        
+        return sql;
     }
 
     private Set<DataElement> getDataElements( Set<DataSet> dataSets )

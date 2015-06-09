@@ -49,7 +49,7 @@ import java.util.Set;
 public interface DataValueSetService
 {
     DataExportParams getFromUrl( Set<String> dataSets, Set<String> periods, Date startDate, Date endDate, 
-        Set<String> organisationUnits, boolean includeChildren, IdSchemes idSchemes );
+        Set<String> organisationUnits, boolean includeChildren, Date lastUpdated, Integer limit, IdSchemes idSchemes );
     
     void validate( DataExportParams params );
     
