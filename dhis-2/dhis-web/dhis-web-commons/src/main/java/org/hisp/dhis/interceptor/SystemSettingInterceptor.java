@@ -131,6 +131,7 @@ public class SystemSettingInterceptor
         map.put( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, systemSettingManager.getSystemSetting( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, false ) );
         map.put( KEY_SYSTEM_NOTIFICATIONS_EMAIL, systemSettingManager.getSystemSetting( KEY_SYSTEM_NOTIFICATIONS_EMAIL ) );
         map.put( KEY_REQUIRE_ADD_TO_VIEW, systemSettingManager.getSystemSetting( KEY_REQUIRE_ADD_TO_VIEW, false ) );
+        map.put( KEY_ALLOW_OBJECT_ASSIGNMENT, systemSettingManager.getSystemSetting( KEY_ALLOW_OBJECT_ASSIGNMENT, false ) );
         map.put( SYSPROP_PORTAL, defaultIfEmpty( System.getProperty( SYSPROP_PORTAL ), String.valueOf( false ) ) );
 
         invocation.getStack().push( map );
