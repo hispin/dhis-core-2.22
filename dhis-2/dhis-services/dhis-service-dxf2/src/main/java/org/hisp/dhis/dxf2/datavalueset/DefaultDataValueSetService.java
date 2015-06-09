@@ -174,8 +174,8 @@ public class DefaultDataValueSetService
         }
         else if ( startDate != null && endDate != null )
         {
-            List<Period> pes = new ArrayList<Period>( periodService.getPeriodsBetweenDates( startDate, endDate ) );
-            params.getPeriods().addAll( periodService.reloadPeriods( pes ) );
+            params.setStartDate( startDate );
+            params.setEndDate( endDate );
         }
         
         if ( organisationUnits != null )
@@ -212,9 +212,14 @@ public class DefaultDataValueSetService
             violation = "At least one valid data set must be specified";
         }
         
-        if ( params.getPeriods().isEmpty() ) 
+        if ( params.getPeriods().isEmpty() && !params.hasStartEndDate() ) 
         {
             violation = "At least one valid period or start/end dates must be specified";
+        }
+        
+        if ( params.hasStartEndDate() && params.getStartDate().after( params.getEndDate() ) )
+        {
+            violation = "Start date must be before end date";
         }
         
         if ( params.getOrganisationUnits().isEmpty() )

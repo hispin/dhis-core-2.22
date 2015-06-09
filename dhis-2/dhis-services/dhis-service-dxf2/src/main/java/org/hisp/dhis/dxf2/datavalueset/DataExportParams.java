@@ -48,6 +48,10 @@ public class DataExportParams
     
     private Set<Period> periods = new HashSet<>();
     
+    private Date startDate;
+    
+    private Date endDate;
+    
     private Set<OrganisationUnit> organisationUnits = new HashSet<>();
 
     private boolean includeChildren;
@@ -78,6 +82,11 @@ public class DataExportParams
     public Period getFirstPeriod()
     {
         return periods != null && !periods.isEmpty() ? periods.iterator().next() : null;
+    }
+    
+    public boolean hasStartEndDate()
+    {
+        return startDate != null && endDate != null;
     }
     
     public OrganisationUnit getFirstOrganisationUnit()
@@ -137,6 +146,26 @@ public class DataExportParams
     public void setPeriods( Set<Period> periods )
     {
         this.periods = periods;
+    }
+
+    public Date getStartDate()
+    {
+        return startDate;
+    }
+
+    public void setStartDate( Date startDate )
+    {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate()
+    {
+        return endDate;
+    }
+
+    public void setEndDate( Date endDate )
+    {
+        this.endDate = endDate;
     }
 
     public Set<OrganisationUnit> getOrganisationUnits()
