@@ -21,7 +21,8 @@ public final class GmlPreProcessingResult
 
     private GmlPreProcessingResult(){}
 
-    public static GmlPreProcessingResult success( MetaData resultMetaData ) {
+    public static GmlPreProcessingResult success( MetaData resultMetaData )
+    {
         GmlPreProcessingResult result = new GmlPreProcessingResult();
         result.setResultMetaData( resultMetaData );
         result.setSuccess( true );
@@ -38,19 +39,9 @@ public final class GmlPreProcessingResult
         return result;
     }
 
-    private void setSuccess( boolean isSuccess )
-    {
-        this.isSuccess = isSuccess;
-    }
-
     public boolean isSuccess()
     {
         return isSuccess;
-    }
-
-    private void setResultMetaData( MetaData resultMetaData )
-    {
-        this.resultMetaData = resultMetaData;
     }
 
     public MetaData getResultMetaData()
@@ -58,13 +49,28 @@ public final class GmlPreProcessingResult
         return resultMetaData;
     }
 
+    public Throwable getThrowable()
+    {
+        return throwable;
+    }
+
+    // -------------------------------------------------------------------------
+    // Private setters
+    // -------------------------------------------------------------------------
+
+    private void setSuccess( boolean isSuccess )
+    {
+        this.isSuccess = isSuccess;
+    }
+
+    private void setResultMetaData( MetaData resultMetaData )
+    {
+        this.resultMetaData = resultMetaData;
+    }
+
     private void setThrowable( Throwable throwable )
     {
         this.throwable = throwable;
     }
 
-    public Throwable getThrowable()
-    {
-        return throwable;
-    }
 }
