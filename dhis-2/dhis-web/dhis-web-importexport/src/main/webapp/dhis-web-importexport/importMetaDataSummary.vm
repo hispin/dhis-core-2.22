@@ -57,5 +57,5 @@ $summary.importCount.ignored Ignored<br/>
 <p>$i18n.getString( "no_conflicts_found" )</p>
 #end
 #else
-    $i18n.getString( "no_summary_available" )
+    $i18n.getString( "no_import_summary_available" )
 #end
