@@ -77,7 +77,9 @@ public class GmlImportServiceTest
     public void fromGmlTest()
         throws Exception
     {
-        MetaData metaData = gmlImportService.fromGml( inputStream );
+        GmlPreProcessingResult result = gmlImportService.preProcessGml( inputStream );
+        MetaData metaData = result.getResultMetaData();
+
         Collection<OrganisationUnit> orgUnits = metaData.getOrganisationUnits();
 
         assertNotNull( orgUnits );
@@ -117,6 +119,4 @@ public class GmlImportServiceTest
         assertEquals( 1, units.get( "Blindern").getCoordinatesAsList().get( 0 ).getNumberOfCoordinates() );
         assertEquals( 76, units.get( "Forskningsparken" ).getCoordinatesAsList().get(0).getNumberOfCoordinates() );
     }
-
-    // TODO Add test for GmlImportService#preProcessGml(InputStream)
 }
