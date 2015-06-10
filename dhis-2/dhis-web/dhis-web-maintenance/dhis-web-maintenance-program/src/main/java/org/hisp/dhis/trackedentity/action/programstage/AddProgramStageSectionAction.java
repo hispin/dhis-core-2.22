@@ -30,6 +30,7 @@ package org.hisp.dhis.trackedentity.action.programstage;
 
 import com.opensymphony.xwork2.Action;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.program.ProgramIndicator;
@@ -140,7 +141,7 @@ public class AddProgramStageSectionAction
             psDataElements.add( psDataElement );
         }
 
-        ProgramStageSection section = new ProgramStageSection( name, psDataElements, programStage
+        ProgramStageSection section = new ProgramStageSection( StringUtils.trimToNull( name ), psDataElements, programStage
             .getProgramStageSections().size() );
 
         // ---------------------------------------------------------------------

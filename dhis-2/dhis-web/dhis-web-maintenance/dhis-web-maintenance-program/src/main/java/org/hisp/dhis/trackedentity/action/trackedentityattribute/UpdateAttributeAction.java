@@ -200,10 +200,10 @@ public class UpdateAttributeAction
     {
         TrackedEntityAttribute trackedEntityAttribute = trackedEntityAttributeService.getTrackedEntityAttribute( id );
 
-        trackedEntityAttribute.setName( name );
-        trackedEntityAttribute.setShortName( shortName );
-        trackedEntityAttribute.setCode( StringUtils.isEmpty( code.trim() ) ? null : code );
-        trackedEntityAttribute.setDescription( description );
+        trackedEntityAttribute.setName( StringUtils.trimToNull( name ) );
+        trackedEntityAttribute.setShortName( StringUtils.trimToNull( shortName ) );
+        trackedEntityAttribute.setCode( StringUtils.trimToNull( code ) );
+        trackedEntityAttribute.setDescription( StringUtils.trimToNull( description ) );
         trackedEntityAttribute.setValueType( valueType );
         trackedEntityAttribute.setExpression( expression );
         trackedEntityAttribute.setDisplayOnVisitSchedule( false );

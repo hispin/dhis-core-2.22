@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.validation.ValidationCriteria;
 import org.hisp.dhis.validation.ValidationCriteriaService;
 
@@ -123,11 +124,11 @@ public class UpdateValidationCriteriaAction
     {
         ValidationCriteria criteria = validationCriteriaService.getValidationCriteria( id );
 
-        criteria.setName( name );
-        criteria.setDescription( description );
+        criteria.setName( StringUtils.trimToNull( name ) );
+        criteria.setDescription( StringUtils.trimToNull( description ) );
         criteria.setProperty( property );
         criteria.setOperator( operator );
-        criteria.setValue( value );
+        criteria.setValue( StringUtils.trimToNull( value ) );
 
         validationCriteriaService.updateValidationCriteria( criteria );
 

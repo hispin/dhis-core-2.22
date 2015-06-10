@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
 import org.hisp.dhis.program.Program;
@@ -145,16 +146,15 @@ public class SaveDataEntryFormAction
         {
             program.increaseVersion();
             
-            dataEntryForm = new DataEntryForm( name, designTextarea );
+            dataEntryForm = new DataEntryForm( StringUtils.trimToNull( name ), designTextarea );
             dataEntryFormService.addDataEntryForm( dataEntryForm );
         }
         else
-        {
-            
-            dataEntryForm.setName( name );
+        {  
+            dataEntryForm.setName( StringUtils.trimToNull( name ) );
             dataEntryForm.setHtmlCode( designTextarea );
             dataEntryFormService.updateDataEntryForm( dataEntryForm );
-        }            
+        }          
 
         programStage.setDataEntryForm( dataEntryForm );
         programStageService.updateProgramStage( programStage );

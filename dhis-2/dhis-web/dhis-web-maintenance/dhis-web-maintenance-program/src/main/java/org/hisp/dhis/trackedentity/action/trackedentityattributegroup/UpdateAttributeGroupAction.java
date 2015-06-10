@@ -29,6 +29,8 @@ package org.hisp.dhis.trackedentity.action.trackedentityattributegroup;
  */
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeGroup;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupService;
@@ -108,8 +110,8 @@ public class UpdateAttributeGroupAction
     {
         TrackedEntityAttributeGroup attributeGroup = attributeGroupService.getTrackedEntityAttributeGroup( id );
 
-        attributeGroup.setName( name );
-        attributeGroup.setDescription( description );
+        attributeGroup.setName( StringUtils.trimToNull( name ) );
+        attributeGroup.setDescription( StringUtils.trimToNull( description ) );
 
         List<TrackedEntityAttribute> attributes = new ArrayList<>();
 
