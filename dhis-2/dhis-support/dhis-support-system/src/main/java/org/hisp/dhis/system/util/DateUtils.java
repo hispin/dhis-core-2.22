@@ -44,8 +44,7 @@ import org.hisp.dhis.period.PeriodType;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Months;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
+import org.joda.time.format.*;
 
 /**
  * @author Lars Helge Overland
@@ -53,17 +52,20 @@ import org.joda.time.format.PeriodFormatterBuilder;
  */
 public class DateUtils
 {
-    public static final SimpleDateFormat[] SUPPORTED_DATE_FORMATS = new SimpleDateFormat[]{
-        new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" ),
-        new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ" ),
-        new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ),
-        new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm" ),
-        new SimpleDateFormat( "yyyy-MM-dd'T'HH" ),
-        new SimpleDateFormat( "yyyy-MM-dd HH:mm:ssZ" ),
-        new SimpleDateFormat( "yyyy-MM-dd" ),
-        new SimpleDateFormat( "yyyy-MM" ),
-        new SimpleDateFormat( "yyyy" )
+    private static final DateTimeParser[] SUPPORTED_DATE_FORMAT_PARSERS = {
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").getParser(),
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ").getParser(),
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").getParser(),
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm").getParser(),
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH").getParser(),
+            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ssZ").getParser(),
+            DateTimeFormat.forPattern("yyyy-MM-dd").getParser(),
+            DateTimeFormat.forPattern("yyyy-MM").getParser(),
+            DateTimeFormat.forPattern("yyyy").getParser()
     };
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = new DateTimeFormatterBuilder()
+            .append( null, SUPPORTED_DATE_FORMAT_PARSERS ).toFormatter();
 
     private static final String SEP = ", ";
     
@@ -617,17 +619,6 @@ public class DateUtils
             return null;
         }
 
-        for ( SimpleDateFormat format : SUPPORTED_DATE_FORMATS )
-        {
-            try
-            {
-                return format.parse( dateString );
-            }
-            catch ( ParseException ignored )
-            {
-            }
-        }
-
-        return null;
+        return DATE_TIME_FORMATTER.parseDateTime( dateString ).toDate();
     }
 }
