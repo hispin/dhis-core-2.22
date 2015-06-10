@@ -1164,7 +1164,7 @@ function dataSetSelected()
     var previousDataSetValid = ( dhis2.de.currentDataSetId && dhis2.de.currentDataSetId != -1 );
     var previousDataSet = !!previousDataSetValid ? dhis2.de.dataSets[dhis2.de.currentDataSetId] : undefined;
     var previousPeriodType = previousDataSet ? previousDataSet.periodType : undefined;
-    var previousAllowFuturePeriods = previousDataSet ? previousDataSet.allowFuturePeriods : false;
+    var previousOpenFuturePeriods = previousDataSet ? previousDataSet.openFuturePeriods : false;
 
     dhis2.de.currentDataSetId = $( '#selectedDataSetId' ).val();
     
@@ -1175,10 +1175,10 @@ function dataSetSelected()
         $( '#nextButton' ).removeAttr( 'disabled' );
 
         var periodType = dhis2.de.dataSets[dhis2.de.currentDataSetId].periodType;
-        var allowFuturePeriods = dhis2.de.dataSets[dhis2.de.currentDataSetId].allowFuturePeriods;
+        var openFuturePeriods = dhis2.de.dataSets[dhis2.de.currentDataSetId].openFuturePeriods;
 
         var previousSelectionValid = !!( periodType == previousPeriodType && 
-        	( allowFuturePeriods == previousAllowFuturePeriods || dhis2.de.currentPeriodOffset <= 0 ) );
+        	( openFuturePeriods == previousOpenFuturePeriods || dhis2.de.currentPeriodOffset <= 0 ) );
         
         dhis2.de.currentCategories = dhis2.de.getCategories( dhis2.de.currentDataSetId );
 
@@ -1250,9 +1250,9 @@ function periodSelected()
  */
 function nextPeriodsSelected()
 {
-	var allowFuturePeriods = !!( dhis2.de.currentDataSetId && dhis2.de.dataSets[dhis2.de.currentDataSetId].allowFuturePeriods );
+	var openFuturePeriods = !!( dhis2.de.currentDataSetId && dhis2.de.dataSets[dhis2.de.currentDataSetId].openFuturePeriods );
 	
-    if ( dhis2.de.currentPeriodOffset < 0 || allowFuturePeriods )
+    if ( dhis2.de.currentPeriodOffset < 0 || openFuturePeriods )
     {
     	dhis2.de.currentPeriodOffset++;
         displayPeriods();
@@ -1275,14 +1275,11 @@ function displayPeriods()
 {
     var dataSetId = $( '#selectedDataSetId' ).val();
     var periodType = dhis2.de.dataSets[dataSetId].periodType;
-    var allowFuturePeriods = dhis2.de.dataSets[dataSetId].allowFuturePeriods;
-    var periods = dhis2.period.generator.generateReversedPeriods(periodType, dhis2.de.currentPeriodOffset);
+    var openFuturePeriods = dhis2.de.dataSets[dataSetId].openFuturePeriods;
+    var periods = dhis2.period.generator.generateReversedPeriods( periodType, dhis2.de.currentPeriodOffset );
 
-    if ( allowFuturePeriods == false )
-    {
-        periods = dhis2.period.generator.filterFuturePeriods( periods );
-    }
-
+    periods = dhis2.period.generator.filterOpenPeriods( periodType, periods, openFuturePeriods );
+    
     clearListById( 'selectedPeriodId' );
 
     if ( periods.length > 0 )
