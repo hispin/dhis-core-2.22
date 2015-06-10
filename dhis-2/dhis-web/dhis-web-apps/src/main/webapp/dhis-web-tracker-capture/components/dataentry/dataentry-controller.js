@@ -203,6 +203,7 @@ trackerCapture.controller('DataEntryController',
                 $scope.eventsByStage[newEvent.programStage].push(newEvent);
                 $scope.currentEvent = newEvent;
                 sortEventsByStage('ADD');
+                $scope.currentEvent = null;
                 $scope.showDataEntry(newEvent, false);
             }            
         }, function () {

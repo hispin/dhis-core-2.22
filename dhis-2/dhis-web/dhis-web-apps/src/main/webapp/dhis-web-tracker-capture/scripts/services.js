@@ -904,10 +904,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 if(val){                    
                     if( type === 'number' ){
                         if(dhis2.validation.isNumber(val)){                            
-                            val = new Number(val);
+                            //val = new Number(val);
+                            val = parseInt(val);                            
                         }
                         else{
-                            val = new Number('0');
+                            //val = new Number('0');
+                            val = parseInt('0');      
                         }
                     }
                     if(type === 'date'){
