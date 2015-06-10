@@ -28,8 +28,8 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -43,23 +43,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.hierarchy.HierarchyViolationException;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.comparator.OrganisationUnitLevelComparator;
 import org.hisp.dhis.system.filter.OrganisationUnitPolygonCoveringCoordinateFilter;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.util.FilterUtils;
 import org.hisp.dhis.system.util.GeoUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.util.FilterUtils;
 import org.hisp.dhis.version.VersionService;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -599,7 +599,6 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String name,
         Collection<OrganisationUnitGroup> groups, OrganisationUnit parent, boolean limit )
     {
@@ -607,17 +606,17 @@ public class DefaultOrganisationUnitService
 
         boolean _limit = limit && parent == null;
 
-        final Collection<OrganisationUnit> result = organisationUnitStore.getOrganisationUnitsByNameAndGroups( name,
-            groups, _limit );
+        final Set<OrganisationUnit> result = new HashSet<>( organisationUnitStore.getOrganisationUnitsByNameAndGroups( name,
+            groups, _limit ) );
 
         if ( parent == null )
         {
             return result;
         }
 
-        final Collection<OrganisationUnit> subTree = getOrganisationUnitWithChildren( parent.getId() );
+        final Set<OrganisationUnit> subTree = new HashSet<>( getOrganisationUnitWithChildren( parent.getId() ) );
 
-        List<OrganisationUnit> intersection = new ArrayList<OrganisationUnit>( CollectionUtils.intersection( subTree,
+        List<OrganisationUnit> intersection = new ArrayList<OrganisationUnit>( Sets.intersection( subTree,
             result ) );
 
         return limit && intersection.size() > MAX_LIMIT ? intersection.subList( 0, MAX_LIMIT )
