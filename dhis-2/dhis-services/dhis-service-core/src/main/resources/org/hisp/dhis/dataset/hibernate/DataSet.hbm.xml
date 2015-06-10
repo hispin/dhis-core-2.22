@@ -81,7 +81,7 @@
 
     <!-- Form properties -->
 
-    <property name="allowFuturePeriods" />
+    <property name="openFuturePeriods" column="openfutureperiods" />
 
     <property name="fieldCombinationRequired" />
 

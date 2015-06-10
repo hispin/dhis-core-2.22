@@ -216,11 +216,11 @@ public class UpdateDataSetAction
         this.dataSetId = dataSetId;
     }
 
-    private boolean allowFuturePeriods;
+    private int openFuturePeriods;
 
-    public void setAllowFuturePeriods( boolean allowFuturePeriods )
+    public void setOpenFuturePeriods( int openFuturePeriods )
     {
-        this.allowFuturePeriods = allowFuturePeriods;
+        this.openFuturePeriods = openFuturePeriods;
     }
 
     private boolean fieldCombinationRequired;
@@ -362,7 +362,7 @@ public class UpdateDataSetAction
         dataSet.setPeriodType( periodService.getPeriodTypeByClass( periodType.getClass() ) );
         dataSet.updateDataElements( dataElements );
         dataSet.setIndicators( indicators );
-        dataSet.setAllowFuturePeriods( allowFuturePeriods );
+        dataSet.setOpenFuturePeriods( openFuturePeriods );
         dataSet.setFieldCombinationRequired( fieldCombinationRequired );
         dataSet.setValidCompleteOnly( validCompleteOnly );
         dataSet.setNoValueRequiresComment( noValueRequiresComment );
