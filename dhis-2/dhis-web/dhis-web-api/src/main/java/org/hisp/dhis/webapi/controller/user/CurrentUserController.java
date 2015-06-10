@@ -29,7 +29,8 @@ package org.hisp.dhis.webapi.controller.user;
  */
 
 import com.google.common.collect.Lists;
-import org.apache.commons.collections.CollectionUtils;
+import com.google.common.collect.Sets;
+
 import org.hisp.dhis.acl.AclService;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -85,6 +86,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -615,7 +617,6 @@ public class CurrentUserController
         renderService.toJson( response.getOutputStream(), forms );
     }
 
-    @SuppressWarnings( "unchecked" )
     @RequestMapping( value = { "/assignedDataSets", "/dataSets" }, produces = { "application/json", "text/*" } )
     public void getDataSets( @RequestParam( defaultValue = "false" ) boolean optionSets, @RequestParam( defaultValue = "50" ) int maxOptions,
         HttpServletResponse response, @RequestParam Map<String, String> parameters ) throws IOException, NotAuthenticatedException
@@ -672,7 +673,7 @@ public class CurrentUserController
 
         for ( OrganisationUnit ou : userOrganisationUnits )
         {
-            Set<DataSet> dataSets = new HashSet<DataSet>( CollectionUtils.intersection( ou.getDataSets(), userDataSets ) );
+            Set<DataSet> dataSets = new HashSet<DataSet>( Sets.intersection( ou.getDataSets(), userDataSets ) );
 
             if ( dataSets.size() > 0 )
             {
@@ -694,7 +695,7 @@ public class CurrentUserController
                 formOrganisationUnit.setParent( organisationUnit.getParent().getUid() );
             }
 
-            Set<DataSet> dataSets = new HashSet<DataSet>( CollectionUtils.intersection( organisationUnit.getDataSets(), userDataSets ) );
+            Set<DataSet> dataSets = new HashSet<DataSet>( Sets.intersection( organisationUnit.getDataSets(), userDataSets ) );
             i18nService.internationalise( dataSets );
 
             for ( DataSet dataSet : dataSets )
