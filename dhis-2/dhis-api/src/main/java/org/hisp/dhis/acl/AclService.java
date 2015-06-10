@@ -135,6 +135,15 @@ public interface AclService
     boolean canManage( User user, IdentifiableObject object );
 
     /**
+     * Can read an objects of this type.
+     *
+     * @param user  User to User to check against
+     * @param klass Type to check against
+     * @return Result of test
+     */
+    <T extends IdentifiableObject> boolean canRead( User user, Class<T> klass );
+
+    /**
      * Can create an object of this type.
      *
      * @param user  User to User to check against
