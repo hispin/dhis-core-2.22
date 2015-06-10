@@ -53,6 +53,7 @@ import org.hisp.dhis.period.YearlyPeriodType;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
+import org.hisp.dhis.util.ObjectUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -358,22 +359,20 @@ public class DataElement
     }
 
     /**
-     * Indicates whether collecting data for future periods should be allowed for
-     * this data element.
-     *
-     * @return true if all the associated data sets allow future periods, false otherwise.
-     */
-    public boolean isAllowFuturePeriods()
+     * Number of periods in the future to open for data capture, 0 means capture
+     * not allowed for current period. Based on the data sets of which this data
+     * element is a member.
+     */    
+    public int getOpenFuturePeriods()
     {
+        Set<Integer> openPeriods = new HashSet<>();
+        
         for ( DataSet dataSet : dataSets )
         {
-            if ( dataSet != null && !dataSet.isAllowFuturePeriods() )
-            {
-                return false;
-            }
+            openPeriods.add( dataSet.getOpenFuturePeriods() );
         }
-
-        return true;
+        
+        return ObjectUtils.firstNonNull( Collections.max( openPeriods ), 0 );
     }
 
     /**
