@@ -347,6 +347,7 @@
         <value>F_USERGROUP_MANAGING_RELATIONSHIPS_VIEW</value>
         <value>F_USER_ADD_WITHIN_MANAGED_GROUP</value>
         <value>F_USER_GROUPS_READ_ONLY_ADD_MEMBERS</value>
+        <value>F_OAUTH2_CLIENT_MANAGE</value>
       </set>
     </property>
   </bean>
