@@ -34,9 +34,9 @@ import org.hibernate.SessionFactory;
 import org.hisp.dhis.cache.HibernateCacheManager;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.commons.timer.SystemTimer;
 import org.hisp.dhis.commons.timer.Timer;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.schema.Schema;
@@ -261,7 +261,7 @@ public class DefaultImportService
 
             if ( importer != null )
             {
-                return importer.importObjects( user, objects, importOptions );
+                return importer.importObjects( user, objects, objectBridge, importOptions );
             }
             else
             {
@@ -278,7 +278,7 @@ public class DefaultImportService
 
         if ( importer != null )
         {
-            return importer.importObject( user, object, importOptions );
+            return importer.importObject( user, object, objectBridge, importOptions );
         }
         else
         {
