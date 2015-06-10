@@ -537,7 +537,9 @@ public class DefaultDataApprovalLevelService
         {
             for ( OrganisationUnit orgUnit : user.getOrganisationUnits() )
             {
-                map.put( orgUnit, requiredApprovalLevel( orgUnit, user, approvalLevels ) );
+                int level = requiredApprovalLevel( orgUnit, user, approvalLevels );
+                
+                map.put( orgUnit, level );
             }
         }
 
@@ -556,7 +558,9 @@ public class DefaultDataApprovalLevelService
         {
             if ( !map.containsKey( orgUnit ) )
             {
-                map.put( orgUnit, requiredApprovalLevel( orgUnit, user, approvalLevels ) );
+                int level = requiredApprovalLevel( orgUnit, user, approvalLevels );
+                
+                map.put( orgUnit, level );
             }
         }
 
