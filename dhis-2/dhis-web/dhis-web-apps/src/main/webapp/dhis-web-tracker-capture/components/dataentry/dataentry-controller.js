@@ -287,7 +287,7 @@ trackerCapture.controller('DataEntryController',
         //check for input validity
         //$scope.outerForm.submitted = true;            
         $scope.updateSuccess = false;
-        if( field.$invalid ){ 
+        if( field && field.$invalid ){ 
             //console.log('form is invalid...');
             $scope.currentElement = {id: prStDe.dataElement.id, saved: false};
             return false;
