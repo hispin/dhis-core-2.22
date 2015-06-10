@@ -8,7 +8,7 @@
     <li data-enabled="canUpdate"><a data-target-fn="showProgramUserRoleForm"><i class="fa fa-plus"></i>&nbsp;&nbsp;$i18n.getString( "assign_program_to_userroles" )</a></li>
     <li data-enabled="canUpdate"><a data-target-fn="showUpdateProgramForm"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "edit" )</a></li>
     <li data-enabled="canUpdate"><a data-target-fn="programStageManagement"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_program_stages" )</a></li>
-    <li data-enabled="canManageTemplateMessage"><a data-target-fn="programReminder"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_template_reminder_messages" )</a></li> 
+    <li data-enabled="canManageTemplateMessage"><a data-target-fn="programReminder"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_reminder_message_templates" )</a></li> 
 	<li data-enabled="canManageProgramRule"><a data-target-fn="programRule"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_program_rule" )</a></li>
     <li data-enabled="canUpdate"><a data-target-fn="validationCriteria"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_validation_criteria" )</a></li>
     <li data-enabled="canUpdate"><a data-target-fn="programValidationManagement"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "view_validation_rules" )</a></li>
