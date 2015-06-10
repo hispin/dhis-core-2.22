@@ -215,6 +215,15 @@ public class DefaultAclService implements AclService
     }
 
     @Override
+    public <T extends IdentifiableObject> boolean canRead( User user, Class<T> klass )
+    {
+        Schema schema = schemaService.getSchema( klass );
+
+        return schema != null &&
+            (schema.getAuthorityByType( AuthorityType.READ ) == null || canAccess( user, schema.getAuthorityByType( AuthorityType.READ ) ));
+    }
+
+    @Override
     public <T extends IdentifiableObject> boolean canCreate( User user, Class<T> klass )
     {
         Schema schema = schemaService.getSchema( klass );
