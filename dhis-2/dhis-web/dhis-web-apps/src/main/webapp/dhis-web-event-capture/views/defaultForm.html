@@ -1,5 +1,5 @@
-<div ng-if='!selectedProgramStage.programStageSections.length'>
-    <table class="dhis2-list-table-striped">                    
+<div  ng-if='!selectedProgramStage.programStageSections.length'>
+    <table class="dhis2-list-table-striped">
         <thead>                        
             <tr>
                 <th>
@@ -16,7 +16,7 @@
                     {{'form_id' | translate}}
                 </td>
                 <td>
-                    <input type="text" ng-disabled="true" ng-model="currentEvent['uid']" style="width:99%;">
+                    <input type="text" ng-disabled="true" ng-model="currentEvent['uid']" class="form-control">
                 </td>
             </tr>
             <tr>
@@ -34,7 +34,7 @@
                            d2-date-validator
                            name="eventDate" 
                            input-field-id='eventDate' 
-                           style="width:99%;">
+                           class="form-control">
                     <div ng-messages="outerForm.eventDate.$error" ng-if="interacted(outerForm.eventDate)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
                     </div>
                 </td>
@@ -48,7 +48,7 @@
                            name="latitude"
                            d2-coordinate-validator
                            ng-required="false"
-                           style="width:99%;"/>
+                           class="form-control"/>
                     <div ng-messages="outerForm.latitude.$error" ng-if="interacted(outerForm.latitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
                     </div>
                 </td>                                            
@@ -63,7 +63,7 @@
                            name="longitude" 
                            d2-coordinate-validator
                            ng-required="false"
-                           style="width:99%;"/>
+                           class="form-control"/>
                     <div ng-messages="outerForm.longitude.$error" ng-if="interacted(outerForm.longitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
                     </div>
                 </td>                                                            
@@ -75,9 +75,9 @@
                 <td >
                     <ng-form name="innerForm">
                         <div ng-if="prStDes[eventGridColumn.id].dataElement.optionSetValue">
-                            <span ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length >= 7">
+                            <div ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length >= 7">                                
                                 <input type="text"
-                                       class="typeahead"
+                                       class="typeahead form-control"
                                        placeholder="&#xf0d7;&nbsp;&nbsp;"                                                 
                                        ng-model="currentEvent[eventGridColumn.id]"                                          
                                        typeahead="option.name as option.name for option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter:$viewValue | limitTo:20" 
@@ -85,10 +85,9 @@
                                        typeahead-editable=false
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
-                                       input-field-id={{eventGridColumn.id}} 
-                                       style="width:98%;"/>
-                            </span>                                    
-                            <span ng-if="selectedProgram.dataEntryMethod && optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length < 7">                                    
+                                       input-field-id={{eventGridColumn.id}}/>                                
+                            </div>                                    
+                            <div ng-if="selectedProgram.dataEntryMethod && optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length < 7">                                    
                                 <label>
                                     <input type="radio" 
                                            name="foo"  
@@ -105,7 +104,7 @@
                                            ng-model="currentEvent[eventGridColumn.id]"
                                            value={{option.name}}> {{option.name}}<br>                                        
                                 </label>
-                            </span>
+                            </div>
                         </div>
                         <div ng-if="!prStDes[eventGridColumn.id].dataElement.optionSetValue" ng-switch="eventGridColumn.type">
                             <div ng-switch-when="int">
@@ -116,7 +115,7 @@
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
                                        input-field-id={{eventGridColumn.id}} 
-                                       style="width:99%;"/>
+                                       class="form-control"/>
                             </div>
                             <div ng-switch-when="string">     
                                 <span ng-if="eventGridColumn.textType==='longText'">
@@ -125,7 +124,7 @@
                                         ng-required={{eventGridColumn.compulsory}}
                                         name="foo" 
                                         input-field-id={{eventGridColumn.id}} 
-                                        style="width:99%;">
+                                        class="form-control">
                                     </textarea>
                                 </span>
                                 <span ng-if="eventGridColumn.textType!=='longText'">
@@ -134,7 +133,7 @@
                                         ng-required={{eventGridColumn.compulsory}}
                                         name="foo" 
                                         input-field-id={{eventGridColumn.id}} 
-                                        style="width:99%;"/>                  
+                                        class="form-control"/>                  
                                 </span>                                              
                             </div>
                             <div ng-switch-when="bool">
@@ -142,7 +141,7 @@
                                         ng-required={{eventGridColumn.compulsory}}
                                         name="foo" 
                                         input-field-id={{eventGridColumn.id}} 
-                                        style="width:99%;">
+                                        class="form-control">
                                 <option value="">{{'please_select'| translate}}</option>                        
                                 <option value="false">{{'no'| translate}}</option>
                                 <option value="true">{{'yes'| translate}}</option>
@@ -158,7 +157,7 @@
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
                                        input-field-id={{eventGridColumn.id}} 
-                                       style="width:99%;"/>
+                                       class="form-control">
                             </div>
                             <div ng-switch-when="trueOnly">
                                 <input type="checkbox"                                         
@@ -173,7 +172,7 @@
                                     ng-required={{eventGridColumn.compulsory}}
                                     name="foo" 
                                     input-field-id={{eventGridColumn.id}} 
-                                    style="width:99%;"/> 
+                                    class="form-control"> 
                             </div>
                         </div>                        
                         <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
@@ -186,7 +185,7 @@
 </div>
 
 
-<div ng-class="" ng-if='selectedProgramStage.programStageSections.length'>
+<div ng-if='selectedProgramStage.programStageSections.length'>
     <table class="dhis2-list-table-striped">        
         <tbody>
             <tr ng-if="selectedProgramStage.preGenerateUID && currentEvent['uid']">
@@ -194,7 +193,7 @@
                     {{'form_id' | translate}}
                 </td>
                 <td>
-                    <input type="text" ng-disabled="true" ng-model="currentEvent['uid']" style="width:99%;">
+                    <input type="text" ng-disabled="true" ng-model="currentEvent['uid']" class="form-control">
                 </td>
             </tr>
             <tr>
@@ -212,7 +211,7 @@
                            d2-date-validator
                            name="eventDate" 
                            input-field-id='eventDate' 
-                           style="width:99%;">
+                           class="form-control">
                     <div ng-messages="outerForm.eventDate.$error" ng-if="interacted(outerForm.eventDate)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
                     </div>
                 </td>
@@ -227,7 +226,7 @@
                            name="latitude"
                            d2-coordinate-validator
                            ng-required="false"
-                           style="width:99%;"/>
+                           class="form-control"/>
                     <div ng-messages="outerForm.latitude.$error" ng-if="interacted(outerForm.latitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
                     </div>
                 </td>                                            
@@ -242,7 +241,7 @@
                            name="longitude" 
                            d2-coordinate-validator
                            ng-required="false"
-                           style="width:99%;"/>
+                           class="form-control"/>
                     <div ng-messages="outerForm.longitude.$error" ng-if="interacted(outerForm.longitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
                     </div>
                 </td>                                            
@@ -271,7 +270,7 @@
                                 <div ng-if="prStDes[de.dataElement.id].dataElement.optionSetValue">
                                     <span ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options.length > 8">
                                         <input type="text"
-                                               class="typeahead"
+                                               class="typeahead form-control"
                                                placeholder="&#xf0d7;&nbsp;&nbsp;"                                                         
                                                ng-model="currentEvent[de.dataElement.id]"
                                                typeahead="option.name as option.name for option in optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options | filter:$viewValue | limitTo:20" 
@@ -279,8 +278,7 @@
                                                typeahead-editable=false
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                name="foo" 
-                                               input-field-id={{de.dataElement.id}} 
-                                               style="width:98%;"/>
+                                               input-field-id={{de.dataElement.id}}>
                                     </span>
                                     <span ng-if="selectedProgram.dataEntryMethod && prStDes[de.dataElement.id].dataElement.optionSet.options.length < 7">                                    
                                         <label>
@@ -289,7 +287,7 @@
                                                    input-field-id={{de.dataElement.id}} 
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                    ng-model="currentEvent[de.dataElement.id]"
-                                                   value=""> {{'no_value' | translate}}<br>
+                                                   value="">{{'no_value' | translate}}<br>
                                         </label>                                    
                                         <label ng-repeat="option in optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options">
                                             <input type="radio" 
@@ -310,7 +308,7 @@
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                name="foo" 
                                                input-field-id={{de.dataElement.id}} 
-                                               style="width:99%;"/>
+                                               class="form-control"/>
                                     </div>
                                     <div ng-switch-when="string">
                                         <span ng-if="prStDes[de.dataElement.id].dataElement.textType==='longText'">
@@ -319,7 +317,7 @@
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                 name="foo" 
                                                 input-field-id={{de.dataElement.id}} 
-                                                style="width:99%;">
+                                                class="form-control">
                                             </textarea>
                                         </span>
                                         <span ng-if="prStDes[de.dataElement.id].dataElement.textType!=='longText'">
@@ -328,7 +326,7 @@
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                 name="foo" 
                                                 input-field-id={{de.dataElement.id}} 
-                                                style="width:99%;"/>                  
+                                                class="form-control">                  
                                         </span>
                                     </div>
                                     <div ng-switch-when="bool">
@@ -336,7 +334,7 @@
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                 name="foo" 
                                                 input-field-id={{de.dataElement.id}} 
-                                                style="width:99%;">
+                                                class="form-control">
                                         <option value="">{{'please_select'| translate}}</option>                        
                                         <option value="false">{{'no'| translate}}</option>
                                         <option value="true">{{'yes'| translate}}</option>
@@ -352,7 +350,7 @@
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                name="foo" 
                                                input-field-id={{de.dataElement.id}} 
-                                               style="width:99%;"/>
+                                               class="form-control"/>
                                     </div>
                                     <div ng-switch-when="trueOnly">
                                         <input type="checkbox"                                                  
@@ -367,7 +365,7 @@
                                             ng-required={{prStDes[de.dataElement.id].compulsory}}
                                             name="foo" 
                                             input-field-id={{de.dataElement.id}} 
-                                            style="width:99%;"/>
+                                            class="form-control"/>
                                     </div>
                                 </div>
                                 <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
@@ -385,7 +383,7 @@
 <h4>
     {{'comments'| translate}}
 </h4>
-<textarea rows="3" ng-model="note.value" placeholder="{{'add_your_comment_here'| translate}}" style="width:99%;"></textarea>
+<textarea rows="3" ng-model="note.value" placeholder="{{'add_your_comment_here'| translate}}" class="form-control"></textarea>
 <div ng-if="currentEvent.notes">    
     <table class="listTable dhis2-list-table-striped"> 
         <thead>
