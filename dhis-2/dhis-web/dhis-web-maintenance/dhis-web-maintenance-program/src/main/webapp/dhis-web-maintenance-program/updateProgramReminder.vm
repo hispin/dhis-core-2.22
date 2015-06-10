@@ -50,7 +50,7 @@
 
 </script>
 
-<h3>$i18n.getString( "edit_template_reminder_message" ) #openHelp( "program_template_reminder" )</h3>
+<h3>$i18n.getString( "edit_reminder_message_template" ) #openHelp( "program_template_reminder" )</h3>
 <h5>$encoder.htmlEncode($program.displayName)</h5>
 
 <form id="updateReminderForm" name="updateReminderForm" action="updateProgramReminder.action" method="get" onsubmit="selectAllById('selectedPropertyIds');" class="inputForm">
@@ -60,7 +60,7 @@
   <table>
     <thead>
       <tr>
-        <th colspan="2" style="width: 590px;">$i18n.getString( "template_reminder_message_details" )</th>
+        <th colspan="2" style="width: 590px;">$i18n.getString( "reminder_message_template_details" )</th>
       </tr>
     </thead>
     <tbody>
