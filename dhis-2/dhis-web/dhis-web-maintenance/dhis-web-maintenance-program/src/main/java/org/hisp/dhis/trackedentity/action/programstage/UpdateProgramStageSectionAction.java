@@ -31,6 +31,7 @@ package org.hisp.dhis.trackedentity.action.programstage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.program.ProgramIndicator;
@@ -147,7 +148,7 @@ public class UpdateProgramStageSectionAction
         // ---------------------------------------------------------------------
 
         ProgramStageSection section = programStageSectionService.getProgramStageSection( id );
-        section.setName( name );
+        section.setName( StringUtils.trimToNull( name ) );
         
         List<ProgramStageDataElement> psDataElements = new ArrayList<>();
         for ( Integer id : dataElementIds )

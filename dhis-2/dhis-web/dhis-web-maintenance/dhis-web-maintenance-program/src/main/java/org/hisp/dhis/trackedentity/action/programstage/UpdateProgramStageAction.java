@@ -357,10 +357,10 @@ public class UpdateProgramStageAction
 
         ProgramStage programStage = programStageService.getProgramStage( id );
 
-        programStage.setName( name );
-        programStage.setDescription( description );
+        programStage.setName( StringUtils.trimToNull( name ) );
+        programStage.setDescription( StringUtils.trimToNull( description ) );
         programStage.setStandardInterval( standardInterval );
-        programStage.setReportDateDescription( reportDateDescription );
+        programStage.setReportDateDescription( StringUtils.trimToNull( reportDateDescription ) );
         programStage.setMinDaysFromStart( minDaysFromStart );
         programStage.setIrregular( irregular );
         programStage.setMinDaysFromStart( minDaysFromStart );

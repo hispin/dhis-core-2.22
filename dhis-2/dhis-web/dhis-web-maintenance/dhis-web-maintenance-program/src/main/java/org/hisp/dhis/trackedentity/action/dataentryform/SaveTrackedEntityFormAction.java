@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
 import org.hisp.dhis.program.Program;
@@ -110,6 +111,9 @@ public class SaveTrackedEntityFormAction
     public String execute()
         throws Exception
     {
+        name = StringUtils.trimToNull( name );
+        designTextarea = StringUtils.trimToNull( designTextarea );
+       
         TrackedEntityForm registrationForm = null;
 
         Program program = null;
@@ -127,7 +131,7 @@ public class SaveTrackedEntityFormAction
         // ---------------------------------------------------------------------
         // Save data-entry-form
         // ---------------------------------------------------------------------
-
+        
         if ( registrationForm == null )
         {
             registrationForm = new TrackedEntityForm();
