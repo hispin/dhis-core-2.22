@@ -31,8 +31,8 @@ package org.hisp.dhis.webapi.controller;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.dataintegrity.DataIntegrityReport;
 import org.hisp.dhis.dataintegrity.FlattenedDataIntegrityReport;
-import org.hisp.dhis.dxf2.metadata.ImportSummary;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.metadata.ImportSummary;
 import org.hisp.dhis.node.exception.InvalidTypeException;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
@@ -60,6 +60,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -99,6 +100,27 @@ public class SystemController
         for ( int i = 0; i < n; i++ )
         {
             collectionNode.addChild( new SimpleNode( "code", CodeGenerator.generateCode() ) );
+        }
+
+        return rootNode;
+    }
+
+    @RequestMapping( value = "/uuid", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE } )
+    public @ResponseBody RootNode getUuid( @RequestParam( required = false, defaultValue = "1" ) Integer n, HttpServletResponse response )
+        throws IOException, InvalidTypeException
+    {
+        if ( n > 10000 )
+        {
+            n = 10000;
+        }
+
+        RootNode rootNode = new RootNode( "codes" );
+        CollectionNode collectionNode = rootNode.addChild( new CollectionNode( "codes" ) );
+        collectionNode.setWrapping( false );
+
+        for ( int i = 0; i < n; i++ )
+        {
+            collectionNode.addChild( new SimpleNode( "code", UUID.randomUUID().toString() ) );
         }
 
         return rootNode;
