@@ -48,11 +48,11 @@ public class ConversionUtils
      * @param clazz   the clazz of the argument objects.
      * @param objects for which to get the identifiers.
      */
-    public static Collection<Integer> getIdentifiers( Class<?> clazz, Collection<?> objects )
+    public static List<Integer> getIdentifiers( Class<?> clazz, Collection<?> objects )
     {
         try
         {
-            Collection<Integer> identifiers = new ArrayList<>();
+            List<Integer> identifiers = new ArrayList<>();
 
             Method method = clazz.getMethod( "getId", new Class[0] );
 
@@ -77,9 +77,9 @@ public class ConversionUtils
      * @param strings the collection of Strings.
      * @return a collection of Integers.
      */
-    public static Collection<Integer> getIntegerCollection( Collection<String> strings )
+    public static List<Integer> getIntegerCollection( Collection<String> strings )
     {
-        Collection<Integer> integers = new ArrayList<>();
+        List<Integer> integers = new ArrayList<>();
 
         if ( strings != null )
         {

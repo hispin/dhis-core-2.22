@@ -30,13 +30,13 @@ package org.hisp.dhis.orgunitdistribution.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
@@ -51,6 +51,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.plot.PlotOrientation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -110,7 +112,6 @@ public class DefaultOrgUnitDistributionService
     
     @Override
     @Transactional
-    @SuppressWarnings("unchecked")
     public Grid getOrganisationUnitDistribution( OrganisationUnitGroupSet groupSet, OrganisationUnit organisationUnit, boolean organisationUnitOnly  )
     {
         Grid grid = new ListGrid();
@@ -143,11 +144,11 @@ public class DefaultOrgUnitDistributionService
             
             int totalGroup = 0;
             
-            Collection<OrganisationUnit> subTree = organisationUnitService.getOrganisationUnitWithChildren( unit.getId() ); 
+            Set<OrganisationUnit> subTree = new HashSet<>( organisationUnitService.getOrganisationUnitWithChildren( unit.getId() ) ); 
             
             for ( OrganisationUnitGroup group : groups )
             {
-                Collection<OrganisationUnit> result = CollectionUtils.intersection( subTree, group.getMembers() );
+                Set<OrganisationUnit> result = Sets.intersection( subTree, group.getMembers() );
                 
                 int count = result != null ? result.size() : 0;
                 
