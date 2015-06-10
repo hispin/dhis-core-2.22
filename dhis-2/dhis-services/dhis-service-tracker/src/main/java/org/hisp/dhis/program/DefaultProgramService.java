@@ -28,9 +28,15 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.util.CollectionUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -39,12 +45,7 @@ import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
+import com.google.common.collect.Sets;
 
 /**
  * @author Abyot Asalefew
@@ -239,7 +240,7 @@ public class DefaultProgramService
 
             for ( Program program : programStore.getAll() )
             {
-                if ( CollectionUtils.intersection( program.getUserRoles(), userRoles ).size() > 0 )
+                if ( Sets.intersection( program.getUserRoles(), userRoles ).size() > 0 )
                 {
                     programs.add( program );
                 }
@@ -265,7 +266,7 @@ public class DefaultProgramService
 
             for ( Program program : programStore.getByType( type ) )
             {
-                if ( CollectionUtils.intersection( program.getUserRoles(), userRoles ).size() > 0 )
+                if ( Sets.intersection( program.getUserRoles(), userRoles ).size() > 0 )
                 {
                     programs.add( program );
                 }
