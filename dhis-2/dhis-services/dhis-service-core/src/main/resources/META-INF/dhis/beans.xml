@@ -361,7 +361,7 @@
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="cacheable" value="true" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.mapping.MapStore" class="org.hisp.dhis.mapping.hibernate.HibernateMapStore">
     <property name="clazz" value="org.hisp.dhis.mapping.Map" />
     <property name="sessionFactory" ref="sessionFactory" />
@@ -446,7 +446,7 @@
     <property name="securityService" ref="org.hisp.dhis.security.SecurityService" />
   </bean>
 
-    <bean id="org.hisp.dhis.dataelement.DataElementService" class="org.hisp.dhis.dataelement.DefaultDataElementService">
+  <bean id="org.hisp.dhis.dataelement.DataElementService" class="org.hisp.dhis.dataelement.DefaultDataElementService">
     <property name="dataElementStore" ref="org.hisp.dhis.dataelement.DataElementStore" />
     <property name="dataElementGroupStore" ref="org.hisp.dhis.dataelement.DataElementGroupStore" />
     <property name="dataElementGroupSetStore" ref="org.hisp.dhis.dataelement.DataElementGroupSetStore" />
@@ -691,11 +691,19 @@
     <property name="indicatorService" ref="org.hisp.dhis.indicator.IndicatorService" />
     <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.legend.LegendService" class="org.hisp.dhis.legend.DefaultLegendService">
     <property name="legendStore" ref="org.hisp.dhis.legend.LegendStore" />
     <property name="legendSetStore" ref="org.hisp.dhis.legend.LegendSetStore" />
   </bean>
+
+  <bean id="org.hisp.dhis.oauth2.OAuth2ClientStore" class="org.hisp.dhis.oauth2.hibernate.HibernateOAuth2ClientStore">
+    <property name="clazz" value="org.hisp.dhis.oauth2.OAuth2Client" />
+    <property name="sessionFactory" ref="sessionFactory" />
+    <property name="cacheable" value="true" />
+  </bean>
+
+  <bean id="oAuth2ClientService" class="org.hisp.dhis.oauth2.DefaultOAuth2ClientService" />
 
   <bean id="org.hisp.dhis.setting.SystemSettingManager" class="org.hisp.dhis.setting.DefaultSystemSettingManager">
     <property name="systemSettingStore" ref="org.hisp.dhis.setting.SystemSettingStore" />
@@ -771,7 +779,7 @@
         <value>south_africa</value>
         <value>south_africa_department_of_health</value>
         <value>sri_lanka</value>
-		<value>sudan</value>
+        <value>sudan</value>
         <value>swaziland</value>
         <value>tajikistan</value>
         <value>tanzania</value>
@@ -843,7 +851,7 @@
   <bean id="org.hisp.dhis.system.SystemService" class="org.hisp.dhis.system.DefaultSystemService" />
 
   <!-- SMS Services -->
-  
+
   <bean id="org.hisp.dhis.sms.MessageQueue" class="org.hisp.dhis.sms.DatabaseSupportedInternalMemoryMessageQueue">
     <property name="smsStore" ref="org.hisp.dhis.sms.hibernate.IncomingSmsStore" />
   </bean>
@@ -880,7 +888,7 @@
     <property name="outboundSmsService" ref="org.hisp.dhis.sms.outbound.OutboundSmsService" />
   </bean>
 
-  <bean id="org.hisp.dhis.sms.SmsMessageSender" class="org.hisp.dhis.sms.SmsMessageSender"/>
+  <bean id="org.hisp.dhis.sms.SmsMessageSender" class="org.hisp.dhis.sms.SmsMessageSender" />
 
   <bean id="org.hisp.dhis.sms.task.SendSmsTask" class="org.hisp.dhis.sms.task.SendSmsTask" scope="prototype" />
 
@@ -1065,8 +1073,8 @@
     class="org.hisp.dhis.dataelement.DataElementCategoryComboDeletionHandler">
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
-  
-  <bean id="org.hisp.dhis.dataelement.DataElementCategoryDimensionDeletionHandler" 
+
+  <bean id="org.hisp.dhis.dataelement.DataElementCategoryDimensionDeletionHandler"
     class="org.hisp.dhis.dataelement.DataElementCategoryDimensionDeletionHandler" />
 
   <bean id="org.hisp.dhis.dataset.DataSetDeletionHandler" class="org.hisp.dhis.dataset.DataSetDeletionHandler" />
@@ -1132,8 +1140,8 @@
 
   <bean id="org.hisp.dhis.user.UserSettingDeletionHandler" class="org.hisp.dhis.user.UserSettingDeletionHandler" />
 
-  <bean id="org.hisp.dhis.dataelement.DataElementCategoryDeletionHandler" 
-  	class="org.hisp.dhis.dataelement.DataElementCategoryDeletionHandler" />
+  <bean id="org.hisp.dhis.dataelement.DataElementCategoryDeletionHandler"
+    class="org.hisp.dhis.dataelement.DataElementCategoryDeletionHandler" />
 
   <bean id="org.hisp.dhis.dataelement.DataElementGroupSetDeletionHandler"
     class="org.hisp.dhis.dataelement.DataElementGroupSetDeletionHandler" />
@@ -1156,7 +1164,7 @@
     <property name="jdbcTemplate" ref="jdbcTemplate" />
   </bean>
 
-  <bean id="org.hisp.dhis.legend.LegendSetDeletionHandler" class="org.hisp.dhis.legend.LegendSetDeletionHandler"/>
+  <bean id="org.hisp.dhis.legend.LegendSetDeletionHandler" class="org.hisp.dhis.legend.LegendSetDeletionHandler" />
 
   <bean id="org.hisp.dhis.mapping.MapViewDeletionHandler" class="org.hisp.dhis.mapping.MapViewDeletionHandler">
     <property name="mappingService" ref="org.hisp.dhis.mapping.MappingService" />
