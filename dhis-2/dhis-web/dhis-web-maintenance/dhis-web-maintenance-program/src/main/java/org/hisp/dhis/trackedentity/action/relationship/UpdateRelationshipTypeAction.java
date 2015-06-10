@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.relationship;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
 
@@ -93,9 +94,9 @@ public class UpdateRelationshipTypeAction
     {
         RelationshipType relationshipType = relationshipTypeService.getRelationshipType( id );
 
-        relationshipType.setaIsToB( aIsToB );
-        relationshipType.setbIsToA( bIsToA );
-        relationshipType.setName( name );
+        relationshipType.setaIsToB( StringUtils.trimToNull( aIsToB ) );
+        relationshipType.setbIsToA( StringUtils.trimToNull( bIsToA ) );
+        relationshipType.setName(StringUtils.trimToNull( name ) );
 
         relationshipTypeService.updateRelationshipType( relationshipType );
 

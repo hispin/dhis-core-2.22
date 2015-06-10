@@ -367,11 +367,11 @@ public class AddProgramStageAction
         ProgramStage programStage = new ProgramStage();
         Program program = programService.getProgram( id );
 
-        programStage.setName( name );
-        programStage.setDescription( description );
+        programStage.setName( StringUtils.trimToNull( name ) );
+        programStage.setDescription( StringUtils.trimToNull( description ) );
         programStage.setProgram( program );
         programStage.setStandardInterval( standardInterval );
-        programStage.setReportDateDescription( reportDateDescription );
+        programStage.setReportDateDescription( StringUtils.trimToNull( reportDateDescription ) );
         programStage.setIrregular( irregular );
         programStage.setMinDaysFromStart( minDaysFromStart );
         programStage.setDisplayGenerateEventBox( displayGenerateEventBox );

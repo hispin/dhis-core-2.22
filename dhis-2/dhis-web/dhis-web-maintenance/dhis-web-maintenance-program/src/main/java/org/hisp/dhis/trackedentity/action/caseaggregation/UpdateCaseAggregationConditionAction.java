@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.caseaggregation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.caseaggregation.CaseAggregationCondition;
 import org.hisp.dhis.caseaggregation.CaseAggregationConditionService;
 import org.hisp.dhis.dataelement.DataElement;
@@ -148,11 +149,12 @@ public class UpdateCaseAggregationConditionAction
 
         CaseAggregationCondition expression = aggregationConditionService.getCaseAggregationCondition( id );
 
-        expression.setOperator( operator );
+        expression.setName( StringUtils.trimToNull( name ) );
         expression.setAggregationExpression( aggregationCondition );
-        expression.setName( name );
+        expression.setOperator( operator );
         expression.setAggregationDataElement( aggregationDataElement );
         expression.setOptionCombo( optionCombo );
+        
         if ( deSumId != null )
         {
             DataElement deSum = dataElementService.getDataElement( deSumId );

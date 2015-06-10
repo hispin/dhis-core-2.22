@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.trackedentityinstancereminder;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
@@ -144,8 +145,8 @@ public class AddProgramStageReminderAction
     {
         ProgramStage programStage = programStageService.getProgramStage( programStageId );
 
-        TrackedEntityInstanceReminder reminder = new TrackedEntityInstanceReminder( name, daysAllowedSendMessage,
-            templateMessage );
+        TrackedEntityInstanceReminder reminder = new TrackedEntityInstanceReminder( StringUtils.trimToNull( name ), daysAllowedSendMessage,
+            StringUtils.trimToNull( templateMessage ) );
         reminder.setDateToCompare( datesToCompare );
         reminder.setSendTo( sendTo );
         reminder.setWhenToSend( whenToSend );

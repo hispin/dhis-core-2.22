@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.expression.Operator;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramExpression;
@@ -128,11 +129,11 @@ public class AddProgramValidationAction
     public String execute()
         throws Exception
     {
-        ProgramExpression leftExpression = new ProgramExpression( leftSideExpression, leftSideDescription );
-        ProgramExpression rightExpression = new ProgramExpression( rightSideExpression, rightSideDescription );
+        ProgramExpression leftExpression = new ProgramExpression( leftSideExpression, StringUtils.trimToNull( leftSideDescription ) );
+        ProgramExpression rightExpression = new ProgramExpression( rightSideExpression, StringUtils.trimToNull( rightSideDescription ) );
 
         ProgramValidation validation = new ProgramValidation();
-        validation.setName( name.trim() );
+        validation.setName( StringUtils.trimToNull( name ) );
         validation.setOperator( Operator.valueOf( operator ) );
         validation.setLeftSide( leftExpression );
         validation.setRightSide( rightExpression );
