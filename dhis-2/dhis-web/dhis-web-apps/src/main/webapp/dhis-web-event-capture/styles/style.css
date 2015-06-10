@@ -3,7 +3,6 @@ html, body {
     margin: 0;
     padding: 0;
     background-color: white;
-    font-size: 10pt;
 }
 
 .not-for-screen {
@@ -24,7 +23,7 @@ input.option
 }
 
 .fixed-width-select{
-    width: 264px;
+    width: 262px;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -809,8 +808,8 @@ input[type=date]::-webkit-inner-spin-button, input[type=date]::-webkit-outer-spi
     display: none;
     float: left;
     min-width: 160px;
-    padding: 4px 1px;
-    margin: 2px 0 0;
+    padding: 0;
+    margin: 0;
     font-size: 9pt;
     list-style: none;
     background-color: #fff;
@@ -833,7 +832,7 @@ input[type=date]::-webkit-inner-spin-button, input[type=date]::-webkit-outer-spi
 }
 .dropdown-menu > li > a {
     display: block;
-    padding: 3px 20px;
+    padding: 5px;
     clear: both;
     font-weight: normal;
     line-height: 1.428571429;
@@ -868,12 +867,14 @@ input[type=date]::-webkit-inner-spin-button, input[type=date]::-webkit-outer-spi
     cursor: pointer;
 }
 
-input[type=number] {
-    border: 1px solid #aaa;
-    padding: 4px 1px;
+input[type=number], input[type=text], input[type=password], input[type=email], textarea
+{
+  border: 1px solid #aaa;
+  padding: 5px 0 !important;
 }
+
 select {
-    padding: 3px;
+    padding: 3px 0 !important;
 }
 
 .clear {
@@ -938,7 +939,11 @@ input.typeahead::-ms-input-placeholder {
     margin-left: 5px;    
 }
 
-form.ng-submitted .ng-invalid {
-    border-color: red;
-    border-width: 2px;
+.form-control {
+    width: 100%;
+}
+
+div#orgUnitTree {
+    height: 50%;
+    border: 1px solid #e3e3e3;
 }
