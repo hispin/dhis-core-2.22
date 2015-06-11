@@ -28,6 +28,9 @@ package org.hisp.dhis.sms.command.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+import java.util.Set;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -42,9 +45,6 @@ import org.hisp.dhis.sms.parse.ParserType;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Set;
-
 public class HibernateSMSCommandStore
     implements SMSCommandStore
 {
@@ -58,7 +58,7 @@ public class HibernateSMSCommandStore
 
     @SuppressWarnings("unchecked")
     @Override
-    public Collection<SMSCommand> getSMSCommands()
+    public List<SMSCommand> getSMSCommands()
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( SMSCommand.class );
         criteria.addOrder( Order.asc( "name" ) );
@@ -135,7 +135,7 @@ public class HibernateSMSCommandStore
 
     @SuppressWarnings("unchecked")
     @Override
-    public Collection<SMSCommand> getJ2MESMSCommands()
+    public List<SMSCommand> getJ2MESMSCommands()
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( SMSCommand.class );
         criteria.add( Restrictions.eq( "parserType", ParserType.J2ME_PARSER ) );

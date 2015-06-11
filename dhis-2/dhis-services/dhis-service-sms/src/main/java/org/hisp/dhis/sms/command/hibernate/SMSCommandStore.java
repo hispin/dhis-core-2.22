@@ -28,7 +28,7 @@ package org.hisp.dhis.sms.command.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.dataset.DataSet;
@@ -39,7 +39,7 @@ import org.hisp.dhis.sms.parse.ParserType;
 
 public interface SMSCommandStore
 {
-    Collection<SMSCommand> getSMSCommands();
+    List<SMSCommand> getSMSCommands();
 
     SMSCommand getSMSCommand( int id );
 
@@ -49,7 +49,7 @@ public interface SMSCommandStore
 
     void save( Set<SMSCode> codes );
     
-    Collection<SMSCommand> getJ2MESMSCommands();
+    List<SMSCommand> getJ2MESMSCommands();
     
     SMSCommand getSMSCommand( String commandName, ParserType parserType );
     
