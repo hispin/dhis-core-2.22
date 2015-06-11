@@ -34,6 +34,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -68,14 +69,14 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> searchDataElementsByName( String key )
+    public List<DataElement> searchDataElementsByName( String key )
     {
         return getCriteria( Restrictions.ilike( "name", "%" + key + "%" ) ).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getAggregateableDataElements()
+    public List<DataElement> getAggregateableDataElements()
     {
         Set<String> types = new HashSet<>();
 
@@ -87,28 +88,28 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsByAggregationOperator( String aggregationOperator )
+    public List<DataElement> getDataElementsByAggregationOperator( String aggregationOperator )
     {
         return getCriteria( Restrictions.eq( "aggregationOperator", aggregationOperator ) ).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsByType( String type )
+    public List<DataElement> getDataElementsByType( String type )
     {
         return getCriteria( Restrictions.eq( "type", type ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataElement> getDataElementsByDomainType( DataElementDomain domainType )
+    public List<DataElement> getDataElementsByDomainType( DataElementDomain domainType )
     {
         return getCriteria( Restrictions.eq( "domainType", domainType ) ).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsByDomainType( DataElementDomain domainType, int first, int max )
+    public List<DataElement> getDataElementsByDomainType( DataElementDomain domainType, int first, int max )
     {
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.eq( "domainType", domainType ) );
@@ -122,14 +123,14 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementByCategoryCombo( DataElementCategoryCombo categoryCombo )
+    public List<DataElement> getDataElementByCategoryCombo( DataElementCategoryCombo categoryCombo )
     {
         return getCriteria( Restrictions.eq( "categoryCombo", categoryCombo ) ).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsWithGroupSets()
+    public List<DataElement> getDataElementsWithGroupSets()
     {
         String hql = "from DataElement d where d.groupSets.size > 0";
 
@@ -160,7 +161,7 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsByZeroIsSignificant( boolean zeroIsSignificant )
+    public List<DataElement> getDataElementsByZeroIsSignificant( boolean zeroIsSignificant )
     {
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.eq( "zeroIsSignificant", zeroIsSignificant ) );
@@ -171,7 +172,7 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsWithoutGroups()
+    public List<DataElement> getDataElementsWithoutGroups()
     {
         String hql = "from DataElement d where d.groups.size = 0";
 
@@ -180,7 +181,7 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsWithoutDataSets()
+    public List<DataElement> getDataElementsWithoutDataSets()
     {
         String hql = "from DataElement d where d.dataSets.size = 0 and d.domainType =:domainType";
 
@@ -189,7 +190,7 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsWithDataSets()
+    public List<DataElement> getDataElementsWithDataSets()
     {
         String hql = "from DataElement d where d.dataSets.size > 0";
 
@@ -198,7 +199,7 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsByDataSets( Collection<DataSet> dataSets )
+    public List<DataElement> getDataElementsByDataSets( Collection<DataSet> dataSets )
     {
         String hql = "select distinct de from DataElement de join de.dataSets ds where ds.id in (:ids)";
 
@@ -207,7 +208,7 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> getDataElementsByAggregationLevel( int aggregationLevel )
+    public List<DataElement> getDataElementsByAggregationLevel( int aggregationLevel )
     {
         String hql = "from DataElement de join de.aggregationLevels al where al = :aggregationLevel";
 
@@ -250,7 +251,7 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElement> get( DataSet dataSet, String key, Integer max )
+    public List<DataElement> get( DataSet dataSet, String key, Integer max )
     {
         String hql = "select dataElement from DataSet dataSet inner join dataSet.dataElements as dataElement where dataSet.id = :dataSetId ";
 
