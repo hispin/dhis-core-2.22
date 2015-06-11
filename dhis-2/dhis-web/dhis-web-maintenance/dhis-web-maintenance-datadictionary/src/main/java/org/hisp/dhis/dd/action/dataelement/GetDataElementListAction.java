@@ -31,7 +31,6 @@ package org.hisp.dhis.dd.action.dataelement;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hisp.dhis.user.UserSettingService.KEY_CURRENT_DOMAIN_TYPE;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -106,7 +105,7 @@ public class GetDataElementListAction
     }
 
     // -------------------------------------------------------------------------
-    // Action implemantation
+    // Action implementation
     // -------------------------------------------------------------------------
 
     @Override
@@ -135,7 +134,7 @@ public class GetDataElementListAction
         {
             this.paging = createPaging( dataElementService.getDataElementCountByName( key ) );
 
-            dataElements = new ArrayList<>( dataElementService.getDataElementsBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            dataElements = dataElementService.getDataElementsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else if ( domainType != null )
         {
@@ -143,13 +142,13 @@ public class GetDataElementListAction
             
             this.paging = createPaging( dataElementService.getDataElementCountByDomainType( deDomainType ) );
 
-            dataElements = new ArrayList<>( dataElementService.getDataElementsByDomainType( deDomainType, paging.getStartPos(), paging.getPageSize() ) );
+            dataElements = dataElementService.getDataElementsByDomainType( deDomainType, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( dataElementService.getDataElementCount() );
 
-            dataElements = new ArrayList<>( dataElementService.getDataElementsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            dataElements = dataElementService.getDataElementsBetween( paging.getStartPos(), paging.getPageSize() );
         }
 
         Collections.sort( dataElements, new IdentifiableObjectNameComparator() );
