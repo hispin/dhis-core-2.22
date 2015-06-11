@@ -224,7 +224,7 @@ public class Paging
         return list.subList( first, last );
     }
     
-    public static <T extends IdentifiableObject> Collection<T> getObjectsByName( Collection<T> objects, String name )
+    public static <T extends IdentifiableObject> List<T> getObjectsByName( Collection<T> objects, String name )
     {
         final List<T> list = new ArrayList<>();
         

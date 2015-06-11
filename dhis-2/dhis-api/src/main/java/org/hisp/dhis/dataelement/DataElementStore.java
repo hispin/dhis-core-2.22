@@ -29,6 +29,7 @@ package org.hisp.dhis.dataelement;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.common.GenericDimensionalObjectStore;
@@ -55,7 +56,7 @@ public interface DataElementStore
      * @param key the name of the DataElement to return.
      * @return List of DataElements with a given key, or all dataelements if no match.
      */
-    Collection<DataElement> searchDataElementsByName( String key );
+    List<DataElement> searchDataElementsByName( String key );
 
     /**
      * Returns all DataElements with types that are possible to aggregate. The
@@ -63,7 +64,7 @@ public interface DataElementStore
      * 
      * @return all DataElements with types that are possible to aggregate.
      */
-    Collection<DataElement> getAggregateableDataElements();
+    List<DataElement> getAggregateableDataElements();
 
     /**
      * Returns all DataElements with a given aggregation operator.
@@ -74,7 +75,7 @@ public interface DataElementStore
      *         operator, or an empty collection if no DataElements have the
      *         aggregation operator.
      */
-    Collection<DataElement> getDataElementsByAggregationOperator( String aggregationOperator );
+    List<DataElement> getDataElementsByAggregationOperator( String aggregationOperator );
 
     /**
      * Returns all DataElements with the given domain type.
@@ -82,7 +83,7 @@ public interface DataElementStore
      * @param domainType the domainType.
      * @return all DataElements with the given domainType.
      */
-    Collection<DataElement> getDataElementsByDomainType( DataElementDomain domainType );
+    List<DataElement> getDataElementsByDomainType( DataElementDomain domainType );
 
     /**
      * Returns all DataElements with the given domain type.
@@ -90,7 +91,7 @@ public interface DataElementStore
      * @param domainType the domainType.
      * @return all DataElements with the given domainType.
      */
-    Collection<DataElement> getDataElementsByDomainType( DataElementDomain domainType, int first, int max );
+    List<DataElement> getDataElementsByDomainType( DataElementDomain domainType, int first, int max );
 
     /**
      * Returns all DataElements with the given type.
@@ -99,7 +100,7 @@ public interface DataElementStore
      * @return all DataElements with the given type.
      */
 
-    Collection<DataElement> getDataElementsByType( String type );
+    List<DataElement> getDataElementsByType( String type );
 
     /**
      * Returns all DataElements with the given category combo.
@@ -107,7 +108,7 @@ public interface DataElementStore
      * @param categoryCombo the DataElementCategoryCombo.
      * @return all DataElements with the given category combo.
      */
-    Collection<DataElement> getDataElementByCategoryCombo( DataElementCategoryCombo categoryCombo );
+    List<DataElement> getDataElementByCategoryCombo( DataElementCategoryCombo categoryCombo );
 
     /**
      * Returns all DataElements which are associated with one or more
@@ -116,7 +117,7 @@ public interface DataElementStore
      * @return all DataElements which are associated with one or more
      *         DataElementGroupSets.
      */
-    Collection<DataElement> getDataElementsWithGroupSets();
+    List<DataElement> getDataElementsWithGroupSets();
 
     /**
      * Defines the given data elements as zero is significant. 
@@ -130,28 +131,28 @@ public interface DataElementStore
      * @param zeroIsSignificant is zeroIsSignificant property 
      * @return a collection of all DataElement
      */
-    Collection<DataElement> getDataElementsByZeroIsSignificant( boolean zeroIsSignificant );
+    List<DataElement> getDataElementsByZeroIsSignificant( boolean zeroIsSignificant );
     
     /**
      * Returns all DataElements which are not member of any DataElementGroups.
      * 
      * @return all DataElements which are not member of any DataElementGroups.
      */
-    Collection<DataElement> getDataElementsWithoutGroups();
+    List<DataElement> getDataElementsWithoutGroups();
     
     /**
      * Returns all DataElements which are not assigned to any DataSets.
      * 
      * @return all DataElements which are not assigned to any DataSets.
      */
-    Collection<DataElement> getDataElementsWithoutDataSets();
+    List<DataElement> getDataElementsWithoutDataSets();
     
     /**
      * Returns all DataElements which are assigned to at least one DataSet.
      * 
      * @return all DataElements which are assigned to at least one DataSet.
      */
-    Collection<DataElement> getDataElementsWithDataSets();
+    List<DataElement> getDataElementsWithDataSets();
     
     /**
      * Returns all DataElements which are assigned to any of the given DataSets.
@@ -159,7 +160,7 @@ public interface DataElementStore
      * @param dataSets the collection of DataSets.
      * @return all DataElements which are assigned to any of the given DataSets.
      */
-    Collection<DataElement> getDataElementsByDataSets( Collection<DataSet> dataSets );
+    List<DataElement> getDataElementsByDataSets( Collection<DataSet> dataSets );
     
     /**
      * Returns all DataElements which have the given aggregation level assigned.
@@ -167,7 +168,7 @@ public interface DataElementStore
      * @param aggregationLevel the aggregation level.
      * @return all DataElements which have the given aggregation level assigned.
      */
-    Collection<DataElement> getDataElementsByAggregationLevel( int aggregationLevel );
+    List<DataElement> getDataElementsByAggregationLevel( int aggregationLevel );
 
     /**
      * Returns a mapping of data element uid and associated category option combo
@@ -178,7 +179,7 @@ public interface DataElementStore
      */
     ListMap<String, String> getDataElementCategoryOptionComboMap( Set<String> dataElementUids );
     
-    Collection<DataElement> get( DataSet dataSet, String key, Integer max );
+    List<DataElement> get( DataSet dataSet, String key, Integer max );
 
     int getCountByDomainType( DataElementDomain domainType );
 }
