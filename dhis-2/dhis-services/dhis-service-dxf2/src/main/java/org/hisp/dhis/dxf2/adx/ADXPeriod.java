@@ -74,6 +74,8 @@ public class ADXPeriod {
         P6M, // 6monthly (including 6monthlyApril)
         P1Y  // yearly, financialApril, financialJuly, financialOctober
     }
+    
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public static Period parse(String periodString) throws ADXPeriodException {
         String[] tokens = periodString.split("/");
@@ -84,7 +86,7 @@ public class ADXPeriod {
         try {
             Period period = null;
             PeriodType periodType = null;
-            Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(tokens[0]);
+            Date startDate = dateFormat.parse(tokens[0]);
             Calendar cal = Calendar.getInstance();
             cal.setTime(startDate);
             Duration duration = Duration.valueOf(tokens[1]);
@@ -148,5 +150,11 @@ public class ADXPeriod {
         } catch (IllegalArgumentException ex) {
             throw new ADXPeriodException(tokens[1] + " is not a supported duration type");
         }
+    }
+    
+    public static String serialize(Period period)
+    {
+        return dateFormat.format(period.getStartDate()) + "/"
+                + period.getPeriodType().getIso8601Duration();
     }
 }
