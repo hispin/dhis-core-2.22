@@ -28,7 +28,7 @@ package org.hisp.dhis.sms.command;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.dataset.DataSet;
@@ -48,7 +48,7 @@ public class DefaultSMSCommandService
     }
 
     @Override
-    public Collection<SMSCommand> getSMSCommands()
+    public List<SMSCommand> getSMSCommands()
     {
         return smsCommandStore.getSMSCommands();
     }
@@ -89,7 +89,7 @@ public class DefaultSMSCommandService
     }
 
     @Override
-    public Collection<SMSCommand> getJ2MESMSCommands()
+    public List<SMSCommand> getJ2MESMSCommands()
     {
         return smsCommandStore.getJ2MESMSCommands();
     }
