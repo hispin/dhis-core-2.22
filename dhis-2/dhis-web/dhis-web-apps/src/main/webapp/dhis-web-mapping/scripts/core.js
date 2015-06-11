@@ -512,13 +512,13 @@ Ext.onReady( function() {
 							layout: 'column',
 							iconCls: 'gis-window-title-icon-information',
 							cls: 'gis-container-default',
-							width: 460,
+							//width: 550,
 							height: 400, //todo
 							period: null,
 							items: [
 								{
 									cls: 'gis-container-inner',
-									columnWidth: 0.4,
+									width: 180,
 									bodyStyle: 'padding-right:4px',
 									items: function() {
 										var a = [];
@@ -569,7 +569,7 @@ Ext.onReady( function() {
 								{
 									xtype: 'form',
 									cls: 'gis-container-inner gis-form-widget',
-									columnWidth: 0.6,
+									//width: 360,
 									bodyStyle: 'padding-left:4px',
 									items: [
 										{
@@ -587,7 +587,7 @@ Ext.onReady( function() {
 											displayField: 'name',
 											emptyText: 'Select period',
 											forceSelection: true,
-											width: 258, //todo
+											width: 350, //todo
 											labelWidth: 70,
 											store: {
 												fields: ['id', 'name'],
@@ -656,10 +656,12 @@ Ext.onReady( function() {
                                                                 }
 
                                                                 // records
-                                                                for (var i = 0; i < r.rows.length; i++) {
+                                                                for (var i = 0, value; i < r.rows.length; i++) {
+                                                                    value = r.rows[i][valueIndex];
+
                                                                     records.push({
                                                                         name: r.metaData.names[r.rows[i][dxIndex]],
-                                                                        value: Ext.isNumeric ? parseFloat(r.rows[i][valueIndex]) : r.rows[i][valueIndex]
+                                                                        value: Ext.isNumeric(value) ? parseFloat(value) : value
                                                                     });
                                                                 }
 
@@ -674,7 +676,7 @@ Ext.onReady( function() {
 											xtype: 'grid',
 											cls: 'gis-grid plain',
 											height: 313, //todo
-											width: 258,
+											width: 350,
 											scroll: 'vertical',
 											columns: [
 												{
@@ -682,14 +684,14 @@ Ext.onReady( function() {
 													text: 'Data element',
 													dataIndex: 'name',
 													sortable: true,
-													width: 195
+													width: 200
 												},
 												{
 													id: 'value',
 													header: 'Value',
 													dataIndex: 'value',
 													sortable: true,
-													width: 63
+													width: 150
 												}
 											],
 											disableSelection: true,
