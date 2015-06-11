@@ -50,6 +50,8 @@ public class DailyPeriodType
     private static final long serialVersionUID = 5371766471215556241L;
 
     public static final String ISO_FORMAT = "yyyyMMdd";
+    
+    private static final String ISO8601_DURATION = "P1D";
 
     /**
      * The name of the DailyPeriodType, which is "Daily".
@@ -164,6 +166,12 @@ public class DailyPeriodType
     {
         return ISO_FORMAT;
     }
+    
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
+    }
+
 
     @Override
     public Date getRewindedDate( Date date, Integer rewindedPeriods )

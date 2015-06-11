@@ -48,6 +48,8 @@ public class SixMonthlyAprilPeriodType
 
     private static final String ISO_FORMAT = "yyyyAprilSn";
 
+    private static final String ISO8601_DURATION = "P6M";
+
     private static final int BASE_MONTH = DateTimeConstants.APRIL;
 
     /**
@@ -104,4 +106,10 @@ public class SixMonthlyAprilPeriodType
     {
         return ISO_FORMAT;
     }
+    
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
+    }
+
 }

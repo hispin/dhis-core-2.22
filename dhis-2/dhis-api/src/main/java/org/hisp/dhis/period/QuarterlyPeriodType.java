@@ -52,6 +52,8 @@ public class QuarterlyPeriodType
     private static final long serialVersionUID = -5973809094923012052L;
 
     private static final String ISO_FORMAT = "yyyyQn";
+    
+    private static final String ISO8601_DURATION = "P1Q";
 
     /**
      * The name of the QuarterlyPeriodType, which is "Quarterly".
@@ -195,6 +197,12 @@ public class QuarterlyPeriodType
     {
         return ISO_FORMAT;
     }
+    
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
+    }
+
 
     public enum Quarter
     {
