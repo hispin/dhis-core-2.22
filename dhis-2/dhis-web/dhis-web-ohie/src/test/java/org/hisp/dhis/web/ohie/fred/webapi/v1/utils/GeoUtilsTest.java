@@ -30,6 +30,7 @@ package org.hisp.dhis.web.ohie.fred.webapi.v1.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
+import java.util.Locale;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -42,7 +43,7 @@ public class GeoUtilsTest
         Double lat = 1.0d;
         Double lng = 2.0d;
 
-        String coordinatesString = String.format( "[%f, %f]", lat, lng );
+        String coordinatesString = String.format( Locale.ENGLISH, "[%f, %f]", lat, lng );
 
         GeoUtils.Coordinates coordinates = GeoUtils.parseCoordinates( coordinatesString, GeoUtils.CoordinateOrder.COORDINATE_LATLNG );
 
@@ -56,7 +57,7 @@ public class GeoUtilsTest
         Double lat = 1.0d;
         Double lng = 2.0d;
 
-        String coordinatesString = String.format( "[%f, %f]", lng, lat );
+        String coordinatesString = String.format( Locale.ENGLISH, "[%f, %f]", lng, lat );
 
         GeoUtils.Coordinates coordinates = GeoUtils.parseCoordinates( coordinatesString, GeoUtils.CoordinateOrder.COORDINATE_LNGLAT );
 
