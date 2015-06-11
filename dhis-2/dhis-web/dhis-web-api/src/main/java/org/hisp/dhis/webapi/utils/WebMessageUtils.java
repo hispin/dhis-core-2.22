@@ -132,6 +132,16 @@ public final class WebMessageUtils
         return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpServletResponse.SC_BAD_REQUEST );
     }
 
+    public static WebMessage forbidden( String message )
+    {
+        return createWebMessage( message, WebMessageStatus.ERROR, HttpServletResponse.SC_FORBIDDEN );
+    }
+
+    public static WebMessage forbidden( String message, String devMessage )
+    {
+        return createWebMessage( message, WebMessageStatus.ERROR, HttpServletResponse.SC_FORBIDDEN );
+    }
+
     private WebMessageUtils()
     {
     }
