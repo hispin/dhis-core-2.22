@@ -45,8 +45,9 @@ dhis2.tc.store = new dhis2.storage.Store({
 /**
  * Page init. The order of events is:
  *
- * 1. Load ouwt 2. Load meta-data (and notify ouwt) 3. Check and potentially
- * download updated forms from server
+ * 1. Load ouwt 
+ * 2. Load meta-data (and notify ouwt) 
+ * 
  */
 $(document).ready(function()
 {
