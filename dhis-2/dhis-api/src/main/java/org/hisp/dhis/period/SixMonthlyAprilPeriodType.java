@@ -108,7 +108,8 @@ public class SixMonthlyAprilPeriodType
     }
     
     @Override
-    public String getIso8601Duration() {
+    public String getIso8601Duration() 
+    {
         return ISO8601_DURATION; 
     }
 
