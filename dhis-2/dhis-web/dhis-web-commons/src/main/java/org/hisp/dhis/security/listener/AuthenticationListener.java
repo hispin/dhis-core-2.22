@@ -100,7 +100,10 @@ public class AuthenticationListener
 
             WebAuthenticationDetails details = (WebAuthenticationDetails) event.getAuthentication().getDetails();
 
-            userAuditService.registerLoginFailure( (String) event.getAuthentication().getPrincipal(), details.getRemoteAddress() );
+            if ( details != null )
+            {
+                userAuditService.registerLoginFailure( (String) event.getAuthentication().getPrincipal(), details.getRemoteAddress() );
+            }
         }
     }
 }
