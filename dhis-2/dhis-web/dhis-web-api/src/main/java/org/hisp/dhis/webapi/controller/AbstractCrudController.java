@@ -167,6 +167,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         WebOptions options = new WebOptions( rpParameters );
         WebMetaData metaData = new WebMetaData();
 
+        if ( !aclService.canRead( currentUserService.getCurrentUser(), getEntityClass() ) )
+        {
+            throw new ReadAccessDeniedException( "You don't have the proper permissions to read objects of this type." );
+        }
+
         if ( fields.isEmpty() )
         {
             fields.add( ":identifiable" );
@@ -216,6 +221,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         TranslateOptions translateOptions,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
+        if ( !aclService.canRead( currentUserService.getCurrentUser(), getEntityClass() ) )
+        {
+            throw new ReadAccessDeniedException( "You don't have the proper permissions to read objects of this type." );
+        }
+
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
         List<String> filters = Lists.newArrayList( contextService.getParameterValues( "filter" ) );
 
@@ -234,6 +244,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         TranslateOptions translateOptions,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
+        if ( !aclService.canRead( currentUserService.getCurrentUser(), getEntityClass() ) )
+        {
+            throw new ReadAccessDeniedException( "You don't have the proper permissions to read objects of this type." );
+        }
+
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
 
         if ( fields.isEmpty() )
@@ -633,6 +648,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         TranslateOptions translateOptions,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
+        if ( !aclService.canRead( currentUserService.getCurrentUser(), getEntityClass() ) )
+        {
+            throw new ReadAccessDeniedException( "You don't have the proper permissions to read objects of this type." );
+        }
+
         RootNode rootNode = getObjectInternal( pvUid, parameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + "[:all]" ), translateOptions );
 
         // TODO optimize this using field filter (collection filtering)
