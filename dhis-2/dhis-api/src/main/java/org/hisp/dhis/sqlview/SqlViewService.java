@@ -29,6 +29,7 @@ package org.hisp.dhis.sqlview;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -62,9 +63,9 @@ public interface SqlViewService
 
     int getSqlViewCount();
 
-    Collection<SqlView> getSqlViewsBetween( int first, int max );
+    List<SqlView> getSqlViewsBetween( int first, int max );
 
-    Collection<SqlView> getSqlViewsBetweenByName( String name, int first, int max );
+    List<SqlView> getSqlViewsBetweenByName( String name, int first, int max );
 
     SqlView getSqlView( int viewId );
 
@@ -72,9 +73,9 @@ public interface SqlViewService
 
     SqlView getSqlView( String viewName );
 
-    Collection<SqlView> getAllSqlViews();
+    List<SqlView> getAllSqlViews();
     
-    Collection<SqlView> getAllSqlViewsNoAcl();
+    List<SqlView> getAllSqlViewsNoAcl();
 
     int getSqlViewCountByName( String name );
     

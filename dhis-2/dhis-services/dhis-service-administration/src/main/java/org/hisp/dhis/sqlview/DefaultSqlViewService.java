@@ -28,8 +28,8 @@ package org.hisp.dhis.sqlview;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -78,13 +78,13 @@ public class DefaultSqlViewService
     }
 
     @Override
-    public Collection<SqlView> getAllSqlViews()
+    public List<SqlView> getAllSqlViews()
     {
         return sqlViewStore.getAll();
     }
 
     @Override
-    public Collection<SqlView> getAllSqlViewsNoAcl()
+    public List<SqlView> getAllSqlViewsNoAcl()
     {
         return sqlViewStore.getAllNoAcl();
     }
@@ -126,13 +126,13 @@ public class DefaultSqlViewService
     }
 
     @Override
-    public Collection<SqlView> getSqlViewsBetween( int first, int max )
+    public List<SqlView> getSqlViewsBetween( int first, int max )
     {
         return sqlViewStore.getAllOrderedName( first, max );
     }
 
     @Override
-    public Collection<SqlView> getSqlViewsBetweenByName( String name, int first, int max )
+    public List<SqlView> getSqlViewsBetweenByName( String name, int first, int max )
     {
         return sqlViewStore.getAllLikeName( name, first, max );
     }
