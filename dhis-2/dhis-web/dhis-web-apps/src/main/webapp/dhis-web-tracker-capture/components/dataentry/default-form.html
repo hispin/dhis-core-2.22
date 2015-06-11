@@ -14,7 +14,7 @@
                 </th>
             </tr>
         </thead>
-        <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements">
+        <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements" ng-if="!isHidden(prStDe.dataElement.id)">
             <td class="col-md-5">
                 {{prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name}}
                 <a ng-if="prStDes[prStDe.dataElement.id].dataElement.description" Title="{{prStDes[prStDe.dataElement.id].dataElement.description}}" ng-init="showHelpText[prStDe.dataElement.id] = false;" ng-click="showHelpText[prStDe.dataElement.id] = !showHelpText[prStDe.dataElement.id]">
@@ -158,7 +158,8 @@
     
     <div ng-if='currentEvent && currentStage.programStageSections.length'>
         <accordion close-others='false'>
-            <accordion-group heading="{{section.name}}" is-open="section.open" ng-repeat='section in currentStage.programStageSections'>
+			<!-- The inline style was needed to override overflow:hidden in the css. Can possibly be replaced with a CSS update. --> 
+            <accordion-group heading="{{section.name}}" is-open="section.open" ng-repeat='section in currentStage.programStageSections' style="overflow:visible">
                 <table class="dhis2-list-table-striped">                    
                     <thead>                        
                         <tr class="col-md-12">
@@ -174,7 +175,7 @@
                         </tr>                        
                     </thead>
                     <tbody id="list">       
-                        <tr class="col-md-12" ng-repeat="de in section.programStageDataElements">
+                        <tr class="col-md-12" ng-repeat="de in section.programStageDataElements" ng-if="!isHidden(de.dataElement.id)">
                             <td class="col-md-5">
                                 {{prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name}}
                                 <a ng-if="prStDes[de.dataElement.id].dataElement.description" Title="{{prStDes[de.dataElement.id].dataElement.description}}" ng-init="showHelpText[de.dataElement.id] = false;" ng-click="showHelpText[de.dataElement.id] = !showHelpText[de.dataElement.id]">

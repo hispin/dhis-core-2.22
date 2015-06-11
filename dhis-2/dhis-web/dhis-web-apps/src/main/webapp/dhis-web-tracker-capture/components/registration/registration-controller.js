@@ -51,7 +51,7 @@ trackerCapture.controller('RegistrationController',
     }
     
     $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
-    $scope.selectedEnrollment = {dateOfEnrollment: '', dateOfIncident: ''};   
+    $scope.selectedEnrollment = {dateOfEnrollment: $scope.today, dateOfIncident: $scope.today};   
             
     $scope.trackedEntities = {available: []};
     TEService.getAll().then(function(entities){
