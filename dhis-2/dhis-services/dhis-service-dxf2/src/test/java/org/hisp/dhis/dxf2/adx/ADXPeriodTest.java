@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.adx;
  */
 
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.period.PeriodType;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -95,5 +96,23 @@ public class ADXPeriodTest {
         {
             assertEquals(ADXPeriod.ADXPeriodException.class,ex.getClass());
         }
+    }
+    
+    @Test
+    public void testSerialize() {
+        p = PeriodType.getPeriodFromIsoString("2015");
+        assertEquals("2015-01-01/P1Y", ADXPeriod.serialize(p));
+        p = PeriodType.getPeriodFromIsoString("201503");
+        assertEquals("2015-03-01/P1M", ADXPeriod.serialize(p));
+        p = PeriodType.getPeriodFromIsoString("2015W1");
+        assertEquals("2014-12-29/P7D", ADXPeriod.serialize(p));
+        p = PeriodType.getPeriodFromIsoString("2015Q2");
+        assertEquals("2015-04-01/P1Q", ADXPeriod.serialize(p));
+        p = PeriodType.getPeriodFromIsoString("2015April");
+        assertEquals("2015-04-01/P1Y", ADXPeriod.serialize(p));
+        p = PeriodType.getPeriodFromIsoString("2015S2");
+        assertEquals("2015-07-01/P6M", ADXPeriod.serialize(p));
+        p = PeriodType.getPeriodFromIsoString("2015AprilS2");
+        assertEquals("2015-10-01/P6M", ADXPeriod.serialize(p));
     }
 }
