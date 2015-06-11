@@ -54,44 +54,51 @@ import org.hisp.dhis.system.util.DateUtils;
  *
  * @author bobj
  */
-public class ADXPeriod {
+public class ADXPeriod
+{
 
-    public static class ADXPeriodException extends RuntimeException {
+    public static class ADXPeriodException extends RuntimeException
+    {
 
-        ADXPeriodException(String message) {
-            super(message);
+        ADXPeriodException( String message )
+        {
+            super( message );
         }
     }
 
-    public static enum Duration {
+    public static enum Duration
+    {
 
         P1D, // daily
         P7D, // weekly
         P1M, // monthly
         P2M, // bi-monthly
-
         P1Q, // quarterly
         P6M, // 6monthly (including 6monthlyApril)
         P1Y  // yearly, financialApril, financialJuly, financialOctober
     }
-    
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static Period parse(String periodString) throws ADXPeriodException {
-        String[] tokens = periodString.split("/");
-        if (tokens.length != 2) {
-            throw new ADXPeriodException(periodString + " not in valid <date>/<duration> format");
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd" );
+
+    public static Period parse( String periodString ) throws ADXPeriodException
+    {
+        String[] tokens = periodString.split( "/" );
+        if ( tokens.length != 2 )
+        {
+            throw new ADXPeriodException( periodString + " not in valid <date>/<duration> format" );
         }
 
-        try {
+        try
+        {
             Period period = null;
             PeriodType periodType = null;
-            Date startDate = dateFormat.parse(tokens[0]);
+            Date startDate = dateFormat.parse( tokens[0] );
             Calendar cal = Calendar.getInstance();
-            cal.setTime(startDate);
-            Duration duration = Duration.valueOf(tokens[1]);
+            cal.setTime( startDate );
+            Duration duration = Duration.valueOf( tokens[1] );
 
-            switch (duration) {
+            switch ( duration )
+            {
                 case P1D:
                     periodType = new DailyPeriodType();
                     break;
@@ -108,7 +115,8 @@ public class ADXPeriod {
                     periodType = new QuarterlyPeriodType();
                     break;
                 case P6M:
-                    switch (cal.get(Calendar.MONTH)) {
+                    switch ( cal.get( Calendar.MONTH ) )
+                    {
                         case 0:
                             periodType = new SixMonthlyPeriodType();
                             break;
@@ -116,10 +124,11 @@ public class ADXPeriod {
                             periodType = new SixMonthlyAprilPeriodType();
                             break;
                         default:
-                            throw new ADXPeriodException(periodString + "is invalid sixmonthly type");
+                            throw new ADXPeriodException( periodString + "is invalid sixmonthly type" );
                     }
                 case P1Y:
-                    switch (cal.get(Calendar.MONTH)) {
+                    switch ( cal.get( Calendar.MONTH ) )
+                    {
                         case 0:
                             periodType = new YearlyPeriodType();
                             break;
@@ -133,28 +142,35 @@ public class ADXPeriod {
                             periodType = new FinancialOctoberPeriodType();
                             break;
                         default:
-                            throw new ADXPeriodException(periodString + "is invalid yearly type");
+                            throw new ADXPeriodException( periodString + "is invalid yearly type" );
                     }
             }
 
-            if (periodType != null) {
-                period = periodType.createPeriod(startDate);
-            } else {
-                throw new ADXPeriodException("Failed to create period type from " + duration);
+            if ( periodType != null )
+            {
+                period = periodType.createPeriod( startDate );
+            } 
+            else
+            {
+                throw new ADXPeriodException( "Failed to create period type from " + duration );
             }
 
             return period;
 
-        } catch (ParseException ex) {
-            throw new ADXPeriodException(tokens[0] + "is not a valid date in YYYY-MM-dd format");
-        } catch (IllegalArgumentException ex) {
-            throw new ADXPeriodException(tokens[1] + " is not a supported duration type");
+        } 
+        catch ( ParseException ex )
+        {
+            throw new ADXPeriodException( tokens[0] + "is not a valid date in YYYY-MM-dd format" );
+        } 
+        catch ( IllegalArgumentException ex )
+        {
+            throw new ADXPeriodException( tokens[1] + " is not a supported duration type" );
         }
     }
-    
-    public static String serialize(Period period)
+
+    public static String serialize( Period period )
     {
-        return dateFormat.format(period.getStartDate()) + "/"
-                + period.getPeriodType().getIso8601Duration();
+        return dateFormat.format( period.getStartDate() ) + "/"
+            + period.getPeriodType().getIso8601Duration();
     }
 }
