@@ -28,7 +28,7 @@
     <aop:scoped-proxy proxy-target-class="false" />
   </bean>
 
-  <bean id="org.hisp.dhis.dxf2.metadata.ObjectBridge" class="org.hisp.dhis.dxf2.metadata.DefaultObjectBridge" scope="prototype"/>
+  <bean id="org.hisp.dhis.dxf2.metadata.ObjectBridge" class="org.hisp.dhis.dxf2.metadata.DefaultObjectBridge" scope="prototype" />
 
   <bean id="org.hisp.dhis.dxf2.datavalueset.DataValueSetService"
     class="org.hisp.dhis.dxf2.datavalueset.DefaultDataValueSetService" />
@@ -316,6 +316,11 @@
   <bean id="dashboardItemImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter"
     scope="prototype">
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.dashboard.DashboardItem" />
+  </bean>
+
+  <bean id="oAuth2ClientImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter"
+    scope="prototype">
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.oauth2.OAuth2Client" />
   </bean>
 
 </beans>
