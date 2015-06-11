@@ -30,7 +30,6 @@ package org.hisp.dhis.dd.action.dataelementgroupset;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -92,13 +91,13 @@ public class ListDataElementGroupSetAction
         {
             this.paging = createPaging( dataElementService.getDataElementGroupSetCountByName( key ) );
             
-            dataElementGroupSets = new ArrayList<>( dataElementService.getDataElementGroupSetsBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            dataElementGroupSets = dataElementService.getDataElementGroupSetsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( dataElementService.getDataElementGroupSetCount() );
             
-            dataElementGroupSets = new ArrayList<>( dataElementService.getDataElementGroupSetsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            dataElementGroupSets = dataElementService.getDataElementGroupSetsBetween( paging.getStartPos(), paging.getPageSize() );
         }
         
         Collections.sort( dataElementGroupSets, IdentifiableObjectNameComparator.INSTANCE );
