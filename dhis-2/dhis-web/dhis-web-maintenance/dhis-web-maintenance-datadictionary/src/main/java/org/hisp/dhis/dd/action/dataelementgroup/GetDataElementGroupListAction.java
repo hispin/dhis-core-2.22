@@ -28,14 +28,13 @@ package org.hisp.dhis.dd.action.dataelementgroup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.paging.ActionPagingSupport;
-
-import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -93,13 +92,13 @@ public class GetDataElementGroupListAction
         {
             this.paging = createPaging( dataElementService.getDataElementGroupCountByName( key ) );
 
-            dataElementGroups = new ArrayList<>( dataElementService.getDataElementGroupsBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            dataElementGroups = dataElementService.getDataElementGroupsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( dataElementService.getDataElementGroupCount() );
 
-            dataElementGroups = new ArrayList<>( dataElementService.getDataElementGroupsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            dataElementGroups = dataElementService.getDataElementGroupsBetween( paging.getStartPos(), paging.getPageSize() );
         }
 
         return SUCCESS;
