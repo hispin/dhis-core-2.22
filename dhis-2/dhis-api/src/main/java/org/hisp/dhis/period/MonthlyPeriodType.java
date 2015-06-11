@@ -52,6 +52,8 @@ public class MonthlyPeriodType
     private static final long serialVersionUID = -6920058214699654387L;
 
     private static final String ISO_FORMAT = "yyyyMM";
+    
+    private static final String ISO8601_DURATION = "P1M";
 
     /**
      * The name of the MonthlyPeriodType, which is "Monthly".
@@ -169,6 +171,12 @@ public class MonthlyPeriodType
     {
         return ISO_FORMAT;
     }
+
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
+    }
+
 
     @Override
     public Date getRewindedDate( Date date, Integer rewindedPeriods )

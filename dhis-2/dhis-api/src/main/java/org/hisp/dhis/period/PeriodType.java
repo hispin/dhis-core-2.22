@@ -315,6 +315,8 @@ public abstract class PeriodType
     {
         return toIsoPeriod( dateTimeUnit, dateTimeUnit );
     }
+    
+    public abstract String getIso8601Duration();
 
     public abstract Period createPeriod( DateTimeUnit dateTimeUnit, org.hisp.dhis.calendar.Calendar calendar );
 

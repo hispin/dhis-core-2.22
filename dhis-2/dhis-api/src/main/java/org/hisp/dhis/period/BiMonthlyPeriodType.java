@@ -42,6 +42,8 @@ public class BiMonthlyPeriodType
     extends CalendarPeriodType
 {
     private static final String ISO_FORMAT = "yyyyMMB";
+    
+    private static final String ISO8601_DURATION = "P2M";
 
     /**
      * The name of the BiMonthlyPeriodType, which is "BiMonthly".
@@ -175,5 +177,10 @@ public class BiMonthlyPeriodType
         dateTimeUnit = cal.minusMonths( dateTimeUnit, rewindedPeriods );
 
         return cal.toIso( dateTimeUnit ).toJdkDate();
+    }
+
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
     }
 }

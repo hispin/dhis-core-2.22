@@ -56,6 +56,8 @@ public class WeeklyPeriodType
 
     private static final String ISO_FORMAT = "yyyyWn";
 
+    private static final String ISO8601_DURATION = "P7D";
+
     /**
      * The name of the WeeklyPeriodType, which is "Weekly".
      */
@@ -187,6 +189,12 @@ public class WeeklyPeriodType
     {
         return ISO_FORMAT;
     }
+    
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
+    }
+
 
     @Override
     public Date getRewindedDate( Date date, Integer rewindedPeriods )
