@@ -3,8 +3,9 @@
 trackerCapture.controller('DataEntryController',
         function($rootScope,
                 $scope,
-                $modal,
-                $filter,
+				$modal,
+				$filter,
+                $log,
                 $timeout,
                 Paginator,
                 DateUtils,
@@ -17,8 +18,10 @@ trackerCapture.controller('DataEntryController',
                 OptionSetService,
                 ModalService,
                 CurrentSelection,
-                CustomFormService,
-                PeriodService) {
+				TrackerRulesExecutionService,
+				CustomFormService,
+				PeriodService) {
+    
     //Data entry form
     $scope.outerForm = {};
     $scope.displayCustomForm = false;
@@ -27,7 +30,11 @@ trackerCapture.controller('DataEntryController',
     $scope.eventPeriods = [];
     $scope.currentPeriod = [];
     $scope.filterEvents = true;
+    $scope.showEventsAsTables = false;
+    //variable is set while looping through the program stages later.
+    $scope.stagesCanBeShownAsTable = false;
     $scope.showHelpText = {};
+	$scope.hiddenFields = {};
     
     var userProfile = SessionStorageService.get('USER_PROFILE');
     var storedBy = userProfile && userProfile.username ? userProfile.username : '';
@@ -46,21 +53,56 @@ trackerCapture.controller('DataEntryController',
                             {color: 'alert-danger', description: 'overdue'},
                             {color: 'alert-default', description: 'skipped'}
                          ];
-    $scope.showEventColors = false;    
-      
+    $scope.showEventColors = false;
+    
+    //listen for rule effect changes
+    $scope.$on('ruleeffectsupdated', function(event, args) {
+        angular.forEach($rootScope.ruleeffects, function(effect) {
+            if( effect.dataElement ) {
+                //in the data entry controller we only care about the "hidefield" actions
+                if(effect.action === "HIDEFIELD") {
+                    if(effect.dataElement) {
+                        //Hide the field if the hiding is in effect, and there is no data value in the field.
+                        var hide = effect.ineffect && !$scope.currentEvent[effect.dataElement.id];
+                        $scope.hiddenFields[effect.dataElement.id] = hide;
+                    }
+                    else {
+                        $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
+                    }
+                }
+            }
+        });
+    });
+    //check if field is hidden
+    $scope.isHidden = function(id) {
+        //In case the field contains a value, we cant hide it. 
+        //If we hid a field with a value, it would falsely seem the user was aware that the value was entered in the UI.
+        if($scope.currentEvent[id])
+        {
+           return false; 
+        }
+        else
+        {
+            return $scope.hiddenFields[id];
+        }
+    }; 
+    
+    
     //listen for the selected items
     $scope.$on('dashboardWidgets', function() {
         $scope.showDataEntryDiv = false;
         $scope.showEventCreationDiv = false;
         $scope.currentEvent = null;
         $scope.currentStage = null;
+        $scope.currentStageEvents = null;
         $scope.totalEvents = 0;
             
         $scope.allowEventCreation = false;
         $scope.repeatableStages = [];        
         $scope.eventsByStage = [];
-        $scope.programStages = [];        
-        $scope.prStDes = [];
+        $scope.programStages = [];
+        $rootScope.ruleeffects = {};
+		$scope.prStDes = [];
         
         var selections = CurrentSelection.get();          
         $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
@@ -84,6 +126,11 @@ trackerCapture.controller('DataEntryController',
                     
                     $scope.stagesById[stage.id] = stage;
                     $scope.eventsByStage[stage.id] = [];
+                    
+                    //If one of the stages has less than 7 data elements, allow sorting as table:
+                    if(stage.programStageDataElements.length < 7) {
+                        $scope.stagesCanBeShownAsTable = true;
+                    }
                 });
                 
                 $scope.programStages = orderByFilter($scope.programStages, '-sortOrder').reverse();
@@ -147,8 +194,32 @@ trackerCapture.controller('DataEntryController',
         $scope.schedulingEnabled = !$scope.schedulingEnabled;
     };
     
+    $scope.stageCanBeShownAsTable = function(stage) {
+        if(stage.programStageDataElements && stage.programStageDataElements.length < 7) {
+            return true;
+        }
+        return false;
+    };
+    
+    $scope.toggleEventsTableDisplay = function() {
+        $scope.showEventsAsTables = !$scope.showEventsAsTables;
+        angular.forEach($scope.programStages, function(stage){
+            if(stage.programStageDataElements.length < 7) {
+                stage.displayEventsInTable = $scope.showEventsAsTables;
+                if($scope.currentStage === stage) {
+                    $scope.getDataEntryForm();
+                }
+            }
+        });
+    };
+    
     $scope.stageNeedsEvent = function(stage){  
-      
+        
+        //In case the event is a table, we sould always allow adding more events(rows)
+        if(stage.displayEventsInTable) {
+            return true;
+        }
+        
         if($scope.eventsByStage[stage.id].length < 1){                
             return true;
         }
@@ -180,6 +251,10 @@ trackerCapture.controller('DataEntryController',
                 },
                 eventPeriods: function(){
                     return $scope.eventPeriods;
+                },
+                autoCreate: function() {
+                    //In case the programstage is a table, autocreate
+                    return stage.displayEventsInTable;
                 }
             }
         });
@@ -200,9 +275,14 @@ trackerCapture.controller('DataEntryController',
                     newEvent.coordinate = {};
                 }
                 
+                //Have to make sure the event is preprocessed - this does not happen unless "Dashboardwidgets" is invoked.
+                newEvent = EventUtils.processEvent(newEvent, stage, $scope.optionSets, $scope.prStDes);
+                
+                
                 $scope.eventsByStage[newEvent.programStage].push(newEvent);
                 $scope.currentEvent = newEvent;
                 sortEventsByStage('ADD');
+
                 $scope.currentEvent = null;
                 $scope.showDataEntry(newEvent, false);
             }            
@@ -253,18 +333,31 @@ trackerCapture.controller('DataEntryController',
     $scope.getDataEntryForm = function(){
         
         $scope.currentStage = $scope.stagesById[$scope.currentEvent.programStage];
+        $scope.currentStageEvents = $scope.eventsByStage[$scope.currentEvent.programStage];
         
         angular.forEach($scope.currentStage.programStageSections, function(section){
             section.open = true;
         });
 
         $scope.customForm = CustomFormService.getForProgramStage($scope.currentStage, $scope.prStDes);
-        $scope.displayCustomForm = $scope.customForm ? true:false;        
+        $scope.displayCustomForm = "default";
+        if($scope.customForm){
+            $scope.displayCustomForm = "custom";
+        }
+        else if($scope.currentStage.displayEventsInTable) {
+            $scope.displayCustomForm = "table";
+        }
+        
+        $scope.currentEventOriginal = angular.copy($scope.currentEvent);
 
-        $scope.currentEventOriginal = angular.copy($scope.currentEvent); 
+        $scope.currentStageEventsOriginal = angular.copy($scope.currentStageEvents);
         
         var period = {event: $scope.currentEvent.event, stage: $scope.currentEvent.programStage, name: $scope.currentEvent.sortingDate};
         $scope.currentPeriod[$scope.currentEvent.programStage] = period;
+
+        //Execute rules for the first time, to make the initial page appear correctly.
+        //Subsequent calls will be made from the "saveDataValue" function.
+        TrackerRulesExecutionService.executeRules($scope);
     };
     
     function updateCurrentEventInStage(){
@@ -280,7 +373,14 @@ trackerCapture.controller('DataEntryController',
         }
         
     };
-    $scope.saveDatavalue = function(prStDe, field){
+
+    $scope.saveDatavalue = function(prStDe,field){
+        $scope.saveDatavalueForEvent(prStDe,field,$scope.currentEvent);
+    };
+
+    $scope.saveDatavalueForEvent = function(prStDe,field,eventToSave,object){
+        //Blank out the input-saved class on the last saved due date:
+        $scope.eventDateSaved = false;
         
         //console.log('the field:  ', field);
         $scope.currentElement = {};
@@ -294,12 +394,17 @@ trackerCapture.controller('DataEntryController',
             return false;
         }
         
-        //input is valid        
-        var value = $scope.currentEvent[prStDe.dataElement.id];
-        //var value = inputField.$viewValue;
+        //input is valid
+        var value = eventToSave[prStDe.dataElement.id];
         
-        if($scope.currentEventOriginal[prStDe.dataElement.id] !== value){
-            
+        var oldValue = null;
+        angular.forEach($scope.currentStageEventsOriginal, function (eventOriginal) {
+            if(eventOriginal.event === eventToSave.event) {
+               oldValue = eventOriginal[prStDe.dataElement.id];
+            }
+        });
+        
+        if(oldValue !== value){
             if(value){
                 if(prStDe.dataElement.type === 'date'){                    
                     value = DateUtils.formatFromUserToApi(value);
@@ -311,19 +416,21 @@ trackerCapture.controller('DataEntryController',
                 }
             }
 
-            $scope.currentElement = {id: prStDe.dataElement.id, saved: false};
+            $scope.updateSuccess = false;
 
-            var ev = {  event: $scope.currentEvent.event,
-                        orgUnit: $scope.currentEvent.orgUnit,
-                        program: $scope.currentEvent.program,
-                        programStage: $scope.currentEvent.programStage,
-                        status: $scope.currentEvent.status,
-                        trackedEntityInstance: $scope.currentEvent.trackedEntityInstance,
+            $scope.currentElement = {id: prStDe.dataElement.id, event:eventToSave.event, saved: false};
+
+            var ev = {  event: eventToSave.event,
+                        orgUnit: eventToSave.orgUnit,
+                        program: eventToSave.program,
+                        programStage: eventToSave.programStage,
+                        status: eventToSave.status,
+                        trackedEntityInstance: eventToSave.trackedEntityInstance,
                         dataValues: [
                                         {
                                             dataElement: prStDe.dataElement.id, 
                                             value: value, 
-                                            providedElsewhere: $scope.currentEvent.providedElsewhere[prStDe.dataElement.id] ? true : false
+                                            providedElsewhere: eventToSave.providedElsewhere[prStDe.dataElement.id] ? true : false
                                         }
                                     ]
                      };
@@ -332,7 +439,12 @@ trackerCapture.controller('DataEntryController',
                 sortEventsByStage('UPDATE');
                 
                 $scope.currentElement.saved = true;
-                $scope.currentEventOriginal = angular.copy($scope.currentEvent);                
+                
+                $scope.currentEventOriginal = angular.copy($scope.currentEvent);
+                
+                $scope.currentStageEventsOriginal = angular.copy($scope.currentStageEvents);
+
+				TrackerRulesExecutionService.executeRules($scope);
             });
             
         }
@@ -365,44 +477,46 @@ trackerCapture.controller('DataEntryController',
                 sortEventsByStage('UPDATE');
                 
                 $scope.updateSuccess = true;
-            });            
-        }        
+            });
+        }
     };
     
-    $scope.saveEventDate = function(){
-        
+    $scope.saveEventDate = function () {
+        $scope.saveEventDateForEvent($scope.currentEvent);
+    };
+    
+    $scope.saveEventDateForEvent = function(eventToSave){
         $scope.eventDateSaved = false;
-        if($scope.currentEvent.eventDate === ''){            
-            $scope.invalidDate = true;
+        if(eventToSave.eventDate === ''){            
+            $scope.invalidDate = eventToSave.event;
             return false;
         }
         
-        var rawDate = angular.copy($scope.currentEvent.eventDate);
-        var convertedDate = DateUtils.format($scope.currentEvent.eventDate);
+        var rawDate = angular.copy(eventToSave.eventDate);
+        var convertedDate = DateUtils.format(eventToSave.eventDate);
         
         if(rawDate !== convertedDate){
             $scope.invalidDate = true;
             return false;
         }
         
-        var e = {event: $scope.currentEvent.event,
-             enrollment: $scope.currentEvent.enrollment,
-             dueDate: DateUtils.formatFromUserToApi($scope.currentEvent.dueDate),
-             status: $scope.currentEvent.status === 'SCHEDULE' ? 'ACTIVE' : $scope.currentEvent.status,
-             program: $scope.currentEvent.program,
-             programStage: $scope.currentEvent.programStage,
-             orgUnit: $scope.currentEvent.dataValues && $scope.currentEvent.dataValues.length > 0 ? $scope.currentEvent.orgUnit : $scope.selectedOrgUnit.id,
-             eventDate: DateUtils.formatFromUserToApi($scope.currentEvent.eventDate),
-             trackedEntityInstance: $scope.currentEvent.trackedEntityInstance
+        var e = {event: eventToSave.event,
+             enrollment: eventToSave.enrollment,
+             dueDate: DateUtils.formatFromUserToApi(eventToSave.dueDate),
+             status: eventToSave.status === 'SCHEDULE' ? 'ACTIVE' : eventToSave.status,
+             program: eventToSave.program,
+             programStage: eventToSave.programStage,
+             orgUnit: eventToSave.dataValues && eventToSave.length > 0 ? eventToSave.orgUnit : $scope.selectedOrgUnit.id,
+             eventDate: DateUtils.formatFromUserToApi(eventToSave.eventDate),
+             trackedEntityInstance: eventToSave.trackedEntityInstance
             };
 
         DHIS2EventFactory.updateForEventDate(e).then(function(data){
-            $scope.currentEvent.sortingDate = $scope.currentEvent.eventDate;
+            eventToSave.sortingDate = eventToSave.eventDate;
             $scope.invalidDate = false;
-            $scope.eventDateSaved = true;
-            $scope.currentEvent.statusColor = EventUtils.getEventStatusColor($scope.currentEvent);
-            $scope.currentEvent.visited = true;
-            
+            $scope.eventDateSaved = eventToSave.event;
+            eventToSave.statusColor = EventUtils.getEventStatusColor(eventToSave);
+            sortEventsByStage();
             updateCurrentEventInStage();
             sortEventsByStage('UPDATE');
         });
@@ -485,6 +599,8 @@ trackerCapture.controller('DataEntryController',
         
         DHIS2EventFactory.update(dhis2Event).then(function(response){            
             $scope.currentEventOriginal = angular.copy($scope.currentEvent);
+            $scope.currentStageEventsOriginal = angular.copy($scope.currentStageEvents);
+
             if(type === 'LAT' || type === 'LATLNG' ){
                 $scope.latitudeSaved = true;
             }
@@ -529,15 +645,29 @@ trackerCapture.controller('DataEntryController',
          $scope.note = '';           
     };
     
-    $scope.getInputNotifcationClass = function(id, custom){
-        if($scope.currentElement.id){
-            if($scope.currentElement.saved && ($scope.currentElement.id === id)){
+    $scope.getInputDueDateClass = function(event) {
+        if(event.event === $scope.eventDateSaved) {
+            return 'input-success';
+        }
+        else {
+            return '';
+        }
+            
+    };
+    
+    $scope.getInputNotifcationClass = function(id, custom, event){
+        if(!event) {
+            event = $scope.currentEvent;
+        }
+        if($scope.currentElement.id && $scope.currentElement.event){
+            if($scope.currentElement.saved && ($scope.currentElement.id === id && $scope.currentElement.event === event.event)){
+                
                 if(custom){
                     return 'input-success';
                 }
                 return 'form-control input-success';
             }            
-            if(!$scope.currentElement.saved && ($scope.currentElement.id === id)){
+            if(!$scope.currentElement.saved && ($scope.currentElement.id === id && $scope.currentElement.event === event.event)){
                 if(custom){
                     return 'input-error';
                 }
@@ -859,7 +989,8 @@ trackerCapture.controller('DataEntryController',
             DialogService,
             stagesById,
             dummyEvent,
-            eventPeriods){
+            eventPeriods,
+            autoCreate){
     $scope.stagesById = stagesById;
     $scope.programStageId = dummyEvent.programStage;
     $scope.eventPeriods = eventPeriods;
@@ -944,6 +1075,12 @@ trackerCapture.controller('DataEntryController',
             }
         });
         
+        
+    };
+    
+    //If the caller wants to create right away, go ahead and save.
+    if(autoCreate) {
+        $scope.save();
     };
     
     $scope.cancel = function(){

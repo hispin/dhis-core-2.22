@@ -42,7 +42,8 @@ public enum ProgramRuleVariableSourceType {
     DATAELEMENT_PREVIOUS_EVENT("dataelement_previous_event"), 
     CALCULATED_VALUE("calculated_value"), 
     TEI_ATTRIBUTE("tei_attribute"),
-    CONTEXT_VARIABLE("context_variable");
+    CONTEXT_VARIABLE("context_variable"),
+    NUMBEROFEVENTS_PROGRAMSTAGE("numberofevents_programstage");
     
     private final String value;
 

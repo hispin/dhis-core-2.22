@@ -67,6 +67,8 @@ public class Program
     extends BaseIdentifiableObject
     implements VersionedObject
 {
+    private static final long serialVersionUID = -2807997671779497354L;
+    
     public static final List<String> TYPE_LOOKUP = Arrays.asList( "", "MULTIPLE_EVENTS_WITH_REGISTRATION",
         "SINGLE_EVENT_WITH_REGISTRATION", "SINGLE_EVENT_WITHOUT_REGISTRATION" );
 
