@@ -869,9 +869,4 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }
         return status;        
     };
-    
-    $scope.clearSelectedOption = function($event, id) {
-        $event.stopPropagation(); 
-        $scope.currentEvent[id] = undefined;
-    };
 });
