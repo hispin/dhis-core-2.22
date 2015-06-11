@@ -43,17 +43,17 @@ public class FilterUtils
      *
      * @param collection the Collection.
      * @param filter the Filter.
-     * @param <T> the type of the Collection members.
+     * @param <V> the type of the Collection members.
      * @return the filtered Collection.
      */
-    public static <T> Collection<T> filter( Collection<T> collection, Filter<T> filter )
+    public static <T extends Collection<V>, V> T filter( T collection, Filter<V> filter )
     {
         if ( collection == null || filter == null )
         {
             return collection;
         }
         
-        final Iterator<T> iterator = collection.iterator();
+        final Iterator<V> iterator = collection.iterator();
         
         while ( iterator.hasNext() )
         {

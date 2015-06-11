@@ -28,7 +28,6 @@ package org.hisp.dhis.i18n;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,7 +72,7 @@ public class I18nUtils
             Paging.getCountByName( i18n( i18nService, store.getAll() ), name );
     }
     
-    public static <T extends IdentifiableObject> Collection<T> getObjectsBetween( 
+    public static <T extends IdentifiableObject> List<T> getObjectsBetween( 
         I18nService i18nService, GenericIdentifiableObjectStore<T> store, int first, int max )
     {
         return i18nService.currentLocaleIsBase() ?
@@ -81,7 +80,7 @@ public class I18nUtils
             Paging.getObjectsBetween( i18n( i18nService, store.getAll() ), first, max );
     }
     
-    public static <T extends IdentifiableObject> Collection<T> getObjectsBetweenByName(
+    public static <T extends IdentifiableObject> List<T> getObjectsBetweenByName(
         I18nService i18nService, GenericIdentifiableObjectStore<T> store, String name, int first, int max )
     {
         return i18nService.currentLocaleIsBase() ?
@@ -89,7 +88,7 @@ public class I18nUtils
             Paging.getObjectsBetweenByName( i18n( i18nService, store.getAll() ), name, first, max );
     }
     
-    public static <T extends IdentifiableObject> Collection<T> getObjectsByName(
+    public static <T extends IdentifiableObject> List<T> getObjectsByName(
         I18nService i18nService, GenericIdentifiableObjectStore<T> store, String name )
     {
         return i18nService.currentLocaleIsBase() ?
