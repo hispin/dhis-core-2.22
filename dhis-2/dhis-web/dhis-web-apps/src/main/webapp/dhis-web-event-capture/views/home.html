@@ -60,7 +60,18 @@
                         <span ng-if="editingEventInFull">{{'print_details'| translate}}</span>
                     </button>  
                 </td> 
-            </tr>                       
+            </tr>
+            <tr ng-if="selectedProgramStage && selectedProgramStage.programStageSections.length  && eventRegistration || editingEventInFull">
+                <td><label>{{'section'| translate}}</label></td>
+                <td>
+                    <select class="fixed-width-select"
+                            name="section"                             
+                            ng-model="selectedSection.id">
+                        <option value="ALL">{{'show_all'| translate}}</option>
+                        <option ng-repeat="section in selectedProgramStage.programStageSections" value={{section.id}}>{{section.name}}</option>
+                    </select>
+                </td>
+            </tr>
         </table>        
         <!-- selection ends -->
         
