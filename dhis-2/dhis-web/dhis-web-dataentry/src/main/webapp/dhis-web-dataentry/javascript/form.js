@@ -1164,7 +1164,7 @@ function dataSetSelected()
     var previousDataSetValid = ( dhis2.de.currentDataSetId && dhis2.de.currentDataSetId != -1 );
     var previousDataSet = !!previousDataSetValid ? dhis2.de.dataSets[dhis2.de.currentDataSetId] : undefined;
     var previousPeriodType = previousDataSet ? previousDataSet.periodType : undefined;
-    var previousOpenFuturePeriods = previousDataSet ? previousDataSet.openFuturePeriods : false;
+    var previousOpenFuturePeriods = previousDataSet ? previousDataSet.openFuturePeriods : 0;
 
     dhis2.de.currentDataSetId = $( '#selectedDataSetId' ).val();
     
@@ -1177,8 +1177,7 @@ function dataSetSelected()
         var periodType = dhis2.de.dataSets[dhis2.de.currentDataSetId].periodType;
         var openFuturePeriods = dhis2.de.dataSets[dhis2.de.currentDataSetId].openFuturePeriods;
 
-        var previousSelectionValid = !!( periodType == previousPeriodType && 
-        	( openFuturePeriods == previousOpenFuturePeriods || dhis2.de.currentPeriodOffset <= 0 ) );
+        var previousSelectionValid = !!( periodType == previousPeriodType && openFuturePeriods == previousOpenFuturePeriods );
         
         dhis2.de.currentCategories = dhis2.de.getCategories( dhis2.de.currentDataSetId );
 
