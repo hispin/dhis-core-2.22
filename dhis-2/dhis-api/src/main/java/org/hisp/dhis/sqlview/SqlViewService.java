@@ -28,7 +28,6 @@ package org.hisp.dhis.sqlview;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
