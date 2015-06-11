@@ -33,6 +33,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     //selected org unit
     $scope.selectedOrgUnit = '';
     $scope.treeLoaded = false;    
+    $scope.selectedSection = {id: 'ALL'};
     
     $scope.calendarSetting = CalendarService.getSetting();
     
@@ -472,6 +473,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
+            $scope.selectedSection.id = 'ALL';
             angular.forEach($scope.selectedProgramStage.programStageSections, function(section){
                 section.open = true;
             });
@@ -600,6 +602,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
+            $scope.selectedSection.id = 'ALL';
             angular.forEach($scope.selectedProgramStage.programStageSections, function(section){
                 section.open = true;
             });
