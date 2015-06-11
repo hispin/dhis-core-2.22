@@ -38,11 +38,13 @@ import org.hisp.dhis.webapi.controller.exception.NotAuthenticatedException;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -131,6 +133,12 @@ public class CrudControllerAdvice
     public void dataApprovalExceptionHandler( DataApprovalException ex, HttpServletResponse response )
     {
         ContextUtils.conflictResponse( response, ex.getClass().getName() ); //TODO fix message
+    }
+
+    @ExceptionHandler( AccessDeniedException.class )
+    public void accessDeniedExceptionHandler( AccessDeniedException ex, HttpServletResponse response, HttpServletRequest request )
+    {
+        webMessageService.send( WebMessageUtils.forbidden( ex.getMessage() ), response, request );
     }
 
     @ExceptionHandler( WebMessageException.class )
