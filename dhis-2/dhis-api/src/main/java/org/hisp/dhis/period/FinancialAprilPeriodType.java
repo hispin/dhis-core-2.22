@@ -44,6 +44,8 @@ public class FinancialAprilPeriodType
     private static final long serialVersionUID = 8790198046182231889L;
 
     private static final String ISO_FORMAT = "yyyyApril";
+    
+    private static final String ISO8601_DURATION = "P1Y";
 
     public static final String NAME = "FinancialApril";
 
@@ -70,4 +72,10 @@ public class FinancialAprilPeriodType
     {
         return ISO_FORMAT;
     }
+    
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
+    }
+
 }

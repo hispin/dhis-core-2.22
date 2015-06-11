@@ -162,4 +162,9 @@ public class CategoryComboMap
         
         return key;
     }
+    
+    public String toString()
+    {
+        return "CatComboMap: catcombo=" + categoryCombo.getName() + " map:" + ccMap.toString();
+    }
 }

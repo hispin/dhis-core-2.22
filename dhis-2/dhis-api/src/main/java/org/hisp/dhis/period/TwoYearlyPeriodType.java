@@ -55,6 +55,8 @@ public class TwoYearlyPeriodType
      * The name of the TwoYearlyPeriodType, which is "TwoYearly".
      */
     public static final String NAME = "TwoYearly";
+    
+    private static final String ISO8601_DURATION = "P2Y";
 
     public static final int FREQUENCY_ORDER = 730;
 
@@ -214,6 +216,12 @@ public class TwoYearlyPeriodType
     {
         return null; // TODO
     }
+    
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
+    }
+
 
     @Override
     public Date getRewindedDate( Date date, Integer rewindedPeriods )

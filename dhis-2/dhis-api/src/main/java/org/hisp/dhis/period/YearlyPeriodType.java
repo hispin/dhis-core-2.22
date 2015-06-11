@@ -52,6 +52,8 @@ public class YearlyPeriodType
     private static final long serialVersionUID = 3893035414025085437L;
 
     private static final String ISO_FORMAT = "yyyy";
+    
+    private static final String ISO8601_DURATION = "P1Y";
 
     /**
      * The name of the YearlyPeriodType, which is "Yearly".
@@ -188,6 +190,12 @@ public class YearlyPeriodType
     {
         return ISO_FORMAT;
     }
+    
+    @Override
+    public String getIso8601Duration() {
+        return ISO8601_DURATION; 
+    }
+
 
     @Override
     public Date getRewindedDate( Date date, Integer rewindedPeriods )
