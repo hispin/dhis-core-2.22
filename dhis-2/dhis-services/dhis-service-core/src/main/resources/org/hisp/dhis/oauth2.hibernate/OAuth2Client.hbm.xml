@@ -19,7 +19,7 @@
 
     <property name="cid" column="cid" not-null="true" unique="true" length="230" />
 
-    <property name="secret" column="secret" not-null="true" unique="false" length="" />
+    <property name="secret" column="secret" not-null="true" unique="false" length="512" />
 
   </class>
 </hibernate-mapping>
