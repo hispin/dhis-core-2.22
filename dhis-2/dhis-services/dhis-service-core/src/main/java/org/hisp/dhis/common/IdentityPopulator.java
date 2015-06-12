@@ -145,10 +145,6 @@ public class IdentityPopulator
 
         log.debug( "Identifiable properties updated" );
 
-        createUidConstraints();
-
-        log.debug( "Identifiable constraints updated" );
-
         createOrgUnitUuids();
 
         log.debug( "Organisation unit uuids updated" );
@@ -181,23 +177,6 @@ public class IdentityPopulator
     private String getIdColumn( String table )
     {
         return TABLE_ID_MAP.containsKey( table ) ? TABLE_ID_MAP.get( table ) : (table + "id");
-    }
-
-    private void createUidConstraints()
-    {
-        for ( String table : tables )
-        {
-            try
-            {
-                final String sql = "ALTER TABLE " + table + " ADD CONSTRAINT " + table + "_uid_key UNIQUE(uid)";
-                jdbcTemplate.execute( sql );
-            }
-            catch ( Exception ex ) // Log and continue, will fail after first run
-            {
-                log.debug( "Could not create uid constraint on table " + table +
-                    ", might already be created or column contains duplicates", ex );
-            }
-        }
     }
 
     private void createOrgUnitUuids()
