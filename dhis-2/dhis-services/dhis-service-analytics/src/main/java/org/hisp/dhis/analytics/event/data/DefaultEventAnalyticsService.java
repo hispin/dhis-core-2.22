@@ -384,7 +384,6 @@ public class DefaultEventAnalyticsService
         params.setLimit( limit );
         params.setOutputType( MoreObjects.firstNonNull( outputType, EventOutputType.EVENT ) );
         params.setCollapseDataDimensions( collapseDataDimensions );
-        params.setAggregate( true );
 
         return params;
     }
@@ -491,7 +490,6 @@ public class DefaultEventAnalyticsService
         params.setDisplayProperty( displayProperty );
         params.setPage( page );
         params.setPageSize( pageSize );
-        params.setAggregate( false );
         
         return params;
     }
