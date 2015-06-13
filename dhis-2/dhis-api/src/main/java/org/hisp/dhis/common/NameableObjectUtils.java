@@ -188,13 +188,14 @@ public class NameableObjectUtils
     }
 
     /**
-     * Returns a mapping between the UID and the short name of the given nameable
-     * objects.
+     * Returns a mapping between the UID and the property defined by the given
+     * display property.
      *
-     * @param objects the v objects.
-     * @return mapping between the uid and the short name of the given objects.
+     * @param objects the objects.
+     * @param displayProperty the property to use as value.
+     * @return mapping between the uid and the property of the given objects.
      */
-    public static Map<String, String> getUidShortNameMap( Collection<? extends NameableObject> objects )
+    public static Map<String, String> getUidDisplayPropertyMap( Collection<? extends NameableObject> objects, DisplayProperty displayProperty )
     {
         Map<String, String> map = new HashMap<>();
 
@@ -202,7 +203,7 @@ public class NameableObjectUtils
         {
             for ( NameableObject object : objects )
             {
-                map.put( object.getUid(), object.getDisplayShortName() );
+                map.put( object.getUid(), getDisplayProperty( object, displayProperty ) );
             }
         }
 
@@ -243,21 +244,21 @@ public class NameableObjectUtils
     
     /**
      * Returns the property of the given object indicated by the given display
-     * property.
+     * property. Falls back to name if short name is null.
      * 
      * @param object the object to read the property from.
      * @param displayProperty the display property to use.
      * @return a property value.
      */
-    public static <T extends NameableObject> String getProperty( T object, DisplayProperty displayProperty )
+    public static <T extends NameableObject> String getDisplayProperty( T object, DisplayProperty displayProperty )
     {
         if ( object != null )
         {
-            if ( DisplayProperty.SHORTNAME.equals( displayProperty ) )
+            if ( DisplayProperty.SHORTNAME.equals( displayProperty ) && object.getDisplayShortName() != null )
             {
                 return object.getDisplayShortName();
             }
-            else // NAME
+            else
             {
                 return object.getDisplayName();
             }

@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.MoreObjects;
 
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
@@ -312,6 +313,13 @@ public class BaseDimensionalObject
     @Override
     public String toString()
     {
-        return "[" + uid + ", type: " + dimensionType + ", items: " + items + ", legend set: " + legendSet + ", filter: " + filter + "]";
+        return MoreObjects.toStringHelper( this )
+            .add( "Dimension", uid )
+            .add( "type", dimensionType )
+            .add( "dimension name", dimensionName )
+            .add( "display name", displayName )
+            .add( "items", items )
+            .add( "legend set", legendSet )
+            .add( "filter", filter ).toString();
     }
 }
