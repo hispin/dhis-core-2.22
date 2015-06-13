@@ -94,12 +94,6 @@ public class EventQueryParams
     private boolean coordinatesOnly;
     
     // -------------------------------------------------------------------------
-    // Transient properties
-    // -------------------------------------------------------------------------
-    
-    private transient boolean aggregate;
-    
-    // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
@@ -140,7 +134,6 @@ public class EventQueryParams
         params.coordinatesOnly = this.coordinatesOnly;
         
         params.periodType = this.periodType;
-        params.aggregate = this.aggregate;
         
         return params;
     }
@@ -547,15 +540,5 @@ public class EventQueryParams
     public void setCoordinatesOnly( boolean coordinatesOnly )
     {
         this.coordinatesOnly = coordinatesOnly;
-    }
-
-    public boolean isAggregate()
-    {
-        return aggregate;
-    }
-
-    public void setAggregate( boolean aggregate )
-    {
-        this.aggregate = aggregate;
     }
 }
