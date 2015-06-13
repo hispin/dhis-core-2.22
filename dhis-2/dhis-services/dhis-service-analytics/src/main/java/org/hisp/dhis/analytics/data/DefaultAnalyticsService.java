@@ -1331,32 +1331,18 @@ public class DefaultAnalyticsService
                 }
                 else
                 {
-                    map.put( object.getUid(), NameableObjectUtils.getProperty( object, displayProperty ) );
+                    map.put( object.getUid(), NameableObjectUtils.getDisplayProperty( object, displayProperty ) );
                 }
 
                 if ( orgUnitHierarchy )
                 {
                     OrganisationUnit unit = (OrganisationUnit) object;
-                   
-                    if ( DisplayProperty.SHORTNAME.equals( displayProperty ) )
-                    {
-                        map.putAll( NameableObjectUtils.getUidShortNameMap( unit.getAncestors() ) );
-                    }
-                    else // NAME
-                    {
-                        map.putAll( IdentifiableObjectUtils.getUidNameMap( unit.getAncestors() ) );
-                    }
+                    
+                    map.putAll( NameableObjectUtils.getUidDisplayPropertyMap( unit.getAncestors(), displayProperty ) );
                 }
             }
 
-            if ( dimension.getDisplayShortName() != null && DisplayProperty.SHORTNAME.equals( displayProperty ) )
-            {
-                map.put( dimension.getDimension(), dimension.getDisplayShortName() );
-            }
-            else if ( dimension.getDisplayName() != null ) // NAME TODO use getProperty
-            {
-                map.put( dimension.getDimension(), dimension.getDisplayName() );
-            }
+            map.put( dimension.getDimension(), NameableObjectUtils.getDisplayProperty( dimension, displayProperty ) );
         }
 
         return map;
