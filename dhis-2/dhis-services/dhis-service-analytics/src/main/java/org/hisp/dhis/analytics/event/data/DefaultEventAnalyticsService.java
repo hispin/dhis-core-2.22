@@ -183,7 +183,7 @@ public class DefaultEventAnalyticsService
             grid.addHeader( new GridHeader( dimension.getDimension(), dimension.getDisplayName(), String.class.getName(), false, true ) );
         }
 
-        if ( params.isCollapseDataDimensions() )
+        if ( params.isCollapseDataDimensions() || params.isAggregateData() )
         {
             grid.addHeader( new GridHeader( DimensionalObject.DATA_COLLAPSED_DIM_ID, DataQueryParams.DISPLAY_NAME_DATA_X, String.class.getName(), false, true ) );
         }
@@ -371,7 +371,8 @@ public class DefaultEventAnalyticsService
     @Override
     public EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate,
         Set<String> dimension, Set<String> filter, String value, AggregationType aggregationType, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, 
-        boolean showHierarchy, SortOrder sortOrder, Integer limit, EventOutputType outputType, boolean collapseDataDimensions, DisplayProperty displayProperty, I18nFormat format )
+        boolean showHierarchy, SortOrder sortOrder, Integer limit, EventOutputType outputType, boolean collapseDataDimensions, 
+        boolean aggregateData, DisplayProperty displayProperty, I18nFormat format )
     {
         EventQueryParams params = getFromUrl( program, stage, startDate, endDate, dimension, filter, null, null, null,
             skipMeta, hierarchyMeta, false, displayProperty, null, null, format );
@@ -384,7 +385,7 @@ public class DefaultEventAnalyticsService
         params.setLimit( limit );
         params.setOutputType( MoreObjects.firstNonNull( outputType, EventOutputType.EVENT ) );
         params.setCollapseDataDimensions( collapseDataDimensions );
-        params.setAggregateQuery( true );
+        params.setAggregateData( aggregateData );
 
         return params;
     }
@@ -491,7 +492,6 @@ public class DefaultEventAnalyticsService
         params.setDisplayProperty( displayProperty );
         params.setPage( page );
         params.setPageSize( pageSize );
-        params.setAggregateQuery( false );
         
         return params;
     }

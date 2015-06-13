@@ -172,6 +172,11 @@ public class JdbcEventAnalyticsManager
                 grid.addValue( gridValue );
             }
             
+            if ( params.isAggregateData() )
+            {
+                grid.addValue( params.getValue().getUid() );
+            }
+            
             if ( params.hasValueDimension() )
             {
                 double value = rowSet.getDouble( "value" );

@@ -862,13 +862,16 @@ public class ListGrid
     {
         Integer rowLength = null;
 
+        int rowPos = 0;
+        
         for ( List<Object> row : grid )
         {
             if ( rowLength != null && rowLength != row.size() )
             {
-                throw new IllegalStateException( "Grid rows do not have the same number of cells, previous: " + rowLength + ", this: " + row.size() );
+                throw new IllegalStateException( "Grid rows do not have the same number of cells, previous: " + rowLength + ", this: " + row.size() + ", at row: " + rowPos );
             }
 
+            rowPos++;
             rowLength = row.size();
         }
     }
