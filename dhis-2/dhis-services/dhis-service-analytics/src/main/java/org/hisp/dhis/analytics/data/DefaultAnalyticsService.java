@@ -466,13 +466,21 @@ public class DefaultAnalyticsService
         if ( !params.isSkipMeta() )
         {
             Map<Object, Object> metaData = new HashMap<>();
-            
+
+            // -----------------------------------------------------------------
+            // Names element
+            // -----------------------------------------------------------------
+
             Map<String, String> uidNameMap = getUidNameMap( params );
             Map<String, String> cocNameMap = getCocNameMap( params );
             uidNameMap.putAll( cocNameMap );
             uidNameMap.put( DATA_X_DIM_ID, DISPLAY_NAME_DATA_X );
 
             metaData.put( NAMES_META_KEY, uidNameMap );
+
+            // -----------------------------------------------------------------
+            // Item order elements
+            // -----------------------------------------------------------------
 
             Calendar calendar = PeriodType.getCalendar();
 
@@ -499,6 +507,14 @@ public class DefaultAnalyticsService
                 metaData.put( OU_NAME_HIERARCHY_KEY, getParentNameGraphMap( organisationUnits, roots, true, params.getDisplayProperty() ) );
             }
 
+            for ( DimensionalObject dim : params.getDimensionsAndFilters() )
+            {
+                if ( dim.isAllItems() )
+                {
+                    metaData.put( dim.getDimension(), getUids( dim.getItems() ) );
+                }
+            }
+            
             grid.setMetaData( metaData );
         }
     }
@@ -1157,7 +1173,7 @@ public class DefaultAnalyticsService
         {
             List<NameableObject> ous = !allItems ? asList( idObjectManager.getByUidOrdered( OrganisationUnitGroup.class, items ) ) : ougs.getItems();
 
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.ORGANISATIONUNIT_GROUPSET, null, ougs.getDisplayName(), ous );
+            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.ORGANISATIONUNIT_GROUPSET, null, ougs.getDisplayName(), ous, allItems );
 
             return ListUtils.getList( object );
         }
@@ -1168,7 +1184,7 @@ public class DefaultAnalyticsService
         {
             List<NameableObject> des = !allItems ? asList( idObjectManager.getByUidOrdered( DataElementGroup.class, items ) ) : degs.getItems();
 
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.DATAELEMENT_GROUPSET, null, degs.getDisplayName(), des );
+            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.DATAELEMENT_GROUPSET, null, degs.getDisplayName(), des, allItems );
 
             return ListUtils.getList( object );
         }
@@ -1179,7 +1195,7 @@ public class DefaultAnalyticsService
         {
             List<NameableObject> cogz = !allItems ? asList( idObjectManager.getByUidOrdered( CategoryOptionGroup.class, items ) ) : cogs.getItems();
 
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORYOPTION_GROUPSET, null, cogs.getDisplayName(), cogz );
+            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORYOPTION_GROUPSET, null, cogs.getDisplayName(), cogz, allItems );
 
             return ListUtils.getList( object );
         }
@@ -1190,7 +1206,7 @@ public class DefaultAnalyticsService
         {
             List<NameableObject> decos = !allItems ? asList( idObjectManager.getByUidOrdered( DataElementCategoryOption.class, items ) ) : dec.getItems();
 
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORY, null, dec.getDisplayName(), decos );
+            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORY, null, dec.getDisplayName(), decos, allItems );
 
             return ListUtils.getList( object );
         }
