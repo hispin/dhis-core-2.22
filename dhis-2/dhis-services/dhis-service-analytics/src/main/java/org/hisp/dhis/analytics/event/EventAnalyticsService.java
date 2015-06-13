@@ -44,9 +44,9 @@ import org.hisp.dhis.i18n.I18nFormat;
  */
 public interface EventAnalyticsService
 {    
-    Grid getAggregatedEvents( EventQueryParams params );
+    Grid getAggregatedEventData( EventQueryParams params );
     
-    Grid getAggregatedEvents( AnalyticalObject object, I18nFormat format );
+    Grid getAggregatedEventData( AnalyticalObject object, I18nFormat format );
     
     Grid getEvents( EventQueryParams params );
 
