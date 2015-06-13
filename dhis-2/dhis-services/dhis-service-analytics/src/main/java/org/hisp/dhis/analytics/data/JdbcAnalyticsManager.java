@@ -321,7 +321,7 @@ public class JdbcAnalyticsManager
 
         for ( DimensionalObject dim : params.getQueryDimensions() )
         {
-            if ( !dim.isAllItems() )
+            if ( !dim.getItems().isEmpty() )
             {
                 String col = statementBuilder.columnQuote( dim.getDimensionName() );
 

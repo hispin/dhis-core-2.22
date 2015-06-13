@@ -132,12 +132,6 @@ public class BaseDimensionalObject
     // -------------------------------------------------------------------------
 
     @Override
-    public boolean isAllItems()
-    {
-        return items != null && items.isEmpty();
-    }
-
-    @Override
     public boolean hasItems()
     {
         return items != null && !items.isEmpty();
