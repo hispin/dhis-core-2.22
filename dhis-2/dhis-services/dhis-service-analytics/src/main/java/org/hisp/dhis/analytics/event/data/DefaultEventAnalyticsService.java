@@ -164,7 +164,7 @@ public class DefaultEventAnalyticsService
     // TODO sorting in queries
 
     @Override
-    public Grid getAggregatedEventData( EventQueryParams params )
+    public Grid getAggregatedEvents( EventQueryParams params )
     {
         securityManager.decideAccess( params );
         
@@ -273,11 +273,11 @@ public class DefaultEventAnalyticsService
     }
     
     @Override
-    public Grid getAggregatedEventData( AnalyticalObject object, I18nFormat format )
+    public Grid getAggregatedEvents( AnalyticalObject object, I18nFormat format )
     {
         EventQueryParams params = getFromAnalyticalObject( (EventAnalyticalObject) object, format );
         
-        return getAggregatedEventData( params );
+        return getAggregatedEvents( params );
     }
 
     @Override

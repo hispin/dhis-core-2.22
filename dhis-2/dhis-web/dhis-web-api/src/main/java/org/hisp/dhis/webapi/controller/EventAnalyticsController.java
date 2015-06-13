@@ -103,7 +103,7 @@ public class EventAnalyticsController
             value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, collapseDataDimensions, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.RESPECT_SYSTEM_SETTING );
-        Grid grid = analyticsService.getAggregatedEventData( params );
+        Grid grid = analyticsService.getAggregatedEvents( params );
         model.addAttribute( "model", grid );
         model.addAttribute( "viewClass", "detailed" );
         return "grid";
@@ -135,7 +135,7 @@ public class EventAnalyticsController
             value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, collapseDataDimensions, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.xml", false );
-        Grid grid = analyticsService.getAggregatedEventData( params );
+        Grid grid = analyticsService.getAggregatedEvents( params );
         GridUtils.toXml( substituteMetaData( grid ), response.getOutputStream() );
     }
 
@@ -165,7 +165,7 @@ public class EventAnalyticsController
             value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, collapseDataDimensions, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.xls", true );
-        Grid grid = analyticsService.getAggregatedEventData( params );
+        Grid grid = analyticsService.getAggregatedEvents( params );
         GridUtils.toXls( substituteMetaData( grid ), response.getOutputStream() );
     }
 
@@ -195,7 +195,7 @@ public class EventAnalyticsController
             value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, collapseDataDimensions, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.csv", true );
-        Grid grid = analyticsService.getAggregatedEventData( params );
+        Grid grid = analyticsService.getAggregatedEvents( params );
         GridUtils.toCsv( substituteMetaData( grid ), response.getOutputStream() );
     }
 
@@ -225,7 +225,7 @@ public class EventAnalyticsController
             value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, collapseDataDimensions, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.html", false );
-        Grid grid = analyticsService.getAggregatedEventData( params );
+        Grid grid = analyticsService.getAggregatedEvents( params );
         GridUtils.toHtml( substituteMetaData( grid ), response.getWriter() );
     }
 
