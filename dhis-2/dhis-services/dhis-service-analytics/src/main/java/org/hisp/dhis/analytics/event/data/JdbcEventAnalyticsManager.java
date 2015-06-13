@@ -103,14 +103,7 @@ public class JdbcEventAnalyticsManager
         // Criteria
         // ---------------------------------------------------------------------
 
-        if ( params.spansMultiplePartitions() )
-        {
-            sql += getFromWhereMultiplePartitionsClause( params, Arrays.asList( "psi" ) );
-        }
-        else
-        {
-            sql += getFromWhereClause( params, params.getPartitions().getSinglePartition() );
-        }
+        sql += getFromWhereClause( params, Arrays.asList( "psi" ) );
 
         // ---------------------------------------------------------------------
         // Group by
@@ -203,14 +196,7 @@ public class JdbcEventAnalyticsManager
         // Criteria
         // ---------------------------------------------------------------------
 
-        if ( params.spansMultiplePartitions() )
-        {
-            sql += getFromWhereMultiplePartitionsClause( params, fixedCols );
-        }
-        else
-        {
-            sql += getFromWhereClause( params, params.getPartitions().getSinglePartition() );
-        }
+        sql += getFromWhereClause( params, fixedCols );
         
         // ---------------------------------------------------------------------
         // Sorting
@@ -288,15 +274,8 @@ public class JdbcEventAnalyticsManager
     {
         String sql = "select count(psi) ";
         
-        if ( params.spansMultiplePartitions() )
-        {
-            sql += getFromWhereMultiplePartitionsClause( params, Arrays.asList( "psi" ) );
-        }
-        else
-        {
-            sql += getFromWhereClause( params, params.getPartitions().getSinglePartition() );
-        }
-        
+        sql += getFromWhereClause( params, Arrays.asList( "psi" ) );
+                
         int count = 0;
         
         try
@@ -402,6 +381,18 @@ public class JdbcEventAnalyticsManager
         return removeLastComma( sql );
     }
 
+    private String getFromWhereClause( EventQueryParams params, List<String> fixedColumns )
+    {
+        if ( params.spansMultiplePartitions() )
+        {
+            return getFromWhereMultiplePartitionsClause( params, fixedColumns );
+        }
+        else
+        {
+            return getFromWhereSinglePartitionClause( params, params.getPartitions().getSinglePartition() );
+        }
+    }
+    
     private String getFromWhereMultiplePartitionsClause( EventQueryParams params, List<String> fixedColumns )
     {
         String sql = "from (";
@@ -410,7 +401,7 @@ public class JdbcEventAnalyticsManager
         {
             sql += "select " + getSelectString( fixedColumns ) + getSelectColumns( params );
             
-            sql += " " + getFromWhereClause( params, partition );
+            sql += " " + getFromWhereSinglePartitionClause( params, partition );
             
             sql += "union all ";
         }
@@ -420,7 +411,7 @@ public class JdbcEventAnalyticsManager
         return sql;
     }
     
-    private String getFromWhereClause( EventQueryParams params, String partition )
+    private String getFromWhereSinglePartitionClause( EventQueryParams params, String partition )
     {
         String sql = "from " + partition + " ";
 
