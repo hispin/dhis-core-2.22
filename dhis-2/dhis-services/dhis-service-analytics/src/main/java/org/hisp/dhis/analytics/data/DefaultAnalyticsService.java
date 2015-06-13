@@ -1315,15 +1315,9 @@ public class DefaultAnalyticsService
         {
             List<NameableObject> items = new ArrayList<>( dimension.getItems() );
 
-            boolean orgUnitHierarchy = hierarchyMeta && DimensionType.ORGANISATIONUNIT.equals( dimension.getDimensionType() );
-
-            // -----------------------------------------------------------------
-            // Insert UID and name into map
-            // -----------------------------------------------------------------
-
             for ( NameableObject object : items )
             {
-                if ( Period.class.isInstance( object ) && !calendar.isIso8601() )
+                if ( DimensionType.PERIOD.equals( dimension.getDimensionType() ) && !calendar.isIso8601() )
                 {
                     Period period = (Period) object;
                     DateTimeUnit dateTimeUnit = calendar.fromIso( period.getStartDate() );
@@ -1334,7 +1328,7 @@ public class DefaultAnalyticsService
                     map.put( object.getUid(), NameableObjectUtils.getDisplayProperty( object, displayProperty ) );
                 }
 
-                if ( orgUnitHierarchy )
+                if ( DimensionType.ORGANISATIONUNIT.equals( dimension.getDimensionType() ) && hierarchyMeta )
                 {
                     OrganisationUnit unit = (OrganisationUnit) object;
                     
