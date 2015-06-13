@@ -92,6 +92,12 @@ public class EventQueryParams
     private boolean collapseDataDimensions;
     
     private boolean coordinatesOnly;
+
+    // -------------------------------------------------------------------------
+    // Transient properties
+    // -------------------------------------------------------------------------
+
+    private boolean aggregateQuery;
     
     // -------------------------------------------------------------------------
     // Constructors
@@ -132,6 +138,7 @@ public class EventQueryParams
         params.outputType = this.outputType;
         params.collapseDataDimensions = this.collapseDataDimensions;
         params.coordinatesOnly = this.coordinatesOnly;
+        params.aggregateQuery = this.aggregateQuery;
         
         params.periodType = this.periodType;
         
@@ -341,6 +348,14 @@ public class EventQueryParams
         return SortOrder.ASC.equals( sortOrder ) ? -1 : SortOrder.DESC.equals( sortOrder ) ? 1 : 0;
     }
     
+    /**
+     * Indicates whether this query is aggregate as opposed to event-based.
+     */
+    public boolean isAggregateQuery()
+    {
+        return aggregateQuery;
+    }
+    
     public String toString()
     {
         return "[" +
@@ -540,5 +555,10 @@ public class EventQueryParams
     public void setCoordinatesOnly( boolean coordinatesOnly )
     {
         this.coordinatesOnly = coordinatesOnly;
+    }
+
+    public void setAggregateQuery( boolean aggregateQuery )
+    {
+        this.aggregateQuery = aggregateQuery;
     }
 }
