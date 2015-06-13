@@ -1308,6 +1308,8 @@ public class DefaultAnalyticsService
     private Map<String, String> getUidNameMap( List<DimensionalObject> dimensions, boolean hierarchyMeta, DisplayProperty displayProperty )
     {
         Map<String, String> map = new HashMap<>();
+        
+        Calendar calendar = PeriodType.getCalendar();
 
         for ( DimensionalObject dimension : dimensions )
         {
@@ -1319,11 +1321,9 @@ public class DefaultAnalyticsService
             // Insert UID and name into map
             // -----------------------------------------------------------------
 
-            Calendar calendar = PeriodType.getCalendar();
-
             for ( NameableObject object : items )
             {
-                if ( !calendar.isIso8601() && Period.class.isInstance( object ) )
+                if ( Period.class.isInstance( object ) && !calendar.isIso8601() )
                 {
                     Period period = (Period) object;
                     DateTimeUnit dateTimeUnit = calendar.fromIso( period.getStartDate() );
