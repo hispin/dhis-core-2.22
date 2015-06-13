@@ -609,7 +609,7 @@ public class DefaultEventAnalyticsService
 
         if ( params.hasValueDimension() )
         {
-            map.put( params.getValue().getUid(), NameableObjectUtils.getProperty( params.getValue(), params.getDisplayProperty() ) );
+            map.put( params.getValue().getUid(), NameableObjectUtils.getDisplayProperty( params.getValue(), params.getDisplayProperty() ) );
         }
         
         map.putAll( getUidNameMap( params.getItems(), params.getDisplayProperty() ) );
@@ -627,7 +627,7 @@ public class DefaultEventAnalyticsService
         
         for ( QueryItem item : queryItems )
         {
-            map.put( item.getItem().getUid(), NameableObjectUtils.getProperty( item.getItem(), displayProperty ) );
+            map.put( item.getItem().getUid(), NameableObjectUtils.getDisplayProperty( item.getItem(), displayProperty ) );
         }
         
         return map;
@@ -652,17 +652,10 @@ public class DefaultEventAnalyticsService
                     objects.addAll( unit.getAncestors() );
                 }
                 
-                if ( DisplayProperty.SHORTNAME.equals( displayProperty ) )
-                {
-                    map.putAll( NameableObjectUtils.getUidShortNameMap( objects ) );
-                }
-                else // NAME
-                {
-                    map.putAll( IdentifiableObjectUtils.getUidNameMap( objects ) );
-                }
+                map.putAll( NameableObjectUtils.getUidDisplayPropertyMap( objects, displayProperty ) );
             }
             
-            map.put( dimension.getDimension(), NameableObjectUtils.getProperty( dimension, displayProperty ) );
+            map.put( dimension.getDimension(), NameableObjectUtils.getDisplayProperty( dimension, displayProperty ) );
         }
 
         return map;
