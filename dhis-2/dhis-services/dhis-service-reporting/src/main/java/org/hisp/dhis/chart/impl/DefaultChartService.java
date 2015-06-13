@@ -805,7 +805,7 @@ public class DefaultChartService
         }
         else if ( chart.isAnalyticsType( AnalyticsType.EVENT ) )
         {
-            Grid grid = eventAnalyticsService.getAggregatedEvents( chart, chart.getFormat() );
+            Grid grid = eventAnalyticsService.getAggregatedEventData( chart, chart.getFormat() );
                         
             chart.setDataItemGrid( grid );
                         
