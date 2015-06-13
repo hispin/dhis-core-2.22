@@ -470,6 +470,7 @@ public class DefaultAnalyticsService
             Map<String, String> uidNameMap = getUidNameMap( params );
             Map<String, String> cocNameMap = getCocNameMap( params );
             uidNameMap.putAll( cocNameMap );
+            uidNameMap.put( DATA_X_DIM_ID, DISPLAY_NAME_DATA_X );
 
             metaData.put( NAMES_META_KEY, uidNameMap );
 
@@ -1280,33 +1281,16 @@ public class DefaultAnalyticsService
     }
 
     /**
-     * Returns a mapping between the identifier and the name of all dimension and
-     * filter items for the given parameters.
+     * Returns a mapping between identifiers and names for the given dimensional
+     * objects.
      *
-     * @param params the data query.
+     * @param params the data query parameters.
      * @return a mapping between identifiers and names.
      */
     private Map<String, String> getUidNameMap( DataQueryParams params )
     {
-        Map<String, String> map = new HashMap<>();
-        map.putAll( getUidNameMap( params.getDimensions(), params.isHierarchyMeta(), params.getDisplayProperty() ) );
-        map.putAll( getUidNameMap( params.getFilters(), params.isHierarchyMeta(), params.getDisplayProperty() ) );
-        map.put( DATA_X_DIM_ID, DISPLAY_NAME_DATA_X );
-
-        return map;
-    }
-
-    /**
-     * Returns a mapping between identifiers and names for the given dimensional
-     * objects.
-     *
-     * @param dimensions the dimensional objects.
-     * @param hierarchyMeta indicates whether to include meta data of the
-     *        organisation unit hierarchy.
-     * @return a mapping between identifiers and names.
-     */
-    private Map<String, String> getUidNameMap( List<DimensionalObject> dimensions, boolean hierarchyMeta, DisplayProperty displayProperty )
-    {
+        List<DimensionalObject> dimensions = params.getDimensionsAndFilters();
+        
         Map<String, String> map = new HashMap<>();
         
         Calendar calendar = PeriodType.getCalendar();
@@ -1325,23 +1309,23 @@ public class DefaultAnalyticsService
                 }
                 else
                 {
-                    map.put( object.getUid(), NameableObjectUtils.getDisplayProperty( object, displayProperty ) );
+                    map.put( object.getUid(), NameableObjectUtils.getDisplayProperty( object, params.getDisplayProperty() ) );
                 }
 
-                if ( DimensionType.ORGANISATIONUNIT.equals( dimension.getDimensionType() ) && hierarchyMeta )
+                if ( DimensionType.ORGANISATIONUNIT.equals( dimension.getDimensionType() ) && params.isHierarchyMeta() )
                 {
                     OrganisationUnit unit = (OrganisationUnit) object;
                     
-                    map.putAll( NameableObjectUtils.getUidDisplayPropertyMap( unit.getAncestors(), displayProperty ) );
+                    map.putAll( NameableObjectUtils.getUidDisplayPropertyMap( unit.getAncestors(), params.getDisplayProperty() ) );
                 }
             }
 
-            map.put( dimension.getDimension(), NameableObjectUtils.getDisplayProperty( dimension, displayProperty ) );
+            map.put( dimension.getDimension(), NameableObjectUtils.getDisplayProperty( dimension, params.getDisplayProperty() ) );
         }
 
         return map;
     }
-
+    
     /**
      * Returns a mapping between the category option combo identifiers and names
      * in the given grid.
