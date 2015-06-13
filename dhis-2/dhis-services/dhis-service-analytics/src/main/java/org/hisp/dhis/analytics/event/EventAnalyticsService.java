@@ -69,13 +69,14 @@ public interface EventAnalyticsService
      * @param limit the max limit of records to return.
      * @param outputType the event output type.
      * @param collapseDataDimensions collapse data dimensions into a single dimension.
+     * @param aggregateData return aggregated data values for data dimensions instead of items.
      * @param displayProperty the display property to use for meta-data.
      * @param format the i18n format.
      */
     EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate, 
         Set<String> dimension, Set<String> filter, String value, AggregationType aggregationType, 
         boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean showHierarchy, SortOrder sortOrder, Integer limit, 
-        EventOutputType outputType, boolean collapseDataDimensions, DisplayProperty displayProperty, I18nFormat format );
+        EventOutputType outputType, boolean collapseDataDimensions, boolean aggregateData, DisplayProperty displayProperty, I18nFormat format );
 
     /**
      * Used for event query.

@@ -114,9 +114,9 @@ public class DefaultEventQueryPlanner
             violation = "Value dimension cannot also be specified as an item or item filter";
         }
         
-        if ( params.hasAggregationType() && !params.hasValueDimension() )
+        if ( params.hasAggregationType() && !( params.hasValueDimension() || params.isAggregateData() ) )
         {
-            violation = "Value dimension must be specified when aggregation type is specified";
+            violation = "Value dimension or aggregate data must be specified when aggregation type is specified";
         }
         
         if ( !params.hasPeriods() && ( params.getStartDate() == null || params.getEndDate() == null ) )
@@ -265,7 +265,17 @@ public class DefaultEventQueryPlanner
     {
         List<EventQueryParams> queries = new ArrayList<>();
         
-        if ( params.isCollapseDataDimensions() && params.getItems() != null && !params.getItems().isEmpty() )
+        if ( params.isAggregateData() )
+        {
+            for ( QueryItem item : params.getItems() )
+            {
+                EventQueryParams query = params.instance();
+                query.getItems().clear();
+                query.setValue( item.getItem() );
+                queries.add( query );
+            }
+        }
+        else if ( params.isCollapseDataDimensions() && !params.getItems().isEmpty() )
         {
             for ( QueryItem item : params.getItems() )
             {
