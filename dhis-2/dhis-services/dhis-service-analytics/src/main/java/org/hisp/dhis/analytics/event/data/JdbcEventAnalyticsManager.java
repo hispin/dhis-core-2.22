@@ -468,13 +468,10 @@ public class JdbcEventAnalyticsManager
         // ---------------------------------------------------------------------
 
         for ( DimensionalObject dim : params.getDimensionsAndFilters( DimensionType.ORGANISATIONUNIT_GROUPSET ) )
-        {
-            if ( !dim.isAllItems() )
-            {
-                String col = statementBuilder.columnQuote( dim.getDimensionName() );
+        {            
+            String col = statementBuilder.columnQuote( dim.getDimensionName() );
                 
-                sql += "and " + col + " in (" + getQuotedCommaDelimitedString( getUids( dim.getItems() ) ) + ") ";
-            }
+            sql += "and " + col + " in (" + getQuotedCommaDelimitedString( getUids( dim.getItems() ) ) + ") ";
         }
 
         // ---------------------------------------------------------------------
