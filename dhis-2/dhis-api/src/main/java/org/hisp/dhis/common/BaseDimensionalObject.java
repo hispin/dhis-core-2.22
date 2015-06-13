@@ -66,6 +66,11 @@ public class BaseDimensionalObject
      * The dimensional items for this dimension.
      */
     private List<NameableObject> items = new ArrayList<>();
+    
+    /**
+     * Indicates whether all available items in this dimension are included.
+     */
+    private boolean allItems;
 
     /**
      * The legend set for this dimension.
@@ -110,11 +115,15 @@ public class BaseDimensionalObject
 
     public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, List<? extends NameableObject> items )
     {
-        this.uid = dimension;
-        this.dimensionType = dimensionType;
+        this( dimension, dimensionType, items );
         this.dimensionName = dimensionName;
         this.displayName = displayName;
-        this.items = new ArrayList<>( items );
+    }
+
+    public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, List<? extends NameableObject> items, boolean allItems )
+    {
+        this( dimension, dimensionType, dimensionName, displayName, items );
+        this.allItems = allItems;
     }
 
     public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, LegendSet legendSet, String filter )
@@ -229,6 +238,21 @@ public class BaseDimensionalObject
 
     @Override
     @JsonProperty
+    @JsonView( { DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isAllItems()
+    {
+        return allItems;
+    }
+
+    public void setAllItems( boolean allItems )
+    {
+        this.allItems = allItems;
+    }
+
+
+    @Override
+    @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DimensionalView.class, DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -313,6 +337,7 @@ public class BaseDimensionalObject
             .add( "dimension name", dimensionName )
             .add( "display name", displayName )
             .add( "items", items )
+            .add( "all items", allItems )
             .add( "legend set", legendSet )
             .add( "filter", filter ).toString();
     }
