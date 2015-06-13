@@ -110,6 +110,11 @@ public interface DimensionalObject
     List<NameableObject> getItems();
 
     /**
+     * Indicates whether all available items in this dimension are included.
+     */
+    boolean isAllItems();
+    
+    /**
      * Indicates whether this dimension has any dimension items.
      */
     boolean hasItems();
