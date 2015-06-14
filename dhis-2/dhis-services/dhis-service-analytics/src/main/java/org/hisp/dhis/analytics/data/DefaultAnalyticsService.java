@@ -823,12 +823,12 @@ public class DefaultAnalyticsService
 
         if ( dimensionParams != null && !dimensionParams.isEmpty() )
         {
-            params.getDimensions().addAll( getDimensionalObjects( dimensionParams, format ) );
+            params.addDimensions( getDimensionalObjects( dimensionParams, format ) );
         }
 
         if ( filterParams != null && !filterParams.isEmpty() )
         {
-            params.getFilters().addAll( getDimensionalObjects( filterParams, format ) );
+            params.addFilters( getDimensionalObjects( filterParams, format ) );
         }
 
         if ( measureCriteria != null && !measureCriteria.isEmpty() )
@@ -861,17 +861,17 @@ public class DefaultAnalyticsService
 
             for ( DimensionalObject column : object.getColumns() )
             {
-                params.getDimensions().addAll( getDimension( toDimension( column.getDimension() ), getUids( column.getItems() ), date, format, false ) );
+                params.addDimensions( getDimension( toDimension( column.getDimension() ), getUids( column.getItems() ), date, format, false ) );
             }
 
             for ( DimensionalObject row : object.getRows() )
             {
-                params.getDimensions().addAll( getDimension( toDimension( row.getDimension() ), getUids( row.getItems() ), date, format, false ) );
+                params.addDimensions( getDimension( toDimension( row.getDimension() ), getUids( row.getItems() ), date, format, false ) );
             }
 
             for ( DimensionalObject filter : object.getFilters() )
             {
-                params.getFilters().addAll( getDimension( toDimension( filter.getDimension() ), getUids( filter.getItems() ), date, format, false ) );
+                params.addFilters( getDimension( toDimension( filter.getDimension() ), getUids( filter.getItems() ), date, format, false ) );
             }
         }
 

@@ -158,23 +158,25 @@ public class JdbcEventAnalyticsManager
         while ( rowSet.next() )
         {            
             grid.addRow();
+
+            if ( params.isAggregateData() )
+            {
+                grid.addValue( params.getValue().getUid() );
+            }
+            else
+            {
+                for ( QueryItem queryItem : params.getItems() )
+                {
+                    String itemValue = rowSet.getString( queryItem.getItemName() );
+                    String gridValue = params.isCollapseDataDimensions() ? getCollapsedDataItemValue( params, queryItem, itemValue ) : itemValue;
+                    grid.addValue( gridValue );
+                }
+            }
             
             for ( DimensionalObject dimension : params.getDimensions() )
             {
                 String dimensionValue = rowSet.getString( dimension.getDimensionName() );
                 grid.addValue( dimensionValue );
-            }
-            
-            for ( QueryItem queryItem : params.getItems() )
-            {
-                String itemValue = rowSet.getString( queryItem.getItemName() );
-                String gridValue = params.isCollapseDataDimensions() ? getCollapsedDataItemValue( params, queryItem, itemValue ) : itemValue;
-                grid.addValue( gridValue );
-            }
-            
-            if ( params.isAggregateData() )
-            {
-                grid.addValue( params.getValue().getUid() );
             }
             
             if ( params.hasValueDimension() )

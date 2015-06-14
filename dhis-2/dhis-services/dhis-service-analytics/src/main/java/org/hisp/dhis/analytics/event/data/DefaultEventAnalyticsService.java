@@ -178,11 +178,6 @@ public class DefaultEventAnalyticsService
         // Headers
         // ---------------------------------------------------------------------
 
-        for ( DimensionalObject dimension : params.getDimensions() )
-        {
-            grid.addHeader( new GridHeader( dimension.getDimension(), dimension.getDisplayName(), String.class.getName(), false, true ) );
-        }
-
         if ( params.isCollapseDataDimensions() || params.isAggregateData() )
         {
             grid.addHeader( new GridHeader( DimensionalObject.DATA_COLLAPSED_DIM_ID, DataQueryParams.DISPLAY_NAME_DATA_X, String.class.getName(), false, true ) );
@@ -197,6 +192,11 @@ public class DefaultEventAnalyticsService
 
                 grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSetUid(), legendSet ) );
             }
+        }
+
+        for ( DimensionalObject dimension : params.getDimensions() )
+        {
+            grid.addHeader( new GridHeader( dimension.getDimension(), dimension.getDisplayName(), String.class.getName(), false, true ) );
         }
 
         grid.addHeader( new GridHeader( "value", "Value", Double.class.getName(), false, false ) );
