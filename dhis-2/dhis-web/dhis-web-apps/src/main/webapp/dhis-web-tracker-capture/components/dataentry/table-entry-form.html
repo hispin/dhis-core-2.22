@@ -7,6 +7,10 @@
                 </th>
                 <th class="col-md-2" ng-repeat="prStDe in currentStage.programStageDataElements" ng-if="!isHidden(prStDe.dataElement.id)">
                     {{prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name}}
+                    <a ng-if="prStDes[prStDe.dataElement.id].dataElement.description" Title="{{prStDes[prStDe.dataElement.id].dataElement.description}}" ng-init="showHelpText[prStDe.dataElement.id] = false;" ng-click="showHelpText[prStDe.dataElement.id] = !showHelpText[prStDe.dataElement.id]">
+                        <span class="glyphicon glyphicon-info-sign" ></span>
+                        <span ng-show="showHelpText[prStDe.dataElement.id]" ><br>{{prStDes[prStDe.dataElement.id].dataElement.description}}</span>
+                    </a> 
                 </th>
             </tr>
         </thead>
