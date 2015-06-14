@@ -28,16 +28,19 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.util.ListUtils;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -47,7 +50,7 @@ public class ListUtilsTest
     @Test
     public void testRemoveAll()
     {
-        List<String> list = new ArrayList<>( Arrays.asList( "a", "b", "c", "d", "e", "f", "g", "h" ) );
+        List<String> list = Lists.newArrayList( "a", "b", "c", "d", "e", "f", "g", "h" );
         
         Integer[] indexes = { 0, 2, 5, 7, -1, 78 };
 
@@ -65,11 +68,31 @@ public class ListUtilsTest
     @Test
     public void testGetDuplicates()
     {
-        List<String> list = new ArrayList<>( Arrays.asList( "a", "b", "c", "c", "d", "e", "e", "e", "f" ) );
-        Set<String> expected = new HashSet<>( Arrays.asList( "c", "e" ) );
+        List<String> list = Lists.newArrayList( "a", "b", "c", "c", "d", "e", "e", "e", "f" );
+        Set<String> expected = Sets.newHashSet( "c", "e" );
         assertEquals( expected, ListUtils.getDuplicates( list ) );
         
         list = new ArrayList<>( Arrays.asList( "a", "b", "c", "d", "e", "f", "g", "h" ) );
         assertEquals( 0, ListUtils.getDuplicates( list ).size() );
+    }
+    
+    @Test
+    public void testMoveFirst()
+    {
+        List<String> list = new ArrayList<>( Arrays.asList( "a", "b", "c", "c", "d", "e", "e", "e", "f" ) );
+        
+        ListUtils.moveFirst( list, 2 );
+        
+        assertEquals( "c", list.get( 0 ) );
+        assertEquals( "a", list.get( 1 ) );
+        assertEquals( "b", list.get( 2 ) );
+        
+        list = new ArrayList<>( Arrays.asList( "a", "b", "c", "c", "d", "e", "e", "e", "f" ) );
+        
+        ListUtils.moveFirst( list, 20 );
+        
+        assertEquals( "a", list.get( 0 ) );
+        assertEquals( "b", list.get( 1 ) );
+        assertEquals( "c", list.get( 2 ) );
     }
 }
