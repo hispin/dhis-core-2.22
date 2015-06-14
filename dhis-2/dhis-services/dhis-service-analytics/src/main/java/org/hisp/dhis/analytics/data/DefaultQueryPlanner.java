@@ -36,6 +36,7 @@ import static org.hisp.dhis.common.DimensionalObject.DATASET_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE;
 import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
 import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_BOOL;
@@ -153,6 +154,11 @@ public class DefaultQueryPlanner
         if ( params.hasDimensionOrFilter( CATEGORYOPTIONCOMBO_DIM_ID ) && !params.hasDimensionOrFilter( DATAELEMENT_DIM_ID ) )
         {
             violation = "Category option combos cannot be specified when data elements are not specified";
+        }
+        
+        if ( params.hasDimensionOrFilter( PROGRAM_DATAELEMENT_DIM_ID ) && !params.hasProgram() )
+        {
+            violation = "Program must be specified when tracker data elements are specified";
         }
         
         if ( violation != null )
