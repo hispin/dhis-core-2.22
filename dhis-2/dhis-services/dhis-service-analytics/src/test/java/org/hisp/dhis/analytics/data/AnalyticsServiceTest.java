@@ -41,6 +41,7 @@ import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.mock.MockCurrentUserService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -64,6 +65,8 @@ public class AnalyticsServiceTest
     private DataElement deB;
     private DataElement deC;
     private DataElement deD;
+    private DataElement deE;
+    private DataElement deF;
     
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
@@ -96,11 +99,18 @@ public class AnalyticsServiceTest
         deB = createDataElement( 'B' );
         deC = createDataElement( 'C' );
         deD = createDataElement( 'D' );
+        deE = createDataElement( 'E' );
+        deF = createDataElement( 'F' );
+        
+        deE.setDomainType( DataElementDomain.TRACKER );
+        deF.setDomainType( DataElementDomain.TRACKER );
         
         dataElementService.addDataElement( deA );
         dataElementService.addDataElement( deB );
         dataElementService.addDataElement( deC );
         dataElementService.addDataElement( deD );
+        dataElementService.addDataElement( deE );
+        dataElementService.addDataElement( deF );
         
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );
@@ -190,6 +200,23 @@ public class AnalyticsServiceTest
             false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 4, params.getDataElements().size() );
+        assertEquals( 1, params.getFilterOrganisationUnits().size() );
+    }
+
+    @Test
+    public void testGetFromUrlC()
+    {
+        Set<String> dimensionParams = new HashSet<>();
+        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() + ";" + deE.getUid() + ";" + deF.getUid() );
+
+        Set<String> filterParams = new HashSet<>();
+        filterParams.add( "ou:" + ouA.getUid() );
+        
+        DataQueryParams params = analyticsService.getFromUrl( dimensionParams, filterParams, null, null, 
+            false, false, false, false, false, false, null, null, null, null, null, null );
+        
+        assertEquals( 2, params.getDataElements().size() );
+        assertEquals( 2, params.getProgramDataElements().size() );
         assertEquals( 1, params.getFilterOrganisationUnits().size() );
     }
 
@@ -374,6 +401,35 @@ public class AnalyticsServiceTest
         assertEquals( 3, params.getDataElements().size() );
         assertEquals( 1, params.getFilterPeriods().size() );
         assertEquals( 2, params.getDimensions().size() );
+        assertEquals( 1, params.getFilters().size() );
+        assertEquals( 3, params.getDimensionOptions( ouGroupSetA.getUid() ).size() );
+    }
+    
+    @Test
+    public void testGetFromAnalyticalObjectC()
+    {
+        Chart chart = new Chart();
+        chart.setSeries( DimensionalObject.DATA_X_DIM_ID );
+        chart.setCategory( ouGroupSetA.getUid() );
+        chart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
+        
+        chart.getDataElements().add( deA );
+        chart.getDataElements().add( deE );
+        chart.getDataElements().add( deF );
+        
+        chart.getOrganisationUnitGroups().add( ouGroupA );
+        chart.getOrganisationUnitGroups().add( ouGroupB );
+        chart.getOrganisationUnitGroups().add( ouGroupC );
+        
+        chart.getPeriods().add( PeriodType.getPeriodFromIsoString( "2012" ) );
+        
+        DataQueryParams params = analyticsService.getFromAnalyticalObject( chart, null );
+        
+        assertNotNull( params );
+        assertEquals( 1, params.getDataElements().size() );
+        assertEquals( 2, params.getProgramDataElements().size() );
+        assertEquals( 1, params.getFilterPeriods().size() );
+        assertEquals( 3, params.getDimensions().size() );
         assertEquals( 1, params.getFilters().size() );
         assertEquals( 3, params.getDimensionOptions( ouGroupSetA.getUid() ).size() );
     }
