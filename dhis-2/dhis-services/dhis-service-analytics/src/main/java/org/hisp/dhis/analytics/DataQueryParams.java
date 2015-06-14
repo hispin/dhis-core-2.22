@@ -80,9 +80,9 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.util.CollectionUtils;
 import org.hisp.dhis.util.ListUtils;
-import org.hisp.dhis.system.util.MathUtils;
 
 /**
  * @author Lars Helge Overland
@@ -555,7 +555,7 @@ public class DataQueryParams
         List<NameableObject> dimOpts = getDimensionOptions( PERIOD_DIM_ID );
         List<NameableObject> filterOpts = getFilterOptions( PERIOD_DIM_ID );
         
-        return ( dimOpts != null && !dimOpts.isEmpty() ) || ( filterOpts != null && !filterOpts.isEmpty() );
+        return !dimOpts.isEmpty() || !filterOpts.isEmpty();
     }
     
     /**
@@ -566,7 +566,7 @@ public class DataQueryParams
         List<NameableObject> dimOpts = getDimensionOptions( ORGUNIT_DIM_ID );
         List<NameableObject> filterOpts = getFilterOptions( ORGUNIT_DIM_ID );
         
-        return ( dimOpts != null && !dimOpts.isEmpty() ) || ( filterOpts != null && !filterOpts.isEmpty() );
+        return !dimOpts.isEmpty() || !filterOpts.isEmpty();
     }
     
     /**
@@ -577,7 +577,7 @@ public class DataQueryParams
     {
         List<NameableObject> filterPeriods = getFilterPeriods();
         
-        if ( filterPeriods != null && !filterPeriods.isEmpty() )
+        if ( !filterPeriods.isEmpty() )
         {
             return ( (Period) filterPeriods.get( 0 ) ).getPeriodType();
         }
@@ -593,7 +593,7 @@ public class DataQueryParams
     {
         List<NameableObject> filterPeriods = getFilterPeriods();
         
-        if ( filterPeriods != null && !filterPeriods.isEmpty() )
+        if ( !filterPeriods.isEmpty() )
         {
             return (Period) filterPeriods.get( 0 );
         }
@@ -716,7 +716,7 @@ public class DataQueryParams
         {
             this.periodType = this.dataPeriodType.getName();
             
-            if ( getPeriods() != null ) // Period is dimension
+            if ( !getPeriods().isEmpty() ) // Period is dimension
             {
                 setDimensionOptions( PERIOD_DIM_ID, DimensionType.PERIOD, dataPeriodType.getName().toLowerCase(), new ArrayList<>( dataPeriodAggregationPeriodMap.keySet() ) );
             }
@@ -758,14 +758,14 @@ public class DataQueryParams
     }
 
     /**
-     * Retrieves the options for the given dimension identifier. Returns null if
-     * the dimension is not present.
+     * Retrieves the options for the given dimension identifier. Returns an empty
+     * list if the dimension is not present.
      */
     public List<NameableObject> getDimensionOptions( String dimension )
     {
         int index = dimensions.indexOf( new BaseDimensionalObject( dimension ) );
         
-        return index != -1 ? dimensions.get( index ).getItems() : null;
+        return index != -1 ? dimensions.get( index ).getItems() : new ArrayList<NameableObject>();
     }
     
     /**
@@ -799,13 +799,14 @@ public class DataQueryParams
     }
     
     /**
-     * Retrieves the options for the given filter.
+     * Retrieves the options for the given filter. Returns an empty list if the
+     * filter is not present.
      */
     public List<NameableObject> getFilterOptions( String filter )
     {
         int index = filters.indexOf( new BaseDimensionalObject( filter ) );
         
-        return index != -1 ? filters.get( index ).getItems() : null;
+        return index != -1 ? filters.get( index ).getItems() : new ArrayList<NameableObject>();
     }
 
     /**
@@ -864,7 +865,7 @@ public class DataQueryParams
         
         for ( DimensionalObject filter : filters )
         {
-            if ( filter != null && filter.getItems() != null )
+            if ( filter != null && filter.hasItems() )
             {
                 filterItems.addAll( filter.getItems() );
             }
@@ -969,6 +970,14 @@ public class DataQueryParams
     public boolean hasProgram()
     {
         return program != null;
+    }
+
+    /**
+     * Indicates whether this object has a program stage.
+     */
+    public boolean hasProgramStage()
+    {
+        return programStage != null;
     }
     
     // -------------------------------------------------------------------------
@@ -1182,7 +1191,7 @@ public class DataQueryParams
     }
     
     // -------------------------------------------------------------------------
-    // Get and set methods for serialize properties
+    // Get and set methods for serialized properties
     // -------------------------------------------------------------------------
 
     public List<DimensionalObject> getDimensions()
@@ -1405,11 +1414,13 @@ public class DataQueryParams
   
     /**
      * Retrieves the options for the the dimension or filter with the given 
-     * identifier. Returns null if the dimension or filter is not present.
+     * identifier. Returns an empty list if the dimension or filter is not present.
      */
     public List<NameableObject> getDimensionOrFilter( String key )
     {
-        return getDimensionOptions( key ) != null ? getDimensionOptions( key ) : getFilterOptions( key );
+        List<NameableObject> dimensionOptions = getDimensionOptions( key );
+        
+        return !dimensionOptions.isEmpty() ? dimensionOptions : getFilterOptions( key );
     }
         
     /**
@@ -1425,16 +1436,16 @@ public class DataQueryParams
         
         if ( DATA_X_DIM_ID.equals( dimension ) )
         {
-            items.addAll( getDimensionOptionsNullSafe( INDICATOR_DIM_ID ) );
-            items.addAll( getDimensionOptionsNullSafe( DATAELEMENT_DIM_ID ) );
-            items.addAll( getDimensionOptionsNullSafe( DATAELEMENT_OPERAND_ID ) );
-            items.addAll( getDimensionOptionsNullSafe( DATASET_DIM_ID ) );
+            items.addAll( getDimensionOptions( INDICATOR_DIM_ID ) );
+            items.addAll( getDimensionOptions( DATAELEMENT_DIM_ID ) );
+            items.addAll( getDimensionOptions( DATAELEMENT_OPERAND_ID ) );
+            items.addAll( getDimensionOptions( DATASET_DIM_ID ) );
         }
         else if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
         {
             List<NameableObject> des = getDimensionOrFilter( DATAELEMENT_DIM_ID );
             
-            if ( des != null && !des.isEmpty() )
+            if ( !des.isEmpty() )
             {
                 Set<DataElementCategoryCombo> categoryCombos = new HashSet<>();
                 
@@ -1451,19 +1462,10 @@ public class DataQueryParams
         }
         else
         {
-            items.addAll( getDimensionOptionsNullSafe( dimension ) );
+            items.addAll( getDimensionOptions( dimension ) );
         }
         
         return items.toArray( new NameableObject[0] );
-    }
-
-    /**
-     * Retrieves the options for the given dimension identifier. Returns an empty
-     * list if the dimension is not present.
-     */
-    public List<NameableObject> getDimensionOptionsNullSafe( String dimension )
-    {
-        return getDimensionOptions( dimension ) != null ? getDimensionOptions( dimension ) : new ArrayList<NameableObject>();
     }
     
     /**
@@ -1480,8 +1482,7 @@ public class DataQueryParams
      */
     public boolean hasDimensionOrFilterWithItems( String key )
     {
-        List<NameableObject> items = getDimensionOrFilter( key );
-        return items != null && !items.isEmpty();
+        return !getDimensionOrFilter( key ).isEmpty();
     }
     
     /**
@@ -1634,7 +1635,7 @@ public class DataQueryParams
     
     public boolean isCategoryOptionCombosEnabled()
     {
-        return getDimensionOrFilter( CATEGORYOPTIONCOMBO_DIM_ID ) != null;
+        return !getDimensionOrFilter( CATEGORYOPTIONCOMBO_DIM_ID ).isEmpty();
     }
     
     // -------------------------------------------------------------------------
@@ -1685,5 +1686,4 @@ public class DataQueryParams
     {
         setFilterOptions( filter, type, null, getList( item ) );
     }
-    
 }
