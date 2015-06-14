@@ -1037,6 +1037,33 @@ public class DataQueryParams
         return map;
     }
     
+    /**
+     * Adds the given dimension to the dimensions of this query. If the dimension
+     * is a data dimensions it will be added to the beginning of the list of dimensions.
+     */
+    public void addDimensions( List<DimensionalObject> dimension )
+    {
+        for ( DimensionalObject dim : dimension )
+        {
+            if ( DATA_DIMS.contains( dim.getDimension() ) )
+            {
+                dimensions.add( 0, dim );
+            }
+            else
+            {
+                dimensions.add( dim );
+            }
+        }
+    }
+    
+    /**
+     * Adds the given filters to the filters of this query.
+     */
+    public void addFilters( List<DimensionalObject> filters )
+    {
+        this.filters.addAll( filters );
+    }
+    
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
