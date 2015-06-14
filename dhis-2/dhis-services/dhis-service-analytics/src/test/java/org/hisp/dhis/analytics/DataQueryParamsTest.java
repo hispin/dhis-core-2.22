@@ -49,7 +49,7 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.period.Period;
 import org.junit.Test;
 
-import com.google.inject.internal.Lists;
+import com.google.common.collect.Lists;
 
 /**
  * @author Lars Helge Overland
