@@ -151,7 +151,7 @@ public class DefaultEventQueryPlanner
         
         if ( violation != null )
         {
-            log.warn( "Validation failed: " + violation );
+            log.warn( "Event analytics validation failed: " + violation );
             
             throw new IllegalQueryException( violation );
         }

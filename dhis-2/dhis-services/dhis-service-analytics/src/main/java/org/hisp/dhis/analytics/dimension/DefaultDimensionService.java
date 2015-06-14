@@ -195,7 +195,7 @@ public class DefaultDimensionService
 
         List<NameableObject> items = new ArrayList<>();
 
-        if ( dimension != null && dimension.getItems() != null )
+        if ( dimension != null && dimension.hasItems() )
         {            
             User user = currentUserService.getCurrentUser();
 

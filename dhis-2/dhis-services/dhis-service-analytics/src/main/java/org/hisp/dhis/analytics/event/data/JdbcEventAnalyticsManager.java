@@ -476,7 +476,7 @@ public class JdbcEventAnalyticsManager
         // Program stage
         // ---------------------------------------------------------------------
 
-        if ( params.getProgramStage() != null )
+        if ( params.hasProgramStage() )
         {
             sql += "and ps = '" + params.getProgramStage().getUid() + "' ";
         }
