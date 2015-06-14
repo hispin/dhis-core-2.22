@@ -554,34 +554,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
                 + " unaccept=" + ( p.isMayUnaccept() ? "T" : "F" )
                 + " read=" + ( p.isMayReadData() ? "T" : "F" );
     }
-
-    /**
-     * Returns approval status and permissions information as a string.
-     * This allows a test to compare the result against a string and test
-     * several things at once. More importantly, it shows in the log
-     * all of the ways in which the test status and permissions differs from
-     * expected, instead of showing only one different value. This can
-     * save time in understanding the difference between the expected value
-     * and the test result.
-     *
-     * @param mockUserService user to execute the test
-     * @param dataSet Approval data set
-     * @param period Approval period
-     * @param organisationUnit Approval orgaisation unit
-     * @param attributeOptionCombo Approval attribute option combination
-     * @return A String representing the state, level, and allowed user actions
-     */
-    private String getStatusAndPermissions( CurrentUserService mockUserService, DataSet dataSet,
-                                         Period period, OrganisationUnit organisationUnit,
-                                         DataElementCategoryOptionCombo attributeOptionCombo )
-    {
-        setUser( mockUserService );
-
-        DataApprovalStatus status = dataApprovalService.getDataApprovalStatusAndPermissions( dataSet, period, organisationUnit, attributeOptionCombo );
-
-        return getStatusString( status );
-    }
-
+    
     private String[] getUserApprovalsAndPermissions( CurrentUserService mockUserService, DataSet dataSet, Period period, OrganisationUnit orgUnit )
     {
         setUser( mockUserService );

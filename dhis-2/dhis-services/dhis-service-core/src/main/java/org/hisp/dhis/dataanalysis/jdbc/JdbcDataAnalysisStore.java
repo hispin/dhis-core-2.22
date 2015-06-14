@@ -164,7 +164,7 @@ public class JdbcDataAnalysisStore
     }
     
     @Override
-    public Collection<DeflatedDataValue> getMinMaxViolations( Collection<DataElement> dataElements, Collection<DataElementCategoryOptionCombo> categoryOptionCombos,
+    public List<DeflatedDataValue> getMinMaxViolations( Collection<DataElement> dataElements, Collection<DataElementCategoryOptionCombo> categoryOptionCombos,
         Collection<Period> periods, Collection<OrganisationUnit> organisationUnits, int limit )
     {
         if ( dataElements.isEmpty() || categoryOptionCombos.isEmpty() || periods.isEmpty() || organisationUnits.isEmpty() )
@@ -202,7 +202,7 @@ public class JdbcDataAnalysisStore
     }
     
     @Override
-    public Collection<DeflatedDataValue> getDeflatedDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
+    public List<DeflatedDataValue> getDeflatedDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
         Collection<Period> periods, Map<Integer, Integer> lowerBoundMap, Map<Integer, Integer> upperBoundMap )
     {
         if ( lowerBoundMap == null || lowerBoundMap.isEmpty() || periods.isEmpty() )
@@ -216,7 +216,7 @@ public class JdbcDataAnalysisStore
         
         log.debug( "No of pages: " + organisationUnitPages.size() );
         
-        Collection<DeflatedDataValue> dataValues = new ArrayList<>();
+        List<DeflatedDataValue> dataValues = new ArrayList<>();
         
         for ( List<Integer> unitPage : organisationUnitPages )
         {
@@ -226,7 +226,7 @@ public class JdbcDataAnalysisStore
         return dataValues;
     }
     
-    private Collection<DeflatedDataValue> getDeflatedDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
+    private List<DeflatedDataValue> getDeflatedDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
         Collection<Period> periods, List<Integer> organisationUnits, Map<Integer, Integer> lowerBoundMap, Map<Integer, Integer> upperBoundMap )
     {
         String periodIds = TextUtils.getCommaDelimitedString( ConversionUtils.getIdentifiers( Period.class, periods ) );
@@ -257,7 +257,7 @@ public class JdbcDataAnalysisStore
     }
 
     @Override
-    public Collection<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit )
+    public List<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit )
     {
         final String idLevelColumn = "idlevel" + organisationUnit.getOrganisationUnitLevel();
 

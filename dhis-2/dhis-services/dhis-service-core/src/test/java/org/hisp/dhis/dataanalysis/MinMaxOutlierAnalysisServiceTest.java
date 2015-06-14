@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -55,9 +56,10 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
-import org.hisp.dhis.util.ListUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.inject.internal.Lists;
 
 /**
  * @author eirikmi
@@ -198,7 +200,7 @@ public class MinMaxOutlierAnalysisServiceTest
         periods.add( periodA );
         periods.add( periodE );
 
-        Collection<DeflatedDataValue> result = minMaxOutlierAnalysisService.analyse( ListUtils.getCollection( organisationUnitA ), dataElementsA, periods, null, from );
+        List<DeflatedDataValue> result = minMaxOutlierAnalysisService.analyse( Lists.newArrayList( organisationUnitA ), dataElementsA, periods, null, from );
 
         assertEquals( 2, result.size() );
     }
