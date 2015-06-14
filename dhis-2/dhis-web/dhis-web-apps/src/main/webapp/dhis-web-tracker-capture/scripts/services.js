@@ -1778,66 +1778,66 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 /* service for building variables based on the data in users fields */
 .service('VariableService', function($rootScope,$q,TrackerRuleVariableFactory,$filter,orderByFilter,$log){
     return {
-        getVariables: function($scope) {
+        getVariables: function(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity) {
             var thePromisedVariables = $q.defer();
-            var variables = [];
+            var variables = {};
             
-            $scope.pushVariable = function(variablename, variablevalue, variabletype, variablefound) {
+            var pushVariable = function(variablename, variableValue, variableType, variablefound) {
                 //First clean away single or double quotation marks at the start and end of the variable name.
-                variablevalue = $filter('trimquotes')(variablevalue);
+                variableValue = $filter('trimquotes')(variableValue);
                 
                 //Append single quotation marks in case the variable is of text type:
-                if(variabletype === 'string') {
-                    variablevalue = "'" + variablevalue + "'";
+                if(variableType === 'string') {
+                    variableValue = "'" + variableValue + "'";
                 }
-                else if(variabletype === 'date') {
-                    variablevalue = "'" + variablevalue + "'";
+                else if(variableType === 'date') {
+                    variableValue = "'" + variableValue + "'";
                 }
-                else if(variabletype === 'bool' || variabletype === 'trueOnly') {
-                    if(eval(variablevalue)) {
-                        variablevalue = true;
+                else if(variableType === 'bool' || variableType === 'trueOnly') {
+                    if(eval(variableValue)) {
+                        variableValue = true;
                     }
                     else {    
-                        variablevalue = false;
+                        variableValue = false;
                     }
                 }
-                else if(variabletype === "int" || variabletype === "number") {
-                    variablevalue = Number(variablevalue);
+                else if(variableType === "int" || variableType === "number") {
+                    variableValue = Number(variableValue);
                 }
                 else{
-                    $log.warn("unknown datatype:" + variabletype);
+                    $log.warn("unknown datatype:" + variableType);
                 }
                  
                 
-                //Make sure that the variablevalue does not contain a dollar sign anywhere 
+                //Make sure that the variableValue does not contain a dollar sign anywhere 
                 //- this would potentially mess up later use of the variable:
-//                if(angular.isDefined(variablevalue) 
-//                        && variablevalue !== null
-//                        && variablevalue.indexOf("$") !== -1 ) {
-//                    variablevalue = variablevalue.replace(/\\$/,"");
+//                if(angular.isDefined(variableValue) 
+//                        && variableValue !== null
+//                        && variableValue.indexOf("$") !== -1 ) {
+//                    variableValue = variableValue.replace(/\\$/,"");
 //                }
                 
                 //TODO:
                 //Also clean away instructions that might be erroneusly evalutated in javascript
 
-                variables.push({variablename:variablename,
-                                variablevalue:variablevalue,
-                                variabletype:variabletype,
+                variables[variablename] = {
+                                variableValue:variableValue,
+                                variableType:variableType,
                                 hasValue:variablefound
-                            });
+                            };
             };
             
-            TrackerRuleVariableFactory.getProgramRuleVariables($scope.currentEvent.program).then(function(programVariables){
+            TrackerRuleVariableFactory.getProgramRuleVariables(programid).then(function(programVariables){
 
                 // The following section will need a different implementation for event capture:
                 var allEventsSorted = [];
-                var currentEvent = $scope.currentEvent;
+                var currentEvent = executingEvent;
                 var eventsSortedPerProgramStage = [];
                 
-                for(var key in $scope.eventsByStage){
-                    if($scope.eventsByStage.hasOwnProperty(key)){
+                for(var key in allEventsByStage){
+                    if(allEventsByStage.hasOwnProperty(key)){
                         eventsSortedPerProgramStage[key] = [];
-                        angular.forEach($scope.eventsByStage[key], function(event){
+                        angular.forEach(allEventsByStage[key], function(event){
                             allEventsSorted.push(event);
                             eventsSortedPerProgramStage[key].push(event);
                         });
@@ -1846,12 +1846,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }
                 allEventsSorted = orderByFilter(allEventsSorted, '-sortingDate').reverse(); 
                 
-                var allDes = {};
-                angular.forEach($scope.programStages, function(programStage){
-                    angular.forEach(programStage.programStageDataElements, function(dataElement) {
-                        allDes[dataElement.dataElement.id] = dataElement;
-                    });
-                });
+                var allDes = allDataElements;
+//                angular.forEach($scope.programStages, function(programStage){
+//                    angular.forEach(programStage.programStageDataElements, function(dataElement) {
+//                        allDes[dataElement.dataElement.id] = dataElement;
+//                    });
+//                });
                 //End of region that neeeds specific implementation for event capture
                 
                 angular.forEach(programVariables, function(programVariable) {
@@ -1862,7 +1862,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 if(angular.isDefined(event[programVariable.dataElement.id])
                                         && event[programVariable.dataElement.id] !== null ){
                                     valueFound = true;
-                                    $scope.pushVariable(programVariable.name, event[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
+                                    pushVariable(programVariable.name, event[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
                                 }
                             });
                         } else {
@@ -1877,7 +1877,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             if(angular.isDefined(event[programVariable.dataElement.id])
                                     && event[programVariable.dataElement.id] !== null ){
                                 valueFound = true;
-                                 $scope.pushVariable(programVariable.name, event[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
+                                 pushVariable(programVariable.name, event[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
                              }
                         });
                     }
@@ -1885,7 +1885,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                         if(angular.isDefined(currentEvent[programVariable.dataElement.id])
                                 && currentEvent[programVariable.dataElement.id] !== null ){
                             valueFound = true;
-                            $scope.pushVariable(programVariable.name, currentEvent[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
+                            pushVariable(programVariable.name, currentEvent[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
                         }      
                     }
                     else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_PREVIOUS_EVENT"){
@@ -1904,21 +1904,20 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 else if(allEventsSorted[i] === currentEvent) {
                                     //We have iterated to the newest event - store the last collected variable value - if any is found:
                                     if(valueFound) {
-                                        $scope.pushVariable(programVariable.name, previousvalue, allDes[programVariable.dataElement.id].dataElement.type, valueFound );
+                                        pushVariable(programVariable.name, previousvalue, allDes[programVariable.dataElement.id].dataElement.type, valueFound );
                                     }
                                     //Set currentEventPassed, ending the iteration:
                                     currentEventPassed = true;
                                 }
-                                
                             }
                         }
                     }
                     else if(programVariable.programRuleVariableSourceType === "TEI_ATTRIBUTE"){
-                        angular.forEach($scope.selectedEntity.attributes , function(attribute) {
+                        angular.forEach(selectedEntity.attributes , function(attribute) {
                             if(!valueFound) {
                                 if(attribute.attribute === programVariable.trackedEntityAttribute.id) {
                                     valueFound = true;
-                                    $scope.pushVariable(programVariable.name, attribute.value, attribute.type, valueFound );
+                                    pushVariable(programVariable.name, attribute.value, attribute.type, valueFound );
                                 }
                             }
                         });
@@ -1932,7 +1931,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             numberOfEvents = eventsSortedPerProgramStage[programVariable.programStage.id].length;
                         }
                         valueFound = true;
-                        $scope.pushVariable(programVariable.name, numberOfEvents, 'int', valueFound );
+                        pushVariable(programVariable.name, numberOfEvents, 'int', valueFound );
                     }
                     else {
                         //Missing handing of ruletype
@@ -1945,22 +1944,22 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                         if(programVariable.dataElement) {
                             var dataElement = allDes[programVariable.dataElement.id];
                             if( dataElement ) {
-                                $scope.pushVariable(programVariable.name, "", dataElement.dataElement.type );
+                                pushVariable(programVariable.name, "", dataElement.dataElement.type );
                             } 
                             else {
                                 $log.warn("Variable #{" + programVariable.name + "} is linked to a dataelement that is not part of the program");
-                                $scope.pushVariable(programVariable.name, "", "string" );
+                                pushVariable(programVariable.name, "", "string" );
                             }
                         }
                         else {
-                            $scope.pushVariable(programVariable.name, "", "string" );
+                            pushVariable(programVariable.name, "", "string" );
                         }
                     }
                 });
 
                 //add context variables:
                 //last parameter "valuefound" is always true for event date
-                $scope.pushVariable('eventdate', currentEvent.eventDate, 'date', true );
+                pushVariable('eventdate', executingEvent.eventDate, 'date', true );
                 
                 thePromisedVariables.resolve(variables);
             });
@@ -1975,16 +1974,15 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 /* service for executing tracker rules and broadcasting results */
 .service('TrackerRulesExecutionService', function(TrackerRulesFactory,VariableService, $rootScope, $log, $filter, orderByFilter){
     return {
-        executeRules: function($scope) {
+        executeRules: function(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity) {
             //When debugging rules, the caller should provide a variable for wether or not the rules is being debugged.
             //hard coding this for now:
             var debug = true;
             var verbose = true;
             
             var variablesHash = {};
-            var variablesWithValueHash = {};
                     
-            $scope.replaceVariables = function(expression) {
+            var replaceVariables = function(expression) {
                 //replaces the variables in an expression with actual variable values.
                 //First check if the expression contains variables at all(any dollar signs):
                 if(expression.indexOf('#') !== -1) {
@@ -1998,7 +1996,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                         if(angular.isDefined(variablesHash[variablepresent])) {
                             //Replace all occurrences of the variable name(hence using regex replacement):
                             expression = expression.replace(new RegExp("#{" + variablepresent + "}", 'g'),
-                                variablesHash[variablepresent]);
+                                variablesHash[variablepresent].variableValue);
                         }
                         else {
                             $log.warn("Expression " + expression + " conains variable " + variablepresent 
@@ -2010,7 +2008,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 return expression;
             };
             
-            $scope.runDhisFunctions = function(expression) {
+            var runDhisFunctions = function(expression) {
                 //Called from "runExpression". Only proceed with this logic in case there seems to be dhis function calls: "dhis." is present.
                 if(angular.isDefined(expression) && expression.indexOf("dhis.") !== -1){   
                     var dhisFunctions = [{name:"dhis.daysbetween",parameters:2},
@@ -2042,7 +2040,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             //In case the function call is nested, the parameter itself contains an expression, run the expression.
                             if(angular.isDefined(parameters)) {
                                 for (var i = 0; i < parameters.length; i++) {
-                                    parameters[i] = $scope.runExpression(parameters[i],dhisFunction.name,"parameter:" + i);
+                                    parameters[i] = runExpression(parameters[i],dhisFunction.name,"parameter:" + i);
                                 }
                             }
 
@@ -2073,7 +2071,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             else if(dhisFunction.name === "dhis.hasValue")
                             {
                                 //"evaluate" hasvalue to true or false:
-                                if(variablesWithValueHash[parameters[0]]){
+                                if(variablesHash[parameters[0]].hasValue){
                                     expression = expression.replace(callToThisFunction, 'true');
                                 } else {
                                     expression = expression.replace(callToThisFunction, 'false');
@@ -2095,14 +2093,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 return expression;
             };
             
-            $scope.runExpression = function(expression, beforereplacement, identifier ){
+            var runExpression = function(expression, beforereplacement, identifier ){
                 //determine if expression is true, and actions should be effectuated
                 //If DEBUG mode, use try catch and report errors. If not, omit the heavy try-catch loop.:
                 var answer = false;
                 if(debug) {
                     try{
                         
-                        var dhisfunctionsevaluated = $scope.runDhisFunctions(expression);
+                        var dhisfunctionsevaluated = runDhisFunctions(expression);
                         answer = eval(dhisfunctionsevaluated);
 
                         if(verbose)
@@ -2117,33 +2115,29 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }
                 else {
                     //Just run the expression. This is much faster than the debug route: http://jsperf.com/try-catch-block-loop-performance-comparison
-                    var dhisfunctionsevaluated = $scope.runDhisFunctions(expression);
+                    var dhisfunctionsevaluated = runDhisFunctions(expression);
                     answer = eval(dhisfunctionsevaluated);
                 }
                 return answer;
             };
             
             
-            VariableService.getVariables($scope).then(function(variables){
-                TrackerRulesFactory.getProgramStageRules($scope.selectedProgram.id, $scope.currentStage.id).then(function(rules){
+            VariableService.getVariables(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity).then(function(variablesReceived){
+                TrackerRulesFactory.getProgramStageRules(programid, executingEvent.programStage).then(function(rules){
                     //But run rules in priority - lowest number first(priority null is last)
                     rules = orderByFilter(rules, 'priority');
-
-                    //Make a variables hash to allow direct lookup:
-                    angular.forEach(variables, function(variable) {
-                        variablesHash[variable.variablename] = variable.variablevalue;
-                    });
                     
-                    //Make a variables-exists/hasvalue hash to allow direct lookup:
-                    angular.forEach(variables, function(variable) {
-                        variablesWithValueHash[variable.variablename] = variable.hasValue;
-                    });
+                    variablesHash = variablesReceived;
 
                     if(angular.isObject(rules) && angular.isArray(rules)){
                         //The program has rules, and we want to run them.
                         //Prepare repository unless it is already prepared:
-                        if(angular.isUndefined( $rootScope.ruleeffects )){
+                        if(angular.isUndefined( $rootScope.ruleeffects ) ) {
                             $rootScope.ruleeffects = {};
+                        }
+                            
+                        if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event] )){
+                            $rootScope.ruleeffects[executingEvent.event] = {};
                         }
 
                         var updatedEffectsExits = false;
@@ -2155,18 +2149,18 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             //Go through and populate variables with actual values, but only if there actually is any replacements to be made(one or more "$" is present)
                             if(expression) {
                                 if(expression.indexOf('#') !== -1) {
-                                    expression = $scope.replaceVariables(expression);
+                                    expression = replaceVariables(expression);
                                 }
                                 //run expression:
-                                ruleEffective = $scope.runExpression(expression, rule.condition, "rule:" + rule.id);
+                                ruleEffective = runExpression(expression, rule.condition, "rule:" + rule.id);
                             } else {
                                 $log.warn("Rule id:'" + rule.id + "'' and name:'" + rule.name + "' had no condition specified. Please check rule configuration.");
                             }
                             
                             angular.forEach(rule.actions, function(action){
                                 //In case the effect-hash is not populated, add entries
-                                if(angular.isUndefined( $rootScope.ruleeffects[action.id] )){
-                                    $rootScope.ruleeffects[action.id] =  {
+                                if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event][action.id] )){
+                                    $rootScope.ruleeffects[executingEvent.event][action.id] =  {
                                         id:action.id,
                                         location:action.location, 
                                         action:action.programRuleActionType,
@@ -2186,56 +2180,56 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                     //To make a lookup in variables hash, we must make a lookup without the dollar sign in the variable name
                                     //The first strategy is to make a direct lookup. In case the "data" expression is more complex, we have to do more replacement and evaluation.
 
-                                    var nameWithoutDollarSign = action.data.replace('#{','').replace('}','');
-                                    if(angular.isDefined(variablesHash[nameWithoutDollarSign]))
+                                    var nameWithoutBrackets = action.data.replace('#{','').replace('}','');
+                                    if(angular.isDefined(variablesHash[nameWithoutBrackets]))
                                     {
                                         //The variable exists, and is replaced with its corresponding value
-                                        $rootScope.ruleeffects[action.id].data =
-                                            variablesHash[nameWithoutDollarSign];
+                                        $rootScope.ruleeffects[executingEvent.event][action.id].data =
+                                            variablesHash[nameWithoutBrackets].variableValue;
                                     }
                                     else if(action.data.indexOf('#') !== -1)
                                     {
                                         //Since the value couldnt be looked up directly, and contains a dollar sign, the expression was more complex
                                         //Now we will have to make a thorough replacement and separate evaluation to find the correct value:
-                                        $rootScope.ruleeffects[action.id].data = $scope.replaceVariables(action.data);
+                                        $rootScope.ruleeffects[executingEvent.event][action.id].data = replaceVariables(action.data);
                                         //In a scenario where the data contains a complex expression, evaluate the expression to compile(calculate) the result:
-                                        $rootScope.ruleeffects[action.id].data = $scope.runExpression($rootScope.ruleeffects[action.id].data, action.data, "action:" + action.id);
+                                        $rootScope.ruleeffects[executingEvent.event][action.id].data = runExpression($rootScope.ruleeffects[executingEvent.event][action.id].data, action.data, "action:" + action.id);
                                     }
                                 }
 
                                 //Update the rule effectiveness if it changed in this evaluation;
-                                if($rootScope.ruleeffects[action.id].ineffect != ruleEffective)
+                                if($rootScope.ruleeffects[executingEvent.event][action.id].ineffect !== ruleEffective)
                                 {
                                     //There is a change in the rule outcome, we need to update the effect object.
                                     updatedEffectsExits = true;
-                                    $rootScope.ruleeffects[action.id].ineffect = ruleEffective;
+                                    $rootScope.ruleeffects[executingEvent.event][action.id].ineffect = ruleEffective;
                                 }
 
                                 //In case the rule is of type "assign variable" and the rule is effective,
                                 //the variable data result needs to be applied to the correct variable:
-                                if($rootScope.ruleeffects[action.id].action === "ASSIGNVARIABLE" && $rootScope.ruleeffects[action.id].ineffect){
+                                if($rootScope.ruleeffects[executingEvent.event][action.id].action === "ASSIGNVARIABLE" && $rootScope.ruleeffects[executingEvent.event][action.id].ineffect){
                                     //from earlier evaluation, the data portion of the ruleeffect now contains the value of the variable to be assign.
                                     //the content portion of the ruleeffect defines the name for the variable, when dollar is removed:
-                                    var variabletoassign = $rootScope.ruleeffects[action.id].content.replace("#{","").replace("}","");
+                                    var variabletoassign = $rootScope.ruleeffects[executingEvent.event][action.id].content.replace("#{","").replace("}","");
 
                                     if(!angular.isDefined(variablesHash[variabletoassign])){
                                         $log.warn("Variable " + variabletoassign + " was not defined.");
                                     }
 
                                     //Even if the variable is not defined: we assign it:
-                                    if(variablesHash[variabletoassign] !== $rootScope.ruleeffects[action.id].data){
+                                    if(variablesHash[variabletoassign].variableValue !== $rootScope.ruleeffects[executingEvent.event][action.id].data){
                                         //If the variable was actually updated, we assume that there is an updated ruleeffect somewhere:
                                         updatedEffectsExits = true;
                                         //Then we assign the new value:
-                                        variablesHash[variabletoassign] = $rootScope.ruleeffects[action.id].data;
+                                        variablesHash[variabletoassign].variableValue = $rootScope.ruleeffects[executingEvent.event][action.id].data;
                                     }
                                 }
                             });
                         });
 
-                        //Broadcast rules finished if there was any actual changes.
+                        //Broadcast rules finished if there was any actual changes to the event.
                         if(updatedEffectsExits){
-                            $rootScope.$broadcast("ruleeffectsupdated");
+                            $rootScope.$broadcast("ruleeffectsupdated", { event: executingEvent.event });
                         }
                     }
 

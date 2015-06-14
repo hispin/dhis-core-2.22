@@ -20,11 +20,11 @@ trackerCapture.controller('RuleBoundController',
         var keyDataInEffect = false;
         
         //Bind non-bound rule effects, if any.
-        angular.forEach($rootScope.ruleeffects, function(effect) {
-            if(effect.location == $scope.widgetCode){
+        angular.forEach($rootScope.ruleeffects[args.event], function(effect) {
+            if(effect.location === $scope.widgetCode){
                 //This effect is affecting the local widget
                 
-                if(effect.action == "DISPLAYTEXT") {
+                if(effect.action === "DISPLAYTEXT") {
                     //this action is display text. Make sure the displaytext is
                     //added to the local list of displayed texts
                     if(!angular.isObject($scope.displayTextEffects[effect.id])){
@@ -35,7 +35,7 @@ trackerCapture.controller('RuleBoundController',
                         textInEffect = true;
                     }
                 }
-                else if(effect.action == "DISPLAYKEYVALUEPAIR") {
+                else if(effect.action === "DISPLAYKEYVALUEPAIR") {
                     //this action is display text. Make sure the displaytext is
                     //added to the local list of displayed texts
                     if(!angular.isObject($scope.displayTextEffects[effect.id])){
@@ -46,7 +46,7 @@ trackerCapture.controller('RuleBoundController',
                         keyDataInEffect = true;
                     }
                 } else {
-                    $log.warn("action: '" + effect.action + "' not supported by rulebound-controller.js")
+                    $log.warn("action: '" + effect.action + "' not supported by rulebound-controller.js");
                 }
             }
         });
