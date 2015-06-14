@@ -541,17 +541,14 @@ public class DefaultAnalyticsService
     @Override
     public Grid getAggregatedDataValues( DataQueryParams params, boolean tableLayout, List<String> columns, List<String> rows )
     {
-        Grid grid = null;
-
         if ( !tableLayout )
         {
             return getAggregatedDataValues( params );
         }
-        else
-        {
-            params.setOutputIdScheme( null );
-            grid = getAggregatedDataValues( params );
-        }
+        
+        params.setOutputIdScheme( null );
+        
+        Grid grid = getAggregatedDataValues( params );
 
         ListUtils.removeEmptys( columns );
         ListUtils.removeEmptys( rows );
