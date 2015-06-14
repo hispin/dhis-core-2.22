@@ -28,6 +28,14 @@ package org.hisp.dhis.light.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
@@ -48,23 +56,16 @@ import org.hisp.dhis.period.YearlyPeriodType;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.OrganisationUnitWithDataSetsFilter;
 import org.hisp.dhis.system.filter.PastAndCurrentPeriodFilter;
-import org.hisp.dhis.util.FilterUtils;
-import org.hisp.dhis.util.ListUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserCredentials;
+import org.hisp.dhis.util.FilterUtils;
 import org.hisp.dhis.validation.ValidationResult;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Sets;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -158,10 +159,10 @@ public class FormUtilsImpl
         Date from = new DateTime( period.getStartDate() ).minusYears( 2 ).toDate();
         
         Collection<DeflatedDataValue> stdDevs = stdDevOutlierAnalysisService.analyse(
-            ListUtils.getCollection( organisationUnit ), dataElements, ListUtils.getCollection( period ), factor, from );
+            Sets.newHashSet( organisationUnit ), dataElements, Sets.newHashSet( period ), factor, from );
 
         Collection<DeflatedDataValue> minMaxs = minMaxOutlierAnalysisService.analyse(
-            ListUtils.getCollection( organisationUnit ), dataElements, ListUtils.getCollection( period ), null, from );
+            Sets.newHashSet( organisationUnit ), dataElements, Sets.newHashSet( period ), null, from );
 
         Collection<DeflatedDataValue> deflatedDataValues = CollectionUtils.union( stdDevs, minMaxs );
 

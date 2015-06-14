@@ -31,6 +31,7 @@ package org.hisp.dhis.dataanalysis;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -95,7 +96,7 @@ public class MinMaxOutlierAnalysisService
     // -------------------------------------------------------------------------
 
     @Override
-    public Collection<DeflatedDataValue> analyse( Collection<OrganisationUnit> organisationUnits,
+    public List<DeflatedDataValue> analyse( Collection<OrganisationUnit> organisationUnits,
         Collection<DataElement> dataElements, Collection<Period> periods, Double stdDevFactor, Date from )
     {
         Set<DataElement> elements = new HashSet<>( dataElements );

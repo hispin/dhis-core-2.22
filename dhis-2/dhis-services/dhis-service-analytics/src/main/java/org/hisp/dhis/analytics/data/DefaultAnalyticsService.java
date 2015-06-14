@@ -148,6 +148,8 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.inject.internal.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -409,7 +411,7 @@ public class DefaultAnalyticsService
 
             for ( Map.Entry<String, Double> entry : aggregatedDataMap.entrySet() )
             {
-                List<String> dataRow = ListUtils.getList( entry.getKey().split( DIMENSION_SEP ) );
+                List<String> dataRow = Lists.newArrayList( entry.getKey().split( DIMENSION_SEP ) );
 
                 List<String> targetRow = ListUtils.getAtIndexes( dataRow, completenessDimIndexes );
                 String targetKey = StringUtils.join( targetRow, DIMENSION_SEP );
@@ -1005,7 +1007,7 @@ public class DefaultAnalyticsService
         {
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORY_OPTION_COMBO, null, DISPLAY_NAME_CATEGORYOPTIONCOMBO, new ArrayList<NameableObject>() );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         if ( PERIOD_DIM_ID.equals( dimension ) )
@@ -1053,7 +1055,7 @@ public class DefaultAnalyticsService
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.PERIOD, null, DISPLAY_NAME_PERIOD, asList( periodList ) );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         if ( ORGUNIT_DIM_ID.equals( dimension ) )
@@ -1138,7 +1140,7 @@ public class DefaultAnalyticsService
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.ORGANISATIONUNIT, null, DISPLAY_NAME_ORGUNIT, orgUnits );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         if ( PROGRAM_INDICATOR_DIM_ID.equals( dimension ) )
@@ -1147,21 +1149,21 @@ public class DefaultAnalyticsService
             
             DimensionalObject object = new BaseDimensionalObject( PROGRAM_INDICATOR_DIM_ID, DimensionType.PROGRAM_INDICATOR, null, DISPLAY_NAME_PROGRAM_INDICATOR, indicators );
             
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
         
         if ( LONGITUDE_DIM_ID.contains( dimension ) )
         {
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.STATIC, null, DISPLAY_NAME_LONGITUDE, new ArrayList<NameableObject>() );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         if ( LATITUDE_DIM_ID.contains( dimension ) )
         {
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.STATIC, null, DISPLAY_NAME_LATITUDE, new ArrayList<NameableObject>() );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         OrganisationUnitGroupSet ougs = idObjectManager.get( OrganisationUnitGroupSet.class, dimension );
@@ -1172,7 +1174,7 @@ public class DefaultAnalyticsService
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.ORGANISATIONUNIT_GROUPSET, null, ougs.getDisplayName(), ous, allItems );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         DataElementGroupSet degs = idObjectManager.get( DataElementGroupSet.class, dimension );
@@ -1183,7 +1185,7 @@ public class DefaultAnalyticsService
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.DATAELEMENT_GROUPSET, null, degs.getDisplayName(), des, allItems );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         CategoryOptionGroupSet cogs = idObjectManager.get( CategoryOptionGroupSet.class, dimension );
@@ -1194,7 +1196,7 @@ public class DefaultAnalyticsService
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORYOPTION_GROUPSET, null, cogs.getDisplayName(), cogz, allItems );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         DataElementCategory dec = idObjectManager.get( DataElementCategory.class, dimension );
@@ -1205,7 +1207,7 @@ public class DefaultAnalyticsService
 
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORY, null, dec.getDisplayName(), decos, allItems );
 
-            return ListUtils.getList( object );
+            return Lists.newArrayList( object );
         }
 
         if ( allowNull )
