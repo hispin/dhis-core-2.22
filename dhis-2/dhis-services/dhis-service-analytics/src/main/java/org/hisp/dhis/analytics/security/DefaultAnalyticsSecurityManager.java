@@ -91,7 +91,7 @@ public class DefaultAnalyticsSecurityManager
         
         List<NameableObject> queryOrgUnits = params.getDimensionOrFilter( DimensionalObject.ORGUNIT_DIM_ID );
         
-        if ( queryOrgUnits == null || queryOrgUnits.isEmpty() || user == null || !user.hasDataViewOrganisationUnit() )
+        if ( queryOrgUnits.isEmpty() || user == null || !user.hasDataViewOrganisationUnit() )
         {
             return; // Allow if no 
         }

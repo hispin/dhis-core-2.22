@@ -163,7 +163,7 @@ public class DefaultQueryPlanner
         
         if ( violation != null )
         {
-            log.warn( "Validation failed: " + violation );
+            log.warn( "Analytics validation failed: " + violation );
             
             throw new IllegalQueryException( violation );
         }
@@ -386,7 +386,7 @@ public class DefaultQueryPlanner
             params.setPartitions( new Partitions().add( tableName ) );
             queries.add( params );
         }
-        else if ( params.getPeriods() != null && !params.getPeriods().isEmpty() )
+        else if ( !params.getPeriods().isEmpty() )
         {
             ListMap<Partitions, NameableObject> partitionPeriodMap = PartitionUtils.getPartitionPeriodMap( params.getPeriods(), tableName, tableSuffix, validPartitions );
             
@@ -401,7 +401,7 @@ public class DefaultQueryPlanner
                 }
             }
         }
-        else if ( params.getFilterPeriods() != null && !params.getFilterPeriods().isEmpty() )
+        else if ( !params.getFilterPeriods().isEmpty() )
         {
             Partitions partitions = PartitionUtils.getPartitions( params.getFilterPeriods(), tableName, tableSuffix, validPartitions );
             
@@ -441,7 +441,7 @@ public class DefaultQueryPlanner
         {
             queries.add( params );
         }
-        else if ( params.getPeriods() != null && !params.getPeriods().isEmpty() )
+        else if ( !params.getPeriods().isEmpty() )
         {
             ListMap<String, NameableObject> periodTypePeriodMap = PartitionUtils.getPeriodTypePeriodMap( params.getPeriods() );
     
@@ -453,7 +453,7 @@ public class DefaultQueryPlanner
                 queries.add( query );
             }
         }
-        else if ( params.getFilterPeriods() != null && !params.getFilterPeriods().isEmpty() )
+        else if ( !params.getFilterPeriods().isEmpty() )
         {
             DimensionalObject filter = params.getFilter( PERIOD_DIM_ID );
             
@@ -488,7 +488,7 @@ public class DefaultQueryPlanner
     {
         List<DataQueryParams> queries = new ArrayList<>();
 
-        if ( params.getOrganisationUnits() != null && !params.getOrganisationUnits().isEmpty() )
+        if ( !params.getOrganisationUnits().isEmpty() )
         {
             ListMap<Integer, NameableObject> levelOrgUnitMap = getLevelOrgUnitMap( params.getOrganisationUnits() );
             
@@ -499,7 +499,7 @@ public class DefaultQueryPlanner
                 queries.add( query );
             }
         }
-        else if ( params.getFilterOrganisationUnits() != null && !params.getFilterOrganisationUnits().isEmpty() )
+        else if ( !params.getFilterOrganisationUnits().isEmpty() )
         {
             DimensionalObject filter = params.getFilter( ORGUNIT_DIM_ID );
             
@@ -533,7 +533,7 @@ public class DefaultQueryPlanner
     {
         List<DataQueryParams> queries = new ArrayList<>();
         
-        if ( params.getDataElements() != null && !params.getDataElements().isEmpty() )
+        if ( !params.getDataElements().isEmpty() )
         {
             ListMap<DataType, NameableObject> dataTypeDataElementMap = getDataTypeDataElementMap( params.getDataElements() );
             
@@ -584,13 +584,13 @@ public class DefaultQueryPlanner
     {
         List<DataQueryParams> queries = new ArrayList<>();
         
-        if ( params.getAggregationType() != null )
+        if ( params.hasAggregationType() )
         {
             queries.add( params.instance() );
             return queries;
         }
         
-        if ( params.getDataElements() != null && !params.getDataElements().isEmpty() )
+        if ( !params.getDataElements().isEmpty() )
         {
             PeriodType periodType = PeriodType.getPeriodTypeByName( params.getPeriodType() );
             
@@ -604,7 +604,7 @@ public class DefaultQueryPlanner
                 queries.add( query );
             }
         }
-        else if ( params.getDataElementGroupSets() != null && !params.getDataElementGroupSets().isEmpty() )
+        else if ( !params.getDataElementGroupSets().isEmpty() )
         {
             DimensionalObject degs = params.getDataElementGroupSets().get( 0 );
             DataElementGroup deg = (DataElementGroup) ( degs.hasItems() ? degs.getItems().get( 0 ) : null );
@@ -646,7 +646,7 @@ public class DefaultQueryPlanner
     {
         List<DataQueryParams> queries = new ArrayList<>();
 
-        if ( params.getDataElements() == null || params.getDataElements().isEmpty() )
+        if ( params.getDataElements().isEmpty() )
         {
             queries.add( params.instance() );
             return queries;

@@ -291,7 +291,7 @@ public class DefaultAnalyticsService
      */
     private void addIndicatorValues( DataQueryParams params, Grid grid )
     {
-        if ( params.getIndicators() != null )
+        if ( !params.getIndicators().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
@@ -364,7 +364,7 @@ public class DefaultAnalyticsService
      */
     private void addDataElementValues( DataQueryParams params, Grid grid )
     {
-        if ( params.getDataElements() != null )
+        if ( !params.getDataElements().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.removeDimension( INDICATOR_DIM_ID );
@@ -391,7 +391,7 @@ public class DefaultAnalyticsService
      */
     private void addProgramDataElementValues( DataQueryParams params, Grid grid )
     {
-        if ( params.getProgramDataElements() != null )
+        if ( !params.getProgramDataElements().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.removeDimension( INDICATOR_DIM_ID );
@@ -415,7 +415,7 @@ public class DefaultAnalyticsService
      */
     private void addDataSetValues( DataQueryParams params, Grid grid )
     {
-        if ( params.getDataSets() != null )
+        if ( !params.getDataSets().isEmpty() )
         {
             // -----------------------------------------------------------------
             // Get complete data set registrations
@@ -490,7 +490,7 @@ public class DefaultAnalyticsService
      */
     private void addDynamicDimensionValues( DataQueryParams params, Grid grid )
     {
-        if ( params.getIndicators() == null && params.getDataElements() == null && params.getDataSets() == null && params.getProgramDataElements() == null )
+        if ( params.getIndicators().isEmpty() && params.getDataElements().isEmpty() && params.getDataSets().isEmpty() && params.getProgramDataElements().isEmpty() )
         {
             Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( params.instance() );
 
@@ -1431,7 +1431,7 @@ public class DefaultAnalyticsService
             {
                 DataElement dataElement = (DataElement) de;
 
-                if ( dataElement.getCategoryCombo() != null )
+                if ( dataElement.hasCategoryCombo() )
                 {
                     categoryCombos.add( dataElement.getCategoryCombo() );
                 }
@@ -1460,7 +1460,7 @@ public class DefaultAnalyticsService
     {
         Integer cores = (Integer) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_DATABASE_SERVER_CPUS );
 
-        return (cores == null || cores == 0) ? SystemUtils.getCpuCores() : cores;
+        return ( cores == null || cores == 0 ) ? SystemUtils.getCpuCores() : cores;
     }
 
     /**
