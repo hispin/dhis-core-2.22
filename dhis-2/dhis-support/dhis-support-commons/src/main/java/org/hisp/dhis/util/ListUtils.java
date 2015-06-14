@@ -290,25 +290,4 @@ public class ListUtils
     {
         return list != null ? list : new ArrayList<T>();
     }
-    
-    /**
-     * Moves the item at the given index to the beginning of the given list.
-     * 
-     * @param list the list.
-     * @param index the index of the item in the list.
-     * @return true if the list was modified, false if not.
-     */
-    public static <T> boolean moveFirst( List<T> list, int index )
-    {
-        if ( list == null || list.isEmpty() || index <= 0 || list.size() <= index )
-        {
-            return false;
-        }
-        
-        T item = list.get( index );
-        list.remove( index );
-        list.add( 0, item );
-        
-        return true;
-    }
 }
