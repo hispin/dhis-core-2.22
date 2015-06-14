@@ -42,6 +42,7 @@ import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.DimensionalObject.INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.NameableObjectUtils.asList;
 import static org.hisp.dhis.common.NameableObjectUtils.getList;
 
@@ -77,6 +78,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.util.CollectionUtils;
 import org.hisp.dhis.util.ListUtils;
 import org.hisp.dhis.system.util.MathUtils;
@@ -101,8 +104,12 @@ public class DataQueryParams
     public static final int DE_IN_INDEX = 0;
     public static final int CO_IN_INDEX = 1;
     
-    public static final List<String> DATA_DIMS = Arrays.asList( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID );
-    public static final List<String> FIXED_DIMS = Arrays.asList( DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
+    public static final List<String> DATA_DIMS = Arrays.asList( 
+        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID );
+    public static final List<String> FIXED_DIMS = Arrays.asList( 
+        DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
+    private static final List<String> DIMENSION_PERMUTATION_IGNORE_DIMS = Arrays.asList( 
+        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID );    
     
     private static final List<DimensionType> COMPLETENESS_DIMENSION_TYPES = Arrays.asList( DATASET, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET );
     
@@ -115,7 +122,7 @@ public class DataQueryParams
 
     protected AggregationType aggregationType;
         
-    private Map<MeasureFilter, Double> measureCriteria = new HashMap<>();
+    protected Map<MeasureFilter, Double> measureCriteria = new HashMap<>();
     
     /**
      * Indicates if the meta data part of the query response should be omitted.
@@ -133,25 +140,25 @@ public class DataQueryParams
      * path of all organisation units part of the query should be included as a
      * "ouHierarchy" key in the meta-data part of the response.
      */
-    private boolean hierarchyMeta;
+    protected boolean hierarchyMeta;
     
     /**
      * Indicates whether the maximum number of records to include the response
      * should be ignored.
      */
-    private boolean ignoreLimit;
+    protected boolean ignoreLimit;
     
     /**
      * Indicates whether rows with no values should be hidden in the response.
      * Applies to responses with table layout only. 
      */
-    private boolean hideEmptyRows;
+    protected boolean hideEmptyRows;
     
     /**
      * Indicates whether the org unit hierarchy path should be displayed with the
      * org unit names on rows.
      */
-    private boolean showHierarchy;
+    protected boolean showHierarchy;
     
     /**
      * Indicates which property to display for meta-data.
@@ -167,6 +174,20 @@ public class DataQueryParams
      * The required approval level identifier for data to be included in query response.
      */
     protected String approvalLevel;
+
+    // -------------------------------------------------------------------------
+    // Event properties
+    // -------------------------------------------------------------------------
+    
+    /**
+     * The program for events.
+     */
+    protected Program program;
+    
+    /**
+     * The program stage for events.
+     */
+    protected ProgramStage programStage;
     
     // -------------------------------------------------------------------------
     // Transient properties
@@ -190,17 +211,17 @@ public class DataQueryParams
     /**
      * The period type of the data values to query.
      */
-    private transient PeriodType dataPeriodType;
+    protected transient PeriodType dataPeriodType;
     
     /**
      * Indicates whether to skip partitioning during query planning.
      */
-    private transient boolean skipPartitioning;
+    protected transient boolean skipPartitioning;
     
     /**
      * Mapping of organisation unit sub-hierarchy roots and lowest available data approval levels.
      */
-    private transient Map<OrganisationUnit, Integer> dataApprovalLevels = new HashMap<>();
+    protected transient Map<OrganisationUnit, Integer> dataApprovalLevels = new HashMap<>();
     
     // -------------------------------------------------------------------------
     // Constructors
@@ -212,8 +233,11 @@ public class DataQueryParams
 
     public DataQueryParams instance()
     {
-        DataQueryParams params = new DataQueryParams();
-        
+        return copyTo( new DataQueryParams() );
+    }
+    
+    public <T extends DataQueryParams> T copyTo( T params )
+    {        
         params.dimensions = new ArrayList<>( this.dimensions );
         params.filters = new ArrayList<>( this.filters );
         params.aggregationType = this.aggregationType;
@@ -227,6 +251,8 @@ public class DataQueryParams
         params.displayProperty = this.displayProperty;
         params.outputIdScheme = this.outputIdScheme;
         params.approvalLevel = this.approvalLevel;
+        params.program = this.program;
+        params.programStage = this.programStage;
         
         params.partitions = new Partitions( this.partitions );
         params.dataType = this.dataType;
@@ -251,7 +277,8 @@ public class DataQueryParams
     {
         if ( !dimensions.contains( new BaseDimensionalObject( DATAELEMENT_DIM_ID ) ) ||
             dimensions.contains( new BaseDimensionalObject( INDICATOR_DIM_ID ) ) ||
-            dimensions.contains( new BaseDimensionalObject( DATASET_DIM_ID ) ) )
+            dimensions.contains( new BaseDimensionalObject( DATASET_DIM_ID ) ) ||
+            dimensions.contains( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ) ) )
         {
             removeDimension( CATEGORYOPTIONCOMBO_DIM_ID );
         }
@@ -301,9 +328,9 @@ public class DataQueryParams
     
     /**
      * Creates a list of dimensions for use as headers. Will replace any of
-     * the indicator, data element or data set dimensions with the common
-     * data x dimension. If the category option combo dimension is given but
-     * not the data element dimension, the former will be removed.
+     * the indicator, data element, data set or program data element dimensions 
+     * with the common data x dimension. If the category option combo dimension 
+     * is given but not the data element dimension, the former will be removed.
      */
     public List<DimensionalObject> getHeaderDimensions()
     {
@@ -323,6 +350,7 @@ public class DataQueryParams
         list.remove( new BaseDimensionalObject( INDICATOR_DIM_ID ) );
         list.remove( new BaseDimensionalObject( DATAELEMENT_DIM_ID ) );
         list.remove( new BaseDimensionalObject( DATASET_DIM_ID ) );
+        list.remove( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ) );
         
         return list;
     }
@@ -423,7 +451,7 @@ public class DataQueryParams
         {
             for ( String dim : dimension )
             {
-                this.dimensions.remove( new BaseDimensionalObject( dim ) );
+                removeDimension( dim );
             }
         }            
         
@@ -707,11 +735,9 @@ public class DataQueryParams
     {
         List<DimensionItem[]> dimensionOptions = new ArrayList<>();
         
-        List<String> ignoreDims = Arrays.asList( DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, INDICATOR_DIM_ID, DATASET_DIM_ID );
-        
         for ( DimensionalObject dimension : dimensions )
         {
-            if ( !ignoreDims.contains( dimension.getDimension() ) )
+            if ( !DIMENSION_PERMUTATION_IGNORE_DIMS.contains( dimension.getDimension() ) )
             {
                 List<DimensionItem> options = new ArrayList<>();
                 
@@ -935,6 +961,14 @@ public class DataQueryParams
         }
         
         return items;
+    }
+
+    /**
+     * Indicates whether this object has a program.
+     */
+    public boolean hasProgram()
+    {
+        return program != null;
     }
     
     // -------------------------------------------------------------------------
@@ -1281,6 +1315,26 @@ public class DataQueryParams
         this.approvalLevel = approvalLevel;
     }
 
+    public Program getProgram()
+    {
+        return program;
+    }
+
+    public void setProgram( Program program )
+    {
+        this.program = program;
+    }
+
+    public ProgramStage getProgramStage()
+    {
+        return programStage;
+    }
+
+    public void setProgramStage( ProgramStage programStage )
+    {
+        this.programStage = programStage;
+    }
+
     // -------------------------------------------------------------------------
     // Get and set methods for transient properties
     // -------------------------------------------------------------------------
@@ -1474,7 +1528,7 @@ public class DataQueryParams
     {
         setDimensionOptions( DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, null, asList( dataElements ) );
     }
-    
+
     public void setDataElement( NameableObject dataElement )
     {
         setDataElements( getList( dataElement ) );
@@ -1523,6 +1577,16 @@ public class DataQueryParams
     public void setOrganisationUnit( NameableObject organisationUnit )
     {
         setOrganisationUnits( getList( organisationUnit ) );
+    }
+
+    public List<NameableObject> getProgramDataElements()
+    {
+        return getDimensionOptions( PROGRAM_DATAELEMENT_DIM_ID );
+    }
+    
+    public void setProgramDataElements( List<? extends NameableObject> trackerDataElements )
+    {
+        setDimensionOptions( PROGRAM_DATAELEMENT_DIM_ID, DimensionType.PROGRAM_DATAELEMENT, null, asList( trackerDataElements ) );
     }
     
     public List<DimensionalObject> getDataElementGroupSets()
@@ -1611,9 +1675,15 @@ public class DataQueryParams
     {
         setFilterOrganisationUnits( getList( organisationUnit ) );
     }
+
+    public List<NameableObject> getFilterProgramDataElements()
+    {
+        return getFilterOptions( PROGRAM_DATAELEMENT_DIM_ID );
+    }
     
     public void setFilter( String filter, DimensionType type, NameableObject item )
     {
         setFilterOptions( filter, type, null, getList( item ) );
     }
+    
 }
