@@ -276,11 +276,15 @@ public class DefaultAnalyticsService
     {
         if ( params.getIndicators() != null )
         {
-            int indicatorIndex = params.getIndicatorDimensionIndex();
-            
-            List<Indicator> indicators = asTypedList( params.getIndicators() );
+            DataQueryParams dataSourceParams = params.instance();
+            dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
+            dataSourceParams.removeDimension( DATASET_DIM_ID );
 
-            Period filterPeriod = params.getFilterPeriod();
+            int indicatorIndex = dataSourceParams.getIndicatorDimensionIndex();
+            
+            List<Indicator> indicators = asTypedList( dataSourceParams.getIndicators() );
+
+            Period filterPeriod = dataSourceParams.getFilterPeriod();
 
             Map<String, Double> constantMap = constantService.getConstantMap();
 
@@ -288,11 +292,11 @@ public class DefaultAnalyticsService
             // Get indicator values
             // -----------------------------------------------------------------
 
-            Map<String, Map<String, Integer>> permutationOrgUnitTargetMap = getOrgUnitTargetMap( params, indicators );
+            Map<String, Map<String, Integer>> permutationOrgUnitTargetMap = getOrgUnitTargetMap( dataSourceParams, indicators );
 
-            List<List<DimensionItem>> dimensionItemPermutations = params.getDimensionItemPermutations();
+            List<List<DimensionItem>> dimensionItemPermutations = dataSourceParams.getDimensionItemPermutations();
 
-            Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = getPermutationOperandValueMap( params );
+            Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = getPermutationOperandValueMap( dataSourceParams );
 
             for ( Indicator indicator : indicators )
             {
@@ -327,7 +331,7 @@ public class DefaultAnalyticsService
                         
                         grid.addRow();
                         grid.addValues( DimensionItem.getItemIdentifiers( row ) );
-                        grid.addValue( params.isSkipRounding() ? value : roundedValue );
+                        grid.addValue( dataSourceParams.isSkipRounding() ? value : roundedValue );
                     }
                 }
             }
