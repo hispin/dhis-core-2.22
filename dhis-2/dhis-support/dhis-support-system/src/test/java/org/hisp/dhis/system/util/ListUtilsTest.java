@@ -75,24 +75,4 @@ public class ListUtilsTest
         list = new ArrayList<>( Arrays.asList( "a", "b", "c", "d", "e", "f", "g", "h" ) );
         assertEquals( 0, ListUtils.getDuplicates( list ).size() );
     }
-    
-    @Test
-    public void testMoveFirst()
-    {
-        List<String> list = new ArrayList<>( Arrays.asList( "a", "b", "c", "c", "d", "e", "e", "e", "f" ) );
-        
-        ListUtils.moveFirst( list, 2 );
-        
-        assertEquals( "c", list.get( 0 ) );
-        assertEquals( "a", list.get( 1 ) );
-        assertEquals( "b", list.get( 2 ) );
-        
-        list = new ArrayList<>( Arrays.asList( "a", "b", "c", "c", "d", "e", "e", "e", "f" ) );
-        
-        ListUtils.moveFirst( list, 20 );
-        
-        assertEquals( "a", list.get( 0 ) );
-        assertEquals( "b", list.get( 1 ) );
-        assertEquals( "c", list.get( 2 ) );
-    }
 }
