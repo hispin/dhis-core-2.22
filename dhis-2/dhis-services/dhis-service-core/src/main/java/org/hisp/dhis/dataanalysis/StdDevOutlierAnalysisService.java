@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -70,14 +71,14 @@ public class StdDevOutlierAnalysisService
     // -------------------------------------------------------------------------
 
     @Override
-    public final Collection<DeflatedDataValue> analyse( Collection<OrganisationUnit> organisationUnits,
+    public final List<DeflatedDataValue> analyse( Collection<OrganisationUnit> organisationUnits,
         Collection<DataElement> dataElements, Collection<Period> periods, Double stdDevFactor, Date from )
     {
         log.info( "Starting std dev analysis, no of org units: " + organisationUnits.size() + ", factor: " + stdDevFactor + ", from: " + from );
         
         Set<Integer> units = new HashSet<>( ConversionUtils.getIdentifiers( OrganisationUnit.class, organisationUnits ) );
 
-        Collection<DeflatedDataValue> outlierCollection = new ArrayList<>();
+        List<DeflatedDataValue> outlierCollection = new ArrayList<>();
 
         loop : for ( DataElement dataElement : dataElements )
         {
@@ -86,7 +87,7 @@ public class StdDevOutlierAnalysisService
             
             if ( dataElement.getType().equals( DataElement.VALUE_TYPE_INT ) )
             {
-                Collection<DataElementCategoryOptionCombo> categoryOptionCombos = dataElement.getCategoryCombo()
+                Set<DataElementCategoryOptionCombo> categoryOptionCombos = dataElement.getCategoryCombo()
                     .getOptionCombos();
 
                 for ( DataElementCategoryOptionCombo categoryOptionCombo : categoryOptionCombos )

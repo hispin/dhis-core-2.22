@@ -30,6 +30,7 @@ package org.hisp.dhis.dataanalysis;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -78,9 +79,9 @@ public interface DataAnalysisStore
      * @param periods the periods.
      * @param organisationUnits the organisation units.
      * @param limit the max limit of violations to return.
-     * @return a collection of data value violations.
+     * @return a list of data value violations.
      */
-    Collection<DeflatedDataValue> getMinMaxViolations( Collection<DataElement> dataElements, Collection<DataElementCategoryOptionCombo> categoryOptionCombos,
+    List<DeflatedDataValue> getMinMaxViolations( Collection<DataElement> dataElements, Collection<DataElementCategoryOptionCombo> categoryOptionCombos,
         Collection<Period> periods, Collection<OrganisationUnit> organisationUnits, int limit );
     
     /**
@@ -92,9 +93,9 @@ public interface DataAnalysisStore
      * @param organisationUnit the OrganisationUnit.
      * @param lowerBound the lower bound for the registered MinMaxDataElement.
      * @param upperBound the upper bound for the registered MinMaxDataElement.
-     * @return
+     * @return a list of DeflatedDataValues.
      */
-    Collection<DeflatedDataValue> getDeflatedDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
+    List<DeflatedDataValue> getDeflatedDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
         Collection<Period> periods, Map<Integer, Integer> lowerBoundMap, Map<Integer, Integer> upperBoundMap );
 
     /**
@@ -103,7 +104,7 @@ public interface DataAnalysisStore
      *
      * @param organisationUnit the source OrganisationUnit.
      * @param limit the maximum number of DeflatedDataValues to return.
-     * @return a collection of DeflatedDataValues.
+     * @return a list of DeflatedDataValues.
      */
-    Collection<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit );
+    List<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit );
 }

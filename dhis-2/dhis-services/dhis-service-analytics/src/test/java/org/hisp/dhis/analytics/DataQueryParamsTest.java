@@ -47,8 +47,9 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.util.ListUtils;
 import org.junit.Test;
+
+import com.google.inject.internal.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -116,11 +117,11 @@ public class DataQueryParamsTest
     {
         DataQueryParams params = new DataQueryParams();
         params.getDimensions().add( new BaseDimensionalObject( DimensionalObject.INDICATOR_DIM_ID, DimensionType.INDICATOR, null, null, 
-            ListUtils.getList( createIndicator( 'A', null ), createIndicator( 'B', null ) ) ) );
+            Lists.newArrayList( createIndicator( 'A', null ), createIndicator( 'B', null ) ) ) );
         params.getDimensions().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, null, null,
-            ListUtils.getList( createOrganisationUnit( 'A' ), createOrganisationUnit( 'B' ) ) ) );
+            Lists.newArrayList( createOrganisationUnit( 'A' ), createOrganisationUnit( 'B' ) ) ) );
         params.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, null, null,
-            ListUtils.getList( createPeriod( "201201" ), createPeriod( "201202" ) ) ) );
+            Lists.newArrayList( createPeriod( "201201" ), createPeriod( "201202" ) ) ) );
 
         assertEquals( 2, params.getDimensions().size() );
         assertEquals( 1, params.getFilters().size() );

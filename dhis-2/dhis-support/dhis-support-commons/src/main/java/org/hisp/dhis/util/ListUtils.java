@@ -28,17 +28,16 @@ package org.hisp.dhis.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Lars Helge Overland
@@ -199,45 +198,7 @@ public class ListUtils
         
         return duplicates;
     }
-    
-    /**
-     * Returns a Collection with the given items.
-     * 
-     * @param items the items which should be included in the Collection.
-     * @return a Collection.
-     */
-    @SafeVarargs
-    public static final <T> Collection<T> getCollection( final T... items )
-    {
-        List<T> list = new ArrayList<>();
         
-        for ( T item : items )
-        {
-            list.add( item );
-        }
-        
-        return list;
-    }
-
-    /**
-     * Returns a List with the given items.
-     * 
-     * @param items the items which should be included in the List.
-     * @return a List.
-     */
-    @SafeVarargs
-    public static final <T> List<T> getList( final T... items )
-    {
-        List<T> list = new ArrayList<>();
-        
-        for ( T item : items )
-        {
-            list.add( item );
-        }
-        
-        return list;
-    }
-    
     /**
      * Removes empty strings from the given list. Empty includes null.
      * 

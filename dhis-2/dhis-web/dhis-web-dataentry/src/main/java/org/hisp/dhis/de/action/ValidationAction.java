@@ -28,8 +28,6 @@ package org.hisp.dhis.de.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.ListUtils.getCollection;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -57,6 +55,7 @@ import org.hisp.dhis.webapi.utils.InputUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.Sets;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -237,8 +236,8 @@ public class ValidationAction
         
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
-            List<DeflatedDataValue> values = new ArrayList<>( minMaxOutlierAnalysisService.analyse( getCollection( organisationUnit ),
-                dataSet.getDataElements(), getCollection( period ), null, from ) );
+            List<DeflatedDataValue> values = new ArrayList<>( minMaxOutlierAnalysisService.analyse( Sets.newHashSet( organisationUnit ),
+                dataSet.getDataElements(), Sets.newHashSet( period ), null, from ) );
 
             if ( !values.isEmpty() )
             {

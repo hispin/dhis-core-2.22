@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -54,9 +55,10 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
-import org.hisp.dhis.util.ListUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.inject.internal.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -204,8 +206,8 @@ public class StdDevOutlierAnalysisServiceTest
         periods.add( periodA );
         periods.add( periodE );
 
-        Collection<DeflatedDataValue> values = stdDevOutlierAnalysisService.analyse(
-            ListUtils.getCollection( organisationUnitA ), dataElementsA, periods, stdDevFactor, from );
+        List<DeflatedDataValue> values = stdDevOutlierAnalysisService.analyse(
+            Lists.newArrayList( organisationUnitA ), dataElementsA, periods, stdDevFactor, from );
 
         double lowerBound = -34.51 * stdDevFactor;
         double upperBound = 34.51 * stdDevFactor;
