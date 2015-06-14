@@ -164,12 +164,14 @@ public interface AnalyticsService
      * @param displayProperty the property to display for meta-data.
      * @param outputIdScheme the identifier scheme to use in the query response.
      * @param approvalLevel the approval level identifier.
+     * @param program the program identifier.
+     * @param stage the program stage identifier.
      * @param format the i18n format.
      * @return a data query parameter object created based on the given URL info.
      */
     DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, String measureCriteria, 
         boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, boolean showHierarchy, 
-        DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, I18nFormat format );
+        DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, String program, String stage, I18nFormat format );
     
     /**
      * Creates a data query parameter object from the given BaseAnalyticalObject.
