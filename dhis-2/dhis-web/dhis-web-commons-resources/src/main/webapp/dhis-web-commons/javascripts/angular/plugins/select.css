@@ -29,7 +29,7 @@
 
 /* Mark invalid Select2 */
 .ng-dirty.ng-invalid > a.select2-choice {
-    border-color: #D44950;
+    //border-color: #D44950;
 }
 
 .select2-result-single {

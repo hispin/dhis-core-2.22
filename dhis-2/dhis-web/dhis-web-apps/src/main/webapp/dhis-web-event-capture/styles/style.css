@@ -673,7 +673,7 @@ input[type=date]::-webkit-inner-spin-button, input[type=date]::-webkit-outer-spi
 }
 .panel-group .panel {
     margin-bottom: 0;
-    overflow: hidden;
+    //overflow: hidden;
     border-radius: 4px
 }
 .panel-group .panel+ .panel {
@@ -871,10 +871,12 @@ input[type=number], input[type=text], input[type=password], input[type=email], t
 {
   border: 1px solid #aaa;
   padding: 5px 0 !important;
+  //border-radius: 4px;
 }
 
 select {
     padding: 3px 0 !important;
+    //border-radius: 4px;
 }
 
 .clear {
@@ -939,6 +941,14 @@ input.typeahead::-ms-input-placeholder {
     margin-left: 5px;    
 }
 
+.small-vertical-spacing{
+    margin-top: 5px;    
+}
+
+.vertical-spacing{
+    margin-top: 20px;    
+}
+
 .form-control {
     width: 100%;
 }
@@ -946,4 +956,15 @@ input.typeahead::-ms-input-placeholder {
 div#orgUnitTree {
     height: 50%;
     border: 1px solid #e3e3e3;
+}
+
+.calendars-popup {
+    z-index: 2000 !important;
+}
+
+.section-label{
+    font-size: 14pt;
+    color: #585D61;
+    border-bottom: 1px solid #e3e3e3;
+    //text-align: center;
 }
