@@ -42,18 +42,25 @@ d2Directives.directive('d2NumberValidator', function() {
 
 .directive("d2DateValidator", function(DateUtils, CalendarService, $parse) {
     return {
-        restrict: "A",
-         
-        require: "ngModel",
-         
+        restrict: "A",         
+        require: "ngModel",         
         link: function(scope, element, attrs, ngModel) {
+        	
+        	var isRequired = attrs.ngRequired === 'true';
+        	
             ngModel.$validators.dateValidator = function(value) {
+                if(!value){
+                    return !isRequired;
+                }                
                 var convertedDate = DateUtils.format(angular.copy(value));
                 var isValid = value === convertedDate;
                 return isValid;
             };
             
             ngModel.$validators.futureDateValidator = function(value) {
+                if(!value){
+                    return !isRequired;
+                }
                 var maxDate = $parse(attrs.maxDate)(scope);
                 var convertedDate = DateUtils.format(angular.copy(value));
                 var isValid = value === convertedDate;
@@ -69,14 +76,13 @@ d2Directives.directive('d2NumberValidator', function() {
 
 .directive("d2CoordinateValidator", function() {
     return {
-        restrict: "A",
-         
-        require: "ngModel",
-         
+        restrict: "A",         
+        require: "ngModel",         
         link: function(scope, element, attrs, ngModel) {
-            ngModel.$validators.latitudeValidator = function(value) { 
-                var isRequired = attrs.ngRequired === 'true';
-                
+        	
+        	var isRequired = attrs.ngRequired === 'true';
+        	
+            ngModel.$validators.latitudeValidator = function(value) {
                 if(!value){
                     return !isRequired;
                 }
@@ -87,9 +93,7 @@ d2Directives.directive('d2NumberValidator', function() {
                 return value >= -90 && value <= 90;
             };
             
-            ngModel.$validators.longitudeValidator = function(value) { 
-                var isRequired = attrs.ngRequired === 'true';
-                
+            ngModel.$validators.longitudeValidator = function(value) {
                 if(!value){
                     return !isRequired;
                 }
@@ -98,6 +102,28 @@ d2Directives.directive('d2NumberValidator', function() {
                     return isNumber;
                 }
                 return value >= -180 && value <= 180;
+            };
+        }
+    };
+})
+
+.directive("d2OptionValidator", function($translate) {
+    return {
+        restrict: "A",         
+        require: "ngModel",         
+        link: function(scope, element, attrs, ngModel) {
+        	
+            var isRequired = attrs.ngRequired === 'true';
+            
+            ngModel.$validators.optionValidator = function(value) {               
+                
+                var res = !value ? !isRequired : true;
+                
+                if(!res){
+                    alert($translate.instant('option_required'));
+                }
+                
+                return res;
             };
         }
     };
