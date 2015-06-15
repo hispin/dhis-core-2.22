@@ -46,8 +46,8 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.util.ConversionUtils;
-import org.hisp.dhis.util.DebugUtils;
+import org.hisp.dhis.commons.util.ConversionUtils;
+import org.hisp.dhis.commons.util.DebugUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 

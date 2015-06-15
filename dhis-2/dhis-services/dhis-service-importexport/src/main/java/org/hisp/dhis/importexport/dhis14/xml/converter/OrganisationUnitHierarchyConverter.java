@@ -44,7 +44,7 @@ import org.hisp.dhis.importexport.importer.OrganisationUnitRelationshipImporter;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.importexport.dhis14.util.Dhis14DateUtil;
-import org.hisp.dhis.util.MimicingHashMap;
+import org.hisp.dhis.commons.collection.MimicingHashMap;
 
 /**
  * @author Lars Helge Overland

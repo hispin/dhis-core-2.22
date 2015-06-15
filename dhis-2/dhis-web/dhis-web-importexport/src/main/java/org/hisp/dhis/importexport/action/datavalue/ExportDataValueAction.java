@@ -29,7 +29,7 @@ package org.hisp.dhis.importexport.action.datavalue;
  */
 
 import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
-import static org.hisp.dhis.util.CodecUtils.filenameEncode;
+import static org.hisp.dhis.commons.util.CodecUtils.filenameEncode;
 import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_CSV;
 import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_JSON;
 import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_XML;

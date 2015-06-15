@@ -54,7 +54,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitHierarchy;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.util.SystemUtils;
+import org.hisp.dhis.system.util.SystemUtils;
 import org.springframework.scheduling.annotation.Async;
 
 /**

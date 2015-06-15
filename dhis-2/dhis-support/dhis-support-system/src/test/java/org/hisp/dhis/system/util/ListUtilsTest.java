@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.hisp.dhis.util.ListUtils;
+import org.hisp.dhis.commons.collection.ListUtils;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;

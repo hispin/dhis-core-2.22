@@ -35,7 +35,7 @@ import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.scheduling.TaskId;
-import org.hisp.dhis.util.DebugUtils;
+import org.hisp.dhis.commons.util.DebugUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

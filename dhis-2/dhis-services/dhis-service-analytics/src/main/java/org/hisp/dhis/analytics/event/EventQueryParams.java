@@ -51,7 +51,7 @@ import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.util.ListUtils;
+import org.hisp.dhis.commons.collection.ListUtils;
 
 /**
  * @author Lars Helge Overland

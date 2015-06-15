@@ -147,11 +147,11 @@ import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.util.DebugUtils;
-import org.hisp.dhis.util.ListUtils;
-import org.hisp.dhis.util.SystemUtils;
+import org.hisp.dhis.commons.util.DebugUtils;
+import org.hisp.dhis.commons.collection.ListUtils;
+import org.hisp.dhis.system.util.SystemUtils;
 import org.hisp.dhis.util.Timer;
-import org.hisp.dhis.util.UniqueArrayList;
+import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;

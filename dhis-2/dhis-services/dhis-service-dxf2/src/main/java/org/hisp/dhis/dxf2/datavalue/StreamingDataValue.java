@@ -31,7 +31,7 @@ package org.hisp.dhis.dxf2.datavalue;
 import org.amplecode.staxwax.reader.XMLReader;
 import org.amplecode.staxwax.writer.XMLWriter;
 
-import static org.hisp.dhis.util.TextUtils.valueOf;
+import static org.hisp.dhis.commons.util.TextUtils.valueOf;
 
 /**
  * @author Lars Helge Overland

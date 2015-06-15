@@ -34,7 +34,7 @@ import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.util.DebugUtils;
+import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.validation.ValidationRuleService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;

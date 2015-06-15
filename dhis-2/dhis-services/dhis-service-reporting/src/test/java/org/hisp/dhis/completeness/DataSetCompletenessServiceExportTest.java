@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static org.hisp.dhis.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
 import static org.junit.Assert.assertEquals;
 
 /**

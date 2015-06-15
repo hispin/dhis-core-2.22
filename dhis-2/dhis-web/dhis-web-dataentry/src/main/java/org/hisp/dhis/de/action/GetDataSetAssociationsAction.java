@@ -28,7 +28,7 @@ package org.hisp.dhis.de.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.TextUtils.SEP;
+import static org.hisp.dhis.commons.util.TextUtils.SEP;
 
 import java.util.ArrayList;
 import java.util.Date;

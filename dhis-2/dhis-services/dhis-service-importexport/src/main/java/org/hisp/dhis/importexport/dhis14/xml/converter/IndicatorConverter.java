@@ -50,8 +50,8 @@ import org.hisp.dhis.importexport.mapping.NameMappingUtil;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
-import org.hisp.dhis.util.MimicingHashMap;
-import org.hisp.dhis.util.TextUtils;
+import org.hisp.dhis.commons.collection.MimicingHashMap;
+import org.hisp.dhis.commons.util.TextUtils;
 
 /**
  * @author Lars Helge Overland

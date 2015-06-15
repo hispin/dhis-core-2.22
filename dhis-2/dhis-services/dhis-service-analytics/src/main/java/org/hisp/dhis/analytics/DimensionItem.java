@@ -33,7 +33,7 @@ import java.util.List;
 
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.NameableObject;
-import org.hisp.dhis.util.CollectionUtils;
+import org.hisp.dhis.commons.collection.CollectionUtils;
 
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 
