@@ -28,7 +28,19 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.period.Period.DEFAULT_DATE_FORMAT;
+import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.indicator.Indicator;
+import org.hisp.dhis.period.Period;
+import org.hisp.dhis.period.PeriodType;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Months;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.DateTimeParser;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,14 +49,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.hisp.dhis.i18n.I18nFormat;
-import org.hisp.dhis.indicator.Indicator;
-import org.hisp.dhis.period.Period;
-import org.hisp.dhis.period.PeriodType;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Months;
-import org.joda.time.format.*;
+import static org.hisp.dhis.period.Period.DEFAULT_DATE_FORMAT;
 
 /**
  * @author Lars Helge Overland
@@ -53,22 +58,22 @@ import org.joda.time.format.*;
 public class DateUtils
 {
     private static final DateTimeParser[] SUPPORTED_DATE_FORMAT_PARSERS = {
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mmZ").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HHZ").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ssZ").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM").getParser(),
-            DateTimeFormat.forPattern("yyyy").getParser()
+        DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm:ss.SSS" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm:ssZ" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm:ss" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mmZ" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd'T'HHZ" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd HH:mm:ssZ" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM-dd" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy-MM" ).getParser(),
+        DateTimeFormat.forPattern( "yyyy" ).getParser()
     };
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = new DateTimeFormatterBuilder()
-            .append( null, SUPPORTED_DATE_FORMAT_PARSERS ).toFormatter();
+        .append( null, SUPPORTED_DATE_FORMAT_PARSERS ).toFormatter();
 
     private static final String SEP = ", ";
 
@@ -175,7 +180,7 @@ public class DateUtils
             return date2 != null ? date2 : null;
         }
 
-        return date2 != null ? ( date1.after( date2 ) ? date1 : date2 ) : date1;
+        return date2 != null ? (date1.after( date2 ) ? date1 : date2) : date1;
     }
 
     /**
@@ -593,7 +598,7 @@ public class DateUtils
      * start and end dates using a day, month, second format.
      *
      * @param start the start date.
-     * @param end the end date.
+     * @param end   the end date.
      * @return a string, or null if the given start or end date is null.
      */
     public static String getPrettyInterval( Date start, Date end )
