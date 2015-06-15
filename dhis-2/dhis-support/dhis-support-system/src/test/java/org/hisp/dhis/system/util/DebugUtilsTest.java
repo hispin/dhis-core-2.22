@@ -28,9 +28,9 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.DebugUtils.SEPARATOR;
-import static org.hisp.dhis.util.DebugUtils.logDuplicates;
-import static org.hisp.dhis.util.DebugUtils.resetDuplicates;
+import static org.hisp.dhis.commons.util.DebugUtils.SEPARATOR;
+import static org.hisp.dhis.commons.util.DebugUtils.logDuplicates;
+import static org.hisp.dhis.commons.util.DebugUtils.resetDuplicates;
 import junit.framework.TestCase;
 
 /**

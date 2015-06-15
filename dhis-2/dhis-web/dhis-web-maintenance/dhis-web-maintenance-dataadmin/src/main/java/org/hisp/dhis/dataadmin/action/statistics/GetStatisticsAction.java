@@ -36,7 +36,7 @@ import org.hisp.dhis.common.Objects;
 import org.hisp.dhis.datavalue.DataValueService;
 import org.hisp.dhis.program.ProgramStageInstanceService;
 import org.hisp.dhis.statistics.StatisticsProvider;
-import org.hisp.dhis.util.EnumMapWrapper;
+import org.hisp.dhis.commons.collection.EnumMapWrapper;
 import org.hisp.dhis.user.UserInvitationStatus;
 import org.hisp.dhis.user.UserQueryParams;
 import org.hisp.dhis.user.UserService;

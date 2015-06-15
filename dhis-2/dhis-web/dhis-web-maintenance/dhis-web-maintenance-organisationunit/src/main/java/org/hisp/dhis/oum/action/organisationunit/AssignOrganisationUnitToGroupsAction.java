@@ -34,7 +34,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.util.ConversionUtils;
+import org.hisp.dhis.commons.util.ConversionUtils;
 
 import com.opensymphony.xwork2.Action;
 

@@ -38,7 +38,7 @@ import static org.hisp.dhis.chart.BaseChart.TYPE_STACKED_BAR;
 import static org.hisp.dhis.chart.BaseChart.TYPE_STACKED_COLUMN;
 import static org.hisp.dhis.chart.BaseChart.TYPE_METER;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
-import static org.hisp.dhis.util.ConversionUtils.getArray;
+import static org.hisp.dhis.commons.util.ConversionUtils.getArray;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -88,7 +88,7 @@ import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.util.FilterUtils;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.jfree.chart.ChartFactory;

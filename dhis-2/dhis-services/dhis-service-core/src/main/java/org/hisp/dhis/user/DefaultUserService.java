@@ -44,7 +44,7 @@ import org.hisp.dhis.security.migration.MigrationPasswordManager;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.UserAuthorityGroupCanIssueFilter;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.util.FilterUtils;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;

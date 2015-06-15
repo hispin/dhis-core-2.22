@@ -28,7 +28,7 @@ package org.hisp.dhis.useraccount.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.TextUtils.nullIfEmpty;
+import static org.hisp.dhis.commons.util.TextUtils.nullIfEmpty;
 
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;

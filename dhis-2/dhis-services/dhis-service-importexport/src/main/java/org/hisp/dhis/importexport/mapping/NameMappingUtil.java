@@ -33,7 +33,7 @@ import java.util.Map;
 
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.util.LoggingHashMap;
+import org.hisp.dhis.commons.collection.LoggingHashMap;
 
 /**
  * @author Lars Helge Overland

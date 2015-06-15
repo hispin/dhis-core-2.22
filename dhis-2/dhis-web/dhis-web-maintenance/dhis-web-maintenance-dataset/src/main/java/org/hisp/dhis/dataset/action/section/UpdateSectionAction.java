@@ -43,7 +43,7 @@ import org.hisp.dhis.indicator.IndicatorService;
 
 import com.opensymphony.xwork2.Action;
 
-import static org.hisp.dhis.util.TextUtils.equalsNullSafe;
+import static org.hisp.dhis.commons.util.TextUtils.equalsNullSafe;
 
 public class UpdateSectionAction
     implements Action

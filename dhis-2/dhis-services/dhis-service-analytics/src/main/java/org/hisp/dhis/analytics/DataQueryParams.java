@@ -81,8 +81,8 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.util.CollectionUtils;
-import org.hisp.dhis.util.ListUtils;
+import org.hisp.dhis.commons.collection.CollectionUtils;
+import org.hisp.dhis.commons.collection.ListUtils;
 
 /**
  * @author Lars Helge Overland

@@ -48,7 +48,7 @@ import org.hisp.dhis.external.location.LocationManagerException;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.database.DatabaseInfoProvider;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.util.SystemUtils;
+import org.hisp.dhis.system.util.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 

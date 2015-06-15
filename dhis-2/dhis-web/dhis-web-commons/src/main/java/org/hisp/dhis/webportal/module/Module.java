@@ -1,7 +1,7 @@
 package org.hisp.dhis.webportal.module;
 
 import org.hisp.dhis.appmanager.App;
-import org.hisp.dhis.util.TextUtils;
+import org.hisp.dhis.commons.util.TextUtils;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo

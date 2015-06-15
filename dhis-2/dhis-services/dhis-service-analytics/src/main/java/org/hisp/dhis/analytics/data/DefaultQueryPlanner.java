@@ -72,7 +72,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.util.PaginatedList;
+import org.hisp.dhis.commons.collection.PaginatedList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

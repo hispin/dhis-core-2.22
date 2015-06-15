@@ -38,7 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
-import static org.hisp.dhis.util.TextUtils.*;
+import static org.hisp.dhis.commons.util.TextUtils.*;
 
 /**
  * @author Jim Grace

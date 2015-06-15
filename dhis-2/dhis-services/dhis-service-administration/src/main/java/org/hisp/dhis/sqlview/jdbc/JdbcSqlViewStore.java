@@ -38,7 +38,7 @@ import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewStore;
 import org.hisp.dhis.sqlview.SqlViewType;
-import org.hisp.dhis.util.SqlHelper;
+import org.hisp.dhis.commons.util.SqlHelper;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 

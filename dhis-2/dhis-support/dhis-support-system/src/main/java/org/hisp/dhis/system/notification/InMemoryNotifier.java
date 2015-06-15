@@ -38,8 +38,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
-import org.hisp.dhis.system.util.TaskLocalList;
-import org.hisp.dhis.system.util.TaskLocalMap;
+import org.hisp.dhis.system.collection.TaskLocalList;
+import org.hisp.dhis.system.collection.TaskLocalMap;
 
 /**
  * @author Lars Helge Overland

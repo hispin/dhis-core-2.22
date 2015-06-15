@@ -35,7 +35,7 @@ import java.util.Set;
 import org.hibernate.Query;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
-import org.hisp.dhis.util.SqlHelper;
+import org.hisp.dhis.commons.util.SqlHelper;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserInvitationStatus;
 import org.hisp.dhis.user.UserQueryParams;

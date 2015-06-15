@@ -37,7 +37,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.util.ConversionUtils;
+import org.hisp.dhis.commons.util.ConversionUtils;
 
 /**
  * @author Lars Helge Overland

@@ -8,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.DeleteNotAllowedException;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
-import org.hisp.dhis.util.PageRange;
+import org.hisp.dhis.commons.util.PageRange;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserInvitationStatus;
 import org.hisp.dhis.user.UserQueryParams;

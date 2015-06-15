@@ -74,7 +74,7 @@ import org.hisp.dhis.jdbc.batchhandler.ImportDataValueBatchHandler;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.system.process.OutputHolderState;
-import org.hisp.dhis.util.StreamUtils;
+import org.hisp.dhis.commons.util.StreamUtils;
 
 
 /**

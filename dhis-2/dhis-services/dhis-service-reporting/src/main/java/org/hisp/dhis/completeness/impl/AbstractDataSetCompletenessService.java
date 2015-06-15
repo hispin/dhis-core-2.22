@@ -28,7 +28,7 @@ package org.hisp.dhis.completeness.impl;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +55,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitHierarchy;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
-import org.hisp.dhis.util.ConversionUtils;
+import org.hisp.dhis.commons.util.ConversionUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 

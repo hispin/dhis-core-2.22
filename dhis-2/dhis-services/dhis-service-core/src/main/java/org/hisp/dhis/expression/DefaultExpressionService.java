@@ -65,7 +65,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.util.TextUtils;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.system.database.DatabaseInfoProvider;
-import org.hisp.dhis.util.TextUtils;
+import org.hisp.dhis.commons.util.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;

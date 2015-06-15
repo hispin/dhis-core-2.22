@@ -45,7 +45,7 @@ import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.importexport.synchronous.ExportPivotViewService;
 import org.hisp.dhis.importexport.synchronous.ExportPivotViewService.RequestType;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.util.StreamUtils;
+import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.util.ContextUtils;
 

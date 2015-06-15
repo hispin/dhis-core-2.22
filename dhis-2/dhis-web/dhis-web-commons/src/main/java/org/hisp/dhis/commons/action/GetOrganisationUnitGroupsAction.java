@@ -37,7 +37,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.paging.ActionPagingSupport;
 import org.hisp.dhis.system.filter.OrganisationUnitGroupWithoutGroupSetFilter;
-import org.hisp.dhis.util.FilterUtils;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 
 /**
