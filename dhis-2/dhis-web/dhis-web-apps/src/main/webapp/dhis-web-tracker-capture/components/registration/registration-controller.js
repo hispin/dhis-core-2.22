@@ -26,6 +26,19 @@ trackerCapture.controller('RegistrationController',
     $scope.tei = {};
     $scope.registrationMode = null;
     
+    //Infinite Scroll
+    $scope.infiniteScroll = {};
+    $scope.infiniteScroll.optionsToAdd = 20;
+    $scope.infiniteScroll.currentOptions = 20;
+    
+    $scope.resetInfScroll = function() {
+        $scope.infiniteScroll.currentOptions = $scope.infiniteScroll.optionsToAdd;
+    };
+  
+    $scope.addMoreOptions = function(){
+        $scope.infiniteScroll.currentOptions += $scope.infiniteScroll.optionsToAdd;
+    }; 
+    
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
         $scope.attributesById = [];
