@@ -693,7 +693,7 @@ trackerCapture.controller('DataEntryController',
             
     };
     
-    $scope.getInputNotifcationClass = function(id, custom, event){
+    /*$scope.getInputNotifcationClass = function(id, custom, event){
         if(!event) {
             event = $scope.currentEvent;
         }
@@ -716,6 +716,33 @@ trackerCapture.controller('DataEntryController',
             return '';
         }
         return 'form-control';
+    };*/
+            
+    //Infinite Scroll
+    $scope.infiniteScroll = {};
+    $scope.infiniteScroll.optionsToAdd = 20;
+    $scope.infiniteScroll.currentOptions = 20;
+    
+    $scope.resetInfScroll = function() {
+        $scope.infiniteScroll.currentOptions = $scope.infiniteScroll.optionsToAdd;
+    };
+  
+    $scope.addMoreOptions = function(){
+        $scope.infiniteScroll.currentOptions += $scope.infiniteScroll.optionsToAdd;
+    };        
+    
+    $scope.getInputNotifcationClass = function(id, custom, event){
+        if(!event) {
+            event = $scope.currentEvent;
+        }
+        if($scope.currentElement.id && 
+                $scope.currentElement.event && 
+                $scope.currentElement.id === id &&
+                $scope.currentElement.event === event.event){            
+            return $scope.currentElement.saved ? 'input-success; ' : 'input-error; ';                      
+        }  
+        
+        return '';
     };
     
     var completeEnrollment = function(){
