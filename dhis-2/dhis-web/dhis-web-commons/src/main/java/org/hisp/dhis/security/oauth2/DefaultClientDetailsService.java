@@ -36,6 +36,9 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
@@ -64,9 +67,21 @@ public class DefaultClientDetailsService implements ClientDetailsService
             return null;
         }
 
+        Set<String> grantTypes = new HashSet<>();
+        grantTypes.add( "password" );
+        grantTypes.add( "authorization_code" );
+        grantTypes.add( "refresh_token" );
+        grantTypes.add( "client_credentials" );
+        grantTypes.add( "implicit" );
+
+        Set<String> scopes = new HashSet<>();
+        scopes.add( "ALL" );
+
         BaseClientDetails clientDetails = new BaseClientDetails();
         clientDetails.setClientId( client.getCid() );
         clientDetails.setClientSecret( client.getSecret() );
+        clientDetails.setAuthorizedGrantTypes( grantTypes );
+        clientDetails.setScope( scopes );
 
         return clientDetails;
     }
