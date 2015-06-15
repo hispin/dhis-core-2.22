@@ -28,15 +28,7 @@ package org.hisp.dhis.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS;
-
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +47,14 @@ import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.util.FilterUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS;
 
 /**
  * @author Chau Thu Tran
@@ -76,7 +75,7 @@ public class DefaultUserService
     {
         this.userStore = userStore;
     }
-    
+
     private UserGroupService userGroupService;
 
     public void setUserGroupService( UserGroupService userGroupService )
@@ -97,7 +96,7 @@ public class DefaultUserService
     {
         this.userAuthorityGroupStore = userAuthorityGroupStore;
     }
-    
+
     private CurrentUserService currentUserService;
 
     public void setCurrentUserService( CurrentUserService currentUserService )
@@ -106,12 +105,12 @@ public class DefaultUserService
     }
 
     private DataElementCategoryService categoryService;
-    
+
     public void setCategoryService( DataElementCategoryService categoryService )
     {
         this.categoryService = categoryService;
     }
-    
+
     private SystemSettingManager systemSettingManager;
 
     public void setSystemSettingManager( SystemSettingManager systemSettingManager )
@@ -191,7 +190,7 @@ public class DefaultUserService
         params.setQuery( name );
         params.setFirst( first );
         params.setMax( max );
-        
+
         return userStore.getUsers( params );
     }
 
@@ -201,7 +200,7 @@ public class DefaultUserService
         UserQueryParams params = new UserQueryParams( user );
         params.setCanManage( true );
         params.setAuthSubset( true );
-        
+
         return userStore.getUsers( params );
     }
 
@@ -211,10 +210,10 @@ public class DefaultUserService
         UserQueryParams params = new UserQueryParams( user );
         params.setCanManage( true );
         params.setAuthSubset( true );
-        
+
         return userStore.getUserCount( params );
     }
-    
+
     @Override
     public List<User> getUsers( UserQueryParams params )
     {
@@ -224,7 +223,7 @@ public class DefaultUserService
         {
             return Lists.newArrayList();
         }
-        
+
         return userStore.getUsers( params );
     }
 
@@ -237,20 +236,20 @@ public class DefaultUserService
         {
             return 0;
         }
-        
+
         return userStore.getUserCount( params );
     }
-    
+
     private void handleUserQueryParams( UserQueryParams params )
     {
         boolean canGrantOwnRoles = (Boolean) systemSettingManager.getSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, false );
         params.setDisjointRoles( !canGrantOwnRoles );
-        
+
         if ( params.getUser() == null )
         {
             params.setUser( currentUserService.getCurrentUser() );
         }
-        
+
         if ( params.getUser() != null && params.getUser().isSuper() )
         {
             params.setCanManage( false );
@@ -261,42 +260,42 @@ public class DefaultUserService
         if ( params.getInactiveMonths() != null )
         {
             Calendar cal = PeriodType.createCalendarInstance();
-            cal.add( Calendar.MONTH, ( params.getInactiveMonths() * -1 ) );
+            cal.add( Calendar.MONTH, (params.getInactiveMonths() * -1) );
             params.setInactiveSince( cal.getTime() );
         }
     }
 
     public boolean validateUserQueryParams( UserQueryParams params )
     {
-        if ( params.isCanManage() && ( params.getUser() == null || !params.getUser().hasManagedGroups() ) )
+        if ( params.isCanManage() && (params.getUser() == null || !params.getUser().hasManagedGroups()) )
         {
             log.warn( "Cannot get managed users as user does not have any managed groups" );
             return false;
         }
-        
-        if ( params.isAuthSubset() && ( params.getUser() == null || !params.getUser().getUserCredentials().hasAuthorities() ) )
+
+        if ( params.isAuthSubset() && (params.getUser() == null || !params.getUser().getUserCredentials().hasAuthorities()) )
         {
             log.warn( "Cannot get users with authority subset as user does not have any authorities" );
             return false;
         }
-        
-        if ( params.isDisjointRoles() && ( params.getUser() == null || !params.getUser().getUserCredentials().hasUserAuthorityGroups() ) )
+
+        if ( params.isDisjointRoles() && (params.getUser() == null || !params.getUser().getUserCredentials().hasUserAuthorityGroups()) )
         {
             log.warn( "Cannot get users with disjoint roles as user does not have any user roles" );
             return false;
         }
-        
+
         return true;
     }
-    
+
     @Override
     public List<User> getUsersByPhoneNumber( String phoneNumber )
     {
         UserQueryParams params = new UserQueryParams();
         params.setPhoneNumber( phoneNumber );
-        return getUsers( params );   
+        return getUsers( params );
     }
-    
+
     @Override
     public Set<CategoryOptionGroup> getCogDimensionConstraints( UserCredentials userCredentials )
     {
@@ -376,43 +375,43 @@ public class DefaultUserService
 
     public boolean canAddOrUpdateUser( Collection<String> userGroups )
     {
-    	User currentUser = currentUserService.getCurrentUser();
-    	
-    	if ( currentUser == null )
-    	{
-    	    return false;
-    	}
-    	
-    	boolean canAdd = currentUser.getUserCredentials().isAuthorized( UserGroup.AUTH_USER_ADD );
-    	
-    	if ( canAdd )
-    	{
-    	    return true;
-    	}
-    	
-    	boolean canAddInGroup = currentUser.getUserCredentials().isAuthorized( UserGroup.AUTH_USER_ADD_IN_GROUP );
-    	
-    	if ( !canAddInGroup )
-    	{
-    	    return false;
-    	}
-    	
-    	boolean canManageAnyGroup = false;
-    	
-    	for ( String uid : userGroups )
-    	{
-    	    UserGroup userGroup = userGroupService.getUserGroup( uid );
-            
+        User currentUser = currentUserService.getCurrentUser();
+
+        if ( currentUser == null )
+        {
+            return false;
+        }
+
+        boolean canAdd = currentUser.getUserCredentials().isAuthorized( UserGroup.AUTH_USER_ADD );
+
+        if ( canAdd )
+        {
+            return true;
+        }
+
+        boolean canAddInGroup = currentUser.getUserCredentials().isAuthorized( UserGroup.AUTH_USER_ADD_IN_GROUP );
+
+        if ( !canAddInGroup )
+        {
+            return false;
+        }
+
+        boolean canManageAnyGroup = false;
+
+        for ( String uid : userGroups )
+        {
+            UserGroup userGroup = userGroupService.getUserGroup( uid );
+
             if ( currentUser.canManage( userGroup ) )
             {
                 canManageAnyGroup = true;
                 break;
             }
-    	}
-    	
-    	return canManageAnyGroup;
+        }
+
+        return canManageAnyGroup;
     }
-    
+
     // -------------------------------------------------------------------------
     // UserAuthorityGroup
     // -------------------------------------------------------------------------
@@ -494,7 +493,7 @@ public class DefaultUserService
     {
         return userAuthorityGroupStore.countDataSetUserAuthorityGroups( dataSet );
     }
-    
+
     @Override
     public void assignDataSetToUserRole( DataSet dataSet )
     {
@@ -572,7 +571,7 @@ public class DefaultUserService
         {
             return null;
         }
-        
+
         return userCredentialsStore.get( user.getId() );
     }
 
@@ -592,8 +591,12 @@ public class DefaultUserService
     public void setLastLogin( String username )
     {
         UserCredentials credentials = getUserCredentialsByUsername( username );
-        credentials.setLastLogin( new Date() );
-        updateUserCredentials( credentials );
+
+        if ( credentials != null )
+        {
+            credentials.setLastLogin( new Date() );
+            updateUserCredentials( credentials );
+        }
     }
 
     @Override
@@ -610,10 +613,10 @@ public class DefaultUserService
     {
         UserQueryParams params = new UserQueryParams();
         params.setLastLogin( since );
-        
+
         return getUserCount( params );
     }
-    
+
     @Override
     public boolean credentialsNonExpired( UserCredentials credentials )
     {
