@@ -5,7 +5,7 @@
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
     http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
-  <bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener" />
+  <bean id="clientDetailsService" class="org.hisp.dhis.security.oauth2.DefaultClientDetailsService" />
 
   <!-- /oauth/authorize
   <sec:http pattern="/oauth/authorize/**" access-denied-page="/login.jsp?authorization_error=true" disable-url-rewriting="true">
@@ -38,8 +38,6 @@
   <sec:authentication-manager id="clientAuthenticationManager">
     <sec:authentication-provider user-service-ref="clientDetailsUserService" />
   </sec:authentication-manager>
-
-  <bean id="clientDetailsService" class="org.hisp.dhis.security.oauth2.DefaultClientDetailsService" />
 
   <bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
     <constructor-arg ref="clientDetailsService" />
