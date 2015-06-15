@@ -277,6 +277,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                             var commonInputFieldProperty = this.getAttributesAsString(attributes) +
                                     ' ng-model="currentEvent.' + fieldId + '" ' +
+                                    ' style="width:100%;" ' +
                                     ' input-field-id="' + fieldId + '"' +
                                     ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                     ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
@@ -286,8 +287,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 //check if dataelement has optionset								
                                 if (prStDe.dataElement.optionSetValue) {
                                     var optionSetId = prStDe.dataElement.optionSet.id;                 
-                                    newInputField = '<ui-select class="form-control" theme="select2" ' + commonInputFieldProperty + ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')" >' +
-                                            '<ui-select-match allow-clear="true" class="form-control" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
+                                    newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + ' on-select="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')" >' +
+                                            '<ui-select-match allow-clear="true" style="width:100%;" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
                                             '<ui-select-choices  infinite-scroll="addMoreOptions()" infinite-scroll-distance="2"' +
                                             ' repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:infiniteScroll.currentOptions">' +
                                             '<span ng-bind-html="option.name | highlight: $select.search"></span>' +
@@ -297,7 +298,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 else {
                                     //check data element type and generate corresponding angular input field
                                     if (prStDe.dataElement.type === "int") {
-                                        newInputField = '<input type="number" class="form-control" ' +
+                                        newInputField = '<input type="number" ' +
                                                 ' d2-number-validator ' +
                                                 ' number-type="' + prStDe.dataElement.numberType + '" ' +
                                                 ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
@@ -386,6 +387,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                             var commonInputFieldProperty = ' name="' + fieldName + '"' +
                                     ' element-id="' + i + '"' +
+                                    ' style="width:100%;" ' +
                                     this.getAttributesAsString(attributes) +
                                     ' d2-focus-next-on-enter' +
                                     ' ng-model="selectedTei.' + attId + '" ' +
@@ -397,9 +399,9 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             if (att.optionSetValue) {
                                 var optionSetId = att.optionSet.id;
                                 newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + ' >' +
-                                        '<ui-select-match allow-clear="true" placeholder="{{"select_or_search" | translate}}">{{$select.selected.name || $select.selected}}</ui-select-match>' +
-                                        '<ui-select-choices  	infinite-scroll="addMoreOptions()" infinite-scroll-distance="2"' +
-                                        'repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:infiniteScroll.currentOptions">' +
+                                        '<ui-select-match style="width:100%;" allow-clear="true" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
+                                        '<ui-select-choices ' +
+                                        'repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:20">' +
                                         '<span ng-bind-html="option.name | highlight: $select.search"></span>' +
                                         '</ui-select-choices>' +
                                         '</ui-select>';
@@ -422,7 +424,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             '</select> ';
                                 }
                                 else if (att.valueType === "date") {
-                                    newInputField = '<input type="text" ' +
+                                    newInputField = '<input  type="text" ' +
                                             ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
                                             ' max-date="' + attMaxDate + '"' + '\'' +
                                             ' d2-date' +
