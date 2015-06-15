@@ -509,7 +509,7 @@
       <dependency>
         <groupId>org.springframework.security.oauth</groupId>
         <artifactId>spring-security-oauth2</artifactId>
-        <version>2.0.7.RELEASE</version>
+        <version>${spring.security.oauth2.version}</version>
       </dependency>
 
       <!-- Spring Mobile -->
@@ -1031,6 +1031,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>4.1.6.RELEASE</spring.version>
     <spring.security.version>3.2.7.RELEASE</spring.security.version>
+    <spring.security.oauth2.version>2.0.7.RELEASE</spring.security.oauth2.version>
     <struts.version>2.3.16.3</struts.version>
     <hibernate.version>4.2.19.Final</hibernate.version>
     <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
