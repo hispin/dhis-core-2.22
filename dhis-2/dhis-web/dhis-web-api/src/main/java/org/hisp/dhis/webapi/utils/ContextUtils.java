@@ -50,7 +50,7 @@ import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.util.CodecUtils;
+import org.hisp.dhis.commons.util.CodecUtils;
 import org.hisp.dhis.system.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

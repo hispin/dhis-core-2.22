@@ -30,7 +30,7 @@ package org.hisp.dhis.system.util;
 
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.annotation.Scanned;
-import org.hisp.dhis.util.functional.Predicate;
+import org.hisp.dhis.commons.functional.Predicate;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

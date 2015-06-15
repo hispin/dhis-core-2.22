@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hisp.dhis.util.PaginatedList;
+import org.hisp.dhis.commons.collection.PaginatedList;
 import org.junit.Test;
 
 /**

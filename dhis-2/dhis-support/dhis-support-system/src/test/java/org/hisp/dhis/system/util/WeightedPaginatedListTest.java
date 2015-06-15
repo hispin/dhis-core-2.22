@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hisp.dhis.common.Weighted;
+import org.hisp.dhis.system.collection.WeightedPaginatedList;
 import org.junit.Test;
 
 /**

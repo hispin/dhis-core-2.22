@@ -43,7 +43,7 @@ import org.hisp.dhis.paging.ActionPagingSupport;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
-import org.hisp.dhis.util.FilterUtils;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.util.ContextUtils;
 
 import java.util.ArrayList;

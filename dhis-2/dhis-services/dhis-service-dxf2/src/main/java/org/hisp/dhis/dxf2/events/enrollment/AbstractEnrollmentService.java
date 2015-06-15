@@ -30,7 +30,6 @@ package org.hisp.dhis.dxf2.events.enrollment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
@@ -64,7 +63,7 @@ import org.hisp.dhis.trackedentitycomment.TrackedEntityComment;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityCommentService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.UserService;
-import org.hisp.dhis.util.CachingMap;
+import org.hisp.dhis.commons.collection.CachingMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 

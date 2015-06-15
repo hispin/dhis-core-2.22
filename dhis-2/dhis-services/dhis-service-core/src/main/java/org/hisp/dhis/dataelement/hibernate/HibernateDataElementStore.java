@@ -28,7 +28,7 @@ package org.hisp.dhis.dataelement.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,7 +50,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.dataelement.DataElementStore;
 import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.util.TextUtils;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.RowCallbackHandler;
 

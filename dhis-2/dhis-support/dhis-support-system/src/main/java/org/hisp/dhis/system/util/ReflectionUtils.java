@@ -31,8 +31,8 @@ package org.hisp.dhis.system.util;
 import javassist.util.proxy.ProxyFactory;
 
 import org.hibernate.collection.spi.PersistentCollection;
-import org.hisp.dhis.util.functional.Function1;
-import org.hisp.dhis.util.functional.Predicate;
+import org.hisp.dhis.commons.functional.Function1;
+import org.hisp.dhis.commons.functional.Predicate;
 import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;

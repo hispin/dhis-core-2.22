@@ -29,7 +29,6 @@ package org.hisp.dhis.dxf2.events.trackedentity;
  */
 
 import com.google.common.collect.Lists;
-import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -54,7 +53,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.user.UserService;
-import org.hisp.dhis.util.CachingMap;
+import org.hisp.dhis.commons.collection.CachingMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 

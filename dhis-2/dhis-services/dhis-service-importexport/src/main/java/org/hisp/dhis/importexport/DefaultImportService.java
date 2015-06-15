@@ -45,7 +45,7 @@ import org.hisp.dhis.common.ProcessState;
 import org.hisp.dhis.importexport.dxf.converter.DXFConverter;
 import org.hisp.dhis.importexport.zip.ZipAnalyzer;
 import org.hisp.dhis.system.process.OutputHolderState;
-import org.hisp.dhis.util.StreamUtils;
+import org.hisp.dhis.commons.util.StreamUtils;
 
 /**
  * @author bobj

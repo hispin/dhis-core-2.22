@@ -72,12 +72,12 @@ import org.hisp.dhis.system.filter.DataElementWithAggregationFilter;
 import org.hisp.dhis.system.filter.OrganisationUnitAboveOrEqualToLevelFilter;
 import org.hisp.dhis.system.filter.PastAndCurrentPeriodFilter;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.util.Clock;
-import org.hisp.dhis.util.ConcurrentUtils;
-import org.hisp.dhis.util.ConversionUtils;
-import org.hisp.dhis.util.FilterUtils;
-import org.hisp.dhis.util.PaginatedList;
-import org.hisp.dhis.util.SystemUtils;
+import org.hisp.dhis.commons.util.Clock;
+import org.hisp.dhis.commons.util.ConcurrentUtils;
+import org.hisp.dhis.commons.util.ConversionUtils;
+import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.commons.collection.PaginatedList;
+import org.hisp.dhis.system.util.SystemUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

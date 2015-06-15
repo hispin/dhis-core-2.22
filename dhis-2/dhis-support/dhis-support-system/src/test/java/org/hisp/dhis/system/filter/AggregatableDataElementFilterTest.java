@@ -36,7 +36,7 @@ import java.util.Set;
 import org.hisp.dhis.DhisConvenienceTest;
 
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.util.FilterUtils;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.junit.Test;
 
 /**

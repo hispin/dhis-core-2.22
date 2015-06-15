@@ -36,7 +36,7 @@ import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import org.hisp.dhis.util.StreamUtils;
+import org.hisp.dhis.commons.util.StreamUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

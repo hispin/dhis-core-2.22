@@ -28,8 +28,8 @@ package org.hisp.dhis.importexport.action.exp;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.util.ConversionUtils.getIdentifiers;
-import static org.hisp.dhis.util.ConversionUtils.getIntegerCollection;
+import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.commons.util.ConversionUtils.getIntegerCollection;
 
 import java.io.InputStream;
 import java.util.ArrayList;

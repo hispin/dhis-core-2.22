@@ -31,7 +31,7 @@ package org.hisp.dhis.dxf2.datavalueset;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.system.util.DateUtils.getLongGmtDateString;
 import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
-import static org.hisp.dhis.util.TextUtils.getCommaDelimitedString;
+import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.io.OutputStream;
 import java.io.Writer;
@@ -51,7 +51,7 @@ import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.datavalue.DataValue;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.util.StreamUtils;
+import org.hisp.dhis.commons.util.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;

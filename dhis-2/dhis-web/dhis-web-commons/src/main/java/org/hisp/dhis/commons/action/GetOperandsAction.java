@@ -44,7 +44,7 @@ import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
 import org.hisp.dhis.system.filter.DataElementPeriodTypeAllowAverageFilter;
 import org.hisp.dhis.system.filter.DataElementPeriodTypeFilter;
 import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.util.FilterUtils;
+import org.hisp.dhis.commons.filter.FilterUtils;
 
 /**
  * @author Lars Helge Overland

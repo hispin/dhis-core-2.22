@@ -29,9 +29,9 @@ package org.hisp.dhis.dataanalysis.jdbc;
  */
 
 import static org.hisp.dhis.common.AggregatedValue.ZERO;
-import static org.hisp.dhis.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
 import static org.hisp.dhis.system.util.MathUtils.isEqual;
-import static org.hisp.dhis.util.TextUtils.getCommaDelimitedString;
+import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,9 +52,9 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.objectmapper.DeflatedDataValueNameMinMaxRowMapper;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.util.ConversionUtils;
-import org.hisp.dhis.util.PaginatedList;
-import org.hisp.dhis.util.TextUtils;
+import org.hisp.dhis.commons.util.ConversionUtils;
+import org.hisp.dhis.commons.collection.PaginatedList;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 

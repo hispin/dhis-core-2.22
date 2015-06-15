@@ -38,15 +38,14 @@ import java.util.List;
 import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramStageInstanceService;
 import org.hisp.dhis.program.SchedulingProgramObject;
-import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.sms.SmsSender;
 import org.hisp.dhis.sms.SmsServiceException;
 import org.hisp.dhis.sms.outbound.OutboundSms;
 import org.hisp.dhis.sms.outbound.OutboundSmsService;
 import org.hisp.dhis.sms.outbound.OutboundSmsStatus;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.util.Clock;
-import org.hisp.dhis.util.SystemUtils;
+import org.hisp.dhis.commons.util.Clock;
+import org.hisp.dhis.system.util.SystemUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
