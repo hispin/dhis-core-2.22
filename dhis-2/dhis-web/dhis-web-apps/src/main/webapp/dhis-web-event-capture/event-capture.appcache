@@ -27,6 +27,7 @@ CACHE:
 
 ../dhis-web-commons/javascripts/jQuery/ui/css/redmond/jquery-ui.css
 ../dhis-web-commons/javascripts/jQuery/calendars/css/ui-redmond.calendars.picker.css    
+../dhis-web-commons/javascripts/jQuery/calendars/css/ui.calendars.picker.css
 
 ../dhis-web-commons/bootstrap/js/bootstrap.min.js
 
@@ -69,6 +70,9 @@ scripts/event-capture.js
 
 ../dhis-web-commons/javascripts/angular/plugins/angularLocalStorage.js
 ../dhis-web-commons/javascripts/angular/plugins/angular-translate.min.js
+../dhis-web-commons/javascripts/angular/plugins/select.js
+../dhis-web-commons/javascripts/angular/plugins/select2.js
+../dhis-web-commons/javascripts/angular/plugins/ng-infinite-scroll.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.directives.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.validations.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.filters.js
@@ -91,6 +95,9 @@ scripts/notes-controller.js
 ../dhis-web-commons/css/widgets.css
 ../dhis-web-commons/css/menu.css
 ../dhis-web-commons/css/print.css
+../dhis-web-commons/javascripts/angular/plugins/select.css
+../dhis-web-commons/javascripts/angular/plugins/select2.css
+../dhis-web-commons/javascripts/angular/plugins/select2.png
 
 styles/style.css
 

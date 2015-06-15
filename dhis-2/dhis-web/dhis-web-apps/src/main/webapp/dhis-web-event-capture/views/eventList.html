@@ -125,133 +125,136 @@
                                 <div style="cursor:default;"
                                     ng-if="(currentEvent.event == dhis2Event.event) && eventGridColumn.show && eventGridColumn.id !== 'comment'">
                                     <ng-form name="innerFormGrid">
-                                        <div ng-switch="eventGridColumn.type">
-                                            <div ng-switch-when="int">
-                                                <input type="number" 
-                                                       program-stage-data-element={{prStDes[eventGridColumn.id]}}
-                                                       d2-number-validator
-                                                       number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
-                                                       ng-model="currentEvent[eventGridColumn.id]" 
-                                                       ng-blur="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
-                                                       ng-required={{eventGridColumn.compulsory}}
-                                                       input-field-id={{eventGridColumn.id}} 
-                                                       name="foo" 
-                                                       style="width:98%;"
-                                                       ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                       ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"/>
-                                            </div>
-                                            <div ng-switch-when="string">                                        
-                                                <div ng-if="eventGridColumn.id == 'uid'">
-                                                    <input type="text"
-                                                           ng-model="currentEvent[eventGridColumn.id]"                                                                    
-                                                           ng-disabled=true 
-                                                           name="foo" 
-                                                           style="width:99%;"/>                                                    
-                                                </div>
-                                                <div ng-if="eventGridColumn.id !== 'uid'">
-                                                    <div class="container-fluid" ng-if="optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id]">                                                
-                                                        <span ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length > 7">
-                                                            <input type="text" 
-                                                               class="typeahead"
-                                                               placeholder="&#xf0d7;&nbsp;&nbsp;"                                                 
-                                                               ng-model="currentEvent[eventGridColumn.id]" 
-                                                               ng-blur="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
-                                                               typeahead="option.name as option.name for option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter:$viewValue | limitTo:20" 
-                                                               typeahead-open-on-focus
-                                                               typeahead-editable="false" 
+                                        <div ng-if="eventGridColumn.id === 'uid'">
+                                            <input type="text"
+                                                    ng-model="currentEvent[eventGridColumn.id]"                                                                    
+                                                    ng-disabled=true 
+                                                    name="foo" 
+                                                    class="form-control"/>
+                                        </div>
+                                        <div ng-if="eventGridColumn.id !== 'uid'">
+                                            <div ng-if="prStDes[eventGridColumn.id].dataElement.optionSetValue">
+                                                <span ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length > 7">
+                                                    <ui-select ng-model="currentEvent[eventGridColumn.id]" 
+                                                               theme="select2" 
                                                                ng-required={{eventGridColumn.compulsory}}
-                                                               ng-disabled="eventGridColumn.id == 'uid'"
-                                                               input-field-id={{eventGridColumn.id}} 
                                                                name="foo" 
-                                                               style="width:98%;"
+                                                               d2-option-validator
+                                                               on-select="updateEventDataValue(dhis2Event,eventGridColumn.id)" 
+                                                               on-remove="validateOptionOnRemove(eventGridColumn.compulsory)"
+                                                               input-field-id={{eventGridColumn.id}}
+                                                               style="width:100%;"
+                                                               class={{getInputNotifcationClass(eventGridColumn.id,false)}}>
+                                                        <ui-select-match allow-clear="true" class="form-control" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name || $select.selected}}</ui-select-match>
+                                                        <ui-select-choices  infinite-scroll="addMoreOptions()" 
+                                                                             infinite-scroll-distance="2" 
+                                                                             repeat="option.name as option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter: $select.search | limitTo:infiniteScroll.currentOptions">
+                                                            <span ng-bind-html="option.name | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </span>
+                                                <span ng-if="selectedProgram.dataEntryMethod && optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length < 7">                                    
+                                                    <label>
+                                                        <input type="radio" 
+                                                               input-field-id={{eventGridColumn.id}} 
+                                                               name="foo"
+                                                               ng-required={{eventGridColumn.compulsory}}
+                                                               ng-model="currentEvent[eventGridColumn.id]" 
+                                                               ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
+                                                               value=""> {{'no_value' | translate}}<br>                                     
+                                                    </label>                                    
+                                                    <label ng-repeat="option in  optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options">
+                                                        <input type="radio" 
+                                                               input-field-id={{eventGridColumn.id}} 
+                                                               name={{eventGridColumn.id}}   
+                                                               ng-required={{eventGridColumn.compulsory}}
+                                                               ng-model="currentEvent[eventGridColumn.id]" 
+                                                               ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)"
                                                                ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
                                                                ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                               />
-                                                        </span>
-                                                        <span ng-if="selectedProgram.dataEntryMethod && optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options.length < 7">                                    
-                                                            <label>
-                                                                <input type="radio" 
-                                                                       input-field-id={{eventGridColumn.id}} 
-                                                                       name="foo"
-                                                                       ng-required={{eventGridColumn.compulsory}}
-                                                                       ng-model="currentEvent[eventGridColumn.id]" 
-                                                                       ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
-                                                                       value=""> {{'no_value' | translate}}<br>                                     
-                                                            </label>                                    
-                                                            <label ng-repeat="option in  optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options">
-                                                                <input type="radio" 
-                                                                       input-field-id={{eventGridColumn.id}} 
-                                                                       name={{eventGridColumn.id}}   
-                                                                       ng-required={{eventGridColumn.compulsory}}
-                                                                       ng-model="currentEvent[eventGridColumn.id]" 
-                                                                       ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)"
-                                                                       ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                                       ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                                       value={{option.name}}> {{option.name}}<br>                                    
-                                                            </label>
-                                                        </span>                                                
-                                                    </div>
-                                                    <div ng-if="!optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id]">
-                                                        <input type="text" 
-                                                            ng-model="currentEvent[eventGridColumn.id]" 
-                                                            ng-blur="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
+                                                               value={{option.name}}> {{option.name}}<br>                                    
+                                                    </label>
+                                                </span> 
+                                            </div>
+                                            <div ng-if="!prStDes[eventGridColumn.id].dataElement.optionSetValue" ng-switch="eventGridColumn.type">                                            
+                                                <div ng-switch-when="int">
+                                                    <input type="number"                                                            
+                                                           d2-number-validator
+                                                           number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
+                                                           ng-model="currentEvent[eventGridColumn.id]" 
+                                                           ng-blur="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
+                                                           ng-required={{eventGridColumn.compulsory}}
+                                                           input-field-id={{eventGridColumn.id}} 
+                                                           name="foo" 
+                                                           class="form-control"
+                                                           ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
+                                                           ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"/>
+                                                </div>
+                                                <div ng-switch-when="string">                                        
+                                                    <div ng-if="eventGridColumn.textType==='longText'">
+                                                        <textarea rows="3"
+                                                            ng-model="currentEvent[eventGridColumn.id]"                                        
                                                             ng-required={{eventGridColumn.compulsory}}
-                                                            ng-disabled="eventGridColumn.id == 'uid'"
+                                                            name="foo" 
+                                                            input-field-id={{eventGridColumn.id}} 
+                                                            ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
+                                                            ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
+                                                            class="form-control">
+                                                        </textarea>
+                                                    </div>
+                                                    <div ng-if="eventGridColumn.textType!=='longText'">
+                                                        <input type="text"
+                                                               ng-model="currentEvent[eventGridColumn.id]" 
+                                                               ng-required={{eventGridColumn.compulsory}}
+                                                               name="foo" 
+                                                               class="form-control"/>                                                    
+                                                    </div>                                                    
+                                                </div>                                        
+                                                <div ng-switch-when="bool">
+                                                    <select ng-model="currentEvent[eventGridColumn.id]" 
+                                                            ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
+                                                            ng-required={{eventGridColumn.compulsory}}
                                                             input-field-id={{eventGridColumn.id}} 
                                                             name="foo" 
                                                             style="width:98%;"
                                                             ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                            ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                            />
-                                                    </div>
+                                                            ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]">
+                                                        <option value="">{{'please_select'| translate}}</option>                        
+                                                        <option value="false">{{'no'| translate}}</option>
+                                                        <option value="true">{{'yes'| translate}}</option>
+                                                    </select>
                                                 </div>
-                                            </div>                                        
-                                            <div ng-switch-when="bool">
-                                                <select ng-model="currentEvent[eventGridColumn.id]" 
-                                                        ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
-                                                        ng-required={{eventGridColumn.compulsory}}
-                                                        input-field-id={{eventGridColumn.id}} 
-                                                        name="foo" 
-                                                        style="width:98%;"
-                                                        ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                        ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]">
-                                                    <option value="">{{'please_select'| translate}}</option>                        
-                                                    <option value="false">{{'no'| translate}}</option>
-                                                    <option value="true">{{'yes'| translate}}</option>
-                                                </select>
+                                                <div ng-switch-when="date">
+                                                    <input type="text" 
+                                                           placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
+                                                           d2-date
+                                                           max-date="prStDes[eventGridColumn.id].allowFutureDate ? '' : 0" 
+                                                           d2-date-validator
+                                                           ng-model="currentEvent[eventGridColumn.id]"
+                                                           blur-or-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
+                                                           ng-required={{eventGridColumn.compulsory}}
+                                                           ng-disabled="eventGridColumn.id == 'event_date'"
+                                                           input-field-id={{eventGridColumn.id}}                                                            
+                                                           style="width:98%;"
+                                                           ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
+                                                           ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
+                                                           name="foo"/>
+                                                </div>
+                                                <div ng-switch-when="trueOnly">
+                                                    <input type="checkbox"
+                                                           d2-validation 
+                                                           ng-model="currentEvent[eventGridColumn.id]"
+                                                           ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
+                                                           ng-required={{eventGridColumn.compulsory}} 
+                                                           input-field-id={{eventGridColumn.id}}                                                            
+                                                           ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
+                                                           ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
+                                                           name="foo"/>
+                                                </div>
+                                                <div ng-messages="innerFormGrid.foo.$error" ng-if="interacted(innerFormGrid.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
+                                                </div>
                                             </div>
-                                            <div ng-switch-when="date">
-                                                <input type="text" 
-                                                       placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
-                                                       d2-date
-                                                       max-date="prStDes[eventGridColumn.id].allowFutureDate ? '' : 0" 
-                                                       d2-date-validator
-                                                       ng-model="currentEvent[eventGridColumn.id]"
-                                                       blur-or-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
-                                                       ng-required={{eventGridColumn.compulsory}}
-                                                       ng-disabled="eventGridColumn.id == 'event_date'"
-                                                       input-field-id={{eventGridColumn.id}} 
-                                                       name="foo" 
-                                                       style="width:98%;"
-                                                       ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                       ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                       />
-                                            </div>
-                                            <div ng-switch-when="trueOnly">
-                                                <input type="checkbox"
-                                                       d2-validation 
-                                                       ng-model="currentEvent[eventGridColumn.id]"
-                                                       ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
-                                                       ng-required={{eventGridColumn.compulsory}} 
-                                                       input-field-id={{eventGridColumn.id}} 
-                                                       name="foo" 
-                                                       ng-class="{true: 'update-success'} [currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                       ng-class="{true: 'update-error'} [!currentElement.updated == true && currentElement.id == eventGridColumn.id]"
-                                                       />
-                                            </div>
-                                        </div>                                        
-                                        <div ng-messages="innerFormGrid.foo.$error" ng-if="interacted(innerFormGrid.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
-                                        </div>                                    
+                                        </div>                                                                            
                                     </ng-form>
                                 </div>
                                 <!-- Visible when event is under editing in grid -->

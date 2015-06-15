@@ -872,4 +872,29 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }
         return status;        
     };
+    
+    //Infinite Scroll
+    $scope.infiniteScroll = {};
+    $scope.infiniteScroll.optionsToAdd = 20;
+    $scope.infiniteScroll.currentOptions = 20;
+    
+    $scope.resetInfScroll = function() {
+        $scope.infiniteScroll.currentOptions = $scope.infiniteScroll.optionsToAdd;
+    };
+  
+    $scope.addMoreOptions = function(){
+        $scope.infiniteScroll.currentOptions += $scope.infiniteScroll.optionsToAdd;
+    };
+    
+    /*$scope.getInputNotifcationClass = function(id, custom, event){
+        var style = "";
+        if($scope.currentElement.id && $scope.currentElement.id === id){            
+            style = $scope.currentElement.updated ? 'update-success' : 'update-error';
+        }
+        return style + ' form-control'; 
+    };*/
+    
+    $scope.getInputNotifcationClass = function(id, custom){        
+        return '; ';
+    };
 });

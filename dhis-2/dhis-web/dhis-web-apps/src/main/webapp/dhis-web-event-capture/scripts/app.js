@@ -16,6 +16,8 @@ var eventCapture = angular.module('eventCapture',
                     'd2Directives',
                     'd2Services',
                     'd2Controllers',
+                    'ui.select',
+                    //'infinite-scroll',
                     'angularLocalStorage',
                     'pascalprecht.translate',
                     'd2HeaderBar'])
