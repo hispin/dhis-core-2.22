@@ -178,7 +178,7 @@ public interface ReportService
      * @param identifiers the Collection of identifiers.
      * @return a Collection of Reports.
      */
-    Collection<Report> getReports( final Collection<Integer> identifiers );
+    List<Report> getReports( final Collection<Integer> identifiers );
 
     /**
      * Retrieves Reports with the given uids.

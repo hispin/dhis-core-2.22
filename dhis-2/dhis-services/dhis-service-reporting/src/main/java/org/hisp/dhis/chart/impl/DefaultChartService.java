@@ -969,7 +969,7 @@ public class DefaultChartService
     }
 
     @Override
-    public Collection<Chart> getCharts( final Collection<Integer> identifiers )
+    public List<Chart> getCharts( final Collection<Integer> identifiers )
     {
         List<Chart> charts = getAllCharts();
 
