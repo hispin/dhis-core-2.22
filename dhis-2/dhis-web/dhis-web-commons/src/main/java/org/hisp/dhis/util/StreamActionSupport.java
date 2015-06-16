@@ -32,10 +32,10 @@ import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.hisp.dhis.commons.util.StreamUtils;
 
 import com.opensymphony.xwork2.Action;
 
@@ -78,7 +78,7 @@ public abstract class StreamActionSupport
         }
         finally
         {
-            StreamUtils.closeOutputStream( out );
+            IOUtils.closeQuietly( out );
         }
     }
 

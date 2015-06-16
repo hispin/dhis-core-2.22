@@ -39,6 +39,7 @@ import java.util.zip.ZipFile;
 
 import org.amplecode.staxwax.factory.XMLFactory;
 import org.amplecode.staxwax.reader.XMLReader;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.ProcessState;
@@ -102,7 +103,7 @@ public class DefaultImportService
                 
                 BufferedOutputStream ostream = new BufferedOutputStream( new FileOutputStream( tempZipFile ) ); // Save it to disk                
 
-                StreamUtils.streamcopy( bufin, ostream );
+                IOUtils.copy( bufin, ostream );
 
                 bufin.close();
 

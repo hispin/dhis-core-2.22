@@ -38,11 +38,12 @@ import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.staxwax.factory.XMLFactory;
 import org.amplecode.staxwax.reader.XMLReader;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.hisp.dhis.cache.HibernateCacheManager;
 import org.hisp.dhis.common.ProcessState;
+import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -74,7 +75,6 @@ import org.hisp.dhis.jdbc.batchhandler.ImportDataValueBatchHandler;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.system.process.OutputHolderState;
-import org.hisp.dhis.commons.util.StreamUtils;
 
 
 /**
@@ -313,7 +313,7 @@ public class DefaultDhis14XMLImportService
             state.setOutput( importAnalyser.getImportAnalysis() );
         }
 
-        StreamUtils.closeInputStream( zipIn );
+        IOUtils.closeQuietly( zipIn );
 
         NameMappingUtil.clearMapping();
 

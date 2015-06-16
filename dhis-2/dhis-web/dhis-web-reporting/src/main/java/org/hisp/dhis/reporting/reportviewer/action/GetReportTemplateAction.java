@@ -35,8 +35,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.struts2.ServletActionContext;
-import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.util.ContextUtils;
 import org.springframework.core.io.ClassPathResource;
 
@@ -82,7 +82,7 @@ public class GetReportTemplateAction
             
             ContextUtils.configureResponse( response, contentType, false, template, true );
             
-            StreamUtils.streamcopy( new BufferedInputStream( new ClassPathResource( template ).getInputStream() ), 
+            IOUtils.copy( new BufferedInputStream( new ClassPathResource( template ).getInputStream() ), 
                 new BufferedOutputStream( response.getOutputStream() ) );
         }
         

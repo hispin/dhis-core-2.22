@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
 import org.hisp.dhis.period.BiMonthlyPeriodType;
 import org.hisp.dhis.period.DailyPeriodType;
 import org.hisp.dhis.period.FinancialAprilPeriodType;
@@ -45,7 +46,6 @@ import org.hisp.dhis.period.SixMonthlyAprilPeriodType;
 import org.hisp.dhis.period.SixMonthlyPeriodType;
 import org.hisp.dhis.period.WeeklyPeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
-import org.hisp.dhis.system.util.DateUtils;
 
 /**
  * ADXPeriod
@@ -56,7 +56,6 @@ import org.hisp.dhis.system.util.DateUtils;
  */
 public class ADXPeriod
 {
-
     public static class ADXPeriodException extends RuntimeException
     {
 
@@ -68,7 +67,6 @@ public class ADXPeriod
 
     public static enum Duration
     {
-
         P1D, // daily
         P7D, // weekly
         P1M, // monthly
@@ -83,6 +81,7 @@ public class ADXPeriod
     public static Period parse( String periodString ) throws ADXPeriodException
     {
         String[] tokens = periodString.split( "/" );
+        
         if ( tokens.length != 2 )
         {
             throw new ADXPeriodException( periodString + " not in valid <date>/<duration> format" );

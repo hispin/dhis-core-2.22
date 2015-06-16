@@ -30,7 +30,6 @@ package org.hisp.dhis.system.util;
 
 import static com.lowagie.text.Element.ALIGN_CENTER;
 import static com.lowagie.text.Element.ALIGN_LEFT;
-import static org.hisp.dhis.commons.util.TextUtils.nullIfEmpty;
 
 import java.io.OutputStream;
 import java.util.Calendar;
@@ -38,6 +37,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.expression.ExpressionService;
@@ -391,23 +391,23 @@ public class PDFUtils
         table.addCell( getItalicCell( i18n.getString( "short_name" ) ) );
         table.addCell( getTextCell( element.getShortName() ) );
 
-        if ( nullIfEmpty( element.getCode() ) != null )
+        if ( StringUtils.trimToNull( element.getCode() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "code" ) ) );
             table.addCell( getTextCell( element.getCode() ) );
         }
-        if ( nullIfEmpty( element.getDescription() ) != null )
+        if ( StringUtils.trimToNull( element.getDescription() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "description" ) ) );
             table.addCell( getTextCell( element.getDescription() ) );
         }
         
-        if ( nullIfEmpty( element.getType() ) != null )
+        if ( StringUtils.trimToNull( element.getType() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "value_type" ) ) );
             table.addCell( getTextCell( i18n.getString( getType().get( element.getType() ) ) ) );
         }
-        if ( nullIfEmpty( element.getAggregationOperator() ) != null )
+        if ( StringUtils.trimToNull( element.getAggregationOperator() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "aggregation_operator" ) ) );
             table.addCell( getTextCell( i18n.getString( getAggregationOperator().get( element.getAggregationOperator() ) ) ) );
@@ -449,12 +449,12 @@ public class PDFUtils
         table.addCell( getItalicCell( i18n.getString( "short_name" ) ) );
         table.addCell( getTextCell( indicator.getShortName() ) );
 
-        if ( nullIfEmpty( indicator.getCode() ) != null )
+        if ( StringUtils.trimToNull( indicator.getCode() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "code" ) ) );
             table.addCell( getTextCell( indicator.getCode() ) );
         }
-        if ( nullIfEmpty( indicator.getDescription() ) != null )
+        if ( StringUtils.trimToNull( indicator.getDescription() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "description" ) ) );
             table.addCell( getTextCell( indicator.getDescription() ) );
@@ -514,7 +514,7 @@ public class PDFUtils
         table.addCell( getItalicCell( i18n.getString( "short_name" ) ) );
         table.addCell( getTextCell( unit.getShortName() ) );
 
-        if ( nullIfEmpty( unit.getCode() ) != null )
+        if ( StringUtils.trimToNull( unit.getCode() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "code" ) ) );
             table.addCell( getTextCell( unit.getCode() ) );
@@ -531,7 +531,7 @@ public class PDFUtils
 
         table.addCell( getItalicCell( i18n.getString( "active" ) ) );
 
-        if ( nullIfEmpty( unit.getComment() ) != null )
+        if ( StringUtils.trimToNull( unit.getComment() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "comment" ) ) );
             table.addCell( getTextCell( unit.getComment() ) );
@@ -572,13 +572,13 @@ public class PDFUtils
         table.addCell( getItalicCell( i18n.getString( "username" ) ) );
         table.addCell( getTextCell( userCredentials.getUsername() ) );
 
-        if ( nullIfEmpty( user.getEmail() ) != null )
+        if ( StringUtils.trimToNull( user.getEmail() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "email" ) ) );
             table.addCell( getTextCell( user.getEmail() ) );
         }
 
-        if ( nullIfEmpty( user.getPhoneNumber() ) != null )
+        if ( StringUtils.trimToNull( user.getPhoneNumber() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "phone_number" ) ) );
             table.addCell( getTextCell( user.getPhoneNumber() ) );
@@ -646,7 +646,7 @@ public class PDFUtils
 
         table.addCell( getEmptyCell( 2, 15 ) );
 
-        if ( nullIfEmpty( validationRule.getDescription() ) != null )
+        if ( StringUtils.trimToNull( validationRule.getDescription() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "description" ) ) );
             table.addCell( getTextCell( validationRule.getDescription() ) );

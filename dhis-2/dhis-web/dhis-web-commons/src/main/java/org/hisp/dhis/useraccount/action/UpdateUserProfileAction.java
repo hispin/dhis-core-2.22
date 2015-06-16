@@ -28,8 +28,7 @@ package org.hisp.dhis.useraccount.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.TextUtils.nullIfEmpty;
-
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.user.User;
@@ -181,15 +180,15 @@ public class UpdateUserProfileAction
         // Prepare values
         // ---------------------------------------------------------------------
 
-        email = nullIfEmpty( email );
-        phoneNumber = nullIfEmpty( phoneNumber );
-        introduction = nullIfEmpty( introduction );
-        jobTitle = nullIfEmpty( jobTitle );
-        nationality = nullIfEmpty( nationality );
-        employer = nullIfEmpty( employer );
-        education = nullIfEmpty( education );
-        interests = nullIfEmpty( interests );
-        languages = nullIfEmpty( languages );
+        email = StringUtils.trimToNull( email );
+        phoneNumber = StringUtils.trimToNull( phoneNumber );
+        introduction = StringUtils.trimToNull( introduction );
+        jobTitle = StringUtils.trimToNull( jobTitle );
+        nationality = StringUtils.trimToNull( nationality );
+        employer = StringUtils.trimToNull( employer );
+        education = StringUtils.trimToNull( education );
+        interests = StringUtils.trimToNull( interests );
+        languages = StringUtils.trimToNull( languages );
 
         User user = userService.getUser( id );
 
