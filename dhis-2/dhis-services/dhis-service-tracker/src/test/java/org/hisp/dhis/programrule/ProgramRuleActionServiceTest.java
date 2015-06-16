@@ -28,7 +28,13 @@ package org.hisp.dhis.programrule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
@@ -37,8 +43,6 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.Assert.*;
 
 public class ProgramRuleActionServiceTest
     extends DhisSpringTest
@@ -108,12 +112,12 @@ public class ProgramRuleActionServiceTest
         actionService.addProgramRuleAction( actionG );
         
         //Get all the 3 rules for programB
-        Collection<ProgramRuleAction> rules = actionService.getProgramRuleAction( programRuleB );
+        List<ProgramRuleAction> rules = actionService.getProgramRuleAction( programRuleB );
         assertEquals( 3, rules.size() );
         assertTrue( rules.contains( actionD ) );
         assertTrue( rules.contains( actionE ) );
         assertTrue( rules.contains( actionF ) );
-        //Make sure that the action connected to rule A is not returned as part of collection of actions in rule B.
+        //Make sure that the action connected to rule A is not returned as part of list of actions in rule B.
         assertFalse( rules.contains( actionG ) );
         
     }

@@ -28,7 +28,7 @@ package org.hisp.dhis.relationship;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
@@ -69,7 +69,7 @@ public class DefaultRelationshipService
     }
 
     @Override
-    public Collection<Relationship> getRelationshipsForTrackedEntityInstance( TrackedEntityInstance instance )
+    public List<Relationship> getRelationshipsForTrackedEntityInstance( TrackedEntityInstance instance )
     {
         return relationshipStore.getForTrackedEntityInstance( instance );
     }
@@ -93,7 +93,7 @@ public class DefaultRelationshipService
     }
 
     @Override
-    public Collection<Relationship> getRelationships( TrackedEntityInstance entityInstanceA,
+    public List<Relationship> getRelationships( TrackedEntityInstance entityInstanceA,
         RelationshipType relationshipType )
     {
         throw new NotImplementedException("");

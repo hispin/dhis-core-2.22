@@ -31,10 +31,11 @@ package org.hisp.dhis.program;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -290,11 +291,11 @@ public class ProgramStageInstanceStoreTest
         programStageInstanceStore.save( programStageInstanceC );
         programStageInstanceStore.save( programStageInstanceD1 );
 
-        Collection<ProgramInstance> programInstances = new HashSet<>();
+        List<ProgramInstance> programInstances = new ArrayList<>();
         programInstances.add( programInstanceA );
         programInstances.add( programInstanceB );
 
-        Collection<ProgramStageInstance> stageInstances = programStageInstanceStore.get( programInstances, EventStatus.COMPLETED );
+        List<ProgramStageInstance> stageInstances = programStageInstanceStore.get( programInstances, EventStatus.COMPLETED );
         assertEquals( 2, stageInstances.size() );
         assertTrue( stageInstances.contains( programStageInstanceA ) );
         assertTrue( stageInstances.contains( programStageInstanceC ) );
@@ -319,7 +320,7 @@ public class ProgramStageInstanceStoreTest
         programStageInstanceStore.save( programStageInstanceA );
         programStageInstanceStore.save( programStageInstanceB );
 
-        Collection<Integer> orgunitIds = new HashSet<>();
+        List<Integer> orgunitIds = new ArrayList<>();
         orgunitIds.add( orgunitAId );
         orgunitIds.add( orgunitBId );
 

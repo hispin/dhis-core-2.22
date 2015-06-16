@@ -28,7 +28,7 @@ package org.hisp.dhis.trackedentity.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
@@ -48,28 +48,28 @@ public class HibernateTrackedEntityAttributeStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttribute> getOptionalAttributesWithoutGroup()
+    public List<TrackedEntityAttribute> getOptionalAttributesWithoutGroup()
     {
         return getCriteria( Restrictions.isNull( "attributeGroup" ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttribute> getWithoutGroup()
+    public List<TrackedEntityAttribute> getWithoutGroup()
     {
         return getCriteria( Restrictions.isNull( "attributeGroup" ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttribute> getByDisplayOnVisitSchedule( boolean displayOnVisitSchedule )
+    public List<TrackedEntityAttribute> getByDisplayOnVisitSchedule( boolean displayOnVisitSchedule )
     {
         return getCriteria( Restrictions.eq( "displayOnVisitSchedule", displayOnVisitSchedule ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttribute> getDisplayInList()
+    public List<TrackedEntityAttribute> getDisplayInList()
     {
         return getCriteria( Restrictions.eq( "displayInListNoProgram", true ) ).list();
     }

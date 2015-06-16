@@ -320,7 +320,7 @@ public class ShowAddTrackedEntityInstanceFormAction
             }
         }
 
-        trackedEntities = new ArrayList<>( trackedEntityService.getAllTrackedEntity() );
+        trackedEntities = trackedEntityService.getAllTrackedEntity();
 
         organisationUnit = selectionManager.getSelectedOrganisationUnit();
         healthWorkers = organisationUnit.getUsers();
@@ -351,14 +351,12 @@ public class ShowAddTrackedEntityInstanceFormAction
 
         if ( customRegistrationForm == null )
         {
-            attributeGroups = new ArrayList<>(
-                attributeGroupService.getAllTrackedEntityAttributeGroups() );
+            attributeGroups = attributeGroupService.getAllTrackedEntityAttributeGroups();
             Collections.sort( attributeGroups, new TrackedEntityAttributeGroupSortOrderComparator() );
 
             if ( program == null )
             {
-                attributes = new ArrayList<>(
-                    attributeService.getTrackedEntityAttributesDisplayInList() );
+                attributes = attributeService.getTrackedEntityAttributesDisplayInList();
                 Collections.sort( attributes, new TrackedEntityAttributeSortOrderInListNoProgramComparator() );
 
                 for ( TrackedEntityAttribute attribute : attributes )

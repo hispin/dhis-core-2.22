@@ -166,10 +166,10 @@ public class GetProgramStageAction
 
         programStageDataElements = programStage.getProgramStageDataElements();
 
-        userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
+        userGroups = userGroupService.getAllUserGroups();
 
         attributeValues = AttributeUtils.getAttributeValueMap( programStage.getAttributeValues() );
-        attributes = new ArrayList<>( attributeService.getProgramStageAttributes() );
+        attributes = attributeService.getProgramStageAttributes();
 
         return SUCCESS;
     }

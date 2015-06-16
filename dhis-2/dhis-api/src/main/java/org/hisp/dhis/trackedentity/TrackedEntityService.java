@@ -28,7 +28,7 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
@@ -97,10 +97,10 @@ public interface TrackedEntityService
     /**
      * Returns all {@link TrackedEntity}
      * 
-     * @return a collection of all TrackedEntity, or an empty
-     *         collection if there are no TrackedEntitys.
+     * @return a List of all TrackedEntity, or an empty
+     *         List if there are no TrackedEntitys.
      */
-    Collection<TrackedEntity> getAllTrackedEntity();
+    List<TrackedEntity> getAllTrackedEntity();
     
     /**
      * Returns The number of TrackedEntities with the key searched
@@ -118,10 +118,10 @@ public interface TrackedEntityService
      * @param name Keyword for searching by name
      * @param min
      * @param max
-     * @return a collection of all TrackedEntity, or an empty
-     *         collection if there are no TrackedEntity.
+     * @return a List of all TrackedEntity, or an empty
+     *         List if there are no TrackedEntity.
      */
-    Collection<TrackedEntity> getTrackedEntityBetweenByName( String name,
+    List<TrackedEntity> getTrackedEntityBetweenByName( String name,
         int min, int max );
 
     /**
@@ -135,8 +135,8 @@ public interface TrackedEntityService
      * 
      * @param min
      * @param max
-     * @return a collection of all TrackedEntity, or an empty
-     *         collection if there are no TrackedEntity.
+     * @return a List of all TrackedEntity, or an empty
+     *         List if there are no TrackedEntity.
      */
-    Collection<TrackedEntity> getTrackedEntitysBetween( int min, int max );
+    List<TrackedEntity> getTrackedEntitysBetween( int min, int max );
 }

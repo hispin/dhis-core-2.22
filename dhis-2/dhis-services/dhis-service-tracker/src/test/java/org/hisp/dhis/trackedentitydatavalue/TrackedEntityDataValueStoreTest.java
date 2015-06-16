@@ -32,9 +32,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -184,7 +185,7 @@ public class TrackedEntityDataValueStoreTest
         dataValueStore.saveVoid( dataValueC );
         dataValueStore.saveVoid( dataValueD );
 
-        Collection<TrackedEntityDataValue> dataValues = dataValueStore.get( stageInstanceA );
+        List<TrackedEntityDataValue> dataValues = dataValueStore.get( stageInstanceA );
         assertEquals( 2, dataValues.size() );
         assertTrue( dataValues.contains( dataValueA ) );
         assertTrue( dataValues.contains( dataValueB ) );
@@ -203,11 +204,11 @@ public class TrackedEntityDataValueStoreTest
         dataValueStore.saveVoid( dataValueC );
         dataValueStore.saveVoid( dataValueD );
 
-        Collection<DataElement> dataElements = new HashSet<>();
+        List<DataElement> dataElements = new ArrayList<>();
         dataElements.add( dataElementA );
         dataElements.add( dataElementB );
 
-        Collection<TrackedEntityDataValue> dataValues = dataValueStore.get( stageInstanceA, dataElements );
+        List<TrackedEntityDataValue> dataValues = dataValueStore.get( stageInstanceA, dataElements );
         assertEquals( 2, dataValues.size() );
         assertTrue( dataValues.contains( dataValueA ) );
         assertTrue( dataValues.contains( dataValueB ) );
@@ -221,11 +222,11 @@ public class TrackedEntityDataValueStoreTest
         dataValueStore.saveVoid( dataValueC );
         dataValueStore.saveVoid( dataValueD );
 
-        Collection<ProgramStageInstance> programStageInstances = new HashSet<>();
+        List<ProgramStageInstance> programStageInstances = new ArrayList<>();
         programStageInstances.add( stageInstanceA );
         programStageInstances.add( stageInstanceB );
 
-        Collection<TrackedEntityDataValue> dataValues = dataValueStore.get( programStageInstances );
+        List<TrackedEntityDataValue> dataValues = dataValueStore.get( programStageInstances );
         assertEquals( 4, dataValues.size() );
         assertTrue( dataValues.contains( dataValueA ) );
         assertTrue( dataValues.contains( dataValueB ) );
@@ -241,7 +242,7 @@ public class TrackedEntityDataValueStoreTest
         dataValueStore.saveVoid( dataValueC );
         dataValueStore.saveVoid( dataValueD );
 
-        Collection<TrackedEntityDataValue> dataValues = dataValueStore.get( dataElementA );
+        List<TrackedEntityDataValue> dataValues = dataValueStore.get( dataElementA );
         assertEquals( 2, dataValues.size() );
         assertTrue( dataValues.contains( dataValueA ) );
         assertTrue( dataValues.contains( dataValueC ) );
@@ -260,11 +261,11 @@ public class TrackedEntityDataValueStoreTest
         dataValueStore.saveVoid( dataValueC );
         dataValueStore.saveVoid( dataValueD );
 
-        Collection<DataElement> dataElements = new HashSet<>();
+        List<DataElement> dataElements = new ArrayList<>();
         dataElements.add( dataElementA );
         dataElements.add( dataElementB );
 
-        Collection<TrackedEntityDataValue> dataValues = dataValueStore.get( entityInstance, dataElements, yesterday,
+        List<TrackedEntityDataValue> dataValues = dataValueStore.get( entityInstance, dataElements, yesterday,
             tomorrow );
 
         dataValues = dataValueStore.get( dataElementB );

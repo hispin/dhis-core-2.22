@@ -28,9 +28,9 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dataelement.DataElement;
+import java.util.List;
 
-import java.util.Collection;
+import org.hisp.dhis.dataelement.DataElement;
 
 /**
  * @author Viet Nguyen
@@ -76,5 +76,5 @@ public interface ProgramStageDataElementService
      * @return a collection of all ProgramStageDataElement, or an empty
      * collection if there are no ProgramStageDataElements.
      */
-    Collection<ProgramStageDataElement> getAllProgramStageDataElements();
+    List<ProgramStageDataElement> getAllProgramStageDataElements();
 }

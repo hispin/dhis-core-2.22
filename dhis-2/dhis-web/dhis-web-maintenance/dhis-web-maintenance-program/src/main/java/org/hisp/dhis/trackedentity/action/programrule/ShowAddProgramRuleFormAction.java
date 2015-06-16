@@ -28,7 +28,6 @@ package org.hisp.dhis.trackedentity.action.programrule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hisp.dhis.program.Program;
@@ -96,7 +95,7 @@ public class ShowAddProgramRuleFormAction
     {
         program = programService.getProgram( id );
 
-        ruleVariables = new ArrayList<>( variableService.getProgramRuleVariable( program ));
+        ruleVariables = variableService.getProgramRuleVariable( program );
             
         return SUCCESS;
     }

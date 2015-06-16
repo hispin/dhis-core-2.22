@@ -30,7 +30,6 @@ package org.hisp.dhis.trackedentity.action.trackedentity;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,15 +89,15 @@ public class GetTrackedEntityListAction
         {
             this.paging = createPaging( trackedEntityService.getTrackedEntityCountByName( key ) );
 
-            trackedEntities = new ArrayList<>( trackedEntityService.getTrackedEntityBetweenByName( key,
-                paging.getStartPos(), paging.getPageSize() ) );
+            trackedEntities = trackedEntityService.getTrackedEntityBetweenByName( key,
+                paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( trackedEntityService.getTrackedEntityCount() );
 
-            trackedEntities = new ArrayList<>( trackedEntityService.getTrackedEntitysBetween(
-                paging.getStartPos(), paging.getPageSize() ) );
+            trackedEntities = trackedEntityService.getTrackedEntitysBetween(
+                paging.getStartPos(), paging.getPageSize() );
         }
 
         Collections.sort( trackedEntities, IdentifiableObjectNameComparator.INSTANCE );

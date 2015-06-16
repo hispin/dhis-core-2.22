@@ -28,7 +28,7 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
@@ -96,10 +96,10 @@ public interface TrackedEntityAttributeGroupService
     /**
      * Returns all {@link TrackedEntityAttributeGroup}
      * 
-     * @return a collection of all TrackedEntityAttributeGroup, or an empty
-     *         collection if there are no TrackedEntityAttributeGroups.
+     * @return a List of all TrackedEntityAttributeGroup, or an empty
+     *         List if there are no TrackedEntityAttributeGroups.
      */
-    Collection<TrackedEntityAttributeGroup> getAllTrackedEntityAttributeGroups();
+    List<TrackedEntityAttributeGroup> getAllTrackedEntityAttributeGroups();
 
     /**
      * Returns The number of TrackedEntityAttributeGroups with the key searched
@@ -117,10 +117,10 @@ public interface TrackedEntityAttributeGroupService
      * @param name Keyword for searching by name
      * @param min
      * @param max
-     * @return a collection of all TrackedEntityAttribute, or an empty
-     *         collection if there are no TrackedEntityAttributes.
+     * @return a List of all TrackedEntityAttribute, or an empty
+     *         List if there are no TrackedEntityAttributes.
      */
-    Collection<TrackedEntityAttributeGroup> getTrackedEntityAttributeGroupsBetweenByName( String name,
+    List<TrackedEntityAttributeGroup> getTrackedEntityAttributeGroupsBetweenByName( String name,
         int min, int max );
 
     /**
@@ -134,8 +134,8 @@ public interface TrackedEntityAttributeGroupService
      * 
      * @param min
      * @param max
-     * @return a collection of all TrackedEntityAttribute, or an empty
-     *         collection if there are no TrackedEntityAttributes.
+     * @return a List of all TrackedEntityAttribute, or an empty
+     *         List if there are no TrackedEntityAttributes.
      */
-    Collection<TrackedEntityAttributeGroup> getTrackedEntityAttributeGroupsBetween( int min, int max );
+    List<TrackedEntityAttributeGroup> getTrackedEntityAttributeGroupsBetween( int min, int max );
 }

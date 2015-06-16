@@ -30,6 +30,7 @@ package org.hisp.dhis.trackedentitydatavalue;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.dataelement.DataElement;
@@ -69,7 +70,7 @@ public interface TrackedEntityDataValueStore
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> get( ProgramStageInstance programStageInstance );
+    List<TrackedEntityDataValue> get( ProgramStageInstance programStageInstance );
 
     /**
      * Retrieve data values of a event with data elements specified
@@ -79,7 +80,7 @@ public interface TrackedEntityDataValueStore
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> get( ProgramStageInstance programStageInstance,
+    List<TrackedEntityDataValue> get( ProgramStageInstance programStageInstance,
         Collection<DataElement> dataElements );
 
     /**
@@ -89,7 +90,7 @@ public interface TrackedEntityDataValueStore
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> get( Collection<ProgramStageInstance> programStageInstances );
+    List<TrackedEntityDataValue> get( Collection<ProgramStageInstance> programStageInstances );
 
     /**
      * Retrieve data values on a data element
@@ -98,7 +99,7 @@ public interface TrackedEntityDataValueStore
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> get( DataElement dataElement );
+    List<TrackedEntityDataValue> get( DataElement dataElement );
 
     /**
      * Retrieve data values of a {@link TrackedEntityInstance} on a
@@ -111,7 +112,7 @@ public interface TrackedEntityDataValueStore
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> get( TrackedEntityInstance instance, Collection<DataElement> dataElements,
+    List<TrackedEntityDataValue> get( TrackedEntityInstance instance, Collection<DataElement> dataElements,
         Date after, Date before );
 
     /**

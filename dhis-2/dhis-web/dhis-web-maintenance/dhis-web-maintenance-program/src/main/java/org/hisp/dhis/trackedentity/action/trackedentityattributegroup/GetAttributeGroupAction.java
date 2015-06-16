@@ -104,7 +104,7 @@ public class GetAttributeGroupAction
     {
         attributeGroup = attributeGroupService.getTrackedEntityAttributeGroup( id );
 
-        attributes = new ArrayList<>( attributeService.getTrackedEntityAttributesWithoutGroup() );
+        attributes = attributeService.getTrackedEntityAttributesWithoutGroup();
 
         Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
 

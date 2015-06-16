@@ -199,7 +199,7 @@ public class ShowEventWithRegistrationFormAction
         // Get registration form
         // ---------------------------------------------------------------------
 
-        trackedEntities = new ArrayList<>( trackedEntityService.getAllTrackedEntity() );
+        trackedEntities = trackedEntityService.getAllTrackedEntity();
 
         organisationUnit = selectionManager.getSelectedOrganisationUnit();
         healthWorkers = organisationUnit.getUsers();
@@ -232,14 +232,12 @@ public class ShowEventWithRegistrationFormAction
 
         if ( customRegistrationForm == null )
         {
-            attributeGroups = new ArrayList<>(
-                attributeGroupService.getAllTrackedEntityAttributeGroups() );
+            attributeGroups = attributeGroupService.getAllTrackedEntityAttributeGroups();
             Collections.sort( attributeGroups, new TrackedEntityAttributeGroupSortOrderComparator() );
 
             if ( program == null )
             {
-                attributes = new ArrayList<>(
-                    attributeService.getTrackedEntityAttributesDisplayInList() );
+                attributes = attributeService.getTrackedEntityAttributesDisplayInList();
                 Collection<Program> programs = programService.getAllPrograms();
 
                 for ( Program p : programs )

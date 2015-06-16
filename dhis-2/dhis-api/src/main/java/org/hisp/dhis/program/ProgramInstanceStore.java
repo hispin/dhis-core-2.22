@@ -34,6 +34,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Abyot Asalefew
@@ -50,7 +51,7 @@ public interface ProgramInstanceStore
      * @param program Program
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( Program program );
+    List<ProgramInstance> get( Program program );
 
     /**
      * Retrieve program instances on program list
@@ -58,7 +59,7 @@ public interface ProgramInstanceStore
      * @param programs Program list
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( Collection<Program> programs );
+    List<ProgramInstance> get( Collection<Program> programs );
 
     /**
      * Retrieve program instances of whom registered in to a orgunit from
@@ -68,7 +69,7 @@ public interface ProgramInstanceStore
      * @param organisationUnit Organisation Unit
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( Collection<Program> programs, OrganisationUnit organisationUnit );
+    List<ProgramInstance> get( Collection<Program> programs, OrganisationUnit organisationUnit );
 
     /**
      * Retrieve program instances of whom registered in to a orgunit from
@@ -80,7 +81,7 @@ public interface ProgramInstanceStore
      *                         STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( Collection<Program> programs, OrganisationUnit organisationUnit, int status );
+    List<ProgramInstance> get( Collection<Program> programs, OrganisationUnit organisationUnit, int status );
 
     /**
      * Retrieve program instances on a program by status
@@ -90,7 +91,7 @@ public interface ProgramInstanceStore
      *                STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( Program program, Integer status );
+    List<ProgramInstance> get( Program program, Integer status );
 
     /**
      * Retrieve program instances on a program list by status
@@ -100,7 +101,7 @@ public interface ProgramInstanceStore
      *                 STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( Collection<Program> programs, Integer status );
+    List<ProgramInstance> get( Collection<Program> programs, Integer status );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance by a status
@@ -110,7 +111,7 @@ public interface ProgramInstanceStore
      *                       STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( TrackedEntityInstance entityInstance, Integer status );
+    List<ProgramInstance> get( TrackedEntityInstance entityInstance, Integer status );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance by a program
@@ -119,7 +120,7 @@ public interface ProgramInstanceStore
      * @param program        Program
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( TrackedEntityInstance entityInstance, Program program );
+    List<ProgramInstance> get( TrackedEntityInstance entityInstance, Program program );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance with a status by a program
@@ -130,7 +131,7 @@ public interface ProgramInstanceStore
      *                       STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( TrackedEntityInstance entityInstance, Program program, Integer status );
+    List<ProgramInstance> get( TrackedEntityInstance entityInstance, Program program, Integer status );
 
     /**
      * Retrieve program instances with active status on an orgunit by a program
@@ -142,7 +143,7 @@ public interface ProgramInstanceStore
      * @param max              Maximum results
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( Program program, OrganisationUnit organisationUnit, Integer min, Integer max );
+    List<ProgramInstance> get( Program program, OrganisationUnit organisationUnit, Integer min, Integer max );
 
     /**
      * Retrieve program instances with active status on an orgunit by a program
@@ -156,7 +157,7 @@ public interface ProgramInstanceStore
      * @param max        Maximum results
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> get( Program program, Collection<Integer> orgunitIds, Date startDate, Date endDate,
+    List<ProgramInstance> get( Program program, Collection<Integer> orgunitIds, Date startDate, Date endDate,
         Integer min, Integer max );
 
     /**
@@ -206,7 +207,7 @@ public interface ProgramInstanceStore
      * @param endDate    The end date for retrieving on enrollment-date
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
+    List<ProgramInstance> getByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate );
 
     /**
@@ -221,7 +222,7 @@ public interface ProgramInstanceStore
      * @param endDate    The end date for retrieving on enrollment-date
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
+    List<ProgramInstance> getByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate, Integer min, Integer max );
 
     /**

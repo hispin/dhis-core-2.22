@@ -28,8 +28,8 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
@@ -72,7 +72,7 @@ public interface TrackedEntityAuditService
      * 
      * @return List of TrackedEntityAudit
      */
-    Collection<TrackedEntityAudit> getTrackedEntityAudits( TrackedEntityInstance instance );
+    List<TrackedEntityAudit> getTrackedEntityAudits( TrackedEntityInstance instance );
 
     /**
      * Get instance audit of a instance

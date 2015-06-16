@@ -169,7 +169,7 @@ public class GetProgramAction
 
         selectionTreeManager.setSelectedOrganisationUnits( program.getOrganisationUnits() );
 
-        userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
+        userGroups = userGroupService.getAllUserGroups();
 
         programIndicators = new ArrayList<>( program.getProgramIndicators() );
 

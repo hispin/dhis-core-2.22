@@ -33,8 +33,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -163,7 +165,7 @@ public class TrackedEntityAttributeValueStoreTest
         attributeValueStore.saveVoid( attributeValueB );
         attributeValueStore.saveVoid( attributeValueC );
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueStore.get( entityInstanceA );
+        List<TrackedEntityAttributeValue> attributeValues = attributeValueStore.get( entityInstanceA );
 
         assertEquals( 2, attributeValues.size() );
         assertTrue( equals( attributeValues, attributeValueA, attributeValueB ) );
@@ -181,11 +183,11 @@ public class TrackedEntityAttributeValueStoreTest
         attributeValueStore.saveVoid( attributeValueB );
         attributeValueStore.saveVoid( attributeValueC );
 
-        Collection<TrackedEntityInstance> entityInstances = new HashSet<>();
+        List<TrackedEntityInstance> entityInstances = new ArrayList<>();
         entityInstances.add( entityInstanceA );
         entityInstances.add( entityInstanceB );
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueStore.get( entityInstances );
+        List<TrackedEntityAttributeValue> attributeValues = attributeValueStore.get( entityInstances );
         assertEquals( 3, attributeValues.size() );
         assertTrue( equals( attributeValues, attributeValueA, attributeValueB, attributeValueC ) );
     }
@@ -197,7 +199,7 @@ public class TrackedEntityAttributeValueStoreTest
         attributeValueStore.saveVoid( attributeValueB );
         attributeValueStore.saveVoid( attributeValueC );
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueStore.searchByValue( attributeA, "A" );
+        List<TrackedEntityAttributeValue> attributeValues = attributeValueStore.searchByValue( attributeA, "A" );
         assertTrue( equals( attributeValues, attributeValueA ) );
     }
 }

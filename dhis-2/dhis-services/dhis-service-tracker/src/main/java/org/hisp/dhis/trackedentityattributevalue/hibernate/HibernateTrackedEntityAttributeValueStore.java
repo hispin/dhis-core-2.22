@@ -30,6 +30,7 @@ package org.hisp.dhis.trackedentityattributevalue.hibernate;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
@@ -75,21 +76,21 @@ public class HibernateTrackedEntityAttributeValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttributeValue> get( TrackedEntityInstance entityInstance )
+    public List<TrackedEntityAttributeValue> get( TrackedEntityInstance entityInstance )
     {
         return getCriteria( Restrictions.eq( "entityInstance", entityInstance ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttributeValue> get( TrackedEntityAttribute attribute )
+    public List<TrackedEntityAttributeValue> get( TrackedEntityAttribute attribute )
     {
         return getCriteria( Restrictions.eq( "attribute", attribute ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttributeValue> get( Collection<TrackedEntityInstance> entityInstances )
+    public List<TrackedEntityAttributeValue> get( Collection<TrackedEntityInstance> entityInstances )
     {
         if ( entityInstances == null || entityInstances.isEmpty() )
         {
@@ -101,7 +102,7 @@ public class HibernateTrackedEntityAttributeValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttributeValue> searchByValue( TrackedEntityAttribute attribute, String searchText )
+    public List<TrackedEntityAttributeValue> searchByValue( TrackedEntityAttribute attribute, String searchText )
     {
         return getCriteria( 
             Restrictions.eq( "attribute", attribute ),
@@ -110,7 +111,7 @@ public class HibernateTrackedEntityAttributeValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityAttributeValue> get( TrackedEntityInstance entityInstance, Program program )
+    public List<TrackedEntityAttributeValue> get( TrackedEntityInstance entityInstance, Program program )
     {
         return getCriteria(
             Restrictions.and( Restrictions.eq( "entityInstance", entityInstance ),

@@ -31,7 +31,7 @@ package org.hisp.dhis.programrule;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
@@ -83,7 +83,7 @@ public class ProgramRuleActionStoreTest
         actionStore.save( actionB );
         actionStore.save( actionC );
         
-        Collection<ProgramRuleAction> vars = actionStore.get( programRuleA );
+        List<ProgramRuleAction> vars = actionStore.get( programRuleA );
         
         assertEquals( 3, vars.size() );
         assertTrue( vars.contains( actionA ) );

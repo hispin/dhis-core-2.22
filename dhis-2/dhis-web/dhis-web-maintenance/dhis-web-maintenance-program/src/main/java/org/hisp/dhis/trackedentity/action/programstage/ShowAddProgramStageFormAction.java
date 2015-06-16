@@ -28,7 +28,6 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -136,18 +135,18 @@ public class ShowAddProgramStageFormAction
     @Override
     public String execute()
     {
-        programs = new ArrayList<>( programService.getAllPrograms() );
+        programs = programService.getAllPrograms();
         programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
         Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );
 
         availableAttributes = attributeService.getAllTrackedEntityAttributes();
 
-        userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
+        userGroups = userGroupService.getAllUserGroups();
 
-        relationshipTypes = new ArrayList<>( relationshipTypeService.getAllRelationshipTypes() );
+        relationshipTypes = relationshipTypeService.getAllRelationshipTypes();
         Collections.sort( relationshipTypes, IdentifiableObjectNameComparator.INSTANCE );
 
-        trackedEntities = new ArrayList<>(trackedEntityService.getAllTrackedEntity());
+        trackedEntities = trackedEntityService.getAllTrackedEntity();
         Collections.sort( trackedEntities, IdentifiableObjectNameComparator.INSTANCE );
 
         return SUCCESS;

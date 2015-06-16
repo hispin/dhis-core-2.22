@@ -31,14 +31,14 @@ package org.hisp.dhis.programrule;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
-import org.junit.Test;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageStore;
 import org.hisp.dhis.program.ProgramStore;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProgramRuleStoreTest
@@ -78,7 +78,7 @@ public class ProgramRuleStoreTest
         variableStore.save( ruleB );
         variableStore.save( ruleC );
         
-        Collection<ProgramRule> vars = variableStore.get( programA );
+        List<ProgramRule> vars = variableStore.get( programA );
         
         assertEquals( 3, vars.size() );
         assertTrue( vars.contains( ruleA ) );

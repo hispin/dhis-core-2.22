@@ -64,7 +64,7 @@ public interface ProgramStageInstanceStore
      * @param status EventStatus
      * @return ProgramStageInstance list
      */
-    Collection<ProgramStageInstance> get( Collection<ProgramInstance> programInstances, EventStatus status );
+    List<ProgramStageInstance> get( Collection<ProgramInstance> programInstances, EventStatus status );
 
     /**
      * Get all events by TrackedEntityInstance, optionally filtering by completed.

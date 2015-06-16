@@ -99,7 +99,7 @@ public class HibernateProgramStageInstanceStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<ProgramStageInstance> get( Collection<ProgramInstance> programInstances, EventStatus status )
+    public List<ProgramStageInstance> get( Collection<ProgramInstance> programInstances, EventStatus status )
     {
         return getCriteria( 
             Restrictions.in( "programInstance", programInstances ), 

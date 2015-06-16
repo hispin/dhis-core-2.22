@@ -30,6 +30,7 @@ package org.hisp.dhis.trackedentity;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.StringUtils;
@@ -115,7 +116,7 @@ public class DefaultTrackedEntityFormService
     }
 
     @Override
-    public Collection<TrackedEntityForm> getAllTrackedEntityForms()
+    public List<TrackedEntityForm> getAllTrackedEntityForms()
     {
         return formStore.getAll();
     }

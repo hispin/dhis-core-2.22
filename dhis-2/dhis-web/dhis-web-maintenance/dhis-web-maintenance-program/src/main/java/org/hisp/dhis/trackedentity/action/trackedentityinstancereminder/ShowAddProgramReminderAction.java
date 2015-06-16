@@ -103,7 +103,7 @@ public class ShowAddProgramReminderAction
     {
         program = programService.getProgram( id );
 
-        userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
+        userGroups = userGroupService.getAllUserGroups();
 
         attributes = program.getTrackedEntityAttributes();
 

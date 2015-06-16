@@ -29,7 +29,6 @@ package org.hisp.dhis.trackedentity.action.programrule;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hisp.dhis.program.Program;
@@ -107,11 +106,11 @@ public class GetProgramRuleListAction
 
         if ( isNotBlank( key ) )
         {
-            programRules = new ArrayList<ProgramRule>( programRuleService.getProgramRules( program, key ) );
+            programRules = programRuleService.getProgramRules( program, key );
         }
         else
         {
-            programRules = new ArrayList<ProgramRule>( programRuleService.getProgramRule( program ) );
+            programRules = programRuleService.getProgramRule( program );
         }
 
         return SUCCESS;

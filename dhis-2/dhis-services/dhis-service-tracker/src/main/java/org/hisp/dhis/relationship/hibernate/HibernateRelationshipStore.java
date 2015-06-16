@@ -29,6 +29,7 @@ package org.hisp.dhis.relationship.hibernate;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.hibernate.HibernateGenericStore;
@@ -46,7 +47,7 @@ public class HibernateRelationshipStore
 {
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Relationship> getForTrackedEntityInstance( TrackedEntityInstance instance )
+    public List<Relationship> getForTrackedEntityInstance( TrackedEntityInstance instance )
     {
         return getCriteria( 
             Restrictions.disjunction().add( 
@@ -56,7 +57,7 @@ public class HibernateRelationshipStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Relationship> getByRelationshipType( RelationshipType relationshipType )
+    public List<Relationship> getByRelationshipType( RelationshipType relationshipType )
     {
         return getCriteria( Restrictions.eq( "relationshipType", relationshipType ) ).list();
     }

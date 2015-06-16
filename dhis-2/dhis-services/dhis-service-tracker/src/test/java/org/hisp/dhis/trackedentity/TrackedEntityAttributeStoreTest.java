@@ -34,7 +34,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -164,7 +163,7 @@ public class TrackedEntityAttributeStoreTest
 
         attributeGroupService.addTrackedEntityAttributeGroup( attributeGroup );
 
-        Collection<TrackedEntityAttribute> attributes = attributeService.getOptionalAttributesWithoutGroup();
+        List<TrackedEntityAttribute> attributes = attributeService.getOptionalAttributesWithoutGroup();
         assertEquals( 1, attributes.size() );
         assertTrue( attributes.contains( attributeC ) );
     }
@@ -180,7 +179,7 @@ public class TrackedEntityAttributeStoreTest
         attributeService.addTrackedEntityAttribute( attributeB );
         attributeService.addTrackedEntityAttribute( attributeC );
 
-        Collection<TrackedEntityAttribute> attributes = attributeService.getTrackedEntityAttributesByDisplayOnVisitSchedule( true );
+        List<TrackedEntityAttribute> attributes = attributeService.getTrackedEntityAttributesByDisplayOnVisitSchedule( true );
         assertEquals( 2, attributes.size() );
         assertTrue( attributes.contains( attributeA ) );
         assertTrue( attributes.contains( attributeB ) );

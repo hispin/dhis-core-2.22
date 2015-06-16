@@ -77,8 +77,7 @@ public class ShowAttributeInListNoProgramAction
     public String execute()
         throws Exception
     {
-        selectedAttributes = new ArrayList<>(
-            attributeService.getTrackedEntityAttributesDisplayInList() );
+        selectedAttributes = attributeService.getTrackedEntityAttributesDisplayInList();
         
         Collections.sort( selectedAttributes, new TrackedEntityAttributeSortOrderInListNoProgramComparator() );
 

@@ -195,8 +195,7 @@ public class ViewDataEntryFormAction
             listAssociationIds.add( ps.getId() );
         }
 
-        existingDataEntryForms = new ArrayList<>(
-            dataEntryFormService.listDistinctDataEntryFormByProgramStageIds( listAssociationIds ) );
+        existingDataEntryForms = dataEntryFormService.listDistinctDataEntryFormByProgramStageIds( listAssociationIds );
 
         existingDataEntryForms.remove( dataEntryForm );
 

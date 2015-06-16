@@ -28,7 +28,7 @@ package org.hisp.dhis.programrule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -74,7 +74,7 @@ public interface ProgramRuleActionService
      * @return a collection of all ProgramRuleAction, or an empty collection if
      * there are no ProgramRuleActions.
      */
-    Collection<ProgramRuleAction> getAllProgramRuleAction();
+    List<ProgramRuleAction> getAllProgramRuleAction();
 
     /**
      * Get validation by {@link ProgramRule}
@@ -82,5 +82,5 @@ public interface ProgramRuleActionService
      * @param program Program
      * @return ProgramRuleAction list
      */
-    Collection<ProgramRuleAction> getProgramRuleAction( ProgramRule programRule );
+    List<ProgramRuleAction> getProgramRuleAction( ProgramRule programRule );
 }

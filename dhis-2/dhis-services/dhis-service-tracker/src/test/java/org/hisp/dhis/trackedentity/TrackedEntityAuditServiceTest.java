@@ -33,8 +33,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -136,7 +136,7 @@ public class TrackedEntityAuditServiceTest
         auditService.saveTrackedEntityAudit( auditA );
         auditService.saveTrackedEntityAudit( auditB );
 
-        Collection<TrackedEntityAudit> audits = auditService.getTrackedEntityAudits( entityInstanceA );
+        List<TrackedEntityAudit> audits = auditService.getTrackedEntityAudits( entityInstanceA );
         assertEquals( 1, audits.size() );
         assertTrue( audits.contains( auditA ) );
 

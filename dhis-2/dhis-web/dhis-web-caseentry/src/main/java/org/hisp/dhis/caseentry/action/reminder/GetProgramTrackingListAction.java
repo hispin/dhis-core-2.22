@@ -28,7 +28,6 @@ package org.hisp.dhis.caseentry.action.reminder;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -127,7 +126,7 @@ public class GetProgramTrackingListAction
     {
         programStageInstance = programStageInstanceService.getProgramStageInstance( programStageInstanceId );
 
-        outboundSms = new ArrayList<>( programStageInstance.getOutboundSms() );
+        outboundSms = programStageInstance.getOutboundSms();
 
         currentUsername = currentUserService.getCurrentUsername();
 
