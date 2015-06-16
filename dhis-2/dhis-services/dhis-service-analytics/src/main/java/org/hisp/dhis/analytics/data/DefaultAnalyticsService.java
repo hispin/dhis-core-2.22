@@ -40,6 +40,7 @@ import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_ORGUNIT;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PERIOD;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PROGRAM_INDICATOR;
 import static org.hisp.dhis.analytics.DataQueryParams.KEY_DE_GROUP;
+import static org.hisp.dhis.analytics.DataQueryParams.COMPLETENESS_DIMENSION_TYPES;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATASET_DIM_ID;
@@ -428,6 +429,11 @@ public class DefaultAnalyticsService
             dataSourceParams.removeDimension( PROGRAM_DATAELEMENT_DIM_ID );
             dataSourceParams.setAggregationType( AggregationType.COUNT );
 
+            if ( !COMPLETENESS_DIMENSION_TYPES.containsAll( dataSourceParams.getDimensionTypes() ) )
+            {
+                return;
+            }
+            
             Map<String, Double> aggregatedDataMap = getAggregatedCompletenessValueMap( dataSourceParams );
 
             // -----------------------------------------------------------------
@@ -483,7 +489,8 @@ public class DefaultAnalyticsService
 
     /**
      * Adds values to the given grid based on dynamic dimensions from the given
-     * data query parameters.
+     * data query parameters. This assumes that no fixed dimensions are part of
+     * the query.
      *
      * @param params the data query parameters.
      * @param grid the grid.
