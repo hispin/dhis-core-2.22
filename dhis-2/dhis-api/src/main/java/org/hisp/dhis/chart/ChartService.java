@@ -102,7 +102,7 @@ public interface ChartService
     
     Chart getChartByName( String name );
 
-    Collection<Chart> getCharts( final Collection<Integer> identifiers );
+    List<Chart> getCharts( final Collection<Integer> identifiers );
 
     List<Chart> getChartsBetween( int first, int max );
 

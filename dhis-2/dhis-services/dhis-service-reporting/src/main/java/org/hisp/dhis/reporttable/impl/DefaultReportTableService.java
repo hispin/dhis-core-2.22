@@ -187,9 +187,9 @@ public class DefaultReportTableService
     }
 
     @Override
-    public Collection<ReportTable> getReportTables( final Collection<Integer> identifiers )
+    public List<ReportTable> getReportTables( final Collection<Integer> identifiers )
     {
-        Collection<ReportTable> objects = getAllReportTables();
+        List<ReportTable> objects = getAllReportTables();
 
         return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<ReportTable>()
         {
