@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -98,7 +98,7 @@ public class DocumentStoreTest
         documentStore.save( documentB );
         documentStore.save( documentC );
         
-        Collection<Document> actual = documentStore.getAll();
+        List<Document> actual = documentStore.getAll();
         
         assertEquals( 3, actual.size() );
         assertTrue( actual.contains( documentA ) );

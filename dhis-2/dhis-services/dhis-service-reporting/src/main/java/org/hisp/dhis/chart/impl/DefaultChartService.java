@@ -957,7 +957,7 @@ public class DefaultChartService
     }
 
     @Override
-    public Collection<Chart> getAllCharts()
+    public List<Chart> getAllCharts()
     {
         return chartStore.getAll();
     }
@@ -971,7 +971,7 @@ public class DefaultChartService
     @Override
     public Collection<Chart> getCharts( final Collection<Integer> identifiers )
     {
-        Collection<Chart> charts = getAllCharts();
+        List<Chart> charts = getAllCharts();
 
         return identifiers == null ? charts : FilterUtils.filter( charts, new Filter<Chart>()
         {

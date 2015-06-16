@@ -30,7 +30,6 @@ package org.hisp.dhis.dataadmin.action.sqlview;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,16 +89,15 @@ public class GetSqlViewListAction
         if ( isNotBlank( key ) )
         {
             this.paging = createPaging( sqlViewService.getSqlViewCountByName( key ) );
-            sqlViewObjectList = new ArrayList<>(
-                sqlViewService.getSqlViewsBetweenByName( key, paging.getStartPos(),
-                    paging.getPageSize() ) );
+            sqlViewObjectList = sqlViewService.getSqlViewsBetweenByName( key, paging.getStartPos(),
+                    paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( sqlViewService.getSqlViewCount() );
             
-            sqlViewObjectList = new ArrayList<>( sqlViewService.getSqlViewsBetween(
-                paging.getStartPos(), paging.getPageSize() ) );
+            sqlViewObjectList = sqlViewService.getSqlViewsBetween(
+                paging.getStartPos(), paging.getPageSize() );
         }
 
         Collections.sort( sqlViewObjectList, IdentifiableObjectNameComparator.INSTANCE );

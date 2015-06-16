@@ -96,15 +96,13 @@ public class DataSetListAction
         {
             this.paging = createPaging( dataSetService.getDataSetCountByName( key ) );
 
-            dataSets = new ArrayList<>( dataSetService.getDataSetsBetweenByName( key, paging.getStartPos(),
-                paging.getPageSize() ) );
+            dataSets = dataSetService.getDataSetsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( dataSetService.getDataSetCount() );
 
-            dataSets = new ArrayList<>( dataSetService.getDataSetsBetween( paging.getStartPos(), paging
-                .getPageSize() ) );
+            dataSets = dataSetService.getDataSetsBetween( paging.getStartPos(), paging.getPageSize() );
         }
 
         Collections.sort( dataSets, new IdentifiableObjectNameComparator() );

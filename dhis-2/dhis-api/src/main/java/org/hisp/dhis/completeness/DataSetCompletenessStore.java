@@ -31,6 +31,7 @@ package org.hisp.dhis.completeness;
 import org.hisp.dhis.dataset.DataSet;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Lars Helge Overland
@@ -48,7 +49,7 @@ public interface DataSetCompletenessStore
 
     Integer getCompulsoryDataElementRegistrations( DataSet dataSet, Collection<Integer> children, Collection<Integer> periods, int completenessOffset );
 
-    Collection<DataSet> getDataSetsWithRegistrations( Collection<DataSet> dataSets );
+    List<DataSet> getDataSetsWithRegistrations( Collection<DataSet> dataSets );
 
     /**
      * Gets the percentage value for the datasetcompleteness with the given parameters.

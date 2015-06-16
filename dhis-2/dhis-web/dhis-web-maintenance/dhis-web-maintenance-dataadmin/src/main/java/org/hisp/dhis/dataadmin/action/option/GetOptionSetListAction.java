@@ -93,14 +93,14 @@ public class GetOptionSetListAction
         {
             this.paging = createPaging( optionService.getOptionSetsCountByName( key ) );
 
-            optionSets = new ArrayList<>( optionService.getOptionSetsBetweenByName( key, paging.getStartPos(),
-                paging.getPageSize() ) );
+            optionSets = optionService.getOptionSetsBetweenByName( key, paging.getStartPos(),
+                paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( optionService.getOptionSetCount() );
 
-            optionSets = new ArrayList<>( optionService.getOptionSetsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            optionSets = optionService.getOptionSetsBetween( paging.getStartPos(), paging.getPageSize() );
         }
 
         Collections.sort( optionSets, IdentifiableObjectNameComparator.INSTANCE );

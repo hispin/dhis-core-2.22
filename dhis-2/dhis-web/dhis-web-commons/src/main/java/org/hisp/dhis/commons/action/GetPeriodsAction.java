@@ -29,7 +29,6 @@ package org.hisp.dhis.commons.action;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,7 +93,7 @@ public class GetPeriodsAction
     {
         if ( name == null || name.equals( ALL ) )
         {
-            Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+            List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
 
             periods = new ArrayList<>();
 

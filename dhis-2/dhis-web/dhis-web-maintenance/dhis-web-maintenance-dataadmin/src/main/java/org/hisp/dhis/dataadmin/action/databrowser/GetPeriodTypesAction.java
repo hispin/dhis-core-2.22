@@ -28,7 +28,7 @@ package org.hisp.dhis.dataadmin.action.databrowser;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
@@ -57,9 +57,9 @@ public class GetPeriodTypesAction
     // Output
     // -------------------------------------------------------------------------
 
-    private Collection<PeriodType> periodTypes;
+    private List<PeriodType> periodTypes;
 
-    public Collection<PeriodType> getPeriodTypes()
+    public List<PeriodType> getPeriodTypes()
     {
         return periodTypes;
     }

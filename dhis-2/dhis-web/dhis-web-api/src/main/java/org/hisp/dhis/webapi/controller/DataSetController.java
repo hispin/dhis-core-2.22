@@ -31,7 +31,6 @@ package org.hisp.dhis.webapi.controller;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -241,7 +240,7 @@ public class DataSetController
         {
             i18nService.internationalise( ou );
 
-            Collection<DataValue> dataValues = dataValueService.getDataValues( ou, pe, dataSets.get( 0 ).getDataElements() );
+            List<DataValue> dataValues = dataValueService.getDataValues( ou, pe, dataSets.get( 0 ).getDataElements() );
 
             FormUtils.fillWithDataValues( form, dataValues );
         }

@@ -30,7 +30,6 @@ package org.hisp.dhis.user.action.usergroup;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,13 +110,13 @@ public class GetUserGroupListAction
         {
             this.paging = createPaging( userGroupService.getUserGroupCountByName( key ) );
             
-            userGroupList = new ArrayList<>( userGroupService.getUserGroupsBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            userGroupList = userGroupService.getUserGroupsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( userGroupService.getUserGroupCount() );
             
-            userGroupList = new ArrayList<>( userGroupService.getUserGroupsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            userGroupList = userGroupService.getUserGroupsBetween( paging.getStartPos(), paging.getPageSize() );
         }
 
         currentUserUid = currentUserService.getCurrentUser().getUid();

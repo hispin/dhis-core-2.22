@@ -28,7 +28,7 @@ package org.hisp.dhis.dataadmin.action.option;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionService;
@@ -89,9 +89,9 @@ public class GetOptionListAction
         return optionSet;
     }
 
-    private Collection<Option> options;
+    private List<Option> options;
 
-    public Collection<Option> getOptions()
+    public List<Option> getOptions()
     {
         return options;
     }

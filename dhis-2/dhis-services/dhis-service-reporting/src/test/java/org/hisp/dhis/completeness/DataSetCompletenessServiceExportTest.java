@@ -41,7 +41,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
 import static org.junit.Assert.assertEquals;
@@ -92,11 +92,11 @@ public class DataSetCompletenessServiceExportTest
 
     private DataSet dataSetA;
 
-    private Collection<DataSet> dataSets;
+    private List<DataSet> dataSets;
 
-    private Collection<Period> periods;
+    private List<Period> periods;
 
-    private Collection<OrganisationUnit> units;
+    private List<OrganisationUnit> units;
 
     @Override
     public void setUpTest()

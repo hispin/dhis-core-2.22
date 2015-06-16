@@ -29,6 +29,7 @@ package org.hisp.dhis.completeness;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -58,12 +59,12 @@ public interface DataSetCompletenessService
      * 
      * @param periodId the identifier of the Period.
      * @param organisationUnitId the identifier of the root OrganisationUnit.
-     * @return a Collection of DataSetCompletenessResults.
+     * @return a List of DataSetCompletenessResults.
      */
-    Collection<DataSetCompletenessResult> getDataSetCompleteness( int periodId, int organisationUnitId, Set<Integer> groupIds );
+    List<DataSetCompletenessResult> getDataSetCompleteness( int periodId, int organisationUnitId, Set<Integer> groupIds );
 
     /**
-     * Returns a Collection of DataSetCompletenessResults. The
+     * Returns a List of DataSetCompletenessResults. The
      * DataSetCompletenessResult object contains the name of the associated
      * OrganisationUnit, the number of sources being associated with the DataSet
      * AND being a child of the OrganisationUnit, and the number of
@@ -75,9 +76,9 @@ public interface DataSetCompletenessService
      * @param parentOrganisationUnitId the identifier of the parent
      *        OrganisationUnit.
      * @param dataSetId the identifier of the DataSet.
-     * @return a Collection of DataSetCompletenessResults.
+     * @return a List of DataSetCompletenessResults.
      */
-    Collection<DataSetCompletenessResult> getDataSetCompleteness( int periodId,
+    List<DataSetCompletenessResult> getDataSetCompleteness( int periodId,
         Collection<Integer> organisationUnitIds, int dataSetId, Set<Integer> groupIds );
 
     /**

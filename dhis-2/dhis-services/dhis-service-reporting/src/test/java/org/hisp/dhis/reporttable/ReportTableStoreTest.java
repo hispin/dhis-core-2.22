@@ -34,7 +34,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -275,7 +274,7 @@ public class ReportTableStoreTest
         reportTableStore.save( reportTableA );
         reportTableStore.save( reportTableB );
         
-        Collection<ReportTable> reportTables = reportTableStore.getAll();
+        List<ReportTable> reportTables = reportTableStore.getAll();
         
         assertTrue( reportTables.contains( reportTableA ) );
         assertTrue( reportTables.contains( reportTableB ) );
