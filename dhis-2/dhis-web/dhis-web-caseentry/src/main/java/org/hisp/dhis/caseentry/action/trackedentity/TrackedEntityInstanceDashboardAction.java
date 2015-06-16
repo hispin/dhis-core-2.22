@@ -28,7 +28,6 @@ package org.hisp.dhis.caseentry.action.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -219,9 +218,9 @@ public class TrackedEntityInstanceDashboardAction
         // Get entityInstance-attribute-values
         // ---------------------------------------------------------------------
 
-        attributes = new ArrayList<>( attributeService.getAllTrackedEntityAttributes() );
+        attributes = attributeService.getAllTrackedEntityAttributes();
         
-        displayedAttributes = new ArrayList<>( attributeService.getTrackedEntityAttributesDisplayInList() );
+        displayedAttributes = attributeService.getTrackedEntityAttributesDisplayInList();
         Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
 
         for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )

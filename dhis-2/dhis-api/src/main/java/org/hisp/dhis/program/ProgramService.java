@@ -34,6 +34,7 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Abyot Asalefew
@@ -89,7 +90,7 @@ public interface ProgramService
      * @return a collection of all Program, or an empty collection if there are
      * no Programs.
      */
-    Collection<Program> getAllPrograms();
+    List<Program> getAllPrograms();
 
     /**
      * Get all {@link Program} belong to a orgunit
@@ -97,21 +98,21 @@ public interface ProgramService
      * @param organisationUnit {@link OrganisationUnit}
      * @return The program list
      */
-    Collection<Program> getPrograms( OrganisationUnit organisationUnit );
+    List<Program> getPrograms( OrganisationUnit organisationUnit );
 
     /**
      * Get {@link Program} by the current user.
      *
      * @return The program list the current user
      */
-    Collection<Program> getProgramsByCurrentUser();
+    List<Program> getProgramsByCurrentUser();
 
     /**
      * Get {@link Program} by user.
      *
      * @return The program list the current user
      */
-    Collection<Program> getProgramsByUser( User user );
+    List<Program> getProgramsByUser( User user );
 
     /**
      * Get {@link Program} by the current user and a certain type
@@ -121,7 +122,7 @@ public interface ProgramService
      *             Single event without registration.
      * @return Program list by a type specified
      */
-    Collection<Program> getProgramsByCurrentUser( int type );
+    List<Program> getProgramsByCurrentUser( int type );
 
     /**
      * Get {@link Program} included in the expression of a
@@ -130,7 +131,7 @@ public interface ProgramService
      * @param validationCriteria {@link ValidationCriteria}
      * @return Program list
      */
-    Collection<Program> getPrograms( ValidationCriteria validationCriteria );
+    List<Program> getPrograms( ValidationCriteria validationCriteria );
 
     /**
      * Get {@link Program} by a type
@@ -140,7 +141,7 @@ public interface ProgramService
      *             Single event without registration
      * @return Program list by a type specified
      */
-    Collection<Program> getPrograms( int type );
+    List<Program> getPrograms( int type );
 
     /**
      * Get {@link Program} assigned to an {@link OrganisationUnit} by a type
@@ -151,7 +152,7 @@ public interface ProgramService
      * @param orgunit Where programs assigned
      * @return Program list by a type specified
      */
-    Collection<Program> getPrograms( int type, OrganisationUnit orgunit );
+    List<Program> getPrograms( int type, OrganisationUnit orgunit );
 
     /**
      * Returns the {@link Program} with the given UID.
@@ -166,14 +167,14 @@ public interface ProgramService
      *
      * @param organisationUnit {@link OrganisationUnit}
      */
-    Collection<Program> getProgramsByCurrentUser( OrganisationUnit organisationUnit );
+    List<Program> getProgramsByCurrentUser( OrganisationUnit organisationUnit );
 
     /**
      * Get {@link TrackedEntity} by TrackedEntity
      *
      * @param trackedEntity {@link TrackedEntity}
      */
-    Collection<Program> getProgramsByTrackedEntity( TrackedEntity trackedEntity );
+    List<Program> getProgramsByTrackedEntity( TrackedEntity trackedEntity );
 
     /**
      * Returns The number of Programs with the key searched
@@ -189,10 +190,10 @@ public interface ProgramService
      * @param name Keyword for searching by name
      * @param min  First result
      * @param max  Maximum results
-     * @return a collection of all Program, or an empty collection if
+     * @return a List of all Program, or an empty collection if
      * there are no Program.
      */
-    Collection<Program> getProgramBetweenByName( String name, int min, int max );
+    List<Program> getProgramBetweenByName( String name, int min, int max );
 
     /**
      * Returns The number of all Program available
@@ -204,17 +205,17 @@ public interface ProgramService
      *
      * @param min First result
      * @param max Maximum results
-     * @return a collection of all Program, or an empty collection if
+     * @return a List of all Program, or an empty List if
      * there are no Program.
      */
-    Collection<Program> getProgramsBetween( int min, int max );
+    List<Program> getProgramsBetween( int min, int max );
 
     /**
      * Get {@link Program} by the current user.
      *
      * @return The program list the current user
      */
-    Collection<Program> getByCurrentUser();
+    List<Program> getByCurrentUser();
 
     /**
      * Get {@link Program} by the current user and a certain type
@@ -224,5 +225,5 @@ public interface ProgramService
      *             Single event without registration.
      * @return Program list by a type specified
      */
-    Collection<Program> getByCurrentUser( int type );
+    List<Program> getByCurrentUser( int type );
 }

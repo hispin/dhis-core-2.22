@@ -149,7 +149,7 @@ public class ShowAddRelationshipFormAction
 
         organisationUnit = selectionManager.getSelectedOrganisationUnit();
         
-        relationshipTypes = new ArrayList<>( relationshipTypeService.getAllRelationshipTypes() );
+        relationshipTypes = relationshipTypeService.getAllRelationshipTypes();
 
         attributes = attributeService.getAllTrackedEntityAttributes();
         

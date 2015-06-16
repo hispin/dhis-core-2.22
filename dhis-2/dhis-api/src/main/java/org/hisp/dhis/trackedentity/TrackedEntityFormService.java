@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentity;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.hisp.dhis.i18n.I18n;
@@ -102,7 +103,7 @@ public interface TrackedEntityFormService
      * @return a collection of all TrackedEntityForm, or an empty collection if
      *         there are no TrackedEntityForms.
      */
-    Collection<TrackedEntityForm> getAllTrackedEntityForms();
+    List<TrackedEntityForm> getAllTrackedEntityForms();
 
     /**
      * Get tracked entity form of a program

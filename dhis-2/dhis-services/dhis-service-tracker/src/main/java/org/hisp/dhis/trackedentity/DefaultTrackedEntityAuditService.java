@@ -28,13 +28,9 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
-import org.hisp.dhis.trackedentity.TrackedEntityInstance;
-import org.hisp.dhis.trackedentity.TrackedEntityAudit;
-import org.hisp.dhis.trackedentity.TrackedEntityAuditService;
-import org.hisp.dhis.trackedentity.TrackedEntityAuditStore;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -78,7 +74,7 @@ public class DefaultTrackedEntityAuditService
     }
 
     @Override
-    public Collection<TrackedEntityAudit> getTrackedEntityAudits( TrackedEntityInstance instance )
+    public List<TrackedEntityAudit> getTrackedEntityAudits( TrackedEntityInstance instance )
     {
         return auditStore.get( instance );
     }

@@ -169,12 +169,12 @@ public class ShowAddProgramStageAction
 
         selectionTreeManager.setSelectedOrganisationUnits( program.getOrganisationUnits() );
 
-        userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
+        userGroups = userGroupService.getAllUserGroups();
 
-        constants = new ArrayList<>( constantService.getAllConstants());        
+        constants = constantService.getAllConstants();        
         Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
 
-        attributes = new ArrayList<>( attributeService.getProgramStageAttributes() );
+        attributes = attributeService.getProgramStageAttributes();
 
         return SUCCESS;
     }

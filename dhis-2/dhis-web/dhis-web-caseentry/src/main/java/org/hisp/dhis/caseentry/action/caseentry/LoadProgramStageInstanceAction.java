@@ -135,8 +135,7 @@ public class LoadProgramStageInstanceAction
 
         List<ProgramInstance> programInstances = new ArrayList<>();
 
-        programInstances = new ArrayList<>( programInstanceService.getProgramInstances( entityInstance,
-            program ) );
+        programInstances = programInstanceService.getProgramInstances( entityInstance, program );
 
         if ( programInstances != null && programInstances.size() > 0 )
         {

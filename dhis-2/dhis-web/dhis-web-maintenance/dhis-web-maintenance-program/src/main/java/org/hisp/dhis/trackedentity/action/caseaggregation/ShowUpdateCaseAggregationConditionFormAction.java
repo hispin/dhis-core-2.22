@@ -28,7 +28,6 @@ package org.hisp.dhis.trackedentity.action.caseaggregation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -162,13 +161,13 @@ public class ShowUpdateCaseAggregationConditionFormAction
     public String execute()
         throws Exception
     {
-        dataSets = new ArrayList<>( dataSetService.getAllDataSets() );
+        dataSets = dataSetService.getAllDataSets();
         Collections.sort( dataSets, IdentifiableObjectNameComparator.INSTANCE );
 
-        programs = new ArrayList<>( programService.getAllPrograms() );
+        programs = programService.getAllPrograms();
         Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );
 
-        attributes = new ArrayList<>( attributeService.getAllTrackedEntityAttributes() );
+        attributes = attributeService.getAllTrackedEntityAttributes();
         Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
 
         caseAggregation = aggregationConditionService.getCaseAggregationCondition( id );

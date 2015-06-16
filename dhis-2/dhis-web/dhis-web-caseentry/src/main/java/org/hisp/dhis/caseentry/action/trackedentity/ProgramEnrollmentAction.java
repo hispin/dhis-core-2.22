@@ -182,7 +182,7 @@ public class ProgramEnrollmentAction
         // Load attributes of the selected program
         // ---------------------------------------------------------------------
 
-        attributes = new ArrayList<>( programInstance.getProgram().getProgramAttributes() );
+        attributes = programInstance.getProgram().getProgramAttributes();
 
         if ( attributes != null )
         {

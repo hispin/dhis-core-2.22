@@ -33,9 +33,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -267,11 +268,11 @@ public class ProgramValidationServiceTest
         programValidationService.addProgramValidation( validationA );
         programValidationService.addProgramValidation( validationB );
 
-        Collection<ProgramValidation> validationList = new HashSet<>();
+        List<ProgramValidation> validationList = new ArrayList<>();
         validationList.add( validationA );
         validationList.add( validationB );
 
-        Collection<ProgramValidationResult> result = programValidationService.validate( validationList, stageInstanceA );
+        List<ProgramValidationResult> result = programValidationService.validate( validationList, stageInstanceA );
         assertEquals( 1, result.size() );
         assertEquals( result.iterator().next().getProgramValidation(), validationB );
     }

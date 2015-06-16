@@ -28,7 +28,7 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Abyot Asalefew
@@ -113,24 +113,24 @@ public interface TrackedEntityAttributeService
     /**
      * Returns all {@link TrackedEntityAttribute}
      * 
-     * @return a collection of all TrackedEntityAttribute, or an empty
-     *         collection if there are no TrackedEntityAttributes.
+     * @return a List of all TrackedEntityAttribute, or an empty
+     *         List if there are no TrackedEntityAttributes.
      */
-    Collection<TrackedEntityAttribute> getAllTrackedEntityAttributes();
+    List<TrackedEntityAttribute> getAllTrackedEntityAttributes();
 
     /**
      * Get attributes without groups
      * 
      * @return List of attributes
      */
-    Collection<TrackedEntityAttribute> getOptionalAttributesWithoutGroup();
+    List<TrackedEntityAttribute> getOptionalAttributesWithoutGroup();
 
     /**
      * Get attributes without groups
      * 
      * @return List of attributes without group
      */
-    Collection<TrackedEntityAttribute> getTrackedEntityAttributesWithoutGroup();
+    List<TrackedEntityAttribute> getTrackedEntityAttributesWithoutGroup();
 
     /**
      * Get attributes which are displayed in visit schedule
@@ -139,7 +139,7 @@ public interface TrackedEntityAttributeService
      * 
      * @return List of attributes
      */
-    Collection<TrackedEntityAttribute> getTrackedEntityAttributesByDisplayOnVisitSchedule(
+    List<TrackedEntityAttribute> getTrackedEntityAttributesByDisplayOnVisitSchedule(
         boolean displayOnVisitSchedule );
 
     /**
@@ -149,7 +149,7 @@ public interface TrackedEntityAttributeService
      * 
      * @return List of attributes
      */
-    Collection<TrackedEntityAttribute> getTrackedEntityAttributesWithoutProgram();
+    List<TrackedEntityAttribute> getTrackedEntityAttributesWithoutProgram();
 
     /**
      * Get attributes which are displayed in visit schedule
@@ -158,7 +158,7 @@ public interface TrackedEntityAttributeService
      * 
      * @return List of attributes
      */
-    Collection<TrackedEntityAttribute> getTrackedEntityAttributesDisplayInList();
+    List<TrackedEntityAttribute> getTrackedEntityAttributesDisplayInList();
 
     /**
      * Returns {@link TrackedEntityAttribute} list with paging
@@ -169,7 +169,7 @@ public interface TrackedEntityAttributeService
      * @return a collection of all TrackedEntityAttribute, or an empty
      *         collection if there are no TrackedEntityAttributes.
      */
-    Collection<TrackedEntityAttribute> getTrackedEntityAttributesBetweenByName( String name, int min, int max );
+    List<TrackedEntityAttribute> getTrackedEntityAttributesBetweenByName( String name, int min, int max );
 
     /**
      * Returns The number of all TrackedEntityAttribute available
@@ -185,7 +185,7 @@ public interface TrackedEntityAttributeService
      * @return a collection of all TrackedEntityAttribute, or an empty
      *         collection if there are no TrackedEntityAttributes.
      */
-    Collection<TrackedEntityAttribute> getTrackedEntityAttributesBetween( int min, int max );
+    List<TrackedEntityAttribute> getTrackedEntityAttributesBetween( int min, int max );
 
     /**
      * Returns The number of TrackedEntityAttributes with the key searched

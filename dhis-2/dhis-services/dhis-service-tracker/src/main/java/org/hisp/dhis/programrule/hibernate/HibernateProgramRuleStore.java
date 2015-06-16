@@ -28,7 +28,7 @@ package org.hisp.dhis.programrule.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -46,7 +46,7 @@ public class HibernateProgramRuleStore
 {
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<ProgramRule> get( Program program )
+    public List<ProgramRule> get( Program program )
     {
         return getCriteria( Restrictions.eq( "program", program ) ).list();
     }
@@ -60,7 +60,7 @@ public class HibernateProgramRuleStore
     
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<ProgramRule> get( Program program, String key )
+    public List<ProgramRule> get( Program program, String key )
     {
         return getSharingCriteria()
             .add( Restrictions.eq( "program", program ) )

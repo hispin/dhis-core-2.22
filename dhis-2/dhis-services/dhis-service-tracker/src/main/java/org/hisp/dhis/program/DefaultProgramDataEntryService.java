@@ -30,6 +30,7 @@ package org.hisp.dhis.program;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -826,7 +827,7 @@ public class DefaultProgramDataEntryService
             return null;
         }
         
-        Collection<DataElement> dataElements = programStage.getAllDataElements();
+        List<DataElement> dataElements = programStage.getAllDataElements();
 
         Map<String, DataElement> map = new HashMap<>();
 

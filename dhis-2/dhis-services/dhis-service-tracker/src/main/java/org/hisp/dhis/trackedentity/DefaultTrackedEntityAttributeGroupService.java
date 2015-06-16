@@ -30,7 +30,7 @@ package org.hisp.dhis.trackedentity;
 
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.i18n.I18nService;
@@ -102,7 +102,7 @@ public class DefaultTrackedEntityAttributeGroupService
     }
 
     @Override
-    public Collection<TrackedEntityAttributeGroup> getAllTrackedEntityAttributeGroups()
+    public List<TrackedEntityAttributeGroup> getAllTrackedEntityAttributeGroups()
     {
         return i18n( i18nService, attributeGroupStore.getAll() );
     }
@@ -114,7 +114,7 @@ public class DefaultTrackedEntityAttributeGroupService
     }
 
     @Override
-    public Collection<TrackedEntityAttributeGroup> getTrackedEntityAttributeGroupsBetweenByName( String name, int min, int max )
+    public List<TrackedEntityAttributeGroup> getTrackedEntityAttributeGroupsBetweenByName( String name, int min, int max )
     {
         return attributeGroupStore.getAllLikeName( name, min, max );
     }
@@ -126,7 +126,7 @@ public class DefaultTrackedEntityAttributeGroupService
     }
 
     @Override
-    public Collection<TrackedEntityAttributeGroup> getTrackedEntityAttributeGroupsBetween( int min, int max )
+    public List<TrackedEntityAttributeGroup> getTrackedEntityAttributeGroupsBetween( int min, int max )
     {
         return attributeGroupStore.getAllOrderedName( min, max );
     }

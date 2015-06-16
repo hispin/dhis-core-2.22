@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentity;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericNameableObjectStore;
 
@@ -45,14 +46,14 @@ public interface TrackedEntityAttributeStore
      * 
      * @return List of attributes
      */
-    Collection<TrackedEntityAttribute> getOptionalAttributesWithoutGroup();
+    List<TrackedEntityAttribute> getOptionalAttributesWithoutGroup();
 
     /**
      * Get {@link TrackedEntityAttribute} without any group
      * 
      * @return TrackedEntityAttribute without group.
      */
-    Collection<TrackedEntityAttribute> getWithoutGroup();
+    List<TrackedEntityAttribute> getWithoutGroup();
 
     /**
      * Get attributes which are displayed in visit schedule
@@ -61,13 +62,13 @@ public interface TrackedEntityAttributeStore
      * 
      * @return List of attributes
      */
-    Collection<TrackedEntityAttribute> getByDisplayOnVisitSchedule( boolean displayOnVisitSchedule );
+    List<TrackedEntityAttribute> getByDisplayOnVisitSchedule( boolean displayOnVisitSchedule );
 
     /**
      * Get attributes which are displayed in visit schedule
      * 
      * @return List of attributes
      */
-    Collection<TrackedEntityAttribute> getDisplayInList();
+    List<TrackedEntityAttribute> getDisplayInList();
 
 }

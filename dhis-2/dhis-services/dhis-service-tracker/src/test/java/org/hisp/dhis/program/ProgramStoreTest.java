@@ -30,8 +30,8 @@ package org.hisp.dhis.program;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -93,7 +93,7 @@ public class ProgramStoreTest
         programC.setType( Program.SINGLE_EVENT_WITH_REGISTRATION );
         programStore.save( programC );
 
-        Collection<Program> programs = programStore.getByType( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
+        List<Program> programs = programStore.getByType( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
         assertTrue( equals( programs, programA, programB ) );
 
         programs = programStore.getByType( Program.SINGLE_EVENT_WITH_REGISTRATION );
@@ -107,7 +107,7 @@ public class ProgramStoreTest
         programStore.save( programB );
         programStore.save( programC );
 
-        Collection<Program> programs = programStore.get( Program.MULTIPLE_EVENTS_WITH_REGISTRATION, organisationUnitA );
+        List<Program> programs = programStore.get( Program.MULTIPLE_EVENTS_WITH_REGISTRATION, organisationUnitA );
         assertTrue( equals( programs, programA, programB ) );
     }
 }

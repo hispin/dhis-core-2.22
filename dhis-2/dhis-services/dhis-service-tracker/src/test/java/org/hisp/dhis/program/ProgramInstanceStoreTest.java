@@ -31,9 +31,11 @@ package org.hisp.dhis.program;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -185,7 +187,7 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceB );
         programInstanceStore.save( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceStore.get( programA );
+        List<ProgramInstance> programInstances = programInstanceStore.get( programA );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
         assertTrue( programInstances.contains( programInstanceD ) );
@@ -203,11 +205,11 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceC );
         programInstanceStore.save( programInstanceD );
 
-        Collection<Program> programs = new HashSet<>();
+        List<Program> programs = new ArrayList<>();
         programs.add( programA );
         programs.add( programB );
 
-        Collection<ProgramInstance> programInstances = programInstanceStore.get( programs );
+        List<ProgramInstance> programInstances = programInstanceStore.get( programs );
         assertEquals( 3, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
         assertTrue( programInstances.contains( programInstanceB ) );
@@ -222,7 +224,7 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceC );
         programInstanceStore.save( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceStore.get( entityInstanceA, programC,
+        List<ProgramInstance> programInstances = programInstanceStore.get( entityInstanceA, programC,
             ProgramInstance.STATUS_COMPLETED );
         assertEquals( 1, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceC ) );
@@ -239,7 +241,7 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceC );
         programInstanceStore.save( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceStore.get( programA, organisationUnitA, 0, 10 );
+        List<ProgramInstance> programInstances = programInstanceStore.get( programA, organisationUnitA, 0, 10 );
         assertEquals( 1, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
     }
@@ -251,7 +253,7 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceB );
         programInstanceStore.save( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceStore.get( programA, orgunitIds, incidenDate,
+        List<ProgramInstance> programInstances = programInstanceStore.get( programA, orgunitIds, incidenDate,
             enrollmentDate, null, null );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
@@ -276,7 +278,7 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceB );
         programInstanceStore.save( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceStore.getByStatus( ProgramInstance.STATUS_ACTIVE,
+        List<ProgramInstance> programInstances = programInstanceStore.getByStatus( ProgramInstance.STATUS_ACTIVE,
             programA, orgunitIds, incidenDate, enrollmentDate );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );

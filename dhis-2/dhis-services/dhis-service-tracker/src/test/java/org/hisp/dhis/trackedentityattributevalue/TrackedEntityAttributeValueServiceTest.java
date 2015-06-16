@@ -33,8 +33,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -175,7 +175,7 @@ public class TrackedEntityAttributeValueServiceTest
         attributeValueService.addTrackedEntityAttributeValue( attributeValueB );
         attributeValueService.addTrackedEntityAttributeValue( attributeValueC );
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService.getTrackedEntityAttributeValues( entityInstanceA );
+        List<TrackedEntityAttributeValue> attributeValues = attributeValueService.getTrackedEntityAttributeValues( entityInstanceA );
 
         assertEquals( 2, attributeValues.size() );
         assertTrue( equals( attributeValues, attributeValueA, attributeValueB ) );
@@ -193,7 +193,7 @@ public class TrackedEntityAttributeValueServiceTest
         attributeValueService.addTrackedEntityAttributeValue( attributeValueB );
         attributeValueService.addTrackedEntityAttributeValue( attributeValueC );
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService
+        List<TrackedEntityAttributeValue> attributeValues = attributeValueService
             .getTrackedEntityAttributeValues( attributeA );
         assertEquals( 2, attributeValues.size() );
         assertTrue( attributeValues.contains( attributeValueA ) );
@@ -211,11 +211,11 @@ public class TrackedEntityAttributeValueServiceTest
         attributeValueService.addTrackedEntityAttributeValue( attributeValueB );
         attributeValueService.addTrackedEntityAttributeValue( attributeValueC );
 
-        Collection<TrackedEntityInstance> entityInstances = new HashSet<>();
+        List<TrackedEntityInstance> entityInstances = new ArrayList<>();
         entityInstances.add( entityInstanceA );
         entityInstances.add( entityInstanceB );
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService.getTrackedEntityAttributeValues( entityInstances );
+        List<TrackedEntityAttributeValue> attributeValues = attributeValueService.getTrackedEntityAttributeValues( entityInstances );
         assertEquals( 3, attributeValues.size() );
         assertTrue( equals( attributeValues, attributeValueA, attributeValueB, attributeValueC ) );
     }
@@ -227,7 +227,7 @@ public class TrackedEntityAttributeValueServiceTest
         attributeValueService.addTrackedEntityAttributeValue( attributeValueB );
         attributeValueService.addTrackedEntityAttributeValue( attributeValueC );
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService.searchTrackedEntityAttributeValue(
+        List<TrackedEntityAttributeValue> attributeValues = attributeValueService.searchTrackedEntityAttributeValue(
             attributeA, "A" );
         assertTrue( equals( attributeValues, attributeValueA ) );
     }

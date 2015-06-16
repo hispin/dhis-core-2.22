@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentityattributevalue;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
@@ -70,19 +71,19 @@ public class DefaultTrackedEntityAttributeValueService
     }
 
     @Override
-    public Collection<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( TrackedEntityInstance instance )
+    public List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( TrackedEntityInstance instance )
     {
         return attributeValueStore.get( instance );
     }
 
     @Override
-    public Collection<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( TrackedEntityAttribute attribute )
+    public List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( TrackedEntityAttribute attribute )
     {
         return attributeValueStore.get( attribute );
     }
 
     @Override
-    public Collection<TrackedEntityAttributeValue> getTrackedEntityAttributeValues(
+    public List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues(
         Collection<TrackedEntityInstance> instances )
     {
         if ( instances != null && instances.size() > 0 )
@@ -113,7 +114,7 @@ public class DefaultTrackedEntityAttributeValueService
     }
 
     @Override
-    public Collection<TrackedEntityAttributeValue> searchTrackedEntityAttributeValue( TrackedEntityAttribute attribute,
+    public List<TrackedEntityAttributeValue> searchTrackedEntityAttributeValue( TrackedEntityAttribute attribute,
         String searchText )
     {
         return attributeValueStore.searchByValue( attribute, searchText );

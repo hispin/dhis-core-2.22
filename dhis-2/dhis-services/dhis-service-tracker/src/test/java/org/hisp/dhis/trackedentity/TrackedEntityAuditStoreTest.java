@@ -31,8 +31,8 @@ package org.hisp.dhis.trackedentity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -94,7 +94,7 @@ public class TrackedEntityAuditStoreTest
         auditStore.save( auditA );
         auditStore.save( auditB );
 
-        Collection<TrackedEntityAudit> entityInstanceAudits = auditStore.get( entityInstanceA );
+        List<TrackedEntityAudit> entityInstanceAudits = auditStore.get( entityInstanceA );
         assertEquals( 1, entityInstanceAudits.size() );
         assertTrue( entityInstanceAudits.contains( auditA ) );
 

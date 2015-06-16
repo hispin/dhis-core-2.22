@@ -28,7 +28,7 @@ package org.hisp.dhis.relationship;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
@@ -97,7 +97,7 @@ public interface RelationshipTypeService
      * @return a collection of all RelationshipType, or an empty collection if
      *         there are no RelationshipTypes.
      */
-    Collection<RelationshipType> getAllRelationshipTypes();
+    List<RelationshipType> getAllRelationshipTypes();
 
     /**
      * Returns The number of RelationshipTypes with the key searched
@@ -118,7 +118,7 @@ public interface RelationshipTypeService
      * @return a collection of all TrackedEntityAttribute, or an empty
      *         collection if there are no TrackedEntityAttributes.
      */
-    Collection<? extends RelationshipType> getRelationshipTypesBetweenByName( String name,
+    List<RelationshipType> getRelationshipTypesBetweenByName( String name,
         int min, int max );
 
     /**
@@ -132,8 +132,8 @@ public interface RelationshipTypeService
      * 
      * @param min
      * @param max
-     * @return a collection of all TrackedEntityAttribute, or an empty
-     *         collection if there are no TrackedEntityAttributes.
+     * @return a List of all TrackedEntityAttribute, or an empty
+     *         List if there are no TrackedEntityAttributes.
      */
-    Collection<RelationshipType> getRelationshipTypesBetween( int min, int max );
+    List<RelationshipType> getRelationshipTypesBetween( int min, int max );
 }

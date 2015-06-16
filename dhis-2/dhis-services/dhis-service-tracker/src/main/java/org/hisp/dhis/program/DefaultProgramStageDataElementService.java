@@ -28,10 +28,10 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hisp.dhis.dataelement.DataElement;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
 
 /**
  * @author Viet Nguyen
@@ -68,7 +68,7 @@ public class DefaultProgramStageDataElementService
     }
 
     @Override
-    public Collection<ProgramStageDataElement> getAllProgramStageDataElements()
+    public List<ProgramStageDataElement> getAllProgramStageDataElements()
     {
         return programStageDataElementStore.getAll();
     }

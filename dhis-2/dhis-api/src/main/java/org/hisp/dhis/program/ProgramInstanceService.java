@@ -89,7 +89,7 @@ public interface ProgramInstanceService
      * @param program Program
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( Program program );
+    List<ProgramInstance> getProgramInstances( Program program );
 
     /**
      * Retrieve program instances on program list
@@ -97,7 +97,7 @@ public interface ProgramInstanceService
      * @param programs Program list
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( Collection<Program> programs );
+    List<ProgramInstance> getProgramInstances( Collection<Program> programs );
 
     /**
      * Retrieve program instances of whom registered in to a orgunit from
@@ -107,7 +107,7 @@ public interface ProgramInstanceService
      * @param organisationUnit Organisation Unit
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( Collection<Program> programs, OrganisationUnit organisationUnit );
+    List<ProgramInstance> getProgramInstances( Collection<Program> programs, OrganisationUnit organisationUnit );
 
     /**
      * Retrieve program instances of whom registered in to a orgunit from
@@ -119,7 +119,7 @@ public interface ProgramInstanceService
      *                         STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( Collection<Program> programs, OrganisationUnit organisationUnit,
+    List<ProgramInstance> getProgramInstances( Collection<Program> programs, OrganisationUnit organisationUnit,
         int status );
 
     /**
@@ -130,7 +130,7 @@ public interface ProgramInstanceService
      *                STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( Program program, Integer status );
+    List<ProgramInstance> getProgramInstances( Program program, Integer status );
 
     /**
      * Retrieve program instances on a program list by status
@@ -140,7 +140,7 @@ public interface ProgramInstanceService
      *                 STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( Collection<Program> programs, Integer status );
+    List<ProgramInstance> getProgramInstances( Collection<Program> programs, Integer status );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance by a status
@@ -150,7 +150,7 @@ public interface ProgramInstanceService
      *                       STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Integer status );
+    List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Integer status );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance by a program
@@ -159,7 +159,7 @@ public interface ProgramInstanceService
      * @param program        Program
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program );
+    List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance with a status by a program
@@ -170,7 +170,7 @@ public interface ProgramInstanceService
      *                       STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program, Integer status );
+    List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program, Integer status );
 
     /**
      * Retrieve program instances with active status on an orgunit by a program
@@ -182,7 +182,7 @@ public interface ProgramInstanceService
      * @param max              Maximum results
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( Program program, OrganisationUnit organisationUnit, Integer min,
+    List<ProgramInstance> getProgramInstances( Program program, OrganisationUnit organisationUnit, Integer min,
         Integer max );
 
     /**
@@ -197,7 +197,7 @@ public interface ProgramInstanceService
      * @param max        Maximum results
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstances( Program program, Collection<Integer> orgunitIds, Date startDate,
+    List<ProgramInstance> getProgramInstances( Program program, Collection<Integer> orgunitIds, Date startDate,
         Date endDate, Integer min, Integer max );
 
     /**
@@ -243,7 +243,7 @@ public interface ProgramInstanceService
      * @param endDate    The end date for retrieving on enrollment-date
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
+    List<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
         Collection<Integer> orgunitIds, Date startDate, Date endDate );
 
     /**
@@ -258,7 +258,7 @@ public interface ProgramInstanceService
      * @param endDate    The end date for retrieving on enrollment-date
      * @return ProgramInstance list
      */
-    Collection<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
+    List<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
         Collection<Integer> orgunitIds, Date startDate, Date endDate, Integer min, Integer max );
 
     /**

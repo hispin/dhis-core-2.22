@@ -29,6 +29,7 @@ package org.hisp.dhis.program;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
@@ -74,7 +75,7 @@ public interface ProgramValidationService
      * @return a collection of all ProgramValidation, or an empty collection if
      * there are no ProgramValidations.
      */
-    Collection<ProgramValidation> getAllProgramValidation();
+    List<ProgramValidation> getAllProgramValidation();
 
     /**
      * Get validation by {@link Program}
@@ -82,7 +83,7 @@ public interface ProgramValidationService
      * @param program Program
      * @return ProgramValidation list
      */
-    Collection<ProgramValidation> getProgramValidation( Program program );
+    List<ProgramValidation> getProgramValidation( Program program );
 
     /**
      * Get validation by program stage
@@ -90,7 +91,7 @@ public interface ProgramValidationService
      * @param programStage {@link ProgramStage}
      * @return ProgramValidation list
      */
-    Collection<ProgramValidation> getProgramValidation( ProgramStage programStage );
+    List<ProgramValidation> getProgramValidation( ProgramStage programStage );
 
     /**
      * Get validation violated in an event
@@ -99,6 +100,6 @@ public interface ProgramValidationService
      * @param programStageInstance {@link ProgramStageInstance}
      * @return List of validation violated
      */
-    Collection<ProgramValidationResult> validate( Collection<ProgramValidation> validation,
+    List<ProgramValidationResult> validate( Collection<ProgramValidation> validation,
         ProgramStageInstance programStageInstance );
 }

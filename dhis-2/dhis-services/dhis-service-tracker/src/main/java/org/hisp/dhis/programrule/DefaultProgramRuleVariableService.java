@@ -28,7 +28,7 @@ package org.hisp.dhis.programrule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.program.Program;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,13 +80,13 @@ public class DefaultProgramRuleVariableService
     }
 
     @Override
-    public Collection<ProgramRuleVariable> getAllProgramRuleVariable()
+    public List<ProgramRuleVariable> getAllProgramRuleVariable()
     {
         return programRuleVariableStore.getAll();
     }
 
     @Override
-    public Collection<ProgramRuleVariable> getProgramRuleVariable( Program program )
+    public List<ProgramRuleVariable> getProgramRuleVariable( Program program )
     {
         return programRuleVariableStore.get( program );
     }

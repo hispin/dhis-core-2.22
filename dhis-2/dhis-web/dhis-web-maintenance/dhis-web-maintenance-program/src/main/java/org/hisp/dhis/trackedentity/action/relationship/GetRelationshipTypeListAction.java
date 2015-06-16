@@ -91,17 +91,15 @@ extends ActionPagingSupport<RelationshipType>
         {
             this.paging = createPaging( relationshipTypeService.getRelationshipTypeCountByName( key ) );
 
-            relationshipTypes = new ArrayList<>(
-                relationshipTypeService.getRelationshipTypesBetweenByName( key, paging.getStartPos(),
-                    paging.getPageSize() ) );
+            relationshipTypes = relationshipTypeService.getRelationshipTypesBetweenByName( key, paging.getStartPos(),
+                    paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( relationshipTypeService.getRelationshipTypeCount() );
 
-            relationshipTypes = new ArrayList<>(
-                relationshipTypeService.getRelationshipTypesBetween( paging.getStartPos(),
-                    paging.getPageSize() ) );
+            relationshipTypes = relationshipTypeService.getRelationshipTypesBetween( paging.getStartPos(),
+                    paging.getPageSize() );
         }
 
         Collections.sort( relationshipTypes, IdentifiableObjectNameComparator.INSTANCE );

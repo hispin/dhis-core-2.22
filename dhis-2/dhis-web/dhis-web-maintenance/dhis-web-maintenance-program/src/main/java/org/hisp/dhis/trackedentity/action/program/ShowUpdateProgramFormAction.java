@@ -28,7 +28,11 @@ package org.hisp.dhis.trackedentity.action.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
@@ -48,11 +52,7 @@ import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
@@ -221,7 +221,7 @@ public class ShowUpdateProgramFormAction
 
         attributeValues = AttributeUtils.getAttributeValueMap( program.getAttributeValues() );
 
-        availableAttributes = new ArrayList<>( trackedEntityAttributeService.getAllTrackedEntityAttributes() );
+        availableAttributes = trackedEntityAttributeService.getAllTrackedEntityAttributes();
 
         for ( ProgramTrackedEntityAttribute programTrackedEntityAttribute : program.getProgramAttributes() )
         {
@@ -230,20 +230,20 @@ public class ShowUpdateProgramFormAction
 
         Collections.sort( availableAttributes, IdentifiableObjectNameComparator.INSTANCE );
 
-        programs = new ArrayList<>( programService.getAllPrograms() );
+        programs = programService.getAllPrograms();
         programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
         programs.remove( program );
         Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );
 
-        userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
+        userGroups = userGroupService.getAllUserGroups();
 
-        relationshipTypes = new ArrayList<>( relationshipTypeService.getAllRelationshipTypes() );
+        relationshipTypes = relationshipTypeService.getAllRelationshipTypes();
         Collections.sort( relationshipTypes, IdentifiableObjectNameComparator.INSTANCE );
 
-        trackedEntities = new ArrayList<>( trackedEntityService.getAllTrackedEntity() );
+        trackedEntities = trackedEntityService.getAllTrackedEntity();
         Collections.sort( trackedEntities, IdentifiableObjectNameComparator.INSTANCE );
 
-        attributes = new ArrayList<>( attributeService.getProgramAttributes() );
+        attributes = attributeService.getProgramAttributes();
 
         return SUCCESS;
     }

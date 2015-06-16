@@ -28,7 +28,6 @@ package org.hisp.dhis.trackedentity.action.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -110,7 +109,7 @@ public class GetTrackedEntityFormListAction
             }
         }
 
-        programs = new ArrayList<>( programService.getAllPrograms() );
+        programs = programService.getAllPrograms();
 
         Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );
 

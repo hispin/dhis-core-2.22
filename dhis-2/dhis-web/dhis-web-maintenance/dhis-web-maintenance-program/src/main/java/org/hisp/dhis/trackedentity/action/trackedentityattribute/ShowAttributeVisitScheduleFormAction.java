@@ -76,8 +76,7 @@ public class ShowAttributeVisitScheduleFormAction
     public String execute()
         throws Exception
     {
-        selectedAttributes = new ArrayList<>(
-            attributeService.getTrackedEntityAttributesByDisplayOnVisitSchedule( true ) );
+        selectedAttributes = attributeService.getTrackedEntityAttributesByDisplayOnVisitSchedule( true );
         
         Collections.sort( selectedAttributes, new TrackedEntityAttributeSortOrderComparator() );
 

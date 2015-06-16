@@ -31,7 +31,7 @@ package org.hisp.dhis.relationship;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -120,7 +120,7 @@ public class RelationshipStoreTest
         relationshipStore.save( relationshipA );
         relationshipStore.save( relationshipC );
 
-        Collection<Relationship> relationships = relationshipStore.getForTrackedEntityInstance( entityInstanceA );
+        List<Relationship> relationships = relationshipStore.getForTrackedEntityInstance( entityInstanceA );
         assertTrue( equals( relationships, relationshipA, relationshipC ) );
     }
 
@@ -130,7 +130,7 @@ public class RelationshipStoreTest
         relationshipStore.save( relationshipA );
         relationshipStore.save( relationshipC );
 
-        Collection<Relationship> relationships = relationshipStore.getByRelationshipType( relationshipType );
+        List<Relationship> relationships = relationshipStore.getByRelationshipType( relationshipType );
         assertTrue( equals( relationships, relationshipA, relationshipC ) );
     }
 

@@ -120,8 +120,7 @@ public class GetAttributesByProgramAction
         }
         else
         {
-            attributes = new ArrayList<>(
-                attributeService.getTrackedEntityAttributesDisplayInList() );
+            attributes = attributeService.getTrackedEntityAttributesDisplayInList();
         }
 
         Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );

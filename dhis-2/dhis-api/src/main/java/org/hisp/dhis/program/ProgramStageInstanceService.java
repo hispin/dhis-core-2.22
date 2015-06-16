@@ -105,7 +105,7 @@ public interface ProgramStageInstanceService
      * @param status EventStatus
      * @return ProgramStageInstance list
      */
-    Collection<ProgramStageInstance> getProgramStageInstances( Collection<ProgramInstance> programInstances,
+    List<ProgramStageInstance> getProgramStageInstances( Collection<ProgramInstance> programInstances,
         EventStatus status );
 
     /**

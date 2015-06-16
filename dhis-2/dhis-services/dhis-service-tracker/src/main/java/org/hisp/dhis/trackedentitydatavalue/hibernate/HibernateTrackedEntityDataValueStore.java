@@ -31,6 +31,7 @@ package org.hisp.dhis.trackedentitydatavalue.hibernate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -65,14 +66,14 @@ public class HibernateTrackedEntityDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityDataValue> get( ProgramStageInstance programStageInstance )
+    public List<TrackedEntityDataValue> get( ProgramStageInstance programStageInstance )
     {
         return getCriteria( Restrictions.eq( "programStageInstance", programStageInstance ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityDataValue> get( ProgramStageInstance programStageInstance,
+    public List<TrackedEntityDataValue> get( ProgramStageInstance programStageInstance,
         Collection<DataElement> dataElements )
     {
         if ( dataElements == null || dataElements.isEmpty() )
@@ -85,7 +86,7 @@ public class HibernateTrackedEntityDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityDataValue> get( Collection<ProgramStageInstance> programStageInstances )
+    public List<TrackedEntityDataValue> get( Collection<ProgramStageInstance> programStageInstances )
     {
         if ( programStageInstances == null || programStageInstances.isEmpty() )
         {
@@ -97,14 +98,14 @@ public class HibernateTrackedEntityDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityDataValue> get( DataElement dataElement )
+    public List<TrackedEntityDataValue> get( DataElement dataElement )
     {
         return getCriteria( Restrictions.eq( "dataElement", dataElement ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<TrackedEntityDataValue> get( TrackedEntityInstance entityInstance, Collection<DataElement> dataElements, Date startDate,
+    public List<TrackedEntityDataValue> get( TrackedEntityInstance entityInstance, Collection<DataElement> dataElements, Date startDate,
         Date endDate )
      {
         if ( dataElements == null || dataElements.isEmpty() )

@@ -28,7 +28,7 @@ package org.hisp.dhis.relationship;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
@@ -94,7 +94,7 @@ public interface RelationshipService
      * 
      * @return Relationship list
      */
-    Collection<Relationship> getRelationshipsForTrackedEntityInstance( TrackedEntityInstance instance );
+    List<Relationship> getRelationshipsForTrackedEntityInstance( TrackedEntityInstance instance );
 
     /**
      * Retrieve all relationships by relationship type of a person, for example
@@ -105,5 +105,5 @@ public interface RelationshipService
      * 
      * @return Relationship list
      */
-    Collection<Relationship> getRelationships( TrackedEntityInstance entityInstanceA, RelationshipType relationshipType );
+    List<Relationship> getRelationships( TrackedEntityInstance entityInstanceA, RelationshipType relationshipType );
 }

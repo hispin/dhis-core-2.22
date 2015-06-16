@@ -286,7 +286,7 @@ public class GetTrackedEntityInstanceAction
         throws Exception
     {
         relationshipTypes = relationshipTypeService.getAllRelationshipTypes();
-        trackedEntities = new ArrayList<>( trackedEntityService.getAllTrackedEntity() );
+        trackedEntities = trackedEntityService.getAllTrackedEntity();
         entityInstance = entityInstanceService.getTrackedEntityInstance( id );
 
         healthWorkers = entityInstance.getOrganisationUnit().getUsers();
@@ -329,14 +329,12 @@ public class GetTrackedEntityInstanceAction
 
         if ( customRegistrationForm == null )
         {
-            attributeGroups = new ArrayList<>(
-                attributeGroupService.getAllTrackedEntityAttributeGroups() );
+            attributeGroups = attributeGroupService.getAllTrackedEntityAttributeGroups();
             Collections.sort( attributeGroups, new TrackedEntityAttributeGroupSortOrderComparator() );
 
             if ( program == null )
             {
-                attributes = new ArrayList<>(
-                    attributeService.getTrackedEntityAttributesDisplayInList() );
+                attributes = attributeService.getTrackedEntityAttributesDisplayInList();
                 Collections.sort( attributes, new TrackedEntityAttributeSortOrderInListNoProgramComparator() );
 
                 for ( TrackedEntityAttribute attribute : attributes )

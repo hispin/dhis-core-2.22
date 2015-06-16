@@ -28,7 +28,7 @@ package org.hisp.dhis.program.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
@@ -49,7 +49,7 @@ public class HibernateProgramValidationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<ProgramValidation> get( Program program )
+    public List<ProgramValidation> get( Program program )
     {
         return getCriteria( Restrictions.eq( "program", program ) ).list();
     }

@@ -33,8 +33,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataentryform.DataEntryForm;
@@ -167,7 +167,7 @@ public class TrackedEntityFormServiceTest
         entityFormService.saveTrackedEntityForm( entityFormA );
         entityFormService.saveTrackedEntityForm( entityFormB );
 
-        Collection<TrackedEntityForm> forms = entityFormService.getAllTrackedEntityForms();
+        List<TrackedEntityForm> forms = entityFormService.getAllTrackedEntityForms();
         assertEquals( 2, forms.size() );
         assertTrue( forms.contains( entityFormA ) );
         assertTrue( forms.contains( entityFormB ) );

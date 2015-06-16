@@ -153,7 +153,7 @@ public class DefaultProgramStageInstanceService
     }
 
     @Override
-    public Collection<ProgramStageInstance> getProgramStageInstances( Collection<ProgramInstance> programInstances,
+    public List<ProgramStageInstance> getProgramStageInstances( Collection<ProgramInstance> programInstances,
         EventStatus status )
     {
         return programStageInstanceStore.get( programInstances, status );

@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentityattributevalue;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
@@ -80,7 +81,7 @@ public interface TrackedEntityAttributeValueService
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( TrackedEntityInstance instance );
+    List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( TrackedEntityInstance instance );
 
     /**
      * Retrieve {@link TrackedEntityAttributeValue} of a {@link TrackedEntityAttribute}
@@ -89,7 +90,7 @@ public interface TrackedEntityAttributeValueService
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( TrackedEntityAttribute attribute );
+    List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( TrackedEntityAttribute attribute );
 
     /**
      * Retrieve {@link TrackedEntityAttributeValue} of a instance list
@@ -98,7 +99,7 @@ public interface TrackedEntityAttributeValueService
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( Collection<TrackedEntityInstance> instances );
+    List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( Collection<TrackedEntityInstance> instances );
 
     /**
      * Search TrackedEntityAttributeValue objects by a TrackedEntityAttribute and a attribute
@@ -109,7 +110,7 @@ public interface TrackedEntityAttributeValueService
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> searchTrackedEntityAttributeValue( TrackedEntityAttribute attribute, String searchText );
+    List<TrackedEntityAttributeValue> searchTrackedEntityAttributeValue( TrackedEntityAttribute attribute, String searchText );
 
     /**
      * Remove all attribute values of destination instance and copy attribute
