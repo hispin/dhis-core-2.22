@@ -74,7 +74,6 @@ import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 @Transactional
 public class DefaultReportService
@@ -351,9 +350,9 @@ public class DefaultReportService
     }
 
     @Override
-    public Collection<Report> getReports( final Collection<Integer> identifiers )
+    public List<Report> getReports( final Collection<Integer> identifiers )
     {
-        Collection<Report> reports = getAllReports();
+        List<Report> reports = getAllReports();
 
         return identifiers == null ? reports : FilterUtils.filter( reports, new Filter<Report>()
         {
