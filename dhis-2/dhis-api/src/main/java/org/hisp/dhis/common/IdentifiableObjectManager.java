@@ -65,25 +65,25 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> T search( Class<T> clazz, String query );
 
-    <T extends IdentifiableObject> Collection<T> filter( Class<T> clazz, String query );
+    <T extends IdentifiableObject> List<T> filter( Class<T> clazz, String query );
 
-    <T extends IdentifiableObject> Collection<T> getAll( Class<T> clazz );
+    <T extends IdentifiableObject> List<T> getAll( Class<T> clazz );
 
-    <T extends IdentifiableObject> Collection<T> getAllByName( Class<T> clazz, String name );
+    <T extends IdentifiableObject> List<T> getAllByName( Class<T> clazz, String name );
 
-    <T extends IdentifiableObject> Collection<T> getAllByNameIgnoreCase( Class<T> clazz, String name );
+    <T extends IdentifiableObject> List<T> getAllByNameIgnoreCase( Class<T> clazz, String name );
 
-    <T extends IdentifiableObject> Collection<T> getAllSorted( Class<T> clazz );
+    <T extends IdentifiableObject> List<T> getAllSorted( Class<T> clazz );
 
-    <T extends IdentifiableObject> Collection<T> getAllSortedByLastUpdated( Class<T> clazz );
+    <T extends IdentifiableObject> List<T> getAllSortedByLastUpdated( Class<T> clazz );
 
     <T extends IdentifiableObject> List<T> getByUid( Class<T> clazz, Collection<String> uids );
 
     <T extends IdentifiableObject> List<T> getByUidOrdered( Class<T> clazz, List<String> uids );
     
-    <T extends IdentifiableObject> Collection<T> getLikeName( Class<T> clazz, String name );
+    <T extends IdentifiableObject> List<T> getLikeName( Class<T> clazz, String name );
 
-    <T extends NameableObject> Collection<T> getLikeShortName( Class<T> clazz, String shortName );
+    <T extends NameableObject> List<T> getLikeShortName( Class<T> clazz, String shortName );
 
     <T extends IdentifiableObject> List<T> getBetween( Class<T> clazz, int first, int max );
 
@@ -95,11 +95,11 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> List<T> getByLastUpdated( Class<T> clazz, Date lastUpdated );
 
-    <T extends IdentifiableObject> Collection<T> getByCreated( Class<T> clazz, Date created );
+    <T extends IdentifiableObject> List<T> getByCreated( Class<T> clazz, Date created );
 
-    <T extends IdentifiableObject> Collection<T> getByLastUpdatedSorted( Class<T> clazz, Date lastUpdated );
+    <T extends IdentifiableObject> List<T> getByLastUpdatedSorted( Class<T> clazz, Date lastUpdated );
 
-    <T extends IdentifiableObject> Collection<T> getByCreatedSorted( Class<T> clazz, Date created );
+    <T extends IdentifiableObject> List<T> getByCreatedSorted( Class<T> clazz, Date created );
 
     <T extends IdentifiableObject> Date getLastUpdated( Class<T> clazz );
 
@@ -153,7 +153,7 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> int getCountNoAcl( Class<T> clazz );
 
-    <T extends IdentifiableObject> Collection<T> getAllNoAcl( Class<T> clazz );
+    <T extends IdentifiableObject> List<T> getAllNoAcl( Class<T> clazz );
 
-    <T extends IdentifiableObject> Collection<T> getBetweenNoAcl( Class<T> clazz, int first, int max );
+    <T extends IdentifiableObject> List<T> getBetweenNoAcl( Class<T> clazz, int first, int max );
 }

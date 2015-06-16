@@ -28,14 +28,13 @@ package org.hisp.dhis.dd.action.category;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.List;
+
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.paging.ActionPagingSupport;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author Chau Thu Tran

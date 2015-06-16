@@ -30,7 +30,6 @@ package org.hisp.dhis.oum.action.organisationunitgroupset;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
