@@ -32,7 +32,7 @@ if( dhis2.ec.memoryOnly ) {
 dhis2.ec.store = new dhis2.storage.Store({
     name: 'dhis2ec',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'ouLevels']
+    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'ouLevels']
 });
 
 (function($) {
@@ -154,6 +154,8 @@ function downloadMetaData(){
     promise = promise.then( getProgramValidations );
     promise = promise.then( getMetaProgramRules );
     promise = promise.then( getProgramRules );
+    promise = promise.then( getMetaProgramRuleVariables );
+    promise = promise.then( getProgramRuleVariables );
     promise = promise.then( getOptionSets );    
     promise.done( function() {    
         //Enable ou selection after meta-data has downloaded
@@ -486,6 +488,16 @@ function getMetaProgramRules( programs )
 function getProgramRules( programRules )
 {
     return getD2Objects( programRules, 'programRules', '../api/programRules', 'fields=id,name,condition,description,program[id],programRuleActions[id,content,programRuleActionType,programStageSection[id,name],dataElement[id]]');
+}
+
+function getMetaProgramRuleVariables( programs )
+{    
+    return getD2MetaObject(programs, 'programRuleVariables', '../api/programRuleVariables.json', 'paging=false&fields=id,program[id]');
+}
+
+function getProgramRuleVariables( programRuleVariables )
+{
+    return getD2Objects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,name,program[id],dataElement[id]');
 }
 
 function getD2MetaObject( programs, objNames, url, filter )
