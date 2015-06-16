@@ -30,7 +30,6 @@ package org.hisp.dhis.dd.action.categoryoptiongroupset;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,7 +71,7 @@ public class GetCategoryOptionGroupSetListAction
         this.key = key;
     }
 
-    private List<CategoryOptionGroupSet> categoryOptionGroupSets = new ArrayList<>();
+    private List<CategoryOptionGroupSet> categoryOptionGroupSets;
 
     public List<CategoryOptionGroupSet> getCategoryOptionGroupSets()
     {
@@ -91,17 +90,15 @@ public class GetCategoryOptionGroupSetListAction
         {
             this.paging = createPaging( dataElementCategoryService.getCategoryOptionGroupSetCountByName( key ) );
 
-            categoryOptionGroupSets = new ArrayList<>(
-                dataElementCategoryService.getCategoryOptionGroupSetsBetweenByName( paging.getStartPos(),
-                    paging.getPageSize(), key ) );
+            categoryOptionGroupSets = dataElementCategoryService.getCategoryOptionGroupSetsBetweenByName( paging.getStartPos(),
+                    paging.getPageSize(), key );
         }
         else
         {
             this.paging = createPaging( dataElementCategoryService.getCategoryOptionGroupSetCount() );
 
-            categoryOptionGroupSets = new ArrayList<>(
-                dataElementCategoryService.getCategoryOptionGroupSetsBetween( paging.getStartPos(),
-                    paging.getPageSize() ) );
+            categoryOptionGroupSets = dataElementCategoryService.getCategoryOptionGroupSetsBetween( paging.getStartPos(),
+                    paging.getPageSize() );
         }
 
         Collections.sort( categoryOptionGroupSets, IdentifiableObjectNameComparator.INSTANCE );

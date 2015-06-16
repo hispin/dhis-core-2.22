@@ -28,7 +28,6 @@ package org.hisp.dhis.dd.action.categorycombo;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,8 +73,7 @@ public class GetDataElementCategoryListAction
     @Override
     public String execute()
     {
-        dataElementCategories = new ArrayList<>( dataElementCategoryService
-            .getAllDataElementCategories() );
+        dataElementCategories = dataElementCategoryService.getAllDataElementCategories();
 
         Collections.sort( dataElementCategories, IdentifiableObjectNameComparator.INSTANCE );
 

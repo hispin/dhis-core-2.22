@@ -30,7 +30,6 @@ package org.hisp.dhis.dd.action.indicator;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,13 +93,13 @@ public class GetIndicatorListAction
         {
             this.paging = createPaging( indicatorService.getIndicatorCountByName( key ) );
             
-            indicators = new ArrayList<>( indicatorService.getIndicatorsBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            indicators = indicatorService.getIndicatorsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( indicatorService.getIndicatorCount() );
             
-            indicators = new ArrayList<>( indicatorService.getIndicatorsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            indicators = indicatorService.getIndicatorsBetween( paging.getStartPos(), paging.getPageSize() );
         }
         
         Collections.sort( indicators, new IdentifiableObjectNameComparator() );
