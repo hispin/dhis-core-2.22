@@ -31,7 +31,6 @@ package org.hisp.dhis.dd.action.categoryoptiongroup;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

@@ -29,7 +29,6 @@ package org.hisp.dhis.attribute;
  */
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
