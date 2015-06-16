@@ -34,8 +34,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -180,7 +180,7 @@ public class CompleteDataSetRegistrationServiceTest
         completeDataSetRegistrationService.saveCompleteDataSetRegistration( registrationA );
         completeDataSetRegistrationService.saveCompleteDataSetRegistration( registrationB );
 
-        Collection<CompleteDataSetRegistration> registrations = completeDataSetRegistrationService
+        List<CompleteDataSetRegistration> registrations = completeDataSetRegistrationService
             .getAllCompleteDataSetRegistrations();
 
         assertEquals( 2, registrations.size() );
@@ -209,20 +209,20 @@ public class CompleteDataSetRegistrationServiceTest
         completeDataSetRegistrationService.saveCompleteDataSetRegistration( registrationG );
         completeDataSetRegistrationService.saveCompleteDataSetRegistration( registrationH );
 
-        Collection<DataSet> dataSets = new ArrayList<>();
+        List<DataSet> dataSets = new ArrayList<>();
 
         dataSets.add( dataSetB );
 
-        Collection<OrganisationUnit> sources = new ArrayList<>();
+        List<OrganisationUnit> sources = new ArrayList<>();
 
         sources.add( sourceA );
         sources.add( sourceB );
 
-        Collection<Period> periods = new ArrayList<>();
+        List<Period> periods = new ArrayList<>();
 
         periods.add( periodA );
 
-        Collection<CompleteDataSetRegistration> registrations = completeDataSetRegistrationService
+        List<CompleteDataSetRegistration> registrations = completeDataSetRegistrationService
             .getCompleteDataSetRegistrations( dataSets, sources, periods );
 
         assertNotNull( registrations );

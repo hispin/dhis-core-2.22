@@ -31,8 +31,6 @@ package org.hisp.dhis.option;
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
@@ -122,7 +120,7 @@ public class DefaultOptionService
     }
 
     @Override
-    public Collection<OptionSet> getAllOptionSets()
+    public List<OptionSet> getAllOptionSets()
     {
         return i18n( i18nService, optionSetStore.getAll() );
     }
@@ -134,15 +132,15 @@ public class DefaultOptionService
     }
 
     @Override
-    public Collection<OptionSet> getOptionSetsBetweenByName( String name, int first, int max )
+    public List<OptionSet> getOptionSetsBetweenByName( String name, int first, int max )
     {
-        return new HashSet<>( i18n( i18nService, optionSetStore.getAllLikeName( name, first, max ) ) );
+        return new ArrayList<>( i18n( i18nService, optionSetStore.getAllLikeName( name, first, max ) ) );
     }
 
     @Override
-    public Collection<OptionSet> getOptionSetsBetween( int first, int max )
+    public List<OptionSet> getOptionSetsBetween( int first, int max )
     {
-        return new HashSet<>( i18n( i18nService, optionSetStore.getAllOrderedName( first, max ) ) );
+        return new ArrayList<>( i18n( i18nService, optionSetStore.getAllOrderedName( first, max ) ) );
     }
 
     @Override
@@ -217,7 +215,7 @@ public class DefaultOptionService
     }
     
     @Override
-    public Collection<Option> getOptions( OptionSet optionSet, String option, Integer min, Integer max )
+    public List<Option> getOptions( OptionSet optionSet, String option, Integer min, Integer max )
     {
         return i18n( i18nService, optionStore.getOptions( optionSet, option, min, max ) );
     }

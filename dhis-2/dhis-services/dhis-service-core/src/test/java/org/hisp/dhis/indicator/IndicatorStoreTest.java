@@ -28,16 +28,19 @@ package org.hisp.dhis.indicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Collection;
-
-import javax.annotation.Resource;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
@@ -137,7 +140,7 @@ public class IndicatorStoreTest
         indicatorTypeStore.save( typeA );
         indicatorTypeStore.save( typeB );
 
-        Collection<IndicatorType> types = indicatorTypeStore.getAll();
+        List<IndicatorType> types = indicatorTypeStore.getAll();
 
         assertEquals( types.size(), 2 );
         assertTrue( types.contains( typeA ) );
@@ -255,7 +258,7 @@ public class IndicatorStoreTest
         indicatorStore.save( indicatorA );
         indicatorStore.save( indicatorB );
 
-        Collection<Indicator> indicators = indicatorStore.getAll();
+        List<Indicator> indicators = indicatorStore.getAll();
 
         assertEquals( indicators.size(), 2 );
         assertTrue( indicators.contains( indicatorA ) );

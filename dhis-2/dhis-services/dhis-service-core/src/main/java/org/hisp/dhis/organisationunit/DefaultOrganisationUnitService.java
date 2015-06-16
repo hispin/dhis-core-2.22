@@ -183,25 +183,25 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getAllOrganisationUnits()
+    public List<OrganisationUnit> getAllOrganisationUnits()
     {
         return i18n( i18nService, organisationUnitStore.getAll() );
     }
 
     @Override
-    public Collection<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean status )
+    public List<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean status )
     {
         return i18n( i18nService, organisationUnitStore.getAllOrganisationUnitsByStatus( status ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated )
+    public List<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated )
     {
         return i18n( i18nService,  organisationUnitStore.getAllOrganisationUnitsByLastUpdated( lastUpdated ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean status, Date lastUpdated )
+    public List<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean status, Date lastUpdated )
     {
         return i18n( i18nService, organisationUnitStore.getAllOrganisationUnitsByStatusLastUpdated( status, lastUpdated ) );
     }
@@ -221,9 +221,9 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnits( final Collection<Integer> identifiers )
+    public List<OrganisationUnit> getOrganisationUnits( final Collection<Integer> identifiers )
     {
-        Collection<OrganisationUnit> objects = getAllOrganisationUnits();
+        List<OrganisationUnit> objects = getAllOrganisationUnits();
 
         return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<OrganisationUnit>()
         {
@@ -266,25 +266,25 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitByNameIgnoreCase( String name )
+    public List<OrganisationUnit> getOrganisationUnitByNameIgnoreCase( String name )
     {
         return organisationUnitStore.getAllEqNameIgnoreCase( name );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsByNames( Collection<String> names )
+    public List<OrganisationUnit> getOrganisationUnitsByNames( Collection<String> names )
     {
         return i18n( i18nService, organisationUnitStore.getByNames( names ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsByCodes( Collection<String> codes )
+    public List<OrganisationUnit> getOrganisationUnitsByCodes( Collection<String> codes )
     {
         return i18n( i18nService, organisationUnitStore.getByCodes( codes ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getRootOrganisationUnits()
+    public List<OrganisationUnit> getRootOrganisationUnits()
     {
         return i18n( i18nService, organisationUnitStore.getRootOrganisationUnits());
     }
@@ -302,9 +302,9 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnits( Collection<OrganisationUnitGroup> groups, Collection<OrganisationUnit> parents )
+    public List<OrganisationUnit> getOrganisationUnits( Collection<OrganisationUnitGroup> groups, Collection<OrganisationUnit> parents )
     {
-        Set<OrganisationUnit> members = new HashSet<>();
+        List<OrganisationUnit> members = new ArrayList<>();
 
         for ( OrganisationUnitGroup group : groups )
         {
@@ -322,15 +322,15 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> parentUids )
+    public List<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> parentUids )
     {
         return getOrganisationUnitsWithChildren( parentUids, null );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> parentUids, Integer maxLevels )
+    public List<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> parentUids, Integer maxLevels )
     {
-        Set<OrganisationUnit> units = new HashSet<>();
+        List<OrganisationUnit> units = new ArrayList<>();
 
         for ( String uid : parentUids )
         {
@@ -341,13 +341,13 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitWithChildren( String uid )
+    public List<OrganisationUnit> getOrganisationUnitWithChildren( String uid )
     {
         return getOrganisationUnitWithChildren( uid, null );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitWithChildren( String uid, Integer maxLevels )
+    public List<OrganisationUnit> getOrganisationUnitWithChildren( String uid, Integer maxLevels )
     {
         OrganisationUnit unit = getOrganisationUnit( uid );
         
@@ -357,24 +357,24 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitWithChildren( int id )
+    public List<OrganisationUnit> getOrganisationUnitWithChildren( int id )
     {
         return getOrganisationUnitWithChildren( id, null );
     }
     
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitWithChildren( int id, Integer maxLevels )
+    public List<OrganisationUnit> getOrganisationUnitWithChildren( int id, Integer maxLevels )
     {
         OrganisationUnit organisationUnit = getOrganisationUnit( id );
 
         if ( organisationUnit == null )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
         
         if ( maxLevels != null && maxLevels <= 0 )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
 
         List<OrganisationUnit> result = new ArrayList<>();
@@ -447,9 +447,9 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsAtLevel( int level )
+    public List<OrganisationUnit> getOrganisationUnitsAtLevel( int level )
     {
-        Collection<OrganisationUnit> roots = getRootOrganisationUnits();
+        List<OrganisationUnit> roots = getRootOrganisationUnits();
 
         if ( level == 1 )
         {
@@ -460,16 +460,16 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsAtLevel( int level, OrganisationUnit parent )
+    public List<OrganisationUnit> getOrganisationUnitsAtLevel( int level, OrganisationUnit parent )
     {
-        Set<OrganisationUnit> parents = new HashSet<>();
+        List<OrganisationUnit> parents = new ArrayList<>();
         parents.add( parent );
 
         return getOrganisationUnitsAtLevel( level, parent != null ? parents : null );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsAtLevel( int level, Collection<OrganisationUnit> parents )
+    public List<OrganisationUnit> getOrganisationUnitsAtLevel( int level, Collection<OrganisationUnit> parents )
     {
         Set<Integer> levels = new HashSet<>();
         levels.add( level );
@@ -478,14 +478,14 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsAtLevels( Collection<Integer> levels, Collection<OrganisationUnit> parents )
+    public List<OrganisationUnit> getOrganisationUnitsAtLevels( Collection<Integer> levels, Collection<OrganisationUnit> parents )
     {
         if ( parents == null || parents.isEmpty() )
         {
             parents = new HashSet<>( getRootOrganisationUnits() );
         }
 
-        Set<OrganisationUnit> result = new HashSet<>();
+        List<OrganisationUnit> result = new ArrayList<>();
 
         for ( Integer level : levels )
         {
@@ -525,7 +525,7 @@ public class DefaultOrganisationUnitService
      * the current level.
      */
     private void addOrganisationUnitChildrenAtLevel( OrganisationUnit parent, int currentLevel, int targetLevel,
-        Set<OrganisationUnit> result )
+        List<OrganisationUnit> result )
     {
         if ( currentLevel == targetLevel )
         {
@@ -586,20 +586,20 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsWithoutGroups()
+    public List<OrganisationUnit> getOrganisationUnitsWithoutGroups()
     {
         return i18n( i18nService, organisationUnitStore.getOrganisationUnitsWithoutGroups() );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query,
+    public List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query,
         Collection<OrganisationUnitGroup> groups, boolean limit )
     {
         return i18n( i18nService, organisationUnitStore.getOrganisationUnitsByNameAndGroups( query, groups, limit ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String name,
+    public List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String name,
         Collection<OrganisationUnitGroup> groups, OrganisationUnit parent, boolean limit )
     {
         // Can only limit in query if parent is not set and we get all units
@@ -611,7 +611,7 @@ public class DefaultOrganisationUnitService
 
         if ( parent == null )
         {
-            return result;
+            return new ArrayList<OrganisationUnit>(result);
         }
 
         final Set<OrganisationUnit> subTree = new HashSet<>( getOrganisationUnitWithChildren( parent.getId() ) );
@@ -709,31 +709,31 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsBetween( int first, int max )
+    public List<OrganisationUnit> getOrganisationUnitsBetween( int first, int max )
     {
         return i18n( i18nService,  organisationUnitStore.getAllOrderedName( first, max ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsBetweenByName( String name, int first, int max )
+    public List<OrganisationUnit> getOrganisationUnitsBetweenByName( String name, int first, int max )
     {
         return i18n( i18nService, organisationUnitStore.getAllLikeName( name, first, max ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsBetweenByStatus( boolean status, int first, int max )
+    public List<OrganisationUnit> getOrganisationUnitsBetweenByStatus( boolean status, int first, int max )
     {
         return i18n( i18nService, organisationUnitStore.getBetweenByStatus( status, first, max ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsBetweenByLastUpdated( Date lastUpdated, int first, int max )
+    public List<OrganisationUnit> getOrganisationUnitsBetweenByLastUpdated( Date lastUpdated, int first, int max )
     {
         return i18n( i18nService, organisationUnitStore.getBetweenByLastUpdated( lastUpdated, first, max ) );
     }
 
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitsBetweenByStatusLastUpdated( boolean status,
+    public List<OrganisationUnit> getOrganisationUnitsBetweenByStatusLastUpdated( boolean status,
         Date lastUpdated, int first, int max )
     {
         return i18n( i18nService, organisationUnitStore.getBetweenByStatusLastUpdated( status, lastUpdated, first, max ));
@@ -845,9 +845,9 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Collection<OrganisationUnitLevel> getOrganisationUnitLevels( final Collection<Integer> identifiers )
+    public List<OrganisationUnitLevel> getOrganisationUnitLevels( final Collection<Integer> identifiers )
     {
-        Collection<OrganisationUnitLevel> objects = getOrganisationUnitLevels();
+        List<OrganisationUnitLevel> objects = getOrganisationUnitLevels();
 
         return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<OrganisationUnitLevel>()
         {
@@ -997,10 +997,10 @@ public class DefaultOrganisationUnitService
      * Get all the Organisation Units within the distance of a coordinate.
      */
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitWithinDistance( double longitude, double latitude,
+    public List<OrganisationUnit> getOrganisationUnitWithinDistance( double longitude, double latitude,
         double distance )
     {
-        Collection<OrganisationUnit> objects = organisationUnitStore.getWithinCoordinateArea( GeoUtils.getBoxShape(
+        List<OrganisationUnit> objects = organisationUnitStore.getWithinCoordinateArea( GeoUtils.getBoxShape(
             longitude, latitude, distance ) );
 
         // Go through the list and remove the ones located outside radius
@@ -1032,10 +1032,10 @@ public class DefaultOrganisationUnitService
      * Get lowest level/target level Organisation Units that includes the coordinates.
      */
     @Override
-    public Collection<OrganisationUnit> getOrganisationUnitByCoordinate( double longitude, double latitude,
+    public List<OrganisationUnit> getOrganisationUnitByCoordinate( double longitude, double latitude,
         String topOrgUnitUid, Integer targetLevel )
     {
-        Collection<OrganisationUnit> orgUnits = new ArrayList<>();
+        List<OrganisationUnit> orgUnits = new ArrayList<>();
 
         if ( GeoUtils.checkGeoJsonPointValid( longitude, latitude ) )
         {

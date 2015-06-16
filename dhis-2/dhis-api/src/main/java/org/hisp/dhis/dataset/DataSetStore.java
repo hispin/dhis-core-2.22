@@ -29,6 +29,7 @@ package org.hisp.dhis.dataset;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericNameableObjectStore;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -51,16 +52,16 @@ public interface DataSetStore
      * Gets all DataSets associated with the given PeriodType.
      * 
      * @param periodType the PeriodType.
-     * @return a collection of DataSets.
+     * @return a list of DataSets.
      */
-    Collection<DataSet> getDataSetsByPeriodType( PeriodType periodType );
+    List<DataSet> getDataSetsByPeriodType( PeriodType periodType );
 
     /**
      * Returns all DataSets that can be collected through mobile.
      */
-    Collection<DataSet> getDataSetsForMobile( OrganisationUnit source );
+    List<DataSet> getDataSetsForMobile( OrganisationUnit source );
 
-    Collection<DataSet> getDataSetsForMobile();
+    List<DataSet> getDataSetsForMobile();
 
-    Collection<DataSet> getDataSetsBySources( Collection<OrganisationUnit> sources );
+    List<DataSet> getDataSetsBySources( Collection<OrganisationUnit> sources );
 }

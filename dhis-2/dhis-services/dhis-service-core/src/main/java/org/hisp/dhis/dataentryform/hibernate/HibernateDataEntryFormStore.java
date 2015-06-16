@@ -28,7 +28,6 @@ package org.hisp.dhis.dataentryform.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -76,7 +75,7 @@ public class HibernateDataEntryFormStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds )
+    public List<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds )
     {
         Session session = sessionFactory.getCurrentSession();
 
@@ -89,7 +88,7 @@ public class HibernateDataEntryFormStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds )
+    public List<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds )
     {
         Session session = sessionFactory.getCurrentSession();
 

@@ -28,10 +28,10 @@ package org.hisp.dhis.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hisp.dhis.common.GenericStore;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
 
 @Transactional
 public class DefaultUserGroupAccessService implements UserGroupAccessService
@@ -70,7 +70,7 @@ public class DefaultUserGroupAccessService implements UserGroupAccessService
     }
 
     @Override
-    public Collection<UserGroupAccess> getAllUserGroupAccesses()
+    public List<UserGroupAccess> getAllUserGroupAccesses()
     {
         return userGroupAccessStore.getAll();
     }

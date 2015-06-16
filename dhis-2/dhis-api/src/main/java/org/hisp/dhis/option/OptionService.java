@@ -28,7 +28,6 @@ package org.hisp.dhis.option;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -56,7 +55,7 @@ public interface OptionService
 
     void deleteOptionSet( OptionSet optionSet );
 
-    Collection<OptionSet> getAllOptionSets();
+    List<OptionSet> getAllOptionSets();
 
     List<Option> getOptions( String optionSetUid, String key, Integer max );
     
@@ -64,9 +63,9 @@ public interface OptionService
 
     Integer getOptionSetsCountByName( String name );
 
-    Collection<OptionSet> getOptionSetsBetweenByName( String name, int first, int max );
+    List<OptionSet> getOptionSetsBetweenByName( String name, int first, int max );
 
-    Collection<OptionSet> getOptionSetsBetween( int first, int max );
+    List<OptionSet> getOptionSetsBetween( int first, int max );
     
     Integer getOptionSetCount();
     
@@ -86,5 +85,5 @@ public interface OptionService
 
     Option getOptionByCode( OptionSet optionSet, String code );
     
-    Collection<Option> getOptions( OptionSet optionSet, String option, Integer min, Integer max );
+    List<Option> getOptions( OptionSet optionSet, String option, Integer min, Integer max );
 }

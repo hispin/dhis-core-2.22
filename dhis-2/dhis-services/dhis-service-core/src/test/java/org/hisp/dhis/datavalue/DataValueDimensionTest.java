@@ -34,7 +34,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.hisp.dhis.DhisSpringTest;
@@ -146,7 +146,7 @@ public class DataValueDimensionTest
     @Test
     public void testGetDimensions()
     {
-        Collection<DataElementCategoryOption> categoryOptions = new ArrayList<>();
+        List<DataElementCategoryOption> categoryOptions = new ArrayList<>();
         categoryOptions.add( male );
         categoryOptions.add( under15 );
         
@@ -160,7 +160,7 @@ public class DataValueDimensionTest
     @Test
     public void testGetByCategoryOptionCombos()
     {
-        Collection<DataElementCategoryOption> categoryOptions = new ArrayList<>();
+        List<DataElementCategoryOption> categoryOptions = new ArrayList<>();
         categoryOptions.add( male );
         categoryOptions.add( under15 );
         

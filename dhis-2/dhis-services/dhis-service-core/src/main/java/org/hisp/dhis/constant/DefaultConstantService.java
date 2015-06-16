@@ -28,8 +28,8 @@ package org.hisp.dhis.constant;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.hisp.dhis.common.GenericNameableObjectStore;
@@ -109,7 +109,7 @@ public class DefaultConstantService
 
     
     @Override
-    public Collection<Constant> getAllConstants()
+    public List<Constant> getAllConstants()
     {
         return constantStore.getAll();
     }
@@ -157,13 +157,13 @@ public class DefaultConstantService
     }
 
     @Override
-    public Collection<Constant> getConstantsBetween( int first, int max )
+    public List<Constant> getConstantsBetween( int first, int max )
     {
         return constantStore.getAllOrderedName( first, max );
     }
 
     @Override
-    public Collection<Constant> getConstantsBetweenByName( String name, int first, int max )
+    public List<Constant> getConstantsBetweenByName( String name, int first, int max )
     {
         return constantStore.getAllLikeName( name, first, max );
     }

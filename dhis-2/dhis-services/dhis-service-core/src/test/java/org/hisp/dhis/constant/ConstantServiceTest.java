@@ -34,7 +34,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
@@ -152,7 +152,7 @@ public class ConstantServiceTest
         constantService.saveConstant( constantB );
         constantService.saveConstant( constantD );
 
-        Collection<Constant> constants = constantService.getAllConstants();
+        List<Constant> constants = constantService.getAllConstants();
 
         assertEquals( 3, constants.size() );
         assertTrue( constants.contains( constantA ) );
@@ -225,7 +225,7 @@ public class ConstantServiceTest
         constantService.saveConstant( constantD );
         constantService.saveConstant( constantE );
 
-        Collection<Constant> results = constantService.getConstantsBetween( 1, 3 );
+        List<Constant> results = constantService.getConstantsBetween( 1, 3 );
 
         assertTrue( !results.contains( constantA ) );
         assertTrue( results.contains( constantB ) );
@@ -243,7 +243,7 @@ public class ConstantServiceTest
         Constant constantD = createConstant( 'D', 23.11d );
         Constant constantE = createConstant( 'E', 2.1d );
 
-        Collection<Constant> constantCollection = new ArrayList<>();
+        List<Constant> constantCollection = new ArrayList<>();
 
         constantCollection.add( constantB );
         constantCollection.add( constantC );

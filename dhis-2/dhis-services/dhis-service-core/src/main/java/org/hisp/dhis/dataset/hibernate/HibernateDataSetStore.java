@@ -31,6 +31,7 @@ package org.hisp.dhis.dataset.hibernate;
 import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
@@ -84,7 +85,7 @@ public class HibernateDataSetStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataSet> getDataSetsByPeriodType( PeriodType periodType )
+    public List<DataSet> getDataSetsByPeriodType( PeriodType periodType )
     {
         periodType = periodService.reloadPeriodType( periodType );
 
@@ -93,7 +94,7 @@ public class HibernateDataSetStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataSet> getDataSetsBySources( Collection<OrganisationUnit> sources )
+    public List<DataSet> getDataSetsBySources( Collection<OrganisationUnit> sources )
     {
         String hql = "select distinct d from DataSet d join d.sources s where s.id in (:ids)";
 
@@ -102,7 +103,7 @@ public class HibernateDataSetStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataSet> getDataSetsForMobile( OrganisationUnit source )
+    public List<DataSet> getDataSetsForMobile( OrganisationUnit source )
     {
         String hql = "from DataSet d where :source in elements(d.sources) and d.mobile = true";
         
@@ -111,7 +112,7 @@ public class HibernateDataSetStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataSet> getDataSetsForMobile()
+    public List<DataSet> getDataSetsForMobile()
     {
         String hql = "from DataSet d where d.mobile = true";
         

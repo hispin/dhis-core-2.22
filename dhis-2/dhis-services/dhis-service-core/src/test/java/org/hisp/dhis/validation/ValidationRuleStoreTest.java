@@ -35,8 +35,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -209,7 +209,7 @@ public class ValidationRuleStoreTest
         validationRuleStore.save( validationRuleA );
         validationRuleStore.save( validationRuleB );
 
-        Collection<ValidationRule> rules = validationRuleStore.getAll();
+        List<ValidationRule> rules = validationRuleStore.getAll();
 
         assertTrue( rules.size() == 2 );
         assertTrue( rules.contains( validationRuleA ) );

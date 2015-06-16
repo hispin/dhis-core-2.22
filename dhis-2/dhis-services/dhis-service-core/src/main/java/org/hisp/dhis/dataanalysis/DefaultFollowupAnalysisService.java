@@ -29,7 +29,7 @@ package org.hisp.dhis.dataanalysis;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.datavalue.DeflatedDataValue;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -56,7 +56,7 @@ public class DefaultFollowupAnalysisService
     // -------------------------------------------------------------------------
 
     @Override
-    public Collection<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit )
+    public List<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit )
     {
         if( organisationUnit == null || limit < 1 )
         {

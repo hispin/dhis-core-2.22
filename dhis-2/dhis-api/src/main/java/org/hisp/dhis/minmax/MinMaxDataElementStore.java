@@ -29,6 +29,7 @@ package org.hisp.dhis.minmax;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.dataelement.DataElement;
@@ -46,9 +47,9 @@ public interface MinMaxDataElementStore
 
     MinMaxDataElement get( OrganisationUnit source, DataElement dataElement, DataElementCategoryOptionCombo optionCombo );
     
-    Collection<MinMaxDataElement> get( OrganisationUnit source, DataElement dataElement );  
+    List<MinMaxDataElement> get( OrganisationUnit source, DataElement dataElement );  
 
-    Collection<MinMaxDataElement> get( OrganisationUnit source, Collection<DataElement> dataElements );
+    List<MinMaxDataElement> get( OrganisationUnit source, Collection<DataElement> dataElements );
     
     void delete( OrganisationUnit organisationUnit );
     

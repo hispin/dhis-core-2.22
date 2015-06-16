@@ -34,7 +34,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -178,7 +177,7 @@ public class DataElementCategoryComboServiceTest
         categoryService.addDataElementCategoryCombo( categoryComboB );
         categoryService.addDataElementCategoryCombo( categoryComboC );
         
-        Collection<DataElementCategoryCombo> categoryCombos = categoryService.getAllDataElementCategoryCombos();
+        List<DataElementCategoryCombo> categoryCombos = categoryService.getAllDataElementCategoryCombos();
         
         assertEquals( 4, categoryCombos.size() ); // Including default
         assertTrue( categoryCombos.contains( categoryComboA ) );

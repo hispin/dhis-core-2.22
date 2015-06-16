@@ -28,7 +28,6 @@ package org.hisp.dhis.i18n;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -63,9 +62,9 @@ public interface I18nLocaleService
     
     int getI18nLocaleCountByName( String name );
     
-    Collection<I18nLocale> getI18nLocalesBetween( int first, int max );
+    List<I18nLocale> getI18nLocalesBetween( int first, int max );
     
-    Collection<I18nLocale> getI18nLocalesBetweenLikeName( String name, int first, int max );
+    List<I18nLocale> getI18nLocalesBetweenLikeName( String name, int first, int max );
     
     List<Locale> getAllLocales();
 

@@ -31,7 +31,6 @@ package org.hisp.dhis.dataanalysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -193,7 +192,7 @@ public class MinMaxOutlierAnalysisServiceTest
         minMaxDataElement = new MinMaxDataElement( organisationUnitA, dataElementA, categoryOptionCombo, -40, 40, false );
         minMaxDataElementService.addMinMaxDataElement( minMaxDataElement );
                 
-        Collection<Period> periods = new ArrayList<>();
+        List<Period> periods = new ArrayList<>();
         periods.add( periodI );
         periods.add( periodJ );
         periods.add( periodA );

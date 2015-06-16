@@ -152,21 +152,21 @@ public class DefaultDataElementOperandService
     }
 
     @Override
-    public Collection<DataElementOperand> getAllDataElementOperands()
+    public List<DataElementOperand> getAllDataElementOperands()
     {
         return dataElementOperandStore.getAllOrderedName();
     }
 
     @Override
-    public Collection<DataElementOperand> getAllDataElementOperands( int first, int max )
+    public List<DataElementOperand> getAllDataElementOperands( int first, int max )
     {
         return dataElementOperandStore.getAllOrderedName( first, max );
     }
 
     @Override
-    public Collection<DataElementOperand> getDataElementOperandByDataElements( Collection<DataElement> dataElements )
+    public List<DataElementOperand> getDataElementOperandByDataElements( Collection<DataElement> dataElements )
     {
-        Collection<DataElementOperand> operands = new ArrayList<>();
+        List<DataElementOperand> operands = new ArrayList<>();
 
         for ( DataElementOperand operand : getAllDataElementOperands() )
         {
@@ -180,10 +180,10 @@ public class DefaultDataElementOperandService
     }
 
     @Override
-    public Collection<DataElementOperand> getDataElementOperandByOptionCombos(
+    public List<DataElementOperand> getDataElementOperandByOptionCombos(
         Collection<DataElementCategoryOptionCombo> optionCombos )
     {
-        Collection<DataElementOperand> operands = new ArrayList<>();
+        List<DataElementOperand> operands = new ArrayList<>();
 
         for ( DataElementOperand operand : getAllDataElementOperands() )
         {
@@ -197,7 +197,7 @@ public class DefaultDataElementOperandService
     }
 
     @Override
-    public Collection<DataElementOperand> getDataElementOperandByDataElementGroup( DataElementGroup dataElementGroup )
+    public List<DataElementOperand> getDataElementOperandByDataElementGroup( DataElementGroup dataElementGroup )
     {
         return dataElementOperandStore.getByDataElementGroup( dataElementGroup );
     }

@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -91,7 +92,7 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<OrganisationUnit> getByNames( Collection<String> names )
+    public List<OrganisationUnit> getByNames( Collection<String> names )
     {
         if ( names == null || names.isEmpty() )
         {
@@ -106,7 +107,7 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<OrganisationUnit> getByCodes( Collection<String> codes )
+    public List<OrganisationUnit> getByCodes( Collection<String> codes )
     {
         if ( codes == null || codes.isEmpty() )
         {
@@ -121,7 +122,7 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean active )
+    public List<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean active )
     {
         Query query = getQuery( "from OrganisationUnit o where o.active is :active" );
         query.setParameter( "active", active );
@@ -130,14 +131,14 @@ public class HibernateOrganisationUnitStore
     }
 
     @Override
-    public Collection<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated )
+    public List<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated )
     {
         return getAllGeLastUpdated( lastUpdated );
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean active, Date lastUpdated )
+    public List<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean active, Date lastUpdated )
     {
         return getCriteria().add( Restrictions.ge( "lastUpdated", lastUpdated ) ).add( Restrictions.eq( "active", active ) ).list();
     }
@@ -150,21 +151,21 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getRootOrganisationUnits()
+    public List<OrganisationUnit> getRootOrganisationUnits()
     {
         return getQuery( "from OrganisationUnit o where o.parent is null" ).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getOrganisationUnitsWithoutGroups()
+    public List<OrganisationUnit> getOrganisationUnitsWithoutGroups()
     {
         return getQuery( "from OrganisationUnit o where o.groups.size = 0" ).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query,
+    public List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query,
         Collection<OrganisationUnitGroup> groups, boolean limit )
     {
         boolean first = true;
@@ -264,7 +265,7 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getBetweenByStatus( boolean status, int first, int max )
+    public List<OrganisationUnit> getBetweenByStatus( boolean status, int first, int max )
     {
         Criteria criteria = getCriteria().add( Restrictions.eq( "active", status ) );
         criteria.setFirstResult( first );
@@ -275,7 +276,7 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getBetweenByLastUpdated( Date lastUpdated, int first, int max )
+    public List<OrganisationUnit> getBetweenByLastUpdated( Date lastUpdated, int first, int max )
     {
         Criteria criteria = getCriteria().add( Restrictions.ge( "lastUpdated", lastUpdated ) );
         criteria.setFirstResult( first );
@@ -286,7 +287,7 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getBetweenByStatusLastUpdated( boolean status, Date lastUpdated, int first, int max )
+    public List<OrganisationUnit> getBetweenByStatusLastUpdated( boolean status, Date lastUpdated, int first, int max )
     {
         Criteria criteria = getCriteria().add( Restrictions.ge( "lastUpdated", lastUpdated ) ).add( Restrictions.eq( "active", status ) );
         criteria.setFirstResult( first );
@@ -297,7 +298,7 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnit> getWithinCoordinateArea( double[] box )
+    public List<OrganisationUnit> getWithinCoordinateArea( double[] box )
     {
         return getQuery( "from OrganisationUnit o"
             + " where o.featureType='Point'"

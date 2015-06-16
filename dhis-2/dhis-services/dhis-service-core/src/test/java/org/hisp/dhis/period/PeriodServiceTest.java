@@ -34,10 +34,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
@@ -60,7 +59,7 @@ public class PeriodServiceTest
     @Test
     public void testAddPeriod()
     {
-        Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -97,7 +96,7 @@ public class PeriodServiceTest
     @Test
     public void testDeleteAndGetPeriod()
     {
-        Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -144,7 +143,7 @@ public class PeriodServiceTest
     @Test
     public void testGetPeriod()
     {
-        Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -215,7 +214,7 @@ public class PeriodServiceTest
         periodService.addPeriod( periodB );
         periodService.addPeriod( periodC );
         
-        Collection<Period> periods = periodService.getAllPeriods();
+        List<Period> periods = periodService.getAllPeriods();
         
         assertNotNull( periods );
         assertEquals( 3, periods.size() );
@@ -227,7 +226,7 @@ public class PeriodServiceTest
     @Test
     public void testGetPeriodsBetweenDates()
     {
-        Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -241,7 +240,7 @@ public class PeriodServiceTest
         periodService.addPeriod( periodC );
         periodService.addPeriod( periodD );
 
-        Collection<Period> periods = periodService.getPeriodsBetweenDates( getDay( 1 ), getDay( 1 ) );
+        List<Period> periods = periodService.getPeriodsBetweenDates( getDay( 1 ), getDay( 1 ) );
         assertNotNull( periods );
         assertEquals( 0, periods.size() );
 
@@ -335,11 +334,11 @@ public class PeriodServiceTest
         periodService.addPeriod( periodM );
         periodService.addPeriod( periodN );
         
-        Collection<Period> periodsA = periodService.getIntersectingPeriodsByPeriodType( ypt, getDate( 2006, 6, 1 ), getDate( 2006, 11, 30 ) ); 
+        List<Period> periodsA = periodService.getIntersectingPeriodsByPeriodType( ypt, getDate( 2006, 6, 1 ), getDate( 2006, 11, 30 ) ); 
         assertNotNull( periodsA );
         assertEquals( 1, periodsA.size() );
         
-        Collection<Period> periodsB = periodService.getIntersectingPeriodsByPeriodType( mpt, getDate( 2006, 6, 1 ), getDate( 2006, 11, 30 ) );            
+        List<Period> periodsB = periodService.getIntersectingPeriodsByPeriodType( mpt, getDate( 2006, 6, 1 ), getDate( 2006, 11, 30 ) );            
         assertNotNull( periodsB );
         assertEquals( 6, periodsB.size() );
     }
@@ -371,7 +370,7 @@ public class PeriodServiceTest
         periodService.addPeriod( periodI );
         periodService.addPeriod( periodJ );
         
-        Collection<Period> periods = periodService.getIntersectingPeriods( getDay( 4 ), getDay( 10 ) );
+        List<Period> periods = periodService.getIntersectingPeriods( getDay( 4 ), getDay( 10 ) );
         
         assertEquals( periods.size(), 8 );
 
@@ -388,7 +387,7 @@ public class PeriodServiceTest
     @Test
     public void testGetPeriodsByPeriodType()
     {
-        Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -403,22 +402,22 @@ public class PeriodServiceTest
         periodService.addPeriod( periodC );
         periodService.addPeriod( periodD );
 
-        Collection<Period> periodsARef = new HashSet<>();
+        List<Period> periodsARef = new ArrayList<>();
         periodsARef.add( periodA );
         periodsARef.add( periodB );
         periodsARef.add( periodC );
 
-        Collection<Period> periodsA = periodService.getPeriodsByPeriodType( periodTypeA );
+        List<Period> periodsA = periodService.getPeriodsByPeriodType( periodTypeA );
         assertNotNull( periodsA );
         assertEquals( periodsARef.size(), periodsA.size() );
         assertTrue( periodsA.containsAll( periodsARef ) );
 
-        Collection<Period> periodsB = periodService.getPeriodsByPeriodType( periodTypeB );
+        List<Period> periodsB = periodService.getPeriodsByPeriodType( periodTypeB );
         assertNotNull( periodsB );
         assertEquals( 1, periodsB.size() );
         assertEquals( periodD, periodsB.iterator().next() );
 
-        Collection<Period> periodsC = periodService.getPeriodsByPeriodType( periodTypeC );
+        List<Period> periodsC = periodService.getPeriodsByPeriodType( periodTypeC );
         assertNotNull( periodsC );
         assertEquals( 0, periodsC.size() );
     }
@@ -435,7 +434,7 @@ public class PeriodServiceTest
         Period periodE = new Period( periodType, getDay( 17 ), getDay( 20 ) );
         Period periodF = new Period( periodType, getDay( 5 ), getDay( 20 ) );
         
-        Collection<Period> periods = new ArrayList<>();
+        List<Period> periods = new ArrayList<>();
         
         periods.add( periodA );
         periods.add( periodB );
@@ -446,7 +445,7 @@ public class PeriodServiceTest
 
         Period basePeriod = new Period( periodType, getDay( 9 ), getDay( 15 ) );
         
-        Collection<Period> boundaryPeriods = periodService.getBoundaryPeriods( basePeriod, periods );
+        List<Period> boundaryPeriods = periodService.getBoundaryPeriods( basePeriod, periods );
         
         assertTrue( boundaryPeriods.size() == 3 );
         assertTrue( boundaryPeriods.contains( periodB ) );
@@ -479,7 +478,7 @@ public class PeriodServiceTest
         Period periodE = new Period( periodType, getDay( 17 ), getDay( 20 ) );
         Period periodF = new Period( periodType, getDay( 5 ), getDay( 20 ) );
         
-        Collection<Period> periods = new ArrayList<>();
+        List<Period> periods = new ArrayList<>();
         
         periods.add( periodA );
         periods.add( periodB );
@@ -490,7 +489,7 @@ public class PeriodServiceTest
 
         Period basePeriod = new Period( periodType, getDay( 8 ), getDay( 20 ) );
         
-        Collection<Period> inclusivePeriods = periodService.getInclusivePeriods( basePeriod, periods );
+        List<Period> inclusivePeriods = periodService.getInclusivePeriods( basePeriod, periods );
 
         assertTrue( inclusivePeriods.size() == 4 );
         assertTrue( inclusivePeriods.contains( periodB ) );
@@ -521,7 +520,7 @@ public class PeriodServiceTest
     public void testGetAndGetAllPeriodTypes()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -538,7 +537,7 @@ public class PeriodServiceTest
     public void testGetPeriodTypeByName()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType refA = it.next();
         PeriodType refB = it.next();
@@ -556,7 +555,7 @@ public class PeriodServiceTest
     public void testDeleteAndGetPeriodType()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodService.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();

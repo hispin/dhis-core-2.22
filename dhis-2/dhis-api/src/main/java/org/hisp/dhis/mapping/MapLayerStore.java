@@ -28,9 +28,9 @@ package org.hisp.dhis.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import java.util.List;
 
-import java.util.Collection;
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 
 /**
  * @author Jan Henrik Overland
@@ -40,7 +40,7 @@ public interface MapLayerStore
 {
     String ID = MapLayerStore.class.getName();
 
-    Collection<MapLayer> getMapLayersByType( String type );
+    List<MapLayer> getMapLayersByType( String type );
 
     MapLayer getMapLayerByMapSource( String mapSource );
 }

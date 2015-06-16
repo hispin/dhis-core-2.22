@@ -28,7 +28,7 @@ package org.hisp.dhis.dataset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 public interface SectionService
 {
@@ -85,6 +85,6 @@ public interface SectionService
      * 
      * @return a Collection of Sections.
      */
-    Collection<Section> getAllSections();  
+    List<Section> getAllSections();  
     
 }

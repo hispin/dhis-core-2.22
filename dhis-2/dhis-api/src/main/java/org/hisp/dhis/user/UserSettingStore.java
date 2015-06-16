@@ -28,7 +28,7 @@ package org.hisp.dhis.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 public interface UserSettingStore
 {
@@ -60,9 +60,9 @@ public interface UserSettingStore
      * Retrieves all UserSettings for the given User.
      *
      * @param user the User.
-     * @return a Collection of UserSettings.
+     * @return a List of UserSettings.
      */
-    Collection<UserSetting> getAllUserSettings( User user );
+    List<UserSetting> getAllUserSettings( User user );
 
     /**
      * Deletes a UserSetting.
@@ -75,9 +75,9 @@ public interface UserSettingStore
      * Returns all UserSettings with the given name.
      *
      * @param name the name.
-     * @return a Collection of UserSettings.
+     * @return a List of UserSettings.
      */
-    Collection<UserSetting> getUserSettings( String name );
+    List<UserSetting> getUserSettings( String name );
 
     /**
      * Removes all user settings associated with the given user.

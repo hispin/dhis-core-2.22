@@ -31,6 +31,7 @@ package org.hisp.dhis.aggregation.jdbc;
 import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.aggregation.AggregatedDataValue;
 import org.hisp.dhis.aggregation.AggregatedIndicatorValue;
@@ -73,7 +74,7 @@ public class JdbcAggregatedOrgUnitDataValueStore
     }
 
     @Override
-    public Collection<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> dataElementIds,
+    public List<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> dataElementIds,
         Collection<Integer> periodIds, int organisationUnitId, Collection<Integer> organisationUnitGroupIds )
     {
         final String sql = 
@@ -127,7 +128,7 @@ public class JdbcAggregatedOrgUnitDataValueStore
     }
 
     @Override
-    public Collection<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> indicatorIds,
+    public List<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> indicatorIds,
         Collection<Integer> periodIds, int organisationUnitId, Collection<Integer> organisationUnitGroupIds )
     {
         final String sql =

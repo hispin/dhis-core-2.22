@@ -34,8 +34,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -257,7 +257,7 @@ public class ValidationRuleGroupStoreTest
         validationRuleGroupStore.save( groupA );
         validationRuleGroupStore.save( groupB );
 
-        Collection<ValidationRuleGroup> groups = validationRuleGroupStore.getAll();
+        List<ValidationRuleGroup> groups = validationRuleGroupStore.getAll();
 
         assertEquals( 2, groups.size() );
         assertTrue( groups.contains( groupA ) );

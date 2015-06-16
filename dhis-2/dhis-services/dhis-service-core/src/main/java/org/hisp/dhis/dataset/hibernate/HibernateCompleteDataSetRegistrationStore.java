@@ -30,6 +30,7 @@ package org.hisp.dhis.dataset.hibernate;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -117,7 +118,7 @@ public class HibernateCompleteDataSetRegistrationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<CompleteDataSetRegistration> getCompleteDataSetRegistrations( 
+    public List<CompleteDataSetRegistration> getCompleteDataSetRegistrations( 
         DataSet dataSet, Collection<OrganisationUnit> sources, Period period )
     {
         Period storedPeriod = periodStore.reloadPeriod( period );
@@ -138,14 +139,14 @@ public class HibernateCompleteDataSetRegistrationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<CompleteDataSetRegistration> getAllCompleteDataSetRegistrations()
+    public List<CompleteDataSetRegistration> getAllCompleteDataSetRegistrations()
     {
         return sessionFactory.getCurrentSession().createCriteria( CompleteDataSetRegistration.class ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<CompleteDataSetRegistration> getCompleteDataSetRegistrations( 
+    public List<CompleteDataSetRegistration> getCompleteDataSetRegistrations( 
         Collection<DataSet> dataSets, Collection<OrganisationUnit> sources, Collection<Period> periods )
     {
         for ( Period period : periods )
@@ -164,7 +165,7 @@ public class HibernateCompleteDataSetRegistrationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<CompleteDataSetRegistration> getCompleteDataSetRegistrations( 
+    public List<CompleteDataSetRegistration> getCompleteDataSetRegistrations( 
         DataSet dataSet, Collection<OrganisationUnit> sources, Period period, Date deadline )
     {
         Period storedPeriod = periodStore.reloadPeriod( period );

@@ -28,7 +28,6 @@ package org.hisp.dhis.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElement;
@@ -100,9 +99,9 @@ public interface MappingService
 
     MapView getIndicatorLastYearMapView( String indicatorUid, String organisationUnitUid, int level );
 
-    Collection<MapView> getAllMapViews();
+    List<MapView> getAllMapViews();
 
-    Collection<MapView> getMapViewsBetweenByName( String name, int first, int max );
+    List<MapView> getMapViewsBetweenByName( String name, int first, int max );
 
     // -------------------------------------------------------------------------
     // MapLayer
@@ -123,11 +122,11 @@ public interface MappingService
 
     MapLayer getMapLayerByName( String name );
 
-    Collection<MapLayer> getMapLayersByType( String type );
+    List<MapLayer> getMapLayersByType( String type );
 
     MapLayer getMapLayerByMapSource( String mapSource );
 
-    Collection<MapLayer> getAllMapLayers();
+    List<MapLayer> getAllMapLayers();
 
     int countMapViewMaps( MapView mapView );
 

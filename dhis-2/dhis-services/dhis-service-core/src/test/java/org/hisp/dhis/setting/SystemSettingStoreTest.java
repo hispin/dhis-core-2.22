@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
@@ -138,7 +138,7 @@ public class SystemSettingStoreTest
     @Test
     public void testGetAllSystemSettings()
     {
-        Collection<SystemSetting> m = systemSettingStore.getAll();
+        List<SystemSetting> m = systemSettingStore.getAll();
         assertNotNull( m );
         assertEquals( 0, m.size() );
 

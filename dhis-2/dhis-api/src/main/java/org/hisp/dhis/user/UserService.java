@@ -80,11 +80,11 @@ public interface UserService
     User getUser( String uid );
 
     /**
-     * Returns a Collection of all Users.
+     * Returns a List of all Users.
      *
      * @return a Collection of Users.
      */
-    Collection<User> getAllUsers();
+    List<User> getAllUsers();
 
     /**
      * Retrieves all Users with first name, surname or user name like the given
@@ -133,7 +133,7 @@ public interface UserService
      * groups association.
      * 
      * @param user the user.
-     * @return a Collection of users.
+     * @return a List of users.
      */
     List<User> getManagedUsers( User user );
 
@@ -224,9 +224,9 @@ public interface UserService
     /**
      * Retrieves all UserCredentials.
      *
-     * @return a Collection of UserCredentials.
+     * @return a List of UserCredentials.
      */
-    Collection<UserCredentials> getAllUserCredentials();
+    List<UserCredentials> getAllUserCredentials();
 
     /**
      * Encodes and sets the password of the User.
@@ -321,9 +321,9 @@ public interface UserService
     /**
      * Retrieves all UserAuthorityGroups.
      *
-     * @return a Collection of UserAuthorityGroups.
+     * @return a List of UserAuthorityGroups.
      */
-    Collection<UserAuthorityGroup> getAllUserAuthorityGroups();
+    List<UserAuthorityGroup> getAllUserAuthorityGroups();
     
     /**
      * Retrieves UserAuthorityGroups with the given UIDs.
@@ -336,16 +336,16 @@ public interface UserService
     /**
      * Retrieves all UserAuthorityGroups.
      *
-     * @return a Collection of UserAuthorityGroups.
+     * @return a List of UserAuthorityGroups.
      */
-    Collection<UserAuthorityGroup> getUserRolesBetween( int first, int max );
+    List<UserAuthorityGroup> getUserRolesBetween( int first, int max );
 
     /**
      * Retrieves all UserAuthorityGroups.
      *
-     * @return a Collection of UserAuthorityGroups.
+     * @return a List of UserAuthorityGroups.
      */
-    Collection<UserAuthorityGroup> getUserRolesBetweenByName( String name, int first, int max );
+    List<UserAuthorityGroup> getUserRolesBetweenByName( String name, int first, int max );
 
     /**
      * Returns the number of UserAuthorityGroups which are associated with the

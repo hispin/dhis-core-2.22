@@ -29,6 +29,7 @@ package org.hisp.dhis.minmax;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -89,19 +90,19 @@ public class DefaultMinMaxDataElementService
     }
     
     @Override
-    public Collection<MinMaxDataElement> getMinMaxDataElements( OrganisationUnit source, DataElement dataElement )
+    public List<MinMaxDataElement> getMinMaxDataElements( OrganisationUnit source, DataElement dataElement )
     {
         return minMaxDataElementStore.get( source, dataElement );
     }   
 
     @Override
-    public Collection<MinMaxDataElement> getMinMaxDataElements( OrganisationUnit source, Collection<DataElement> dataElements )
+    public List<MinMaxDataElement> getMinMaxDataElements( OrganisationUnit source, Collection<DataElement> dataElements )
     {
         return minMaxDataElementStore.get( source, dataElements );
     }
     
     @Override
-    public Collection<MinMaxDataElement> getAllMinMaxDataElements()
+    public List<MinMaxDataElement> getAllMinMaxDataElements()
     {
         return minMaxDataElementStore.getAll();
     }

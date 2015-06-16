@@ -33,8 +33,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -229,7 +229,7 @@ public class MessageServiceTest
 
         String[] uids = { uidA, uidB };
 
-        Collection<MessageConversation> conversations = messageService.getMessageConversations( sender, uids );
+        List<MessageConversation> conversations = messageService.getMessageConversations( sender, uids );
 
         assertTrue( conversations.contains( conversationA ) );
         assertTrue( conversations.contains( conversationB ) );

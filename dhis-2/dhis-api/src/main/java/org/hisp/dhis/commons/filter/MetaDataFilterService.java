@@ -28,7 +28,7 @@ package org.hisp.dhis.commons.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Ovidiu Rosu <rosu.ovi@gmail.com>
@@ -39,11 +39,11 @@ public interface MetaDataFilterService
 
     MetaDataFilter getFilterByUid( String uid );
 
-    Collection<MetaDataFilter> getAllFilters();
+    List<MetaDataFilter> getAllFilters();
 
-    Collection<MetaDataFilter> getFiltersBetweenByName( String name, int first, int max );
+    List<MetaDataFilter> getFiltersBetweenByName( String name, int first, int max );
 
-    Collection<MetaDataFilter> getFiltersBetween( int first, int max );
+    List<MetaDataFilter> getFiltersBetween( int first, int max );
 
     void saveFilter( MetaDataFilter metaDataFilter );
 

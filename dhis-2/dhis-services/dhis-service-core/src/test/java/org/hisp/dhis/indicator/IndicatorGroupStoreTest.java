@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -120,7 +120,7 @@ public class IndicatorGroupStoreTest
         indicatorGroupStore.save( groupA );
         indicatorGroupStore.save( groupB );
 
-        Collection<IndicatorGroup> groups = indicatorGroupStore.getAll();
+        List<IndicatorGroup> groups = indicatorGroupStore.getAll();
 
         assertEquals( groups.size(), 2 );
         assertTrue( groups.contains( groupA ) );

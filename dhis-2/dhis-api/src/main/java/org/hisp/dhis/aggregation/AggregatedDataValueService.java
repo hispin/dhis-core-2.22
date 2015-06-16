@@ -29,6 +29,7 @@ package org.hisp.dhis.aggregation;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.completeness.DataSetCompletenessResult;
 import org.hisp.dhis.dataelement.DataElement;
@@ -121,7 +122,7 @@ public interface AggregatedDataValueService
      * @param organisationUnitIds the collection of OrganisationUnit identifiers.
      * @return a collection of AggregatedDataValues.
      */
-    Collection<AggregatedDataValue> getAggregatedDataValues( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
+    List<AggregatedDataValue> getAggregatedDataValues( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
 
     /**
      * Gets a collection of AggregatedDataValues where the value is the sum of
@@ -132,7 +133,7 @@ public interface AggregatedDataValueService
      * @param organisationUnitIds the collection of OrganisationUnit identifiers.
      * @return a collection of AggregatedDataValues.
      */
-    Collection<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
+    List<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
     
     /**
      * Gets a collection of AggregatedDataValues.
@@ -142,7 +143,7 @@ public interface AggregatedDataValueService
      * @param organisationUnitIds the collection of OrganisationUnit identifiers.
      * @return a collection of AggregatedDataValues.
      */
-    Collection<AggregatedDataValue> getAggregatedDataValues( int dataElementId, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
+    List<AggregatedDataValue> getAggregatedDataValues( int dataElementId, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
 
     /**
      * Gets a collection of AggregatedDataValues.
@@ -152,7 +153,7 @@ public interface AggregatedDataValueService
      * @param organisationUnitIds the collection of OrganisationUnit identifiers.
      * @return a collection of AggregatedDataValues.
      */
-    Collection<AggregatedDataValue> getAggregatedDataValues( Collection<Integer> dataElementIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
+    List<AggregatedDataValue> getAggregatedDataValues( Collection<Integer> dataElementIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
 
     /**
      * Gets a collection of AggregatedDataValues where the value is the sum of
@@ -164,7 +165,7 @@ public interface AggregatedDataValueService
      * @param organisationUnitIds the collection of OrganisationUnit identifiers.
      * @return a collection of AggregatedDataValues.
      */
-    Collection<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> dataElementIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
+    List<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> dataElementIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
     
     /**
      * Deletes AggregatedDataValues registered for the given parameters.
@@ -222,7 +223,7 @@ public interface AggregatedDataValueService
      * @param organisationUnitIds the OrganisationUnit identifiers.
      * @return a collection of AggregatedIndicatorValues.
      */
-    Collection<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
+    List<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
     
     /**
      * Gets a collection of AggregatedIndicatorValues.
@@ -232,7 +233,7 @@ public interface AggregatedDataValueService
      * @param organisationUnitIds the OrganisationUnit identifiers.
      * @return a collection of AggregatedIndicatorValues.
      */
-    Collection<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> indicatorIds,
+    List<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> indicatorIds,
         Collection<Integer> periodIds, Collection<Integer> organisationUnitIds );
     
     /**
@@ -282,7 +283,7 @@ public interface AggregatedDataValueService
      * @param periodIds a collection of Period identifiers.
      * @param organisationUnitIds a collection of OrganisationUnit identifiers.
      */
-    Collection<DataSetCompletenessResult> getAggregatedDataSetCompleteness( Collection<Integer> dataSetIds, Collection<Integer> periodIds,
+    List<DataSetCompletenessResult> getAggregatedDataSetCompleteness( Collection<Integer> dataSetIds, Collection<Integer> periodIds,
         Collection<Integer> organisationUnitIds );
 
     // ----------------------------------------------------------------------

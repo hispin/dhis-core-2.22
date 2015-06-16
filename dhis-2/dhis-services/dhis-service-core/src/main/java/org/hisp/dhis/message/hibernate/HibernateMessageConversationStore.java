@@ -133,7 +133,7 @@ public class HibernateMessageConversationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<MessageConversation> getMessageConversations( String[] uids )
+    public List<MessageConversation> getMessageConversations( String[] uids )
     {
         return getSharingCriteria()
             .add( Restrictions.in( "uid", uids ) )

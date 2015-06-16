@@ -33,7 +33,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -202,7 +201,7 @@ public class DataEntryFormServiceTest
         dataEntryFormService.addDataEntryForm( dataEntryFormA );
         dataEntryFormService.addDataEntryForm( dataEntryFormB );
 
-        Collection<DataEntryForm> dataEntryForms = dataEntryFormService.getAllDataEntryForms();
+        List<DataEntryForm> dataEntryForms = dataEntryFormService.getAllDataEntryForms();
 
         assertEquals( dataEntryForms.size(), 2 );
         assertTrue( dataEntryForms.contains( dataEntryFormA ) );

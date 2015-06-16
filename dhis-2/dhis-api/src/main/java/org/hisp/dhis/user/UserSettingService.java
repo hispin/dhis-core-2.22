@@ -30,7 +30,6 @@ package org.hisp.dhis.user;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -113,17 +112,17 @@ public interface UserSettingService
      * Retrieves all UserSettings for the given User.
      *
      * @param user the User.
-     * @return a Collection of UserSettings.
+     * @return a List of UserSettings.
      */
-    Collection<UserSetting> getAllUserSettings( User user );
+    List<UserSetting> getAllUserSettings( User user );
 
     /**
      * Retrieves all UserSettings with the given name.
      * 
      * @param name the name.
-     * @return a Collection of UserSettings.
+     * @return a List of UserSettings.
      */
-    Collection<UserSetting> getUserSettings( String name );
+    List<UserSetting> getUserSettings( String name );
 
     /**
      * Deletes a UserSetting.
@@ -208,7 +207,7 @@ public interface UserSettingService
      * @return all user settings belonging to the current user.
      * @throws NoCurrentUserException if there is no current user.
      */
-    Collection<UserSetting> getAllUserSettings();
+    List<UserSetting> getAllUserSettings();
 
     /**
      * Deletes the user setting with the given name.

@@ -79,10 +79,10 @@ public interface OrganisationUnitGroupService
     /**
      * Returns the OrganisationUnitGroup with the given identifiers.
      * 
-     * @param identifiers the collection of identifiers.
+     * @param identifiers the list of identifiers.
      * @return the OrganisationUnitGroup with the given identifiers.
      */
-    Collection<OrganisationUnitGroup> getOrganisationUnitGroups( Collection<Integer> identifiers );
+    List<OrganisationUnitGroup> getOrganisationUnitGroups( Collection<Integer> identifiers );
     
     /**
      * Returns the OrganisationUnitGroups with the given UIDs.
@@ -130,17 +130,17 @@ public interface OrganisationUnitGroupService
     /**
      * Returns all OrganisationUnitGroups.
      * 
-     * @return a collection of all the OrganisationUnitGroups, or an empty
-     *         collection if no OrganisationUnitGroup exists.
+     * @return a list of all the OrganisationUnitGroups, or an empty
+     *         list if no OrganisationUnitGroup exists.
      */
-    Collection<OrganisationUnitGroup> getAllOrganisationUnitGroups();
+    List<OrganisationUnitGroup> getAllOrganisationUnitGroups();
     
     /**
      * Returns all OrganisationUnitGroups which have a OrganisationUnitGroupSet.
      * 
      * @return a collection of OrganisationUnitGroups.
      */
-    Collection<OrganisationUnitGroup> getOrganisationUnitGroupsWithGroupSets();
+    List<OrganisationUnitGroup> getOrganisationUnitGroupsWithGroupSets();
 
     // -------------------------------------------------------------------------
     // OrganisationUnitGroupSet
@@ -202,7 +202,7 @@ public interface OrganisationUnitGroupService
      * @param identifiers the identifiers.
      * @return the OrganisationUnitGroupSets with the given identifiers.
      */
-    Collection<OrganisationUnitGroupSet> getOrganisationUnitGroupSets( Collection<Integer> identifiers );
+    List<OrganisationUnitGroupSet> getOrganisationUnitGroupSets( Collection<Integer> identifiers );
 
     /**
      * Returns the OrganisationUnitGroupSets with the given uids.
@@ -225,29 +225,29 @@ public interface OrganisationUnitGroupService
     /**
      * Returns all OrganisationUnitGroupSets.
      * 
-     * @return a collection of all OrganisationUnitGroupSets, or an empty
+     * @return a list of all OrganisationUnitGroupSets, or an empty
      *         collection if no OrganisationUnitGroupSet exists.
      */
-    Collection<OrganisationUnitGroupSet> getAllOrganisationUnitGroupSets();
+    List<OrganisationUnitGroupSet> getAllOrganisationUnitGroupSets();
 
     /**
      * Returns all compulsory OrganisationUnitGroupSets.
      * 
-     * @return a collection of all compulsory OrganisationUnitGroupSets, or an
+     * @return a list of all compulsory OrganisationUnitGroupSets, or an
      *         empty collection if there are no compulsory
      *         OrganisationUnitGroupSets.
      */
-    Collection<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSets();
+    List<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSets();
 
     /**
      * Returns all compulsory OrganisationUnitGroupSets which have one ore more
      * members.
      * 
-     * @return a collection of all OrganisationUnitGroupSets, or an
+     * @return a list of all OrganisationUnitGroupSets, or an
      *         empty collection if there are no compulsory
      *         OrganisationUnitGroupSets.
      */
-    Collection<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSetsWithMembers();
+    List<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSetsWithMembers();
 
     /**
      * Returns a Collection of compulsory OrganisationUnitGroupSets which groups
@@ -256,19 +256,19 @@ public interface OrganisationUnitGroupService
      * @param organisationUnit the OrganisationUnit.
      * @return a Collection of OrganisationUnitGroupSets.
      */
-    Collection<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSetsNotAssignedTo( OrganisationUnit organisationUnit );
+    List<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSetsNotAssignedTo( OrganisationUnit organisationUnit );
 
-    Collection<OrganisationUnitGroup> getOrganisationUnitGroupsBetween( int first, int max );
+    List<OrganisationUnitGroup> getOrganisationUnitGroupsBetween( int first, int max );
     
-    Collection<OrganisationUnitGroup> getOrganisationUnitGroupsBetweenByName( String name, int first, int max );
+    List<OrganisationUnitGroup> getOrganisationUnitGroupsBetweenByName( String name, int first, int max );
     
     int getOrganisationUnitGroupCount();
     
     int getOrganisationUnitGroupCountByName( String name );
 
-    Collection<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsBetween( int first, int max );
+    List<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsBetween( int first, int max );
     
-    Collection<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsBetweenByName( String name, int first, int max );
+    List<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsBetweenByName( String name, int first, int max );
     
     int getOrganisationUnitGroupSetCount();
     

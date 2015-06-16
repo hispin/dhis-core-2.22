@@ -33,8 +33,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.AuditType;
@@ -184,7 +184,7 @@ public class DataValueAuditServiceTest
         dataValueAuditService.addDataValueAudit( dataValueAuditA );
         dataValueAuditService.addDataValueAudit( dataValueAuditB );
 
-        Collection<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
+        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
         assertNotNull( audits );
         assertTrue( audits.contains( dataValueAuditA ) );
     }
@@ -202,7 +202,7 @@ public class DataValueAuditServiceTest
         dataValueAuditService.addDataValueAudit( dataValueAuditA );
         dataValueAuditService.addDataValueAudit( dataValueAuditB );
 
-        Collection<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
+        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
 
         assertEquals( 2, audits.size() );
 
@@ -242,7 +242,7 @@ public class DataValueAuditServiceTest
 
         dataValueAuditService.deleteDataValueAuditByDataElement( dataValueAuditA.getDataElement() );
 
-        Collection<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
+        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
 
         assertTrue( audits.isEmpty() );
 
@@ -280,7 +280,7 @@ public class DataValueAuditServiceTest
 
         dataValueAuditService.deleteDataValueAuditByPeriod( dataValueAuditA.getPeriod() );
 
-        Collection<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
+        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
 
         assertTrue( audits.isEmpty() );
 
@@ -318,7 +318,7 @@ public class DataValueAuditServiceTest
 
         dataValueAuditService.deleteDataValueAuditByOrganisationUnit( dataValueAuditA.getOrganisationUnit() );
 
-        Collection<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
+        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
 
         assertTrue( audits.isEmpty() );
 
@@ -354,7 +354,7 @@ public class DataValueAuditServiceTest
 
         dataValueAuditService.deleteDataValueAuditByCategoryOptionCombo( optionCombo );
 
-        Collection<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
+        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
         assertTrue( audits.isEmpty() );
 
         audits = dataValueAuditService.getDataValueAudits( dataValueB );
