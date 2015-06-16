@@ -34,6 +34,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
+ * Utility class for collection filtering.
+ * 
  * @author Lars Helge Overland
  */
 public class FilterUtils

@@ -60,7 +60,6 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class StreamUtils
 {

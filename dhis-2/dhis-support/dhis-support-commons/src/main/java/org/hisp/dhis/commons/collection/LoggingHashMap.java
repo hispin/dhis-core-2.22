@@ -38,7 +38,6 @@ import java.util.Map;
  * HashMap that logs the key if the requested value is null.
  * 
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class LoggingHashMap<K, V>
     extends HashMap<K, V>

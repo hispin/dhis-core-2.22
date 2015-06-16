@@ -1,8 +1,5 @@
 package org.hisp.dhis.commons.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -30,6 +27,9 @@ import java.util.List;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Lars Helge Overland

@@ -34,7 +34,6 @@ import java.util.HashMap;
  * HashMap that returns as value the given key.
  * 
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class MimicingHashMap<K, V>
     extends HashMap<K, V>
