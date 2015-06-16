@@ -30,7 +30,6 @@ package org.hisp.dhis.dd.action.indicatorgroupset;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -93,13 +92,13 @@ public class ListIndicatorGroupSetAction
         {
             this.paging = createPaging( indicatorService.getIndicatorGroupSetCountByName( key ) );
             
-            indicatorGroupSets = new ArrayList<>( indicatorService.getIndicatorGroupSetsBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            indicatorGroupSets = indicatorService.getIndicatorGroupSetsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( indicatorService.getIndicatorGroupSetCount() );
             
-            indicatorGroupSets = new ArrayList<>( indicatorService.getIndicatorGroupSetsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            indicatorGroupSets = indicatorService.getIndicatorGroupSetsBetween( paging.getStartPos(), paging.getPageSize() );
         }
         
         Collections.sort( indicatorGroupSets, IdentifiableObjectNameComparator.INSTANCE );
