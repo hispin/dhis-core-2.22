@@ -29,9 +29,9 @@ package org.hisp.dhis.dxf2.datavalueset;
  */
 
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
+import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 import static org.hisp.dhis.system.util.DateUtils.getLongGmtDateString;
 import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
-import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.io.OutputStream;
 import java.io.Writer;
@@ -42,6 +42,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.amplecode.staxwax.factory.XMLFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.calendar.Calendar;
@@ -51,7 +52,6 @@ import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.datavalue.DataValue;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.commons.util.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -82,7 +82,7 @@ public class SpringDataValueSetStore
 
         writeDataValueSet( getDataValueSql( params ), params, completeDate, dataValueSet );
 
-        StreamUtils.closeOutputStream( out );
+        IOUtils.closeQuietly( out );
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SpringDataValueSetStore
 
         writeDataValueSet( getDataValueSql( params ), params, completeDate, dataValueSet );
 
-        StreamUtils.closeOutputStream( out );
+        IOUtils.closeQuietly( out );
     }
 
     @Override
@@ -102,7 +102,7 @@ public class SpringDataValueSetStore
 
         writeDataValueSet( getDataValueSql( params ), params, completeDate, dataValueSet );
 
-        StreamUtils.closeWriter( writer );
+        IOUtils.closeQuietly( writer );
     }
 
     @Override

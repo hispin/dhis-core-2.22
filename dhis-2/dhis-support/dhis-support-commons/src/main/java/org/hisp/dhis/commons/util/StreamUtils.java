@@ -28,25 +28,18 @@ package org.hisp.dhis.commons.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.commons.comparator.FileLastModifiedComparator;
-
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,6 +51,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.hisp.dhis.commons.comparator.FileLastModifiedComparator;
+
 /**
  * @author Lars Helge Overland
  */
@@ -65,70 +60,6 @@ public class StreamUtils
 {
     public static final String LINE_BREAK = "\n";
     public static final String ENCODING_UTF8 = "UTF-8";
-
-    /**
-     * Loads a resorce from the classpath defined by the name parameter.
-     *
-     * @param name the name of the resource.
-     * @return an InputStream.
-     */
-    public static InputStream loadResource( String name )
-    {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-        return classLoader.getResourceAsStream( name );
-    }
-
-    public static void streamcopy( BufferedInputStream in, BufferedOutputStream out )
-    {
-        int b = 0;
-
-        try
-        {
-            while ( (b = in.read()) != -1 )
-            {
-                out.write( b );
-            }
-        }
-        catch ( IOException ex )
-        {
-            throw new RuntimeException( ex );
-        }
-        finally
-        {
-            closeInputStream( in );
-            closeOutputStream( out );
-        }
-    }
-
-    /**
-     * Writes the content of the first File to the second File.
-     *
-     * @param inFile  the input File.
-     * @param outFile the output File.
-     */
-    public static void write( File inFile, File outFile )
-    {
-        BufferedInputStream in = null;
-        BufferedOutputStream out = null;
-
-        try
-        {
-            in = new BufferedInputStream( new FileInputStream( inFile ) );
-            out = new BufferedOutputStream( new FileOutputStream( outFile ) );
-
-            streamcopy( in, out );
-        }
-        catch ( IOException ex )
-        {
-            throw new RuntimeException( ex );
-        }
-        finally
-        {
-            closeInputStream( in );
-            closeOutputStream( out );
-        }
-    }
 
     /**
      * Returns all Files in the given directory.
@@ -208,25 +139,7 @@ public class StreamUtils
             throw new RuntimeException( ex );
         }
     }
-
-    /**
-     * Creates a FileWriter.
-     *
-     * @param file the name of the file.
-     * @return a FileWriter.
-     */
-    public static Writer getFileWriter( String file )
-    {
-        try
-        {
-            return new BufferedWriter( new FileWriter( file ) );
-        }
-        catch ( IOException ex )
-        {
-            throw new RuntimeException( ex );
-        }
-    }
-
+    
     /**
      * Returns the content of the File as a String.
      *
@@ -327,95 +240,17 @@ public class StreamUtils
     }
 
     /**
-     * Closes the given Reader.
-     *
-     * @param reader the Reader to close.
-     */
-    public static void closeReader( Reader reader )
-    {
-        if ( reader != null )
-        {
-            try
-            {
-                reader.close();
-            }
-            catch ( Exception ex )
-            {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Closes the given Writer.
-     *
-     * @param writer the Writer to close.
-     */
-    public static void closeWriter( Writer writer )
-    {
-        if ( writer != null )
-        {
-            try
-            {
-                writer.flush();
-            }
-            catch ( IOException ex )
-            {
-                ex.printStackTrace();
-            }
-
-            try
-            {
-                writer.close();
-            }
-            catch ( Exception ex )
-            {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * Closes the given InputStream.
      *
      * @param in the InputStream to close.
      */
-    public static void closeInputStream( InputStream in )
+    private static void closeInputStream( InputStream in )
     {
         if ( in != null )
         {
             try
             {
                 in.close();
-            }
-            catch ( Exception ex )
-            {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Closes and flushes the given OutputStream.
-     *
-     * @param out the OutputStream to close.
-     */
-    public static void closeOutputStream( OutputStream out )
-    {
-        if ( out != null )
-        {
-            try
-            {
-                out.flush();
-            }
-            catch ( Exception ex )
-            {
-                ex.printStackTrace();
-            }
-
-            try
-            {
-                out.close();
             }
             catch ( Exception ex )
             {
@@ -575,27 +410,5 @@ public class StreamUtils
         {
             throw new RuntimeException( "Failed to finish the content of the ZipOutputStream", ex );
         }
-    }
-
-    /**
-     * Attempts to delete the File with the given path.
-     *
-     * @param path the File path.
-     * @return true if the operation succeeded, false otherwise.
-     */
-    public static boolean delete( String path )
-    {
-        return new File( path ).delete();
-    }
-
-    /**
-     * Tests whether the File with the given path exists.
-     *
-     * @param path the File path.
-     * @return true if the File exists, false otherwise.
-     */
-    public static boolean exists( String path )
-    {
-        return new File( path ).exists();
     }
 }
