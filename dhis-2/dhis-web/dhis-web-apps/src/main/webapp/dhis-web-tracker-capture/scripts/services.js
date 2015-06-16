@@ -10,7 +10,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     var store = new dhis2.storage.Store({
         name: "dhis2tc",
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules', 'programRuleActions']
+        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules']
     });
     return{
         currentStore: store
@@ -1086,34 +1086,21 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             var def = $q.defer();
             
             TCStorageService.currentStore.open().done(function(){
-                TCStorageService.currentStore.getAll('programRules').done(function(rules){ 
-                    TCStorageService.currentStore.getAll('programRuleActions').done(function(actions){
-                        //The hash will serve as a direct-lookup for linking the actions to rules later.
-                        var programRulesHash = {};
-                        //The array will ultimately be returned to the caller.
-                        var programRulesArray = [];
-                        //Loop through and add the rules belonging to this program and program stage
-                        angular.forEach(rules, function(rule){
-                           if(rule.program.id == programUid) {
-                               if(!rule.programStage || !rule.programStage.id || rule.programStage.id == programStageUid) {
-                                    rule.actions = [];
-                                    programRulesHash[rule.id] = rule;
-                                    programRulesArray.push(rule);
-                                }
-                           }
-                        });
-                        
-                        //Loop through and attach all actions to the correct rules:
-                        angular.forEach(actions, function(action){
-                           if(programRulesHash[action.programRule.id])
-                           {
-                               programRulesHash[action.programRule.id].actions.push(action);
-                           }
-                        });
-                        
-                        $rootScope.$apply(function(){
-                            def.resolve(programRulesArray);
-                        });
+                TCStorageService.currentStore.getAll('programRules').done(function(rules){                    
+                    //The array will ultimately be returned to the caller.
+                    var programRulesArray = [];
+                    //Loop through and add the rules belonging to this program and program stage
+                    angular.forEach(rules, function(rule){
+                       if(rule.program.id == programUid) {
+                           if(!rule.programStage || !rule.programStage.id || rule.programStage.id == programStageUid) {
+                                rule.actions = [];
+                                programRulesArray.push(rule);
+                            }
+                       }
+                    });
+
+                    $rootScope.$apply(function(){
+                        def.resolve(programRulesArray);
                     });
                 });     
             });
