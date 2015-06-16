@@ -40,7 +40,6 @@ import java.util.Map;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class DebugUtils
 {

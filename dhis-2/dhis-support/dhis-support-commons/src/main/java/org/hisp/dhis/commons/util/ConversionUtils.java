@@ -37,7 +37,6 @@ import java.util.regex.Pattern;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class ConversionUtils
 {

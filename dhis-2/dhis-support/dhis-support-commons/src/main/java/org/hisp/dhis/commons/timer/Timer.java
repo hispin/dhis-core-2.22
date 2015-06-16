@@ -29,7 +29,7 @@ package org.hisp.dhis.commons.timer;
  */
 
 /**
- * Simple interface that captures time, and pretty prints it back to you.
+ * Simple interface that captures time durations and pretty prints it back to you.
  *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */

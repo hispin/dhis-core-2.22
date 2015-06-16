@@ -31,6 +31,8 @@ package org.hisp.dhis.commons.timer;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Timer implementation which uses system time.
+ * 
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class SystemTimer 

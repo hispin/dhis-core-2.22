@@ -33,6 +33,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * List implementation that provides a paged view.
+ * 
  * @author Lars Helge Overland
  */
 public class PaginatedList<T>
