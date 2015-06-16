@@ -33,8 +33,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
@@ -377,7 +378,7 @@ public class DataValueServiceTest
         dataValueService.addDataValue( dataValueC );
         dataValueService.addDataValue( dataValueD );
         
-        Collection<DataValue> dataValues = dataValueService.getAllDataValues();
+        List<DataValue> dataValues = dataValueService.getAllDataValues();
         assertNotNull( dataValues );
         assertEquals( 4, dataValues.size() );
     }   
@@ -400,7 +401,7 @@ public class DataValueServiceTest
         dataValueService.addDataValue( dataValueC );
         dataValueService.addDataValue( dataValueD );
 
-        Collection<DataValue> dataValues = dataValueService.getDataValues( sourceA, periodA );
+        List<DataValue> dataValues = dataValueService.getDataValues( sourceA, periodA );
         assertNotNull( dataValues );
         assertEquals( 2, dataValues.size() );
 
@@ -431,7 +432,7 @@ public class DataValueServiceTest
         dataValueService.addDataValue( dataValueC );
         dataValueService.addDataValue( dataValueD );
 
-        Collection<DataValue> dataValues = dataValueService.getDataValues( sourceA, dataElementA );
+        List<DataValue> dataValues = dataValueService.getDataValues( sourceA, dataElementA );
         assertNotNull( dataValues );
         assertEquals( 1, dataValues.size() );
 
@@ -462,11 +463,11 @@ public class DataValueServiceTest
         dataValueService.addDataValue( dataValueC );
         dataValueService.addDataValue( dataValueD );
 
-        Collection<OrganisationUnit> sources = new HashSet<>();
+        List<OrganisationUnit> sources = new ArrayList<>();
         sources.add( sourceA );
         sources.add( sourceB );
 
-        Collection<DataValue> dataValues = dataValueService.getDataValues( sources, dataElementA );
+        List<DataValue> dataValues = dataValueService.getDataValues( sources, dataElementA );
         assertNotNull( dataValues );
         assertEquals( 2, dataValues.size() );
 
@@ -497,11 +498,11 @@ public class DataValueServiceTest
         dataValueService.addDataValue( dataValueC );
         dataValueService.addDataValue( dataValueD );
 
-        Collection<DataElement> dataElements = new HashSet<>();
+        List<DataElement> dataElements = new ArrayList<>();
         dataElements.add( dataElementA );
         dataElements.add( dataElementB );
 
-        Collection<DataValue> dataValues = dataValueService.getDataValues( sourceA, periodA, dataElements );
+        List<DataValue> dataValues = dataValueService.getDataValues( sourceA, periodA, dataElements );
         assertNotNull( dataValues );
         assertEquals( 2, dataValues.size() );
 
@@ -532,15 +533,15 @@ public class DataValueServiceTest
         dataValueService.addDataValue( dataValueC );
         dataValueService.addDataValue( dataValueD );
         
-        Collection<Period> periods = new HashSet<>();
+        List<Period> periods = new ArrayList<>();
         periods.add( periodA );
         periods.add( periodB );
 
-        Collection<OrganisationUnit> sources = new HashSet<>();
+        List<OrganisationUnit> sources = new ArrayList<>();
         sources.add( sourceA );
         sources.add( sourceB );
         
-        Collection<DataValue> dataValues = dataValueService.getDataValues( dataElementA, periods, sources );
+        List<DataValue> dataValues = dataValueService.getDataValues( dataElementA, periods, sources );
         
         assertEquals( dataValues.size(), 2 );
         assertTrue( dataValues.contains( dataValueA ) );
@@ -565,11 +566,11 @@ public class DataValueServiceTest
         dataValueService.addDataValue( dataValueC );
         dataValueService.addDataValue( dataValueD );
         
-        Collection<Period> periods = new HashSet<>();
+        List<Period> periods = new ArrayList<>();
         periods.add( periodA );
         periods.add( periodB );
 
-        Collection<OrganisationUnit> sources = new HashSet<>();
+        List<OrganisationUnit> sources = new ArrayList<>();
         sources.add( sourceA );
         sources.add( sourceB );
         

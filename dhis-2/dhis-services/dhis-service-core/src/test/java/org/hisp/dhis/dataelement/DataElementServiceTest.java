@@ -33,8 +33,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -243,13 +244,13 @@ public class DataElementServiceTest
         dataElementService.addDataElement( dataElementC );
         dataElementService.addDataElement( dataElementD );
 
-        Collection<DataElement> dataElementsRef = new HashSet<>();
+        List<DataElement> dataElementsRef = new ArrayList<>();
         dataElementsRef.add( dataElementA );
         dataElementsRef.add( dataElementB );
         dataElementsRef.add( dataElementC );
         dataElementsRef.add( dataElementD );
 
-        Collection<DataElement> dataElements = dataElementService.getAllDataElements();
+        List<DataElement> dataElements = dataElementService.getAllDataElements();
         assertNotNull( dataElements );
         assertEquals( dataElementsRef.size(), dataElements.size() );
         assertTrue( dataElements.containsAll( dataElementsRef ) );
@@ -275,12 +276,12 @@ public class DataElementServiceTest
         dataElementService.addDataElement( dataElementC );
         dataElementService.addDataElement( dataElementD );
 
-        Collection<DataElement> dataElementsRef = new HashSet<>();
+        List<DataElement> dataElementsRef = new ArrayList<>();
         dataElementsRef.add( dataElementA );
         dataElementsRef.add( dataElementB );
         dataElementsRef.add( dataElementD );
 
-        Collection<DataElement> dataElements = dataElementService.getAggregateableDataElements();
+        List<DataElement> dataElements = dataElementService.getAggregateableDataElements();
         assertNotNull( dataElements );
         assertEquals( dataElementsRef.size(), dataElements.size() );
         assertTrue( dataElements.containsAll( dataElementsRef ) );
@@ -537,13 +538,13 @@ public class DataElementServiceTest
         dataElementService.addDataElementGroup( dataElementGroupC );
         dataElementService.addDataElementGroup( dataElementGroupD );
         
-        Collection<DataElementGroup> groupsA = dataElementService.getGroupsContainingDataElement( dataElementA );
+        List<DataElementGroup> groupsA = dataElementService.getGroupsContainingDataElement( dataElementA );
         
         assertTrue( groupsA.size() == 2 );
         assertTrue( groupsA.contains( dataElementGroupA ) );
         assertTrue( groupsA.contains( dataElementGroupC ) );        
 
-        Collection<DataElementGroup> groupsB = dataElementService.getGroupsContainingDataElement( dataElementC );
+        List<DataElementGroup> groupsB = dataElementService.getGroupsContainingDataElement( dataElementC );
         
         assertTrue( groupsB.size() == 4 );
     }

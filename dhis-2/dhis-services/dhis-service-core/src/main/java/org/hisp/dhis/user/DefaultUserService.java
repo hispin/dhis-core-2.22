@@ -160,7 +160,7 @@ public class DefaultUserService
     }
 
     @Override
-    public Collection<User> getAllUsers()
+    public List<User> getAllUsers()
     {
         return userStore.getAll();
     }
@@ -435,7 +435,7 @@ public class DefaultUserService
     }
 
     @Override
-    public Collection<UserAuthorityGroup> getAllUserAuthorityGroups()
+    public List<UserAuthorityGroup> getAllUserAuthorityGroups()
     {
         return userAuthorityGroupStore.getAll();
     }
@@ -465,13 +465,13 @@ public class DefaultUserService
     }
 
     @Override
-    public Collection<UserAuthorityGroup> getUserRolesBetween( int first, int max )
+    public List<UserAuthorityGroup> getUserRolesBetween( int first, int max )
     {
         return userAuthorityGroupStore.getAllOrderedName( first, max );
     }
 
     @Override
-    public Collection<UserAuthorityGroup> getUserRolesBetweenByName( String name, int first, int max )
+    public List<UserAuthorityGroup> getUserRolesBetweenByName( String name, int first, int max )
     {
         return userAuthorityGroupStore.getAllLikeName( name, first, max );
     }
@@ -539,7 +539,7 @@ public class DefaultUserService
     }
 
     @Override
-    public Collection<UserCredentials> getAllUserCredentials()
+    public List<UserCredentials> getAllUserCredentials()
     {
         return userCredentialsStore.getAll();
     }

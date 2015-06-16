@@ -125,38 +125,38 @@ public interface OrganisationUnitService
     /**
      * Returns all OrganisationUnits.
      *
-     * @return a collection of all OrganisationUnits, or an empty collection if
+     * @return a list of all OrganisationUnits, or an empty list if
      *         there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getAllOrganisationUnits();
+    List<OrganisationUnit> getAllOrganisationUnits();
 
     /**
      * Returns all OrganisationUnits by status.
      *
      * @param active Get active or inactive
-     * @return a collection of all OrganisationUnits, or an empty collection if
+     * @return a list of all OrganisationUnits, or an empty list if
      *         there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean status );
+    List<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean status );
 
     /**
      * Returns all OrganisationUnits by lastUpdated.
      *
      * @param lastUpdated OrganisationUnits from this date
-     * @return a collection of all OrganisationUnits, or an empty collection if
+     * @return a list of all OrganisationUnits, or an empty list if
      *         there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated );
+    List<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated );
 
     /**
      * Returns all OrganisationUnits by status and lastUpdated.
      *
      * @param active      Get active or inactive
      * @param lastUpdated OrganisationUnits from this date
-     * @return a collection of all OrganisationUnits, or an empty collection if
+     * @return a list of all OrganisationUnits, or an empty list if
      *         there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean status, Date lastUpdated );
+    List<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean status, Date lastUpdated );
 
     /**
      * Returns all OrganisationUnits with corresponding name key based on the given list.
@@ -171,9 +171,9 @@ public interface OrganisationUnitService
      * Returns all OrganisationUnits with corresponding identifiers.
      *
      * @param identifiers the collection of identifiers.
-     * @return a collection of OrganisationUnits.
+     * @return a list of OrganisationUnits.
      */
-    Collection<OrganisationUnit> getOrganisationUnits( Collection<Integer> identifiers );
+    List<OrganisationUnit> getOrganisationUnits( Collection<Integer> identifiers );
 
     /**
      * Returns all OrganisationUnits with corresponding identifiers.
@@ -197,7 +197,7 @@ public interface OrganisationUnitService
      * @param name the name of the OrganisationUnit to return.
      * @return the OrganisationUnit with the given name, or null if not match.
      */
-    Collection<OrganisationUnit> getOrganisationUnitByNameIgnoreCase( String name );
+    List<OrganisationUnit> getOrganisationUnitByNameIgnoreCase( String name );
 
     /**
      * Returns all OrganisationUnits exactly matching the given names.
@@ -205,7 +205,7 @@ public interface OrganisationUnitService
      * @param names names of OrganisationUnits to return.
      * @return the OrganisationUnits matching the given names.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsByNames( Collection<String> names );
+    List<OrganisationUnit> getOrganisationUnitsByNames( Collection<String> names );
 
     /**
      * Returns all OrganisationUnits matching the given codes.
@@ -213,16 +213,16 @@ public interface OrganisationUnitService
      * @param codes codes of OrganisationUnits to return.
      * @return the OrganisationUnits matching the given codes.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsByCodes( Collection<String> codes );
+    List<OrganisationUnit> getOrganisationUnitsByCodes( Collection<String> codes );
 
     /**
      * Returns all root OrganisationUnits. A root OrganisationUnit is an
      * OrganisationUnit with no parent/the parent set to null.
      *
-     * @return a collection containing all root OrganisationUnits, or an empty
-     *         collection if there are no OrganisationUnits.
+     * @return a list containing all root OrganisationUnits, or an empty
+     *         list if there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getRootOrganisationUnits();
+    List<OrganisationUnit> getRootOrganisationUnits();
 
     /**
      * Returns the level of the organisation unit with the given identifier.
@@ -246,19 +246,19 @@ public interface OrganisationUnitService
      * 
      * @param groups the collection of OrganisationUnitGroups.
      * @param parents the collection of OrganisationUnit parents in the hierarchy.
-     * @return collection of OrganisationUnits.
+     * @return A list of OrganisationUnits.
      */
-    Collection<OrganisationUnit> getOrganisationUnits( Collection<OrganisationUnitGroup> groups, Collection<OrganisationUnit> parents );
+    List<OrganisationUnit> getOrganisationUnits( Collection<OrganisationUnitGroup> groups, Collection<OrganisationUnit> parents );
     
     /**
      * Returns an OrganisationUnit and all its children.
      *
      * @param uid the uid of the parent OrganisationUnit in the subtree.
-     * @return a collection containing the OrganisationUnit with the given id
-     *         and all its children, or an empty collection if no
+     * @return a list containing the OrganisationUnit with the given id
+     *         and all its children, or an empty list if no
      *         OrganisationUnits match.
      */
-    Collection<OrganisationUnit> getOrganisationUnitWithChildren( String uid );
+    List<OrganisationUnit> getOrganisationUnitWithChildren( String uid );
 
     /**
      * Returns an OrganisationUnit and all its children.
@@ -266,21 +266,21 @@ public interface OrganisationUnitService
      * @param uid the uid of the parent OrganisationUnit in the subtree.
      * @param maxLevels the max number of levels to return relative to 
      *        the given root, inclusive.
-     * @return a collection containing the OrganisationUnit with the given id
-     *         and all its children, or an empty collection if no
+     * @return a list containing the OrganisationUnit with the given id
+     *         and all its children, or an empty list if no
      *         OrganisationUnits match.
      */
-    Collection<OrganisationUnit> getOrganisationUnitWithChildren( String uid, Integer maxLevels );
+    List<OrganisationUnit> getOrganisationUnitWithChildren( String uid, Integer maxLevels );
 
     /**
      * Returns an OrganisationUnit and all its children.
      *
      * @param id the id of the parent OrganisationUnit in the subtree.
-     * @return a collection containing the OrganisationUnit with the given id
-     *         and all its children, or an empty collection if no
+     * @return a list containing the OrganisationUnit with the given id
+     *         and all its children, or an empty list if no
      *         OrganisationUnits match.
      */
-    Collection<OrganisationUnit> getOrganisationUnitWithChildren( int id );
+    List<OrganisationUnit> getOrganisationUnitWithChildren( int id );
 
     /**
      * Returns an OrganisationUnit and all its children.
@@ -288,21 +288,21 @@ public interface OrganisationUnitService
      * @param id the id of the parent OrganisationUnit in the subtree.
      * @param maxLevels the max number of levels to return relative to 
      *        the given root, inclusive.
-     * @return a collection containing the OrganisationUnit with the given id
-     *         and all its children, or an empty collection if no
+     * @return a list containing the OrganisationUnit with the given id
+     *         and all its children, or an empty list if no
      *         OrganisationUnits match.
      */
-    Collection<OrganisationUnit> getOrganisationUnitWithChildren( int id, Integer maxLevels );
+    List<OrganisationUnit> getOrganisationUnitWithChildren( int id, Integer maxLevels );
 
     /**
      * Returns the OrganisationUnits and all their children.
      *
      * @param uids the uids of the parent OrganisationUnits.
-     * @return a collection containing the OrganisationUnit with the given id
-     *         and all its children, or an empty collection if no
+     * @return a list containing the OrganisationUnit with the given id
+     *         and all its children, or an empty list if no
      *         OrganisationUnits match.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> uids );
+    List<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> uids );
 
     /**
      * Returns the OrganisationUnits and all their children.
@@ -310,11 +310,11 @@ public interface OrganisationUnitService
      * @param uids the uids of the parent OrganisationUnits.
      * @param maxLevels the max number of levels to return relative to 
      *        the given root, inclusive.
-     * @return a collection containing the OrganisationUnit with the given id
-     *         and all its children, or an empty collection if no
+     * @return a list containing the OrganisationUnit with the given id
+     *         and all its children, or an empty list if no
      *         OrganisationUnits match.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> uids, Integer maxLevels );
+    List<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> uids, Integer maxLevels );
     
     /**
      * Returns the branch of OrganisationUnits from a root to a given
@@ -333,11 +333,11 @@ public interface OrganisationUnitService
      * OrganisationUnits are at level 1.
      *
      * @param level the hierarchical level.
-     * @return a collection of all OrganisationUnits at a given hierarchical
-     *         level, or an empty collection if the level is empty.
+     * @return a list of all OrganisationUnits at a given hierarchical
+     *         level, or an empty list if the level is empty.
      * @throws IllegalArgumentException if the level is zero or negative.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsAtLevel( int level );
+    List<OrganisationUnit> getOrganisationUnitsAtLevel( int level );
 
     /**
      * Returns all OrganisationUnits which are children of the given unit and are
@@ -350,7 +350,7 @@ public interface OrganisationUnitService
      *         at the given hierarchical level.
      * @throws IllegalArgumentException if the level is illegal.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsAtLevel( int level, OrganisationUnit parent );
+    List<OrganisationUnit> getOrganisationUnitsAtLevel( int level, OrganisationUnit parent );
 
     /**
      * Returns all OrganisationUnits which are children of the given unit and are
@@ -363,7 +363,7 @@ public interface OrganisationUnitService
      *         at the given hierarchical level.
      * @throws IllegalArgumentException if the level is illegal.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsAtLevels( Collection<Integer> levels, Collection<OrganisationUnit> parents );
+    List<OrganisationUnit> getOrganisationUnitsAtLevels( Collection<Integer> levels, Collection<OrganisationUnit> parents );
     
     /**
      * Returns all OrganisationUnits which are children of the given units and are
@@ -376,7 +376,7 @@ public interface OrganisationUnitService
      *         at the given hierarchical level.
      * @throws IllegalArgumentException if the level is illegal.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsAtLevel( int level, Collection<OrganisationUnit> parents );
+    List<OrganisationUnit> getOrganisationUnitsAtLevel( int level, Collection<OrganisationUnit> parents );
 
     /**
      * Returns the number of levels in the OrganisationUnit hierarchy.
@@ -390,7 +390,7 @@ public interface OrganisationUnitService
      *
      * @return all OrganisationUnits which are not a member of any OrganisationUnitGroups.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsWithoutGroups();
+    List<OrganisationUnit> getOrganisationUnitsWithoutGroups();
 
     /**
      * Returns all OrganisationUnit which names are like the given name, or which
@@ -399,9 +399,9 @@ public interface OrganisationUnitService
      * @param query  the query to match on name, code or uid.
      * @param groups the organisation unit groups.
      * @param limit  the limit of returned objects.
-     * @return a collection of OrganisationUnits.
+     * @return a list of OrganisationUnits.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String name, Collection<OrganisationUnitGroup> groups, boolean limit );
+    List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String name, Collection<OrganisationUnitGroup> groups, boolean limit );
 
     /**
      * Returns all OrganisationUnit which names are like the given name, or which
@@ -410,23 +410,23 @@ public interface OrganisationUnitService
      * @param query  the query to match on name, code or uid.
      * @param groups the organisation unit groups.
      * @param limit  the limit of returned objects.
-     * @return a collection of OrganisationUnits.
+     * @return a list of OrganisationUnits.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String name, Collection<OrganisationUnitGroup> groups, OrganisationUnit parent, boolean limit );
+    List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String name, Collection<OrganisationUnitGroup> groups, OrganisationUnit parent, boolean limit );
 
     OrganisationUnitDataSetAssociationSet getOrganisationUnitDataSetAssociationSet( Integer maxlevels );
 
     void filterOrganisationUnitsWithoutData( Collection<OrganisationUnit> organisationUnits );
 
-    Collection<OrganisationUnit> getOrganisationUnitsBetween( int first, int max );
+    List<OrganisationUnit> getOrganisationUnitsBetween( int first, int max );
 
-    Collection<OrganisationUnit> getOrganisationUnitsBetweenByName( String name, int first, int max );
+    List<OrganisationUnit> getOrganisationUnitsBetweenByName( String name, int first, int max );
 
-    Collection<OrganisationUnit> getOrganisationUnitsBetweenByStatus( boolean status, int first, int max );
+    List<OrganisationUnit> getOrganisationUnitsBetweenByStatus( boolean status, int first, int max );
 
-    Collection<OrganisationUnit> getOrganisationUnitsBetweenByLastUpdated( Date lastUpdated, int first, int max );
+    List<OrganisationUnit> getOrganisationUnitsBetweenByLastUpdated( Date lastUpdated, int first, int max );
 
-    Collection<OrganisationUnit> getOrganisationUnitsBetweenByStatusLastUpdated( boolean status, Date lastUpdated, int first, int max );
+    List<OrganisationUnit> getOrganisationUnitsBetweenByStatusLastUpdated( boolean status, Date lastUpdated, int first, int max );
 
     Map<String, OrganisationUnit> getUuidOrganisationUnitMap();
     
@@ -437,9 +437,9 @@ public interface OrganisationUnitService
      * @param latitude         The latitude of the center location.
      * @param distance         The distance from center location.
      * 
-     * @return collection of objects.
+     * @return a list of objects.
      */
-    Collection<OrganisationUnit> getOrganisationUnitWithinDistance( double longitude, double latitude, double distance );
+    List<OrganisationUnit> getOrganisationUnitWithinDistance( double longitude, double latitude, double distance );
 
     /**
      * Retrieves the orgunit(s) by coordinate.
@@ -450,9 +450,9 @@ public interface OrganisationUnitService
      *        Country level orgunit)
      * @param targetLevel Optional. The level being searched.
      * 
-     * @return collection of objects.
+     * @return list of objects.
      */
-    Collection<OrganisationUnit> getOrganisationUnitByCoordinate( double longitude, double latitude, String topOrgUnitUid,
+    List<OrganisationUnit> getOrganisationUnitByCoordinate( double longitude, double latitude, String topOrgUnitUid,
         Integer targetLevel );
 
     /**
@@ -510,7 +510,7 @@ public interface OrganisationUnitService
 
     OrganisationUnitLevel getOrganisationUnitLevel( String uid );
 
-    Collection<OrganisationUnitLevel> getOrganisationUnitLevels( Collection<Integer> identifiers );
+    List<OrganisationUnitLevel> getOrganisationUnitLevels( Collection<Integer> identifiers );
 
     void deleteOrganisationUnitLevel( OrganisationUnitLevel level );
 

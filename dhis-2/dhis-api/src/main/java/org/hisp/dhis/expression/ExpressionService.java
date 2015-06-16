@@ -29,6 +29,7 @@ package org.hisp.dhis.expression;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -120,9 +121,9 @@ public interface ExpressionService
     /**
      * Gets all Expressions.
      *
-     * @return A collection with all Expressions.
+     * @return A list with all Expressions.
      */
-    Collection<Expression> getAllExpressions();
+    List<Expression> getAllExpressions();
     
     Double getIndicatorValue( Indicator indicator, Period period, Map<DataElementOperand, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days );
@@ -250,7 +251,7 @@ public interface ExpressionService
      *  
      * @param indicators collection of Indicators.
      */
-    void filterInvalidIndicators( Collection<Indicator> indicators );
+    void filterInvalidIndicators( List<Indicator> indicators );
     
     /**
      * Tests whether the expression is valid. Returns a positive value if the
@@ -356,5 +357,5 @@ public interface ExpressionService
      * 
      * @param indicators the collection of Indicators.
      */
-    Set<DataElementOperand> getOperandsInIndicators( Collection<Indicator> indicators );
+    List<DataElementOperand> getOperandsInIndicators( List<Indicator> indicators );
 }

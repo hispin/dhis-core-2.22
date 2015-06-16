@@ -91,7 +91,7 @@ public class DefaultUserGroupService
     }
 
     @Override
-    public Collection<UserGroup> getAllUserGroups()
+    public List<UserGroup> getAllUserGroups()
     {
         return userGroupStore.getAll();
     }

@@ -28,7 +28,6 @@ package org.hisp.dhis.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hisp.dhis.common.GenericStore;
@@ -50,7 +49,7 @@ public interface DataEntryFormStore
      */
     DataEntryForm getDataEntryFormByName( String name );
     
-    Collection<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds );
+    List<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds );
     
-    Collection<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds );
+    List<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds );
 }

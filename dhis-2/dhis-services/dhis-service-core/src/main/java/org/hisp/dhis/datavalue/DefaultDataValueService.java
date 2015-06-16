@@ -34,6 +34,7 @@ import static org.hisp.dhis.system.util.ValidationUtils.dataValueIsZeroAndInsign
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -220,78 +221,78 @@ public class DefaultDataValueService
     // -------------------------------------------------------------------------
 
     @Override
-    public Collection<DataValue> getAllDataValues()
+    public List<DataValue> getAllDataValues()
     {
         return dataValueStore.getAllDataValues();
     }
 
     @Override
-    public Collection<DataValue> getDataValues( OrganisationUnit source, Period period )
+    public List<DataValue> getDataValues( OrganisationUnit source, Period period )
     {
         return dataValueStore.getDataValues( source, period );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( OrganisationUnit source, DataElement dataElement )
+    public List<DataValue> getDataValues( OrganisationUnit source, DataElement dataElement )
     {
         return dataValueStore.getDataValues( source, dataElement );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( Collection<OrganisationUnit> sources, DataElement dataElement )
+    public List<DataValue> getDataValues( Collection<OrganisationUnit> sources, DataElement dataElement )
     {
         return dataValueStore.getDataValues( sources, dataElement );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements )
+    public List<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements )
     {
         return dataValueStore.getDataValues( source, period, dataElements );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( OrganisationUnit source, Period period,
+    public List<DataValue> getDataValues( OrganisationUnit source, Period period,
         Collection<DataElement> dataElements, DataElementCategoryOptionCombo attributeOptionCombo )
     {
         return dataValueStore.getDataValues( source, period, dataElements, attributeOptionCombo );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements,
+    public List<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements,
         Collection<DataElementCategoryOptionCombo> optionCombos )
     {
         return dataValueStore.getDataValues( source, period, dataElements, optionCombos );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( DataElement dataElement, Period period,
+    public List<DataValue> getDataValues( DataElement dataElement, Period period,
         Collection<OrganisationUnit> sources )
     {
         return dataValueStore.getDataValues( dataElement, period, sources );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( DataElement dataElement, Collection<Period> periods,
+    public List<DataValue> getDataValues( DataElement dataElement, Collection<Period> periods,
         Collection<OrganisationUnit> sources )
     {
         return dataValueStore.getDataValues( dataElement, periods, sources );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( DataElement dataElement, DataElementCategoryOptionCombo optionCombo,
+    public List<DataValue> getDataValues( DataElement dataElement, DataElementCategoryOptionCombo optionCombo,
         Collection<Period> periods, Collection<OrganisationUnit> sources )
     {
         return dataValueStore.getDataValues( dataElement, optionCombo, periods, sources );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( Collection<DataElementCategoryOptionCombo> optionCombos )
+    public List<DataValue> getDataValues( Collection<DataElementCategoryOptionCombo> optionCombos )
     {
         return dataValueStore.getDataValues( optionCombos );
     }
 
     @Override
-    public Collection<DataValue> getDataValues( DataElement dataElement )
+    public List<DataValue> getDataValues( DataElement dataElement )
     {
         return dataValueStore.getDataValues( dataElement );
     }

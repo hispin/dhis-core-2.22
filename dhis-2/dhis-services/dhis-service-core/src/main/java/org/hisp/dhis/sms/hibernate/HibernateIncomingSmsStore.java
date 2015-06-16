@@ -28,7 +28,8 @@ package org.hisp.dhis.sms.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -74,7 +75,7 @@ public class HibernateIncomingSmsStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword )
+    public List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword )
     {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( IncomingSms.class ).addOrder( Order.desc( "sentDate" ) );
@@ -88,7 +89,7 @@ public class HibernateIncomingSmsStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<IncomingSms> getSmsByOriginator( String originator )
+    public List<IncomingSms> getSmsByOriginator( String originator )
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( IncomingSms.class );
         criteria.add( Restrictions.eq( "originator", originator ) );
@@ -97,7 +98,7 @@ public class HibernateIncomingSmsStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<IncomingSms> getAllSmses()
+    public List<IncomingSms> getAllSmses()
     {
         return sessionFactory.getCurrentSession().createCriteria( IncomingSms.class ).addOrder( Order.desc( "id" ) )
             .list();
@@ -127,7 +128,7 @@ public class HibernateIncomingSmsStore
 
     @SuppressWarnings( "unchecked" )
     @Override
-    public Collection<IncomingSms> getAllUnparsedSmses()
+    public List<IncomingSms> getAllUnparsedSmses()
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( IncomingSms.class );
         criteria.add( Restrictions.eq( "parsed", false ) );
@@ -136,7 +137,7 @@ public class HibernateIncomingSmsStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max )
+    public List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max )
     {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( IncomingSms.class ).addOrder( Order.desc( "sentDate" ) );

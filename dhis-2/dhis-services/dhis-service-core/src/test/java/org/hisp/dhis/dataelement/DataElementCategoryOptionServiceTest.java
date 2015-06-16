@@ -34,7 +34,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -120,7 +119,7 @@ public class DataElementCategoryOptionServiceTest
         categoryService.addDataElementCategoryOption( categoryOptionB );
         categoryService.addDataElementCategoryOption( categoryOptionC );
         
-        Collection<DataElementCategoryOption> categoryOptions = categoryService.getAllDataElementCategoryOptions();
+        List<DataElementCategoryOption> categoryOptions = categoryService.getAllDataElementCategoryOptions();
         
         assertEquals( 4, categoryOptions.size() ); // Including default
         assertTrue( categoryOptions.contains( categoryOptionA ) );
@@ -164,7 +163,7 @@ public class DataElementCategoryOptionServiceTest
         categoryService.addDataElementCategory( categoryB );
         categoryService.addDataElementCategory( categoryC );
         
-        Collection<DataElementCategoryOption> categoryOptions = categoryService.getDataElementCategoryOptions( categoryA );
+        List<DataElementCategoryOption> categoryOptions = categoryService.getDataElementCategoryOptions( categoryA );
 
         assertEquals( 2, categoryOptions.size() );
         

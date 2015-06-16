@@ -29,7 +29,6 @@ package org.hisp.dhis.i18n;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -183,13 +182,13 @@ public class DefaultI18nLocaleService
     }
     
     @Override
-    public Collection<I18nLocale> getI18nLocalesBetween( int first, int max )
+    public List<I18nLocale> getI18nLocalesBetween( int first, int max )
     {
         return localeStore.getAllOrderedName( first, max );
     }
     
     @Override
-    public Collection<I18nLocale> getI18nLocalesBetweenLikeName( String name, int first, int max )
+    public List<I18nLocale> getI18nLocalesBetweenLikeName( String name, int first, int max )
     {
         return localeStore.getAllLikeName( name, first, max );
     }

@@ -29,14 +29,9 @@ package org.hisp.dhis.sms.incoming;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
 import org.hisp.dhis.sms.MessageQueue;
-import org.hisp.dhis.sms.incoming.IncomingSms;
-import org.hisp.dhis.sms.incoming.IncomingSmsStore;
-import org.hisp.dhis.sms.incoming.SmsMessageEncoding;
-import org.hisp.dhis.sms.incoming.SmsMessageStatus;
-import org.hisp.dhis.sms.incoming.IncomingSmsService;
 import org.smslib.InboundMessage;
 import org.smslib.Service;
 
@@ -181,7 +176,7 @@ public class DefaultIncomingSmsService
     }
 
     @Override
-    public Collection<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword )
+    public List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword )
     {
         return incomingSmsStore.getSmsByStatus( status, keyword );
     }
@@ -204,7 +199,7 @@ public class DefaultIncomingSmsService
     }
 
     @Override
-    public Collection<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max )
+    public List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max )
     {
         return incomingSmsStore.getSmsByStatus( status, keyword, min, max );
     }

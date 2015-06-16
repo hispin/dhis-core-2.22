@@ -28,7 +28,7 @@ package org.hisp.dhis.sms.incoming;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 /** 
  * Store for incoming SMS messages.
@@ -43,17 +43,17 @@ public interface IncomingSmsStore
 
     IncomingSms get( int id );
 
-    Collection<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword );
+    List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword );
     
-    Collection<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max );
+    List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max );
 
-    Collection<IncomingSms> getSmsByOriginator( String originator );
+    List<IncomingSms> getSmsByOriginator( String originator );
 
     long getSmsCount();
 
-    Collection<IncomingSms> getAllSmses();
+    List<IncomingSms> getAllSmses();
     
     void delete( IncomingSms incomingSms);
     
-    Collection<IncomingSms> getAllUnparsedSmses();
+    List<IncomingSms> getAllUnparsedSmses();
 }

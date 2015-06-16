@@ -28,12 +28,13 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericNameableObjectStore;
-
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.hisp.dhis.common.GenericNameableObjectStore;
 
 /**
  * Defines methods for persisting OrganisationUnits.
@@ -64,7 +65,7 @@ public interface OrganisationUnitStore
      * @param names names of the OrganisationUnits to return.
      * @return all OrganisationUnits matching the given names.
      */
-    Collection<OrganisationUnit> getByNames( Collection<String> names );
+    List<OrganisationUnit> getByNames( Collection<String> names );
 
     /**
      * Retrieves all OrganisationUnits matching the given codes.
@@ -72,35 +73,35 @@ public interface OrganisationUnitStore
      * @param codes codes of the OrganisationUnits to return.
      * @return all OrganisationUnits matching the given codes.
      */
-    Collection<OrganisationUnit> getByCodes( Collection<String> codes );
+    List<OrganisationUnit> getByCodes( Collection<String> codes );
 
     /**
      * Returns all OrganisationUnits by status.
      *
      * @param active Get active or inactive
-     * @return a collection of all OrganisationUnits, or an empty collection if
+     * @return a list of all OrganisationUnits, or an empty list if
      *         there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean active );
+    List<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean active );
 
     /**
      * Returns all OrganisationUnits by lastUpdated.
      *
      * @param lastUpdated OrganisationUnits from this date
-     * @return a collection of all OrganisationUnits, or an empty collection if
+     * @return a list of all OrganisationUnits, or an empty list if
      *         there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated );
+    List<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated );
 
     /**
      * Returns all OrganisationUnits by status and lastUpdated.
      *
      * @param active      Get active or inactive
      * @param lastUpdated OrganisationUnits from this date
-     * @return a collection of all OrganisationUnits, or an empty collection if
+     * @return a list of all OrganisationUnits, or an empty list if
      *         there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean active, Date lastUpdated );
+    List<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean active, Date lastUpdated );
 
     /**
      * Returns an OrganisationUnit with a given name. Case is ignored.
@@ -114,17 +115,17 @@ public interface OrganisationUnitStore
      * Returns all root OrganisationUnits. A root OrganisationUnit is an
      * OrganisationUnit with no parent/has the parent set to null.
      *
-     * @return a collection containing all root OrganisationUnits, or an empty
-     *         collection if there are no OrganisationUnits.
+     * @return a list containing all root OrganisationUnits, or an empty
+     *         list if there are no OrganisationUnits.
      */
-    Collection<OrganisationUnit> getRootOrganisationUnits();
+    List<OrganisationUnit> getRootOrganisationUnits();
 
     /**
      * Returns all OrganisationUnits which are not a member of any OrganisationUnitGroups.
      *
      * @return all OrganisationUnits which are not a member of any OrganisationUnitGroups.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsWithoutGroups();
+    List<OrganisationUnit> getOrganisationUnitsWithoutGroups();
 
     /**
      * Returns all OrganisationUnit which names are like the given name, or which
@@ -133,9 +134,9 @@ public interface OrganisationUnitStore
      * @param query  the query to match on name, code or uid.
      * @param groups the organisation unit groups.
      * @param limit  the limit of returned objects.
-     * @return a collection of OrganisationUnits.
+     * @return a list of OrganisationUnits.
      */
-    Collection<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query, Collection<OrganisationUnitGroup> groups, boolean limit );
+    List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query, Collection<OrganisationUnitGroup> groups, boolean limit );
 
     /**
      * Creates a mapping between organisation unit UID and set of data set UIDs
@@ -155,9 +156,9 @@ public interface OrganisationUnitStore
      * @param status the name which result object names must be like.
      * @param first  the first result object to return.
      * @param max    the max number of result objects to return.
-     * @return collection of objects.
+     * @return a list of objects.
      */
-    Collection<OrganisationUnit> getBetweenByStatus( boolean status, int first, int max );
+    List<OrganisationUnit> getBetweenByStatus( boolean status, int first, int max );
 
     /**
      * Retrieves the objects determined by the given first result and max result
@@ -166,9 +167,9 @@ public interface OrganisationUnitStore
      * @param lastUpdated the name which result object names must be like.
      * @param first       the first result object to return.
      * @param max         the max number of result objects to return.
-     * @return collection of objects.
+     * @return a list of objects.
      */
-    Collection<OrganisationUnit> getBetweenByLastUpdated( Date lastUpdated, int first, int max );
+    List<OrganisationUnit> getBetweenByLastUpdated( Date lastUpdated, int first, int max );
 
 
     /**
@@ -179,9 +180,9 @@ public interface OrganisationUnitStore
      * @param lastUpdated the name which result object names must be like.
      * @param first       the first result object to return.
      * @param max         the max number of result objects to return.
-     * @return collection of objects.
+     * @return a list of objects.
      */
-    Collection<OrganisationUnit> getBetweenByStatusLastUpdated( boolean status, Date lastUpdated, int first, int max );
+    List<OrganisationUnit> getBetweenByStatusLastUpdated( boolean status, Date lastUpdated, int first, int max );
 
 
     /**
@@ -193,9 +194,9 @@ public interface OrganisationUnitStore
      * Index 3: Minumum longitude (west edge of box shape)
      *
      * @param box      the 4 area points.
-     * @return collection of objects.
+     * @return a list of objects.
      */
-    Collection<OrganisationUnit> getWithinCoordinateArea( double[] box );
+    List<OrganisationUnit> getWithinCoordinateArea( double[] box );
     
     // -------------------------------------------------------------------------
     // OrganisationUnitHierarchy
@@ -204,7 +205,7 @@ public interface OrganisationUnitStore
     /**
      * Get the OrganisationUnit hierarchy.
      *
-     * @return a Collection with OrganisationUnitRelationship entries.
+     * @return a  with OrganisationUnitRelationship entries.
      */
     OrganisationUnitHierarchy getOrganisationUnitHierarchy();
 

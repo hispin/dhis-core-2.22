@@ -28,11 +28,10 @@ package org.hisp.dhis.message;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.user.User;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Lars Helge Overland
@@ -57,7 +56,7 @@ public interface MessageConversationStore
      * @param messageConversationUids the UIDs of the MessageConversations to get.
      * @return a collection of MessageConversations.
      */
-    Collection<MessageConversation> getMessageConversations( String[] messageConversationUids );
+    List<MessageConversation> getMessageConversations( String[] messageConversationUids );
     
     int getMessageConversationCount( User user, boolean followUpOnly, boolean unreadOnly );
     

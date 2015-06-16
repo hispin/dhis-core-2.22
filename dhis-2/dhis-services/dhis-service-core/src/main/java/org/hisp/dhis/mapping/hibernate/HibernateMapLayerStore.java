@@ -28,14 +28,14 @@ package org.hisp.dhis.mapping.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.mapping.MapLayer;
 import org.hisp.dhis.mapping.MapLayerStore;
-
-import java.util.Collection;
 
 /**
  * @author Jan Henrik Overland
@@ -46,7 +46,7 @@ public class HibernateMapLayerStore
 {
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<MapLayer> getMapLayersByType( String type )
+    public List<MapLayer> getMapLayersByType( String type )
     {
         Session session = sessionFactory.getCurrentSession();
 
@@ -58,7 +58,7 @@ public class HibernateMapLayerStore
     }
 
     @SuppressWarnings( "unchecked" )
-    public Collection<MapLayer> getMapLayersByMapSourceType( String mapSourceType )
+    public List<MapLayer> getMapLayersByMapSourceType( String mapSourceType )
     {
         Session session = sessionFactory.getCurrentSession();
 

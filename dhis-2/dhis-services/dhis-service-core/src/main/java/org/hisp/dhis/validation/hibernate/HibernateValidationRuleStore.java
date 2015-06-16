@@ -28,9 +28,9 @@ package org.hisp.dhis.validation.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
@@ -86,9 +86,9 @@ public class HibernateValidationRuleStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<ValidationRule> getValidationRulesByDataElements( Collection<DataElement> dataElements )
+    public List<ValidationRule> getValidationRulesByDataElements( Collection<DataElement> dataElements )
     {
-        Set<ValidationRule> validationRules = new HashSet<>();
+        List<ValidationRule> validationRules = new ArrayList<>();
         
         Collection<Integer> ids = ConversionUtils.getIdentifiers( DataElement.class, dataElements );
         

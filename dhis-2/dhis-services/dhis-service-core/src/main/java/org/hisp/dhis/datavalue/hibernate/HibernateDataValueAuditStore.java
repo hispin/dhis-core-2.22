@@ -29,7 +29,7 @@ package org.hisp.dhis.datavalue.hibernate;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -85,7 +85,7 @@ public class HibernateDataValueAuditStore
 
 
     @Override
-    public Collection<DataValueAudit> getDataValueAudits( DataValue dataValue )
+    public List<DataValueAudit> getDataValueAudits( DataValue dataValue )
     {
         return getDataValueAudits( dataValue.getDataElement(), dataValue.getPeriod(),
             dataValue.getSource(), dataValue.getCategoryOptionCombo(), dataValue.getAttributeOptionCombo() );
@@ -93,7 +93,7 @@ public class HibernateDataValueAuditStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period,
+    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period,
         OrganisationUnit organisationUnit, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
     {
         Session session = sessionFactory.getCurrentSession();

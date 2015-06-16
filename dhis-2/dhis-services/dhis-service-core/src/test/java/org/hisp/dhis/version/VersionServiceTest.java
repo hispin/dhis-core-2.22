@@ -28,14 +28,16 @@ package org.hisp.dhis.version;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.Assert.*;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class VersionServiceTest
     extends DhisSpringTest
@@ -127,7 +129,7 @@ public class VersionServiceTest
         versionService.addVersion( versionA );
         versionService.addVersion( versionB );
 
-        Collection<Version> versions = versionService.getAllVersions();
+        List<Version> versions = versionService.getAllVersions();
 
         assertNotNull( versions );
         assertEquals( 2, versions.size() );

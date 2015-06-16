@@ -136,13 +136,13 @@ public class DefaultCompleteDataSetRegistrationService
     }
 
     @Override
-    public Collection<CompleteDataSetRegistration> getAllCompleteDataSetRegistrations()
+    public List<CompleteDataSetRegistration> getAllCompleteDataSetRegistrations()
     {
         return completeDataSetRegistrationStore.getAllCompleteDataSetRegistrations();
     }
 
     @Override
-    public Collection<CompleteDataSetRegistration> getCompleteDataSetRegistrations(
+    public List<CompleteDataSetRegistration> getCompleteDataSetRegistrations(
         Collection<DataSet> dataSets, Collection<OrganisationUnit> sources, Collection<Period> periods )
     {
         return completeDataSetRegistrationStore.getCompleteDataSetRegistrations( dataSets, sources, periods );

@@ -33,9 +33,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -212,13 +211,13 @@ public class DataElementStoreTest
         dataElementStore.save( dataElementC );
         dataElementStore.save( dataElementD );
 
-        Collection<DataElement> dataElementsRef = new HashSet<>();
+        List<DataElement> dataElementsRef = new ArrayList<>();
         dataElementsRef.add( dataElementA );
         dataElementsRef.add( dataElementB );
         dataElementsRef.add( dataElementC );
         dataElementsRef.add( dataElementD );
 
-        Collection<DataElement> dataElements = dataElementStore.getAll();
+        List<DataElement> dataElements = dataElementStore.getAll();
         assertNotNull( dataElements );
         assertEquals( dataElementsRef.size(), dataElements.size() );
         assertTrue( dataElements.containsAll( dataElementsRef ) );
@@ -244,12 +243,12 @@ public class DataElementStoreTest
         dataElementStore.save( dataElementC );
         dataElementStore.save( dataElementD );
 
-        Collection<DataElement> dataElementsRef = new HashSet<>();
+        List<DataElement> dataElementsRef = new ArrayList<>();
         dataElementsRef.add( dataElementA );
         dataElementsRef.add( dataElementB );
         dataElementsRef.add( dataElementD );
 
-        Collection<DataElement> dataElements = dataElementStore.getAggregateableDataElements();
+        List<DataElement> dataElements = dataElementStore.getAggregateableDataElements();
         assertNotNull( dataElements );
         assertEquals( dataElementsRef.size(), dataElements.size() );
         assertTrue( dataElements.containsAll( dataElementsRef ) );
@@ -360,7 +359,7 @@ public class DataElementStoreTest
         dataElementStore.save( dataElementB );
         dataElementStore.save( dataElementC );
         
-        Collection<DataElement> dataElements = dataElementStore.getDataElementsByAggregationLevel( 2 );
+        List<DataElement> dataElements = dataElementStore.getDataElementsByAggregationLevel( 2 );
         
         assertEquals( 0, dataElements.size() );
         
@@ -395,7 +394,7 @@ public class DataElementStoreTest
         dataElementStore.save( dataElementC );
         dataElementStore.save( dataElementD );
         
-        Collection<DataElement> dataElements = dataElementStore.getDataElementsByZeroIsSignificant( true );
+        List<DataElement> dataElements = dataElementStore.getDataElementsByZeroIsSignificant( true );
         
         assertTrue( equals( dataElements, dataElementA, dataElementB ) );
     }
@@ -429,11 +428,11 @@ public class DataElementStoreTest
         dataSetService.addDataSet( dataSetA );
         dataSetService.addDataSet( dataSetB );
         
-        Collection<DataSet> dataSets = new HashSet<>();
+        List<DataSet> dataSets = new ArrayList<>();
         dataSets.add( dataSetA );
         dataSets.add( dataSetB );
         
-        Collection<DataElement> dataElements = dataElementStore.getDataElementsByDataSets( dataSets );
+        List<DataElement> dataElements = dataElementStore.getDataElementsByDataSets( dataSets );
         
         assertNotNull( dataElements );
         assertEquals( 4, dataElements.size() );

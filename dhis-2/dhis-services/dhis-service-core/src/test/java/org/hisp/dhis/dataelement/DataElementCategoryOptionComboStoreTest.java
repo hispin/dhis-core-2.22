@@ -32,8 +32,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -210,7 +210,7 @@ public class DataElementCategoryOptionComboStoreTest
         categoryOptionComboStore.save( categoryOptionComboB );
         categoryOptionComboStore.save( categoryOptionComboC );
         
-        Collection<DataElementCategoryOptionCombo> categoryOptionCombos = 
+        List<DataElementCategoryOptionCombo> categoryOptionCombos = 
             categoryOptionComboStore.getAll();
         
         assertNotNull( categoryOptionCombos );
@@ -223,7 +223,7 @@ public class DataElementCategoryOptionComboStoreTest
         categoryService.generateOptionCombos( categoryComboA );
         categoryService.generateOptionCombos( categoryComboB );
         
-        Collection<DataElementCategoryOptionCombo> optionCombos = categoryService.getAllDataElementCategoryOptionCombos();
+        List<DataElementCategoryOptionCombo> optionCombos = categoryService.getAllDataElementCategoryOptionCombos();
         
         assertEquals( 7, optionCombos.size() ); // Including default
     }

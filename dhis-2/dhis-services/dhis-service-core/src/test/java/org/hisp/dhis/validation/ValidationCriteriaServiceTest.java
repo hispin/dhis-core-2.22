@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
@@ -163,7 +163,7 @@ public class ValidationCriteriaServiceTest
         validationCriteriaService.saveValidationCriteria( validationCriteriaA );
         validationCriteriaService.saveValidationCriteria( validationCriteriaB );
 
-        Collection<ValidationCriteria> validationCriteria = validationCriteriaService.getAllValidationCriterias();
+        List<ValidationCriteria> validationCriteria = validationCriteriaService.getAllValidationCriterias();
 
         assertTrue( validationCriteria.size() == 2 );
         assertTrue( validationCriteria.contains( validationCriteriaA ) );

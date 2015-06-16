@@ -33,8 +33,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -195,7 +195,7 @@ public class ExpressionStoreTest
         expressionStore.save( exprA );
         expressionStore.save( exprB );
 
-        Collection<Expression> expressions = expressionStore.getAll();
+        List<Expression> expressions = expressionStore.getAll();
 
         assertTrue( expressions.size() == 2 );
         assertTrue( expressions.contains( exprA ) );

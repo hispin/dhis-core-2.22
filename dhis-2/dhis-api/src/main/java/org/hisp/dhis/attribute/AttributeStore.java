@@ -28,9 +28,9 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import java.util.List;
 
-import java.util.Set;
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 
 /**
  * @author mortenoh
@@ -45,96 +45,96 @@ public interface AttributeStore
      *
      * @return All attributes with attribute.dataElement = true
      */
-    Set<Attribute> getDataElementAttributes();
+    List<Attribute> getDataElementAttributes();
 
     /**
      * Get all attributes that are enabled for data element groups.
      *
      * @return All attributes with attribute.dataElementGroup = true
      */
-    Set<Attribute> getDataElementGroupAttributes();
+    List<Attribute> getDataElementGroupAttributes();
 
     /**
      * Get all attributes that are enabled for indicators.
      *
      * @return All attributes with attribute.indicator = true
      */
-    Set<Attribute> getIndicatorAttributes();
+    List<Attribute> getIndicatorAttributes();
 
     /**
      * Get all attributes that are enabled for indicator groups.
      *
      * @return All attributes with attribute.indicatorGroup = true
      */
-    Set<Attribute> getIndicatorGroupAttributes();
+    List<Attribute> getIndicatorGroupAttributes();
 
     /**
      * Get all attributes that are enabled for data sets.
      *
      * @return All attributes with attribute.dataSet = true
      */
-    Set<Attribute> getDataSetAttributes();
+    List<Attribute> getDataSetAttributes();
 
     /**
      * Get all attributes that are enabled for organisation units.
      *
      * @return All attributes with attribute.organisationUnit = true
      */
-    Set<Attribute> getOrganisationUnitAttributes();
+    List<Attribute> getOrganisationUnitAttributes();
 
     /**
      * Get all attributes that are enabled for organisation unit groups.
      *
      * @return All attributes with attribute.organisationUnitGroup = true
      */
-    Set<Attribute> getOrganisationUnitGroupAttributes();
+    List<Attribute> getOrganisationUnitGroupAttributes();
 
     /**
      * Get all attributes that are enabled for organisation unit group sets.
      *
      * @return All attributes with attribute.organisationUnitGroupSet = true
      */
-    Set<Attribute> getOrganisationUnitGroupSetAttributes();
+    List<Attribute> getOrganisationUnitGroupSetAttributes();
 
     /**
      * Get all attributes that are enabled for users.
      *
      * @return All attributes with attribute.organisationUnit = true
      */
-    Set<Attribute> getUserAttributes();
+    List<Attribute> getUserAttributes();
 
     /**
      * Get all attributes that are enabled for user group.
      *
      * @return All attributes with attribute.organisationUnitGroup = true
      */
-    Set<Attribute> getUserGroupAttributes();
+    List<Attribute> getUserGroupAttributes();
 
     /**
      * Get all attributes that are enabled for program.
      *
      * @return All attributes with attribute.program = true
      */
-    Set<Attribute> getProgramAttributes();
+    List<Attribute> getProgramAttributes();
 
     /**
      * Gets attributes which are associated with program stages.
      *
      * @return a set of attributes which are associated with programs.
      */
-    Set<Attribute> getProgramStageAttributes();
+    List<Attribute> getProgramStageAttributes();
 
     /**
      * Gets attributes which are associated with tracked entities.
      *
      * @return a set of attributes which are associated with programs.
      */
-    Set<Attribute> getTrackedEntityAttributes();
+    List<Attribute> getTrackedEntityAttributes();
 
     /**
      * Gets attributes which are associated with programs.
      *
      * @return a set of attributes which are associated with programs.
      */
-    Set<Attribute> getTrackedEntityAttributeAttributes();
+    List<Attribute> getTrackedEntityAttributeAttributes();
 }

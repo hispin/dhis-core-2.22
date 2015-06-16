@@ -129,7 +129,7 @@ public interface DataElementService
     /**
      * Returns all DataElements.
      *
-     * @return a list of all DataElements, or an empty collection if there
+     * @return a list of all DataElements, or an empty list if there
      *         are no DataElements.
      */
     List<DataElement> getAllDataElements();

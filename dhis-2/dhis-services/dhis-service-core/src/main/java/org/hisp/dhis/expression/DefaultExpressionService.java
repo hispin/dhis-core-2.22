@@ -37,6 +37,7 @@ import static org.hisp.dhis.system.util.MathUtils.calculateExpression;
 import static org.hisp.dhis.system.util.MathUtils.isEqual;
 import static org.hisp.dhis.expression.MissingValueStrategy.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -155,7 +156,7 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public Collection<Expression> getAllExpressions()
+    public List<Expression> getAllExpressions()
     {
         return expressionStore.getAll();
     }
@@ -449,7 +450,7 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public void filterInvalidIndicators( Collection<Indicator> indicators )
+    public void filterInvalidIndicators( List<Indicator> indicators )
     {
         if ( indicators != null )
         {
@@ -972,9 +973,9 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public Set<DataElementOperand> getOperandsInIndicators( Collection<Indicator> indicators )
+    public List<DataElementOperand> getOperandsInIndicators( List<Indicator> indicators )
     {
-        final Set<DataElementOperand> operands = new HashSet<>();
+        final List<DataElementOperand> operands = new ArrayList<>();
         
         for ( Indicator indicator : indicators )
         {

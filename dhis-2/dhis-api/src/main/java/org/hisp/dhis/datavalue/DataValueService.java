@@ -30,6 +30,7 @@ package org.hisp.dhis.datavalue;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.common.MapMap;
@@ -143,7 +144,7 @@ public interface DataValueService
     DataValue getDataValue( int dataElementId, int periodId, int sourceId, int categoryOptionComboId );
     
     // -------------------------------------------------------------------------
-    // Collections of DataValues
+    // Lists of DataValues
     // -------------------------------------------------------------------------
 
     /**
@@ -151,7 +152,7 @@ public interface DataValueService
      * 
      * @return a collection of all DataValues.
      */
-    Collection<DataValue> getAllDataValues();
+    List<DataValue> getAllDataValues();
     
     /**
      * Returns all DataValues for a given Source and Period.
@@ -161,7 +162,7 @@ public interface DataValueService
      * @return a collection of all DataValues which match the given Source and
      *         Period, or an empty collection if no values match.
      */
-    Collection<DataValue> getDataValues( OrganisationUnit source, Period period );
+    List<DataValue> getDataValues( OrganisationUnit source, Period period );
 
     /**
      * Returns all DataValues for a given Source and DataElement.
@@ -171,7 +172,7 @@ public interface DataValueService
      * @return a collection of all DataValues which match the given Source and
      *         DataElement, or an empty collection if no values match.
      */
-    Collection<DataValue> getDataValues( OrganisationUnit source, DataElement dataElement );
+    List<DataValue> getDataValues( OrganisationUnit source, DataElement dataElement );
 
     /**
      * Returns all DataValues for a given collection of Sources and a
@@ -183,7 +184,7 @@ public interface DataValueService
      *         Sources and the DataElement, or an empty collection if no values
      *         match.
      */
-    Collection<DataValue> getDataValues( Collection<OrganisationUnit> sources, DataElement dataElement );
+    List<DataValue> getDataValues( Collection<OrganisationUnit> sources, DataElement dataElement );
     
     /**
      * Returns all DataValues for a given Source, Period, collection of
@@ -196,7 +197,7 @@ public interface DataValueService
      *         Period, and any of the DataElements, or an empty collection if no
      *         values match.
      */
-    Collection<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements, Collection<DataElementCategoryOptionCombo> optionCombos );
+    List<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements, Collection<DataElementCategoryOptionCombo> optionCombos );
 
     /**
      * Returns all DataValues for a given Source, Period, and collection of
@@ -209,7 +210,7 @@ public interface DataValueService
      *         Period, and any of the DataElements, or an empty collection if no
      *         values match.
      */
-    Collection<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements );
+    List<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements );
 
     /**
      * Returns all DataValues for a given Source, Period, collection of
@@ -223,7 +224,7 @@ public interface DataValueService
      *         Period, and any of the DataElements, or an empty collection if no
      *         values match.
      */
-    Collection<DataValue> getDataValues( OrganisationUnit source, Period period, 
+    List<DataValue> getDataValues( OrganisationUnit source, Period period, 
         Collection<DataElement> dataElements, DataElementCategoryOptionCombo attributeOptionCombo );
     
     /**
@@ -236,7 +237,7 @@ public interface DataValueService
      * @return a collection of all DataValues which match the given DataElement,
      *         Period, and Sources.
      */
-    Collection<DataValue> getDataValues( DataElement dataElement, Period period, Collection<OrganisationUnit> sources );
+    List<DataValue> getDataValues( DataElement dataElement, Period period, Collection<OrganisationUnit> sources );
     
     /**
      * Returns all DataValues for a given DataElement, collection of Periods, and 
@@ -247,7 +248,7 @@ public interface DataValueService
      * @return a collection of all DataValues which match the given DataElement,
      *         Periods, and Sources.
      */
-    Collection<DataValue> getDataValues( DataElement dataElement, Collection<Period> periods, 
+    List<DataValue> getDataValues( DataElement dataElement, Collection<Period> periods, 
         Collection<OrganisationUnit> sources );
 
     /**
@@ -261,7 +262,7 @@ public interface DataValueService
      * @return a collection of all DataValues which match the given DataElement,
      *         Periods, and Sources.
      */
-    Collection<DataValue> getDataValues( DataElement dataElement, DataElementCategoryOptionCombo optionCombo, 
+    List<DataValue> getDataValues( DataElement dataElement, DataElementCategoryOptionCombo optionCombo, 
         Collection<Period> periods, Collection<OrganisationUnit> sources );
     
     /**
@@ -271,7 +272,7 @@ public interface DataValueService
      * @return a collection of all DataValues which match the given collection of
      *         DataElementCategoryOptionCombos.
      */
-    Collection<DataValue> getDataValues( Collection<DataElementCategoryOptionCombo> optionCombos );
+    List<DataValue> getDataValues( Collection<DataElementCategoryOptionCombo> optionCombos );
     
     /**
      * Returns all DataValues for a given collection of DataElements.
@@ -279,7 +280,7 @@ public interface DataValueService
      * @param dataElement the DataElements of the DataValue.
      * @return a collection of all DataValues which mach the given collection of DataElements.
      */
-    Collection<DataValue> getDataValues( DataElement dataElement );
+    List<DataValue> getDataValues( DataElement dataElement );
     
     /**
      * Returns Latest DataValues for a given DataElement, PeriodType and OrganisationUnit

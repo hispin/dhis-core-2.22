@@ -32,8 +32,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
@@ -135,10 +135,10 @@ public class MinMaxDataElementStoreTest
 
         assertTrue( minMaxDataElementStore.get( mmdeid1 ).getMax() == 100 );
 
-        Collection<DataElement> dataElements1 = new HashSet<>();
+        List<DataElement> dataElements1 = new ArrayList<>();
         dataElements1.add( dataElement1 );
 
-        Collection<DataElement> dataElements2 = new HashSet<>();
+        List<DataElement> dataElements2 = new ArrayList<>();
         dataElements2.add( dataElement2 );
         dataElements2.add( dataElement3 );
         dataElements2.add( dataElement4 );

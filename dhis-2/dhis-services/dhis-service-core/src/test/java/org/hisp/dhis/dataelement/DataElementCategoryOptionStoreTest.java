@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -114,7 +114,7 @@ public class DataElementCategoryOptionStoreTest
         categoryOptionStore.save( categoryOptionB );
         categoryOptionStore.save( categoryOptionC );
         
-        Collection<DataElementCategoryOption> categoryOptions = categoryOptionStore.getAll();
+        List<DataElementCategoryOption> categoryOptions = categoryOptionStore.getAll();
         
         assertEquals( 4, categoryOptions.size() ); // Including default
         assertTrue( categoryOptions.contains( categoryOptionA ) );

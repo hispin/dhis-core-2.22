@@ -28,6 +28,15 @@ package org.hisp.dhis.dataset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -40,11 +49,6 @@ import org.hisp.dhis.period.PeriodType;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Collection;
-import java.util.HashSet;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
@@ -219,7 +223,7 @@ public class DataSetServiceTest
         dataSetService.addDataSet( dataSetA );
         dataSetService.addDataSet( dataSetB );
 
-        Collection<DataSet> dataSets = dataSetService.getAllDataSets();
+        List<DataSet> dataSets = dataSetService.getAllDataSets();
 
         assertEquals( dataSets.size(), 2 );
         assertTrue( dataSets.contains( dataSetA ) );
@@ -244,18 +248,18 @@ public class DataSetServiceTest
         dataSetService.addDataSet( dataSetC );
         dataSetService.addDataSet( dataSetD );
 
-        Collection<OrganisationUnit> sources = new HashSet<>();
+        List<OrganisationUnit> sources = new ArrayList<>();
         sources.add( unitA );
         sources.add( unitB );
 
-        Collection<DataSet> dataSets = dataSetService.getDataSetsBySources( sources );
+        List<DataSet> dataSets = dataSetService.getDataSetsBySources( sources );
 
         assertEquals( 3, dataSets.size() );
         assertTrue( dataSets.contains( dataSetA ) );
         assertTrue( dataSets.contains( dataSetB ) );
         assertTrue( dataSets.contains( dataSetC ) );
 
-        sources = new HashSet<>();
+        sources = new ArrayList<>();
         sources.add( unitA );
 
         dataSets = dataSetService.getDataSetsBySources( sources );
@@ -282,7 +286,7 @@ public class DataSetServiceTest
         dataSetService.addDataSet( dataSetA );
         dataSetService.addDataSet( dataSetB );
 
-        Collection<OrganisationUnit> sources = new HashSet<>();
+        List<OrganisationUnit> sources = new ArrayList<>();
 
         sources.add( unitA );
         sources.add( unitB );

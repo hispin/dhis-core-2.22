@@ -33,11 +33,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
-import org.hisp.dhis.dataentryform.DataEntryForm;
-import org.hisp.dhis.dataentryform.DataEntryFormStore;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.period.PeriodStore;
@@ -153,7 +151,7 @@ public class DataEntryFormStoreTest
         dataEntryFormStore.save( dataEntryFormA );
         dataEntryFormStore.save( dataEntryFormB );
 
-        Collection<DataEntryForm> dataEntryForms = dataEntryFormStore.getAll();
+        List<DataEntryForm> dataEntryForms = dataEntryFormStore.getAll();
 
         assertEquals( dataEntryForms.size(), 2 );
         assertTrue( dataEntryForms.contains( dataEntryFormA ) );

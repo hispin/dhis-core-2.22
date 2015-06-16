@@ -28,7 +28,7 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericNameableObjectStore;
 
@@ -38,5 +38,5 @@ import org.hisp.dhis.common.GenericNameableObjectStore;
 public interface OrganisationUnitGroupStore
     extends GenericNameableObjectStore<OrganisationUnitGroup>
 {
-    Collection<OrganisationUnitGroup> getOrganisationUnitGroupsWithGroupSets();
+    List<OrganisationUnitGroup> getOrganisationUnitGroupsWithGroupSets();
 }

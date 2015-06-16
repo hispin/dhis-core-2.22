@@ -28,13 +28,13 @@ package org.hisp.dhis.attribute.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeStore;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author mortenoh
@@ -45,99 +45,99 @@ public class HibernateAttributeStore
 {
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getDataElementAttributes()
+    public List<Attribute> getDataElementAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "dataElementAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "dataElementAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getDataElementGroupAttributes()
+    public List<Attribute> getDataElementGroupAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "dataElementGroupAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "dataElementGroupAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getIndicatorAttributes()
+    public List<Attribute> getIndicatorAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "indicatorAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "indicatorAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getIndicatorGroupAttributes()
+    public List<Attribute> getIndicatorGroupAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "indicatorGroupAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "indicatorGroupAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getDataSetAttributes()
+    public List<Attribute> getDataSetAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "dataSetAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "dataSetAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getOrganisationUnitAttributes()
+    public List<Attribute> getOrganisationUnitAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "organisationUnitAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "organisationUnitAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getOrganisationUnitGroupAttributes()
+    public List<Attribute> getOrganisationUnitGroupAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "organisationUnitGroupAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "organisationUnitGroupAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getOrganisationUnitGroupSetAttributes()
+    public List<Attribute> getOrganisationUnitGroupSetAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "organisationUnitGroupSetAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "organisationUnitGroupSetAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getUserAttributes()
+    public List<Attribute> getUserAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "userAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "userAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getUserGroupAttributes()
+    public List<Attribute> getUserGroupAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "userGroupAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "userGroupAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getProgramAttributes()
+    public List<Attribute> getProgramAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "programAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "programAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getProgramStageAttributes()
+    public List<Attribute> getProgramStageAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "programStageAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "programStageAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getTrackedEntityAttributes()
+    public List<Attribute> getTrackedEntityAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "trackedEntityAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "trackedEntityAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Set<Attribute> getTrackedEntityAttributeAttributes()
+    public List<Attribute> getTrackedEntityAttributeAttributes()
     {
-        return new HashSet<Attribute>( getCriteria( Restrictions.eq( "trackedEntityAttributeAttribute", true ) ).list() );
+        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "trackedEntityAttributeAttribute", true ) ).list() );
     }
 }

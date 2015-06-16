@@ -28,7 +28,7 @@ package org.hisp.dhis.user.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -90,7 +90,7 @@ public class HibernateUserSettingStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<UserSetting> getAllUserSettings( User user )
+    public List<UserSetting> getAllUserSettings( User user )
     {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery( "from UserSetting us where us.user = :user" );
@@ -101,7 +101,7 @@ public class HibernateUserSettingStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<UserSetting> getUserSettings( String name )
+    public List<UserSetting> getUserSettings( String name )
     {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery( "from UserSetting us where us.name = :name" );

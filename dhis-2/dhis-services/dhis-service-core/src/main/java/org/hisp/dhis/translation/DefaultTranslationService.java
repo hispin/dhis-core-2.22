@@ -29,6 +29,7 @@ package org.hisp.dhis.translation;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import org.hisp.dhis.system.util.LocaleUtils;
@@ -91,31 +92,31 @@ public class DefaultTranslationService
     }
 
     @Override
-    public Collection<Translation> getTranslations( String className, Locale locale, String objectUid )
+    public List<Translation> getTranslations( String className, Locale locale, String objectUid )
     {
         return translationStore.getTranslations( className, locale, objectUid );
     }
 
     @Override
-    public Collection<Translation> getTranslationsNoFallback( String className, Locale locale, String objectUid )
+    public List<Translation> getTranslationsNoFallback( String className, Locale locale, String objectUid )
     {
         return translationStore.getTranslationsNoFallback( className, objectUid, locale );
     }
 
     @Override
-    public Collection<Translation> getTranslations( String className, Locale locale )
+    public List<Translation> getTranslations( String className, Locale locale )
     {
         return translationStore.getTranslations( className, locale );
     }
 
     @Override
-    public Collection<Translation> getTranslations( Locale locale )
+    public List<Translation> getTranslations( Locale locale )
     {
         return translationStore.getTranslations( locale );
     }
 
     @Override
-    public Collection<Translation> getAllTranslations()
+    public List<Translation> getAllTranslations()
     {
         return translationStore.getAll();
     }

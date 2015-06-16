@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
@@ -75,7 +75,7 @@ public class OrganisationUnitStoreTest
         organisationUnitLevelStore.save( levelA );
         organisationUnitLevelStore.save( levelB );
 
-        Collection<OrganisationUnitLevel> actual = organisationUnitLevelStore.getAll();
+        List<OrganisationUnitLevel> actual = organisationUnitLevelStore.getAll();
 
         assertNotNull( actual );
         assertEquals( 2, actual.size() );

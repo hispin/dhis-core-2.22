@@ -28,12 +28,12 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
-
-import java.util.Collection;
 
 /**
  * @author Quang Nguyen
@@ -55,10 +55,10 @@ public interface DataValueAuditService
      * Returns all DataValueAudits for the given DataValue.
      *
      * @param dataValue the DataValue to get DataValueAudits for.
-     * @return a collection of DataValueAudits which match the given DataValue,
+     * @return a list of DataValueAudits which match the given DataValue,
      *         or an empty collection if there are no matches.
      */
-    Collection<DataValueAudit> getDataValueAudits( DataValue dataValue );
+    List<DataValueAudit> getDataValueAudits( DataValue dataValue );
 
     /**
      * Returns all DataValueAudits for the given DataElement, Period,
@@ -69,11 +69,11 @@ public interface DataValueAuditService
      * @param organisationUnit the OrganisationUnit of the DataValueAudits.
      * @param categoryOptionCombo the DataElementCategoryOptionCombo of the DataValueAudits.
      * @param attributeOptionCombo the attribute option combo.
-     * @return a collection of DataValueAudits which matches the given DataElement, Period,
+     * @return a list of DataValueAudits which matches the given DataElement, Period,
      *         OrganisationUnit and DataElementCategoryOptionCombo, or an empty collection if
      *         there are not matches.
      */
-    Collection<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period, OrganisationUnit organisationUnit, 
+    List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period, OrganisationUnit organisationUnit, 
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo );
 
     /**

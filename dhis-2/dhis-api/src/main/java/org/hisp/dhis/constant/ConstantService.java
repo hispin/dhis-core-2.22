@@ -28,7 +28,7 @@ package org.hisp.dhis.constant;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,7 +59,7 @@ public interface ConstantService
 
     Constant getConstantByCode( String code );
 
-    Collection<Constant> getAllConstants();
+    List<Constant> getAllConstants();
 
     Map<String, Double> getConstantMap();
 
@@ -69,9 +69,9 @@ public interface ConstantService
     // Constant expanding
     // -------------------------------------------------------------------------
 
-    Collection<Constant> getConstantsBetween( int first, int max );
+    List<Constant> getConstantsBetween( int first, int max );
 
-    Collection<Constant> getConstantsBetweenByName( String name, int first, int max );
+    List<Constant> getConstantsBetweenByName( String name, int first, int max );
 
     int getConstantCount();
 

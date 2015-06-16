@@ -35,6 +35,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.List;
 
 import org.amplecode.quick.StatementHolder;
 import org.amplecode.quick.StatementManager;
@@ -151,7 +152,7 @@ public class JdbcAggregatedDataValueStore
     }
 
     @Override
-    public Collection<AggregatedDataValue> getAggregatedDataValues( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
+    public List<AggregatedDataValue> getAggregatedDataValues( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
     {
         final String sql = 
             "SELECT * " +
@@ -163,7 +164,7 @@ public class JdbcAggregatedDataValueStore
     }
     
     @Override
-    public Collection<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
+    public List<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
     {
         final String sql = 
             "SELECT dataelementid, 0 as categoryoptioncomboid, periodid, organisationunitid, SUM(value) as value " +
@@ -176,7 +177,7 @@ public class JdbcAggregatedDataValueStore
     }
 
     @Override
-    public Collection<AggregatedDataValue> getAggregatedDataValues( int dataElementId,
+    public List<AggregatedDataValue> getAggregatedDataValues( int dataElementId,
         Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
     {
         final String sql = 
@@ -190,7 +191,7 @@ public class JdbcAggregatedDataValueStore
     }
 
     @Override
-    public Collection<AggregatedDataValue> getAggregatedDataValues( Collection<Integer> dataElementIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
+    public List<AggregatedDataValue> getAggregatedDataValues( Collection<Integer> dataElementIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
     {
         final String sql = 
             "SELECT * " +
@@ -203,7 +204,7 @@ public class JdbcAggregatedDataValueStore
     }
 
     @Override
-    public Collection<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> dataElementIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
+    public List<AggregatedDataValue> getAggregatedDataValueTotals( Collection<Integer> dataElementIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
     {
         final String sql = 
             "SELECT dataelementid, 0 as categoryoptioncomboid, periodid, organisationunitid, SUM(value) as value " +
@@ -309,7 +310,7 @@ public class JdbcAggregatedDataValueStore
     }
 
     @Override
-    public Collection<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
+    public List<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
     {
         final String sql =
             "SELECT * " +
@@ -321,7 +322,7 @@ public class JdbcAggregatedDataValueStore
     }
 
     @Override
-    public Collection<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> indicatorIds,
+    public List<AggregatedIndicatorValue> getAggregatedIndicatorValues( Collection<Integer> indicatorIds,
         Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
     {
         final String sql =
@@ -417,7 +418,7 @@ public class JdbcAggregatedDataValueStore
     // -------------------------------------------------------------------------
 
     @Override
-    public Collection<DataSetCompletenessResult> getAggregatedDataSetCompleteness( Collection<Integer> dataSetIds, Collection<Integer> periodIds,
+    public List<DataSetCompletenessResult> getAggregatedDataSetCompleteness( Collection<Integer> dataSetIds, Collection<Integer> periodIds,
         Collection<Integer> organisationUnitIds )
     {
         final String sql =

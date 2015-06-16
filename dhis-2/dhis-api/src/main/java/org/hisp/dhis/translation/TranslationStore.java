@@ -28,10 +28,10 @@ package org.hisp.dhis.translation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
-
-import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
+
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 
 /**
  * @author Oyvind Brucker
@@ -65,42 +65,42 @@ public interface TranslationStore
     Translation getTranslationNoFallback( String className, Locale locale, String property, String objectUid );
 
     /**
-     * Retrieves a Collection of Translations.
+     * Retrieves a List of Translations.
      *
      * @param className the class name.
      * @param locale    the locale.
      * @param objectUid the id.
      * @return a Collection of Translations.
      */
-    Collection<Translation> getTranslations( String className, Locale locale, String objectUid );
+    List<Translation> getTranslations( String className, Locale locale, String objectUid );
 
     /**
-     * Retrieves a Collection of Translations. Only exact matches on the given
+     * Retrieves a List of Translations. Only exact matches on the given
      * Locale will be returned.
      *
      * @param className the class name.
      * @param objectUid the id.
      * @param locale    the locale.
-     * @return a Collection of Translations.
+     * @return a List of Translations.
      */
-    Collection<Translation> getTranslationsNoFallback( String className, String objectUid, Locale locale );
+    List<Translation> getTranslationsNoFallback( String className, String objectUid, Locale locale );
 
     /**
-     * Retrieves a Collection of Translations.
+     * Retrieves a List of Translations.
      *
      * @param className the class name.
      * @param locale    the locale.
-     * @return a Collection of Translations.
+     * @return a List of Translations.
      */
-    Collection<Translation> getTranslations( String className, Locale locale );
+    List<Translation> getTranslations( String className, Locale locale );
 
     /**
-     * Retrieves a Collection of Translations.
+     * Retrieves a List of Translations.
      *
      * @param locale the locale.
-     * @return a Collection of Translations.
+     * @return a List of Translations.
      */
-    Collection<Translation> getTranslations( Locale locale );
+    List<Translation> getTranslations( Locale locale );
 
     /**
      * Deletes Translations.

@@ -292,7 +292,7 @@ public class OrganisationUnitServiceTest
         organisationUnitService.addOrganisationUnit( unit4 );
         organisationUnitService.addOrganisationUnit( unit5 );
 
-        Collection<OrganisationUnit> units = organisationUnitService.getAllOrganisationUnits();
+        List<OrganisationUnit> units = organisationUnitService.getAllOrganisationUnits();
 
         assertNotNull( units );
         assertEquals( 5, units.size() );
@@ -560,7 +560,7 @@ public class OrganisationUnitServiceTest
         organisationUnitGroupService.addOrganisationUnitGroup( groupC );
 
         List<OrganisationUnitGroup> groups = Arrays.asList( groupA );
-        Collection<OrganisationUnit> units = organisationUnitService.getOrganisationUnitsByNameAndGroups( null, groups, false );
+        List<OrganisationUnit> units = organisationUnitService.getOrganisationUnitsByNameAndGroups( null, groups, false );
         assertEquals( 3, units.size() );
         units = organisationUnitService.getOrganisationUnitsByNameAndGroups( unitA.getName().toLowerCase(), groups, false );
         assertEquals( 1, units.size() );
@@ -649,7 +649,7 @@ public class OrganisationUnitServiceTest
         OrganisationUnitGroup group3 = new OrganisationUnitGroup( "organisationUnitGroupName3" );
         OrganisationUnitGroup group4 = new OrganisationUnitGroup( "organisationUnitGroupName4" );
 
-        Collection<OrganisationUnitGroup> groups = new ArrayList<>();
+        List<OrganisationUnitGroup> groups = new ArrayList<>();
         groups.add( group1 );
         groups.add( group2 );
         groups.add( group3 );
@@ -662,7 +662,7 @@ public class OrganisationUnitServiceTest
             groupIds.add( organisationUnitGroupService.addOrganisationUnitGroup( group ) );
         }
 
-        Collection<OrganisationUnitGroup> fetchedGroups = organisationUnitGroupService.getAllOrganisationUnitGroups();
+        List<OrganisationUnitGroup> fetchedGroups = organisationUnitGroupService.getAllOrganisationUnitGroups();
 
         ArrayList<Integer> fetchedGroupIds = new ArrayList<>();
 
@@ -858,7 +858,7 @@ public class OrganisationUnitServiceTest
         assertEquals( set1.getName(), ougs1 );
         assertEquals( set2.getName(), ougs2 );
 
-        Collection<OrganisationUnitGroupSet> compulsorySets = organisationUnitGroupService
+        List<OrganisationUnitGroupSet> compulsorySets = organisationUnitGroupService
             .getCompulsoryOrganisationUnitGroupSets();
         assertEquals( compulsorySets.size(), 1 );
     }

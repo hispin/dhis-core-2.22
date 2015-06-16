@@ -28,6 +28,7 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -99,105 +100,105 @@ public interface AttributeService
      *
      * @return a set of all attributes.
      */
-    Set<Attribute> getAllAttributes();
+    List<Attribute> getAllAttributes();
 
     /**
      * Gets attributes which are associated with data elements.
      *
      * @return a set of attributes associated with data elements.
      */
-    Set<Attribute> getDataElementAttributes();
+    List<Attribute> getDataElementAttributes();
 
     /**
      * Gets attributes which are associated with data element groups.
      *
      * @return a set of attributes associated with data element groups.
      */
-    Set<Attribute> getDataElementGroupAttributes();
+    List<Attribute> getDataElementGroupAttributes();
 
     /**
      * Gets attributes which are associated with indicators.
      *
      * @return a set of attributes associated with indicators.
      */
-    Set<Attribute> getIndicatorAttributes();
+    List<Attribute> getIndicatorAttributes();
 
     /**
      * Gets attributes which are associated with data elements.
      *
      * @return a set of attributes associated with data elements.
      */
-    Set<Attribute> getIndicatorGroupAttributes();
+    List<Attribute> getIndicatorGroupAttributes();
 
     /**
      * Gets attributes which are associated with data sets.
      *
      * @return a set of attributes associated with data sets.
      */
-    Set<Attribute> getDataSetAttributes();
+    List<Attribute> getDataSetAttributes();
 
     /**
      * Gets attributes which are associated with organisation units.
      *
      * @return a set of attributes associated with organisation units.
      */
-    Set<Attribute> getOrganisationUnitAttributes();
+    List<Attribute> getOrganisationUnitAttributes();
 
     /**
      * Gets attributes which are associated with organisation unit groups.
      *
      * @return a set of attributes associated with organisation unit groups.
      */
-    Set<Attribute> getOrganisationUnitGroupAttributes();
+    List<Attribute> getOrganisationUnitGroupAttributes();
 
     /**
      * Gets attributes which are associated with organisation unit group sets.
      *
      * @return a set of attributes associated with organisation unit group sets.
      */
-    Set<Attribute> getOrganisationUnitGroupSetAttributes();
+    List<Attribute> getOrganisationUnitGroupSetAttributes();
 
     /**
      * Gets attributes which are associated with users.
      *
      * @return a set of attributes which are associated with users.
      */
-    Set<Attribute> getUserAttributes();
+    List<Attribute> getUserAttributes();
 
     /**
      * Gets attributes which are associated with user groups.
      *
      * @return a set of attributes which are associated with user groups.
      */
-    Set<Attribute> getUserGroupAttributes();
+    List<Attribute> getUserGroupAttributes();
 
     /**
      * Gets attributes which are associated with programs.
      *
      * @return a set of attributes which are associated with programs.
      */
-    Set<Attribute> getProgramAttributes();
+    List<Attribute> getProgramAttributes();
 
     /**
      * Gets attributes which are associated with program stages.
      *
      * @return a set of attributes which are associated with programs.
      */
-    Set<Attribute> getProgramStageAttributes();
+    List<Attribute> getProgramStageAttributes();
 
     /**
      * Gets attributes which are associated with tracked entities.
      *
      * @return a set of attributes which are associated with programs.
      */
-    Set<Attribute> getTrackedEntityAttributes();
+    List<Attribute> getTrackedEntityAttributes();
 
     /**
      * Gets attributes which are associated with programs.
      *
      * @return a set of attributes which are associated with programs.
      */
-    Set<Attribute> getTrackedEntityAttributeAttributes();
+    List<Attribute> getTrackedEntityAttributeAttributes();
 
     /**
      * Gets the number of attributes.
@@ -213,9 +214,9 @@ public interface AttributeService
      */
     int getAttributeCountByName( String name );
 
-    Set<Attribute> getAttributesBetween( int first, int max );
+    List<Attribute> getAttributesBetween( int first, int max );
 
-    Set<Attribute> getAttributesBetweenByName( String name, int first, int max );
+    List<Attribute> getAttributesBetweenByName( String name, int first, int max );
 
     // -------------------------------------------------------------------------
     // AttributeValue
@@ -255,7 +256,7 @@ public interface AttributeService
      *
      * @return a set with all attribute values.
      */
-    Set<AttributeValue> getAllAttributeValues();
+    List<AttributeValue> getAllAttributeValues();
 
     /**
      * Gets the number of attribute values.

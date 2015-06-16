@@ -109,7 +109,7 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public Collection<SystemSetting> getAllSystemSettings()
+    public List<SystemSetting> getAllSystemSettings()
     {
         return systemSettingStore.getAll();
     }

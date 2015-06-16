@@ -28,18 +28,17 @@ package org.hisp.dhis.setting;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.QuarterlyPeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
 
 /**
  * @author Stian Strandli
@@ -164,7 +163,7 @@ public interface SystemSettingManager
 
     Serializable getSystemSetting( String name, Serializable defaultValue );
 
-    Collection<SystemSetting> getAllSystemSettings();
+    List<SystemSetting> getAllSystemSettings();
 
     void deleteSystemSetting( String name );
 

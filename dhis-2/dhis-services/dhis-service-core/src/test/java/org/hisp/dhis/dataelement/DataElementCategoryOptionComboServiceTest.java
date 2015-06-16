@@ -32,9 +32,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -137,7 +137,7 @@ public class DataElementCategoryOptionComboServiceTest
     {
         categoryService.generateOptionCombos( categoryComboA );
         
-        Collection<DataElementCategoryOption> catopts = new LinkedList<>();
+        List<DataElementCategoryOption> catopts = new LinkedList<>();
         catopts.add( categoryOptionA );
         catopts.add( categoryOptionC );
         
@@ -222,7 +222,7 @@ public class DataElementCategoryOptionComboServiceTest
         categoryService.addDataElementCategoryOptionCombo( categoryOptionComboB );
         categoryService.addDataElementCategoryOptionCombo( categoryOptionComboC );
         
-        Collection<DataElementCategoryOptionCombo> categoryOptionCombos = 
+        List<DataElementCategoryOptionCombo> categoryOptionCombos = 
             categoryService.getAllDataElementCategoryOptionCombos();
         
         assertNotNull( categoryOptionCombos );

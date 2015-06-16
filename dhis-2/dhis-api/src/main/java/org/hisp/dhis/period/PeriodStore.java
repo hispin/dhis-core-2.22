@@ -28,8 +28,8 @@ package org.hisp.dhis.period;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericStore;
 
@@ -82,11 +82,11 @@ public interface PeriodStore
      *
      * @param startDate the ultimate start date.
      * @param endDate   the ultimate end date.
-     * @return a collection of all Periods with start date after or equal the
+     * @return a list of all Periods with start date after or equal the
      *         specified start date and end date before or equal the specified
      *         end date, or an empty collection if no Periods match.
      */
-    Collection<Period> getPeriodsBetweenDates( Date startDate, Date endDate );
+    List<Period> getPeriodsBetweenDates( Date startDate, Date endDate );
 
     /**
      * Returns all Periods of the specified PeriodType with start date after or
@@ -96,13 +96,13 @@ public interface PeriodStore
      * @param periodType the PeriodType.
      * @param startDate  the ultimate start date.
      * @param endDate    the ultimate end date.
-     * @return a collection of all Periods with start date after or equal the
+     * @return a list of all Periods with start date after or equal the
      *         specified start date and end date before or equal the specified
      *         end date, or an empty collection if no Periods match.
      */
-    Collection<Period> getPeriodsBetweenDates( PeriodType periodType, Date startDate, Date endDate );
+    List<Period> getPeriodsBetweenDates( PeriodType periodType, Date startDate, Date endDate );
 
-    Collection<Period> getPeriodsBetweenOrSpanningDates( Date startDate, Date endDate );
+    List<Period> getPeriodsBetweenOrSpanningDates( Date startDate, Date endDate );
 
     /**
      * Returns all intersecting Periods between the startDate and endDate based on PeriodType
@@ -114,7 +114,7 @@ public interface PeriodStore
      * @param endDate    is intercepting endDate
      * @return
      */
-    Collection<Period> getIntersectingPeriodsByPeriodType( PeriodType periodType, Date startDate, Date endDate );
+    List<Period> getIntersectingPeriodsByPeriodType( PeriodType periodType, Date startDate, Date endDate );
 
     /**
      * Returns Periods where at least one its days is between the given start date and end date.
@@ -123,16 +123,16 @@ public interface PeriodStore
      * @param endDate   the end date.
      * @return Periods where at least one its days is between the given start date and end date.
      */
-    Collection<Period> getIntersectingPeriods( Date startDate, Date endDate );
+    List<Period> getIntersectingPeriods( Date startDate, Date endDate );
 
     /**
      * Returns all Periods with a given PeriodType.
      *
      * @param periodType the PeriodType of the Periods to return.
-     * @return all Periods with the given PeriodType, or an empty collection if
+     * @return all Periods with the given PeriodType, or an empty list if
      *         no Periods match.
      */
-    Collection<Period> getPeriodsByPeriodType( PeriodType periodType );
+    List<Period> getPeriodsByPeriodType( PeriodType periodType );
 
     /**
      * Checks if the given period is associated with the current session and loads
@@ -191,10 +191,10 @@ public interface PeriodStore
     /**
      * Returns all PeriodTypes.
      *
-     * @return a collection of all PeriodTypes, or an empty collection if there
+     * @return a list of all PeriodTypes, or an empty list if there
      *         are no PeriodTypes.
      */
-    Collection<PeriodType> getAllPeriodTypes();
+    List<PeriodType> getAllPeriodTypes();
 
     /**
      * Checks if the given periodType is associated with the current session and loads

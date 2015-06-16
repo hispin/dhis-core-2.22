@@ -33,10 +33,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class PeriodStoreTest
     public void testAddPeriod()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -98,7 +98,7 @@ public class PeriodStoreTest
     public void testDeleteAndGetPeriod()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -146,7 +146,7 @@ public class PeriodStoreTest
     public void testGetPeriod()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -218,7 +218,7 @@ public class PeriodStoreTest
         periodStore.addPeriod( periodB );
         periodStore.addPeriod( periodC );
         
-        Collection<Period> periods = periodStore.getAll();
+        List<Period> periods = periodStore.getAll();
         
         assertNotNull( periods );
         assertEquals( 3, periods.size() );
@@ -231,7 +231,7 @@ public class PeriodStoreTest
     public void testGetPeriodsBetweenDates()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -245,7 +245,7 @@ public class PeriodStoreTest
         periodStore.addPeriod( periodC );
         periodStore.addPeriod( periodD );
 
-        Collection<Period> periods = periodStore.getPeriodsBetweenDates( getDay( 1 ), getDay( 1 ) );
+        List<Period> periods = periodStore.getPeriodsBetweenDates( getDay( 1 ), getDay( 1 ) );
         assertNotNull( periods );
         assertEquals( 0, periods.size() );
 
@@ -274,7 +274,7 @@ public class PeriodStoreTest
     public void testGetPeriodsBetweenOrSpanningDates()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -290,7 +290,7 @@ public class PeriodStoreTest
         periodStore.addPeriod( periodD );
         periodStore.addPeriod( periodE );
 
-        Collection<Period> periods = periodStore.getPeriodsBetweenOrSpanningDates( getDay( 1 ), getDay( 1 ) );
+        List<Period> periods = periodStore.getPeriodsBetweenOrSpanningDates( getDay( 1 ), getDay( 1 ) );
         assertNotNull( periods );
         assertEquals( 2, periods.size() );
         assertTrue( periods.contains( periodA ) );
@@ -387,11 +387,11 @@ public class PeriodStoreTest
     	periodStore.addPeriod( periodM );
     	periodStore.addPeriod( periodN );
     	
-    	Collection<Period> periodsA = periodStore.getIntersectingPeriodsByPeriodType( ypt, getDate( 2006, 6, 1 ), getDate( 2006, 11, 30 ) ); 
+    	List<Period> periodsA = periodStore.getIntersectingPeriodsByPeriodType( ypt, getDate( 2006, 6, 1 ), getDate( 2006, 11, 30 ) ); 
     	assertNotNull( periodsA );
     	assertEquals( 1, periodsA.size() );
     	
-    	Collection<Period> periodsB = periodStore.getIntersectingPeriodsByPeriodType( mpt, getDate( 2006, 6, 1 ), getDate( 2006, 11, 30 ) );    	
+    	List<Period> periodsB = periodStore.getIntersectingPeriodsByPeriodType( mpt, getDate( 2006, 6, 1 ), getDate( 2006, 11, 30 ) );    	
     	assertNotNull( periodsB );
     	assertEquals( 6, periodsB.size() );
     }
@@ -424,7 +424,7 @@ public class PeriodStoreTest
         periodStore.addPeriod( periodI );
         periodStore.addPeriod( periodJ );
         
-        Collection<Period> periods = periodStore.getIntersectingPeriods( getDay( 4 ), getDay( 10 ) );
+        List<Period> periods = periodStore.getIntersectingPeriods( getDay( 4 ), getDay( 10 ) );
         
         assertEquals( periods.size(), 8 );
 
@@ -442,7 +442,7 @@ public class PeriodStoreTest
     public void testGetPeriodsByPeriodType()
         throws Exception
     {
-        Collection<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
+        List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
         PeriodType periodTypeA = it.next();
         PeriodType periodTypeB = it.next();
@@ -457,22 +457,22 @@ public class PeriodStoreTest
         periodStore.addPeriod( periodC );
         periodStore.addPeriod( periodD );
 
-        Collection<Period> periodsARef = new HashSet<>();
+        List<Period> periodsARef = new ArrayList<>();
         periodsARef.add( periodA );
         periodsARef.add( periodB );
         periodsARef.add( periodC );
 
-        Collection<Period> periodsA = periodStore.getPeriodsByPeriodType( periodTypeA );
+        List<Period> periodsA = periodStore.getPeriodsByPeriodType( periodTypeA );
         assertNotNull( periodsA );
         assertEquals( periodsARef.size(), periodsA.size() );
         assertTrue( periodsA.containsAll( periodsARef ) );
 
-        Collection<Period> periodsB = periodStore.getPeriodsByPeriodType( periodTypeB );
+        List<Period> periodsB = periodStore.getPeriodsByPeriodType( periodTypeB );
         assertNotNull( periodsB );
         assertEquals( 1, periodsB.size() );
         assertEquals( periodD, periodsB.iterator().next() );
 
-        Collection<Period> periodsC = periodStore.getPeriodsByPeriodType( periodTypeC );
+        List<Period> periodsC = periodStore.getPeriodsByPeriodType( periodTypeC );
         assertNotNull( periodsC );
         assertEquals( 0, periodsC.size() );
     }

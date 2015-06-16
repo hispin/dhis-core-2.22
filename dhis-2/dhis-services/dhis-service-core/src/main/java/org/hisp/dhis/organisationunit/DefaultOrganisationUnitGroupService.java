@@ -122,9 +122,9 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public Collection<OrganisationUnitGroup> getOrganisationUnitGroups( final Collection<Integer> identifiers )
+    public List<OrganisationUnitGroup> getOrganisationUnitGroups( final Collection<Integer> identifiers )
     {
-        Collection<OrganisationUnitGroup> objects = getAllOrganisationUnitGroups();
+        List<OrganisationUnitGroup> objects = getAllOrganisationUnitGroups();
 
         return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<OrganisationUnitGroup>()
         {
@@ -176,13 +176,13 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public Collection<OrganisationUnitGroup> getAllOrganisationUnitGroups()
+    public List<OrganisationUnitGroup> getAllOrganisationUnitGroups()
     {
         return i18n( i18nService, organisationUnitGroupStore.getAll() );
     }
 
     @Override
-    public Collection<OrganisationUnitGroup> getOrganisationUnitGroupsWithGroupSets()
+    public List<OrganisationUnitGroup> getOrganisationUnitGroupsWithGroupSets()
     {
         return i18n( i18nService, organisationUnitGroupStore.getOrganisationUnitGroupsWithGroupSets() );
     }
@@ -200,13 +200,13 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public Collection<OrganisationUnitGroup> getOrganisationUnitGroupsBetween( int first, int max )
+    public List<OrganisationUnitGroup> getOrganisationUnitGroupsBetween( int first, int max )
     {
         return getObjectsBetween( i18nService, organisationUnitGroupStore, first, max );
     }
 
     @Override
-    public Collection<OrganisationUnitGroup> getOrganisationUnitGroupsBetweenByName( String name, int first, int max )
+    public List<OrganisationUnitGroup> getOrganisationUnitGroupsBetweenByName( String name, int first, int max )
     {
         return getObjectsBetweenByName( i18nService, organisationUnitGroupStore, name, first, max );
     }
@@ -259,9 +259,9 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public Collection<OrganisationUnitGroupSet> getOrganisationUnitGroupSets( final Collection<Integer> identifiers )
+    public List<OrganisationUnitGroupSet> getOrganisationUnitGroupSets( final Collection<Integer> identifiers )
     {
-        Collection<OrganisationUnitGroupSet> objects = getAllOrganisationUnitGroupSets();
+        List<OrganisationUnitGroupSet> objects = getAllOrganisationUnitGroupSets();
 
         return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<OrganisationUnitGroupSet>()
         {
@@ -287,15 +287,15 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public Collection<OrganisationUnitGroupSet> getAllOrganisationUnitGroupSets()
+    public List<OrganisationUnitGroupSet> getAllOrganisationUnitGroupSets()
     {
         return i18n( i18nService, organisationUnitGroupSetStore.getAll() );
     }
 
     @Override
-    public Collection<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSets()
+    public List<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSets()
     {
-        Collection<OrganisationUnitGroupSet> groupSets = new ArrayList<>();
+        List<OrganisationUnitGroupSet> groupSets = new ArrayList<>();
 
         for ( OrganisationUnitGroupSet groupSet : getAllOrganisationUnitGroupSets() )
         {
@@ -309,7 +309,7 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public Collection<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSetsWithMembers()
+    public List<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSetsWithMembers()
     {
         return FilterUtils.filter( getAllOrganisationUnitGroupSets(), new Filter<OrganisationUnitGroupSet>()
         {
@@ -335,10 +335,10 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public Collection<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSetsNotAssignedTo(
+    public List<OrganisationUnitGroupSet> getCompulsoryOrganisationUnitGroupSetsNotAssignedTo(
         OrganisationUnit organisationUnit )
     {
-        Collection<OrganisationUnitGroupSet> groupSets = new ArrayList<>();
+        List<OrganisationUnitGroupSet> groupSets = new ArrayList<>();
 
         for ( OrganisationUnitGroupSet groupSet : getCompulsoryOrganisationUnitGroupSets() )
         {
@@ -364,13 +364,13 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public Collection<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsBetween( int first, int max )
+    public List<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsBetween( int first, int max )
     {
         return getObjectsBetween( i18nService, organisationUnitGroupSetStore, first, max );
     }
 
     @Override
-    public Collection<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsBetweenByName( String name, int first,
+    public List<OrganisationUnitGroupSet> getOrganisationUnitGroupSetsBetweenByName( String name, int first,
         int max )
     {
         return getObjectsBetweenByName( i18nService, organisationUnitGroupSetStore, name, first, max );

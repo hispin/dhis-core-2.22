@@ -28,15 +28,17 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
@@ -142,7 +144,7 @@ public class DataElementCategoryServiceTest
         categoryService.addDataElementCategory( categoryB );
         categoryService.addDataElementCategory( categoryC );
 
-        Collection<DataElementCategory> categories = categoryService.getAllDataElementCategories();
+        List<DataElementCategory> categories = categoryService.getAllDataElementCategories();
 
         assertEquals( 4, categories.size() ); // Including default
         assertTrue( categories.contains( categoryA ) );

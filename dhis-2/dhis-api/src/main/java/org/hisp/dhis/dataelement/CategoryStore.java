@@ -28,7 +28,6 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hisp.dhis.common.GenericDimensionalObjectStore;
@@ -39,9 +38,9 @@ import org.hisp.dhis.common.GenericDimensionalObjectStore;
 public interface CategoryStore
     extends GenericDimensionalObjectStore<DataElementCategory>
 {
-    Collection<DataElementCategory> getCategoriesByDimensionType( String dimensionType );
+    List<DataElementCategory> getCategoriesByDimensionType( String dimensionType );
     
-    Collection<DataElementCategory> getCategories( String dimensionType, boolean dataDimension );
+    List<DataElementCategory> getCategories( String dimensionType, boolean dataDimension );
     
     List<DataElementCategory> getCategoriesNoAcl( String dimensionType, boolean dataDimension );
 }

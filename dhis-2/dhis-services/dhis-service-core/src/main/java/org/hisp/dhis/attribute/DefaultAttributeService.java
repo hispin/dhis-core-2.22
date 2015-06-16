@@ -28,14 +28,14 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.i18n.I18nService;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 /**
  * @author mortenoh
@@ -116,92 +116,92 @@ public class DefaultAttributeService
     }
 
     @Override
-    public Set<Attribute> getAllAttributes()
+    public List<Attribute> getAllAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getAll() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getAll() ) );
     }
 
     @Override
-    public Set<Attribute> getDataElementAttributes()
+    public List<Attribute> getDataElementAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getDataElementAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getDataElementAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getDataElementGroupAttributes()
+    public List<Attribute> getDataElementGroupAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getDataElementGroupAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getDataElementGroupAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getIndicatorAttributes()
+    public List<Attribute> getIndicatorAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getIndicatorAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getIndicatorAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getIndicatorGroupAttributes()
+    public List<Attribute> getIndicatorGroupAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getIndicatorGroupAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getIndicatorGroupAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getDataSetAttributes()
+    public List<Attribute> getDataSetAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getDataSetAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getDataSetAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getOrganisationUnitAttributes()
+    public List<Attribute> getOrganisationUnitAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getOrganisationUnitAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getOrganisationUnitAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getOrganisationUnitGroupAttributes()
+    public List<Attribute> getOrganisationUnitGroupAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getOrganisationUnitGroupAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getOrganisationUnitGroupAttributes() ) );
     }
 
-    @Override public Set<Attribute> getOrganisationUnitGroupSetAttributes()
+    @Override public List<Attribute> getOrganisationUnitGroupSetAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getOrganisationUnitGroupSetAttributes() ) );
-    }
-
-    @Override
-    public Set<Attribute> getUserAttributes()
-    {
-        return new HashSet<>( i18n( i18nService, attributeStore.getUserAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getOrganisationUnitGroupSetAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getUserGroupAttributes()
+    public List<Attribute> getUserAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getUserGroupAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getUserAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getProgramAttributes()
+    public List<Attribute> getUserGroupAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getProgramAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getUserGroupAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getProgramStageAttributes()
+    public List<Attribute> getProgramAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getProgramStageAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getProgramAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getTrackedEntityAttributes()
+    public List<Attribute> getProgramStageAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getTrackedEntityAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getProgramStageAttributes() ) );
     }
 
     @Override
-    public Set<Attribute> getTrackedEntityAttributeAttributes()
+    public List<Attribute> getTrackedEntityAttributes()
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getTrackedEntityAttributeAttributes() ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getTrackedEntityAttributes() ) );
+    }
+
+    @Override
+    public List<Attribute> getTrackedEntityAttributeAttributes()
+    {
+        return new ArrayList<>( i18n( i18nService, attributeStore.getTrackedEntityAttributeAttributes() ) );
     }
 
     @Override
@@ -217,15 +217,15 @@ public class DefaultAttributeService
     }
 
     @Override
-    public Set<Attribute> getAttributesBetween( int first, int max )
+    public List<Attribute> getAttributesBetween( int first, int max )
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getAllOrderedName( first, max ) ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getAllOrderedName( first, max ) ) );
     }
 
     @Override
-    public Set<Attribute> getAttributesBetweenByName( String name, int first, int max )
+    public List<Attribute> getAttributesBetweenByName( String name, int first, int max )
     {
-        return new HashSet<>( i18n( i18nService, attributeStore.getAllLikeName( name, first, max ) ) );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getAllLikeName( name, first, max ) ) );
     }
 
     // -------------------------------------------------------------------------
@@ -259,9 +259,9 @@ public class DefaultAttributeService
     }
 
     @Override
-    public Set<AttributeValue> getAllAttributeValues()
+    public List<AttributeValue> getAllAttributeValues()
     {
-        return new HashSet<>( attributeValueStore.getAll() );
+        return new ArrayList<>( attributeValueStore.getAll() );
     }
 
     @Override

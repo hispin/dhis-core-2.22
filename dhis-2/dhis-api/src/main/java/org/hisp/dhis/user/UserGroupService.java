@@ -62,7 +62,7 @@ public interface UserGroupService
     
     void updateUserGroups( User user, Collection<String> uids );
 
-    Collection<UserGroup> getAllUserGroups();
+    List<UserGroup> getAllUserGroups();
 
     List<UserGroup> getUserGroupByName( String name );
 

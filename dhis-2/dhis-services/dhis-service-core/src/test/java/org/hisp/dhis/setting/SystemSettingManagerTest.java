@@ -33,12 +33,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.hisp.dhis.DhisSpringTest;
-import org.hisp.dhis.setting.SystemSetting;
-import org.hisp.dhis.setting.SystemSettingManager;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -77,7 +75,7 @@ public class SystemSettingManagerTest
         systemSettingManager.saveSystemSetting( "settingB", new String( "valueB" ) );
         systemSettingManager.saveSystemSetting( "settingC", new String( "valueC" ) );
         
-        Collection<SystemSetting> settings = systemSettingManager.getAllSystemSettings();
+        List<SystemSetting> settings = systemSettingManager.getAllSystemSettings();
         
         assertNotNull( settings );
         assertEquals( 3, settings.size() );

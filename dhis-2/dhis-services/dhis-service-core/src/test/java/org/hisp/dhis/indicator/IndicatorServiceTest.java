@@ -33,8 +33,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -136,7 +136,7 @@ public class IndicatorServiceTest
         indicatorService.addIndicatorType( typeA );
         indicatorService.addIndicatorType( typeB );
 
-        Collection<IndicatorType> types = indicatorService.getAllIndicatorTypes();
+        List<IndicatorType> types = indicatorService.getAllIndicatorTypes();
 
         assertEquals( types.size(), 2 );
         assertTrue( types.contains( typeA ) );
@@ -237,7 +237,7 @@ public class IndicatorServiceTest
         indicatorService.addIndicatorGroup( groupA );
         indicatorService.addIndicatorGroup( groupB );
 
-        Collection<IndicatorGroup> groups = indicatorService.getAllIndicatorGroups();
+        List<IndicatorGroup> groups = indicatorService.getAllIndicatorGroups();
 
         assertEquals( groups.size(), 2 );
         assertTrue( groups.contains( groupA ) );
@@ -304,11 +304,11 @@ public class IndicatorServiceTest
         indicatorService.addIndicatorGroup( indicatorGroup3 );
         indicatorService.addIndicatorGroup( indicatorGroup4 );
 
-        Collection<IndicatorGroup> groups1 = indicatorService.getGroupsContainingIndicator( indicator1 );
+        List<IndicatorGroup> groups1 = indicatorService.getGroupsContainingIndicator( indicator1 );
 
         assertTrue( groups1.size() == 4 );
 
-        Collection<IndicatorGroup> groups2 = indicatorService.getGroupsContainingIndicator( indicator2 );
+        List<IndicatorGroup> groups2 = indicatorService.getGroupsContainingIndicator( indicator2 );
 
         assertTrue( groups2.size() == 2 );
         assertTrue( groups2.contains( indicatorGroup1 ) );
@@ -404,7 +404,7 @@ public class IndicatorServiceTest
         indicatorService.addIndicator( indicatorA );
         indicatorService.addIndicator( indicatorB );
 
-        Collection<Indicator> indicators = indicatorService.getAllIndicators();
+        List<Indicator> indicators = indicatorService.getAllIndicators();
 
         assertEquals( indicators.size(), 2 );
         assertTrue( indicators.contains( indicatorA ) );

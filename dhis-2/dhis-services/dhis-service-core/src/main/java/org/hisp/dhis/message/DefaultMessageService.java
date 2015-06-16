@@ -28,7 +28,6 @@ package org.hisp.dhis.message;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -353,9 +352,9 @@ public class DefaultMessageService
     }
 
     @Override
-    public Collection<MessageConversation> getMessageConversations( User user, String[] messageConversationUids )
+    public List<MessageConversation> getMessageConversations( User user, String[] messageConversationUids )
     {
-        Collection<MessageConversation> conversations = messageConversationStore.getMessageConversations( messageConversationUids );
+        List<MessageConversation> conversations = messageConversationStore.getMessageConversations( messageConversationUids );
 
         // Set transient properties
 
