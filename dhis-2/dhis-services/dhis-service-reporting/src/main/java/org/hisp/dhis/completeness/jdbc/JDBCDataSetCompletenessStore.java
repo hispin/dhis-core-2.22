@@ -32,6 +32,7 @@ import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.amplecode.quick.StatementManager;
 import org.apache.commons.logging.Log;
@@ -158,9 +159,9 @@ public class JDBCDataSetCompletenessStore
     // -------------------------------------------------------------------------
     
     @Override
-    public Collection<DataSet> getDataSetsWithRegistrations( Collection<DataSet> dataSets )
+    public List<DataSet> getDataSetsWithRegistrations( Collection<DataSet> dataSets )
     {
-        Collection<DataSet> selection = new ArrayList<>();
+        List<DataSet> selection = new ArrayList<>();
         
         for ( DataSet dataSet : dataSets )
         {

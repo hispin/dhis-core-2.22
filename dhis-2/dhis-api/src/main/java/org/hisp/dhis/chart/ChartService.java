@@ -98,7 +98,7 @@ public interface ChartService
 
     void deleteChart( Chart chart );
 
-    Collection<Chart> getAllCharts();
+    List<Chart> getAllCharts();
     
     Chart getChartByName( String name );
 

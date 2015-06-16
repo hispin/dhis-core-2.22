@@ -87,8 +87,7 @@ public class GetAssignedGroupsByDataElementAction
         {
             DataElement dataElement = dataElementService.getDataElement( dataElementId );
 
-            dataElementGroups = new ArrayList<>( dataElementService
-                .getGroupsContainingDataElement( dataElement ) );
+            dataElementGroups = dataElementService.getGroupsContainingDataElement( dataElement );
 
             Collections.sort( dataElementGroups, IdentifiableObjectNameComparator.INSTANCE );
         }

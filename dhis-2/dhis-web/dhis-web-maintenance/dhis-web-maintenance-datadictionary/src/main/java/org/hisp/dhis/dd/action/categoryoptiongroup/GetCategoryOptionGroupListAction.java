@@ -91,7 +91,7 @@ public class GetCategoryOptionGroupListAction
         {
             this.paging = createPaging( dataElementCategoryService.getCategoryOptionGroupCountByName( key ) );
 
-            Collection<CategoryOptionGroup> groups = dataElementCategoryService.getCategoryOptionGroupsBetweenByName(
+            List<CategoryOptionGroup> groups = dataElementCategoryService.getCategoryOptionGroupsBetweenByName(
                 paging.getStartPos(), paging.getPageSize(), key );
 
             categoryOptionGroups.addAll( groups );
@@ -100,7 +100,7 @@ public class GetCategoryOptionGroupListAction
         {
             this.paging = createPaging( dataElementCategoryService.getCategoryOptionGroupCount() );
 
-            Collection<CategoryOptionGroup> groups = dataElementCategoryService.getCategoryOptionGroupsBetween(
+            List<CategoryOptionGroup> groups = dataElementCategoryService.getCategoryOptionGroupsBetween(
                 paging.getStartPos(), paging.getPageSize() );
 
             categoryOptionGroups.addAll( groups );

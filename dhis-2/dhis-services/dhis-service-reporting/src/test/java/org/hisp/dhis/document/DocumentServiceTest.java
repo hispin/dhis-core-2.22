@@ -28,13 +28,16 @@ package org.hisp.dhis.document;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Collection;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
@@ -93,7 +96,7 @@ public class DocumentServiceTest
         documentService.saveDocument( documentB );
         documentService.saveDocument( documentC );
 
-        Collection<Document> actual = documentService.getAllDocuments();
+        List<Document> actual = documentService.getAllDocuments();
 
         assertEquals( 3, actual.size() );
         assertTrue( actual.contains( documentA ) );

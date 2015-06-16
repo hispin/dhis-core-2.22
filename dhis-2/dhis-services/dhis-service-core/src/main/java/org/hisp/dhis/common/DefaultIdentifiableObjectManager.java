@@ -556,7 +556,7 @@ public class DefaultIdentifiableObjectManager
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> Collection<T> getByLastUpdated( Class<T> clazz, Date lastUpdated )
+    public <T extends IdentifiableObject> List<T> getByLastUpdated( Class<T> clazz, Date lastUpdated )
     {
         GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( clazz );
 
@@ -565,7 +565,7 @@ public class DefaultIdentifiableObjectManager
             return new ArrayList<>();
         }
 
-        return (Collection<T>) store.getAllGeLastUpdated( lastUpdated );
+        return (List<T>) store.getAllGeLastUpdated( lastUpdated );
     }
 
     @Override

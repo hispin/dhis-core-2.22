@@ -93,7 +93,7 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> List<T> getBetweenLikeName( Class<T> clazz, Set<String> words, int first, int max );
 
-    <T extends IdentifiableObject> Collection<T> getByLastUpdated( Class<T> clazz, Date lastUpdated );
+    <T extends IdentifiableObject> List<T> getByLastUpdated( Class<T> clazz, Date lastUpdated );
 
     <T extends IdentifiableObject> Collection<T> getByCreated( Class<T> clazz, Date created );
 

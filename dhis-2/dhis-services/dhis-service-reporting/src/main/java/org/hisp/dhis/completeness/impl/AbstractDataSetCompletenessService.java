@@ -28,8 +28,6 @@ package org.hisp.dhis.completeness.impl;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,6 +39,7 @@ import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.commons.util.ConversionUtils;
 import org.hisp.dhis.completeness.DataSetCompletenessResult;
 import org.hisp.dhis.completeness.DataSetCompletenessService;
 import org.hisp.dhis.completeness.DataSetCompletenessStore;
@@ -55,7 +54,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnitHierarchy;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
-import org.hisp.dhis.commons.util.ConversionUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -190,20 +188,20 @@ public abstract class AbstractDataSetCompletenessService
 
     @Override
     @Transactional
-    public Collection<DataSetCompletenessResult> getDataSetCompleteness( int periodId, int organisationUnitId, Set<Integer> groupIds )
+    public List<DataSetCompletenessResult> getDataSetCompleteness( int periodId, int organisationUnitId, Set<Integer> groupIds )
     {
         final Period period = periodService.getPeriod( periodId );
 
         final Set<Integer> children = organisationUnitService.getOrganisationUnitHierarchy().getChildren(
             organisationUnitId );
 
-        final Collection<DataSet> dataSets = dataSetService.getAllDataSets();
+        final List<DataSet> dataSets = dataSetService.getAllDataSets();
 
         final List<DataSetCompletenessResult> results = new ArrayList<>();
 
         for ( final DataSet dataSet : dataSets )
         {
-            final List<Integer> periodsBetweenDates = getIdentifiers( Period.class,
+            final List<Integer> periodsBetweenDates = ConversionUtils.getIdentifiers( Period.class,
                 periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
 
             final Set<Integer> relevantSources = getRelevantSources( dataSet, children, groupIds );
@@ -231,14 +229,14 @@ public abstract class AbstractDataSetCompletenessService
 
     @Override
     @Transactional
-    public Collection<DataSetCompletenessResult> getDataSetCompleteness( int periodId,
+    public List<DataSetCompletenessResult> getDataSetCompleteness( int periodId,
         Collection<Integer> organisationUnitIds, int dataSetId, Set<Integer> groupIds )
     {
         final DataSet dataSet = dataSetService.getDataSet( dataSetId );
 
         final Period period = periodService.getPeriod( periodId );
 
-        final List<Integer> periodsBetweenDates = getIdentifiers( Period.class, periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
+        final List<Integer> periodsBetweenDates = ConversionUtils.getIdentifiers( Period.class, periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
 
         final List<DataSetCompletenessResult> results = new ArrayList<>();
 
