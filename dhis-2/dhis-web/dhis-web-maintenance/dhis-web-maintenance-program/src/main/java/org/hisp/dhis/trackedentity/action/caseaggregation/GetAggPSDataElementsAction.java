@@ -28,7 +28,6 @@ package org.hisp.dhis.trackedentity.action.caseaggregation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 

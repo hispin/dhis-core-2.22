@@ -76,11 +76,11 @@ public interface ActivityReportingService
     public String completeProgramInstance( int programId )
         throws NotAllowedException;
 
-    Collection<org.hisp.dhis.trackedentity.TrackedEntityAttribute> getPatientAtts( String programId );
+    List<org.hisp.dhis.trackedentity.TrackedEntityAttribute> getPatientAtts( String programId );
 
-    Collection<PatientAttribute> getAttsForMobile();
+    List<PatientAttribute> getAttsForMobile();
 
-    Collection<PatientAttribute> getPatientAttributesForMobile( String programId );
+    List<PatientAttribute> getPatientAttributesForMobile( String programId );
 
     Patient addRelationship( Relationship enrollmentRelationship, int orgUnitId )
         throws NotAllowedException;

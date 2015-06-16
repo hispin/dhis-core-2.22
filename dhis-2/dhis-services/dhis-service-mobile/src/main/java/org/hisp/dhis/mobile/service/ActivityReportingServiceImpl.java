@@ -1402,9 +1402,9 @@ public class ActivityReportingServiceImpl
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getPatientAtts( String programId )
+    public List<TrackedEntityAttribute> getPatientAtts( String programId )
     {
-        Collection<TrackedEntityAttribute> patientAttributes = null;
+        List<TrackedEntityAttribute> patientAttributes = null;
 
         if ( programId != null && !programId.trim().equals( "" ) )
         {
@@ -1420,9 +1420,9 @@ public class ActivityReportingServiceImpl
     }
 
     @Override
-    public Collection<org.hisp.dhis.api.mobile.model.PatientAttribute> getAttsForMobile()
+    public List<org.hisp.dhis.api.mobile.model.PatientAttribute> getAttsForMobile()
     {
-        Collection<org.hisp.dhis.api.mobile.model.PatientAttribute> list = new HashSet<>();
+        List<org.hisp.dhis.api.mobile.model.PatientAttribute> list = new ArrayList<>();
 
         for ( TrackedEntityAttribute patientAtt : getPatientAtts( null ) )
         {
@@ -1435,9 +1435,10 @@ public class ActivityReportingServiceImpl
     }
 
     @Override
-    public Collection<org.hisp.dhis.api.mobile.model.PatientAttribute> getPatientAttributesForMobile( String programId )
+    public List<org.hisp.dhis.api.mobile.model.PatientAttribute> getPatientAttributesForMobile( String programId )
     {
-        Collection<org.hisp.dhis.api.mobile.model.PatientAttribute> list = new HashSet<>();
+        List<org.hisp.dhis.api.mobile.model.PatientAttribute> list = new ArrayList<>();
+        
         for ( TrackedEntityAttribute pa : getPatientAtts( programId ) )
         {
             PatientAttribute patientAttribute = new PatientAttribute();
@@ -1449,6 +1450,7 @@ public class ActivityReportingServiceImpl
 
             list.add( patientAttribute );
         }
+        
         return list;
     }
 

@@ -28,13 +28,12 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Abyot Asalefew
