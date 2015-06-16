@@ -309,7 +309,7 @@ public class DefaultDataSetService
     @Override
     public PeriodType getPeriodType( DataElement dataElement, Collection<Integer> dataSetIdentifiers )
     {
-        Collection<DataSet> dataSets = getDataSets( dataSetIdentifiers );
+        List<DataSet> dataSets = getDataSets( dataSetIdentifiers );
 
         for ( DataSet dataSet : dataSets )
         {
@@ -343,7 +343,7 @@ public class DefaultDataSetService
     @Override
     public Set<DataElement> getDistinctDataElements( Collection<Integer> dataSetIdentifiers )
     {
-        Collection<DataSet> dataSets = getDataSets( dataSetIdentifiers );
+        List<DataSet> dataSets = getDataSets( dataSetIdentifiers );
 
         Set<DataElement> dataElements = new HashSet<>();
 
