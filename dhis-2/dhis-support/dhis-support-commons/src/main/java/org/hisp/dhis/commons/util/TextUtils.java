@@ -369,20 +369,7 @@ public class TextUtils
         
         return null;
     }
-    
-    /**
-     * Returns null if the given string is not null and contains no characters,
-     * the string itself otherwise.
-     * 
-     * @param string the string.
-     * @return null if the given string is not null and contains no characters,
-     *         the string itself otherwise.
-     */
-    public static String nullIfEmpty( String string )
-    {
-        return string != null && string.trim().length() == 0 ? null : string;
-    }
-    
+        
     /**
      * Checks the two strings for equality.
      * 

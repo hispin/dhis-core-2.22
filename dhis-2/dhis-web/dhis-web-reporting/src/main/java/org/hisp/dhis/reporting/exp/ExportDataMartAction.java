@@ -39,13 +39,13 @@ import java.util.zip.GZIPOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.importexport.synchronous.ExportPivotViewService;
 import org.hisp.dhis.importexport.synchronous.ExportPivotViewService.RequestType;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.util.ContextUtils;
 
@@ -256,7 +256,7 @@ public class ExportDataMartAction
         }
         finally
         {
-            StreamUtils.closeOutputStream( out );
+            IOUtils.closeQuietly( out );
         }
 
         return SUCCESS;

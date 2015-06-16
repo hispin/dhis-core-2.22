@@ -28,8 +28,6 @@ package org.hisp.dhis.dataadmin.action.databrowser;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.TextUtils.nullIfEmpty;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.Grid;
@@ -419,7 +418,7 @@ public class DataBrowserAction
 
         // Check if the second selected date is later than the first
         
-        if ( nullIfEmpty( fromDate ) == null && nullIfEmpty( toDate ) == null )
+        if ( StringUtils.trimToNull( fromDate ) == null && StringUtils.trimToNull( toDate ) == null )
         {
             if ( DateUtils.checkDates( fromDate, toDate ) )
             {

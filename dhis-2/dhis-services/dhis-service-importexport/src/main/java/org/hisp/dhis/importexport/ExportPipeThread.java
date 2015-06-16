@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.zip.ZipOutputStream;
 
 import org.amplecode.staxwax.writer.XMLWriter;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
@@ -193,7 +194,7 @@ public class ExportPipeThread
         {
             writer.closeWriter();
             
-            StreamUtils.closeOutputStream( zipOutputStream );
+            IOUtils.closeQuietly( zipOutputStream );
             
             NameMappingUtil.clearMapping();
         }
