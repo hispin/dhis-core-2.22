@@ -28,7 +28,13 @@ package org.hisp.dhis.programrule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
@@ -39,8 +45,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.Assert.*;
 
 public class ProgramRuleVariableServiceTest
     extends DhisSpringTest
@@ -112,12 +116,12 @@ public class ProgramRuleVariableServiceTest
         variableService.addProgramRuleVariable( variableG );
 
         //Get all the 3 rules for programB
-        Collection<ProgramRuleVariable> vars = variableService.getProgramRuleVariable( programB );
+        List<ProgramRuleVariable> vars = variableService.getProgramRuleVariable( programB );
         assertEquals( 3, vars.size() );
         assertTrue( vars.contains( variableD ) );
         assertTrue( vars.contains( variableE ) );
         assertTrue( vars.contains( variableF ) );
-        //Make sure that the var connected to program A is not returned as part of collection of vars in program B.
+        //Make sure that the var connected to program A is not returned as part of list of vars in program B.
         assertFalse( vars.contains( variableG ) );
         
     }

@@ -28,7 +28,6 @@ package org.hisp.dhis.caseentry.action.caseentry;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -112,12 +111,9 @@ public class ValidateProgramInstanceAction
     public String execute()
         throws Exception
     {
-        programValidationResults = new ArrayList<>();
-
         ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( programStageInstanceId );
 
-        List<ProgramValidation> validation = new ArrayList<>(
-            programValidationService.getProgramValidation( programStageInstance.getProgramStage() ) );
+        List<ProgramValidation> validation = programValidationService.getProgramValidation( programStageInstance.getProgramStage() );
 
         programValidationResults = programValidationService.validate( validation, programStageInstance );
 

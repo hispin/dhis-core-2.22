@@ -33,9 +33,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -263,7 +265,7 @@ public class ProgramInstanceServiceTest
         programInstanceService.addProgramInstance( programInstanceB );
         programInstanceService.addProgramInstance( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( programA );
+        List<ProgramInstance> programInstances = programInstanceService.getProgramInstances( programA );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
         assertTrue( programInstances.contains( programInstanceD ) );
@@ -281,11 +283,11 @@ public class ProgramInstanceServiceTest
         programInstanceService.addProgramInstance( programInstanceC );
         programInstanceService.addProgramInstance( programInstanceD );
 
-        Collection<Program> programs = new HashSet<>();
+        List<Program> programs = new ArrayList<>();
         programs.add( programA );
         programs.add( programB );
 
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( programs );
+        List<ProgramInstance> programInstances = programInstanceService.getProgramInstances( programs );
         assertEquals( 3, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
         assertTrue( programInstances.contains( programInstanceB ) );
@@ -303,7 +305,7 @@ public class ProgramInstanceServiceTest
         programInstance.setStatus( ProgramInstance.STATUS_COMPLETED );
         programInstanceService.updateProgramInstance( programInstance );
 
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( entityInstanceA, programA );
+        List<ProgramInstance> programInstances = programInstanceService.getProgramInstances( entityInstanceA, programA );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
         assertTrue( programInstances.contains( programInstance ) );
@@ -324,7 +326,7 @@ public class ProgramInstanceServiceTest
         programInstance2.setStatus( ProgramInstance.STATUS_COMPLETED );
         programInstanceService.updateProgramInstance( programInstance2 );
 
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( entityInstanceA, programA,
+        List<ProgramInstance> programInstances = programInstanceService.getProgramInstances( entityInstanceA, programA,
             ProgramInstance.STATUS_COMPLETED );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstance1 ) );
@@ -343,7 +345,7 @@ public class ProgramInstanceServiceTest
         programInstanceService.addProgramInstance( programInstanceC );
         programInstanceService.addProgramInstance( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( programA,
+        List<ProgramInstance> programInstances = programInstanceService.getProgramInstances( programA,
             organisationUnitA, 0, 10 );
         assertEquals( 1, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
@@ -356,7 +358,7 @@ public class ProgramInstanceServiceTest
         programInstanceService.addProgramInstance( programInstanceB );
         programInstanceService.addProgramInstance( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( programA,
+        List<ProgramInstance> programInstances = programInstanceService.getProgramInstances( programA,
             orgunitIds, incidenDate, enrollmentDate, null, null );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
@@ -381,7 +383,7 @@ public class ProgramInstanceServiceTest
         programInstanceService.addProgramInstance( programInstanceB );
         programInstanceService.addProgramInstance( programInstanceD );
 
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstancesByStatus(
+        List<ProgramInstance> programInstances = programInstanceService.getProgramInstancesByStatus(
             ProgramInstance.STATUS_ACTIVE, programA, orgunitIds, incidenDate, enrollmentDate );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );

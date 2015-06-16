@@ -33,8 +33,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -166,7 +166,7 @@ public class ProgramServiceTest
         programService.addProgram( programB );
         programService.addProgram( programC );
 
-        Collection<Program> programs = programService.getPrograms( organisationUnitA );
+        List<Program> programs = programService.getPrograms( organisationUnitA );
         assertTrue( equals( programs, programA, programB ) );
 
         programs = programService.getPrograms( organisationUnitB );
@@ -188,7 +188,7 @@ public class ProgramServiceTest
         programB.getValidationCriteria().add( validationCriteria );
         programService.updateProgram( programB );
 
-        Collection<Program> programs = programService.getPrograms( validationCriteria );
+        List<Program> programs = programService.getPrograms( validationCriteria );
         assertEquals( 2, programs.size() );
         assertTrue( programs.contains( programA ) );
         assertTrue( programs.contains( programB ) );
@@ -203,7 +203,7 @@ public class ProgramServiceTest
         programC.setType( Program.SINGLE_EVENT_WITH_REGISTRATION );
         programService.addProgram( programC );
 
-        Collection<Program> programs = programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
+        List<Program> programs = programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
         assertTrue( equals( programs, programA, programB ) );
 
         programs = programService.getPrograms( Program.SINGLE_EVENT_WITH_REGISTRATION );
@@ -217,7 +217,7 @@ public class ProgramServiceTest
         programService.addProgram( programB );
         programService.addProgram( programC );
 
-        Collection<Program> programs = programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION,
+        List<Program> programs = programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION,
             organisationUnitA );
         assertTrue( equals( programs, programA, programB ) );
     }

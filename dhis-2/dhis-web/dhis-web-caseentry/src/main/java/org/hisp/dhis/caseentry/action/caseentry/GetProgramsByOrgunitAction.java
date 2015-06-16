@@ -30,6 +30,7 @@ package org.hisp.dhis.caseentry.action.caseentry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
@@ -75,7 +76,7 @@ public class GetProgramsByOrgunitAction
         return organisationUnit;
     }
 
-    private Collection<Program> programs = new ArrayList<>();
+    private List<Program> programs = new ArrayList<>();
 
     public Collection<Program> getPrograms()
     {

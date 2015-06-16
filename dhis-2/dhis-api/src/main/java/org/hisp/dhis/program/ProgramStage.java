@@ -28,7 +28,9 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.attribute.AttributeValue;
@@ -150,9 +152,9 @@ public class ProgramStage
     // Logic
     // -------------------------------------------------------------------------
 
-    public Set<DataElement> getAllDataElements()
+    public List<DataElement> getAllDataElements()
     {
-        Set<DataElement> dataElements = new HashSet<>();
+        List<DataElement> dataElements = new ArrayList<>();
 
         for ( ProgramStageDataElement element : programStageDataElements )
         {
@@ -553,19 +555,32 @@ public class ProgramStage
                 description = programStage.getDescription() == null ? description : programStage.getDescription();
                 irregular = programStage.getIrregular() == null ? irregular : programStage.getIrregular();
                 program = programStage.getProgram() == null ? program : programStage.getProgram();
-                dataEntryForm = programStage.getDataEntryForm() == null ? dataEntryForm : programStage.getDataEntryForm();
-                standardInterval = programStage.getStandardInterval() == null ? standardInterval : programStage.getStandardInterval();
-                reportDateDescription = programStage.getReportDateDescription() == null ? reportDateDescription : programStage.getReportDateDescription();
-                validCompleteOnly = programStage.getValidCompleteOnly() == null ? validCompleteOnly : programStage.getValidCompleteOnly();
-                displayGenerateEventBox = programStage.getDisplayGenerateEventBox() == null ? displayGenerateEventBox : programStage.getDisplayGenerateEventBox();
-                captureCoordinates = programStage.getCaptureCoordinates() == null ? captureCoordinates : programStage.getCaptureCoordinates();
-                blockEntryForm = programStage.getBlockEntryForm() == null ? blockEntryForm : programStage.getBlockEntryForm();
-                remindCompleted = programStage.getRemindCompleted() == null ? remindCompleted : programStage.getRemindCompleted();
-                generatedByEnrollmentDate = programStage.getGeneratedByEnrollmentDate() == null ? generatedByEnrollmentDate : programStage.getGeneratedByEnrollmentDate();
-                allowGenerateNextVisit = programStage.getAllowGenerateNextVisit() == null ? allowGenerateNextVisit : programStage.getAllowGenerateNextVisit();
-                openAfterEnrollment = programStage.getOpenAfterEnrollment() == null ? openAfterEnrollment : programStage.getOpenAfterEnrollment();
-                reportDateToUse = programStage.getReportDateToUse() == null ? reportDateToUse : programStage.getReportDateToUse();
-                preGenerateUID = programStage.getPreGenerateUID() == null ? preGenerateUID : programStage.getPreGenerateUID();
+                dataEntryForm = programStage.getDataEntryForm() == null ? dataEntryForm : programStage
+                    .getDataEntryForm();
+                standardInterval = programStage.getStandardInterval() == null ? standardInterval : programStage
+                    .getStandardInterval();
+                reportDateDescription = programStage.getReportDateDescription() == null ? reportDateDescription
+                    : programStage.getReportDateDescription();
+                validCompleteOnly = programStage.getValidCompleteOnly() == null ? validCompleteOnly : programStage
+                    .getValidCompleteOnly();
+                displayGenerateEventBox = programStage.getDisplayGenerateEventBox() == null ? displayGenerateEventBox
+                    : programStage.getDisplayGenerateEventBox();
+                captureCoordinates = programStage.getCaptureCoordinates() == null ? captureCoordinates : programStage
+                    .getCaptureCoordinates();
+                blockEntryForm = programStage.getBlockEntryForm() == null ? blockEntryForm : programStage
+                    .getBlockEntryForm();
+                remindCompleted = programStage.getRemindCompleted() == null ? remindCompleted : programStage
+                    .getRemindCompleted();
+                generatedByEnrollmentDate = programStage.getGeneratedByEnrollmentDate() == null ? generatedByEnrollmentDate
+                    : programStage.getGeneratedByEnrollmentDate();
+                allowGenerateNextVisit = programStage.getAllowGenerateNextVisit() == null ? allowGenerateNextVisit
+                    : programStage.getAllowGenerateNextVisit();
+                openAfterEnrollment = programStage.getOpenAfterEnrollment() == null ? openAfterEnrollment
+                    : programStage.getOpenAfterEnrollment();
+                reportDateToUse = programStage.getReportDateToUse() == null ? reportDateToUse : programStage
+                    .getReportDateToUse();
+                preGenerateUID = programStage.getPreGenerateUID() == null ? preGenerateUID : programStage
+                    .getPreGenerateUID();
             }
 
             programStageDataElements.clear();

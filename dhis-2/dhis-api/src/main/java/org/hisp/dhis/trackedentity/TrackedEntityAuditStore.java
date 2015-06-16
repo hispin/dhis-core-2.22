@@ -28,8 +28,8 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericStore;
 
@@ -48,7 +48,7 @@ public interface TrackedEntityAuditStore
      * 
      * @return List of TrackedEntityInstanceAudit
      */
-    Collection<TrackedEntityAudit> get( TrackedEntityInstance instance );
+    List<TrackedEntityAudit> get( TrackedEntityInstance instance );
 
     /**
      * Get tracked entity audit of a instance

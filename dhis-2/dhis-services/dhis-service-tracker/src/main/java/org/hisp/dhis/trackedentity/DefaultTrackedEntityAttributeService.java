@@ -28,8 +28,8 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
@@ -71,7 +71,7 @@ public class DefaultTrackedEntityAttributeService
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getAllTrackedEntityAttributes()
+    public List<TrackedEntityAttribute> getAllTrackedEntityAttributes()
     {
         return attributeStore.getAll();
     }
@@ -113,13 +113,13 @@ public class DefaultTrackedEntityAttributeService
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getOptionalAttributesWithoutGroup()
+    public List<TrackedEntityAttribute> getOptionalAttributesWithoutGroup()
     {
         return attributeStore.getOptionalAttributesWithoutGroup();
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getTrackedEntityAttributesWithoutGroup()
+    public List<TrackedEntityAttribute> getTrackedEntityAttributesWithoutGroup()
     {
         return attributeStore.getWithoutGroup();
     }
@@ -131,18 +131,18 @@ public class DefaultTrackedEntityAttributeService
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getTrackedEntityAttributesByDisplayOnVisitSchedule(
+    public List<TrackedEntityAttribute> getTrackedEntityAttributesByDisplayOnVisitSchedule(
         boolean displayOnVisitSchedule )
     {
         return attributeStore.getByDisplayOnVisitSchedule( displayOnVisitSchedule );
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getTrackedEntityAttributesWithoutProgram()
+    public List<TrackedEntityAttribute> getTrackedEntityAttributesWithoutProgram()
     {
-        Collection<TrackedEntityAttribute> result = attributeStore.getAll();
+        List<TrackedEntityAttribute> result = attributeStore.getAll();
 
-        Collection<Program> programs = programService.getAllPrograms();
+        List<Program> programs = programService.getAllPrograms();
 
         if ( result != null )
         {
@@ -154,17 +154,17 @@ public class DefaultTrackedEntityAttributeService
             return result;
         }
 
-        return new HashSet<>();
+        return new ArrayList<>();
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getTrackedEntityAttributesDisplayInList()
+    public List<TrackedEntityAttribute> getTrackedEntityAttributesDisplayInList()
     {
         return attributeStore.getDisplayInList();
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getTrackedEntityAttributesBetweenByName( String name, int min, int max )
+    public List<TrackedEntityAttribute> getTrackedEntityAttributesBetweenByName( String name, int min, int max )
     {
         return attributeStore.getAllLikeName( name, min, max );
     }
@@ -176,7 +176,7 @@ public class DefaultTrackedEntityAttributeService
     }
 
     @Override
-    public Collection<TrackedEntityAttribute> getTrackedEntityAttributesBetween( int min, int max )
+    public List<TrackedEntityAttribute> getTrackedEntityAttributesBetween( int min, int max )
     {
         return attributeStore.getAllOrderedName( min, max );
     }

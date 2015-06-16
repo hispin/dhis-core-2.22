@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -392,11 +392,11 @@ public class ProgramStageInstanceServiceTest
         programStageInstanceService.addProgramStageInstance( programStageInstanceC );
         programStageInstanceService.addProgramStageInstance( programStageInstanceD1 );
 
-        Collection<ProgramInstance> programInstances = new HashSet<>();
+        List<ProgramInstance> programInstances = new ArrayList<>();
         programInstances.add( programInstanceA );
         programInstances.add( programInstanceB );
 
-        Collection<ProgramStageInstance> stageInstances = programStageInstanceService.getProgramStageInstances(
+        List<ProgramStageInstance> stageInstances = programStageInstanceService.getProgramStageInstances(
             programInstances, EventStatus.COMPLETED );
         assertEquals( 2, stageInstances.size() );
         assertTrue( stageInstances.contains( programStageInstanceA ) );

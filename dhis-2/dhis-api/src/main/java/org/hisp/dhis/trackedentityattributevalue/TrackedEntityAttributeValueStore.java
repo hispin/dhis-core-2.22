@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentityattributevalue;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.program.Program;
@@ -79,7 +80,7 @@ public interface TrackedEntityAttributeValueStore
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> get( TrackedEntityInstance instance );
+    List<TrackedEntityAttributeValue> get( TrackedEntityInstance instance );
 
     /**
      * Retrieve {@link TrackedEntityAttributeValue} of a
@@ -89,7 +90,7 @@ public interface TrackedEntityAttributeValueStore
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> get( TrackedEntityAttribute attribute );
+    List<TrackedEntityAttributeValue> get( TrackedEntityAttribute attribute );
 
     /**
      * Retrieve {@link TrackedEntityAttributeValue} of a instance list
@@ -98,7 +99,7 @@ public interface TrackedEntityAttributeValueStore
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> get( Collection<TrackedEntityInstance> instances );
+    List<TrackedEntityAttributeValue> get( Collection<TrackedEntityInstance> instances );
 
     /**
      * Search TrackedEntityAttributeValue objects by a TrackedEntityAttribute
@@ -109,7 +110,7 @@ public interface TrackedEntityAttributeValueStore
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> searchByValue( TrackedEntityAttribute attribute, String searchText );
+    List<TrackedEntityAttributeValue> searchByValue( TrackedEntityAttribute attribute, String searchText );
 
     /**
      * Retrieve attribute values of an instance by a program
@@ -119,5 +120,5 @@ public interface TrackedEntityAttributeValueStore
      * 
      * @return TrackedEntityAttributeValue list
      */
-    Collection<TrackedEntityAttributeValue> get( TrackedEntityInstance instance, Program program );
+    List<TrackedEntityAttributeValue> get( TrackedEntityInstance instance, Program program );
 }

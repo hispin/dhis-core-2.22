@@ -33,10 +33,11 @@ import static org.hisp.dhis.program.ProgramExpression.OBJECT_PROGRAM_STAGE_DATAE
 import static org.hisp.dhis.program.ProgramExpression.SEPARATOR_ID;
 import static org.hisp.dhis.program.ProgramExpression.SEPARATOR_OBJECT;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,7 +100,7 @@ public class DefaultProgramValidationService
     }
 
     @Override
-    public Collection<ProgramValidation> getAllProgramValidation()
+    public List<ProgramValidation> getAllProgramValidation()
     {
         return validationStore.getAll();
     }
@@ -111,10 +112,10 @@ public class DefaultProgramValidationService
     }
 
     @Override
-    public Collection<ProgramValidationResult> validate( Collection<ProgramValidation> validation,
+    public List<ProgramValidationResult> validate( Collection<ProgramValidation> validation,
         ProgramStageInstance programStageInstance )
     {
-        Collection<ProgramValidationResult> result = new HashSet<>();
+        List<ProgramValidationResult> result = new ArrayList<>();
 
         // ---------------------------------------------------------------------
         // Get data-values
@@ -188,15 +189,15 @@ public class DefaultProgramValidationService
     }
 
     @Override
-    public Collection<ProgramValidation> getProgramValidation( Program program )
+    public List<ProgramValidation> getProgramValidation( Program program )
     {
         return validationStore.get( program );
     }
 
     @Override
-    public Collection<ProgramValidation> getProgramValidation( ProgramStage programStage )
+    public List<ProgramValidation> getProgramValidation( ProgramStage programStage )
     {
-        Collection<ProgramValidation> programValidation = getProgramValidation( programStage.getProgram() );
+        List<ProgramValidation> programValidation = getProgramValidation( programStage.getProgram() );
 
         Iterator<ProgramValidation> iter = programValidation.iterator();
 

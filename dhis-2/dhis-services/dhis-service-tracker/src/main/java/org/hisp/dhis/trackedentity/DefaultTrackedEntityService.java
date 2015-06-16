@@ -28,7 +28,7 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +92,7 @@ public class DefaultTrackedEntityService
     }
 
     @Override
-    public Collection<TrackedEntity> getAllTrackedEntity()
+    public List<TrackedEntity> getAllTrackedEntity()
     {
         return trackedEntityStore.getAll();
     }
@@ -104,7 +104,7 @@ public class DefaultTrackedEntityService
     }
 
     @Override
-    public Collection<TrackedEntity> getTrackedEntityBetweenByName( String name, int min, int max )
+    public List<TrackedEntity> getTrackedEntityBetweenByName( String name, int min, int max )
     {
         return trackedEntityStore.getAllLikeName( name, min, max );
     }
@@ -116,7 +116,7 @@ public class DefaultTrackedEntityService
     }
 
     @Override
-    public Collection<TrackedEntity> getTrackedEntitysBetween( int min, int max )
+    public List<TrackedEntity> getTrackedEntitysBetween( int min, int max )
     {
         return trackedEntityStore.getAllOrderedName( min, max );
     }

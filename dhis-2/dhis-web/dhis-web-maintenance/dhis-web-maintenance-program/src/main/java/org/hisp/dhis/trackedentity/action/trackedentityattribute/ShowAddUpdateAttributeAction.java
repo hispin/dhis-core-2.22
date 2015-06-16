@@ -163,16 +163,16 @@ public class ShowAddUpdateAttributeAction
             attribute = trackedEntityAttributeService.getTrackedEntityAttribute( id );
             attributeValues = AttributeUtils.getAttributeValueMap( attribute.getAttributeValues() );
 
-            programs = new ArrayList<>( programService.getAllPrograms() );
+            programs = programService.getAllPrograms();
             programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
             Collections.sort( programs );
         }
 
         periodTypes = periodService.getAllPeriodTypes();
-        optionSets = new ArrayList<>( optionService.getAllOptionSets() );
+        optionSets = optionService.getAllOptionSets();
         legendSets = legendService.getAllLegendSets();
-        attributes = new ArrayList<>( attributeService.getTrackedEntityAttributeAttributes() );
-        trackedEntities = new ArrayList<>( trackedEntityService.getAllTrackedEntity() );
+        attributes = attributeService.getTrackedEntityAttributeAttributes();
+        trackedEntities = trackedEntityService.getAllTrackedEntity();
 
         Collections.sort( optionSets );
         Collections.sort( legendSets );

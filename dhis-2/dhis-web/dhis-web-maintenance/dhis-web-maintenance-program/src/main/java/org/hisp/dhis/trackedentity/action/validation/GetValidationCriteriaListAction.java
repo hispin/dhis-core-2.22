@@ -28,7 +28,6 @@ package org.hisp.dhis.trackedentity.action.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -77,7 +76,7 @@ public class GetValidationCriteriaListAction
     public String execute()
         throws Exception
     {
-        criterias = new ArrayList<>( validationCriteriaService.getAllValidationCriterias() );
+        criterias = validationCriteriaService.getAllValidationCriterias();
 
         Collections.sort( criterias, new ValidationCriteriaComparator() );
 

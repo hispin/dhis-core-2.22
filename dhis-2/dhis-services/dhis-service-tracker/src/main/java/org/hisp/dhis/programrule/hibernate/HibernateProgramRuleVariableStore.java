@@ -28,7 +28,7 @@ package org.hisp.dhis.programrule.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
@@ -45,7 +45,7 @@ public class HibernateProgramRuleVariableStore
 {
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<ProgramRuleVariable> get( Program program )
+    public List<ProgramRuleVariable> get( Program program )
     {
         return getCriteria( Restrictions.eq( "program", program ) ).list();
     }

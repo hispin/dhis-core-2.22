@@ -129,10 +129,10 @@ public class MultiDataEntrySelectAction
     public String execute()
         throws Exception
     {
-        attributes = new ArrayList<>( attributeService.getAllTrackedEntityAttributes() );
+        attributes = attributeService.getAllTrackedEntityAttributes();
         Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
         
-        trackedEntities = new ArrayList<>( trackedEntityService.getAllTrackedEntity() );
+        trackedEntities = trackedEntityService.getAllTrackedEntity();
         Collections.sort( trackedEntities, IdentifiableObjectNameComparator.INSTANCE );
 
         organisationUnit = selectionManager.getSelectedOrganisationUnit();

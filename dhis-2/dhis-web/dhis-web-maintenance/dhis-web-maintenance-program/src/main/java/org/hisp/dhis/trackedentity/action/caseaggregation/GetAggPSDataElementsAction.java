@@ -86,7 +86,7 @@ public class GetAggPSDataElementsAction
     {
         ProgramStage stage = programStageService.getProgramStage( psId );
         
-        dataElementList = new ArrayList<>( stage.getAllDataElements() );
+        dataElementList = stage.getAllDataElements();
 
         if ( dataElementList != null && !dataElementList.isEmpty() )
         {

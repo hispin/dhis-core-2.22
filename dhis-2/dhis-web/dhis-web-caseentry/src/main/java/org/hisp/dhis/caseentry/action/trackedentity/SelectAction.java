@@ -129,15 +129,15 @@ public class SelectAction
     {
         organisationUnit = selectionManager.getSelectedOrganisationUnit();
 
-        attributes = new ArrayList<>( attributeService.getTrackedEntityAttributesDisplayInList()  );
+        attributes = attributeService.getTrackedEntityAttributesDisplayInList();
         Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
 
-        trackedEntities = new ArrayList<>( trackedEntityService.getAllTrackedEntity() );
+        trackedEntities = trackedEntityService.getAllTrackedEntity();
         Collections.sort( trackedEntities, IdentifiableObjectNameComparator.INSTANCE );
 
         if ( organisationUnit != null )
         {
-            programs = new ArrayList<>( programService.getProgramsByCurrentUser( organisationUnit ) );
+            programs = programService.getProgramsByCurrentUser( organisationUnit );
             programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
 
             Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );

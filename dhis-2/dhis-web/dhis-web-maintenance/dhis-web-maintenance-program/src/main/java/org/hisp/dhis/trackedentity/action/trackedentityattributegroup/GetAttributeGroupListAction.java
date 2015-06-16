@@ -92,17 +92,15 @@ public class GetAttributeGroupListAction
         {
             this.paging = createPaging( attributeGroupService.getTrackedEntityAttributeGroupCountByName( key ) );
 
-            attributeGroups = new ArrayList<>(
-                attributeGroupService.getTrackedEntityAttributeGroupsBetweenByName( key, paging.getStartPos(),
-                    paging.getPageSize() ) );
+            attributeGroups = attributeGroupService.getTrackedEntityAttributeGroupsBetweenByName( key, paging.getStartPos(),
+                    paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( attributeGroupService.getTrackedEntityAttributeGroupCount() );
 
-            attributeGroups = new ArrayList<>(
-                attributeGroupService.getTrackedEntityAttributeGroupsBetween( paging.getStartPos(),
-                    paging.getPageSize() ) );
+            attributeGroups = attributeGroupService.getTrackedEntityAttributeGroupsBetween( paging.getStartPos(),
+                    paging.getPageSize() );
         }
 
         Collections.sort( attributeGroups, IdentifiableObjectNameComparator.INSTANCE );

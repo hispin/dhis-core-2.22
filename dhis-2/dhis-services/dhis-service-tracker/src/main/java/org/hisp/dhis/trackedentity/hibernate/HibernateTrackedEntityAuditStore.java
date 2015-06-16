@@ -28,15 +28,15 @@ package org.hisp.dhis.trackedentity.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.hibernate.HibernateGenericStore;
-import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityAudit;
 import org.hisp.dhis.trackedentity.TrackedEntityAuditStore;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 /**
  * @author Chau Thu Tran
@@ -47,7 +47,7 @@ public class HibernateTrackedEntityAuditStore
 {
     @SuppressWarnings( "unchecked" )
     @Override
-    public Collection<TrackedEntityAudit> get( TrackedEntityInstance entityInstance )
+    public List<TrackedEntityAudit> get( TrackedEntityInstance entityInstance )
     {
         return getCriteria( Restrictions.eq( "entityInstance", entityInstance ) ).addOrder( Order.desc( "date" ) ).list();
     }

@@ -189,71 +189,71 @@ public class DefaultProgramInstanceService
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( Program program )
+    public List<ProgramInstance> getProgramInstances( Program program )
     {
         return programInstanceStore.get( program );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( Collection<Program> programs )
+    public List<ProgramInstance> getProgramInstances( Collection<Program> programs )
     {
         return programInstanceStore.get( programs );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( Collection<Program> programs,
+    public List<ProgramInstance> getProgramInstances( Collection<Program> programs,
         OrganisationUnit organisationUnit )
     {
         return programInstanceStore.get( programs, organisationUnit );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( Collection<Program> programs,
+    public List<ProgramInstance> getProgramInstances( Collection<Program> programs,
         OrganisationUnit organisationUnit, int status )
     {
         return programInstanceStore.get( programs, organisationUnit, status );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( Collection<Program> programs, Integer status )
+    public List<ProgramInstance> getProgramInstances( Collection<Program> programs, Integer status )
     {
         return programInstanceStore.get( programs, status );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( Program program, Integer status )
+    public List<ProgramInstance> getProgramInstances( Program program, Integer status )
     {
         return programInstanceStore.get( program, status );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Integer status )
+    public List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Integer status )
     {
         return programInstanceStore.get( entityInstance, status );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program )
+    public List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program )
     {
         return programInstanceStore.get( entityInstance, program );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program,
+    public List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program,
         Integer status )
     {
         return programInstanceStore.get( entityInstance, program, status );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( Program program, OrganisationUnit organisationUnit,
+    public List<ProgramInstance> getProgramInstances( Program program, OrganisationUnit organisationUnit,
         Integer min, Integer max )
     {
         return programInstanceStore.get( program, organisationUnit, min, max );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstances( Program program, Collection<Integer> orgunitIds,
+    public List<ProgramInstance> getProgramInstances( Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate, Integer min, Integer max )
     {
         return programInstanceStore.get( program, orgunitIds, startDate, endDate, min, max );
@@ -441,14 +441,14 @@ public class DefaultProgramInstanceService
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
+    public List<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
         Collection<Integer> orgunitIds, Date startDate, Date endDate )
     {
         return programInstanceStore.getByStatus( status, program, orgunitIds, startDate, endDate );
     }
 
     @Override
-    public Collection<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
+    public List<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
         Collection<Integer> orgunitIds, Date startDate, Date endDate, Integer min, Integer max )
     {
         return programInstanceStore.getByStatus( status, program, orgunitIds, startDate, endDate, min, max );

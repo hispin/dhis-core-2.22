@@ -28,7 +28,7 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -97,10 +97,10 @@ public interface ProgramIndicatorService
     /**
      * Returns all {@link ProgramIndicator}.
      *
-     * @return a collection of all ProgramIndicator, or an empty collection if
+     * @return a List of all ProgramIndicator, or an empty List if
      * there are no ProgramIndicators.
      */
-    Collection<ProgramIndicator> getAllProgramIndicators();
+    List<ProgramIndicator> getAllProgramIndicators();
 
     /**
      * Calculate a program indicator value based on program stage instance and an

@@ -91,16 +91,15 @@ public class GetAttributeListAction
         if ( isNotBlank( key ) ) // Filter on key only if set
         {
             this.paging = createPaging( attributeService.getTrackedEntityAttributeCountByName( key ) );
-            attributes = new ArrayList<>(
-                attributeService.getTrackedEntityAttributesBetweenByName( key, paging.getStartPos(),
-                    paging.getPageSize() ) );
+            attributes = attributeService.getTrackedEntityAttributesBetweenByName( key, paging.getStartPos(),
+                    paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( attributeService.getTrackedEntityAttributeCount() );
             
-            attributes = new ArrayList<>( attributeService.getTrackedEntityAttributesBetween(
-                paging.getStartPos(), paging.getPageSize() ) );
+            attributes = attributeService.getTrackedEntityAttributesBetween(
+                paging.getStartPos(), paging.getPageSize() );
         }
 
         Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );

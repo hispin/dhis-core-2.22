@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -176,7 +176,7 @@ public class RelationshipServiceTest
         relationshipService.addRelationship( relationshipA );
         relationshipService.addRelationship( relationshipC );
 
-        Collection<Relationship> relationships = relationshipService
+        List<Relationship> relationships = relationshipService
             .getRelationshipsForTrackedEntityInstance( entityInstanceA );
         assertTrue( equals( relationships, relationshipA, relationshipC ) );
     }

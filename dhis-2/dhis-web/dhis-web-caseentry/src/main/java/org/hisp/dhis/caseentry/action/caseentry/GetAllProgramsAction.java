@@ -28,7 +28,6 @@ package org.hisp.dhis.caseentry.action.caseentry;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -86,7 +85,7 @@ public class GetAllProgramsAction
     {
         OrganisationUnit organisationUnit = selectionManager.getSelectedOrganisationUnit();
 
-        programs = new ArrayList<>( programService.getProgramsByCurrentUser( organisationUnit ) );
+        programs = programService.getProgramsByCurrentUser( organisationUnit );
         programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
 
         Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );

@@ -28,7 +28,7 @@ package org.hisp.dhis.programrule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericNameableObjectStore;
 import org.hisp.dhis.program.Program;
@@ -47,7 +47,7 @@ public interface ProgramRuleStore
      * @param program {@link Program}
      * @return ProgramRuleVariable list
      */
-    Collection<ProgramRule> get( Program program );
+    List<ProgramRule> get( Program program );
     
     /**
      * Returns a {@link ProgramRule}.
@@ -65,5 +65,5 @@ public interface ProgramRuleStore
      * @param key Search Program Rule by key
      * @return ProgramRule list
      */
-    Collection<ProgramRule> get( Program program, String key );
+    List<ProgramRule> get( Program program, String key );
 }

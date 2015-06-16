@@ -30,6 +30,7 @@ package org.hisp.dhis.trackedentitydatavalue;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStageInstance;
@@ -82,7 +83,7 @@ public interface TrackedEntityDataValueService
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> getTrackedEntityDataValues( ProgramStageInstance programStageInstance );
+    List<TrackedEntityDataValue> getTrackedEntityDataValues( ProgramStageInstance programStageInstance );
 
     /**
      * Retrieve data values of a event with data elements specified
@@ -92,7 +93,7 @@ public interface TrackedEntityDataValueService
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> getTrackedEntityDataValues( ProgramStageInstance programStageInstance,
+    List<TrackedEntityDataValue> getTrackedEntityDataValues( ProgramStageInstance programStageInstance,
         Collection<DataElement> dataElement );
 
     /**
@@ -102,7 +103,7 @@ public interface TrackedEntityDataValueService
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> getTrackedEntityDataValues( Collection<ProgramStageInstance> programStageInstances );
+    List<TrackedEntityDataValue> getTrackedEntityDataValues( Collection<ProgramStageInstance> programStageInstances );
 
     /**
      * Retrieve data values of a data element
@@ -111,7 +112,7 @@ public interface TrackedEntityDataValueService
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> getTrackedEntityDataValues( DataElement dataElement );
+    List<TrackedEntityDataValue> getTrackedEntityDataValues( DataElement dataElement );
 
     /**
      * Retrieve data values of a instance on data elements specified from
@@ -124,7 +125,7 @@ public interface TrackedEntityDataValueService
      * 
      * @return TrackedEntityDataValue list
      */
-    Collection<TrackedEntityDataValue> getTrackedEntityDataValues( TrackedEntityInstance instance, Collection<DataElement> dataElements,
+    List<TrackedEntityDataValue> getTrackedEntityDataValues( TrackedEntityInstance instance, Collection<DataElement> dataElements,
         Date after, Date before );
 
     /**

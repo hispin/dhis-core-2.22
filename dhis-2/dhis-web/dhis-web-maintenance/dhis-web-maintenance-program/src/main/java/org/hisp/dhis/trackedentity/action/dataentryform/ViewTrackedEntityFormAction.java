@@ -153,7 +153,7 @@ public class ViewTrackedEntityFormAction
     public String execute()
         throws Exception
     {
-        List<Program> programs = new ArrayList<>( programService.getAllPrograms() );
+        List<Program> programs = programService.getAllPrograms();
 
         programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
 

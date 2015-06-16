@@ -72,7 +72,7 @@ public class ShowAddRepresentativeAction
     @Override
     public String execute()
     {
-        relationshipTypes = new ArrayList<>( relationshipTypeService.getAllRelationshipTypes() );
+        relationshipTypes = relationshipTypeService.getAllRelationshipTypes();
 
         attributes = attributeService.getAllTrackedEntityAttributes();
 

@@ -92,15 +92,15 @@ public class GetProgramListAction
         {
             this.paging = createPaging( programService.getProgramCountByName( key ) );
 
-            programs = new ArrayList<>( programService.getProgramBetweenByName( key, paging.getStartPos(),
-                paging.getPageSize() ) );
+            programs = programService.getProgramBetweenByName( key, paging.getStartPos(),
+                paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( programService.getProgramCount() );
             
-            programs = new ArrayList<>( programService.getProgramsBetween( paging.getStartPos(),
-                paging.getPageSize() ) );
+            programs = programService.getProgramsBetween( paging.getStartPos(),
+                paging.getPageSize() );
         }
 
         Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );

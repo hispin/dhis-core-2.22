@@ -28,9 +28,9 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericStore;
+import java.util.List;
 
-import java.util.Collection;
+import org.hisp.dhis.common.GenericStore;
 
 /**
  * @author Chau Thu Tran
@@ -47,5 +47,5 @@ public interface ProgramValidationStore
      * @param program {@link Program}
      * @return ProgramValidation list
      */
-    Collection<ProgramValidation> get( Program program );
+    List<ProgramValidation> get( Program program );
 }

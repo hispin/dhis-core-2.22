@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -93,32 +94,32 @@ public class DefaultTrackedEntityDataValueService
     }
 
     @Override
-    public Collection<TrackedEntityDataValue> getTrackedEntityDataValues( ProgramStageInstance programStageInstance )
+    public List<TrackedEntityDataValue> getTrackedEntityDataValues( ProgramStageInstance programStageInstance )
     {
         return dataValueStore.get( programStageInstance );
     }
 
     @Override
-    public Collection<TrackedEntityDataValue> getTrackedEntityDataValues( ProgramStageInstance programStageInstance,
+    public List<TrackedEntityDataValue> getTrackedEntityDataValues( ProgramStageInstance programStageInstance,
         Collection<DataElement> dataElements )
     {
         return dataValueStore.get( programStageInstance, dataElements );
     }
 
     @Override
-    public Collection<TrackedEntityDataValue> getTrackedEntityDataValues( Collection<ProgramStageInstance> programStageInstances )
+    public List<TrackedEntityDataValue> getTrackedEntityDataValues( Collection<ProgramStageInstance> programStageInstances )
     {
         return dataValueStore.get( programStageInstances );
     }
 
     @Override
-    public Collection<TrackedEntityDataValue> getTrackedEntityDataValues( DataElement dataElement )
+    public List<TrackedEntityDataValue> getTrackedEntityDataValues( DataElement dataElement )
     {
         return dataValueStore.get( dataElement );
     }
 
     @Override
-    public Collection<TrackedEntityDataValue> getTrackedEntityDataValues( TrackedEntityInstance entityInstance,
+    public List<TrackedEntityDataValue> getTrackedEntityDataValues( TrackedEntityInstance entityInstance,
         Collection<DataElement> dataElements, Date startDate, Date endDate )
     {
         return dataValueStore.get( entityInstance, dataElements, startDate, endDate );

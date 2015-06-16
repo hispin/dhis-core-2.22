@@ -28,7 +28,7 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -51,7 +51,7 @@ public interface ProgramStore
      *             Single event without registration
      * @return Program list by a type specified
      */
-    Collection<Program> getByType( int type );
+    List<Program> getByType( int type );
 
     /**
      * Get {@link Program} assigned to an {@link OrganisationUnit} by a type
@@ -59,7 +59,7 @@ public interface ProgramStore
      * @param organisationUnit Where programs assigned
      * @return Program list by a type specified
      */
-    Collection<Program> get( OrganisationUnit organisationUnit );
+    List<Program> get( OrganisationUnit organisationUnit );
 
     /**
      * Get {@link Program} assigned to an {@link OrganisationUnit} by a type
@@ -70,13 +70,13 @@ public interface ProgramStore
      * @param orgunit Where programs assigned
      * @return Program list by a type specified
      */
-    Collection<Program> get( int type, OrganisationUnit orgunit );
+    List<Program> get( int type, OrganisationUnit orgunit );
 
     /**
      * Get {@link Program} by TrackedEntity
      *
      * @param trackedEntity {@link TrackedEntity}
      */
-    Collection<Program> getByTrackedEntity( TrackedEntity trackedEntity );
+    List<Program> getByTrackedEntity( TrackedEntity trackedEntity );
 
 }

@@ -33,6 +33,7 @@ import static org.hisp.dhis.i18n.I18nUtils.i18n;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.i18n.I18nService;
@@ -109,7 +110,7 @@ public class DefaultProgramService
     }
 
     @Override
-    public Collection<Program> getAllPrograms()
+    public List<Program> getAllPrograms()
     {
         return i18n( i18nService, programStore.getAll() );
     }
@@ -127,15 +128,15 @@ public class DefaultProgramService
     }
 
     @Override
-    public Collection<Program> getPrograms( OrganisationUnit organisationUnit )
+    public List<Program> getPrograms( OrganisationUnit organisationUnit )
     {
         return i18n( i18nService, programStore.get( organisationUnit ) );
     }
 
     @Override
-    public Collection<Program> getPrograms( ValidationCriteria validationCriteria )
+    public List<Program> getPrograms( ValidationCriteria validationCriteria )
     {
-        Set<Program> programs = new HashSet<>();
+        List<Program> programs = new ArrayList<>();
 
         for ( Program program : getAllPrograms() )
         {
@@ -149,31 +150,31 @@ public class DefaultProgramService
     }
 
     @Override
-    public Collection<Program> getPrograms( int type )
+    public List<Program> getPrograms( int type )
     {
         return i18n( i18nService, programStore.getByType( type ) );
     }
 
     @Override
-    public Collection<Program> getPrograms( int type, OrganisationUnit orgunit )
+    public List<Program> getPrograms( int type, OrganisationUnit orgunit )
     {
         return i18n( i18nService, programStore.get( type, orgunit ) );
     }
 
     @Override
-    public Collection<Program> getProgramsByCurrentUser()
+    public List<Program> getProgramsByCurrentUser()
     {
         return i18n( i18nService, getByCurrentUser() );
     }
 
     @Override
-    public Collection<Program> getProgramsByUser( User user )
+    public List<Program> getProgramsByUser( User user )
     {
         return i18n( i18nService, getByUser( user ) );
     }
 
     @Override
-    public Collection<Program> getProgramsByCurrentUser( int type )
+    public List<Program> getProgramsByCurrentUser( int type )
     {
         return i18n( i18nService, getByCurrentUser( type ) );
     }
@@ -185,16 +186,16 @@ public class DefaultProgramService
     }
 
     @Override
-    public Collection<Program> getProgramsByCurrentUser( OrganisationUnit organisationUnit )
+    public List<Program> getProgramsByCurrentUser( OrganisationUnit organisationUnit )
     {
-        Collection<Program> programs = new ArrayList<>( getPrograms( organisationUnit ) );
+        List<Program> programs = new ArrayList<>( getPrograms( organisationUnit ) );
         programs.retainAll( getProgramsByCurrentUser() );
 
         return programs;
     }
 
     @Override
-    public Collection<Program> getProgramsByTrackedEntity( TrackedEntity trackedEntity )
+    public List<Program> getProgramsByTrackedEntity( TrackedEntity trackedEntity )
     {
         return i18n( i18nService, programStore.getByTrackedEntity( trackedEntity ) );
     }
@@ -206,7 +207,7 @@ public class DefaultProgramService
     }
 
     @Override
-    public Collection<Program> getProgramBetweenByName( String name, int min, int max )
+    public List<Program> getProgramBetweenByName( String name, int min, int max )
     {
         return i18n( i18nService, programStore.getAllLikeName( name, min, max ) );
     }
@@ -218,20 +219,20 @@ public class DefaultProgramService
     }
 
     @Override
-    public Collection<Program> getProgramsBetween( int min, int max )
+    public List<Program> getProgramsBetween( int min, int max )
     {
         return i18n( i18nService, programStore.getAllOrderedName( min, max ) );
     }
 
     @Override
-    public Collection<Program> getByCurrentUser()
+    public List<Program> getByCurrentUser()
     {
         return getByUser( currentUserService.getCurrentUser() );
     }
 
-    public Collection<Program> getByUser( User user )
+    public List<Program> getByUser( User user )
     {
-        Collection<Program> programs = new HashSet<>();
+        List<Program> programs = new ArrayList<>();
 
         if ( user != null && !user.isSuper() )
         {
@@ -255,9 +256,9 @@ public class DefaultProgramService
     }
 
     @Override
-    public Collection<Program> getByCurrentUser( int type )
+    public List<Program> getByCurrentUser( int type )
     {
-        Collection<Program> programs = new HashSet<>();
+        List<Program> programs = new ArrayList<>();
 
         if ( currentUserService.getCurrentUser() != null && !currentUserService.currentUserIsSuper() )
         {

@@ -30,7 +30,7 @@ package org.hisp.dhis.relationship;
 
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.i18n.I18nService;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +71,7 @@ public class DefaultRelationshipTypeService
     }
 
     @Override
-    public Collection<RelationshipType> getAllRelationshipTypes()
+    public List<RelationshipType> getAllRelationshipTypes()
     {
         return i18n( i18nService, relationshipTypeStore.getAll() );
     }
@@ -113,7 +113,7 @@ public class DefaultRelationshipTypeService
     }
 
     @Override
-    public Collection<? extends RelationshipType> getRelationshipTypesBetweenByName( String name, int min, int max )
+    public List<RelationshipType> getRelationshipTypesBetweenByName( String name, int min, int max )
     {
         return relationshipTypeStore.getAllLikeName( name, min, max );
     }
@@ -125,7 +125,7 @@ public class DefaultRelationshipTypeService
     }
 
     @Override
-    public Collection<RelationshipType> getRelationshipTypesBetween( int min, int max )
+    public List<RelationshipType> getRelationshipTypesBetween( int min, int max )
     {
         return relationshipTypeStore.getAllOrderedName( min, max );
     }

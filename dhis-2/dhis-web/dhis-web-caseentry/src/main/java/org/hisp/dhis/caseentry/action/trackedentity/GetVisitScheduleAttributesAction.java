@@ -58,7 +58,7 @@ public class GetVisitScheduleAttributesAction
     // Getter && Setter
     // -------------------------------------------------------------------------
     
-    private List<TrackedEntityAttribute> attributes = new ArrayList<>();
+    private List<TrackedEntityAttribute> attributes;
     
     public List<TrackedEntityAttribute> getAttributes()
     {
@@ -72,8 +72,7 @@ public class GetVisitScheduleAttributesAction
     @Override
     public String execute()
     {
-        attributes = new ArrayList<>(
-            attributeService.getTrackedEntityAttributesByDisplayOnVisitSchedule( true ) );
+        attributes = attributeService.getTrackedEntityAttributesByDisplayOnVisitSchedule( true );
         Collections.sort( attributes, new TrackedEntityAttributeSortOrderComparator() );
         
         return SUCCESS;
