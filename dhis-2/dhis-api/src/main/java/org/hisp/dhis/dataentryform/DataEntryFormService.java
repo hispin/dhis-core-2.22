@@ -99,7 +99,7 @@ public interface DataEntryFormService
      * 
      * @return A collection containing all DataEntryForms.
      */
-    Collection<DataEntryForm> getAllDataEntryForms();    
+    List<DataEntryForm> getAllDataEntryForms();    
     
     /**
      * Return the DataEntryForms with the given collection of identifiers. If the
@@ -108,7 +108,7 @@ public interface DataEntryFormService
      * @param identifiers the collection of identifiers.
      * @return a collection of DataEntryForms.
      */
-    Collection<DataEntryForm> getDataEntryForms( final Collection<Integer> identifiers );
+    List<DataEntryForm> getDataEntryForms( final Collection<Integer> identifiers );
     
     /**
      * Prepare DataEntryForm code for save by reversing the effects of
@@ -144,7 +144,7 @@ public interface DataEntryFormService
     
     Set<DataElementOperand> getOperandsInDataEntryForm( DataSet dataSet );
     
-    Collection<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds );
+    List<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds );
     
-    Collection<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds );
+    List<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds );
 }

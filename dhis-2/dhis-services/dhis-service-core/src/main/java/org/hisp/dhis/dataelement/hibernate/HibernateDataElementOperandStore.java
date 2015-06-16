@@ -28,14 +28,13 @@ package org.hisp.dhis.dataelement.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementOperandStore;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -68,7 +67,7 @@ public class HibernateDataElementOperandStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataElementOperand> getByDataElementGroup( DataElementGroup dataElementGroup )
+    public List<DataElementOperand> getByDataElementGroup( DataElementGroup dataElementGroup )
     {
         String hql = "select d from DataElementOperand d, DataElementGroup deg where deg=:dataElementGroup and d.dataElement in elements(deg.members)";
         

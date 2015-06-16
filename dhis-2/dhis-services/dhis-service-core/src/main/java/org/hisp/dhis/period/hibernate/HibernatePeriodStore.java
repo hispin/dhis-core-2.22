@@ -28,8 +28,8 @@ package org.hisp.dhis.period.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -75,7 +75,7 @@ public class HibernatePeriodStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Period> getPeriodsBetweenDates( Date startDate, Date endDate )
+    public List<Period> getPeriodsBetweenDates( Date startDate, Date endDate )
     {
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.ge( "startDate", startDate ) );
@@ -87,7 +87,7 @@ public class HibernatePeriodStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Period> getPeriodsBetweenDates( PeriodType periodType, Date startDate, Date endDate )
+    public List<Period> getPeriodsBetweenDates( PeriodType periodType, Date startDate, Date endDate )
     {
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.eq( "periodType", reloadPeriodType( periodType ) ) );
@@ -99,7 +99,7 @@ public class HibernatePeriodStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Period> getPeriodsBetweenOrSpanningDates( Date startDate, Date endDate )
+    public List<Period> getPeriodsBetweenOrSpanningDates( Date startDate, Date endDate )
     {
         String hql = "from Period p where ( p.startDate >= :startDate and p.endDate <= :endDate ) or ( p.startDate <= :startDate and p.endDate >= :endDate )";
         
@@ -108,7 +108,7 @@ public class HibernatePeriodStore
     
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Period> getIntersectingPeriodsByPeriodType( PeriodType periodType, Date startDate, Date endDate )
+    public List<Period> getIntersectingPeriodsByPeriodType( PeriodType periodType, Date startDate, Date endDate )
     {
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.eq( "periodType", reloadPeriodType( periodType ) ) );
@@ -120,7 +120,7 @@ public class HibernatePeriodStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Period> getIntersectingPeriods( Date startDate, Date endDate )
+    public List<Period> getIntersectingPeriods( Date startDate, Date endDate )
     {
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.ge( "endDate", startDate ) );
@@ -131,7 +131,7 @@ public class HibernatePeriodStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Period> getPeriodsByPeriodType( PeriodType periodType )
+    public List<Period> getPeriodsByPeriodType( PeriodType periodType )
     {
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.eq( "periodType", reloadPeriodType( periodType ) ) );
@@ -220,7 +220,7 @@ public class HibernatePeriodStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<PeriodType> getAllPeriodTypes()
+    public List<PeriodType> getAllPeriodTypes()
     {
         Session session = sessionFactory.getCurrentSession();
 

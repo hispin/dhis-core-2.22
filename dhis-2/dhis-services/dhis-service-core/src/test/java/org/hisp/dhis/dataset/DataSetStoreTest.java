@@ -33,8 +33,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -106,18 +106,18 @@ public class DataSetStoreTest
         dataSetStore.save( dataSetC );
         dataSetStore.save( dataSetD );
         
-        Collection<OrganisationUnit> sources = new HashSet<>();
+        List<OrganisationUnit> sources = new ArrayList<>();
         sources.add( unitA );
         sources.add( unitB );
         
-        Collection<DataSet> dataSets = dataSetStore.getDataSetsBySources( sources );
+        List<DataSet> dataSets = dataSetStore.getDataSetsBySources( sources );
 
         assertEquals( 3, dataSets.size() );
         assertTrue( dataSets.contains( dataSetA ) );
         assertTrue( dataSets.contains( dataSetB ) );
         assertTrue( dataSets.contains( dataSetC ) );
 
-        sources = new HashSet<>();
+        sources = new ArrayList<>();
         sources.add( unitA );
         
         dataSets = dataSetStore.getDataSetsBySources( sources );
@@ -223,7 +223,7 @@ public class DataSetStoreTest
         dataSetStore.save( dataSetA );
         dataSetStore.save( dataSetB );
 
-        Collection<DataSet> dataSets = dataSetStore.getAll();
+        List<DataSet> dataSets = dataSetStore.getAll();
 
         assertEquals( dataSets.size(), 2 );
         assertTrue( dataSets.contains( dataSetA ) );

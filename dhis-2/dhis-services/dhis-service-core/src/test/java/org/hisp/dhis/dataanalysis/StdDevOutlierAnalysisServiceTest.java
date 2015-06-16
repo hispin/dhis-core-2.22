@@ -32,7 +32,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -200,7 +199,7 @@ public class StdDevOutlierAnalysisServiceTest
         dataValueService.addDataValue( dataValueB );
 
         double stdDevFactor = 2.0;
-        Collection<Period> periods = new ArrayList<>();
+        List<Period> periods = new ArrayList<>();
         periods.add( periodI );
         periods.add( periodJ );
         periods.add( periodA );

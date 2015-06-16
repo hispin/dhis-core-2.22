@@ -664,15 +664,15 @@ public class DefaultValidationRuleService
     }
 
     @Override
-    public Collection<ValidationRule> getAllValidationRules()
+    public List<ValidationRule> getAllValidationRules()
     {
         return i18n( i18nService, validationRuleStore.getAll() );
     }
 
     @Override
-    public Collection<ValidationRule> getValidationRules( final Collection<Integer> identifiers )
+    public List<ValidationRule> getValidationRules( final Collection<Integer> identifiers )
     {
-        Collection<ValidationRule> objects = getAllValidationRules();
+        List<ValidationRule> objects = getAllValidationRules();
 
         return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<ValidationRule>()
         {
@@ -685,13 +685,13 @@ public class DefaultValidationRuleService
     }
 
     @Override
-    public Collection<ValidationRule> getValidationRulesByName( String name )
+    public List<ValidationRule> getValidationRulesByName( String name )
     {
         return getObjectsByName( i18nService, validationRuleStore, name );
     }
 
     @Override
-    public Collection<ValidationRule> getValidationRulesByDataElements( Collection<DataElement> dataElements )
+    public List<ValidationRule> getValidationRulesByDataElements( Collection<DataElement> dataElements )
     {
         return i18n( i18nService, validationRuleStore.getValidationRulesByDataElements( dataElements ) );
     }
@@ -709,13 +709,13 @@ public class DefaultValidationRuleService
     }
 
     @Override
-    public Collection<ValidationRule> getValidationRulesBetween( int first, int max )
+    public List<ValidationRule> getValidationRulesBetween( int first, int max )
     {
         return getObjectsBetween( i18nService, validationRuleStore, first, max );
     }
 
     @Override
-    public Collection<ValidationRule> getValidationRulesBetweenByName( String name, int first, int max )
+    public List<ValidationRule> getValidationRulesBetweenByName( String name, int first, int max )
     {
         return getObjectsBetweenByName( i18nService, validationRuleStore, name, first, max );
     }
@@ -768,7 +768,7 @@ public class DefaultValidationRuleService
     }
 
     @Override
-    public Collection<ValidationRuleGroup> getAllValidationRuleGroups()
+    public List<ValidationRuleGroup> getAllValidationRuleGroups()
     {
         return i18n( i18nService, validationRuleGroupStore.getAll() );
     }
@@ -792,13 +792,13 @@ public class DefaultValidationRuleService
     }
 
     @Override
-    public Collection<ValidationRuleGroup> getValidationRuleGroupsBetween( int first, int max )
+    public List<ValidationRuleGroup> getValidationRuleGroupsBetween( int first, int max )
     {
         return getObjectsBetween( i18nService, validationRuleGroupStore, first, max );
     }
 
     @Override
-    public Collection<ValidationRuleGroup> getValidationRuleGroupsBetweenByName( String name, int first, int max )
+    public List<ValidationRuleGroup> getValidationRuleGroupsBetweenByName( String name, int first, int max )
     {
         return getObjectsBetweenByName( i18nService, validationRuleGroupStore, name, first, max );
     }

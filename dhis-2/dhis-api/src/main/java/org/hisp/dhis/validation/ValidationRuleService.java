@@ -66,7 +66,7 @@ public interface ValidationRuleService
      * @param group validation rule group (null for all validationRules).
      * @param sendAlerts whether to send alerts for surveillance.
      * @param format the i18n format.
-     * @return a collection of ValidationResults for each validation violation.
+     * @return a LiCollectionst of ValidationResults for each validation violation.
      */
     Collection<ValidationResult> validate( Date startDate, Date endDate, Collection<OrganisationUnit> sources, DataElementCategoryOptionCombo attributeCombo, ValidationRuleGroup group, boolean sendAlerts, I18nFormat format );
 
@@ -77,7 +77,7 @@ public interface ValidationRuleService
      * @param period the Period.
      * @param source the Organisation unit.
      * @param attributeCombo attribute category option combo (null for all).
-     * @return a collection of ValidationResults for each validation violation.
+     * @return a Collection of ValidationResults for each validation violation.
      */
     Collection<ValidationResult> validate( DataSet dataSet, Period period, OrganisationUnit source, DataElementCategoryOptionCombo attributeCombo );
 
@@ -87,7 +87,7 @@ public interface ValidationRuleService
      * @param startDate the start date.
      * @param endDate   the end date.
      * @param source    the Source.
-     * @return a collection of ValidationResults for each validation violation.
+     * @return a Collection of ValidationResults for each validation violation.
      */
     Collection<ValidationResult> validate( Date startDate, Date endDate, OrganisationUnit source );
 
@@ -168,14 +168,14 @@ public interface ValidationRuleService
      * @param identifiers the collection of identifiers.
      * @return a collection of validation rules.
      */
-    Collection<ValidationRule> getValidationRules( Collection<Integer> identifiers );
+    List<ValidationRule> getValidationRules( Collection<Integer> identifiers );
 
     /**
      * Get all validation rules.
      *
-     * @return a Collection of ValidationRule or null if it there are no validation rules.
+     * @return a List of ValidationRule or null if it there are no validation rules.
      */
-    Collection<ValidationRule> getAllValidationRules();
+    List<ValidationRule> getAllValidationRules();
 
     /**
      * Get a validation rule with the given name.
@@ -188,17 +188,17 @@ public interface ValidationRuleService
      * Get the validation rules which are associated with the given name key.
      *
      * @param name the name key.
-     * @return a collection of validation rules.
+     * @return a List of validation rules.
      */
-    Collection<ValidationRule> getValidationRulesByName( String name );
+    List<ValidationRule> getValidationRulesByName( String name );
 
     /**
      * Get the validation rules which are associated with the given data elements.
      *
      * @param dataElements the collection of data elements.
-     * @return a collection of validation rules.
+     * @return a List of validation rules.
      */
-    Collection<ValidationRule> getValidationRulesByDataElements( Collection<DataElement> dataElements );
+    List<ValidationRule> getValidationRulesByDataElements( Collection<DataElement> dataElements );
 
     // -------------------------------------------------------------------------
     // ValidationRuleGroup
@@ -254,9 +254,9 @@ public interface ValidationRuleService
     /**
      * Get all ValidationRuleGroups.
      *
-     * @return a Collection of ValidationRuleGroup or null if it there are no ValidationRuleGroups.
+     * @return a List of ValidationRuleGroup or null if it there are no ValidationRuleGroups.
      */
-    Collection<ValidationRuleGroup> getAllValidationRuleGroups();
+    List<ValidationRuleGroup> getAllValidationRuleGroups();
 
     /**
      * Get a ValidationRuleGroup with the given name.
@@ -265,17 +265,17 @@ public interface ValidationRuleService
      */
     ValidationRuleGroup getValidationRuleGroupByName( String name );
 
-    Collection<ValidationRule> getValidationRulesBetween( int first, int max );
+    List<ValidationRule> getValidationRulesBetween( int first, int max );
 
-    Collection<ValidationRule> getValidationRulesBetweenByName( String name, int first, int max );
+    List<ValidationRule> getValidationRulesBetweenByName( String name, int first, int max );
 
     int getValidationRuleCount();
 
     int getValidationRuleCountByName( String name );
 
-    Collection<ValidationRuleGroup> getValidationRuleGroupsBetween( int first, int max );
+    List<ValidationRuleGroup> getValidationRuleGroupsBetween( int first, int max );
 
-    Collection<ValidationRuleGroup> getValidationRuleGroupsBetweenByName( String name, int first, int max );
+    List<ValidationRuleGroup> getValidationRuleGroupsBetweenByName( String name, int first, int max );
 
     int getValidationRuleGroupCount();
 

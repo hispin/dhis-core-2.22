@@ -28,7 +28,7 @@ package org.hisp.dhis.version;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author mortenoh
@@ -79,7 +79,7 @@ public interface VersionService
     Version getVersionByKey( String key );
 
     /**
-     * @return Collection of all version objects.
+     * @return List of all version objects.
      */
-    Collection<Version> getAllVersions();
+    List<Version> getAllVersions();
 }

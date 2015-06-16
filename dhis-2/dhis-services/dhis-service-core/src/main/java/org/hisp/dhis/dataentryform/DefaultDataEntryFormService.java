@@ -145,7 +145,7 @@ public class DefaultDataEntryFormService
     }
 
     @Override
-    public Collection<DataEntryForm> getAllDataEntryForms()
+    public List<DataEntryForm> getAllDataEntryForms()
     {
         return dataEntryFormStore.getAll();
     }
@@ -477,7 +477,7 @@ public class DefaultDataEntryFormService
     }
 
     @Override
-    public Collection<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds )
+    public List<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds )
     {
         if ( programStageIds == null || programStageIds.isEmpty() )
         {
@@ -488,7 +488,7 @@ public class DefaultDataEntryFormService
     }
 
     @Override
-    public Collection<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds )
+    public List<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds )
     {
         if ( dataSetIds == null || dataSetIds.size() == 0 )
         {
@@ -499,9 +499,9 @@ public class DefaultDataEntryFormService
     }
 
     @Override
-    public Collection<DataEntryForm> getDataEntryForms( final Collection<Integer> identifiers )
+    public List<DataEntryForm> getDataEntryForms( final Collection<Integer> identifiers )
     {
-        Collection<DataEntryForm> dataEntryForms = getAllDataEntryForms();
+        List<DataEntryForm> dataEntryForms = getAllDataEntryForms();
 
         return identifiers == null ? dataEntryForms : FilterUtils.filter( dataEntryForms, new Filter<DataEntryForm>()
         {

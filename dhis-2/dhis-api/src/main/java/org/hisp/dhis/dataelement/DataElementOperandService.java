@@ -50,13 +50,13 @@ public interface DataElementOperandService
 
     DataElementOperand getDataElementOperand( DataElementOperand dataElementOperand );
 
-    Collection<DataElementOperand> getAllDataElementOperands();
+    List<DataElementOperand> getAllDataElementOperands();
 
-    Collection<DataElementOperand> getAllDataElementOperands(int first, int max);
+    List<DataElementOperand> getAllDataElementOperands(int first, int max);
 
-    Collection<DataElementOperand> getDataElementOperandByDataElements( Collection<DataElement> dataElements );
+    List<DataElementOperand> getDataElementOperandByDataElements( Collection<DataElement> dataElements );
 
-    Collection<DataElementOperand> getDataElementOperandByOptionCombos( Collection<DataElementCategoryOptionCombo> optionCombos );
+    List<DataElementOperand> getDataElementOperandByOptionCombos( Collection<DataElementCategoryOptionCombo> optionCombos );
 
-    Collection<DataElementOperand> getDataElementOperandByDataElementGroup( DataElementGroup dataElementGroup );
+    List<DataElementOperand> getDataElementOperandByDataElementGroup( DataElementGroup dataElementGroup );
 }

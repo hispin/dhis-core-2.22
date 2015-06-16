@@ -30,7 +30,7 @@ package org.hisp.dhis.validation;
 
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericNameableObjectStore;
 import org.hisp.dhis.i18n.I18nService;
@@ -91,7 +91,7 @@ public class DefaultValidationCriteriaService
     }
 
     @Override
-    public Collection<ValidationCriteria> getAllValidationCriterias()
+    public List<ValidationCriteria> getAllValidationCriterias()
     {
         return i18n( i18nService, validationCriteriaStore.getAll() );
     }

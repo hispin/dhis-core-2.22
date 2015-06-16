@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -190,7 +190,7 @@ public class DataElementGroupStoreTest
         dataElementGroupStore.save( dataElementGroupA );
         dataElementGroupStore.save( dataElementGroupB );
 
-        Collection<DataElementGroup> groups = dataElementGroupStore.getAll();
+        List<DataElementGroup> groups = dataElementGroupStore.getAll();
         
         assertTrue( groups.size() == 2 );
         assertTrue( groups.contains( dataElementGroupA ) );

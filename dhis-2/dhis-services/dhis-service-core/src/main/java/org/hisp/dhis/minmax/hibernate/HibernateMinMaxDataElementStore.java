@@ -28,8 +28,9 @@ package org.hisp.dhis.minmax.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.dataelement.DataElement;
@@ -64,7 +65,7 @@ public class HibernateMinMaxDataElementStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<MinMaxDataElement> get( OrganisationUnit source, DataElement dataElement )
+    public List<MinMaxDataElement> get( OrganisationUnit source, DataElement dataElement )
     {
         return getCriteria( 
             Restrictions.eq( "source", source ), 
@@ -73,11 +74,11 @@ public class HibernateMinMaxDataElementStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<MinMaxDataElement> get( OrganisationUnit source, Collection<DataElement> dataElements )
+    public List<MinMaxDataElement> get( OrganisationUnit source, Collection<DataElement> dataElements )
     {
         if ( dataElements.size() == 0 )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
 
         return getCriteria( 

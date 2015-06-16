@@ -102,15 +102,15 @@ public interface PeriodService
      * 
      * @return all persisted Periods.
      */
-    Collection<Period> getAllPeriods();
+    List<Period> getAllPeriods();
 
     /**
      * Returns all Periods with corresponding identifiers.
      * 
      * @param identifiers a collection of identifiers.
-     * @return a collection of Periods.
+     * @return a list of Periods.
      */
-    Collection<Period> getPeriods( Collection<Integer> identifiers );
+    List<Period> getPeriods( Collection<Integer> identifiers );
     
     /**
      * Returns all Periods with start date after or equal the specified start
@@ -118,11 +118,11 @@ public interface PeriodService
      * 
      * @param startDate the ultimate start date.
      * @param endDate the ultimate end date.
-     * @return a collection of all Periods with start date after or equal the
+     * @return a list of all Periods with start date after or equal the
      *         specified start date and end date before or equal the specified
-     *         end date, or an empty collection if no Periods match.
+     *         end date, or an empty list if no Periods match.
      */
-    Collection<Period> getPeriodsBetweenDates( Date startDate, Date endDate );
+    List<Period> getPeriodsBetweenDates( Date startDate, Date endDate );
 
     /**
      * Returns all Periods of the specified PeriodType with start date after or 
@@ -132,11 +132,11 @@ public interface PeriodService
      * @param periodType the PeriodType.
      * @param startDate the ultimate start date.
      * @param endDate the ultimate end date.
-     * @return a collection of all Periods with start date after or equal the
+     * @return a list of all Periods with start date after or equal the
      *         specified start date and end date before or equal the specified
-     *         end date, or an empty collection if no Periods match.
+     *         end date, or an empty list if no Periods match.
      */
-    Collection<Period> getPeriodsBetweenDates( PeriodType periodType, Date startDate, Date endDate );
+    List<Period> getPeriodsBetweenDates( PeriodType periodType, Date startDate, Date endDate );
 
     /**
      * Returns all Periods with either i) start and end date between the given
@@ -145,9 +145,9 @@ public interface PeriodService
      * 
      * @param startDate the start date.
      * @param endDate the end date.
-     * @return a collection of Periods.
+     * @return a list of Periods.
      */
-    Collection<Period> getPeriodsBetweenOrSpanningDates( Date startDate, Date endDate );
+    List<Period> getPeriodsBetweenOrSpanningDates( Date startDate, Date endDate );
     
     /**
      * Returns all Intersecting Periods between the startDate and endDate based on PeriodType
@@ -159,7 +159,7 @@ public interface PeriodService
      * @param endDate is intercepting endDate
      * @return
      */
-    Collection<Period> getIntersectingPeriodsByPeriodType( PeriodType periodType, Date startDate, Date endDate );
+    List<Period> getIntersectingPeriodsByPeriodType( PeriodType periodType, Date startDate, Date endDate );
 
     /**
      * Returns Periods where at least one its days are between the given start date and end date.
@@ -168,16 +168,16 @@ public interface PeriodService
      * @param endDate the end date.
      * @return Periods where at least one its days are between the given start date and end date.
      */    
-    Collection<Period> getIntersectingPeriods( Date startDate, Date endDate );
+    List<Period> getIntersectingPeriods( Date startDate, Date endDate );
     
     /**
      * Returns Periods where at least one its days are between each of the Periods
      * start date and end date in the given collection.
      * 
      * @param periods the collection of Periods.
-     * @return a collection of Periods.
+     * @return a list of Periods.
      */
-    Collection<Period> getIntersectionPeriods( Collection<Period> periods );
+    List<Period> getIntersectionPeriods( Collection<Period> periods );
     
     /**
      * Returns all Periods from the given collection of Periods which span the border of either the
@@ -185,10 +185,10 @@ public interface PeriodService
      * 
      * @param period the base Period.
      * @param periods the collection of Periods.
-     * @return all Periods from the given collection of Periods which span the border of either the
+     * @return all Periods from the given list of Periods which span the border of either the
      *         start date or end date of the given Period.
      */
-    Collection<Period> getBoundaryPeriods( Period period, Collection<Period> periods );
+    List<Period> getBoundaryPeriods( Period period, Collection<Period> periods );
 
     /**
      * Returns all Periods from the given collection of Periods which are completely within the
@@ -199,16 +199,16 @@ public interface PeriodService
      * @return all Periods from the given collection of Periods which are completely within the
      *         span of the of the given Period.
      */
-    Collection<Period> getInclusivePeriods( Period period, Collection<Period> periods );    
+    List<Period> getInclusivePeriods( Period period, Collection<Period> periods );    
     
     /**
      * Returns all Periods with a given PeriodType.
      * 
      * @param periodType the PeriodType of the Periods to return.
-     * @return all Periods with the given PeriodType, or an empty collection if
+     * @return all Periods with the given PeriodType, or an empty list if
      *         no Periods match.
      */
-    Collection<Period> getPeriodsByPeriodType( PeriodType periodType );
+    List<Period> getPeriodsByPeriodType( PeriodType periodType );
 
     /**
      * Enforces that each Period in the given collection is loaded in the current

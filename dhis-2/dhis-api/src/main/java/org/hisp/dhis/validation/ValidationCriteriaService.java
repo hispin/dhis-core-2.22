@@ -28,7 +28,7 @@ package org.hisp.dhis.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
@@ -52,5 +52,5 @@ public interface ValidationCriteriaService
     
     ValidationCriteria getValidationCriteria(String name);
 
-    Collection<ValidationCriteria> getAllValidationCriterias();
+    List<ValidationCriteria> getAllValidationCriterias();
 }

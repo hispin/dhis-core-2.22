@@ -28,7 +28,6 @@ package org.hisp.dhis.dataelement.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -45,14 +44,14 @@ public class HibernateCategoryStore
 {
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElementCategory> getCategoriesByDimensionType( String dimensionType )
+    public List<DataElementCategory> getCategoriesByDimensionType( String dimensionType )
     {
         return getSharingCriteria( Restrictions.eq( "dataDimensionType", dimensionType ) ).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<DataElementCategory> getCategories( String dimensionType, boolean dataDimension )
+    public List<DataElementCategory> getCategories( String dimensionType, boolean dataDimension )
     {
         return getSharingCriteria( 
             Restrictions.eq( "dataDimensionType", dimensionType ),

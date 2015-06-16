@@ -28,13 +28,13 @@ package org.hisp.dhis.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -108,13 +108,13 @@ public class DefaultUserSettingService
     }
 
     @Override
-    public Collection<UserSetting> getAllUserSettings( User user )
+    public List<UserSetting> getAllUserSettings( User user )
     {
         return userSettingStore.getAllUserSettings( user );
     }
 
     @Override
-    public Collection<UserSetting> getUserSettings( String name )
+    public List<UserSetting> getUserSettings( String name )
     {
         return userSettingStore.getUserSettings( name );
     }
@@ -255,13 +255,13 @@ public class DefaultUserSettingService
     }
 
     @Override
-    public Collection<UserSetting> getAllUserSettings()
+    public List<UserSetting> getAllUserSettings()
     {
         User currentUser = currentUserService.getCurrentUser();
 
         if ( currentUser == null )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
 
         return getAllUserSettings( currentUser );

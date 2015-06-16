@@ -29,6 +29,7 @@ package org.hisp.dhis.translation;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -93,9 +94,9 @@ public interface TranslationService
      *
      * @param className the class name.
      * @param locale the locale.
-     * @return a Collection of Translations.
+     * @return a List of Translations.
      */
-    Collection<Translation> getTranslations( String className, Locale locale, String objectUid );
+    List<Translation> getTranslations( String className, Locale locale, String objectUid );
 
     /**
      * Retrieves a Collection of Translations. Only exact matches on the given
@@ -106,33 +107,33 @@ public interface TranslationService
      * @param className the class name.
      * @param locale the locale.
      * @param objectUid the id.
-     * @return a Collection of Translations.
+     * @return a List of Translations.
      */
-    Collection<Translation> getTranslationsNoFallback( String className, Locale locale, String objectUid );
+    List<Translation> getTranslationsNoFallback( String className, Locale locale, String objectUid );
 
     /**
-     * Retrieves a Collection of Translations.
+     * Retrieves a List of Translations.
      * 
      * @param className the class name.
      * @param locale the locale.
-     * @return a Collection of Translations.
+     * @return a List of Translations.
      */
-    Collection<Translation> getTranslations( String className, Locale locale );
+    List<Translation> getTranslations( String className, Locale locale );
 
     /**
-     * Retrieves a Collection of Translations.
+     * Retrieves a List of Translations.
      * 
      * @param locale the locale.
-     * @return a Collection of Translations.
+     * @return a List of Translations.
      */
-    Collection<Translation> getTranslations( Locale locale );
+    List<Translation> getTranslations( Locale locale );
 
     /**
-     * Retrieves a Collection of all Translations.
+     * Retrieves a List of all Translations.
      * 
-     * @return a Collection of all Translations.
+     * @return a List of all Translations.
      */
-    Collection<Translation> getAllTranslations();
+    List<Translation> getAllTranslations();
 
     /**
      * Deletes a Translation.

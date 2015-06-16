@@ -28,11 +28,11 @@ package org.hisp.dhis.organisationunit.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupStore;
-
-import java.util.Collection;
 
 /**
  * @author Lars Helge Overland
@@ -43,7 +43,7 @@ public class HibernateOrganisationUnitGroupStore
 {
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<OrganisationUnitGroup> getOrganisationUnitGroupsWithGroupSets()
+    public List<OrganisationUnitGroup> getOrganisationUnitGroupsWithGroupSets()
     {
         return getQuery( "from OrganisationUnitGroup o where o.groupSet is not null" ).list();
     }

@@ -103,9 +103,9 @@ public interface DataElementCategoryService
      * 
      * @param identifiers the identifiers of the DataElementCategories to
      *        retrieve.
-     * @return a collection of DataElementCategories.
+     * @return a list of DataElementCategories.
      */
-    Collection<DataElementCategory> getDataElementCategories( Collection<Integer> identifiers );
+    List<DataElementCategory> getDataElementCategories( Collection<Integer> identifiers );
 
     /**
      * Retrieves the DataElementCategories with the given uids.
@@ -126,39 +126,39 @@ public interface DataElementCategoryService
     /**
      * Returns all DataElementCategories.
      * 
-     * @return a collection of all DataElementCategories.
+     * @return a list of all DataElementCategories.
      */
-    Collection<DataElementCategory> getAllDataElementCategories();
+    List<DataElementCategory> getAllDataElementCategories();
 
     /**
      * Retrieves all DataElementCategories of dimension type disaggregation.
      * 
-     * @return a collection of DataElementCategoryCombos.
+     * @return a list of DataElementCategoryCombos.
      */
-    Collection<DataElementCategory> getDisaggregationCategories();
+    List<DataElementCategory> getDisaggregationCategories();
 
     /**
      * Retrieves all DataElementCategories of dimension type disaggregation and
      * data dimensional. Ignores ACL / sharing.
      * 
-     * @return a collection of DataElementCategoryCombos.
+     * @return a list of DataElementCategoryCombos.
      */
-    Collection<DataElementCategory> getDisaggregationDataDimensionCategoriesNoAcl();
+    List<DataElementCategory> getDisaggregationDataDimensionCategoriesNoAcl();
 
     /**
      * Retrieves all DataElementCategories of dimension type attribute.
      * 
-     * @return a collection of DataElementCategoryCombos.
+     * @return a list of DataElementCategoryCombos.
      */
-    Collection<DataElementCategory> getAttributeCategories();
+    List<DataElementCategory> getAttributeCategories();
 
     /**
      * Retrieves all DataElementCategories of dimension type attribute and data
      * dimensional. Ignores ACL / sharing.
      * 
-     * @return a collection of DataElementCategoryCombos.
+     * @return a list of DataElementCategoryCombos.
      */
-    Collection<DataElementCategory> getAttributeDataDimensionCategoriesNoAcl();
+    List<DataElementCategory> getAttributeDataDimensionCategoriesNoAcl();
 
     // -------------------------------------------------------------------------
     // CategoryOption
@@ -209,9 +209,9 @@ public interface DataElementCategoryService
      * 
      * @param identifiers the identifiers of the DataElementCategoryOption to
      *        retrieve.
-     * @return a Collection of DataElementCategoryOptions.
+     * @return a list of DataElementCategoryOptions.
      */
-    Collection<DataElementCategoryOption> getDataElementCategoryOptions( Collection<Integer> identifiers );
+    List<DataElementCategoryOption> getDataElementCategoryOptions( Collection<Integer> identifiers );
 
     /**
      * Retrieves the DataElementCategoryOptions with the given uids.
@@ -248,19 +248,19 @@ public interface DataElementCategoryService
     /**
      * Returns all DataElementCategoryOptions.
      * 
-     * @return a collection of all DataElementCategoryOptions, or an empty
+     * @return a list of all DataElementCategoryOptions, or an empty
      *         collection if there are no DataElementCategoryOptions.
      */
-    Collection<DataElementCategoryOption> getAllDataElementCategoryOptions();
+    List<DataElementCategoryOption> getAllDataElementCategoryOptions();
 
     /**
      * Returns all DataElementCategoryOptions for the given DataElementCategory.
      * 
      * @param category the DataElementCategory.
-     * @return a collection of all DataElementCategoryOptions, or an empty
+     * @return a list of all DataElementCategoryOptions, or an empty
      *         collection if there are no DataElementCategoryOptions.
      */
-    Collection<DataElementCategoryOption> getDataElementCategoryOptions( DataElementCategory category );
+    List<DataElementCategoryOption> getDataElementCategoryOptions( DataElementCategory category );
     
     // -------------------------------------------------------------------------
     // CategoryCombo
@@ -308,9 +308,9 @@ public interface DataElementCategoryService
      * Retrieves the DataElementCategoryCombo with the given identifiers.
      * 
      * @param identifiers the identifiers.
-     * @return a collection of DataElementCategoryCombos.
+     * @return a list of DataElementCategoryCombos.
      */
-    Collection<DataElementCategoryCombo> getDataElementCategoryCombos( Collection<Integer> identifiers );
+    List<DataElementCategoryCombo> getDataElementCategoryCombos( Collection<Integer> identifiers );
 
     /**
      * Retrieves the DataElementCategoryCombo with the given name.
@@ -328,23 +328,23 @@ public interface DataElementCategoryService
     /**
      * Retrieves all DataElementCategoryCombos.
      * 
-     * @return a collection of DataElementCategoryCombos.
+     * @return a list of DataElementCategoryCombos.
      */
-    Collection<DataElementCategoryCombo> getAllDataElementCategoryCombos();
+    List<DataElementCategoryCombo> getAllDataElementCategoryCombos();
 
     /**
      * Retrieves all DataElementCategoryCombos of dimension type disaggregation.
      * 
-     * @return a collection of DataElementCategoryCombos.
+     * @return a list of DataElementCategoryCombos.
      */
-    Collection<DataElementCategoryCombo> getDisaggregationCategoryCombos();
+    List<DataElementCategoryCombo> getDisaggregationCategoryCombos();
 
     /**
      * Retrieves all DataElementCategoryCombos of dimension type attribute.
      * 
-     * @return a collection of DataElementCategoryCombos.
+     * @return a list of DataElementCategoryCombos.
      */
-    Collection<DataElementCategoryCombo> getAttributeCategoryCombos();
+    List<DataElementCategoryCombo> getAttributeCategoryCombos();
     
     /**
      * Validates the category combo. Possible return values are:
@@ -420,9 +420,9 @@ public interface DataElementCategoryService
      * 
      * @param identifiers the identifiers of the
      *        DataElementCategoryOptionCombos.
-     * @return a Collection of DataElementCategoryOptionCombos.
+     * @return a list of DataElementCategoryOptionCombos.
      */
-    Collection<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombos( Collection<Integer> identifiers );
+    List<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombos( Collection<Integer> identifiers );
 
     /**
      * Retrieves the DataElementCategoryOptionCombos with the given uids.
@@ -463,9 +463,9 @@ public interface DataElementCategoryService
     /**
      * Retrieves all DataElementCategoryOptionCombos.
      * 
-     * @return a Collection of DataElementCategoryOptionCombos.
+     * @return a list of DataElementCategoryOptionCombos.
      */
-    Collection<DataElementCategoryOptionCombo> getAllDataElementCategoryOptionCombos();
+    List<DataElementCategoryOptionCombo> getAllDataElementCategoryOptionCombos();
     
     /**
      * Returns {@link DataElementCategoryOptionCombo} list with paging
@@ -473,9 +473,9 @@ public interface DataElementCategoryService
      * @param min  First result
      * @param max  Maximum results
      * 
-     * @return a collection of all category-option-combo
+     * @return a list of all category-option-combo
      */
-    Collection<DataElementCategoryOptionCombo> getOptionCombosBetween( int min, int max );
+    List<DataElementCategoryOptionCombo> getOptionCombosBetween( int min, int max );
     
     /**
      * Returns The number of all DataElementCategoryOptionCombo available
@@ -542,9 +542,9 @@ public interface DataElementCategoryService
      * collection.
      * 
      * @param operands the collection of Operands.
-     * @return a collection of Operands.
+     * @return a set of Operands.
      */
-    public Collection<DataElementOperand> populateOperands( Collection<DataElementOperand> operands );
+    List<DataElementOperand> populateOperands( List<DataElementOperand> operands );
 
     /**
      * Gets the Operands for the given Collection of DataElements.
@@ -552,7 +552,7 @@ public interface DataElementCategoryService
      * @param dataElements the Collection of DataElements.
      * @return the Operands for the given Collection of DataElements.
      */
-    Collection<DataElementOperand> getOperands( Collection<DataElement> dataElements );
+    List<DataElementOperand> getOperands( Collection<DataElement> dataElements );
 
     /**
      * Gets the Operands for the given Collection of DataElements.
@@ -562,7 +562,7 @@ public interface DataElementCategoryService
      *        Collection of Operands.
      * @return the Operands for the given Collection of DataElements.
      */
-    Collection<DataElementOperand> getOperands( Collection<DataElement> dataElements, boolean includeTotals );
+    List<DataElementOperand> getOperands( Collection<DataElement> dataElements, boolean includeTotals );
 
     /**
      * Gets the Operands for the DataElements with names like the given name.
@@ -570,7 +570,7 @@ public interface DataElementCategoryService
      * @param name the name.
      * @return the Operands for the DataElements with names like the given name.
      */
-    Collection<DataElementOperand> getOperandsLikeName( String name );
+    List<DataElementOperand> getOperandsLikeName( String name );
 
     /**
      * Gets the Operands for the given Collection of DataElements. Operands will
@@ -579,11 +579,11 @@ public interface DataElementCategoryService
      * @param dataElements the Collection of DataElements.
      * @return the Operands for the given Collection of DataElements.
      */
-    Collection<DataElementOperand> getFullOperands( Collection<DataElement> dataElements );
+    List<DataElementOperand> getFullOperands( Collection<DataElement> dataElements );
 
-    Collection<DataElementCategory> getDataElementCategoriesBetween( int first, int max );
+    List<DataElementCategory> getDataElementCategoriesBetween( int first, int max );
 
-    Collection<DataElementCategory> getDataElementCategoriesBetweenByName( String name, int first, int max );
+    List<DataElementCategory> getDataElementCategoriesBetweenByName( String name, int first, int max );
 
     Map<String, Integer> getDataElementCategoryOptionComboUidIdMap();
 
@@ -591,17 +591,17 @@ public interface DataElementCategoryService
 
     int getDataElementCategoryCountByName( String name );
 
-    Collection<DataElementCategory> getDataElementCategoryBetween( int first, int max );
+    List<DataElementCategory> getDataElementCategoryBetween( int first, int max );
 
-    Collection<DataElementCategory> getDataElementCategoryBetweenByName( String name, int first, int max );
+    List<DataElementCategory> getDataElementCategoryBetweenByName( String name, int first, int max );
 
     int getDataElementCategoryOptionCount();
 
     int getDataElementCategoryOptionCountByName( String name );
 
-    Collection<DataElementCategoryOption> getDataElementCategoryOptionsBetween( int first, int max );
+    List<DataElementCategoryOption> getDataElementCategoryOptionsBetween( int first, int max );
 
-    Collection<DataElementCategoryOption> getDataElementCategoryOptionsBetweenByName( String name, int first, int max );
+    List<DataElementCategoryOption> getDataElementCategoryOptionsBetweenByName( String name, int first, int max );
 
     int getDataElementCategoryOptionComboCount();
 
@@ -611,9 +611,9 @@ public interface DataElementCategoryService
 
     int getDataElementCategoryComboCountByName( String name );
 
-    Collection<DataElementCategoryCombo> getDataElementCategoryCombosBetween( int first, int max );
+    List<DataElementCategoryCombo> getDataElementCategoryCombosBetween( int first, int max );
 
-    Collection<DataElementCategoryCombo> getDataElementCategoryCombosBetweenByName( String name, int first, int max );
+    List<DataElementCategoryCombo> getDataElementCategoryCombosBetweenByName( String name, int first, int max );
 
     // -------------------------------------------------------------------------
     // CategoryOptionGroup
@@ -631,11 +631,11 @@ public interface DataElementCategoryService
 
     void deleteCategoryOptionGroup( CategoryOptionGroup group );
 
-    Collection<CategoryOptionGroup> getCategoryOptionGroupsBetween( int first, int max );
+    List<CategoryOptionGroup> getCategoryOptionGroupsBetween( int first, int max );
 
-    Collection<CategoryOptionGroup> getCategoryOptionGroupsBetweenByName( int first, int max, String name );
+    List<CategoryOptionGroup> getCategoryOptionGroupsBetweenByName( int first, int max, String name );
 
-    Collection<CategoryOptionGroup> getAllCategoryOptionGroups();
+    List<CategoryOptionGroup> getAllCategoryOptionGroups();
     
     List<CategoryOptionGroup> getCategoryOptionGroups( CategoryOptionGroupSet groupSet );
 
@@ -665,11 +665,11 @@ public interface DataElementCategoryService
 
     void deleteCategoryOptionGroupSet( CategoryOptionGroupSet group );
 
-    Collection<CategoryOptionGroupSet> getCategoryOptionGroupSetsBetween( int first, int max );
+    List<CategoryOptionGroupSet> getCategoryOptionGroupSetsBetween( int first, int max );
 
-    Collection<CategoryOptionGroupSet> getCategoryOptionGroupSetsBetweenByName( int first, int max, String name );
+    List<CategoryOptionGroupSet> getCategoryOptionGroupSetsBetweenByName( int first, int max, String name );
 
-    Collection<CategoryOptionGroupSet> getAllCategoryOptionGroupSets();
+    List<CategoryOptionGroupSet> getAllCategoryOptionGroupSets();
 
     CategoryOptionGroupSet getCategoryOptionGroupSetByName( String name );
 

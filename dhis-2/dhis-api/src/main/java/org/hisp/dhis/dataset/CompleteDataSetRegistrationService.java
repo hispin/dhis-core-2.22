@@ -103,9 +103,9 @@ public interface CompleteDataSetRegistrationService
     /**
      * Retrieves all CompleteDataSetRegistrations.
      *
-     * @return a Collection of CompleteDataSetRegistrations.
+     * @return a list of CompleteDataSetRegistrations.
      */
-    Collection<CompleteDataSetRegistration> getAllCompleteDataSetRegistrations();
+    List<CompleteDataSetRegistration> getAllCompleteDataSetRegistrations();
 
     /**
      * Retrieves the CompleteDataSetRegistrations for the given Collections of
@@ -114,9 +114,9 @@ public interface CompleteDataSetRegistrationService
      * @param dataSets the Collection of DataSets.
      * @param sources  the Collection of Sources.
      * @param periods  the Collection of Periods.
-     * @return a Collection of CompleteDataSetRegistrations.
+     * @return a list of CompleteDataSetRegistrations.
      */
-    Collection<CompleteDataSetRegistration> getCompleteDataSetRegistrations(
+    List<CompleteDataSetRegistration> getCompleteDataSetRegistrations(
         Collection<DataSet> dataSets, Collection<OrganisationUnit> sources, Collection<Period> periods );
 
     /**

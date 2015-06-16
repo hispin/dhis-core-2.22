@@ -240,11 +240,11 @@ public class DefaultDataMartEngine
         // Get objects
         // ---------------------------------------------------------------------
 
-        final Collection<Indicator> indicators = indicatorService.getIndicators( indicatorIds );
-        final Collection<Period> periods = periodService.getPeriods( periodIds );
+        final List<Indicator> indicators = indicatorService.getIndicators( indicatorIds );
+        final List<Period> periods = periodService.getPeriods( periodIds );        
         final List<OrganisationUnit> organisationUnits = new ArrayList<>( organisationUnitService.getOrganisationUnits( organisationUnitIds ) );
-        final Collection<OrganisationUnitGroup> organisationUnitGroups = organisationUnitGroupService.getOrganisationUnitGroups( organisationUnitGroupIds );
-        final Collection<DataElement> dataElements = dataElementService.getDataElements( dataElementIds );
+        final List<OrganisationUnitGroup> organisationUnitGroups = organisationUnitGroupService.getOrganisationUnitGroups( organisationUnitGroupIds );
+        final List<DataElement> dataElements = dataElementService.getDataElements( dataElementIds );
 
         final Map<String, Integer> dataElementUidIdMap = dataElementService.getDataElementUidIdMap();
         final Map<String, Integer> categoryOptionComboUidIdMap = categoryService.getDataElementCategoryOptionComboUidIdMap();
@@ -283,7 +283,7 @@ public class DefaultDataMartEngine
         // ---------------------------------------------------------------------
         
         final Collection<DataElementOperand> dataElementOperands = categoryService.getOperands( dataElements );
-        final List<DataElementOperand> indicatorOperands = new ArrayList<>( categoryService.populateOperands( expressionService.getOperandsInIndicators( indicators ) ) );
+        final List<DataElementOperand> indicatorOperands = categoryService.populateOperands( expressionService.getOperandsInIndicators( indicators ) );
         
         Set<DataElementOperand> allOperands = new HashSet<>();
         allOperands.addAll( dataElementOperands );
@@ -315,7 +315,7 @@ public class DefaultDataMartEngine
         // ---------------------------------------------------------------------
         // Create crosstabtable
         // ---------------------------------------------------------------------
-
+        
         final Collection<Integer> intersectingPeriodIds = ConversionUtils.getIdentifiers( Period.class, periodService.getIntersectionPeriods( periods ) );
         final Set<Integer> childrenIds = organisationUnitService.getOrganisationUnitHierarchy().getChildren( organisationUnitIds );
         final List<List<Integer>> childrenPages = new PaginatedList<>( childrenIds ).setNumberOfPages( cpuCores ).getPages();

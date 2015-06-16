@@ -29,6 +29,7 @@ package org.hisp.dhis.validation;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
@@ -53,5 +54,5 @@ public interface ValidationRuleStore
      * @param dataElements the collection of DataElements.
      * @return a collection of ValidationRules.
      */
-    Collection<ValidationRule> getValidationRulesByDataElements( Collection<DataElement> dataElements );
+    List<ValidationRule> getValidationRulesByDataElements( Collection<DataElement> dataElements );
 }

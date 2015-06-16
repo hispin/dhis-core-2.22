@@ -28,7 +28,7 @@ package org.hisp.dhis.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 public interface UserGroupAccessService
 {
@@ -40,5 +40,5 @@ public interface UserGroupAccessService
 
     void deleteUserGroupAccess( UserGroupAccess userGroupAccess );
 
-    Collection<UserGroupAccess> getAllUserGroupAccesses();
+    List<UserGroupAccess> getAllUserGroupAccesses();
 }

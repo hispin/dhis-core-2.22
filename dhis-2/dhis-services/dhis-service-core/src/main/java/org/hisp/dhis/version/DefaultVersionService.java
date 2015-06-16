@@ -28,7 +28,7 @@ package org.hisp.dhis.version;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -109,7 +109,7 @@ public class DefaultVersionService
     }
 
     @Override
-    public Collection<Version> getAllVersions()
+    public List<Version> getAllVersions()
     {
         return versionStore.getAll();
     }

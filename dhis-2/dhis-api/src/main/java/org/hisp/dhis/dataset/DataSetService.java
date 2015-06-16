@@ -37,6 +37,7 @@ import org.hisp.dhis.period.PeriodType;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -158,7 +159,7 @@ public interface DataSetService
     /**
      * Returns all DataSets associated with the specified sources.
      */
-    Collection<DataSet> getDataSetsBySources( Collection<OrganisationUnit> sources );
+    List<DataSet> getDataSetsBySources( Collection<OrganisationUnit> sources );
 
     /**
      * Returns the number of Sources among the specified Sources associated with
@@ -169,25 +170,25 @@ public interface DataSetService
     /**
      * Get all DataSets.
      *
-     * @return A collection containing all DataSets.
+     * @return A list containing all DataSets.
      */
-    Collection<DataSet> getAllDataSets();
+    List<DataSet> getAllDataSets();
 
     /**
      * Gets all DataSets associated with the given PeriodType.
      *
      * @param periodType the PeriodType.
-     * @return a collection of DataSets.
+     * @return a list of DataSets.
      */
-    Collection<DataSet> getDataSetsByPeriodType( PeriodType periodType );
+    List<DataSet> getDataSetsByPeriodType( PeriodType periodType );
 
     /**
      * Get all DataSets with corresponding identifiers.
      *
      * @param identifiers the collection of identifiers.
-     * @return a collection of indicators.
+     * @return a list of indicators.
      */
-    Collection<DataSet> getDataSets( Collection<Integer> identifiers );
+    List<DataSet> getDataSets( Collection<Integer> identifiers );
 
     /**
      * Get list of available ie. unassigned datasets.
@@ -231,9 +232,9 @@ public interface DataSetService
      * sets with the given corresponding data set identifiers.
      *
      * @param dataSetIdentifiers the data set identifiers.
-     * @return a distinct collection of data elements.
+     * @return a distinct list of data elements.
      */
-    Collection<DataElement> getDistinctDataElements( Collection<Integer> dataSetIdentifiers );
+    Set<DataElement> getDistinctDataElements( Collection<Integer> dataSetIdentifiers );
 
     /**
      * Returns a list of data sets with the given uids.
@@ -256,29 +257,29 @@ public interface DataSetService
      * corresponding data set.
      *
      * @param dataSet the data set object.
-     * @return a collection of data elements.
+     * @return a list of data elements.
      */
-    Collection<DataElement> getDataElements( DataSet dataSet );
+    Set<DataElement> getDataElements( DataSet dataSet );
 
     /**
      * Returns all DataSets that can be collected through mobile (one
      * organisation unit).
      */
-    Collection<DataSet> getDataSetsForMobile( OrganisationUnit source );
+    List<DataSet> getDataSetsForMobile( OrganisationUnit source );
 
     /**
      * Returns all DataSets that can be collected through mobile (all
      * organisation unit).
      */
-    Collection<DataSet> getDataSetsForMobile();
+    List<DataSet> getDataSetsForMobile();
 
     int getDataSetCountByName( String name );
 
-    Collection<DataSet> getDataSetsBetweenByName( String name, int first, int max );
+    List<DataSet> getDataSetsBetweenByName( String name, int first, int max );
 
     int getDataSetCount();
 
-    Collection<DataSet> getDataSetsBetween( int first, int max );
+    List<DataSet> getDataSetsBetween( int first, int max );
 
     // -------------------------------------------------------------------------
     // DataSet LockExceptions
@@ -326,24 +327,24 @@ public interface DataSetService
      *
      * @return List of all the lock exceptions
      */
-    Collection<LockException> getAllLockExceptions();
+    List<LockException> getAllLockExceptions();
 
     /**
      * Get all LockExceptions within a specific range
      *
      * @param first Index to start at
      * @param max   Number of results wanted
-     * @return Collection of LockExceptions withing the range specified
+     * @return List of LockExceptions withing the range specified
      */
-    Collection<LockException> getLockExceptionsBetween( int first, int max );
+    List<LockException> getLockExceptionsBetween( int first, int max );
 
     /**
      * Find all unique dataSet + period combinations
      * (mainly used for batch removal)
      *
-     * @return A collection of all unique combinations (only dataSet and period is set)
+     * @return A list of all unique combinations (only dataSet and period is set)
      */
-    public Collection<LockException> getLockExceptionCombinations();
+    public List<LockException> getLockExceptionCombinations();
 
     /**
      * Delete a dataSet + period combination, used for batch removal, e.g. when you

@@ -28,6 +28,9 @@ package org.hisp.dhis.translation.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+import java.util.Locale;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -36,10 +39,6 @@ import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.system.util.LocaleUtils;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.translation.TranslationStore;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Oyvind Brucker
@@ -92,7 +91,7 @@ public class HibernateTranslationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Translation> getTranslations( String className, Locale locale, String objectUid )
+    public List<Translation> getTranslations( String className, Locale locale, String objectUid )
     {
         Session session = sessionFactory.getCurrentSession();
 
@@ -111,7 +110,7 @@ public class HibernateTranslationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Translation> getTranslationsNoFallback( String className, String objectUid, Locale locale )
+    public List<Translation> getTranslationsNoFallback( String className, String objectUid, Locale locale )
     {
         Session session = sessionFactory.getCurrentSession();
 
@@ -128,7 +127,7 @@ public class HibernateTranslationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Translation> getTranslations( String className, Locale locale )
+    public List<Translation> getTranslations( String className, Locale locale )
     {
         Session session = sessionFactory.getCurrentSession();
 
@@ -146,7 +145,7 @@ public class HibernateTranslationStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Translation> getTranslations( Locale locale )
+    public List<Translation> getTranslations( Locale locale )
     {
         Session session = sessionFactory.getCurrentSession();
 

@@ -33,7 +33,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
@@ -163,7 +163,7 @@ public class DataValueBatchHandlerTest
         
         batchHandler.flush();
         
-        Collection<DataValue> values = dataValueService.getAllDataValues();
+        List<DataValue> values = dataValueService.getAllDataValues();
         
         assertNotNull( values );
         assertEquals( 4, values.size() );
@@ -186,7 +186,7 @@ public class DataValueBatchHandlerTest
         
         batchHandler.flush();
         
-        Collection<DataValue> values = dataValueService.getAllDataValues();
+        List<DataValue> values = dataValueService.getAllDataValues();
         
         assertNotNull( values );
         assertEquals( 4, values.size() );

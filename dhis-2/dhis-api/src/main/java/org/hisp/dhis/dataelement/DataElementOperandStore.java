@@ -28,9 +28,9 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import java.util.List;
 
-import java.util.Collection;
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -40,5 +40,5 @@ public interface DataElementOperandStore
 {
     String ID = DataElementOperand.class.getName();
 
-    Collection<DataElementOperand> getByDataElementGroup( DataElementGroup dataElementGroup );
+    List<DataElementOperand> getByDataElementGroup( DataElementGroup dataElementGroup );
 }

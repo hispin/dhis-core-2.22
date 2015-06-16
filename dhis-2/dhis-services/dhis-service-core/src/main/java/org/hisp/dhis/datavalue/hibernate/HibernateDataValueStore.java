@@ -32,9 +32,8 @@ import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -45,8 +44,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.common.MapMap;
+import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -205,7 +204,7 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getAllDataValues()
+    public List<DataValue> getAllDataValues()
     {
         Session session = sessionFactory.getCurrentSession();
 
@@ -216,13 +215,13 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( OrganisationUnit source, Period period )
+    public List<DataValue> getDataValues( OrganisationUnit source, Period period )
     {
         Period storedPeriod = periodStore.reloadPeriod( period );
 
         if ( storedPeriod == null )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
 
         Session session = sessionFactory.getCurrentSession();
@@ -236,7 +235,7 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( OrganisationUnit source, DataElement dataElement )
+    public List<DataValue> getDataValues( OrganisationUnit source, DataElement dataElement )
     {
         Session session = sessionFactory.getCurrentSession();
 
@@ -249,13 +248,13 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( Collection<OrganisationUnit> sources, DataElement dataElement )
+    public List<DataValue> getDataValues( Collection<OrganisationUnit> sources, DataElement dataElement )
     {
         Session session = sessionFactory.getCurrentSession();
         
         if ( sources == null || sources.isEmpty() )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
         
         Criteria criteria = session.createCriteria( DataValue.class );
@@ -267,13 +266,13 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements )
+    public List<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements )
     {
         Period storedPeriod = periodStore.reloadPeriod( period );
 
         if ( storedPeriod == null || dataElements == null || dataElements.isEmpty() )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
 
         Session session = sessionFactory.getCurrentSession();
@@ -288,14 +287,14 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( OrganisationUnit source, Period period, 
+    public List<DataValue> getDataValues( OrganisationUnit source, Period period, 
         Collection<DataElement> dataElements, DataElementCategoryOptionCombo attributeOptionCombo )
     {
         Period storedPeriod = periodStore.reloadPeriod( period );
 
         if ( storedPeriod == null || dataElements == null || dataElements.isEmpty() )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
 
         Session session = sessionFactory.getCurrentSession();
@@ -311,14 +310,14 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements,
+    public List<DataValue> getDataValues( OrganisationUnit source, Period period, Collection<DataElement> dataElements,
         Collection<DataElementCategoryOptionCombo> categoryOptionCombos )
     {
         Period storedPeriod = periodStore.reloadPeriod( period );
 
         if ( storedPeriod == null || dataElements == null || dataElements.isEmpty() || categoryOptionCombos == null || categoryOptionCombos.isEmpty() )
         {
-            return Collections.emptySet();
+            return new ArrayList<>();
         }
 
         Session session = sessionFactory.getCurrentSession();
@@ -334,14 +333,14 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( DataElement dataElement, Period period,
+    public List<DataValue> getDataValues( DataElement dataElement, Period period,
         Collection<OrganisationUnit> sources )
     {
         Period storedPeriod = periodStore.reloadPeriod( period );
 
         if ( storedPeriod == null || sources == null || sources.isEmpty() )
         {
-            return new HashSet<>();
+            return new ArrayList<>();
         }
 
         Session session = sessionFactory.getCurrentSession();
@@ -356,7 +355,7 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( DataElement dataElement, Collection<Period> periods,
+    public List<DataValue> getDataValues( DataElement dataElement, Collection<Period> periods,
         Collection<OrganisationUnit> sources )
     {
         Collection<Period> storedPeriods = new ArrayList<>();
@@ -373,7 +372,7 @@ public class HibernateDataValueStore
 
         if ( storedPeriods.isEmpty() || sources == null || sources.isEmpty() )
         {
-            return new HashSet<>();
+            return new ArrayList<>();
         }
 
         Session session = sessionFactory.getCurrentSession();
@@ -388,7 +387,7 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
+    public List<DataValue> getDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
         Collection<Period> periods, Collection<OrganisationUnit> sources )
     {
         Collection<Period> storedPeriods = new ArrayList<>();
@@ -405,7 +404,7 @@ public class HibernateDataValueStore
 
         if ( storedPeriods.isEmpty() || sources == null || sources.isEmpty() )
         {
-            return new HashSet<>();
+            return new ArrayList<>();
         }
 
         Session session = sessionFactory.getCurrentSession();
@@ -421,13 +420,13 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( Collection<DataElementCategoryOptionCombo> categoryOptionCombos )
+    public List<DataValue> getDataValues( Collection<DataElementCategoryOptionCombo> categoryOptionCombos )
     {
         Session session = sessionFactory.getCurrentSession();
 
         if ( categoryOptionCombos == null || categoryOptionCombos.isEmpty() )
         {
-            return new HashSet<>();
+            return new ArrayList<>();
         }
         
         Criteria criteria = session.createCriteria( DataValue.class );
@@ -438,7 +437,7 @@ public class HibernateDataValueStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<DataValue> getDataValues( DataElement dataElement )
+    public List<DataValue> getDataValues( DataElement dataElement )
     {
         Session session = sessionFactory.getCurrentSession();
 

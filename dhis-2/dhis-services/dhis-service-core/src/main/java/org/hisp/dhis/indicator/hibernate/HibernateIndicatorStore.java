@@ -28,7 +28,7 @@ package org.hisp.dhis.indicator.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.indicator.Indicator;
@@ -48,7 +48,7 @@ public class HibernateIndicatorStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<Indicator> getIndicatorsWithGroupSets()
+    public List<Indicator> getIndicatorsWithGroupSets()
     {
         final String hql = "from Indicator d where d.groupSets.size > 0";
 
@@ -57,7 +57,7 @@ public class HibernateIndicatorStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<Indicator> getIndicatorsWithoutGroups()
+    public List<Indicator> getIndicatorsWithoutGroups()
     {
         final String hql = "from Indicator d where d.groups.size = 0";
 
@@ -66,7 +66,7 @@ public class HibernateIndicatorStore
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<Indicator> getIndicatorsWithDataSets()
+    public List<Indicator> getIndicatorsWithDataSets()
     {
         final String hql = "from Indicator d where d.dataSets.size > 0";
 

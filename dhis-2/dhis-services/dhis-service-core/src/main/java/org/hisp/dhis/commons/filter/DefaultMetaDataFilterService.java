@@ -28,13 +28,15 @@ package org.hisp.dhis.commons.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.i18n.I18nUtils.getCountByName;
+import static org.hisp.dhis.i18n.I18nUtils.getObjectsBetween;
+import static org.hisp.dhis.i18n.I18nUtils.getObjectsBetweenByName;
+
+import java.util.List;
+
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.i18n.I18nService;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-
-import static org.hisp.dhis.i18n.I18nUtils.*;
 
 /**
  * @author Ovidiu Rosu <rosu.ovi@gmail.com>
@@ -78,19 +80,19 @@ public class DefaultMetaDataFilterService
     }
 
     @Override
-    public Collection<MetaDataFilter> getAllFilters()
+    public List<MetaDataFilter> getAllFilters()
     {
         return metaDataFilterStore.getAll();
     }
 
     @Override
-    public Collection<MetaDataFilter> getFiltersBetweenByName( String name, int first, int max )
+    public List<MetaDataFilter> getFiltersBetweenByName( String name, int first, int max )
     {
         return getObjectsBetweenByName( i18nService, metaDataFilterStore, name, first, max );
     }
 
     @Override
-    public Collection<MetaDataFilter> getFiltersBetween( int first, int max )
+    public List<MetaDataFilter> getFiltersBetween( int first, int max )
     {
         return getObjectsBetween( i18nService, metaDataFilterStore, first, max );
     }

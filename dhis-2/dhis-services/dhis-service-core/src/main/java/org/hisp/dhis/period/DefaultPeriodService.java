@@ -106,15 +106,15 @@ public class DefaultPeriodService
     }
 
     @Override
-    public Collection<Period> getAllPeriods()
+    public List<Period> getAllPeriods()
     {
         return periodStore.getAll();
     }
 
     @Override
-    public Collection<Period> getPeriods( final Collection<Integer> identifiers )
+    public List<Period> getPeriods( final Collection<Integer> identifiers )
     {
-        Collection<Period> periods = getAllPeriods();
+        List<Period> periods = getAllPeriods();
 
         return identifiers == null ? periods : FilterUtils.filter( periods, new Filter<Period>()
         {
@@ -127,58 +127,58 @@ public class DefaultPeriodService
     }
 
     @Override
-    public Collection<Period> getPeriodsByPeriodType( PeriodType periodType )
+    public List<Period> getPeriodsByPeriodType( PeriodType periodType )
     {
         return periodStore.getPeriodsByPeriodType( periodType );
     }
 
     @Override
-    public Collection<Period> getPeriodsBetweenDates( Date startDate, Date endDate )
+    public List<Period> getPeriodsBetweenDates( Date startDate, Date endDate )
     {
         return periodStore.getPeriodsBetweenDates( startDate, endDate );
     }
 
     @Override
-    public Collection<Period> getPeriodsBetweenDates( PeriodType periodType, Date startDate, Date endDate )
+    public List<Period> getPeriodsBetweenDates( PeriodType periodType, Date startDate, Date endDate )
     {
         return periodStore.getPeriodsBetweenDates( periodType, startDate, endDate );
     }
 
     @Override
-    public Collection<Period> getPeriodsBetweenOrSpanningDates( Date startDate, Date endDate )
+    public List<Period> getPeriodsBetweenOrSpanningDates( Date startDate, Date endDate )
     {
         return periodStore.getPeriodsBetweenOrSpanningDates( startDate, endDate );
     }
 
     @Override
-    public Collection<Period> getIntersectingPeriodsByPeriodType( PeriodType periodType, Date startDate, Date endDate )
+    public List<Period> getIntersectingPeriodsByPeriodType( PeriodType periodType, Date startDate, Date endDate )
     {
         return periodStore.getIntersectingPeriodsByPeriodType( periodType, startDate, endDate );
     }
 
     @Override
-    public Collection<Period> getIntersectingPeriods( Date startDate, Date endDate )
+    public List<Period> getIntersectingPeriods( Date startDate, Date endDate )
     {
         return periodStore.getIntersectingPeriods( startDate, endDate );
     }
 
     @Override
-    public Collection<Period> getIntersectionPeriods( Collection<Period> periods )
+    public List<Period> getIntersectionPeriods( Collection<Period> periods )
     {
         Set<Period> intersecting = new HashSet<>();
 
         for ( Period period : periods )
         {
             intersecting.addAll( getIntersectingPeriods( period.getStartDate(), period.getEndDate() ) );
-        }
-
-        return intersecting;
+        }      
+        
+        return new ArrayList<>( intersecting );
     }
 
     @Override
-    public Collection<Period> getBoundaryPeriods( Period period, Collection<Period> periods )
+    public List<Period> getBoundaryPeriods( Period period, Collection<Period> periods )
     {
-        Collection<Period> immutablePeriods = new ArrayList<>( periods );
+        List<Period> immutablePeriods = new ArrayList<>( periods );
 
         Iterator<Period> iterator = immutablePeriods.iterator();
 
@@ -197,9 +197,9 @@ public class DefaultPeriodService
     }
 
     @Override
-    public Collection<Period> getInclusivePeriods( Period period, Collection<Period> periods )
+    public List<Period> getInclusivePeriods( Period period, Collection<Period> periods )
     {
-        Collection<Period> immutablePeriods = new ArrayList<>( periods );
+        List<Period> immutablePeriods = new ArrayList<>( periods );
 
         Iterator<Period> iterator = immutablePeriods.iterator();
 
@@ -254,14 +254,14 @@ public class DefaultPeriodService
     }
 
     @Override
-    public Collection<Period> namePeriods( Collection<Period> periods, I18nFormat format )
+    public List<Period> namePeriods( Collection<Period> periods, I18nFormat format )
     {
         for ( Period period : periods )
         {
             period.setName( format.formatPeriod( period ) );
         }
 
-        return periods;
+        return new ArrayList<>( periods );
     }
 
     @Override

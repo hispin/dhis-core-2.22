@@ -29,6 +29,7 @@ package org.hisp.dhis.indicator;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hisp.dhis.common.GenericNameableObjectStore;
 
@@ -40,9 +41,9 @@ public interface IndicatorStore
 {
     String ID = IndicatorStore.class.getName();
 
-    Collection<Indicator> getIndicatorsWithGroupSets();
+    List<Indicator> getIndicatorsWithGroupSets();
 
-    Collection<Indicator> getIndicatorsWithoutGroups();
+    List<Indicator> getIndicatorsWithoutGroups();
 
-    Collection<Indicator> getIndicatorsWithDataSets();
+    List<Indicator> getIndicatorsWithDataSets();
 }

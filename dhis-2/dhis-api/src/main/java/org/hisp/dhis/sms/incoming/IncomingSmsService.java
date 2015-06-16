@@ -28,7 +28,6 @@ package org.hisp.dhis.sms.incoming;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hisp.dhis.sms.MessageQueue;
@@ -66,9 +65,9 @@ public interface IncomingSmsService
     
     public void setIncomingSmsQueue( MessageQueue incomingSmsQueue );
     
-    Collection<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword );
+    List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword );
     
-    Collection<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max );
+    List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max );
 
     IncomingSms convertToIncomingSms( InboundMessage message );
 

@@ -28,7 +28,6 @@ package org.hisp.dhis.option.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -104,7 +103,7 @@ public class HibernateOptionStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public Collection<Option> getOptions( OptionSet optionSet, String option, Integer min, Integer max )
+    public List<Option> getOptions( OptionSet optionSet, String option, Integer min, Integer max )
     {
         String hql = 
             "select option from OptionSet as optionset " +

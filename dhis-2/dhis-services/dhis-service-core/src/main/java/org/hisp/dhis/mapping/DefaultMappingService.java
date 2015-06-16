@@ -28,7 +28,6 @@ package org.hisp.dhis.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElement;
@@ -232,9 +231,9 @@ public class DefaultMappingService
     }
 
     @Override
-    public Collection<MapView> getAllMapViews()
+    public List<MapView> getAllMapViews()
     {
-        Collection<MapView> mapViews = mapViewStore.getAll();
+        List<MapView> mapViews = mapViewStore.getAll();
 
         if ( mapViews.size() > 0 )
         {
@@ -253,7 +252,7 @@ public class DefaultMappingService
     }
 
     @Override
-    public Collection<MapView> getMapViewsBetweenByName( String name, int first, int max )
+    public List<MapView> getMapViewsBetweenByName( String name, int first, int max )
     {
         return mapViewStore.getAllLikeName( name, first, max );
     }
@@ -325,7 +324,7 @@ public class DefaultMappingService
     }
 
     @Override
-    public Collection<MapLayer> getMapLayersByType( String type )
+    public List<MapLayer> getMapLayersByType( String type )
     {
         return mapLayerStore.getMapLayersByType( type );
     }
@@ -337,7 +336,7 @@ public class DefaultMappingService
     }
 
     @Override
-    public Collection<MapLayer> getAllMapLayers()
+    public List<MapLayer> getAllMapLayers()
     {
         return mapLayerStore.getAll();
     }

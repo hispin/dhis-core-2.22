@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -179,7 +179,7 @@ public class ValidationCriteriaStoreTest
         validationCriteriaStore.save( validationCriteriaA );
         validationCriteriaStore.save( validationCriteriaB );
 
-        Collection<ValidationCriteria> validationCriteria = validationCriteriaStore.getAll();
+        List<ValidationCriteria> validationCriteria = validationCriteriaStore.getAll();
 
         assertTrue( validationCriteria.size() == 2 );
         assertTrue( validationCriteria.contains( validationCriteriaA ) );
