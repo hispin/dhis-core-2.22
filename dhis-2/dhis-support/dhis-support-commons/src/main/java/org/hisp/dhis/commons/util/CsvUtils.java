@@ -30,7 +30,6 @@ package org.hisp.dhis.commons.util;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class CsvUtils
 {

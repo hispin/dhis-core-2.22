@@ -40,6 +40,8 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * Utility methods for list operations.
+ * 
  * @author Lars Helge Overland
  */
 public class ListUtils

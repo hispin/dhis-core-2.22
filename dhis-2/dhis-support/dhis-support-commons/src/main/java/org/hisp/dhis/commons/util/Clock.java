@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Utility class providing stopwatch-like functionality.
+ * 
  * @author Lars Helge Overland
  */
 public class Clock
