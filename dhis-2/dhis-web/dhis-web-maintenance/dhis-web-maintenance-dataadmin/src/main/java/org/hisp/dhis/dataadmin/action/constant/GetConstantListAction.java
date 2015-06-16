@@ -30,7 +30,6 @@ package org.hisp.dhis.dataadmin.action.constant;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -95,13 +94,13 @@ public class GetConstantListAction
         {
             this.paging = createPaging( constantService.getConstantCountByName( key ) );
             
-            constants = new ArrayList<>( constantService.getConstantsBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            constants = constantService.getConstantsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( constantService.getConstantCount() );
             
-            constants = new ArrayList<>( constantService.getConstantsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            constants = constantService.getConstantsBetween( paging.getStartPos(), paging.getPageSize() );
         }
         
         Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );

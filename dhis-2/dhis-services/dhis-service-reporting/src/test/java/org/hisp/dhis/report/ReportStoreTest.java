@@ -34,7 +34,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -146,7 +146,7 @@ public class ReportStoreTest
         reportStore.save( reportA );
         reportStore.save( reportB );
         
-        Collection<Report> reports = reportStore.getAll();
+        List<Report> reports = reportStore.getAll();
         
         assertNotNull( reports );
         assertEquals( 2, reports.size() );

@@ -47,7 +47,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -160,7 +159,7 @@ public class OrganisationUnitLocationController
     {
         boolean withinOrgUnit = false;
 
-        Collection<OrganisationUnit> organisationUnits = new ArrayList<>();
+        List<OrganisationUnit> organisationUnits = new ArrayList<>();
         organisationUnits.add( organisationUnitService.getOrganisationUnit( orgUnitUid ) );
         FilterUtils.filter( organisationUnits, new OrganisationUnitPolygonCoveringCoordinateFilter( longitude, latitude ) );
 

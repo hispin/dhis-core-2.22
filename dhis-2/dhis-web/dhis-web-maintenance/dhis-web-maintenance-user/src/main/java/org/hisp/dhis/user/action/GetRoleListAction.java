@@ -30,7 +30,6 @@ package org.hisp.dhis.user.action;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hisp.dhis.paging.ActionPagingSupport;
@@ -90,13 +89,13 @@ public class GetRoleListAction
         {
             this.paging = createPaging( userService.getUserRoleCountByName( key ) );
             
-            userAuthorityGroups = new ArrayList<>( userService.getUserRolesBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            userAuthorityGroups = userService.getUserRolesBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( userService.getUserRoleCount() );
             
-            userAuthorityGroups = new ArrayList<>( userService.getUserRolesBetween( paging.getStartPos(), paging.getPageSize() ) );
+            userAuthorityGroups = userService.getUserRolesBetween( paging.getStartPos(), paging.getPageSize() );
         }
 
         return SUCCESS;

@@ -110,7 +110,7 @@ public class GetCompulsoryDataElementsAction
 
         selectedOperands = new ArrayList<>( dataSet.getCompulsoryDataElementOperands() );
 
-        availableOperands = new ArrayList<>( dataElementCategoryService.getOperands( dataSet.getDataElements() ) );
+        availableOperands = dataElementCategoryService.getOperands( dataSet.getDataElements() );
         
         Iterator<DataElementOperand> availableIter = availableOperands.iterator();
 

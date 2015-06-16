@@ -92,13 +92,13 @@ public class GetOrganisationUnitGroupListAction
         {
             this.paging = createPaging( organisationUnitGroupService.getOrganisationUnitGroupCountByName( key ) );
             
-            organisationUnitGroups = new ArrayList<>( organisationUnitGroupService.getOrganisationUnitGroupsBetweenByName( key, paging.getStartPos(), paging.getPageSize() ) );
+            organisationUnitGroups = organisationUnitGroupService.getOrganisationUnitGroupsBetweenByName( key, paging.getStartPos(), paging.getPageSize() );
         }
         else
         {
             this.paging = createPaging( organisationUnitGroupService.getOrganisationUnitGroupCount() );
             
-            organisationUnitGroups = new ArrayList<>( organisationUnitGroupService.getOrganisationUnitGroupsBetween( paging.getStartPos(), paging.getPageSize() ) );
+            organisationUnitGroups = organisationUnitGroupService.getOrganisationUnitGroupsBetween( paging.getStartPos(), paging.getPageSize() );
         }
 
         Collections.sort( organisationUnitGroups, IdentifiableObjectNameComparator.INSTANCE );

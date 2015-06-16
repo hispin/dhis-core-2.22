@@ -109,8 +109,8 @@ public class GetLocaleListAction
 
             this.paging = createPaging( total );
 
-            i18nlocales = new ArrayList<>( localeService.getI18nLocalesBetweenLikeName( key, paging.getStartPos(),
-                paging.getPageSize() ) );
+            i18nlocales = localeService.getI18nLocalesBetweenLikeName( key, paging.getStartPos(),
+                paging.getPageSize() );
         }
         else
         {
@@ -118,8 +118,8 @@ public class GetLocaleListAction
 
             this.paging = createPaging( total );
 
-            i18nlocales = new ArrayList<>( localeService.getI18nLocalesBetween( paging.getStartPos(),
-                paging.getPageSize() ) );
+            i18nlocales = localeService.getI18nLocalesBetween( paging.getStartPos(),
+                paging.getPageSize() );
         }
 
         Collections.sort( i18nlocales, IdentifiableObjectNameComparator.INSTANCE );

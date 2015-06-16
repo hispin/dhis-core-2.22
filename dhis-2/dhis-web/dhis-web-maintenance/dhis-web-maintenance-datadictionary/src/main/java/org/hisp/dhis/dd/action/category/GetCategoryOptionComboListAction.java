@@ -28,6 +28,7 @@ package org.hisp.dhis.dd.action.category;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -80,7 +81,8 @@ public class GetCategoryOptionComboListAction
         defaultCategoryOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
 
         this.paging = createPaging( categoryService.getOptionComboCount() );
-        optionCombos = categoryService.getOptionCombosBetween( paging.getStartPos(), paging.getPageSize() );
+        optionCombos = categoryService.getOptionCombosBetween( paging.getStartPos(),
+            paging.getPageSize() );
 
         return SUCCESS;
     }

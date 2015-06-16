@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -288,7 +289,7 @@ public class DataSetCompletenessServiceTest
         registrationService.saveCompleteDataSetRegistration( new CompleteDataSetRegistration( dataSetC, periodA, unitC, null, tooLateA, "") );
         registrationService.saveCompleteDataSetRegistration( new CompleteDataSetRegistration( dataSetC, periodB, unitA, null, tooLateB, "") );
 
-        Collection<DataSetCompletenessResult> results = registrationCompletenessService.getDataSetCompleteness( periodIdA, unitIdA, null );
+        List<DataSetCompletenessResult> results = registrationCompletenessService.getDataSetCompleteness( periodIdA, unitIdA, null );
         
         assertNotNull( results );
         assertEquals( 3, results.size() );        
@@ -334,7 +335,7 @@ public class DataSetCompletenessServiceTest
         registrationService.saveCompleteDataSetRegistration( new CompleteDataSetRegistration( dataSetC, periodA, unitA, null, tooLateA, "") );
         registrationService.saveCompleteDataSetRegistration( new CompleteDataSetRegistration( dataSetC, periodA, unitB, null, onTimeA, "") );
 
-        Collection<DataSetCompletenessResult> results = registrationCompletenessService.getDataSetCompleteness( periodIdA, unitIdA, null );
+        List<DataSetCompletenessResult> results = registrationCompletenessService.getDataSetCompleteness( periodIdA, unitIdA, null );
         
         assertNotNull( results );
         assertEquals( 3, results.size() );        
@@ -373,7 +374,7 @@ public class DataSetCompletenessServiceTest
         registrationService.saveCompleteDataSetRegistration( new CompleteDataSetRegistration( dataSetA, periodB, unitF, null, onTimeB, "") );
         registrationService.saveCompleteDataSetRegistration( new CompleteDataSetRegistration( dataSetA, periodB, unitG, null, tooLateB, "") );
 
-        Collection<DataSetCompletenessResult> results = registrationCompletenessService.getDataSetCompleteness( periodIdA, unitIdA, null );
+        List<DataSetCompletenessResult> results = registrationCompletenessService.getDataSetCompleteness( periodIdA, unitIdA, null );
         
         assertNotNull( results );
         assertEquals( 1, results.size() );        
@@ -415,7 +416,7 @@ public class DataSetCompletenessServiceTest
         groupIds.clear();
         groupIds.add( groupA.getId() );
         
-        Collection<DataSetCompletenessResult> results = registrationCompletenessService.getDataSetCompleteness( periodIdC, unitIdA, groupIds );
+        List<DataSetCompletenessResult> results = registrationCompletenessService.getDataSetCompleteness( periodIdC, unitIdA, groupIds );
    
         assertNotNull( results );
         assertEquals( 3, results.size() );
