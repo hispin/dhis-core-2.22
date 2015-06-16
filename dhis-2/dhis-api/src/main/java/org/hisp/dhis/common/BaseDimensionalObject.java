@@ -143,13 +143,13 @@ public class BaseDimensionalObject
     @Override
     public boolean hasItems()
     {
-        return items != null && !items.isEmpty();
+        return !getItems().isEmpty();
     }
     
     @Override
     public boolean hasLegendSet()
     {
-        return legendSet != null;
+        return getLegendSet() != null;
     }
 
     @Override
@@ -163,8 +163,8 @@ public class BaseDimensionalObject
     {
         return
             DimensionType.TRACKED_ENTITY_ATTRIBUTE.equals( dimensionType ) ||
-                DimensionType.TRACKED_ENTITY_DATAELEMENT.equals( dimensionType ) ?
-                AnalyticsType.EVENT : AnalyticsType.AGGREGATE;
+            DimensionType.TRACKED_ENTITY_DATAELEMENT.equals( dimensionType ) ?
+            AnalyticsType.EVENT : AnalyticsType.AGGREGATE;
     }
 
     /**
