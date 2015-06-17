@@ -78,7 +78,7 @@ div#orgUnitTree
 <table>
     <col style="width: 120px"/>
 
-    #if ( $keyAccountInvite )
+    #if ( $allowInvite )
     <tr>
         <td><label>$i18n.getString( "action" )</label></td>
         <td>
