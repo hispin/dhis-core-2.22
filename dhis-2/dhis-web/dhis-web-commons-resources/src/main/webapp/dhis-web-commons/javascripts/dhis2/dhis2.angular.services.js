@@ -1089,7 +1089,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 $log.warn("Rule id:'" + rule.id + "'' and name:'" + rule.name + "' had no condition specified. Please check rule configuration.");
                             }
                             
-                            angular.forEach(rule.actions, function(action){
+                            angular.forEach(rule.programRuleActions, function(action){
                                 //In case the effect-hash is not populated, add entries
                                 if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event][action.id] )){
                                     $rootScope.ruleeffects[executingEvent.event][action.id] =  {
