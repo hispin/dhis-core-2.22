@@ -31,6 +31,7 @@ package org.hisp.dhis.analytics.event;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +52,7 @@ import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.commons.collection.ListUtils;
 
 /**
@@ -143,22 +145,37 @@ public class EventQueryParams
         
         dataQueryParams.copyTo( params );
         
-        for ( NameableObject object : ListUtils.emptyIfNull( dataQueryParams.getProgramDataElements() ) )
+        for ( NameableObject object : dataQueryParams.getProgramDataElements() )
         {
             DataElement element = (DataElement) object;            
             QueryItem item = new QueryItem( element, element.getLegendSet(), element.getType(), element.getOptionSet() );
             params.getItems().add( item );
         }
 
-        for ( NameableObject object : ListUtils.emptyIfNull( dataQueryParams.getFilterProgramDataElements() ) )
+        for ( NameableObject object : dataQueryParams.getProgramAttributes() )
+        {
+            TrackedEntityAttribute element = (TrackedEntityAttribute) object;            
+            QueryItem item = new QueryItem( element, element.getLegendSet(), element.getValueType(), element.getOptionSet() );
+            params.getItems().add( item );
+        }
+
+        for ( NameableObject object : dataQueryParams.getFilterProgramDataElements() )
         {
             DataElement element = (DataElement) object;            
             QueryItem item = new QueryItem( element, element.getLegendSet(), element.getType(), element.getOptionSet() );            
             params.getItemFilters().add( item );
         }
 
+        for ( NameableObject object : dataQueryParams.getFilterProgramAttributes() )
+        {
+            TrackedEntityAttribute element = (TrackedEntityAttribute) object;            
+            QueryItem item = new QueryItem( element, element.getLegendSet(), element.getValueType(), element.getOptionSet() );            
+            params.getItemFilters().add( item );
+        }
+
         params.setAggregateData( true );
         params.removeDimensionOrFilter( PROGRAM_DATAELEMENT_DIM_ID );
+        params.removeDimensionOrFilter( PROGRAM_ATTRIBUTE_DIM_ID );
         
         return params;
     }
