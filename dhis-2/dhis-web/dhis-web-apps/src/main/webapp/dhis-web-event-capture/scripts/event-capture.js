@@ -497,7 +497,7 @@ function getMetaProgramRuleVariables( programs )
 
 function getProgramRuleVariables( programRuleVariables )
 {
-    return getD2Objects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,name,displayName,programRuleVariableSourceType,program[id],dataElement[id]');
+    return getD2Objects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,name,displayName,programRuleVariableSourceType,program[id],programStage[id],dataElement[id]');
 }
 
 function getD2MetaObject( programs, objNames, url, filter )

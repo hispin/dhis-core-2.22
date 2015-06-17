@@ -7,7 +7,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
 
 //Controller for settings page
 .controller('MainController',
-        function($scope,
+        function($rootScope,
+                $scope,
                 $modal,
                 $timeout,
                 $anchorScroll,
@@ -29,11 +30,14 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 CurrentSelection,
                 ModalService,
                 DialogService,
-                AuthorityService) {
+                AuthorityService,
+                TrackerRulesExecutionService) {
     //selected org unit
     $scope.selectedOrgUnit = '';
     $scope.treeLoaded = false;    
-    $scope.selectedSection = {id: 'ALL'};
+    $scope.selectedSection = {id: 'ALL'};    
+    $rootScope.ruleeffects = {};
+    $scope.hiddenFields = {};
     
     $scope.calendarSetting = CalendarService.getSetting();
     
@@ -300,7 +304,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 }                
                 $scope.eventFetched = true;
             });
-        }        
+        }
     };    
     
     $scope.jumpToPage = function(){
@@ -886,6 +890,73 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.infiniteScroll.currentOptions += $scope.infiniteScroll.optionsToAdd;
     };
     
+    //listen for rule effect changes
+    $scope.$on('ruleeffectsupdated', function(event, args) {
+        if($rootScope.ruleeffects[args.event]) {
+            //Establish which event was affected:
+            var affectedEvent = $scope.currentEvent;
+            //In most cases the updated effects apply to the current event. In case the affected event is not the current event, fetch the correct event to affect:
+            if(args.event !== affectedEvent.event) {
+                angular.forEach($scope.currentStageEvents, function(searchedEvent) {
+                    if(searchedEvent.event === args.event) {
+                        affectedEvent = searchedEvent;
+                    }
+                });
+            }
+            
+            angular.forEach($rootScope.ruleeffects[args.event], function(effect) {
+                if( effect.dataElement ) {
+                    //in the data entry controller we only care about the "hidefield" actions
+                    if(effect.action === "HIDEFIELD") {
+                        if(effect.dataElement) {
+                            if(effect.ineffect && affectedEvent[effect.dataElement.id]) {
+                                //If a field is going to be hidden, but contains a value, we need to take action;
+                                if(effect.content) {
+                                    //TODO: Alerts is going to be replaced with a proper display mecanism.
+                                    alert(effect.content);
+                                }
+                                else {
+                                    //TODO: Alerts is going to be replaced with a proper display mecanism.
+                                    alert($scope.prStDes[effect.dataElement.id].dataElement.formName + "Was blanked out and hidden by your last action");
+                                }
+
+                                //Blank out the value:
+                                affectedEvent[effect.dataElement.id] = "";
+                                $scope.saveDatavalueForEvent($scope.prStDes[effect.dataElement.id],null,affectedEvent);
+                            }
+
+                            $scope.hiddenFields[effect.dataElement.id] = effect.ineffect;
+                        }
+                        else {
+                            $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
+                        }
+                    }
+                }
+            });
+        }
+    });
+    
+    $scope.executeRules = function() {
+        $scope.eventsByStage = [];
+        $scope.eventsByStage[$scope.selectedProgramStage.id] = [$scope.currentEvent];
+        TrackerRulesExecutionService.executeRules($scope.selectedProgram.id,$scope.currentEvent,$scope.eventsByStage,$scope.prStDes,null);
+    };
+    
+    //check if field is hidden
+    $scope.isHidden = function(id) {
+        //In case the field contains a value, we cant hide it. 
+        //If we hid a field with a value, it would falsely seem the user was aware that the value was entered in the UI.
+        if($scope.currentEvent[id]) {
+           return false; 
+        }
+        else {
+            return $scope.hiddenFields[id];
+        }
+    }; 
+    
+    $scope.saveDatavalue = function(){
+        $scope.executeRules();
+    };
     /*$scope.getInputNotifcationClass = function(id, custom, event){
         var style = "";
         if($scope.currentElement.id && $scope.currentElement.id === id){            
