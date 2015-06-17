@@ -53,6 +53,7 @@ import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObjectUtils.toDimension;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifier;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifiers;
@@ -151,6 +152,7 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.system.util.SystemUtils;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.util.Timer;
 import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,7 +257,7 @@ public class DefaultAnalyticsService
 
         addDataSetValues( params, grid );
         
-        addProgramDataElementValues( params, grid );
+        addProgramValues( params, grid );
 
         addDynamicDimensionValues( params, grid );
 
@@ -371,6 +373,7 @@ public class DefaultAnalyticsService
             dataSourceParams.removeDimension( INDICATOR_DIM_ID );
             dataSourceParams.removeDimension( DATASET_DIM_ID );
             dataSourceParams.removeDimension( PROGRAM_DATAELEMENT_DIM_ID );
+            dataSourceParams.removeDimension( PROGRAM_ATTRIBUTE_DIM_ID );
 
             Map<String, Object> aggregatedDataMap = getAggregatedDataValueMapObjectTyped( dataSourceParams );
 
@@ -390,9 +393,9 @@ public class DefaultAnalyticsService
      * @param params the data query parameters.
      * @param grid the grid.
      */
-    private void addProgramDataElementValues( DataQueryParams params, Grid grid )
+    private void addProgramValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getProgramDataElements().isEmpty() )
+        if ( !params.getProgramDataElements().isEmpty() || !params.getProgramAttributes().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.removeDimension( INDICATOR_DIM_ID );
@@ -427,6 +430,7 @@ public class DefaultAnalyticsService
             dataSourceParams.removeDimension( INDICATOR_DIM_ID );
             dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
             dataSourceParams.removeDimension( PROGRAM_DATAELEMENT_DIM_ID );
+            dataSourceParams.removeDimension( PROGRAM_ATTRIBUTE_DIM_ID );
             dataSourceParams.setAggregationType( AggregationType.COUNT );
 
             if ( !COMPLETENESS_DIMENSION_TYPES.containsAll( dataSourceParams.getDimensionTypes() ) )
@@ -979,6 +983,7 @@ public class DefaultAnalyticsService
             List<NameableObject> dataSets = new ArrayList<>();
             List<NameableObject> operandDataElements = new ArrayList<>();
             List<NameableObject> programDataElements = new ArrayList<>();
+            List<NameableObject> programAttributes = new ArrayList<>();
 
             itemLoop:
             for ( String uid : items )
@@ -1033,6 +1038,14 @@ public class DefaultAnalyticsService
                     operandDataElements.add( dc.getDataElement() );
                     continue itemLoop;
                 }
+                
+                TrackedEntityAttribute pa = idObjectManager.get( TrackedEntityAttribute.class, uid );
+                
+                if ( pa != null )
+                {
+                    programAttributes.add( pa );
+                    continue itemLoop;
+                }
 
                 throw new IllegalQueryException( "Data dimension option identifier does not reference any option: " + uid );
             }
@@ -1071,7 +1084,12 @@ public class DefaultAnalyticsService
                 dataDimensions.add( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID, DimensionType.PROGRAM_DATAELEMENT, programDataElements ) );
             }
 
-            if ( indicators.isEmpty() && dataElements.isEmpty() && dataSets.isEmpty() && operandDataElements.isEmpty() && programDataElements.isEmpty() )
+            if ( !programAttributes.isEmpty() )
+            {
+                dataDimensions.add( new BaseDimensionalObject( PROGRAM_ATTRIBUTE_DIM_ID, DimensionType.PROGRAM_ATTRIBUTE, programAttributes ) );
+            }
+            
+            if ( indicators.isEmpty() && dataElements.isEmpty() && dataSets.isEmpty() && operandDataElements.isEmpty() && programDataElements.isEmpty() && programAttributes.isEmpty() )
             {
                 throw new IllegalQueryException( "Dimension dx is present in query without any valid dimension options" );
             }
@@ -1332,7 +1350,8 @@ public class DefaultAnalyticsService
 
         if ( !dataElements.isEmpty() )
         {
-            DataQueryParams dataSourceParams = params.instance().removeDimensions( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID );
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( 
+                INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
             
             dataSourceParams.getDimensions().add( DataQueryParams.DE_IN_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
@@ -1358,7 +1377,8 @@ public class DefaultAnalyticsService
 
         if ( !dataElements.isEmpty() )
         {
-            DataQueryParams dataSourceParams = params.instance().removeDimensions( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID );
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( 
+                INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
             
             dataSourceParams.getDimensions().add( DataQueryParams.DE_IN_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );

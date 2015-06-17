@@ -280,16 +280,4 @@ public class ListUtils
         
         return list;
     }
-    
-    /**
-     * Returns an empty list if the given list is null, otherwise returns the list
-     * as is.
-     * 
-     * @param list the list.
-     * @return a list.
-     */
-    public static <T> List<T> emptyIfNull( List<T> list )
-    {
-        return list != null ? list : new ArrayList<T>();
-    }
 }

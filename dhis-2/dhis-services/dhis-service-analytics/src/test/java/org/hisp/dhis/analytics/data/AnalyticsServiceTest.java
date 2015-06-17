@@ -50,6 +50,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.junit.Test;
@@ -67,6 +69,9 @@ public class AnalyticsServiceTest
     private DataElement deD;
     private DataElement deE;
     private DataElement deF;
+    
+    private TrackedEntityAttribute paA;
+    private TrackedEntityAttribute paB;
     
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
@@ -91,6 +96,9 @@ public class AnalyticsServiceTest
     
     @Autowired
     private OrganisationUnitGroupService organisationUnitGroupService;
+
+    @Autowired
+    private TrackedEntityAttributeService attributeService;
     
     @Override
     public void setUpTest()
@@ -111,6 +119,12 @@ public class AnalyticsServiceTest
         dataElementService.addDataElement( deD );
         dataElementService.addDataElement( deE );
         dataElementService.addDataElement( deF );
+
+        paA = createTrackedEntityAttribute( 'A' );
+        paB = createTrackedEntityAttribute( 'B' );
+        
+        attributeService.addTrackedEntityAttribute( paA );
+        attributeService.addTrackedEntityAttribute( paB );
         
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );
@@ -217,6 +231,23 @@ public class AnalyticsServiceTest
         
         assertEquals( 2, params.getDataElements().size() );
         assertEquals( 2, params.getProgramDataElements().size() );
+        assertEquals( 1, params.getFilterOrganisationUnits().size() );
+    }
+
+    @Test
+    public void testGetFromUrlD()
+    {
+        Set<String> dimensionParams = new HashSet<>();
+        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() + ";" + paA.getUid() + ";" + paB.getUid() );
+
+        Set<String> filterParams = new HashSet<>();
+        filterParams.add( "ou:" + ouA.getUid() );
+        
+        DataQueryParams params = analyticsService.getFromUrl( dimensionParams, filterParams, null, null, 
+            false, false, false, false, false, false, null, null, null, null, null, null );
+        
+        assertEquals( 2, params.getDataElements().size() );
+        assertEquals( 2, params.getProgramAttributes().size() );
         assertEquals( 1, params.getFilterOrganisationUnits().size() );
     }
 

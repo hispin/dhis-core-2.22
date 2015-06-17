@@ -54,6 +54,7 @@ public interface DimensionalObject
     final String DATASET_DIM_ID = "ds";
     final String DATAELEMENT_OPERAND_ID = "dc";
     final String PROGRAM_DATAELEMENT_DIM_ID = "pd";
+    final String PROGRAM_ATTRIBUTE_DIM_ID = "pa";
     final String CATEGORYOPTIONCOMBO_DIM_ID = "co";
     final String PERIOD_DIM_ID = "pe";
     final String ORGUNIT_DIM_ID = "ou";
@@ -71,8 +72,10 @@ public interface DimensionalObject
     final String LONGITUDE_DIM_ID = "longitude";
     final String LATITUDE_DIM_ID = "latitude";
 
-    final List<String> DATA_X_DIMS = Arrays.asList( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, DATAELEMENT_OPERAND_ID, PROGRAM_DATAELEMENT_DIM_ID );    
-    final List<String> STATIC_DIMS = Arrays.asList( LONGITUDE_DIM_ID, LATITUDE_DIM_ID );
+    final List<String> DATA_X_DIMS = Arrays.asList( 
+        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, DATAELEMENT_OPERAND_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
+    final List<String> STATIC_DIMS = Arrays.asList( 
+        LONGITUDE_DIM_ID, LATITUDE_DIM_ID );
     
     final Map<String, String> PRETTY_NAMES = DimensionalObjectUtils.asMap( 
         DATA_X_DIM_ID, "Data",
