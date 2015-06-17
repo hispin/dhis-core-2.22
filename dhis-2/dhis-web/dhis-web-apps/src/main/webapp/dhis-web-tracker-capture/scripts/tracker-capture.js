@@ -697,7 +697,7 @@ function getProgramRule( id )
         return $.ajax( {
             url: '../api/programRules.json',
             type: 'GET',
-            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,description,condition,program[id],programstage[id],priority,programRulesAction[id,content,location,data,programRuleActionType,programStageSection[id,name],dataElement[id]]'
+            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,description,condition,program[id],programstage[id],priority,programRuleActions[id,content,location,data,programRuleActionType,programStageSection[id,name],dataElement[id]]'
         }).done( function( response ){
             
             _.each( _.values( response.programRules ), function ( programRule ) { 
