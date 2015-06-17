@@ -68,7 +68,7 @@
                     </div>
                 </td>                                                            
             </tr>            
-            <tr ng-repeat="eventGridColumn in eventGridColumns" ng-if="eventGridColumn.id !== 'comment' && eventGridColumn.id !== 'uid' && eventGridColumn.id !== 'event_date'">
+            <tr ng-repeat="eventGridColumn in eventGridColumns" ng-if="eventGridColumn.id !== 'comment' && eventGridColumn.id !== 'uid' && eventGridColumn.id !== 'event_date' && !isHidden(eventGridColumn.id)">
                 <td >
                     {{eventGridColumn.name}}<span ng-if="eventGridColumn.compulsory" class="required">*</span>
                 </td>
@@ -81,6 +81,7 @@
                                            ng-required={{eventGridColumn.compulsory}}
                                            name="foo" 
                                            input-field-id={{eventGridColumn.id}}
+                                           on-select="saveDatavalue()" 
                                            class='form-control'>
                                     <ui-select-match allow-clear="true" class="form-control" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name  || $select.selected}}</ui-select-match>
                                     <ui-select-choices  infinite-scroll="addMoreOptions()"
@@ -95,6 +96,7 @@
                                     <input type="radio" 
                                            name="foo"  
                                            input-field-id={{eventGridColumn.id}}   
+                                           ng-change="saveDatavalue()" 
                                            ng-required={{eventGridColumn.compulsory}}
                                            ng-model="currentEvent[eventGridColumn.id]"
                                            value=""> {{'no_value' | translate}}<br>
@@ -103,6 +105,7 @@
                                     <input type="radio" 
                                            name={{eventGridColumn.id}}   
                                            input-field-id={{eventGridColumn.id}}    
+                                           ng-change="saveDatavalue()" 
                                            ng-required={{eventGridColumn.compulsory}}
                                            ng-model="currentEvent[eventGridColumn.id]"
                                            value={{option.name}}> {{option.name}}<br>                                        
@@ -118,6 +121,7 @@
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
                                        input-field-id={{eventGridColumn.id}} 
+                                       ng-blur="saveDatavalue()" 
                                        class="form-control"/>
                             </div>
                             <div ng-switch-when="string">     
@@ -127,6 +131,7 @@
                                         ng-required={{eventGridColumn.compulsory}}
                                         name="foo" 
                                         input-field-id={{eventGridColumn.id}} 
+                                        ng-blur="saveDatavalue()" 
                                         class="form-control">
                                     </textarea>
                                 </span>
@@ -136,6 +141,7 @@
                                         ng-required={{eventGridColumn.compulsory}}
                                         name="foo" 
                                         input-field-id={{eventGridColumn.id}} 
+                                        ng-blur="saveDatavalue()" 
                                         class="form-control"/>                  
                                 </span>                                              
                             </div>
@@ -144,6 +150,7 @@
                                         ng-required={{eventGridColumn.compulsory}}
                                         name="foo" 
                                         input-field-id={{eventGridColumn.id}} 
+                                        ng-change="saveDatavalue()" 
                                         class="form-control">
                                 <option value="">{{'please_select'| translate}}</option>                        
                                 <option value="false">{{'no'| translate}}</option>
@@ -160,6 +167,7 @@
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
                                        input-field-id={{eventGridColumn.id}} 
+                                       blur-or-change="saveDatavalue()" 
                                        class="form-control">
                             </div>
                             <div ng-switch-when="trueOnly">
@@ -167,7 +175,8 @@
                                        ng-model="currentEvent[eventGridColumn.id]"                                                               
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
-                                       input-field-id={{eventGridColumn.id}} />
+                                       input-field-id={{eventGridColumn.id}} 
+                                       ng-change="saveDatavalue()" />
                             </div>
                             <div ng-switch-default>
                                 <input type="text"                                             
@@ -175,6 +184,7 @@
                                     ng-required={{eventGridColumn.compulsory}}
                                     name="foo" 
                                     input-field-id={{eventGridColumn.id}} 
+                                    ng-blur="saveDatavalue()" 
                                     class="form-control"> 
                             </div>
                         </div>                        
@@ -269,7 +279,7 @@
                 </tr>                        
             </thead>
             <tbody>       
-                <tr ng-repeat="de in section.programStageDataElements">
+                <tr ng-repeat="de in section.programStageDataElements" ng-if="!isHidden(de.dataElement.id)">
                     <td >
                         {{prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name}}<span ng-if="prStDes[de.dataElement.id].compulsory" class="required">*</span>                        </td>
                     <td >
@@ -280,7 +290,8 @@
                                                theme="select2" 
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                ng-app=""name="foo" 
-                                               ng-app=""input-field-id={{de.dataElement.id}}
+                                               ng-app=""input-field-id={{de.dataElement.id}} 
+                                               on-select="saveDataValue()"
                                                class='form-control'>
                                         <ui-select-match allow-clear="true" class="form-control" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name || $select.selected}}</ui-select-match>
                                         <ui-select-choices  infinite-scroll="addMoreOptions()"
@@ -295,6 +306,7 @@
                                         <input type="radio" 
                                                name="foo"  
                                                input-field-id={{de.dataElement.id}} 
+                                               ng-change="saveDatavalue()" 
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                ng-model="currentEvent[de.dataElement.id]"
                                                value="">{{'no_value' | translate}}<br>
@@ -303,6 +315,7 @@
                                         <input type="radio" 
                                                name={{de.dataElement.id}}   
                                                input-field-id={{de.dataElement.id}} 
+                                               ng-change="saveDatavalue()" 
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                ng-model="currentEvent[de.dataElement.id]"
                                                value={{option.name}}> {{option.name}}<br>                                        
@@ -318,6 +331,7 @@
                                            ng-required={{prStDes[de.dataElement.id].compulsory}}
                                            name="foo" 
                                            input-field-id={{de.dataElement.id}} 
+                                           ng-blur="saveDatavalue()" 
                                            class="form-control"/>
                                 </div>
                                 <div ng-switch-when="string">
@@ -327,6 +341,7 @@
                                             ng-required={{prStDes[de.dataElement.id].compulsory}}
                                             name="foo" 
                                             input-field-id={{de.dataElement.id}} 
+                                            ng-blur="saveDatavalue()" 
                                             class="form-control">
                                         </textarea>
                                     </span>
@@ -336,6 +351,7 @@
                                             ng-required={{prStDes[de.dataElement.id].compulsory}}
                                             name="foo" 
                                             input-field-id={{de.dataElement.id}} 
+                                            ng-blur="saveDatavalue()" 
                                             class="form-control">                  
                                     </span>
                                 </div>
@@ -344,6 +360,7 @@
                                             ng-required={{prStDes[de.dataElement.id].compulsory}}
                                             name="foo" 
                                             input-field-id={{de.dataElement.id}} 
+                                            ng-change="saveDatavalue()" 
                                             class="form-control">
                                     <option value="">{{'please_select'| translate}}</option>                        
                                     <option value="false">{{'no'| translate}}</option>
@@ -360,6 +377,7 @@
                                            ng-required={{prStDes[de.dataElement.id].compulsory}}
                                            name="foo" 
                                            input-field-id={{de.dataElement.id}} 
+                                           blur-or-change="saveDatavalue()" 
                                            class="form-control"/>
                                 </div>
                                 <div ng-switch-when="trueOnly">
@@ -367,7 +385,8 @@
                                            ng-model="currentEvent[de.dataElement.id]"                                                               
                                            ng-required={{prStDes[de.dataElement.id].compulsory}}
                                            name="foo" 
-                                           input-field-id={{de.dataElement.id}}/>
+                                           input-field-id={{de.dataElement.id}}
+                                           ng-change="saveDatavalue()" />
                                 </div>
                                 <div ng-switch-default>
                                     <input type="text"                                                  
@@ -375,6 +394,7 @@
                                         ng-required={{prStDes[de.dataElement.id].compulsory}}
                                         name="foo" 
                                         input-field-id={{de.dataElement.id}} 
+                                        ng-blur="saveDatavalue()" 
                                         class="form-control"/>
                                 </div>
                             </div>
