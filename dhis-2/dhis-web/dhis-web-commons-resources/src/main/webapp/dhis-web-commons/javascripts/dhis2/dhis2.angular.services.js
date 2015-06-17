@@ -1099,7 +1099,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                         dataElement:action.dataElement,
                                         content:action.content,
                                         data:action.data,
-                                        ineffect:false
+                                        ineffect:undefined
                                     };
                                 }
 
