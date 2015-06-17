@@ -120,11 +120,6 @@ public class IsInviteTokenValidAction
     @Override
     public String execute()
     {
-        if ( !systemSettingManager.accountInviteEnabled() )
-        {
-            return ERROR;
-        }
-
         userCredentials = userService.getUserCredentialsByUsername( username );
 
         if ( userCredentials == null )

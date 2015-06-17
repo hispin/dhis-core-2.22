@@ -217,12 +217,6 @@ public class AccountController
 
         if ( invitedByEmail )
         {
-            if ( !systemSettingManager.accountInviteEnabled() )
-            {
-                ContextUtils.conflictResponse( response, "Account invite is not enabled" );
-                return;
-            }
-
             credentials = userService.getUserCredentialsByUsername( inviteUsername );
 
             if ( credentials == null )
