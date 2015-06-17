@@ -28,7 +28,6 @@ package org.hisp.dhis.settings.action.system;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCOUNT_INVITE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCOUNT_RECOVERY;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_CREDENTIALS_EXPIRES;
@@ -102,13 +101,6 @@ public class SetAccessSettingsAction
     public void setAccountRecovery( Boolean accountRecovery )
     {
         this.accountRecovery = accountRecovery;
-    }
-
-    private Boolean accountInvite;
-
-    public void setAccountInvite( Boolean accountInvite )
-    {
-        this.accountInvite = accountInvite;
     }
 
     private Boolean canGrantOwnUserAuthorityGroups;
@@ -197,7 +189,6 @@ public class SetAccessSettingsAction
         configurationService.setConfiguration( config );
 
         systemSettingManager.saveSystemSetting( KEY_ACCOUNT_RECOVERY, accountRecovery );
-        systemSettingManager.saveSystemSetting( KEY_ACCOUNT_INVITE, accountInvite );
         systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, canGrantOwnUserAuthorityGroups );
         systemSettingManager.saveSystemSetting( KEY_ALLOW_OBJECT_ASSIGNMENT, allowObjectAssignment );
         systemSettingManager.saveSystemSetting( KEY_SELF_REGISTRATION_NO_RECAPTCHA, selfRegistrationNoRecaptcha );

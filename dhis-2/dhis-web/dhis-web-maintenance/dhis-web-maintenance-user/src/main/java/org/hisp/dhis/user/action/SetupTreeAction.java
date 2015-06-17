@@ -46,6 +46,7 @@ import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserAuthorityGroup;
@@ -112,6 +113,9 @@ public class SetupTreeAction
 
     @Autowired
     private UserSettingService userSettingService;
+    
+    @Autowired
+    private SystemSettingManager systemSettingManager;
 
     // -------------------------------------------------------------------------
     // Input & Output
@@ -200,6 +204,13 @@ public class SetupTreeAction
     {
         return attributeValues;
     }
+    
+    private boolean allowInvite;
+
+    public boolean isAllowInvite()
+    {
+        return allowInvite;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -260,6 +271,8 @@ public class SetupTreeAction
         
         attributes = new ArrayList<>( attributeService.getUserAttributes() );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
+        
+        allowInvite = systemSettingManager.emailEnabled();
         
         return SUCCESS;
     }
