@@ -102,15 +102,17 @@ trackerCapture.controller('RegistrationController',
         var mode = _mode ? _mode : 'ENROLLMENT';
         AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
             $scope.attributes = atts;
-            $scope.customFormExists = false;               
-            TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){
-                if(angular.isObject(teForm)){                        
-                    $scope.customFormExists = true;
-                    $scope.trackedEntityForm = teForm;                      
-                    $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
-                }                    
-            });  
-        });        
+            $scope.customFormExists = false;   
+            if($scope.selectedProgram && $scope.selectedProgram.id){
+                TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){
+                    if(angular.isObject(teForm)){                        
+                        $scope.customFormExists = true;
+                        $scope.trackedEntityForm = teForm;                      
+                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
+                    }
+                });
+            }
+        });
     };
     
     $scope.registerEntity = function(destination){        

@@ -632,11 +632,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 .factory('TEFormService', function(TCStorageService, $q, $rootScope) {
 
     return {
-        getByProgram: function(program, attributes){            
-            
-            if(!program){
-                program = {id: 'NO_PROGRAM', name: 'NO_PROGRAM', selectIncidentDatesInFuture: false, selectEnrollmentDatesInFuture: false, displayIncidentDate: false};
-            }
+        getByProgram: function(program, attributes){ 
             
             var def = $q.defer();
             
