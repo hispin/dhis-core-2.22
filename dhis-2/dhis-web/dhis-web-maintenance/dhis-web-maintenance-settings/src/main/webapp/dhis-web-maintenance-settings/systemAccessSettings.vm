@@ -21,7 +21,6 @@ jQuery( document ).ready( function() {
                 selfRegistrationOrgUnit: jQuery( "#selfRegistrationOrgUnit" ).val(),
                 selfRegistrationNoRecaptcha: jQuery( '#selfRegistrationNoRecaptcha' ).is( ':checked' ),
                 accountRecovery: jQuery( '#accountRecovery' ).is( ':checked' ),
-                accountInvite: jQuery( '#accountInvite' ).is( ':checked' ),
                 canGrantOwnUserAuthorityGroups: jQuery( '#canGrantOwnUserAuthorityGroups' ).is( ':checked' ),
                 allowObjectAssignment: jQuery( '#allowObjectAssignment' ).is( ':checked' ),
                 credentialsExpires: jQuery( '#credentialsExpires' ).val(),
@@ -86,11 +85,6 @@ jQuery( document ).ready( function() {
 <div class="setting">
     <input type="checkbox" id="accountRecovery" name="accountRecovery"#if( $keyAccountRecovery ) checked="checked"#end>
     <label for="accountRecovery">$i18n.getString( "enable_user_account_recovery" )</label>
-</div>
-
-<div class="setting">
-    <input type="checkbox" id="accountInvite" name="accountInvite"#if( $keyAccountInvite ) checked="checked"#end>
-    <label for="accountInvite">$i18n.getString( "enable_user_account_invite" )</label>
 </div>
 
 <div class="setting">
