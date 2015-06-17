@@ -980,9 +980,6 @@ function getTrackedEntityForms( )
             _.each( _.values( response.trackedEntityForms ), function ( trackedEntityForm ) { 
                 
                 if( trackedEntityForm && trackedEntityForm.id){
-                    if(!trackedEntityForm.program || !trackedEntityForm.program.id){
-                        trackedEntityForm.program = {id: 'NO_PROGRAM', name: 'NO_PROGRAM'};
-                    }                    
                     trackedEntityForm.id = trackedEntityForm.program.id;
                     dhis2.tc.store.set( 'trackedEntityForms', trackedEntityForm );
                 }
