@@ -184,8 +184,6 @@ public interface SystemSettingManager
 
     boolean accountRecoveryEnabled();
 
-    boolean accountInviteEnabled();
-
     boolean selfRegistrationNoRecaptcha();
 
     boolean emailEnabled();
