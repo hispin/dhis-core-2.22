@@ -187,12 +187,6 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public boolean accountInviteEnabled()
-    {
-        return (Boolean) getSystemSetting( KEY_ACCOUNT_INVITE, false );
-    }
-
-    @Override
     public boolean selfRegistrationNoRecaptcha()
     {
         return (Boolean) getSystemSetting( KEY_SELF_REGISTRATION_NO_RECAPTCHA, false );

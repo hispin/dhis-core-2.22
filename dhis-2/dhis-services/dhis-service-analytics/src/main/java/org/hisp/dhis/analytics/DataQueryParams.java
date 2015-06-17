@@ -45,6 +45,7 @@ import static org.hisp.dhis.common.DimensionalObject.INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
 import static org.hisp.dhis.common.NameableObjectUtils.asList;
 import static org.hisp.dhis.common.NameableObjectUtils.getList;
 
@@ -86,6 +87,8 @@ import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.commons.collection.CollectionUtils;
 import org.hisp.dhis.commons.collection.ListUtils;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -107,11 +110,11 @@ public class DataQueryParams
     public static final int CO_IN_INDEX = 1;
     
     public static final List<String> DATA_DIMS = Arrays.asList( 
-        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID );
+        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
     public static final List<String> FIXED_DIMS = Arrays.asList( 
-        DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
+        DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
     private static final List<String> DIMENSION_PERMUTATION_IGNORE_DIMS = Arrays.asList( 
-        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID );    
+        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
     public static final List<DimensionType> COMPLETENESS_DIMENSION_TYPES = Arrays.asList( 
         DATASET, PERIOD, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET, CATEGORYOPTION_GROUPSET );
     private static final List<DimensionType> COMPLETENESS_TARGET_DIMENSION_TYPES = Arrays.asList( 
@@ -282,7 +285,8 @@ public class DataQueryParams
         if ( !dimensions.contains( new BaseDimensionalObject( DATAELEMENT_DIM_ID ) ) ||
             dimensions.contains( new BaseDimensionalObject( INDICATOR_DIM_ID ) ) ||
             dimensions.contains( new BaseDimensionalObject( DATASET_DIM_ID ) ) ||
-            dimensions.contains( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ) ) )
+            dimensions.contains( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ) ) ||
+            dimensions.contains( new BaseDimensionalObject( PROGRAM_ATTRIBUTE_DIM_ID ) ) )
         {
             removeDimension( CATEGORYOPTIONCOMBO_DIM_ID );
         }
@@ -351,10 +355,12 @@ public class DataQueryParams
             }
         }
         
-        list.remove( new BaseDimensionalObject( INDICATOR_DIM_ID ) );
-        list.remove( new BaseDimensionalObject( DATAELEMENT_DIM_ID ) );
-        list.remove( new BaseDimensionalObject( DATASET_DIM_ID ) );
-        list.remove( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ) );
+        list.removeAll( Lists.newArrayList( 
+            new BaseDimensionalObject( INDICATOR_DIM_ID ),
+            new BaseDimensionalObject( DATAELEMENT_DIM_ID ),
+            new BaseDimensionalObject( DATASET_DIM_ID ),
+            new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ),
+            new BaseDimensionalObject( PROGRAM_ATTRIBUTE_DIM_ID ) ) );
         
         return list;
     }
@@ -1605,9 +1611,19 @@ public class DataQueryParams
         return getDimensionOptions( PROGRAM_DATAELEMENT_DIM_ID );
     }
     
-    public void setProgramDataElements( List<? extends NameableObject> trackerDataElements )
+    public void setProgramDataElements( List<? extends NameableObject> programDataElements )
     {
-        setDimensionOptions( PROGRAM_DATAELEMENT_DIM_ID, DimensionType.PROGRAM_DATAELEMENT, null, asList( trackerDataElements ) );
+        setDimensionOptions( PROGRAM_DATAELEMENT_DIM_ID, DimensionType.PROGRAM_DATAELEMENT, null, asList( programDataElements ) );
+    }
+    
+    public List<NameableObject> getProgramAttributes()
+    {
+        return getDimensionOptions( PROGRAM_ATTRIBUTE_DIM_ID );
+    }
+    
+    public void setProgramAttributes( List<? extends NameableObject> programAttributes )
+    {
+        setDimensionOptions( PROGRAM_ATTRIBUTE_DIM_ID, DimensionType.PROGRAM_ATTRIBUTE, null, asList( programAttributes ) );
     }
     
     public List<DimensionalObject> getDataElementGroupSets()
@@ -1700,6 +1716,11 @@ public class DataQueryParams
     public List<NameableObject> getFilterProgramDataElements()
     {
         return getFilterOptions( PROGRAM_DATAELEMENT_DIM_ID );
+    }
+    
+    public List<NameableObject> getFilterProgramAttributes()
+    {
+        return getFilterOptions( PROGRAM_ATTRIBUTE_DIM_ID );
     }
     
     public void setFilter( String filter, DimensionType type, NameableObject item )
