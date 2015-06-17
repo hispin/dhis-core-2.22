@@ -399,6 +399,80 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
     };    
 })
 
+    /* Returns a function for getting rules for a specific program */
+.factory('TrackerRulesFactory', function($q,$rootScope,ECStorageService){
+    return{
+        getOldProgramStageRules :function(programUid, programstageUid) {
+            var rules = this.getProgramRules(programUid);
+            
+            //Only keep the rules actually matching the program stage we are in, or rules with no program stage defined.
+            var programStageRules = [];
+            angular.forEach(rules, function(rule) {
+                if(rule.programstage_uid == null || rule.programstage_uid == "" || rule.programstage_uid == programstageUid) {
+                   programStageRules.push(rule);
+                }
+            });
+            
+            return programStageRules;
+        },
+        
+        getProgramStageRules : function(programUid, programStageUid){
+            var def = $q.defer();
+            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.getAll('programRules').done(function(rules){                    
+                    //The array will ultimately be returned to the caller.
+                    var programRulesArray = [];
+                    //Loop through and add the rules belonging to this program and program stage
+                    angular.forEach(rules, function(rule){
+                       if(rule.program.id == programUid) {
+                           if(!rule.programStage || !rule.programStage.id || rule.programStage.id == programStageUid) {
+                                programRulesArray.push(rule);
+                            }
+                       }
+                    });
+
+                    $rootScope.$apply(function(){
+                        def.resolve(programRulesArray);
+                    });
+                });     
+            });
+                        
+            return def.promise;
+        }
+    };  
+})
+
+/* Returns user defined variable names and their corresponding UIDs and types for a specific program */
+.factory('TrackerRuleVariableFactory', function($rootScope, $q, ECStorageService){
+    return{
+        getProgramRuleVariables : function(programUid){
+            var def = $q.defer();
+
+            ECStorageService.currentStore.open().done(function(){
+                
+                ECStorageService.currentStore.getAll('programRuleVariables').done(function(variables){
+                    
+                    //The array will ultimately be returned to the caller.
+                    var programRuleVariablesArray = [];
+                    //Loop through and add the variables belonging to this program
+                    angular.forEach(variables, function(variable){
+                       if(variable.program.id == programUid) {
+                            programRuleVariablesArray.push(variable);
+                       }
+                    });
+
+                    $rootScope.$apply(function(){
+                        def.resolve(programRuleVariablesArray);
+                    });
+                });
+            });
+                        
+            return def.promise;
+        }
+    };
+})
+
 /* service for dealing with events */
 .service('DHIS2EventService', function(){
     return {     

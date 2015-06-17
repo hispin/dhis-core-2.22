@@ -280,7 +280,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     ' style="width:100%;" ' +
                                     ' input-field-id="' + fieldId + '"' +
                                     ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
-                                    ' ng-disabled="selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
+                                    ' ng-disabled="isHidden(prStDes.' + fieldId + '.dataElement.id) || selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
                                     ' ng-required="{{prStDes.' + fieldId + '.compulsory}}" ';
 
                             if (prStDe && prStDe.dataElement && prStDe.dataElement.type) {
