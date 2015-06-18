@@ -323,4 +323,9 @@
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.oauth2.OAuth2Client" />
   </bean>
 
+  <!-- ADX Service -->
+
+  <bean id="org.hisp.dhis.dxf2.ADXDataService"
+    class="org.hisp.dhis.dxf2.adx.DefaultADXDataService" />
+
 </beans>
