@@ -16,9 +16,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 SessionStorageService,
                 Paginator,
                 OptionSetService,
-                ProgramValidationService,
-                ProgramFactory,
-                ProgramStageFactory,                
+                MetaDataFactory,
+                ProgramFactory,                               
                 DHIS2EventFactory,
                 DHIS2EventService,
                 ContextMenuSelectedItem,                
@@ -87,7 +86,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             
             if($scope.optionSets.length < 1){
                 $scope.optionSets = [];
-                OptionSetService.getAll().then(function(optionSets){
+                MetaDataFactory.getAll('optionSets').then(function(optionSets){
                     angular.forEach(optionSets, function(optionSet){  
                         $scope.optionSets[optionSet.id] = optionSet;
                     });                    
@@ -145,7 +144,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.selectedProgram.programStages[0].id){ 
                 
             //because this is single event, take the first program stage
-            ProgramStageFactory.get($scope.selectedProgram.programStages[0].id).then(function (programStage){
+            MetaDataFactory.get('programStages', $scope.selectedProgram.programStages[0].id).then(function (programStage){
 
                 $scope.selectedProgramStage = programStage;   
 
@@ -193,7 +192,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 }
                 $scope.newDhis2Event.eventDate = '';
 
-                ProgramValidationService.getByProgram($scope.selectedProgram.id).then(function(pvs){
+                MetaDataFactory.getByProgram('programValidations', $scope.selectedProgram.id).then(function(pvs){
                     $scope.programValidations = pvs;
                     $scope.loadEvents();
                 });

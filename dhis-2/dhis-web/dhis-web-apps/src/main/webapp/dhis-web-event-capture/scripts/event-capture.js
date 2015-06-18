@@ -32,7 +32,7 @@ if( dhis2.ec.memoryOnly ) {
 dhis2.ec.store = new dhis2.storage.Store({
     name: 'dhis2ec',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'ouLevels']
+    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels']
 });
 
 (function($) {
@@ -152,6 +152,8 @@ function downloadMetaData(){
     promise = promise.then( getProgramStages );
     promise = promise.then( getMetaProgramValidations );
     promise = promise.then( getProgramValidations );
+    promise = promise.then( getMetaProgramIndicators );
+    promise = promise.then( getProgramIndicators );
     promise = promise.then( getMetaProgramRules );
     promise = promise.then( getProgramRules );
     promise = promise.then( getMetaProgramRuleVariables );
@@ -478,6 +480,16 @@ function getMetaProgramValidations( programs )
 function getProgramValidations( programValidations )
 {
     return getD2Objects( programValidations, 'programValidations', '../api/programValidations', 'fields=id,name,displayName,operator,rightSide[expression,description],leftSide[expression,description],program[id]');
+}
+
+function getMetaProgramIndicators( programs )
+{    
+    return getD2MetaObject(programs, 'programIndicators', '../api/programIndicators.json', 'paging=false&fields=id,program[id]');
+}
+
+function getProgramIndicators( programIndicators )
+{
+    return getD2Objects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,expression,displayDescription,rootDate,description,valueType,DisplayName,program[id,name]');
 }
 
 function getMetaProgramRules( programs )
