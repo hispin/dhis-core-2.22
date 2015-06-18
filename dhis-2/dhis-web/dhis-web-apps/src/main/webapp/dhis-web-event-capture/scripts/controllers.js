@@ -443,9 +443,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent); 
         
         if($scope.eventRegistration){
-            //Blank out rule effects, as there is no rules in effect before the first
-            //time the rules is run on a new page.
-            $rootScope.ruleeffects[$scope.currentEvent.event] = {};        
             $scope.executeRules();
         }
     };    
