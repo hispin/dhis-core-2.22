@@ -140,6 +140,8 @@ public class EventQueryParams
     
     public static EventQueryParams fromDataQueryParams( DataQueryParams dataQueryParams )
     {
+        //TODO indicator filter
+        
         EventQueryParams params = new EventQueryParams();
         
         dataQueryParams.copyTo( params );
