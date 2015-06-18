@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hisp.dhis.constant.Constant;
+import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
@@ -103,16 +105,6 @@ public interface ProgramIndicatorService
     List<ProgramIndicator> getAllProgramIndicators();
 
     /**
-     * Calculate a program indicator value based on program stage instance and an
-     * indicator.
-     *
-     * @param programIndicator ProgramIndicator
-     * @param programInstance  ProgramInstance
-     * @return Indicator value
-     */
-    String getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramStageInstance programStageInstance );
-    
-    /**
      * Calculate a program indicator value based on program instance and an
      * indicator.
      *
@@ -122,6 +114,14 @@ public interface ProgramIndicatorService
      */
     String getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramInstance programInstance );
 
+    /**
+     * Calculate a program indicator value based on the given arguments.
+     * 
+     * @param valueMap map containing keys for data elements, attributes and 
+     *        constants with corresponding values.
+     */
+    Double getProgramIndicatorValue( ProgramIndicator indicator, Map<String, Double> valueMap );
+    
     /**
      * Get indicator values of all program indicators defined for a TrackedEntityInstance
      *
@@ -158,21 +158,33 @@ public interface ProgramIndicatorService
      */
     String filterIsValid( String filter );
     
+    Set<DataElement> getDataElementsInIndicators( Set<ProgramIndicator> indicators );
+    
     /**
-     * Get all {@link ProgramStageDataElement} part of the expression of the 
-     * given indicator.
+     * Get all {@link ProgramStageDataElement} part of the expression.
      * 
-     * @param indicator the ProgramIndicator.
+     * @param expression the expression.
      * @return a set of ProgramStageDataElements.
      */
-    Set<ProgramStageDataElement> getProgramStageDataElementsInExpression( ProgramIndicator indicator );
+    Set<ProgramStageDataElement> getProgramStageDataElementsInExpression( String expression );
+    
+    Set<TrackedEntityAttribute> getAttributesInIndicators( Set<ProgramIndicator> indicators );
 
     /**
-     * Get all {@link TrackedEntityAttribute} part of the expression of the 
-     * given indicator.
+     * Get all {@link TrackedEntityAttribute} part of the expression.
      * 
-     * @param indicator the ProgramIndicator.
+     * @param expression the expression.
      * @return a set of TrackedEntityAttributes.
      */
-    Set<TrackedEntityAttribute> getAttributesInExpression( ProgramIndicator indicator );
+    Set<TrackedEntityAttribute> getAttributesInExpression( String expression );
+    
+    Set<Constant> getConstantsInIndicators( Set<ProgramIndicator> indicators );
+    
+    /**
+     * Get all {@link Constant} part of the expression of the expression.
+     * 
+     * @param expression the expression.
+     * @return a set of Constants.
+     */
+    Set<Constant> getConstantsInExpression( String expression );
 }
