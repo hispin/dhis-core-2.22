@@ -280,6 +280,11 @@ public class DefaultProgramIndicatorService
     @Override
     public String getExpressionDescription( String expression )
     {
+        if ( expression == null )
+        {
+            return null;
+        }
+        
         StringBuffer description = new StringBuffer();
 
         Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
