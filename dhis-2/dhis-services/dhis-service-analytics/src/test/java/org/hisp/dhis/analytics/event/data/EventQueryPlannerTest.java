@@ -30,7 +30,6 @@ package org.hisp.dhis.analytics.event.data;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -43,6 +42,8 @@ import org.hisp.dhis.program.Program;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -83,7 +84,7 @@ public class EventQueryPlannerTest
         params.setProgram( prA );
         params.setStartDate( new DateTime( 2010, 6, 1, 0, 0 ).toDate() );
         params.setEndDate( new DateTime( 2012, 3, 20, 0, 0 ).toDate() );
-        params.setOrganisationUnits( Arrays.asList( ouA ) );
+        params.setOrganisationUnits( Lists.newArrayList( ouA ) );
         
         List<EventQueryParams> queries = queryPlanner.planAggregateQuery( params );
         
@@ -109,7 +110,7 @@ public class EventQueryPlannerTest
         params.setProgram( prA );
         params.setStartDate( new DateTime( 2010, 3, 1, 0, 0 ).toDate() );
         params.setEndDate( new DateTime( 2010, 9, 20, 0, 0 ).toDate() );
-        params.setOrganisationUnits( Arrays.asList( ouA ) );
+        params.setOrganisationUnits( Lists.newArrayList( ouA ) );
         
         List<EventQueryParams> queries = queryPlanner.planAggregateQuery( params );
 
@@ -133,7 +134,7 @@ public class EventQueryPlannerTest
         params.setProgram( prA );
         params.setStartDate( new DateTime( 2010, 6, 1, 0, 0 ).toDate() );
         params.setEndDate( new DateTime( 2012, 3, 20, 0, 0 ).toDate() );
-        params.setOrganisationUnits( Arrays.asList( ouA, ouB ) );
+        params.setOrganisationUnits( Lists.newArrayList( ouA, ouB ) );
         
         List<EventQueryParams> queries = queryPlanner.planAggregateQuery( params );
         
@@ -149,7 +150,7 @@ public class EventQueryPlannerTest
         params.setProgram( prA );
         params.setStartDate( new DateTime( 2010, 6, 1, 0, 0 ).toDate() );
         params.setEndDate( new DateTime( 2012, 3, 20, 0, 0 ).toDate() );
-        params.setOrganisationUnits( Arrays.asList( ouA ) );
+        params.setOrganisationUnits( Lists.newArrayList( ouA ) );
         
         params = queryPlanner.planEventQuery( params );
         
@@ -171,7 +172,7 @@ public class EventQueryPlannerTest
         params.setProgram( prA );
         params.setStartDate( new DateTime( 2010, 3, 1, 0, 0 ).toDate() );
         params.setEndDate( new DateTime( 2010, 9, 20, 0, 0 ).toDate() );
-        params.setOrganisationUnits( Arrays.asList( ouA ) );
+        params.setOrganisationUnits( Lists.newArrayList( ouA ) );
         
         params = queryPlanner.planEventQuery( params );
 

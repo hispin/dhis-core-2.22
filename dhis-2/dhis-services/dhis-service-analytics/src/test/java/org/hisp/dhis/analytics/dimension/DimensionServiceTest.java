@@ -34,8 +34,6 @@ import static org.hisp.dhis.period.RelativePeriodEnum.LAST_12_MONTHS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseNameableObject;
@@ -53,6 +51,8 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -169,9 +169,9 @@ public class DimensionServiceTest
     {
         ReportTable reportTable = new ReportTable();
         
-        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Arrays.asList( deA, deB ) ) );
-        reportTable.getRows().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, Arrays.asList( ouA, ouB, ouC, ouD, ouE ) ) );
-        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Arrays.asList( peA, peB ) ) );
+        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Lists.newArrayList( deA, deB ) ) );
+        reportTable.getRows().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, Lists.newArrayList( ouA, ouB, ouC, ouD, ouE ) ) );
+        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList( peA, peB ) ) );
         
         dimensionService.mergeAnalyticalObject( reportTable );
         
@@ -185,9 +185,9 @@ public class DimensionServiceTest
     {
         ReportTable reportTable = new ReportTable();
 
-        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Arrays.asList( deA, deB ) ) );
-        reportTable.getRows().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, Arrays.asList( ouUser ) ) );
-        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Arrays.asList( peA ) ) );
+        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Lists.newArrayList( deA, deB ) ) );
+        reportTable.getRows().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, Lists.newArrayList( ouUser ) ) );
+        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList( peA ) ) );
         
         dimensionService.mergeAnalyticalObject( reportTable );
         
@@ -202,9 +202,9 @@ public class DimensionServiceTest
     {
         ReportTable reportTable = new ReportTable();
 
-        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Arrays.asList( deA, deB ) ) );
-        reportTable.getRows().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, Arrays.asList( ouLevel2, ouA ) ) );
-        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Arrays.asList( peA ) ) );
+        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Lists.newArrayList( deA, deB ) ) );
+        reportTable.getRows().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, Lists.newArrayList( ouLevel2, ouA ) ) );
+        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList( peA ) ) );
         
         dimensionService.mergeAnalyticalObject( reportTable );
         
@@ -219,9 +219,9 @@ public class DimensionServiceTest
     {
         ReportTable reportTable = new ReportTable();
         
-        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Arrays.asList( deA, deB ) ) );
-        reportTable.getRows().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, Arrays.asList( ouA, ouB, ouC, ouD, ouE ) ) );
-        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Arrays.asList( peLast12Months ) ) );
+        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Lists.newArrayList( deA, deB ) ) );
+        reportTable.getRows().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, Lists.newArrayList( ouA, ouB, ouC, ouD, ouE ) ) );
+        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList( peLast12Months ) ) );
         
         dimensionService.mergeAnalyticalObject( reportTable );
         
@@ -236,9 +236,9 @@ public class DimensionServiceTest
     {
         ReportTable reportTable = new ReportTable();
         
-        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Arrays.asList( deA, deB ) ) );
+        reportTable.getColumns().add( new BaseDimensionalObject( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, Lists.newArrayList( deA, deB ) ) );
         reportTable.getRows().add( ouGroupSetA );
-        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Arrays.asList( peA, peB ) ) );
+        reportTable.getFilters().add( new BaseDimensionalObject( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList( peA, peB ) ) );
         
         dimensionService.mergeAnalyticalObject( reportTable );
         

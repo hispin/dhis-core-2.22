@@ -43,7 +43,6 @@ import static org.hisp.dhis.commons.util.TextUtils.removeLastComma;
 import static org.hisp.dhis.commons.util.TextUtils.removeLastOr;
 import static org.hisp.dhis.commons.util.TextUtils.trimEnd;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -67,6 +66,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+
+import com.google.common.collect.Lists;
 
 /**
  * TODO could use row_number() and filtering for paging, but not supported on MySQL.
@@ -103,7 +104,7 @@ public class JdbcEventAnalyticsManager
         // Criteria
         // ---------------------------------------------------------------------
 
-        sql += getFromWhereClause( params, Arrays.asList( "psi" ) );
+        sql += getFromWhereClause( params, Lists.newArrayList( "psi" ) );
 
         // ---------------------------------------------------------------------
         // Group by
@@ -195,7 +196,7 @@ public class JdbcEventAnalyticsManager
     @Override
     public Grid getEvents( EventQueryParams params, Grid grid, int maxLimit )
     {
-        List<String> fixedCols = Arrays.asList( "psi", "ps", "executiondate", "longitude", "latitude", "ouname", "oucode" );
+        List<String> fixedCols = Lists.newArrayList( "psi", "ps", "executiondate", "longitude", "latitude", "ouname", "oucode" );
         
         String sql = "select " + getSelectString( fixedCols ) + getSelectColumns( params ) + " ";
 
@@ -281,7 +282,7 @@ public class JdbcEventAnalyticsManager
     {
         String sql = "select count(psi) ";
         
-        sql += getFromWhereClause( params, Arrays.asList( "psi" ) );
+        sql += getFromWhereClause( params, Lists.newArrayList( "psi" ) );
                 
         int count = 0;
         
