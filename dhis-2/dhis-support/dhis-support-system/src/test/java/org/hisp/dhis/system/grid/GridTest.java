@@ -589,6 +589,18 @@ public class GridTest
     }
     
     @Test
+    public void testGetAsMap()
+    {
+        Map<String, Integer> map = gridA.getAsMap( 2, "-" );
+        
+        assertEquals( 4, map.size() );        
+        assertEquals( Integer.valueOf( 13 ), map.get( "11-12" ) );
+        assertEquals( Integer.valueOf( 23 ), map.get( "21-22" ) );
+        assertEquals( Integer.valueOf( 33 ), map.get( "31-32" ) );
+        assertEquals( Integer.valueOf( 43 ), map.get( "41-42" ) );
+    }
+    
+    @Test
     public void testJRDataSource() throws Exception
     {
         assertTrue( gridA.next() );
