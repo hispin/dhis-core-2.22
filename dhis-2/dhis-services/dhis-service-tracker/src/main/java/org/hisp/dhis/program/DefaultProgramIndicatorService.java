@@ -183,17 +183,17 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
-    public String getProgramIndicatorValue( ProgramStageInstance programStageInstance, ProgramIndicator programIndicator )
+    public String getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramStageInstance programStageInstance )
     {
-        Double value = getValue( null, programStageInstance, programIndicator );
+        Double value = getValue( programIndicator, null, programStageInstance );
 
         return value != null ? String.valueOf( value ) : null;
     }
     
     @Override
-    public String getProgramIndicatorValue( ProgramInstance programInstance, ProgramIndicator programIndicator )
+    public String getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramInstance programInstance )
     {
-        Double value = getValue( programInstance, null, programIndicator );
+        Double value = getValue( programIndicator, programInstance, null );
 
         if ( value != null )
         {
@@ -230,7 +230,7 @@ public class DefaultProgramIndicatorService
 
         for ( ProgramIndicator programIndicator : programIndicators )
         {
-            String value = getProgramIndicatorValue( programInstance, programIndicator );
+            String value = getProgramIndicatorValue( programIndicator, programInstance );
             
             if ( value != null )
             {
@@ -473,11 +473,11 @@ public class DefaultProgramIndicatorService
      * the program stage instance will be retrieved based on the given program
      * instance in combination with the program stage from the indicator expression.
      * 
+     * @param indicator the indicator, must be not null.
      * @param programInstance the program instance, can be null.
      * @param programStageInstance the program stage instance, can be null.
-     * @param indicator the indicator, must be not null.
      */
-    private Double getValue( ProgramInstance programInstance, ProgramStageInstance programStageInstance, ProgramIndicator indicator )
+    private Double getValue( ProgramIndicator indicator, ProgramInstance programInstance, ProgramStageInstance programStageInstance )
     {
         StringBuffer buffer = new StringBuffer();
 

@@ -456,19 +456,19 @@ public class ProgramIndicatorServiceTest
         programIndicatorService.addProgramIndicator( indicatorI );
         programIndicatorService.addProgramIndicator( indicatorJ );
 
-        String valueINT = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorA );
+        String valueINT = programIndicatorService.getProgramIndicatorValue( indicatorA, programInstance );
         assertEquals( "10.0", valueINT );
 
-        String valueDATE = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorB );
+        String valueDATE = programIndicatorService.getProgramIndicatorValue( indicatorB, programInstance );
         assertEquals( DateUtils.getMediumDateString( enrollmentDate ), valueDATE );
 
-        String valueE = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorE );
+        String valueE = programIndicatorService.getProgramIndicatorValue( indicatorE, programInstance );
         assertEquals( "9.0", valueE );
 
-        String valueF = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorF );
+        String valueF = programIndicatorService.getProgramIndicatorValue( indicatorF, programInstance );
         assertEquals( "17.0", valueF );
 
-        String valueG = programIndicatorService.getProgramIndicatorValue( programInstance, indicatorG );
+        String valueG = programIndicatorService.getProgramIndicatorValue( indicatorG, programInstance );
         assertEquals( "29.0", valueG );
     }
 
