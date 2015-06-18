@@ -320,6 +320,14 @@ public interface Grid
     Set<Object> getUniqueValues( String columnName );
     
     /**
+     * Returns a map of each row in the grid.
+     * 
+     * @param valueIndex the index of the column to use as map values.
+     * @param keySeparator the separator to use to concatenate the map key.
+     */
+    <T> Map<String, T> getAsMap( int valueIndex, String keySeparator );
+    
+    /**
      * Adds a set of headers based on the column names of the given SQL result set.
      * 
      * @param rs the result set.
