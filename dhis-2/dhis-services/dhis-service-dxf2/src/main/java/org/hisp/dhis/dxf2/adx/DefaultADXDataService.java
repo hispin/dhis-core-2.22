@@ -65,7 +65,6 @@ import org.w3c.dom.Element;
 public class DefaultADXDataService
     implements ADXDataService
 {
-
     protected DataValueSetService dataValueSetService;
 
     @Override
@@ -78,7 +77,6 @@ public class DefaultADXDataService
     public ImportSummaries postData( InputStream in, ImportOptions importOptions )
         throws IOException
     {
-
         XMLReader reader = XMLFactory.getXMLReader( in );
 
         ImportSummaries importSummaries = new ImportSummaries();
@@ -110,7 +108,8 @@ public class DefaultADXDataService
                 
                 // pass off to the dxf2 datavalueset service
                 importSummaries.addImportSummary( dataValueSetService.saveDataValueSet( dxfIn, importOptions ) );
-            } catch ( Exception ex )
+            } 
+            catch ( Exception ex )
             {
                 ImportSummary importSummary = new ImportSummary();
                 importSummary.setStatus( ImportStatus.ERROR );
@@ -179,6 +178,7 @@ public class DefaultADXDataService
         {
             attributes.put( reader.getAttributeLocalName( i ), reader.getAttributeValue( i ) );
         }
+        
         return attributes;
     }
 }

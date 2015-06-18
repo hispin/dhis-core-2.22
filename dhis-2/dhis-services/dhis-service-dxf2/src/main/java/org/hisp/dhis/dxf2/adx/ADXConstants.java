@@ -32,36 +32,35 @@ package org.hisp.dhis.dxf2.adx;
  *
  * @author bobj
  */
-public class ADXConstants
+public interface ADXConstants
 {
     //--------------------------------------------------------------------------
     // These are defined in the ADX standard
     //--------------------------------------------------------------------------
 
-    public static final String NAMESPACE = "urn:ihe:qrph:adx:2015";
+    final String NAMESPACE = "urn:ihe:qrph:adx:2015";
     
-    public static final String ROOT = "adx";
+    final String ROOT = "adx";
 
-    public static final String GROUP = "group";
+    final String GROUP = "group";
     
-    public static final String PERIOD = "period";
+    final String PERIOD = "period";
     
-    public static final String ORGUNIT = "orgUnit";
+    final String ORGUNIT = "orgUnit";
     
-    public static final String DATAELEMENT = "dataelement";
+    final String DATAELEMENT = "dataelement";
 
-    public static final String DATAVALUE = "dataValue";
+    final String DATAVALUE = "dataValue";
 
-    public static final String VALUE = "value";
+    final String VALUE = "value";
 
-    public static final String ANNOTATION = "annotation";
+    final String ANNOTATION = "annotation";
     
     //--------------------------------------------------------------------------
     // DHIS2 specific
     //--------------------------------------------------------------------------
 
-    public static final String CATOPTCOMBO = "categoryOptionCombo";
+    final String CATOPTCOMBO = "categoryOptionCombo";
     
-    public static final String ATTOPTCOMBO = "attributeOptionCombo";
-
+    final String ATTOPTCOMBO = "attributeOptionCombo";
 }
