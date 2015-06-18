@@ -382,28 +382,6 @@ public class DefaultAnalyticsService
     }
     
     /**
-     * Adds program data element values to the given grid based on the given data
-     * query parameters.
-     * 
-     * @param params the data query parameters.
-     * @param grid the grid.
-     */
-    private void addProgramValues( DataQueryParams params, Grid grid )
-    {
-        if ( !params.getProgramDataElements().isEmpty() || !params.getProgramAttributes().isEmpty() )
-        {
-            DataQueryParams dataSourceParams = params.instance();
-            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATASET_DIM_ID, DATAELEMENT_DIM_ID );
-            
-            EventQueryParams eventQueryParams = EventQueryParams.fromDataQueryParams( dataSourceParams );
-            
-            Grid eventGrid = eventAnalyticsService.getAggregatedEventData( eventQueryParams );
-            
-            grid.addRows( eventGrid );
-        }
-    }
-
-    /**
      * Adds data set values to the given grid based on the given data query
      * parameters.
      *
@@ -478,6 +456,28 @@ public class DefaultAnalyticsService
                     grid.addValue( params.isSkipRounding() ? value : MathUtils.getRounded( value ) );
                 }
             }
+        }
+    }
+
+    /**
+     * Adds program data element values to the given grid based on the given data
+     * query parameters.
+     * 
+     * @param params the data query parameters.
+     * @param grid the grid.
+     */
+    private void addProgramValues( DataQueryParams params, Grid grid )
+    {
+        if ( !params.getProgramDataElements().isEmpty() || !params.getProgramAttributes().isEmpty() )
+        {
+            DataQueryParams dataSourceParams = params.instance();
+            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATASET_DIM_ID, DATAELEMENT_DIM_ID );
+            
+            EventQueryParams eventQueryParams = EventQueryParams.fromDataQueryParams( dataSourceParams );
+            
+            Grid eventGrid = eventAnalyticsService.getAggregatedEventData( eventQueryParams );
+            
+            grid.addRows( eventGrid );
         }
     }
 
