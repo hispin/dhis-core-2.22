@@ -45,6 +45,7 @@ import java.util.Set;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
@@ -738,7 +739,28 @@ public class ListGrid
         
         return values;
     }
+    
+    @SuppressWarnings("unchecked")
+    public <T> Map<String, T> getAsMap( int valueIndex, String keySeparator )
+    {
+        Map<String, T> map = new HashMap<>();
+        
+        for ( List<Object> row : grid )
+        {
+            List<Object> metaDataRow = new ArrayList<>( row );
             
+            metaDataRow.remove( valueIndex );
+            
+            String key = StringUtils.join( metaDataRow, keySeparator );
+            
+            T value = (T) row.get( valueIndex );
+            
+            map.put( key, value );
+        }
+        
+        return map;
+    }
+    
     // -------------------------------------------------------------------------
     // JRDataSource implementation
     // -------------------------------------------------------------------------
