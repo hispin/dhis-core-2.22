@@ -56,6 +56,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.period.Period;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Element;
 
 /**
@@ -65,6 +66,7 @@ import org.w3c.dom.Element;
 public class DefaultADXDataService
     implements ADXDataService
 {
+    @Autowired
     protected DataValueSetService dataValueSetService;
 
     @Override
