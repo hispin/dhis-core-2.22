@@ -299,6 +299,8 @@ public class DefaultAnalyticsService
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
             dataSourceParams.removeDimension( DATASET_DIM_ID );
+            dataSourceParams.removeDimension( PROGRAM_DATAELEMENT_DIM_ID );
+            dataSourceParams.removeDimension( PROGRAM_ATTRIBUTE_DIM_ID );
 
             int indicatorIndex = dataSourceParams.getIndicatorDimensionIndex();
             
