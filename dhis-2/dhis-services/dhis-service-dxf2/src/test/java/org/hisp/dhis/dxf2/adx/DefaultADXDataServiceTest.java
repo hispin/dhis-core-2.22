@@ -52,7 +52,6 @@ import org.w3c.dom.Document;
  */
 public class DefaultADXDataServiceTest
 {
-
     protected static final String SIMPLE_ADX_SAMPLE = "adx/adx_data_sample1.xml";
 
     public DefaultADXDataServiceTest()
@@ -87,10 +86,8 @@ public class DefaultADXDataServiceTest
     {
         try
         {
-            System.out.println( "parseADXGroup" );
             XMLReader reader = XMLFactory.getXMLReader( new ClassPathResource( SIMPLE_ADX_SAMPLE ).getInputStream() );
             reader.moveToStartElement( ADXConstants.ROOT, ADXConstants.NAMESPACE );
-            System.out.println( "Parsing adx, exported: " + reader.getAttributeValue( "exported" ) );
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder;
@@ -100,7 +97,6 @@ public class DefaultADXDataServiceTest
 
             while ( reader.moveToStartElement( ADXConstants.GROUP, ADXConstants.NAMESPACE ) )
             {
-                System.out.println( "Parsing new group" );
                 Document dxf = docBuilder.newDocument();
                 instance.parseADXGroupToDxf( reader, dxf );
 
@@ -110,7 +106,6 @@ public class DefaultADXDataServiceTest
                 StreamResult result = new StreamResult( System.out );
 
                 transformer.transform( source, result );
-                System.out.println();
             }
         } 
         catch ( Exception ex )
@@ -118,5 +113,4 @@ public class DefaultADXDataServiceTest
             fail( ex.toString() );
         }
     }
-
 }
