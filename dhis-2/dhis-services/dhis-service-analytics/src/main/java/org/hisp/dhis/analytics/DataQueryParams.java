@@ -106,7 +106,7 @@ public class DataQueryParams
     public static final String DISPLAY_NAME_LONGITUDE = "Longitude";
     public static final String DISPLAY_NAME_LATITUDE = "Latitude";
 
-    public static final int DE_IN_INDEX = 0;
+    public static final int DX_INDEX = 0;
     public static final int CO_IN_INDEX = 1;
     
     public static final List<String> DATA_DIMS = Arrays.asList( 
@@ -506,15 +506,7 @@ public class DataQueryParams
         
         return this;
     }
-    
-    /**
-     * Returns the index of the indicator dimension in the dimension map.
-     */
-    public int getIndicatorDimensionIndex()
-    {
-        return getDimensionIdentifiersAsList().indexOf( INDICATOR_DIM_ID );
-    }
-    
+        
     /**
      * Returns the index of the data element dimension in the dimension map.
      */
@@ -1029,12 +1021,12 @@ public class DataQueryParams
         {
             List<String> keys = new ArrayList<>( Arrays.asList( key.split( DIMENSION_SEP ) ) );
             
-            String de = keys.get( DE_IN_INDEX );
+            String de = keys.get( DX_INDEX );
             String coc = cocEnabled ? keys.get( CO_IN_INDEX ) : null;
 
             DataElementOperand operand = new DataElementOperand( de, coc );
             
-            ListUtils.removeAll( keys, DE_IN_INDEX, ( cocEnabled ? CO_IN_INDEX : -1 ) );
+            ListUtils.removeAll( keys, DX_INDEX, ( cocEnabled ? CO_IN_INDEX : -1 ) );
             
             String permKey = StringUtils.join( keys, DIMENSION_SEP );
             
