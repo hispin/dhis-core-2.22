@@ -41,6 +41,7 @@ import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PERIOD;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PROGRAM_INDICATOR;
 import static org.hisp.dhis.analytics.DataQueryParams.KEY_DE_GROUP;
 import static org.hisp.dhis.analytics.DataQueryParams.COMPLETENESS_DIMENSION_TYPES;
+import static org.hisp.dhis.analytics.DataQueryParams.DX_INDEX;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATASET_DIM_ID;
@@ -302,8 +303,6 @@ public class DefaultAnalyticsService
             dataSourceParams.removeDimension( PROGRAM_DATAELEMENT_DIM_ID );
             dataSourceParams.removeDimension( PROGRAM_ATTRIBUTE_DIM_ID );
 
-            int indicatorIndex = dataSourceParams.getIndicatorDimensionIndex();
-            
             List<Indicator> indicators = asTypedList( dataSourceParams.getIndicators() );
 
             Period filterPeriod = dataSourceParams.getFilterPeriod();
@@ -347,7 +346,7 @@ public class DefaultAnalyticsService
                     {
                         List<DimensionItem> row = new ArrayList<>( dimensionItems );
 
-                        row.add( indicatorIndex, new DimensionItem( INDICATOR_DIM_ID, indicator ) );
+                        row.add( DX_INDEX, new DimensionItem( INDICATOR_DIM_ID, indicator ) );
 
                         Double roundedValue = indicator.hasDecimals() ? MathUtils.getRounded( value, indicator.getDecimals() ) : MathUtils.getRounded( value );
                         
@@ -1355,7 +1354,7 @@ public class DefaultAnalyticsService
             DataQueryParams dataSourceParams = params.instance().removeDimensions( 
                 INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
             
-            dataSourceParams.getDimensions().add( DataQueryParams.DE_IN_INDEX, new BaseDimensionalObject( 
+            dataSourceParams.getDimensions().add( DataQueryParams.DX_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
     
             return getAggregatedDataValueMap( dataSourceParams );
@@ -1382,7 +1381,7 @@ public class DefaultAnalyticsService
             DataQueryParams dataSourceParams = params.instance().removeDimensions( 
                 INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
             
-            dataSourceParams.getDimensions().add( DataQueryParams.DE_IN_INDEX, new BaseDimensionalObject( 
+            dataSourceParams.getDimensions().add( DataQueryParams.DX_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
             dataSourceParams.getDimensions().add( DataQueryParams.CO_IN_INDEX, new BaseDimensionalObject( 
                 CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<NameableObject>() ) );
