@@ -32,27 +32,37 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.io.IOUtils;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
+
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
 import javax.xml.stream.XMLStreamException;
+
 import org.amplecode.staxwax.factory.XMLFactory;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.amplecode.staxwax.reader.XMLReader;
+
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.period.Period;
@@ -106,7 +116,7 @@ public class DefaultADXDataService
                 StreamResult result = new StreamResult(writer);
                 transformer.transform( source, result );
                 // create an inputstream for the String
-                InputStream dxfIn = IOUtils.toInputStream(result.toString(), "UTF-8" );
+                InputStream dxfIn = IOUtils.toInputStream( result.toString(), StandardCharsets.UTF_8 );
                 
                 // pass off to the dxf2 datavalueset service
                 importSummaries.addImportSummary( dataValueSetService.saveDataValueSet( dxfIn, importOptions ) );

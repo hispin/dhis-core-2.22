@@ -162,8 +162,8 @@ public class BaseDimensionalObject
     public AnalyticsType getAnalyticsType()
     {
         return
-            DimensionType.TRACKED_ENTITY_ATTRIBUTE.equals( dimensionType ) ||
-            DimensionType.TRACKED_ENTITY_DATAELEMENT.equals( dimensionType ) ?
+            DimensionType.PROGRAM_ATTRIBUTE.equals( dimensionType ) ||
+            DimensionType.PROGRAM_DATAELEMENT.equals( dimensionType ) ?
             AnalyticsType.EVENT : AnalyticsType.AGGREGATE;
     }
 
