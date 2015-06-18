@@ -144,6 +144,7 @@ import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.period.comparator.AscendingPeriodEndDateComparator;
 import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.reporttable.ReportTable;
@@ -158,6 +159,7 @@ import org.hisp.dhis.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * @author Lars Helge Overland
@@ -211,6 +213,9 @@ public class DefaultAnalyticsService
     private ProgramStageService programStageService;
     
     @Autowired
+    private ProgramIndicatorService programIndicatorService;
+    
+    @Autowired
     private CurrentUserService currentUserService;
 
     public void setCurrentUserService( CurrentUserService currentUserService )
@@ -257,6 +262,8 @@ public class DefaultAnalyticsService
 
         addDataSetValues( params, grid );
         
+        addProgramIndicatorValues( params, grid );
+        
         addProgramValues( params, grid );
 
         addDynamicDimensionValues( params, grid );
@@ -283,6 +290,64 @@ public class DefaultAnalyticsService
         }
 
         grid.addHeader( new GridHeader( DataQueryParams.VALUE_ID, VALUE_HEADER_NAME, Double.class.getName(), false, false ) );
+    }
+
+    /**
+     * Adds program indicator values to the given grid based on the given data query
+     * parameters.
+     *
+     * @param params the data query parameters.
+     * @param grid the grid.
+     */
+    private void addProgramIndicatorValues( DataQueryParams params, Grid grid )
+    {
+        if ( !params.getProgramIndicators().isEmpty() )
+        {
+            DataQueryParams dataSourceParams = params.instance();
+            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
+            
+            List<ProgramIndicator> indicators = asTypedList( dataSourceParams.getProgramIndicators() );
+            
+            //TODO constants
+
+            // -----------------------------------------------------------------
+            // Get indicator values
+            // -----------------------------------------------------------------
+
+            List<List<DimensionItem>> dimensionItemPermutations = dataSourceParams.getDimensionItemPermutations();
+            
+            Map<String, Map<String, Double>> permutationOperandValueMap = Maps.newHashMap(); //TODO add values
+
+            for ( ProgramIndicator indicator : indicators )
+            {
+                for ( List<DimensionItem> dimensionItems : dimensionItemPermutations )
+                {
+                    String permKey = DimensionItem.asItemKey( dimensionItems );
+                    
+                    Map<String, Double> valueMap = permutationOperandValueMap.get( permKey );
+
+                    if ( valueMap == null )
+                    {
+                        continue;
+                    }
+
+                    Double value = programIndicatorService.getProgramIndicatorValue( indicator, valueMap );
+                    
+                    if ( value != null )
+                    {
+                        List<DimensionItem> row = new ArrayList<>( dimensionItems );
+
+                        row.add( DX_INDEX, new DimensionItem( PROGRAM_INDICATOR_DIM_ID, indicator ) );
+                        
+                        Double roundedValue = MathUtils.getRounded( value );
+                        
+                        grid.addRow();
+                        grid.addValues( DimensionItem.getItemIdentifiers( row ) );
+                        grid.addValue( dataSourceParams.isSkipRounding() ? value : roundedValue );
+                    }
+                }
+            }
+        }
     }
     
     /**
