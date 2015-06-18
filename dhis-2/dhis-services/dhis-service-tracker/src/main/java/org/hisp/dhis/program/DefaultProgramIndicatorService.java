@@ -39,15 +39,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import org.hisp.dhis.commons.util.ExpressionUtils;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.commons.util.ExpressionUtils;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
@@ -183,14 +184,6 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
-    public String getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramStageInstance programStageInstance )
-    {
-        Double value = getValue( programIndicator, null, programStageInstance );
-
-        return value != null ? String.valueOf( value ) : null;
-    }
-    
-    @Override
     public String getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramInstance programInstance )
     {
         Double value = getValue( programIndicator, programInstance, null );
@@ -221,6 +214,49 @@ public class DefaultProgramIndicatorService
         return null;
     }
 
+    @Override
+    public Double getProgramIndicatorValue( ProgramIndicator indicator, Map<String, Double> valueMap )
+    {
+        StringBuffer buffer = new StringBuffer();
+
+        String expression = indicator.getExpression();
+        
+        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
+        
+        while ( matcher.find() )
+        {
+            String key = matcher.group( 1 );
+            
+            Double value = null;
+
+            //TODO query by program stage
+            
+            if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
+            {
+                String de = matcher.group( 3 );
+                
+                value = valueMap.get( de );
+            }
+            else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) || ProgramIndicator.KEY_CONSTANT.equals( key ) )
+            {
+                String uid = matcher.group( 2 );
+                
+                value = valueMap.get( uid );
+            }
+            
+            if ( value == null )
+            {
+                return null;
+            }
+            
+            matcher.appendReplacement( buffer, Matcher.quoteReplacement( String.valueOf( value ) ) );
+        }
+
+        expression = TextUtils.appendTail( matcher, buffer );
+
+        return MathUtils.calculateExpression( expression );
+    }
+    
     @Override
     public Map<String, String> getProgramIndicatorValues( ProgramInstance programInstance )
     {
@@ -419,11 +455,29 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
-    public Set<ProgramStageDataElement> getProgramStageDataElementsInExpression( ProgramIndicator indicator )
+    public Set<DataElement> getDataElementsInIndicators( Set<ProgramIndicator> indicators )
+    {
+        Set<DataElement> dataElements = new HashSet<>();
+        
+        for ( ProgramIndicator indicator : indicators )
+        {
+            Set<ProgramStageDataElement> psds = getProgramStageDataElementsInExpression( indicator.getExpression() );
+            
+            for ( ProgramStageDataElement psd : psds )
+            {
+                dataElements.add( psd.getDataElement() );
+            }
+        }
+        
+        return dataElements;
+    }
+    
+    @Override
+    public Set<ProgramStageDataElement> getProgramStageDataElementsInExpression( String expression )
     {
         Set<ProgramStageDataElement> elements = new HashSet<>();
         
-        Matcher matcher = ProgramIndicator.DATAELEMENT_PATTERN.matcher( indicator.getExpression() );
+        Matcher matcher = ProgramIndicator.DATAELEMENT_PATTERN.matcher( expression );
         
         while ( matcher.find() )
         {
@@ -443,11 +497,24 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
-    public Set<TrackedEntityAttribute> getAttributesInExpression( ProgramIndicator indicator )
+    public Set<TrackedEntityAttribute> getAttributesInIndicators( Set<ProgramIndicator> indicators )
+    {
+        Set<TrackedEntityAttribute> attributes = new HashSet<>();
+        
+        for ( ProgramIndicator indicator : indicators )
+        {
+            attributes.addAll( getAttributesInExpression( indicator.getExpression() ) );
+        }
+        
+        return attributes;
+    }
+    
+    @Override
+    public Set<TrackedEntityAttribute> getAttributesInExpression( String expression )
     {
         Set<TrackedEntityAttribute> attributes = new HashSet<>();
 
-        Matcher matcher = ProgramIndicator.ATTRIBUTE_PATTERN.matcher( indicator.getExpression() );
+        Matcher matcher = ProgramIndicator.ATTRIBUTE_PATTERN.matcher( expression );
         
         while ( matcher.find() )
         {
@@ -463,15 +530,50 @@ public class DefaultProgramIndicatorService
         
         return attributes;        
     }
+
+    @Override
+    public Set<Constant> getConstantsInIndicators( Set<ProgramIndicator> indicators )
+    {
+        Set<Constant> constants = new HashSet<>();
+        
+        for ( ProgramIndicator indicator : indicators )
+        {
+            constants.addAll( getConstantsInExpression( indicator.getExpression() ) );
+        }
+        
+        return constants;
+    }
+    
+    @Override
+    public Set<Constant> getConstantsInExpression( String expression )
+    {
+        Set<Constant> constants = new HashSet<>();
+
+        Matcher matcher = ExpressionService.CONSTANT_PATTERN.matcher( expression );
+        
+        while ( matcher.find() )
+        {
+            String co = matcher.group( 1 );
+            
+            Constant constant = constantService.getConstant( co );
+            
+            if ( constant != null )
+            {
+                constants.add( constant );
+            }
+        }
+        
+        return constants;        
+    }
     
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
     /**
-     * Get value for the given arguments. If programStageInstance argument is null, 
-     * the program stage instance will be retrieved based on the given program
-     * instance in combination with the program stage from the indicator expression.
+     * Get indicator value for the given arguments. If programStageInstance 
+     * argument is null, the program stage instance will be retrieved based on 
+     * the given program instance in combination with the program stage from the indicator expression.
      * 
      * @param indicator the indicator, must be not null.
      * @param programInstance the program instance, can be null.

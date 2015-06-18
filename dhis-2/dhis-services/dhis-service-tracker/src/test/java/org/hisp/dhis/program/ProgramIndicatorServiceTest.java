@@ -426,7 +426,7 @@ public class ProgramIndicatorServiceTest
     public void testGetProgramStageDataElementsInExpression()
     {
         Set<ProgramStageDataElement> elements = programIndicatorService
-            .getProgramStageDataElementsInExpression( indicatorE );
+            .getProgramStageDataElementsInExpression( indicatorE.getExpression() );
 
         assertEquals( 2, elements.size() );
 
@@ -437,7 +437,7 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetAttributesInExpression()
     {
-        Set<TrackedEntityAttribute> attributes = programIndicatorService.getAttributesInExpression( indicatorE );
+        Set<TrackedEntityAttribute> attributes = programIndicatorService.getAttributesInExpression( indicatorE.getExpression() );
 
         assertEquals( 2, attributes.size() );
         assertTrue( attributes.contains( atA ) );

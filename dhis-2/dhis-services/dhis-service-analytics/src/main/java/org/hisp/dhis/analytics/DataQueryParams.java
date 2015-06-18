@@ -88,6 +88,7 @@ import org.hisp.dhis.commons.collection.CollectionUtils;
 import org.hisp.dhis.commons.collection.ListUtils;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -457,6 +458,14 @@ public class DataQueryParams
      */
     public DataQueryParams removeDimensions( String... dimension )
     {
+        return removeDimensions( Sets.newHashSet( dimension ) );
+    }
+
+    /**
+     * Removes the dimensions with the given identifiers.
+     */
+    public DataQueryParams removeDimensions( Set<String> dimension )
+    {
         if ( dimension != null )
         {
             for ( String dim : dimension )
@@ -496,7 +505,7 @@ public class DataQueryParams
             }
         }
     }
-
+    
     /**
      * Removes the filter with the given identifier.
      */

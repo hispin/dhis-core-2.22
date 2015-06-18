@@ -285,7 +285,7 @@ public class DefaultAnalyticsService
 
         grid.addHeader( new GridHeader( DataQueryParams.VALUE_ID, VALUE_HEADER_NAME, Double.class.getName(), false, false ) );
     }
-
+    
     /**
      * Adds indicator values to the given grid based on the given data query
      * parameters.
@@ -1343,7 +1343,7 @@ public class DefaultAnalyticsService
             DataQueryParams dataSourceParams = params.instance().removeDimensions( 
                 INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
             
-            dataSourceParams.getDimensions().add( DataQueryParams.DX_INDEX, new BaseDimensionalObject( 
+            dataSourceParams.getDimensions().add( DX_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
     
             return getAggregatedDataValueMap( dataSourceParams );
