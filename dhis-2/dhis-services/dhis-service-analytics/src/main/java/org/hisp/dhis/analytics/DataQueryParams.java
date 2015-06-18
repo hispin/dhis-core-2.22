@@ -506,14 +506,6 @@ public class DataQueryParams
         
         return this;
     }
-        
-    /**
-     * Returns the index of the data element dimension in the dimension map.
-     */
-    public int getDataElementDimensionIndex()
-    {
-        return getDimensionIdentifiersAsList().indexOf( DATAELEMENT_DIM_ID );
-    }
     
     /**
      * Returns the index of the data set dimension in the dimension map.
