@@ -32,7 +32,7 @@ if( dhis2.ec.memoryOnly ) {
 dhis2.ec.store = new dhis2.storage.Store({
     name: 'dhis2ec',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels']
+    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants']
 });
 
 (function($) {
@@ -146,6 +146,7 @@ function downloadMetaData(){
     promise = promise.then( dhis2.ec.store.open );    
     promise = promise.then( getUserRoles );
     promise = promise.then( getCalendarSetting );
+    promise = promise.then( getConstants );
     promise = promise.then( getOrgUnitLevels );    
     promise = promise.then( getMetaPrograms );     
     promise = promise.then( getPrograms );     
@@ -215,28 +216,23 @@ function getCalendarSetting()
     return def.promise();
 }
 
+function getConstants()
+{
+    dhis2.ec.store.getKeys( 'constants').done(function(res){        
+        if(res.length > 0){
+            return;
+        }        
+        return getD2Objects('constants', 'constants', '../api/constants.json', 'paging=false&fields=id,name,displayName,value');        
+    });    
+}
+
 function getOrgUnitLevels()
 {
     dhis2.ec.store.getKeys( 'ouLevels').done(function(res){        
         if(res.length > 0){
             return;
-        }
-        var def = $.Deferred();
-
-        $.ajax({
-            url: '../api/organisationUnitLevels.json',
-            type: 'GET',
-            data:'filter=level:gt:1&fields=id,name,level&paging=false'
-        }).done(function(response) {
-            if(response.organisationUnitLevels){
-                dhis2.ec.store.setAll( 'ouLevels', response.organisationUnitLevels );
-            }            
-            def.resolve();        
-        }).fail(function(){
-            def.resolve();
-        });
-
-        return def.promise();
+        }        
+        return getD2Objects('ouLevels', 'organisationUnitLevels', '../api/organisationUnitLevels.json', 'filter=level:gt:1&fields=id,name,level&paging=false');
     });    
 }
 
@@ -479,7 +475,7 @@ function getMetaProgramValidations( programs )
 
 function getProgramValidations( programValidations )
 {
-    return getD2Objects( programValidations, 'programValidations', '../api/programValidations', 'fields=id,name,displayName,operator,rightSide[expression,description],leftSide[expression,description],program[id]');
+    return checkAndGetD2Objects( programValidations, 'programValidations', '../api/programValidations', 'fields=id,name,displayName,operator,rightSide[expression,description],leftSide[expression,description],program[id]');
 }
 
 function getMetaProgramIndicators( programs )
@@ -489,7 +485,7 @@ function getMetaProgramIndicators( programs )
 
 function getProgramIndicators( programIndicators )
 {
-    return getD2Objects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,expression,displayDescription,rootDate,description,valueType,DisplayName,program[id,name]');
+    return checkAndGetD2Objects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,expression,displayDescription,rootDate,description,valueType,DisplayName,program[id]');
 }
 
 function getMetaProgramRules( programs )
@@ -499,7 +495,7 @@ function getMetaProgramRules( programs )
 
 function getProgramRules( programRules )
 {
-    return getD2Objects( programRules, 'programRules', '../api/programRules', 'fields=id,name,condition,description,program[id],programStage[id],priority,programRuleActions[id,content,location,data,programRuleActionType,programStageSection[id],dataElement[id]]');
+    return checkAndGetD2Objects( programRules, 'programRules', '../api/programRules', 'fields=id,name,condition,description,program[id],programStage[id],priority,programRuleActions[id,content,location,data,programRuleActionType,programStageSection[id],dataElement[id]]');
 }
 
 function getMetaProgramRuleVariables( programs )
@@ -509,7 +505,7 @@ function getMetaProgramRuleVariables( programs )
 
 function getProgramRuleVariables( programRuleVariables )
 {
-    return getD2Objects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,name,displayName,programRuleVariableSourceType,program[id],programStage[id],dataElement[id]');
+    return checkAndGetD2Objects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,name,displayName,programRuleVariableSourceType,program[id],programStage[id],dataElement[id]');
 }
 
 function getD2MetaObject( programs, objNames, url, filter )
@@ -554,7 +550,7 @@ function getD2MetaObject( programs, objNames, url, filter )
     return def.promise();    
 }
 
-function getD2Objects( obj, store, url, filter )
+function checkAndGetD2Objects( obj, store, url, filter )
 {
     if( !obj || !obj.programs || !obj.self ){
         return;
@@ -597,6 +593,27 @@ function getD2Objects( obj, store, url, filter )
 
     return mainPromise;
 }
+
+function getD2Objects(store, objs, url, filter)
+{
+    var def = $.Deferred();
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: filter
+    }).done(function(response) {
+        if(response[objs]){
+            dhis2.ec.store.setAll( store, response[objs] );
+        }            
+        def.resolve();        
+    }).fail(function(){
+        def.resolve();
+    });
+
+    return def.promise();
+}
+
 
 function getD2Object( id, store, url, filter, storage )
 {
