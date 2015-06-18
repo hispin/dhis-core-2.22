@@ -298,10 +298,7 @@ public class DefaultAnalyticsService
         if ( !params.getIndicators().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
-            dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
-            dataSourceParams.removeDimension( DATASET_DIM_ID );
-            dataSourceParams.removeDimension( PROGRAM_DATAELEMENT_DIM_ID );
-            dataSourceParams.removeDimension( PROGRAM_ATTRIBUTE_DIM_ID );
+            dataSourceParams.removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
 
             List<Indicator> indicators = asTypedList( dataSourceParams.getIndicators() );
 
@@ -371,10 +368,7 @@ public class DefaultAnalyticsService
         if ( !params.getDataElements().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
-            dataSourceParams.removeDimension( INDICATOR_DIM_ID );
-            dataSourceParams.removeDimension( DATASET_DIM_ID );
-            dataSourceParams.removeDimension( PROGRAM_DATAELEMENT_DIM_ID );
-            dataSourceParams.removeDimension( PROGRAM_ATTRIBUTE_DIM_ID );
+            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
 
             Map<String, Object> aggregatedDataMap = getAggregatedDataValueMapObjectTyped( dataSourceParams );
 
@@ -399,9 +393,7 @@ public class DefaultAnalyticsService
         if ( !params.getProgramDataElements().isEmpty() || !params.getProgramAttributes().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
-            dataSourceParams.removeDimension( INDICATOR_DIM_ID );
-            dataSourceParams.removeDimension( DATASET_DIM_ID );
-            dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
+            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATASET_DIM_ID, DATAELEMENT_DIM_ID );
             
             EventQueryParams eventQueryParams = EventQueryParams.fromDataQueryParams( dataSourceParams );
             
@@ -428,10 +420,7 @@ public class DefaultAnalyticsService
 
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.ignoreDataApproval(); // No approval for reporting rates
-            dataSourceParams.removeDimension( INDICATOR_DIM_ID );
-            dataSourceParams.removeDimension( DATAELEMENT_DIM_ID );
-            dataSourceParams.removeDimension( PROGRAM_DATAELEMENT_DIM_ID );
-            dataSourceParams.removeDimension( PROGRAM_ATTRIBUTE_DIM_ID );
+            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
             dataSourceParams.setAggregationType( AggregationType.COUNT );
 
             if ( !COMPLETENESS_DIMENSION_TYPES.containsAll( dataSourceParams.getDimensionTypes() ) )
