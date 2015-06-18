@@ -167,12 +167,14 @@ public class DefaultExpressionService
     
     @Override
     public Double getIndicatorValue( Indicator indicator, Period period, Map<DataElementOperand, Double> valueMap,
-        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days )
+        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap )
     {
         if ( indicator == null || indicator.getExplodedNumeratorFallback() == null || indicator.getExplodedDenominatorFallback() == null )
         {
             return null;
         }
+        
+        Integer days = period != null ? period.getDaysInPeriod() : null;
         
         final String denominatorExpression = generateExpression( indicator.getExplodedDenominatorFallback(), 
             valueMap, constantMap, orgUnitCountMap, days, NEVER_SKIP );
