@@ -498,7 +498,7 @@ public class ExpressionServiceTest
         Map<String, Double> constantMap = new HashMap<>();
         constantMap.put( constantA.getUid(), 2.0 );
         
-        assertEquals( 200d, expressionService.getIndicatorValue( indicatorA, period, valueMap, constantMap, null, null ), DELTA );        
+        assertEquals( 200d, expressionService.getIndicatorValue( indicatorA, period, valueMap, constantMap, null ), DELTA );        
     }
     
     // -------------------------------------------------------------------------
