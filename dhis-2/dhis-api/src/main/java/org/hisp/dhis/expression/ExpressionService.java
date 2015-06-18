@@ -46,10 +46,12 @@ import org.hisp.dhis.validation.ValidationRule;
  * Expressions are mathematical formulas and can contain references to various
  * elements.
  * 
- * - Data element operands on the form #{dataelementuid.categoryoptioncombouid}
- * - Data element totals on the form #{dataelementuid}
- * - Constants on the form C{constantuid}
- * - Days in aggregation period as the symbol D{}
+ * <ul>
+ * <li>Data element operands on the form #{dataelementuid.categoryoptioncombouid}</li>
+ * <li>Data element totals on the form #{dataelementuid}</li>
+ * <li>Constants on the form C{constantuid}</li>
+ * <li>Days in aggregation period as the symbol D{}</li>
+ * </ul>
  *
  * @author Margrethe Store
  * @author Lars Helge Overland
@@ -125,6 +127,17 @@ public interface ExpressionService
      */
     List<Expression> getAllExpressions();
     
+    /**
+     * Generates the calculated value for the given parameters based on the values
+     * in the given maps.
+     * 
+     * @param indicator the indicator for which to calculate the value.
+     * @param period the period for which to calculate the value.
+     * @param valueMap the map of data values.
+     * @param constantMap the map of constants.
+     * @param orgUnitCountMap the map of organisation unit counts.
+     * @return the calculated value as a double.
+     */
     Double getIndicatorValue( Indicator indicator, Period period, Map<DataElementOperand, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap );
     
@@ -138,7 +151,7 @@ public interface ExpressionService
      * @param constantMap the mapping between the constant uid and value to use
      *        in the calculation.
      * @param orgUnitCountMap the mapping between organisation unit group uid and
-     *        count of org units to use in the calculation.
+     *        count of organisation units to use in the calculation.
      * @param days the number of days to use in the calculation.
      * @return the calculated value as a double.
      */
@@ -155,7 +168,7 @@ public interface ExpressionService
      * @param constantMap the mapping between the constant uid and value to use
      *        in the calculation.
      * @param orgUnitCountMap the mapping between organisation unit group uid and
-     *        count of org units to use in the calculation.
+     *        count of organisation units to use in the calculation.
      * @param days the number of days to use in the calculation.
      * @param set of data element operands that have values but they are incomplete
      *        (for example due to aggregation from organisationUnit children where
@@ -290,7 +303,7 @@ public interface ExpressionService
      * @return An expression string containing DataElement names and the names of
      *         the CategoryOptions in the CategoryOptionCombo.
      * @throws IllegalArgumentException if data element id or category option combo
-     * 		   id are not numeric or data element or category option combo do not exist.
+     *         id are not numeric or data element or category option combo do not exist.
      */
     String getExpressionDescription( String expression );
 
