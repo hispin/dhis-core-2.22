@@ -30,28 +30,18 @@ package org.hisp.dhis.commons.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import org.hisp.dhis.commons.comparator.FileLastModifiedComparator;
 
 /**
  * @author Lars Helge Overland
@@ -60,115 +50,6 @@ public class StreamUtils
 {
     public static final String LINE_BREAK = "\n";
     public static final String ENCODING_UTF8 = "UTF-8";
-
-    /**
-     * Returns all Files in the given directory.
-     *
-     * @param directory a File representing the relevant directory.
-     * @param sort      indicates whether to sort chronologically on the lastModified property.
-     * @return a List of Files.
-     */
-    public static List<File> getFileList( File directory, boolean sort )
-    {
-        List<File> files = new ArrayList<>();
-
-        if ( directory != null )
-        {
-            files = Arrays.asList( directory.listFiles() );
-        }
-
-        if ( sort )
-        {
-            Collections.sort( files, new FileLastModifiedComparator() );
-        }
-
-        return files;
-    }
-
-    /**
-     * Writes the content of the StringBuffer to the file.
-     *
-     * @param file    the file to write to.
-     * @param content the content to write.
-     * @throws IOException
-     */
-    public static void writeContent( File file, StringBuffer content )
-        throws IOException
-    {
-        BufferedWriter writer = new BufferedWriter(
-            new OutputStreamWriter( new FileOutputStream( file ), ENCODING_UTF8 ) );
-
-        try
-        {
-            writer.write( content.toString() );
-        }
-        finally
-        {
-            try
-            {
-                writer.flush();
-            }
-            catch ( Exception ex )
-            {
-            }
-
-            try
-            {
-                writer.close();
-            }
-            catch ( Exception ex )
-            {
-            }
-        }
-    }
-
-    /**
-     * Get an InputStream for the String.
-     *
-     * @param string the String.
-     * @return the InputStream.
-     */
-    public static InputStream getInputStream( String string )
-    {
-        try
-        {
-            return new BufferedInputStream( new ByteArrayInputStream( string.getBytes( ENCODING_UTF8 ) ) );
-        }
-        catch ( UnsupportedEncodingException ex )
-        {
-            throw new RuntimeException( ex );
-        }
-    }
-    
-    /**
-     * Returns the content of the File as a String.
-     *
-     * @param file the File.
-     * @return the String.
-     */
-    public static String getContent( File file )
-    {
-        BufferedInputStream in = null;
-        
-        try
-        {
-            in = new BufferedInputStream( new FileInputStream( file ) );
-
-            byte[] bytes = new byte[(int) file.length()];
-
-            in.read( bytes );
-
-            return new String( bytes, ENCODING_UTF8 );
-        }
-        catch ( IOException ex )
-        {
-            throw new RuntimeException( ex );
-        }
-        finally
-        {
-            closeInputStream( in );
-        }
-    }
 
     /**
      * Reads the content of the file to a StringBuffer. Each line is compared to
@@ -237,26 +118,6 @@ public class StreamUtils
         }
 
         return content;
-    }
-
-    /**
-     * Closes the given InputStream.
-     *
-     * @param in the InputStream to close.
-     */
-    private static void closeInputStream( InputStream in )
-    {
-        if ( in != null )
-        {
-            try
-            {
-                in.close();
-            }
-            catch ( Exception ex )
-            {
-                ex.printStackTrace();
-            }
-        }
     }
 
     /**

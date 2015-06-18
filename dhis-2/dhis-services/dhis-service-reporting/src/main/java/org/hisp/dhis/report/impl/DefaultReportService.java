@@ -28,15 +28,36 @@ package org.hisp.dhis.report.impl;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
+
+import java.io.OutputStream;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.velocity.VelocityContext;
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.commons.util.Encoder;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -49,28 +70,10 @@ import org.hisp.dhis.report.ReportService;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.commons.util.Encoder;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.system.util.JRExportUtils;
-import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
-import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 /**
  * @author Lars Helge Overland
@@ -169,7 +172,7 @@ public class DefaultReportService
 
         try
         {
-            JasperReport jasperReport = JasperCompileManager.compileReport( StreamUtils.getInputStream( report.getDesignContent() ) );
+            JasperReport jasperReport = JasperCompileManager.compileReport( IOUtils.toInputStream( report.getDesignContent(), StandardCharsets.UTF_8 ) );
 
             if ( report.hasReportTable() ) // Use JR data source
             {

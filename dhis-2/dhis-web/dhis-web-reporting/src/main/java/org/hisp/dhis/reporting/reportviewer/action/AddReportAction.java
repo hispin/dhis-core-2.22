@@ -30,6 +30,7 @@ package org.hisp.dhis.reporting.reportviewer.action;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.commons.action.AbstractRelativePeriodsAction;
@@ -39,7 +40,6 @@ import org.hisp.dhis.report.ReportService;
 import org.hisp.dhis.reporttable.ReportParams;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
-import org.hisp.dhis.commons.util.StreamUtils;
 
 /**
  * @author Lars Helge Overland
@@ -213,7 +213,7 @@ public class AddReportAction
 
         if ( file != null )
         {
-            report.setDesignContent( StreamUtils.getContent( file ) );
+            report.setDesignContent( FileUtils.readFileToString( file ) );
         }
         
         reportService.saveReport( report );

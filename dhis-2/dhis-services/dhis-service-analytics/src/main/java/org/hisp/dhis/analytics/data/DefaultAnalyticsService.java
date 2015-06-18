@@ -340,7 +340,7 @@ public class DefaultAnalyticsService
 
                     Map<String, Integer> orgUnitCountMap = permutationOrgUnitTargetMap != null ? permutationOrgUnitTargetMap.get( ou ) : null;
 
-                    Double value = expressionService.getIndicatorValue( indicator, period, valueMap, constantMap, orgUnitCountMap, period.getDaysInPeriod() );
+                    Double value = expressionService.getIndicatorValue( indicator, period, valueMap, constantMap, orgUnitCountMap );
 
                     if ( value != null )
                     {

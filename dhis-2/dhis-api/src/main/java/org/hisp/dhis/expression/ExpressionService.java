@@ -126,7 +126,7 @@ public interface ExpressionService
     List<Expression> getAllExpressions();
     
     Double getIndicatorValue( Indicator indicator, Period period, Map<DataElementOperand, Double> valueMap, 
-        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days );
+        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap );
     
     /**
      * Generates the calculated value for the given expression base on the values

@@ -29,6 +29,9 @@ package org.hisp.dhis.system.grid;
  */
 
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
+import static org.hisp.dhis.commons.util.CsvUtils.NEWLINE;
+import static org.hisp.dhis.commons.util.CsvUtils.SEPARATOR_B;
+import static org.hisp.dhis.commons.util.CsvUtils.csvEncode;
 import static org.hisp.dhis.system.util.PDFUtils.addTableToDocument;
 import static org.hisp.dhis.system.util.PDFUtils.closeDocument;
 import static org.hisp.dhis.system.util.PDFUtils.getEmptyCell;
@@ -38,13 +41,11 @@ import static org.hisp.dhis.system.util.PDFUtils.getTextCell;
 import static org.hisp.dhis.system.util.PDFUtils.getTitleCell;
 import static org.hisp.dhis.system.util.PDFUtils.openDocument;
 import static org.hisp.dhis.system.util.PDFUtils.resetPaddings;
-import static org.hisp.dhis.commons.util.CsvUtils.csvEncode;
-import static org.hisp.dhis.commons.util.CsvUtils.SEPARATOR_B;
-import static org.hisp.dhis.commons.util.CsvUtils.NEWLINE;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,6 +66,7 @@ import net.sf.jasperreports.engine.JasperReport;
 
 import org.amplecode.staxwax.factory.XMLFactory;
 import org.amplecode.staxwax.writer.XMLWriter;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -72,14 +74,13 @@ import org.apache.velocity.VelocityContext;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.NameableObjectUtils;
+import org.hisp.dhis.commons.collection.ListUtils;
+import org.hisp.dhis.commons.util.CodecUtils;
+import org.hisp.dhis.commons.util.Encoder;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.ExcelUtils;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.commons.util.CodecUtils;
-import org.hisp.dhis.commons.util.Encoder;
-import org.hisp.dhis.commons.collection.ListUtils;
-import org.hisp.dhis.commons.util.StreamUtils;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
@@ -102,7 +103,7 @@ public class GridUtils
 {
     private static final Log log = LogFactory.getLog( GridUtils.class );
     
-    private static final String EMPTY = "";    
+    private static final String EMPTY = "";
     private static final String XLS_SHEET_PREFIX = "Sheet ";
     private static final int JXL_MAX_COLS = 256;
     
@@ -390,7 +391,7 @@ public class GridUtils
         
         String report = writer.toString();
 
-        JasperReport jasperReport = JasperCompileManager.compileReport( StreamUtils.getInputStream( report ) );
+        JasperReport jasperReport = JasperCompileManager.compileReport( IOUtils.toInputStream( report, StandardCharsets.UTF_8 ) );
         
         JasperPrint print = JasperFillManager.fillReport( jasperReport, params, grid );
         
