@@ -28,71 +28,22 @@ package org.hisp.dhis.commons.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * @author Lars Helge Overland
  */
 public class CodecUtils
 {
-    private static final Log log = LogFactory.getLog( CodecUtils.class );
-    
-    private static final String CHARSET = "8859_1";
-    private static final Base64 codec = new Base64();
     private static final String EMPTY_REPLACEMENT = "_";
     private static final String REGEX_NUMERIC = "([0-9]*)";
     private static final String SEPARATOR = "_";
     
     private static final String ILLEGAL_FILENAME_CHARS_REGEX = "[/\\?%*:|\"'<>.]";
 
-    /**
-     * Encrypts a string with Base64 encoding.
-     * 
-     * @param string the string to encrypt.
-     */
-    public static String encryptBase64( String string )
-    {
-        try
-        {
-            byte[] data = codec.encode( string.getBytes( CHARSET ) );
-            
-            return new String( data, CHARSET );
-        }
-        catch ( UnsupportedEncodingException e )
-        {
-            log.warn( "Could not encrypt string because of unsupported encoding: " + CHARSET );
-            
-            return null;
-        }
-    }
-
-    /**
-     * Decrypts a string with Base64 encoding.
-     * 
-     * @param string the string to decrypt.
-     */
-    public static String decryptBase64( String string )
-    {
-        try
-        {
-            byte[] data = codec.decode( string.getBytes( CHARSET ) );
-            
-            return new String( data, CHARSET );
-        }
-        catch ( UnsupportedEncodingException e )
-        {
-            log.warn( "Could not decrypt string because of unsupported encoding: " + CHARSET );
-            
-            return null;
-        }
-    }
-    
     /**
      * Database encodes the argument string. Remove non-character data from the
      * string, prefixes the string if it starts with a numeric character and
