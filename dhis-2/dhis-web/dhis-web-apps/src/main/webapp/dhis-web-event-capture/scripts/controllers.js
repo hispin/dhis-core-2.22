@@ -440,7 +440,14 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             $scope.eventUID = dhis2.util.uid();
             $scope.currentEvent['uid'] = $scope.eventUID;
         }        
-        $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);        
+        $scope.currentEventOriginialValue = angular.copy($scope.currentEvent); 
+        
+        if($scope.eventRegistration){
+            //Blank out rule effects, as there is no rules in effect before the first
+            //time the rules is run on a new page.
+            $rootScope.ruleeffects[$scope.currentEvent.event] = {};        
+            $scope.executeRules();
+        }
     };    
     
     $scope.showEditEventInGrid = function(){
@@ -466,11 +473,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }); 
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
         
-        //Blank out rule effects, as there is no rules in effect before the first
-        //time the rules is run on a new page.
-        $rootScope.ruleeffects[$scope.currentEvent.event] = {};
-        
-        $scope.executeRules();
+        if($scope.editingEventInFull){
+            //Blank out rule effects, as there is no rules in effect before the first
+            //time the rules is run on a new page.
+            $rootScope.ruleeffects[$scope.currentEvent.event] = {};        
+            $scope.executeRules();
+        }
     };
     
     $scope.switchDataEntryForm = function(){
