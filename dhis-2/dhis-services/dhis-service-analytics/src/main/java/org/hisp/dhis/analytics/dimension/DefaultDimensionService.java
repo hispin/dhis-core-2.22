@@ -47,6 +47,7 @@ import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryDimension;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
+import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementOperandService;
@@ -155,16 +156,16 @@ public class DefaultDimensionService
         
         if ( tea != null )
         {
-            tea.setDimensionType( DimensionType.TRACKED_ENTITY_ATTRIBUTE );
+            tea.setDimensionType( DimensionType.PROGRAM_ATTRIBUTE );
             return tea;
         }
         
-        DataElement tde = identifiableObjectManager.get( DataElement.class, uid );
+        DataElement pde = identifiableObjectManager.get( DataElement.class, uid );
         
-        if ( tde != null )
+        if ( pde != null && DataElementDomain.TRACKER.equals( pde.getDomainType() ) )
         {
-            tde.setDimensionType( DimensionType.TRACKED_ENTITY_DATAELEMENT );
-            return tde;
+            pde.setDimensionType( DimensionType.PROGRAM_DATAELEMENT );
+            return pde;
         }
         
         return null;
@@ -267,14 +268,14 @@ public class DefaultDimensionService
         
         if ( tea != null )
         {
-            return DimensionType.TRACKED_ENTITY_ATTRIBUTE;
+            return DimensionType.PROGRAM_ATTRIBUTE;
         }
         
-        DataElement de = identifiableObjectManager.get( DataElement.class, uid );
+        DataElement pde = identifiableObjectManager.get( DataElement.class, uid );
         
-        if ( de != null )
+        if ( pde != null && DataElementDomain.TRACKER.equals( pde.getDomainType() ) )
         {
-            return DimensionType.TRACKED_ENTITY_DATAELEMENT;
+            return DimensionType.PROGRAM_DATAELEMENT;
         }
 
         final Map<String, DimensionType> dimObjectTypeMap = new HashMap<>();
@@ -533,7 +534,7 @@ public class DefaultDimensionService
                 {
                     object.getCategoryOptionGroups().addAll( identifiableObjectManager.getByUidOrdered( CategoryOptionGroup.class, uids ) );
                 }
-                else if ( TRACKED_ENTITY_ATTRIBUTE.equals( type ) )
+                else if ( PROGRAM_ATTRIBUTE.equals( type ) )
                 {
                     TrackedEntityAttributeDimension attributeDimension = new TrackedEntityAttributeDimension();
                     attributeDimension.setAttribute( identifiableObjectManager.get( TrackedEntityAttribute.class, dimensionId ) );
@@ -542,7 +543,7 @@ public class DefaultDimensionService
                     
                     object.getAttributeDimensions().add( attributeDimension );
                 }
-                else if ( TRACKED_ENTITY_DATAELEMENT.equals( type ) )
+                else if ( PROGRAM_DATAELEMENT.equals( type ) )
                 {
                     TrackedEntityDataElementDimension dataElementDimension = new TrackedEntityDataElementDimension();
                     dataElementDimension.setDataElement( identifiableObjectManager.get( DataElement.class, dimensionId ) );
