@@ -460,7 +460,7 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
-    public Set<DataElement> getDataElementsInIndicators( Set<ProgramIndicator> indicators )
+    public Set<DataElement> getDataElementsInIndicators( Collection<ProgramIndicator> indicators )
     {
         Set<DataElement> dataElements = new HashSet<>();
         
@@ -502,7 +502,7 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
-    public Set<TrackedEntityAttribute> getAttributesInIndicators( Set<ProgramIndicator> indicators )
+    public Set<TrackedEntityAttribute> getAttributesInIndicators( Collection<ProgramIndicator> indicators )
     {
         Set<TrackedEntityAttribute> attributes = new HashSet<>();
         
@@ -537,7 +537,7 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
-    public Set<Constant> getConstantsInIndicators( Set<ProgramIndicator> indicators )
+    public Set<Constant> getConstantsInIndicators( Collection<ProgramIndicator> indicators )
     {
         Set<Constant> constants = new HashSet<>();
         

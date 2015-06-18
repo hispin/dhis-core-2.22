@@ -32,7 +32,6 @@ import static org.hisp.dhis.dataapproval.DataApprovalLevelService.APPROVAL_LEVEL
 import static org.hisp.dhis.commons.util.TextUtils.getQuotedCommaDelimitedString;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -54,6 +53,8 @@ import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.springframework.scheduling.annotation.Async;
+
+import com.google.common.collect.Lists;
 
 /**
  * This class manages the analytics table. The analytics table is a denormalized
@@ -353,7 +354,7 @@ public class JdbcAnalyticsTableManager
         String[] ou = { quote( "ou" ), "character(11) not null", "ou.uid" };
         String[] level = { quote( "level" ), "integer", "ous.level" };
         
-        columns.addAll( Arrays.asList( de, co, ou, level ) );
+        columns.addAll( Lists.newArrayList( de, co, ou, level ) );
 
         if ( isApprovalEnabled() )
         {

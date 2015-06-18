@@ -30,11 +30,11 @@ package org.hisp.dhis.analytics;
 
 import static org.hisp.dhis.analytics.AggregationType.AVERAGE_INT_DISAGGREGATION;
 import static org.hisp.dhis.analytics.AggregationType.AVERAGE_SUM_INT_DISAGGREGATION;
+import static org.hisp.dhis.common.DimensionType.CATEGORYOPTION_GROUPSET;
 import static org.hisp.dhis.common.DimensionType.DATASET;
-import static org.hisp.dhis.common.DimensionType.PERIOD;
 import static org.hisp.dhis.common.DimensionType.ORGANISATIONUNIT;
 import static org.hisp.dhis.common.DimensionType.ORGANISATIONUNIT_GROUPSET;
-import static org.hisp.dhis.common.DimensionType.CATEGORYOPTION_GROUPSET;
+import static org.hisp.dhis.common.DimensionType.PERIOD;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_OPERAND_ID;
@@ -44,14 +44,13 @@ import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.DimensionalObject.INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.NameableObjectUtils.asList;
 import static org.hisp.dhis.common.NameableObjectUtils.getList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,6 +71,8 @@ import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.commons.collection.CollectionUtils;
+import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -85,8 +86,6 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.commons.collection.CollectionUtils;
-import org.hisp.dhis.commons.collection.ListUtils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -110,15 +109,15 @@ public class DataQueryParams
     public static final int DX_INDEX = 0;
     public static final int CO_IN_INDEX = 1;
     
-    public static final List<String> DATA_DIMS = Arrays.asList( 
+    public static final List<String> DATA_DIMS = Lists.newArrayList( 
         INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
-    public static final List<String> FIXED_DIMS = Arrays.asList( 
+    public static final List<String> FIXED_DIMS = Lists.newArrayList( 
         DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
-    private static final List<String> DIMENSION_PERMUTATION_IGNORE_DIMS = Arrays.asList( 
+    private static final List<String> DIMENSION_PERMUTATION_IGNORE_DIMS = Lists.newArrayList( 
         INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
-    public static final List<DimensionType> COMPLETENESS_DIMENSION_TYPES = Arrays.asList( 
+    public static final List<DimensionType> COMPLETENESS_DIMENSION_TYPES = Lists.newArrayList( 
         DATASET, PERIOD, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET, CATEGORYOPTION_GROUPSET );
-    private static final List<DimensionType> COMPLETENESS_TARGET_DIMENSION_TYPES = Arrays.asList( 
+    private static final List<DimensionType> COMPLETENESS_TARGET_DIMENSION_TYPES = Lists.newArrayList( 
         DATASET, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET );
     
     private static final DimensionItem[] DIM_OPT_ARR = new DimensionItem[0];
@@ -1022,7 +1021,7 @@ public class DataQueryParams
     {
         for ( String key : aggregatedDataMap.keySet() )
         {
-            List<String> keys = new ArrayList<>( Arrays.asList( key.split( DIMENSION_SEP ) ) );
+            List<String> keys = Lists.newArrayList( key.split( DIMENSION_SEP ) );
             
             String de = keys.get( DX_INDEX );
             String coc = cocEnabled ? keys.get( CO_IN_INDEX ) : null;
@@ -1038,6 +1037,32 @@ public class DataQueryParams
             permutationMap.putEntry( permKey, operand, value );            
         }
     }
+    
+    /**
+     * Returns a mapping of permutation keys and mappings of identifiers and values
+     * based on the given mapping of dimension option keys and values.
+     */
+    public static Map<String, Map<String, Double>> getPermutationProgramValueMap( Map<String, Double> valueMap )
+    {
+        MapMap<String, String, Double> permutationMap = new MapMap<>();
+        
+        for ( String key : valueMap.keySet() )
+        {
+            List<String> keys = Lists.newArrayList( key.split( DIMENSION_SEP ) );
+            
+            String dxUid = keys.get( DX_INDEX );
+            
+            keys.remove( DX_INDEX );
+            
+            String permKey = StringUtils.join( keys, DIMENSION_SEP );
+            
+            Double value = valueMap.get( key );
+            
+            permutationMap.putEntry( permKey, dxUid, value );
+        }
+        
+        return permutationMap;
+    }
 
     /**
      * Returns a mapping of permutations keys (org unit id or null) and mappings
@@ -1050,7 +1075,7 @@ public class DataQueryParams
         
         for ( String key : orgUnitCountMap.keySet() )
         {
-            List<String> keys = new ArrayList<>( Arrays.asList( key.split( DIMENSION_SEP ) ) );
+            List<String> keys = Lists.newArrayList( key.split( DIMENSION_SEP ) );
             
             // Org unit group always at last index, org unit potentially at first
             
