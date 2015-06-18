@@ -53,13 +53,13 @@ public interface DimensionalObject
     final String DATAELEMENT_DIM_ID = "de";
     final String DATASET_DIM_ID = "ds";
     final String DATAELEMENT_OPERAND_ID = "dc";
+    final String PROGRAM_INDICATOR_DIM_ID = "pi";
     final String PROGRAM_DATAELEMENT_DIM_ID = "pd";
     final String PROGRAM_ATTRIBUTE_DIM_ID = "pa";
     final String CATEGORYOPTIONCOMBO_DIM_ID = "co";
     final String PERIOD_DIM_ID = "pe";
     final String ORGUNIT_DIM_ID = "ou";
     final String ORGUNIT_GROUP_DIM_ID = "oug"; // Used for org unit target
-    final String PROGRAM_INDICATOR_DIM_ID = "pin";
     final String ITEM_DIM_ID = "item";
 
     final String OU_MODE_SELECTED = "selected"; //TODO replace with OrganisationUnitSelectionMode
@@ -88,8 +88,8 @@ public interface DimensionalObject
         put( DimensionType.DATAELEMENT_GROUPSET, DataElementGroupSet.class );
         put( DimensionType.ORGANISATIONUNIT_GROUPSET, OrganisationUnitGroupSet.class );
         put( DimensionType.CATEGORYOPTION_GROUPSET, CategoryOptionGroupSet.class );
-        put( DimensionType.TRACKED_ENTITY_ATTRIBUTE, TrackedEntityAttribute.class );
-        put( DimensionType.TRACKED_ENTITY_DATAELEMENT, DataElement.class );        
+        put( DimensionType.PROGRAM_ATTRIBUTE, TrackedEntityAttribute.class );
+        put( DimensionType.PROGRAM_DATAELEMENT, DataElement.class );        
     } };
     
     /**

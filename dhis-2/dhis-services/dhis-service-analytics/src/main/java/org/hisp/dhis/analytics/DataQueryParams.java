@@ -44,6 +44,7 @@ import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.DimensionalObject.INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
 import static org.hisp.dhis.common.NameableObjectUtils.asList;
@@ -103,7 +104,6 @@ public class DataQueryParams
     public static final String DISPLAY_NAME_CATEGORYOPTIONCOMBO = "Category";
     public static final String DISPLAY_NAME_PERIOD = "Period";
     public static final String DISPLAY_NAME_ORGUNIT = "Organisation unit";
-    public static final String DISPLAY_NAME_PROGRAM_INDICATOR = "Program indicator";
     public static final String DISPLAY_NAME_LONGITUDE = "Longitude";
     public static final String DISPLAY_NAME_LATITUDE = "Latitude";
 
@@ -111,11 +111,11 @@ public class DataQueryParams
     public static final int CO_IN_INDEX = 1;
     
     public static final List<String> DATA_DIMS = Arrays.asList( 
-        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
+        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
     public static final List<String> FIXED_DIMS = Arrays.asList( 
-        DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
+        DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
     private static final List<String> DIMENSION_PERMUTATION_IGNORE_DIMS = Arrays.asList( 
-        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
+        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
     public static final List<DimensionType> COMPLETENESS_DIMENSION_TYPES = Arrays.asList( 
         DATASET, PERIOD, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET, CATEGORYOPTION_GROUPSET );
     private static final List<DimensionType> COMPLETENESS_TARGET_DIMENSION_TYPES = Arrays.asList( 
@@ -286,6 +286,7 @@ public class DataQueryParams
         if ( !dimensions.contains( new BaseDimensionalObject( DATAELEMENT_DIM_ID ) ) ||
             dimensions.contains( new BaseDimensionalObject( INDICATOR_DIM_ID ) ) ||
             dimensions.contains( new BaseDimensionalObject( DATASET_DIM_ID ) ) ||
+            dimensions.contains( new BaseDimensionalObject( PROGRAM_INDICATOR_DIM_ID ) ) ||
             dimensions.contains( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ) ) ||
             dimensions.contains( new BaseDimensionalObject( PROGRAM_ATTRIBUTE_DIM_ID ) ) )
         {
@@ -360,6 +361,7 @@ public class DataQueryParams
             new BaseDimensionalObject( INDICATOR_DIM_ID ),
             new BaseDimensionalObject( DATAELEMENT_DIM_ID ),
             new BaseDimensionalObject( DATASET_DIM_ID ),
+            new BaseDimensionalObject( PROGRAM_INDICATOR_DIM_ID ),
             new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ),
             new BaseDimensionalObject( PROGRAM_ATTRIBUTE_DIM_ID ) ) );
         
@@ -464,7 +466,7 @@ public class DataQueryParams
     /**
      * Removes the dimensions with the given identifiers.
      */
-    public DataQueryParams removeDimensions( Set<String> dimension )
+    public DataQueryParams removeDimensions( Collection<String> dimension )
     {
         if ( dimension != null )
         {
@@ -1599,6 +1601,16 @@ public class DataQueryParams
         setOrganisationUnits( getList( organisationUnit ) );
     }
 
+    public List<NameableObject> getProgramIndicators()
+    {
+        return getDimensionOptions( PROGRAM_INDICATOR_DIM_ID );
+    }
+
+    public void setProgramIndicators( List<? extends NameableObject> programIndicators )
+    {
+        setDimensionOptions( PROGRAM_INDICATOR_DIM_ID, DimensionType.PROGRAM_INDICATOR, null, asList( programIndicators ) );
+    }
+    
     public List<NameableObject> getProgramDataElements()
     {
         return getDimensionOptions( PROGRAM_DATAELEMENT_DIM_ID );

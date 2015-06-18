@@ -29,9 +29,8 @@ package org.hisp.dhis.analytics.event;
  */
 
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,13 +46,13 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.common.QueryItem;
+import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.commons.collection.ListUtils;
 
 /**
  * @author Lars Helge Overland
@@ -296,17 +295,6 @@ public class EventQueryParams
         return !items.isEmpty() || !itemFilters.isEmpty();
     }
 
-    /**
-     * Indicates whether program indicators are present as dimension or filter.
-     */
-    public boolean hasProgramIndicators()
-    {
-        List<NameableObject> dimOpts = getDimensionOptions( PROGRAM_INDICATOR_DIM_ID );
-        List<NameableObject> filterOpts = getFilterOptions( PROGRAM_INDICATOR_DIM_ID );
-        
-        return ( dimOpts != null && !dimOpts.isEmpty() ) || ( filterOpts != null && !filterOpts.isEmpty() );
-    }
-    
     public boolean hasStartEndDate()
     {
         return startDate != null && endDate != null;

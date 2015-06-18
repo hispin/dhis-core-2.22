@@ -32,16 +32,15 @@ import static org.hisp.dhis.analytics.AnalyticsTableManager.ANALYTICS_TABLE_NAME
 import static org.hisp.dhis.analytics.AnalyticsTableManager.COMPLETENESS_TABLE_NAME;
 import static org.hisp.dhis.analytics.AnalyticsTableManager.COMPLETENESS_TARGET_TABLE_NAME;
 import static org.hisp.dhis.analytics.AnalyticsTableManager.ORGUNIT_TARGET_TABLE_NAME;
+import static org.hisp.dhis.analytics.DataQueryParams.COMPLETENESS_DIMENSION_TYPES;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_CATEGORYOPTIONCOMBO;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_DATA_X;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_LATITUDE;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_LONGITUDE;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_ORGUNIT;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PERIOD;
-import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PROGRAM_INDICATOR;
-import static org.hisp.dhis.analytics.DataQueryParams.KEY_DE_GROUP;
-import static org.hisp.dhis.analytics.DataQueryParams.COMPLETENESS_DIMENSION_TYPES;
 import static org.hisp.dhis.analytics.DataQueryParams.DX_INDEX;
+import static org.hisp.dhis.analytics.DataQueryParams.KEY_DE_GROUP;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATASET_DIM_ID;
@@ -52,9 +51,9 @@ import static org.hisp.dhis.common.DimensionalObject.LATITUDE_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.LONGITUDE_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObjectUtils.toDimension;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifier;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifiers;
@@ -115,6 +114,9 @@ import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
+import org.hisp.dhis.commons.collection.ListUtils;
+import org.hisp.dhis.commons.collection.UniqueArrayList;
+import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -148,14 +150,11 @@ import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.user.User;
-import org.hisp.dhis.commons.util.DebugUtils;
-import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.system.util.SystemUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.user.User;
 import org.hisp.dhis.util.Timer;
-import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
@@ -298,7 +297,7 @@ public class DefaultAnalyticsService
         if ( !params.getIndicators().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
-            dataSourceParams.removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
+            dataSourceParams.removeDimensions( DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
 
             List<Indicator> indicators = asTypedList( dataSourceParams.getIndicators() );
 
@@ -368,7 +367,7 @@ public class DefaultAnalyticsService
         if ( !params.getDataElements().isEmpty() )
         {
             DataQueryParams dataSourceParams = params.instance();
-            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
+            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
 
             Map<String, Object> aggregatedDataMap = getAggregatedDataValueMapObjectTyped( dataSourceParams );
 
@@ -398,7 +397,7 @@ public class DefaultAnalyticsService
 
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.ignoreDataApproval(); // No approval for reporting rates
-            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
+            dataSourceParams.removeDimensions( INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
             dataSourceParams.setAggregationType( AggregationType.COUNT );
 
             if ( !COMPLETENESS_DIMENSION_TYPES.containsAll( dataSourceParams.getDimensionTypes() ) )
@@ -972,6 +971,7 @@ public class DefaultAnalyticsService
             List<NameableObject> dataElements = new ArrayList<>();
             List<NameableObject> dataSets = new ArrayList<>();
             List<NameableObject> operandDataElements = new ArrayList<>();
+            List<NameableObject> programIndicators = new ArrayList<>();
             List<NameableObject> programDataElements = new ArrayList<>();
             List<NameableObject> programAttributes = new ArrayList<>();
 
@@ -1007,7 +1007,8 @@ public class DefaultAnalyticsService
                     dataElements.add( de );
                     continue itemLoop;
                 }
-                else if ( de != null && DataElementDomain.TRACKER.equals( de.getDomainType() ) )
+                
+                if ( de != null && DataElementDomain.TRACKER.equals( de.getDomainType() ) )
                 {
                     programDataElements.add( de );
                     continue itemLoop;
@@ -1026,6 +1027,14 @@ public class DefaultAnalyticsService
                 if ( dc != null )
                 {
                     operandDataElements.add( dc.getDataElement() );
+                    continue itemLoop;
+                }
+                
+                ProgramIndicator pi = idObjectManager.get( ProgramIndicator.class, uid );
+                
+                if ( pi != null )
+                {
+                    programIndicators.add( pi );
                     continue itemLoop;
                 }
                 
@@ -1069,6 +1078,11 @@ public class DefaultAnalyticsService
                 dataDimensions.add( new BaseDimensionalObject( CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<NameableObject>() ) );
             }
             
+            if ( !programIndicators.isEmpty() )
+            {
+                dataDimensions.add( new BaseDimensionalObject( PROGRAM_INDICATOR_DIM_ID, DimensionType.PROGRAM_INDICATOR, programIndicators ) );
+            }
+            
             if ( !programDataElements.isEmpty() )
             {
                 dataDimensions.add( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID, DimensionType.PROGRAM_DATAELEMENT, programDataElements ) );
@@ -1079,7 +1093,8 @@ public class DefaultAnalyticsService
                 dataDimensions.add( new BaseDimensionalObject( PROGRAM_ATTRIBUTE_DIM_ID, DimensionType.PROGRAM_ATTRIBUTE, programAttributes ) );
             }
             
-            if ( indicators.isEmpty() && dataElements.isEmpty() && dataSets.isEmpty() && operandDataElements.isEmpty() && programDataElements.isEmpty() && programAttributes.isEmpty() )
+            if ( indicators.isEmpty() && dataElements.isEmpty() && dataSets.isEmpty() && operandDataElements.isEmpty() && 
+                programDataElements.isEmpty() && programAttributes.isEmpty() && programIndicators.isEmpty() )
             {
                 throw new IllegalQueryException( "Dimension dx is present in query without any valid dimension options" );
             }
@@ -1227,15 +1242,6 @@ public class DefaultAnalyticsService
             return Lists.newArrayList( object );
         }
 
-        if ( PROGRAM_INDICATOR_DIM_ID.equals( dimension ) )
-        {
-            List<ProgramIndicator> indicators = idObjectManager.getByUid( ProgramIndicator.class, items );
-            
-            DimensionalObject object = new BaseDimensionalObject( PROGRAM_INDICATOR_DIM_ID, DimensionType.PROGRAM_INDICATOR, null, DISPLAY_NAME_PROGRAM_INDICATOR, indicators );
-            
-            return Lists.newArrayList( object );
-        }
-        
         if ( LONGITUDE_DIM_ID.contains( dimension ) )
         {
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.STATIC, null, DISPLAY_NAME_LONGITUDE, new ArrayList<NameableObject>() );
@@ -1340,8 +1346,7 @@ public class DefaultAnalyticsService
 
         if ( !dataElements.isEmpty() )
         {
-            DataQueryParams dataSourceParams = params.instance().removeDimensions( 
-                INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( DataQueryParams.DATA_DIMS );
             
             dataSourceParams.getDimensions().add( DX_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
@@ -1367,8 +1372,7 @@ public class DefaultAnalyticsService
 
         if ( !dataElements.isEmpty() )
         {
-            DataQueryParams dataSourceParams = params.instance().removeDimensions( 
-                INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( DataQueryParams.DATA_DIMS );
             
             dataSourceParams.getDimensions().add( DataQueryParams.DX_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
