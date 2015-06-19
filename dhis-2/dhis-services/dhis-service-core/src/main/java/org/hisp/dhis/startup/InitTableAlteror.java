@@ -71,10 +71,6 @@ public class InitTableAlteror
         executeSql( "ALTER TABLE program DROP COLUMN displayonallorgunit" );
         
         upgradeProgramStageDataElements();
-        
-        executeSql( "UPDATE program SET dataentryformid =(SELECT trackedentityform.dataentryformid FROM trackedentityform WHERE program.programid=trackedentityform.programid) " +
-        "WHERE program.programid = (SELECT  trackedentityform.programid FROM trackedentityform WHERE program.programid = trackedentityform.programid)" );
-//        executeSql( "drop table trackedentityform");
     }
 
     // -------------------------------------------------------------------------
