@@ -17,7 +17,7 @@
         <dataValue dataElement="MAL04" value="10" categoryOptionCombo="McDonalds"/>
     </group>
     
-    <group orgUnit="342" period="2015-01-01/P1M" >
+    <group dataSet="Malaria" orgUnit="342" period="2015-01-01/P1M" >
         <dataValue dataElement="MAL01" value="32" />
         <dataValue dataElement="MAL02" value="20" />
         <dataValue dataElement="MAL03" value="0" >

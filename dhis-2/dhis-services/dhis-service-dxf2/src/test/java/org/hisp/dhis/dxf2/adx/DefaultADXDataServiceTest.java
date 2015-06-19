@@ -28,89 +28,57 @@ package org.hisp.dhis.dxf2.adx;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.amplecode.staxwax.factory.XMLFactory;
-import org.amplecode.staxwax.reader.XMLReader;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import java.io.InputStream;
+import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.datavalue.DataValue;
+import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
+import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
+import org.hisp.dhis.jdbc.batchhandler.DataValueBatchHandler;
+import org.hisp.dhis.mock.batchhandler.MockBatchHandler;
+import org.hisp.dhis.mock.batchhandler.MockBatchHandlerFactory;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.w3c.dom.Document;
 
 /**
  *
  * @author bobj
  */
 public class DefaultADXDataServiceTest
+    extends DhisSpringTest
 {
+    @Autowired
+    private DataValueSetService dataValueSetService;
+
+    @Autowired
+    private ADXDataService adxDataService;
+
     protected static final String SIMPLE_ADX_SAMPLE = "adx/adx_data_sample1.xml";
 
-    public DefaultADXDataServiceTest()
+    private MockBatchHandler<DataValue> mockDataValueBatchHandler = null;
+
+    private MockBatchHandlerFactory mockBatchHandlerFactory = null;
+
+    @Override
+    public void setUpTest()
     {
+        mockDataValueBatchHandler = new MockBatchHandler<>();
+        mockBatchHandlerFactory = new MockBatchHandlerFactory();
+        mockBatchHandlerFactory.registerBatchHandler( DataValueBatchHandler.class, mockDataValueBatchHandler );
+        setDependency( dataValueSetService, "batchHandlerFactory", mockBatchHandlerFactory );
+        setDependency( adxDataService,"dataValueSetService", dataValueSetService );
     }
 
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
-
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
-
-    @Before
-    public void setUp() throws IOException
-    {
-    }
-
-    @After
-    public void tearDown()
-    {
-    }
-
-    /**
-     * Test of parseADXGroup method, of class DefaultADXDataService.
-     */
     @Test
-    public void testParseADXGroup() throws Exception
+    public void testpostData() throws Exception
     {
-        try
-        {
-            XMLReader reader = XMLFactory.getXMLReader( new ClassPathResource( SIMPLE_ADX_SAMPLE ).getInputStream() );
-            reader.moveToStartElement( ADXConstants.ROOT, ADXConstants.NAMESPACE );
-
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder;
-            docBuilder = docFactory.newDocumentBuilder();
-
-            DefaultADXDataService instance = new DefaultADXDataService();
-
-            while ( reader.moveToStartElement( ADXConstants.GROUP, ADXConstants.NAMESPACE ) )
-            {
-                Document dxf = docBuilder.newDocument();
-                instance.parseADXGroupToDxf( reader, dxf );
-
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource( dxf );
-                StreamResult result = new StreamResult( System.out );
-
-                transformer.transform( source, result );
-            }
-        } 
-        catch ( Exception ex )
-        {
-            fail( ex.toString() );
-        }
+        InputStream in = new ClassPathResource( SIMPLE_ADX_SAMPLE ).getInputStream();
+        
+        ImportSummaries importSummaries =  adxDataService.postData(in, null);
+        
+        assertEquals(importSummaries.getImportSummaries().size(), 2);
+        // only testing this far .. summaries are full of conflicts for now ...
     }
+
 }
