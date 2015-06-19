@@ -731,7 +731,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                     if(eval(variableValue)) {
                         variableValue = true;
                     }
-                    else {    
+                    else {
                         variableValue = false;
                     }
                 }
@@ -741,18 +741,6 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 else{
                     $log.warn("unknown datatype:" + variableType);
                 }
-                 
-                
-                //Make sure that the variableValue does not contain a dollar sign anywhere 
-                //- this would potentially mess up later use of the variable:
-//                if(angular.isDefined(variableValue) 
-//                        && variableValue !== null
-//                        && variableValue.indexOf("$") !== -1 ) {
-//                    variableValue = variableValue.replace(/\\$/,"");
-//                }
-                
-                //TODO:
-                //Also clean away instructions that might be erroneusly evalutated in javascript
 
                 variables[variablename] = {
                                 variableValue:variableValue,
@@ -763,7 +751,6 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             
             TrackerRuleVariableFactory.getProgramRuleVariables(programid).then(function(programVariables){
 
-                // The following section will need a different implementation for event capture:
                 var allEventsSorted = [];
                 var currentEvent = executingEvent;
                 var eventsSortedPerProgramStage = [];
@@ -781,12 +768,6 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 allEventsSorted = orderByFilter(allEventsSorted, '-sortingDate').reverse(); 
                 
                 var allDes = allDataElements;
-//                angular.forEach($scope.programStages, function(programStage){
-//                    angular.forEach(programStage.programStageDataElements, function(dataElement) {
-//                        allDes[dataElement.dataElement.id] = dataElement;
-//                    });
-//                });
-                //End of region that neeeds specific implementation for event capture
                 
                 angular.forEach(programVariables, function(programVariable) {
                     var valueFound = false;
