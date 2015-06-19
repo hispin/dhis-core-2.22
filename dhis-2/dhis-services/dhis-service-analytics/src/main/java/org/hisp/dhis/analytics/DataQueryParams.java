@@ -47,6 +47,7 @@ import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.DATA_DIMS;
 import static org.hisp.dhis.common.NameableObjectUtils.asList;
 import static org.hisp.dhis.common.NameableObjectUtils.getList;
 
@@ -109,8 +110,6 @@ public class DataQueryParams
     public static final int DX_INDEX = 0;
     public static final int CO_IN_INDEX = 1;
     
-    public static final List<String> DATA_DIMS = Lists.newArrayList( 
-        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );
     public static final List<String> FIXED_DIMS = Lists.newArrayList( 
         DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
     private static final List<String> DIMENSION_PERMUTATION_IGNORE_DIMS = Lists.newArrayList( 

@@ -28,7 +28,7 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIMS;
+import static org.hisp.dhis.common.DimensionalObject.DATA_DIMS;
 import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class DimensionalObjectUtils
      */
     public static String toDimension( String identifier )
     {
-        if ( DATA_X_DIMS.contains( identifier ) )
+        if ( DATA_DIMS.contains( identifier ) )
         {
             return DATA_X_DIM_ID;
         }

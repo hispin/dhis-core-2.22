@@ -54,6 +54,7 @@ import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.DATA_DIMS;
 import static org.hisp.dhis.common.DimensionalObjectUtils.toDimension;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifier;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifiers;
@@ -1410,7 +1411,7 @@ public class DefaultAnalyticsService
         
         if ( !dataElements.isEmpty() || !attributes.isEmpty() )
         {
-            DataQueryParams dataSourceParams = params.instance().removeDimensions( DataQueryParams.DATA_DIMS );
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( DATA_DIMS );
             
             dataSourceParams.getDimensions().add( DX_INDEX, new BaseDimensionalObject( 
                 PROGRAM_DATAELEMENT_DIM_ID, DimensionType.PROGRAM_DATAELEMENT, dataElements ) );
@@ -1445,7 +1446,7 @@ public class DefaultAnalyticsService
 
         if ( !dataElements.isEmpty() )
         {
-            DataQueryParams dataSourceParams = params.instance().removeDimensions( DataQueryParams.DATA_DIMS );
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( DATA_DIMS );
             
             dataSourceParams.getDimensions().add( DX_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
@@ -1471,7 +1472,7 @@ public class DefaultAnalyticsService
 
         if ( !dataElements.isEmpty() )
         {
-            DataQueryParams dataSourceParams = params.instance().removeDimensions( DataQueryParams.DATA_DIMS );
+            DataQueryParams dataSourceParams = params.instance().removeDimensions( DATA_DIMS );
             
             dataSourceParams.getDimensions().add( DataQueryParams.DX_INDEX, new BaseDimensionalObject( 
                 DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, dataElements ) );
