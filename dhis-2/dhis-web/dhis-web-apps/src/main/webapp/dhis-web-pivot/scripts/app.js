@@ -2744,8 +2744,7 @@ Ext.onReady( function() {
             tool,
             toolPanel,
             organisationUnit,
-			dimensionIdAvailableStoreMap = {},
-			dimensionIdSelectedStoreMap = {},
+            dimensionPanelMap = {},
 			getDimensionPanel,
 			getDimensionPanels,
 			update,
@@ -2771,7 +2770,9 @@ Ext.onReady( function() {
             setGui,
             viewport,
 
-			accordionPanels = [];
+			accordionPanels = [],
+
+            dimConf = ns.core.conf.finals.dimension;
 
 		ns.app.stores = ns.app.stores || {};
 
@@ -3498,6 +3499,7 @@ Ext.onReady( function() {
 			xtype: 'panel',
 			title: '<div class="ns-panel-title-data">' + NS.i18n.indicators + '</div>',
 			hideCollapseTool: true,
+            dimension: dimConf.indicator.objectName,
 			getDimension: function() {
 				var config = {
 					dimension: dimConf.indicator.objectName,
@@ -3763,6 +3765,7 @@ Ext.onReady( function() {
 			xtype: 'panel',
 			title: '<div class="ns-panel-title-data">' + NS.i18n.data_elements + '</div>',
 			hideCollapseTool: true,
+            dimension: dimConf.dataElement.objectName,
 			getDimension: function() {
 				var config = {
 					dimension: dataElementDetailLevel.getValue(),
@@ -3973,6 +3976,7 @@ Ext.onReady( function() {
 			xtype: 'panel',
 			title: '<div class="ns-panel-title-data">' + NS.i18n.reporting_rates + '</div>',
 			hideCollapseTool: true,
+            dimension: dimConf.dataSet.objectName,
 			getDimension: function() {
 				var config = {
 					dimension: dimConf.dataSet.objectName,
@@ -4421,6 +4425,7 @@ Ext.onReady( function() {
 			xtype: 'panel',
 			title: '<div class="ns-panel-title-period">Periods</div>',
 			hideCollapseTool: true,
+            dimension: dimConf.period.objectName,
 			checkboxes: [],
 			getDimension: function() {
 				var config = {
@@ -4884,6 +4889,7 @@ Ext.onReady( function() {
 			title: '<div class="ns-panel-title-organisationunit">' + NS.i18n.organisation_units + '</div>',
 			bodyStyle: 'padding:1px',
 			hideCollapseTool: true,
+            dimension: dimConf.organisationUnit.objectName,
 			collapsed: false,
 			getDimension: function() {
 				var r = treePanel.getSelectionModel().getSelection(),
@@ -5004,8 +5010,10 @@ Ext.onReady( function() {
 				dataLabel,
 				dataSearch,
 				dataFilter,
+                selectedAll,
 				available,
 				selected,
+                onSelectAll,
 				panel,
 
 				createPanel,
@@ -5014,7 +5022,7 @@ Ext.onReady( function() {
             onSelect = function() {
                 var win = ns.app.layoutWindow;
 
-                if (selectedStore.getRange().length) {
+                if (selectedStore.getRange().length || selectedAll.getValue()) {
                     win.addDimension({id: dimension.id, name: dimension.name});
                 }
                 else if (win.hasDimension(dimension.id)) {
@@ -5227,6 +5235,17 @@ Ext.onReady( function() {
 				}
 			});
 
+            selectedAll = Ext.create('Ext.form.field.Checkbox', {
+                cls: 'ns-checkbox',
+                style: 'margin-left: 2px; margin-right: 5px',
+                boxLabel: 'All',
+                listeners: {
+                    change: function(chb, newVal) {
+                        onSelectAll(newVal);
+                    }
+                }
+            });
+
 			available = Ext.create('Ext.ux.form.MultiSelect', {
 				cls: 'ns-toolbar-multiselect-left',
 				width: (ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding) / 2,
@@ -5303,7 +5322,8 @@ Ext.onReady( function() {
 						xtype: 'label',
 						text: NS.i18n.selected,
 						cls: 'ns-toolbar-multiselect-right-label'
-					}
+					},
+                    selectedAll
 				],
 				listeners: {
 					afterrender: function() {
@@ -5314,8 +5334,20 @@ Ext.onReady( function() {
 				}
 			});
 
-			dimensionIdAvailableStoreMap[dimension.id] = availableStore;
-			dimensionIdSelectedStoreMap[dimension.id] = selectedStore;
+            onSelectAll = function(value) {
+                if (available.boundList && selected.boundList) {
+                    if (value) {
+                        available.boundList.disable();
+                        selected.boundList.disable();
+                    }
+                    else {
+                        available.boundList.enable();
+                        selected.boundList.enable();
+                    }
+                }
+
+                onSelect();
+            };
 
 			//availableStore.on('load', function() {
 				//ns.core.web.multiSelect.filterAvailable(available, selected);
@@ -5325,25 +5357,41 @@ Ext.onReady( function() {
 				xtype: 'panel',
 				title: '<div class="' + iconCls + '">' + dimension.name + '</div>',
 				hideCollapseTool: true,
+                dimension: dimension.id,
 				availableStore: availableStore,
 				selectedStore: selectedStore,
+                selectedAll: selectedAll,
 				getDimension: function() {
-					var config = {
-						dimension: dimension.id,
-						items: []
-					};
+					var config = {};
 
-					selectedStore.each( function(r) {
-						config.items.push({id: r.data.id});
-					});
+                    if (dimension.id) {
+						config.dimension = dimension.id;
+                    }
 
-					return config.items.length ? config : null;
+                    if (selectedStore.getRange().length) {
+                        config.items = [];
+                    
+                        selectedStore.each( function(r) {
+                            config.items.push({id: r.data.id});
+                        });
+                    }
+
+					return config.dimension ? config : null;
 				},
 				onExpand: function() {
+
+                    // load items
 					if (!availableStore.isLoaded) {
 						availableStore.loadPage();
 					}
 
+                    // enable/disable ui
+                    if (selectedAll.getValue()) {
+                        available.boundList.disable();
+                        selected.boundList.disable();
+                    }
+
+                    // set height
 					var h = ns.app.westRegion.hasScrollbar ?
 						ns.core.conf.layout.west_scrollbarheight_accordion_group : ns.core.conf.layout.west_maxheight_accordion_group;
 					accordion.setThisHeight(h);
@@ -5381,7 +5429,7 @@ Ext.onReady( function() {
 			var panels = [];
 
 			for (var i = 0, panel; i < dimensions.length; i++) {
-				panels.push(getDimensionPanel(dimensions[i], iconCls));
+                panels.push(getDimensionPanel(dimensions[i], iconCls));
 			}
 
 			return panels;
@@ -5391,7 +5439,7 @@ Ext.onReady( function() {
 
 		update = function() {
 			var config = ns.core.web.pivot.getLayoutConfig(),
-				layout = ns.core.api.layout.Layout(config);
+                layout = ns.core.api.layout.Layout(config);
 
 			if (!layout) {
 				return;
@@ -5414,9 +5462,18 @@ Ext.onReady( function() {
 					period,
 					organisationUnit
 				],
-				dims = Ext.clone(ns.core.init.dimensions);
+				dims = Ext.clone(ns.core.init.dimensions),
+                dimPanels = getDimensionPanels(dims, 'ns-panel-title-dimension');
 
-				panels = panels.concat(getDimensionPanels(dims, 'ns-panel-title-dimension'));
+                // idPanelMap
+                for (var i = 0, dimPanel; i < dimPanels.length; i++) {
+                    dimPanel = dimPanels[i];
+                    
+                    dimensionPanelMap[dimPanel.dimension] = dimPanel;
+                }
+
+                // panels
+				panels = panels.concat(dimPanels);
 
 				last = panels[panels.length - 1];
 				last.cls = 'ns-accordion-last';
@@ -6429,7 +6486,7 @@ Ext.onReady( function() {
 			// Set gui
 			if (!updateGui) {
 				return;
-			}
+			}                
 
 			// Indicators
 			indicatorSelectedStore.removeAll();
@@ -6482,20 +6539,27 @@ Ext.onReady( function() {
 			ns.core.web.multiSelect.filterAvailable({store: fixedPeriodAvailableStore}, {store: fixedPeriodSelectedStore});
 
 			// Group sets
-			for (var key in dimensionIdSelectedStoreMap) {
-				if (dimensionIdSelectedStoreMap.hasOwnProperty(key)) {
-					var a = dimensionIdAvailableStoreMap[key],
-						s = dimensionIdSelectedStoreMap[key];
+			for (var key in dimensionPanelMap) {
+				if (dimensionPanelMap.hasOwnProperty(key)) {
+					var panel = dimensionPanelMap[key],
+                        a = panel.availableStore,
+						s = panel.selectedStore;
 
-					if (s.getCount() > 0) {
-						a.reset();
-						s.removeAll();
-					}
+                    // reset
+                    a.reset();
+                    s.removeAll();
+                    panel.selectedAll.setValue(false);
 
-					if (recMap[key]) {
-						s.add(recMap[key]);
-						ns.core.web.multiSelect.filterAvailable({store: a}, {store: s});
-					}
+                    // add
+                    if (Ext.Array.contains(xLayout.objectNames, key)) {
+                        if (recMap[key]) {
+                            s.add(recMap[key]);
+                            ns.core.web.multiSelect.filterAvailable({store: a}, {store: s});
+                        }
+                        else {
+                            panel.selectedAll.setValue(true);
+                        }
+                    }
 				}
 			}
 
