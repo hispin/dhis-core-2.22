@@ -556,7 +556,7 @@ public class DefaultAnalyticsService
      */
     private void addDynamicDimensionValues( DataQueryParams params, Grid grid )
     {
-        if ( params.getIndicators().isEmpty() && params.getDataElements().isEmpty() && params.getDataSets().isEmpty() && params.getProgramDataElements().isEmpty() )
+        if ( params.getDataDimensionAndFilterOptions().isEmpty() )
         {
             Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( params.instance() );
 
