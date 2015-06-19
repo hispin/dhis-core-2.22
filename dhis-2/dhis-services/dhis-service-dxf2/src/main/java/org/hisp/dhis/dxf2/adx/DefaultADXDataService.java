@@ -31,43 +31,33 @@ package org.hisp.dhis.dxf2.adx;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.io.PipedOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-
+import javax.xml.stream.XMLOutputFactory;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.amplecode.staxwax.factory.XMLFactory;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.amplecode.staxwax.reader.XMLReader;
-
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
+import javax.xml.stream.XMLStreamWriter;
+import org.hisp.dhis.dxf2.datavalueset.PipedImporter;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.period.Period;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.w3c.dom.Element;
 
 /**
  *
@@ -79,6 +69,17 @@ public class DefaultADXDataService
     @Autowired
     protected DataValueSetService dataValueSetService;
 
+    protected ExecutorService executor;
+
+    public static final int PIPE_BUFFER_SIZE = 4096;
+
+    public static final int TOTAL_MINUTES_TO_WAIT = 5;
+
+    public void setDataValueSetService( DataValueSetService dataValueSetService )
+    {
+        this.dataValueSetService = dataValueSetService;
+    }
+
     @Override
     public void getData( DataExportParams params, OutputStream out )
     {
@@ -89,39 +90,30 @@ public class DefaultADXDataService
     public ImportSummaries postData( InputStream in, ImportOptions importOptions )
         throws IOException
     {
-        XMLReader reader = XMLFactory.getXMLReader( in );
+
+        XMLReader adxReader = XMLFactory.getXMLReader( in );
 
         ImportSummaries importSummaries = new ImportSummaries();
 
-        reader.moveToStartElement( ADXConstants.ROOT, ADXConstants.NAMESPACE );
+        adxReader.moveToStartElement( ADXConstants.ROOT, ADXConstants.NAMESPACE );
 
-        while ( reader.moveToStartElement( ADXConstants.GROUP, ADXConstants.NAMESPACE ) )
+        // TODO: inject this?
+        executor = Executors.newSingleThreadExecutor();
+
+        while ( adxReader.moveToStartElement( ADXConstants.GROUP, ADXConstants.NAMESPACE ) )
         {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder;
-            try
+            try (PipedOutputStream pipeOut = new PipedOutputStream())
             {
-                docBuilder = docFactory.newDocumentBuilder();
-                Document dxf = docBuilder.newDocument();
+                Future<ImportSummary> futureImportSummary;
+                futureImportSummary = executor.submit(new PipedImporter( dataValueSetService, importOptions, pipeOut ) );
+                XMLOutputFactory factory = XMLOutputFactory.newInstance();
+                XMLStreamWriter dxfWriter = factory.createXMLStreamWriter( pipeOut );
+                parseADXGroupToDxf( adxReader, dxfWriter );
+                pipeOut.flush();
 
-                // buld a dxf2 datavalueset document from each adx group
-                parseADXGroupToDxf( reader, dxf );
-                
-                // write the document to String
-                DOMSource source = new DOMSource( dxf );
-                StringWriter writer = new StringWriter();
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                
-                StreamResult result = new StreamResult(writer);
-                transformer.transform( source, result );
-                // create an inputstream for the String
-                InputStream dxfIn = IOUtils.toInputStream( result.toString(), StandardCharsets.UTF_8 );
-                
-                // pass off to the dxf2 datavalueset service
-                importSummaries.addImportSummary( dataValueSetService.saveDataValueSet( dxfIn, importOptions ) );
+                importSummaries.addImportSummary( futureImportSummary.get( TOTAL_MINUTES_TO_WAIT, TimeUnit.SECONDS ) );
             } 
-            catch ( Exception ex )
+            catch ( IOException | XMLStreamException | InterruptedException | ExecutionException | TimeoutException ex )
             {
                 ImportSummary importSummary = new ImportSummary();
                 importSummary.setStatus( ImportStatus.ERROR );
@@ -134,43 +126,46 @@ public class DefaultADXDataService
         return importSummaries;
     }
 
-    protected void parseADXGroupToDxf( XMLReader reader, Document dxf ) throws XMLStreamException
+    protected void parseADXGroupToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter ) throws XMLStreamException
     {
-        Element root = dxf.createElementNS( "http://dhis2.org/schema/dxf/2.0", "dataValueSet" );
-        
-        Map<String, String> groupAttributes = readAttributes( reader );
+        dxfWriter.writeStartDocument( "1.0" );
+        dxfWriter.writeStartElement( "dataValueSet" );
+        dxfWriter.writeDefaultNamespace( "http://dhis2.org/schema/dxf/2.0" );
+
+        Map<String, String> groupAttributes = readAttributes( adxReader );
 
         String periodStr = groupAttributes.get( ADXConstants.PERIOD );
         groupAttributes.remove( ADXConstants.PERIOD );
 
         Period period = ADXPeriod.parse( periodStr );
-        root.setAttribute( "period", period.getIsoDate() );
+        dxfWriter.writeAttribute( "period", period.getIsoDate() );
+        
         // pass through the remaining attributes to dxf
         for ( String attribute : groupAttributes.keySet() )
         {
-            root.setAttribute( attribute, groupAttributes.get( attribute ) );
+            dxfWriter.writeAttribute( attribute, groupAttributes.get( attribute ) );
         }
 
-        dxf.appendChild( root );
-        
-        while ( reader.moveToStartElement( ADXConstants.DATAVALUE, ADXConstants.GROUP ) )
+        while ( adxReader.moveToStartElement( ADXConstants.DATAVALUE, ADXConstants.GROUP ) )
         {
-            parseADXDataValueToDxf( reader, dxf );
+            parseADXDataValueToDxf( adxReader, dxfWriter );
         }
+        dxfWriter.writeEndElement();
+        dxfWriter.writeEndDocument();
     }
 
-    protected void parseADXDataValueToDxf( XMLReader reader, Document dxf ) throws XMLStreamException
+    protected void parseADXDataValueToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter ) throws XMLStreamException
     {
-        Element dv = dxf.createElementNS( "http://dhis2.org/schema/dxf/2.0","dataValue");
+        dxfWriter.writeStartElement( "dataValue" );
 
-        Map<String, String> groupAttributes = readAttributes( reader );
+        Map<String, String> groupAttributes = readAttributes( adxReader );
 
         // pass through the remaining attributes to dxf
         for ( String attribute : groupAttributes.keySet() )
         {
-            dv.setAttribute( attribute, groupAttributes.get( attribute ) );
+            dxfWriter.writeAttribute( attribute, groupAttributes.get( attribute ) );
         }
-        dxf.getFirstChild().appendChild( dv );
+        dxfWriter.writeEndElement();
     }
 
     // TODO  this should really be part of staxwax library
@@ -190,7 +185,7 @@ public class DefaultADXDataService
         {
             attributes.put( reader.getAttributeLocalName( i ), reader.getAttributeValue( i ) );
         }
-        
+
         return attributes;
     }
 }
