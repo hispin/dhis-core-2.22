@@ -318,7 +318,7 @@ Ext.onReady( function() {
 						var records = [];
 
 						if (!Ext.isArray(config.items)) {
-							console.log('Dimension: items is not an array: ' + config);
+							//console.log('Dimension: items is not an array: ' + config);
 							return;
 						}
 
@@ -329,7 +329,7 @@ Ext.onReady( function() {
 						config.items = Ext.Array.clean(records);
 
 						if (!config.items.length) {
-							console.log('Dimension: has no valid items: ' + config);
+							//console.log('Dimension: has no valid items: ' + config);
 							return;
 						}
 					}
@@ -494,9 +494,9 @@ Ext.onReady( function() {
 						return;
 					}
 
-					config.columns = getValidatedDimensionArray(config.columns);
-					config.rows = getValidatedDimensionArray(config.rows);
-					config.filters = getValidatedDimensionArray(config.filters);
+					//config.columns = getValidatedDimensionArray(config.columns);
+					//config.rows = getValidatedDimensionArray(config.rows);
+					//config.filters = getValidatedDimensionArray(config.filters);
 
 					// at least one dimension specified as column or row
 					if (!(config.columns || config.rows)) {
