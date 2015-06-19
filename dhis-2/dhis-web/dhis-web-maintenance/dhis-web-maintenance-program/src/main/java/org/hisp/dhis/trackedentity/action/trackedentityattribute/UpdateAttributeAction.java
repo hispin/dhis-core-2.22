@@ -207,20 +207,22 @@ public class UpdateAttributeAction
         trackedEntityAttribute.setValueType( valueType );
         trackedEntityAttribute.setExpression( expression );
         trackedEntityAttribute.setDisplayOnVisitSchedule( false );
+        trackedEntityAttribute.setOptionSet( null );
 
-        unique = (unique == null) ? false : true;
+        unique = (unique != null);
         trackedEntityAttribute.setUnique( unique );
 
-        inherit = (inherit == null) ? false : true;
+        inherit = (inherit != null);
         trackedEntityAttribute.setInherit( inherit );
 
-        confidential = (confidential == null) ? false : true;
+        confidential = (confidential != null);
         trackedEntityAttribute.setConfidential( confidential );
 
         if ( unique )
         {
             boolean orgunitScope = false;
             boolean programScope = false;
+
             if ( scope != null && (scope == SCOPE_ORGUNIT || scope == SCOPE_PROGRAM_IN_ORGUNIT) )
             {
                 orgunitScope = true;
