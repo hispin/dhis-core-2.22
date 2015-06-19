@@ -157,9 +157,14 @@ public class TrackedEntityAttribute
      */
     public Boolean isValidOptionValue( String value )
     {
-        for ( Option option : this.getOptionSet().getOptions() )
+        if ( !hasOptionSet() || value == null )
         {
-            if ( option.getCode().equals( value ) )
+            return false;
+        }
+        
+        for ( Option option : getOptionSet().getOptions() )
+        {
+            if ( value.equals( option.getCode() ) )
             {
                 return true;
             }
