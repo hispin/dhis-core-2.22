@@ -47,6 +47,6 @@ public class NnullOp extends Op
             return OpStatus.INCLUDE;
         }
 
-        return OpStatus.IGNORE;
+        return OpStatus.EXCLUDE;
     }
 }

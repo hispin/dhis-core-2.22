@@ -38,7 +38,7 @@ public class NLikeOp extends Op
     {
         if ( getValue() == null || object == null )
         {
-            return OpStatus.IGNORE;
+            return OpStatus.EXCLUDE;
         }
 
         if ( String.class.isInstance( object ) )
@@ -49,6 +49,6 @@ public class NLikeOp extends Op
             return (s1 != null && s2.toLowerCase().contains( s1.toLowerCase() )) ? OpStatus.EXCLUDE : OpStatus.INCLUDE;
         }
 
-        return OpStatus.IGNORE;
+        return OpStatus.EXCLUDE;
     }
 }
