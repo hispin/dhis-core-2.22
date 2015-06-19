@@ -310,6 +310,9 @@ public class TableAlteror
         
         executeSql( "drop index index_patientdatavalue" );
         
+        executeSql( "update program p set dataentryformid = (select dataentryformid from trackedentityform tf where tf.programid=p.programid limit 1)" );
+        executeSql( "drop table trackedentityform" );
+        
         updateProgramStageList();
         updateProgramAttributeList();
         
