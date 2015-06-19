@@ -32,9 +32,14 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.concurrent.Callable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.user.CurrentUserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  *
@@ -44,6 +49,8 @@ public class PipedImporter
     implements Callable<ImportSummary>
 {
 
+    private static final Log log = LogFactory.getLog( PipedImporter.class );
+    
     public static final int PIPE_BUFFER_SIZE = 4096;
 
     public static final int TOTAL_MINUTES_TO_WAIT = 5;
@@ -54,18 +61,23 @@ public class PipedImporter
 
     private final ImportOptions importOptions;
 
+    private Authentication authentication;
+
     public PipedImporter( DataValueSetService dataValueSetService, ImportOptions importOptions, PipedOutputStream pipeOut )
         throws IOException
     {
         this.dataValueSetService = dataValueSetService;
         pipeIn = new PipedInputStream( pipeOut, PIPE_BUFFER_SIZE );
         this.importOptions = importOptions;
+        this.authentication = SecurityContextHolder.getContext().getAuthentication();
     }
 
     @Override
     public ImportSummary call() throws Exception
     {
         ImportSummary result = null;
+        SecurityContextHolder.getContext().setAuthentication( authentication );
+        
         try
         {
             result = dataValueSetService.saveDataValueSet( pipeIn, importOptions );
