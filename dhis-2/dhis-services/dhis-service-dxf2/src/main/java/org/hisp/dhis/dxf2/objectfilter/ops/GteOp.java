@@ -41,7 +41,7 @@ public class GteOp extends Op
     {
         if ( getValue() == null || object == null )
         {
-            return OpStatus.IGNORE;
+            return OpStatus.EXCLUDE;
         }
 
         if ( Integer.class.isInstance( object ) )
