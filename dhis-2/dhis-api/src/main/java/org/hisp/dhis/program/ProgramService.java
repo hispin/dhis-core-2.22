@@ -28,10 +28,15 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.hisp.dhis.i18n.I18n;
+import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.trackedentity.TrackedEntity;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
 
@@ -41,7 +46,24 @@ import org.hisp.dhis.validation.ValidationCriteria;
  */
 public interface ProgramService
 {
+
     String ID = ProgramService.class.getName();
+
+    final Pattern INPUT_PATTERN = Pattern.compile( "(<input.*?/>)", Pattern.DOTALL );
+
+    final Pattern DYNAMIC_ATTRIBUTE_PATTERN = Pattern.compile( "attributeid=\"(\\w+)\"" );
+
+    final Pattern PROGRAM_PATTERN = Pattern.compile( "programid=\"(\\w+)\"" );
+
+    final Pattern VALUE_TAG_PATTERN = Pattern.compile( "value=\"(.*?)\"", Pattern.DOTALL );
+
+    final Pattern TITLE_TAG_PATTERN = Pattern.compile( "title=\"(.*?)\"", Pattern.DOTALL );
+
+    final Pattern SUGGESTED_VALUE_PATTERN = Pattern.compile( "suggested=('|\")(\\w*)('|\")" );
+
+    final Pattern CLASS_PATTERN = Pattern.compile( "class=('|\")(\\w*)('|\")" );
+
+    final Pattern STYLE_PATTERN = Pattern.compile( "style=('|\")([\\w|\\d\\:\\;]+)('|\")" );
 
     /**
      * Adds an {@link Program}
@@ -87,7 +109,7 @@ public interface ProgramService
      * Returns all {@link Program}.
      *
      * @return a collection of all Program, or an empty collection if there are
-     * no Programs.
+     *         no Programs.
      */
     List<Program> getAllPrograms();
 
@@ -117,8 +139,8 @@ public interface ProgramService
      * Get {@link Program} by the current user and a certain type
      *
      * @param type The type of program. There are three types, include Multi
-     *             events with registration, Single event with registration and
-     *             Single event without registration.
+     *        events with registration, Single event with registration and
+     *        Single event without registration.
      * @return Program list by a type specified
      */
     List<Program> getProgramsByCurrentUser( int type );
@@ -136,8 +158,8 @@ public interface ProgramService
      * Get {@link Program} by a type
      *
      * @param type The type of program. There are three types, include Multi
-     *             events with registration, Single event with registration and
-     *             Single event without registration
+     *        events with registration, Single event with registration and
+     *        Single event without registration
      * @return Program list by a type specified
      */
     List<Program> getPrograms( int type );
@@ -145,9 +167,9 @@ public interface ProgramService
     /**
      * Get {@link Program} assigned to an {@link OrganisationUnit} by a type
      *
-     * @param type    The type of program. There are three types, include Multi
-     *                events with registration, Single event with registration and
-     *                Single event without registration
+     * @param type The type of program. There are three types, include Multi
+     *        events with registration, Single event with registration and
+     *        Single event without registration
      * @param orgunit Where programs assigned
      * @return Program list by a type specified
      */
@@ -187,10 +209,10 @@ public interface ProgramService
      * Returns {@link Program} list with paging
      *
      * @param name Keyword for searching by name
-     * @param min  First result
-     * @param max  Maximum results
-     * @return a List of all Program, or an empty collection if
-     * there are no Program.
+     * @param min First result
+     * @param max Maximum results
+     * @return a List of all Program, or an empty collection if there are no
+     *         Program.
      */
     List<Program> getProgramBetweenByName( String name, int min, int max );
 
@@ -204,8 +226,7 @@ public interface ProgramService
      *
      * @param min First result
      * @param max Maximum results
-     * @return a List of all Program, or an empty List if
-     * there are no Program.
+     * @return a List of all Program, or an empty List if there are no Program.
      */
     List<Program> getProgramsBetween( int min, int max );
 
@@ -220,9 +241,22 @@ public interface ProgramService
      * Get {@link Program} by the current user and a certain type
      *
      * @param type The type of program. There are three types, include Multi
-     *             events with registration, Single event with registration and
-     *             Single event without registration.
+     *        events with registration, Single event with registration and
+     *        Single event without registration.
      * @return Program list by a type specified
      */
     List<Program> getByCurrentUser( int type );
+
+    /**
+     * @param htmlCode
+     * @param program
+     * @param healthWorkers
+     * @param instance
+     * @param programInstance
+     * @param i18n
+     * @param format
+     * @return
+     */
+    String prepareDataEntryFormForAdd( String htmlCode, Program program, Collection<User> healthWorkers,
+        TrackedEntityInstance instance, ProgramInstance programInstance, I18n i18n, I18nFormat format );
 }

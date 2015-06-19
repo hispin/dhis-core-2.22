@@ -348,12 +348,12 @@ function insertElement( type )
 
 }
 
-function deleteRegistrationForm( id, name )
+function deleteProgramEntryForm( id, name )
 {
 	var result = window.confirm( i18n_confirm_delete + '\n\n' + name );
 	if ( result )
 	{
-		window.location.href = 'delRegistrationEntryFormAction.action?id=' + id;
+		window.location.href = 'removeProgramEntryForm.action?programId=' + id;
 	}
 }
 
@@ -370,10 +370,10 @@ function insertImage() {
 
 function setAutoSaveRegistrationSetting(_autoSave)
 {
-	jQuery.postJSON("setAutoSaveTrackedEntityFormSetting.action", {autoSave:_autoSave}, function(json) {
+	jQuery.postJSON("setAutoSaveProgramEntryFormSetting.action", {autoSave:_autoSave}, function(json) {
 		autoSave = _autoSave;
 		if (_autoSave) {
-			window.setTimeout( "validateTrackedEntityFormTimeout( false );", 6000 );
+			window.setTimeout( "validateProgramEntryFormTimeout( false );", 6000 );
 		}
 		else{
 			window.clearTimeout(timeOut);
@@ -412,7 +412,7 @@ function validateDataEntryForm(form)
 				}
 				else
 				{
-					autoSaveTrackedEntityForm();
+					autoSaveProgramEntryForm();
 				}
 			}
 			else if ( json.response = 'error' )
@@ -423,9 +423,9 @@ function validateDataEntryForm(form)
 	}
 }
 
-function autoSaveTrackedEntityForm()
+function autoSaveProgramEntryForm()
 {
-	$.postUTF8( 'autoSaveTrackedEntityForm.action',
+	$.postUTF8( 'autoSaveProgramEntryForm.action',
 	{
 		name: getFieldValue('name'),
 		designTextarea: jQuery("#designTextarea").ckeditor().editor.getData(),

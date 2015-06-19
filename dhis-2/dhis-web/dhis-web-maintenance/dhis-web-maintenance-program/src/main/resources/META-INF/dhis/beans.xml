@@ -479,35 +479,23 @@
     <property name="userSettingService" ref="org.hisp.dhis.user.UserSettingService" />
   </bean>
 
-  <!-- TrackedEntityForm -->
+  <!-- Program Data Entry Form -->
 
   <bean
-    id="org.hisp.dhis.trackedentity.action.dataentryform.GetTrackedEntityFormListAction"
-    class="org.hisp.dhis.trackedentity.action.dataentryform.GetTrackedEntityFormListAction"
+    id="org.hisp.dhis.trackedentity.action.dataentryform.RemoveProgramEntryFormAction"
+    class="org.hisp.dhis.trackedentity.action.dataentryform.RemoveProgramEntryFormAction"
     scope="prototype">
-    <property name="formService">
-      <ref bean="org.hisp.dhis.trackedentity.TrackedEntityFormService" />
-    </property>
     <property name="programService">
       <ref bean="org.hisp.dhis.program.ProgramService" />
+    </property>
+    <property name="dataEntryFormService">
+      <ref bean="org.hisp.dhis.dataentryform.DataEntryFormService" />
     </property>
   </bean>
 
   <bean
-    id="org.hisp.dhis.trackedentity.action.dataentryform.RemoveTrackedEntityFormAction"
-    class="org.hisp.dhis.trackedentity.action.dataentryform.RemoveTrackedEntityFormAction"
-    scope="prototype">
-    <property name="formService">
-      <ref bean="org.hisp.dhis.trackedentity.TrackedEntityFormService" />
-    </property>
-    <property name="programService">
-      <ref bean="org.hisp.dhis.program.ProgramService" />
-    </property>
-  </bean>
-
-  <bean
-    id="org.hisp.dhis.trackedentity.action.dataentryform.SaveTrackedEntityFormAction"
-    class="org.hisp.dhis.trackedentity.action.dataentryform.SaveTrackedEntityFormAction"
+    id="org.hisp.dhis.trackedentity.action.dataentryform.SaveProgramEntryFormAction"
+    class="org.hisp.dhis.trackedentity.action.dataentryform.SaveProgramEntryFormAction"
     scope="prototype">
     <property name="dataEntryFormService">
       <ref bean="org.hisp.dhis.dataentryform.DataEntryFormService" />
@@ -515,14 +503,11 @@
     <property name="programService">
       <ref bean="org.hisp.dhis.program.ProgramService" />
     </property>
-    <property name="formService">
-      <ref bean="org.hisp.dhis.trackedentity.TrackedEntityFormService" />
-    </property>
   </bean>
 
   <bean
-    id="org.hisp.dhis.trackedentity.action.dataentryform.ShowTrackedEntityFormAction"
-    class="org.hisp.dhis.trackedentity.action.dataentryform.ShowTrackedEntityFormAction"
+    id="org.hisp.dhis.trackedentity.action.dataentryform.ShowProgramEntryFormAction"
+    class="org.hisp.dhis.trackedentity.action.dataentryform.ShowProgramEntryFormAction"
     scope="prototype">
     <property name="dataEntryFormService">
       <ref bean="org.hisp.dhis.dataentryform.DataEntryFormService" />
@@ -530,17 +515,11 @@
   </bean>
 
   <bean
-    id="org.hisp.dhis.trackedentity.action.dataentryform.ViewTrackedEntityFormAction"
-    class="org.hisp.dhis.trackedentity.action.dataentryform.ViewTrackedEntityFormAction"
+    id="org.hisp.dhis.trackedentity.action.dataentryform.ViewProgramEntryFormAction"
+    class="org.hisp.dhis.trackedentity.action.dataentryform.ViewProgramEntryFormAction"
     scope="prototype">
     <property name="programService">
       <ref bean="org.hisp.dhis.program.ProgramService" />
-    </property>
-    <property name="attributeService">
-      <ref bean="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
-    </property>
-    <property name="formService">
-      <ref bean="org.hisp.dhis.trackedentity.TrackedEntityFormService" />
     </property>
     <property name="systemSettingManager">
       <ref bean="org.hisp.dhis.setting.SystemSettingManager" />
@@ -551,8 +530,8 @@
   </bean>
 
   <bean
-    id="org.hisp.dhis.trackedentity.action.dataentryform.SetAutoSaveTrackedEntityFormSettingAction"
-    class="org.hisp.dhis.trackedentity.action.dataentryform.SetAutoSaveTrackedEntityFormSettingAction"
+    id="org.hisp.dhis.trackedentity.action.dataentryform.SetAutoSaveProgramEntryFormSettingAction"
+    class="org.hisp.dhis.trackedentity.action.dataentryform.SetAutoSaveProgramEntryFormSettingAction"
     scope="prototype">
     <property name="userSettingService" ref="org.hisp.dhis.user.UserSettingService" />
   </bean>

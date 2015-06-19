@@ -28,62 +28,46 @@ package org.hisp.dhis.trackedentity.action.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.trackedentity.TrackedEntityForm;
-import org.hisp.dhis.trackedentity.TrackedEntityFormService;
+import org.hisp.dhis.dataentryform.DataEntryForm;
+import org.hisp.dhis.dataentryform.DataEntryFormService;
 
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
  * 
- * @version GetTrackedEntityFormListAction.java 11:06:37 AM Jan 31, 2013 $
+ * @version ShowProgramEntryFormAction.java 10:35:08 AM Jan 31, 2013 $
  */
-public class GetTrackedEntityFormListAction
+public class ShowProgramEntryFormAction
     implements Action
 {
     // -------------------------------------------------------------------------
     // Dependency
     // -------------------------------------------------------------------------
 
-    private TrackedEntityFormService formService;
+    private DataEntryFormService dataEntryFormService;
 
-    public void setFormService( TrackedEntityFormService formService )
+    public void setDataEntryFormService( DataEntryFormService dataEntryFormService )
     {
-        this.formService = formService;
-    }
-
-    private ProgramService programService;
-
-    public void setProgramService( ProgramService programService )
-    {
-        this.programService = programService;
+        this.dataEntryFormService = dataEntryFormService;
     }
 
     // -------------------------------------------------------------------------
     // Getters & Setters
     // -------------------------------------------------------------------------
 
-    private Map<Integer, TrackedEntityForm> mapRegistrationForms = new HashMap<>();
+    private Integer dataEntryFormId;
 
-    public Map<Integer, TrackedEntityForm> getMapRegistrationForms()
+    public void setDataEntryFormId( Integer dataEntryFormId )
     {
-        return mapRegistrationForms;
+        this.dataEntryFormId = dataEntryFormId;
     }
 
-    private List<Program> programs;
+    private String dataEntryFormCode;
 
-    public List<Program> getPrograms()
+    public String getDataEntryFormCode()
     {
-        return programs;
+        return dataEntryFormCode;
     }
 
     // -------------------------------------------------------------------------
@@ -94,24 +78,15 @@ public class GetTrackedEntityFormListAction
     public String execute()
         throws Exception
     {
-        Collection<TrackedEntityForm> registrationForms = formService
-            .getAllTrackedEntityForms();
-
-        for ( TrackedEntityForm registrationForm : registrationForms )
+        if ( dataEntryFormId != null )
         {
-            if ( registrationForm.getProgram() != null )
+            DataEntryForm dataEntryForm = dataEntryFormService.getDataEntryForm( dataEntryFormId );
+
+            if ( dataEntryForm != null )
             {
-                mapRegistrationForms.put( registrationForm.getProgram().getId(), registrationForm );
-            }
-            else
-            {
-                mapRegistrationForms.put( 0, registrationForm );
+                dataEntryFormCode = dataEntryForm.getHtmlCode();
             }
         }
-
-        programs = programService.getAllPrograms();
-
-        Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );
 
         return SUCCESS;
     }

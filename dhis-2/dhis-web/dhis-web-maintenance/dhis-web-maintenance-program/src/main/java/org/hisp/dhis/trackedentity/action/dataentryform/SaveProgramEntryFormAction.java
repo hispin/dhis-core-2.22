@@ -28,30 +28,31 @@ package org.hisp.dhis.trackedentity.action.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang.StringUtils;
+import org.hisp.dhis.dataentryform.DataEntryForm;
+import org.hisp.dhis.dataentryform.DataEntryFormService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.trackedentity.TrackedEntityForm;
-import org.hisp.dhis.trackedentity.TrackedEntityFormService;
 
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
  * 
- * @version RemoveTrackedEntityFormAction.java 10:13:10 AM Jan 31, 2013 $
+ * @version SaveProgramEntryFormAction.java 10:26:09 AM Jan 31, 2013 $
  */
-public class RemoveTrackedEntityFormAction
+public class SaveProgramEntryFormAction
     implements Action
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private TrackedEntityFormService formService;
+    private DataEntryFormService dataEntryFormService;
 
-    public void setFormService( TrackedEntityFormService formService )
+    public void setDataEntryFormService( DataEntryFormService dataEntryFormService )
     {
-        this.formService = formService;
+        this.dataEntryFormService = dataEntryFormService;
     }
 
     private ProgramService programService;
@@ -62,14 +63,35 @@ public class RemoveTrackedEntityFormAction
     }
 
     // -------------------------------------------------------------------------
-    // Getters & setters
+    // Getters & Setters
     // -------------------------------------------------------------------------
+    
+    private String name;
 
-    private Integer id;
-
-    public void setId( Integer id )
+    public void setName( String name )
     {
-        this.id = id;
+        this.name = name;
+    }
+
+    private String designTextarea;
+
+    public void setDesignTextarea( String designTextarea )
+    {
+        this.designTextarea = designTextarea;
+    }
+
+    private Integer programId;
+
+    public void setProgramId( Integer programId )
+    {
+        this.programId = programId;
+    }
+
+    private String message;
+
+    public String getMessage()
+    {
+        return message;
     }
 
     // -------------------------------------------------------------------------
@@ -80,26 +102,34 @@ public class RemoveTrackedEntityFormAction
     public String execute()
         throws Exception
     {
-        TrackedEntityForm registrationForm = null;
+        name = StringUtils.trimToNull( name );
+        designTextarea = StringUtils.trimToNull( designTextarea );
+        
+        Program program = programService.getProgram( programId );
+        DataEntryForm dataEntryForm = program.getDataEntryForm();
 
-        if ( id != null )
+        // ---------------------------------------------------------------------
+        // Save data-entry-form
+        // ---------------------------------------------------------------------
+        
+        if ( dataEntryForm == null )
         {
-            Program program = programService.getProgram( id );
-
-            registrationForm = formService.getFormsWithProgram( program );
+            dataEntryForm = new DataEntryForm( name, designTextarea );
+            program.setDataEntryForm( dataEntryForm );
             
-            program.increaseVersion();
+            programService.updateProgram( program );
         }
         else
         {
-            registrationForm = formService.getFormsWithoutProgram();
+            dataEntryForm.setName( name );
+            dataEntryForm.setHtmlCode( designTextarea );
+            dataEntryFormService.updateDataEntryForm( dataEntryForm );
         }
 
-        if ( registrationForm != null )
-        {
-           formService.deleteTrackedEntityForm( registrationForm );
-        }
-        
+        Integer dataEntryFormId = dataEntryFormService.getDataEntryFormByName( name ).getId();
+
+        message = dataEntryFormId + "";
+
         return SUCCESS;
     }
 }
