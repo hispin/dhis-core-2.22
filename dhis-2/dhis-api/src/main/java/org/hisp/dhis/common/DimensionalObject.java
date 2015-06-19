@@ -72,8 +72,8 @@ public interface DimensionalObject
     final String LONGITUDE_DIM_ID = "longitude";
     final String LATITUDE_DIM_ID = "latitude";
 
-    final List<String> DATA_X_DIMS = Arrays.asList( 
-        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, DATAELEMENT_OPERAND_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
+    final List<String> DATA_DIMS = Arrays.asList( 
+        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
     final List<String> STATIC_DIMS = Arrays.asList( 
         LONGITUDE_DIM_ID, LATITUDE_DIM_ID );
     
