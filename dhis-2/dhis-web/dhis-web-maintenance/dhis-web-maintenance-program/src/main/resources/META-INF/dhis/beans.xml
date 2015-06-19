@@ -482,18 +482,6 @@
   <!-- Program Data Entry Form -->
 
   <bean
-    id="org.hisp.dhis.trackedentity.action.dataentryform.RemoveProgramEntryFormAction"
-    class="org.hisp.dhis.trackedentity.action.dataentryform.RemoveProgramEntryFormAction"
-    scope="prototype">
-    <property name="programService">
-      <ref bean="org.hisp.dhis.program.ProgramService" />
-    </property>
-    <property name="dataEntryFormService">
-      <ref bean="org.hisp.dhis.dataentryform.DataEntryFormService" />
-    </property>
-  </bean>
-
-  <bean
     id="org.hisp.dhis.trackedentity.action.dataentryform.SaveProgramEntryFormAction"
     class="org.hisp.dhis.trackedentity.action.dataentryform.SaveProgramEntryFormAction"
     scope="prototype">
