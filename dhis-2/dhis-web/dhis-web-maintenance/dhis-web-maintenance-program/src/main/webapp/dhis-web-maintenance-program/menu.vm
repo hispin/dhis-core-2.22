@@ -4,7 +4,6 @@
 	#if( $security.canView( "trackedEntityAttributeGroup" ) )<li><a href="attributeGroup.action">$i18n.getString( "tracked_entity_attribute_group" )</a></li>#end
 	#if( $security.canView( "relationShipType" ) )<li><a href="relationshipType.action">$i18n.getString( "relationship_type" )</a></li>#end
 	#if( $security.canView( "trackedEntity" ) )<li><a href="trackedEntity.action">$i18n.getString( "tracked_entity" )</a></li>#end
-	#if( $security.canView( "trackedEntityForm" ) )<li><a href="trackedEntityForm.action">$i18n.getString( "tracked_entity_form" )</a></li>#end
 </ul>
 
 <h2>$i18n.getString( "programs" )</h2>

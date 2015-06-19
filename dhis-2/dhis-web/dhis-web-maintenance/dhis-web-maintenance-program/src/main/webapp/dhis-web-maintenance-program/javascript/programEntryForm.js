@@ -6,16 +6,16 @@ $(function() {
 });
 
 function defineForm( context ){
-	window.location.href='viewTrackedEntityForm.action?programId=' + context.id;
+	window.location.href='viewProgramEntryForm.action?programId=' + context.id;
 }
 
-function removeTrackedEntityForm( context )
+function removeProgramEntryForm( context )
 {
 	var result = window.confirm( i18n_confirm_delete + "\n\n" + context.name );
     
     if ( result )
     {
-		jQuery.postJSON("removeTrackedEntityForm.action", {id:context.id}
+		jQuery.postJSON("removeProgramEntryForm.action", {id:context.id}
 		,function(json) {});
 	}
 }

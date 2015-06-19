@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.program.Program;
@@ -51,8 +52,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeGroup;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
-import org.hisp.dhis.trackedentity.TrackedEntityForm;
-import org.hisp.dhis.trackedentity.TrackedEntityFormService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
@@ -94,13 +93,6 @@ public class GetTrackedEntityInstanceAction
     public void setRelationshipTypeService( RelationshipTypeService relationshipTypeService )
     {
         this.relationshipTypeService = relationshipTypeService;
-    }
-
-    private TrackedEntityFormService trackedEntityFormService;
-
-    public void setTrackedEntityFormService( TrackedEntityFormService trackedEntityFormService )
-    {
-        this.trackedEntityFormService = trackedEntityFormService;
     }
 
     private TrackedEntityAttributeGroupService attributeGroupService;
@@ -211,10 +203,6 @@ public class GetTrackedEntityInstanceAction
         return healthWorkers;
     }
 
-    public void setTrackedEntityForm( TrackedEntityForm trackedEntityForm )
-    {
-        this.trackedEntityForm = trackedEntityForm;
-    }
 
     private String programId;
 
@@ -230,13 +218,18 @@ public class GetTrackedEntityInstanceAction
         return attributesMap;
     }
 
-    private TrackedEntityForm trackedEntityForm;
+    private DataEntryForm trackedEntityForm;
 
-    public TrackedEntityForm getTrackedEntityForm()
+    public DataEntryForm getTrackedEntityForm()
     {
         return trackedEntityForm;
     }
 
+    public void setTrackedEntityForm( DataEntryForm trackedEntityForm )
+    {
+        this.trackedEntityForm = trackedEntityForm;
+    }
+    
     private String customRegistrationForm;
 
     public String getCustomRegistrationForm()
@@ -292,21 +285,10 @@ public class GetTrackedEntityInstanceAction
         healthWorkers = entityInstance.getOrganisationUnit().getUsers();
         Program program = null;
 
-        if ( programId == null || programId.isEmpty() )
-        {
-            trackedEntityForm = trackedEntityFormService.getFormsWithoutProgram();
-
-            if ( trackedEntityForm != null && trackedEntityForm.getDataEntryForm() != null )
-            {
-                customRegistrationForm = trackedEntityFormService.prepareDataEntryFormForAdd( trackedEntityForm
-                    .getDataEntryForm().getHtmlCode(), trackedEntityForm.getProgram(), healthWorkers, entityInstance,
-                    null, i18n, format );
-            }
-        }
-        else
+        if ( programId != null )
         {
             program = programService.getProgram( programId );
-            trackedEntityForm = trackedEntityFormService.getFormsWithProgram( program );
+            trackedEntityForm = program.getDataEntryForm();
 
             Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( entityInstance,
                 program, ProgramInstance.STATUS_ACTIVE );
@@ -317,10 +299,9 @@ public class GetTrackedEntityInstanceAction
             {
                 programInstance = programInstances.iterator().next();
             }
-            if ( trackedEntityForm != null && trackedEntityForm.getDataEntryForm() != null )
+            if ( trackedEntityForm != null )
             {
-                customRegistrationForm = trackedEntityFormService.prepareDataEntryFormForAdd( trackedEntityForm
-                    .getDataEntryForm().getHtmlCode(), trackedEntityForm.getProgram(), healthWorkers, entityInstance,
+                customRegistrationForm = programService.prepareDataEntryFormForAdd( trackedEntityForm.getHtmlCode(), program, healthWorkers, entityInstance,
                     programInstance, i18n, format );
             }
         }

@@ -91,6 +91,9 @@
     <many-to-one name="trackedEntity" class="org.hisp.dhis.trackedentity.TrackedEntity"
       column="trackedentityid" foreign-key="fk_program_trackedentityid" />
 
+    <many-to-one name="dataEntryForm" class="org.hisp.dhis.dataentryform.DataEntryForm"
+      column="dataentryformid" foreign-key="fk_program_dataentryformid" cascade="all" />
+    
     <!-- Dynamic attribute values -->
 
     <set name="attributeValues" table="programattributevalues">

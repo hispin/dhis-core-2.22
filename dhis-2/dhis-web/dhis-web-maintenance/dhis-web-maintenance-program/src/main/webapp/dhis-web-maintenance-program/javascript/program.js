@@ -41,6 +41,10 @@ function programReminder( context ){
   location.href = 'programReminder.action?id=' + context.id;
 }
 
+function viewProgramEntryForm( context ){
+  location.href = 'viewProgramEntryForm.action?programId=' + context.id;
+}
+
 function showProgramDetails( context ) {
   jQuery.getJSON("getProgram.action", {
     id: context.id

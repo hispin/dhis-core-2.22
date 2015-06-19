@@ -349,25 +349,6 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<!-- TrackedEntityForm -->
-
-	<bean id="org.hisp.dhis.trackedentity.TrackedEntityFormService"
-		class="org.hisp.dhis.trackedentity.DefaultTrackedEntityFormService">
-		<property name="formStore"
-			ref="org.hisp.dhis.trackedentity.TrackedEntityFormStore" />
-		<property name="attributeService"
-			ref="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
-		<property name="attributeValueService"
-			ref="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService" />
-	</bean>
-
-	<bean id="org.hisp.dhis.trackedentity.TrackedEntityFormStore"
-		class="org.hisp.dhis.trackedentity.hibernate.HibernateTrackedEntityFormStore">
-		<property name="clazz"
-			value="org.hisp.dhis.trackedentity.TrackedEntityForm" />
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
 	<!-- TrackedEntityInstanceReminder -->
 
 	<bean
@@ -415,7 +396,6 @@
 				<value>trackedentityattribute</value>
 				<value>trackedentityattributegroup</value>
 				<value>trackedentityinstancereminder</value>
-				<value>trackedentityform</value>
 				<value>program</value>
 				<value>programindicator</value>
 				<value>programstage</value>
@@ -546,13 +526,6 @@
 	</bean>
 	
 	<bean
-		id="org.hisp.dhis.trackedentity.TrackedEntityFormDeletionHandler"
-		class="org.hisp.dhis.trackedentity.TrackedEntityFormDeletionHandler">
-		<property name="formService"
-			ref="org.hisp.dhis.trackedentity.TrackedEntityFormService" />
-	</bean>
-	
-	<bean
 		id="org.hisp.dhis.eventchart.EventChartDeletionHandler"
 		class="org.hisp.dhis.eventchart.EventChartDeletionHandler">
 	</bean>
@@ -588,7 +561,6 @@
 					<ref bean="org.hisp.dhis.programrule.ProgramRuleDeletionHandler" />
 					<ref bean="org.hisp.dhis.programrule.ProgramRuleVariableDeletionHandler" />
 					<ref bean="org.hisp.dhis.programrule.ProgramRuleActionDeletionHandler" />
-					<ref bean="org.hisp.dhis.trackedentity.TrackedEntityFormDeletionHandler" />
 					<ref bean="org.hisp.dhis.eventchart.EventChartDeletionHandler" />
 					<ref bean="org.hisp.dhis.eventreport.EventReportDeletionHandler" />
 				</list>
@@ -655,9 +627,6 @@
 				method="intercept" />
 			<aop:before
 				pointcut="execution( * org.hisp.dhis.caseaggregation.CaseAggregationConditionService.delete*(..) )"
-				method="intercept" />
-			<aop:before
-				pointcut="execution( * org.hisp.dhis.trackedentity.TrackedEntityFormService.delete*(..) )"
 				method="intercept" />
 			<aop:before
 				pointcut="execution( * org.hisp.dhis.eventchart.EventChartService.delete*(..) )"
