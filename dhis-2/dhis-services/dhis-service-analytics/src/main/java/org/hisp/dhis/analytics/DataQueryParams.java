@@ -761,6 +761,23 @@ public class DataQueryParams
     }
 
     /**
+     * Retrieves the options for all data-related (dx) dimensions and filters.
+     * Returns an empty list if not present.
+     */
+    public List<NameableObject> getDataDimensionAndFilterOptions()
+    {
+        List<NameableObject> options = new ArrayList<>();
+        
+        for ( String dim : DATA_DIMS )
+        {
+            options.addAll( getDimensionOptions( dim ) );
+            options.addAll( getFilterOptions( dim ) );
+        }
+        
+        return options;
+    }
+    
+    /**
      * Retrieves the options for the given dimension identifier. Returns an empty
      * list if the dimension is not present.
      */
