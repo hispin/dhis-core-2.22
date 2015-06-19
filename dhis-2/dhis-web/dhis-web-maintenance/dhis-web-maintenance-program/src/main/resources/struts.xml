@@ -547,37 +547,28 @@
 
     <!-- Tracked Entity Form -->
 
-    <action name="trackedEntityForm"
-      class="org.hisp.dhis.trackedentity.action.dataentryform.GetTrackedEntityFormListAction">
+    <action name="viewProgramEntryForm"
+      class="org.hisp.dhis.trackedentity.action.dataentryform.ViewProgramEntryFormAction">
       <result name="success" type="velocity">/main.vm</result>
-      <param name="page">/dhis-web-maintenance-program/trackedEntityForm.vm</param>
-      <param name="menu">/dhis-web-maintenance-program/menu.vm</param>
-      <param name="javascripts">javascript/trackedEntityForm.js</param>
-      <param name="requiredAuthorities">F_TRACKED_ENTITY_FORM_MANAGEMENT</param>
-    </action>
-
-    <action name="viewTrackedEntityForm"
-      class="org.hisp.dhis.trackedentity.action.dataentryform.ViewTrackedEntityFormAction">
-      <result name="success" type="velocity">/main.vm</result>
-      <param name="page">/dhis-web-maintenance-program/viewTrackedEntityForm.vm</param>
+      <param name="page">/dhis-web-maintenance-program/viewProgramEntryForm.vm</param>
       <param name="javascripts">
         ../dhis-web-commons/ckeditor/ckeditor.js,
         ../dhis-web-commons/ckeditor/adapters/jquery.js,
-        javascript/viewTrackedEntityForm.js
+        javascript/viewProgramEntryForm.js
       </param>
       <param name="stylesheets">style/basic.css</param>
       <param name="requiredAuthorities">F_TRACKED_ENTITY_FORM_ADD</param>
     </action>
 
-    <action name="saveTrackedEntityForm"
-      class="org.hisp.dhis.trackedentity.action.dataentryform.SaveTrackedEntityFormAction">
-      <result name="success" type="redirect">trackedEntityForm.action
+    <action name="saveProgramEntryForm"
+      class="org.hisp.dhis.trackedentity.action.dataentryform.SaveProgramEntryFormAction">
+      <result name="success" type="redirect">program.action
       </result>
       <param name="requiredAuthorities">F_TRACKED_ENTITY_FORM_ADD</param>
     </action>
 
-    <action name="autoSaveTrackedEntityForm"
-      class="org.hisp.dhis.trackedentity.action.dataentryform.SaveTrackedEntityFormAction">
+    <action name="autoSaveProgramEntryForm"
+      class="org.hisp.dhis.trackedentity.action.dataentryform.SaveProgramEntryFormAction">
       <result name="success" type="velocity-json">
         /dhis-web-commons/ajax/jsonResponseSuccess.vm
       </result>
@@ -591,23 +582,23 @@
       </result>
     </action>
 
-    <action name="removeTrackedEntityForm"
-      class="org.hisp.dhis.trackedentity.action.dataentryform.RemoveTrackedEntityFormAction">
-      <result name="success" type="redirect">trackedEntityForm.action
+    <action name="removeProgramEntryForm"
+      class="org.hisp.dhis.trackedentity.action.dataentryform.RemoveProgramEntryFormAction">
+      <result name="success" type="redirect">program.action
       </result>
       <param name="requiredAuthorities">F_TRACKED_ENTITY_FORM_DELETE</param>
     </action>
 
-    <action name="showTrackedEntityForm"
-      class="org.hisp.dhis.trackedentity.action.dataentryform.ShowTrackedEntityFormAction">
+    <action name="showProgramEntryForm"
+      class="org.hisp.dhis.trackedentity.action.dataentryform.ShowProgramEntryFormAction">
       <result name="success" type="velocity">
         /dhis-web-maintenance-program/dataEntryFormCode.vm
       </result>
       <param name="requiredAuthorities">F_TRACKED_ENTITY_FORM_ADD</param>
     </action>
 
-    <action name="setAutoSaveTrackedEntityFormSetting"
-      class="org.hisp.dhis.trackedentity.action.dataentryform.SetAutoSaveTrackedEntityFormSettingAction">
+    <action name="setAutoSaveProgramEntryFormSetting"
+      class="org.hisp.dhis.trackedentity.action.dataentryform.SetAutoSaveProgramEntryFormSettingAction">
       <result name="success" type="velocity-json">
         ../dhis-web-commons/ajax/jsonResponseSuccess.vm
       </result>

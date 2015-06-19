@@ -184,8 +184,6 @@
 		<property name="selectionManager"
 			ref="org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager" />
 			<property name="programService" ref="org.hisp.dhis.program.ProgramService" />
-		<property name="trackedEntityFormService"
-			ref="org.hisp.dhis.trackedentity.TrackedEntityFormService" />
 		<property name="programDataEntryService"
 			ref="org.hisp.dhis.program.ProgramDataEntryService" />
 		<property name="attributeService"
@@ -366,8 +364,6 @@
 		</property>
 		<property name="relationshipTypeService"
 			ref="org.hisp.dhis.relationship.RelationshipTypeService" />
-		<property name="trackedEntityFormService"
-			ref="org.hisp.dhis.trackedentity.TrackedEntityFormService" />
 		<property name="attributeGroupService">
 			<ref bean="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupService" />
 		</property>
@@ -413,9 +409,6 @@
 		</property>
 		<property name="programService">
 			<ref bean="org.hisp.dhis.program.ProgramService" />
-		</property>
-		<property name="trackedEntityFormService">
-			<ref bean="org.hisp.dhis.trackedentity.TrackedEntityFormService" />
 		</property>
 		<property name="attributeGroupService">
 			<ref bean="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupService" />

@@ -33,14 +33,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
-import org.hisp.dhis.trackedentity.TrackedEntityForm;
-import org.hisp.dhis.trackedentity.TrackedEntityFormService;
 import org.hisp.dhis.user.UserSettingService;
 
 import com.opensymphony.xwork2.Action;
@@ -48,9 +47,9 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author Chau Thu Tran
  * 
- * @version ViewTrackedEntityFormAction.java 10:35:08 AM Jan 31, 2013 $
+ * @version ViewProgramEntryFormAction.java 10:35:08 AM Jan 31, 2013 $
  */
-public class ViewTrackedEntityFormAction
+public class ViewProgramEntryFormAction
     implements Action
 {
     // -------------------------------------------------------------------------
@@ -63,21 +62,7 @@ public class ViewTrackedEntityFormAction
     {
         this.programService = programService;
     }
-
-    private TrackedEntityAttributeService attributeService;
-
-    public void setAttributeService( TrackedEntityAttributeService attributeService )
-    {
-        this.attributeService = attributeService;
-    }
-
-    private TrackedEntityFormService formService;
-
-    public void setFormService( TrackedEntityFormService formService )
-    {
-        this.formService = formService;
-    }
-
+    
     private SystemSettingManager systemSettingManager;
 
     public void setSystemSettingManager( SystemSettingManager systemSettingManager )
@@ -117,9 +102,9 @@ public class ViewTrackedEntityFormAction
         return programAttributes;
     }
 
-    private TrackedEntityForm registrationForm;
+    private DataEntryForm registrationForm;
 
-    public TrackedEntityForm getRegistrationForm()
+    public DataEntryForm getRegistrationForm()
     {
         return registrationForm;
     }
@@ -157,23 +142,9 @@ public class ViewTrackedEntityFormAction
 
         programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
 
-        if ( programId == null )
-        {
-            registrationForm = formService.getFormsWithoutProgram();
-
-            attributes = attributeService.getAllTrackedEntityAttributes();
-
-            for ( Program program : programs )
-            {
-                attributes.removeAll( program.getProgramAttributes() );
-            }
-        }
-        else
-        {
-            program = programService.getProgram( programId );
-            programAttributes = program.getProgramAttributes();
-            registrationForm = formService.getFormsWithProgram( program );
-        }
+        program = programService.getProgram( programId );
+        programAttributes = program.getProgramAttributes();
+        registrationForm = program.getDataEntryForm();
 
         // ---------------------------------------------------------------------
         // Get images

@@ -1,4 +1,4 @@
-package org.hisp.dhis.trackedentity;
+package org.hisp.dhis.trackedentity.action.dataentryform;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,29 +28,51 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
-import org.hisp.dhis.program.Program;
+import org.hisp.dhis.user.UserSettingService;
+
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
+ * 
+ * @version SetAutoSaveProgramEntryFormSettingAction.java 02:10:07 PM Apr 05, 2013 $
  */
-public interface TrackedEntityFormStore
-    extends GenericIdentifiableObjectStore<TrackedEntityForm>
+public class SetAutoSaveProgramEntryFormSettingAction
+    implements Action
 {
-    String ID = TrackedEntityFormStore.class.getName();
+    // -------------------------------------------------------------------------
+    // Dependencies
+    // -------------------------------------------------------------------------
 
-    /**
-     * Get tracked entity form of a program
-     *
-     * @param program Program
-     * @return TrackedEntityForm
-     */
-    TrackedEntityForm get( Program program );
+    private UserSettingService userSettingService;
 
-    /**
-     * Get tracked entity form which doesn't belong to any program
-     *
-     * @return TrackedEntityForm
-     */
-    TrackedEntityForm getFormsWithoutProgram();
+    public void setUserSettingService( UserSettingService userSettingService )
+    {
+        this.userSettingService = userSettingService;
+    }
+
+    // -------------------------------------------------------------------------
+    // Input / Output
+    // -------------------------------------------------------------------------
+
+    private boolean autoSave;
+
+    public void setAutoSave( boolean autoSave )
+    {
+        this.autoSave = autoSave;
+    }
+
+    // -------------------------------------------------------------------------
+    // Implementation Action
+    // -------------------------------------------------------------------------
+
+    @Override
+    public String execute()
+        throws Exception
+    {
+        userSettingService.saveUserSetting( UserSettingService.AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM, autoSave );
+
+        return SUCCESS;
+    }
+
 }

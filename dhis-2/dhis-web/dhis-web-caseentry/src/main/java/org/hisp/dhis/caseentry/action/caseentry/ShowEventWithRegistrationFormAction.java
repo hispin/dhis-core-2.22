@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -51,8 +52,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeGroup;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
-import org.hisp.dhis.trackedentity.TrackedEntityForm;
-import org.hisp.dhis.trackedentity.TrackedEntityFormService;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.hisp.dhis.trackedentity.comparator.TrackedEntityAttributeGroupSortOrderComparator;
 import org.hisp.dhis.user.User;
@@ -83,14 +82,7 @@ public class ShowEventWithRegistrationFormAction
     {
         this.programService = programService;
     }
-
-    private TrackedEntityFormService trackedEntityFormService;
-
-    public void setTrackedEntityFormService( TrackedEntityFormService trackedEntityFormService )
-    {
-        this.trackedEntityFormService = trackedEntityFormService;
-    }
-
+    
     private ProgramDataEntryService programDataEntryService;
 
     public void setProgramDataEntryService( ProgramDataEntryService programDataEntryService )
@@ -153,9 +145,9 @@ public class ShowEventWithRegistrationFormAction
 
     private Program program;
 
-    private TrackedEntityForm trackedEntityForm;
+    private DataEntryForm trackedEntityForm;
 
-    public TrackedEntityForm getTrackedEntityForm()
+    public DataEntryForm getTrackedEntityForm()
     {
         return trackedEntityForm;
     }
@@ -204,27 +196,15 @@ public class ShowEventWithRegistrationFormAction
         organisationUnit = selectionManager.getSelectedOrganisationUnit();
         healthWorkers = organisationUnit.getUsers();
 
-        if ( programId == null || programId.isEmpty() )
-        {
-            trackedEntityForm = trackedEntityFormService.getFormsWithoutProgram();
-
-            if ( trackedEntityForm != null && trackedEntityForm.getDataEntryForm() != null )
-            {
-                customRegistrationForm = trackedEntityFormService.prepareDataEntryFormForAdd( trackedEntityForm
-                    .getDataEntryForm().getHtmlCode(), trackedEntityForm.getProgram(), healthWorkers, null, null, i18n,
-                    format );
-            }
-        }
-        else
+        if ( programId != null )
         {
             program = programService.getProgram( programId );
-            trackedEntityForm = trackedEntityFormService.getFormsWithProgram( program );
+            trackedEntityForm = program.getDataEntryForm();
 
-            if ( trackedEntityForm != null && trackedEntityForm.getDataEntryForm() != null )
+            if ( trackedEntityForm != null )
             {
-                customRegistrationForm = trackedEntityFormService.prepareDataEntryFormForAdd( trackedEntityForm
-                    .getDataEntryForm().getHtmlCode(), trackedEntityForm.getProgram(), healthWorkers, null, null, i18n,
-                    format );
+                customRegistrationForm = programService.prepareDataEntryFormForAdd( trackedEntityForm.getHtmlCode(),
+                    program, healthWorkers, null, null, i18n, format );
             }
         }
 

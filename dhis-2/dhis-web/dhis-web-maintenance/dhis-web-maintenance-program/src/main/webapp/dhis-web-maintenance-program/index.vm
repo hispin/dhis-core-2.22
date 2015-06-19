@@ -5,7 +5,6 @@
     #if( $security.canView( "trackedEntityAttributeGroup" ) )#introListImgItem( "attributeGroup.action" "attribute_group" "patient" )#end
     #if( $security.canView( "relationShipType" ) )#introListImgItem( "relationshipType.action" "relationship_type" "patient" )#end
     #if( $security.canView( "trackedEntity" ) )#introListImgItem( "trackedEntity.action" "tracked_entity" "patient" )#end
-    #if( $security.canView( "trackedEntityForm" ) )#introListImgItem( "trackedEntityForm.action" "tracked_entity_form" "pivottable" )#end
     #if( $security.canView( "program" ) )#introListImgItem( "program.action" "program" "program" )#end
     #introListImgItem( "caseAggregation.action" "aggregation_query_builder" "caseaggregationmapping" )
 	
