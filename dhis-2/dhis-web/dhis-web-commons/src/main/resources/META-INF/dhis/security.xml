@@ -5,8 +5,6 @@
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
     http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
-  <bean id="clientDetailsService" class="org.hisp.dhis.security.oauth2.DefaultClientDetailsService" />
-
   <!-- /oauth/authorize
   <sec:http pattern="/oauth/authorize/**" access-denied-page="/login.jsp?authorization_error=true" disable-url-rewriting="true">
       <sec:intercept-url pattern="/oauth/authorize/**" access="IS_AUTHENTICATED_FULLY" />
@@ -34,21 +32,6 @@
     <oauth:client-credentials />
     <oauth:password />
   </oauth:authorization-server>
-
-  <sec:authentication-manager id="clientAuthenticationManager">
-    <sec:authentication-provider user-service-ref="clientDetailsUserService" />
-  </sec:authentication-manager>
-
-  <bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
-    <constructor-arg ref="clientDetailsService" />
-  </bean>
-
-  <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore" />
-
-  <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
-    <property name="tokenStore" ref="tokenStore" />
-    <property name="supportRefreshToken" value="true" />
-  </bean>
 
   <bean id="oauthAuthenticationEntryPoint"
     class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
@@ -179,26 +162,6 @@
     <property name="userService" ref="org.hisp.dhis.user.UserService" />
   </bean>
 
-  <!-- Security : Authentication providers -->
-
-  <sec:authentication-manager alias="authenticationManager">
-    <sec:authentication-provider ref="migrationAuthenticationProvider" />
-  </sec:authentication-manager>
-
-  <!--
-  As of 2.17 user password hashes are being migrated from MD5(password, username) to bCrypt(password).
-  The migration is implemented in the migrationAuthenticationProvider configured above.
-  Once migration is complete, the authentication-manager configuration above can be
-  replaced by the one given below (commented). At that point the system will no longer accept
-  authentication request from users which are still stored with an MD5 hash in the database.
-
-  <sec:authentication-manager alias="authenticationManager">
-    <sec:authentication-provider user-service-ref="userDetailsService">
-      <sec:password-encoder ref="bCryptPasswordEncoder" />
-    </sec:authentication-provider>
-  </sec:authentication-manager>
-  -->
-
   <!-- Security : AccessProvider -->
 
   <bean id="databaseAutomaticAccessProvider" class="org.hisp.dhis.security.DatabaseAutomaticAccessProvider">
@@ -213,6 +176,7 @@
 
   <!-- Security : AccessDecision/Voter -->
 
+  <bean id="scopeVoter" class="org.springframework.security.oauth2.provider.vote.ScopeVoter" />
   <bean id="authenticatedVoter" class="org.springframework.security.access.vote.AuthenticatedVoter" />
   <bean id="webExpressionVoter" class="org.springframework.security.web.access.expression.WebExpressionVoter" />
   <bean id="externalAccessVoter" class="org.hisp.dhis.security.vote.ExternalAccessVoter" />
