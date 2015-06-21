@@ -48,9 +48,11 @@ public class DefaultClientDetailsService implements ClientDetailsService
     private OAuth2ClientService oAuth2ClientService;
 
     private final Set<String> GRANT_TYPES =
-        Sets.newHashSet( "password", "authorization_code", "refresh_token" );
+        Sets.newHashSet( "password", "authorization_code", "refresh_token", "implicit" );
 
     private final Set<String> SCOPES = Sets.newHashSet( "ALL" );
+
+    private final Set<String> REDIRECT_URIS = Sets.newHashSet( "http://www.example.org" );
 
     @Override
     public ClientDetails loadClientByClientId( String clientId ) throws ClientRegistrationException
@@ -77,6 +79,7 @@ public class DefaultClientDetailsService implements ClientDetailsService
         clientDetails.setClientSecret( client.getSecret() );
         clientDetails.setAuthorizedGrantTypes( GRANT_TYPES );
         clientDetails.setScope( SCOPES );
+        clientDetails.setRegisteredRedirectUri( REDIRECT_URIS );
 
         return clientDetails;
     }
