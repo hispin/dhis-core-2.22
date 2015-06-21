@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
   <bean id="md5PasswordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
 
@@ -52,4 +52,44 @@
     <property name="systemSettingManager" ref="org.hisp.dhis.setting.SystemSettingManager" />
     <property name="i18nManager" ref="org.hisp.dhis.i18n.I18nManager" />
   </bean>
+
+  <!-- Security : Authentication providers -->
+
+  <sec:authentication-manager alias="authenticationManager">
+    <sec:authentication-provider ref="migrationAuthenticationProvider" />
+  </sec:authentication-manager>
+
+  <!--
+  As of 2.17 user password hashes are being migrated from MD5(password, username) to bCrypt(password).
+  The migration is implemented in the migrationAuthenticationProvider configured above.
+  Once migration is complete, the authentication-manager configuration above can be
+  replaced by the one given below (commented). At that point the system will no longer accept
+  authentication request from users which are still stored with an MD5 hash in the database.
+
+  <sec:authentication-manager alias="authenticationManager">
+    <sec:authentication-provider user-service-ref="userDetailsService">
+      <sec:password-encoder ref="bCryptPasswordEncoder" />
+    </sec:authentication-provider>
+  </sec:authentication-manager>
+  -->
+
+  <!-- OAuth2 -->
+  <bean id="clientDetailsService" class="org.hisp.dhis.security.oauth2.DefaultClientDetailsService" />
+
+  <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore" />
+
+  <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+    <property name="tokenStore" ref="tokenStore" />
+    <property name="supportRefreshToken" value="true" />
+  </bean>
+
+  <bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+    <constructor-arg ref="clientDetailsService" />
+  </bean>
+
+  <sec:authentication-manager id="clientAuthenticationManager">
+    <sec:authentication-provider user-service-ref="clientDetailsUserService" />
+  </sec:authentication-manager>
+  <!-- End OAuth2 -->
+
 </beans>
