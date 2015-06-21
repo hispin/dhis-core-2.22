@@ -710,13 +710,13 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 })
 
 /* service for building variables based on the data in users fields */
-.service('VariableService', function($rootScope,$q,TrackerRuleVariableFactory,$filter,orderByFilter,$log){
+.service('VariableService', function($rootScope,$q,TrackerRuleVariableFactory,DateUtils,CalendarService,MetaDataFactory,$filter,orderByFilter,$log){
     return {
-        getVariables: function(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity) {
+        getVariables: function(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity, variablesFromIndicators, selectedEnrollment) {
             var thePromisedVariables = $q.defer();
             var variables = {};
             
-            var pushVariable = function(variablename, variableValue, variableType, variablefound) {
+            var pushVariable = function(variablename, variableValue, variableType, variablefound, variablePrefix) {
                 //First clean away single or double quotation marks at the start and end of the variable name.
                 variableValue = $filter('trimquotes')(variableValue);
                 
@@ -745,138 +745,161 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 variables[variablename] = {
                                 variableValue:variableValue,
                                 variableType:variableType,
-                                hasValue:variablefound
+                                hasValue:variablefound,
+                                variablePrefix:variablePrefix
                             };
             };
-            
-            TrackerRuleVariableFactory.getProgramRuleVariables(programid).then(function(programVariables){
+            MetaDataFactory.getAll('constants').then(function(constants) {
+                TrackerRuleVariableFactory.getProgramRuleVariables(programid).then(function(programVariables){
 
-                var allEventsSorted = [];
-                var currentEvent = executingEvent;
-                var eventsSortedPerProgramStage = [];
-                
-                for(var key in allEventsByStage){
-                    if(allEventsByStage.hasOwnProperty(key)){
-                        eventsSortedPerProgramStage[key] = [];
-                        angular.forEach(allEventsByStage[key], function(event){
-                            allEventsSorted.push(event);
-                            eventsSortedPerProgramStage[key].push(event);
-                        });
-                        eventsSortedPerProgramStage[key] = orderByFilter(eventsSortedPerProgramStage[key], '-sortingDate').reverse(); 
+                    programVariables = programVariables.concat(variablesFromIndicators);
+
+                    var allEventsSorted = [];
+                    var currentEvent = executingEvent;
+                    var eventsSortedPerProgramStage = [];
+
+                    for(var key in allEventsByStage){
+                        if(allEventsByStage.hasOwnProperty(key)){
+                            eventsSortedPerProgramStage[key] = [];
+                            angular.forEach(allEventsByStage[key], function(event){
+                                allEventsSorted.push(event);
+                                eventsSortedPerProgramStage[key].push(event);
+                            });
+                            eventsSortedPerProgramStage[key] = orderByFilter(eventsSortedPerProgramStage[key], '-sortingDate').reverse(); 
+                        }
                     }
-                }
-                allEventsSorted = orderByFilter(allEventsSorted, '-sortingDate').reverse(); 
-                
-                var allDes = allDataElements;
-                
-                angular.forEach(programVariables, function(programVariable) {
-                    var valueFound = false;
-                    if(programVariable.programRuleVariableSourceType === "DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE"){
-                        if(programVariable.programStage) {
-                            angular.forEach(eventsSortedPerProgramStage[programVariable.programStage.id], function(event) {
-                                if(angular.isDefined(event[programVariable.dataElement.id])
-                                        && event[programVariable.dataElement.id] !== null ){
+                    allEventsSorted = orderByFilter(allEventsSorted, '-sortingDate').reverse(); 
+
+                    var allDes = allDataElements;
+
+                    angular.forEach(programVariables, function(programVariable) {
+                        var dataElementId = programVariable.dataElement;
+                        if(programVariable.dataElement.id) {
+                            dataElementId = programVariable.dataElement.id;
+                        }
+
+                        var programStageId = programVariable.programStage;
+                        if(programVariable.programStage.id) {
+                            programStageId = programVariable.programStage.id;
+                        }
+
+                        var valueFound = false;
+                        if(programVariable.programRuleVariableSourceType === "DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE"){
+                            if(programVariable.programStage) {
+                                angular.forEach(eventsSortedPerProgramStage[programStageId], function(event) {
+                                    if(angular.isDefined(event[dataElementId])
+                                            && event[dataElementId] !== null ){
+                                        valueFound = true;
+                                        pushVariable(programVariable.name, event[dataElementId], allDes[dataElementId].dataElement.type, valueFound, '#');
+                                    }
+                                });
+                            } else {
+                                $log.warn("Variable id:'" + programVariable.id + "' name:'" + programVariable.name 
+                                        + "' does not have a programstage defined,"
+                                        + " despite that the variable has sourcetype DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE" );
+                            }
+
+                        }
+                        else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_NEWEST_EVENT_PROGRAM"){
+                            angular.forEach(allEventsSorted, function(event) {
+                                if(angular.isDefined(event[dataElementId])
+                                        && event[dataElementId] !== null ){
                                     valueFound = true;
-                                    pushVariable(programVariable.name, event[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
+                                     pushVariable(programVariable.name, event[dataElementId], allDes[dataElementId].dataElement.type, valueFound, '#' );
+                                 }
+                            });
+                        }
+                        else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_CURRENT_EVENT"){
+                            if(angular.isDefined(currentEvent[dataElementId])
+                                    && currentEvent[dataElementId] !== null ){
+                                valueFound = true;
+                                pushVariable(programVariable.name, currentEvent[dataElementId], allDes[dataElementId].dataElement.type, valueFound, '#' );
+                            }      
+                        }
+                        else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_PREVIOUS_EVENT"){
+                            //Only continue checking for a value if there is more than one event.
+                            if(allEventsSorted && allEventsSorted.length > 1) {
+                                var previousvalue = null;
+                                var currentEventPassed = false;
+                                for(var i = 0; i < allEventsSorted.length; i++) {
+                                    //Store the values as we iterate through the stages
+                                    //If the event[i] is not the current event, it is older(previous). Store the previous value if it exists
+                                    if(!currentEventPassed && allEventsSorted[i] !== currentEvent && 
+                                            angular.isDefined(allEventsSorted[i][dataElementId])) {
+                                        previousvalue = allEventsSorted[i][dataElementId];
+                                        valueFound = true;
+                                    }
+                                    else if(allEventsSorted[i] === currentEvent) {
+                                        //We have iterated to the newest event - store the last collected variable value - if any is found:
+                                        if(valueFound) {
+                                            pushVariable(programVariable.name, previousvalue, allDes[dataElementId].dataElement.type, valueFound, '#' );
+                                        }
+                                        //Set currentEventPassed, ending the iteration:
+                                        currentEventPassed = true;
+                                    }
+                                }
+                            }
+                        }
+                        else if(programVariable.programRuleVariableSourceType === "TEI_ATTRIBUTE"){
+                            angular.forEach(selectedEntity.attributes , function(attribute) {
+                                if(!valueFound) {
+                                    if(attribute.attribute === programVariable.trackedEntityAttribute.id) {
+                                        valueFound = true;
+                                        pushVariable(programVariable.name, attribute.value, attribute.type, valueFound, '#' );
+                                    }
                                 }
                             });
-                        } else {
-                            $log.warn("Variable id:'" + programVariable.id + "' name:'" + programVariable.name 
-                                    + "' does not have a programstage defined,"
-                                    + " despite that the variable has sourcetype DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE" );
                         }
-                        
-                    }
-                    else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_NEWEST_EVENT_PROGRAM"){
-                        angular.forEach(allEventsSorted, function(event) {
-                            if(angular.isDefined(event[programVariable.dataElement.id])
-                                    && event[programVariable.dataElement.id] !== null ){
-                                valueFound = true;
-                                 pushVariable(programVariable.name, event[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
-                             }
-                        });
-                    }
-                    else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_CURRENT_EVENT"){
-                        if(angular.isDefined(currentEvent[programVariable.dataElement.id])
-                                && currentEvent[programVariable.dataElement.id] !== null ){
+                        else if(programVariable.programRuleVariableSourceType === "CALCULATED_VALUE"){
+                            //We won't assign the calculated variables at this step. The rules execution will calculate and assign the variable.
+                        }
+                        else if(programVariable.programRuleVariableSourceType === "NUMBEROFEVENTS_PROGRAMSTAGE"){
+                            var numberOfEvents = 0;
+                            if( programVariable.programStage && eventsSortedPerProgramStage[programStageId] ) {
+                                numberOfEvents = eventsSortedPerProgramStage[programStageId].length;
+                            }
                             valueFound = true;
-                            pushVariable(programVariable.name, currentEvent[programVariable.dataElement.id], allDes[programVariable.dataElement.id].dataElement.type, valueFound );
-                        }      
-                    }
-                    else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_PREVIOUS_EVENT"){
-                        //Only continue checking for a value if there is more than one event.
-                        if(allEventsSorted && allEventsSorted.length > 1) {
-                            var previousvalue = null;
-                            var currentEventPassed = false;
-                            for(var i = 0; i < allEventsSorted.length; i++) {
-                                //Store the values as we iterate through the stages
-                                //If the event[i] is not the current event, it is older(previous). Store the previous value if it exists
-                                if(!currentEventPassed && allEventsSorted[i] !== currentEvent && 
-                                        angular.isDefined(allEventsSorted[i][programVariable.dataElement.id])) {
-                                    previousvalue = allEventsSorted[i][programVariable.dataElement.id];
-                                    valueFound = true;
-                                }
-                                else if(allEventsSorted[i] === currentEvent) {
-                                    //We have iterated to the newest event - store the last collected variable value - if any is found:
-                                    if(valueFound) {
-                                        pushVariable(programVariable.name, previousvalue, allDes[programVariable.dataElement.id].dataElement.type, valueFound );
-                                    }
-                                    //Set currentEventPassed, ending the iteration:
-                                    currentEventPassed = true;
-                                }
-                            }
-                        }
-                    }
-                    else if(programVariable.programRuleVariableSourceType === "TEI_ATTRIBUTE"){
-                        angular.forEach(selectedEntity.attributes , function(attribute) {
-                            if(!valueFound) {
-                                if(attribute.attribute === programVariable.trackedEntityAttribute.id) {
-                                    valueFound = true;
-                                    pushVariable(programVariable.name, attribute.value, attribute.type, valueFound );
-                                }
-                            }
-                        });
-                    }
-                    else if(programVariable.programRuleVariableSourceType === "CALCULATED_VALUE"){
-                        //We won't assign the calculated variables at this step. The rules execution will calculate and assign the variable.
-                    }
-                    else if(programVariable.programRuleVariableSourceType === "NUMBEROFEVENTS_PROGRAMSTAGE"){
-                        var numberOfEvents = 0;
-                        if( programVariable.programStage && eventsSortedPerProgramStage[programVariable.programStage.id] ) {
-                            numberOfEvents = eventsSortedPerProgramStage[programVariable.programStage.id].length;
-                        }
-                        valueFound = true;
-                        pushVariable(programVariable.name, numberOfEvents, 'int', valueFound );
-                    }
-                    else {
-                        //Missing handing of ruletype
-                        $log.warn("Unknown programRuleVariableSourceType:" + programVariable.programRuleVariableSourceType);
-                    }
-
-                   
-                    if(!valueFound){
-                        //If there is still no value found, assign default value:
-                        if(programVariable.dataElement) {
-                            var dataElement = allDes[programVariable.dataElement.id];
-                            if( dataElement ) {
-                                pushVariable(programVariable.name, "", dataElement.dataElement.type );
-                            } 
-                            else {
-                                $log.warn("Variable #{" + programVariable.name + "} is linked to a dataelement that is not part of the program");
-                                pushVariable(programVariable.name, "", "string" );
-                            }
+                            pushVariable(programVariable.name, numberOfEvents, 'int', valueFound, '#' );
                         }
                         else {
-                            pushVariable(programVariable.name, "", "string" );
+                            //Missing handing of ruletype
+                            $log.warn("Unknown programRuleVariableSourceType:" + programVariable.programRuleVariableSourceType);
                         }
-                    }
-                });
 
-                //add context variables:
-                //last parameter "valuefound" is always true for event date
-                pushVariable('eventdate', executingEvent.eventDate, 'date', true );
-                
-                thePromisedVariables.resolve(variables);
+
+                        if(!valueFound){
+                            //If there is still no value found, assign default value:
+                            if(programVariable.dataElement) {
+                                var dataElement = allDes[dhis2.tc];
+                                if( dataElement ) {
+                                    pushVariable(programVariable.name, "", dataElement.dataElement.type, false, '#' );
+                                } 
+                                else {
+                                    $log.warn("Variable #{" + programVariable.name + "} is linked to a dataelement that is not part of the program");
+                                    pushVariable(programVariable.name, "", "string",false, '#' );
+                                }
+                            }
+                            else {
+                                pushVariable(programVariable.name, "", "string",false, '#' );
+                            }
+                        }
+                    });
+
+                    //add context variables:
+                    //last parameter "valuefound" is always true for event date
+                    pushVariable('incident_date', executingEvent.eventDate, 'date', true, 'V' );
+                    pushVariable('enrollment_date', selectedEnrollment.dateOfEnrollment, 'date', true, 'V' );
+                    pushVariable('current_date', DateUtils.getToday(), 'date', true, 'V' );
+                    //pushVariable('value_count', executingEvent.eventDate, 'date', true, 'V' );
+                    //pushVariable('zero_pos_value_count', executingEvent.eventDate, 'date', true, 'V' );
+
+                    //Push all constant values:
+                    angular.forEach(constants, function(constant){
+                        pushVariable(constant.id, constant.value, 'int', true, 'C' );
+                    });
+
+                    thePromisedVariables.resolve(variables);
+                }); 
             });
             
             return thePromisedVariables.promise;
@@ -885,28 +908,29 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 })
 
 /* service for executing tracker rules and broadcasting results */
-.service('TrackerRulesExecutionService', function(TrackerRulesFactory,VariableService, $rootScope, $log, $filter, orderByFilter){
+.service('TrackerRulesExecutionService', function(TrackerRulesFactory, MetaDataFactory, VariableService, $rootScope, $log, $q, $filter, orderByFilter){
     return {
-        executeRules: function(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity) {
+        executeRules: function(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity, selectedEnrollment ) {
             //When debugging rules, the caller should provide a variable for wether or not the rules is being debugged.
             //hard coding this for now:
             var debug = true;
             var verbose = true;
             
             var variablesHash = {};
-                    
+            
             var replaceVariables = function(expression) {
                 //replaces the variables in an expression with actual variable values.
                 //First check if the expression contains variables at all(any dollar signs):
-                if(expression.indexOf('#') !== -1) {
+                if(expression.indexOf('#{') !== -1) {
                     //Find every variable name in the expression;
-                    var variablespresent = expression.match(/#{\w+}/g);
+                    var variablespresent = expression.match(/#{\w+.?\w*}/g);
                     //Replace each matched variable:
                     angular.forEach(variablespresent, function(variablepresent) {
-                        //First strip away any dollar signs from the variable name:
+                        //First strip away any prefix and postfix signs from the variable name:
                         variablepresent = variablepresent.replace("#{","").replace("}","");
                         
-                        if(angular.isDefined(variablesHash[variablepresent])) {
+                        if(angular.isDefined(variablesHash[variablepresent]) &&
+                                variablesHash[variablepresent].variablePrefix === '#') {
                             //Replace all occurrences of the variable name(hence using regex replacement):
                             expression = expression.replace(new RegExp("#{" + variablepresent + "}", 'g'),
                                 variablesHash[variablepresent].variableValue);
@@ -914,8 +938,49 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         else {
                             $log.warn("Expression " + expression + " conains variable " + variablepresent 
                                     + " - but this variable is not defined." );
+                        }  
+                    });
+                }
+                
+                if(expression.indexOf('V{') !== -1) {
+                    //Find every variable name in the expression;
+                    var variablespresent = expression.match(/V{\w+.?\w*}/g);
+                    //Replace each matched variable:
+                    angular.forEach(variablespresent, function(variablepresent) {
+                        //First strip away any prefix and postfix signs from the variable name:
+                        variablepresent = variablepresent.replace("V{","").replace("}","");
+                        
+                        if(angular.isDefined(variablesHash[variablepresent]) &&
+                                variablesHash[variablepresent].variablePrefix === 'V') {
+                            //Replace all occurrences of the variable name(hence using regex replacement):
+                            expression = expression.replace(new RegExp("V{" + variablepresent + "}", 'g'),
+                                variablesHash[variablepresent].variableValue);
                         }
-                            
+                        else {
+                            $log.warn("Expression " + expression + " conains context variable " + variablepresent 
+                                    + " - but this variable is not defined." );
+                        } 
+                    });
+                }
+                
+                if(expression.indexOf('C{') !== -1) {
+                    //Find every constant in the expression;
+                    var variablespresent = expression.match(/C{\w+.?\w*}/g);
+                    //Replace each matched variable:
+                    angular.forEach(variablespresent, function(variablepresent) {
+                        //First strip away any prefix and postfix signs from the variable name:
+                        variablepresent = variablepresent.replace("C{","").replace("}","");
+                        
+                        if(angular.isDefined(variablesHash[variablepresent]) &&
+                                variablesHash[variablepresent].variablePrefix === 'C') {
+                            //Replace all occurrences of the variable name(hence using regex replacement):
+                            expression = expression.replace(new RegExp("C{" + variablepresent + "}", 'g'),
+                                variablesHash[variablepresent].variableValue);
+                        }
+                        else {
+                            $log.warn("Expression " + expression + " conains constant " + variablepresent 
+                                    + " - but this constant is not defined." );
+                        } 
                     });
                 }
                 return expression;
@@ -1034,119 +1099,196 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 return answer;
             };
             
-            
-            VariableService.getVariables(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity).then(function(variablesReceived){
-                TrackerRulesFactory.getProgramStageRules(programid, executingEvent.programStage).then(function(rules){
-                    //But run rules in priority - lowest number first(priority null is last)
-                    rules = orderByFilter(rules, 'priority');
+        var getIndicatorRules = function (programid) {
+                var def = $q.defer();
+                MetaDataFactory.getByProgram('programIndicators', programid).then(function(pis){
+                    var variables = [];
                     
-                    variablesHash = variablesReceived;
-
-                    if(angular.isObject(rules) && angular.isArray(rules)){
-                        //The program has rules, and we want to run them.
-                        //Prepare repository unless it is already prepared:
-                        if(angular.isUndefined( $rootScope.ruleeffects ) ) {
-                            $rootScope.ruleeffects = {};
-                        }
+                    var programRules = [];
+                    
+                    angular.forEach(pis, function(pi){
+                        var newAction = {
+                                id:pi.id,
+                                content:pi.displayDescription,
+                                data:pi.expression,
+                                programRuleActionType:'DISPLAYKEYVALUEPAIR',
+                                location:'indicators'
+                            };
+                        var newRule = {
+                                name:pi.name,
+                                shortname:pi.shortname,
+                                code:pi.code,
+                                program:pi.program,
+                                description:pi.description,
+                                condition:pi.filter ? pi.filter : 'true',
+                                programRuleActions: [newAction]
+                            };
                             
-                        if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event] )){
-                            $rootScope.ruleeffects[executingEvent.event] = {};
-                        }
-
-                        var updatedEffectsExits = false;
-
-                        angular.forEach(rules, function(rule) {
-                            var ruleEffective = false;
-
-                            var expression = rule.condition;
-                            //Go through and populate variables with actual values, but only if there actually is any replacements to be made(one or more "$" is present)
-                            if(expression) {
-                                if(expression.indexOf('#') !== -1) {
-                                    expression = replaceVariables(expression);
-                                }
-                                //run expression:
-                                ruleEffective = runExpression(expression, rule.condition, "rule:" + rule.id);
-                            } else {
-                                $log.warn("Rule id:'" + rule.id + "'' and name:'" + rule.name + "' had no condition specified. Please check rule configuration.");
+                        programRules.push(newRule);
+                        
+                        var variablesInCondition = newRule.condition.match(/#{\w+.?\w*}/g);
+                        var variablesInData = newAction.data.match(/#{\w+.?\w*}/g);
+                        
+                        var pushDirectAddressedVariable = function(variableWithCurls) {
+                            var variableName = variableWithCurls.replace("#{","").replace("}","");
+                            var variableNameParts = variableName.split('.');
+                            
+                           
+                            if(variableNameParts.length === 2) {
+                                //this is a programstage and dataelement specification. translate to program variable:
+                                variables.push({
+                                    name:variableName,
+                                    programRuleVariableSourceType:'DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE',
+                                    dataElement:variableNameParts[1],
+                                    programStage:variableNameParts[0],
+                                    program:programid
+                                });
                             }
-                            
-                            angular.forEach(rule.programRuleActions, function(action){
-                                //In case the effect-hash is not populated, add entries
-                                if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event][action.id] )){
-                                    $rootScope.ruleeffects[executingEvent.event][action.id] =  {
-                                        id:action.id,
-                                        location:action.location, 
-                                        action:action.programRuleActionType,
-                                        dataElement:action.dataElement,
-                                        content:action.content,
-                                        data:action.data,
-                                        ineffect:undefined
-                                    };
-                                }
-
-                                //In case the rule is effective and contains specific data, 
-                                //the effect be refreshed from the variables list.
-                                //If the rule is not effective we can skip this step
-                                if(ruleEffective && action.data)
-                                {
-                                    //The key data might be containing a dollar sign denoting that the key data is a variable.
-                                    //To make a lookup in variables hash, we must make a lookup without the dollar sign in the variable name
-                                    //The first strategy is to make a direct lookup. In case the "data" expression is more complex, we have to do more replacement and evaluation.
-
-                                    var nameWithoutBrackets = action.data.replace('#{','').replace('}','');
-                                    if(angular.isDefined(variablesHash[nameWithoutBrackets]))
-                                    {
-                                        //The variable exists, and is replaced with its corresponding value
-                                        $rootScope.ruleeffects[executingEvent.event][action.id].data =
-                                            variablesHash[nameWithoutBrackets].variableValue;
-                                    }
-                                    else if(action.data.indexOf('#') !== -1)
-                                    {
-                                        //Since the value couldnt be looked up directly, and contains a dollar sign, the expression was more complex
-                                        //Now we will have to make a thorough replacement and separate evaluation to find the correct value:
-                                        $rootScope.ruleeffects[executingEvent.event][action.id].data = replaceVariables(action.data);
-                                        //In a scenario where the data contains a complex expression, evaluate the expression to compile(calculate) the result:
-                                        $rootScope.ruleeffects[executingEvent.event][action.id].data = runExpression($rootScope.ruleeffects[executingEvent.event][action.id].data, action.data, "action:" + action.id);
-                                    }
-                                }
-
-                                //Update the rule effectiveness if it changed in this evaluation;
-                                if($rootScope.ruleeffects[executingEvent.event][action.id].ineffect !== ruleEffective)
-                                {
-                                    //There is a change in the rule outcome, we need to update the effect object.
-                                    updatedEffectsExits = true;
-                                    $rootScope.ruleeffects[executingEvent.event][action.id].ineffect = ruleEffective;
-                                }
-
-                                //In case the rule is of type "assign variable" and the rule is effective,
-                                //the variable data result needs to be applied to the correct variable:
-                                if($rootScope.ruleeffects[executingEvent.event][action.id].action === "ASSIGNVARIABLE" && $rootScope.ruleeffects[executingEvent.event][action.id].ineffect){
-                                    //from earlier evaluation, the data portion of the ruleeffect now contains the value of the variable to be assign.
-                                    //the content portion of the ruleeffect defines the name for the variable, when dollar is removed:
-                                    var variabletoassign = $rootScope.ruleeffects[executingEvent.event][action.id].content.replace("#{","").replace("}","");
-
-                                    if(!angular.isDefined(variablesHash[variabletoassign])){
-                                        $log.warn("Variable " + variabletoassign + " was not defined.");
-                                    }
-
-                                    //Even if the variable is not defined: we assign it:
-                                    if(variablesHash[variabletoassign].variableValue !== $rootScope.ruleeffects[executingEvent.event][action.id].data){
-                                        //If the variable was actually updated, we assume that there is an updated ruleeffect somewhere:
-                                        updatedEffectsExits = true;
-                                        //Then we assign the new value:
-                                        variablesHash[variabletoassign].variableValue = $rootScope.ruleeffects[executingEvent.event][action.id].data;
-                                    }
-                                }
-                            });
+                            else if(variableNameParts.length === 1)
+                            {
+                                //This is an attribute - let us translate to program variable:
+                                variables.push({
+                                    name:variableName,
+                                    programRuleVariableSourceType:'TEI_ATTRIBUTE',
+                                    trackedEntityAttribute:variableNameParts[0],
+                                    program:programid
+                                });
+                            }
+                         
+                        };
+                        
+                        angular.forEach(variablesInCondition, function(variableInCondition) {
+                            pushDirectAddressedVariable(variableInCondition);
                         });
+                        
+                        angular.forEach(variablesInData, function(variableInData) {
+                            pushDirectAddressedVariable(variableInData);
+                        });
+                    });
 
-                        //Broadcast rules finished if there was any actual changes to the event.
-                        if(updatedEffectsExits){
-                            $rootScope.$broadcast("ruleeffectsupdated", { event: executingEvent.event });
+                    def.resolve({rules:programRules,variables:variables});
+                });
+                return def.promise;       
+            };
+            
+            
+            getIndicatorRules(programid).then(function(indicatorRulesAndVariables){
+                VariableService.getVariables(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity,indicatorRulesAndVariables.variables, selectedEnrollment).then(function(variablesReceived){
+                    TrackerRulesFactory.getProgramStageRules(programid, executingEvent.programStage).then(function(rules){
+                        //Concatenate rules produced by indicator definitions into the other rules:
+                        rules = rules.concat(indicatorRulesAndVariables.rules);
+                        
+                        //Run rules in priority - lowest number first(priority null is last)
+                        rules = orderByFilter(rules, 'priority');
+
+                        variablesHash = variablesReceived;
+
+                        if(angular.isObject(rules) && angular.isArray(rules)){
+                            //The program has rules, and we want to run them.
+                            //Prepare repository unless it is already prepared:
+                            if(angular.isUndefined( $rootScope.ruleeffects ) ) {
+                                $rootScope.ruleeffects = {};
+                            }
+
+                            if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event] )){
+                                $rootScope.ruleeffects[executingEvent.event] = {};
+                            }
+
+                            var updatedEffectsExits = false;
+
+                            angular.forEach(rules, function(rule) {
+                                var ruleEffective = false;
+
+                                var expression = rule.condition;
+                                //Go through and populate variables with actual values, but only if there actually is any replacements to be made(one or more "$" is present)
+                                if(expression) {
+                                    if(expression.indexOf('{') !== -1) {
+                                        expression = replaceVariables(expression);
+                                    }
+                                    //run expression:
+                                    ruleEffective = runExpression(expression, rule.condition, "rule:" + rule.id);
+                                } else {
+                                    $log.warn("Rule id:'" + rule.id + "'' and name:'" + rule.name + "' had no condition specified. Please check rule configuration.");
+                                }
+
+                                angular.forEach(rule.programRuleActions, function(action){
+                                    //In case the effect-hash is not populated, add entries
+                                    if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event][action.id] )){
+                                        $rootScope.ruleeffects[executingEvent.event][action.id] =  {
+                                            id:action.id,
+                                            location:action.location, 
+                                            action:action.programRuleActionType,
+                                            dataElement:action.dataElement,
+                                            content:action.content,
+                                            data:action.data,
+                                            ineffect:undefined
+                                        };
+                                    }
+
+                                    //In case the rule is effective and contains specific data, 
+                                    //the effect be refreshed from the variables list.
+                                    //If the rule is not effective we can skip this step
+                                    if(ruleEffective && action.data)
+                                    {
+                                        //The key data might be containing a dollar sign denoting that the key data is a variable.
+                                        //To make a lookup in variables hash, we must make a lookup without the dollar sign in the variable name
+                                        //The first strategy is to make a direct lookup. In case the "data" expression is more complex, we have to do more replacement and evaluation.
+
+                                        var nameWithoutBrackets = action.data.replace('#{','').replace('}','');
+                                        if(angular.isDefined(variablesHash[nameWithoutBrackets]))
+                                        {
+                                            //The variable exists, and is replaced with its corresponding value
+                                            $rootScope.ruleeffects[executingEvent.event][action.id].data =
+                                                variablesHash[nameWithoutBrackets].variableValue;
+                                        }
+                                        else if(action.data.indexOf('{') !== -1)
+                                        {
+                                            //Since the value couldnt be looked up directly, and contains a dollar sign, the expression was more complex
+                                            //Now we will have to make a thorough replacement and separate evaluation to find the correct value:
+                                            $rootScope.ruleeffects[executingEvent.event][action.id].data = replaceVariables(action.data);
+                                            //In a scenario where the data contains a complex expression, evaluate the expression to compile(calculate) the result:
+                                            $rootScope.ruleeffects[executingEvent.event][action.id].data = runExpression($rootScope.ruleeffects[executingEvent.event][action.id].data, action.data, "action:" + action.id);
+                                        }
+                                    }
+
+                                    //Update the rule effectiveness if it changed in this evaluation;
+                                    if($rootScope.ruleeffects[executingEvent.event][action.id].ineffect !== ruleEffective)
+                                    {
+                                        //There is a change in the rule outcome, we need to update the effect object.
+                                        updatedEffectsExits = true;
+                                        $rootScope.ruleeffects[executingEvent.event][action.id].ineffect = ruleEffective;
+                                    }
+
+                                    //In case the rule is of type "assign variable" and the rule is effective,
+                                    //the variable data result needs to be applied to the correct variable:
+                                    if($rootScope.ruleeffects[executingEvent.event][action.id].action === "ASSIGNVARIABLE" && $rootScope.ruleeffects[executingEvent.event][action.id].ineffect){
+                                        //from earlier evaluation, the data portion of the ruleeffect now contains the value of the variable to be assign.
+                                        //the content portion of the ruleeffect defines the name for the variable, when dollar is removed:
+                                        var variabletoassign = $rootScope.ruleeffects[executingEvent.event][action.id].content.replace("#{","").replace("}","");
+
+                                        if(!angular.isDefined(variablesHash[variabletoassign])){
+                                            $log.warn("Variable " + variabletoassign + " was not defined.");
+                                        }
+
+                                        //Even if the variable is not defined: we assign it:
+                                        if(variablesHash[variabletoassign].variableValue !== $rootScope.ruleeffects[executingEvent.event][action.id].data){
+                                            //If the variable was actually updated, we assume that there is an updated ruleeffect somewhere:
+                                            updatedEffectsExits = true;
+                                            //Then we assign the new value:
+                                            variablesHash[variabletoassign].variableValue = $rootScope.ruleeffects[executingEvent.event][action.id].data;
+                                        }
+                                    }
+                                });
+                            });
+
+                            //Broadcast rules finished if there was any actual changes to the event.
+                            if(updatedEffectsExits){
+                                $rootScope.$broadcast("ruleeffectsupdated", { event: executingEvent.event });
+                            }
                         }
-                    }
 
-                    return true;
+                        return true;
+                    });
                 });
             });
         }
