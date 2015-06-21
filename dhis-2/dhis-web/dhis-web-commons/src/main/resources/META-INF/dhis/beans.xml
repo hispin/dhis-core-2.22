@@ -255,7 +255,7 @@
     </property>
   </bean>
 
-  <bean id="org.hisp.dhis.oust.action.GetUserCountAction" class="org.hisp.dhis.oust.action.GetUserCountAction" scope="prototype"></bean>
+  <bean id="org.hisp.dhis.oust.action.GetUserCountAction" class="org.hisp.dhis.oust.action.GetUserCountAction" scope="prototype"/>
 
   <!-- Security import -->
   <import resource="security.xml" />
