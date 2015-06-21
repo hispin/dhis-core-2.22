@@ -29,7 +29,7 @@ if( dhis2.tc.memoryOnly ) {
 dhis2.tc.store = new dhis2.storage.Store({
     name: 'dhis2tc',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules']      
+    objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'programIndicators', 'ouLevels', 'programRuleVariables', 'programRules','constants']      
 });
 
 (function($) {
@@ -132,6 +132,7 @@ function downloadMetaData()
     promise = promise.then( dhis2.tc.store.open );
     promise = promise.then( getUserRoles );
     promise = promise.then( getCalendarSetting );
+    promise = promise.then( getConstants );
     promise = promise.then( getRelationships );       
     promise = promise.then( getTrackedEntities );
     promise = promise.then( getMetaPrograms );     
@@ -146,7 +147,9 @@ function downloadMetaData()
     promise = promise.then( getMetaProgramRules );
     promise = promise.then( getProgramRules );
     promise = promise.then( getMetaProgramValidations );
-    promise = promise.then( getProgramValidations );    
+    promise = promise.then( getProgramValidations );   
+    promise = promise.then( getMetaProgramIndicators );
+    promise = promise.then( getProgramIndicators );
     promise = promise.then( getTrackedEntityForms );
     promise = promise.then( getOrgUnitLevels );
     promise.done(function() {
@@ -204,6 +207,16 @@ function getCalendarSetting()
     });
 
     return def.promise();
+}
+
+function getConstants()
+{
+    dhis2.tc.store.getKeys( 'constants').done(function(res){        
+        if(res.length > 0){
+            return;
+        }        
+        return getD2Objects('constants', 'constants', '../api/constants.json', 'paging=false&fields=id,name,displayName,value');        
+    });    
 }
 
 function getRelationships()
@@ -680,7 +693,7 @@ function getProgramRules( data )
         def.resolve();
 
         promise = promise.done( function () {
-            mainDef.resolve( data );
+            mainDef.resolve( data.programs );
         } );
     }).fail(function(){
         mainDef.resolve( null );
@@ -821,6 +834,16 @@ function getProgramValidation( id )
             });
         });
     };
+}
+
+function getMetaProgramIndicators( programs )
+{    
+    return getD2MetaObject(programs, 'programIndicators', '../api/programIndicators.json', 'paging=false&fields=id,program[id]');
+}
+
+function getProgramIndicators( programIndicators )
+{
+    return checkAndGetD2Objects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,expression,displayDescription,rootDate,description,valueType,DisplayName,filter,program[id]');
 }
 
 function getMetaTrackeEntityAttributes( programs ){
@@ -1017,4 +1040,151 @@ function getOrgUnitLevels()
 
         return def.promise();
     }); 
+}
+
+function getD2MetaObject( programs, objNames, url, filter )
+{
+    if( !programs ){
+        return;
+    }
+    
+    var def = $.Deferred();
+    
+    var programIds = [];
+    _.each( _.values( programs ), function ( program ) { 
+        if( program.id ) {
+            programIds.push( program.id );
+        }
+    });
+    
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data:filter
+    }).done( function(response) {          
+        var objs = [];
+        _.each( _.values( response[objNames]), function ( o ) { 
+            if( o &&
+                o.id &&
+                o.program &&
+                o.program.id &&
+                programIds.indexOf( o.program.id ) !== -1) {
+            
+                objs.push( o );
+            }  
+            
+        });
+        
+        def.resolve( {programs: programs, self: objs} );
+        
+    }).fail(function(){
+        def.resolve( null );
+    });
+    
+    return def.promise();    
+}
+
+function checkAndGetD2Objects( obj, store, url, filter )
+{
+    if( !obj || !obj.programs || !obj.self ){
+        return;
+    }
+    
+    var mainDef = $.Deferred();
+    var mainPromise = mainDef.promise();
+
+    var def = $.Deferred();
+    var promise = def.promise();
+
+    var builder = $.Deferred();
+    var build = builder.promise();
+
+    _.each( _.values( obj.self ), function ( obj) {
+        build = build.then(function() {
+            var d = $.Deferred();
+            var p = d.promise();
+            dhis2.tc.store.get(store, obj.id).done(function(o) {
+                if(!o) {
+                    promise = promise.then( getD2Object( obj.id, store, url, filter, 'idb' ) );
+                }
+                d.resolve();
+            });
+
+            return p;
+        });
+    });
+
+    build.done(function() {
+        def.resolve();
+        promise = promise.done( function () {
+            mainDef.resolve( obj.programs );
+        } );
+    }).fail(function(){
+        mainDef.resolve( null );
+    });
+
+    builder.resolve();
+
+    return mainPromise;
+}
+
+function getD2Objects(store, objs, url, filter)
+{
+    var def = $.Deferred();
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: filter
+    }).done(function(response) {
+        if(response[objs]){
+            dhis2.tc.store.setAll( store, response[objs] );
+        }            
+        def.resolve();        
+    }).fail(function(){
+        def.resolve();
+    });
+
+    return def.promise();
+}
+
+
+function getD2Object( id, store, url, filter, storage )
+{
+    return function() {
+        if(id){
+            url = url + '/' + id + '.json';
+        }
+        return $.ajax( {
+            url: url,
+            type: 'GET',            
+            data: filter
+        }).done( function( response ){
+            if(storage === 'idb'){
+                if( response && response.id) {
+                    dhis2.tc.store.set( store, response );
+                }
+            }
+            if(storage === 'localStorage'){
+                localStorage[store] = JSON.stringify(response);
+            }            
+            if(storage === 'sessionStorage'){
+                var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
+                SessionStorageService.set(store, response);
+            }            
+        });
+    };
+}
+
+function uploadLocalData()
+{
+    var OfflineECStorageService = angular.element('body').injector().get('OfflineECStorageService');
+    setHeaderWaitMessage(i18n_uploading_data_notification);
+     
+    OfflineECStorageService.uploadLocalData().then(function(){
+        dhis2.tc.store.removeAll( 'events' );
+        log( 'Successfully uploaded local events' );      
+        setHeaderDelayMessage( i18n_sync_success );
+        selection.responseReceived(); //notify angular
+    });
 }

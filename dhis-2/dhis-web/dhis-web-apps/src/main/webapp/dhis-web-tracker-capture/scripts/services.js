@@ -10,7 +10,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     var store = new dhis2.storage.Store({
         name: "dhis2tc",
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules']
+        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules','constants']
     });
     return{
         currentStore: store
@@ -22,8 +22,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     
     var w = {};
     w.enrollmentWidget = {title: 'enrollment', view: "components/enrollment/enrollment.html", show: true, expand: true, parent: 'biggerWidget', order: 0};
-    w.dataentryWidget = {title: 'dataentry', view: "components/dataentry/dataentry.html", show: true, expand: true, parent: 'biggerWidget', order: 1};
-    w.reportWidget = {title: 'report', view: "components/report/tei-report.html", show: true, expand: true, parent: 'biggerWidget', order: 2};
+    w.indicatorWidget = {title: 'indicators', view: "components/rulebound/rulebound.html", show: true, expand: true, parent: 'biggerWidget', order: 1, code:'indicators'};
+    w.dataentryWidget = {title: 'dataentry', view: "components/dataentry/dataentry.html", show: true, expand: true, parent: 'biggerWidget', order: 2};
+    w.reportWidget = {title: 'report', view: "components/report/tei-report.html", show: true, expand: true, parent: 'biggerWidget', order: 3};
     w.selectedWidget = {title: 'current_selections', view: "components/selected/selected.html", show: false, expand: true, parent: 'smallerWidget', order: 0};
     w.profileWidget = {title: 'profile', view: "components/profile/profile.html", show: true, expand: true, parent: 'smallerWidget', order: 1};
     w.relationshipWidget = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true, parent: 'smallerWidget', order: 2};
@@ -1061,6 +1062,55 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };  
 })
 
+/* factory to fetch and process programValidations */
+.factory('MetaDataFactory', function($q, $rootScope, TCStorageService) {  
+    
+    return {        
+        get: function(store, uid){
+            
+            var def = $q.defer();
+            
+            TCStorageService.currentStore.open().done(function(){
+                TCStorageService.currentStore.get(store, uid).done(function(pv){                    
+                    $rootScope.$apply(function(){
+                        def.resolve(pv);
+                    });
+                });
+            });                        
+            return def.promise;
+        },
+        getByProgram: function(store, program){
+            var def = $q.defer();
+            var obj = [];
+            
+            TCStorageService.currentStore.open().done(function(){
+                TCStorageService.currentStore.getAll(store, program).done(function(pvs){   
+                    angular.forEach(pvs, function(pv){
+                        if(pv.program.id === program){                            
+                            obj.push(pv);                               
+                        }                        
+                    });
+                    $rootScope.$apply(function(){
+                        def.resolve(obj);
+                    });
+                });                
+            });            
+            return def.promise;
+        },
+        getAll: function(store){
+            var def = $q.defer();            
+            TCStorageService.currentStore.open().done(function(){
+                TCStorageService.currentStore.getAll(store).done(function(pvs){                       
+                    $rootScope.$apply(function(){
+                        def.resolve(pvs);
+                    });
+                });                
+            });            
+            return def.promise;
+        }
+    };        
+})
+
     /* Returns a function for getting rules for a specific program */
 .factory('TrackerRulesFactory', function($q,$rootScope,TCStorageService){
     return{
@@ -1755,5 +1805,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             return event;
         }
-    }; 
+    };
+    
 });
