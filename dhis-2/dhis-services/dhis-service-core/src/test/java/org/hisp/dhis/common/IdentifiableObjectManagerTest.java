@@ -29,14 +29,17 @@ package org.hisp.dhis.common;
  */
 
 import com.google.common.collect.Sets;
+
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.acl.AccessStringHelper;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
+import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
@@ -48,7 +51,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -98,6 +103,24 @@ public class IdentifiableObjectManagerTest
         assertEquals( dataElementGroupB, identifiableObjectManager.getObject( dataElementGroupIdB, DataElementGroup.class.getSimpleName() ) );
     }
 
+    @Test
+    public void testGetWithClasses()
+    {
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        dataElementService.addDataElement( dataElementA );
+        dataElementService.addDataElement( dataElementB );
+
+        Set<Class<? extends IdentifiableObject>> classes = new HashSet<>();
+        classes.add( DataElement.class );
+        classes.add( DataSet.class );
+        classes.add( Indicator.class );
+        
+        assertEquals( dataElementA, identifiableObjectManager.get( DataDimension.DATA_DIMENSION_CLASSES, dataElementA.getUid() ) );
+        assertEquals( dataElementB, identifiableObjectManager.get( DataDimension.DATA_DIMENSION_CLASSES, dataElementB.getUid() ) );        
+    }
+    
     @Test
     public void publicAccessSetIfNoUser()
     {
