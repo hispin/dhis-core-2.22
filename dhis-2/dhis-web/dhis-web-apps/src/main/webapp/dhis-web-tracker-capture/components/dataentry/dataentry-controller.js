@@ -117,10 +117,10 @@ trackerCapture.controller('DataEntryController',
         //If the events is displayed in a table, it is necessary to run the rules for all visible events.
         if($scope.currentStage.displayEventsInTable) {
            angular.forEach($scope.currentStageEvents, function(event) {
-               TrackerRulesExecutionService.executeRules($scope.selectedProgramId,event,$scope.eventsByStage,$scope.prStDes,$scope.selectedTei);
+               TrackerRulesExecutionService.executeRules($scope.selectedProgramId,event,$scope.eventsByStage,$scope.prStDes,$scope.selectedTei,$scope.selectedEnrollment);
            });
         } else {
-           TrackerRulesExecutionService.executeRules($scope.selectedProgramId,$scope.currentEvent,$scope.eventsByStage,$scope.prStDes,$scope.selectedTei);
+           TrackerRulesExecutionService.executeRules($scope.selectedProgramId,$scope.currentEvent,$scope.eventsByStage,$scope.prStDes,$scope.selectedTei,$scope.selectedEnrollment);
         }
     };
     
