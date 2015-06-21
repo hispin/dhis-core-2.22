@@ -34,10 +34,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
@@ -111,6 +113,25 @@ public class IdentifiableObjectUtils
         }
 
         return uids;
+    }
+
+    /**
+     * 
+     * @param classes
+     * @return
+     */
+    @SafeVarargs
+    @SuppressWarnings("unchecked")
+    public static Set<Class<IdentifiableObject>> asTypedClassSet( Class<? extends IdentifiableObject>... classes )
+    {
+        Set<Class<IdentifiableObject>> set = new HashSet<>();
+        
+        for ( Class<? extends IdentifiableObject> clazz : classes )
+        {
+            set.add( (Class<IdentifiableObject>) clazz );
+        }
+        
+        return set;
     }
 
     /**
