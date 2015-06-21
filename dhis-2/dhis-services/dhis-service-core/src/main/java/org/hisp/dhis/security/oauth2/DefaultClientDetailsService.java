@@ -28,6 +28,7 @@ package org.hisp.dhis.security.oauth2;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Sets;
 import org.hisp.dhis.oauth2.OAuth2Client;
 import org.hisp.dhis.oauth2.OAuth2ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,6 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -46,6 +46,11 @@ public class DefaultClientDetailsService implements ClientDetailsService
 {
     @Autowired
     private OAuth2ClientService oAuth2ClientService;
+
+    private final Set<String> GRANT_TYPES =
+        Sets.newHashSet( "password", "authorization_code", "refresh_token" );
+
+    private final Set<String> SCOPES = Sets.newHashSet( "ALL" );
 
     @Override
     public ClientDetails loadClientByClientId( String clientId ) throws ClientRegistrationException
@@ -67,21 +72,11 @@ public class DefaultClientDetailsService implements ClientDetailsService
             return null;
         }
 
-        Set<String> grantTypes = new HashSet<>();
-        grantTypes.add( "password" );
-        grantTypes.add( "authorization_code" );
-        grantTypes.add( "refresh_token" );
-        grantTypes.add( "client_credentials" );
-        grantTypes.add( "implicit" );
-
-        Set<String> scopes = new HashSet<>();
-        scopes.add( "ALL" );
-
         BaseClientDetails clientDetails = new BaseClientDetails();
         clientDetails.setClientId( client.getCid() );
         clientDetails.setClientSecret( client.getSecret() );
-        clientDetails.setAuthorizedGrantTypes( grantTypes );
-        clientDetails.setScope( scopes );
+        clientDetails.setAuthorizedGrantTypes( GRANT_TYPES );
+        clientDetails.setScope( SCOPES );
 
         return clientDetails;
     }
