@@ -16,26 +16,15 @@
     <property name="authenticationManager" ref="clientAuthenticationManager" />
   </bean>
 
-  <sec:http pattern="/api/oauth/token" create-session="stateless" authentication-manager-ref="clientAuthenticationManager">
-    <sec:intercept-url pattern="/api/oauth/token" access="IS_AUTHENTICATED_FULLY" />
+  <oauth:resource-server id="resourceServerFilter" token-services-ref="tokenServices" entry-point-ref="oauthAuthenticationEntryPoint" />
+
+  <sec:http pattern="/api/oauth/**" create-session="stateless" authentication-manager-ref="clientAuthenticationManager">
+    <sec:intercept-url pattern="/api/oauth/**" access="IS_AUTHENTICATED_FULLY" />
     <sec:anonymous enabled="false" />
     <sec:http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
     <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
     <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
   </sec:http>
-
-  <oauth:resource-server id="resourceServerFilter" token-services-ref="tokenServices" entry-point-ref="oauthAuthenticationEntryPoint" />
-
-  <!--
-  <sec:http pattern="/oauth/authorize/**" access-denied-page="/login.jsp?authorization_error=true" disable-url-rewriting="true">
-      <sec:intercept-url pattern="/oauth/authorize/**" access="IS_AUTHENTICATED_FULLY" />
-      <sec:form-login authentication-failure-url="/login.jsp?authentication_error=true"
-          default-target-url="http://www.ourwebsite.com/" login-page="/login.jsp"
-          login-processing-url="/login.do" />
-      <sec:http-basic />
-      <sec:anonymous />
-  </sec:http>
-  -->
   <!-- End OAuth2 -->
 
   <bean id="mappedRedirectStrategy" class="org.hisp.dhis.security.MappedRedirectStrategy">
