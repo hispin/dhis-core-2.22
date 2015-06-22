@@ -28,7 +28,18 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Sets;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
+
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.acl.AccessStringHelper;
@@ -47,14 +58,7 @@ import org.hisp.dhis.user.UserService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.Assert.*;
+import com.google.common.collect.Sets;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -102,7 +106,6 @@ public class IdentifiableObjectManagerTest
         assertEquals( dataElementGroupB, identifiableObjectManager.getObject( dataElementGroupIdB, DataElementGroup.class.getSimpleName() ) );
     }
 
-    /*
     @Test
     public void testGetWithClasses()
     {
@@ -111,16 +114,12 @@ public class IdentifiableObjectManagerTest
 
         dataElementService.addDataElement( dataElementA );
         dataElementService.addDataElement( dataElementB );
-
-        Set<Class<? extends IdentifiableObject>> classes = new HashSet<>();
-        classes.add( DataElement.class );
-        classes.add( DataSet.class );
-        classes.add( Indicator.class );
-
-        assertEquals( dataElementA, identifiableObjectManager.get( DataDimension.DATA_DIMENSION_CLASSES, dataElementA.getUid() ) );
-        assertEquals( dataElementB, identifiableObjectManager.get( DataDimension.DATA_DIMENSION_CLASSES, dataElementB.getUid() ) );
+        
+        Set<Class<IdentifiableObject>> classes = IdentifiableObjectUtils.asTypedClassSet( DataElement.class, DataSet.class, Indicator.class );
+        
+        assertEquals( dataElementA, identifiableObjectManager.get( classes, dataElementA.getUid() ) );
+        assertEquals( dataElementB, identifiableObjectManager.get( classes, dataElementB.getUid() ) );
     }
-    */
 
     @Test
     public void publicAccessSetIfNoUser()
