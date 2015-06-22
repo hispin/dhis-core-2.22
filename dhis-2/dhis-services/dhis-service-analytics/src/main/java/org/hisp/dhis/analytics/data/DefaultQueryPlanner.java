@@ -265,27 +265,17 @@ public class DefaultQueryPlanner
                         List<DataQueryParams> groupedByAggregationType = groupByAggregationType( byDataType );
     
                         for ( DataQueryParams byAggregationType : groupedByAggregationType )
-                        {
-                            if ( byAggregationType.isDisaggregation() )
+                        {                            
+                            List<DataQueryParams> groupedByDataPeriodType = groupByDataPeriodType( byAggregationType );
+                            
+                            for ( DataQueryParams byDataPeriodType : groupedByDataPeriodType )
                             {
-                                List<DataQueryParams> groupedByDataPeriodType = groupByDataPeriodType( byAggregationType );
+                                byDataPeriodType.setPartitions( byPartition.getPartitions() );
+                                byDataPeriodType.setPeriodType( byPeriodType.getPeriodType() );
+                                byDataPeriodType.setAggregationType( byAggregationType.getAggregationType() );
                                 
-                                for ( DataQueryParams byDataPeriodType : groupedByDataPeriodType )
-                                {
-                                    byDataPeriodType.setPartitions( byPartition.getPartitions() );
-                                    byDataPeriodType.setPeriodType( byPeriodType.getPeriodType() );
-                                    byDataPeriodType.setAggregationType( byAggregationType.getAggregationType() );
-                                    
-                                    queries.add( byDataPeriodType );
-                                }
-                            }
-                            else
-                            {
-                                byAggregationType.setPartitions( byPartition.getPartitions() );
-                                byAggregationType.setPeriodType( byPeriodType.getPeriodType() );
-                                
-                                queries.add( byAggregationType );
-                            }
+                                queries.add( byDataPeriodType );
+                            } 
                         }
                     }
                 }
@@ -647,13 +637,14 @@ public class DefaultQueryPlanner
 
     /**
      * Groups the given query in sub queries based on the period type of its
-     * data elements. Sets the data period type on each query.
+     * data elements. Sets the data period type on each query. This only applies
+     * if the aggregation type of the query involves disaggregation.
      */
     private List<DataQueryParams> groupByDataPeriodType( DataQueryParams params )
     {
         List<DataQueryParams> queries = new ArrayList<>();
 
-        if ( params.getDataElements().isEmpty() )
+        if ( params.getDataElements().isEmpty() || !params.isDisaggregation() )
         {
             queries.add( params.instance() );
             return queries;
