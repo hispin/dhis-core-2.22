@@ -174,6 +174,55 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
     };
 })
 
+/* factory for handling program related meta-data */
+.factory('MetaDataFactory', function($q, $rootScope, ECStorageService) {  
+    
+    return {        
+        get: function(store, uid){
+            
+            var def = $q.defer();
+            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.get(store, uid).done(function(pv){                    
+                    $rootScope.$apply(function(){
+                        def.resolve(pv);
+                    });
+                });
+            });                        
+            return def.promise;
+        },
+        getByProgram: function(store, program){
+            var def = $q.defer();
+            var objs = [];
+            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.getAll(store, program).done(function(data){   
+                    angular.forEach(data, function(o){
+                        if(o.program.id === program){                            
+                            objs.push(o);                               
+                        }                        
+                    });
+                    $rootScope.$apply(function(){
+                        def.resolve(objs);
+                    });
+                });                
+            });            
+            return def.promise;
+        },
+        getAll: function(store){
+            var def = $q.defer();            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.getAll(store).done(function(objs){                       
+                    $rootScope.$apply(function(){
+                        def.resolve(objs);
+                    });
+                });                
+            });            
+            return def.promise;
+        }
+    };        
+})
+
 /* factory for handling events */
 .factory('DHIS2EventFactory', function($http, $q, ECStorageService, $rootScope) {   
     
