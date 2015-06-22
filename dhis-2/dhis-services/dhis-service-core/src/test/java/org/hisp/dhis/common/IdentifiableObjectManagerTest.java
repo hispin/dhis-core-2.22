@@ -29,7 +29,6 @@ package org.hisp.dhis.common;
  */
 
 import com.google.common.collect.Sets;
-
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.acl.AccessStringHelper;
@@ -103,6 +102,7 @@ public class IdentifiableObjectManagerTest
         assertEquals( dataElementGroupB, identifiableObjectManager.getObject( dataElementGroupIdB, DataElementGroup.class.getSimpleName() ) );
     }
 
+    /*
     @Test
     public void testGetWithClasses()
     {
@@ -116,11 +116,12 @@ public class IdentifiableObjectManagerTest
         classes.add( DataElement.class );
         classes.add( DataSet.class );
         classes.add( Indicator.class );
-        
+
         assertEquals( dataElementA, identifiableObjectManager.get( DataDimension.DATA_DIMENSION_CLASSES, dataElementA.getUid() ) );
-        assertEquals( dataElementB, identifiableObjectManager.get( DataDimension.DATA_DIMENSION_CLASSES, dataElementB.getUid() ) );        
+        assertEquals( dataElementB, identifiableObjectManager.get( DataDimension.DATA_DIMENSION_CLASSES, dataElementB.getUid() ) );
     }
-    
+    */
+
     @Test
     public void publicAccessSetIfNoUser()
     {
@@ -606,11 +607,11 @@ public class IdentifiableObjectManagerTest
         identifiableObjectManager.save( dataElementD );
 
         List<String> uids = Arrays.asList( dataElementA.getUid(), dataElementC.getUid(), dataElementB.getUid(), dataElementD.getUid() );
-        
+
         List<DataElement> expected = new ArrayList<>( Arrays.asList( dataElementA, dataElementC, dataElementB, dataElementD ) );
-        
+
         List<DataElement> actual = new ArrayList<>( identifiableObjectManager.getByUidOrdered( DataElement.class, uids ) );
-        
+
         assertEquals( expected, actual );
     }
 }
