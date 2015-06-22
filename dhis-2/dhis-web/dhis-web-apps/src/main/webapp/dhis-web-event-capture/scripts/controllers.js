@@ -105,6 +105,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.resetOu = false;
         $scope.selectedProgramStage = null;
         $scope.programValidations = [];
+        $scope.programIndicators = [];
         $scope.dhis2Events = [];
         $scope.currentEvent = {};
         $scope.currentEventOriginialValue = {};
@@ -194,7 +195,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
 
                 MetaDataFactory.getByProgram('programValidations', $scope.selectedProgram.id).then(function(pvs){
                     $scope.programValidations = pvs;
-                    $scope.loadEvents();
+                    MetaDataFactory.getByProgram('programIndicators', $scope.selectedProgram.id).then(function(pis){
+                        $scope.programIndicators = pis;
+                        $scope.loadEvents();
+                    });                    
                 });
             });
         }
@@ -945,9 +949,14 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     });
     
     $scope.executeRules = function() {
+        $scope.currentEvent.event = !$scope.currentEvent.event ? 'SINGLE_EVENT' : $scope.currentEvent.event;
         $scope.eventsByStage = [];
         $scope.eventsByStage[$scope.selectedProgramStage.id] = [$scope.currentEvent];
-        TrackerRulesExecutionService.executeRules($scope.selectedProgram.id,$scope.currentEvent,$scope.eventsByStage,$scope.prStDes,null);
+        TrackerRulesExecutionService.executeRules($scope.selectedProgram.id,$scope.currentEvent,$scope.eventsByStage,$scope.prStDes,null,false);
+    };
+    
+    $scope.formatNumberResult = function(val){        
+        return dhis2.validation.isNumber(val) ? val : '';
     };
     
     //check if field is hidden
