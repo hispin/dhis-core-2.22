@@ -29,7 +29,7 @@ if( dhis2.tc.memoryOnly ) {
 dhis2.tc.store = new dhis2.storage.Store({
     name: 'dhis2tc',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'programIndicators', 'ouLevels', 'programRuleVariables', 'programRules','constants']      
+    objectStores: ['programs', 'programStages', 'trackedEntities', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'programIndicators', 'ouLevels', 'programRuleVariables', 'programRules','constants']      
 });
 
 (function($) {
@@ -150,7 +150,6 @@ function downloadMetaData()
     promise = promise.then( getProgramValidations );   
     promise = promise.then( getMetaProgramIndicators );
     promise = promise.then( getProgramIndicators );
-    promise = promise.then( getTrackedEntityForms );
     promise = promise.then( getOrgUnitLevels );
     promise.done(function() {
         
@@ -339,7 +338,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs.json',
             type: 'GET',
-            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
+            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],dataEntryForm[name,style,htmlCode,format],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
         }).done( function( response ){
             
             _.each( _.values( response.programs ), function ( program ) { 
@@ -986,35 +985,6 @@ function getOptionSetsForAttributes( data )
     builder.resolve();
 
     return mainPromise;    
-}
-
-function getTrackedEntityForms( )
-{
-    dhis2.tc.store.getKeys( 'trackedEntityForms').done(function(res){        
-        if(res.length > 0){
-            return;
-        }
-        var def = $.Deferred();
-
-        $.ajax({
-            url: '../api/trackedEntityForms.json?paging=false&fields=id,program[id,name],dataEntryForm[name,htmlCode]',
-            type: 'GET'
-        }).done(function(response) {
-            _.each( _.values( response.trackedEntityForms ), function ( trackedEntityForm ) { 
-                
-                if( trackedEntityForm && trackedEntityForm.id){
-                    trackedEntityForm.id = trackedEntityForm.program.id;
-                    dhis2.tc.store.set( 'trackedEntityForms', trackedEntityForm );
-                }
-            });
-            
-            def.resolve();        
-        }).fail(function(){
-            def.resolve();
-        });
-
-        return def.promise();
-    });    
 }
 
 function getOrgUnitLevels()

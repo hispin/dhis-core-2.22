@@ -8,7 +8,6 @@ trackerCapture.controller('RegistrationController',
                 AttributesFactory,
                 DHIS2EventFactory,
                 TEService,
-                TEFormService,
                 CustomFormService,
                 EnrollmentService,
                 DialogService,
@@ -102,15 +101,15 @@ trackerCapture.controller('RegistrationController',
         var mode = _mode ? _mode : 'ENROLLMENT';
         AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
             $scope.attributes = atts;
-            $scope.customFormExists = false;   
-            if($scope.selectedProgram && $scope.selectedProgram.id){
-                TEFormService.getByProgram($scope.selectedProgram, $scope.attributes).then(function(teForm){
-                    if(angular.isObject(teForm)){                        
-                        $scope.customFormExists = true;
-                        $scope.trackedEntityForm = teForm;                      
-                        $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
-                    }
-                });
+            $scope.customFormExists = false;
+            if($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedProgram.dataEntryForm && $scope.selectedProgram.dataEntryForm.htmlCode){
+                $scope.customFormExists = true;
+                $scope.trackedEntityForm = $scope.selectedProgram.dataEntryForm;  
+                $scope.trackedEntityForm.attributes = $scope.attributes;
+                $scope.trackedEntityForm.selectIncidentDatesInFuture = $scope.selectedProgram.selectIncidentDatesInFuture;
+                $scope.trackedEntityForm.selectEnrollmentDatesInFuture = $scope.selectedProgram.selectEnrollmentDatesInFuture;
+                $scope.trackedEntityForm.displayIncidentDate = $scope.selectedProgram.displayIncidentDate;
+                $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
             }
         });
     };
