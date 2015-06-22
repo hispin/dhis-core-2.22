@@ -323,7 +323,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' blur-or-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
-                                    else if (prStDe.dataElement.type.type === "trueOnly") {
+                                    else if (prStDe.dataElement.type === "trueOnly") {
                                         newInputField = '<input type="checkbox" ' +
                                                 ' ng-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
