@@ -239,15 +239,8 @@ public class GetMetaDataAction
 
         expressionService.substituteExpressions( indicators, null );
 
-        if ( currentUserService.currentUserIsSuper() )
-        {
-            dataSets = new ArrayList<>( dataSetService.getAllDataSets() );
-        }
-        else if ( user != null )
-        {
-            dataSets = new ArrayList<>( user.getUserCredentials().getAllDataSets() );
-        }
-
+        dataSets = currentUserService.getCurrentUserDataSets();
+        
         Set<DataElementCategoryCombo> categoryComboSet = new HashSet<>();
         Set<DataElementCategory> categorySet = new HashSet<>();
 
