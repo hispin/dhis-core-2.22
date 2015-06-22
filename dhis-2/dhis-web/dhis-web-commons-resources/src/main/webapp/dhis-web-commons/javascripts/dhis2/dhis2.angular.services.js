@@ -888,8 +888,11 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                     //add context variables:
                     //last parameter "valuefound" is always true for event date
                     pushVariable('incident_date', executingEvent.eventDate, 'date', true, 'V' );
-                    pushVariable('enrollment_date', selectedEnrollment.dateOfEnrollment, 'date', true, 'V' );
                     pushVariable('current_date', DateUtils.getToday(), 'date', true, 'V' );
+                    if(selectedEnrollment){
+                        pushVariable('enrollment_date', selectedEnrollment.dateOfEnrollment, 'date', true, 'V' );
+                    }
+                    
                     //pushVariable('value_count', executingEvent.eventDate, 'date', true, 'V' );
                     //pushVariable('zero_pos_value_count', executingEvent.eventDate, 'date', true, 'V' );
 
@@ -910,11 +913,10 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 /* service for executing tracker rules and broadcasting results */
 .service('TrackerRulesExecutionService', function(TrackerRulesFactory, MetaDataFactory, VariableService, $rootScope, $log, $q, $filter, orderByFilter){
     return {
-        executeRules: function(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity, selectedEnrollment ) {
+        executeRules: function(programid, executingEvent, allEventsByStage, allDataElements, selectedEntity, selectedEnrollment, verbose ) {
             //When debugging rules, the caller should provide a variable for wether or not the rules is being debugged.
             //hard coding this for now:
             var debug = true;
-            var verbose = true;
             
             var variablesHash = {};
             
