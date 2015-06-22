@@ -50,6 +50,7 @@ import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -424,7 +425,7 @@ public class DefaultResourceTableService
         resourceTableStore.createDatePeriodStructure();
 
         // ---------------------------------------------------------------------
-        // Populate table
+        // Populate table, uniqueness check as some calendars produce duplicates
         // ---------------------------------------------------------------------
 
         List<PeriodType> periodTypes = PeriodType.getAvailablePeriodTypes();
@@ -434,7 +435,7 @@ public class DefaultResourceTableService
         Date startDate = new Cal( 1975, 1, 1, true ).time(); //TODO
         Date endDate = new Cal( 2025, 1, 1, true ).time();
 
-        List<Period> days = new DailyPeriodType().generatePeriods( startDate, endDate );
+        List<Period> days = new UniqueArrayList<>( new DailyPeriodType().generatePeriods( startDate, endDate ) );
 
         Calendar calendar = PeriodType.getCalendar();
 
