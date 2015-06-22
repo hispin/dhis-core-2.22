@@ -10,7 +10,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     var store = new dhis2.storage.Store({
         name: "dhis2tc",
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'trackedEntities', 'trackedEntityForms', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules','constants']
+        objectStores: ['programs', 'programStages', 'trackedEntities', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules','constants']
     });
     return{
         currentStore: store
@@ -621,36 +621,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 TCStorageService.currentStore.get('trackedEntities', uid).done(function(te){                    
                     $rootScope.$apply(function(){
                         def.resolve(te);
-                    });
-                });
-            });                        
-            return def.promise;            
-        }
-    };
-})
-
-/* Service for getting tracked entity Form */
-.factory('TEFormService', function(TCStorageService, $q, $rootScope) {
-
-    return {
-        getByProgram: function(program, attributes){ 
-            
-            var def = $q.defer();
-            
-            TCStorageService.currentStore.open().done(function(){
-                TCStorageService.currentStore.get('trackedEntityForms', program.id).done(function(teForm){                    
-                    $rootScope.$apply(function(){
-                        var trackedEntityForm = teForm;
-                        if(angular.isObject(trackedEntityForm)){
-                            trackedEntityForm.attributes = attributes;
-                            trackedEntityForm.selectIncidentDatesInFuture = program.selectIncidentDatesInFuture;
-                            trackedEntityForm.selectEnrollmentDatesInFuture = program.selectEnrollmentDatesInFuture;
-                            trackedEntityForm.displayIncidentDate = program.displayIncidentDate;
-                            def.resolve(trackedEntityForm);
-                        }
-                        else{
-                            def.resolve(null);
-                        }
                     });
                 });
             });                        
