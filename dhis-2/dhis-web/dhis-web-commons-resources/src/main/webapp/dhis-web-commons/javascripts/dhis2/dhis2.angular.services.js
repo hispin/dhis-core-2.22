@@ -256,6 +256,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             newInputField = '<input type="text" ' +
                                     this.getAttributesAsString(attributes) +
                                     ' ng-model="currentEvent.' + fieldId + '"' +
+                                    ' style="width:100%;" ' +
                                     ' input-field-id="' + fieldId + '"' +
                                     ' d2-date ' +
                                     ' d2-date-validator ' +
