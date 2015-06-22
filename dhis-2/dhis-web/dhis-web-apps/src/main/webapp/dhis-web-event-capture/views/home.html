@@ -88,9 +88,11 @@
                     <span ng-if="eventRegistration">{{'new_event'| translate}}</span>                            
                 </h3>
                 <div class="bordered-div" ng-if="displayCustomForm">
+                    <!--<div ng-if="programIndicators.length > 0" ng-include="'views/indicators.html'"></div>-->
                     <div ng-include="'views/ec-custom-form.html'"></div>  
                 </div>
                 <div class="bordered-div container-default-form" ng-if="!displayCustomForm">
+                    <!--<div ng-if="programIndicators.length > 0" ng-include="'views/indicators.html'"></div>-->
                     <div ng-include="'views/defaultForm.html'"></div>                
                 </div>
             </div>
