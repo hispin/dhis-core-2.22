@@ -89,7 +89,6 @@ import java.io.BufferedInputStream;
 @RequestMapping(value = "/csd")
 public class CsdController
 {
-
     private static final String SOAP_CONTENT_TYPE = "application/soap+xml";
 
     // Name of group all facilities belong to
