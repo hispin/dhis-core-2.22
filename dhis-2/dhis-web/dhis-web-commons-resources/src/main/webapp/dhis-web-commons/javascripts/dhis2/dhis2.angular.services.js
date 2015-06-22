@@ -346,16 +346,16 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             }
             return null;
         },
-        getForTrackedEntity: function (trackedEntity, target) {
-            if (!trackedEntity) {
+        getForTrackedEntity: function (trackedEntityForm, target) {
+            if (!trackedEntityForm) {
                 return null;
             }
 
-            var htmlCode = trackedEntity.dataEntryForm ? trackedEntity.dataEntryForm.htmlCode : null;
+            var htmlCode = trackedEntityForm.htmlCode ? trackedEntityForm.htmlCode : null;
             if (htmlCode) {
 
                 var trackedEntityFormAttributes = [];
-                angular.forEach(trackedEntity.attributes, function (att) {
+                angular.forEach(trackedEntityForm.attributes, function (att) {
                     trackedEntityFormAttributes[att.id] = att;
                 });
 
@@ -457,7 +457,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         programId = attributes['programid'];
                         if (programId === 'enrollmentDate') {
                             fieldName = 'dateOfEnrollment';
-                            var enMaxDate = trackedEntity.selectEnrollmentDatesInFuture ? '' : 0;
+                            var enMaxDate = trackedEntityForm.selectEnrollmentDatesInFuture ? '' : 0;
                             newInputField = '<input type="text" ' +
                                     ' name="' + fieldName + '"' +
                                     ' element-id="' + i + '"' +
@@ -470,9 +470,9 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     ' max-date="' + enMaxDate + '"' +
                                     ' ng-required="true"> ';
                         }
-                        if (programId === 'dateOfIncident' && trackedEntity.displayIncidentDate) {
+                        if (programId === 'dateOfIncident' && trackedEntityForm.displayIncidentDate) {
                             fieldName = 'dateOfIncident';
-                            var inMaxDate = trackedEntity.selectIncidentDatesInFuture ? '' : 0;
+                            var inMaxDate = trackedEntityForm.selectIncidentDatesInFuture ? '' : 0;
                             newInputField = '<input type="text" ' +
                                     ' name="' + fieldName + '"' +
                                     ' element-id="' + i + '"' +
