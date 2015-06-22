@@ -29,15 +29,22 @@ package org.hisp.dhis.user;
  */
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.security.spring.AbstractSpringSecurityCurrentUserService;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
+
 /**
  * @author Torgeir Lorange Ostby
- * @version $Id: DefaultCurrentUserService.java 5708 2008-09-16 14:28:32Z larshelg $
  */
 @Transactional
 public class DefaultCurrentUserService
@@ -52,6 +59,20 @@ public class DefaultCurrentUserService
     public void setUserService( UserService userService )
     {
         this.userService = userService;
+    }
+
+    private DataSetService dataSetService;
+
+    public void setDataSetService( DataSetService dataSetService )
+    {
+        this.dataSetService = dataSetService;
+    }
+
+    private I18nService i18nService;
+
+    public void setI18nService( I18nService service )
+    {
+        i18nService = service;
     }
 
     // -------------------------------------------------------------------------
@@ -81,21 +102,9 @@ public class DefaultCurrentUserService
     @Override
     public boolean currentUserIsSuper()
     {
-        String username = getCurrentUsername();
+        User user = getCurrentUser();
 
-        if ( username == null )
-        {
-            return false;
-        }
-
-        UserCredentials userCredentials = userService.getUserCredentialsByUsername( username );
-
-        if ( userCredentials == null )
-        {
-            return false;
-        }
-
-        return userCredentials.isSuper();
+        return user != null && user.isSuper();
     }
 
     @Override
@@ -112,5 +121,25 @@ public class DefaultCurrentUserService
         User user = getCurrentUser();
         
         return user != null && user.getUserCredentials().isAuthorized( auth );
+    }
+
+    @Override
+    public List<DataSet> getCurrentUserDataSets()
+    {
+        User user = getCurrentUser();
+        
+        if ( user == null )
+        {
+            return Lists.newArrayList();
+        }
+        
+        if ( user.isSuper() )
+        {
+            return dataSetService.getAllDataSets();
+        }
+        else
+        {
+            return i18n( i18nService, Lists.newArrayList( user.getUserCredentials().getAllDataSets() ) );
+        }
     }
 }
