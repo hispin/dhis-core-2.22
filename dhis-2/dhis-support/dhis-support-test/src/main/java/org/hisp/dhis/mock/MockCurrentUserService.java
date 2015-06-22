@@ -30,13 +30,17 @@ package org.hisp.dhis.mock;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserCredentials;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -111,5 +115,11 @@ public class MockCurrentUserService
     public boolean currenUserIsAuthorized( String auth )
     {
         return true;
+    }
+
+    @Override
+    public List<DataSet> getCurrentUserDataSets()
+    {
+        return Lists.newArrayList();
     }
 }
