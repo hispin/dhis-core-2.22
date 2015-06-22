@@ -17,6 +17,7 @@
     <module>dhis-web-api-mobile</module>
     <module>dhis-web-api</module>
     <module>dhis-web-ohie</module>
+    <module>dhis-web-uaa</module>
     <module>dhis-web-maintenance</module>
     <module>dhis-web-dataentry</module>
     <module>dhis-web-importexport</module>

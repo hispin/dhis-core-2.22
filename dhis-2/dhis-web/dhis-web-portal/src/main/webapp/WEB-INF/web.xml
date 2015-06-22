@@ -93,6 +93,14 @@
     <url-pattern>/ohie/*</url-pattern>
   </filter-mapping>
   <filter-mapping>
+    <filter-name>hiddenHttpMethodFilter</filter-name>
+    <url-pattern>/uaa/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>OpenSessionInViewFilter</filter-name>
+    <url-pattern>/uaa/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
     <filter-name>OpenSessionInViewFilter</filter-name>
     <url-pattern>/mobile/*</url-pattern>
   </filter-mapping>
@@ -136,12 +144,23 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+
   <servlet>
-    <servlet-name>ohie</servlet-name>
+    <servlet-name>ohieServlet</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
       <param-value>classpath*:/META-INF/dhis/webapi-ohie.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>uaaServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath*:/META-INF/dhis/webapi-uaa.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -163,12 +182,20 @@
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>ohie</servlet-name>
+    <servlet-name>ohieServlet</servlet-name>
     <url-pattern>/ohie</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>ohie</servlet-name>
+    <servlet-name>ohieServlet</servlet-name>
     <url-pattern>/ohie/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>uaaServlet</servlet-name>
+    <url-pattern>/uaa</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>uaaServlet</servlet-name>
+    <url-pattern>/uaa/*</url-pattern>
   </servlet-mapping>
 
 </web-app>
