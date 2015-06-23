@@ -69,7 +69,7 @@ public class ProgramRuleVariable
      * within the current event. dataelement_previous_event Get a specific
      * data elements value, specifically from the event preceding the current
      * event, if this exists. calculated_value Do not assign the variable a
-     * hard-linked source, it will be populated by rules with “assignvariable”
+     * hard-linked source, it will be populated by rules with assignvariable
      * actions(i.e. calculation rules). tei_attribute Get a specific attribute
      * from the current tracked entity. the linked attribute will be used to
      * lookup the attributes uID value.
@@ -89,7 +89,7 @@ public class ProgramRuleVariable
      * <ul>
      * <li>dataelement_newest_event_program_stage</li>
      * <li>dataelement_newest_event_program</li>
-     * <li>dataelement_current_event</li>
+     * <li>dataelement_current_even</li>
      * </ul>
      */
     private DataElement dataElement;

@@ -180,10 +180,11 @@
 				<select type="" id="sourceType" name="sourceType" onchange="sourceTypeOnChange()" style="width:250px;">
 					<option value="DATAELEMENT_NEWEST_EVENT_PROGRAM">$i18n.getString("data_element_newest_event_program")</option>
 					<option value="DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE">$i18n.getString("data_element_newest_event_program_stage")</option>
+					<option value="TEI_ATTRIBUTE">$i18n.getString("tei_attribute")</option>
 				</select>
 			</td>
 		</td>
-		<tr>
+		<tr name="deSourceType">
 			<td>$i18n.getString('source_program_stage')</td>
 			<td>
 				<select type="" id="programStageId" disabled style="width:250px;" onchange="getDataElementsByStage();">
@@ -194,7 +195,7 @@
 				</select>
 			</td>
 		</td>
-		<tr>
+		<tr name="deSourceType">
 			<td>$i18n.getString('source_dataElement') <em title="$i18n.getString( "required" )" class="required">*</em></td>
 			<td>
 				<select type="" id="dataElementId" style="width:250px;">
@@ -205,6 +206,18 @@
 					#end
 				</select>
 				<span style="color:red;display:none;" id="dataElementIdError" ></span>
+			</td>
+		</td>
+		
+		<tr name="teiAttrSourceType" style='display:none'>
+			<td>$i18n.getString('tei_attribute') <em title="$i18n.getString( "required" )" class="required">*</em></td>
+			<td>
+				<select type="" id="attributeId" style="width:250px;">
+					#foreach( $programAttribute in $program.programAttributes )
+						<option value="$programAttribute.attribute.uid">$programAttribute.attribute.displayName</option>
+					#end
+				</select>
+				<span style="color:red;display:none;" id="attributeIdError" ></span>
 			</td>
 		</td>
 		<tr>
