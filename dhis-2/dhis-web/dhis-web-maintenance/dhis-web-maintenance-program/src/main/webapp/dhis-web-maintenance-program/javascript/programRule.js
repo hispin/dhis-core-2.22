@@ -158,6 +158,49 @@ function validateVariable( dataElementId, variableName )
 
 function addProgramRuleVariable()
 {
+	var sourceType = getFieldValue('sourceType');
+	
+	if( sourceType == 'TEI_ATTRIBUTE' ){
+		addProgramRuleAttrVariable();
+	}
+	else{
+		addProgramRuleDEVariable();
+	}
+}
+
+function addProgramRuleAttrVariable()
+{
+	var attributeId = getFieldValue('programRuleVariableDiv #attributeId');
+	var variableName = getFieldValue('variableName');
+	if( validateVariable( attributeId, variableName ) )
+	{	
+		hideById('variableNameError');
+		
+		var sourceType = getFieldValue('sourceType');
+		var programStageId = getFieldValue('programStageId');
+		var attributeName = $('#attributeId option:selected').text();
+		var json_Data = getAttrVariableJson( variableName, sourceType, attributeId );
+		
+		var clazz = "listAlternateRow";
+		if( $("#sourceFieldList tr").length % 2 == 0 )
+		{
+			clazz = "listRow";
+		}
+			
+		var row = "<tr class='" + clazz + " newVariable' jsonData='" + json_Data + "'><td>" + attributeName + "</td><td>" + addAttrVariableButton( variableName, attributeId ) +"</td></tr>";
+		$("#sourceFieldList").append(row);
+		
+		// Remove the data element from Add the Source field form. This data was used, so cannot be used for any variables.
+		
+		$('#programRuleVariableDiv #attributeId option[value="' + attributeId + '"]').remove();		
+		$("#programRuleVariableDiv").dialog("close");
+	}
+	
+}
+
+
+function addProgramRuleDEVariable()
+{
 	var dataElementId = getFieldValue('programRuleVariableDiv #dataElementId');
 	var variableName = getFieldValue('variableName');
 	if( validateVariable( dataElementId, variableName ) )
@@ -167,7 +210,7 @@ function addProgramRuleVariable()
 		var sourceType = getFieldValue('sourceType');
 		var programStageId = getFieldValue('programStageId');
 		var dataElementName = $('#dataElementId option:selected').text();
-		var json_Data = getVariableJson( variableName, sourceType, dataElementId, programStageId );
+		var json_Data = getDEVariableJson( variableName, sourceType, dataElementId, programStageId );
 		
 		var clazz = "listAlternateRow";
 		if( $("#sourceFieldList tr").length % 2 == 0 )
@@ -175,7 +218,7 @@ function addProgramRuleVariable()
 			clazz = "listRow";
 		}
 			
-		var row = "<tr class='" + clazz + " newVariable' jsonData='" + json_Data + "'><td>" + dataElementName + "</td><td>" + addVariableButton( variableName, dataElementId ) +"</td></tr>";
+		var row = "<tr class='" + clazz + " newVariable' jsonData='" + json_Data + "'><td>" + dataElementName + "</td><td>" + addDEVariableButton( variableName, dataElementId ) +"</td></tr>";
 		$("#sourceFieldList").append(row);
 		
 		// Remove the data element from Add the Source field form. This data was used, so cannot be used for any variables.
@@ -186,17 +229,23 @@ function addProgramRuleVariable()
 	
 }
 
-function addVariableButton( name, deId )
+function addDEVariableButton( name, deId )
 {
 	return "<input type='button' deId='" + deId + "' realValue='" + name + "' value='#{" + name + "}' style='width:100%;' onclick='insertVariable(this)'/>";
 }
+
+function addAttrVariableButton( name, attributeId )
+{
+	return "<input type='button' attributeId='" + attributeId + "' realValue='" + name + "' value='A{" + name + "}' style='width:100%;' onclick='insertVariable(this)'/>";
+}
+
 
 function insertVariable(_this)
 {
 	insertTextCommon('condition', _this.value + " "); 
 }
 
-function getVariableJson( variableName, sourceType, dataElementId, programStageId )
+function getDEVariableJson( variableName, sourceType, dataElementId, programStageId )
 {
 	var json_Data = '{ '
 		+ '"name": "' + variableName + '",'
@@ -204,6 +253,19 @@ function getVariableJson( variableName, sourceType, dataElementId, programStageI
 		+ '"dataElement": { "id" : "' + dataElementId + '"},'
 		+ '"program": { "id" :"' + getFieldValue("programId") + '"},'
 		+ '"programStage": { "id" :  "' + programStageId + '"}'
+	+ '}';
+	
+	return json_Data;
+}
+
+
+function getAttrVariableJson( variableName, sourceType, attributeId )
+{
+	var json_Data = '{ '
+		+ '"name": "' + variableName + '",'
+		+ '"programRuleVariableSourceType": "' +  sourceType + '",'
+		+ '"trackedEntityAttribute": { "id" : "' + attributeId + '"},'
+		+ '"program": { "id" :"' + getFieldValue("programId") + '"}'
 	+ '}';
 	
 	return json_Data;
@@ -232,12 +294,14 @@ function validateProgramRule()
 {
 	status = 0; 
 	var valid = true;
-	$("#actionTB tr").find(".content").each(function(){
-		if( $(this).val() == "" )
+	$("#actionTB tr").find(".actionList").each(function(){
+		var sourceType = $(this).val();
+		var contentCell = $(this).closest("tr").find(".content");
+		if( contentCell.val() == "" && sourceType.indexOf("HIDE") < 0 )
 		{
-			var message = $(this).closest('tr').find('.actionList option:selected').attr("errorMessage");
-			$(this).css('background-color', 'pink');
-			$(this).attr('placeholder', message);
+			var message = $(this).find('option:selected').attr("errorMessage");
+			contentCell.css('background-color', 'pink');
+			contentCell.attr('placeholder', message);
 			unLockScreen();
 			valid = false;
 			return;
@@ -353,9 +417,19 @@ function sourceTypeOnChange()
 	if( sourceType == "DATAELEMENT_NEWEST_EVENT_PROGRAM" ){
 		setFieldValue( "programStageId", "" );
 		disable("programStageId");
+		$("[name='deSourceType']").show();
+		$("[name='teiAttrSourceType']").hide();		
 	}
-	else{
+	else if( sourceType == "DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE" ){
 		enable("programStageId");
+		$("[name='deSourceType']").show();
+		$("[name='teiAttrSourceType']").hide();	
+	}
+	else if( sourceType == "TEI_ATTRIBUTE" ){
+		setFieldValue( "programStageId", "" );
+		disable("programStageId");
+		$("[name='deSourceType']").hide();
+		$("[name='teiAttrSourceType']").show();	
 	}
 }
 
@@ -388,9 +462,9 @@ function addMoreAction()
 	}
 	var row = "<tr " + clazz + ">"
 			+ "<td><select class='actionList' style='width:100%' onchange='actionListToggle(this)'>"
-			+ "	<option value='SHOWERROR' errorMessage='" + i18n_please_enter_error_message + "' >" + i18n_show_error + "</option>"
-			+ "	<option value='SHOWWARNING' errorMessage='" + i18n_please_enter_warning_message + "' >" + i18n_show_warning + "</option>"
 			+ "	<option value='HIDEFIELD' errorMessage='" + i18n_please_enter_alert_message_when_hiding_a_field + "' >" + i18n_hide_field + "</option>"
+			+ "	<option value='SHOWWARNING' errorMessage='" + i18n_please_enter_warning_message + "' >" + i18n_show_warning + "</option>"
+			+ "	<option value='SHOWERROR' errorMessage='" + i18n_please_enter_error_message + "' >" + i18n_show_error + "</option>"
 			+ "	<option value='HIDESECTION' errorMessage='" + i18n_please_enter_alert_message_when_hiding_a_section + "' >" + i18n_hide_section + "</option>"
 			+ "</select>"
 			+ "</td>"
