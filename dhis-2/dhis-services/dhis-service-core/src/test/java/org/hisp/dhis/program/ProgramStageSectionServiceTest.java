@@ -30,7 +30,6 @@ package org.hisp.dhis.program;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -142,26 +141,6 @@ public class ProgramStageSectionServiceTest
 
         assertNotNull( programStageSectionService.getProgramStageSection( idA ) );
         assertNotNull( programStageSectionService.getProgramStageSection( idB ) );
-    }
-
-    @Test
-    public void testDeleteProgramStageSection()
-    {
-        int idA = programStageSectionService.saveProgramStageSection( sectionA );
-        int idB = programStageSectionService.saveProgramStageSection( sectionB );
-
-        assertNotNull( programStageSectionService.getProgramStageSection( idA ) );
-        assertNotNull( programStageSectionService.getProgramStageSection( idB ) );
-
-        programStageSectionService.deleteProgramStageSection( sectionA );
-
-        assertNull( programStageSectionService.getProgramStageSection( idA ) );
-        assertNotNull( programStageSectionService.getProgramStageSection( idB ) );
-
-        programStageSectionService.deleteProgramStageSection( sectionB );
-
-        assertNull( programStageSectionService.getProgramStageSection( idA ) );
-        assertNull( programStageSectionService.getProgramStageSection( idB ) );
     }
 
     @Test
