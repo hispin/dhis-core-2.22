@@ -19,12 +19,13 @@ trackerCapture.controller('DashboardController',
                 DHIS2EventFactory,
                 DashboardLayoutService,
                 AttributesFactory,
-                CurrentSelection) {
+                CurrentSelection,
+                AuthorityService) {
     //selections
     $scope.selectedTeiId = ($location.search()).tei; 
     $scope.selectedProgramId = ($location.search()).program; 
     $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
-    
+    $scope.userAuthority = AuthorityService.getUserAuthorities(SessionStorageService.get('USER_ROLES'));
     $scope.sortedTeiIds = CurrentSelection.getSortedTeiIds();    
     
     $scope.previousTeiExists = false;
@@ -64,12 +65,13 @@ trackerCapture.controller('DashboardController',
         $scope.orderChanged = false;        
         
         DashboardLayoutService.get().then(function(response){
-            $scope.dashboardLayouts = response;
-            
-            var selectedLayout = $scope.dashboardLayouts ['DEFAULT'];            
-            if($scope.selectedProgram && $scope.selectedProgram.id){
-                selectedLayout = $scope.dashboardLayouts [$scope.selectedProgram.id] ? $scope.dashboardLayouts [$scope.selectedProgram.id] : selectedLayout;
-            }
+            $scope.dashboardLayouts = response;            
+            var defaultLayout = $scope.dashboardLayouts.defaultLayout['DEFAULT'];
+            var selectedLayout = null;
+            if($scope.selectedProgram && $scope.selectedProgram.id){                
+                selectedLayout = $scope.dashboardLayouts.customLayout && $scope.dashboardLayouts.customLayout[$scope.selectedProgram.id] ? $scope.dashboardLayouts.customLayout[$scope.selectedProgram.id] : $scope.dashboardLayouts.defaultLayout[$scope.selectedProgram.id];
+            }            
+            selectedLayout = !selectedLayout ?  defaultLayout : selectedLayout;
 
             angular.forEach(selectedLayout.widgets, function(widget){
                 switch(widget.title){
@@ -238,6 +240,48 @@ trackerCapture.controller('DashboardController',
         $scope.applySelectedProgram();
     }); 
     
+    function getCurrentDashboardLayout(){
+        var widgets = [];
+        $scope.hasBigger = false;
+        $scope.hasSmaller = false;
+        angular.forEach($rootScope.dashboardWidgets, function(widget){
+            var w = angular.copy(widget);            
+            if($scope.orderChanged){
+                if($scope.widgetsOrder.biggerWidgets.indexOf(w.title) !== -1){
+                    $scope.hasBigger = $scope.hasBigger || w.show;
+                    w.parent = 'biggerWidget';
+                    w.order = $scope.widgetsOrder.biggerWidgets.indexOf(w.title);
+                }
+                
+                if($scope.widgetsOrder.smallerWidgets.indexOf(w.title) !== -1){
+                    $scope.hasSmaller = $scope.hasSmaller || w.show;
+                    w.parent = 'smallerWidget';
+                    w.order = $scope.widgetsOrder.smallerWidgets.indexOf(w.title);
+                }
+            }
+            widgets.push(w);
+        });        
+        var layout = {};
+        if($scope.selectedProgram && $scope.selectedProgram.id){
+            layout[$scope.selectedProgram.id] = {widgets: widgets, program: $scope.selectedProgram.id};
+        }
+        else{
+            layout['DEFAULT'] = {widgets: widgets, program: 'DEFAULT'};
+        }
+        return layout;
+    }
+    
+    function saveDashboardLayout(){
+        var layout = getCurrentDashboardLayout();        
+        DashboardLayoutService.saveLayout(layout, false).then(function(){
+            if(!$scope.orderChanged){
+                $scope.hasSmaller = $filter('filter')($scope.dashboardWidgets, {parent: "smallerWidget", show: true}).length > 0;
+                $scope.hasBigger = $filter('filter')($scope.dashboardWidgets, {parent: "biggerWidget", show: true}).length > 0;                                
+            }                
+            setWidgetsSize();      
+        });
+    };
+    
     //watch for widget sorting    
     $scope.$watch('widgetsOrder', function() {        
         if(angular.isObject($scope.widgetsOrder)){
@@ -304,41 +348,14 @@ trackerCapture.controller('DashboardController',
         saveDashboardLayout();;
     };
     
-    var saveDashboardLayout = function(){
-        var widgets = [];
-        $scope.hasBigger = false;
-        $scope.hasSmaller = false;
-        angular.forEach($rootScope.dashboardWidgets, function(widget){
-            var w = angular.copy(widget);            
-            if($scope.orderChanged){
-                if($scope.widgetsOrder.biggerWidgets.indexOf(w.title) !== -1){
-                    $scope.hasBigger = $scope.hasBigger || w.show;
-                    w.parent = 'biggerWidget';
-                    w.order = $scope.widgetsOrder.biggerWidgets.indexOf(w.title);
-                }
-                
-                if($scope.widgetsOrder.smallerWidgets.indexOf(w.title) !== -1){
-                    $scope.hasSmaller = $scope.hasSmaller || w.show;
-                    w.parent = 'smallerWidget';
-                    w.order = $scope.widgetsOrder.smallerWidgets.indexOf(w.title);
-                }
-            }
-            widgets.push(w);
-        });
-
-        if($scope.selectedProgram && $scope.selectedProgram.id){
-            $scope.dashboardLayouts[$scope.selectedProgram.id] = {widgets: widgets, program: $scope.selectedProgram.id};
-        }
-        
-        DashboardLayoutService.saveLayout($scope.dashboardLayouts).then(function(){
-            if(!$scope.orderChanged){
-                $scope.hasSmaller = $filter('filter')($scope.dashboardWidgets, {parent: "smallerWidget", show: true}).length > 0;
-                $scope.hasBigger = $filter('filter')($scope.dashboardWidgets, {parent: "biggerWidget", show: true}).length > 0;                                
-            }                
-            setWidgetsSize();      
+    $scope.saveDashboarLayoutAsDefault = function(){      
+        var layout = angular.copy($scope.dashboardLayouts.defaultLayout);
+        var currentLayout = getCurrentDashboardLayout();
+        angular.extend(layout, currentLayout);
+        delete layout.DEFAULT;
+        DashboardLayoutService.saveLayout(layout, true).then(function(){                          
         });
     };
-    
     $scope.showHideWidgets = function(){
         var modalInstance = $modal.open({
             templateUrl: "components/dashboard/dashboard-widgets.html",
