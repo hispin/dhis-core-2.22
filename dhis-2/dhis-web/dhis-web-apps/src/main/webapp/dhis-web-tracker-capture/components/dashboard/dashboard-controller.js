@@ -83,6 +83,11 @@ trackerCapture.controller('DashboardController',
                         $rootScope.dashboardWidgets.push($rootScope.indicatorWidget);
                         $scope.dashboardStatus[widget.title] = angular.copy(widget);
                         break;
+                    case 'feedback':
+                        $rootScope.feedbackWidget = widget;
+                        $rootScope.dashboardWidgets.push($rootScope.feedbackWidget);
+                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
+                        break;
                     case 'dataentry':
                         $rootScope.dataentryWidget = widget;
                         $rootScope.dashboardWidgets.push($rootScope.dataentryWidget);
