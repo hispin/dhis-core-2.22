@@ -8,7 +8,7 @@ trackerCapture.controller('RuleBoundController',
     $scope.widget = $scope.$parent.$parent.biggerWidget ? $scope.$parent.$parent.biggerWidget
     : $scope.$parent.$parent.smallerWidget ? $scope.$parent.$parent.smallerWidget : null;
     $scope.widgetTitle = $scope.widget.title;
-    $scope.widgetCode = $scope.widget.code;
+    
     
     
     $scope.displayTextEffects = {};
@@ -21,7 +21,7 @@ trackerCapture.controller('RuleBoundController',
         
         //Bind non-bound rule effects, if any.
         angular.forEach($rootScope.ruleeffects[args.event], function(effect) {
-            if(effect.location === $scope.widgetCode){
+            if(effect.location === $scope.widgetTitle){
                 //This effect is affecting the local widget
                 
                 if(effect.action === "DISPLAYTEXT") {
