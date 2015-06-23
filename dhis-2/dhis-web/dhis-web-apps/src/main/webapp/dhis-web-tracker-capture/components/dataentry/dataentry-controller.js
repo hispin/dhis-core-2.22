@@ -220,7 +220,7 @@ trackerCapture.controller('DataEntryController',
             
             sortEventsByStage(null);
             $scope.showDataEntry($scope.currentEvent, true);            
-        }                          
+        }
     };
     
     var setEventEditing = function(dhis2Event, stage){
@@ -250,14 +250,14 @@ trackerCapture.controller('DataEntryController',
         });
     };
     
-    $scope.stageNeedsEvent = function(stage){  
+    $scope.stageNeedsEvent = function(stage){
         
         //In case the event is a table, we sould always allow adding more events(rows)
         if(stage.displayEventsInTable) {
             return true;
         }
         
-        if($scope.eventsByStage[stage.id].length < 1){                
+        if($scope.eventsByStage[stage.id].length < 1){
             return true;
         }
 
@@ -266,7 +266,7 @@ trackerCapture.controller('DataEntryController',
                 if(!$scope.eventsByStage[stage.id][j].eventDate && $scope.eventsByStage[stage.id][j].status !== 'SKIPPED'){
                     return false;
                 }
-            }            
+            }
             return true;            
         }        
         return false;        
