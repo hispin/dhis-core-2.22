@@ -11,7 +11,7 @@
   <sec:global-method-security pre-post-annotations="enabled" />
 
   <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-    <property name="resourceLoaderPath" value="/WEB-INF/uaa/" />
+    <property name="resourceLoaderPath" value="/WEB-INF/dhis-web-uaa/" />
   </bean>
 
   <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
@@ -27,7 +27,8 @@
   <context:component-scan base-package="org.hisp.dhis.web.uaa" />
 
   <!-- OAuth2 -->
-  <oauth:authorization-server client-details-service-ref="clientDetailsService" token-services-ref="tokenServices">
+  <oauth:authorization-server client-details-service-ref="clientDetailsService" token-services-ref="tokenServices"
+    user-approval-page="forward:/uaa/oauth/confirm_access">
     <oauth:authorization-code />
     <oauth:refresh-token />
     <oauth:password authentication-manager-ref="authenticationManager" />
