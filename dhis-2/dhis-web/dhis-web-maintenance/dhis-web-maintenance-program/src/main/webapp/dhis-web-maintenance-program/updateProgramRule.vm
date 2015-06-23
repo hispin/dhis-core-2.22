@@ -95,20 +95,34 @@
 						<col width="50%" />
 						#set($idx = 0 )
 						#foreach($ruleVariable in $ruleVariables)
-							#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
-								+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
-								+ ',"dataElement":{ "id":"' + $ruleVariable.dataElement.id + '"}'
-								+ ',"program":{"id":"' + $ruleVariable.program.id + '"}'
-								+ ',"programStage":{"id":"' + "$!ruleVariable.programStage.id" + '"}}' )
 							#set($clazz = "listAlternateRow")
 							#if( $idx % 2 == 0 )
 								#set($clazz = "listRow")
 							#end		
 							#set($idx = $idx + 1 )
-							<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
-								<td>$!encoder.htmlEncode($ruleVariable.dataElement.displayName)</td>
-								<td><input type='button' deId='$ruleVariable.dataElement.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:100%;' onclick='insertVariable(this)'/></td>
-							</tr>
+							
+							#if( $ruleVariable.sourceType == "TEI_ATTRIBUTE" )
+								#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
+									+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
+									+ ',"trackedEntityAttribute":{ "id":"' + $ruleVariable.dataElement.id + '"}'
+									+ ',"program":{"id":"' + "$!ruleVariable.program.id" + '"}}' )
+								
+								<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
+									<td>$!encoder.htmlEncode($ruleVariable.attribute.displayName)</td>
+									<td><input type='button' deId='$ruleVariable.attribute.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:100%;' onclick='insertVariable(this)'/></td>
+								</tr>
+							#else
+								#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
+									+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
+									+ ',"dataElement":{ "id":"' + $ruleVariable.dataElement.id + '"}'
+									+ ',"program":{"id":"' + $ruleVariable.program.id + '"}'
+									+ ',"programStage":{"id":"' + "$!ruleVariable.programStage.id" + '"}}' )
+								
+								<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
+									<td>$!encoder.htmlEncode($ruleVariable.dataElement.displayName)</td>
+									<td><input type='button' deId='$ruleVariable.dataElement.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:100%;' onclick='insertVariable(this)'/></td>
+								</tr>
+							#end
 						#end
 					</table>
 				</div>
@@ -223,10 +237,11 @@
 				<select type="" id="sourceType" name="sourceType" onchange="sourceTypeOnChange()" style="width:250px;">
 					<option value="DATAELEMENT_NEWEST_EVENT_PROGRAM">$i18n.getString("data_element_newest_event_program")</option>
 					<option value="DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE">$i18n.getString("data_element_newest_event_program_stage")</option>
+					<option value="TEI_ATTRIBUTE">$i18n.getString("tei_attribute")</option>
 				</select>
 			</td>
 		</td>
-		<tr>
+		<tr name="deSourceType">
 			<td>$i18n.getString('source_program_stage')</td>
 			<td>
 				<select type="" id="programStageId" disabled style="width:250px;" onchange="getDataElementsByStage();">
@@ -237,7 +252,7 @@
 				</select>
 			</td>
 		</td>
-		<tr>
+		<tr name="deSourceType">
 			<td>$i18n.getString('source_dataElement') <em title="$i18n.getString( "required" )" class="required">*</em></td>
 			<td>
 				<select type="" id="dataElementId" style="width:250px;">
@@ -254,6 +269,18 @@
 			<td>$i18n.getString('variable_name') <em title="$i18n.getString( "required" )" class="required">*</em></td>
 			<td><input type="text" id="variableName" name="variableName" style="width:247px;" onkeypress="return variableNameKeyPress(event)" />
 			<span style="color:red;display:none;" id="variableNameError" ></span></td>
+		</td>
+		
+		<tr name="teiAttrSourceType" style='display:none'>
+			<td>$i18n.getString('tei_attribute') <em title="$i18n.getString( "required" )" class="required">*</em></td>
+			<td>
+				<select type="" id="attributeId" style="width:250px;">
+					#foreach( $programAttribute in $program.programAttributes )
+						<option value="$programAttribute.attribute.uid">$programAttribute.attribute.displayName</option>
+					#end
+				</select>
+				<span style="color:red;display:none;" id="attributeIdError" ></span>
+			</td>
 		</td>
 		
 		<tr>
