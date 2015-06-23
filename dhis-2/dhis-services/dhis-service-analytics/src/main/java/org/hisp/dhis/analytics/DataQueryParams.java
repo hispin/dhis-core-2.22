@@ -943,6 +943,22 @@ public class DataQueryParams
     }
     
     /**
+     * Returns the number of days in the first dimension period in this query.
+     * If no dimension periods exist, the frequency order of the period type of
+     * the query is returned. If no period type exists, -1 is returned.
+     * @return
+     */
+    public int getDaysInFirstPeriod()
+    {
+        List<NameableObject> periods = getPeriods();
+        
+        Period period = !periods.isEmpty() ? (Period) periods.get( 0 ) : null;
+        
+        return period != null ? period.getDaysInPeriod() : periodType != null ? 
+            PeriodType.getPeriodTypeByName( periodType ).getFrequencyOrder() : -1;
+    }
+    
+    /**
      * Indicates whether this params defines an identifier scheme different from
      * UID.
      */
