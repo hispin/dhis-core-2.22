@@ -28,7 +28,9 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -42,10 +44,7 @@ import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramStageService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
@@ -149,11 +148,6 @@ public class AddProgramStageSectionAction
         // ---------------------------------------------------------------------
 
         Set<ProgramStageSection> sections = programStage.getProgramStageSections();
-
-        if ( sections == null )
-        {
-            sections = new HashSet<>();
-        }
 
         sections.add( section );
         
