@@ -230,9 +230,7 @@ public class JdbcAnalyticsManager
 
         if ( params.isAggregationType( AVERAGE_SUM_INT ) )
         {
-            int days = PeriodType.getPeriodTypeByName( params.getPeriodType() ).getFrequencyOrder();
-
-            sql += "sum(daysxvalue) / " + days;
+            sql += "sum(daysxvalue) / " + params.getDaysInFirstPeriod();
         }
         else if ( params.isAggregationType( AVERAGE_INT ) || params.isAggregationType( AVERAGE_INT_DISAGGREGATION ) )
         {
