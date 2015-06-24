@@ -37,6 +37,7 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -47,12 +48,7 @@ public class DefaultClientDetailsService implements ClientDetailsService
     @Autowired
     private OAuth2ClientService oAuth2ClientService;
 
-    private final Set<String> GRANT_TYPES =
-        Sets.newHashSet( "password", "authorization_code", "refresh_token", "implicit" );
-
     private final Set<String> SCOPES = Sets.newHashSet( "ALL" );
-
-    private final Set<String> REDIRECT_URIS = Sets.newHashSet( "http://www.example.org" );
 
     @Override
     public ClientDetails loadClientByClientId( String clientId ) throws ClientRegistrationException
@@ -77,9 +73,9 @@ public class DefaultClientDetailsService implements ClientDetailsService
         BaseClientDetails clientDetails = new BaseClientDetails();
         clientDetails.setClientId( client.getCid() );
         clientDetails.setClientSecret( client.getSecret() );
-        clientDetails.setAuthorizedGrantTypes( GRANT_TYPES );
+        clientDetails.setAuthorizedGrantTypes( new HashSet<>( client.getGrantTypes() ) );
         clientDetails.setScope( SCOPES );
-        clientDetails.setRegisteredRedirectUri( REDIRECT_URIS );
+        clientDetails.setRegisteredRedirectUri( new HashSet<>( client.getRedirectUris() ) );
 
         return clientDetails;
     }
