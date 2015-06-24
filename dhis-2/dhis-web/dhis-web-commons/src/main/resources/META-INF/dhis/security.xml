@@ -31,11 +31,11 @@
     <sec:http-basic />
     <sec:anonymous />
 
-    <!--
-    <form-login authentication-failure-url="/login.jsp?authentication_error=true"
-      default-target-url="http://www.ourwebsite.com/" login-page="/login.jsp"
-      login-processing-url="/login.do" />
-      -->
+    <sec:form-login authentication-failure-url="/dhis-web-commons/security/login.action?failed=true"
+      username-parameter="j_username" password-parameter="j_password"
+      login-page="/dhis-web-commons/security/login.action"
+      login-processing-url="/dhis-web-commons-security/login.action" />
+
   </sec:http>
 
   <!-- End OAuth2 -->
