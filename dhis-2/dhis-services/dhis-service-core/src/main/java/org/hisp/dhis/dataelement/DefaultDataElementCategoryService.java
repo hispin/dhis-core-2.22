@@ -220,6 +220,12 @@ public class DefaultDataElementCategoryService
     }
 
     @Override
+    public DataElementCategory getDataElementCategoryByCode( String code )
+    {
+        return categoryStore.getByCode( code );
+    }
+
+    @Override
     public List<DataElementCategory> getDisaggregationCategories()
     {
         return i18n( i18nService, categoryStore.getCategoriesByDimensionType( DataElementCategoryCombo.DIMENSION_TYPE_DISAGGREGATION ) );

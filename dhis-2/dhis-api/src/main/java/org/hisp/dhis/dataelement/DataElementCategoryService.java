@@ -124,6 +124,14 @@ public interface DataElementCategoryService
     DataElementCategory getDataElementCategoryByName( String name );
 
     /**
+     * Retrieves the DataElementCategory with the given code.
+     * 
+     * @param code the name of the DataElementCategory to retrieve.
+     * @return the DataElementCategory.
+     */
+    DataElementCategory getDataElementCategoryByCode( String code );
+
+    /**
      * Returns all DataElementCategories.
      * 
      * @return a list of all DataElementCategories.
