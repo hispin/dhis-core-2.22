@@ -33,12 +33,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.acl.AclService;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.dxf2.common.FilterOptions;
-import org.hisp.dhis.dxf2.common.Options;
 import org.hisp.dhis.commons.filter.MetaDataFilter;
 import org.hisp.dhis.commons.filter.MetaDataFilterService;
+import org.hisp.dhis.dxf2.common.FilterOptions;
+import org.hisp.dhis.dxf2.common.Options;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
@@ -46,6 +47,7 @@ import org.hisp.dhis.system.notification.NotificationLevel;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.util.ReflectionUtils;
 import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -66,7 +68,7 @@ public class DefaultExportService
     implements ExportService
 {
     private static final Log log = LogFactory.getLog( DefaultExportService.class );
-    
+
     //-------------------------------------------------------------------------------------------------------
     // Dependencies
     //-------------------------------------------------------------------------------------------------------
@@ -88,6 +90,9 @@ public class DefaultExportService
     @Autowired
     private SchemaService schemaService;
 
+    @Autowired
+    private AclService aclService;
+
     //-------------------------------------------------------------------------------------------------------
     // ExportService Implementation - MetaData
     //-------------------------------------------------------------------------------------------------------
@@ -104,7 +109,9 @@ public class DefaultExportService
         MetaData metaData = new MetaData();
         metaData.setCreated( new Date() );
 
-        log.info( "User '" + currentUserService.getCurrentUsername() + "' started export at " + new Date() );
+        User user = currentUserService.getCurrentUser();
+
+        log.info( "User '" + user.getUsername() + "' started export at " + new Date() );
 
         Date lastUpdated = options.getLastUpdated();
 
@@ -122,6 +129,11 @@ public class DefaultExportService
 
             Class<? extends IdentifiableObject> idObjectClass = (Class<? extends IdentifiableObject>) schema.getKlass();
             Collection<? extends IdentifiableObject> idObjects;
+
+            if ( !aclService.canRead( user, idObjectClass ) )
+            {
+                continue;
+            }
 
             if ( lastUpdated != null )
             {
