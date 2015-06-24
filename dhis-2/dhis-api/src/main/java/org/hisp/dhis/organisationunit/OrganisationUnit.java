@@ -49,6 +49,7 @@ import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
@@ -129,6 +130,8 @@ public class OrganisationUnit
     private Set<OrganisationUnitGroup> groups = new HashSet<>();
 
     private Set<DataSet> dataSets = new HashSet<>();
+
+    private Set<Program> programs = new HashSet<>();
 
     private Set<User> users = new HashSet<>();
 
@@ -544,14 +547,14 @@ public class OrganisationUnit
     public String getAncestorNames()
     {
         List<OrganisationUnit> units = getAncestors();
-        
+
         StringBuilder builder = new StringBuilder();
 
         for ( OrganisationUnit unit : units )
         {
             builder.append( unit.getName() ).append( NAME_SEPARATOR );
         }
-        
+
         return builder.toString();
     }
 
@@ -1025,6 +1028,21 @@ public class OrganisationUnit
     @JsonProperty
     @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class } )
+    @JacksonXmlElementWrapper( localName = "programs", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "program", namespace = DxfNamespaces.DXF_2_0 )
+    public Set<Program> getPrograms()
+    {
+        return programs;
+    }
+
+    public void setPrograms( Set<Program> programs )
+    {
+        this.programs = programs;
+    }
+
+    @JsonProperty
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class } )
     @JacksonXmlElementWrapper( localName = "users", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "userItem", namespace = DxfNamespaces.DXF_2_0 )
     public Set<User> getUsers()
@@ -1136,6 +1154,7 @@ public class OrganisationUnit
             groups.clear();
             users.clear();
             dataSets.clear();
+            programs.clear();
 
             attributeValues.clear();
             attributeValues.addAll( organisationUnit.getAttributeValues() );
