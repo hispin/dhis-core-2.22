@@ -21,5 +21,19 @@
 
     <property name="secret" column="secret" not-null="true" unique="false" length="512" />
 
+    <list name="redirectUris" table="oauth2clientredirecturis" cascade="all-delete-orphan">
+      <cache usage="read-write" />
+      <key column="oauth2clientid" foreign-key="fk_oauth2clientredirecturis_oauth2clientid" />
+      <list-index column="sort_order" base="0" />
+      <element type="string" column="redirecturi" />
+    </list>
+
+    <list name="grantTypes" table="oauth2clientgranttypes" cascade="all-delete-orphan">
+      <cache usage="read-write" />
+      <key column="oauth2clientid" foreign-key="fk_oauth2clientgranttypes_oauth2clientid" />
+      <list-index column="sort_order" base="0" />
+      <element type="string" column="granttype" />
+    </list>
+
   </class>
 </hibernate-mapping>
