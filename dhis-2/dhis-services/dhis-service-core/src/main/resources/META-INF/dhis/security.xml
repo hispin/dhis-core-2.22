@@ -78,6 +78,8 @@
 
   <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore" />
 
+  <bean id="authorizationCodeServices" class="org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices" />
+
   <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
     <property name="tokenStore" ref="tokenStore" />
     <property name="supportRefreshToken" value="true" />
