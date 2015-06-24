@@ -247,7 +247,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 $scope.teiCount = data.rows.length;
             }                    
             
-            if( data.metaData.pager ){
+            if( data.metaData && data.metaData.pager ){
                 $scope.pager = data.metaData.pager;
                 $scope.pager.toolBarDisplay = 5;
 
