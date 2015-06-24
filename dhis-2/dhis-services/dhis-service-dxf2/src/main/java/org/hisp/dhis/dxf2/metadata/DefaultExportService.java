@@ -110,8 +110,9 @@ public class DefaultExportService
         metaData.setCreated( new Date() );
 
         User user = currentUserService.getCurrentUser();
+        String username = currentUserService.getCurrentUsername();
 
-        log.info( "User '" + user.getUsername() + "' started export at " + new Date() );
+        log.info( "User '" + username + "' started export at " + new Date() );
 
         Date lastUpdated = options.getLastUpdated();
 
