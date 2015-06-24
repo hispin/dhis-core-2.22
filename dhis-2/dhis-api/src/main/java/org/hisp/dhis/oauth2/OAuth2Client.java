@@ -45,15 +45,27 @@ import java.util.UUID;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-@JacksonXmlRootElement( localName = "client", namespace = DxfNamespaces.DXF_2_0 )
+@JacksonXmlRootElement( localName = "oAuth2Client", namespace = DxfNamespaces.DXF_2_0 )
 public class OAuth2Client extends BaseIdentifiableObject
 {
+    /**
+     * client_id
+     */
     private String cid;
 
+    /**
+     * client_secret
+     */
     private String secret = UUID.randomUUID().toString();
 
+    /**
+     * List of allowed redirect URI targets for this client.
+     */
     private List<String> redirectUris = new ArrayList<>();
 
+    /**
+     * List of allowed grant types for this client.
+     */
     private List<String> grantTypes = new ArrayList<>();
 
     public OAuth2Client()
