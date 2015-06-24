@@ -1009,14 +1009,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     return {        
         getEventReport: function(orgUnit, ouMode, program, startDate, endDate, programStatus, eventStatus, pager){
             
-            var url = '../api/events/eventRows.json?' + 'orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&program=' + program + '&addAttributes=true';
+            var url = '../api/events/eventRows.json?' + 'orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&program=' + program;
             
             if( programStatus ){
                 url = url + '&programStatus=' + programStatus;
             }
             
             if( eventStatus ){
-                url = url + '&status=' + eventStatus;
+                url = url + '&eventStatus=' + eventStatus;
             }
             
             if(startDate && endDate){
