@@ -556,11 +556,6 @@ public class DefaultSecurityService
     {
         UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
 
-        if ( userCredentials.isAuthorized( "ALL" ) )
-        {
-            return true;
-        }
-
         for ( String authority : authorities )
         {
             if ( userCredentials.isAuthorized( authority ) )
