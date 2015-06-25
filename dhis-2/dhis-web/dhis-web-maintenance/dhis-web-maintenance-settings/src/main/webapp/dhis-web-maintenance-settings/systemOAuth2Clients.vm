@@ -23,6 +23,11 @@
 
 <table class="mainPageTable">
   <tr>
+    <td style="text-align:right">
+      <input type="button" value="$i18n.getString( 'add_new' )" onclick="window.location.href='getOAuth2Client.action'" style="width:80px"/>
+    </td>
+  </tr>
+  <tr>
     <td style="vertical-align:top">
       <table class="listTable" id="listTable">
         <col/>
