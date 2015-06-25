@@ -127,6 +127,9 @@
 
   <!-- OAuth2 -->
   <bean id="org.hisp.dhis.settings.action.system.GetOAuth2ClientsAction"
-    class="org.hisp.dhis.settings.action.system.GetOAuth2ClientsAction" />
+    class="org.hisp.dhis.settings.action.system.GetOAuth2ClientsAction" scope="prototype" />
+
+  <bean id="org.hisp.dhis.settings.action.system.GetOAuth2ClientAction"
+    class="org.hisp.dhis.settings.action.system.GetOAuth2ClientAction" scope="prototype" />
 
 </beans>
