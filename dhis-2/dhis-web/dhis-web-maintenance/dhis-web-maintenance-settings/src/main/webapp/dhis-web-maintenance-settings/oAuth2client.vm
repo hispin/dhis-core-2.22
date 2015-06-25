@@ -59,6 +59,14 @@
       <td><label for="name">$i18n.getString( "client_secret" )</label></td>
       <td><input type="text" id="clientSecret" name="clientSecret" value="" #if($id)disabled#end></td>
     </tr>
+    <tr>
+      <td><label for="name">$i18n.getString( "grant_types" )</label></td>
+      <td>
+        <input type="checkbox" id="gtPassword" name="gtPassword">Password<br/>
+        <input type="checkbox" id="gtRefreshToken" name="gtRefreshToken">Refresh Token<br/>
+        <input type="checkbox" id="gtAuthorizationCode" name="gtAuthorizationCode">Authorization Code<br/>
+      </td>
+    </tr>
   </table>
 
   #if( $id )

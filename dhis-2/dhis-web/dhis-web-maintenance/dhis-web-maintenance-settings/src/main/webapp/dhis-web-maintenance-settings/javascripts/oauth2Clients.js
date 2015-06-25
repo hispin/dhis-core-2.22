@@ -1,6 +1,6 @@
 var OAuth2Service = {
   save: function(o, id) {
-    if( !id ) {
+    if( !!id ) {
       return $.ajax({
         url: '../api/oAuth2Clients/' + id,
         type: 'PUT',
@@ -25,13 +25,39 @@ var OAuth2Service = {
     $('#name').val(o.name);
     $('#clientId').val(o.cid);
     $('#clientSecret').val(o.secret);
+
+    if( o.grantTypes.indexOf('password') != -1 ) {
+      $('#gtPassword').attr('checked', true);
+    }
+
+    if( o.grantTypes.indexOf('refresh_token') != -1 ) {
+      $('#gtRefreshToken').attr('checked', true);
+    }
+
+    if( o.grantTypes.indexOf('authorization_code') != -1 ) {
+      $('#gtAuthorizationCode').attr('checked', true);
+    }
   },
   toJson: function() {
     var o = {};
+    o.grantTypes = [];
+    o.redirectUris = [];
 
     o.name = $('#name').val();
     o.cid = $('#clientId').val();
     o.secret = $('#clientSecret').val();
+
+    if( $('#gtPassword').is(':checked') ) {
+      o.grantTypes.push("password");
+    }
+
+    if( $('#gtRefreshToken').is(':checked') ) {
+      o.grantTypes.push("refresh_token");
+    }
+
+    if( $('#gtAuthorizationCode').is(':checked') ) {
+      o.grantTypes.push("authorization_code");
+    }
 
     return o;
   },
