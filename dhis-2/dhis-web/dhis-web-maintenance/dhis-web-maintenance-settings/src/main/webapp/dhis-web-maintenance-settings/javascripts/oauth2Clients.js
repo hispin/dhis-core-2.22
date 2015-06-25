@@ -37,6 +37,10 @@ var OAuth2Service = {
     if( o.grantTypes.indexOf('authorization_code') != -1 ) {
       $('#gtAuthorizationCode').attr('checked', true);
     }
+
+    o.redirectUris.forEach(function(el) {
+      $('<option/>').attr('value', el).text(el).appendTo('#redirectUris');
+    });
   },
   toJson: function() {
     var o = {};
@@ -58,6 +62,10 @@ var OAuth2Service = {
     if( $('#gtAuthorizationCode').is(':checked') ) {
       o.grantTypes.push("authorization_code");
     }
+
+    $("#redirectUris").children().each(function(idx, el) {
+      o.redirectUris.push($(el).val());
+    });
 
     return o;
   },
