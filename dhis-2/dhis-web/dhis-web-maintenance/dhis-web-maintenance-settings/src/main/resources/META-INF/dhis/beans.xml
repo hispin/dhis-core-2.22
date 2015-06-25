@@ -55,11 +55,11 @@
 
   <bean id="org.hisp.dhis.settings.action.system.GetSMTPSettingsAction"
     class="org.hisp.dhis.settings.action.system.GetSMTPSettingsAction"
-    scope="prototype"/>
+    scope="prototype" />
 
   <bean id="org.hisp.dhis.settings.action.system.SetSMTPSettingsAction"
     class="org.hisp.dhis.settings.action.system.SetSMTPSettingsAction"
-    scope="prototype"/>
+    scope="prototype" />
 
   <bean id="org.hisp.dhis.settings.action.system.GetAccessSettingsAction"
     class="org.hisp.dhis.settings.action.system.GetAccessSettingsAction"
@@ -112,17 +112,21 @@
     scope="prototype">
     <property name="dataApprovalLevelService" ref="org.hisp.dhis.dataapproval.DataApprovalLevelService" />
   </bean>
-  
+
   <!-- Configuration -->
-  
+
   <bean id="org.hisp.dhis.settings.action.system.GetSynchronizationSettingsAction"
     class="org.hisp.dhis.settings.action.system.GetSynchronizationSettingsAction"
     scope="prototype">
   </bean>
-  
- <bean id="org.hisp.dhis.settings.action.system.SetSynchronizationSettingsAction"
+
+  <bean id="org.hisp.dhis.settings.action.system.SetSynchronizationSettingsAction"
     class="org.hisp.dhis.settings.action.system.SetSynchronizationSettingsAction"
     scope="prototype">
   </bean>
-  
+
+  <!-- OAuth2 -->
+  <bean id="org.hisp.dhis.settings.action.system.GetOAuth2ClientsAction"
+    class="org.hisp.dhis.settings.action.system.GetOAuth2ClientsAction" />
+
 </beans>

@@ -8,4 +8,8 @@
     #introListImgItem( "systemApprovalSettings.action" "approval_settings" "systemsettings" )
     #introListImgItem( "systemCalendarSettings.action" "calendar_settings" "systemsettings" )
     #introListImgItem( "systemSynchronizationSettings.action" "data_synchronization" "systemsettings" )
+
+    #if( $security.hasAnyAuthority( "F_OAUTH2_CLIENT_MANAGE", "ALL" ) )
+    #introListImgItem( "systemOAuth2Clients.action" "oauth2_clients" "systemsettings" )
+    #end
 </ul>
