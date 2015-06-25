@@ -66,6 +66,7 @@ import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.mapping.Map;
 import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.minmax.MinMaxDataElement;
+import org.hisp.dhis.oauth2.OAuth2Client;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -345,7 +346,7 @@ public abstract class DeletionHandler
     {
         return null;
     }
-    
+
     public void deleteValidationRuleGroup( ValidationRuleGroup validationRuleGroup )
     {
     }
@@ -498,11 +499,11 @@ public abstract class DeletionHandler
     {
         return null;
     }
-    
+
     public void deleteMetaDataFilter( MetaDataFilter metaDataFilter )
     {
     }
-    
+
     public String allowDeleteMetaDataFilter( MetaDataFilter metaDataFilter )
     {
         return null;
@@ -543,7 +544,7 @@ public abstract class DeletionHandler
     public void deleteTrackedEntityAttributeGroup( TrackedEntityAttributeGroup attributeGroup )
     {
     }
-   
+
     public String allowDeleteRelationship( Relationship relationship )
     {
         return null;
@@ -606,7 +607,7 @@ public abstract class DeletionHandler
     public void deleteProgramStageInstance( ProgramStageInstance programStageInstance )
     {
     }
-    
+
     public String allowDeleteProgramRule( ProgramRule programRule )
     {
         return null;
@@ -615,7 +616,7 @@ public abstract class DeletionHandler
     public void deleteProgramRule( ProgramRule programRule )
     {
     }
-    
+
     public String allowDeleteProgramRuleVariable( ProgramRuleVariable programRuleVariable )
     {
         return null;
@@ -624,7 +625,7 @@ public abstract class DeletionHandler
     public void deleteProgramRuleVariable( ProgramRuleVariable programRuleVariable )
     {
     }
-    
+
     public String allowDeleteProgramRuleAction( ProgramRuleAction programRuleAction )
     {
         return null;
@@ -660,16 +661,16 @@ public abstract class DeletionHandler
     public void deleteProgramValidation( ProgramValidation programValidation )
     {
     }
-    
+
     public void deleteProgramIndicator( ProgramIndicator programIndicator )
     {
     }
-    
+
     public String allowDeleteProgramIndicator( ProgramIndicator programIndicator )
     {
         return null;
     }
-    
+
     public String allowDeleteValidationCriteria( ValidationCriteria validationCriteria )
     {
         return null;
@@ -759,7 +760,7 @@ public abstract class DeletionHandler
     {
         return null;
     }
-    
+
     public void deleteCategoryOptionGroup( CategoryOptionGroup categoryOptionGroup )
     {
     }
@@ -768,39 +769,48 @@ public abstract class DeletionHandler
     {
         return null;
     }
-    
+
     public void deleteCategoryOptionGroupSet( CategoryOptionGroupSet categoryOptionGroupSet )
     {
     }
-    
+
     public String allowDeleteCategoryOptionGroupSet( CategoryOptionGroupSet categoryOptionGroupSet )
     {
         return null;
     }
-    
+
     public void deleteTrackedEntity( TrackedEntity trackedEntity )
     {
     }
-    
+
     public String allowDeleteTrackedEntity( TrackedEntity trackedEntity )
     {
         return null;
     }
-    
+
     public void deleteEventReport( EventReport eventReport )
     {
     }
-    
+
     public String allowDeleteEventReport( EventReport eventReport )
     {
         return null;
     }
-        
+
     public void deleteEventChart( EventChart eventChart )
     {
     }
-    
+
     public String allowDeleteEventChart( EventChart eventChart )
+    {
+        return null;
+    }
+
+    public void deleteOAuth2Client( OAuth2Client oAuth2Client )
+    {
+    }
+
+    public String allowDeleteOAuth2Client( OAuth2Client oAuth2Client )
     {
         return null;
     }
