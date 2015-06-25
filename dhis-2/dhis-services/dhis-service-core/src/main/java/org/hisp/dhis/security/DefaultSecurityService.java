@@ -28,15 +28,6 @@ package org.hisp.dhis.security;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.acl.AclService;
@@ -59,6 +50,15 @@ import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.user.UserSettingService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Lars Helge Overland
@@ -119,7 +119,7 @@ public class DefaultSecurityService
 
     @Autowired
     private CurrentUserService currentUserService;
-    
+
     @Autowired
     private UserSettingService userSettingService;
 
@@ -154,7 +154,7 @@ public class DefaultSecurityService
 
         return true;
     }
-    
+
     @Override
     public String validateRestore( UserCredentials credentials )
     {
@@ -192,16 +192,16 @@ public class DefaultSecurityService
             log.warn( "Could not send invite message as user does is null" );
             return "no_user_credentials";
         }
-        
+
         if ( credentials.getUsername() != null && userService.getUserCredentialsByUsername( credentials.getUsername() ) != null )
         {
             log.warn( "Could not send invite message as username is already taken: " + credentials );
             return "username_taken";
         }
-        
+
         return validateRestore( credentials );
     }
-    
+
     @Override
     public boolean sendRestoreMessage( UserCredentials credentials, String rootPath, RestoreOptions restoreOptions )
     {
@@ -214,7 +214,7 @@ public class DefaultSecurityService
         {
             return false;
         }
-        
+
         RestoreType restoreType = restoreOptions.getRestoreType();
 
         String applicationTitle = (String) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_APPLICATION_TITLE );
@@ -240,7 +240,7 @@ public class DefaultSecurityService
         Locale locale = (Locale) userSettingService.getUserSettingValue( user, UserSettingService.KEY_UI_LOCALE, LocaleManager.DHIS_STANDARD_LOCALE );
 
         I18n i18n = i18nManager.getI18n( locale );
-        vars.put( "i18n" , i18n );
+        vars.put( "i18n", i18n );
 
         rootPath = rootPath.replace( "http://", "" ).replace( "https://", "" );
 
@@ -251,10 +251,10 @@ public class DefaultSecurityService
         VelocityManager vm = new VelocityManager();
 
         String text1 = vm.render( vars, restoreType.getEmailTemplate() + "1" ),
-               text2 = vm.render( vars, restoreType.getEmailTemplate() + "2" );
+            text2 = vm.render( vars, restoreType.getEmailTemplate() + "2" );
 
         String subject1 = i18n.getString( restoreType.getEmailSubject() ) + " " + rootPath + " (" + i18n.getString( "message" ).toLowerCase() + " 1 / 2)",
-               subject2 = i18n.getString( restoreType.getEmailSubject() ) + " " + rootPath + " (" + i18n.getString( "message" ).toLowerCase() + " 2 / 2)";
+            subject2 = i18n.getString( restoreType.getEmailSubject() ) + " " + rootPath + " (" + i18n.getString( "message" ).toLowerCase() + " 2 / 2)";
 
         // -------------------------------------------------------------------------
         // Send emails
@@ -285,7 +285,7 @@ public class DefaultSecurityService
 
         userService.updateUserCredentials( credentials );
 
-        return new String[] { token, code };
+        return new String[]{ token, code };
     }
 
     @Override
@@ -335,9 +335,10 @@ public class DefaultSecurityService
      * Verifies all parameters needed for account restore and checks validity of the
      * user supplied token and code. If the restore cannot be verified a descriptive
      * error string is returned.
+     *
      * @param credentials the user credentials.
-     * @param token the user supplied token.
-     * @param code the user supplied code.
+     * @param token       the user supplied token.
+     * @param code        the user supplied code.
      * @param restoreType the restore type.
      * @return null if restore is valid, a descriptive error string otherwise.
      */
@@ -378,15 +379,16 @@ public class DefaultSecurityService
     /**
      * Verifies a user supplied restore code against the stored restore code.
      * If the code cannot be verified a descriptive error string is returned.
+     *
      * @param credentials the user credentials.
-     * @param code the user supplied code.
+     * @param code        the user supplied code.
      * @return null on success, a descriptive error string otherwise.
      */
     private String verifyRestoreCode( UserCredentials credentials, String code )
     {
         String restoreCode = credentials.getRestoreCode();
 
-        if( code == null )
+        if ( code == null )
         {
             return "code_parameter_is_null";
         }
@@ -398,26 +400,26 @@ public class DefaultSecurityService
 
         boolean validCode = passwordManager.legacyOrCurrentMatches( code, restoreCode, credentials.getUsername() );
 
-        return validCode ? null : "code_does_not_match_restoreCode - code: '"+ code + "' restoreCode: '" + restoreCode + "'" ;
+        return validCode ? null : "code_does_not_match_restoreCode - code: '" + code + "' restoreCode: '" + restoreCode + "'";
     }
 
     /**
      * Verify the token given for a user invite or password restore operation.
-     * <p>
+     * <p/>
      * If error, returns one of the following strings:
-     *
+     * <p/>
      * <ul>
-     *     <li>credentials_parameter_is_null</li>
-     *     <li>token_parameter_is_null</li>
-     *     <li>restore_type_parameter_is_null</li>
-     *     <li>cannot_parse_restore_options</li>
-     *     <li>wrong_prefix_for_restore_type</li>
-     *     <li>could_not_verify_token</li>
-     *     <li>restore_token_does_not_match_supplied_token</li>
+     * <li>credentials_parameter_is_null</li>
+     * <li>token_parameter_is_null</li>
+     * <li>restore_type_parameter_is_null</li>
+     * <li>cannot_parse_restore_options</li>
+     * <li>wrong_prefix_for_restore_type</li>
+     * <li>could_not_verify_token</li>
+     * <li>restore_token_does_not_match_supplied_token</li>
      * </ul>
      *
      * @param credentials the user credentials.
-     * @param token the token.
+     * @param token       the token.
      * @param restoreType type of restore operation.
      * @return null if success, otherwise error string.
      */
@@ -470,7 +472,7 @@ public class DefaultSecurityService
         {
             return true;
         }
-        
+
         return INVITE_USERNAME_PATTERN.matcher( username ).matches();
     }
 
@@ -501,8 +503,8 @@ public class DefaultSecurityService
     public boolean canView( String type )
     {
         boolean requireAddToView = (Boolean) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_REQUIRE_ADD_TO_VIEW, false );
-        
-        return !requireAddToView || ( canCreatePrivate( type ) || canCreatePublic( type ) );
+
+        return !requireAddToView || (canCreatePrivate( type ) || canCreatePublic( type ));
     }
 
     @Override
@@ -547,5 +549,26 @@ public class DefaultSecurityService
     {
         return !aclService.isShareable( identifiableObject.getClass() )
             || aclService.canManage( currentUserService.getCurrentUser(), identifiableObject );
+    }
+
+    @Override
+    public boolean hasAnyAuthority( String... authorities )
+    {
+        UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
+
+        if ( userCredentials.isAuthorized( "ALL" ) )
+        {
+            return true;
+        }
+
+        for ( String authority : authorities )
+        {
+            if ( userCredentials.isAuthorized( authority ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

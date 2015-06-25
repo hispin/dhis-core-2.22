@@ -45,32 +45,32 @@ public interface SecurityService
      * @return true if the invitation was sent, otherwise false.
      */
     boolean prepareUserForInvite( User user );
-    
+
     /**
      * Indicates whether a restore/invite is allowed for the given user. The
      * requirements are:</p>
-     * 
+     * <p/>
      * <ul>
      * <li>email_not_configured_for_system</li>
      * <li>no_user_credentials</li>
      * <li>user_does_not_have_valid_email</li>
      * <li>user_has_critical_authorities</li>
      * </ul>
-     * 
+     *
      * @param credentials the user credentials.
      * @return a string if restore cannot be performed, null otherwise.
      */
     String validateRestore( UserCredentials credentials );
-    
+
     /**
      * Indicates whether an invite is allowed for the given user. Delegates to
      * validateRestore( UserCredentials ). The requirements are.
-     * 
+     * <p/>
      * <ul>
      * <li>no_user_credentials</li>
      * <li>username_taken</li>
      * </ul>
-     * 
+     *
      * @param credentials the user credentials.
      * @return a string if invite cannot be performed, null otherwise.
      */
@@ -79,16 +79,16 @@ public interface SecurityService
     /**
      * Invokes the initRestore method and dispatches email messages with
      * restore information to the user.
-     * <p>
+     * <p/>
      * In the case of inviting a user to finish setting up an account,
      * the user account must already be configured with the profile desired
      * for the user (e.g., locale, organisation unit(s), role(s), etc.)
      *
-     * @param credentials the credentials for the user to send restore message.
-     * @param rootPath the root path of the request.
+     * @param credentials    the credentials for the user to send restore message.
+     * @param rootPath       the root path of the request.
      * @param restoreOptions restore options, including type of restore.
      * @return false if any of the arguments are null or if the user credentials
-     *         identified by the user name does not exist, true otherwise.
+     * identified by the user name does not exist, true otherwise.
      */
     boolean sendRestoreMessage( UserCredentials credentials, String rootPath, RestoreOptions restoreOptions );
 
@@ -98,10 +98,10 @@ public interface SecurityService
      * restoreExpiry property with a date time some interval from now depending
      * on the restore type. Changes are persisted.
      *
-     * @param credentials the user credentials.
+     * @param credentials    the user credentials.
      * @param restoreOptions restore options, including type of restore.
      * @return an array where index 0 is the clear-text token and index 1 the
-     *         clear-text code.
+     * clear-text code.
      */
     String[] initRestore( UserCredentials credentials, RestoreOptions restoreOptions );
 
@@ -121,8 +121,8 @@ public interface SecurityService
      * the expiry date time of the credentials.
      *
      * @param credentials the user credentials.
-     * @param token the token.
-     * @param code the code.
+     * @param token       the token.
+     * @param code        the code.
      * @param newPassword the proposed new password.
      * @param restoreType type of restore operation (e.g. pw recovery, invite).
      * @return true or false.
@@ -136,8 +136,8 @@ public interface SecurityService
      * the credentials.
      *
      * @param credentials the user credentials.
-     * @param token the token.
-     * @param code the code.
+     * @param token       the token.
+     * @param code        the code.
      * @param restoreType type of restore operation (e.g. pw recovery, invite).
      * @return true or false.
      */
@@ -149,10 +149,10 @@ public interface SecurityService
      * user credentials identified by the given user name.
      *
      * @param credentials the user credentials.
-     * @param token the token.
+     * @param token       the token.
      * @return error message if any of the arguments are null or if the user
-     *         credentials identified by the user name does not exist, null if
-     *         the arguments are valid.
+     * credentials identified by the user name does not exist, null if
+     * the arguments are valid.
      */
     String verifyToken( UserCredentials credentials, String token, RestoreType restoreType );
 
@@ -160,12 +160,12 @@ public interface SecurityService
      * Indicates whether the given username is an invite. The username is
      * considered an invite if it is null or matches the invite username pattern
      * of invite-<email>-<uid>.
-     * 
+     *
      * @param username the username.
      * @return true if the username represents an account invitation.
      */
     boolean isInviteUsername( String username );
-    
+
     /**
      * Checks whether current user has read access to object.
      *
@@ -246,4 +246,6 @@ public interface SecurityService
      * @return true of false depending on outcome of manage check
      */
     boolean canManage( IdentifiableObject identifiableObject );
+
+    boolean hasAnyAuthority( String... authorities );
 }
