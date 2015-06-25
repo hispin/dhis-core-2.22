@@ -558,6 +558,7 @@ trackerCapture.controller('RelationshipController',
                 SessionStorageService) {
     $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
     $scope.enrollment = {enrollmentDate: '', incidentDate: ''};    
+    $scope.attributesById = CurrentSelection.getAttributesById();
     
     var selections = CurrentSelection.get();
     $scope.optionSets = selections.optionSets;
@@ -630,8 +631,8 @@ trackerCapture.controller('RelationshipController',
         //prepare tei model and do registration
         $scope.tei = {trackedEntity: selectedTrackedEntity, orgUnit: $scope.selectedOrgUnit.id, attributes: registrationAttributes };   
         var teiId = '';
-    
-        TEIService.register($scope.tei).then(function(tei){
+
+        TEIService.register($scope.tei, $scope.optionSets, $scope.attributesById).then(function(tei){
             
             if(tei.status === 'SUCCESS'){
                 
