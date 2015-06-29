@@ -100,7 +100,7 @@ public class TrackedEntityInstanceController
     // READ
     // -------------------------------------------------------------------------
 
-    @RequestMapping( method = RequestMethod.GET, produces = { ContextUtils.CONTENT_TYPE_JSON, ContextUtils.CONTENT_TYPE_JAVASCRIPT } )
+    @RequestMapping( value = { "", "/query" }, method = RequestMethod.GET, produces = { ContextUtils.CONTENT_TYPE_JSON, ContextUtils.CONTENT_TYPE_JAVASCRIPT } )
     public String queryTrackedEntityInstancesJson(
         @RequestParam( required = false ) String query,
         @RequestParam( required = false ) Set<String> attribute,
@@ -137,7 +137,7 @@ public class TrackedEntityInstanceController
         return "grid";
     }
 
-    @RequestMapping( method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_XML )
+    @RequestMapping( value = { "", "/query" }, method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_XML )
     public void queryTrackedEntityInstancesXml(
         @RequestParam( required = false ) String query,
         @RequestParam( required = false ) Set<String> attribute,
