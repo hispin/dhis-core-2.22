@@ -35,6 +35,7 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
@@ -53,7 +54,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.user.UserService;
-import org.hisp.dhis.commons.collection.CachingMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -106,6 +106,19 @@ public abstract class AbstractTrackedEntityInstanceService
     // -------------------------------------------------------------------------
     // READ
     // -------------------------------------------------------------------------
+
+    @Override
+    public List<TrackedEntityInstance> getTrackedEntityInstances( List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances )
+    {
+        List<TrackedEntityInstance> teiItems = new ArrayList<>();
+
+        for ( org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
+        {
+            teiItems.add( getTrackedEntityInstance( trackedEntityInstance ) );
+        }
+
+        return teiItems;
+    }
 
     @Override
     public TrackedEntityInstance getTrackedEntityInstance( String uid )
