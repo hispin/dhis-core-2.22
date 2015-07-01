@@ -35,8 +35,6 @@ import org.hisp.dhis.system.deletion.DeletionHandler;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityComment;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityCommentService;
-import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
-import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 
 /**
  * @author Quang Nguyen
@@ -55,13 +53,6 @@ public class ProgramInstanceDeletionHandler
         this.programInstanceService = programInstanceService;
     }
 
-    private TrackedEntityDataValueService dataValueService;
-
-    public void setDataValueService( TrackedEntityDataValueService dataValueService )
-    {
-        this.dataValueService = dataValueService;
-    }
-
     private TrackedEntityCommentService commentService;
 
     public void setCommentService( TrackedEntityCommentService commentService )
@@ -74,13 +65,6 @@ public class ProgramInstanceDeletionHandler
     public void setProgramStageDEService( ProgramStageDataElementService programStageDEService )
     {
         this.programStageDEService = programStageDEService;
-    }
-
-    private ProgramStageInstanceService programStageInstanceService;
-
-    public void setProgramStageInstanceService( ProgramStageInstanceService programStageInstanceService )
-    {
-        this.programStageInstanceService = programStageInstanceService;
     }
 
     // -------------------------------------------------------------------------
@@ -98,17 +82,6 @@ public class ProgramInstanceDeletionHandler
     {
         for ( ProgramInstance programInstance : entityInstance.getProgramInstances() )
         {
-            for ( ProgramStageInstance programStageInstance : programInstance.getProgramStageInstances() )
-            {
-                for ( TrackedEntityDataValue entityInstanceDataValue : dataValueService
-                    .getTrackedEntityDataValues( programStageInstance ) )
-                {
-                    dataValueService.deleteTrackedEntityDataValue( entityInstanceDataValue );
-                }
-
-                programStageInstanceService.deleteProgramStageInstance( programStageInstance );
-            }
-
             for( TrackedEntityComment comment : programInstance.getComments())
             {
                 commentService.deleteTrackedEntityComment( comment );

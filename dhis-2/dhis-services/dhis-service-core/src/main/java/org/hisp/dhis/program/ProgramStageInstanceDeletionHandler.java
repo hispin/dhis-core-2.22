@@ -69,15 +69,7 @@ public class ProgramStageInstanceDeletionHandler
 
         return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
     }
-    
-    @Override
-    public String allowDeleteProgramInstance( ProgramInstance programInstance )
-    {
-        String sql = "SELECT COUNT(*) FROM programstageinstance WHERE programinstanceid=" + programInstance.getId() + " and executionDate is not null ";
-
-        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
-    }
-    
+        
     @Override
     public void deleteProgramInstance( ProgramInstance programInstance )
     {
