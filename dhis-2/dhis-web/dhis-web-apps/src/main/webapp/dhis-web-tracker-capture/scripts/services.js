@@ -666,7 +666,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         search: function(ouId, ouMode, queryUrl, programUrl, attributeUrl, pager, paging) {
                 
-            var url =  '../api/trackedEntityInstances.json?ou=' + ouId + '&ouMode='+ ouMode;
+            var url =  '../api/trackedEntityInstances/query.json?ou=' + ouId + '&ouMode='+ ouMode;
             
             if(queryUrl){
                 url = url + '&'+ queryUrl;
@@ -1098,23 +1098,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };        
 })
 
-    /* Returns a function for getting rules for a specific program */
-.factory('TrackerRulesFactory', function($q,$rootScope,TCStorageService){
-    return{
-        getOldProgramStageRules :function(programUid, programstageUid) {
-            var rules = this.getProgramRules(programUid);
-            
-            //Only keep the rules actually matching the program stage we are in, or rules with no program stage defined.
-            var programStageRules = [];
-            angular.forEach(rules, function(rule) {
-                if(rule.programstage_uid == null || rule.programstage_uid == "" || rule.programstage_uid == programstageUid) {
-                   programStageRules.push(rule);
-                }
-            });
-            
-            return programStageRules;
-        },
-        
+/* Returns a function for getting rules for a specific program */
+.factory('TrackerRulesFactory', function($q,$rootScope,TCStorageService, MetaDataFactory){
+    return{        
         getProgramStageRules : function(programUid, programStageUid){
             var def = $q.defer();
             
@@ -1124,8 +1110,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     var programRulesArray = [];
                     //Loop through and add the rules belonging to this program and program stage
                     angular.forEach(rules, function(rule){
-                       if(rule.program.id == programUid) {
-                           if(!rule.programStage || !rule.programStage.id || rule.programStage.id == programStageUid) {
+                       if(rule.program.id === programUid) {
+                           if(!rule.programStage || !rule.programStage.id || rule.programStage.id === programStageUid) {
                                 rule.actions = [];
                                 programRulesArray.push(rule);
                             }
@@ -1139,72 +1125,94 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });
                         
             return def.promise;
-        }
-    };  
-})
+        },        
+        getRules : function(programUid){            
+            var def = $q.defer();            
+            MetaDataFactory.getAll('constants').then(function(constants) {
+                MetaDataFactory.getByProgram('programIndicators',programUid).then(function(pis){                    
+                    var variables = [];
+                    var programRules = [];
+                    angular.forEach(pis, function(pi){                    
+                        var newAction = {
+                                id:pi.id,
+                                content:pi.displayDescription ? pi.displayDescription : pi.name,
+                                data:pi.expression,
+                                programRuleActionType:'DISPLAYKEYVALUEPAIR',
+                                location:'indicators'
+                            };
+                        var newRule = {
+                                name:pi.name,
+                                id: pi.id,
+                                shortname:pi.shortname,
+                                code:pi.code,
+                                program:pi.program,
+                                description:pi.description,
+                                condition:pi.filter ? pi.filter : 'true',
+                                programRuleActions: [newAction]
+                            };
 
-/* Returns user defined variable names and their corresponding UIDs and types for a specific program */
-.factory('TrackerRuleVariableFactory', function($rootScope, $q, TCStorageService){
-    return{
-        getProgramRuleVariables : function(programUid){
-            var def = $q.defer();
-            
-            TCStorageService.currentStore.open().done(function(){
-                
-                TCStorageService.currentStore.getAll('programRuleVariables').done(function(variables){
+                        programRules.push(newRule);
+
+                        var variablesInCondition = newRule.condition.match(/#{\w+.?\w*}/g);
+                        var variablesInData = newAction.data.match(/#{\w+.?\w*}/g);
+
+                        var pushDirectAddressedVariable = function(variableWithCurls) {
+                            var variableName = variableWithCurls.replace("#{","").replace("}","");
+                            var variableNameParts = variableName.split('.');
+
+
+                            if(variableNameParts.length === 2) {
+                                //this is a programstage and dataelement specification. translate to program variable:
+                                variables.push({
+                                    name:variableName,
+                                    programRuleVariableSourceType:'DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE',
+                                    dataElement:variableNameParts[1],
+                                    programStage:variableNameParts[0],
+                                    program:programUid
+                                });
+                            }
+                            else if(variableNameParts.length === 1)
+                            {
+                                //This is an attribute - let us translate to program variable:
+                                variables.push({
+                                    name:variableName,
+                                    programRuleVariableSourceType:'TEI_ATTRIBUTE',
+                                    trackedEntityAttribute:variableNameParts[0],
+                                    program:programUid
+                                });
+                            }
+
+                        };
+
+                        angular.forEach(variablesInCondition, function(variableInCondition) {
+                            pushDirectAddressedVariable(variableInCondition);
+                        });
+
+                        angular.forEach(variablesInData, function(variableInData) {
+                            pushDirectAddressedVariable(variableInData);
+                        });
+                    });
+
+                    var programIndicators = {rules:programRules, variables:variables};
                     
-                    //The array will ultimately be returned to the caller.
-                    var programRuleVariablesArray = [];
-                    //Loop through and add the variables belonging to this program
-                    angular.forEach(variables, function(variable){
-                       if(variable.program.id == programUid) {
-                            programRuleVariablesArray.push(variable);
-                       }
+                    MetaDataFactory.getByProgram('programValidations',programUid).then(function(programValidations){                    
+                        MetaDataFactory.getByProgram('programRuleVariables',programUid).then(function(programVariables){                    
+                            MetaDataFactory.getByProgram('programRules',programUid).then(function(prs){
+                                var programRules = [];
+                                angular.forEach(prs, function(rule){
+                                    rule.actions = [];
+                                    rule.programStageId = rule.programStage && rule.programStage.id ? rule.programStage.id : null;
+                                    programRules.push(rule);
+                                });                                
+                                def.resolve({constants: constants, programIndicators: programIndicators, programValidations: programValidations, programVariables: programVariables, programRules: programRules});
+                            });
+                        });
                     });
-
-                    $rootScope.$apply(function(){
-                        def.resolve(programRuleVariablesArray);
-                    });
-                });
-            });
-                        
+                }); 
+            });                        
             return def.promise;
         }
-    };
-})
-
-/* Returns user defined variable names and their corresponding UIDs and types for a specific program */
-.factory('TrackerWidgetsConfigurationFactory', function(){
-    return{
-        getWidgetConfiguration : function(programUid){
-            //If no config exists, return default config
-            
-            return [
-                {title: 'Details', type: 'rulebound', code:"det", show: true, expand: true, horizontalplacement:"left", index:0},
-                {title: 'enrollment', type:'enrollment', show: false, expand: true, horizontalplacement:"left", index:1},
-                {title: 'dataentry', type: 'dataentry', show: true, expand: true, horizontalplacement:"left", index:2},
-                {title: 'report', type: 'report', show: false, expand: true, horizontalplacement:"left", index:3},
-                {title: 'current_selections', type: 'current_selections', show: false, expand: true, horizontalplacement:"right", index:0},
-                {title: 'profile', type: 'profile', show: false, expand: true, horizontalplacement:"right", index:1},
-                {title: 'Conditions/Complications',  type:'rulebound', code:"con", show: true, expand: true, horizontalplacement:"right", index:2},
-                {title: 'relationships', type: 'relationships', show: false, expand: true, horizontalplacement:"right", index:3},
-                {title: 'notes', type: 'notes', show: true, expand: true, horizontalplacement:"right", index:4},
-                {title: 'Summary', type: 'rulebound', code:"sum", show: true, expand: true, horizontalplacement:"left", index:4}
-            ];
-        },
-        getDefaultWidgetConfiguration: function() {
-            return [
-                {title: 'enrollment', type:'enrollment', show: true, expand: true, horizontalplacement:"left", index:0},
-                {title: 'dataentry', type: 'dataentry', show: true, expand: true, horizontalplacement:"left", index:1},
-                {title: 'report', type: 'report', show: true, expand: true, horizontalplacement:"left", index:2},
-                {title: 'current_selections', type: 'current_selections', show: false, expand: true, horizontalplacement:"right", index:0},
-                {title: 'profile', type: 'profile', show: true, expand: true, horizontalplacement:"right", index:1},
-                {title: 'relationships', type: 'relationships', show: true, expand: true, horizontalplacement:"right", index:2},
-                {title: 'notes', type: 'notes', show: true, expand: true, horizontalplacement:"right", index:3}
-            ];
-        }
-    };
-            
+    };  
 })
 
 .service('EntityQueryFactory', function(OperatorFactory, DateUtils){  
