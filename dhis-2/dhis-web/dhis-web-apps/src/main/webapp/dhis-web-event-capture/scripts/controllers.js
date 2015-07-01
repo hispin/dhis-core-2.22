@@ -30,7 +30,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 ModalService,
                 DialogService,
                 AuthorityService,
-                TrackerRulesExecutionService) {
+                TrackerRulesExecutionService,
+                TrackerRulesFactory) {
     //selected org unit
     $scope.selectedOrgUnit = '';
     $scope.treeLoaded = false;    
@@ -106,6 +107,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.selectedProgramStage = null;
         $scope.programValidations = [];
         $scope.programIndicators = [];
+        $scope.allProgramRules = [];
         $scope.dhis2Events = [];
         $scope.currentEvent = {};
         $scope.currentEventOriginialValue = {};
@@ -193,12 +195,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 }
                 $scope.newDhis2Event.eventDate = '';
 
-                MetaDataFactory.getByProgram('programValidations', $scope.selectedProgram.id).then(function(pvs){
-                    $scope.programValidations = pvs;
-                    MetaDataFactory.getByProgram('programIndicators', $scope.selectedProgram.id).then(function(pis){
-                        $scope.programIndicators = pis;
+                MetaDataFactory.getByProgram('programIndicators', $scope.selectedProgram.id).then(function(pis){
+                    $scope.programIndicators = pis;
+                    TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+                        $scope.allProgramRules = rules;
                         $scope.loadEvents();
-                    });                    
+                    }); 
                 });
             });
         }
@@ -304,7 +306,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     if(!$scope.sortHeader.id){
                         $scope.sortEventGrid({name: $scope.selectedProgramStage.reportDateDescription ? $scope.selectedProgramStage.reportDateDescription : 'incident_date', id: 'event_date', type: 'date', compulsory: false, showFilter: false, show: true});
                     }
-                }                
+                }     
+                
+                
                 $scope.eventFetched = true;
             });
         }
@@ -952,8 +956,14 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.currentEvent.event = !$scope.currentEvent.event ? 'SINGLE_EVENT' : $scope.currentEvent.event;
         $scope.eventsByStage = [];
         $scope.eventsByStage[$scope.selectedProgramStage.id] = [$scope.currentEvent];
-        TrackerRulesExecutionService.executeRules($scope.selectedProgram.id,$scope.currentEvent,$scope.eventsByStage,$scope.prStDes,null,false);
+        var evs = {all: [$scope.currentEvent], byStage: $scope.eventsByStage};
+        
+        var flag = {debug: true, verbose: true};
+        
+        //TrackerRulesExecutionService.executeRules($scope.selectedProgram.id,$scope.currentEvent,$scope.eventsByStage,$scope.prStDes,null,false);
+        TrackerRulesExecutionService.executeRules($scope.allProgramRules, $scope.currentEvent, evs, $scope.prStDes, $scope.selectedTei, $scope.selectedEnrollment, flag);
     };
+       
     
     $scope.formatNumberResult = function(val){        
         return dhis2.validation.isNumber(val) ? val : '';
