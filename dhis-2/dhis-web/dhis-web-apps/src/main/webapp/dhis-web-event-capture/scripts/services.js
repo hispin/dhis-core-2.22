@@ -320,33 +320,8 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
 })
 
 /* Returns a function for getting rules for a specific program */
-.factory('TrackerRulesFactory', function($q,$rootScope,ECStorageService, MetaDataFactory){
+.factory('TrackerRulesFactory', function($q,MetaDataFactory){
     return{        
-        getProgramStageRules : function(programUid, programStageUid){
-            var def = $q.defer();
-            
-            ECStorageService.currentStore.open().done(function(){
-                ECStorageService.currentStore.getAll('programRules').done(function(rules){                    
-                    //The array will ultimately be returned to the caller.
-                    var programRulesArray = [];
-                    //Loop through and add the rules belonging to this program and program stage
-                    angular.forEach(rules, function(rule){
-                       if(rule.program.id === programUid) {
-                           if(!rule.programStage || !rule.programStage.id || rule.programStage.id === programStageUid) {
-                                rule.actions = [];
-                                programRulesArray.push(rule);
-                            }
-                       }
-                    });
-
-                    $rootScope.$apply(function(){
-                        def.resolve(programRulesArray);
-                    });
-                });     
-            });
-                        
-            return def.promise;
-        },        
         getRules : function(programUid){            
             var def = $q.defer();            
             MetaDataFactory.getAll('constants').then(function(constants) {
