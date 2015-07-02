@@ -43,6 +43,7 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.relationship.Relationship;
 import org.hisp.dhis.relationship.RelationshipService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -203,8 +204,8 @@ public class TrackedEntityInstanceDashboardAction
         entityInstance = entityInstanceService.getTrackedEntityInstance( entityInstanceId );
 
         Collection<Program> programs = programService
-            .getProgramsByCurrentUser( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
-        programs.addAll( programService.getProgramsByCurrentUser( Program.SINGLE_EVENT_WITH_REGISTRATION ) );
+            .getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION );
+        programs.addAll( programService.getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION ) );
 
         // ---------------------------------------------------------------------
         // Get relationship

@@ -389,7 +389,7 @@ public class AddProgramStageAction
             programStage.setPeriodType( null );
         }
 
-        if ( program.isSingleEvent() )
+        if ( program.isWithoutRegistration() )
         {
             programStage.setAutoGenerateEvent( true );
         }

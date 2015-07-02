@@ -15,8 +15,8 @@ function orgunitSelected( orgUnits, orgUnitNames )
 	{
 		var count = 0;
 		for ( i in json.programs ) {
-			if( json.programs[i].type==2){
-				jQuery( '#program').append( '<option value="' + json.programs[i].id +'" programStageId="' + json.programs[i].programStageId + '" type="' + json.programs[i].type + '">' + json.programs[i].name + '</option>' );
+			if( json.programs[i].programType=='WITH_REGISTRATION'){
+				jQuery( '#program').append( '<option value="' + json.programs[i].id +'" programStageId="' + json.programs[i].programStageId + '" type="' + json.programs[i].programType + '">' + json.programs[i].name + '</option>' );
 				count++;
 			}
 		}

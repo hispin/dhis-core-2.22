@@ -13,7 +13,7 @@
 		<div id="expression-tabs" style="width:670px">
 			<ul>
 				<li><a href="#expression-tab1">$i18n.getString("data_elements")</a></li>
-				#if($program.type!='3')
+				#if($program.proprgramType=='with_registration')
 					<li><a href="#expression-tab2">$i18n.getString("attributes")</a></li>
 					<li><a href="#expression-tab3">$i18n.getString("variables")</a></li>
 				#end
@@ -43,7 +43,7 @@
 		      </table>
 			</div>
 			
-		#if($program.type!='3')
+		#if($program.proprgramType=='with_registration')
 		
 			<div id="expression-tab2">
 				<table style="width:100%">

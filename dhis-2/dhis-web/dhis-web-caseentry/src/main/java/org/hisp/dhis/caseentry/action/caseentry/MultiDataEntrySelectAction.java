@@ -38,6 +38,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -141,7 +142,7 @@ public class MultiDataEntrySelectAction
         {
             programs = programService.getProgramsByCurrentUser( organisationUnit );
             programs.removeAll( programService
-                .getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION, organisationUnit ) );
+                .getPrograms( ProgramType.WITHOUT_REGISTRATION, organisationUnit ) );
         }
 
         return SUCCESS;

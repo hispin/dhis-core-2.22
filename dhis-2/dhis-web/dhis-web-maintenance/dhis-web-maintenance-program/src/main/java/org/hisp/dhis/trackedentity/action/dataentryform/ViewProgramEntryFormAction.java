@@ -37,6 +37,7 @@ import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.user.UserSettingService;
@@ -139,7 +140,7 @@ public class ViewProgramEntryFormAction
     {
         List<Program> programs = programService.getAllPrograms();
 
-        programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
+        programs.removeAll( programService.getPrograms( ProgramType.WITHOUT_REGISTRATION ) );
 
         program = programService.getProgram( programId );
         programAttributes = program.getProgramAttributes();

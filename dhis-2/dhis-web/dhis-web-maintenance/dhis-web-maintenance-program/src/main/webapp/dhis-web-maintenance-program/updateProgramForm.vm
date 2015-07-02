@@ -92,9 +92,8 @@
 			<td><label for="type">$i18n.getString( "type" ) </label></td>
 			<td>
 				<select id="type" name="type" onchange='programOnChange();' class="{validate:{required:true}}">
-					<option value='1' #if( $program.type=='1' ) selected #end>$i18n.getString('multiple_events_with_registration')</option>
-					<option value='2' #if( $program.type=='2' ) selected #end>$i18n.getString('single_event_with_registration')</option>
-					<option value='3' #if( $program.type=='3' ) selected #end>$i18n.getString('single_event_without_registration')</option>
+					<option value='with_registration' #if( $program.programType=="with_registration" ) selected #end>$i18n.getString('with_registration')</option>
+					<option value='without_registration' #if( $program.programType=="without_registration" ) selected #end>$i18n.getString('without_registration')</option>
 				</select>
 			</td>
 			<td></td>
@@ -150,25 +149,25 @@
 		
 		<tr name='nonAnonymous'>
 			<td><label for="onlyEnrollOnce">$i18n.getString( "only_enroll_once" )</label></td>
-			<td><input type="checkbox" id="onlyEnrollOnce" name="onlyEnrollOnce" value='true' onchange='programOnChange();' #if( $program.type!='1' ) disabled #end #if($program.onlyEnrollOnce=='true') checked #end></td>
+			<td><input type="checkbox" id="onlyEnrollOnce" name="onlyEnrollOnce" value='true' onchange='programOnChange();' #if( $program.programType.value=="without_registration" ) disabled #end #if($program.onlyEnrollOnce=='true') checked #end></td>
 			<td></td>
 		</tr>
 
 		<tr name='nonAnonymous'>
 			<td><label for="displayIncidentDate">$i18n.getString( "show_incident_date" )</label></td>
-			<td><input type="checkbox" id="displayIncidentDate" name="displayIncidentDate" value='true' onchange='programOnChange();' #if( $program.type=='3' ) disabled #elseif($program.displayIncidentDate=='true') checked #end></td>
+			<td><input type="checkbox" id="displayIncidentDate" name="displayIncidentDate" value='true' onchange='programOnChange();' #if( $program.programType.value=="without_registration" ) disabled #elseif($program.displayIncidentDate=='true') checked #end></td>
 			<td></td>
 		</tr>
 		
 		<tr name='nonAnonymous'>
 			<td><label for="dateOfIncidentDescription">$i18n.getString( "date_of_incident_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-			<td><input type="text" id="dateOfIncidentDescription" name="dateOfIncidentDescription" value="$!program.dateOfIncidentDescription" class="{validate:{required:true,minlength:4}}" #if( $program.type=='2' || $program.type=='3') disabled #end ></td>
+			<td><input type="text" id="dateOfIncidentDescription" name="dateOfIncidentDescription" value="$!program.dateOfIncidentDescription" class="{validate:{required:true,minlength:4}}" #if( $program.programType.value=="without_registration") disabled #end ></td>
 			<td></td>
 		</tr name='nonAnonymous'>
 		
 		<tr name='nonAnonymous'>
 			<td><label for="dateOfEnrollmentDescription">$i18n.getString( "date_of_enrollment_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-			<td><input type="text" id="dateOfEnrollmentDescription" name="dateOfEnrollmentDescription"  value="$!program.dateOfEnrollmentDescription" class="{validate:{required:true,minlength:4}}" #if( $program.type=='3' ) disabled #end></td>
+			<td><input type="text" id="dateOfEnrollmentDescription" name="dateOfEnrollmentDescription"  value="$!program.dateOfEnrollmentDescription" class="{validate:{required:true,minlength:4}}" #if( $program.programType.value=="without_registration" ) disabled #end></td>
 			<td></td>
 		</tr>
 
@@ -227,7 +226,7 @@
         </tr>
         <tr name='nonAnonymous'>
             <td><label for="ignoreOverdueEvents">$i18n.getString( "skip_to_generate_overdue_events" )</label></td>
-            <td><input type="checkbox" id="ignoreOverdueEvents" name="ignoreOverdueEvents" value='true' #if($program.ignoreOverdueEvents=='true') checked #end #if( $program.type!='1' ) disabled #end ></td>
+            <td><input type="checkbox" id="ignoreOverdueEvents" name="ignoreOverdueEvents" value='true' #if($program.ignoreOverdueEvents=='true') checked #end #if( $program.programType.value=="without_registration" ) disabled #end ></td>
             <td></td>
         </tr>
     </tbody>
@@ -259,7 +258,7 @@
 	
 		<tr>
 			<td>
-				<select size="15" style="width:100%;" multiple id="availablePropertyIds" name="availablePropertyIds" ondblclick="selectProperties();" #if( $program.type=='3' ) disabled #end>
+				<select size="15" style="width:100%;" multiple id="availablePropertyIds" name="availablePropertyIds" ondblclick="selectProperties();" #if( $program.programType.value=="without_registration" ) disabled #end>
 					#foreach( $attribute in $availableAttributes )
 						<option value="attr_$attribute.id" valuetype='$attribute.valueType'>$encoder.htmlEncode($attribute.displayName)</option>
 					#end
@@ -286,16 +285,16 @@
 								<th style="width:20px;">$i18n.getString( "date_in_future" )</th>
                             </tr>
 						</thead>
-						<tbody id="selectedList" #if($program.type==3) style="display:none;" #end>
+						<tbody id="selectedList" #if($program.programType.value=="without_registration") style="display:none;" #end>
 							#foreach( $programAttribute in $program.programAttributes )
 								#set($attribute = $programAttribute.attribute)
 								<tr ondblclick="unSelectProperties( this )" id="attr_$programAttribute.attribute.id">
 									<td onmousedown="select(event, this)">$encoder.htmlEncode( $attribute.name )</td>
-									<td align="center"><input type="checkbox" name="displayed" value="attr_$programAttribute.attribute.id" #if($programAttribute.displayInList == true ) checked #end #if($program.type==3) disabled #end  /></td>
-									<td align="center"><input type="checkbox" name="mandatory" #if($programAttribute.mandatory == "true" ) checked #end #if($program.type==3) disabled #end  /></td>
+									<td align="center"><input type="checkbox" name="displayed" value="attr_$programAttribute.attribute.id" #if($programAttribute.displayInList == true ) checked #end #if($program.programType.value=="without_registration") disabled #end  /></td>
+									<td align="center"><input type="checkbox" name="mandatory" #if($programAttribute.mandatory == "true" ) checked #end #if($program.tprogramType.value=="without_registration") disabled #end  /></td>
 									<td align="center">
 										#if($attribute.valueType=='date')
-											<input type="checkbox" name="allowFutureDate" #if($programAttribute.allowFutureDate == "true" ) checked #end #if($program.type==3) disabled #end />
+											<input type="checkbox" name="allowFutureDate" #if($programAttribute.allowFutureDate == "true" ) checked #end #if($program.programType.value=="without_registration") disabled #end />
 										#else
 											<input type="hidden" name="allowFutureDate" />
 										#end

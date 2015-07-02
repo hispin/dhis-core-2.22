@@ -52,7 +52,7 @@ public class Program
     // single event with registration: 2
     // single event without registration: 3
 
-    private Integer type;
+    private String type;
 
     private String dateOfEnrollmentDescription = "Date of Enrollment";
 
@@ -102,12 +102,12 @@ public class Program
         this.clientVersion = clientVersion;
     }
 
-    public Integer getType()
+    public String getType()
     {
         return type;
     }
 
-    public void setType( Integer type )
+    public void setType( String type )
     {
         this.type = type;
     }
@@ -188,7 +188,7 @@ public class Program
     {
         super.serialize( dout );
         dout.writeInt( getVersion() );
-        dout.writeInt( this.getType() );
+        dout.writeUTF( this.getType() );
         dout.writeUTF( getDateOfEnrollmentDescription() );
         dout.writeUTF( getDateOfIncidentDescription() );
         dout.writeUTF( getTrackedEntityName() );
@@ -227,7 +227,7 @@ public class Program
     {
         super.deSerialize( dataInputStream );
         this.setVersion( dataInputStream.readInt() );
-        this.setType( dataInputStream.readInt() );
+        this.setType( dataInputStream.readUTF() );
         this.setDateOfEnrollmentDescription( dataInputStream.readUTF() );
         this.setDateOfIncidentDescription( dataInputStream.readUTF() );
         this.setTrackedEntityName( dataInputStream.readUTF() );

@@ -6,7 +6,7 @@
 			"id"  : ${program.id} ,
 			"uid" : "${program.uid}" ,
 			"name": "$!encoder.jsonEncode( ${program.name} )",
-			"type": "$program.type"
+			"programType": "$program.programType"
 		  }#if( $velocityCount < $size ),#end
 		#end]
 }

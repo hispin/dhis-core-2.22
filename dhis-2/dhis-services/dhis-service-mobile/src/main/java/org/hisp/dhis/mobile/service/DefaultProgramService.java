@@ -197,7 +197,7 @@ public class DefaultProgramService
 
         pr.setId( program.getId() );
         pr.setName( program.getName() );
-        pr.setType( program.getType() );
+        pr.setType( program.getProgramType().getValue() );
         pr.setVersion( program.getVersion() );
         pr.setDateOfEnrollmentDescription( program.getDateOfEnrollmentDescription() );
         pr.setDateOfIncidentDescription( program.getDateOfIncidentDescription() );
@@ -239,7 +239,7 @@ public class DefaultProgramService
 
             prStg.setCompleted( false );
 
-            prStg.setSingleEvent( program.isSingleEvent() );
+            prStg.setSingleEvent( program.isWithoutRegistration() );
 
             List<org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement> des = new ArrayList<>();
 

@@ -36,6 +36,7 @@ import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 
@@ -113,8 +114,8 @@ public class ProgramEnrollmentSelectAction
 
         programs = programService.getProgramsByCurrentUser( orgunit );
         programs.retainAll( programService.getProgramsByTrackedEntity( entityInstance.getTrackedEntity() ) );
-        programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
-
+        programs.removeAll( programService.getPrograms( ProgramType.WITHOUT_REGISTRATION ) );
+        
         Iterator<Program> iterProgram = programs.iterator();
         while ( iterProgram.hasNext() )
         {
@@ -125,7 +126,7 @@ public class ProgramEnrollmentSelectAction
                 {
                     if (programInstance.getStatus() == ProgramInstance.STATUS_ACTIVE 
                         || program.getOnlyEnrollOnce()
-                        || ((programInstance.getStatus() == ProgramInstance.STATUS_COMPLETED && program.isSingleEvent() )))
+                        || ((programInstance.getStatus() == ProgramInstance.STATUS_COMPLETED && program.isWithoutRegistration() )))
                     { 
                         iterProgram.remove();
                     }

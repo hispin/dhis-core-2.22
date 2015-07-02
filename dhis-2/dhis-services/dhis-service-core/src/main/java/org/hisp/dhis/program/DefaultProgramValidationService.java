@@ -123,7 +123,7 @@ public class DefaultProgramValidationService
 
         Program program = programStageInstance.getProgramInstance().getProgram();
         Collection<TrackedEntityDataValue> entityInstanceDataValues = null;
-        if ( program.isSingleEvent() )
+        if ( program.isWithoutRegistration() )
         {
             entityInstanceDataValues = dataValueService.getTrackedEntityDataValues( programStageInstance );
         }

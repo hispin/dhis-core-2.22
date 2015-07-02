@@ -144,7 +144,7 @@
 			
 				<select id="dataElementIds" name="dataElementIds" style="height:200px; width:100%;"  multiple="multiple" size="10" ondblclick="insertDataElement( '#dataElementSelection', '$programStage.uid')">
 				
-					#if( $programStage.program.type=='3' )
+					#if( $programStage.program.programType.value=="WITHOUT_REGISTRATION" )
 						#set($name = "$encoder.htmlEncode($programStage.reportDateDescription)")
 						#set($deJSON = '{"uid":"executionDate","name":"executionDate","executionDate":"executionDate","type":"date"}' )
 						<option value='$deJSON' decode="executionDate" dename="executionDate" title="$name">$encoder.htmlEncode($programStage.reportDateDescription)</option>
@@ -156,7 +156,7 @@
 					#end
 				</select>
 				<select id="dataElementIdsStore" multiple="multiple" style="display:none">
-					#if( $programStage.program.type=='3' )
+					#if( $programStage.program.programType.value=="WITHOUT_REGISTRATION" )
 						#set($name = "$encoder.htmlEncode($programStage.reportDateDescription)")#set($deJSON = '{"uid":"executionDate","name":"executionDate","executionDate":"executionDate","type":"date"}' )
 						<option value='$deJSON' decode="executionDate" dename="executionDate" title="$name">$encoder.htmlEncode($programStage.reportDateDescription)</option>
 					#end

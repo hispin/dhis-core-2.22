@@ -84,6 +84,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import org.hisp.dhis.program.ProgramType;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -499,7 +501,7 @@ public class CurrentUserController
 
     @RequestMapping( value = { "/assignedPrograms", "/programs" }, produces = { "application/json", "text/*" } )
     public void getPrograms( HttpServletResponse response, @RequestParam Map<String, String> parameters,
-        @RequestParam( required = false ) Integer type )
+        @RequestParam( required = false ) String type )
         throws IOException, NotAuthenticatedException
     {
         User currentUser = currentUserService.getCurrentUser();
@@ -521,7 +523,7 @@ public class CurrentUserController
         }
         else
         {
-            userPrograms = new ArrayList<>( programService.getProgramsByCurrentUser( type ) );
+            userPrograms = new ArrayList<>( programService.getProgramsByCurrentUser( ProgramType.fromValue( type ) ) );
         }
 
         if ( currentUserService.currentUserIsSuper() && currentUser.getOrganisationUnits().isEmpty() )

@@ -253,7 +253,7 @@ public abstract class AbstractEventService
             return new ImportSummary( ImportStatus.ERROR, "Event.program does not point to a valid program" );
         }
 
-        if ( programStage == null && !program.isSingleEvent() )
+        if ( programStage == null && program.isRegistration() )
         {
             return new ImportSummary( ImportStatus.ERROR,
                 "Event.programStage does not point to a valid programStage, and program is multi stage" );
@@ -305,7 +305,7 @@ public abstract class AbstractEventService
 
             programInstance = programInstances.get( 0 );
 
-            if ( program.isSingleEvent() )
+            if ( program.isWithoutRegistration() )
             {
                 List<ProgramStageInstance> programStageInstances = new ArrayList<>(
                     programStageInstanceService.getProgramStageInstances( programInstances, EventStatus.ACTIVE ) );

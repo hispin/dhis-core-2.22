@@ -2,12 +2,6 @@
     jQuery(document).ready(function() {
         showById('programStageAddEntityInstanceTR');
         showById('sendSmsToListBtn');
-        jQuery("#program option").each(function() {
-            var item = jQuery(this);
-            if( item.val() != '' && item.attr('type') != 1 ) {
-                item.remove();
-            }
-        });
 
 		hideById('addAdvancedSearchBtn');
 		jQuery("#program option[value='']").text(i18n_please_select);

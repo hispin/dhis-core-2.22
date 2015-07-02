@@ -90,7 +90,7 @@
 					#end
 					#if( $!programStageInstance!='')
 						#set( $status = $programStageInstance.getEventStatus().getValue() )
-						<tr id='tr1_$programInstance.id' type='$programInstance.program.type'
+						<tr id='tr1_$programInstance.id' type='$programInstance.program.programType'
 						programStageInstanceId='$programStageInstance.id' 
 						relationshipText='$!programInstance.program.relationshipText'
 						relationshipType='$!programInstance.program.relationshipType.id'
@@ -104,7 +104,7 @@
 								<img id='followup_$programInstance.id' src='images/risk_small.png' #if($programInstance.followup=='true') #else class='hidden' #end >
 							</td>
 						</tr>
-						#if($programInstance.program.type==1 && $programStageInstance)
+						#if($programInstance.program.programType=='WITH_REGISTRATION' && $programStageInstance)
 							<tr>
 								<td id='tr2_$programInstance.id' style='cursor:pointer;'>
 									&#8226; $programStageInstance.programStage.displayName ($format.formatDate($programStageInstance.dueDate))
@@ -112,7 +112,7 @@
 							</tr>
 						#end
 					#else
-					<tr id='tr1_$programInstance.id' type='$programInstance.program.type'
+					<tr id='tr1_$programInstance.id' type='$programInstance.program.programType'
 						programStageInstanceId='$programStageInstance.id' 
 						relationshipText='$!programInstance.program.relationshipText'
 						relationshipType='$!programInstance.program.relationshipType.id'
@@ -145,12 +145,7 @@
 		<div class="contentProviderTable">
 			<table id='completedTB' name='completedTB' style='cursor:pointer;'>
 				#foreach($programInstance in $completedProgramInstances)
-					#set($programStageInstanceId = '')
-					#if($programInstance.program.type==2)
-						#foreach( $programStageInstance in $programInstance.programStageInstances)
-							#set($programStageInstanceId = $programStageInstance.id)
-						#end
-					#end
+					
 					<tr onclick='javascript:setFieldValue("programIdAddTrackedEntityInstance",$programInstance.program.id);loadActiveProgramStageRecords($programInstance.id);' >
 						<td>
 							<a><span id='infor_$programInstance.id'>$programInstance.program.displayName ($format.formatDate($programInstance.enrollmentDate))</span></a>

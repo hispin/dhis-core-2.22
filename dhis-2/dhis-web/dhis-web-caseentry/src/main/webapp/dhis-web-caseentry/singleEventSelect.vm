@@ -1,12 +1,6 @@
 <script>
 	jQuery(document).ready(	function(){
-		jQuery("#program option").each(function() {
-            var item = jQuery(this);
-            if( item.attr('type') != 2 ) {
-                item.remove();
-            }
-        });
-	
+		
 		if(jQuery("#program option").length==0)
 		{
 			jQuery( '#program').append( '<option value="" type="">' + i18n_none_program + '</option>' );

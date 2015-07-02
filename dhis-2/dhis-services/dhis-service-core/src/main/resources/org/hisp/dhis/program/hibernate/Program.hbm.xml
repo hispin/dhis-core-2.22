@@ -42,7 +42,7 @@
         class="org.hisp.dhis.validation.ValidationCriteria" foreign-key="fk_program_criteria_validationcriteriaid" />
     </set>
 
-    <property name="type" />
+    <property name="programType" column="type" type="org.hisp.dhis.program.ProgramTypeUserType" not-null="true"  />
 
     <property name="displayIncidentDate" />
 
