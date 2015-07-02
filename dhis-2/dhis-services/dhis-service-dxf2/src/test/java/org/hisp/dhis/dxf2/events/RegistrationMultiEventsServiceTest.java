@@ -55,6 +55,7 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageDataElementService;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.hisp.dhis.user.UserService;
@@ -162,7 +163,7 @@ public class RegistrationMultiEventsServiceTest
         identifiableObjectManager.save( programStageB );
 
         programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );
-        programA.setType( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
+        programA.setProgramType( ProgramType.WITH_REGISTRATION );
         identifiableObjectManager.save( programA );
 
         ProgramStageDataElement programStageDataElement = new ProgramStageDataElement();

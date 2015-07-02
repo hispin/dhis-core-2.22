@@ -276,8 +276,8 @@ public class DefaultProgramInstanceService
         // ---------------------------------------------------------------------
 
         Collection<Program> programs = programService
-            .getProgramsByCurrentUser( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
-        programs.addAll( programService.getProgramsByCurrentUser( Program.SINGLE_EVENT_WITH_REGISTRATION ) );
+            .getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION );
+        programs.addAll( programService.getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION ) );
 
         Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService
             .getTrackedEntityAttributeValues( instance );
@@ -514,7 +514,7 @@ public class DefaultProgramInstanceService
         // At some point, programs of type single event should be removed.
         // ---------------------------------------------------------------------
 
-        if ( program.isSingleEvent() && program.getProgramStages().size() == 1 )
+        if ( program.isRegistration() && program.getProgramStages().size() == 1 )
         {
             ProgramStage programStage = program.getProgramStages().iterator().next();
             programStageInstanceService.createProgramStageInstance( programInstance, programStage, enrollmentDate,

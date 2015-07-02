@@ -1,4 +1,4 @@
-<table id='tb_$!programInstance.id' class="stage-container" programType='$!programInstance.program.type'>
+<table id='tb_$!programInstance.id' class="stage-container" programType='$!programInstance.program.programType'>
 	<tr>
 		<td>
 			<div class="arrow-left" onclick="moveLeft('flow_$!programInstance.id')">&nbsp;</div>
@@ -35,7 +35,7 @@
 								psuid="$programStageInstance.programStage.uid"
 								psname="$programStageInstance.programStage.displayName"
 								status="$programStageInstance.getEventStatus().getValue()"
-								programType='$programInstance.program.type'
+								programType='$programInstance.program.programType'
 								reportDate="$!format.formatDate( $!programStageInstance.executionDate )"
 								reportDateDes="$programStageInstance.programStage.reportDateDescription"
 								dueDate="$format.formatDate( $programStageInstance.dueDate )"
@@ -101,7 +101,7 @@
 								standardInterval='$standardInterval' 
 								selected repeatable="true"
 								allowGenerateNextVisit='$allowGenerateNextVisit' 
-								programType = '$programStage.program.type'
+								programType = '$programStage.program.programType'
 								reportDateDes='$!programStage.reportDateDescription'
 								repeatable="false"
 								openAfterEnrollment="$!programStage.openAfterEnrollment"
@@ -124,7 +124,7 @@
 								prevStageId='$prevStageId'
 								standardInterval='$programStage.minDaysFromStart' 
 								allowGenerateNextVisit='$allowGenerateNextVisit' 
-								programType = '$programStage.program.type'
+								programType = '$programStage.program.programType'
 								reportDateDes='$programStage.reportDateDescription'
 								repeatable="false"
 								openAfterEnrollment="$programStage.openAfterEnrollment"

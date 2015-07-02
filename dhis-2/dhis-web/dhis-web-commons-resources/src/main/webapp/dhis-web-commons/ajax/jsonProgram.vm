@@ -4,7 +4,7 @@
 	"uid": "$!program.uid",
 	"name": "$!encoder.jsEncode( ${program.name} )",
 	"description": "$!encoder.jsEncode( ${program.description} )",
-	"type": "$!program.type",
+	"programType": "$!program.programType",
 	"dataEntryMethod": "$!program.dataEntryMethod",
 	"displayIncidentDate": "$!program.displayIncidentDate",
 	"ignoreOverdueEvents": "$!program.ignoreOverdueEvents",

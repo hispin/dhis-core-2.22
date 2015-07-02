@@ -43,6 +43,7 @@ import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.hisp.dhis.program.ProgramType;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,7 +67,7 @@ public class ProgramController
     @Override
     protected void postCreateEntity( Program program )
     {
-        if ( program.isSingleEvent() && !program.isRegistration() )
+        if ( program.isWithoutRegistration() )
         {
             ProgramInstance programInstance = new ProgramInstance();
             programInstance.setEnrollmentDate( new Date() );
@@ -120,7 +121,7 @@ public class ProgramController
         {
             try
             {
-                int programType = Integer.parseInt( type );
+                ProgramType programType = ProgramType.fromValue( type );
 
                 Iterator<Program> iterator = entityList.iterator();
 
@@ -128,7 +129,7 @@ public class ProgramController
                 {
                     Program program = iterator.next();
 
-                    if ( program.getType() != programType )
+                    if ( program.getProgramType() != programType )
                     {
                         iterator.remove();
                     }

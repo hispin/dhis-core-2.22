@@ -19,7 +19,7 @@
 <table class="mainPageTable">
 	<tr>
 		<td style="text-align:right">
-			#if( $program.type=='1' )
+			#if( $program.programType.value=="with_registration" )
 				<input type="button" value="$i18n.getString( 'add_new' )" onclick="javascript:addProgramStage()" style="width:150px"><br>
 			#end
 			<input type="button" value="$i18n.getString( 'sort_order' )" onclick="window.location.href='sortProgramStagesForm.action?id=$program.id'" style="width:150px"><br>
@@ -43,8 +43,8 @@
 						    data-can-manage="$security.canManage( $programStage )"
 						    data-can-update="$security.canUpdate( $programStage )"
 						    data-can-delete="$security.canDelete( $programStage )"
-							data-can-manage-template-message="#if($programStage.program.type!=3)true#{else}false#end"
-						    data-can-remove="#if( $program.type=='1' )true#{else}false#end">
+							data-can-manage-template-message="#if($programStage.program.programType.value=="with_registration")true#{else}false#end"
+						    data-can-remove="#if( $program.programType.value=="with_registration" )true#{else}false#end">
 						    <td>$encoder.htmlEncode( $!programStage.displayName )</td>
 						</tr>
 					#end

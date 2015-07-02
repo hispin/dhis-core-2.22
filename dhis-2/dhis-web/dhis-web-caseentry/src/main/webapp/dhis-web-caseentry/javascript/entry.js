@@ -876,12 +876,12 @@ function loadProgramStageFromServer( programStageInstanceId ) {
 				$( "#commentTB" ).append(tr);
 			}
 			
-			if ( data.program.type != '1' ) {
+			if ( data.program.programType = 'WITH_REGISTRATION' ) {
 				hideById( 'newEncounterBtn' );
 			}
 
-			if ( data.program.type == '1' && data.programInstance.status == '1' ) {
-				var blockEntry = getFieldValue('blockEntryForm');
+			if ( data.program.programType = 'WITH_REGISTRATION' && data.programInstance.status == '1' ) {
+ 				var blockEntry = getFieldValue('blockEntryForm');
 				if( blockEntry == 'true' ){
 					blockEntryForm();
 				}

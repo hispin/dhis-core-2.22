@@ -5,7 +5,7 @@
 	"id": "${programStageDataElement.dataElement.id}",
 	"uid": "${programStageDataElement.dataElement.uid}",
 	"name": "$!encoder.jsonEncode( ${programStageDataElement.dataElement.getFormNameFallback()} )",
-	"type": 
+	"programType":
 		#if( $!programStageDataElement.dataElement.optionSet )
 			"optionset",
 		#else

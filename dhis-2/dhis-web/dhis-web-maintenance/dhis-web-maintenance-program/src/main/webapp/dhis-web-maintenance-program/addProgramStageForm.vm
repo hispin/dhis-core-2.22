@@ -115,7 +115,7 @@
 		<td><textarea id="description" name="description"></textarea></td>
 	</tr>
 	
-	#if( $program.type == 1 )
+	#if( $program.programType.value=="with_registration" )
 	<tr>
 		<td><label for="minDaysFromStart">$i18n.getString( "scheduled_days_from_start" )</label></td>
 		<td><input type="text" id="minDaysFromStart" name="minDaysFromStart" value="0" /></td>
@@ -166,7 +166,7 @@
 		<td><input type="checkbox" id="autoGenerateEvent" name="autoGenerateEvent" value='true' checked onchange='autoGenerateEventOnChange("$openAfterEnrollment")' /></td>
 	</tr>
 	
-	#if($program.type!=3)
+	#if($program.programType.value=="with_registration")
 	
 		#if($openAfterEnrollment!='' ) 
 		<tr>
@@ -215,7 +215,7 @@
 		<td></td>
 	</tr>
 	
-	#if($program.type==1)
+	#if($program.programType.value=="with_registration")
 	<tr>
 		<td><label for="generatedByEnrollmentDate">$i18n.getString( "generate_events_based_on_enrollment_date" ) <span class="tipText">($i18n.getString( "not_incident_date" ))</label></td>
 		<td><input type="checkbox" id="generatedByEnrollmentDate" name="generatedByEnrollmentDate" value='true'></td>

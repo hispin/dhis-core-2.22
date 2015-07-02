@@ -90,13 +90,13 @@ public class ProgramStoreTest
         programStore.save( programA );
         programStore.save( programB );
 
-        programC.setType( Program.SINGLE_EVENT_WITH_REGISTRATION );
+        programC.setProgramType( ProgramType.WITHOUT_REGISTRATION );
         programStore.save( programC );
 
-        List<Program> programs = programStore.getByType( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
+        List<Program> programs = programStore.getByType( ProgramType.WITH_REGISTRATION );
         assertTrue( equals( programs, programA, programB ) );
 
-        programs = programStore.getByType( Program.SINGLE_EVENT_WITH_REGISTRATION );
+        programs = programStore.getByType( ProgramType.WITHOUT_REGISTRATION );
         assertTrue( equals( programs, programC ) );
     }
 
@@ -107,7 +107,8 @@ public class ProgramStoreTest
         programStore.save( programB );
         programStore.save( programC );
 
-        List<Program> programs = programStore.get( Program.MULTIPLE_EVENTS_WITH_REGISTRATION, organisationUnitA );
+        List<Program> programs = programStore.get( ProgramType.WITH_REGISTRATION, organisationUnitA );
+        
         assertTrue( equals( programs, programA, programB ) );
     }
 }

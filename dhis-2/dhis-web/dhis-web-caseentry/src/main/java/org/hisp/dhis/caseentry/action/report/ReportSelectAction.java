@@ -34,6 +34,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 
 import com.opensymphony.xwork2.Action;
 
@@ -89,7 +90,7 @@ public class ReportSelectAction
     {
         orgunit = selectionManager.getSelectedOrganisationUnit();
         
-        programs = programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
+        programs = programService.getPrograms( ProgramType.WITH_REGISTRATION );
         programs.retainAll( programService.getProgramsByCurrentUser());
 
         return SUCCESS;

@@ -53,12 +53,11 @@ function showProgramDetails( context ) {
     setInnerHTML('descriptionField', json.program.description);
     setInnerHTML('idField', json.program.uid);
 
-    var type = i18n_multiple_events_with_registration;
-    if( json.program.type == "2" )
-      type = i18n_single_event_with_registration;
-    else if( json.program.type == "3" )
-      type = i18n_single_event_without_registration;
-    setInnerHTML('typeField', type);
+    var type = i18n_with_registration;
+    if( json.program.programType == "without_registration" ){
+		type = i18n_without_registration;
+	}
+	setInnerHTML('typeField', type);
 
     var displayIncidentDate = ( json.program.displayIncidentDate == 'true') ? i18n_yes : i18n_no;
     setInnerHTML('displayIncidentDateField', displayIncidentDate);
@@ -127,7 +126,7 @@ function programOnChange() {
   var type = getFieldValue('type');
   
   // anonymous
-  if( type == "3" ) {
+  if( type == "without_registration" ) {
     disable('onlyEnrollOnce');
     disable('dateOfEnrollmentDescription');
     disable("displayIncidentDate");
@@ -138,6 +137,7 @@ function programOnChange() {
     disable('trackedEntityId');
     hideById('selectedList');
     hideById('programMessageTB');
+	disable('compulsaryIdentifier');
 
     jQuery("[name=displayed]").attr("disabled", true);
     jQuery("[name=displayed]").removeAttr("checked");
@@ -156,14 +156,10 @@ function programOnChange() {
     enable('trackedEntityId');
     showById('programMessageTB');
     showById("selectedList");
+	enable('compulsaryIdentifier');
 
     jQuery("[name=nonAnonymous]").show();
-    if( type == 2 ) {
-      disable('ignoreOverdueEvents');
-      disable('onlyEnrollOnce');
-      disable('generatedByEnrollmentDate');
-    }
-
+    
     if( byId('displayIncidentDate').checked ) {
       enable("dateOfIncidentDescription");
     }

@@ -200,13 +200,13 @@ public class ProgramServiceTest
         programService.addProgram( programA );
         programService.addProgram( programB );
 
-        programC.setType( Program.SINGLE_EVENT_WITH_REGISTRATION );
+        programC.setProgramType( ProgramType.WITHOUT_REGISTRATION );
         programService.addProgram( programC );
 
-        List<Program> programs = programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION );
+        List<Program> programs = programService.getPrograms( ProgramType.WITH_REGISTRATION );
         assertTrue( equals( programs, programA, programB ) );
 
-        programs = programService.getPrograms( Program.SINGLE_EVENT_WITH_REGISTRATION );
+        programs = programService.getPrograms( ProgramType.WITHOUT_REGISTRATION );
         assertTrue( equals( programs, programC ) );
     }
 
@@ -215,9 +215,11 @@ public class ProgramServiceTest
     {
         programService.addProgram( programA );
         programService.addProgram( programB );
+        
+        programC.setProgramType( ProgramType.WITHOUT_REGISTRATION );
         programService.addProgram( programC );
 
-        List<Program> programs = programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION,
+        List<Program> programs = programService.getPrograms( ProgramType.WITH_REGISTRATION,
             organisationUnitA );
         assertTrue( equals( programs, programA, programB ) );
     }

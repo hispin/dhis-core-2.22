@@ -36,6 +36,7 @@ import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStore;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 
 /**
@@ -51,9 +52,9 @@ public class HibernateProgramStore
 
     @SuppressWarnings( "unchecked" )
     @Override
-    public List<Program> getByType( int type )
+    public List<Program> getByType( ProgramType type )
     {
-        return getCriteria( Restrictions.eq( "type", type ) ).list();
+        return getCriteria( Restrictions.eq( "programType", type ) ).list();
     }
 
     @SuppressWarnings( "unchecked" )
@@ -68,11 +69,11 @@ public class HibernateProgramStore
 
     @SuppressWarnings( "unchecked" )
     @Override
-    public List<Program> get( int type, OrganisationUnit organisationUnit )
+    public List<Program> get( ProgramType type, OrganisationUnit organisationUnit )
     {
         Criteria criteria1 = getCriteria();
         criteria1.createAlias( "organisationUnits", "orgunit" );
-        criteria1.add( Restrictions.eq( "type", type ) );
+        criteria1.add( Restrictions.eq( "programType", type ) );
         criteria1.add( Restrictions.eq( "orgunit.id", organisationUnit.getId() ) );
         return criteria1.list();
     }

@@ -33,6 +33,7 @@ import java.util.Collection;
 
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 
 import com.opensymphony.xwork2.Action;
 
@@ -81,8 +82,7 @@ public class GetUnAnonymousProgramAction
         throws Exception
     {
         programs = programService.getAllPrograms();
-
-        programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
+        programs.removeAll( programService.getPrograms( ProgramType.WITHOUT_REGISTRATION ) );
         
         return SUCCESS;
     }

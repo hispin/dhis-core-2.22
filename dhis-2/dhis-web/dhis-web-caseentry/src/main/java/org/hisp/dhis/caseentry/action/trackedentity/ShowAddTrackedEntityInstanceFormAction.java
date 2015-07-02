@@ -317,7 +317,7 @@ public class ShowAddTrackedEntityInstanceFormAction
         organisationUnit = selectionManager.getSelectedOrganisationUnit();
         healthWorkers = organisationUnit.getUsers();
 
-        if ( programId != null )
+        if ( programId != null && !programId.isEmpty() )
         {
             program = programService.getProgram( programId );
             trackedEntityForm = program.getDataEntryForm();

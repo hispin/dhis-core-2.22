@@ -50,6 +50,7 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.joda.time.DateTime;
@@ -123,7 +124,7 @@ public class EnrollmentServiceTest
         manager.save( programStage );
 
         programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );
-        programA.setType( Program.SINGLE_EVENT_WITH_REGISTRATION );
+        programA.setProgramType( ProgramType.WITH_REGISTRATION );
         manager.save( programA );
 
         programA.getProgramStages().add( programStage );

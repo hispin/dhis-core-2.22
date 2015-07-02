@@ -36,6 +36,7 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
+import org.hisp.dhis.program.ProgramType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,14 +65,14 @@ public class GetProgramMetaDataAction implements Action
     // Input & Output
     // -------------------------------------------------------------------------
 
-    private Integer programType = Program.SINGLE_EVENT_WITHOUT_REGISTRATION;
+    private ProgramType programType = ProgramType.WITHOUT_REGISTRATION;
 
-    public void setProgramType( Integer programType )
+    public void setProgramType( ProgramType programType )
     {
         this.programType = programType;
     }
 
-    public Integer getProgramType()
+    public ProgramType getProgramType()
     {
         return programType;
     }

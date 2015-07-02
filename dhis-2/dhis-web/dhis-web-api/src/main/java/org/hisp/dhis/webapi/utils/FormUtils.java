@@ -48,6 +48,7 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageSection;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.webapi.webdomain.form.Field;
 import org.hisp.dhis.webapi.webdomain.form.Form;
 import org.hisp.dhis.webapi.webdomain.form.Group;
@@ -61,10 +62,15 @@ import org.springframework.util.StringUtils;
 public class FormUtils
 {
     private static final String KEY_PERIOD_TYPE = "periodType";
+
     private static final String KEY_OPEN_FUTURE_PERIODS = "openFuturePeriods";
+
     private static final String KEY_DATA_ELEMENTS = "dataElements";
+
     private static final String KEY_INDICATORS = "indicators";
+
     private static final String KEY_EXPIRY_DAYS = "expiryDays";
+
     private static final String SEP = "-";
 
     public static Form fromDataSet( DataSet dataSet, boolean metaData )
@@ -81,23 +87,26 @@ public class FormUtils
         {
             List<Section> sections = new ArrayList<>( dataSet.getSections() );
             Collections.sort( sections, SectionOrderComparator.INSTANCE );
-            
+
             for ( Section section : sections )
             {
-                List<Field> fields = inputFromDataElements( new ArrayList<>( section.getDataElements() ), new ArrayList<>( section.getGreyedFields() ) );
+                List<Field> fields = inputFromDataElements( new ArrayList<>( section.getDataElements() ),
+                    new ArrayList<>( section.getGreyedFields() ) );
 
                 Group group = new Group();
                 group.setLabel( section.getDisplayName() );
                 group.setDescription( section.getDescription() );
                 group.setDataElementCount( section.getDataElements().size() );
                 group.setFields( fields );
-                
+
                 if ( metaData )
                 {
-                    group.getMetaData().put( KEY_DATA_ELEMENTS, NameableObjectUtils.getAsNameableObjects( section.getDataElements() ) );
-                    group.getMetaData().put( KEY_INDICATORS, NameableObjectUtils.getAsNameableObjects( section.getIndicators() ) );
+                    group.getMetaData().put( KEY_DATA_ELEMENTS,
+                        NameableObjectUtils.getAsNameableObjects( section.getDataElements() ) );
+                    group.getMetaData().put( KEY_INDICATORS,
+                        NameableObjectUtils.getAsNameableObjects( section.getIndicators() ) );
                 }
-                
+
                 form.getGroups().add( group );
             }
         }
@@ -113,9 +122,10 @@ public class FormUtils
 
             if ( metaData )
             {
-                group.getMetaData().put( KEY_DATA_ELEMENTS, NameableObjectUtils.getAsNameableObjects( new ArrayList<>( dataSet.getDataElements() ) ) );
+                group.getMetaData().put( KEY_DATA_ELEMENTS,
+                    NameableObjectUtils.getAsNameableObjects( new ArrayList<>( dataSet.getDataElements() ) ) );
             }
-            
+
             form.getGroups().add( group );
         }
 
@@ -144,14 +154,13 @@ public class FormUtils
             form.getOptions().put( "dateOfIncidentDescription", program.getDateOfIncidentDescription() );
         }
 
-        form.getOptions().put( "type", Program.TYPE_LOOKUP.get( program.getType() ) );
+        form.getOptions().put( "type", program.getProgramType().getValue() );
 
         ProgramStage programStage = program.getProgramStageByStage( 1 );
 
         if ( programStage == null )
         {
-            if ( (Program.SINGLE_EVENT_WITHOUT_REGISTRATION == program.getType()
-                || Program.SINGLE_EVENT_WITH_REGISTRATION == program.getType()) )
+            if ( program.isWithoutRegistration() )
             {
                 throw new NullPointerException();
             }
@@ -178,8 +187,8 @@ public class FormUtils
         }
         else
         {
-            List<Field> fields = inputFromProgramStageDataElements(
-                new ArrayList<>( programStage.getProgramStageDataElements() ) );
+            List<Field> fields = inputFromProgramStageDataElements( new ArrayList<>(
+                programStage.getProgramStageDataElements() ) );
 
             Group group = new Group();
             group.setLabel( "default" );
@@ -208,13 +217,15 @@ public class FormUtils
         return inputFromDataElements( dataElements, new ArrayList<DataElementOperand>() );
     }
 
-    private static List<Field> inputFromDataElements( List<DataElement> dataElements, final List<DataElementOperand> greyedFields )
+    private static List<Field> inputFromDataElements( List<DataElement> dataElements,
+        final List<DataElementOperand> greyedFields )
     {
         List<Field> fields = new ArrayList<>();
 
         for ( DataElement dataElement : dataElements )
         {
-            for ( DataElementCategoryOptionCombo categoryOptionCombo : dataElement.getCategoryCombo().getSortedOptionCombos() )
+            for ( DataElementCategoryOptionCombo categoryOptionCombo : dataElement.getCategoryCombo()
+                .getSortedOptionCombos() )
             {
                 if ( !isDisabled( dataElement, categoryOptionCombo, greyedFields ) )
                 {
@@ -246,7 +257,8 @@ public class FormUtils
         return fields;
     }
 
-    private static boolean isDisabled( DataElement dataElement, DataElementCategoryOptionCombo dataElementCategoryOptionCombo, List<DataElementOperand> greyedFields )
+    private static boolean isDisabled( DataElement dataElement,
+        DataElementCategoryOptionCombo dataElementCategoryOptionCombo, List<DataElementOperand> greyedFields )
     {
         for ( DataElementOperand operand : greyedFields )
         {
@@ -262,8 +274,8 @@ public class FormUtils
 
     private static InputType inputTypeFromDataElement( DataElement dataElement )
     {
-        //TODO harmonize / use map
-        
+        // TODO harmonize / use map
+
         if ( DataElement.VALUE_TYPE_STRING.equals( dataElement.getType() ) )
         {
             if ( DataElement.VALUE_TYPE_TEXT.equals( dataElement.getTextType() ) )
@@ -332,7 +344,7 @@ public class FormUtils
             DataElementCategoryOptionCombo categoryOptionCombo = dataValue.getCategoryOptionCombo();
 
             Field field = operandFieldMap.get( dataElement.getUid() + SEP + categoryOptionCombo.getUid() );
-            
+
             field.setValue( dataValue.getValue() );
             field.setComment( dataValue.getComment() );
         }

@@ -460,7 +460,7 @@ public class ProgramStageInstanceServiceTest
     @Test
     public void testCreateProgramStageInstance()
     {
-        programA.setType( Program.SINGLE_EVENT_WITHOUT_REGISTRATION );
+        programA.setProgramType( ProgramType.WITHOUT_REGISTRATION );
         programService.updateProgram( programA );
 
         ProgramStageInstance programStageInstance = programStageInstanceService.createProgramStageInstance( entityInstanceA,
