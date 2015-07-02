@@ -1099,33 +1099,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Returns a function for getting rules for a specific program */
-.factory('TrackerRulesFactory', function($q,$rootScope,TCStorageService, MetaDataFactory){
-    return{        
-        getProgramStageRules : function(programUid, programStageUid){
-            var def = $q.defer();
-            
-            TCStorageService.currentStore.open().done(function(){
-                TCStorageService.currentStore.getAll('programRules').done(function(rules){                    
-                    //The array will ultimately be returned to the caller.
-                    var programRulesArray = [];
-                    //Loop through and add the rules belonging to this program and program stage
-                    angular.forEach(rules, function(rule){
-                       if(rule.program.id === programUid) {
-                           if(!rule.programStage || !rule.programStage.id || rule.programStage.id === programStageUid) {
-                                rule.actions = [];
-                                programRulesArray.push(rule);
-                            }
-                       }
-                    });
-
-                    $rootScope.$apply(function(){
-                        def.resolve(programRulesArray);
-                    });
-                });     
-            });
-                        
-            return def.promise;
-        },        
+.factory('TrackerRulesFactory', function($q,MetaDataFactory){
+    return{                
         getRules : function(programUid){            
             var def = $q.defer();            
             MetaDataFactory.getAll('constants').then(function(constants) {

@@ -2,7 +2,7 @@
     {{'indicators' | translate}}
 </div>
 <table class="dhis2-list-table-striped">
-    <tr ng-repeat="pid in programIndicators">
+    <tr ng-repeat="pid in allProgramRules.programIndicators.rules">
         <td>
             {{pid.name}}
         </td>
