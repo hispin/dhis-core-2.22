@@ -11,7 +11,7 @@
     "description":"$encoder.jsonEncode( ${program.description} )",
     "enrollmentDescription":"$encoder.jsonEncode( ${program.dateOfEnrollmentDescription} )",
     "incidentDescription":"$encoder.jsonEncode( ${program.dateOfIncidentDescription} )",
-    "type": "$!program.type",
+    "programType": "$!program.programType",
     "programStages":[#set( $pssize = $program.programStages.size() )
     #foreach( $ps in $program.programStages )
     {

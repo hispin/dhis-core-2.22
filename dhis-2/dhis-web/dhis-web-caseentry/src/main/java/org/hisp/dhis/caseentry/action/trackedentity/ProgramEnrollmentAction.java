@@ -205,7 +205,7 @@ public class ProgramEnrollmentAction
             return false;
         }
 
-        if ( !program.isSingleEvent() && programInstance == null )
+        if ( program.isRegistration() && programInstance == null )
         {
             return false;
         }

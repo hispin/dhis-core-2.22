@@ -38,6 +38,7 @@ import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
@@ -119,9 +120,9 @@ public class AddProgramAction
         this.dateOfIncidentDescription = dateOfIncidentDescription;
     }
 
-    private Integer type;
+    private String type;
 
-    public void setType( Integer type )
+    public void setType( String type )
     {
         this.type = type;
     }
@@ -252,7 +253,8 @@ public class AddProgramAction
         selectEnrollmentDatesInFuture = (selectEnrollmentDatesInFuture == null) ? false : selectEnrollmentDatesInFuture;
         selectIncidentDatesInFuture = (selectIncidentDatesInFuture == null) ? false : selectIncidentDatesInFuture;
         dataEntryMethod = (dataEntryMethod == null) ? false : dataEntryMethod;
-
+        ProgramType programType = ProgramType.fromValue( type );
+        
         Program program = new Program();
 
         program.setName( StringUtils.trimToNull( name ) );
@@ -260,14 +262,14 @@ public class AddProgramAction
         program.setVersion( 1 );
         program.setDateOfEnrollmentDescription( StringUtils.trimToNull( dateOfEnrollmentDescription ) );
         program.setDateOfIncidentDescription( StringUtils.trimToNull( dateOfIncidentDescription ) );
-        program.setType( type );
+        program.setProgramType( programType );
         program.setDisplayIncidentDate( displayIncidentDate );
         program.setOnlyEnrollOnce( onlyEnrollOnce );
         program.setSelectEnrollmentDatesInFuture( selectEnrollmentDatesInFuture );
         program.setSelectIncidentDatesInFuture( selectIncidentDatesInFuture );
         program.setDataEntryMethod( dataEntryMethod );
 
-        if ( type == Program.MULTIPLE_EVENTS_WITH_REGISTRATION )
+        if ( programType == ProgramType.WITH_REGISTRATION )
         {
             program.setIgnoreOverdueEvents( ignoreOverdueEvents );
         }
@@ -328,8 +330,7 @@ public class AddProgramAction
 
         programService.updateProgram( program );
 
-        if ( program.getType().equals( Program.SINGLE_EVENT_WITH_REGISTRATION )
-            || program.getType().equals( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) )
+        if ( program.isWithoutRegistration() )
         {
             ProgramStage programStage = new ProgramStage();
 
@@ -347,7 +348,7 @@ public class AddProgramAction
         // create program-instance for anonymous program
         // ---------------------------------------------------------------------
 
-        if ( program.getType().equals( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) )
+        if ( program.isWithoutRegistration() )
         {
             // Add a new program-instance
             ProgramInstance programInstance = new ProgramInstance();

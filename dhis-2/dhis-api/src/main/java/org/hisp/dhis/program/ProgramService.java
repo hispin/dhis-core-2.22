@@ -143,7 +143,7 @@ public interface ProgramService
      *        Single event without registration.
      * @return Program list by a type specified
      */
-    List<Program> getProgramsByCurrentUser( int type );
+    List<Program> getProgramsByCurrentUser( ProgramType type );
 
     /**
      * Get {@link Program} included in the expression of a
@@ -162,7 +162,7 @@ public interface ProgramService
      *        Single event without registration
      * @return Program list by a type specified
      */
-    List<Program> getPrograms( int type );
+    List<Program> getPrograms( ProgramType type );
 
     /**
      * Get {@link Program} assigned to an {@link OrganisationUnit} by a type
@@ -173,7 +173,7 @@ public interface ProgramService
      * @param orgunit Where programs assigned
      * @return Program list by a type specified
      */
-    List<Program> getPrograms( int type, OrganisationUnit orgunit );
+    List<Program> getPrograms( ProgramType type, OrganisationUnit orgunit );
 
     /**
      * Returns the {@link Program} with the given UID.
@@ -245,7 +245,7 @@ public interface ProgramService
      *        Single event without registration.
      * @return Program list by a type specified
      */
-    List<Program> getByCurrentUser( int type );
+    List<Program> getByCurrentUser( ProgramType type );
 
     /**
      * @param htmlCode

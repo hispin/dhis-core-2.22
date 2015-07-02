@@ -451,7 +451,7 @@ public class HibernateCaseAggregationConditionStore
             sql += "GROUP BY ou.organisationunitid ) from organisationunit ou where ou.organisationunitid in ( " + TextUtils.getCommaDelimitedString( orgunitIds ) + " ) ";
             
         }
-System.out.println("\n\n " + sql + "\n\n");
+        
         return sql;
     }
 

@@ -51,7 +51,7 @@ public interface ProgramStore
      *             Single event without registration
      * @return Program list by a type specified
      */
-    List<Program> getByType( int type );
+    List<Program> getByType( ProgramType type );
 
     /**
      * Get {@link Program} assigned to an {@link OrganisationUnit} by a type
@@ -70,7 +70,7 @@ public interface ProgramStore
      * @param orgunit Where programs assigned
      * @return Program list by a type specified
      */
-    List<Program> get( int type, OrganisationUnit orgunit );
+    List<Program> get( ProgramType type, OrganisationUnit orgunit );
 
     /**
      * Get {@link Program} by TrackedEntity

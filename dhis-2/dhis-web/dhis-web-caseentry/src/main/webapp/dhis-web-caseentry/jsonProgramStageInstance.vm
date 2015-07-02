@@ -33,7 +33,7 @@
     "program": {
         "id": "$!programStageInstance.programInstance.program.id",
         "uid": "$encoder.jsonEncode( $!programStageInstance.programInstance.program.uid )",
-        "type": "$!programStageInstance.programInstance.program.type"
+        "programType": "$!programStageInstance.programInstance.program.programType"
     },
 
     "programStage": {

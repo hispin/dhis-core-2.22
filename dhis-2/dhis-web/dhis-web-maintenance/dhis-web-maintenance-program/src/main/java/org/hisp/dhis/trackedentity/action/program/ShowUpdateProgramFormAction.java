@@ -40,6 +40,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
@@ -231,7 +232,7 @@ public class ShowUpdateProgramFormAction
         Collections.sort( availableAttributes, IdentifiableObjectNameComparator.INSTANCE );
 
         programs = programService.getAllPrograms();
-        programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
+        programs.removeAll( programService.getPrograms( ProgramType.WITHOUT_REGISTRATION ) );
         programs.remove( program );
         Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );
 

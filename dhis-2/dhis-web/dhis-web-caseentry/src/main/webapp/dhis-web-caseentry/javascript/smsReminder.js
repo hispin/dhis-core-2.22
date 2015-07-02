@@ -31,9 +31,9 @@ function orgunitSelected( orgUnits, orgUnitNames )
 		{
 			var count = 0;
 			for ( i in json.programs ) {
-				if(json.programs[i].type==1){
+				if(json.programs[i].programType=='WITH_REGISTRATION'){
 					count++;
-					jQuery( '#program').append( '<option value="' + json.programs[i].uid +'" type="' + json.programs[i].type + '">' + json.programs[i].name + '</option>' );
+					jQuery( '#program').append( '<option value="' + json.programs[i].uid +'" type="' + json.programs[i].programType + '">' + json.programs[i].name + '</option>' );
 				}
 			}
 			if(count==0){

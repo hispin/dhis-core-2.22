@@ -28,12 +28,10 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -55,11 +53,12 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.validation.ValidationCriteria;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author Abyot Asalefew
@@ -70,14 +69,7 @@ public class Program
     implements VersionedObject
 {
     private static final long serialVersionUID = -2807997671779497354L;
-    
-    public static final List<String> TYPE_LOOKUP = Arrays.asList( "", "MULTIPLE_EVENTS_WITH_REGISTRATION",
-        "SINGLE_EVENT_WITH_REGISTRATION", "SINGLE_EVENT_WITHOUT_REGISTRATION" );
-
-    public static final int MULTIPLE_EVENTS_WITH_REGISTRATION = 1;
-    public static final int SINGLE_EVENT_WITH_REGISTRATION = 2;
-    public static final int SINGLE_EVENT_WITHOUT_REGISTRATION = 3;
-
+   
     private String description;
 
     private int version;
@@ -95,7 +87,7 @@ public class Program
     @Scanned
     private Set<ValidationCriteria> validationCriteria = new HashSet<>();
 
-    private Integer type;
+    private ProgramType programType;
 
     private Boolean displayIncidentDate = true;
 
@@ -357,21 +349,22 @@ public class Program
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getKind()
     {
-        return TYPE_LOOKUP.get( type );
+        return programType.name();
     }
-
+    
     @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Integer getType()
+    public ProgramType getProgramType()
     {
-        return type;
+        return programType;
     }
 
-    public void setType( Integer type )
+    public void setProgramType( ProgramType programType )
     {
-        this.type = type;
+        this.programType = programType;
     }
-
+    
     @JsonProperty( "validationCriterias" )
     @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class } )
@@ -416,19 +409,19 @@ public class Program
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isSingleEvent()
+    public boolean isRegistration()
     {
-        return type != null && (SINGLE_EVENT_WITH_REGISTRATION == type || SINGLE_EVENT_WITHOUT_REGISTRATION == type);
+        return programType.equals( ProgramType.WITH_REGISTRATION );
     }
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isRegistration()
+    public boolean isWithoutRegistration()
     {
-        return type != null && (SINGLE_EVENT_WITH_REGISTRATION == type || MULTIPLE_EVENTS_WITH_REGISTRATION == type);
+        return programType.equals( ProgramType.WITHOUT_REGISTRATION );
     }
-
+    
     @JsonProperty
     @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class } )
@@ -649,7 +642,7 @@ public class Program
                 description = program.getDescription();
                 dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription();
                 dateOfIncidentDescription = program.getDateOfIncidentDescription();
-                type = program.getType();
+                programType = program.getProgramType();
                 displayIncidentDate = program.getDisplayIncidentDate();
                 ignoreOverdueEvents = program.getIgnoreOverdueEvents();
                 onlyEnrollOnce = program.getOnlyEnrollOnce();
@@ -667,7 +660,7 @@ public class Program
                 description = program.getDescription() == null ? description : program.getDescription();
                 dateOfEnrollmentDescription = program.getDateOfEnrollmentDescription() == null ? dateOfEnrollmentDescription : program.getDateOfEnrollmentDescription();
                 dateOfIncidentDescription = program.getDateOfIncidentDescription() == null ? dateOfIncidentDescription : program.getDateOfIncidentDescription();
-                type = program.getType() == null ? type : program.getType();
+                programType = program.getProgramType() == null ? programType : program.getProgramType();
                 displayIncidentDate = program.getDisplayIncidentDate() == null ? displayIncidentDate : program.getDisplayIncidentDate();
                 ignoreOverdueEvents = program.getIgnoreOverdueEvents() == null ? ignoreOverdueEvents : program.getIgnoreOverdueEvents();
                 onlyEnrollOnce = program.getOnlyEnrollOnce() == null ? onlyEnrollOnce : program.getOnlyEnrollOnce();

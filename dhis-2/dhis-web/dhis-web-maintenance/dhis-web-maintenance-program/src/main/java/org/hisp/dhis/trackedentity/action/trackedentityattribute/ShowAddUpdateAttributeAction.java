@@ -43,6 +43,7 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -164,7 +165,7 @@ public class ShowAddUpdateAttributeAction
             attributeValues = AttributeUtils.getAttributeValueMap( attribute.getAttributeValues() );
 
             programs = programService.getAllPrograms();
-            programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) );
+            programs.removeAll( programService.getPrograms( ProgramType.WITHOUT_REGISTRATION ) );
             Collections.sort( programs );
         }
 

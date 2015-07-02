@@ -368,8 +368,7 @@ public class DefaultProgramStageInstanceService
         // ProgramInstance
         // ---------------------------------------------------------------------
 
-        if ( !programStageInstance.getProgramInstance().getProgram().getType()
-            .equals( Program.SINGLE_EVENT_WITHOUT_REGISTRATION ) )
+        if ( programStageInstance.getProgramInstance().getProgram().isRegistration() )
         {
             boolean canCompleted = programInstanceService.canAutoCompleteProgramInstanceStatus( programStageInstance
                 .getProgramInstance() );
@@ -388,7 +387,7 @@ public class DefaultProgramStageInstanceService
         programStageInstance.setExecutionDate( executionDate );
         programStageInstance.setOrganisationUnit( organisationUnit );
 
-        if ( programStageInstance.getProgramInstance().getProgram().isSingleEvent() )
+        if ( programStageInstance.getProgramInstance().getProgram().isWithoutRegistration() )
         {
             programStageInstance.setDueDate( executionDate );
         }
@@ -412,23 +411,10 @@ public class DefaultProgramStageInstanceService
         {
             programStage = program.getProgramStages().iterator().next();
         }
-
-        int type = program.getType();
+        
         ProgramInstance programInstance = null;
-
-        if ( type == Program.SINGLE_EVENT_WITH_REGISTRATION )
-        {
-            // Add a new program instance
-            programInstance = new ProgramInstance();
-            programInstance.setEnrollmentDate( executionDate );
-            programInstance.setDateOfIncident( executionDate );
-            programInstance.setProgram( program );
-            programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
-            programInstance.setEntityInstance( instance );
-
-            programInstanceService.addProgramInstance( programInstance );
-        }
-        else if ( type == Program.SINGLE_EVENT_WITHOUT_REGISTRATION )
+        
+        if ( program.isWithoutRegistration()  )
         {
             Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( program );
             if ( programInstances == null || programInstances.size() == 0 )
@@ -487,7 +473,7 @@ public class DefaultProgramStageInstanceService
             programStageInstance.setDueDate( dueDate );
             programStageInstance.setStatus( EventStatus.SCHEDULE );
 
-            if ( programStage.getOpenAfterEnrollment() || programInstance.getProgram().isSingleEvent()
+            if ( programStage.getOpenAfterEnrollment() || programInstance.getProgram().isWithoutRegistration()
                 || programStage.getPeriodType() != null )
             {
                 programStageInstance.setExecutionDate( dueDate );

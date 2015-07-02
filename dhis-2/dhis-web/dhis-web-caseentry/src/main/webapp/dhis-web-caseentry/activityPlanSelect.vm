@@ -55,8 +55,8 @@
 						<option value="">[$i18n.getString( "please_select" )]</option>
 						#end
 						#foreach($program in $programs)
-							#if($program.type=='1') 
-								<option value="$program.uid" type='$program.type'>$program.displayName</option>
+							#if($program.programType=='WITH_REGISTRATION') 
+								<option value="$program.uid" type='$program.programType'>$program.displayName</option>
 							#end
 						#end
 					</select>

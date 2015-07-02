@@ -385,7 +385,7 @@ public class UpdateProgramStageAction
             programStage.setPeriodType( null );
         }
 
-        if ( programStage.getProgram().isSingleEvent() )
+        if ( programStage.getProgram().isWithoutRegistration() )
         {
             programStage.setAutoGenerateEvent( true );
         }

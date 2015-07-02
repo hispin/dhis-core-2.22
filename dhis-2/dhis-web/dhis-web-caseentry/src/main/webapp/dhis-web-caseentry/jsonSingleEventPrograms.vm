@@ -5,11 +5,15 @@
 		  {
 			"id":  "${program.uid}",
 			"name": "$!encoder.jsonEncode( ${program.displayName} )",
-			"type": "$program.type",
-			#foreach( $programStage in $program.programStages )
-				"reportDateDescription": "$programStage.reportDateDescription",
-				"programStageId": "$programStage.id"
-			#end
+			"programType": "$program.programType",
+			"programStage":[
+				#foreach( $programStage in $program.programStages )
+				{
+					"reportDateDescription": "$programStage.reportDateDescription",
+					"programStageId": "$programStage.id"
+				}#if( $velocityCount < $program.programStages.size() ),#end
+				#end
+			]
 		
 		  }#if( $velocityCount < $size ),#end
 		#end]

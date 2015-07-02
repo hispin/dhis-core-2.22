@@ -177,13 +177,13 @@ public class DefaultProgramService
     }
 
     @Override
-    public List<Program> getPrograms( int type )
+    public List<Program> getPrograms( ProgramType type)
     {
         return i18n( i18nService, programStore.getByType( type ) );
     }
 
     @Override
-    public List<Program> getPrograms( int type, OrganisationUnit orgunit )
+    public List<Program> getPrograms( ProgramType type, OrganisationUnit orgunit )
     {
         return i18n( i18nService, programStore.get( type, orgunit ) );
     }
@@ -201,7 +201,7 @@ public class DefaultProgramService
     }
 
     @Override
-    public List<Program> getProgramsByCurrentUser( int type )
+    public List<Program> getProgramsByCurrentUser( ProgramType type)
     {
         return i18n( i18nService, getByCurrentUser( type ) );
     }
@@ -283,7 +283,7 @@ public class DefaultProgramService
     }
 
     @Override
-    public List<Program> getByCurrentUser( int type )
+    public List<Program> getByCurrentUser( ProgramType type)
     {
         List<Program> programs = new ArrayList<>();
 

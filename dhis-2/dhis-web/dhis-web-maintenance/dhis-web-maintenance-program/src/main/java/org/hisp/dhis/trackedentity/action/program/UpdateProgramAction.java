@@ -35,6 +35,7 @@ import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
 import org.hisp.dhis.system.util.AttributeUtils;
@@ -113,9 +114,9 @@ public class UpdateProgramAction
         this.dateOfIncidentDescription = dateOfIncidentDescription;
     }
 
-    private Integer type;
+    private String type;
 
-    public void setType( Integer type )
+    public void setType( String type )
     {
         this.type = type;
     }
@@ -277,20 +278,21 @@ public class UpdateProgramAction
         selectEnrollmentDatesInFuture = (selectEnrollmentDatesInFuture == null) ? false : selectEnrollmentDatesInFuture;
         selectIncidentDatesInFuture = (selectIncidentDatesInFuture == null) ? false : selectIncidentDatesInFuture;
         dataEntryMethod = (dataEntryMethod == null) ? false : dataEntryMethod;
-
+        ProgramType programType = ProgramType.fromValue( type );
+        
         Program program = programService.getProgram( id );
         program.setName( StringUtils.trimToNull( name ) );
         program.setDescription( StringUtils.trimToNull( description ) );
         program.setDateOfEnrollmentDescription( StringUtils.trimToNull( dateOfEnrollmentDescription ) );
         program.setDateOfIncidentDescription( StringUtils.trimToNull( dateOfIncidentDescription ) );
-        program.setType( type );
+        program.setProgramType( programType );
         program.setDisplayIncidentDate( displayIncidentDate );
         program.setOnlyEnrollOnce( onlyEnrollOnce );
         program.setSelectEnrollmentDatesInFuture( selectEnrollmentDatesInFuture );
         program.setSelectIncidentDatesInFuture( selectIncidentDatesInFuture );
         program.setDataEntryMethod( dataEntryMethod );
 
-        if ( type == Program.MULTIPLE_EVENTS_WITH_REGISTRATION )
+        if ( program.isRegistration() )
         {
             program.setIgnoreOverdueEvents( ignoreOverdueEvents );
         }

@@ -39,6 +39,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.sms.parse.ParserType;
 import org.hisp.dhis.sms.command.code.SMSCode;
@@ -190,7 +191,7 @@ public class SMSCommandAction
             }
         }
         userGroupList = new ArrayList<>( userGroupService.getAllUserGroups() );
-        programList = new ArrayList<>( programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION ) );
+        programList = new ArrayList<>( programService.getPrograms( ProgramType.WITH_REGISTRATION ) );
         return SUCCESS;
     }
 

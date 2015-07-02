@@ -34,6 +34,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramType;
 
 import com.opensymphony.xwork2.Action;
 
@@ -87,8 +88,7 @@ public class GetSingleEventProgramListAction
         if ( orgunit != null )
         {
             programs = programService.getProgramsByCurrentUser( orgunit );
-            programs.removeAll( programService.getPrograms( Program.MULTIPLE_EVENTS_WITH_REGISTRATION) );
-            programs.removeAll( programService.getPrograms( Program.SINGLE_EVENT_WITHOUT_REGISTRATION) );
+            programs.removeAll( programService.getPrograms( ProgramType.WITHOUT_REGISTRATION) );
         }
 
         return SUCCESS;
