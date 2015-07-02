@@ -105,8 +105,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         $scope.resetOu = false;
         $scope.selectedProgramStage = null;
-        $scope.programValidations = [];
-        $scope.programIndicators = [];
         $scope.allProgramRules = [];
         $scope.dhis2Events = [];
         $scope.currentEvent = {};
@@ -194,13 +192,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     $scope.newDhis2Event.coordinate = {};
                 }
                 $scope.newDhis2Event.eventDate = '';
-
-                MetaDataFactory.getByProgram('programIndicators', $scope.selectedProgram.id).then(function(pis){
-                    $scope.programIndicators = pis;
-                    TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-                        $scope.allProgramRules = rules;
-                        $scope.loadEvents();
-                    }); 
+                
+                TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+                    $scope.allProgramRules = rules;
+                    $scope.loadEvents();
                 });
             });
         }
@@ -958,7 +953,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.eventsByStage[$scope.selectedProgramStage.id] = [$scope.currentEvent];
         var evs = {all: [$scope.currentEvent], byStage: $scope.eventsByStage};
         
-        var flag = {debug: true, verbose: true};
+        var flag = {debug: true, verbose: false};
         
         //TrackerRulesExecutionService.executeRules($scope.selectedProgram.id,$scope.currentEvent,$scope.eventsByStage,$scope.prStDes,null,false);
         TrackerRulesExecutionService.executeRules($scope.allProgramRules, $scope.currentEvent, evs, $scope.prStDes, $scope.selectedTei, $scope.selectedEnrollment, flag);
