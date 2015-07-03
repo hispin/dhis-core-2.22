@@ -317,7 +317,7 @@ public class ActivityReportingServiceImpl
         TrackedEntityInstanceQueryParams param = new TrackedEntityInstanceQueryParams();
         param.addOrganisationUnit( unit );
 
-        Grid trackedEntityDrid = entityInstanceService.getTrackedEntityInstances( param );
+        Grid trackedEntityDrid = entityInstanceService.getTrackedEntityInstancesGrid( param );
         List<List<Object>> entityInstanceList = trackedEntityDrid.getRows();
 
         for ( List<Object> entityInstance : entityInstanceList )
@@ -354,7 +354,7 @@ public class ActivityReportingServiceImpl
         TrackedEntityInstanceQueryParams param = new TrackedEntityInstanceQueryParams();
         param.addOrganisationUnit( unit );
 
-        Grid trackedEntityDrid = entityInstanceService.getTrackedEntityInstances( param );
+        Grid trackedEntityDrid = entityInstanceService.getTrackedEntityInstancesGrid( param );
         List<List<Object>> entityInstanceList = trackedEntityDrid.getRows();
 
         for ( List<Object> entityInstance : entityInstanceList )
@@ -1747,7 +1747,7 @@ public class ActivityReportingServiceImpl
             }
         }
 
-        Grid trackedEntityInstanceGrid = entityInstanceService.getTrackedEntityInstances( param );
+        Grid trackedEntityInstanceGrid = entityInstanceService.getTrackedEntityInstancesGrid( param );
         List<List<Object>> listOfTrackedEntityInstance = trackedEntityInstanceGrid.getRows();
 
         if ( listOfTrackedEntityInstance.size() == 0 )
@@ -1861,7 +1861,7 @@ public class ActivityReportingServiceImpl
         param.setEventStartDate( fromDate );
         param.setEventEndDate( toDate );
 
-        Grid programStageInstanceGrid = entityInstanceService.getTrackedEntityInstances( param );
+        Grid programStageInstanceGrid = entityInstanceService.getTrackedEntityInstancesGrid( param );
         List<List<Object>> rows = programStageInstanceGrid.getRows();
 
         if ( rows.size() == 0 )
@@ -2191,7 +2191,7 @@ public class ActivityReportingServiceImpl
         param.setEventStartDate( fromDate );
         param.setEventEndDate( toDate );
 
-        Grid programStageInstanceGrid = entityInstanceService.getTrackedEntityInstances( param );
+        Grid programStageInstanceGrid = entityInstanceService.getTrackedEntityInstancesGrid( param );
         List<List<Object>> listOfListProgramStageInstance = programStageInstanceGrid.getRows();
 
         if ( listOfListProgramStageInstance.size() == 0 )

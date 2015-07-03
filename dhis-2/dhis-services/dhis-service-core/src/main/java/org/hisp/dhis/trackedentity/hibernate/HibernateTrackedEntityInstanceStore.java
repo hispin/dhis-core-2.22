@@ -28,30 +28,11 @@ package org.hisp.dhis.trackedentity.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
-import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
-import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
-import static org.hisp.dhis.commons.util.TextUtils.getTokens;
-import static org.hisp.dhis.commons.util.TextUtils.removeLastAnd;
-import static org.hisp.dhis.commons.util.TextUtils.removeLastComma;
-import static org.hisp.dhis.commons.util.TextUtils.removeLastOr;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.CREATED_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.LAST_UPDATED_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.ORG_UNIT_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.TRACKED_ENTITY_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.TRACKED_ENTITY_INSTANCE_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceService.ERROR_DUPLICATE_IDENTIFIER;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceService.SEPARATOR;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
@@ -60,13 +41,13 @@ import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.commons.util.SqlHelper;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramStatus;
-import org.hisp.dhis.commons.util.SqlHelper;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
@@ -74,6 +55,19 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstanceStore;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
+import static org.hisp.dhis.commons.util.TextUtils.*;
+import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
+import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.*;
+import static org.hisp.dhis.trackedentity.TrackedEntityInstanceService.ERROR_DUPLICATE_IDENTIFIER;
+import static org.hisp.dhis.trackedentity.TrackedEntityInstanceService.SEPARATOR;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -84,7 +78,7 @@ public class HibernateTrackedEntityInstanceStore
     implements TrackedEntityInstanceStore
 {
     private static final Log log = LogFactory.getLog( HibernateTrackedEntityInstanceStore.class );
-    
+
     private static final Map<ProgramStatus, Integer> PROGRAM_STATUS_MAP = new HashMap<ProgramStatus, Integer>()
     {
         {
@@ -110,7 +104,70 @@ public class HibernateTrackedEntityInstanceStore
     // -------------------------------------------------------------------------
 
     @Override
-    public List<Map<String, String>> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
+    @SuppressWarnings( "unchecked" )
+    public List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
+    {
+        String hql = buildTrackedEntityInstanceHql( params );
+        Query query = getQuery( hql );
+
+        if ( params.isPaging() )
+        {
+            query.setFirstResult( params.getOffset() );
+            query.setMaxResults( params.getPageSizeWithDefault() );
+        }
+
+        return query.list();
+    }
+
+    private String buildTrackedEntityInstanceHql( TrackedEntityInstanceQueryParams params )
+    {
+        String hql = "from TrackedEntityInstance tei";
+
+        if ( params.hasTrackedEntity() || params.hasOrganisationUnits() || params.hasFilters() )
+        {
+            hql += " where ";
+        }
+
+        if ( params.hasTrackedEntity() )
+        {
+            hql += "tei.trackedEntity.uid='" + params.getTrackedEntity().getUid() + "'";
+            hql += params.hasOrganisationUnits() ? " and " : "";
+        }
+
+        if ( params.hasOrganisationUnits() )
+        {
+            hql += "tei.organisationUnit.uid in (" + getQuotedCommaDelimitedString( getUids( params.getOrganisationUnits() ) ) + ")";
+        }
+
+        if ( params.hasFilters() )
+        {
+            for ( QueryItem queryItem : params.getFilters() )
+            {
+                for ( QueryFilter queryFilter : queryItem.getFilters() )
+                {
+                    String filter = queryFilter.getSqlFilter( StringUtils.lowerCase( queryFilter.getFilter() ) );
+
+                    hql += " and exists (from TrackedEntityAttributeValue teav where teav.entityInstance=tei";
+                    hql += " and teav.attribute.uid='" + queryItem.getItemId() + "'";
+
+                    if ( queryItem.isNumeric() )
+                    {
+                        hql += " and teav.value " + queryFilter.getSqlOperator() + filter + ")";
+                    }
+                    else
+                    {
+                        hql += " and lower(teav.value) " + queryFilter.getSqlOperator() + filter + ")";
+                    }
+
+                }
+            }
+        }
+
+        return hql;
+    }
+
+    @Override
+    public List<Map<String, String>> getTrackedEntityInstancesGrid( TrackedEntityInstanceQueryParams params )
     {
         SqlHelper hlp = new SqlHelper();
 
@@ -387,7 +444,7 @@ public class HibernateTrackedEntityInstanceStore
     public String validate( TrackedEntityInstance instance, TrackedEntityAttributeValue attributeValue, Program program )
     {
         TrackedEntityAttribute attribute = attributeValue.getAttribute();
-        
+
         try
         {
             if ( attribute.isUnique() )
