@@ -43,12 +43,14 @@ public interface ADXConstants
     final String ROOT = "adx";
 
     final String GROUP = "group";
+
+    final String DATASET = "dataSet";
     
     final String PERIOD = "period";
     
     final String ORGUNIT = "orgUnit";
     
-    final String DATAELEMENT = "dataelement";
+    final String DATAELEMENT = "dataElement";
 
     final String DATAVALUE = "dataValue";
 
