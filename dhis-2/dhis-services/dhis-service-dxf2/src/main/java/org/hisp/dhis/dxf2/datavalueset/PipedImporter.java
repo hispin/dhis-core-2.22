@@ -37,7 +37,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -61,7 +60,7 @@ public class PipedImporter
 
     private final ImportOptions importOptions;
 
-    private Authentication authentication;
+    private final Authentication authentication;
 
     public PipedImporter( DataValueSetService dataValueSetService, ImportOptions importOptions, PipedOutputStream pipeOut )
         throws IOException

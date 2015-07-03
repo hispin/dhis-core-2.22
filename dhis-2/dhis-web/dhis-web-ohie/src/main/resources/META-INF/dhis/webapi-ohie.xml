@@ -16,6 +16,8 @@
 
   <context:component-scan base-package="org.hisp.dhis.web.ohie.csd" />
 
+  <context:component-scan base-package="org.hisp.dhis.web.ohie.adx"  />
+
   <context:annotation-config />
 
   <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
@@ -100,5 +102,5 @@
       </list>
     </property>
   </bean>
-
+  
 </beans>
