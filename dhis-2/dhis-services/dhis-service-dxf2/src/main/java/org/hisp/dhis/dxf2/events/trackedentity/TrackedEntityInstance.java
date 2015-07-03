@@ -53,6 +53,8 @@ public class TrackedEntityInstance
     
     private String created;
 
+    private String lastUpdated;
+
     private List<Relationship> relationships = new ArrayList<>();
 
     private List<Attribute> attributes = new ArrayList<>();
@@ -121,6 +123,18 @@ public class TrackedEntityInstance
     public void setCreated( String created )
     {
         this.created = created;
+    }
+
+    @JsonProperty( required = true )
+    @JacksonXmlProperty( isAttribute = true )
+    public String getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( String lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
     }
 
     @JsonProperty

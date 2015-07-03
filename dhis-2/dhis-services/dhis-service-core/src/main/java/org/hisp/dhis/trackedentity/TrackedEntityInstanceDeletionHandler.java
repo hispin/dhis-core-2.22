@@ -76,7 +76,7 @@ public class TrackedEntityInstanceDeletionHandler
     {
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
         params.addOrganisationUnit( unit );
-        Grid grid = instanceService.getTrackedEntityInstances( params );
+        Grid grid = instanceService.getTrackedEntityInstancesGrid( params );
         
         return grid.getHeight() == 0 ? null : ERROR;
     }
