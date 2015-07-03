@@ -187,7 +187,7 @@ public class MetaDataImportAction
         }
         else if ( "gml".equals( importFormat ) )
         {
-            scheduler.executeTask( new ImportMetaDataGmlTask( userId, gmlImportService, notifier, importOptions, in, taskId ) );
+            scheduler.executeTask( new ImportMetaDataGmlTask( userId, gmlImportService, importOptions, in, taskId ) );
         }
         else if ( "json".equals( importFormat ) || "xml".equals( importFormat ) )
         {

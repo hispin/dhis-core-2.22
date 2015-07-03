@@ -29,7 +29,6 @@ package org.hisp.dhis.dxf2.gml;
  */
 
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.metadata.MetaData;
 import org.hisp.dhis.scheduling.TaskId;
 
 import java.io.InputStream;
@@ -42,34 +41,13 @@ import java.io.InputStream;
  */
 public interface GmlImportService
 {
-    String ID = GmlImportService.class.getName();
-
     /**
-     * Pre-process a GML document. The process, in short, entails the following:
-     * <ol>
-     *     <li>Parse the GML payload and transform it into DXF2 format</li>
-     *     <li>Get the given identifiers (uid, code or name) from the parsed payload and fetch
-     *     the corresponding entities from the DB</li>
-     *     <li>Merge the geospatial data given in the input GML into DB entities and return</li>
-     * </ol>
+     * Import the geospatial data from a GML document.
      *
-     * The result of this process in returned in a {@link GmlPreProcessingResult} which
-     * encapsulates the returned {@link MetaData} object or the exception in cause of parse
-     * failure due to IO errors or malformed input.
-     *
-     * @param gmlInputStream the InputStream providing the GML input.
-     * @return a GmlPreProcessingResult representing the end result of the process.
+     * @param inputStream the GML document.
+     * @param userUid the UID of the user performing the import.
+     * @param importOptions the ImportOptions. ImportStrategy is always overridden to UPDATE.
+     * @param taskId the TaskId of the import process.
      */
-    GmlPreProcessingResult preProcessGml( InputStream gmlInputStream );
-
-    /**
-     * Imports a MetaData object containing geospatial updates.
-     * The MetaData should be retrieved using {@link #preProcessGml(InputStream)}.
-     *
-     * @param metaData the MetaData reflecting the geospatial updates.
-     * @param userUid the UID of the user performing the import (task owner).
-     * @param importOptions the ImportOptions for the MetaData importer.
-     * @param taskId the TaskId of the process.
-     */
-    void importGml( MetaData metaData, String userUid, ImportOptions importOptions, TaskId taskId );
+    void importGml( InputStream inputStream, String userUid, ImportOptions importOptions, TaskId taskId );
 }
