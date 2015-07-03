@@ -30,7 +30,9 @@ package org.hisp.dhis.dxf2.adx;
 
 import java.io.InputStream;
 import org.hisp.dhis.DhisSpringTest;
+import static org.hisp.dhis.common.IdentifiableProperty.CODE;
 import org.hisp.dhis.datavalue.DataValue;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.jdbc.batchhandler.DataValueBatchHandler;
@@ -75,7 +77,11 @@ public class DefaultADXDataServiceTest
     {
         InputStream in = new ClassPathResource( SIMPLE_ADX_SAMPLE ).getInputStream();
         
-        ImportSummaries importSummaries =  adxDataService.postData(in, null);
+        ImportOptions options = new ImportOptions();
+        options.setDataElementIdScheme( "CODE");
+        options.setOrgUnitIdScheme( "CODE" );
+        
+        ImportSummaries importSummaries =  adxDataService.postData(in, options);
         
         assertEquals(importSummaries.getImportSummaries().size(), 2);
         // only testing this far .. summaries are full of conflicts for now ...
