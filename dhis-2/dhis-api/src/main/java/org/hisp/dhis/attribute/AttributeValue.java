@@ -121,7 +121,7 @@ public class AttributeValue
     {
         return "AttributeValue{" +
             "id=" + id +
-            ", attribute=" + attribute +
+            ", attribute=" + ( attribute != null ? attribute.getUid() : "" ) +
             ", value='" + value + '\'' +
             '}';
     }
