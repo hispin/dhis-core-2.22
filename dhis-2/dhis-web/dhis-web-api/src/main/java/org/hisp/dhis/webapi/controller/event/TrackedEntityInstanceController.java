@@ -42,6 +42,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
+import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.program.ProgramStatus;
@@ -100,7 +101,51 @@ public class TrackedEntityInstanceController
     // READ
     // -------------------------------------------------------------------------
 
-    @RequestMapping( value = { "", "/query" }, method = RequestMethod.GET, produces = { ContextUtils.CONTENT_TYPE_JSON, ContextUtils.CONTENT_TYPE_JAVASCRIPT } )
+    @RequestMapping( value = "", method = RequestMethod.GET )
+    public @ResponseBody RootNode getTrackedEntityInstances(
+        @RequestParam( required = false ) String query,
+        @RequestParam( required = false ) Set<String> attribute,
+        @RequestParam( required = false ) Set<String> filter,
+        @RequestParam( required = false ) String ou,
+        @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
+        @RequestParam( required = false ) String program,
+        @RequestParam( required = false ) ProgramStatus programStatus,
+        @RequestParam( required = false ) Boolean followUp,
+        @RequestParam( required = false ) Date programStartDate,
+        @RequestParam( required = false ) Date programEndDate,
+        @RequestParam( required = false ) String trackedEntity,
+        @RequestParam( required = false ) EventStatus eventStatus,
+        @RequestParam( required = false ) Date eventStartDate,
+        @RequestParam( required = false ) Date eventEndDate,
+        @RequestParam( required = false ) boolean skipMeta,
+        @RequestParam( required = false ) Integer page,
+        @RequestParam( required = false ) Integer pageSize,
+        @RequestParam( required = false ) boolean totalPages,
+        @RequestParam( required = false ) boolean skipPaging,
+        HttpServletResponse response ) throws Exception
+    {
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+
+        if ( fields.isEmpty() )
+        {
+            fields.add( ":all" );
+        }
+
+        Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
+        TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
+            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
+            eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
+
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.NO_CACHE );
+        List<TrackedEntityInstance> trackedEntityInstances = trackedEntityInstanceService.getTrackedEntityInstances( instanceService.getTrackedEntityInstances( params ) );
+
+        RootNode rootNode = NodeUtils.createMetadata();
+        rootNode.addChild( fieldFilterService.filter( TrackedEntityInstance.class, trackedEntityInstances, fields ) );
+
+        return rootNode;
+    }
+
+    @RequestMapping( value = "/query", method = RequestMethod.GET, produces = { ContextUtils.CONTENT_TYPE_JSON, ContextUtils.CONTENT_TYPE_JAVASCRIPT } )
     public String queryTrackedEntityInstancesJson(
         @RequestParam( required = false ) String query,
         @RequestParam( required = false ) Set<String> attribute,
@@ -130,14 +175,14 @@ public class TrackedEntityInstanceController
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.NO_CACHE );
-        Grid grid = instanceService.getTrackedEntityInstances( params );
+        Grid grid = instanceService.getTrackedEntityInstancesGrid( params );
 
         model.addAttribute( "model", grid );
         model.addAttribute( "viewClass", "detailed" );
         return "grid";
     }
 
-    @RequestMapping( value = { "", "/query" }, method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_XML )
+    @RequestMapping( value = "/query", method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_XML )
     public void queryTrackedEntityInstancesXml(
         @RequestParam( required = false ) String query,
         @RequestParam( required = false ) Set<String> attribute,
@@ -167,7 +212,7 @@ public class TrackedEntityInstanceController
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.NO_CACHE );
-        Grid grid = instanceService.getTrackedEntityInstances( params );
+        Grid grid = instanceService.getTrackedEntityInstancesGrid( params );
         GridUtils.toXml( grid, response.getOutputStream() );
     }
 
@@ -201,7 +246,7 @@ public class TrackedEntityInstanceController
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.NO_CACHE );
-        Grid grid = instanceService.getTrackedEntityInstances( params );
+        Grid grid = instanceService.getTrackedEntityInstancesGrid( params );
         GridUtils.toXls( grid, response.getOutputStream() );
     }
 
@@ -235,7 +280,7 @@ public class TrackedEntityInstanceController
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.NO_CACHE );
-        Grid grid = instanceService.getTrackedEntityInstances( params );
+        Grid grid = instanceService.getTrackedEntityInstancesGrid( params );
         GridUtils.toCsv( grid, response.getOutputStream() );
     }
 

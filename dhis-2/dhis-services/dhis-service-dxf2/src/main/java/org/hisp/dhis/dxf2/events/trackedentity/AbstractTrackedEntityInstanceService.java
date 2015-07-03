@@ -145,6 +145,7 @@ public abstract class AbstractTrackedEntityInstanceService
         trackedEntityInstance.setOrgUnit( entityInstance.getOrganisationUnit().getUid() );
         trackedEntityInstance.setTrackedEntity( entityInstance.getTrackedEntity().getUid() );
         trackedEntityInstance.setCreated( entityInstance.getCreated().toString() );
+        trackedEntityInstance.setLastUpdated( entityInstance.getLastUpdated().toString() );
 
         Collection<Relationship> relationships = relationshipService.getRelationshipsForTrackedEntityInstance( entityInstance );
 
@@ -443,7 +444,7 @@ public abstract class AbstractTrackedEntityInstanceService
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
         }
 
-        Grid instances = teiService.getTrackedEntityInstances( params );
+        Grid instances = teiService.getTrackedEntityInstancesGrid( params );
 
         if ( instances.getHeight() == 0 || (tei != null && instances.getHeight() == 1 && instances.getRow( 0 ).contains( tei.getUid() )) )
         {

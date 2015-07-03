@@ -28,12 +28,12 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-import java.util.Map;
-
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -46,13 +46,15 @@ public interface TrackedEntityInstanceStore
 
     final int MAX_RESULTS = 50000;
 
-    List<Map<String, String>> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
+    List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
+
+    List<Map<String, String>> getTrackedEntityInstancesGrid( TrackedEntityInstanceQueryParams params );
 
     int getTrackedEntityInstanceCount( TrackedEntityInstanceQueryParams params );
 
     /**
      * Returns null if valid, a descriptive, non-null string if invalid.
-     * 
+     *
      * @param instance
      * @param attributeValue
      * @param program
