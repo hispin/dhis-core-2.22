@@ -205,14 +205,14 @@ public class DefaultADXDataService
 
         Map<String, String> groupAttributes = readAttributes( adxReader );
 
-        if (!groupAttributes.containsKey( "period"))
+        if (!groupAttributes.containsKey( ADXConstants.PERIOD))
         {
-            throw new ADXException("'period' attribute is required on 'group'");
+            throw new ADXException( ADXConstants.PERIOD + " attribute is required on 'group'");
         }
         
-        if (!groupAttributes.containsKey( "orgUnit"))
+        if (!groupAttributes.containsKey( ADXConstants.ORGUNIT))
         {
-            throw new ADXException("'orgUnit' attribute is required on 'group'");
+            throw new ADXException( ADXConstants.ORGUNIT + " attribute is required on 'group'");
         }
 
         // translate adx period to dxf2
@@ -222,14 +222,14 @@ public class DefaultADXDataService
         dxfWriter.writeAttribute( "period", period.getIsoDate() );
 
         // process adx group attributes
-        if (!groupAttributes.containsKey( "attributeOptionCombo") && groupAttributes.containsKey( "dataSet"))
+        if (!groupAttributes.containsKey( ADXConstants.ATTOPTCOMBO) && groupAttributes.containsKey( ADXConstants.DATASET ))
         {
             log.debug( "No attributeOptionCombo present.  Check dataSet for attribute categorycombo");
             
-            DataSet dataSet = identifiableObjectManager.getObject( DataSet.class, dataElementIdScheme, groupAttributes.get( "dataSet"));
-            groupAttributes.put( "dataSet", dataSet.getUid());
+            DataSet dataSet = identifiableObjectManager.getObject( DataSet.class, dataElementIdScheme, groupAttributes.get( ADXConstants.DATASET ));
+            groupAttributes.put( ADXConstants.DATASET, dataSet.getUid());
             DataElementCategoryCombo attributeCombo = dataSet.getCategoryCombo();
-            attributesToDXF("attributeOptionCombo", attributeCombo, groupAttributes, dataElementIdScheme);
+            attributesToDXF(ADXConstants.ATTOPTCOMBO, attributeCombo, groupAttributes, dataElementIdScheme);
         }
         
         // write the remaining attributes through to dxf stream
@@ -253,33 +253,33 @@ public class DefaultADXDataService
     {
         Map<String, String> dvAttributes = readAttributes( adxReader );
 
-        if (!dvAttributes.containsKey( "dataElement"))
+        if (!dvAttributes.containsKey( ADXConstants.DATAELEMENT ))
         {
-            throw new ADXException("'dataElement' attribute is required on 'dataValue'");
+            throw new ADXException(ADXConstants.DATAELEMENT + " attribute is required on 'dataValue'");
         }
         
-        if (!dvAttributes.containsKey( "value"))
+        if (!dvAttributes.containsKey( ADXConstants.VALUE))
         {
-            throw new ADXException("'value' attribute is required on 'dataValue'");
+            throw new ADXException(ADXConstants.VALUE + " attribute is required on 'dataValue'");
         }
         
         IdentifiableProperty dataElementIdScheme = importOptions.getDataElementIdScheme();
 
         dxfWriter.writeStartElement( "dataValue" );
         
-        DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme, dvAttributes.get( "dataElement") );
+        DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme, dvAttributes.get( ADXConstants.DATAELEMENT ));
         DataElementCategoryCombo categoryCombo = dataElement.getCategoryCombo();
             
-        attributesToDXF("categoryOptionCombo", categoryCombo, dvAttributes, dataElementIdScheme);
+        attributesToDXF(ADXConstants.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme);
         
         // if dataelement type is string we need to pick out the 'annotation' element
         if (dataElement.getType().equals( DataElement.VALUE_TYPE_STRING ))
         {
-            adxReader.moveToStartElement( "annotation", "datavalue");
-            if (adxReader.isStartElement("annotation"))
+            adxReader.moveToStartElement( ADXConstants.ANNOTATION, ADXConstants.DATAVALUE );
+            if (adxReader.isStartElement(ADXConstants.ANNOTATION ))
             {
                 String textValue = adxReader.getElementValue();
-                dvAttributes.put( "value", textValue);
+                dvAttributes.put( ADXConstants.VALUE, textValue);
             }
             else
             {
