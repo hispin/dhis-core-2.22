@@ -46,6 +46,8 @@ public interface TrackedEntityInstanceStore
 
     final int MAX_RESULTS = 50000;
 
+    int countTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
+
     List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
 
     List<Map<String, String>> getTrackedEntityInstancesGrid( TrackedEntityInstanceQueryParams params );
