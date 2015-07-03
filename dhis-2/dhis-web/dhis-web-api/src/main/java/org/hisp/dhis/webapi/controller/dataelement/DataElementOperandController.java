@@ -97,13 +97,6 @@ public class DataElementOperandController extends AbstractCrudController<DataEle
             }
         }
 
-        if ( options.hasPaging() )
-        {
-            Pager pager = new Pager( options.getPage(), dataElementOperands.size(), options.getPageSize() );
-            metaData.setPager( pager );
-            dataElementOperands = PagerUtils.pageCollection( dataElementOperands, pager );
-        }
-
         return dataElementOperands;
     }
 }
