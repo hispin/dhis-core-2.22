@@ -104,6 +104,15 @@ public class HibernateTrackedEntityInstanceStore
     // -------------------------------------------------------------------------
 
     @Override
+    public int countTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
+    {
+        String hql = buildTrackedEntityInstanceHql( params );
+        Query query = getQuery( hql );
+
+        return ((Number) query.iterate().next()).intValue();
+    }
+
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
     {
