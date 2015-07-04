@@ -281,7 +281,7 @@ public class TrackedEntityInstanceController
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.NO_CACHE );
         Grid grid = instanceService.getTrackedEntityInstancesGrid( params );
-        GridUtils.toCsv( grid, response.getOutputStream() );
+        GridUtils.toCsv( grid, response.getWriter() );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.GET )

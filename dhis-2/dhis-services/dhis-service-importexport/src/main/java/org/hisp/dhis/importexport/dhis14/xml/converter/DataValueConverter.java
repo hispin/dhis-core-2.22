@@ -28,11 +28,7 @@ package org.hisp.dhis.importexport.dhis14.xml.converter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.CsvUtils.NEWLINE;
-import static org.hisp.dhis.commons.util.CsvUtils.SEPARATOR_B;
-import static org.hisp.dhis.commons.util.CsvUtils.csvEncode;
-import static org.hisp.dhis.commons.util.CsvUtils.getCsvEndValue;
-import static org.hisp.dhis.commons.util.CsvUtils.getCsvValue;
+import static org.hisp.dhis.importexport.dhis14.util.CsvUtils.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;

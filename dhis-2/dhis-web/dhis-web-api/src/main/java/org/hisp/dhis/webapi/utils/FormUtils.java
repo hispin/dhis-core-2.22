@@ -48,7 +48,6 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageSection;
-import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.webapi.webdomain.form.Field;
 import org.hisp.dhis.webapi.webdomain.form.Form;
 import org.hisp.dhis.webapi.webdomain.form.Group;

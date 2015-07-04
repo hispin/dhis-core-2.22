@@ -204,7 +204,7 @@ public class EventAnalyticsController
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.csv", true );
         Grid grid = analyticsService.getAggregatedEventData( params );
-        GridUtils.toCsv( substituteMetaData( grid ), response.getOutputStream() );
+        GridUtils.toCsv( substituteMetaData( grid ), response.getWriter() );
     }
 
     @RequestMapping( value = RESOURCE_PATH + "/aggregate/{program}.html", method = RequestMethod.GET )
@@ -354,7 +354,7 @@ public class EventAnalyticsController
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.csv", true );
         Grid grid = analyticsService.getEvents( params );
-        GridUtils.toCsv( substituteMetaData( grid ), response.getOutputStream() );
+        GridUtils.toCsv( substituteMetaData( grid ), response.getWriter() );
     }
 
     @RequestMapping( value = RESOURCE_PATH + "/query/{program}.html", method = RequestMethod.GET )
