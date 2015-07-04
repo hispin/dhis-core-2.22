@@ -28,7 +28,15 @@ package org.hisp.dhis.webapi.view;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.webapi.webdomain.WebMetaData;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -36,23 +44,15 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.PredicateUtils;
 import org.hisp.dhis.system.util.ReflectionUtils;
+import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.springframework.web.servlet.view.AbstractView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public abstract class AbstractGridView extends AbstractView
 {
-    protected abstract void renderGrids( List<Grid> grids, OutputStream outputStream ) throws Exception;
+    protected abstract void renderGrids( List<Grid> grids, HttpServletResponse response ) throws Exception;
 
     @Override
     protected void renderMergedOutputModel( Map<String, Object> model, HttpServletRequest request, HttpServletResponse response ) throws Exception
@@ -130,6 +130,6 @@ public abstract class AbstractGridView extends AbstractView
             grids.add( grid );
         }
 
-        renderGrids( grids, response.getOutputStream() );
+        renderGrids( grids, response );
     }
 }

@@ -28,12 +28,13 @@ package org.hisp.dhis.webapi.view;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.system.grid.GridUtils;
-
-import java.io.OutputStream;
-import java.util.List;
+import org.hisp.dhis.webapi.utils.ContextUtils;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -46,8 +47,8 @@ public class PdfGridView extends AbstractGridView
     }
 
     @Override
-    protected void renderGrids( List<Grid> grids, OutputStream outputStream )
+    protected void renderGrids( List<Grid> grids, HttpServletResponse response ) throws Exception
     {
-        GridUtils.toPdf( grids, outputStream );
+        GridUtils.toPdf( grids, response.getOutputStream() );
     }
 }

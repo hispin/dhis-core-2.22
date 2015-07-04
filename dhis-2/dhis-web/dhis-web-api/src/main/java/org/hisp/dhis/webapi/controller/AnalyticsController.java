@@ -230,7 +230,7 @@ public class AnalyticsController
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "data.csv", true );
         Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
-        GridUtils.toCsv( grid, response.getOutputStream() );
+        GridUtils.toCsv( grid, response.getWriter() );
     }
 
     @RequestMapping( value = RESOURCE_PATH + ".xls", method = RequestMethod.GET )

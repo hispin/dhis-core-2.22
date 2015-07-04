@@ -81,7 +81,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.xerces.util.XMLChar;
 
 /**
- *
  * @author bobj
  */
 public class DefaultADXDataService

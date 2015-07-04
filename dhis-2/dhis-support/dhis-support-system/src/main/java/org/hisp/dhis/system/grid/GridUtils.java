@@ -29,9 +29,6 @@ package org.hisp.dhis.system.grid;
  */
 
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
-import static org.hisp.dhis.commons.util.CsvUtils.NEWLINE;
-import static org.hisp.dhis.commons.util.CsvUtils.SEPARATOR_B;
-import static org.hisp.dhis.commons.util.CsvUtils.csvEncode;
 import static org.hisp.dhis.system.util.PDFUtils.addTableToDocument;
 import static org.hisp.dhis.system.util.PDFUtils.closeDocument;
 import static org.hisp.dhis.system.util.PDFUtils.getEmptyCell;
@@ -93,6 +90,7 @@ import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import com.csvreader.CsvWriter;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfPTable;
 
@@ -104,6 +102,7 @@ public class GridUtils
     private static final Log log = LogFactory.getLog( GridUtils.class );
     
     private static final String EMPTY = "";
+    private static final char CSV_DELIMITER = ',';
     private static final String XLS_SHEET_PREFIX = "Sheet ";
     private static final int JXL_MAX_COLS = 256;
     
@@ -334,7 +333,7 @@ public class GridUtils
     /**
      * Writes a CSV representation of the given Grid to the given OutputStream.
      */
-    public static void toCsv( Grid grid, OutputStream out )
+    public static void toCsv( Grid grid, Writer writer )
         throws Exception
     {
         if ( grid == null )
@@ -342,19 +341,19 @@ public class GridUtils
             return;
         }
         
+        CsvWriter csvWriter = new CsvWriter( writer, CSV_DELIMITER );
+        
         Iterator<GridHeader> headers = grid.getHeaders().iterator();
         
-        while ( headers.hasNext() )
+        if ( !grid.getHeaders().isEmpty() )
         {
-            out.write( csvEncode( headers.next().getColumn() ).getBytes() );
-            
-            if ( headers.hasNext() )
+            while ( headers.hasNext() )
             {
-                out.write( SEPARATOR_B );
+                csvWriter.write( headers.next().getColumn() );
             }
+            
+            csvWriter.endRecord();
         }
-
-        out.write( NEWLINE );
         
         for ( List<Object> row : grid.getRows() )
         {
@@ -362,15 +361,12 @@ public class GridUtils
             
             while ( columns.hasNext() )
             {
-                out.write( csvEncode( columns.next() ).getBytes() );
+                Object value = columns.next();
                 
-                if ( columns.hasNext() )
-                {
-                    out.write( SEPARATOR_B );
-                }
+                csvWriter.write( value != null ? String.valueOf( value ) : StringUtils.EMPTY );
             }
             
-            out.write( NEWLINE );
+            csvWriter.endRecord();
         }
     }
 

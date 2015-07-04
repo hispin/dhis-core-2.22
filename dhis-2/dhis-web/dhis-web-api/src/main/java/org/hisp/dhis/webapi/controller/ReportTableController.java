@@ -243,7 +243,7 @@ public class ReportTableController
         String filename = filenameEncode( grid.getTitle() ) + ".csv";
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, filename, true );
 
-        GridUtils.toCsv( grid, response.getOutputStream() );
+        GridUtils.toCsv( grid, response.getWriter() );
     }
 
     private Grid getReportTableGrid( String uid, String organisationUnitUid, Date date )

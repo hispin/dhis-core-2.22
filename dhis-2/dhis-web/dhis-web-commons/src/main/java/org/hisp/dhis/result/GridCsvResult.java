@@ -28,15 +28,13 @@ package org.hisp.dhis.result;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.OutputStream;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.commons.util.CodecUtils;
+import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.util.ContextUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -88,8 +86,6 @@ public class GridCsvResult
 
         HttpServletResponse response = ServletActionContext.getResponse();
 
-        OutputStream out = response.getOutputStream();
-
         String filename = CodecUtils.filenameEncode( StringUtils.defaultIfEmpty( grid.getTitle(), DEFAULT_FILENAME ) ) + ".csv";
         
         ContextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, true, filename, true );
@@ -98,6 +94,6 @@ public class GridCsvResult
         // Write CSV to output stream
         // ---------------------------------------------------------------------
 
-        GridUtils.toCsv( grid, out );
+        GridUtils.toCsv( grid, response.getWriter() );
     }
 }
