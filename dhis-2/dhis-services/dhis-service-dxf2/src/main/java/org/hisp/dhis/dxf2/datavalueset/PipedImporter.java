@@ -32,8 +32,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.concurrent.Callable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
@@ -41,15 +40,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
- *
  * @author bobj
  */
 public class PipedImporter
     implements Callable<ImportSummary>
 {
-
-    private static final Log log = LogFactory.getLog( PipedImporter.class );
-    
     public static final int PIPE_BUFFER_SIZE = 4096;
 
     public static final int TOTAL_MINUTES_TO_WAIT = 5;
@@ -62,7 +57,8 @@ public class PipedImporter
 
     private final Authentication authentication;
 
-    public PipedImporter( DataValueSetService dataValueSetService, ImportOptions importOptions, PipedOutputStream pipeOut )
+    public PipedImporter( DataValueSetService dataValueSetService, ImportOptions importOptions,
+        PipedOutputStream pipeOut )
         throws IOException
     {
         this.dataValueSetService = dataValueSetService;
@@ -72,23 +68,24 @@ public class PipedImporter
     }
 
     @Override
-    public ImportSummary call() throws Exception
+    public ImportSummary call()
+        throws Exception
     {
         ImportSummary result = null;
         SecurityContextHolder.getContext().setAuthentication( authentication );
-        
+
         try
         {
             result = dataValueSetService.saveDataValueSet( pipeIn, importOptions );
-        } 
+        }
         catch ( Exception ex )
         {
             result = new ImportSummary();
             result.setStatus( ImportStatus.ERROR );
-            result.setDescription( "Exception: " + ex.getMessage());
+            result.setDescription( "Exception: " + ex.getMessage() );
         }
+        
         pipeIn.close();
         return result;
     }
-
 }
