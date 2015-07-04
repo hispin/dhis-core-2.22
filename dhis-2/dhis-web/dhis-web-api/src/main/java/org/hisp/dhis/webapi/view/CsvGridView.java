@@ -28,12 +28,13 @@ package org.hisp.dhis.webapi.view;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.system.grid.GridUtils;
-
-import java.io.OutputStream;
-import java.util.List;
+import org.hisp.dhis.webapi.utils.ContextUtils;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -46,11 +47,11 @@ public class CsvGridView extends AbstractGridView
     }
 
     @Override
-    protected void renderGrids( List<Grid> grids, OutputStream outputStream ) throws Exception
+    protected void renderGrids( List<Grid> grids, HttpServletResponse response ) throws Exception
     {
         if ( !grids.isEmpty() )
         {
-            GridUtils.toCsv( grids.get( 0 ), outputStream );
+            GridUtils.toCsv( grids.get( 0 ), response.getWriter() );
         }
     }
 }

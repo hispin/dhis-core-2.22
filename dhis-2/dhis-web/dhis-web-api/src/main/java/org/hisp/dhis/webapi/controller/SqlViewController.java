@@ -124,7 +124,7 @@ public class SqlViewController
         
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, filename, true );
 
-        GridUtils.toCsv( grid, response.getOutputStream() );
+        GridUtils.toCsv( grid, response.getWriter() );
     }
 
     @RequestMapping( value = "/{uid}/data.xls", method = RequestMethod.GET )
