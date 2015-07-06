@@ -132,7 +132,7 @@ public class HibernateTrackedEntityInstanceStore
     {
         String hql = "from TrackedEntityInstance tei";
 
-        if ( params.hasTrackedEntity() || params.hasOrganisationUnits() || params.hasFilters() )
+        if ( params.hasTrackedEntity() || params.hasOrganisationUnits() || params.hasFilters() || params.hasProgram() )
         {
             hql += " where ";
         }
@@ -170,6 +170,34 @@ public class HibernateTrackedEntityInstanceStore
 
                 }
             }
+        }
+
+        if ( params.hasProgram() )
+        {
+            hql += " and exists (from ProgramInstance pi where pi.entityInstance=tei";
+            hql += " and pi.program.uid = '" + params.getProgram().getUid() + "'";
+
+            if ( params.hasProgramStatus() )
+            {
+                hql += " and pi.status = " + PROGRAM_STATUS_MAP.get( params.getProgramStatus() );
+            }
+
+            if ( params.hasFollowUp() )
+            {
+                hql += " and pi.followup = " + params.getFollowUp() + " ";
+            }
+
+            if ( params.hasProgramStartDate() )
+            {
+                hql += " and pi.enrollmentdate >= '" + getMediumDateString( params.getProgramStartDate() ) + "' ";
+            }
+
+            if ( params.hasProgramEndDate() )
+            {
+                hql += "and pi.enrollmentdate <= '" + getMediumDateString( params.getProgramEndDate() ) + "' ";
+            }
+
+            hql += ")";
         }
 
         return hql;
