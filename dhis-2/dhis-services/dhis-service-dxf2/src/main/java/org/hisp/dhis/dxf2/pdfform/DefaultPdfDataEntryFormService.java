@@ -670,25 +670,19 @@ public class DefaultPdfDataEntryFormService
     }
 
     private void addCell_WithDropDownListField( PdfPTable table, Rectangle rect, PdfWriter writer, PdfPCell cell, String strfldName, String[] optionList,
-        String[] valueList)
+        String[] valueList) throws IOException, DocumentException
     {
-        // If there is option, then create name-value set in 2 dimension array
-        // and set it as dropdown option name-value list.
-        String[][] optionValueList = new String[optionList.length][2];
+        TextField textList = new TextField( writer, rect, strfldName );
 
-        for ( int i = 0; i < optionList.length; i++ )
-        {
-            optionValueList[i][1] = optionList[i];
-            optionValueList[i][0] = valueList[i];
-        }
+        textList.setChoices( optionList );
+        textList.setChoiceExports( valueList );
 
-        // Code 2 create DROP-DOWN LIST
-        PdfFormField dropDown = PdfFormField.createCombo( writer, true, optionValueList, 0 );
+        textList.setBorderWidth( 1 );
+        textList.setBorderColor( Color.BLACK );
+        textList.setBorderStyle( PdfBorderDictionary.STYLE_SOLID );
+        textList.setBackgroundColor( COLOR_BACKGROUDTEXTBOX );
 
-        dropDown.setWidget( new Rectangle(0, 0), PdfAnnotation.HIGHLIGHT_INVERT );
-        dropDown.setFieldName( strfldName );
-
-        dropDown.setMKBorderColor( Color.BLACK );
+        PdfFormField dropDown = textList.getComboField();
 
         cell.setCellEvent( new PdfFieldCell( dropDown, rect.getWidth(), rect.getHeight(), writer ) );
 
