@@ -189,12 +189,12 @@ public class HibernateTrackedEntityInstanceStore
 
             if ( params.hasProgramStartDate() )
             {
-                hql += " and pi.enrollmentdate >= '" + getMediumDateString( params.getProgramStartDate() ) + "' ";
+                hql += " and pi.enrollmentDate >= '" + getMediumDateString( params.getProgramStartDate() ) + "' ";
             }
 
             if ( params.hasProgramEndDate() )
             {
-                hql += "and pi.enrollmentdate <= '" + getMediumDateString( params.getProgramEndDate() ) + "' ";
+                hql += "and pi.enrollmentDate <= '" + getMediumDateString( params.getProgramEndDate() ) + "' ";
             }
 
             hql += ")";
