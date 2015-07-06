@@ -249,12 +249,17 @@ public class DefaultADXDataService
 
         dxfWriter.writeStartElement( "dataValue" );
 
-        DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,
-            dvAttributes.get( ADXConstants.DATAELEMENT ) );
-        DataElementCategoryCombo categoryCombo = dataElement.getCategoryCombo();
+        DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,dvAttributes.get( ADXConstants.DATAELEMENT));
+            
+        // process adx group attributes
+        if ( !dvAttributes.containsKey( ADXConstants.CATOPTCOMBO )
+            && dvAttributes.containsKey( ADXConstants.DATASET ) )
+        {
+            log.debug( "No attributeOptionCombo present.  Check dataSet for attribute categorycombo" );
+            DataElementCategoryCombo categoryCombo = dataElement.getCategoryCombo();
 
-        attributesToDXF( ADXConstants.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
-
+            attributesToDXF( ADXConstants.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
+        }
         // if dataelement type is string we need to pick out the 'annotation' element
         if ( dataElement.getType().equals( DataElement.VALUE_TYPE_STRING ) )
         {
