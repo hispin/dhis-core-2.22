@@ -58,8 +58,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
@@ -348,7 +350,11 @@ public class HibernateTrackedEntityInstanceStore
             sql += hlp.whereAnd() + " tei.trackedentityid = " + params.getTrackedEntity().getId() + " ";
         }
 
-        if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS ) )
+        if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ALL ) )
+        {
+            // No restriction
+        }
+        else if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS ) )
         {
             SetMap<Integer, OrganisationUnit> levelOuMap = params.getLevelOrgUnitMap();
 
@@ -360,11 +366,20 @@ public class HibernateTrackedEntityInstanceStore
 
             sql = removeLastOr( sql );
         }
-        else if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ALL ) )
+        else if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.CHILDREN ) )
         {
+            Set<OrganisationUnit> orgUnits = new HashSet<>();
+            
+            for ( OrganisationUnit orgUnit : params.getOrganisationUnits() )
+            {
+                orgUnits.add( orgUnit );
+                orgUnits.addAll( orgUnit.getChildren() );
+            }
+            
+            sql += hlp.whereAnd() + " tei.organisationunitid in ("
+                + getCommaDelimitedString( getIdentifiers( orgUnits ) ) + ") ";
         }
-        else
-        // SELECTED (default)
+        else // SELECTED (default)        
         {
             sql += hlp.whereAnd() + " tei.organisationunitid in ("
                 + getCommaDelimitedString( getIdentifiers( params.getOrganisationUnits() ) ) + ") ";
