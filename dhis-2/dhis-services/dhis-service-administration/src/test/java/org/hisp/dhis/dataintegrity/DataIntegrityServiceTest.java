@@ -160,7 +160,7 @@ public class DataIntegrityServiceTest
         organisationUnitService.addOrganisationUnit( unitF );
         
         unitA.setParent( unitC );
-        
+
         organisationUnitService.updateOrganisationUnit( unitA );
         
         dataSetA = createDataSet( 'A', new MonthlyPeriodType() );

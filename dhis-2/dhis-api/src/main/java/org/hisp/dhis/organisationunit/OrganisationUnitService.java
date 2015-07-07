@@ -551,6 +551,16 @@ public interface OrganisationUnitService
      */
     int getOfflineOrganisationUnitLevels();
 
+    /**
+     * Update all OUs where paths is null.
+     */
+    void updatePaths();
+
+    /**
+     * Update all OUs (thus forcing update of path).
+     */
+    void forceUpdatePaths();
+
     // -------------------------------------------------------------------------
     // Version
     // -------------------------------------------------------------------------
