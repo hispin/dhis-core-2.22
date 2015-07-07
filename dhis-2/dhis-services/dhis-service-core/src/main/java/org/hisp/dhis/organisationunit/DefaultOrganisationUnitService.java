@@ -326,12 +326,16 @@ public class DefaultOrganisationUnitService
     {
         List<OrganisationUnit> ouParents = new ArrayList<>( organisationUnitStore.getByUid( parents ) );
         Set<String> ou = new HashSet<>();
-        User user = currentUserService.getCurrentUser();
 
-        if ( user != null && OrganisationUnitSelectionMode.ACCESSIBLE == ouMode )
+        if ( OrganisationUnitSelectionMode.ACCESSIBLE == ouMode )
         {
-            ouParents = new ArrayList<>( user.getDataViewOrganisationUnitsWithFallback() );
-            ouMode = OrganisationUnitSelectionMode.DESCENDANTS;
+            User user = currentUserService.getCurrentUser();
+
+            if ( user != null )
+            {
+                ouParents = new ArrayList<>( user.getDataViewOrganisationUnitsWithFallback() );
+                ouMode = OrganisationUnitSelectionMode.DESCENDANTS;
+            }
         }
 
         for ( OrganisationUnit organisationUnit : ouParents )
