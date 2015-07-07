@@ -119,14 +119,7 @@ public class EnrollmentController
 
         if ( fields.isEmpty() )
         {
-            fields.add( "enrollment" );
-            fields.add( "trackedEntityInstance" );
-            fields.add( "program" );
-            fields.add( "status" );
-            fields.add( "orgUnit" );
-            fields.add( "dateOfEnrollment" );
-            fields.add( "dateOfIncident" );
-            fields.add( "followup" );
+            fields.add( "enrollment,trackedEntityInstance,program,status,orgUnit,dateOfEnrollment,dateOfIncident,followup" );
         }
 
         if ( startDate != null && endDate != null && programUid != null && orgUnitUid != null && ouMode != null )
