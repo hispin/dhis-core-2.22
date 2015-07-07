@@ -76,9 +76,13 @@
   <!-- OAuth2 -->
   <bean id="clientDetailsService" class="org.hisp.dhis.security.oauth2.DefaultClientDetailsService" />
 
-  <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore" />
+  <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
+    <constructor-arg name="dataSource" ref="dataSource" />
+  </bean>
 
-  <bean id="authorizationCodeServices" class="org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices" />
+  <bean id="authorizationCodeServices" class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
+    <constructor-arg name="dataSource" ref="dataSource" />
+  </bean>
 
   <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
     <property name="tokenStore" ref="tokenStore" />

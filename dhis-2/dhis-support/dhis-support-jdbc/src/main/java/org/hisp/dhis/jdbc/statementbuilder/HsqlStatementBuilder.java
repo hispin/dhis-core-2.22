@@ -41,7 +41,7 @@ public class HsqlStatementBuilder
     {
         return "double";
     }
-    
+
     @Override
     public String getColumnQuote()
     {
