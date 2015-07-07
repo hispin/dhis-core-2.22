@@ -37,6 +37,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.jdbc.batchhandler.RelativePeriodsBatchHandler;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,9 @@ public class TableAlteror
 
     @Autowired
     private BatchHandlerFactory batchHandlerFactory;
+
+    @Autowired
+    private OrganisationUnitService organisationUnitService;
 
     // -------------------------------------------------------------------------
     // Execute
@@ -835,6 +839,7 @@ public class TableAlteror
         upgradeAggregationType( "chart" );
 
         updateRelativePeriods();
+        organisationUnitService.updatePaths();
 
         log.info( "Tables updated" );
     }

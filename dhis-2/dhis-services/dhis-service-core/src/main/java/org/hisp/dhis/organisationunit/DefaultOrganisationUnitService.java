@@ -1031,6 +1031,18 @@ public class DefaultOrganisationUnitService
         return 1;
     }
 
+    @Override
+    public void updatePaths()
+    {
+        organisationUnitStore.updatePaths();
+    }
+
+    @Override
+    public void forceUpdatePaths()
+    {
+        organisationUnitStore.forceUpdatePaths();
+    }
+
     /**
      * Get all the Organisation Units within the distance of a coordinate.
      */

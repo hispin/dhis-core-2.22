@@ -33,7 +33,7 @@ package org.hisp.dhis.commons.util;
  */
 public class SqlHelper
 {
-    private boolean whereAndInvoked = false;
+    private boolean invoked = false;
 
     private boolean includeSpaces = false;
 
@@ -51,9 +51,45 @@ public class SqlHelper
      */
     public String whereAnd()
     {
-        String str = whereAndInvoked ? "and" : "where";
+        String str = invoked ? "and" : "where";
 
-        whereAndInvoked = true;
+        invoked = true;
+
+        return includeSpaces ? " " + str + " " : str;
+    }
+
+    /**
+     * Returns "where" the first time it is invoked, then "or" for subsequent invocations.
+     */
+    public String whereOr()
+    {
+        String str = invoked ? "or" : "where";
+
+        invoked = true;
+
+        return includeSpaces ? " " + str + " " : str;
+    }
+
+    /**
+     * Returns "" the first time it is invoked, then "and" for subsequent invocations.
+     */
+    public String and()
+    {
+        String str = invoked ? "and" : "";
+
+        invoked = true;
+
+        return includeSpaces ? " " + str + " " : str;
+    }
+
+    /**
+     * Returns "" the first time it is invoked, then "or" for subsequent invocations.
+     */
+    public String or()
+    {
+        String str = invoked ? "or" : "";
+
+        invoked = true;
 
         return includeSpaces ? " " + str + " " : str;
     }
