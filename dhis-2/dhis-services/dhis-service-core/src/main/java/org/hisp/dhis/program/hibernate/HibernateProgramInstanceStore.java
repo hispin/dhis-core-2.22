@@ -33,9 +33,9 @@ import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.commons.util.SqlHelper;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
@@ -85,6 +85,15 @@ public class HibernateProgramInstanceStore
     // -------------------------------------------------------------------------
 
     @Override
+    public int countProgramInstances( ProgramInstanceQueryParams params )
+    {
+        String hql = buildProgramInstanceHql( params );
+        Query query = getQuery( hql );
+
+        return ((Number) query.iterate().next()).intValue();
+    }
+
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<ProgramInstance> getProgramInstances( ProgramInstanceQueryParams params )
     {
@@ -102,9 +111,8 @@ public class HibernateProgramInstanceStore
 
     private String buildProgramInstanceHql( ProgramInstanceQueryParams params )
     {
-        SqlHelper hlp = new SqlHelper( true );
-
         String hql = "from ProgramInstance pi";
+        SqlHelper hlp = new SqlHelper( true );
 
         if ( params.hasLastUpdated() )
         {
@@ -123,7 +131,24 @@ public class HibernateProgramInstanceStore
 
         if ( params.hasOrganisationUnits() )
         {
-            hql += hlp.whereAnd() + "pi.organisationUnit.uid in (" + getQuotedCommaDelimitedString( getUids( params.getOrganisationUnits() ) ) + ")";
+            if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS ) )
+            {
+                String ouClause = "(";
+                SqlHelper orHlp = new SqlHelper( true );
+
+                for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
+                {
+                    ouClause += orHlp.or() + "pi.organisationUnit.path LIKE '" + organisationUnit.getPath() + "%'";
+                }
+
+                ouClause += ")";
+
+                hql += hlp.whereAnd() + ouClause;
+            }
+            else
+            {
+                hql += hlp.whereAnd() + "pi.organisationUnit.uid in (" + getQuotedCommaDelimitedString( getUids( params.getOrganisationUnits() ) ) + ")";
+            }
         }
 
         if ( params.hasProgram() )
@@ -402,7 +427,7 @@ public class HibernateProgramInstanceStore
                     + " INNER JOIN trackedentityattribute tea on tea.trackedentityattributeid=teav.trackedentityattributeid "
                     + " INNER JOIN programinstance ps on teav.trackedentityinstanceid=ps.trackedentityinstanceid "
                     + " INNER JOIN programstageinstance psi on ps.programinstanceid=psi.programinstanceid "
-                    + " where tea.uid in ( " + TextUtils.getQuotedCommaDelimitedString( attributeUids ) + ") "
+                    + " where tea.uid in ( " + getQuotedCommaDelimitedString( attributeUids ) + ") "
                     + " and ps.programinstanceid=" + programInstanceId );
             while ( attributeValueRow.next() )
             {

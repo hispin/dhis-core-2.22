@@ -133,21 +133,33 @@ public class HibernateTrackedEntityInstanceStore
     private String buildTrackedEntityInstanceHql( TrackedEntityInstanceQueryParams params )
     {
         String hql = "from TrackedEntityInstance tei";
-
-        if ( params.hasTrackedEntity() || params.hasOrganisationUnits() || params.hasFilters() || params.hasProgram() )
-        {
-            hql += " where ";
-        }
+        SqlHelper hlp = new SqlHelper( true );
 
         if ( params.hasTrackedEntity() )
         {
-            hql += "tei.trackedEntity.uid='" + params.getTrackedEntity().getUid() + "'";
-            hql += params.hasOrganisationUnits() ? " and " : "";
+            hql += hlp.whereAnd() + "tei.trackedEntity.uid='" + params.getTrackedEntity().getUid() + "'";
         }
 
         if ( params.hasOrganisationUnits() )
         {
-            hql += "tei.organisationUnit.uid in (" + getQuotedCommaDelimitedString( getUids( params.getOrganisationUnits() ) ) + ")";
+            if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS ) )
+            {
+                String ouClause = "(";
+                SqlHelper orHlp = new SqlHelper( true );
+
+                for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
+                {
+                    ouClause += orHlp.or() + "tei.organisationUnit.path LIKE '" + organisationUnit.getPath() + "%'";
+                }
+
+                ouClause += ")";
+
+                hql += hlp.whereAnd() + ouClause;
+            }
+            else
+            {
+                hql += hlp.whereAnd() + "tei.organisationUnit.uid in (" + getQuotedCommaDelimitedString( getUids( params.getOrganisationUnits() ) ) + ")";
+            }
         }
 
         if ( params.hasFilters() )
@@ -176,27 +188,27 @@ public class HibernateTrackedEntityInstanceStore
 
         if ( params.hasProgram() )
         {
-            hql += " and exists (from ProgramInstance pi where pi.entityInstance=tei";
-            hql += " and pi.program.uid = '" + params.getProgram().getUid() + "'";
+            hql += hlp.whereAnd() + "exists (from ProgramInstance pi where pi.entityInstance=tei";
+            hql += hlp.whereAnd() + "pi.program.uid = '" + params.getProgram().getUid() + "'";
 
             if ( params.hasProgramStatus() )
             {
-                hql += " and pi.status = " + PROGRAM_STATUS_MAP.get( params.getProgramStatus() );
+                hql += hlp.whereAnd() + "pi.status = " + PROGRAM_STATUS_MAP.get( params.getProgramStatus() );
             }
 
             if ( params.hasFollowUp() )
             {
-                hql += " and pi.followup = " + params.getFollowUp() + " ";
+                hql += hlp.whereAnd() + "pi.followup = " + params.getFollowUp();
             }
 
             if ( params.hasProgramStartDate() )
             {
-                hql += " and pi.enrollmentDate >= '" + getMediumDateString( params.getProgramStartDate() ) + "' ";
+                hql += hlp.whereAnd() + "pi.enrollmentDate >= '" + getMediumDateString( params.getProgramStartDate() ) + "'";
             }
 
             if ( params.hasProgramEndDate() )
             {
-                hql += "and pi.enrollmentDate <= '" + getMediumDateString( params.getProgramEndDate() ) + "' ";
+                hql += hlp.whereAnd() + "pi.enrollmentDate <= '" + getMediumDateString( params.getProgramEndDate() ) + "'";
             }
 
             hql += ")";
@@ -369,13 +381,13 @@ public class HibernateTrackedEntityInstanceStore
         else if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.CHILDREN ) )
         {
             Set<OrganisationUnit> orgUnits = new HashSet<>();
-            
+
             for ( OrganisationUnit orgUnit : params.getOrganisationUnits() )
             {
                 orgUnits.add( orgUnit );
                 orgUnits.addAll( orgUnit.getChildren() );
             }
-            
+
             sql += hlp.whereAnd() + " tei.organisationunitid in ("
                 + getCommaDelimitedString( getIdentifiers( orgUnits ) ) + ") ";
         }

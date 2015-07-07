@@ -217,4 +217,7 @@ public interface OrganisationUnitStore
      */
     void updateOrganisationUnitParent( int organisationUnitId, int parentId );
 
+    void updatePaths();
+
+    void forceUpdatePaths();
 }

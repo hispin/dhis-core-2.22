@@ -46,6 +46,14 @@ public interface ProgramInstanceStore
     String ID = ProgramInstanceStore.class.getName();
 
     /**
+     * Count all program instances by PI query params.
+     *
+     * @param params ProgramInstanceQueryParams to use
+     * @return Count of matching PIs
+     */
+    int countProgramInstances( ProgramInstanceQueryParams params );
+
+    /**
      * Get all program instances by PI query params.
      *
      * @param params ProgramInstanceQueryParams to use

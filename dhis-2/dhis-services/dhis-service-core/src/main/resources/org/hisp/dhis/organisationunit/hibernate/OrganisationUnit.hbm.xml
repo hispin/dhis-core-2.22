@@ -28,6 +28,8 @@
     <many-to-one name="parent" class="org.hisp.dhis.organisationunit.OrganisationUnit" column="parentid"
       foreign-key="fk_parentid" index="in_parentid" />
 
+    <property name="path" column="path" access="property" unique="true" index="in_organisationunit_path" />
+
     <property name="uuid" unique="true" length="36" />
 
     <property name="description" type="text" />
