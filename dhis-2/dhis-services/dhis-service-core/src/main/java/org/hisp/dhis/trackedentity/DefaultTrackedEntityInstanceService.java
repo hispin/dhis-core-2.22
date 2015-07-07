@@ -66,8 +66,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ACCESSIBLE;
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ALL;
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.*;
 import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.*;
 
 /**
@@ -163,10 +162,22 @@ public class DefaultTrackedEntityInstanceService
 
         User user = currentUserService.getCurrentUser();
 
-        if ( user != null && params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ACCESSIBLE ) )
+        if ( user != null && params.isOrganisationUnitMode( ACCESSIBLE ) )
         {
             params.setOrganisationUnits( user.getDataViewOrganisationUnitsWithFallback() );
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
+        }
+        else if ( params.isOrganisationUnitMode( CHILDREN ) )
+        {
+            Set<OrganisationUnit> organisationUnits = new HashSet<>();
+            organisationUnits.addAll( params.getOrganisationUnits() );
+
+            for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
+            {
+                organisationUnits.addAll( organisationUnit.getChildren() );
+            }
+
+            params.setOrganisationUnits( organisationUnits );
         }
 
         for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
@@ -196,6 +207,18 @@ public class DefaultTrackedEntityInstanceService
         {
             params.setOrganisationUnits( user.getDataViewOrganisationUnitsWithFallback() );
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
+        }
+        else if ( params.isOrganisationUnitMode( CHILDREN ) )
+        {
+            Set<OrganisationUnit> organisationUnits = new HashSet<>();
+            organisationUnits.addAll( params.getOrganisationUnits() );
+
+            for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
+            {
+                organisationUnits.addAll( organisationUnit.getChildren() );
+            }
+
+            params.setOrganisationUnits( organisationUnits );
         }
 
         for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
