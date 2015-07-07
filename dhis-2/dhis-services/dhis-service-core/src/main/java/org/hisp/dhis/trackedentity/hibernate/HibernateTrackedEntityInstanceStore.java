@@ -200,6 +200,8 @@ public class HibernateTrackedEntityInstanceStore
             hql += ")";
         }
 
+        System.err.println( "hql: " + hql );
+
         return hql;
     }
 
@@ -437,6 +439,8 @@ public class HibernateTrackedEntityInstanceStore
 
             sql = removeLastAnd( sql ) + ") ";
         }
+
+        System.err.println( "sql: " + sql );
 
         return sql;
     }

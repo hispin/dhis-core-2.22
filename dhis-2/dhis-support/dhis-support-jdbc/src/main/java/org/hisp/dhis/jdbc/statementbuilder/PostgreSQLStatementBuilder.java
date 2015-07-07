@@ -43,6 +43,12 @@ public class PostgreSQLStatementBuilder
     }
 
     @Override
+    public String getLongVarBinaryType()
+    {
+        return "BYTEA";
+    }
+
+    @Override
     public String getColumnQuote()
     {
         return "\"";
