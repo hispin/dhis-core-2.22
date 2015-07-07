@@ -49,7 +49,7 @@
 </script>
 
 <h3>$i18n.getString( "edit_program_rule" )</h3>
-<h5>$encoder.htmlEncode($programRule.program.displayName)</h5>
+<h5>$!encoder.htmlEncode( $programRule.program.displayName )</h5>
 					
 <form id="programRuleForm" name="programRuleForm" action="updateProgramRule.action" method="post" class="inputForm">
 
@@ -89,8 +89,8 @@
 		<tr>
 			<td>
 				
-				<div style="height:180px; border:1px solid black; overflow-y: auto;">
-					<table id='sourceFieldList' style="height:100px;width:100%" >
+				<div style="height:180px; border:1px solid #aaa; overflow-y: auto;">
+					<table id='sourceFieldList' style="width:100%" >
 						<col width="50%" />
 						<col width="50%" />
 						#set($idx = 0 )
@@ -130,7 +130,7 @@
 				<input type="button" id="addMoreVariableBtn" value="+ $i18n.getString('add_source_field')" onclick="javascript:addSourceFieldForm();"/>
 			</td>			
 			<td>
-				<fieldset style="width:95%;">
+				<fieldset style="width:95%; border:1px solid #aaa;">
 					<textarea size="10" id='condition' name='condition' style="width:98%;border:none;height:150px;">$programRule.condition</textarea>
 				</fieldset>
 				<br>								
@@ -185,11 +185,11 @@
 												 <option value='HIDESECTION' #if($action.programRuleActionType=='HIDESECTION') selected #end  errorMessage="$i18n.getString('please_enter_alert_message_when_hiding_a_section_that_contains_values')">$i18n.getString("hide_section")</option>
 										 </select>
 									 </td>
-									 <td><input type='text' class='content' style='width:97%;' value='$encoder.htmlEncode($action.content)'/></td>
+									 <td><input type='text' class='content' style='width:97%;' value='$!encoder.htmlEncode( $action.content )'/></td>
 									 <td>
 										<span class="deCell" #if($action.programRuleActionType=='HIDESECTION') style='display:none;' #end>
 											<select class='actionDEs' style='width:100%;'>
-												<option value="$programRule.dataElement.uid">$encoder.htmlEncode($action.dataElement.displayName)</option>
+												<option value="$programRule.dataElement.uid">$!encoder.htmlEncode( $action.dataElement.displayName )</option>
 											</select>
 										</span>
 										
@@ -199,7 +199,7 @@
 												#foreach( $section in $programStage.programStageSections )
 													#set( $uid = $section.uid )
 													#set( $name = $section.displayName)
-													<option value="$uid" #if($action.programStageSection.uid==$uid) selected #end >$name</option>
+													<option value="$uid" #if( $action.programStageSection.uid==$uid ) selected #end >$name</option>
 												#end
 											#end
 											</select>
