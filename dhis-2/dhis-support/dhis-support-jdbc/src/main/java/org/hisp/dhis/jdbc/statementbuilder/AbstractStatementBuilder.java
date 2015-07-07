@@ -28,10 +28,10 @@ package org.hisp.dhis.jdbc.statementbuilder;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.DateUtils.getSqlDateString;
-
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.period.Period;
+
+import static org.hisp.dhis.system.util.DateUtils.getSqlDateString;
 
 /**
  * @author Lars Helge Overland
@@ -44,7 +44,7 @@ public abstract class AbstractStatementBuilder
     {
         return encode( value, true );
     }
-    
+
     @Override
     public String encode( String value, boolean quote )
     {
@@ -53,14 +53,14 @@ public abstract class AbstractStatementBuilder
             value = value.endsWith( "\\" ) ? value.substring( 0, value.length() - 1 ) : value;
             value = value.replaceAll( QUOTE, QUOTE + QUOTE );
         }
-        
-        return quote ? ( QUOTE + value + QUOTE ) : value;
+
+        return quote ? (QUOTE + value + QUOTE) : value;
     }
-    
+
     @Override
     public String columnQuote( String column )
     {
-        return column != null ? ( getColumnQuote() + column + getColumnQuote() ) : null;
+        return column != null ? (getColumnQuote() + column + getColumnQuote()) : null;
     }
 
     @Override
@@ -76,76 +76,82 @@ public abstract class AbstractStatementBuilder
     }
 
     @Override
+    public String getLongVarBinaryType()
+    {
+        return "VARBINARY(1000000)";
+    }
+
+    @Override
     public String getPeriodIdentifierStatement( Period period )
     {
         return
-            "SELECT periodid FROM period WHERE periodtypeid=" + period.getPeriodType().getId() + " " + 
-            "AND startdate='" + getSqlDateString( period.getStartDate() ) + "' " +
-            "AND enddate='" + getSqlDateString( period.getEndDate() ) + "'";
+            "SELECT periodid FROM period WHERE periodtypeid=" + period.getPeriodType().getId() + " " +
+                "AND startdate='" + getSqlDateString( period.getStartDate() ) + "' " +
+                "AND enddate='" + getSqlDateString( period.getEndDate() ) + "'";
     }
 
     @Override
     public String getCreateAggregatedDataValueTable( boolean temp )
     {
         return
-            "CREATE TABLE aggregateddatavalue" + ( temp ? "_temp" : "" ) + " ( " +
-            "dataelementid INTEGER, " +
-            "categoryoptioncomboid INTEGER, " +
-            "periodid INTEGER, " +
-            "organisationunitid INTEGER, " +
-            "periodtypeid INTEGER, " +
-            "level INTEGER, " +
-            "value " + getDoubleColumnType() + " );";
+            "CREATE TABLE aggregateddatavalue" + (temp ? "_temp" : "") + " ( " +
+                "dataelementid INTEGER, " +
+                "categoryoptioncomboid INTEGER, " +
+                "periodid INTEGER, " +
+                "organisationunitid INTEGER, " +
+                "periodtypeid INTEGER, " +
+                "level INTEGER, " +
+                "value " + getDoubleColumnType() + " );";
     }
 
     @Override
     public String getCreateAggregatedOrgUnitDataValueTable( boolean temp )
     {
         return
-            "CREATE TABLE aggregatedorgunitdatavalue" + ( temp ? "_temp" : "" ) + " ( " +
-            "dataelementid INTEGER, " +
-            "categoryoptioncomboid INTEGER, " +
-            "periodid INTEGER, " +
-            "organisationunitid INTEGER, " +
-            "organisationunitgroupid INTEGER, " +
-            "periodtypeid INTEGER, " +
-            "level INTEGER, " +
-            "value " + getDoubleColumnType() + " );";
+            "CREATE TABLE aggregatedorgunitdatavalue" + (temp ? "_temp" : "") + " ( " +
+                "dataelementid INTEGER, " +
+                "categoryoptioncomboid INTEGER, " +
+                "periodid INTEGER, " +
+                "organisationunitid INTEGER, " +
+                "organisationunitgroupid INTEGER, " +
+                "periodtypeid INTEGER, " +
+                "level INTEGER, " +
+                "value " + getDoubleColumnType() + " );";
     }
 
     @Override
     public String getCreateAggregatedIndicatorTable( boolean temp )
     {
         return
-            "CREATE TABLE aggregatedindicatorvalue" + ( temp ? "_temp" : "" ) + " ( " +
-            "indicatorid INTEGER, " +
-            "periodid INTEGER, " +
-            "organisationunitid INTEGER, " +
-            "periodtypeid INTEGER, " +
-            "level INTEGER, " +
-            "annualized VARCHAR( 10 ), " +
-            "factor " + getDoubleColumnType() + ", " +
-            "value " + getDoubleColumnType() + ", " +
-            "numeratorvalue " + getDoubleColumnType() + ", " +
-            "denominatorvalue " + getDoubleColumnType() + " );";
+            "CREATE TABLE aggregatedindicatorvalue" + (temp ? "_temp" : "") + " ( " +
+                "indicatorid INTEGER, " +
+                "periodid INTEGER, " +
+                "organisationunitid INTEGER, " +
+                "periodtypeid INTEGER, " +
+                "level INTEGER, " +
+                "annualized VARCHAR( 10 ), " +
+                "factor " + getDoubleColumnType() + ", " +
+                "value " + getDoubleColumnType() + ", " +
+                "numeratorvalue " + getDoubleColumnType() + ", " +
+                "denominatorvalue " + getDoubleColumnType() + " );";
     }
 
     @Override
     public String getCreateAggregatedOrgUnitIndicatorTable( boolean temp )
     {
         return
-            "CREATE TABLE aggregatedorgunitindicatorvalue" + ( temp ? "_temp" : "" ) + " ( " +
-            "indicatorid INTEGER, " +
-            "periodid INTEGER, " +
-            "organisationunitid INTEGER, " +
-            "organisationunitgroupid INTEGER, " +
-            "periodtypeid INTEGER, " +
-            "level INTEGER, " +
-            "annualized VARCHAR( 10 ), " +
-            "factor " + getDoubleColumnType() + ", " +
-            "value " + getDoubleColumnType() + ", " +
-            "numeratorvalue " + getDoubleColumnType() + ", " +
-            "denominatorvalue " + getDoubleColumnType() + " );";
+            "CREATE TABLE aggregatedorgunitindicatorvalue" + (temp ? "_temp" : "") + " ( " +
+                "indicatorid INTEGER, " +
+                "periodid INTEGER, " +
+                "organisationunitid INTEGER, " +
+                "organisationunitgroupid INTEGER, " +
+                "periodtypeid INTEGER, " +
+                "level INTEGER, " +
+                "annualized VARCHAR( 10 ), " +
+                "factor " + getDoubleColumnType() + ", " +
+                "value " + getDoubleColumnType() + ", " +
+                "numeratorvalue " + getDoubleColumnType() + ", " +
+                "denominatorvalue " + getDoubleColumnType() + " );";
     }
 
     @Override
@@ -153,15 +159,15 @@ public abstract class AbstractStatementBuilder
     {
         return
             "CREATE TABLE aggregateddatasetcompleteness ( " +
-            "datasetid INTEGER, " +
-            "periodid INTEGER, " +
-            "periodname VARCHAR( 30 ), " +
-            "organisationunitid INTEGER, " +
-            "sources INTEGER, " +
-            "registrations INTEGER, " +
-            "registrationsOnTime INTEGER, " +
-            "value " + getDoubleColumnType() + ", " +
-            "valueOnTime " + getDoubleColumnType() + " );";
+                "datasetid INTEGER, " +
+                "periodid INTEGER, " +
+                "periodname VARCHAR( 30 ), " +
+                "organisationunitid INTEGER, " +
+                "sources INTEGER, " +
+                "registrations INTEGER, " +
+                "registrationsOnTime INTEGER, " +
+                "value " + getDoubleColumnType() + ", " +
+                "valueOnTime " + getDoubleColumnType() + " );";
     }
 
     @Override
@@ -169,16 +175,16 @@ public abstract class AbstractStatementBuilder
     {
         return
             "CREATE TABLE aggregatedorgunitdatasetcompleteness ( " +
-            "datasetid INTEGER, " +
-            "periodid INTEGER, " +
-            "periodname VARCHAR( 30 ), " +
-            "organisationunitid INTEGER, " +
-            "organisationunitgroupid INTEGER, " +
-            "sources INTEGER, " +
-            "registrations INTEGER, " +
-            "registrationsOnTime INTEGER, " +
-            "value " + getDoubleColumnType() + ", " +
-            "valueOnTime " + getDoubleColumnType() + " );";
+                "datasetid INTEGER, " +
+                "periodid INTEGER, " +
+                "periodname VARCHAR( 30 ), " +
+                "organisationunitid INTEGER, " +
+                "organisationunitgroupid INTEGER, " +
+                "sources INTEGER, " +
+                "registrations INTEGER, " +
+                "registrationsOnTime INTEGER, " +
+                "value " + getDoubleColumnType() + ", " +
+                "valueOnTime " + getDoubleColumnType() + " );";
     }
 
     @Override
@@ -186,14 +192,14 @@ public abstract class AbstractStatementBuilder
     {
         return
             "select count(cu.column_name) from information_schema.key_column_usage cu " +
-            "inner join information_schema.table_constraints tc  " +
-            "on cu.constraint_catalog=tc.constraint_catalog " +
+                "inner join information_schema.table_constraints tc  " +
+                "on cu.constraint_catalog=tc.constraint_catalog " +
                 "and cu.constraint_schema=tc.constraint_schema " +
                 "and cu.constraint_name=tc.constraint_name " +
                 "and cu.table_schema=tc.table_schema " +
                 "and cu.table_name=tc.table_name " +
-            "where tc.constraint_type='PRIMARY KEY' " +
-            "and cu.table_name='" + table + "';";
+                "where tc.constraint_type='PRIMARY KEY' " +
+                "and cu.table_name='" + table + "';";
     }
 
     @Override
@@ -207,7 +213,7 @@ public abstract class AbstractStatementBuilder
     {
         return "alter table " + table + " add column " + column + " integer auto_increment primary key not null;";
     }
-    
+
     @Override
     public String getDropNotNullConstraint( String table, String column, String type )
     {

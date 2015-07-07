@@ -115,7 +115,9 @@ public interface StatementBuilder
      * @return the name of a double column type.
      */
     String getDoubleColumnType();
-    
+
+    String getLongVarBinaryType();
+
     /**
      * Returns the value used to match a column to a regular expression. Matching
      * is case insensitive.

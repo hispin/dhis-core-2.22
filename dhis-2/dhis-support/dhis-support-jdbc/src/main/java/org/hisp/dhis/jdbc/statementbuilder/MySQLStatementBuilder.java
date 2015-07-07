@@ -43,6 +43,12 @@ public class MySQLStatementBuilder
     }
 
     @Override
+    public String getLongVarBinaryType()
+    {
+        return "BLOB";
+    }
+
+    @Override
     public String getColumnQuote()
     {
         return "`";
