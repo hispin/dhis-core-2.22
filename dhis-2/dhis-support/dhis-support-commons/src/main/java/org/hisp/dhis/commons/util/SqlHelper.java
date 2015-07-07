@@ -34,16 +34,27 @@ package org.hisp.dhis.commons.util;
 public class SqlHelper
 {
     private boolean whereAndInvoked = false;
-    
+
+    private boolean includeSpaces = false;
+
+    public SqlHelper()
+    {
+    }
+
+    public SqlHelper( boolean includeSpaces )
+    {
+        this.includeSpaces = includeSpaces;
+    }
+
     /**
      * Returns "where" the first time it is invoked, then "and" for subsequent invocations.
      */
     public String whereAnd()
     {
         String str = whereAndInvoked ? "and" : "where";
-        
+
         whereAndInvoked = true;
-        
-        return str;
+
+        return includeSpaces ? " " + str + " " : str;
     }
 }

@@ -31,6 +31,8 @@ package org.hisp.dhis.program;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
+import org.hisp.dhis.common.IllegalQueryException;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.i18n.I18n;
@@ -39,22 +41,27 @@ import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.message.MessageConversation;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.sms.SmsSender;
 import org.hisp.dhis.sms.SmsServiceException;
 import org.hisp.dhis.sms.outbound.OutboundSms;
 import org.hisp.dhis.system.grid.ListGrid;
+import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
+import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityComment;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -147,6 +154,12 @@ public class DefaultProgramInstanceService
         this.trackedEntityInstanceService = trackedEntityInstanceService;
     }
 
+    @Autowired
+    private OrganisationUnitService organisationUnitService;
+
+    @Autowired
+    private TrackedEntityService trackedEntityService;
+
     private I18nManager i18nManager;
 
     public void setI18nManager( I18nManager i18nManager )
@@ -186,6 +199,93 @@ public class DefaultProgramInstanceService
     public void updateProgramInstance( ProgramInstance programInstance )
     {
         programInstanceStore.update( programInstance );
+    }
+
+    @Override
+    public ProgramInstanceQueryParams getFromUrl( Set<String> ou, OrganisationUnitSelectionMode ouMode, Date lastUpdated, String program, ProgramStatus programStatus,
+        Date programStartDate, Date programEndDate, String trackedEntity, String trackedEntityInstance, Boolean followUp, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging )
+    {
+        ProgramInstanceQueryParams params = new ProgramInstanceQueryParams();
+
+        if ( ou != null )
+        {
+            for ( String orgUnit : ou )
+            {
+                OrganisationUnit organisationUnit = organisationUnitService.getOrganisationUnit( orgUnit );
+
+                if ( organisationUnit == null )
+                {
+                    throw new IllegalQueryException( "Organisation unit does not exist: " + orgUnit );
+                }
+
+                params.getOrganisationUnits().add( organisationUnit );
+            }
+        }
+
+        Program pr = program != null ? programService.getProgram( program ) : null;
+
+        if ( program != null && pr == null )
+        {
+            throw new IllegalQueryException( "Program does not exist: " + program );
+        }
+
+        TrackedEntity te = trackedEntity != null ? trackedEntityService.getTrackedEntity( trackedEntity ) : null;
+
+        if ( trackedEntity != null && te == null )
+        {
+            throw new IllegalQueryException( "Tracked entity does not exist: " + program );
+        }
+
+        TrackedEntityInstance tei = trackedEntityInstance != null ? trackedEntityInstanceService.getTrackedEntityInstance( trackedEntityInstance ) : null;
+
+        if ( trackedEntityInstance != null && tei == null )
+        {
+            throw new IllegalQueryException( "Tracked entity instance does not exist: " + program );
+        }
+
+        params.setProgram( pr );
+        params.setProgramStatus( programStatus );
+        params.setFollowUp( followUp );
+        params.setLastUpdated( lastUpdated );
+        params.setProgramStartDate( programStartDate );
+        params.setProgramEndDate( programEndDate );
+        params.setTrackedEntity( te );
+        params.setTrackedEntityInstance( tei );
+        params.setOrganisationUnitMode( ouMode );
+        params.setPage( page );
+        params.setPageSize( pageSize );
+        params.setTotalPages( totalPages );
+        params.setSkipPaging( skipPaging );
+
+        return params;
+    }
+
+    // TODO consider security
+    @Override
+    public List<ProgramInstance> getProgramInstances( ProgramInstanceQueryParams params )
+    {
+        User user = currentUserService.getCurrentUser();
+
+        if ( user != null && params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ACCESSIBLE ) )
+        {
+            params.setOrganisationUnits( user.getDataViewOrganisationUnitsWithFallback() );
+            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
+        }
+
+        for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
+        {
+            if ( !organisationUnit.hasLevel() )
+            {
+                organisationUnit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( organisationUnit.getId() ) );
+            }
+        }
+
+        if ( !params.isPaging() && !params.isSkipPaging() )
+        {
+            params.setDefaultPaging();
+        }
+
+        return programInstanceStore.getProgramInstances( params );
     }
 
     @Override
@@ -794,7 +894,7 @@ public class DefaultProgramInstanceService
                 && rm.getWhenToSend() != null
                 && rm.getWhenToSend() == status
                 && (rm.getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_DHIS_MESSAGE || rm
-                    .getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH) )
+                .getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH) )
             {
                 int id = messageService.sendMessage( programInstance.getProgram().getDisplayName(),
                     reminderService.getMessageFromTemplate( rm, programInstance, format ), null,
