@@ -72,11 +72,11 @@
 				<table width="100%">
 					<tr>
 						<td><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-						<td><input type="text" id="name" name="name" value="$programRule.name" style="width:98%" ></td>
+						<td><input type="text" id="name" name="name" value="$!programRule.name" style="width:98%" ></td>
 					</tr>					
 					<tr>
 						<td><label for="description">$i18n.getString( "description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-						<td><input type="text" id="description" name="description" value="$programRule.description" style="width:98%" /></td>
+						<td><input type="text" id="description" name="description" value="$!programRule.description" style="width:98%" /></td>
 					</tr>
 				</table>
 			</td>	
@@ -199,7 +199,7 @@
 												#foreach( $section in $programStage.programStageSections )
 													#set( $uid = $section.uid )
 													#set( $name = $section.displayName)
-													<option value="$uid" #if( $action.programStageSection.uid==$uid ) selected #end >$name</option>
+													<option value="$uid" #if( $action.programStageSection.uid == $uid ) selected #end >$name</option>
 												#end
 											#end
 											</select>
