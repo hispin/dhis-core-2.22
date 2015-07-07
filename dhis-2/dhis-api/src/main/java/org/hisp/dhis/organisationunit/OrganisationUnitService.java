@@ -251,7 +251,14 @@ public interface OrganisationUnitService
      */
     List<OrganisationUnit> getOrganisationUnits( Collection<OrganisationUnitGroup> groups, Collection<OrganisationUnit> parents );
 
-    Set<String> getOrganisationUnits( Set<String> parents, OrganisationUnitSelectionMode ouMode );
+    /**
+     * Returns organisation unit UIDs for the given parameters.
+     * 
+     * @param parents the set of boundary parent organisation units.
+     * @param ouMode the organisation unit selection mode.
+     * @return a set of strings.
+     */
+    Set<String> getOrganisationUnitUids( Set<String> parents, OrganisationUnitSelectionMode ouMode );
 
     /**
      * Returns an OrganisationUnit and all its children.

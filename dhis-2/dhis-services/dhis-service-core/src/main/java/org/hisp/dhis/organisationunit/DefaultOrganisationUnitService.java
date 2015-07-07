@@ -322,7 +322,7 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public Set<String> getOrganisationUnits( Set<String> parents, OrganisationUnitSelectionMode ouMode )
+    public Set<String> getOrganisationUnitUids( Set<String> parents, OrganisationUnitSelectionMode ouMode )
     {
         List<OrganisationUnit> ouParents = new ArrayList<>( organisationUnitStore.getByUid( parents ) );
         Set<String> ou = new HashSet<>();
