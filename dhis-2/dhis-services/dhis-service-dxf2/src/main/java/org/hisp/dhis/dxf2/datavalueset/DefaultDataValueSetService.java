@@ -181,10 +181,11 @@ public class DefaultDataValueSetService
         if ( organisationUnits != null )
         {
             params.getOrganisationUnits().addAll( identifiableObjectManager.getByUid( OrganisationUnit.class, organisationUnits ) );
+            params.setRequestOrganisationUnits();
             
             if ( includeChildren )
             {
-                params.setOrganisationUnits( new HashSet<OrganisationUnit>( 
+                params.getOrganisationUnits().addAll( new HashSet<OrganisationUnit>( 
                     organisationUnitService.getOrganisationUnitsWithChildren( getUids( params.getOrganisationUnits() ) ) ) );
             }
         }
@@ -222,12 +223,12 @@ public class DefaultDataValueSetService
             violation = "Start date must be before end date";
         }
         
-        if ( params.getOrganisationUnits().isEmpty() )
+        if ( params.getRequestOrganisationUnits().isEmpty() )
         {
             violation = "At least one valid organisation unit must be specified";
         }
         
-        for ( OrganisationUnit unit : params.getOrganisationUnits() )
+        for ( OrganisationUnit unit : params.getRequestOrganisationUnits() )
         {
             if ( !organisationUnitService.isInUserHierarchy( unit ) )
             {
