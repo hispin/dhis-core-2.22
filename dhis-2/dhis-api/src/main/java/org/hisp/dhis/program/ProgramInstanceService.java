@@ -29,6 +29,7 @@ package org.hisp.dhis.program;
  */
 
 import org.hisp.dhis.common.Grid;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
@@ -36,6 +37,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Abyot Asalefew
@@ -82,6 +84,12 @@ public interface ProgramInstanceService
      * @return the ProgramInstance with the given UID, or null if no match.
      */
     ProgramInstance getProgramInstance( String uid );
+
+    ProgramInstanceQueryParams getFromUrl( Set<String> ou, OrganisationUnitSelectionMode ouMode, Date lastUpdated, String program,
+        ProgramStatus programStatus, Date programStartDate, Date programEndDate, String trackedEntity, String trackedEntityInstance,
+        Boolean followUp, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging );
+
+    List<ProgramInstance> getProgramInstances( ProgramInstanceQueryParams params );
 
     /**
      * Retrieve program instances on a program
@@ -287,7 +295,7 @@ public interface ProgramInstanceService
     /**
      * Enroll a TrackedEntityInstance into a program. Must be run inside a transaction.
      *
-     * @param uid UID to use for new instance
+     * @param uid            UID to use for new instance
      * @param entityInstance TrackedEntityInstance
      * @param program        Program
      * @param enrollmentDate The date of enrollment

@@ -200,8 +200,6 @@ public class HibernateTrackedEntityInstanceStore
             hql += ")";
         }
 
-        System.err.println( "hql: " + hql );
-
         return hql;
     }
 

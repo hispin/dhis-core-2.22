@@ -59,33 +59,11 @@ public interface EnrollmentService
 
     Enrollments getEnrollments( TrackedEntityInstance trackedEntityInstance );
 
-    Enrollments getEnrollments( TrackedEntityInstance trackedEntityInstance, EnrollmentStatus status );
-
     Enrollments getEnrollments( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance );
 
     Enrollments getEnrollments( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance, EnrollmentStatus status );
 
-    Enrollments getEnrollments( Program program );
-
-    Enrollments getEnrollments( Program program, EnrollmentStatus status );
-
-    Enrollments getEnrollments( Program program, EnrollmentStatus status, OrganisationUnit organisationUnit, Date startDate, Date endDate );
-
-    Enrollments getEnrollments( Program program, EnrollmentStatus status, List<OrganisationUnit> organisationUnits, Date startDate, Date endDate );
-
-    Enrollments getEnrollments( Program program, TrackedEntityInstance trackedEntityInstance );
-
     Enrollments getEnrollments( Program program, TrackedEntityInstance trackedEntityInstance, EnrollmentStatus status );
-
-    Enrollments getEnrollments( OrganisationUnit organisationUnit );
-
-    Enrollments getEnrollments( OrganisationUnit organisationUnit, EnrollmentStatus status );
-
-    Enrollments getEnrollments( Program program, OrganisationUnit organisationUnit );
-
-    Enrollments getEnrollments( Program program, OrganisationUnit organisationUnit, Date startDate, Date endDate );
-
-    Enrollments getEnrollments( Program program, List<OrganisationUnit> organisationUnits, Date startDate, Date endDate );
 
     Enrollments getEnrollments( Collection<ProgramInstance> programInstances );
 
