@@ -136,7 +136,6 @@ public class TrackedEntityInstanceController
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.NO_CACHE );
         List<TrackedEntityInstance> trackedEntityInstances = trackedEntityInstanceService.getTrackedEntityInstances( instanceService.getTrackedEntityInstances( params ) );
 
         RootNode rootNode = NodeUtils.createMetadata();
