@@ -75,18 +75,6 @@ public class Enrollment
 
     @JsonProperty( required = true )
     @JacksonXmlProperty( isAttribute = true )
-    public String getTrackedEntityInstance()
-    {
-        return trackedEntityInstance;
-    }
-
-    public void setTrackedEntityInstance( String trackedEntityInstance )
-    {
-        this.trackedEntityInstance = trackedEntityInstance;
-    }
-
-    @JsonProperty( required = true )
-    @JacksonXmlProperty( isAttribute = true )
     public String getEnrollment()
     {
         return enrollment;
@@ -95,6 +83,18 @@ public class Enrollment
     public void setEnrollment( String enrollment )
     {
         this.enrollment = enrollment;
+    }
+
+    @JsonProperty( required = true )
+    @JacksonXmlProperty( isAttribute = true )
+    public String getTrackedEntityInstance()
+    {
+        return trackedEntityInstance;
+    }
+
+    public void setTrackedEntityInstance( String trackedEntityInstance )
+    {
+        this.trackedEntityInstance = trackedEntityInstance;
     }
 
     @JsonProperty( required = true )
@@ -158,7 +158,6 @@ public class Enrollment
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public List<Attribute> getAttributes()
     {
@@ -171,7 +170,6 @@ public class Enrollment
     }
     
     @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public List<Note> getNotes()
     {

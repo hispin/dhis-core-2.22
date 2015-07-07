@@ -28,6 +28,7 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
@@ -37,14 +38,18 @@ import org.hisp.dhis.dxf2.events.enrollment.EnrollmentStatus;
 import org.hisp.dhis.dxf2.events.enrollment.Enrollments;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
+import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.importexport.ImportStrategy;
+import org.hisp.dhis.node.NodeUtils;
+import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
+import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +62,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -88,23 +94,40 @@ public class EnrollmentController
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
+    @Autowired
+    protected FieldFilterService fieldFilterService;
+
+    @Autowired
+    protected ContextService contextService;
+
     // -------------------------------------------------------------------------
     // READ
     // -------------------------------------------------------------------------
 
     @RequestMapping( value = "", method = RequestMethod.GET )
-    public String getEnrollments(
+    public @ResponseBody RootNode getEnrollments(
         @RequestParam( value = "orgUnit", required = false ) String orgUnitUid,
         @RequestParam( value = "program", required = false ) String programUid,
         @RequestParam( value = "trackedEntityInstance", required = false ) String trackedEntityInstanceUid,
         @RequestParam( required = false ) Date startDate,
         @RequestParam( required = false ) Date endDate,
         @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
-        @RequestParam( value = "status", required = false ) EnrollmentStatus status,
-        @RequestParam Map<String, String> parameters, Model model ) throws NotFoundException
+        @RequestParam( value = "status", required = false ) EnrollmentStatus status ) throws NotFoundException
     {
-        WebOptions options = new WebOptions( parameters );
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
         Enrollments enrollments;
+
+        if ( fields.isEmpty() )
+        {
+            fields.add( "enrollment" );
+            fields.add( "trackedEntityInstance" );
+            fields.add( "program" );
+            fields.add( "status" );
+            fields.add( "orgUnit" );
+            fields.add( "dateOfEnrollment" );
+            fields.add( "dateOfIncident" );
+            fields.add( "followup" );
+        }
 
         if ( startDate != null && endDate != null && programUid != null && orgUnitUid != null && ouMode != null )
         {
@@ -153,10 +176,10 @@ public class EnrollmentController
             enrollments = status != null ? enrollmentService.getEnrollments( trackedEntityInstance, status ) : enrollmentService.getEnrollments( trackedEntityInstance );
         }
 
-        model.addAttribute( "model", enrollments );
-        model.addAttribute( "viewClass", options.getViewClass( "basic" ) );
+        RootNode rootNode = NodeUtils.createMetadata();
+        rootNode.addChild( fieldFilterService.filter( Enrollment.class, enrollments.getEnrollments(), fields ) );
 
-        return "enrollments";
+        return rootNode;
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.GET )
