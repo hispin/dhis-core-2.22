@@ -73,6 +73,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.CHILDREN;
+
 /**
  * @author Abyot Asalefew
  */
@@ -270,6 +272,18 @@ public class DefaultProgramInstanceService
         {
             params.setOrganisationUnits( user.getDataViewOrganisationUnitsWithFallback() );
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
+        }
+        else if ( params.isOrganisationUnitMode( CHILDREN ) )
+        {
+            Set<OrganisationUnit> organisationUnits = new HashSet<>();
+            organisationUnits.addAll( params.getOrganisationUnits() );
+
+            for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
+            {
+                organisationUnits.addAll( organisationUnit.getChildren() );
+            }
+
+            params.setOrganisationUnits( organisationUnits );
         }
 
         for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
