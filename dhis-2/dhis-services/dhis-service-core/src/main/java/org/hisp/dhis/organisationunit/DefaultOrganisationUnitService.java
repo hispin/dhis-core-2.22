@@ -28,8 +28,23 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.configuration.ConfigurationService;
+import org.hisp.dhis.hierarchy.HierarchyViolationException;
+import org.hisp.dhis.i18n.I18nService;
+import org.hisp.dhis.organisationunit.comparator.OrganisationUnitLevelComparator;
+import org.hisp.dhis.system.filter.OrganisationUnitPolygonCoveringCoordinateFilter;
+import org.hisp.dhis.system.util.GeoUtils;
+import org.hisp.dhis.system.util.ValidationUtils;
+import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.user.User;
+import org.hisp.dhis.version.VersionService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -43,23 +58,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.configuration.ConfigurationService;
-import org.hisp.dhis.hierarchy.HierarchyViolationException;
-import org.hisp.dhis.i18n.I18nService;
-import org.hisp.dhis.organisationunit.comparator.OrganisationUnitLevelComparator;
-import org.hisp.dhis.system.filter.OrganisationUnitPolygonCoveringCoordinateFilter;
-import org.hisp.dhis.system.util.GeoUtils;
-import org.hisp.dhis.system.util.ValidationUtils;
-import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.user.User;
-import org.hisp.dhis.commons.filter.FilterUtils;
-import org.hisp.dhis.version.VersionService;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -131,16 +131,16 @@ public class DefaultOrganisationUnitService
 
             currentUserService.getCurrentUser().getOrganisationUnits().add( organisationUnit );
         }
-        
+
         return id;
     }
 
     @Override
     public void updateOrganisationUnit( OrganisationUnit organisationUnit )
     {
-        organisationUnitStore.update( organisationUnit );        
+        organisationUnitStore.update( organisationUnit );
     }
-    
+
     @Override
     public void updateOrganisationUnitVersion()
     {
@@ -197,7 +197,7 @@ public class DefaultOrganisationUnitService
     @Override
     public List<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated )
     {
-        return i18n( i18nService,  organisationUnitStore.getAllOrganisationUnitsByLastUpdated( lastUpdated ) );
+        return i18n( i18nService, organisationUnitStore.getAllOrganisationUnitsByLastUpdated( lastUpdated ) );
     }
 
     @Override
@@ -286,7 +286,7 @@ public class DefaultOrganisationUnitService
     @Override
     public List<OrganisationUnit> getRootOrganisationUnits()
     {
-        return i18n( i18nService, organisationUnitStore.getRootOrganisationUnits());
+        return i18n( i18nService, organisationUnitStore.getRootOrganisationUnits() );
     }
 
     @Override
@@ -322,6 +322,40 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
+    public Set<String> getOrganisationUnits( Set<String> parents, OrganisationUnitSelectionMode ouMode )
+    {
+        List<OrganisationUnit> ouParents = new ArrayList<>( organisationUnitStore.getByUid( parents ) );
+        Set<String> ou = new HashSet<>();
+        User user = currentUserService.getCurrentUser();
+
+        if ( user != null && OrganisationUnitSelectionMode.ACCESSIBLE == ouMode )
+        {
+            ouParents = new ArrayList<>( user.getDataViewOrganisationUnitsWithFallback() );
+            ouMode = OrganisationUnitSelectionMode.DESCENDANTS;
+        }
+
+        for ( OrganisationUnit organisationUnit : ouParents )
+        {
+            if ( OrganisationUnitSelectionMode.DESCENDANTS == ouMode )
+            {
+                ou.add( organisationUnit.getUid() );
+                ou.addAll( getUids( getOrganisationUnitWithChildren( organisationUnit.getUid() ) ) );
+            }
+            else if ( OrganisationUnitSelectionMode.CHILDREN == ouMode )
+            {
+                ou.add( organisationUnit.getUid() );
+                ou.addAll( getUids( organisationUnit.getChildren() ) );
+            }
+            else // SELECTED
+            {
+                ou.add( organisationUnit.getUid() );
+            }
+        }
+
+        return ou;
+    }
+
+    @Override
     public List<OrganisationUnit> getOrganisationUnitsWithChildren( Collection<String> parentUids )
     {
         return getOrganisationUnitsWithChildren( parentUids, null );
@@ -350,9 +384,9 @@ public class DefaultOrganisationUnitService
     public List<OrganisationUnit> getOrganisationUnitWithChildren( String uid, Integer maxLevels )
     {
         OrganisationUnit unit = getOrganisationUnit( uid );
-        
+
         int id = unit != null ? unit.getId() : -1;
-        
+
         return getOrganisationUnitWithChildren( id, maxLevels );
     }
 
@@ -361,7 +395,7 @@ public class DefaultOrganisationUnitService
     {
         return getOrganisationUnitWithChildren( id, null );
     }
-    
+
     @Override
     public List<OrganisationUnit> getOrganisationUnitWithChildren( int id, Integer maxLevels )
     {
@@ -371,7 +405,7 @@ public class DefaultOrganisationUnitService
         {
             return new ArrayList<>();
         }
-        
+
         if ( maxLevels != null && maxLevels <= 0 )
         {
             return new ArrayList<>();
@@ -384,8 +418,8 @@ public class DefaultOrganisationUnitService
         organisationUnit.setLevel( rootLevel );
         result.add( organisationUnit );
 
-        final Integer maxLevel = maxLevels != null ? ( rootLevel + maxLevels - 1 ) : null;
-        
+        final Integer maxLevel = maxLevels != null ? (rootLevel + maxLevels - 1) : null;
+
         addOrganisationUnitChildren( organisationUnit, result, rootLevel, maxLevel );
 
         return result;
@@ -401,7 +435,7 @@ public class DefaultOrganisationUnitService
         {
             level++;
         }
-        
+
         if ( maxLevel != null && level > maxLevel )
         {
             return;
@@ -611,7 +645,7 @@ public class DefaultOrganisationUnitService
 
         if ( parent == null )
         {
-            return new ArrayList<OrganisationUnit>(result);
+            return new ArrayList<OrganisationUnit>( result );
         }
 
         final Set<OrganisationUnit> subTree = new HashSet<>( getOrganisationUnitWithChildren( parent.getId() ) );
@@ -652,7 +686,7 @@ public class DefaultOrganisationUnitService
 
     /**
      * Retains only the data sets from the map which the current user has access to.
-     * 
+     *
      * @param associationMap the associations between organisation unit and data sets.
      */
     private void filterUserDataSets( Map<String, Set<String>> associationMap )
@@ -672,10 +706,10 @@ public class DefaultOrganisationUnitService
 
     /**
      * Retains only the organisation units in the sub-tree of the current user.
-     * 
+     *
      * @param associationMap the associations between organisation unit and data sets.
-     * @param maxLevels the maximum number of levels to include relative to 
-     *        current user, inclusive.
+     * @param maxLevels      the maximum number of levels to include relative to
+     *                       current user, inclusive.
      */
     private void filterChildOrganisationUnits( Map<String, Set<String>> associationMap, Integer maxLevels )
     {
@@ -686,7 +720,7 @@ public class DefaultOrganisationUnitService
             Collection<String> parentIds = getUids( currentUser.getOrganisationUnits() );
 
             Collection<OrganisationUnit> organisationUnitsWithChildren = getOrganisationUnitsWithChildren( parentIds, maxLevels );
-            
+
             Collection<String> children = getUids( organisationUnitsWithChildren );
 
             associationMap.keySet().retainAll( children );
@@ -711,7 +745,7 @@ public class DefaultOrganisationUnitService
     @Override
     public List<OrganisationUnit> getOrganisationUnitsBetween( int first, int max )
     {
-        return i18n( i18nService,  organisationUnitStore.getAllOrderedName( first, max ) );
+        return i18n( i18nService, organisationUnitStore.getAllOrderedName( first, max ) );
     }
 
     @Override
@@ -736,21 +770,21 @@ public class DefaultOrganisationUnitService
     public List<OrganisationUnit> getOrganisationUnitsBetweenByStatusLastUpdated( boolean status,
         Date lastUpdated, int first, int max )
     {
-        return i18n( i18nService, organisationUnitStore.getBetweenByStatusLastUpdated( status, lastUpdated, first, max ));
+        return i18n( i18nService, organisationUnitStore.getBetweenByStatusLastUpdated( status, lastUpdated, first, max ) );
     }
 
     @Override
     public Map<String, OrganisationUnit> getUuidOrganisationUnitMap()
     {
         Map<String, OrganisationUnit> map = new HashMap<>();
-        
+
         Collection<OrganisationUnit> organisationUnits = getAllOrganisationUnits();
-        
+
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
             map.put( organisationUnit.getUuid(), organisationUnit );
         }
-        
+
         return map;
     }
 
@@ -758,7 +792,7 @@ public class DefaultOrganisationUnitService
     public boolean isInUserHierarchy( OrganisationUnit organisationUnit )
     {
         User user = currentUserService.getCurrentUser();
-        
+
         return user != null ? user.isInUserHierarchy( organisationUnit ) : false;
     }
 
@@ -766,10 +800,10 @@ public class DefaultOrganisationUnitService
     public boolean isInUserHierarchy( String uid, Set<OrganisationUnit> organisationUnits )
     {
         OrganisationUnit organisationUnit = organisationUnitStore.getByUid( uid );
-        
+
         return User.isInUserHierarchy( organisationUnit, organisationUnits );
     }
-    
+
     // -------------------------------------------------------------------------
     // OrganisationUnitHierarchy
     // -------------------------------------------------------------------------
@@ -926,7 +960,7 @@ public class DefaultOrganisationUnitService
 
         return levelMap;
     }
-    
+
     @Override
     public int getNumberOfOrganisationUnits()
     {
@@ -947,15 +981,15 @@ public class DefaultOrganisationUnitService
         // ---------------------------------------------------------------------
 
         User user = currentUserService.getCurrentUser();
-        
+
         if ( user != null && user.hasOrganisationUnit() )
         {
             OrganisationUnit organisationUnit = user.getOrganisationUnit();
-            
+
             int level = getLevelOfOrganisationUnit( organisationUnit.getId() );
-            
+
             OrganisationUnitLevel orgUnitLevel = getOrganisationUnitLevelByLevel( level );
-            
+
             if ( orgUnitLevel != null && orgUnitLevel.getOfflineLevels() != null )
             {
                 return orgUnitLevel.getOfflineLevels();
@@ -967,7 +1001,7 @@ public class DefaultOrganisationUnitService
         // ---------------------------------------------------------------------
 
         OrganisationUnitLevel level = configurationService.getConfiguration().getOfflineOrganisationUnitLevel();
-        
+
         if ( level != null )
         {
             return level.getLevel();
@@ -980,7 +1014,7 @@ public class DefaultOrganisationUnitService
         int max = getOrganisationUnitLevels().size();
 
         OrganisationUnitLevel maxLevel = getOrganisationUnitLevelByLevel( max );
-        
+
         if ( maxLevel != null )
         {
             return maxLevel.getLevel();
@@ -1004,7 +1038,7 @@ public class DefaultOrganisationUnitService
             longitude, latitude, distance ) );
 
         // Go through the list and remove the ones located outside radius
-        
+
         if ( objects != null && objects.size() > 0 )
         {
             Iterator<OrganisationUnit> iter = objects.iterator();
@@ -1048,7 +1082,7 @@ public class DefaultOrganisationUnitService
             else
             {
                 // Get top search point through top level org unit which contains coordinate
-                
+
                 Collection<OrganisationUnit> orgUnitsTopLevel = getTopLevelOrgUnitWithPoint( longitude, latitude, 1,
                     getNumberOfOrganisationalLevels() - 1 );
 
@@ -1059,7 +1093,7 @@ public class DefaultOrganisationUnitService
             }
 
             // Search children org units to get the lowest level org unit that contains coordinate
-            
+
             if ( topOrgUnit != null )
             {
                 Collection<OrganisationUnit> orgUnitChildren = new ArrayList<>();
@@ -1074,9 +1108,9 @@ public class DefaultOrganisationUnitService
                 }
 
                 FilterUtils.filter( orgUnitChildren, new OrganisationUnitPolygonCoveringCoordinateFilter( longitude, latitude ) );
-                
+
                 // Get org units with lowest level
-                
+
                 int bottomLevel = topOrgUnit.getLevel();
 
                 for ( OrganisationUnit ou : orgUnitChildren )
@@ -1117,14 +1151,14 @@ public class DefaultOrganisationUnitService
     /**
      * Searches organisation units until finding one with polygon containing point.
      */
-    private List<OrganisationUnit> getTopLevelOrgUnitWithPoint( double longitude, double latitude, 
+    private List<OrganisationUnit> getTopLevelOrgUnitWithPoint( double longitude, double latitude,
         int searchLevel, int stopLevel )
     {
         for ( int i = searchLevel; i <= stopLevel; i++ )
         {
             List<OrganisationUnit> unitsAtLevel = new ArrayList<>( getOrganisationUnitsAtLevel( i ) );
             FilterUtils.filter( unitsAtLevel, new OrganisationUnitPolygonCoveringCoordinateFilter( longitude, latitude ) );
-            
+
             if ( unitsAtLevel.size() > 0 )
             {
                 return unitsAtLevel;
