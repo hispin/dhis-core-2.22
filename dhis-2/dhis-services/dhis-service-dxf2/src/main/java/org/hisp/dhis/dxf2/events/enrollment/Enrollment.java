@@ -29,13 +29,9 @@ package org.hisp.dhis.dxf2.events.enrollment;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dxf2.events.event.Note;
 import org.hisp.dhis.dxf2.events.trackedentity.Attribute;
 
@@ -51,6 +47,12 @@ public class Enrollment
 {
     private String enrollment;
 
+    private Date created;
+
+    private Date lastUpdated;
+
+    private String trackedEntity;
+
     private String trackedEntityInstance;
 
     private String program;
@@ -64,9 +66,9 @@ public class Enrollment
     private Date dateOfIncident;
 
     private List<Attribute> attributes = new ArrayList<>();
-    
+
     private List<Note> notes = new ArrayList<>();
-    
+
     private Boolean followup;
 
     public Enrollment()
@@ -83,6 +85,42 @@ public class Enrollment
     public void setEnrollment( String enrollment )
     {
         this.enrollment = enrollment;
+    }
+
+    @JsonProperty( required = true )
+    @JacksonXmlProperty( isAttribute = true )
+    public Date getCreated()
+    {
+        return created;
+    }
+
+    public void setCreated( Date created )
+    {
+        this.created = created;
+    }
+
+    @JsonProperty( required = true )
+    @JacksonXmlProperty( isAttribute = true )
+    public Date getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( Date lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
+    }
+
+    @JsonProperty( required = true )
+    @JacksonXmlProperty( isAttribute = true )
+    public String getTrackedEntity()
+    {
+        return trackedEntity;
+    }
+
+    public void setTrackedEntity( String trackedEntity )
+    {
+        this.trackedEntity = trackedEntity;
     }
 
     @JsonProperty( required = true )
@@ -168,7 +206,7 @@ public class Enrollment
     {
         this.attributes = attributes;
     }
-    
+
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public List<Note> getNotes()
@@ -180,9 +218,9 @@ public class Enrollment
     {
         this.notes = notes;
     }
-    
+
     @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Boolean getFollowup()
     {
         return followup;
