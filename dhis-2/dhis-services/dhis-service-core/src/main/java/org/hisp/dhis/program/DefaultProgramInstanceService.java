@@ -28,6 +28,8 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
@@ -73,7 +75,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.CHILDREN;
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.*;
 
 /**
  * @author Abyot Asalefew
@@ -82,79 +84,41 @@ import static org.hisp.dhis.common.OrganisationUnitSelectionMode.CHILDREN;
 public class DefaultProgramInstanceService
     implements ProgramInstanceService
 {
+    private static final Log log = LogFactory.getLog( DefaultProgramInstanceService.class );
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private ProgramInstanceStore programInstanceStore;
 
-    public void setProgramInstanceStore( ProgramInstanceStore programInstanceStore )
-    {
-        this.programInstanceStore = programInstanceStore;
-    }
-
+    @Autowired
     private TrackedEntityAttributeValueService attributeValueService;
 
-    public void setAttributeValueService( TrackedEntityAttributeValueService attributeValueService )
-    {
-        this.attributeValueService = attributeValueService;
-    }
-
-    public void setDataValueService( TrackedEntityDataValueService dataValueService )
-    {
-        this.dataValueService = dataValueService;
-    }
-
+    @Autowired
     private TrackedEntityDataValueService dataValueService;
 
+    @Autowired
     private ProgramService programService;
 
-    public void setProgramService( ProgramService programService )
-    {
-        this.programService = programService;
-    }
-
+    @Autowired
     private SmsSender smsSender;
 
-    public void setSmsSender( SmsSender smsSender )
-    {
-        this.smsSender = smsSender;
-    }
-
+    @Autowired
     private CurrentUserService currentUserService;
 
-    public void setCurrentUserService( CurrentUserService currentUserService )
-    {
-        this.currentUserService = currentUserService;
-    }
-
+    @Autowired
     private TrackedEntityInstanceReminderService reminderService;
 
-    public void setReminderService( TrackedEntityInstanceReminderService reminderService )
-    {
-        this.reminderService = reminderService;
-    }
-
+    @Autowired
     private MessageService messageService;
 
-    public void setMessageService( MessageService messageService )
-    {
-        this.messageService = messageService;
-    }
-
+    @Autowired
     private ProgramStageInstanceService programStageInstanceService;
 
-    public void setProgramStageInstanceService( ProgramStageInstanceService programStageInstanceService )
-    {
-        this.programStageInstanceService = programStageInstanceService;
-    }
-
+    @Autowired
     private TrackedEntityInstanceService trackedEntityInstanceService;
-
-    public void setTrackedEntityInstanceService( TrackedEntityInstanceService trackedEntityInstanceService )
-    {
-        this.trackedEntityInstanceService = trackedEntityInstanceService;
-    }
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
@@ -162,12 +126,8 @@ public class DefaultProgramInstanceService
     @Autowired
     private TrackedEntityService trackedEntityService;
 
+    @Autowired
     private I18nManager i18nManager;
-
-    public void setI18nManager( I18nManager i18nManager )
-    {
-        this.i18nManager = i18nManager;
-    }
 
     // -------------------------------------------------------------------------
     // Implementation methods
@@ -353,7 +313,56 @@ public class DefaultProgramInstanceService
     @Override
     public void validate( ProgramInstanceQueryParams params ) throws IllegalQueryException
     {
+        String violation = null;
 
+        if ( params == null )
+        {
+            throw new IllegalQueryException( "Params cannot be null" );
+        }
+
+        User user = currentUserService.getCurrentUser();
+
+        if ( !params.hasOrganisationUnits() && !(params.isOrganisationUnitMode( ALL ) || params.isOrganisationUnitMode( ACCESSIBLE )) )
+        {
+            violation = "At least one organisation unit must be specified";
+        }
+
+        if ( params.isOrganisationUnitMode( ACCESSIBLE ) && (user == null || !user.hasDataViewOrganisationUnitWithFallback()) )
+        {
+            violation = "Current user must be associated with at least one organisation unit when selection mode is ACCESSIBLE";
+        }
+
+        if ( params.hasProgram() && params.hasTrackedEntity() )
+        {
+            violation = "Program and tracked entity cannot be specified simultaneously";
+        }
+
+        if ( params.hasProgramStatus() && !params.hasProgram() )
+        {
+            violation = "Program must be defined when program status is defined";
+        }
+
+        if ( params.hasFollowUp() && !params.hasProgram() )
+        {
+            violation = "Program must be defined when follow up status is defined";
+        }
+
+        if ( params.hasProgramStartDate() && !params.hasProgram() )
+        {
+            violation = "Program must be defined when program start date is specified";
+        }
+
+        if ( params.hasProgramEndDate() && !params.hasProgram() )
+        {
+            violation = "Program must be defined when program end date is specified";
+        }
+
+        if ( violation != null )
+        {
+            log.warn( "Validation failed: " + violation );
+
+            throw new IllegalQueryException( violation );
+        }
     }
 
     @Override
