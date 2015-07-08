@@ -44,8 +44,7 @@ import java.util.List;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @JacksonXmlRootElement( localName = "typeSummary", namespace = DxfNamespaces.DXF_2_0 )
-public class ImportTypeSummary
-    extends ImportSummary
+public class ImportTypeSummary extends ImportSummary
 {
     private String type;
 

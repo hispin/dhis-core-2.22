@@ -33,5 +33,5 @@ package org.hisp.dhis.dxf2.webmessage;
  */
 public enum WebMessageStatus
 {
-    OK, ERROR
+    OK, WARNING, ERROR
 }
