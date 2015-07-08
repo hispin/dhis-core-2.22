@@ -31,6 +31,7 @@ package org.hisp.dhis.webapi.controller.event;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.eventreport.EventReport;
 import org.hisp.dhis.eventreport.EventReportService;
 import org.hisp.dhis.i18n.I18nFormat;
@@ -41,7 +42,7 @@ import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.schema.descriptors.EventReportSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,7 +92,8 @@ public class EventReportController
 
         eventReportService.saveEventReport( report );
 
-        ContextUtils.createdResponse( response, "Event report created", EventReportSchemaDescriptor.API_ENDPOINT + "/" + report.getUid() );
+        response.addHeader( "Location", EventReportSchemaDescriptor.API_ENDPOINT + "/" + report.getUid() );
+        webMessageService.send( WebMessageUtils.created( "Event report created" ), response, request );
     }
 
     @Override
@@ -102,8 +104,7 @@ public class EventReportController
 
         if ( report == null )
         {
-            ContextUtils.notFoundResponse( response, "Event report does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event report does not exist: " + uid ) );
         }
 
         EventReport newReport = JacksonUtils.fromJson( request.getInputStream(), EventReport.class );
@@ -123,8 +124,7 @@ public class EventReportController
 
         if ( report == null )
         {
-            ContextUtils.notFoundResponse( response, "Event report does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event report does not exist: " + uid ) );
         }
 
         eventReportService.deleteEventReport( report );
