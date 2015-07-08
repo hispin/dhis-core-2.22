@@ -28,22 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.scheduling.SchedulingManager.TASK_ANALYTICS_ALL;
-import static org.hisp.dhis.scheduling.SchedulingManager.TASK_ANALYTICS_LAST_3_YEARS;
-import static org.hisp.dhis.scheduling.SchedulingManager.TASK_DATAMART_LAST_YEAR;
-import static org.hisp.dhis.scheduling.SchedulingManager.TASK_DATA_SYNCH;
-import static org.hisp.dhis.scheduling.SchedulingManager.TASK_MONITORING_LAST_DAY;
-import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE;
-import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE_15_MINS;
-import static org.hisp.dhis.system.scheduling.Scheduler.CRON_DAILY_0AM;
-import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_15MIN;
-import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_MIN;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.scheduling.SchedulingManager;
@@ -56,6 +40,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static org.hisp.dhis.scheduling.SchedulingManager.*;
+import static org.hisp.dhis.system.scheduling.Scheduler.*;
 
 /**
  * @author Lars Helge Overland
@@ -71,7 +62,7 @@ public class SchedulingController
 
     @Autowired
     private SchedulingManager schedulingManager;
-    
+
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SCHEDULING_ADMIN')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( method = { RequestMethod.POST, RequestMethod.PUT }, consumes = { ContextUtils.CONTENT_TYPE_JSON } )
@@ -79,7 +70,7 @@ public class SchedulingController
         throws IOException
     {
         SchedulingStrategy strategy = JacksonUtils.fromJson( request.getInputStream(), SchedulingStrategy.class );
-                
+
         ListMap<String, String> cronKeyMap = new ListMap<>();
 
         // -------------------------------------------------------------

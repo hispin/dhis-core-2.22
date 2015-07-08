@@ -124,9 +124,6 @@ public class DataApprovalController
     @Autowired
     private DataElementCategoryService categoryService;
 
-    @Autowired
-    private InputUtils inputUtils;
-
     // -------------------------------------------------------------------------
     // Get
     // -------------------------------------------------------------------------

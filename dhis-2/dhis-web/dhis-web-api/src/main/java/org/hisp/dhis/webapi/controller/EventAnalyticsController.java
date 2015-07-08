@@ -28,13 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.analytics.AnalyticsService.NAMES_META_KEY;
-
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.analytics.SortOrder;
@@ -55,6 +48,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+import java.util.Set;
+
+import static org.hisp.dhis.analytics.AnalyticsService.NAMES_META_KEY;
 
 /**
  * @author Lars Helge Overland
@@ -101,7 +100,7 @@ public class EventAnalyticsController
         HttpServletResponse response ) throws Exception
     {
         EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
-            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, 
+            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType,
             collapseDataDimensions, aggregateData, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.RESPECT_SYSTEM_SETTING );
@@ -135,7 +134,7 @@ public class EventAnalyticsController
         HttpServletResponse response ) throws Exception
     {
         EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
-            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, 
+            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType,
             collapseDataDimensions, aggregateData, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.xml", false );
@@ -167,7 +166,7 @@ public class EventAnalyticsController
         HttpServletResponse response ) throws Exception
     {
         EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
-            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, 
+            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType,
             collapseDataDimensions, aggregateData, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.xls", true );
@@ -199,7 +198,7 @@ public class EventAnalyticsController
         HttpServletResponse response ) throws Exception
     {
         EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
-            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, 
+            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType,
             collapseDataDimensions, aggregateData, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.csv", true );
@@ -231,7 +230,7 @@ public class EventAnalyticsController
         HttpServletResponse response ) throws Exception
     {
         EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
-            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType, 
+            value, aggregationType, skipMeta, skipRounding, hierarchyMeta, showHierarchy, sortOrder, limit, outputType,
             collapseDataDimensions, aggregateData, displayProperty, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.html", false );
