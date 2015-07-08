@@ -46,7 +46,9 @@ import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.service.ContextService;
+import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -90,6 +92,9 @@ public class EnrollmentController
 
     @Autowired
     protected ContextService contextService;
+
+    @Autowired
+    private WebMessageService webMessageService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -170,7 +175,7 @@ public class EnrollmentController
                 response.setHeader( "Location", getResourcePath( request, importSummary ) );
             }
 
-            JacksonUtils.toXml( response.getOutputStream(), importSummary );
+            webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
         }
     }
 
@@ -196,7 +201,7 @@ public class EnrollmentController
                 response.setHeader( "Location", getResourcePath( request, importSummary ) );
             }
 
-            JacksonUtils.toJson( response.getOutputStream(), importSummary );
+            webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
         }
     }
 
@@ -209,9 +214,7 @@ public class EnrollmentController
     public void updateEnrollmentXml( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         ImportSummary importSummary = enrollmentService.updateEnrollmentXml( id, request.getInputStream() );
-        response.setContentType( MediaType.APPLICATION_XML_VALUE );
-
-        JacksonUtils.toXml( response.getOutputStream(), importSummary );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE )
@@ -219,9 +222,7 @@ public class EnrollmentController
     public void updateEnrollmentJson( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         ImportSummary importSummary = enrollmentService.updateEnrollmentJson( id, request.getInputStream() );
-        response.setContentType( MediaType.APPLICATION_JSON_VALUE );
-
-        JacksonUtils.toJson( response.getOutputStream(), importSummary );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     @RequestMapping( value = "/{id}/cancelled", method = RequestMethod.PUT )

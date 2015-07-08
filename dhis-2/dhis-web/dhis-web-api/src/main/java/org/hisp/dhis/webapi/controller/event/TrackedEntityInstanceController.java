@@ -31,7 +31,6 @@ package org.hisp.dhis.webapi.controller.event;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
@@ -51,15 +50,16 @@ import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.service.ContextService;
+import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -96,6 +96,9 @@ public class TrackedEntityInstanceController
 
     @Autowired
     private ContextService contextService;
+
+    @Autowired
+    private WebMessageService webMessageService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -342,7 +345,7 @@ public class TrackedEntityInstanceController
                 importSummary.setImportCount( null );
             }
 
-            JacksonUtils.toXml( response.getOutputStream(), importSummary );
+            webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
         }
     }
 
@@ -379,7 +382,7 @@ public class TrackedEntityInstanceController
                 importSummary.setImportCount( null );
             }
 
-            JacksonUtils.toJson( response.getOutputStream(), importSummary );
+            webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
         }
     }
 
@@ -393,9 +396,7 @@ public class TrackedEntityInstanceController
         throws IOException
     {
         ImportSummary importSummary = trackedEntityInstanceService.updateTrackedEntityInstanceXml( id, request.getInputStream() );
-
-        response.setContentType( MediaType.APPLICATION_XML_VALUE );
-        JacksonUtils.toXml( response.getOutputStream(), importSummary );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE )
@@ -404,9 +405,7 @@ public class TrackedEntityInstanceController
         throws IOException
     {
         ImportSummary importSummary = trackedEntityInstanceService.updateTrackedEntityInstanceJson( id, request.getInputStream() );
-
-        response.setContentType( MediaType.APPLICATION_JSON_VALUE );
-        JacksonUtils.toJson( response.getOutputStream(), importSummary );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     // -------------------------------------------------------------------------
