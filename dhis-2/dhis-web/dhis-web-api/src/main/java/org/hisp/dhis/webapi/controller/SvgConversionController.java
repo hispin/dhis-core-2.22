@@ -28,12 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.awt.Color;
-import java.io.OutputStream;
-import java.io.StringReader;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -49,23 +43,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.io.OutputStream;
+import java.io.StringReader;
+
 import static org.hisp.dhis.system.util.GeoUtils.replaceUnsafeSvgText;
 
 @Controller
 @RequestMapping
 public class SvgConversionController
-{    
+{
     @Autowired
     private ContextUtils contextUtils;
-    
+
     @RequestMapping( value = "/svg.png", method = RequestMethod.POST, consumes = ContextUtils.CONTENT_TYPE_FORM_ENCODED )
     public void toPng( @RequestParam String svg, @RequestParam( required = false ) String filename, HttpServletResponse response )
         throws Exception
     {
-        String name = filename != null ? ( CodecUtils.filenameEncode( filename ) + ".png" ) : "file.png";
+        String name = filename != null ? (CodecUtils.filenameEncode( filename ) + ".png") : "file.png";
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PNG, CacheStrategy.NO_CACHE, name, true );        
-        
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PNG, CacheStrategy.NO_CACHE, name, true );
+
         convertToPng( svg, response.getOutputStream() );
     }
 
@@ -73,22 +72,22 @@ public class SvgConversionController
     public void toPdf( @RequestParam String svg, @RequestParam( required = false ) String filename, HttpServletResponse response )
         throws Exception
     {
-        String name = filename != null ? ( CodecUtils.filenameEncode( filename ) + ".pdf" ) : "file.pdf";
+        String name = filename != null ? (CodecUtils.filenameEncode( filename ) + ".pdf") : "file.pdf";
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.NO_CACHE, name, true );        
-        
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.NO_CACHE, name, true );
+
         convertToPdf( svg, response.getOutputStream() );
     }
 
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
-    
+
     private void convertToPng( String svg, OutputStream out )
         throws TranscoderException
     {
         svg = replaceUnsafeSvgText( svg );
-        
+
         PNGTranscoder t = new PNGTranscoder();
 
         t.addTranscodingHint( ImageTranscoder.KEY_BACKGROUND_COLOR, Color.WHITE );
@@ -104,7 +103,7 @@ public class SvgConversionController
         throws TranscoderException
     {
         svg = replaceUnsafeSvgText( svg );
-        
+
         PDFTranscoder t = new PDFTranscoder();
 
         TranscoderInput input = new TranscoderInput( new StringReader( svg ) );

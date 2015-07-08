@@ -28,14 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.acl.AccessStringHelper;
@@ -60,6 +52,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -156,7 +155,7 @@ public class SharingController
         }
 
         Collections.sort( sharing.getObject().getUserGroupAccesses(), SharingUserGroupAccessNameComparator.INSTANCE );
-        
+
         JacksonUtils.toJson( response.getOutputStream(), sharing );
     }
 
@@ -265,13 +264,13 @@ public class SharingController
             ContextUtils.conflictResponse( response, "Search key not specified" );
             return;
         }
-        
+
         int max = pageSize != null ? pageSize : Integer.MAX_VALUE;
-        
+
         SharingUserGroups sharingUserGroups = new SharingUserGroups();
 
         List<UserGroup> userGroups = userGroupService.getUserGroupsBetweenByName( key, 0, max );
-        
+
         for ( UserGroup userGroup : userGroups )
         {
             SharingUserGroupAccess sharingUserGroupAccess = new SharingUserGroupAccess();

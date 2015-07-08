@@ -28,19 +28,13 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.sms.config.GenericHttpGatewayConfig;
 import org.hisp.dhis.sms.config.SmsConfiguration;
 import org.hisp.dhis.sms.config.SmsConfigurationManager;
 import org.hisp.dhis.sms.config.SmsGatewayConfig;
+import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,6 +42,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 
 @Controller
 @RequestMapping( value = SmsConfigurationController.RESOURCE_PATH )
@@ -59,7 +58,7 @@ public class SmsConfigurationController
 
     @Autowired
     private SmsConfigurationManager smsConfigurationManager;
-    
+
     @RequestMapping( method = RequestMethod.GET )
     public String getSmsConfiguration( Model model )
     {
@@ -75,32 +74,32 @@ public class SmsConfigurationController
         return "smsConfiguration";
     }
 
-    @RequestMapping( value="test", method = RequestMethod.GET )
+    @RequestMapping( value = "test", method = RequestMethod.GET )
     public String getTest( Model model )
     {
 
         SmsConfiguration smsConfiguration = new SmsConfiguration();
 
-        SmsGatewayConfig gatewayConfig = new GenericHttpGatewayConfig("http://storset.org/", new HashMap<String,String>());
+        SmsGatewayConfig gatewayConfig = new GenericHttpGatewayConfig( "http://storset.org/", new HashMap<String, String>() );
         smsConfiguration.setGateways( Collections.singletonList( gatewayConfig ) );
-        
+
         model.addAttribute( "model", smsConfiguration );
         model.addAttribute( "viewClass", "detailed" );
 
         return "smsConfiguration";
     }
 
-    
+
     //--------------------------------------------------------------------------
     // POST
     //--------------------------------------------------------------------------
 
     @RequestMapping( method = RequestMethod.PUT )
-    public String putSmsConfig( @RequestBody SmsConfiguration smsConfiguration, Model model  ) throws Exception
+    public String putSmsConfig( @RequestBody SmsConfiguration smsConfiguration, Model model ) throws Exception
     {
         if ( smsConfiguration == null )
         {
-            throw new  IllegalArgumentException();
+            throw new IllegalArgumentException();
         }
 
         smsConfigurationManager.updateSmsConfiguration( smsConfiguration );
@@ -109,7 +108,7 @@ public class SmsConfigurationController
 
 
     @ExceptionHandler
-    public void mapException(IllegalArgumentException exception, HttpServletResponse response ) throws IOException
+    public void mapException( IllegalArgumentException exception, HttpServletResponse response ) throws IOException
     {
         log.info( "Exception", exception );
         response.setStatus( HttpServletResponse.SC_CONFLICT );

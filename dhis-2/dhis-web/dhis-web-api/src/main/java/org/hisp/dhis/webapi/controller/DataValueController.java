@@ -121,7 +121,7 @@ public class DataValueController
             return;
         }
 
-        DataElementCategoryOptionCombo categoryOptionCombo = null;
+        DataElementCategoryOptionCombo categoryOptionCombo;
 
         if ( co != null )
         {
@@ -285,7 +285,7 @@ public class DataValueController
             return;
         }
 
-        DataElementCategoryOptionCombo categoryOptionCombo = null;
+        DataElementCategoryOptionCombo categoryOptionCombo;
 
         if ( co != null )
         {
