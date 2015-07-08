@@ -27,53 +27,52 @@
  */
 
 var validationRules = {
-	rules: {
-		oldPassword: {
-			required: true
-		},
-		password: {
-			required: true,
-			rangelength: [ 8, 80 ],
-			password: true,
-			notequalto : "#oldPassword"
-		},
-		retypePassword: {
-			required: true,
-			equalTo: "#password"
-		}
-	}
+  rules: {
+    oldPassword: {
+      required: true
+    },
+    password: {
+      required: true,
+      rangelength: [8, 80],
+      password: true,
+      notequalto: "#oldPassword"
+    },
+    retypePassword: {
+      required: true,
+      equalTo: "#password"
+    }
+  }
 };
 
-$( document ).ready( function() {
-	$( "#accountForm" ).validate( {
-		rules: validationRules.rules,
-		submitHandler: accountSubmitHandler,
-		errorPlacement: function( error, element ) {
-			element.parent( "td" ).append( "<br>" ).append( error );
-		}
-	} );
-} );
+$(document).ready(function() {
+  $("#accountForm").validate({
+    rules: validationRules.rules,
+    submitHandler: accountSubmitHandler,
+    errorPlacement: function(error, element) {
+      element.parent("td").append("<br>").append(error);
+    }
+  });
+});
 
-function accountSubmitHandler()
-{
-	$( "#submitButton" ).attr( "disabled", "disabled" );
+function accountSubmitHandler() {
+  $("#submitButton").attr("disabled", "disabled");
 
-	$.ajax( {
-		url: '../../api/account/password',
-		data: $( "#accountForm" ).serialize(),
-		type: 'POST',
-		success: function( data ) {
-			window.location.href = "../../dhis-web-commons-about/redirect.action";
-		},
-		error: function( jqXHR, textStatus, errorThrown ) {
-            var data = JSON.parse(jqXHR.responseText);
+  $.ajax({
+    url: '../../api/account/password',
+    data: $("#accountForm").serialize(),
+    type: 'POST',
+    success: function(data) {
+      window.location.href = "../../dhis-web-commons-about/redirect.action";
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      var data = JSON.parse(jqXHR.responseText);
 
-            if( data.status === 'NON_EXPIRED' ) {
-                window.location.href = "login.action";
-            }
+      if( data.status === 'NON_EXPIRED' ) {
+        window.location.href = "login.action";
+      }
 
-            $( "#messageSpan" ).show().text( data.message );
-			$( "#submitButton" ).removeAttr( "disabled" );
-		}
-	} );
+      $("#messageSpan").show().text(data.message);
+      $("#submitButton").removeAttr("disabled");
+    }
+  });
 }
