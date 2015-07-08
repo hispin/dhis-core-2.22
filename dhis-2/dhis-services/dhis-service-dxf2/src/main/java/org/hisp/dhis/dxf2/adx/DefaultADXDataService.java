@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.io.PipedOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,7 +69,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.dxf2.adx.ADXPeriod.ADXPeriodException;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
@@ -79,6 +79,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.period.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.xerces.util.XMLChar;
+import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 
 /**
  * @author bobj
@@ -140,6 +141,7 @@ public class DefaultADXDataService
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
+        int count = 0;
         // submit each ADX group to DXF importer as a datavalueSet
         while ( adxReader.moveToStartElement( ADXConstants.GROUP, ADXConstants.NAMESPACE ) )
         {
@@ -149,20 +151,40 @@ public class DefaultADXDataService
                 futureImportSummary = executor.submit( new PipedImporter( dataValueSetService, importOptions, pipeOut ) );
                 XMLOutputFactory factory = XMLOutputFactory.newInstance();
                 XMLStreamWriter dxfWriter = factory.createXMLStreamWriter( pipeOut );
-                parseADXGroupToDxf( adxReader, dxfWriter, importOptions );
+                
+                // note theis returns conflicts which are detected at adx level
+                List<ImportConflict> adxConflicts = parseADXGroupToDxf( adxReader, dxfWriter, importOptions );
+                
                 pipeOut.flush();
-
-                importSummaries.addImportSummary( futureImportSummary.get( TOTAL_MINUTES_TO_WAIT, TimeUnit.MINUTES ) );
+                
+                ImportSummary summary = futureImportSummary.get( TOTAL_MINUTES_TO_WAIT, TimeUnit.MINUTES );
+                
+                // add adx conflicts to the import summary
+                for ( ImportConflict conflict : adxConflicts)
+                {
+                    summary.getConflicts().add( conflict );
+                    summary.getImportCount().incrementIgnored();
+                }
+                importSummaries.addImportSummary( summary );
             }
-            catch ( IOException | XMLStreamException | InterruptedException | ExecutionException | TimeoutException
-                | ADXException | ADXPeriodException ex )
+            catch ( ADXException ex)
             {
                 ImportSummary importSummary = new ImportSummary();
                 importSummary.setStatus( ImportStatus.ERROR );
-                importSummary.setDescription( "Exception: " + ex.getMessage() );
+                importSummary.setDescription( "DataSet import failed for group number " + count );
+                importSummary.getConflicts().add( ex.getImportConflict() );
                 importSummaries.addImportSummary( importSummary );
                 log.warn( "Import failed: " + ex );
             }
+            catch ( IOException | XMLStreamException | InterruptedException | ExecutionException | TimeoutException ex )
+            {
+                ImportSummary importSummary = new ImportSummary();
+                importSummary.setStatus( ImportStatus.ERROR );
+                importSummary.setDescription( "DataSet import failed for group number " + count );
+                importSummaries.addImportSummary( importSummary );
+                log.warn( "Import failed: " + ex );
+            }
+            count++;
         }
 
         executor.shutdown();
@@ -174,9 +196,11 @@ public class DefaultADXDataService
     // Utility methods
     // -------------------------------------------------------------------------
 
-    private void parseADXGroupToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter, ImportOptions importOptions )
-        throws XMLStreamException, ADXException, ADXPeriodException
+    private List<ImportConflict> parseADXGroupToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter, ImportOptions importOptions )
+        throws XMLStreamException, ADXException
     {
+        List<ImportConflict> adxConflicts = new LinkedList<>();
+        
         dxfWriter.writeStartDocument( "1.0" );
         dxfWriter.writeStartElement( "dataValueSet" );
         dxfWriter.writeDefaultNamespace( "http://dhis2.org/schema/dxf/2.0" );
@@ -199,7 +223,7 @@ public class DefaultADXDataService
         String periodStr = groupAttributes.get( ADXConstants.PERIOD );
         groupAttributes.remove( ADXConstants.PERIOD );
         Period period = ADXPeriod.parse( periodStr );
-        dxfWriter.writeAttribute( "period", period.getIsoDate() );
+        groupAttributes.put( ADXConstants.PERIOD, period.getIsoDate());
 
         // process adx group attributes
         if ( !groupAttributes.containsKey( ADXConstants.ATTOPTCOMBO )
@@ -209,6 +233,11 @@ public class DefaultADXDataService
 
             DataSet dataSet = identifiableObjectManager.getObject( DataSet.class, dataElementIdScheme,
                 groupAttributes.get( ADXConstants.DATASET ) );
+            
+            if (dataSet == null)
+            {
+                throw new ADXException("No dataSet matching identifier: " + groupAttributes.get( ADXConstants.DATASET ));
+            }
             groupAttributes.put( ADXConstants.DATASET, dataSet.getUid() );
             DataElementCategoryCombo attributeCombo = dataSet.getCategoryCombo();
             attributesToDXF( ADXConstants.ATTOPTCOMBO, attributeCombo, groupAttributes, dataElementIdScheme );
@@ -223,18 +252,30 @@ public class DefaultADXDataService
         // process the dataValues
         while ( adxReader.moveToStartElement( ADXConstants.DATAVALUE, ADXConstants.GROUP ) )
         {
-            parseADXDataValueToDxf( adxReader, dxfWriter, importOptions );
+            try 
+            {
+                parseADXDataValueToDxf( adxReader, dxfWriter, importOptions );
+            }
+            catch (ADXException ex)
+            {
+                adxConflicts.add( ex.getImportConflict() );
+                log.info("ADX datavalue conflict: " + ex.getImportConflict());
+            }
         }
 
         dxfWriter.writeEndElement();
         dxfWriter.writeEndDocument();
+        
+        return adxConflicts;
     }
 
     private void parseADXDataValueToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter, ImportOptions importOptions )
         throws XMLStreamException, ADXException
     {
         Map<String, String> dvAttributes = readAttributes( adxReader );
-
+        
+        log.debug("Processing datavalue: " + dvAttributes );
+        
         if ( !dvAttributes.containsKey( ADXConstants.DATAELEMENT ) )
         {
             throw new ADXException( ADXConstants.DATAELEMENT + " attribute is required on 'dataValue'" );
@@ -247,15 +288,12 @@ public class DefaultADXDataService
 
         IdentifiableProperty dataElementIdScheme = importOptions.getDataElementIdScheme();
 
-        dxfWriter.writeStartElement( "dataValue" );
-
         DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,dvAttributes.get( ADXConstants.DATAELEMENT));
             
-        // process adx group attributes
-        if ( !dvAttributes.containsKey( ADXConstants.CATOPTCOMBO )
-            && dvAttributes.containsKey( ADXConstants.DATASET ) )
+        // process adx datavalue attributes
+        if ( !dvAttributes.containsKey( ADXConstants.CATOPTCOMBO ) )
         {
-            log.debug( "No attributeOptionCombo present.  Check dataSet for attribute categorycombo" );
+            log.debug( "No categoryOptionCombo present." );
             DataElementCategoryCombo categoryCombo = dataElement.getCategoryCombo();
 
             attributesToDXF( ADXConstants.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
@@ -275,12 +313,14 @@ public class DefaultADXDataService
             }
         }
         
+        log.debug("Processing datavalue as DXF2: " + dvAttributes );
+        
+        dxfWriter.writeStartElement( "dataValue" );
         // pass through the remaining attributes to dxf
         for ( String attribute : dvAttributes.keySet() )
         {
             dxfWriter.writeAttribute( attribute, dvAttributes.get( attribute ) );
         }
-        
         dxfWriter.writeEndElement();
     }
 
@@ -321,7 +361,7 @@ public class DefaultADXDataService
         }
         catch ( CategoryComboMapException ex )
         {
-            log.warn( "Failed to create catcomboMap from " + catcombo );
+            log.info( "Failed to create catcomboMap from " + catcombo );
             throw new ADXException( ex.getMessage() );
         }
 
@@ -333,14 +373,14 @@ public class DefaultADXDataService
             
             if ( catCode == null )
             {
-                throw new RuntimeException( "No category matching " + catCode );
+                throw new ADXException( "No category matching " + catCode );
             }
             
             String catAttribute = attributes.get( catCode );
             
             if ( catAttribute == null )
             {
-                throw new RuntimeException( "Missing required attribute from catcombo: " + catCode );
+                throw new ADXException( "Missing required attribute from catcombo: " + catCode );
             }
             
             compositeIdentifier += "\"" + catAttribute + "\"";
@@ -387,7 +427,7 @@ public class DefaultADXDataService
 
         DataElementCategoryOptionCombo catOptCombo = getCatOptComboFromAttributes( attributeOptions, catCombo, scheme );
         attributes.put( optionComboName, catOptCombo.getUid() );
-
+            
         log.debug( "dxf attributes: " + attributes );
     }
 
