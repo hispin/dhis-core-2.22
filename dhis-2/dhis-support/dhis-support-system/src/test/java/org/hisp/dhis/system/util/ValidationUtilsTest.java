@@ -28,22 +28,11 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.ValidationUtils.coordinateIsValid;
-import static org.hisp.dhis.system.util.ValidationUtils.dataValueIsValid;
-import static org.hisp.dhis.system.util.ValidationUtils.emailIsValid;
-import static org.hisp.dhis.system.util.ValidationUtils.getLatitude;
-import static org.hisp.dhis.system.util.ValidationUtils.getLongitude;
-import static org.hisp.dhis.system.util.ValidationUtils.isValidHexColor;
-import static org.hisp.dhis.system.util.ValidationUtils.passwordIsValid;
-import static org.hisp.dhis.system.util.ValidationUtils.dataValueIsZeroAndInsignificant;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
+
+import static org.hisp.dhis.system.util.ValidationUtils.*;
+import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
@@ -59,7 +48,7 @@ public class ValidationUtilsTest
         assertTrue( coordinateIsValid( "[170.99034,78.94221]" ) );
         assertTrue( coordinateIsValid( "[-167,-28.94221]" ) );
         assertTrue( coordinateIsValid( "[37.99034,28]" ) );
-        
+
         assertFalse( coordinateIsValid( "23.34343,56.3232" ) );
         assertFalse( coordinateIsValid( "23.34343 56.3232" ) );
         assertFalse( coordinateIsValid( "[23.34f43,56.3232]" ) );
@@ -68,7 +57,7 @@ public class ValidationUtilsTest
         assertFalse( coordinateIsValid( "[++37,-28.94221]" ) );
         assertFalse( coordinateIsValid( "S-0.27726 E37.08472" ) );
         assertFalse( coordinateIsValid( null ) );
-                
+
         assertFalse( coordinateIsValid( "-185.12345,45.45423" ) );
         assertFalse( coordinateIsValid( "192.56789,-45.34332" ) );
         assertFalse( coordinateIsValid( "140.34,92.23323" ) );
@@ -85,7 +74,7 @@ public class ValidationUtilsTest
         assertNull( getLongitude( "23.34343,56.3232" ) );
         assertNull( getLongitude( null ) );
     }
-    
+
     @Test
     public void testGetLatitude()
     {
@@ -94,7 +83,7 @@ public class ValidationUtilsTest
         assertNull( getLatitude( "23.34343,56.3232" ) );
         assertNull( getLatitude( null ) );
     }
-    
+
     @Test
     public void testPasswordIsValid()
     {
@@ -103,28 +92,28 @@ public class ValidationUtilsTest
         assertFalse( passwordIsValid( "Johndoedoe" ) );
         assertTrue( passwordIsValid( "Johndoe1" ) );
     }
-    
+
     @Test
     public void testEmailIsValid()
     {
         assertFalse( emailIsValid( "john@doe" ) );
         assertTrue( emailIsValid( "john@doe.com" ) );
     }
-    
+
     @Test
     public void testDataValueIsZeroAndInsignificant()
     {
         DataElement de = new DataElement( "DEA" );
         de.setType( DataElement.VALUE_TYPE_INT );
         de.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
-      
+
         assertTrue( dataValueIsZeroAndInsignificant( "0", de ) );
-        
+
         de.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM );
 
         assertFalse( dataValueIsZeroAndInsignificant( "0", de ) );
     }
-    
+
     @Test
     public void testDataValueIsValid()
     {
@@ -133,61 +122,67 @@ public class ValidationUtilsTest
 
         assertNull( dataValueIsValid( null, de ) );
         assertNull( dataValueIsValid( "", de ) );
-        
+
         assertNull( dataValueIsValid( "34", de ) );
         assertNotNull( dataValueIsValid( "Yes", de ) );
-        
+
         de.setNumberType( DataElement.VALUE_TYPE_NUMBER );
-        
+
         assertNull( dataValueIsValid( "3.7", de ) );
         assertNotNull( dataValueIsValid( "No", de ) );
 
         de.setNumberType( DataElement.VALUE_TYPE_POSITIVE_INT );
-        
+
         assertNull( dataValueIsValid( "3", de ) );
         assertNotNull( dataValueIsValid( "-4", de ) );
-        
+
         de.setNumberType( DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT );
-        
+
         assertNull( dataValueIsValid( "3", de ) );
         assertNotNull( dataValueIsValid( "-4", de ) );
 
         de.setNumberType( DataElement.VALUE_TYPE_NEGATIVE_INT );
-        
+
         assertNull( dataValueIsValid( "-3", de ) );
         assertNotNull( dataValueIsValid( "4", de ) );
 
         de.setType( DataElement.VALUE_TYPE_TEXT );
 
         assertNull( dataValueIsValid( "0", de ) );
-        
+
         de.setType( DataElement.VALUE_TYPE_BOOL );
-        
+
         assertNull( dataValueIsValid( "true", de ) );
         assertNotNull( dataValueIsValid( "yes", de ) );
-        
+
         de.setType( DataElement.VALUE_TYPE_TRUE_ONLY );
 
         assertNull( dataValueIsValid( "true", de ) );
         assertNotNull( dataValueIsValid( "false", de ) );
-        
+
         de.setType( DataElement.VALUE_TYPE_DATE );
         assertNull( dataValueIsValid( "2013-04-01", de ) );
         assertNotNull( dataValueIsValid( "2012304-01", de ) );
-        assertNotNull( dataValueIsValid( "Date", de ) );        
+        assertNotNull( dataValueIsValid( "Date", de ) );
+
+        de.setType( DataElement.VALUE_TYPE_DATETIME );
+        assertNull( dataValueIsValid( "2013-04-01T11:00:00.000Z", de ) );
+        assertNotNull( dataValueIsValid( "2013-04-01", de ) );
+        assertNotNull( dataValueIsValid( "abcd", de ) );
     }
 
     @Test
-    public void testIsValidHexColor() {
+    public void testIsValidHexColor()
+    {
         assertFalse( isValidHexColor( "abcpqr" ) );
         assertFalse( isValidHexColor( "#qwerty" ) );
-        assertFalse( isValidHexColor( "FFAB#O") );
+        assertFalse( isValidHexColor( "FFAB#O" ) );
 
         assertTrue( isValidHexColor( "#FF0" ) );
         assertTrue( isValidHexColor( "#FF0000" ) );
         assertTrue( isValidHexColor( "FFFFFF" ) );
         assertTrue( isValidHexColor( "ffAAb4" ) );
         assertTrue( isValidHexColor( "#4a6" ) );
-        assertTrue( isValidHexColor ( "abc" ) );
+        assertTrue( isValidHexColor( "abc" ) );
     }
 }

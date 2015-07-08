@@ -72,8 +72,19 @@ public class DateUtils
         DateTimeFormat.forPattern( "yyyy" ).getParser()
     };
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter DATE_FORMATTER = new DateTimeFormatterBuilder()
         .append( null, SUPPORTED_DATE_FORMAT_PARSERS ).toFormatter();
+
+    private static final DateTimeParser[] SUPPORTED_DATE_TIME_FORMAT_PARSERS = {
+            DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" ).getParser(),
+            DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm:ssZ" ).getParser(),
+            DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mmZ" ).getParser(),
+            DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm:ss" ).getParser(),
+            DateTimeFormat.forPattern( "yyyy-MM-dd'T'HH:mm" ).getParser()
+    };
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = ( new DateTimeFormatterBuilder() )
+            .append(null, SUPPORTED_DATE_TIME_FORMAT_PARSERS).toFormatter();
 
     private static final String SEP = ", ";
 
@@ -483,6 +494,26 @@ public class DateUtils
     }
 
     /**
+     * This method checks whether the String dateTimeString is a valid datetime following
+     * the format "yyyy-MM-dd".
+     *
+     * @param dateTimeString the string to be checked.
+     * @return true/false depending on whether the string is a valid datetime according to the format "yyyy-MM-dd".
+     */
+    public static boolean dateTimeIsValid(final String dateTimeString)
+    {
+        try
+        {
+            DATE_TIME_FORMATTER.parseDateTime(dateTimeString);
+            return true;
+        }
+        catch( IllegalArgumentException ex )
+        {
+            return false;
+        }
+    }
+
+    /**
      * Returns the number of seconds until the next day at the given hour.
      *
      * @param hour the hour.
@@ -627,6 +658,6 @@ public class DateUtils
             return null;
         }
 
-        return DATE_TIME_FORMATTER.parseDateTime( dateString ).toDate();
+        return DATE_FORMATTER.parseDateTime( dateString ).toDate();
     }
 }
