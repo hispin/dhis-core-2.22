@@ -230,6 +230,7 @@ public abstract class AbstractEnrollmentService
         Program program = getProgram( enrollment.getProgram() );
 
         ProgramInstanceQueryParams params = new ProgramInstanceQueryParams();
+        params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
         params.setSkipPaging( true );
         params.setProgram( program );
         params.setTrackedEntityInstance( entityInstance );
@@ -249,9 +250,6 @@ public abstract class AbstractEnrollmentService
 
         if ( program.getOnlyEnrollOnce() )
         {
-            params.setSkipPaging( true );
-            params.setProgram( program );
-            params.setTrackedEntityInstance( entityInstance );
             params.setProgramStatus( ProgramStatus.COMPLETED );
 
             enrollments = getEnrollments( programInstanceService.getProgramInstances( params ) );
@@ -457,8 +455,7 @@ public abstract class AbstractEnrollmentService
 
         for ( ProgramTrackedEntityAttribute programTrackedEntityAttribute : program.getProgramAttributes() )
         {
-            mandatoryMap
-                .put( programTrackedEntityAttribute.getAttribute(), programTrackedEntityAttribute.isMandatory() );
+            mandatoryMap.put( programTrackedEntityAttribute.getAttribute(), programTrackedEntityAttribute.isMandatory() );
         }
 
         for ( TrackedEntityAttributeValue value : trackedEntityInstance.getAttributeValues() )
