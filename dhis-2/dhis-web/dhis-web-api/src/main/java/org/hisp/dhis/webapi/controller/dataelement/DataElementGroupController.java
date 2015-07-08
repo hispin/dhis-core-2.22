@@ -36,9 +36,10 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dxf2.common.TranslateOptions;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.schema.descriptors.DataElementGroupSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +80,7 @@ public class DataElementGroupController
 
         if ( dataElementGroups.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, "DataElementGroup not found for uid: " + uid );
-            return null;
+            throw new WebMessageException( WebMessageUtils.notFound( "DataElementGroup not found for uid: " + uid ) );
         }
 
         WebMetaData metaData = new WebMetaData();
@@ -126,8 +126,7 @@ public class DataElementGroupController
 
         if ( dataElementGroups.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, "DataElementGroup not found for uid: " + uid );
-            return null;
+            throw new WebMessageException( WebMessageUtils.notFound( "DataElementGroup not found for uid: " + uid ) );
         }
 
         WebMetaData metaData = new WebMetaData();
