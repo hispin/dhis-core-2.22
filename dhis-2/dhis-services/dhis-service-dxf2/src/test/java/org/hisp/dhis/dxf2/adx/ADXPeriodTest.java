@@ -49,7 +49,8 @@ public class ADXPeriodTest
     @Test
     public void testParser()
     {
-        try {
+        try 
+        {
             p = ADXPeriod.parse( "2015-01-01/P1Y" );
             assertEquals( "2015", p.getIsoDate() );
             p = ADXPeriod.parse( "2015-01-01/P1M" );
