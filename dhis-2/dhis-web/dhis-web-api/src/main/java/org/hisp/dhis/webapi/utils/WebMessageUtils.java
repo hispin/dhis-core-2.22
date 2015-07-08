@@ -28,6 +28,8 @@ package org.hisp.dhis.webapi.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.importsummary.ImportStatus;
+import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
 import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageResponse;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
@@ -170,6 +172,31 @@ public final class WebMessageUtils
     public static WebMessage unathorized( String message, String devMessage )
     {
         return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpServletResponse.SC_UNAUTHORIZED );
+    }
+
+    public static WebMessage importTypeSummary( ImportTypeSummary importTypeSummary )
+    {
+        WebMessage webMessage = new WebMessage();
+
+        if ( importTypeSummary.isStatus( ImportStatus.ERROR ) )
+        {
+            webMessage.setStatus( WebMessageStatus.ERROR );
+            webMessage.setHttpStatusCode( HttpServletResponse.SC_CONFLICT );
+        }
+        else if ( importTypeSummary.isStatus( ImportStatus.SUCCESS ) && !importTypeSummary.getConflicts().isEmpty() )
+        {
+            webMessage.setStatus( WebMessageStatus.WARNING );
+            webMessage.setHttpStatusCode( HttpServletResponse.SC_CONFLICT );
+        }
+        else
+        {
+            webMessage.setStatus( WebMessageStatus.OK );
+            webMessage.setHttpStatusCode( HttpServletResponse.SC_OK );
+        }
+
+        webMessage.setResponse( importTypeSummary );
+
+        return webMessage;
     }
 
     private WebMessageUtils()

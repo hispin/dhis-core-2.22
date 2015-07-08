@@ -33,6 +33,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.dxf2.webmessage.AbstractWebMessageResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ import java.util.List;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @JacksonXmlRootElement( localName = "importSummaries", namespace = DxfNamespaces.DXF_2_0 )
-public class ImportSummaries
+public class ImportSummaries extends AbstractWebMessageResponse
 {
     private int imported;
 
@@ -53,6 +54,7 @@ public class ImportSummaries
 
     public ImportSummaries()
     {
+
     }
 
     public void addImportSummaries( ImportSummaries importSummaries )
