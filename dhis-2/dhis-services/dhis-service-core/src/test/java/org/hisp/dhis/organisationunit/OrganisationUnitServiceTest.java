@@ -983,15 +983,6 @@ public class OrganisationUnitServiceTest
         User user = createUser( 'A' );
         Set<OrganisationUnit> organisationUnits = Sets.newHashSet( ouB );
         user.setOrganisationUnits( organisationUnits );
-
-        assertTrue( user.isInUserHierarchy( ouB ) );
-        assertTrue( user.isInUserHierarchy( ouD ) );
-        assertTrue( user.isInUserHierarchy( ouE ) );
-        
-        assertFalse( user.isInUserHierarchy( ouA ) );
-        assertFalse( user.isInUserHierarchy( ouC ) );
-        assertFalse( user.isInUserHierarchy( ouF ) );
-        assertFalse( user.isInUserHierarchy( ouG ) );
         
         assertTrue( organisationUnitService.isInUserHierarchy( ouB.getUid(), organisationUnits ) );
         assertTrue( organisationUnitService.isInUserHierarchy( ouD.getUid(), organisationUnits ) );
