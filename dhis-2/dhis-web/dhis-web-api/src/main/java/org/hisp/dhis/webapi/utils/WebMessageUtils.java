@@ -139,7 +139,37 @@ public final class WebMessageUtils
 
     public static WebMessage forbidden( String message, String devMessage )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpServletResponse.SC_FORBIDDEN );
+        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpServletResponse.SC_FORBIDDEN );
+    }
+
+    public static WebMessage serviceUnavailable( String message )
+    {
+        return createWebMessage( message, WebMessageStatus.ERROR, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
+    }
+
+    public static WebMessage serviceUnavailable( String message, String devMessage )
+    {
+        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
+    }
+
+    public static WebMessage unprocessableEntity( String message )
+    {
+        return createWebMessage( message, WebMessageStatus.ERROR, 422 );
+    }
+
+    public static WebMessage unprocessableEntity( String message, String devMessage )
+    {
+        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, 422 );
+    }
+
+    public static WebMessage unathorized( String message )
+    {
+        return createWebMessage( message, WebMessageStatus.ERROR, HttpServletResponse.SC_UNAUTHORIZED );
+    }
+
+    public static WebMessage unathorized( String message, String devMessage )
+    {
+        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpServletResponse.SC_UNAUTHORIZED );
     }
 
     private WebMessageUtils()

@@ -442,14 +442,4 @@ public class TrackedEntityInstanceController
     {
         return ContextUtils.getContextPath( request ) + "/api/" + "trackedEntityInstances" + "/" + importSummary.getReference();
     }
-
-    // -------------------------------------------------------------------------
-    // Exception handling
-    // -------------------------------------------------------------------------
-
-    @ExceptionHandler( IllegalQueryException.class )
-    public void handleError( IllegalQueryException ex, HttpServletResponse response )
-    {
-        ContextUtils.conflictResponse( response, ex.getMessage() );
-    }
 }

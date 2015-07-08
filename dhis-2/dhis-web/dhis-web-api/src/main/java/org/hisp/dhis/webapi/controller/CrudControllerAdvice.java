@@ -37,21 +37,15 @@ import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.webapi.controller.exception.NotAuthenticatedException;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.service.WebMessageService;
-import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -81,58 +75,52 @@ public class CrudControllerAdvice
         } );
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> notAuthenticatedExceptionHandler( NotAuthenticatedException ex )
+    @ExceptionHandler( { NotAuthenticatedException.class } )
+    public void notAuthenticatedExceptionHandler( NotAuthenticatedException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.UNAUTHORIZED );
+        webMessageService.send( WebMessageUtils.unathorized( ex.getClass().getName() ), response, request );
     }
 
     @ExceptionHandler( { NotFoundException.class } )
-    public ResponseEntity<String> notFoundExceptionHandler( Exception ex )
+    public void notFoundExceptionHandler( NotFoundException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.NOT_FOUND );
-    }
-
-    @ExceptionHandler( { HttpClientErrorException.class, HttpServerErrorException.class } )
-    public ResponseEntity<String> httpClient( HttpStatusCodeException ex )
-    {
-        return new ResponseEntity<>( ex.getStatusText(), getHeaders(), ex.getStatusCode() );
+        webMessageService.send( WebMessageUtils.notFound( ex.getClass().getName() ), response, request );
     }
 
     @ExceptionHandler( ConstraintViolationException.class )
-    public ResponseEntity<String> constraintViolationExceptionHandler( ConstraintViolationException ex )
+    public void constraintViolationExceptionHandler( ConstraintViolationException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.UNPROCESSABLE_ENTITY );
+        webMessageService.send( WebMessageUtils.unprocessableEntity( ex.getClass().getName() ), response, request );
     }
 
     @ExceptionHandler( DeleteNotAllowedException.class )
-    public ResponseEntity<String> deleteNotAllowedExceptionHandler( DeleteNotAllowedException ex )
+    public void deleteNotAllowedExceptionHandler( DeleteNotAllowedException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.CONFLICT );
+        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
     }
 
     @ExceptionHandler( IllegalQueryException.class )
-    public ResponseEntity<String> illegalQueryExceptionHandler( IllegalQueryException ex )
+    public void illegalQueryExceptionHandler( IllegalQueryException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.CONFLICT );
+        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
     }
 
     @ExceptionHandler( IllegalArgumentException.class )
-    public ResponseEntity<String> illegalArgumentExceptionHandler( IllegalArgumentException ex )
+    public void illegalArgumentExceptionHandler( IllegalArgumentException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.CONFLICT );
+        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
     }
 
     @ExceptionHandler( MaintenanceModeException.class )
-    public ResponseEntity<String> maintenanceModeExceptionHandler( MaintenanceModeException ex )
+    public void maintenanceModeExceptionHandler( MaintenanceModeException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        return new ResponseEntity<>( ex.getMessage(), getHeaders(), HttpStatus.SERVICE_UNAVAILABLE );
+        webMessageService.send( WebMessageUtils.serviceUnavailable( ex.getClass().getName() ), response, request );
     }
 
     @ExceptionHandler( DataApprovalException.class )
-    public void dataApprovalExceptionHandler( DataApprovalException ex, HttpServletResponse response )
+    public void dataApprovalExceptionHandler( DataApprovalException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        ContextUtils.conflictResponse( response, ex.getClass().getName() ); //TODO fix message
+        webMessageService.send( WebMessageUtils.conflict( ex.getClass().getName() ), response, request ); //TODO fix message
     }
 
     @ExceptionHandler( AccessDeniedException.class )
