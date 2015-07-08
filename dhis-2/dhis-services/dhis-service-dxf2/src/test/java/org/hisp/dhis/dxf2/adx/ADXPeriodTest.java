@@ -49,20 +49,26 @@ public class ADXPeriodTest
     @Test
     public void testParser()
     {
-        p = ADXPeriod.parse( "2015-01-01/P1Y" );
-        assertEquals( "2015", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-01-01/P1M" );
-        assertEquals( "201501", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-01-01/P1D" );
-        assertEquals( "20150101", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-01-01/P1Q" );
-        assertEquals( "2015Q1", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-04-01/P1Q" );
-        assertEquals( "2015Q2", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-01-01/P7D" );
-        assertEquals( "2015W1", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-01-05/P7D" );
-        assertEquals( "2015W2", p.getIsoDate() );
+        try {
+            p = ADXPeriod.parse( "2015-01-01/P1Y" );
+            assertEquals( "2015", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-01-01/P1M" );
+            assertEquals( "201501", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-01-01/P1D" );
+            assertEquals( "20150101", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-01-01/P1Q" );
+            assertEquals( "2015Q1", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-04-01/P1Q" );
+            assertEquals( "2015Q2", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-01-01/P7D" );
+            assertEquals( "2015W1", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-01-05/P7D" );
+            assertEquals( "2015W2", p.getIsoDate() );
+        }
+        catch (ADXException ex)
+        {
+            fail(ex.getMessage());
+        }
     }
 
     @Test
@@ -75,21 +81,28 @@ public class ADXPeriodTest
         } 
         catch ( Exception ex )
         {
-            assertEquals( ADXPeriod.ADXPeriodException.class, ex.getClass() );
+            assertEquals( ADXException.class, ex.getClass() );
         }
     }
 
     @Test
     public void testFinancialTypes()
     {
-        p = ADXPeriod.parse( "2015-01-01/P1Y" );
-        assertEquals( "2015", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-04-01/P1Y" );
-        assertEquals( "2015April", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-07-01/P1Y" );
-        assertEquals( "2015July", p.getIsoDate() );
-        p = ADXPeriod.parse( "2015-10-01/P1Y" );
-        assertEquals( "2015Oct", p.getIsoDate() );
+        try
+        {
+            p = ADXPeriod.parse( "2015-01-01/P1Y" );
+            assertEquals( "2015", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-04-01/P1Y" );
+            assertEquals( "2015April", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-07-01/P1Y" );
+            assertEquals( "2015July", p.getIsoDate() );
+            p = ADXPeriod.parse( "2015-10-01/P1Y" );
+            assertEquals( "2015Oct", p.getIsoDate() );
+        }
+        catch (ADXException ex)
+        {
+            fail(ex.getMessage());
+        }
     }
 
     @Test
@@ -102,7 +115,7 @@ public class ADXPeriodTest
         } 
         catch ( Exception ex )
         {
-            assertEquals( ADXPeriod.ADXPeriodException.class, ex.getClass() );
+            assertEquals( ADXException.class, ex.getClass() );
         }
     }
 
