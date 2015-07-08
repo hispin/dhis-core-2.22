@@ -333,7 +333,7 @@ public class EventController
                 }
             }
 
-            JacksonUtils.toXml( response.getOutputStream(), importSummaries );
+            webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
         }
         else
         {
@@ -379,7 +379,7 @@ public class EventController
                 }
             }
 
-            JacksonUtils.toJson( response.getOutputStream(), importSummaries );
+            webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
         }
         else
         {
@@ -404,7 +404,7 @@ public class EventController
         if ( !importOptions.isAsync() )
         {
             ImportSummaries importSummaries = eventService.addEvents( events.getEvents(), importOptions, null );
-            JacksonUtils.toJson( response.getOutputStream(), importSummaries );
+            webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
         }
         else
         {

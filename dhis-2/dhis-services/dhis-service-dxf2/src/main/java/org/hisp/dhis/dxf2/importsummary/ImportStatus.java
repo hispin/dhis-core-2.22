@@ -31,5 +31,6 @@ package org.hisp.dhis.dxf2.importsummary;
 public enum ImportStatus
 {
     SUCCESS,
+    WARNING,
     ERROR
 }
