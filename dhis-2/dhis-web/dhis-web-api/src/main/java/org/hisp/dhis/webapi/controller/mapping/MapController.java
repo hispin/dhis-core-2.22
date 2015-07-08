@@ -31,6 +31,7 @@ package org.hisp.dhis.webapi.controller.mapping;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.legend.LegendService;
@@ -48,6 +49,7 @@ import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -126,7 +128,8 @@ public class MapController
 
         mappingService.addMap( map );
 
-        ContextUtils.createdResponse( response, "Map created", MapSchemaDescriptor.API_ENDPOINT + "/" + map.getUid() );
+        response.addHeader( "Location", MapSchemaDescriptor.API_ENDPOINT + "/" + map.getUid() );
+        webMessageService.send( WebMessageUtils.created( "Map created" ), response, request );
     }
 
     @Override
@@ -137,8 +140,7 @@ public class MapController
 
         if ( map == null )
         {
-            ContextUtils.notFoundResponse( response, "Map does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Map does not exist: " + uid ) );
         }
 
         Iterator<MapView> views = map.getMapViews().iterator();
@@ -179,8 +181,7 @@ public class MapController
 
         if ( map == null )
         {
-            ContextUtils.notFoundResponse( response, "Map does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Map does not exist: " + uid ) );
         }
 
         mappingService.deleteMap( map );
@@ -203,20 +204,17 @@ public class MapController
 
         if ( map == null )
         {
-            ContextUtils.notFoundResponse( response, "Map does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Map does not exist: " + uid ) );
         }
 
         if ( width != null && width < MAP_MIN_WIDTH )
         {
-            ContextUtils.conflictResponse( response, "Min map width is " + MAP_MIN_WIDTH + ": " + width );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Min map width is " + MAP_MIN_WIDTH + ": " + width ) );
         }
 
         if ( height != null && height < MAP_MIN_HEIGHT )
         {
-            ContextUtils.conflictResponse( response, "Min map height is " + MAP_MIN_HEIGHT + ": " + height );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Min map height is " + MAP_MIN_HEIGHT + ": " + height ) );
         }
 
         OrganisationUnit unit = ou != null ? organisationUnitService.getOrganisationUnit( ou ) : null;
