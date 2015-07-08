@@ -28,14 +28,7 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
@@ -71,7 +64,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -277,7 +275,7 @@ public class MessageConversationController
 
     @RequestMapping( value = "/{uid}/read", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE } )
     public @ResponseBody RootNode markMessageConversationRead(
-         @PathVariable String uid, @RequestParam ( required = false ) String userUid, HttpServletResponse response )
+        @PathVariable String uid, @RequestParam( required = false ) String userUid, HttpServletResponse response )
     {
         return modifyMessageConversationRead( userUid, new String[]{ uid }, response, true );
     }
@@ -295,7 +293,7 @@ public class MessageConversationController
 
     @RequestMapping( value = "/{uid}/unread", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE } )
     public @ResponseBody RootNode markMessageConversationUnread(
-        @PathVariable String uid, @RequestParam ( required = false ) String userUid, HttpServletResponse response )
+        @PathVariable String uid, @RequestParam( required = false ) String userUid, HttpServletResponse response )
     {
         return modifyMessageConversationRead( userUid, new String[]{ uid }, response, false );
     }
@@ -566,6 +564,7 @@ public class MessageConversationController
 
     /**
      * Internal handler for setting the read property of MessageConversation.
+     *
      * @param readValue true when setting as read, false when setting unread.
      */
     private RootNode modifyMessageConversationRead( String userUid, String[] uids, HttpServletResponse response, boolean readValue )
@@ -603,7 +602,7 @@ public class MessageConversationController
         for ( org.hisp.dhis.message.MessageConversation conversation : messageConversations )
         {
 
-            boolean success = ( readValue ? conversation.markRead( user ) : conversation.markUnread( user ) );
+            boolean success = (readValue ? conversation.markRead( user ) : conversation.markUnread( user ));
             if ( success )
             {
                 messageService.updateMessageConversation( conversation );

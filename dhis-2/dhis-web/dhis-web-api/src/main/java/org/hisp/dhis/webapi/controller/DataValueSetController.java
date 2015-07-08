@@ -28,17 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_CSV;
-import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
-import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_XML;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
@@ -54,6 +43,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.Set;
+
+import static org.hisp.dhis.webapi.utils.ContextUtils.*;
 
 /**
  * @author Lars Helge Overland
@@ -85,9 +82,9 @@ public class DataValueSetController
     {
         response.setContentType( CONTENT_TYPE_XML );
 
-        DataExportParams params = dataValueSetService.getFromUrl( dataSet, period, 
+        DataExportParams params = dataValueSetService.getFromUrl( dataSet, period,
             startDate, endDate, orgUnit, children, lastUpdated, limit, idSchemes );
-        
+
         dataValueSetService.writeDataValueSetXml( params, response.getOutputStream() );
     }
 
@@ -105,9 +102,9 @@ public class DataValueSetController
     {
         response.setContentType( CONTENT_TYPE_JSON );
 
-        DataExportParams params = dataValueSetService.getFromUrl( dataSet, period, 
+        DataExportParams params = dataValueSetService.getFromUrl( dataSet, period,
             startDate, endDate, orgUnit, children, lastUpdated, limit, idSchemes );
-        
+
         dataValueSetService.writeDataValueSetJson( params, response.getOutputStream() );
     }
 
@@ -126,9 +123,9 @@ public class DataValueSetController
     {
         response.setContentType( CONTENT_TYPE_CSV );
 
-        DataExportParams params = dataValueSetService.getFromUrl( dataSet, period, 
+        DataExportParams params = dataValueSetService.getFromUrl( dataSet, period,
             startDate, endDate, orgUnit, children, lastUpdated, limit, idSchemes );
-        
+
         dataValueSetService.writeDataValueSetCsv( params, response.getWriter() );
     }
 
