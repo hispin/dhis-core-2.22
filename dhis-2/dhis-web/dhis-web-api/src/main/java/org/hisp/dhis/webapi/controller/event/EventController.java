@@ -28,8 +28,8 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dxf2.common.IdSchemes;
@@ -44,21 +44,21 @@ import org.hisp.dhis.dxf2.events.event.ImportEventsTask;
 import org.hisp.dhis.dxf2.events.event.csv.CsvEventService;
 import org.hisp.dhis.dxf2.events.report.EventRowService;
 import org.hisp.dhis.dxf2.events.report.EventRows;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.scheduling.Scheduler;
-import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -96,8 +96,6 @@ public class EventController
     // Dependencies
     //--------------------------------------------------------------------------
 
-    @Autowired
-    private IdentifiableObjectManager manager;
 
     @Autowired
     private CurrentUserService currentUserService;
@@ -115,13 +113,10 @@ public class EventController
     private EventRowService eventRowService;
 
     @Autowired
-    private TrackedEntityInstanceService trackedEntityInstanceService;
-
-    @Autowired
-    private OrganisationUnitService organisationUnitService;
-
-    @Autowired
     private DataElementService dataElementService;
+
+    @Autowired
+    private WebMessageService webMessageService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -426,52 +421,49 @@ public class EventController
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = { "application/xml", "text/xml" } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
-    public void putXmlEvent( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException
+    public void putXmlEvent( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
         Event event = eventService.getEvent( uid );
 
         if ( event == null )
         {
-            ContextUtils.notFoundResponse( response, "Event not found for uid: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
         Event updatedEvent = JacksonUtils.fromXml( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         eventService.updateEvent( updatedEvent, false, importOptions );
-        ContextUtils.okResponse( response, "Event updated: " + uid );
+        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
     }
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
-    public void putJsonEvent( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException
+    public void putJsonEvent( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
         Event event = eventService.getEvent( uid );
 
         if ( event == null )
         {
-            ContextUtils.notFoundResponse( response, "Event not found for uid: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
         Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         eventService.updateEvent( updatedEvent, false, importOptions );
-        ContextUtils.okResponse( response, "Event updated: " + uid );
+        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
     }
 
     @RequestMapping( value = "/{uid}/{dataElementUid}", method = RequestMethod.PUT, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
-    public void putJsonEventSingleValue( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, @PathVariable( "dataElementUid" ) String dataElementUid ) throws IOException
+    public void putJsonEventSingleValue( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, @PathVariable( "dataElementUid" ) String dataElementUid ) throws IOException, WebMessageException
     {
         Event event = eventService.getEvent( uid );
 
         if ( event == null )
         {
-            ContextUtils.notFoundResponse( response, "Event not found for uid: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
         DataElement dataElement = dataElementService.getDataElement( dataElementUid );
@@ -486,46 +478,43 @@ public class EventController
         updatedEvent.setEvent( uid );
 
         eventService.updateEvent( updatedEvent, true );
-        ContextUtils.okResponse( response, "Event updated: " + uid );
-
+        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
     }
 
     @RequestMapping( value = "/{uid}/addNote", method = RequestMethod.PUT, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
-    public void putJsonEventForNote( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException
+    public void putJsonEventForNote( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
         Event event = eventService.getEvent( uid );
 
         if ( event == null )
         {
-            ContextUtils.notFoundResponse( response, "Event not found for uid: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
         Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         eventService.updateEventForNote( updatedEvent );
-        ContextUtils.okResponse( response, "Event updated: " + uid );
+        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
     }
 
     @RequestMapping( value = "/{uid}/updateEventDate", method = RequestMethod.PUT, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
-    public void putJsonEventForEventDate( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException
+    public void putJsonEventForEventDate( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
         Event event = eventService.getEvent( uid );
 
         if ( event == null )
         {
-            ContextUtils.notFoundResponse( response, "Event not found for uid: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
         Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         eventService.updateEventForEventDate( updatedEvent );
-        ContextUtils.okResponse( response, "Event updated: " + uid );
+        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
     }
 
     // -------------------------------------------------------------------------
@@ -534,14 +523,13 @@ public class EventController
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.DELETE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_DELETE')" )
-    public void deleteEvent( HttpServletResponse response, @PathVariable( "uid" ) String uid )
+    public void deleteEvent( HttpServletResponse response, @PathVariable( "uid" ) String uid ) throws WebMessageException
     {
         Event event = eventService.getEvent( uid );
 
         if ( event == null )
         {
-            ContextUtils.notFoundResponse( response, "Event not found for uid: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
         response.setStatus( HttpServletResponse.SC_NO_CONTENT );
