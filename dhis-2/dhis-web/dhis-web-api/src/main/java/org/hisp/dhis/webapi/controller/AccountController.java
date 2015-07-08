@@ -465,7 +465,7 @@ public class AccountController
             return;
         }
 
-        if( !passwordManager.legacyOrCurrentMatches( oldPassword, credentials.getPassword(), credentials.getUsername() ) )
+        if ( !passwordManager.legacyOrCurrentMatches( oldPassword, credentials.getPassword(), credentials.getUsername() ) )
         {
             result.put( "status", "NON_MATCHING_PASSWORD" );
             result.put( "message", "Old password is wrong, please correct and try again." );
