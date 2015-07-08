@@ -64,6 +64,11 @@ public class TrackedEntityInstanceQueryParams
     public static final int DEFAULT_PAGE_SIZE = 50;
     
     /**
+     * Last updated for TEI.
+     */
+    private Date lastUpdated;
+
+    /**
      * Query value, will apply to all relevant attributes.
      */
     private QueryFilter query;
@@ -524,6 +529,16 @@ public class TrackedEntityInstanceQueryParams
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
+
+    public Date getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( Date lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
+    }
 
     public QueryFilter getQuery()
     {

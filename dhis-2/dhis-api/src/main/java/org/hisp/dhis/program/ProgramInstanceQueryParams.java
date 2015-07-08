@@ -46,7 +46,7 @@ public class ProgramInstanceQueryParams
     public static final int DEFAULT_PAGE_SIZE = 50;
 
     /**
-     * Last updated for enrollment.
+     * Last updated for PI.
      */
     private Date lastUpdated;
 

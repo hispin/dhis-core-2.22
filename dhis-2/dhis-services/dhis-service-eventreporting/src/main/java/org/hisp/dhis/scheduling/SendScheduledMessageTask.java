@@ -206,7 +206,7 @@ public class SendScheduledMessageTask
     {
         notifier.notify( taskId, "Start to prepare reminder messages for enrollements" );
 
-        Collection<SchedulingProgramObject> schedulingProgramObjects = programInstanceService.getScheduleMesssages();
+        Collection<SchedulingProgramObject> schedulingProgramObjects = programInstanceService.getScheduledMessages();
 
         for ( SchedulingProgramObject schedulingProgramObject : schedulingProgramObjects )
         {

@@ -188,6 +188,8 @@ public class DefaultTrackedEntityInstanceService
             }
         }
 
+        params.setSkipPaging( true );
+
         return trackedEntityInstanceStore.countTrackedEntityInstances( params );
     }
 
