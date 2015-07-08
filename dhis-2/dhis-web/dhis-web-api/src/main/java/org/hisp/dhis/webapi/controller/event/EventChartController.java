@@ -30,8 +30,10 @@ package org.hisp.dhis.webapi.controller.event;
 
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.DimensionService;
+import org.hisp.dhis.commons.util.CodecUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.eventchart.EventChart;
 import org.hisp.dhis.eventchart.EventChartService;
 import org.hisp.dhis.i18n.I18nFormat;
@@ -42,10 +44,10 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.schema.descriptors.EventChartSchemaDescriptor;
-import org.hisp.dhis.commons.util.CodecUtils;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +111,8 @@ public class EventChartController
 
         eventChartService.saveEventChart( eventChart );
 
-        ContextUtils.createdResponse( response, "Event chart created", EventChartSchemaDescriptor.API_ENDPOINT + "/" + eventChart.getUid() );
+        response.addHeader( "Location", EventChartSchemaDescriptor.API_ENDPOINT + "/" + eventChart.getUid() );
+        webMessageService.send( WebMessageUtils.created( "Event chart created" ), response, request );
     }
 
     @Override
@@ -120,8 +123,7 @@ public class EventChartController
 
         if ( eventChart == null )
         {
-            ContextUtils.notFoundResponse( response, "Event chart does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event chart does not exist: " + uid ) );
         }
 
         EventChart newEventChart = JacksonUtils.fromJson( request.getInputStream(), EventChart.class );
@@ -141,8 +143,7 @@ public class EventChartController
 
         if ( eventChart == null )
         {
-            ContextUtils.notFoundResponse( response, "Event report does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event chart does not exist: " + uid ) );
         }
 
         eventChartService.deleteEventChart( eventChart );
@@ -160,14 +161,13 @@ public class EventChartController
         @RequestParam( value = "width", defaultValue = "800", required = false ) int width,
         @RequestParam( value = "height", defaultValue = "500", required = false ) int height,
         @RequestParam( value = "attachment", required = false ) boolean attachment,
-        HttpServletResponse response ) throws IOException
+        HttpServletResponse response ) throws IOException, WebMessageException
     {
         EventChart chart = eventChartService.getEventChart( uid ); // TODO no acl?
 
         if ( chart == null )
         {
-            ContextUtils.notFoundResponse( response, "Chart does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event chart does not exist: " + uid ) );
         }
 
         OrganisationUnit unit = ou != null ? organisationUnitService.getOrganisationUnit( ou ) : null;
