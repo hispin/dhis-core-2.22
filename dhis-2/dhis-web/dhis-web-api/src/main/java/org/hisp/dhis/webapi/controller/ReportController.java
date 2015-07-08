@@ -32,6 +32,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.j2ee.servlets.BaseHttpServlet;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 import org.hisp.dhis.commons.util.CodecUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -43,6 +44,7 @@ import org.hisp.dhis.report.ReportService;
 import org.hisp.dhis.schema.descriptors.ReportSchemaDescriptor;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -94,8 +96,7 @@ public class ReportController
 
         if ( report == null )
         {
-            ContextUtils.notFoundResponse( response, "Report not found for identifier: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Report not found for identifier: " + uid ) );
         }
 
         report.setDesignContent( designContent );
@@ -109,14 +110,12 @@ public class ReportController
 
         if ( report == null )
         {
-            ContextUtils.notFoundResponse( response, "Report not found for identifier: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Report not found for identifier: " + uid ) );
         }
 
         if ( report.getDesignContent() == null )
         {
-            ContextUtils.conflictResponse( response, "Report has no design content: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Report has no design content: " + uid ) );
         }
 
         if ( Report.TYPE_HTML.equals( report.getType() ) )
@@ -194,8 +193,7 @@ public class ReportController
 
         if ( report == null )
         {
-            ContextUtils.notFoundResponse( response, "Report does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Report not found for identifier: " + uid ) );
         }
 
         if ( organisationUnitUid == null && report.hasReportTable() && report.getReportTable().hasReportParams()

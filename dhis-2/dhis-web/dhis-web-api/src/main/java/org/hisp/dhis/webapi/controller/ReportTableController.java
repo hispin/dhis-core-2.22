@@ -33,10 +33,10 @@ import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.legend.LegendService;
-import org.hisp.dhis.mapping.MappingService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
@@ -46,6 +46,7 @@ import org.hisp.dhis.schema.descriptors.ReportTableSchemaDescriptor;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -82,9 +83,6 @@ public class ReportTableController
     private DimensionService dimensionService;
 
     @Autowired
-    private MappingService mappingService;
-
-    @Autowired
     private LegendService legendService;
 
     @Autowired
@@ -107,7 +105,8 @@ public class ReportTableController
 
         reportTableService.saveReportTable( reportTable );
 
-        ContextUtils.createdResponse( response, "Report table created", ReportTableSchemaDescriptor.API_ENDPOINT + "/" + reportTable.getUid() );
+        response.addHeader( "Location", ReportTableSchemaDescriptor.API_ENDPOINT + "/" + reportTable.getUid() );
+        webMessageService.send( WebMessageUtils.created( "Report table created" ), response, request );
     }
 
     @Override
@@ -118,8 +117,7 @@ public class ReportTableController
 
         if ( reportTable == null )
         {
-            ContextUtils.notFoundResponse( response, "Report table does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Report table does not exist: " + uid ) );
         }
 
         ReportTable newReportTable = JacksonUtils.fromJson( request.getInputStream(), ReportTable.class );
@@ -139,8 +137,7 @@ public class ReportTableController
 
         if ( reportTable == null )
         {
-            ContextUtils.notFoundResponse( response, "Report table does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Report table does not exist: " + uid ) );
         }
 
         reportTableService.deleteReportTable( reportTable );
