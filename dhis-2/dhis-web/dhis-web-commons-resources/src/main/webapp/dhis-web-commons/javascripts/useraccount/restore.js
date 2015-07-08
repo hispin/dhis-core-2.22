@@ -16,7 +16,6 @@ var validationRules = {
 };
 
 $(document).ready(function() {
-
   $("#restoreForm").validate({
     rules: validationRules.rules,
     submitHandler: restoreSubmitHandler,
