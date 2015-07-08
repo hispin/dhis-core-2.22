@@ -170,6 +170,17 @@
                                        blur-or-change="saveDatavalue()" 
                                        class="form-control">
                             </div>
+                            <div ng-switch-when="datetime">
+                                <input type="text"
+                                       placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
+                                       d2-date
+                                       max-date="prStDes[eventGridColumn.id].allowFutureDate ? '' : 0"
+                                       ng-model="currentEvent[eventGridColumn.id]"
+                                       ng-required={{eventGridColumn.compulsory}}
+                                       name="foo"
+                                       input-field-id={{eventGridColumn.id}}
+                                       style="width:99%;"/>
+                            </div>
                             <div ng-switch-when="trueOnly">
                                 <input type="checkbox"                                         
                                        ng-model="currentEvent[eventGridColumn.id]"                                                               
@@ -378,6 +389,19 @@
                                            name="foo" 
                                            input-field-id={{de.dataElement.id}} 
                                            blur-or-change="saveDatavalue()" 
+                                           class="form-control"/>
+                                </div>
+                                <div ng-switch-when="datetime">
+                                    <input type="text"
+                                           placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
+                                           d2-date
+                                           max-date="prStDes[de.dataElement.id].allowFutureDate ? '' : 0"
+                                           d2-date-validator
+                                           ng-model="currentEvent[de.dataElement.id]"
+                                           ng-required={{prStDes[de.dataElement.id].compulsory}}
+                                           name="foo"
+                                           input-field-id={{de.dataElement.id}}
+                                           blur-or-change="saveDatavalue()"
                                            class="form-control"/>
                                 </div>
                                 <div ng-switch-when="trueOnly">

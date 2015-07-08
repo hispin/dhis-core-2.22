@@ -766,7 +766,8 @@ public class DataValueDailyConverter
 
             }
 
-            else if ( dataElementType.equals( DataElement.VALUE_TYPE_DATE ) )
+            else if ( dataElementType.equals( DataElement.VALUE_TYPE_DATE )
+                || dataElementType.equals( DataElement.VALUE_TYPE_DATETIME ) )
             {
                 out.write( SEPARATOR_B );
                 out.write( SEPARATOR_B );
