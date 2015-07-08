@@ -50,7 +50,7 @@ import java.util.List;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @Controller
-@RequestMapping(value = TrackedEntityAttributeSchemaDescriptor.API_ENDPOINT)
+@RequestMapping( value = TrackedEntityAttributeSchemaDescriptor.API_ENDPOINT )
 public class TrackedEntityAttributeController
     extends AbstractCrudController<TrackedEntityAttribute>
 {
@@ -70,8 +70,7 @@ public class TrackedEntityAttributeController
 
         if ( withoutPrograms )
         {
-            entityList = new ArrayList<>(
-                trackedEntityAttributeService.getTrackedEntityAttributesWithoutProgram() );
+            entityList = new ArrayList<>( trackedEntityAttributeService.getTrackedEntityAttributesWithoutProgram() );
         }
         else if ( options.getOptions().containsKey( "query" ) )
         {
