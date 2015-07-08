@@ -796,16 +796,21 @@ public class DefaultOrganisationUnitService
     public boolean isInUserHierarchy( OrganisationUnit organisationUnit )
     {
         User user = currentUserService.getCurrentUser();
+        
+        if ( user == null || user.getOrganisationUnits() == null || user.getOrganisationUnits().isEmpty() )
+        {
+            return false;
+        }
 
-        return user != null ? user.isInUserHierarchy( organisationUnit ) : false;
+        return organisationUnit.isDescendant( user.getOrganisationUnits() );
     }
 
     @Override
     public boolean isInUserHierarchy( String uid, Set<OrganisationUnit> organisationUnits )
     {
         OrganisationUnit organisationUnit = organisationUnitStore.getByUid( uid );
-
-        return User.isInUserHierarchy( organisationUnit, organisationUnits );
+        
+        return organisationUnit != null ? organisationUnit.isDescendant( organisationUnits ) : false;
     }
 
     // -------------------------------------------------------------------------

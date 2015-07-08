@@ -53,6 +53,8 @@ public interface DataValueSetService
     
     void validate( DataExportParams params );
     
+    void decideAccess( DataExportParams params );
+    
     void writeDataValueSetXml( DataExportParams params, OutputStream out );
 
     void writeDataValueSetJson( DataExportParams params, OutputStream out );
