@@ -124,7 +124,7 @@ public class EnrollmentController
             programEndDate, trackedEntity, trackedEntityInstance, followUp, page, pageSize, totalPages, skipPaging );
 
         List<Enrollment> enrollments = new ArrayList<>( enrollmentService.getEnrollments(
-            programInstanceService.getProgramInstances( params ) ).getEnrollments() );
+            programInstanceService.getProgramInstances( params ) ) );
 
         RootNode rootNode = NodeUtils.createMetadata();
         rootNode.addChild( fieldFilterService.filter( Enrollment.class, enrollments, fields ) );
