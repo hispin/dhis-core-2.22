@@ -140,12 +140,12 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
     {
         ImportSummaries importSummaries = new ImportSummaries();
 
-        Enrollments create = new Enrollments();
-        Enrollments update = new Enrollments();
+        List<Enrollment> create = new ArrayList<>();
+        List<Enrollment> update = new ArrayList<>();
 
         if ( strategy.isCreate() )
         {
-            create.getEnrollments().addAll( enrollments );
+            create.addAll( enrollments );
         }
         else if ( strategy.isCreateAndUpdate() )
         {
@@ -153,24 +153,24 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
             {
                 if ( StringUtils.isEmpty( enrollment.getEnrollment() ) )
                 {
-                    create.getEnrollments().add( enrollment );
+                    create.add( enrollment );
                 }
                 else
                 {
                     if ( programInstanceService.getProgramInstance( enrollment.getEnrollment() ) == null )
                     {
-                        create.getEnrollments().add( enrollment );
+                        create.add( enrollment );
                     }
                     else
                     {
-                        update.getEnrollments().add( enrollment );
+                        update.add( enrollment );
                     }
                 }
             }
         }
 
-        importSummaries.addImportSummaries( addEnrollments( create.getEnrollments() ) );
-        importSummaries.addImportSummaries( updateEnrollments( update.getEnrollments() ) );
+        importSummaries.addImportSummaries( addEnrollments( create ) );
+        importSummaries.addImportSummaries( updateEnrollments( update ) );
 
         return importSummaries;
     }
