@@ -94,13 +94,13 @@ public interface TrackedEntityInstanceService
 {
     String ID = TrackedEntityInstanceService.class.getName();
 
-    final int ERROR_NONE = 0;
-    final int ERROR_DUPLICATE_IDENTIFIER = 1;
-    final int ERROR_ENROLLMENT = 2;
+    int ERROR_NONE = 0;
+    int ERROR_DUPLICATE_IDENTIFIER = 1;
+    int ERROR_ENROLLMENT = 2;
 
-    final String SEPARATOR = "_";
+    String SEPARATOR = "_";
 
-    final String F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS = "F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS";
+    String F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS = "F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS";
 
     /**
      * Returns a grid with tracked entity instance values based on the given
@@ -111,8 +111,22 @@ public interface TrackedEntityInstanceService
      */
     Grid getTrackedEntityInstancesGrid( TrackedEntityInstanceQueryParams params );
 
+    /**
+     * Returns a list with tracked entity instance values based on the given
+     * TrackedEntityInstanceQueryParams.
+     *
+     * @param params the TrackedEntityInstanceQueryParams.
+     * @return List of TEIs matching the params
+     */
     List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
 
+    /**
+     * Returns the number of tracked entity instance matches based on the given
+     * TrackedEntityInstanceQueryParams.
+     *
+     * @param params the TrackedEntityInstanceQueryParams.
+     * @return Number of TEIs matching the params
+     */
     int countTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
 
     /**
@@ -121,10 +135,10 @@ public interface TrackedEntityInstanceService
      * @param query            the query string.
      * @param attribute        the set of attributes.
      * @param filter           the set of filters.
-     * @param ou               the set of organisatio unit identifiers.
+     * @param ou               the set of organisation unit identifiers.
      * @param ouMode           the OrganisationUnitSelectionMode.
      * @param program          the Program identifier.
-     * @param programStatus    the ProgramStatus in the given orogram.
+     * @param programStatus    the ProgramStatus in the given program.
      * @param followUp         indicates follow up status in the given Program.
      * @param programStartDate the start date for enrollment in the given
      *                         Program.

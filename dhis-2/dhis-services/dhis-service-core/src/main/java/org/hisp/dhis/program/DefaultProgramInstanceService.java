@@ -266,6 +266,9 @@ public class DefaultProgramInstanceService
     @Override
     public List<ProgramInstance> getProgramInstances( ProgramInstanceQueryParams params )
     {
+        decideAccess( params );
+        validate( params );
+
         User user = currentUserService.getCurrentUser();
 
         if ( user != null && params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ACCESSIBLE ) )
@@ -300,6 +303,57 @@ public class DefaultProgramInstanceService
         }
 
         return programInstanceStore.getProgramInstances( params );
+    }
+
+    @Override
+    public int countProgramInstances( ProgramInstanceQueryParams params )
+    {
+        decideAccess( params );
+        validate( params );
+
+        User user = currentUserService.getCurrentUser();
+
+        if ( user != null && params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ACCESSIBLE ) )
+        {
+            params.setOrganisationUnits( user.getDataViewOrganisationUnitsWithFallback() );
+            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
+        }
+        else if ( params.isOrganisationUnitMode( CHILDREN ) )
+        {
+            Set<OrganisationUnit> organisationUnits = new HashSet<>();
+            organisationUnits.addAll( params.getOrganisationUnits() );
+
+            for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
+            {
+                organisationUnits.addAll( organisationUnit.getChildren() );
+            }
+
+            params.setOrganisationUnits( organisationUnits );
+        }
+
+        for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
+        {
+            if ( !organisationUnit.hasLevel() )
+            {
+                organisationUnit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( organisationUnit.getId() ) );
+            }
+        }
+
+        params.setSkipPaging( true );
+
+        return programInstanceStore.countProgramInstances( params );
+    }
+
+    @Override
+    public void decideAccess( ProgramInstanceQueryParams params )
+    {
+
+    }
+
+    @Override
+    public void validate( ProgramInstanceQueryParams params ) throws IllegalQueryException
+    {
+
     }
 
     @Override
@@ -382,30 +436,27 @@ public class DefaultProgramInstanceService
     @Override
     public List<Grid> getProgramInstanceReport( TrackedEntityInstance instance, I18n i18n )
     {
-
         List<Grid> grids = new ArrayList<>();
 
         // ---------------------------------------------------------------------
         // Dynamic attributes
         // ---------------------------------------------------------------------
 
-        Collection<Program> programs = programService
-            .getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION );
+        Collection<Program> programs = programService.getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION );
         programs.addAll( programService.getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION ) );
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService
-            .getTrackedEntityAttributeValues( instance );
+        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService.getTrackedEntityAttributeValues( instance );
         Iterator<TrackedEntityAttributeValue> iterAttribute = attributeValues.iterator();
 
         for ( Program program : programs )
         {
-            List<TrackedEntityAttribute> atttributes = program.getTrackedEntityAttributes();
+            List<TrackedEntityAttribute> attributes = program.getTrackedEntityAttributes();
 
             while ( iterAttribute.hasNext() )
             {
                 TrackedEntityAttributeValue attributeValue = iterAttribute.next();
 
-                if ( !atttributes.contains( attributeValue.getAttribute() ) )
+                if ( !attributes.contains( attributeValue.getAttribute() ) )
                 {
                     iterAttribute.remove();
                 }
@@ -562,14 +613,7 @@ public class DefaultProgramInstanceService
     }
 
     @Override
-    public List<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
-        Collection<Integer> orgunitIds, Date startDate, Date endDate, Integer min, Integer max )
-    {
-        return programInstanceStore.getByStatus( status, program, orgunitIds, startDate, endDate, min, max );
-    }
-
-    @Override
-    public Collection<SchedulingProgramObject> getScheduleMesssages()
+    public Collection<SchedulingProgramObject> getScheduledMessages()
     {
         Collection<SchedulingProgramObject> result = programInstanceStore
             .getSendMesssageEvents( TrackedEntityInstanceReminder.ENROLLEMENT_DATE_TO_COMPARE );
