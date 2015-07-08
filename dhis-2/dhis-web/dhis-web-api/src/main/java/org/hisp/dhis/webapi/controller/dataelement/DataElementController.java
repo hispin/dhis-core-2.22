@@ -29,7 +29,6 @@ package org.hisp.dhis.webapi.controller.dataelement;
  */
 
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElement;
