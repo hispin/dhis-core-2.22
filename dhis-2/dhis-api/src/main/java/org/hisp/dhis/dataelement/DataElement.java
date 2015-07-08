@@ -94,6 +94,7 @@ public class DataElement
     public static final String VALUE_TYPE_BOOL = "bool";
     public static final String VALUE_TYPE_TRUE_ONLY = "trueOnly";
     public static final String VALUE_TYPE_DATE = "date";
+    public static final String VALUE_TYPE_DATETIME = "datetime";
     public static final String VALUE_TYPE_UNIT_INTERVAL = "unitInterval";
     public static final String VALUE_TYPE_PERCENTAGE = "percentage";
 
