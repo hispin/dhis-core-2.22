@@ -82,6 +82,8 @@ public class OrganisationUnit
 {
     private static final long serialVersionUID = 1228298379303894619L;
 
+    private static final Joiner PATH_JOINER = Joiner.on( "/" );
+
     public static final String FEATURETYPE_NONE = "None";
     public static final String FEATURETYPE_MULTIPOLYGON = "MultiPolygon";
     public static final String FEATURETYPE_POLYGON = "Polygon";
@@ -852,7 +854,7 @@ public class OrganisationUnit
 
         Collections.reverse( pathList );
 
-        path = "/" + Joiner.on( "/" ).join( pathList );
+        path = "/" + PATH_JOINER.join( pathList );
 
         return path;
     }
