@@ -26,16 +26,38 @@ package org.hisp.dhis.dxf2.adx;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.importsummary.ImportConflict;
+
 /**
- * A simple wrapper for ADX checked exceptions
+ * A simple class for ADX checked exceptions
+ * which can wrap an ImportConflict
  * 
  * @author bobj
  */
 public class ADXException
     extends Exception
 {
+    protected String object;
+    
+    public String getObject()
+    {
+        return object;
+    }
+    
     public ADXException(String msg) 
     {
         super(msg);
+    }
+
+    // for wrapping ImportConflict
+    public ADXException(String object, String msg) 
+    {
+        super(msg);
+        this.object = object;
+    }
+    
+    public ImportConflict getImportConflict()
+    {
+        return new ImportConflict(object, this.getMessage());
     }
 }
