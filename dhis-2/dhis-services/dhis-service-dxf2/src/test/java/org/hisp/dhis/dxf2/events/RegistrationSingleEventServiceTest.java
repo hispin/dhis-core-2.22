@@ -211,32 +211,6 @@ public class RegistrationSingleEventServiceTest
         assertEquals( 1, eventService.getEvents( params ).getEvents().size() );
     }
 
-    @Test
-    public void testMultipleEnrollmentsWithEventShouldGiveDifferentUIDs()
-    {
-        Enrollment enrollment = createEnrollment( programA.getUid(), trackedEntityInstanceMaleA.getTrackedEntityInstance() );
-        enrollmentService.addEnrollment( enrollment );
-
-        Event event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(), trackedEntityInstanceMaleA.getTrackedEntityInstance() );
-        event.setStatus( EventStatus.COMPLETED );
-        ImportSummary importSummary1 = eventService.addEvent( event );
-        assertEquals( ImportStatus.SUCCESS, importSummary1.getStatus() );
-        enrollment = enrollmentService.getEnrollments( trackedEntityInstanceMaleA ).getEnrollments().get( 0 );
-        enrollmentService.completeEnrollment( enrollment );
-
-        enrollment = createEnrollment( programA.getUid(), trackedEntityInstanceMaleA.getTrackedEntityInstance() );
-        enrollmentService.addEnrollment( enrollment );
-
-        event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(), trackedEntityInstanceMaleA.getTrackedEntityInstance() );
-        event.setStatus( EventStatus.COMPLETED );
-        ImportSummary importSummary2 = eventService.addEvent( event );
-        assertEquals( ImportStatus.SUCCESS, importSummary2.getStatus() );
-        enrollment = enrollmentService.getEnrollments( trackedEntityInstanceMaleA ).getEnrollments().get( 0 );
-        enrollmentService.completeEnrollment( enrollment );
-
-        assertNotEquals( importSummary1.getReference(), importSummary2.getReference() );
-    }
-
     private Enrollment createEnrollment( String program, String person )
     {
         Enrollment enrollment = new Enrollment();
