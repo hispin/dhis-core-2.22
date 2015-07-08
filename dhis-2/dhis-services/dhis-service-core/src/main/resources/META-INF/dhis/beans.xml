@@ -1106,19 +1106,7 @@
     <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
   </bean>
 
-  <bean id="org.hisp.dhis.program.ProgramInstanceService" class="org.hisp.dhis.program.DefaultProgramInstanceService">
-    <property name="programInstanceStore" ref="org.hisp.dhis.program.ProgramInstanceStore" />
-    <property name="attributeValueService" ref="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService" />
-    <property name="dataValueService" ref="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService" />
-    <property name="programService" ref="org.hisp.dhis.program.ProgramService" />
-    <property name="smsSender" ref="org.hisp.dhis.sms.SmsSender" />
-    <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
-    <property name="reminderService" ref="org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService" />
-    <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
-    <property name="programStageInstanceService" ref="org.hisp.dhis.program.ProgramStageInstanceService" />
-    <property name="i18nManager" ref="org.hisp.dhis.i18n.I18nManager" />
-    <property name="trackedEntityInstanceService" ref="org.hisp.dhis.trackedentity.TrackedEntityInstanceService" />
-  </bean>
+  <bean id="org.hisp.dhis.program.ProgramInstanceService" class="org.hisp.dhis.program.DefaultProgramInstanceService" />
 
   <bean id="org.hisp.dhis.program.ProgramStageService" class="org.hisp.dhis.program.DefaultProgramStageService">
     <property name="programStageStore" ref="org.hisp.dhis.program.ProgramStageStore" />
@@ -1156,17 +1144,7 @@
   </bean>
 
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityInstanceService"
-    class="org.hisp.dhis.trackedentity.DefaultTrackedEntityInstanceService">
-    <property name="trackedEntityInstanceStore" ref="org.hisp.dhis.trackedentity.TrackedEntityInstanceStore" />
-    <property name="attributeValueService" ref="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService" />
-    <property name="attributeService" ref="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
-    <property name="trackedEntityService" ref="org.hisp.dhis.trackedentity.TrackedEntityService" />
-    <property name="relationshipTypeService" ref="org.hisp.dhis.relationship.RelationshipTypeService" />
-    <property name="relationshipService" ref="org.hisp.dhis.relationship.RelationshipService" />
-    <property name="programService" ref="org.hisp.dhis.program.ProgramService" />
-    <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
-    <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
-  </bean>
+    class="org.hisp.dhis.trackedentity.DefaultTrackedEntityInstanceService" />
 
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityAttributeService"
     class="org.hisp.dhis.trackedentity.DefaultTrackedEntityAttributeService">
