@@ -28,23 +28,18 @@ package org.hisp.dhis.webapi.controller.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.validation.ValidationResult;
 import org.hisp.dhis.validation.ValidationRuleService;
 import org.hisp.dhis.validation.ValidationSummary;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +47,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  * @author Lars Helge Overland
@@ -62,61 +60,56 @@ public class ValidationController
 {
     @Autowired
     private ValidationRuleService validationRuleService;
-    
+
     @Autowired
-    private DataSetService dataSetService;    
-    
-    @Autowired
-    private PeriodService periodService;
-    
+    private DataSetService dataSetService;
+
     @Autowired
     private OrganisationUnitService organisationUnitService;
-    
+
     @Autowired
     private DataElementCategoryService categoryService;
-    
+
     @RequestMapping( value = "/dataSet/{ds}", method = RequestMethod.GET )
-    public String validate( @PathVariable String ds, @RequestParam String pe, 
-        @RequestParam String ou, @RequestParam( required = false ) String aoc, 
-        HttpServletResponse response, Model model )
+    public String validate( @PathVariable String ds, @RequestParam String pe,
+        @RequestParam String ou, @RequestParam( required = false ) String aoc,
+        HttpServletResponse response, Model model ) throws WebMessageException
     {
         DataSet dataSet = dataSetService.getDataSet( ds );
-        
+
         if ( dataSet == null )
         {
-            ContextUtils.conflictResponse( response, "Data set does not exist: " + ds );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Data set does not exist: " + ds ) );
         }
-        
+
         Period period = PeriodType.getPeriodFromIsoString( pe );
-        
+
         if ( period == null )
         {
-            ContextUtils.conflictResponse( response, "Period does not exist: " + pe );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Period does not exist: " + pe ) );
         }
-        
+
         OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( ou );
-        
+
         if ( orgUnit == null )
         {
-            ContextUtils.conflictResponse( response, "Organisation unit does not exist: " + pe );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Organisation unit does not exist: " + ou ) );
         }
-        
+
         DataElementCategoryOptionCombo attributeOptionCombo = categoryService.getDataElementCategoryOptionCombo( aoc );
-        
+
         if ( attributeOptionCombo == null )
         {
             attributeOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
         }
-                
+
         ValidationSummary summary = new ValidationSummary();
-        
-        summary.setValidationRuleViolations( new ArrayList<ValidationResult>( validationRuleService.validate( dataSet, period, orgUnit, attributeOptionCombo ) ) );
+
+        summary.setValidationRuleViolations( new ArrayList<>( validationRuleService.validate( dataSet, period, orgUnit, attributeOptionCombo ) ) );
         summary.setCommentRequiredViolations( validationRuleService.validateRequiredComments( dataSet, period, orgUnit, attributeOptionCombo ) );
-        
+
         model.addAttribute( "model", summary );
-        return "summary";        
+
+        return "summary";
     }
 }
