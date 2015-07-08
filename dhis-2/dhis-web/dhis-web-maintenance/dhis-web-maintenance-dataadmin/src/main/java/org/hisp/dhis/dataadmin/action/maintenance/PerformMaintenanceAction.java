@@ -28,8 +28,7 @@ package org.hisp.dhis.dataadmin.action.maintenance;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javax.annotation.Resource;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.aggregation.AggregatedDataValueService;
@@ -38,46 +37,47 @@ import org.hisp.dhis.completeness.DataSetCompletenessService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.datamart.DataMartManager;
 import org.hisp.dhis.maintenance.MaintenanceService;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.resourcetable.ResourceTableService;
 import org.hisp.dhis.user.CurrentUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import javax.annotation.Resource;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class PerformMaintenanceAction
     implements Action
 {
     private static final Log log = LogFactory.getLog( PerformMaintenanceAction.class );
-    
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
-    @Resource(name="org.hisp.dhis.analytics.AnalyticsTableService")
+    @Resource( name = "org.hisp.dhis.analytics.AnalyticsTableService" )
     private AnalyticsTableService analyticsTableService;
 
-    @Resource(name="org.hisp.dhis.analytics.CompletenessTableService")
+    @Resource( name = "org.hisp.dhis.analytics.CompletenessTableService" )
     private AnalyticsTableService completenessTableService;
-    
-    @Resource(name="org.hisp.dhis.analytics.CompletenessTargetTableService")
+
+    @Resource( name = "org.hisp.dhis.analytics.CompletenessTargetTableService" )
     private AnalyticsTableService completenessTargetTableService;
 
-    @Resource(name="org.hisp.dhis.analytics.OrgUnitTargetTableService")
+    @Resource( name = "org.hisp.dhis.analytics.OrgUnitTargetTableService" )
     private AnalyticsTableService orgUnitTargetTableService;
-    
-    @Resource(name="org.hisp.dhis.analytics.EventAnalyticsTableService")
+
+    @Resource( name = "org.hisp.dhis.analytics.EventAnalyticsTableService" )
     private AnalyticsTableService eventAnalyticsTableService;
-    
+
     private MaintenanceService maintenanceService;
 
     public void setMaintenanceService( MaintenanceService maintenanceService )
     {
         this.maintenanceService = maintenanceService;
     }
-    
+
     private DataSetCompletenessService completenessService;
 
     public void setCompletenessService( DataSetCompletenessService completenessService )
@@ -86,12 +86,12 @@ public class PerformMaintenanceAction
     }
 
     private AggregatedDataValueService aggregatedDataValueService;
-    
+
     public void setAggregatedDataValueService( AggregatedDataValueService aggregatedDataValueService )
     {
         this.aggregatedDataValueService = aggregatedDataValueService;
     }
-        
+
     private DataMartManager dataMartManager;
 
     public void setDataMartManager( DataMartManager dataMartManager )
@@ -105,7 +105,7 @@ public class PerformMaintenanceAction
     {
         this.currentUserService = currentUserService;
     }
-    
+
     private DataElementCategoryService categoryService;
 
     public void setCategoryService( DataElementCategoryService categoryService )
@@ -120,12 +120,15 @@ public class PerformMaintenanceAction
         this.resourceTableService = resourceTableService;
     }
 
+    @Autowired
+    private OrganisationUnitService organisationUnitService;
+
     // -------------------------------------------------------------------------
     // Input
     // -------------------------------------------------------------------------
-    
+
     private boolean clearAnalytics;
-    
+
     public void setClearAnalytics( boolean clearAnalytics )
     {
         this.clearAnalytics = clearAnalytics;
@@ -139,7 +142,7 @@ public class PerformMaintenanceAction
     }
 
     public boolean dataMartIndex;
-    
+
     public void setDataMartIndex( boolean dataMartIndex )
     {
         this.dataMartIndex = dataMartIndex;
@@ -151,23 +154,23 @@ public class PerformMaintenanceAction
     {
         this.zeroValues = zeroValues;
     }
-    
+
     private boolean dataSetCompleteness;
 
     public void setDataSetCompleteness( boolean dataSetCompleteness )
     {
         this.dataSetCompleteness = dataSetCompleteness;
     }
-    
+
     private boolean prunePeriods;
 
     public void setPrunePeriods( boolean prunePeriods )
     {
         this.prunePeriods = prunePeriods;
     }
-    
+
     private boolean removeExpiredInvitations;
-    
+
     public void setRemoveExpiredInvitations( boolean removeExpiredInvitations )
     {
         this.removeExpiredInvitations = removeExpiredInvitations;
@@ -181,12 +184,12 @@ public class PerformMaintenanceAction
     }
 
     private boolean createSqlViews;
-    
+
     public void setCreateSqlViews( boolean createSqlViews )
     {
         this.createSqlViews = createSqlViews;
     }
-    
+
     private boolean updateCategoryOptionCombos;
 
     public void setUpdateCategoryOptionCombos( boolean updateCategoryOptionCombos )
@@ -194,16 +197,23 @@ public class PerformMaintenanceAction
         this.updateCategoryOptionCombos = updateCategoryOptionCombos;
     }
 
+    private boolean updateOrganisationUnitPaths;
+
+    public void setUpdateOrganisationUnitPaths( boolean updateOrganisationUnitPaths )
+    {
+        this.updateOrganisationUnitPaths = updateOrganisationUnitPaths;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
-    
+
     @Override
     public String execute()
         throws Exception
     {
         String username = currentUserService.getCurrentUsername();
-        
+
         if ( clearAnalytics )
         {
             resourceTableService.dropAllSqlViews();
@@ -212,85 +222,92 @@ public class PerformMaintenanceAction
             completenessTargetTableService.dropTables();
             orgUnitTargetTableService.dropTables();
             eventAnalyticsTableService.dropTables();
-            
+
             log.info( "'" + username + "': Cleared analytics tables" );
         }
-        
+
         if ( clearDataMart )
         {
             aggregatedDataValueService.dropDataMart();
             aggregatedDataValueService.createDataMart();
-            
+
             log.info( "'" + username + "': Cleared data mart" );
         }
-        
+
         if ( dataMartIndex )
         {
             dataMartManager.dropDataValueIndex();
             dataMartManager.dropIndicatorValueIndex();
             dataMartManager.dropOrgUnitDataValueIndex();
             dataMartManager.dropOrgUnitIndicatorValueIndex();
-            
+
             dataMartManager.createDataValueIndex();
             dataMartManager.createIndicatorValueIndex();
             dataMartManager.createOrgUnitDataValueIndex();
             dataMartManager.createOrgUnitIndicatorValueIndex();
-            
+
             completenessService.dropIndex();
             completenessService.createIndex();
-            
+
             log.info( "'" + username + "': Rebuilt data mart indexes" );
         }
-        
+
         if ( zeroValues )
         {
             maintenanceService.deleteZeroDataValues();
-            
+
             log.info( "Cleared zero values" );
         }
-        
+
         if ( dataSetCompleteness )
         {
             completenessService.deleteDataSetCompleteness();
-            
+
             log.info( "'" + username + "': Cleared data completeness" );
         }
-        
+
         if ( prunePeriods )
         {
             maintenanceService.prunePeriods();
-            
+
             log.info( "'" + username + "': Pruned periods" );
         }
-        
+
         if ( removeExpiredInvitations )
         {
             maintenanceService.removeExpiredInvitations();
-            
+
             log.info( "'" + username + "': Removed expired invitations" );
         }
 
         if ( dropSqlViews )
         {
             resourceTableService.dropAllSqlViews();
-            
+
             log.info( "'" + username + "': Dropped SQL views" );
         }
-        
+
         if ( createSqlViews )
         {
             resourceTableService.createAllSqlViews();
-            
+
             log.info( "'" + username + "': Created SQL views" );
         }
-        
+
         if ( updateCategoryOptionCombos )
         {
             categoryService.updateAllOptionCombos();
-            
+
             log.info( "'" + username + "': Updated category option combos" );
         }
-        
+
+        if ( updateOrganisationUnitPaths )
+        {
+            organisationUnitService.forceUpdatePaths();
+
+            log.info( "'" + username + "': Updated organisation unit paths" );
+        }
+
         return SUCCESS;
     }
 }

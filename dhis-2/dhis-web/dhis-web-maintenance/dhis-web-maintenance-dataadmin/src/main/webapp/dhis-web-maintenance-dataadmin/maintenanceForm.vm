@@ -57,6 +57,11 @@
 </p>
 
 <p>
+    <input type="checkbox" id="updateOrganisationUnitPaths"/>
+    <label for="updateOrganisationUnitPaths">$i18n.getString( "update_organisation_unit_paths" )</label>
+</p>
+
+<p>
 	<input type="button" value="$i18n.getString( 'perform_maintenance' )" onclick="performMaintenance()" style="width:170px"/>
 </p>
 
