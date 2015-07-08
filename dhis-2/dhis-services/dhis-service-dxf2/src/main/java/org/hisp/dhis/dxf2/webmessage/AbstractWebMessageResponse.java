@@ -42,27 +42,27 @@ public class AbstractWebMessageResponse implements WebMessageResponse
      * <p/>
      * Some examples might be 'ImportCount', 'ImportSummary', etc.
      */
-    private String type;
+    private String responseType;
 
     public AbstractWebMessageResponse()
     {
-        this.type = getClass().getSimpleName().replaceFirst( "WebMessageResponse", "" );
+        this.responseType = getClass().getSimpleName().replaceFirst( "WebMessageResponse", "" );
     }
 
-    public AbstractWebMessageResponse( String type )
+    public AbstractWebMessageResponse( String responseType )
     {
-        this.type = type;
+        this.responseType = responseType;
     }
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
-    public String getType()
+    public String getResponseType()
     {
-        return type;
+        return responseType;
     }
 
-    public void setType( String type )
+    public void setResponseType( String responseType )
     {
-        this.type = type;
+        this.responseType = responseType;
     }
 }

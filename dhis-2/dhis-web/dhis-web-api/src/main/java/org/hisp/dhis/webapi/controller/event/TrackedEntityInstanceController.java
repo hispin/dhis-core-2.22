@@ -178,6 +178,7 @@ public class TrackedEntityInstanceController
 
         model.addAttribute( "model", grid );
         model.addAttribute( "viewClass", "detailed" );
+
         return "grid";
     }
 

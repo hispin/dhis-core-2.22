@@ -28,18 +28,18 @@ package org.hisp.dhis.dxf2.importsummary;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.hisp.dhis.common.DxfNamespaces;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.dxf2.webmessage.AbstractWebMessageResponse;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @JacksonXmlRootElement( localName = "importSummary", namespace = DxfNamespaces.DXF_2_0 )
-public class ImportSummary
+public class ImportSummary extends AbstractWebMessageResponse
 {
     private ImportStatus status = ImportStatus.SUCCESS;
 
@@ -57,15 +57,18 @@ public class ImportSummary
 
     public ImportSummary()
     {
+
     }
 
     public ImportSummary( ImportStatus status )
     {
+        this();
         this.status = status;
     }
 
     public ImportSummary( ImportStatus status, String description )
     {
+        this();
         this.status = status;
         this.description = description;
     }
@@ -78,7 +81,7 @@ public class ImportSummary
     {
         return this.status != null && this.status.equals( status );
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------

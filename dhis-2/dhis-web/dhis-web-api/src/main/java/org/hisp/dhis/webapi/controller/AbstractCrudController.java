@@ -314,10 +314,10 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             property.getSetterMethod().invoke( persistedObject, value );
         }
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
             ImportStrategy.UPDATE, MergeStrategy.MERGE );
 
-        serialize( request, response, summary );
+        webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
 
     private List<String> getJsonProperties( String payload ) throws IOException
@@ -395,10 +395,10 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         property.getSetterMethod().invoke( persistedObject, value );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
             ImportStrategy.UPDATE, MergeStrategy.MERGE );
 
-        serialize( request, response, summary );
+        webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
 
     protected void translate( List<?> entities, TranslateOptions translateOptions )
@@ -496,21 +496,21 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preCreateEntity( parsed );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
             ImportStrategy.CREATE, importOptions.getMergeStrategy() );
 
-        if ( ImportStatus.SUCCESS.equals( summary.getStatus() ) )
+        if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
             postCreateEntity( parsed );
 
-            if ( summary.getImportCount().getImported() == 1 && summary.getLastImported() != null )
+            if ( importTypeSummary.getImportCount().getImported() == 1 && importTypeSummary.getLastImported() != null )
             {
                 response.setHeader( "Location", contextService.getApiPath() + getSchema().getRelativeApiEndpoint()
-                    + "/" + summary.getLastImported() );
+                    + "/" + importTypeSummary.getLastImported() );
             }
         }
 
-        renderService.toXml( response.getOutputStream(), summary );
+        webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
@@ -526,21 +526,21 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preCreateEntity( parsed );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
             ImportStrategy.CREATE, importOptions.getMergeStrategy() );
 
-        if ( ImportStatus.SUCCESS.equals( summary.getStatus() ) )
+        if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
             postCreateEntity( parsed );
 
-            if ( summary.getImportCount().getImported() == 1 && summary.getLastImported() != null )
+            if ( importTypeSummary.getImportCount().getImported() == 1 && importTypeSummary.getLastImported() != null )
             {
                 response.setHeader( "Location", contextService.getApiPath() + getSchema().getRelativeApiEndpoint()
-                    + "/" + summary.getLastImported() );
+                    + "/" + importTypeSummary.getLastImported() );
             }
         }
 
-        renderService.toJson( response.getOutputStream(), summary );
+        webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
 
     //--------------------------------------------------------------------------
@@ -567,15 +567,15 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preUpdateEntity( parsed );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
             ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
 
-        if ( ImportStatus.SUCCESS.equals( summary.getStatus() ) )
+        if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
             postUpdateEntity( parsed );
         }
 
-        renderService.toXml( response.getOutputStream(), summary );
+        webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE )
@@ -598,15 +598,15 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preUpdateEntity( parsed );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
             ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
 
-        if ( ImportStatus.SUCCESS.equals( summary.getStatus() ) )
+        if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
             postUpdateEntity( parsed );
         }
 
-        renderService.toJson( response.getOutputStream(), summary );
+        webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
 
     //--------------------------------------------------------------------------
