@@ -28,6 +28,7 @@ package org.hisp.dhis.webapi.controller.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.query.Order;
@@ -36,7 +37,7 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,22 +74,20 @@ public class UserRoleController
     }
 
     @RequestMapping( value = "/{id}/users/{userId}", method = { RequestMethod.POST, RequestMethod.PUT } )
-    public void addUserToRole( @PathVariable( value = "id" ) String pvId, @PathVariable( "userId" ) String pvUserId, HttpServletResponse response )
+    public void addUserToRole( @PathVariable( value = "id" ) String pvId, @PathVariable( "userId" ) String pvUserId, HttpServletResponse response ) throws WebMessageException
     {
         UserAuthorityGroup userAuthorityGroup = userService.getUserAuthorityGroup( pvId );
 
         if ( userAuthorityGroup == null )
         {
-            ContextUtils.notFoundResponse( response, "UserRole does not exist: " + pvId );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "UserRole does not exist: " + pvId ) );
         }
 
         User user = userService.getUser( pvUserId );
 
         if ( user == null )
         {
-            ContextUtils.notFoundResponse( response, "User does not exist: " + pvId );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "User does not exist: " + pvId ) );
         }
 
         if ( !aclService.canUpdate( currentUserService.getCurrentUser(), userAuthorityGroup ) )
@@ -106,22 +105,20 @@ public class UserRoleController
     }
 
     @RequestMapping( value = "/{id}/users/{userId}", method = RequestMethod.DELETE )
-    public void removeUserFromRole( @PathVariable( value = "id" ) String pvId, @PathVariable( "userId" ) String pvUserId, HttpServletResponse response )
+    public void removeUserFromRole( @PathVariable( value = "id" ) String pvId, @PathVariable( "userId" ) String pvUserId, HttpServletResponse response ) throws WebMessageException
     {
         UserAuthorityGroup userAuthorityGroup = userService.getUserAuthorityGroup( pvId );
 
         if ( userAuthorityGroup == null )
         {
-            ContextUtils.notFoundResponse( response, "UserRole does not exist: " + pvId );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "UserRole does not exist: " + pvId ) );
         }
 
         User user = userService.getUser( pvUserId );
 
         if ( user == null || user.getUserCredentials() == null )
         {
-            ContextUtils.notFoundResponse( response, "User does not exist: " + pvId );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "User does not exist: " + pvId ) );
         }
 
         if ( !aclService.canUpdate( currentUserService.getCurrentUser(), userAuthorityGroup ) )
