@@ -30,12 +30,13 @@ package org.hisp.dhis.webapi.controller.legend;
 
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.schema.descriptors.LegendSetSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -72,7 +73,8 @@ public class LegendSetController
 
         legendService.addLegendSet( legendSet );
 
-        ContextUtils.createdResponse( response, "Legend set created", LegendSetSchemaDescriptor.API_ENDPOINT + "/" + legendSet.getUid() );
+        response.addHeader( "Location", LegendSetSchemaDescriptor.API_ENDPOINT + "/" + legendSet.getUid() );
+        webMessageService.send( WebMessageUtils.created( "Legend set created" ), response, request );
     }
 
     @Override
@@ -84,8 +86,7 @@ public class LegendSetController
 
         if ( legendSet == null )
         {
-            ContextUtils.notFoundResponse( response, "Legend set does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Legend set does not exist: " + uid ) );
         }
 
         Iterator<Legend> legends = legendSet.getLegends().iterator();
@@ -118,8 +119,7 @@ public class LegendSetController
 
         if ( legendSet == null )
         {
-            ContextUtils.notFoundResponse( response, "Legend set does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Legend set does not exist: " + uid ) );
         }
 
         Iterator<Legend> legends = legendSet.getLegends().iterator();
