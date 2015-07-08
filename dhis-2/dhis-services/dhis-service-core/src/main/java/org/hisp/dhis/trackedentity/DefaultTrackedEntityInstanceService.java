@@ -56,6 +56,7 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueServ
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -82,73 +83,36 @@ public class DefaultTrackedEntityInstanceService
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private TrackedEntityInstanceStore trackedEntityInstanceStore;
 
-    public void setTrackedEntityInstanceStore( TrackedEntityInstanceStore trackedEntityInstanceStore )
-    {
-        this.trackedEntityInstanceStore = trackedEntityInstanceStore;
-    }
-
+    @Autowired
     private TrackedEntityAttributeValueService attributeValueService;
 
-    public void setAttributeValueService( TrackedEntityAttributeValueService attributeValueService )
-    {
-        this.attributeValueService = attributeValueService;
-    }
-
+    @Autowired
     private TrackedEntityAttributeService attributeService;
 
-    public void setAttributeService( TrackedEntityAttributeService attributeService )
-    {
-        this.attributeService = attributeService;
-    }
-
+    @Autowired
     private TrackedEntityService trackedEntityService;
 
-    public void setTrackedEntityService( TrackedEntityService trackedEntityService )
-    {
-        this.trackedEntityService = trackedEntityService;
-    }
-
+    @Autowired
     private RelationshipService relationshipService;
 
-    public void setRelationshipService( RelationshipService relationshipService )
-    {
-        this.relationshipService = relationshipService;
-    }
-
+    @Autowired
     private RelationshipTypeService relationshipTypeService;
 
-    public void setRelationshipTypeService( RelationshipTypeService relationshipTypeService )
-    {
-        this.relationshipTypeService = relationshipTypeService;
-    }
-
+    @Autowired
     private ProgramService programService;
 
-    public void setProgramService( ProgramService programService )
-    {
-        this.programService = programService;
-    }
-
+    @Autowired
     private OrganisationUnitService organisationUnitService;
 
-    public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
-    {
-        this.organisationUnitService = organisationUnitService;
-    }
-
+    @Autowired
     private CurrentUserService currentUserService;
-
-    public void setCurrentUserService( CurrentUserService currentUserService )
-    {
-        this.currentUserService = currentUserService;
-    }
 
     // -------------------------------------------------------------------------
     // Implementation methods
     // -------------------------------------------------------------------------
-
 
     @Override
     public int countTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
