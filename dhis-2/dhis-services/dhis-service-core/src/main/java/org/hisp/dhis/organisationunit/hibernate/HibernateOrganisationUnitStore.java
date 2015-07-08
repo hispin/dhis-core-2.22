@@ -39,6 +39,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.AuditLogUtil;
 import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitHierarchy;
@@ -72,6 +73,9 @@ public class HibernateOrganisationUnitStore
 
     @Autowired
     private CurrentUserService currentUserService;
+
+    @Autowired
+    private DbmsManager dbmsManager;
 
     // -------------------------------------------------------------------------
     // OrganisationUnit
@@ -340,12 +344,19 @@ public class HibernateOrganisationUnitStore
     {
         List<OrganisationUnit> organisationUnits = new ArrayList<>( getQuery( "from OrganisationUnit ou where ou.path IS NULL" ).list() );
         Session session = sessionFactory.getCurrentSession();
+        int counter = 0;
 
         // use SF directly since we don't need to check for access etc here, just a simple update with no changes (so that path gets re-generated)
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
-            organisationUnit.setAutoFields();
             session.update( organisationUnit );
+
+            if ( (counter % 400) == 0 )
+            {
+                dbmsManager.clearSession();
+            }
+
+            counter++;
         }
     }
 
@@ -355,12 +366,19 @@ public class HibernateOrganisationUnitStore
     {
         List<OrganisationUnit> organisationUnits = new ArrayList<>( getQuery( "from OrganisationUnit" ).list() );
         Session session = sessionFactory.getCurrentSession();
+        int counter = 0;
 
         // use SF directly since we don't need to check for access etc here, just a simple update with no changes (so that path gets re-generated)
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
-            organisationUnit.setAutoFields();
             session.update( organisationUnit );
+
+            if ( (counter % 400) == 0 )
+            {
+                dbmsManager.clearSession();
+            }
+
+            counter++;
         }
     }
 }
