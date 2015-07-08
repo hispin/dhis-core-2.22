@@ -29,6 +29,7 @@ package org.hisp.dhis.webapi.controller.mapping;
  */
 
 import com.google.common.collect.Lists;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.mapgeneration.MapGenerationService;
 import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.mapping.MappingService;
@@ -37,10 +38,11 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.MapViewSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.webapi.webdomain.WebMetaData;
-import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
+import org.hisp.dhis.webapi.webdomain.WebMetaData;
+import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -86,8 +88,7 @@ public class MapViewController
 
         if ( mapView == null )
         {
-            ContextUtils.notFoundResponse( response, "Map view does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Map view does not exist: " + uid ) );
         }
 
         renderMapViewPng( mapView, response );
