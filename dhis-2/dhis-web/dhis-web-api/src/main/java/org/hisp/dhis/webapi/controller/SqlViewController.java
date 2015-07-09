@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
@@ -206,7 +207,7 @@ public class SqlViewController
 
     @RequestMapping( value = "/{uid}/execute", method = RequestMethod.POST )
     public void executeView( @PathVariable( "uid" ) String uid, @RequestParam( required = false ) Set<String> var,
-        HttpServletResponse response ) throws WebMessageException
+        HttpServletResponse response, HttpServletRequest request ) throws WebMessageException
     {
         SqlView sqlView = sqlViewService.getSqlViewByUid( uid );
 
@@ -219,13 +220,12 @@ public class SqlViewController
 
         if ( result != null )
         {
-            ContextUtils.conflictResponse( response, result );
+            throw new WebMessageException( WebMessageUtils.conflict( result ) );
         }
         else
         {
-            String location = SqlViewSchemaDescriptor.API_ENDPOINT + "/" + sqlView.getUid();
-
-            ContextUtils.createdResponse( response, "SQL view created", location );
+            response.addHeader( "Location", SqlViewSchemaDescriptor.API_ENDPOINT + "/" + sqlView.getUid() );
+            webMessageService.send( WebMessageUtils.created( "SQL view created" ), response, request );
         }
     }
 }
