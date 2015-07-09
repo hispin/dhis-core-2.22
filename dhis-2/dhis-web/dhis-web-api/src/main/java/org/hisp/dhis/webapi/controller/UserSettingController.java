@@ -28,9 +28,11 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.system.util.LocaleUtils;
 import org.hisp.dhis.user.UserSettingService;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.service.WebMessageService;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -56,23 +58,25 @@ public class UserSettingController
     @Autowired
     private UserSettingService userSettingService;
 
+    @Autowired
+    private WebMessageService webMessageService;
+
     @RequestMapping( value = "/{key}", method = RequestMethod.POST )
     public void setUserSetting(
         @PathVariable String key,
         @RequestParam( value = "user", required = false ) String username,
         @RequestParam( value = "value", required = false ) String value,
-        @RequestBody( required = false ) String valuePayload, HttpServletResponse response )
+        @RequestBody( required = false ) String valuePayload,
+        HttpServletResponse response, HttpServletRequest request ) throws WebMessageException
     {
         if ( key == null )
         {
-            ContextUtils.conflictResponse( response, "Key must be specified" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Key must be specified" ) );
         }
 
         if ( value == null && valuePayload == null )
         {
-            ContextUtils.conflictResponse( response, "Value must be specified as query param or as payload" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Value must be specified as query param or as payload" ) );
         }
 
         value = value != null ? value : valuePayload;
@@ -87,12 +91,13 @@ public class UserSettingController
             userSettingService.saveUserSetting( key, valueToSet( key, value ), username );
         }
 
-        ContextUtils.okResponse( response, "User setting saved" );
+        webMessageService.send( WebMessageUtils.ok( "User setting saved" ), response, request );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
     public void getSystemSetting( @PathVariable( "key" ) String key,
-        @RequestParam( value = "user", required = false ) String username, HttpServletRequest request, HttpServletResponse response ) throws IOException
+        @RequestParam( value = "user", required = false ) String username,
+        HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
     {
         String value;
 
@@ -107,8 +112,7 @@ public class UserSettingController
 
         if ( value == null )
         {
-            ContextUtils.notFoundResponse( response, "User setting not found." );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "User setting not found." ) );
         }
 
         String contentType;
