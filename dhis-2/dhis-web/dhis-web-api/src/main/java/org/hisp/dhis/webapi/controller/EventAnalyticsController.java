@@ -398,14 +398,4 @@ public class EventAnalyticsController
 
         return grid;
     }
-
-    // -------------------------------------------------------------------------
-    // Exception handlers
-    // -------------------------------------------------------------------------
-
-    @ExceptionHandler( IllegalQueryException.class )
-    public void illegalQueryExceptionHandler( IllegalQueryException ex, HttpServletResponse response )
-    {
-        ContextUtils.conflictResponse( response, ex.getMessage() );
-    }
 }
