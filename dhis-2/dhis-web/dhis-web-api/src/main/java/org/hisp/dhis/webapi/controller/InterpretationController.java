@@ -50,7 +50,6 @@ import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.schema.descriptors.InterpretationSchemaDescriptor;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
@@ -319,14 +318,13 @@ public class InterpretationController
 
     @RequestMapping( value = "/{uid}/comments/{cuid}", method = RequestMethod.PUT )
     public void updateComment( @PathVariable( "uid" ) String uid, @PathVariable( "cuid" ) String cuid, HttpServletResponse response,
-        @RequestBody String content )
+        @RequestBody String content ) throws WebMessageException
     {
         Interpretation interpretation = interpretationService.getInterpretation( uid );
 
         if ( interpretation == null )
         {
-            ContextUtils.conflictResponse( response, "Interpretation does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Interpretation does not exist: " + uid ) );
         }
 
         for ( InterpretationComment comment : interpretation.getComments() )
