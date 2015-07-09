@@ -28,14 +28,7 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -43,13 +36,14 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dxf2.common.TranslateOptions;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.node.AbstractNode;
 import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.query.Order;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +55,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -151,7 +150,7 @@ public class DimensionController
     @RequestMapping( value = "/dataSet/{uid}", method = RequestMethod.GET )
     public String getDimensionsForDataSet( @PathVariable String uid,
         @RequestParam( value = "links", defaultValue = "true", required = false ) Boolean links,
-        Model model, HttpServletResponse response )
+        Model model, HttpServletResponse response ) throws WebMessageException
     {
         WebMetaData metaData = new WebMetaData();
 
@@ -159,14 +158,12 @@ public class DimensionController
 
         if ( dataSet == null )
         {
-            ContextUtils.notFoundResponse( response, "Data set does not exist: " + uid );
-            return null;
+            throw new WebMessageException( WebMessageUtils.notFound( "DataSet not found for uid: " + uid ) );
         }
 
         if ( !dataSet.hasCategoryCombo() )
         {
-            ContextUtils.conflictResponse( response, "Data set does not have a category combination: " + uid );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Data set does not have a category combination: " + uid ) );
         }
 
         List<DimensionalObject> dimensions = new ArrayList<>();
