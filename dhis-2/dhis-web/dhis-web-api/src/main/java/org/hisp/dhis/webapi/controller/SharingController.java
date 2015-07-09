@@ -36,12 +36,14 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupAccess;
 import org.hisp.dhis.user.UserGroupAccessService;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.sharing.Sharing;
 import org.hisp.dhis.webapi.webdomain.sharing.SharingUserGroupAccess;
 import org.hisp.dhis.webapi.webdomain.sharing.SharingUserGroups;
@@ -87,12 +89,11 @@ public class SharingController
     private AclService aclService;
 
     @RequestMapping( method = RequestMethod.GET, produces = { "application/json" } )
-    public void getSharing( @RequestParam String type, @RequestParam String id, HttpServletResponse response ) throws IOException
+    public void getSharing( @RequestParam String type, @RequestParam String id, HttpServletResponse response ) throws IOException, WebMessageException
     {
         if ( !aclService.isShareable( type ) )
         {
-            ContextUtils.notFoundResponse( response, "Type " + type + " is not supported." );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Type " + type + " is not supported." ) );
         }
 
         Class<? extends IdentifiableObject> klass = aclService.classForType( type );
@@ -100,8 +101,7 @@ public class SharingController
 
         if ( object == null )
         {
-            ContextUtils.notFoundResponse( response, "Object of type " + type + " with ID " + id + " was not found." );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Object of type " + type + " with ID " + id + " was not found." ) );
         }
 
         if ( !aclService.canManage( currentUserService.getCurrentUser(), object ) )
@@ -160,22 +160,20 @@ public class SharingController
     }
 
     @RequestMapping( method = { RequestMethod.POST, RequestMethod.PUT }, consumes = "application/json" )
-    public void setSharing( @RequestParam String type, @RequestParam String id, HttpServletResponse response, HttpServletRequest request ) throws IOException
+    public void setSharing( @RequestParam String type, @RequestParam String id, HttpServletResponse response, HttpServletRequest request ) throws IOException, WebMessageException
     {
         Class<? extends IdentifiableObject> sharingClass = aclService.classForType( type );
 
         if ( sharingClass == null || !aclService.isShareable( sharingClass ) )
         {
-            ContextUtils.notFoundResponse( response, "Type " + type + " is not supported." );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Type " + type + " is not supported." ) );
         }
 
         BaseIdentifiableObject object = (BaseIdentifiableObject) manager.get( sharingClass, id );
 
         if ( object == null )
         {
-            ContextUtils.notFoundResponse( response, "Object of type " + type + " with ID " + id + " was not found." );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Object of type " + type + " with ID " + id + " was not found." ) );
         }
 
         if ( !aclService.canManage( currentUserService.getCurrentUser(), object ) )
@@ -257,12 +255,12 @@ public class SharingController
     }
 
     @RequestMapping( value = "/search", method = RequestMethod.GET, produces = { "application/json" } )
-    public void searchUserGroups( @RequestParam String key, @RequestParam( required = false ) Integer pageSize, HttpServletResponse response ) throws IOException
+    public void searchUserGroups( @RequestParam String key, @RequestParam( required = false ) Integer pageSize,
+        HttpServletResponse response ) throws IOException, WebMessageException
     {
         if ( key == null )
         {
-            ContextUtils.conflictResponse( response, "Search key not specified" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Search key not specified" ) );
         }
 
         int max = pageSize != null ? pageSize : Integer.MAX_VALUE;

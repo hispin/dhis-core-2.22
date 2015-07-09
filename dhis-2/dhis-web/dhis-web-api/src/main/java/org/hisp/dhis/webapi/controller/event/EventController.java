@@ -260,8 +260,7 @@ public class EventController
 
         if ( event == null )
         {
-            ContextUtils.notFoundResponse( response, "Event not found for uid: " + uid );
-            return null;
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
         if ( options.hasLinks() )
@@ -470,8 +469,7 @@ public class EventController
 
         if ( dataElement == null )
         {
-            ContextUtils.notFoundResponse( response, "DataElement not found for uid: " + dataElementUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "DataElement not found for uid: " + dataElementUid ) );
         }
 
         Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
