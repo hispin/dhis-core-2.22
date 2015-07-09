@@ -35,10 +35,11 @@ import org.hisp.dhis.dashboard.DashboardSearchResult;
 import org.hisp.dhis.dashboard.DashboardService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.schema.descriptors.DashboardItemSchemaDescriptor;
 import org.hisp.dhis.schema.descriptors.DashboardSchemaDescriptor;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -87,7 +88,8 @@ public class DashboardController
         dashboardService.mergeDashboard( dashboard );
         dashboardService.saveDashboard( dashboard );
 
-        ContextUtils.createdResponse( response, "Dashboard created", DashboardSchemaDescriptor.API_ENDPOINT + "/" + dashboard.getUid() );
+        response.addHeader( "Location", DashboardSchemaDescriptor.API_ENDPOINT + "/" + dashboard.getUid() );
+        webMessageService.send( WebMessageUtils.created( "Dashboard created" ), response, request );
     }
 
     @Override
@@ -98,8 +100,7 @@ public class DashboardController
 
         if ( dashboard == null )
         {
-            ContextUtils.notFoundResponse( response, "Dashboard does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Dashboard does not exist: " + uid ) );
         }
 
         Dashboard newDashboard = JacksonUtils.fromJson( request.getInputStream(), Dashboard.class );
@@ -118,8 +119,7 @@ public class DashboardController
 
         if ( objects.isEmpty() )
         {
-            ContextUtils.conflictResponse( response, getEntityName() + " does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Dashboard does not exist: " + uid ) );
         }
 
         if ( !aclService.canDelete( currentUserService.getCurrentUser(), objects.get( 0 ) ) )
@@ -137,8 +137,7 @@ public class DashboardController
 
         if ( dashboard == null )
         {
-            ContextUtils.notFoundResponse( response, "Dashboard does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Dashboard does not exist: " + uid ) );
         }
 
         DashboardItem item = JacksonUtils.fromJson( request.getInputStream(), DashboardItem.class );
@@ -149,7 +148,8 @@ public class DashboardController
 
         dashboardService.updateDashboard( dashboard );
 
-        ContextUtils.createdResponse( response, "Dashboard item created", item.getUid() );
+        response.addHeader( "Location", DashboardItemSchemaDescriptor.API_ENDPOINT + "/" + item.getUid() );
+        webMessageService.send( WebMessageUtils.created( "Dashboard item created" ), response, request );
     }
 
     @RequestMapping( value = "/{dashboardUid}/items/content", method = RequestMethod.POST )
@@ -160,11 +160,12 @@ public class DashboardController
 
         if ( item == null )
         {
-            ContextUtils.conflictResponse( response, "Max number of dashboard items reached: " + MAX_ITEMS );
+            throw new WebMessageException( WebMessageUtils.conflict( "Max number of dashboard items reached: " + MAX_ITEMS ) );
         }
         else
         {
-            ContextUtils.createdResponse( response, "Dashboard item added", DashboardItemSchemaDescriptor.API_ENDPOINT + "/" + item.getUid() );
+            response.addHeader( "Location", DashboardItemSchemaDescriptor.API_ENDPOINT + "/" + item.getUid() );
+            webMessageService.send( WebMessageUtils.created( "Dashboard item created" ), response, request );
         }
     }
 
@@ -176,36 +177,33 @@ public class DashboardController
 
         if ( dashboard == null )
         {
-            ContextUtils.notFoundResponse( response, "Dashboard does not exist: " + dashboardUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Dashboard does not exist: " + dashboardUid ) );
         }
 
         if ( dashboard.moveItem( itemUid, position ) )
         {
             dashboardService.updateDashboard( dashboard );
 
-            ContextUtils.okResponse( response, "Dashboard item moved" );
+            webMessageService.send( WebMessageUtils.ok( "Dashboard item moved" ), response, request );
         }
     }
 
     @RequestMapping( value = "/{dashboardUid}/items/{itemUid}", method = RequestMethod.DELETE )
     public void deleteItem( HttpServletResponse response, HttpServletRequest request,
-        @PathVariable String dashboardUid, @PathVariable String itemUid )
+        @PathVariable String dashboardUid, @PathVariable String itemUid ) throws WebMessageException
     {
         Dashboard dashboard = dashboardService.getDashboard( dashboardUid );
 
         if ( dashboard == null )
         {
-            ContextUtils.notFoundResponse( response, "Dashboard does not exist: " + dashboardUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Dashboard does not exist: " + dashboardUid ) );
         }
 
         DashboardItem item = dashboardService.getDashboardItem( itemUid );
 
         if ( item == null )
         {
-            ContextUtils.notFoundResponse( response, "Dashboard item does not exist: " + itemUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Dashboard item does not exist: " + dashboardUid ) );
         }
 
         if ( dashboard.hasItems() && dashboard.getItems().remove( item ) )
@@ -213,28 +211,26 @@ public class DashboardController
             dashboardService.deleteDashboardItem( item );
             dashboardService.updateDashboard( dashboard );
 
-            ContextUtils.okResponse( response, "Dashboard item removed" );
+            webMessageService.send( WebMessageUtils.ok( "Dashboard item removed" ), response, request );
         }
     }
 
     @RequestMapping( value = "/{dashboardUid}/items/{itemUid}/content/{contentUid}", method = RequestMethod.DELETE )
     public void deleteItemContent( HttpServletResponse response, HttpServletRequest request,
-        @PathVariable String dashboardUid, @PathVariable String itemUid, @PathVariable String contentUid )
+        @PathVariable String dashboardUid, @PathVariable String itemUid, @PathVariable String contentUid ) throws WebMessageException
     {
         Dashboard dashboard = dashboardService.getDashboard( dashboardUid );
 
         if ( dashboard == null )
         {
-            ContextUtils.notFoundResponse( response, "Dashboard does not exist: " + dashboardUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Dashboard does not exist: " + dashboardUid ) );
         }
 
         DashboardItem item = dashboard.getItemByUid( itemUid );
 
         if ( item == null )
         {
-            ContextUtils.notFoundResponse( response, "Dashboard item does not exist: " + itemUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Dashboard item does not exist: " + dashboardUid ) );
         }
 
         if ( item.removeItemContent( contentUid ) )
@@ -246,7 +242,7 @@ public class DashboardController
 
             dashboardService.updateDashboard( dashboard );
 
-            ContextUtils.okResponse( response, "Dashboard item content removed" );
+            webMessageService.send( WebMessageUtils.ok( "Dashboard item content removed" ), response, request );
         }
     }
 
