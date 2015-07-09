@@ -31,11 +31,13 @@ package org.hisp.dhis.webapi.controller;
 import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.document.Document;
 import org.hisp.dhis.document.DocumentService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.external.location.LocationManagerException;
 import org.hisp.dhis.schema.descriptors.DocumentSchemaDescriptor;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,8 +72,7 @@ public class DocumentController
 
         if ( document == null )
         {
-            ContextUtils.notFoundResponse( response, "Resource not found for identifier: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Document not found for uid: " + uid ) );
         }
 
         if ( document.isExternal() )
@@ -93,9 +94,7 @@ public class DocumentController
             }
             catch ( LocationManagerException ex )
             {
-                ContextUtils.conflictResponse( response, "Document could not be found: " + document.getUrl() );
-
-                return;
+                throw new WebMessageException( WebMessageUtils.notFound( "Document could not be found: " + document.getUrl() ) );
             }
             finally
             {

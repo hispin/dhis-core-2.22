@@ -28,20 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
@@ -49,10 +35,11 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueService;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.metadata.ExportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -60,8 +47,8 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.schema.descriptors.DataSetSchemaDescriptor;
-import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.FormUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.view.ClassPathUriResolver;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.hisp.dhis.webapi.webdomain.form.Form;
@@ -75,6 +62,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -152,14 +152,13 @@ public class DataSetController
         @RequestParam( value = "period", defaultValue = "", required = false ) String period,
         @RequestParam( value = "orgUnit", defaultValue = "", required = false ) List<String> orgUnits,
         @RequestParam( value = "comment", defaultValue = "true", required = false ) boolean comment,
-        HttpServletResponse response ) throws IOException
+        HttpServletResponse response ) throws IOException, WebMessageException
     {
         List<DataSet> dataSets = getEntity( uid );
 
         if ( dataSets.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, "Object not found for uid: " + uid );
-            return null;
+            throw new WebMessageException( WebMessageUtils.notFound( "DataSet not found for uid: " + uid ) );
         }
 
         Period pe = periodService.getPeriod( period );
@@ -167,26 +166,24 @@ public class DataSetController
     }
 
     @RequestMapping( value = "/{uid}/form", method = RequestMethod.GET, produces = "application/json" )
-    public void getFormJson( 
-        @PathVariable( "uid" ) String uid, 
+    public void getFormJson(
+        @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String orgUnit,
-        @RequestParam( value = "pe", required = false ) String period, 
-        @RequestParam( required = false ) boolean metaData, HttpServletResponse response ) throws IOException
+        @RequestParam( value = "pe", required = false ) String period,
+        @RequestParam( required = false ) boolean metaData, HttpServletResponse response ) throws IOException, WebMessageException
     {
         List<DataSet> dataSets = getEntity( uid );
 
         if ( dataSets.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, "Data set does not exist: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "DataSet not found for uid: " + uid ) );
         }
-        
+
         OrganisationUnit ou = null;
-        
-        if ( orgUnit != null && ( ou = manager.get( OrganisationUnit.class, orgUnit ) ) == null )
+
+        if ( orgUnit != null && (ou = manager.get( OrganisationUnit.class, orgUnit )) == null )
         {
-            ContextUtils.notFoundResponse( response, "Organisation unit does not exist: " + orgUnit );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Organisation unit does not exist: " + orgUnit ) );
         }
 
         Period pe = PeriodType.getPeriodFromIsoString( period );
@@ -197,26 +194,24 @@ public class DataSetController
     }
 
     @RequestMapping( value = "/{uid}/form", method = RequestMethod.GET, produces = { "application/xml", "text/xml" } )
-    public void getFormXml( 
-        @PathVariable( "uid" ) String uid, 
+    public void getFormXml(
+        @PathVariable( "uid" ) String uid,
         @RequestParam( value = "ou", required = false ) String orgUnit,
-        @RequestParam( value = "pe", required = false ) String period, 
-        @RequestParam( required = false ) boolean metaData, HttpServletResponse response ) throws IOException
+        @RequestParam( value = "pe", required = false ) String period,
+        @RequestParam( required = false ) boolean metaData, HttpServletResponse response ) throws IOException, WebMessageException
     {
         List<DataSet> dataSets = getEntity( uid );
 
         if ( dataSets.isEmpty() )
         {
-            ContextUtils.notFoundResponse( response, "Object not found for uid: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "DataSet not found for uid: " + uid ) );
         }
 
         OrganisationUnit ou = null;
-        
-        if ( orgUnit != null && ( ou = manager.get( OrganisationUnit.class, orgUnit ) ) == null )
+
+        if ( orgUnit != null && (ou = manager.get( OrganisationUnit.class, orgUnit )) == null )
         {
-            ContextUtils.notFoundResponse( response, "Organisation unit does not exist: " + orgUnit );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "Organisation unit does not exist: " + orgUnit ) );
         }
 
         Period pe = PeriodType.getPeriodFromIsoString( period );
@@ -225,11 +220,11 @@ public class DataSetController
 
         JacksonUtils.toXml( response.getOutputStream(), form );
     }
-    
+
     private Form getForm( List<DataSet> dataSets, OrganisationUnit ou, Period pe, boolean metaData )
     {
         DataSet dataSet = dataSets.get( 0 );
-        
+
         i18nService.internationalise( dataSet );
         i18nService.internationalise( dataSet.getDataElements() );
         i18nService.internationalise( dataSet.getSections() );
@@ -244,7 +239,7 @@ public class DataSetController
 
             FormUtils.fillWithDataValues( form, dataValues );
         }
-        
+
         return form;
     }
 
@@ -258,8 +253,7 @@ public class DataSetController
 
         if ( dataSet == null )
         {
-            ContextUtils.notFoundResponse( response, "Data set not found for identifier: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.notFound( "DataSet not found for uid: " + uid ) );
         }
 
         DataEntryForm form = dataSet.getDataEntryForm();
@@ -276,8 +270,8 @@ public class DataSetController
             dataEntryFormService.updateDataEntryForm( form );
         }
 
-        dataSet.increaseVersion(); 
-        dataSetService.updateDataSet( dataSet );        
+        dataSet.increaseVersion();
+        dataSetService.updateDataSet( dataSet );
     }
 
     /**
