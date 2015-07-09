@@ -165,14 +165,4 @@ public class DataValueSetController
         response.setContentType( CONTENT_TYPE_XML );
         JacksonUtils.toXml( response.getOutputStream(), summary );
     }
-
-    // -------------------------------------------------------------------------
-    // Supportive
-    // -------------------------------------------------------------------------
-
-    @ExceptionHandler( IllegalArgumentException.class )
-    public void handleError( IllegalArgumentException ex, HttpServletResponse response )
-    {
-        ContextUtils.conflictResponse( response, ex.getMessage() );
-    }
 }

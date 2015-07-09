@@ -29,8 +29,11 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
@@ -61,23 +65,26 @@ public class SystemSettingController
     @Autowired
     private RenderService renderService;
 
+    @Autowired
+    private WebMessageService webMessageService;
+
     @RequestMapping( value = "/{key}", method = RequestMethod.POST, consumes = { ContextUtils.CONTENT_TYPE_TEXT, ContextUtils.CONTENT_TYPE_HTML } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     public void setSystemSetting(
         @PathVariable( value = "key" ) String key,
         @RequestParam( required = false, value = "key" ) String keyParam,
         @RequestParam( required = false ) String value,
-        @RequestBody( required = false ) String valuePayload, HttpServletResponse response )
+        @RequestBody( required = false ) String valuePayload,
+        HttpServletResponse response, HttpServletRequest request ) throws WebMessageException
     {
         if ( key == null && keyParam == null )
         {
-            ContextUtils.conflictResponse( response, "Key must be specified" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Key must be specified" ) );
         }
 
         if ( value == null && valuePayload == null )
         {
-            ContextUtils.conflictResponse( response, "Value must be specified as query param or as payload" );
+            throw new WebMessageException( WebMessageUtils.conflict( "Value must be specified as query param or as payload" ) );
         }
 
         value = value != null ? value : valuePayload;
@@ -86,19 +93,19 @@ public class SystemSettingController
 
         systemSettingManager.saveSystemSetting( key, value );
 
-        ContextUtils.okResponse( response, "System setting " + key + " set as value '" + value + "'." );
+        webMessageService.send( WebMessageUtils.ok( "System setting " + key + " set as value '" + value + "'." ), response, request );
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = { ContextUtils.CONTENT_TYPE_JSON } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    public void setSystemSetting( @RequestBody Map<String, Object> settings, HttpServletResponse response )
+    public void setSystemSetting( @RequestBody Map<String, Object> settings, HttpServletResponse response, HttpServletRequest request )
     {
         for ( String key : settings.keySet() )
         {
             systemSettingManager.saveSystemSetting( key, (Serializable) settings.get( key ) );
         }
 
-        ContextUtils.okResponse( response, "System settings imported" );
+        webMessageService.send( WebMessageUtils.ok( "System settings imported" ), response, request );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_TEXT )
