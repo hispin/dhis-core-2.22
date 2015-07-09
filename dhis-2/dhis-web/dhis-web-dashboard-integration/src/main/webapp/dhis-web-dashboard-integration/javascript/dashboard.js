@@ -836,7 +836,8 @@ dhis2.db.addItemContent = function( type, id )
 	    		}
 	    	},
 	    	error: function( xhr ) {
-	    		setHeaderDelayMessage( xhr.responseText );
+					var error = JSON.parse( xhr.responseText );
+					setHeaderDelayMessage( error.message );
 	    	}
 	    } );
 	}
