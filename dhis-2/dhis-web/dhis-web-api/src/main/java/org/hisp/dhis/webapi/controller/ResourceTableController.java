@@ -36,7 +36,8 @@ import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.validation.scheduling.MonitoringTask;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.service.WebMessageService;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -74,6 +76,9 @@ public class ResourceTableController
     @Autowired
     private CurrentUserService currentUserService;
 
+    @Autowired
+    private WebMessageService webMessageService;
+
     //TODO make tasks prototypes to avoid potential concurrency issues?
 
     @RequestMapping( value = "/analytics", method = { RequestMethod.PUT, RequestMethod.POST } )
@@ -83,7 +88,7 @@ public class ResourceTableController
         @RequestParam( required = false ) boolean skipAggregate,
         @RequestParam( required = false ) boolean skipEvents,
         @RequestParam( required = false ) Integer lastYears,
-        HttpServletResponse response )
+        HttpServletResponse response, HttpServletRequest request )
     {
         analyticsTableTask.setSkipResourceTables( skipResourceTables );
         analyticsTableTask.setSkipAggregate( skipAggregate );
@@ -93,39 +98,39 @@ public class ResourceTableController
 
         scheduler.executeTask( analyticsTableTask );
 
-        ContextUtils.okResponse( response, "Initiated analytics table update" );
+        webMessageService.send( WebMessageUtils.ok( "Initiated analytics table update" ), response, request );
     }
 
     @RequestMapping( value = "/dataMart", method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATA_MART_ADMIN')" )
-    public void dataMart( HttpServletResponse response )
+    public void dataMart( HttpServletResponse response, HttpServletRequest request )
     {
         dataMartTask.setTaskId( new TaskId( TaskCategory.DATAMART, currentUserService.getCurrentUser() ) );
 
         scheduler.executeTask( dataMartTask );
 
-        ContextUtils.okResponse( response, "Initiated data mart update" );
+        webMessageService.send( WebMessageUtils.ok( "Initiated data mart update" ), response, request );
     }
 
     @RequestMapping( method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
-    public void resourceTables( HttpServletResponse response )
+    public void resourceTables( HttpServletResponse response, HttpServletRequest request )
     {
         resourceTableTask.setTaskId( new TaskId( TaskCategory.RESOURCETABLE_UPDATE, currentUserService.getCurrentUser() ) );
 
         scheduler.executeTask( resourceTableTask );
 
-        ContextUtils.okResponse( response, "Initiated resource table update" );
+        webMessageService.send( WebMessageUtils.ok( "Initiated resource table update" ), response, request );
     }
 
     @RequestMapping( value = "/monitoring", method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
-    public void monitoring( HttpServletResponse response )
+    public void monitoring( HttpServletResponse response, HttpServletRequest request )
     {
         monitoringTask.setTaskId( new TaskId( TaskCategory.MONITORING, currentUserService.getCurrentUser() ) );
 
         scheduler.executeTask( monitoringTask );
 
-        ContextUtils.okResponse( response, "Initiated data monitoring" );
+        webMessageService.send( WebMessageUtils.ok( "Initiated data monitoring" ), response, request );
     }
 }
