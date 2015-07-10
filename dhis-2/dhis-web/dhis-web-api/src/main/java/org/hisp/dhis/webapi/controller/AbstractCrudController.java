@@ -735,7 +735,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( !aclService.canUpdate( currentUserService.getCurrentUser(), owningObject ) )
         {
-            throw new DeleteAccessDeniedException( "You don't have the proper permissions to update this object." );
+            throw new UpdateAccessDeniedException( "You don't have the proper permissions to update this object." );
         }
 
         // if it already contains this object, don't add it. It might be a list and not set, and we don't want duplicates.
