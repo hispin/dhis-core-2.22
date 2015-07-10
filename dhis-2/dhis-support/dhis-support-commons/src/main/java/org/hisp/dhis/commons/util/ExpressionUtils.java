@@ -33,8 +33,11 @@ import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.JexlException;
 import org.apache.commons.jexl2.MapContext;
+import org.hisp.dhis.commons.math.ExpressionFunctions;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author Lars Helge Overland
@@ -43,8 +46,14 @@ public class ExpressionUtils
 {
     private static final JexlEngine JEXL = new JexlEngine();
 
+    private static final Pattern NUMERIC_PATTERN = Pattern.compile( "^(-?0|-?[1-9]\\d*)(\\.\\d+)?(E(-)?\\d+)?$" );
+    
     static 
     {
+        Map<String, Object> functions = new HashMap<>();
+        functions.put( ExpressionFunctions.NAMESPACE, ExpressionFunctions.class );
+        
+        JEXL.setFunctions( functions );
         JEXL.setCache( 512 );
         JEXL.setSilent( false );
     }
@@ -64,6 +73,32 @@ public class ExpressionUtils
         JexlContext context = vars != null ? new MapContext( vars ) : new MapContext();
                 
         return exp.evaluate( context );
+    }
+
+    /**
+     * Evaluates the given expression. The given variables will be substituted 
+     * in the expression. Converts the result of the evaluation to a Double.
+     * Throws an IllegalStateException if the result could not be converted to
+     * a Double
+     * 
+     * @param expression the expression.
+     * @param vars the variables, can be null.
+     * @return the result of the evaluation.
+     */
+    public static Double evaluateToDouble( String expression, Map<String, Object> vars )
+    {
+        Expression exp = JEXL.createExpression( expression );
+        
+        JexlContext context = vars != null ? new MapContext( vars ) : new MapContext();
+                
+        Object result = exp.evaluate( context );
+        
+        if ( result == null || !isNumeric( String.valueOf( result ) ) )
+        {
+            throw new IllegalStateException( "Result must be not null and numeric: " + result );
+        }
+        
+        return Double.valueOf( String.valueOf( result ) );
     }
 
     /**
@@ -101,5 +136,16 @@ public class ExpressionUtils
         {
             return false;
         }
+    }
+    
+    /**
+     * Indicates whether the given value is numeric.
+     * 
+     * @param value the value.
+     * @return true or false.
+     */
+    public static boolean isNumeric( String value )
+    {
+        return NUMERIC_PATTERN.matcher( value ).matches();
     }
 }
