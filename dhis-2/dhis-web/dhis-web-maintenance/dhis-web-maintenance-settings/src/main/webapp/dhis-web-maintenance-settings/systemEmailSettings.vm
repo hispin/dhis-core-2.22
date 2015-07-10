@@ -26,7 +26,8 @@
           		setHeaderDelayMessage ( xhr.responseText )
           	},
           	error: function( xhr, status, error ) {
-          		setHeaderDelayMessage( xhr.responseText );
+							var errorText = JSON.parse( xhr.responseText );
+          		setHeaderDelayMessage( errorText );
           	}
         });
     });
