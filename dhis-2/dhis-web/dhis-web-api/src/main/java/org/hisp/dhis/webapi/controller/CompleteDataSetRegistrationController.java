@@ -42,6 +42,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -50,17 +51,15 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.InputUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -188,7 +187,7 @@ public class CompleteDataSetRegistrationController
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE )
-    public void saveCompleteDataSetRegistrationsJson( HttpServletRequest request, HttpServletResponse response ) throws IOException
+    public void saveCompleteDataSetRegistrationsJson( HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
     {
         CompleteDataSetRegistrations completeDataSetRegistrations = renderService.fromJson( request.getInputStream(),
             CompleteDataSetRegistrations.class );
@@ -197,7 +196,7 @@ public class CompleteDataSetRegistrationController
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = MediaType.APPLICATION_XML_VALUE )
-    public void saveCompleteDataSetRegistrationsXml( HttpServletRequest request, HttpServletResponse response ) throws IOException
+    public void saveCompleteDataSetRegistrationsXml( HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
     {
         CompleteDataSetRegistrations completeDataSetRegistrations = renderService.fromXml( request.getInputStream(),
             CompleteDataSetRegistrations.class );
@@ -205,7 +204,7 @@ public class CompleteDataSetRegistrationController
         saveCompleteDataSetRegistrations( completeDataSetRegistrations );
     }
 
-    private void saveCompleteDataSetRegistrations( CompleteDataSetRegistrations completeDataSetRegistrations )
+    private void saveCompleteDataSetRegistrations( CompleteDataSetRegistrations completeDataSetRegistrations ) throws WebMessageException
     {
         for ( CompleteDataSetRegistration completeDataSetRegistration : completeDataSetRegistrations.getCompleteDataSetRegistrations() )
         {
@@ -256,30 +255,27 @@ public class CompleteDataSetRegistrationController
         @RequestParam( required = false ) String cp,
         @RequestParam( required = false ) Date cd,
         @RequestParam( required = false ) String sb,
-        @RequestParam( required = false ) boolean multiOu, HttpServletResponse response )
+        @RequestParam( required = false ) boolean multiOu, HttpServletResponse response ) throws WebMessageException
     {
         DataSet dataSet = dataSetService.getDataSet( ds );
 
         if ( dataSet == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal data set identifier: " + ds );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal data set identifier: " + ds ) );
         }
 
         Period period = PeriodType.getPeriodFromIsoString( pe );
 
         if ( period == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal period identifier: " + pe );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal period identifier: " + pe ) );
         }
 
         OrganisationUnit organisationUnit = organisationUnitService.getOrganisationUnit( ou );
 
         if ( organisationUnit == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal organisation unit identifier: " + ou );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
         }
 
         DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( response, cc, cp );
@@ -295,8 +291,7 @@ public class CompleteDataSetRegistrationController
 
         if ( dataSetService.isLocked( dataSet, period, organisationUnit, attributeOptionCombo, null, multiOu ) )
         {
-            ContextUtils.conflictResponse( response, "Data set is locked: " + ds );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Data set is locked: " + ds ) );
         }
 
         // ---------------------------------------------------------------------
@@ -317,7 +312,9 @@ public class CompleteDataSetRegistrationController
                 organisationUnit, attributeOptionCombo, storedBy, completionDate );
 
             if ( completeDataSetRegistration != null )
+            {
                 registrations.add( completeDataSetRegistration );
+            }
         }
         else
         {
@@ -329,7 +326,9 @@ public class CompleteDataSetRegistrationController
                         organisationUnit, attributeOptionCombo, storedBy, completionDate );
 
                     if ( completeDataSetRegistration != null )
+                    {
                         registrations.add( completeDataSetRegistration );
+                    }
                 }
             }
         }
@@ -340,7 +339,7 @@ public class CompleteDataSetRegistrationController
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json", value = MULTIPLE_SAVE_RESOURCE_PATH )
     public void saveCompleteDataSetRegistration(
         @RequestBody CompleteDataSetRegistrationRequests completeDataSetRegistrationRequests,
-        HttpServletResponse response )
+        HttpServletResponse response ) throws WebMessageException
     {
         List<CompleteDataSetRegistration> registrations = new ArrayList<>();
 
@@ -351,8 +350,7 @@ public class CompleteDataSetRegistrationController
 
             if ( dataSet == null )
             {
-                ContextUtils.conflictResponse( response, "Illegal data set identifier: " + ds );
-                return;
+                throw new WebMessageException( WebMessageUtils.conflict( "Illegal data set identifier: " + ds ) );
             }
 
             String pe = completeDataSetRegistrationRequest.getPe();
@@ -360,8 +358,7 @@ public class CompleteDataSetRegistrationController
 
             if ( period == null )
             {
-                ContextUtils.conflictResponse( response, "Illegal period identifier: " + pe );
-                return;
+                throw new WebMessageException( WebMessageUtils.conflict( "Illegal period identifier: " + pe ) );
             }
 
             String ou = completeDataSetRegistrationRequest.getOu();
@@ -369,8 +366,7 @@ public class CompleteDataSetRegistrationController
 
             if ( organisationUnit == null )
             {
-                ContextUtils.conflictResponse( response, "Illegal organisation unit identifier: " + ou );
-                return;
+                throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
             }
 
             String cc = completeDataSetRegistrationRequest.getCc();
@@ -390,8 +386,7 @@ public class CompleteDataSetRegistrationController
 
             if ( dataSetService.isLocked( dataSet, period, organisationUnit, attributeOptionCombo, null, multiOu ) )
             {
-                ContextUtils.conflictResponse( response, "Data set is locked: " + ds );
-                return;
+                throw new WebMessageException( WebMessageUtils.conflict( "Data set is locked: " + ds ) );
             }
 
             // ---------------------------------------------------------------------
@@ -438,30 +433,27 @@ public class CompleteDataSetRegistrationController
         @RequestParam String ou,
         @RequestParam( required = false ) String cc,
         @RequestParam( required = false ) String cp,
-        @RequestParam( required = false ) boolean multiOu, HttpServletResponse response )
+        @RequestParam( required = false ) boolean multiOu, HttpServletResponse response ) throws WebMessageException
     {
         Set<DataSet> dataSets = new HashSet<>( manager.getByUid( DataSet.class, ds ) );
 
         if ( dataSets.size() != ds.size() )
         {
-            ContextUtils.conflictResponse( response, "Illegal data set identifier in this list: " + ds );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal data set identifier in this list: " + ds ) );
         }
 
         Period period = PeriodType.getPeriodFromIsoString( pe );
 
         if ( period == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal period identifier: " + pe );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal period identifier: " + pe ) );
         }
 
         OrganisationUnit organisationUnit = organisationUnitService.getOrganisationUnit( ou );
 
         if ( organisationUnit == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal organisation unit identifier: " + ou );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
         }
 
         DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( response, cc, cp );
@@ -486,8 +478,7 @@ public class CompleteDataSetRegistrationController
 
         if ( lockedDataSets.size() != 0 )
         {
-            ContextUtils.conflictResponse( response, "Locked Data set(s) : " + StringUtils.join( lockedDataSets, ", " ) );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Locked Data set(s) : " + StringUtils.join( lockedDataSets, ", " ) ) );
         }
 
         // ---------------------------------------------------------------------
@@ -510,28 +501,28 @@ public class CompleteDataSetRegistrationController
     // -------------------------------------------------------------------------
 
     private CompleteDataSetRegistration registerCompleteDataSet( DataSet dataSet, Period period,
-        OrganisationUnit orgUnit, DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, Date completionDate )
+        OrganisationUnit orgUnit, DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, Date completionDate ) throws WebMessageException
     {
         I18nFormat format = i18nManager.getI18nFormat();
 
         if ( dataSet == null )
         {
-            throw new HttpClientErrorException( HttpStatus.BAD_REQUEST, "DataSet can not be null." );
+            throw new WebMessageException( WebMessageUtils.conflict( "dataSet can not be null." ) );
         }
 
         if ( period == null )
         {
-            throw new HttpClientErrorException( HttpStatus.BAD_REQUEST, "period can not be null." );
+            throw new WebMessageException( WebMessageUtils.conflict( "period can not be null" ) );
         }
 
         if ( orgUnit == null )
         {
-            throw new HttpClientErrorException( HttpStatus.BAD_REQUEST, "organisationUnit can not be null" );
+            throw new WebMessageException( WebMessageUtils.conflict( "organisationUnit can not be null" ) );
         }
 
         if ( attributeOptionCombo == null )
         {
-            throw new HttpClientErrorException( HttpStatus.BAD_REQUEST, "attributeOptionCombo can not be null" );
+            throw new WebMessageException( WebMessageUtils.conflict( "attributeOptionCombo can not be null" ) );
         }
 
         CompleteDataSetRegistration registration = registrationService.getCompleteDataSetRegistration( dataSet, period,
