@@ -28,25 +28,40 @@ package org.hisp.dhis.commons.math;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * JEP function which returns 1 if the argument is a zero or positive number, 0
- * otherwise.
- * 
- * @author Lars Helge Overland
- */
-public class OneIfZeroOrPositiveFunction
-    extends UnaryDoubleFunction
+public class ExpressionFunctions
 {
-    public static final String NAME = "oizp";
-
-    public OneIfZeroOrPositiveFunction()
+    public static final String NAMESPACE = "d2";
+    
+    /**
+     * Function which will return zero if the argument is a negative number.
+     * 
+     * @param value the value.
+     * @return a Double.
+     */
+    public static Double zing( String value )
     {
-        super();
+        if ( value == null )
+        {
+            throw new IllegalArgumentException( "Argument is null: " + value );
+        }
+        
+        return Math.max( 0d, Double.valueOf( value ) );
     }
 
-    @Override
-    public Double eval( double arg )
+    /**
+     * Function which will return one if the argument is zero or a positive 
+     * number, and zero if not.
+     * 
+     * @param value the value.
+     * @return a Double.
+     */
+    public static Double oizp( String value )
     {
-        return ( arg >= 0d ) ? 1d : 0d;
+        if ( value == null )
+        {
+            throw new IllegalArgumentException( "Argument is null: " + value );
+        }
+        
+        return ( Double.valueOf( value ) >= 0d ) ? 1d : 0d;
     }
 }

@@ -28,17 +28,15 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.i18n.locale.LocaleManager.DHIS_STANDARD_LOCALE;
-
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Pattern;
 
 import org.apache.commons.validator.routines.DoubleValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
-import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.expression.Operator;
 import org.hisp.dhis.commons.math.OneIfZeroOrPositiveFunction;
 import org.hisp.dhis.commons.math.ZeroIfNegativeFunction;
@@ -50,6 +48,8 @@ import org.nfunk.jep.JEP;
 public class MathUtils
 {
     public static final Double ZERO = new Double( 0 );
+    
+    private static final Locale LOCALE = new Locale( "en" );
     
     private static DoubleValidator DOUBLE_VALIDATOR = new DoubleValidator();
     private static IntegerValidator INT_VALIDATOR = new IntegerValidator();
@@ -334,7 +334,7 @@ public class MathUtils
      */
     public static boolean isNumeric( String value )
     {
-        return value != null && DOUBLE_VALIDATOR.isValid( value, DHIS_STANDARD_LOCALE ) && NUMERIC_PATTERN.matcher( value ).matches();
+        return value != null && DOUBLE_VALIDATOR.isValid( value, LOCALE ) && NUMERIC_PATTERN.matcher( value ).matches();
     }
 
     /**
@@ -346,7 +346,7 @@ public class MathUtils
      */
     public static boolean isNumericLenient( String value )
     {
-        return value != null && DOUBLE_VALIDATOR.isValid( value, DHIS_STANDARD_LOCALE ) && NUMERIC_LENIENT_PATTERN.matcher( value ).matches();
+        return value != null && DOUBLE_VALIDATOR.isValid( value, LOCALE ) && NUMERIC_LENIENT_PATTERN.matcher( value ).matches();
     }
     
     /**
@@ -458,7 +458,7 @@ public class MathUtils
      */
     public static boolean isBool( String value )
     {
-        return value != null && ( value.equals( DataValue.TRUE ) || value.equals( DataValue.FALSE ) );
+        return value != null && ( value.equals( "true" ) || value.equals( "false" ) );
     }
     
     /**
