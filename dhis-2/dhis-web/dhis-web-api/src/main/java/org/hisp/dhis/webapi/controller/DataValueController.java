@@ -28,12 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElement;
@@ -42,14 +36,15 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.InputUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -57,6 +52,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Lars Helge Overland
@@ -88,7 +88,7 @@ public class DataValueController
 
     @Autowired
     private IdentifiableObjectManager idObjectManager;
-    
+
     @Autowired
     private InputUtils inputUtils;
 
@@ -107,18 +107,17 @@ public class DataValueController
         @RequestParam String ou,
         @RequestParam( required = false ) String value,
         @RequestParam( required = false ) String comment,
-        @RequestParam( required = false ) boolean followUp, HttpServletResponse response )
+        @RequestParam( required = false ) boolean followUp, HttpServletResponse response ) throws WebMessageException
     {
         // ---------------------------------------------------------------------
         // Input validation
         // ---------------------------------------------------------------------
 
         DataElement dataElement = idObjectManager.get( DataElement.class, de );
-        
+
         if ( dataElement == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal data element identifier: " + de );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal data element identifier: " + de ) );
         }
 
         DataElementCategoryOptionCombo categoryOptionCombo;
@@ -134,11 +133,10 @@ public class DataValueController
 
         if ( categoryOptionCombo == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal category option combo identifier: " + co );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal category option combo identifier: " + co ) );
         }
 
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( response, cc, cp );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
 
         if ( attributeOptionCombo == null )
         {
@@ -149,50 +147,44 @@ public class DataValueController
 
         if ( period == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal period identifier: " + pe );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal period identifier: " + pe ) );
         }
 
         OrganisationUnit organisationUnit = idObjectManager.get( OrganisationUnit.class, ou );
 
         if ( organisationUnit == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal organisation unit identifier: " + ou );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
         }
 
         boolean isInHierarchy = organisationUnitService.isInUserHierarchy( organisationUnit );
 
         if ( !isInHierarchy )
         {
-            ContextUtils.conflictResponse( response, "Organisation unit is not in the hierarchy of the current user: " + ou );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Organisation unit is not in the hierarchy of the current user: " + ou ) );
         }
 
         String valid = ValidationUtils.dataValueIsValid( value, dataElement );
 
         if ( valid != null )
         {
-            ContextUtils.conflictResponse( response, "Invalid value: " + value + ", must match data element type: " + dataElement.getDetailedType() );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Invalid value: " + value + ", must match data element type: " + dataElement.getDetailedType() ) );
         }
 
         valid = ValidationUtils.commentIsValid( comment );
 
         if ( valid != null )
         {
-            ContextUtils.conflictResponse( response, "Invalid comment: " + comment );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Invalid comment: " + comment ) );
         }
 
         // ---------------------------------------------------------------------
         // Future period constraint check //TODO better check
         // ---------------------------------------------------------------------
-        
+
         if ( period.isFuture() && dataElement.getOpenFuturePeriods() <= 0 )
         {
-            ContextUtils.conflictResponse( response, "One or more data sets for data element does not allow future periods: " + de );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "One or more data sets for data element does not allow future periods: " + de ) );
         }
 
         // ---------------------------------------------------------------------
@@ -201,8 +193,7 @@ public class DataValueController
 
         if ( dataSetService.isLocked( dataElement, period, organisationUnit, null ) )
         {
-            ContextUtils.conflictResponse( response, "Data set is locked" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Data set is locked" ) );
         }
 
         // ---------------------------------------------------------------------
@@ -271,7 +262,7 @@ public class DataValueController
         @RequestParam( required = false ) String cc,
         @RequestParam( required = false ) String cp,
         @RequestParam String pe,
-        @RequestParam String ou, HttpServletResponse response )
+        @RequestParam String ou, HttpServletResponse response ) throws WebMessageException
     {
         // ---------------------------------------------------------------------
         // Input validation
@@ -281,8 +272,7 @@ public class DataValueController
 
         if ( dataElement == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal data element identifier: " + de );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal data element identifier: " + de ) );
         }
 
         DataElementCategoryOptionCombo categoryOptionCombo;
@@ -298,11 +288,10 @@ public class DataValueController
 
         if ( categoryOptionCombo == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal category option combo identifier: " + co );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal category option combo identifier: " + co ) );
         }
 
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( response, cc, cp );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
 
         if ( attributeOptionCombo == null )
         {
@@ -313,24 +302,21 @@ public class DataValueController
 
         if ( period == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal period identifier: " + pe );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal period identifier: " + pe ) );
         }
 
         OrganisationUnit organisationUnit = idObjectManager.get( OrganisationUnit.class, ou );
 
         if ( organisationUnit == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal organisation unit identifier: " + ou );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
         }
 
         boolean isInHierarchy = organisationUnitService.isInUserHierarchy( organisationUnit );
 
         if ( !isInHierarchy )
         {
-            ContextUtils.conflictResponse( response, "Organisation unit is not in the hierarchy of the current user: " + ou );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Organisation unit is not in the hierarchy of the current user: " + ou ) );
         }
 
         // ---------------------------------------------------------------------
@@ -339,8 +325,7 @@ public class DataValueController
 
         if ( dataSetService.isLocked( dataElement, period, organisationUnit, null ) )
         {
-            ContextUtils.conflictResponse( response, "Data set is locked" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Data set is locked" ) );
         }
 
         // ---------------------------------------------------------------------
@@ -351,8 +336,7 @@ public class DataValueController
 
         if ( dataValue == null )
         {
-            ContextUtils.conflictResponse( response, "Data value cannot be deleted because it does not exist" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Data value cannot be deleted because it does not exist" ) );
         }
 
         dataValueService.deleteDataValue( dataValue );
@@ -370,7 +354,7 @@ public class DataValueController
         @RequestParam( required = false ) String cp,
         @RequestParam String pe,
         @RequestParam String ou,
-        Model model, HttpServletResponse response )
+        Model model, HttpServletResponse response ) throws WebMessageException
     {
         // ---------------------------------------------------------------------
         // Input validation
@@ -380,11 +364,10 @@ public class DataValueController
 
         if ( dataElement == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal data element identifier: " + de );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal data element identifier: " + de ) );
         }
 
-        DataElementCategoryOptionCombo categoryOptionCombo = null;
+        DataElementCategoryOptionCombo categoryOptionCombo;
 
         if ( co != null )
         {
@@ -397,11 +380,10 @@ public class DataValueController
 
         if ( categoryOptionCombo == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal category option combo identifier: " + co );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal category option combo identifier: " + co ) );
         }
 
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( response, cc, cp );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
 
         if ( attributeOptionCombo == null )
         {
@@ -412,24 +394,21 @@ public class DataValueController
 
         if ( period == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal period identifier: " + pe );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal period identifier: " + pe ) );
         }
 
         OrganisationUnit organisationUnit = idObjectManager.get( OrganisationUnit.class, ou );
 
         if ( organisationUnit == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal organisation unit identifier: " + ou );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
         }
 
         boolean isInHierarchy = organisationUnitService.isInUserHierarchy( organisationUnit );
 
         if ( !isInHierarchy )
         {
-            ContextUtils.conflictResponse( response, "Organisation unit is not in the hierarchy of the current user: " + ou );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Organisation unit is not in the hierarchy of the current user: " + ou ) );
         }
 
         // ---------------------------------------------------------------------
@@ -438,8 +417,7 @@ public class DataValueController
 
         if ( dataSetService.isLocked( dataElement, period, organisationUnit, null ) )
         {
-            ContextUtils.conflictResponse( response, "Data set is locked" );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Data set is locked" ) );
         }
 
         // ---------------------------------------------------------------------
@@ -450,8 +428,7 @@ public class DataValueController
 
         if ( dataValue == null )
         {
-            ContextUtils.conflictResponse( response, "Data value does not exist" );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Data value does not exist" ) );
         }
 
         List<String> value = new ArrayList<>();

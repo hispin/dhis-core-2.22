@@ -364,7 +364,8 @@ function ValueSaver( de, pe, co, value, fieldId, resultColor )
     	if ( 409 == xhr.status || 500 == xhr.status ) // Invalid value or locked
     	{
     		markValue( fieldId, dhis2.de.cst.colorRed );
-    		setHeaderDelayMessage( xhr.responseText );
+        var errorText = JSON.parse( xhr.responseText );
+    		setHeaderDelayMessage( errorText.message );
     	}
     	else // Offline, keep local value
     	{
