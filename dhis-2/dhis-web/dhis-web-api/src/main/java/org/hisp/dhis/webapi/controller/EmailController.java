@@ -28,18 +28,21 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javax.servlet.http.HttpServletResponse;
-
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.email.Email;
 import org.hisp.dhis.email.EmailService;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.service.WebMessageService;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Halvdan Hoem Grelland <halvdanhg@gmail.com>
@@ -59,12 +62,15 @@ public class EmailController
 
     @Autowired
     private CurrentUserService currentUserService;
-    
+
     @Autowired
     private SystemSettingManager systemSettingManager;
 
+    @Autowired
+    private WebMessageService webMessageService;
+
     @RequestMapping( value = "/test", method = RequestMethod.POST )
-    public void sendTestEmail( HttpServletResponse response )
+    public void sendTestEmail( HttpServletResponse response, HttpServletRequest request ) throws WebMessageException
     {
         String userEmail = currentUserService.getCurrentUser().getEmail();
         boolean smtpConfigured = emailService.emailEnabled();
@@ -72,41 +78,37 @@ public class EmailController
 
         if ( !smtpConfigured )
         {
-            ContextUtils.conflictResponse( response, "Could not send test email, SMTP server not configured" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Could not send test email, SMTP server not configured" ) );
         }
-        
+
         if ( !userEmailConfigured )
         {
-            ContextUtils.conflictResponse( response, "Could not send test email, no email configured for current user" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Could not send test email, no email configured for current user" ) );
         }
-        
+
         emailService.sendTestEmail();
 
-        ContextUtils.okResponse( response, "Test email was sent to " + userEmail );
+        webMessageService.send( WebMessageUtils.ok( "Test email was sent to " + userEmail ), response, request );
     }
-    
+
     @RequestMapping( value = "/notification", method = RequestMethod.POST )
-    public void sendSystemNotificationEmail( @RequestBody Email email, HttpServletResponse response )
+    public void sendSystemNotificationEmail( @RequestBody Email email, HttpServletResponse response, HttpServletRequest request ) throws WebMessageException
     {
         boolean smtpConfigured = emailService.emailEnabled();
         boolean systemNotificationEmailValid = systemSettingManager.systemNotificationEmailValid();
 
         if ( !smtpConfigured )
         {
-            ContextUtils.conflictResponse( response, "Could not send email, SMTP server not configured" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Could not send email, SMTP server not configured" ) );
         }
-        
+
         if ( !systemNotificationEmailValid )
         {
-            ContextUtils.conflictResponse( response, "Could not send email, system notification email address not set or not valid" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Could not send email, system notification email address not set or not valid" ) );
         }
-        
+
         emailService.sendSystemEmail( email );
-        
-        ContextUtils.okResponse( response, "System notification email sent" );
+
+        webMessageService.send( WebMessageUtils.ok( "System notification email sent" ), response, request );
     }
 }
