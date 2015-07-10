@@ -28,15 +28,9 @@ package org.hisp.dhis.de.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.hisp.dhis.webapi.utils.InputUtils;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.CompleteDataSetRegistration;
 import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
@@ -50,9 +44,13 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.webapi.utils.InputUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -61,7 +59,7 @@ public class GetDataValuesForDataSetAction
     implements Action
 {
     private static final Log log = LogFactory.getLog( GetDataValuesForDataSetAction.class );
-    
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -100,7 +98,7 @@ public class GetDataValuesForDataSetAction
     {
         this.organisationUnitService = organisationUnitService;
     }
-    
+
     @Autowired
     private InputUtils inputUtils;
 
@@ -140,7 +138,7 @@ public class GetDataValuesForDataSetAction
     {
         return multiOrganisationUnit;
     }
-    
+
     private String cc;
 
     public void setCc( String cc )
@@ -207,6 +205,7 @@ public class GetDataValuesForDataSetAction
 
     @Override
     public String execute()
+        throws Exception
     {
         // ---------------------------------------------------------------------
         // Validation
@@ -230,8 +229,8 @@ public class GetDataValuesForDataSetAction
         // Attributes
         // ---------------------------------------------------------------------
 
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( ServletActionContext.getResponse(), cc, cp );
-        
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
+
         // ---------------------------------------------------------------------
         // Data values & Min-max data elements
         // ---------------------------------------------------------------------
