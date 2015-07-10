@@ -30,8 +30,10 @@ package org.hisp.dhis.webapi.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -39,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
@@ -61,6 +64,9 @@ public class FileController
     @Autowired
     private ContextUtils contextUtils;
 
+    @Autowired
+    private WebMessageService webMessageService;
+
     // -------------------------------------------------------------------------
     // Custom script
     // -------------------------------------------------------------------------
@@ -78,12 +84,12 @@ public class FileController
 
     @RequestMapping( value = "/script", method = RequestMethod.POST, consumes = "application/javascript" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_INSERT_CUSTOM_JS_CSS')" )
-    public void postCustomScript( @RequestBody String content, HttpServletResponse response )
+    public void postCustomScript( @RequestBody String content, HttpServletResponse response, HttpServletRequest request )
     {
         if ( content != null )
         {
             systemSettingManager.saveSystemSetting( KEY_CUSTOM_JS, content );
-            ContextUtils.okResponse( response, "Custom script created" );
+            webMessageService.send( WebMessageUtils.ok( "Custom script created" ), response, request );
         }
     }
 
@@ -114,12 +120,12 @@ public class FileController
 
     @RequestMapping( value = "/style", method = RequestMethod.POST, consumes = "text/css" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_INSERT_CUSTOM_JS_CSS')" )
-    public void postCustomStyle( @RequestBody String content, HttpServletResponse response )
+    public void postCustomStyle( @RequestBody String content, HttpServletResponse response, HttpServletRequest request )
     {
         if ( content != null )
         {
             systemSettingManager.saveSystemSetting( KEY_CUSTOM_CSS, content );
-            ContextUtils.okResponse( response, "Custom style created" );
+            webMessageService.send( WebMessageUtils.ok( "Custom style created" ), response, request );
         }
     }
 
