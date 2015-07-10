@@ -232,7 +232,7 @@ function replicateUser() {
 		},
 		error: function( xhr, status, error ) {
       var errorText = JSON.parse( xhr.responseText );
-			setHeaderDelayMessage( errorText );
+			setHeaderDelayMessage( errorText.message );
 		}
 	});
 }
@@ -252,7 +252,7 @@ function resendInvitation( context ) {
 		},
 		error: function( xhr, status, error ) {
       var errorText = JSON.parse( xhr.responseText );
-			setHeaderDelayMessage( errorText );
+			setHeaderDelayMessage( errorText.message );
 		}
 	} );
 }

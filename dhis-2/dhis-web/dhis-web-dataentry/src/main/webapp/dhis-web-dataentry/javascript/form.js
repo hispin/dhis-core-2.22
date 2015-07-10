@@ -478,7 +478,7 @@ dhis2.de.uploadLocalData = function()
 	                setHeaderMessage( message );
 
 	                $( '#sync_button' ).bind( 'click', dhis2.de.uploadLocalData );
-                    $( '#discard_button' ).bind( 'click', dhis2.de.discardLocalData );
+                  $( '#discard_button' ).bind( 'click', dhis2.de.discardLocalData );
             	}
             }
         } );
