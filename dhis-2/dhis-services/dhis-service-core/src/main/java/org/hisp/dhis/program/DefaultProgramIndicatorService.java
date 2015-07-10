@@ -368,7 +368,7 @@ public class DefaultProgramIndicatorService
             return expr;
         }
         
-        if ( MathUtils.expressionHasErrors( expr ) )
+        if ( !ExpressionUtils.isValid( expr, null ) )
         {
             return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
         }
@@ -450,7 +450,7 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
-                matcher.appendReplacement( expr, String.valueOf( 0 ) );
+                matcher.appendReplacement( expr, String.valueOf( 1 ) );
             }
         }
         
