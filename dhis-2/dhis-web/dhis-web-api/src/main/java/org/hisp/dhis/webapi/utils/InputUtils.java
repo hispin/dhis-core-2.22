@@ -28,17 +28,16 @@ package org.hisp.dhis.webapi.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -47,22 +46,21 @@ public class InputUtils
 {
     @Autowired
     private DataElementCategoryService categoryService;
-    
+
     @Autowired
     private IdentifiableObjectManager idObjectManager;
-    
+
     /**
      * Validates and retrieves the attribute option combo. 409 conflict as status
      * code along with a textual message will be set on the response in case of
      * invalid input.
-     * 
-     * @param response the servlet response.
-     * @param cc the category combo identifier.
-     * @param cp the category and option query string.
+     *
+     * @param cc       the category combo identifier.
+     * @param cp       the category and option query string.
      * @return the attribute option combo identified from the given input, or null
-     *         if the input was invalid.
+     * if the input was invalid.
      */
-    public DataElementCategoryOptionCombo getAttributeOptionCombo( HttpServletResponse response, String cc, String cp )
+    public DataElementCategoryOptionCombo getAttributeOptionCombo( String cc, String cp ) throws WebMessageException
     {
         Set<String> opts = ContextUtils.getQueryParamValues( cp );
 
@@ -70,18 +68,16 @@ public class InputUtils
         // Attribute category combo validation
         // ---------------------------------------------------------------------
 
-        if ( ( cc == null && opts != null || ( cc != null && opts == null ) ) )
+        if ( (cc == null && opts != null || (cc != null && opts == null)) )
         {
-            ContextUtils.conflictResponse( response, "Both or none of category combination and category options must be present" );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Both or none of category combination and category options must be present" ) );
         }
 
         DataElementCategoryCombo categoryCombo = null;
-        
-        if ( cc != null && ( categoryCombo = idObjectManager.get( DataElementCategoryCombo.class, cc ) ) == null )
+
+        if ( cc != null && (categoryCombo = idObjectManager.get( DataElementCategoryCombo.class, cc )) == null )
         {
-            ContextUtils.conflictResponse( response, "Illegal category combo identifier: " + cc );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal category combo identifier: " + cc ) );
         }
 
         // ---------------------------------------------------------------------
@@ -97,22 +93,20 @@ public class InputUtils
             for ( String uid : opts )
             {
                 DataElementCategoryOption categoryOption = idObjectManager.get( DataElementCategoryOption.class, uid );
-                
+
                 if ( categoryOption == null )
                 {
-                    ContextUtils.conflictResponse( response, "Illegal category option identifier: " + uid );
-                    return null;
+                    throw new WebMessageException( WebMessageUtils.conflict( "Illegal category option identifier: " + uid ) );
                 }
-                
+
                 categoryOptions.add( categoryOption );
             }
-            
+
             attributeOptionCombo = categoryService.getDataElementCategoryOptionCombo( categoryCombo, categoryOptions );
-            
+
             if ( attributeOptionCombo == null )
             {
-                ContextUtils.conflictResponse( response, "Attribute option combo does not exist for given category combo and category options" );
-                return null;
+                throw new WebMessageException( WebMessageUtils.conflict( "Attribute option combo does not exist for given category combo and category options" ) );
             }
         }
 
@@ -120,13 +114,12 @@ public class InputUtils
         {
             attributeOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
         }
-        
+
         if ( attributeOptionCombo == null )
         {
-            ContextUtils.conflictResponse( response, "Default attribute option combo does not exist" );
-            return null;
+            throw new WebMessageException( WebMessageUtils.conflict( "Default attribute option combo does not exist" ) );
         }
-        
+
         return attributeOptionCombo;
     }
 }

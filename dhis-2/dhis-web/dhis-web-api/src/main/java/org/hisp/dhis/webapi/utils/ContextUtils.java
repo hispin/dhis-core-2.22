@@ -161,31 +161,6 @@ public class ContextUtils
         setResponse( response, HttpServletResponse.SC_OK, message );
     }
 
-    public static void createdResponse( HttpServletResponse response, String message, String location )
-    {
-        if ( location != null )
-        {
-            response.addHeader( HEADER_LOCATION, location );
-        }
-
-        setResponse( response, HttpServletResponse.SC_CREATED, message );
-    }
-
-    public static void notFoundResponse( HttpServletResponse response, String message )
-    {
-        setResponse( response, HttpServletResponse.SC_NOT_FOUND, message );
-    }
-
-    public static void conflictResponse( HttpServletResponse response, String message )
-    {
-        setResponse( response, HttpServletResponse.SC_CONFLICT, message );
-    }
-
-    public static void errorResponse( HttpServletResponse response, String message )
-    {
-        setResponse( response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message );
-    }
-
     public static void badRequestResponse( HttpServletResponse response, String message )
     {
         setResponse( response, HttpServletResponse.SC_BAD_REQUEST, message );
