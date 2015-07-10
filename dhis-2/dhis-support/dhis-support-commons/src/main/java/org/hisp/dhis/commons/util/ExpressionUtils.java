@@ -87,11 +87,7 @@ public class ExpressionUtils
      */
     public static Double evaluateToDouble( String expression, Map<String, Object> vars )
     {
-        Expression exp = JEXL.createExpression( expression );
-        
-        JexlContext context = vars != null ? new MapContext( vars ) : new MapContext();
-                
-        Object result = exp.evaluate( context );
+        Object result = evaluate( expression, vars );
         
         if ( result == null || !isNumeric( String.valueOf( result ) ) )
         {
