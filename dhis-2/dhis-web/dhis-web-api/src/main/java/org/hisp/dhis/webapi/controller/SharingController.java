@@ -42,7 +42,7 @@ import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupAccess;
 import org.hisp.dhis.user.UserGroupAccessService;
 import org.hisp.dhis.user.UserGroupService;
-import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.sharing.Sharing;
 import org.hisp.dhis.webapi.webdomain.sharing.SharingUserGroupAccess;
@@ -87,6 +87,9 @@ public class SharingController
 
     @Autowired
     private AclService aclService;
+
+    @Autowired
+    private WebMessageService webMessageService;
 
     @RequestMapping( method = RequestMethod.GET, produces = { "application/json" } )
     public void getSharing( @RequestParam String type, @RequestParam String id, HttpServletResponse response ) throws IOException, WebMessageException
@@ -251,7 +254,7 @@ public class SharingController
 
         log.info( builder );
 
-        ContextUtils.okResponse( response, "Access control set" );
+        webMessageService.send( WebMessageUtils.ok( "Access control set" ), response, request );
     }
 
     @RequestMapping( value = "/search", method = RequestMethod.GET, produces = { "application/json" } )
