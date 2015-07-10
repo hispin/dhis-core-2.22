@@ -289,7 +289,11 @@ public class DefaultADXDataService
         IdentifiableProperty dataElementIdScheme = importOptions.getDataElementIdScheme();
 
         DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,dvAttributes.get( ADXConstants.DATAELEMENT));
-            
+        
+        if (dataElement == null)
+        {
+            throw new ADXException(dvAttributes.get( ADXConstants.DATAELEMENT), "No matching dataelement");
+        }
         // process adx datavalue attributes
         if ( !dvAttributes.containsKey( ADXConstants.CATOPTCOMBO ) )
         {
@@ -309,7 +313,7 @@ public class DefaultADXDataService
             }
             else
             {
-                throw new ADXException( "Dataelement " + dataElement.getShortName() + " expects text annotation" );
+                throw new ADXException( dvAttributes.get( ADXConstants.DATAELEMENT),"Dataelement expects text annotation" );
             }
         }
         
