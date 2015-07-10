@@ -28,16 +28,8 @@ package org.hisp.dhis.webapi.controller.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
@@ -47,6 +39,9 @@ import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
+import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.query.Order;
@@ -65,6 +60,7 @@ import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.user.Users;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,8 +70,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -245,35 +247,31 @@ public class UserController
     public void resendInvite( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         User user = userService.getUser( id );
-        
+
         if ( user == null )
         {
-            ContextUtils.conflictResponse( response, "User not found: " + id );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "User not found: " + id ) );
         }
-        
+
         if ( user.getUserCredentials() == null || !user.getUserCredentials().isInvitation() )
         {
-            ContextUtils.conflictResponse( response, "User account is not an invitation: " + id );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "User account is not an invitation: " + id ) );
         }
 
         String valid = securityService.validateRestore( user.getUserCredentials() );
-        
+
         if ( valid != null )
         {
-            ContextUtils.conflictResponse( response, valid );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( valid ) );
         }
-        
+
         boolean isInviteUsername = securityService.isInviteUsername( user.getUsername() );
-        
+
         RestoreOptions restoreOptions = isInviteUsername ? RestoreOptions.INVITE_WITH_USERNAME_CHOICE : RestoreOptions.INVITE_WITH_DEFINED_USERNAME;
-        
-        securityService.sendRestoreMessage( user.getUserCredentials(),
-            ContextUtils.getContextPath( request ), restoreOptions );
+
+        securityService.sendRestoreMessage( user.getUserCredentials(), ContextUtils.getContextPath( request ), restoreOptions );
     }
-    
+
     @RequestMapping( value = BULK_INVITE_PATH, method = RequestMethod.POST, consumes = "application/json" )
     public void postJsonInvites( HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
@@ -297,14 +295,13 @@ public class UserController
     @PreAuthorize( "hasRole('ALL')" )
     @RequestMapping( value = "/{uid}/replica", method = RequestMethod.POST )
     public void replicateUser( @PathVariable String uid,
-        HttpServletRequest request, HttpServletResponse response ) throws IOException
+        HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
     {
         User existingUser = userService.getUser( uid );
 
         if ( existingUser == null || existingUser.getUserCredentials() == null )
         {
-            ContextUtils.conflictResponse( response, "User not found: " + uid );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "User not found: " + uid ) );
         }
 
         if ( !validateCreateUser( existingUser, response ) )
@@ -319,26 +316,22 @@ public class UserController
 
         if ( auth == null || username == null )
         {
-            ContextUtils.conflictResponse( response, "Username must be specified" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Username must be specified" ) );
         }
 
         if ( userService.getUserCredentialsByUsername( username ) != null )
         {
-            ContextUtils.conflictResponse( response, "Username already taken: " + username );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Username already taken: " + username ) );
         }
 
         if ( password == null )
         {
-            ContextUtils.conflictResponse( response, "Password must be specified" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Password must be specified" ) );
         }
 
         if ( !ValidationUtils.passwordIsValid( password ) )
         {
-            ContextUtils.conflictResponse( response, "Password must have at least 8 characters, one digit, one uppercase" );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "Password must have at least 8 characters, one digit, one uppercase" ) );
         }
 
         User userReplica = new User();
@@ -359,7 +352,8 @@ public class UserController
         userService.addUserCredentials( credentialsReplica );
         userGroupService.addUserToGroups( userReplica, IdentifiableObjectUtils.getUids( existingUser.getGroups() ) );
 
-        ContextUtils.createdResponse( response, "User replica created", UserSchemaDescriptor.API_ENDPOINT + "/" + userReplica.getUid() );
+        response.addHeader( "Location", UserSchemaDescriptor.API_ENDPOINT + "/" + userReplica.getUid() );
+        webMessageService.send( WebMessageUtils.created( "User replica created" ), response, request );
     }
 
     // -------------------------------------------------------------------------
@@ -374,14 +368,12 @@ public class UserController
 
         if ( users.isEmpty() )
         {
-            ContextUtils.conflictResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( getEntityName() + " does not exist: " + pvUid ) );
         }
 
         if ( !aclService.canUpdate( currentUserService.getCurrentUser(), users.get( 0 ) ) )
         {
-            ContextUtils.conflictResponse( response, "You don't have the proper permissions to update this user." );
-            return;
+            throw new UpdateAccessDeniedException( "You don't have the proper permissions to update this user." );
         }
 
         User parsed = renderService.fromXml( request.getInputStream(), getEntityClass() );
@@ -389,8 +381,7 @@ public class UserController
 
         if ( !userService.canAddOrUpdateUser( IdentifiableObjectUtils.getUids( parsed.getGroups() ) ) )
         {
-            ContextUtils.conflictResponse( response, "You must have permissions to create user, or ability to manage at least one user group for the user." );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "You must have permissions to create user, or ability to manage at least one user group for the user." ) );
         }
 
         ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
@@ -414,14 +405,12 @@ public class UserController
 
         if ( users.isEmpty() )
         {
-            ContextUtils.conflictResponse( response, getEntityName() + " does not exist: " + pvUid );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( getEntityName() + " does not exist: " + pvUid ) );
         }
 
         if ( !aclService.canUpdate( currentUserService.getCurrentUser(), users.get( 0 ) ) )
         {
-            ContextUtils.conflictResponse( response, "You don't have the proper permissions to update this object." );
-            return;
+            throw new UpdateAccessDeniedException( "You don't have the proper permissions to update this user." );
         }
 
         User parsed = renderService.fromJson( request.getInputStream(), getEntityClass() );
@@ -429,8 +418,7 @@ public class UserController
 
         if ( !userService.canAddOrUpdateUser( IdentifiableObjectUtils.getUids( parsed.getGroups() ) ) )
         {
-            ContextUtils.conflictResponse( response, "You must have permissions to create user, or ability to manage at least one user group for the user." );
-            return;
+            throw new WebMessageException( WebMessageUtils.conflict( "You must have permissions to create user, or ability to manage at least one user group for the user." ) );
         }
 
         ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
@@ -456,18 +444,16 @@ public class UserController
      * @param user     the user.
      * @param response the response.
      */
-    private boolean validateCreateUser( User user, HttpServletResponse response )
+    private boolean validateCreateUser( User user, HttpServletResponse response ) throws WebMessageException
     {
         if ( !aclService.canCreate( currentUserService.getCurrentUser(), getEntityClass() ) )
         {
-            ContextUtils.conflictResponse( response, "You don't have the proper permissions to create this object." );
-            return false;
+            throw new CreateAccessDeniedException( "You don't have the proper permissions to create this object." );
         }
 
         if ( !userService.canAddOrUpdateUser( IdentifiableObjectUtils.getUids( user.getGroups() ) ) )
         {
-            ContextUtils.conflictResponse( response, "You must have permissions to create user, or ability to manage at least one user group for the user." );
-            return false;
+            throw new WebMessageException( WebMessageUtils.conflict( "You must have permissions to create user, or ability to manage at least one user group for the user." ) );
         }
 
         List<String> uids = IdentifiableObjectUtils.getUids( user.getGroups() );
@@ -476,8 +462,7 @@ public class UserController
         {
             if ( !userGroupService.canAddOrRemoveMember( uid ) )
             {
-                ContextUtils.conflictResponse( response, "You don't have permissions to add user to user group: " + uid );
-                return false;
+                throw new WebMessageException( WebMessageUtils.conflict( "You don't have permissions to add user to user group: " + uid ) );
             }
         }
 
@@ -515,7 +500,7 @@ public class UserController
      * @param user     the user.
      * @param response the response.
      */
-    private boolean validateInviteUser( User user, HttpServletResponse response )
+    private boolean validateInviteUser( User user, HttpServletResponse response ) throws WebMessageException
     {
         if ( !validateCreateUser( user, response ) )
         {
@@ -526,8 +511,7 @@ public class UserController
 
         if ( credentials == null )
         {
-            ContextUtils.conflictResponse( response, "User credentials is not present" );
-            return false;
+            throw new WebMessageException( WebMessageUtils.conflict( "User credentials is not present" ) );
         }
 
         credentials.setUser( user );
@@ -538,8 +522,7 @@ public class UserController
         {
             if ( role != null && role.hasCriticalAuthorities() )
             {
-                ContextUtils.conflictResponse( response, "User cannot be invited with user role which has critical authorities: " + role );
-                return false;
+                throw new WebMessageException( WebMessageUtils.conflict( "User cannot be invited with user role which has critical authorities: " + role ) );
             }
         }
 
@@ -547,8 +530,7 @@ public class UserController
 
         if ( valid != null )
         {
-            ContextUtils.conflictResponse( response, valid + ": " + user.getUserCredentials() );
-            return false;
+            throw new WebMessageException( WebMessageUtils.conflict( valid + ": " + user.getUserCredentials() ) );
         }
 
         return true;
@@ -571,8 +553,7 @@ public class UserController
 
         if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getImported() == 1 )
         {
-            securityService.sendRestoreMessage( user.getUserCredentials(),
-                ContextUtils.getContextPath( request ), restoreOptions );
+            securityService.sendRestoreMessage( user.getUserCredentials(), ContextUtils.getContextPath( request ), restoreOptions );
         }
 
         return summary;

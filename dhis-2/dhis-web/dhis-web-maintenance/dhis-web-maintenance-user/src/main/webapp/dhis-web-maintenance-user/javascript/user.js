@@ -231,7 +231,8 @@ function replicateUser() {
 			window.location.href = "alluser.action";
 		},
 		error: function( xhr, status, error ) {
-			setHeaderDelayMessage( xhr.responseText );
+      var errorText = JSON.parse( xhr.responseText );
+			setHeaderDelayMessage( errorText );
 		}
 	});
 }
@@ -250,7 +251,8 @@ function resendInvitation( context ) {
 			setHeaderDelayMessage( i18n_invitation_sent );
 		},
 		error: function( xhr, status, error ) {
-			setHeaderDelayMessage( xhr.responseText );
+      var errorText = JSON.parse( xhr.responseText );
+			setHeaderDelayMessage( errorText );
 		}
 	} );
 }
