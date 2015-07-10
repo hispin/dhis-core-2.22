@@ -43,8 +43,8 @@
 						    data-can-manage="$security.canManage( $programIndicator )"
 						    data-can-update="$security.canUpdate( $programIndicator )"
 						    data-can-delete="$security.canDelete( $programIndicator )">
-						    <td>$encoder.htmlEncode( $!programIndicator.displayName )</td>
-						    <td>$encoder.htmlEncode( $!programIndicator.description )</td>
+						    <td>$!encoder.htmlEncode( $programIndicator.displayName )</td>
+						    <td>$!encoder.htmlEncode( $programIndicator.description )</td>
 						</tr>
 					#end
 				</tbody>
@@ -61,6 +61,7 @@
 				<p><label class="bold">$i18n.getString( "description" ):</label><br><span id="descriptionField"></span></p>
 				<p><label class="bold">$i18n.getString( "value_type" ):</label><br><span id="valueTypeField"></span></p>
 				<p><label class="bold">$i18n.getString( "expression" ):</label><br><span id="expressionField"></span></p>
+				<p><label class="bold">$i18n.getString( "filter" ):</label><br><span id="filterField"></span></p>
 				<p><label class="bold">$i18n.getString( "id" ):</label><br><span id="idField"></span></p>
 			</div>
 		</td>
