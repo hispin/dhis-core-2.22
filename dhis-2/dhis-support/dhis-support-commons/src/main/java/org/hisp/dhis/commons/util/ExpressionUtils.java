@@ -56,6 +56,7 @@ public class ExpressionUtils
         JEXL.setFunctions( functions );
         JEXL.setCache( 512 );
         JEXL.setSilent( false );
+        JEXL.setStrict( true );
     }
     
     /**
@@ -127,6 +128,28 @@ public class ExpressionUtils
             Object result = evaluate( expression, vars );
             
             return ( result instanceof Boolean );
+        }
+        catch ( JexlException ex )
+        {
+            return false;
+        }
+    }
+    
+    /**
+     * Indicates whether the given expression is valid, i.e. can be successfully
+     * evaluated.
+     * 
+     * @param expression the expression.
+     * @param vars the variables, can be null.
+     * @return true or false.
+     */
+    public static boolean isValid( String expression, Map<String, Object> vars )
+    {
+        try
+        {
+            Object result = evaluate( expression, vars );
+            
+            return result != null;
         }
         catch ( JexlException ex )
         {

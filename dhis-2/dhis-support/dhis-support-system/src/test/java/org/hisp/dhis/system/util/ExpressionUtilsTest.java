@@ -28,9 +28,9 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -134,5 +134,22 @@ public class ExpressionUtilsTest
         assertFalse( ExpressionUtils.isBoolean( "4", null ) );
         assertFalse( ExpressionUtils.isBoolean( "3 + 2", null ) );
         assertFalse( ExpressionUtils.isBoolean( "someinvalid expr", null ) );
+    }
+    
+    @Test
+    public void testIsValid()
+    {
+        Map<String, Object> vars = new HashMap<String, Object>();
+        
+        vars.put( "v1", "12" );
+        
+        assertTrue( ExpressionUtils.isValid( "2 + 8", null ) );
+        assertTrue( ExpressionUtils.isValid( "3 - v1", vars ) );
+        assertTrue( ExpressionUtils.isValid( "d2:zing(1)", null ) );
+        assertTrue( ExpressionUtils.isValid( "(d2:zing(1)+d2:zing(1))*50/1", null ) );
+        
+        assertFalse( ExpressionUtils.isValid( "2 a 3", null ) );
+        assertFalse( ExpressionUtils.isValid( "v2 + 3", vars ) );
+        assertFalse( ExpressionUtils.isValid( "4 + abc", vars ) );
     }
 }
