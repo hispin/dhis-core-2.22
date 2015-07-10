@@ -35,33 +35,33 @@ public class ExpressionFunctions
     /**
      * Function which will return zero if the argument is a negative number.
      * 
-     * @param value the value.
+     * @param value the value, must be a number.
      * @return a Double.
      */
-    public static Double zing( String value )
+    public static Double zing( Number value )
     {
         if ( value == null )
         {
             throw new IllegalArgumentException( "Argument is null: " + value );
         }
         
-        return Math.max( 0d, Double.valueOf( value ) );
+        return Math.max( 0d, value.doubleValue() );
     }
 
     /**
      * Function which will return one if the argument is zero or a positive 
      * number, and zero if not.
      * 
-     * @param value the value.
+     * @param value the value, must be a number.
      * @return a Double.
      */
-    public static Double oizp( String value )
+    public static Double oizp( Number value )
     {
         if ( value == null )
         {
             throw new IllegalArgumentException( "Argument is null: " + value );
         }
         
-        return ( Double.valueOf( value ) >= 0d ) ? 1d : 0d;
+        return ( value.doubleValue() >= 0d ) ? 1d : 0d;
     }
 }
