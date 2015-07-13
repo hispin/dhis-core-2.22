@@ -2865,24 +2865,42 @@ Ext.onReady( function() {
 			// message
 			web.message = web.message || {};
 
-			web.message.alert = function(msg, type) {
+			web.message.alert = function(obj) {
                 var config = {},
+                    type,
                     window;
 
-                if (!msg) {
+                if (!obj || (Ext.isObject(obj) && !obj.message && !obj.responseText)) {
                     return;
                 }
 
-                type = type || 'error';
+                // if response object
+                if (Ext.isObject(obj) && obj.responseText && !obj.message) {
+                    obj = Ext.decode(obj.responseText);
+                }
 
-				config.title = type === 'error' ? NS.i18n.error : (type === 'warning' ? NS.i18n.warning : NS.i18n.info);
+                // if string
+                if (Ext.isString(obj)) {
+                    obj = {
+                        status: 'ERROR',
+                        message: obj
+                    };
+                }
+
+                // web message
+                type = (obj.status || 'INFO').toLowerCase();
+
+				config.title = obj.status;
 				config.iconCls = 'ns-window-title-messagebox ' + type;
 
                 // html
-                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+                config.html = '';
+                config.html += obj.httpStatusCode ? 'Code: ' + obj.httpStatusCode + '<br>' : '';
+                config.html += obj.httpStatus ? 'Status: ' + obj.httpStatus + '<br><br>' : '';
+                config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
 
                 // bodyStyle
-                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
 
                 // destroy handler
                 config.modal = true;
@@ -3029,7 +3047,10 @@ Ext.onReady( function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                ns.alert(msg, 'warning');
+                ns.alert({
+                    status: 'INFO',
+                    message: msg
+                });
 			};
 
 			// report
