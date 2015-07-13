@@ -317,12 +317,12 @@ public class DefaultFieldFilterService implements FieldFilterService
         _updateFields( fieldMap, klass, false );
     }
 
+    private final Pattern MUTATOR_PATTERN = Pattern.compile( "(\\w+)(?:::(\\w+))?(?:\\|rename\\((\\w+)\\))?" );
+
     private void _updateFields( FieldMap fieldMap, Class<?> klass, boolean expandOnly )
     {
         Schema schema = schemaService.getDynamicSchema( klass );
         List<String> cleanupFields = Lists.newArrayList();
-
-        Pattern pattern = Pattern.compile( "(\\w+)(?:::(\\w+))?(?:\\|rename\\((\\w+)\\))?" );
 
         for ( String fieldKey : Sets.newHashSet( fieldMap.keySet() ) )
         {
@@ -393,7 +393,7 @@ public class DefaultFieldFilterService implements FieldFilterService
             }
             else if ( fieldKey.contains( "::" ) || fieldKey.contains( "|rename(" ) )
             {
-                Matcher matcher = pattern.matcher( fieldKey );
+                Matcher matcher = MUTATOR_PATTERN.matcher( fieldKey );
 
                 if ( !matcher.find() )
                 {
