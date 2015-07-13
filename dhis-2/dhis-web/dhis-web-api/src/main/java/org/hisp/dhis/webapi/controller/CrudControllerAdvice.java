@@ -28,13 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.beans.PropertyEditorSupport;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
-
 import org.hisp.dhis.common.DeleteNotAllowedException;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MaintenanceModeException;
@@ -51,6 +44,12 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import java.beans.PropertyEditorSupport;
+import java.util.Date;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -92,20 +91,8 @@ public class CrudControllerAdvice
         webMessageService.send( WebMessageUtils.unprocessableEntity( ex.getClass().getName() ), response, request );
     }
 
-    @ExceptionHandler( DeleteNotAllowedException.class )
-    public void deleteNotAllowedExceptionHandler( DeleteNotAllowedException ex, HttpServletResponse response, HttpServletRequest request )
-    {
-        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
-    }
-
-    @ExceptionHandler( IllegalQueryException.class )
-    public void illegalQueryExceptionHandler( IllegalQueryException ex, HttpServletResponse response, HttpServletRequest request )
-    {
-        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
-    }
-
-    @ExceptionHandler( IllegalArgumentException.class )
-    public void illegalArgumentExceptionHandler( IllegalArgumentException ex, HttpServletResponse response, HttpServletRequest request )
+    @ExceptionHandler( { IllegalQueryException.class, IllegalArgumentException.class, DeleteNotAllowedException.class } )
+    public void conflictsExceptionHandler( Exception ex, HttpServletResponse response, HttpServletRequest request )
     {
         webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
     }
