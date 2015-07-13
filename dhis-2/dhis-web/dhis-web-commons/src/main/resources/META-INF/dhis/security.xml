@@ -37,7 +37,6 @@
       login-processing-url="/dhis-web-commons-security/login.action" />
 
   </sec:http>
-
   <!-- End OAuth2 -->
 
   <bean id="mappedRedirectStrategy" class="org.hisp.dhis.security.MappedRedirectStrategy">
@@ -154,13 +153,6 @@
   <!-- Security : Listener -->
 
   <bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener" />
-
-  <!--
-  <bean id="authenticationListener" class="org.hisp.dhis.security.listener.AuthenticationListener">
-    <property name="userAuditService" ref="org.hisp.dhis.useraudit.UserAuditService" />
-    <property name="userService" ref="org.hisp.dhis.user.UserService" />
-  </bean>
-  -->
 
   <!-- Security : AccessProvider -->
 
