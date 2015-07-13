@@ -44,7 +44,7 @@ import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.PagerUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.OrderOptions;
-import org.hisp.dhis.dxf2.common.TranslateOptions;
+import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.metadata.ImportService;
@@ -157,7 +157,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     @RequestMapping( method = RequestMethod.GET )
     public @ResponseBody RootNode getObjectList(
         @RequestParam Map<String, String> rpParameters,
-        TranslateOptions translateOptions, OrderOptions orderOptions,
+        TranslateParams translateParams, OrderOptions orderOptions,
         HttpServletResponse response, HttpServletRequest request )
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
@@ -181,7 +181,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         Pager pager = metaData.getPager();
 
         entities = objectFilterService.filter( entities, filters );
-        translate( entities, translateOptions );
+        translate( entities, translateParams );
 
         if ( options.hasPaging() && pager == null )
         {
@@ -218,7 +218,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     public @ResponseBody RootNode getObject(
         @PathVariable( "uid" ) String pvUid,
         @RequestParam Map<String, String> rpParameters,
-        TranslateOptions translateOptions,
+        TranslateParams translateParams,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         if ( !aclService.canRead( currentUserService.getCurrentUser(), getEntityClass() ) )
@@ -234,14 +234,14 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             fields.add( ":all" );
         }
 
-        return getObjectInternal( pvUid, rpParameters, filters, fields, translateOptions );
+        return getObjectInternal( pvUid, rpParameters, filters, fields, translateParams );
     }
 
     @RequestMapping( value = "/{uid}/{property}", method = RequestMethod.GET )
     public @ResponseBody RootNode getObjectProperty(
         @PathVariable( "uid" ) String pvUid, @PathVariable( "property" ) String pvProperty,
         @RequestParam Map<String, String> rpParameters,
-        TranslateOptions translateOptions,
+        TranslateParams translateParams,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         if ( !aclService.canRead( currentUserService.getCurrentUser(), getEntityClass() ) )
@@ -258,7 +258,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         String fieldFilter = "[" + Joiner.on( ',' ).join( fields ) + "]";
 
-        return getObjectInternal( pvUid, rpParameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + fieldFilter ), translateOptions );
+        return getObjectInternal( pvUid, rpParameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + fieldFilter ), translateParams );
     }
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.PATCH )
@@ -401,30 +401,30 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
 
-    protected void translate( List<?> entities, TranslateOptions translateOptions )
+    protected void translate( List<?> entities, TranslateParams translateParams )
     {
-        if ( translateOptions.isTranslate() )
+        if ( translateParams.isTranslate() )
         {
-            if ( translateOptions.defaultLocale() )
+            if ( translateParams.defaultLocale() )
             {
                 i18nService.internationalise( entities );
             }
             else
             {
-                i18nService.internationalise( entities, translateOptions.getLocale() );
+                i18nService.internationalise( entities, translateParams.getLocale() );
             }
         }
     }
 
     private RootNode getObjectInternal( String uid, Map<String, String> parameters,
-        List<String> filters, List<String> fields, TranslateOptions translateOptions ) throws Exception
+        List<String> filters, List<String> fields, TranslateParams translateParams ) throws Exception
     {
         WebOptions options = new WebOptions( parameters );
         List<T> entities = getEntity( uid, options );
 
-        if ( translateOptions != null )
+        if ( translateParams != null )
         {
-            translate( entities, translateOptions );
+            translate( entities, translateParams );
         }
 
         if ( entities.isEmpty() )
@@ -645,7 +645,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         @PathVariable( "property" ) String pvProperty,
         @PathVariable( "itemId" ) String pvItemId,
         @RequestParam Map<String, String> parameters,
-        TranslateOptions translateOptions,
+        TranslateParams translateParams,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         if ( !aclService.canRead( currentUserService.getCurrentUser(), getEntityClass() ) )
@@ -653,7 +653,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             throw new ReadAccessDeniedException( "You don't have the proper permissions to read objects of this type." );
         }
 
-        RootNode rootNode = getObjectInternal( pvUid, parameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + "[:all]" ), translateOptions );
+        RootNode rootNode = getObjectInternal( pvUid, parameters, Lists.<String>newArrayList(), Lists.newArrayList( pvProperty + "[:all]" ), translateParams );
 
         // TODO optimize this using field filter (collection filtering)
         if ( !rootNode.getChildren().isEmpty() && rootNode.getChildren().get( 0 ).isCollection() )
