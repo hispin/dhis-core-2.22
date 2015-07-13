@@ -130,12 +130,11 @@ public class ProgramRuleAction
 
     public ProgramRuleAction()
     {
-        setAutoFields();
+
     }
 
     public ProgramRuleAction( String name, ProgramRule programRule, ProgramRuleActionType programRuleActionType, DataElement dataElement, String location, String content, String data )
     {
-        this();
         this.name = name;
         this.programRule = programRule;
         this.programRuleActionType = programRuleActionType;

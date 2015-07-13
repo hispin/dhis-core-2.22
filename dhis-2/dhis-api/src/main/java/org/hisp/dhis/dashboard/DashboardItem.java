@@ -110,7 +110,7 @@ public class DashboardItem
 
     public DashboardItem()
     {
-        super.setAutoFields();
+        setAutoFields();
     }
 
     public DashboardItem( String uid )

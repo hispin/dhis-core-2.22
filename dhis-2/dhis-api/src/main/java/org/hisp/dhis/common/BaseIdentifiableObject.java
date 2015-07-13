@@ -42,6 +42,7 @@ import org.hisp.dhis.common.annotation.Description;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
@@ -54,6 +55,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Bob Jolliffe
@@ -378,8 +380,8 @@ public class BaseIdentifiableObject
     public int hashCode()
     {
         int result = getUid() != null ? getUid().hashCode() : 0;
-        result = 31 * result + ( getCode() != null ? getCode().hashCode() : 0 );
-        result = 31 * result + ( getName() != null ? getName().hashCode() : 0 );
+        result = 31 * result + (getCode() != null ? getCode().hashCode() : 0);
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
 
         return result;
     }
@@ -463,7 +465,7 @@ public class BaseIdentifiableObject
 
         publicAccess = AccessStringHelper.DEFAULT;
         externalAccess = false;
-        
+
         if ( userGroupAccesses != null )
         {
             userGroupAccesses.clear();
@@ -500,7 +502,7 @@ public class BaseIdentifiableObject
     public static Map<String, Integer> getCodeMap( Collection<? extends BaseIdentifiableObject> objects )
     {
         Map<String, Integer> map = new HashMap<>();
-        
+
         for ( BaseIdentifiableObject object : objects )
         {
             String code = object.getCode();
@@ -508,7 +510,7 @@ public class BaseIdentifiableObject
 
             map.put( code, internalId );
         }
-        
+
         return map;
     }
 
@@ -521,7 +523,7 @@ public class BaseIdentifiableObject
     public static Map<String, Integer> getNameMap( Collection<? extends BaseIdentifiableObject> objects )
     {
         Map<String, Integer> map = new HashMap<>();
-        
+
         for ( BaseIdentifiableObject object : objects )
         {
             String name = object.getName();
@@ -529,7 +531,7 @@ public class BaseIdentifiableObject
 
             map.put( name, internalId );
         }
-        
+
         return map;
     }
 

@@ -83,7 +83,7 @@ public class ProgramStageInstance
 
     public ProgramStageInstance()
     {
-        setAutoFields();
+
     }
 
     public ProgramStageInstance( ProgramInstance programInstance, ProgramStage programStage )

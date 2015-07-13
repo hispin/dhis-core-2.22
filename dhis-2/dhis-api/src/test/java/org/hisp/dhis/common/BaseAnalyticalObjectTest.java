@@ -110,18 +110,20 @@ public class BaseAnalyticalObjectTest
     public void testPopulateAnalyticalProperties()
     {
         TrackedEntityAttribute tea = new TrackedEntityAttribute();
+        tea.setAutoFields();
 
         TrackedEntityAttributeDimension tead = new TrackedEntityAttributeDimension( tea, null, "EQ:10" );
+
+        EventChart eventChart = new EventChart();
+        eventChart.setAutoFields();
+        eventChart.getColumnDimensions().add( tea.getUid() );
+        eventChart.getAttributeDimensions().add( tead );
         
-        EventChart chart = new EventChart();
-        chart.getColumnDimensions().add( tea.getUid() );
-        chart.getAttributeDimensions().add( tead );
+        eventChart.populateAnalyticalProperties();
         
-        chart.populateAnalyticalProperties();
+        assertEquals( 1, eventChart.getColumns().size() );
         
-        assertEquals( 1, chart.getColumns().size() );
-        
-        DimensionalObject dim = chart.getColumns().get( 0 );
+        DimensionalObject dim = eventChart.getColumns().get( 0 );
         
         assertNotNull( dim );
         assertEquals( tea.getDimension(), dim.getDimension() );

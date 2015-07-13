@@ -60,12 +60,11 @@ public class Translation
 
     public Translation()
     {
-        setAutoFields();
+
     }
 
     public Translation( String className, String locale, String property, String value, String objectUid )
     {
-        this();
         this.className = className;
         this.locale = locale;
         this.property = property;

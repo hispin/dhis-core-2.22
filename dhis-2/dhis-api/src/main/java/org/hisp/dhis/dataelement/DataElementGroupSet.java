@@ -78,12 +78,11 @@ public class DataElementGroupSet
 
     public DataElementGroupSet()
     {
-        setAutoFields();
+
     }
 
     public DataElementGroupSet( String name )
     {
-        this();
         this.name = name;
         this.compulsory = false;
     }

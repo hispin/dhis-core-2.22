@@ -152,13 +152,12 @@ public class ValidationRule
 
     public ValidationRule()
     {
-        setAutoFields();
+
     }
 
     public ValidationRule( String name, String description,
         Operator operator, Expression leftSide, Expression rightSide )
     {
-        this();
         this.name = name;
         this.description = description;
         this.operator = operator;

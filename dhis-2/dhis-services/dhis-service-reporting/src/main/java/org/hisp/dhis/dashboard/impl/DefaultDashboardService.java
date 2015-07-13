@@ -28,9 +28,11 @@ package org.hisp.dhis.dashboard.impl;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Sets;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dashboard.Dashboard;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dashboard.DashboardItemStore;
@@ -42,13 +44,10 @@ import org.hisp.dhis.eventreport.EventReport;
 import org.hisp.dhis.mapping.Map;
 import org.hisp.dhis.report.Report;
 import org.hisp.dhis.reporttable.ReportTable;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.Sets;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -81,7 +80,7 @@ public class DefaultDashboardService
 
     @Autowired
     private IdentifiableObjectManager objectManager;
-    
+
     @Autowired
     private UserService userService;
 
@@ -106,7 +105,7 @@ public class DefaultDashboardService
     public DashboardSearchResult search( String query, Set<String> maxTypes )
     {
         Set<String> words = Sets.newHashSet( query.split( TextUtils.SPACE ) );
-        
+
         DashboardSearchResult result = new DashboardSearchResult();
 
         result.setUsers( userService.getAllUsersBetweenByName( query, 0, getMax( TYPE_USERS, maxTypes ) ) );
@@ -130,11 +129,11 @@ public class DefaultDashboardService
         {
             return null;
         }
-        
+
         DashboardItem item = new DashboardItem();
-        
+
         if ( TYPE_CHART.equals( type ) )
-        {            
+        {
             item.setChart( objectManager.get( Chart.class, contentUid ) );
             dashboard.getItems().add( 0, item );
         }
@@ -232,7 +231,7 @@ public class DefaultDashboardService
         {
             item.setReportTable( objectManager.get( ReportTable.class, item.getReportTable().getUid() ) );
         }
-        
+
         if ( item.getEventReport() != null )
         {
             item.setEventReport( objectManager.get( EventReport.class, item.getEventReport().getUid() ) );
@@ -298,7 +297,7 @@ public class DefaultDashboardService
     {
         dashboardItemStore.update( item );
     }
-    
+
     @Override
     public DashboardItem getDashboardItem( String uid )
     {
@@ -310,7 +309,7 @@ public class DefaultDashboardService
     {
         dashboardItemStore.delete( item );
     }
-    
+
     @Override
     public int countMapDashboardItems( Map map )
     {
