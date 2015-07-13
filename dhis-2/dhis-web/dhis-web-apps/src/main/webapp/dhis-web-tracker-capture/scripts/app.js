@@ -19,6 +19,7 @@ var trackerCapture = angular.module('trackerCapture',
          'angularLocalStorage',
          'ui.select',
          'ui.select2',
+         'infinite-scroll',
          'd2HeaderBar',
          'ngCsv',
          'nvd3ChartDirectives',
@@ -61,9 +62,3 @@ var trackerCapture = angular.module('trackerCapture',
     $translateProvider.useLoader('i18nLoader');
     
 });
-
-/*.run(function($rootScope){    
-    setTimeout(function () {
-        $rootScope.$apply(function () {});
-    }, 1000);
-});*/

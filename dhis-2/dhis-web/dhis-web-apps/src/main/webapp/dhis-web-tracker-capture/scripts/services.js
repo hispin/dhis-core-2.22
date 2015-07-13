@@ -457,7 +457,17 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             var query = store.get(uid);
                 
             query.onsuccess = function(e){
-                deferred.resolve(e.target.result);
+                if(e.target.result){
+                    deferred.resolve(e.target.result);
+                }
+                else{
+                    var t = db.transaction(["ouPartial"]);
+                    var s = t.objectStore("ouPartial");
+                    var q = s.get(uid);
+                    q.onsuccess = function(e){
+                        deferred.resolve(e.target.result);
+                    };
+                }            
             };
         }
         return deferred.promise;
@@ -569,19 +579,19 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return promise;
         },
         getByEntity: function( entity ){
-            var promise = $http.get(  '../api/enrollments.json?trackedEntityInstance=' + entity + '&paging=false').then(function(response){
+            var promise = $http.get(  '../api/enrollments.json?ouMode=ACCESSIBLE&trackedEntityInstance=' + entity + '&paging=false').then(function(response){
                 return convertFromApiToUser(response.data);
             });
             return promise;
         },
         getByEntityAndProgram: function( entity, program ){
-            var promise = $http.get(  '../api/enrollments.json?trackedEntityInstance=' + entity + '&program=' + program + '&paging=false').then(function(response){
+            var promise = $http.get(  '../api/enrollments.json?ouMode=ACCESSIBLE&trackedEntityInstance=' + entity + '&program=' + program + '&paging=false').then(function(response){
                 return convertFromApiToUser(response.data);
             });
             return promise;
         },
         getByStartAndEndDate: function( program, orgUnit, ouMode, startDate, endDate ){
-            var promise = $http.get(  '../api/enrollments.json?program=' + program + '&orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&startDate=' + startDate + '&endDate=' + endDate + '&paging=false').then(function(response){
+            var promise = $http.get(  '../api/enrollments.json?ouMode=ACCESSIBLE&program=' + program + '&orgUnit=' + orgUnit + '&ouMode='+ ouMode + '&startDate=' + startDate + '&endDate=' + endDate + '&paging=false').then(function(response){
                 return convertFromApiToUser(response.data);
             });
             return promise;
@@ -929,14 +939,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     return {     
         
         getEventsByStatus: function(entity, orgUnit, program, programStatus){   
-            var promise = $http.get( '../api/events.json?' + 'trackedEntityInstance=' + entity + '&orgUnit=' + orgUnit + '&program=' + program + '&programStatus=' + programStatus  + '&paging=false').then(function(response){
+            var promise = $http.get( '../api/events.json?ouMode=ACCESSIBLE&' + 'trackedEntityInstance=' + entity + '&orgUnit=' + orgUnit + '&program=' + program + '&programStatus=' + programStatus  + '&paging=false').then(function(response){
                 return response.data.events;
             });            
             return promise;
         },
         getEventsByProgram: function(entity, program){   
             
-            var url = '../api/events.json?' + 'trackedEntityInstance=' + entity + '&paging=false';            
+            var url = '../api/events.json?ouMode=ACCESSIBLE&' + 'trackedEntityInstance=' + entity + '&paging=false';            
             if(program){
                 url = url + '&program=' + program;
             }

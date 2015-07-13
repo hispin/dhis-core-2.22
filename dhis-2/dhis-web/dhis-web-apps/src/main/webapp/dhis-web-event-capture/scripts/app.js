@@ -17,7 +17,7 @@ var eventCapture = angular.module('eventCapture',
                     'd2Services',
                     'd2Controllers',
                     'ui.select',
-                    //'infinite-scroll',
+                    'infinite-scroll',
                     'angularLocalStorage',
                     'pascalprecht.translate',
                     'd2HeaderBar'])
@@ -36,5 +36,4 @@ var eventCapture = angular.module('eventCapture',
     $translateProvider.preferredLanguage('en');
     $translateProvider.useSanitizeValueStrategy('escaped');
     $translateProvider.useLoader('i18nLoader');
-
 });

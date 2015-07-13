@@ -224,19 +224,7 @@ function getRelationships()
         if(res.length > 0){
             return;
         }
-        var def = $.Deferred();
-
-        $.ajax({
-            url: '../api/relationshipTypes.json?paging=false&fields=id,name,aIsToB,bIsToA,displayName',
-            type: 'GET'
-        }).done(function(response) {        
-            dhis2.tc.store.setAll( 'relationshipTypes', response.relationshipTypes );
-            def.resolve();        
-        }).fail(function(){
-            def.resolve();
-        });
-
-        return def.promise();
+        return getD2Objects('relationshipTypes', 'relationshipTypes', '../api/relationshipTypes.json', 'paging=false&fields=id,name,aIsToB,bIsToA,displayName');
     });    
 }
 
@@ -245,22 +233,8 @@ function getTrackedEntities()
     dhis2.tc.store.getKeys('trackedEntities').done(function(res){
         if(res.length > 0){
             return;
-        }
-        
-        var def = $.Deferred();
-
-        $.ajax({
-            url: '../api/trackedEntities',
-            type: 'GET',
-            data: 'viewClass=detailed&paging=false'
-        }).done(function(response) {
-            dhis2.tc.store.setAll( 'trackedEntities', response.trackedEntities );        
-            def.resolve();
-        }).fail(function(){
-            def.resolve();
-        });
-
-        return def.promise();
+        }        
+        return getD2Objects('trackedEntities', 'trackedEntities', '../api/trackedEntities.json', 'paging=false&fields=id,name');
     });    
 }
 
@@ -273,12 +247,7 @@ function getMetaPrograms()
         type: 'GET',
         data:'filter=programType:eq:WITH_REGISTRATION&paging=false&fields=id,version,programTrackedEntityAttributes[trackedEntityAttribute[id,optionSet[id,version]]],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse,programStageDataElements[dataElement[optionSet[id,version]]]]'
     }).done( function(response) {          
-        var programs = [];
-        _.each( _.values( response.programs ), function ( program ) { 
-            programs.push(program);
-        });
-        
-        def.resolve( programs );
+        def.resolve( response.programs ? response.programs: [] );
     }).fail(function(){
         def.resolve( null );
     });
@@ -336,35 +305,27 @@ function getProgram( id )
 {
     return function() {
         return $.ajax( {
-            url: '../api/programs.json',
+            url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],dataEntryForm[name,style,htmlCode,format],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
-        }).done( function( response ){
-            
-            _.each( _.values( response.programs ), function ( program ) { 
-                
-                var ou = {};
-                if(program.organisationUnits){
-                    _.each(_.values( program.organisationUnits), function(o){
-                        ou[o.id] = o.name;
-                    });
-                }
+            data: 'fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],dataEntryForm[name,style,htmlCode,format],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
+        }).done( function( program ){            
+            var ou = {};
+            if(program.organisationUnits){
+                _.each(_.values( program.organisationUnits), function(o){
+                    ou[o.id] = o.name;
+                });
+            }
+            program.organisationUnits = ou;
 
-                program.organisationUnits = ou;
+            var ur = {};
+            if(program.userRoles){
+                _.each(_.values( program.userRoles), function(u){
+                    ur[u.id] = u.name;
+                });
+            }
+            program.userRoles = ur;
 
-                var ur = {};
-                
-                if(program.userRoles){
-                    _.each(_.values( program.userRoles), function(u){
-                        ur[u.id] = u.name;
-                    });
-                }                
-
-                program.userRoles = ur;
-
-                dhis2.tc.store.set( 'programs', program );
-
-            });         
+            dhis2.tc.store.set( 'programs', program );  
         });
     };
 }
@@ -393,7 +354,7 @@ function getProgramStages( programs )
                     var p = d.promise();
                     dhis2.tc.store.get('programStages', programStage.id).done(function(obj) {
                         if(!obj || obj.version !== programStage.version) {
-                            promise = promise.then( getProgramStage( programStage.id ) );
+                            promise = promise.then( getD2Object( programStage.id, 'programStages', '../api/programStages', 'fields=id,name,sortOrder,version,dataEntryForm,captureCoordinates,blockEntryForm,autoGenerateEvent,allowGenerateNextVisit,generatedByEnrollmentDate,remindCompleted,reportDateDescription,minDaysFromStart,repeatable,openAfterEnrollment,standardInterval,periodType,reportDateToUse,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,code,name,description,formName,type,numberType,textType,optionSetValue,optionSet[id]]]', 'idb' ) );
                         }
                         d.resolve();
                     });
@@ -416,21 +377,6 @@ function getProgramStages( programs )
     builder.resolve();
 
     return mainPromise;    
-}
-
-function getProgramStage( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/programStages.json',
-            type: 'GET',
-            data: 'filter=id:eq:' + id +'&fields=id,name,sortOrder,version,dataEntryForm,captureCoordinates,blockEntryForm,autoGenerateEvent,allowGenerateNextVisit,generatedByEnrollmentDate,remindCompleted,reportDateDescription,minDaysFromStart,repeatable,openAfterEnrollment,standardInterval,periodType,reportDateToUse,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,code,name,description,formName,type,numberType,textType,optionSetValue,optionSet[id]]]'
-        }).done( function( response ){            
-            _.each( _.values( response.programStages ), function( programStage ) {
-                dhis2.tc.store.set( 'programStages', programStage );
-            });
-        });
-    };
 }
 
 function getOptionSetsForDataElements( programs )
@@ -462,7 +408,7 @@ function getOptionSetsForDataElements( programs )
                                 dhis2.tc.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {                                    
                                     if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetsInPromise.indexOf(prStDe.dataElement.optionSet.id) === -1) {                                
                                         optionSetsInPromise.push( prStDe.dataElement.optionSet.id );
-                                        promise = promise.then( getOptionSet( prStDe.dataElement.optionSet.id ) );
+                                        promise = promise.then( getD2Object( prStDe.dataElement.optionSet.id, 'optionSets', '../api/optionSets', 'fields=id,name,version,options[id,name,code]', 'idb' ) );
                                     }
                                     d.resolve();
                                 });
@@ -489,360 +435,6 @@ function getOptionSetsForDataElements( programs )
     builder.resolve();
 
     return mainPromise;    
-}
-
-function getOptionSet( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/optionSets.json',
-            type: 'GET',
-            data: 'filter=id:eq:' + id +'&fields=id,name,version,options[id,name,code]'
-        }).done( function( response ){            
-            _.each( _.values( response.optionSets ), function( optionSet ) {                
-                dhis2.tc.store.set( 'optionSets', optionSet );
-            });
-        });
-    };
-}
-
-function getMetaProgramRuleVariables( programs )
-{
-    if( !programs ){
-        return;
-    }
-    
-    var def = $.Deferred();
-    
-    var programIds = [];
-    _.each( _.values( programs ), function ( program ) { 
-        if( program.id ) {
-            programIds.push( program.id );
-        }
-    });
-    
-    $.ajax({
-        url: '../api/programRuleVariables.json',
-        type: 'GET',
-        data:'paging=false&fields=id,program[id]'
-    }).done( function(response) {          
-        var programRuleVariables = [];
-        _.each( _.values( response.programRuleVariables ), function ( programRuleVariable ) { 
-            if( programRuleVariable &&
-                programRuleVariable.id &&
-                programRuleVariable.program &&
-                programRuleVariable.program.id &&
-                programIds.indexOf( programRuleVariable.program.id ) !== -1) {
-            
-                programRuleVariables.push( programRuleVariable );
-            }  
-            
-        });
-        
-        def.resolve( {programRuleVariables: programRuleVariables, programs: programs} );
-        
-    }).fail(function(){
-        def.resolve( null );
-    });
-    
-    return def.promise();    
-}
-
-function getProgramRuleVariables( data )
-{
-    if( !data || !data.programRuleVariables ){
-        return;
-    }
-    
-    var mainDef = $.Deferred();
-    var mainPromise = mainDef.promise();
-
-    var def = $.Deferred();
-    var promise = def.promise();
-
-    var builder = $.Deferred();
-    var build = builder.promise();
-
-    _.each( _.values( data.programRuleVariables ), function ( programRuleVariable ) {
-        build = build.then(function() {
-            var d = $.Deferred();
-            var p = d.promise();
-            dhis2.tc.store.get('programRuleVariables', programRuleVariable.id).done(function(obj) {
-                if(!obj) {
-                    promise = promise.then( getProgramRuleVariable( programRuleVariable.id ) );
-                }
-                d.resolve();
-            });
-
-            return p;
-        });
-    });
-
-    build.done(function() {
-        def.resolve();
-
-        promise = promise.done( function () {
-            mainDef.resolve( data.programs );
-        } );
-    }).fail(function(){
-        mainDef.resolve( null );
-    });
-
-    builder.resolve();
-
-    return mainPromise;
-}
-
-function getProgramRuleVariable( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/programRuleVariables.json',
-            type: 'GET',
-            data: 'paging=false&filter=id:eq:' + id +'&fields=id,program[id],name,programRuleVariableSourceType,trackedEntityAttribute[id],dataElement[id],programStage[id]'
-        }).done( function( response ){
-            
-            _.each( _.values( response.programRuleVariables ), function ( programRuleVariable ) { 
-                
-                if( programRuleVariable &&
-                    programRuleVariable.id &&
-                    programRuleVariable.program &&
-                    programRuleVariable.program.id ) {
-                
-                    dhis2.tc.store.set( 'programRuleVariables', programRuleVariable );
-                }
-            });
-        });
-    };
-}
-
-function getMetaProgramRules( programs )
-{
-    if( !programs ){
-        return;
-    }
-    
-    var def = $.Deferred();
-    
-    var programIds = [];
-    _.each( _.values( programs ), function ( program ) { 
-        if( program.id ) {
-            programIds.push( program.id );
-        }
-    });
-    
-    $.ajax({
-        url: '../api/programRules.json',
-        type: 'GET',
-        data:'paging=false&fields=id,program[id]'
-    }).done( function(response) {          
-        var programRules = [];
-        _.each( _.values( response.programRules ), function ( programRule ) { 
-            if( programRule &&
-                programRule.id &&
-                programRule.program &&
-                programRule.program.id &&
-                programIds.indexOf( programRule.program.id ) !== -1) {
-            
-                programRules.push( programRule );
-            }  
-            
-        });
-        
-        def.resolve( {programRules: programRules, programs: programs} );
-        
-    }).fail(function(){
-        def.resolve( null );
-    });
-    
-    return def.promise();    
-}
-
-function getProgramRules( data )
-{
-    if( !data || !data.programRules ){
-        return;
-    }
-    
-    var mainDef = $.Deferred();
-    var mainPromise = mainDef.promise();
-
-    var def = $.Deferred();
-    var promise = def.promise();
-
-    var builder = $.Deferred();
-    var build = builder.promise();
-
-    _.each( _.values( data.programRules ), function ( programRule ) {
-        build = build.then(function() {
-            var d = $.Deferred();
-            var p = d.promise();
-            dhis2.tc.store.get('programRules', programRule.id).done(function(obj) {
-                if(!obj) {
-                    promise = promise.then( getProgramRule( programRule.id ) );
-                }
-                d.resolve();
-            });
-
-            return p;
-        });
-    });
-
-    build.done(function() {
-        def.resolve();
-
-        promise = promise.done( function () {
-            mainDef.resolve( data.programs );
-        } );
-    }).fail(function(){
-        mainDef.resolve( null );
-    });
-
-    builder.resolve();
-
-    return mainPromise;
-}
-
-function getProgramRule( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/programRules.json',
-            type: 'GET',
-            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,description,condition,program[id],programstage[id],priority,programRuleActions[id,content,location,data,programRuleActionType,programStageSection[id,name],dataElement[id]]'
-        }).done( function( response ){
-            
-            _.each( _.values( response.programRules ), function ( programRule ) { 
-                
-                if( programRule &&
-                    programRule.id &&
-                    programRule.program &&
-                    programRule.program.id ) {
-                
-                    dhis2.tc.store.set( 'programRules', programRule );
-                }
-            });
-        });
-    };
-}
-
-function getMetaProgramValidations( programs )
-{
-    if( !programs ){
-        return;
-    }
-    
-    var def = $.Deferred();
-    
-    var programIds = [];
-    _.each( _.values( programs ), function ( program ) { 
-        if( program.id ) {
-            programIds.push( program.id );
-        }
-    });
-    
-    $.ajax({
-        url: '../api/programValidations.json',
-        type: 'GET',
-        data:'paging=false&fields=id,program[id]'
-    }).done( function(response) {          
-        var programValidations = [];
-        _.each( _.values( response.programValidations ), function ( programValidation ) { 
-            if( programValidation &&
-                programValidation.id &&
-                programValidation.program &&
-                programValidation.program.id &&
-                programIds.indexOf( programValidation.program.id ) !== -1) {
-            
-                programValidations.push( programValidation );
-            }  
-            
-        });
-        
-        def.resolve( {programValidations: programValidations, programs: programs} );
-        
-    }).fail(function(){
-        def.resolve( null );
-    });
-    
-    return def.promise();    
-}
-
-function getProgramValidations( data )
-{
-    if( !data || !data.programValidations ){
-        return;
-    }
-    
-    var mainDef = $.Deferred();
-    var mainPromise = mainDef.promise();
-
-    var def = $.Deferred();
-    var promise = def.promise();
-
-    var builder = $.Deferred();
-    var build = builder.promise();
-
-    _.each( _.values( data.programValidations ), function ( programValidation ) {
-        build = build.then(function() {
-            var d = $.Deferred();
-            var p = d.promise();
-            dhis2.tc.store.get('programValidations', programValidation.id).done(function(obj) {
-                if(!obj) {
-                    promise = promise.then( getProgramValidation( programValidation.id ) );
-                }
-                d.resolve();
-            });
-
-            return p;
-        });
-    });
-
-    build.done(function() {
-        def.resolve();
-
-        promise = promise.done( function () {
-            mainDef.resolve( data.programs );
-        } );
-    }).fail(function(){
-        mainDef.resolve( null );
-    });
-
-    builder.resolve();
-
-    return mainPromise;
-}
-
-function getProgramValidation( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/programValidations.json',
-            type: 'GET',
-            data: 'paging=false&filter=id:eq:' + id +'&fields=id,name,operator,displayName,rightSide,leftSide,program[id]'
-        }).done( function( response ){
-            
-            _.each( _.values( response.programValidations ), function ( programValidation ) { 
-                
-                if( programValidation &&
-                    programValidation.id &&
-                    programValidation.program &&
-                    programValidation.program.id ) {
-                    dhis2.tc.store.set( 'programValidations', programValidation );
-                }
-            });
-        });
-    };
-}
-
-function getMetaProgramIndicators( programs )
-{    
-    return getD2MetaObject(programs, 'programIndicators', '../api/programIndicators.json', 'paging=false&fields=id,program[id]');
-}
-
-function getProgramIndicators( programIndicators )
-{
-    return checkAndGetD2Objects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,expression,displayDescription,rootDate,description,valueType,DisplayName,filter,program[id]');
 }
 
 function getMetaTrackeEntityAttributes( programs ){
@@ -900,7 +492,7 @@ function getTrackedEntityAttributes( data )
             dhis2.tc.store.get('attributes', teAttribute.id).done(function(obj) {
                 if((!obj || obj.version !== teAttribute.version) && attributesInPromise.indexOf(teAttribute.id) === -1) {
                     attributesInPromise.push( teAttribute.id );
-                    promise = promise.then( getAttribute( teAttribute.id ) );
+                    promise = promise.then( getD2Object( teAttribute.id, 'attributes', '../api/trackedEntityAttributes', 'fields=id,name,code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version]', 'idb' ) );
                 }
                 d.resolve();
             });
@@ -922,22 +514,6 @@ function getTrackedEntityAttributes( data )
 
     return mainPromise;    
 }
-
-function getAttribute( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/trackedEntityAttributes.json',
-            type: 'GET',
-            data: 'filter=id:eq:' + id +'&paging=false&fields=id,name,code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version]'
-        }).done( function( response ){            
-            _.each( _.values( response.trackedEntityAttributes ), function( teAttribute ) {
-                dhis2.tc.store.set( 'attributes', teAttribute );
-            });
-        });
-    };
-}
-
 
 function getOptionSetsForAttributes( data )
 {
@@ -962,7 +538,7 @@ function getOptionSetsForAttributes( data )
                 dhis2.tc.store.get('optionSets', teAttribute.optionSet.id).done(function(obj) {                            
                     if((!obj || obj.version !== teAttribute.optionSet.version) && optionSetsInPromise.indexOf(teAttribute.optionSet.id) === -1) {                                
                         optionSetsInPromise.push(teAttribute.optionSet.id);
-                        promise = promise.then( getOptionSet( teAttribute.optionSet.id ) );
+                        promise = promise.then( getD2Object( teAttribute.optionSet.id, 'optionSets', '../api/optionSets', 'fields=id,name,version,options[id,name,code]', 'idb' ) );
                     }
                     d.resolve();
                 });
@@ -993,23 +569,50 @@ function getOrgUnitLevels()
         if(res.length > 0){
             return;
         }
-        var def = $.Deferred();
-
-        $.ajax({
-            url: '../api/organisationUnitLevels.json',
-            type: 'GET',
-            data:'filter=level:gt:1&fields=id,name,level&paging=false'
-        }).done(function(response) {
-            if(response.organisationUnitLevels){
-                dhis2.tc.store.setAll( 'ouLevels', response.organisationUnitLevels );
-            }            
-            def.resolve();        
-        }).fail(function(){
-            def.resolve();
-        });
-
-        return def.promise();
+        
+        return getD2Objects('ouLevels', 'organisationUnitLevels', '../api/organisationUnitLevels.json', 'filter=level:gt:1&fields=id,name,level&paging=false');        
     }); 
+}
+
+
+function getMetaProgramValidations( programs )
+{    
+    return getD2MetaObject(programs, 'programValidations', '../api/programValidations.json', 'paging=false&fields=id,program[id]');
+}
+
+function getProgramValidations( programValidations )
+{
+    return checkAndGetD2Objects( programValidations, 'programValidations', '../api/programValidations', 'fields=id,name,displayName,operator,rightSide[expression,description],leftSide[expression,description],program[id]');
+}
+
+function getMetaProgramIndicators( programs )
+{    
+    return getD2MetaObject(programs, 'programIndicators', '../api/programIndicators.json', 'paging=false&fields=id,program[id]');
+}
+
+function getProgramIndicators( programIndicators )
+{
+    return checkAndGetD2Objects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,expression,displayDescription,rootDate,description,valueType,DisplayName,filter,program[id]');
+}
+
+function getMetaProgramRules( programs )
+{    
+    return getD2MetaObject(programs, 'programRules', '../api/programRules.json', 'paging=false&fields=id,program[id]');
+}
+
+function getProgramRules( programRules )
+{
+    return checkAndGetD2Objects( programRules, 'programRules', '../api/programRules', 'fields=id,name,condition,description,program[id],programStage[id],priority,programRuleActions[id,content,location,data,programRuleActionType,programStageSection[id],dataElement[id]]');
+}
+
+function getMetaProgramRuleVariables( programs )
+{    
+    return getD2MetaObject(programs, 'programRuleVariables', '../api/programRuleVariables.json', 'paging=false&fields=id,program[id]');
+}
+
+function getProgramRuleVariables( programRuleVariables )
+{
+    return checkAndGetD2Objects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,name,displayName,programRuleVariableSourceType,program[id],programStage[id],dataElement[id]');
 }
 
 function getD2MetaObject( programs, objNames, url, filter )
@@ -1118,7 +721,6 @@ function getD2Objects(store, objs, url, filter)
     return def.promise();
 }
 
-
 function getD2Object( id, store, url, filter, storage )
 {
     return function() {
@@ -1144,17 +746,4 @@ function getD2Object( id, store, url, filter, storage )
             }            
         });
     };
-}
-
-function uploadLocalData()
-{
-    var OfflineECStorageService = angular.element('body').injector().get('OfflineECStorageService');
-    setHeaderWaitMessage(i18n_uploading_data_notification);
-     
-    OfflineECStorageService.uploadLocalData().then(function(){
-        dhis2.tc.store.removeAll( 'events' );
-        log( 'Successfully uploaded local events' );      
-        setHeaderDelayMessage( i18n_sync_success );
-        selection.responseReceived(); //notify angular
-    });
 }

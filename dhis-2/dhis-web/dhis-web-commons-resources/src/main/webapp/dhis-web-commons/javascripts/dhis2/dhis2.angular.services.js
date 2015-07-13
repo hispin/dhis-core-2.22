@@ -405,7 +405,9 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + ' >' +
                                         '<ui-select-match style="width:100%;" allow-clear="true" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
                                         '<ui-select-choices ' +
-                                        'repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:20">' +
+                                        'infinite-scroll="addMoreOptions()" ' +
+                                        'infinite-scroll-distance="2" ' +
+                                        'repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:infiniteScroll.currentOptions">' +
                                         '<span ng-bind-html="option.name | highlight: $select.search"></span>' +
                                         '</ui-select-choices>' +
                                         '</ui-select>';
