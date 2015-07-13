@@ -240,12 +240,11 @@ public class DataSet
 
     public DataSet()
     {
-        setAutoFields();
+
     }
 
     public DataSet( String name )
     {
-        this();
         this.name = name;
     }
 

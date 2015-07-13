@@ -106,7 +106,7 @@ public class ProgramRuleVariable
 
     public ProgramRuleVariable()
     {
-        setAutoFields();
+
     }
 
     public ProgramRuleVariable( String name,
@@ -116,7 +116,6 @@ public class ProgramRuleVariable
         DataElement dataElement,
         ProgramStage programStage )
     {
-        this();
         this.name = name;
         this.program = program;
         this.sourceType = sourceType;

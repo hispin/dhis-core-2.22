@@ -82,12 +82,11 @@ public class DataElementCategoryOption
 
     public DataElementCategoryOption()
     {
-        setAutoFields();
+
     }
 
     public DataElementCategoryOption( String name )
     {
-        this();
         this.name = name;
     }
 

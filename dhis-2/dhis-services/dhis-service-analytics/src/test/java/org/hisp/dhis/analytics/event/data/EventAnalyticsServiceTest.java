@@ -28,13 +28,7 @@ package org.hisp.dhis.analytics.event.data;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.event.EventAnalyticsService;
@@ -70,7 +64,12 @@ import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Lars Helge Overland
@@ -83,18 +82,18 @@ public class EventAnalyticsServiceTest
 
     private Period peA;
     private Period peB;
-    
+
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
-    
+
     private DataElement deA;
     private DataElement deB;
-    
+
     private TrackedEntityAttribute atA;
     private TrackedEntityAttribute atB;
-    
+
     private LegendSet legendSetA;
-    
+
     private Legend legendA;
     private Legend legendB;
 
@@ -106,68 +105,68 @@ public class EventAnalyticsServiceTest
 
     @Autowired
     private ProgramStageService programStageService;
-    
+
     @Autowired
     private ProgramStageDataElementService programStageDataElementService;
-    
+
     @Autowired
     private DataElementService dataElementService;
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
-    
+
     @Autowired
     private TrackedEntityAttributeService attributeService;
-    
+
     @Autowired
     private LegendService legendService;
-    
+
     @Override
     public void setUpTest()
     {
         peA = PeriodType.getPeriodFromIsoString( "201401" );
         peB = PeriodType.getPeriodFromIsoString( "201402" );
-        
+
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );
 
         organisationUnitService.addOrganisationUnit( ouA );
         organisationUnitService.addOrganisationUnit( ouB );
-        
+
         deA = createDataElement( 'A' );
         deB = createDataElement( 'B' );
 
         dataElementService.addDataElement( deA );
         dataElementService.addDataElement( deB );
-        
+
         atA = createTrackedEntityAttribute( 'A' );
         atB = createTrackedEntityAttribute( 'B' );
-        
+
         attributeService.addTrackedEntityAttribute( atA );
         attributeService.addTrackedEntityAttribute( atB );
-                
+
         prA = createProgram( 'A', new HashSet<ProgramStage>(), Sets.newHashSet( atA, atB ), Sets.newHashSet( ouA, ouB ) );
         programService.addProgram( prA );
-        
+
         psA = createProgramStage( 'A', 0 );
         prA.getProgramStages().add( psA );
-        
+
         programStageService.saveProgramStage( psA );
-        
+
         programStageDataElementService.addProgramStageDataElement( new ProgramStageDataElement( psA, deA, false ) );
         programStageDataElementService.addProgramStageDataElement( new ProgramStageDataElement( psA, deB, false ) );
-        
+
         legendA = createLegend( 'A', 0d, 10d );
         legendB = createLegend( 'B', 10d, 20d );
 
         legendService.addLegend( legendA );
         legendService.addLegend( legendB );
-        
+
         legendSetA = createLegendSet( 'A' );
-        
+
         legendSetA.getLegends().add( legendA );
         legendSetA.getLegends().add( legendB );
-        
+
         legendService.addLegendSet( legendSetA );
     }
 
@@ -177,13 +176,13 @@ public class EventAnalyticsServiceTest
         Set<String> dimensionParams = new HashSet<>();
         dimensionParams.add( "ou:" + ouA.getUid() + ";" + ouB.getId() );
         dimensionParams.add( atA.getUid() + ":LE:5" );
-        
+
         Set<String> filterParams = new HashSet<>();
         filterParams.add( "pe:201401;201402" );
-        
-        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
+
+        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
             null, null, dimensionParams, filterParams, null, null, false, false, false, false, null, null, null, false, false, null, null );
-        
+
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getOrganisationUnits().size() );
         assertEquals( 1, params.getItems().size() );
@@ -196,13 +195,13 @@ public class EventAnalyticsServiceTest
         Set<String> dimensionParams = new HashSet<>();
         dimensionParams.add( "ou:" + ouA.getUid() + ";" + ouB.getId() );
         dimensionParams.add( atA.getUid() + ":LE:5" );
-        
+
         Set<String> filterParams = new HashSet<>();
         filterParams.add( "pe:201401" );
-        
-        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
+
+        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
             null, null, dimensionParams, filterParams, deA.getUid(), AggregationType.AVERAGE, false, false, false, false, null, null, null, false, false, null, null );
-        
+
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getOrganisationUnits().size() );
         assertEquals( 1, params.getItems().size() );
@@ -210,51 +209,53 @@ public class EventAnalyticsServiceTest
         assertEquals( deA, params.getValue() );
         assertEquals( AggregationType.AVERAGE, params.getAggregationType() );
     }
-    
+
     @Test
     public void testGetFromAnalyticalObjectA()
     {
-        EventChart chart = new EventChart();
-        chart.setProgram( prA );
-        
-        chart.getColumnDimensions().add( atA.getUid() );
-        chart.getRowDimensions().add( DimensionalObject.ORGUNIT_DIM_ID );
-        chart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
-        
-        chart.getAttributeDimensions().add( new TrackedEntityAttributeDimension( atA, null, "LE:5" ) );
-        chart.getPeriods().add( peA );
-        chart.getPeriods().add( peB );
-        chart.getOrganisationUnits().add( ouA );
-        chart.getOrganisationUnits().add( ouB );
-        
-        EventQueryParams params = analyticsService.getFromAnalyticalObject( chart, null );
-        
+        EventChart eventChart = new EventChart();
+        eventChart.setAutoFields();
+        eventChart.setProgram( prA );
+
+        eventChart.getColumnDimensions().add( atA.getUid() );
+        eventChart.getRowDimensions().add( DimensionalObject.ORGUNIT_DIM_ID );
+        eventChart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
+
+        eventChart.getAttributeDimensions().add( new TrackedEntityAttributeDimension( atA, null, "LE:5" ) );
+        eventChart.getPeriods().add( peA );
+        eventChart.getPeriods().add( peB );
+        eventChart.getOrganisationUnits().add( ouA );
+        eventChart.getOrganisationUnits().add( ouB );
+
+        EventQueryParams params = analyticsService.getFromAnalyticalObject( eventChart, null );
+
         assertNotNull( params );
         assertEquals( 1, params.getItems().size() );
         assertEquals( 2, params.getOrganisationUnits().size() );
         assertEquals( 2, params.getFilterPeriods().size() );
     }
-    
+
     @Test
     public void testGetFromAnalyticalObjectB()
     {
-        EventChart chart = new EventChart();
-        chart.setProgram( prA );
-        
-        chart.getColumnDimensions().add( atA.getUid() );
-        chart.getColumnDimensions().add( deA.getUid() );
-        chart.getRowDimensions().add( DimensionalObject.PERIOD_DIM_ID );
-        chart.getFilterDimensions().add( DimensionalObject.ORGUNIT_DIM_ID );
-        
-        chart.getAttributeDimensions().add( new TrackedEntityAttributeDimension( atA, null, "LE:5" ) );
-        chart.getDataElementDimensions().add( new TrackedEntityDataElementDimension( deA, null, "GE:100" ) );
-        chart.getPeriods().add( peA );
-        chart.getPeriods().add( peB );
-        chart.getOrganisationUnits().add( ouA );
-        chart.getOrganisationUnits().add( ouB );
-        
-        EventQueryParams params = analyticsService.getFromAnalyticalObject( chart, null );
-        
+        EventChart eventChart = new EventChart();
+        eventChart.setAutoFields();
+        eventChart.setProgram( prA );
+
+        eventChart.getColumnDimensions().add( atA.getUid() );
+        eventChart.getColumnDimensions().add( deA.getUid() );
+        eventChart.getRowDimensions().add( DimensionalObject.PERIOD_DIM_ID );
+        eventChart.getFilterDimensions().add( DimensionalObject.ORGUNIT_DIM_ID );
+
+        eventChart.getAttributeDimensions().add( new TrackedEntityAttributeDimension( atA, null, "LE:5" ) );
+        eventChart.getDataElementDimensions().add( new TrackedEntityDataElementDimension( deA, null, "GE:100" ) );
+        eventChart.getPeriods().add( peA );
+        eventChart.getPeriods().add( peB );
+        eventChart.getOrganisationUnits().add( ouA );
+        eventChart.getOrganisationUnits().add( ouB );
+
+        EventQueryParams params = analyticsService.getFromAnalyticalObject( eventChart, null );
+
         assertNotNull( params );
         assertEquals( 2, params.getItems().size() );
         assertEquals( 2, params.getPeriods().size() );
@@ -264,58 +265,61 @@ public class EventAnalyticsServiceTest
     @Test
     public void testGetFromAnalyticalObjectC()
     {
-        EventChart chart = new EventChart();
-        chart.setProgram( prA );
-        
-        chart.getColumnDimensions().add( deA.getUid() );
-        chart.getColumnDimensions().add( atA.getUid() );
-        chart.getRowDimensions().add( DimensionalObject.ORGUNIT_DIM_ID );
-        chart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
-        
-        chart.getDataElementDimensions().add( new TrackedEntityDataElementDimension( deA, null, "GT:2000" ) );
-        chart.getAttributeDimensions().add( new TrackedEntityAttributeDimension( atA, null, "LE:5" ) );
-        chart.getPeriods().add( peA );
-        chart.getPeriods().add( peB );
-        chart.getOrganisationUnits().add( ouA );
-        
-        EventQueryParams params = analyticsService.getFromAnalyticalObject( chart, null );
-        
+        EventChart eventChart = new EventChart();
+        eventChart.setAutoFields();
+        eventChart.setProgram( prA );
+
+        eventChart.getColumnDimensions().add( deA.getUid() );
+        eventChart.getColumnDimensions().add( atA.getUid() );
+        eventChart.getRowDimensions().add( DimensionalObject.ORGUNIT_DIM_ID );
+        eventChart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
+
+        eventChart.getDataElementDimensions().add( new TrackedEntityDataElementDimension( deA, null, "GT:2000" ) );
+        eventChart.getAttributeDimensions().add( new TrackedEntityAttributeDimension( atA, null, "LE:5" ) );
+        eventChart.getPeriods().add( peA );
+        eventChart.getPeriods().add( peB );
+        eventChart.getOrganisationUnits().add( ouA );
+
+        EventQueryParams params = analyticsService.getFromAnalyticalObject( eventChart, null );
+
         assertNotNull( params );
         assertEquals( 2, params.getItems().size() );
         assertEquals( 1, params.getOrganisationUnits().size() );
         assertEquals( 2, params.getFilterPeriods().size() );
     }
-    
+
     @Test
     public void testSetItemsForDimensionFilters()
     {
         TrackedEntityAttribute tea = new TrackedEntityAttribute();
+        tea.setAutoFields();
 
         TrackedEntityAttributeDimension tead = new TrackedEntityAttributeDimension( tea, null, "EQ:2" );
-        
-        EventChart chart = new EventChart();
-        chart.getColumnDimensions().add( tea.getUid() );
-        chart.getAttributeDimensions().add( tead );
-        
+
+        EventChart eventChart = new EventChart();
+        eventChart.setAutoFields();
+        eventChart.getColumnDimensions().add( tea.getUid() );
+        eventChart.getAttributeDimensions().add( tead );
+
         Grid grid = new ListGrid();
         grid.addHeader( new GridHeader( tea.getUid(), tea.getName() ) );
         grid.addRow().addValue( "1" );
         grid.addRow().addValue( "2" );
         grid.addRow().addValue( "3" );
         grid.addRow().addValue( null );
-        
-        chart.populateAnalyticalProperties();
-        
-        DimensionalObject dim = chart.getColumns().get( 0 );
-        
+
+        eventChart.populateAnalyticalProperties();
+
+        DimensionalObject dim = eventChart.getColumns().get( 0 );
+
         DimensionalObjectUtils.setDimensionItemsForFilters( dim, grid, true );
-        
+
         assertNotNull( dim );
         assertEquals( tea.getDimension(), dim.getDimension() );
         assertEquals( DimensionType.PROGRAM_ATTRIBUTE, dim.getDimensionType() );
         assertEquals( AnalyticsType.EVENT, dim.getAnalyticsType() );
         assertEquals( tead.getFilter(), dim.getFilter() );
-        
+
         List<NameableObject> items = dim.getItems();
         assertEquals( 4, items.size() );
         assertNotNull( items.get( 0 ).getUid() );
@@ -329,14 +333,14 @@ public class EventAnalyticsServiceTest
     {
         Set<String> dimensionParams = new HashSet<>();
         dimensionParams.add( deA.getUid() + "-" + legendSetA.getUid() + ":IN:" + legendA.getUid() + ";" + legendB.getUid() );
-        
+
         Set<String> filterParams = new HashSet<>();
         filterParams.add( "pe:201401;201402" );
         filterParams.add( atA.getUid() + ":LE:5" );
-        
-        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null, 
+
+        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
             null, null, dimensionParams, filterParams, null, null, false, false, false, false, null, null, null, false, false, null, null );
-        
+
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getItems().size() );
         assertEquals( legendSetA, params.getItems().get( 0 ).getLegendSet() );

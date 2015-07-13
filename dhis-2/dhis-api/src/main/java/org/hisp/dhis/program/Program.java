@@ -134,12 +134,11 @@ public class Program
 
     public Program()
     {
-        setAutoFields();
+
     }
 
     public Program( String name, String description )
     {
-        setAutoFields();
         this.name = name;
         this.description = description;
     }

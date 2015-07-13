@@ -62,12 +62,11 @@ public class IndicatorType
 
     public IndicatorType()
     {
-        setAutoFields();
+
     }
 
     public IndicatorType( String name, int factor, Boolean number )
     {
-        this();
         this.name = name;
         this.factor = factor;
         this.number = number;

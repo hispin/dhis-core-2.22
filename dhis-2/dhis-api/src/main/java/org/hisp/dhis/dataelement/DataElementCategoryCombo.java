@@ -88,12 +88,11 @@ public class DataElementCategoryCombo
 
     public DataElementCategoryCombo()
     {
-        setAutoFields();
+
     }
 
     public DataElementCategoryCombo( String name )
     {
-        this();
         this.name = name;
     }
 
@@ -111,7 +110,7 @@ public class DataElementCategoryCombo
     {
         return name.equals( DEFAULT_CATEGORY_COMBO_NAME );
     }
-    
+
     /**
      * Indicates whether this category combo has at least one category, has at
      * least one category option combo and that all categories have at least one
@@ -123,7 +122,7 @@ public class DataElementCategoryCombo
         {
             return false;
         }
-        
+
         for ( DataElementCategory category : categories )
         {
             if ( category == null || category.getCategoryOptions() == null || category.getCategoryOptions().isEmpty() )
@@ -131,7 +130,7 @@ public class DataElementCategoryCombo
                 return false;
             }
         }
-        
+
         return true;
     }
 

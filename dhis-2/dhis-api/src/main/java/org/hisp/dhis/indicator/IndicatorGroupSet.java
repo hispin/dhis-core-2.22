@@ -78,12 +78,11 @@ public class IndicatorGroupSet
 
     public IndicatorGroupSet()
     {
-        setAutoFields();
+
     }
 
     public IndicatorGroupSet( String name )
     {
-        this();
         this.name = name;
         this.compulsory = false;
     }

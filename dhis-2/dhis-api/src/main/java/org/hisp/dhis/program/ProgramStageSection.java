@@ -70,21 +70,18 @@ public class ProgramStageSection
 
     public ProgramStageSection()
     {
-        setAutoFields();
+
     }
 
     public ProgramStageSection( String name, List<ProgramStageDataElement> programStageDataElements )
     {
-        setAutoFields();
         this.name = name;
         this.programStageDataElements = programStageDataElements;
     }
 
     public ProgramStageSection( String name, List<ProgramStageDataElement> programStageDataElements, Integer sortOrder )
     {
-        setAutoFields();
-        this.name = name;
-        this.programStageDataElements = programStageDataElements;
+        this( name, programStageDataElements );
         this.sortOrder = sortOrder;
     }
 
@@ -96,7 +93,7 @@ public class ProgramStageSection
     {
         return programStage != null;
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------

@@ -75,12 +75,11 @@ public class ValidationRuleGroup
 
     public ValidationRuleGroup()
     {
-        setAutoFields();
+
     }
 
     public ValidationRuleGroup( String name, String description, Set<ValidationRule> members )
     {
-        this();
         this.name = name;
         this.description = description;
         this.members = members;

@@ -138,12 +138,11 @@ public class ProgramStage
 
     public ProgramStage()
     {
-        setAutoFields();
+
     }
 
     public ProgramStage( String name, Program program )
     {
-        setAutoFields();
         this.name = name;
         this.program = program;
     }

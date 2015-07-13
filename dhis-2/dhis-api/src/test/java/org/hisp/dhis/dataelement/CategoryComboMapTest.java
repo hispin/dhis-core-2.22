@@ -28,16 +28,16 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.LinkedList;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
 import org.hisp.dhis.common.IdentifiableProperty;
-import static org.hisp.dhis.common.IdentifiableProperty.NAME;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.hisp.dhis.common.IdentifiableProperty.NAME;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author bobj
@@ -78,9 +78,20 @@ public class CategoryComboMapTest
         categoryOptionE = new DataElementCategoryOption( "OptionE" );
         categoryOptionF = new DataElementCategoryOption( "OptionF" );
 
+        categoryOptionA.setAutoFields();
+        categoryOptionB.setAutoFields();
+        categoryOptionC.setAutoFields();
+        categoryOptionD.setAutoFields();
+        categoryOptionE.setAutoFields();
+        categoryOptionF.setAutoFields();
+
         categoryA = new DataElementCategory( "CategoryA" );
         categoryB = new DataElementCategory( "CategoryB" );
         categoryC = new DataElementCategory( "CategoryC" );
+
+        categoryA.setAutoFields();
+        categoryB.setAutoFields();
+        categoryC.setAutoFields();
 
         categoryA.getCategoryOptions().add( categoryOptionA );
         categoryA.getCategoryOptions().add( categoryOptionB );
@@ -90,6 +101,7 @@ public class CategoryComboMapTest
         categoryC.getCategoryOptions().add( categoryOptionF );
 
         categoryCombo = new DataElementCategoryCombo( "CategoryCombo" );
+        categoryCombo.setAutoFields();
 
         categoryCombo.addDataElementCategory( categoryA );
         categoryCombo.addDataElementCategory( categoryB );

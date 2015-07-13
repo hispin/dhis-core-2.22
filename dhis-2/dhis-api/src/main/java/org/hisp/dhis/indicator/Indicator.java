@@ -103,7 +103,7 @@ public class Indicator
 
     public Indicator()
     {
-        setAutoFields();
+
     }
 
     // -------------------------------------------------------------------------

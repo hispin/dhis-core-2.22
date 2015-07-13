@@ -155,8 +155,6 @@ public class UserCredentials
 
     public UserCredentials()
     {
-        setAutoFields();
-        this.name = this.getClass().getSimpleName(); // Used to avoid JSR-303 issues
         this.lastLogin = new Date();
         this.passwordLastUpdated = new Date();
     }
