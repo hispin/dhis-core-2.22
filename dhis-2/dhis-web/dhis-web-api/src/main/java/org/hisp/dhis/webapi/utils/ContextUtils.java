@@ -28,10 +28,20 @@ package org.hisp.dhis.webapi.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.apache.commons.lang3.StringUtils.trimToNull;
-import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_CACHE_STRATEGY;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CACHE_STRATEGY;
+import org.apache.commons.io.IOUtils;
+import org.hisp.dhis.common.DimensionalObjectUtils;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.commons.util.CodecUtils;
+import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.util.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -42,20 +52,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.hisp.dhis.common.DimensionalObjectUtils;
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.commons.util.CodecUtils;
-import org.hisp.dhis.system.util.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import static org.apache.commons.lang3.StringUtils.trimToNull;
+import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_CACHE_STRATEGY;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_CACHE_STRATEGY;
 
 /**
  * @author Lars Helge Overland
@@ -82,8 +81,7 @@ public class ContextUtils
     public static final String HEADER_EXPIRES = "Expires";
     public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
     public static final String HEADER_CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
-    public static final String HEADER_LOCATION = "Location";
-    
+
     public static final String QUERY_PARAM_SEP = ";";
     public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
     public static final String HEADER_ETAG = "ETag";
@@ -192,7 +190,7 @@ public class ContextUtils
 
     public static HttpServletRequest getRequest()
     {
-        return ( (ServletRequestAttributes) RequestContextHolder.getRequestAttributes() ).getRequest();
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 
     public static String getContextPath( HttpServletRequest request )
@@ -201,7 +199,7 @@ public class ContextUtils
         String xForwardedProto = request.getHeader( "X-Forwarded-Proto" );
         String xForwardedPort = request.getHeader( "X-Forwarded-Port" );
 
-        if ( xForwardedProto != null && ( xForwardedProto.equalsIgnoreCase( "http" ) || xForwardedProto.equalsIgnoreCase( "https" ) ) )
+        if ( xForwardedProto != null && (xForwardedProto.equalsIgnoreCase( "http" ) || xForwardedProto.equalsIgnoreCase( "https" )) )
         {
             builder.append( xForwardedProto );
         }
@@ -240,11 +238,11 @@ public class ContextUtils
 
         return builder.toString();
     }
-    
+
     /**
      * Splits the given query param value into independent values using ; as
      * separator.
-     * 
+     *
      * @param value the query param value.
      * @return the list of independent values.
      */
@@ -256,17 +254,17 @@ public class ContextUtils
         }
 
         String[] values = value.split( QUERY_PARAM_SEP );
-        
+
         return new HashSet<>( Arrays.asList( values ) );
     }
-    
+
     /**
      * Returns a mapping of dimension identifiers and dimension option identifiers
      * based on the given set of dimension strings. Splits the strings using : as
      * separator. Returns null of dimensions are null or empty.
-     * 
+     * <p/>
      * TODO remove
-     * 
+     *
      * @param dimensions the set of strings on format dimension:dimension-option.
      * @return a map of dimensions and dimension options.
      */
@@ -276,32 +274,32 @@ public class ContextUtils
         {
             return null;
         }
-        
+
         Map<String, String> map = new HashMap<>();
-        
+
         for ( String dim : dimensions )
         {
             String[] dims = dim.split( DimensionalObjectUtils.DIMENSION_NAME_SEP );
-            
+
             if ( dims.length == 2 && dims[0] != null && dims[1] != null )
             {
                 map.put( dims[0], dims[1] );
             }
         }
-        
+
         return map;
     }
 
     /**
      * Returns the base URL for the given request.
-     * 
+     *
      * @param request the HTTP servlet request.
      * @return the base URL.
      */
     public static String getBaseUrl( HttpServletRequest request )
     {
         String server = request.getServerName();
-        
+
         String scheme = request.getScheme();
         int port = request.getServerPort();
         String baseUrl = scheme + "://" + server + ":" + port + "/";
@@ -324,78 +322,78 @@ public class ContextUtils
 
     /**
      * Clears the given collection if it is not modified according to the HTTP
-     * cache validation. This method looks up the ETag sent in the request from 
-     * the "If-None-Match" header value, generates an ETag based on the given 
+     * cache validation. This method looks up the ETag sent in the request from
+     * the "If-None-Match" header value, generates an ETag based on the given
      * collection of IdentifiableObjects and compares them for equality. If this
      * evaluates to true, it will set status code 304 Not Modified on the response
      * and remove all elements from the given list. It will set the ETag header
      * on the response in any case.
-     * 
-     * @param request the HttpServletRequest.
+     *
+     * @param request  the HttpServletRequest.
      * @param response the HttpServletResponse.
      * @return true if the eTag values are equals, false otherwise.
      */
     public static boolean clearIfNotModified( HttpServletRequest request, HttpServletResponse response, Collection<? extends IdentifiableObject> objects )
     {
         String tag = QUOTE + IdentifiableObjectUtils.getLastUpdatedTag( objects ) + QUOTE;
-        
+
         response.setHeader( HEADER_ETAG, tag );
-        
+
         String inputTag = request.getHeader( HEADER_IF_NONE_MATCH );
 
         if ( objects != null && inputTag != null && inputTag.equals( tag ) )
         {
             response.setStatus( HttpServletResponse.SC_NOT_MODIFIED );
-            
+
             objects.clear();
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
-     * This method looks up the ETag sent in the request from the "If-None-Match" 
-     * header value and compares it to the given tag. If they match, it will set 
+     * This method looks up the ETag sent in the request from the "If-None-Match"
+     * header value and compares it to the given tag. If they match, it will set
      * status code 304 Not Modified on the response. It will set the ETag header
      * on the response in any case. It will wrap the given tag in quotes.
-     * 
-     * @param request the HttpServletRequest.
+     *
+     * @param request  the HttpServletRequest.
      * @param response the HttpServletResponse.
-     * @param tag the tag to compare.
+     * @param tag      the tag to compare.
      * @return true if the given tag match the request tag and the response is
-     *         considered not modified, false if not.
+     * considered not modified, false if not.
      */
     public static boolean isNotModified( HttpServletRequest request, HttpServletResponse response, String tag )
     {
-        tag = tag != null ? ( QUOTE + tag + QUOTE ) : null;
-        
+        tag = tag != null ? (QUOTE + tag + QUOTE) : null;
+
         String inputTag = request.getHeader( HEADER_IF_NONE_MATCH );
 
         response.setHeader( HEADER_ETAG, tag );
-        
+
         if ( inputTag != null && inputTag.equals( tag ) )
         {
             response.setStatus( HttpServletResponse.SC_NOT_MODIFIED );
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Indicates whether the given requests indicates that it accepts a compressed
      * response.
-     * 
+     *
      * @param request the HttpServletRequest.
      * @return whether the given requests indicates that it accepts a compressed
      * response.
      */
     public static boolean isAcceptGzip( HttpServletRequest request )
     {
-        return request != null && ( ( request.getPathInfo() != null && request.getPathInfo().endsWith( ".gz" ) )
-            || ( request.getHeader( "Accept" ) != null && request.getHeader( "Accept" ).contains( "application/csv+gzip" ) ) );
+        return request != null && ((request.getPathInfo() != null && request.getPathInfo().endsWith( ".gz" ))
+            || (request.getHeader( "Accept" ) != null && request.getHeader( "Accept" ).contains( "application/csv+gzip" )));
     }
 }
