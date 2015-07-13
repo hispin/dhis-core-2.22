@@ -35,7 +35,7 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.dxf2.common.TranslateOptions;
+import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.node.AbstractNode;
 import org.hisp.dhis.node.Node;
@@ -100,7 +100,7 @@ public class DimensionController
 
     @RequestMapping( value = "/{uid}/items", method = RequestMethod.GET )
     public @ResponseBody RootNode getItems( @PathVariable String uid, @RequestParam Map<String, String> parameters,
-        TranslateOptions translateOptions, Model model, HttpServletRequest request, HttpServletResponse response )
+        TranslateParams translateParams, Model model, HttpServletRequest request, HttpServletResponse response )
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
         List<String> filters = Lists.newArrayList( contextService.getParameterValues( "filter" ) );
@@ -114,7 +114,7 @@ public class DimensionController
         items = objectFilterService.filter( items, filters );
         Collections.sort( items, IdentifiableObjectNameComparator.INSTANCE );
 
-        translate( items, translateOptions );
+        translate( items, translateParams );
 
         RootNode rootNode = NodeUtils.createMetadata();
 

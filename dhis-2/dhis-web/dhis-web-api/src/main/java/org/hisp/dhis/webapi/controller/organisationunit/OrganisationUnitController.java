@@ -32,7 +32,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.Pager;
-import org.hisp.dhis.dxf2.common.TranslateOptions;
+import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.organisationunit.comparator.OrganisationUnitByLevelComparator;
@@ -226,12 +226,12 @@ public class OrganisationUnitController
 
     @RequestMapping( value = "/{uid}/parents", method = RequestMethod.GET )
     public List<OrganisationUnit> getEntityList( @PathVariable( "uid" ) String uid,
-        @RequestParam Map<String, String> parameters, Model model, TranslateOptions translateOptions,
+        @RequestParam Map<String, String> parameters, Model model, TranslateParams translateParams,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         OrganisationUnit organisationUnit = manager.get( getEntityClass(), uid );
         List<OrganisationUnit> organisationUnits = Lists.newArrayList();
-        translate( organisationUnits, translateOptions );
+        translate( organisationUnits, translateParams );
 
         if ( organisationUnit != null )
         {
