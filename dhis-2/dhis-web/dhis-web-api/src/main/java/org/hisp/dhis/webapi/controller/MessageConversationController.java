@@ -32,7 +32,7 @@ import com.google.common.collect.Lists;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
-import org.hisp.dhis.dxf2.common.TranslateOptions;
+import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
@@ -109,7 +109,7 @@ public class MessageConversationController
     }
 
     @Override
-    public RootNode getObject( @PathVariable String uid, Map<String, String> rpParameters, TranslateOptions translateOptions, HttpServletRequest request, HttpServletResponse response )
+    public RootNode getObject( @PathVariable String uid, Map<String, String> rpParameters, TranslateParams translateParams, HttpServletRequest request, HttpServletResponse response )
         throws Exception
     {
         org.hisp.dhis.message.MessageConversation messageConversation = messageService.getMessageConversation( uid );
@@ -127,7 +127,7 @@ public class MessageConversationController
             throw new AccessDeniedException( "Not authorized to access this conversation." );
         }
 
-        return super.getObject( uid, rpParameters, translateOptions, request, response );
+        return super.getObject( uid, rpParameters, translateParams, request, response );
     }
 
     @Override

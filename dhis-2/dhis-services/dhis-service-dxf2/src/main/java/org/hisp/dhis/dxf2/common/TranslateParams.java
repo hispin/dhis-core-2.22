@@ -35,13 +35,13 @@ import java.util.Locale;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class TranslateOptions
+public class TranslateParams
 {
     private boolean translate;
 
     private String locale;
 
-    public TranslateOptions()
+    public TranslateParams()
     {
     }
 
