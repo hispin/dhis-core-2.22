@@ -163,7 +163,7 @@ trackerCapture.controller('EnrollmentController',
         ModalService.showModal({}, modalOptions).then(function(result){            
             EnrollmentService.cancel($scope.selectedEnrollment).then(function(data){                
                 $scope.selectedEnrollment.status = 'CANCELLED';
-                $scope.loadEnrollmentDetails($scope.selectedEnrollment.status);                
+                $scope.loadEnrollmentDetails($scope.selectedEnrollment);                
             });
         });
     };
