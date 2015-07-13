@@ -30,12 +30,12 @@ package org.hisp.dhis.webapi.controller.event;
 
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.Pager;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.Query;
 import org.hisp.dhis.schema.descriptors.ProgramSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -43,11 +43,8 @@ import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.hisp.dhis.program.ProgramType;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -80,84 +77,41 @@ public class ProgramController
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     protected List<Program> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
-        String type = options.getOptions().get( "type" );
-        String orgUnit = options.getOptions().get( "orgUnit" );
         Boolean userFilter = Boolean.parseBoolean( options.getOptions().get( "userFilter" ) );
 
         List<Program> entityList;
-
-        if ( type != null || orgUnit != null || userFilter )
-        {
-            options.getOptions().put( "paging", "false" );
-        }
+        boolean haveFilters = !filters.isEmpty();
+        Query query = queryService.getQueryFromUrl( getEntityClass(), filters, orders );
+        query.setDefaultOrder();
 
         if ( options.getOptions().containsKey( "query" ) )
         {
             entityList = Lists.newArrayList( manager.filter( getEntityClass(), options.getOptions().get( "query" ) ) );
         }
-        else if ( options.hasPaging() )
+        else if ( options.hasPaging() && !haveFilters )
         {
-            int count = manager.getCount( getEntityClass() );
+            int count = queryService.count( query );
 
             Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
             metaData.setPager( pager );
 
-            entityList = new ArrayList<>( manager.getBetweenSorted( getEntityClass(), pager.getOffset(), pager.getPageSize() ) );
+            query.setFirstResult( pager.getOffset() );
+            query.setMaxResults( pager.getPageSize() );
+            entityList = (List<Program>) queryService.query( query ).getItems();
         }
         else
         {
-            entityList = new ArrayList<>( manager.getAllSorted( getEntityClass() ) );
+            entityList = (List<Program>) queryService.query( query ).getItems();
         }
 
         if ( userFilter )
         {
             List<Program> programs = Lists.newArrayList( programService.getProgramsByCurrentUser() );
             entityList.retainAll( programs );
-        }
-
-        if ( type != null )
-        {
-            try
-            {
-                ProgramType programType = ProgramType.fromValue( type );
-
-                Iterator<Program> iterator = entityList.iterator();
-
-                while ( iterator.hasNext() )
-                {
-                    Program program = iterator.next();
-
-                    if ( program.getProgramType() != programType )
-                    {
-                        iterator.remove();
-                    }
-                }
-            }
-            catch ( NumberFormatException ignored )
-            {
-            }
-        }
-
-        if ( orgUnit != null )
-        {
-            OrganisationUnit organisationUnit = manager.get( OrganisationUnit.class, orgUnit );
-
-            if ( organisationUnit != null )
-            {
-                Iterator<Program> iterator = entityList.iterator();
-
-                while ( iterator.hasNext() )
-                {
-                    Program program = iterator.next();
-
-                    if ( !program.getOrganisationUnits().contains( organisationUnit ) )
-                    {
-                        iterator.remove();
-                    }
-                }
-            }
+            metaData.setPager( null );
         }
 
         return entityList;
