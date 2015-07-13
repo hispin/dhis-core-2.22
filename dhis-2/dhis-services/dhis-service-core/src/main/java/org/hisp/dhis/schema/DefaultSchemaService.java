@@ -133,6 +133,8 @@ public class DefaultSchemaService implements SchemaService
 
         updateSelf( schema );
 
+        classSchemaMap.put( klass, schema );
+
         return schema;
     }
 
