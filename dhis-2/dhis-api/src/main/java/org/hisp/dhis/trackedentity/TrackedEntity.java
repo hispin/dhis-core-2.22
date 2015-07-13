@@ -64,12 +64,11 @@ public class TrackedEntity
 
     public TrackedEntity()
     {
-        setAutoFields();
+
     }
 
     public TrackedEntity( String name, String description )
     {
-        this();
         this.name = name;
         this.description = description;
     }

@@ -168,13 +168,11 @@ public class OrganisationUnit
 
     public OrganisationUnit()
     {
-        this.uuid = UUID.randomUUID().toString();
-        setAutoFields();
+
     }
 
     public OrganisationUnit( String name )
     {
-        this();
         this.name = name;
     }
 
@@ -214,6 +212,17 @@ public class OrganisationUnit
         this.openingDate = openingDate;
         this.closedDate = closedDate;
         this.comment = comment;
+    }
+
+    @Override
+    public void setAutoFields()
+    {
+        if ( uuid == null )
+        {
+            uuid = UUID.randomUUID().toString();
+        }
+
+        super.setAutoFields();
     }
 
     // -------------------------------------------------------------------------

@@ -69,7 +69,7 @@ public class Chart
 
     public Chart()
     {
-        setAutoFields();
+
     }
 
     public Chart( String name )

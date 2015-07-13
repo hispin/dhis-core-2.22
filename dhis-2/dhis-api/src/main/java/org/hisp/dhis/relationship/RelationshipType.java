@@ -62,12 +62,11 @@ public class RelationshipType
 
     public RelationshipType()
     {
-        setAutoFields();
+
     }
 
     public RelationshipType( String aIsToB, String bIsToA )
     {
-        this();
         this.aIsToB = aIsToB;
         this.bIsToA = bIsToA;
     }

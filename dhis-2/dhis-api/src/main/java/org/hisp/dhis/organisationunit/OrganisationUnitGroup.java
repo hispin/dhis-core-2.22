@@ -78,12 +78,11 @@ public class OrganisationUnitGroup
 
     public OrganisationUnitGroup()
     {
-        setAutoFields();
+
     }
 
     public OrganisationUnitGroup( String name )
     {
-        this();
         this.name = name;
     }
 

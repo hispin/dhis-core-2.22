@@ -95,12 +95,11 @@ public class UserGroup
 
     public UserGroup()
     {
-        setAutoFields();
+
     }
 
     public UserGroup( String name )
     {
-        this();
         this.name = name;
     }
 

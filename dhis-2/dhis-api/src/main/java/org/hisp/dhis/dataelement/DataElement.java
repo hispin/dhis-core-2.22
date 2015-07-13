@@ -205,7 +205,7 @@ public class DataElement
 
     public DataElement()
     {
-        setAutoFields();
+
     }
 
     public DataElement( String name )

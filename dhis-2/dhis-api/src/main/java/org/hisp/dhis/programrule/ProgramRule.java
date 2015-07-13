@@ -73,7 +73,7 @@ public class ProgramRule
      * The collection of actions that will be triggered if the the rule is triggered.
      */
     @Scanned
-    private Set<ProgramRuleAction> programRuleActions;
+    private Set<ProgramRuleAction> programRuleActions = new HashSet<>();
 
     /**
      * The condition expression, if this expression is evaluated to true, the actions is triggered.
@@ -92,13 +92,11 @@ public class ProgramRule
 
     public ProgramRule()
     {
-        this.setAutoFields();
-        this.programRuleActions = new HashSet<ProgramRuleAction>();
+
     }
 
     public ProgramRule( String name, String description, Program program, ProgramStage programStage, Set<ProgramRuleAction> programRuleActions, String condition, Integer priority )
     {
-        this();
         this.name = name;
         this.description = description;
         this.program = program;

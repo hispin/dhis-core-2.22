@@ -43,75 +43,81 @@ public class DashboardServiceTest
 {
     @Autowired
     private DashboardService dashboardService;
-    
+
     @Autowired
     private ChartService chartService;
-    
+
     @Autowired
     private DocumentService documentService;
-    
+
     private Dashboard dA;
     private Dashboard dB;
-    
+
     private DashboardItem diA;
     private DashboardItem diB;
     private DashboardItem diC;
     private DashboardItem diD;
-    
+
     private Chart chartA;
     private Chart chartB;
-    
+
     @Override
     public void setUpTest()
     {
         chartA = new Chart( "A" );
         chartB = new Chart( "B" );
-        
+
         chartService.addChart( chartA );
         chartService.addChart( chartB );
-                
+
         Document docA = new Document( "A", "url", false, null );
         Document docB = new Document( "B", "url", false, null );
         Document docC = new Document( "C", "url", false, null );
         Document docD = new Document( "D", "url", false, null );
-        
+
         documentService.saveDocument( docA );
         documentService.saveDocument( docB );
         documentService.saveDocument( docC );
         documentService.saveDocument( docD );
-        
+
         diA = new DashboardItem();
+        diA.setAutoFields();
         diA.setChart( chartA );
-        
+
         diB = new DashboardItem();
+        diB.setAutoFields();
         diB.setChart( chartB );
-        
+
         diC = new DashboardItem();
+        diC.setAutoFields();
         diC.getResources().add( docA );
         diC.getResources().add( docB );
 
         diD = new DashboardItem();
+        diD.setAutoFields();
         diD.getResources().add( docC );
         diD.getResources().add( docD );
-        
+
         dA = new Dashboard( "A" );
+        dA.setAutoFields();
         dA.getItems().add( diA );
         dA.getItems().add( diB );
         dA.getItems().add( diC );
-        
+
         dB = new Dashboard( "B" );
+        dB.setAutoFields();
         dB.getItems().add( diD );
     }
-    
+
     @Test
     public void testAddGet()
-    {        
+    {
         int dAId = dashboardService.saveDashboard( dA );
         int dBId = dashboardService.saveDashboard( dB );
-        
+
         assertEquals( dA, dashboardService.getDashboard( dAId ) );
         assertEquals( dB, dashboardService.getDashboard( dBId ) );
-        
+
         assertEquals( 3, dashboardService.getDashboard( dAId ).getItems().size() );
         assertEquals( 1, dashboardService.getDashboard( dBId ).getItems().size() );
     }
@@ -120,11 +126,11 @@ public class DashboardServiceTest
     public void testUpdate()
     {
         int dAId = dashboardService.saveDashboard( dA );
-        
+
         assertEquals( "A", dashboardService.getDashboard( dAId ).getName() );
-        
+
         dA.setName( "B" );
-        
+
         dashboardService.updateDashboard( dA );
 
         assertEquals( "B", dashboardService.getDashboard( dAId ).getName() );
@@ -132,13 +138,13 @@ public class DashboardServiceTest
 
     @Test
     public void testDelete()
-    {        
+    {
         int dAId = dashboardService.saveDashboard( dA );
         int dBId = dashboardService.saveDashboard( dB );
-        
+
         assertNotNull( dashboardService.getDashboard( dAId ) );
         assertNotNull( dashboardService.getDashboard( dBId ) );
-        
+
         dashboardService.deleteDashboard( dA );
 
         assertNull( dashboardService.getDashboard( dAId ) );
@@ -147,17 +153,17 @@ public class DashboardServiceTest
         dashboardService.deleteDashboard( dB );
 
         assertNull( dashboardService.getDashboard( dAId ) );
-        assertNull( dashboardService.getDashboard( dBId ) );        
+        assertNull( dashboardService.getDashboard( dBId ) );
     }
-    
+
     @Test
     public void testAddItemContent()
     {
         dashboardService.saveDashboard( dA );
         dashboardService.saveDashboard( dB );
-        
+
         DashboardItem itemA = dashboardService.addItemContent( dA.getUid(), DashboardItem.TYPE_CHART, chartA.getUid() );
-        
+
         assertNotNull( itemA );
         assertNotNull( itemA.getUid() );
     }

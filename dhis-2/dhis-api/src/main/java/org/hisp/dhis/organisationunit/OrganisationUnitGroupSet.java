@@ -83,12 +83,11 @@ public class OrganisationUnitGroupSet
 
     public OrganisationUnitGroupSet()
     {
-        setAutoFields();
+
     }
 
     public OrganisationUnitGroupSet( String name, String description, boolean compulsory )
     {
-        this();
         this.name = name;
         this.description = description;
         this.compulsory = compulsory;

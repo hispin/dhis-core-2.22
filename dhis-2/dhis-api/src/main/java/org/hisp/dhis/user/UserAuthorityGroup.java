@@ -82,7 +82,7 @@ public class UserAuthorityGroup
 
     public UserAuthorityGroup()
     {
-        setAutoFields();
+
     }
 
     // -------------------------------------------------------------------------
