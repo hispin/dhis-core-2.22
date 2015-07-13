@@ -244,13 +244,8 @@ function getMetaPrograms()
         url: '../api/programs.json',
         type: 'GET',
         data:'filter=programType:eq:WITHOUT_REGISTRATION&paging=false&fields=id,name,version,programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]]'
-    }).done( function(response) {          
-        var programs = [];
-        _.each( _.values( response.programs ), function ( program ) { 
-            programs.push(program);            
-        });
-        
-        def.resolve( programs );
+    }).done( function(response) {        
+        def.resolve( response.programs ? response.programs: [] );
     }).fail(function(){
         def.resolve( null );
     });
@@ -311,29 +306,23 @@ function getProgram( id )
 {
     return function() {
         return $.ajax( {
-            url: '../api/programs.json?filter=id:eq:' + id +'&fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]',
-            type: 'GET'
-        }).done( function( response ){
-            
-            _.each( _.values( response.programs ), function ( program ) { 
-                
-                var ou = {};
-                _.each(_.values( program.organisationUnits), function(o){
-                    ou[o.id] = o.name;
-                });
+            url: '../api/programs/' + id + '.json',
+            type: 'GET',
+            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
+        }).done( function( program ){            
+            var ou = {};
+            _.each(_.values( program.organisationUnits), function(o){
+                ou[o.id] = o.name;
+            });
+            program.organisationUnits = ou;
 
-                program.organisationUnits = ou;
+            var ur = {};
+            _.each(_.values( program.userRoles), function(u){
+                ur[u.id] = u.name;
+            });
+            program.userRoles = ur;
 
-                var ur = {};
-                _.each(_.values( program.userRoles), function(u){
-                    ur[u.id] = u.name;
-                });
-
-                program.userRoles = ur;
-
-                dhis2.ec.store.set( 'programs', program );
-
-            });         
+            dhis2.ec.store.set( 'programs', program );        
         });
     };
 }
@@ -361,7 +350,8 @@ function getProgramStages( programs )
                 var p = d.promise();
                 dhis2.ec.store.get('programStages', program.programStages[0].id).done(function(obj) {
                     if(!obj || obj.version !== program.programStages[0].version) {
-                        promise = promise.then( getProgramStage( program.programStages[0].id ) );
+                        //promise = promise.then( getProgramStage( program.programStages[0].id ) );
+                        promise = promise.then( getD2Object( program.programStages[0].id, 'programStages', '../api/programStages', 'fields=id,name,version,description,reportDateDescription,captureCoordinates,dataEntryForm,minDaysFromStart,repeatable,preGenerateUID,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,sortOrder,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,name,type,optionSetValue,numberType,textType,formName,optionSet[id]]]', 'idb' ) );
                     }
 
                     d.resolve();
@@ -387,7 +377,7 @@ function getProgramStages( programs )
     return mainPromise;    
 }
 
-function getProgramStage( id )
+/*function getProgramStage( id )
 {
     return function() {
         return $.ajax( {
@@ -399,7 +389,7 @@ function getProgramStage( id )
             });
         });
     };
-}
+}*/
 
 function getOptionSets( programs )
 {
@@ -427,7 +417,8 @@ function getOptionSets( programs )
                         dhis2.ec.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {
                             if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetsInPromise.indexOf(prStDe.dataElement.optionSet.id) === -1) {
                                 optionSetsInPromise.push( prStDe.dataElement.optionSet.id );
-                                promise = promise.then( getOptionSet( prStDe.dataElement.optionSet.id ) );                                
+                                //promise = promise.then( getOptionSet( prStDe.dataElement.optionSet.id ) );
+                                promise = promise.then( getD2Object( prStDe.dataElement.optionSet.id, 'optionSets', '../api/optionSets', 'fields=id,name,version,options[id,name,code]', 'idb' ) );
                             }
                             d.resolve();
                         });
@@ -454,7 +445,7 @@ function getOptionSets( programs )
     return mainPromise;    
 }
 
-function getOptionSet( id )
+/*function getOptionSet( id )
 {
     return function() {
         return $.ajax( {
@@ -466,7 +457,7 @@ function getOptionSet( id )
             });
         });
     };
-}
+}*/
 
 function getMetaProgramValidations( programs )
 {    

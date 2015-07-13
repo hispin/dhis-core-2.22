@@ -142,11 +142,11 @@ trackerCapture.controller('RegistrationController',
             return false;
         }
         
-        RegistrationService.registerOrUpdate($scope.tei, $scope.optionSets, $scope.attributesById).then(function(response){
+        RegistrationService.registerOrUpdate($scope.tei, $scope.optionSets, $scope.attributesById).then(function(registrationResponse){
             
-            if(response.status === 'SUCCESS'){
+            if(registrationResponse.response && registrationResponse.response.reference && registrationResponse.response.status === 'SUCCESS'){
                 
-                $scope.tei.trackedEntityInstance = response.reference;
+                $scope.tei.trackedEntityInstance = registrationResponse.response.reference;
                 
                 if( $scope.registrationMode === 'PROFILE' ){                    
                     reloadProfileWidget();
@@ -162,27 +162,28 @@ trackerCapture.controller('RegistrationController',
                         enrollment.dateOfEnrollment = $scope.selectedEnrollment.dateOfEnrollment;
                         enrollment.dateOfIncident = $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident;
 
-                        EnrollmentService.enroll(enrollment).then(function(data){
-                            if(data.status !== 'SUCCESS'){
-                                //enrollment has failed
-                                var dialogOptions = {
-                                        headerText: 'enrollment_error',
-                                        bodyText: data.description
-                                    };
-                                DialogService.showDialog({}, dialogOptions);
-                                return;
-                            }
-                            else{
-                                enrollment.enrollment = data.reference;
+                        EnrollmentService.enroll(enrollment).then(function(enrollmentResponse){
+                            var r = enrollmentResponse.response && enrollmentResponse.response.importSummaries && enrollmentResponse.response.importSummaries[0] ? enrollmentResponse.response.importSummaries[0] : {};
+                            if(r.reference && r.status === 'SUCCESS'){                                
+                                enrollment.enrollment = r.reference;
                                 $scope.selectedEnrollment = enrollment;                                                                
                                 var dhis2Events = EventUtils.autoGenerateEvents($scope.tei.trackedEntityInstance, $scope.selectedProgram, $scope.selectedOrgUnit, enrollment);
                                 if(dhis2Events.events.length > 0){
-                                    DHIS2EventFactory.create(dhis2Events).then(function(data){
+                                    DHIS2EventFactory.create(dhis2Events).then(function(){
                                         notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
                                     });
                                 }else{
                                     notifyRegistrtaionCompletion(destination, $scope.tei.trackedEntityInstance);
-                                }                            
+                                }                                
+                            }
+                            else{
+                                //enrollment has failed
+                                var dialogOptions = {
+                                        headerText: 'enrollment_error',
+                                        bodyText: enrollmentResponse.message
+                                    };
+                                DialogService.showDialog({}, dialogOptions);
+                                return;                                                            
                             }
                         });
                     }
@@ -194,7 +195,7 @@ trackerCapture.controller('RegistrationController',
             else{//update/registration has failed
                 var dialogOptions = {
                         headerText: $scope.tei && $scope.tei.trackedEntityInstance ? 'update_error' : 'registration_error',
-                        bodyText: response.description
+                        bodyText: registrationResponse.message
                     };
                 DialogService.showDialog({}, dialogOptions);
                 return;
