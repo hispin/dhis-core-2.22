@@ -1130,7 +1130,7 @@ Ext.onReady( function() {
 							params: Ext.encode(favorite),
 							failure: function(r) {
 								ns.core.web.mask.hide(ns.app.centerRegion);
-								ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+								ns.alert(r);
 							},
 							success: function(r) {
 								var id = r.getAllResponseHeaders().location.split('/').pop();
@@ -1162,7 +1162,7 @@ Ext.onReady( function() {
 							method: 'GET',
 							failure: function(r) {
 								ns.core.web.mask.hide(ns.app.centerRegion);
-										ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+								ns.alert(r);
 							},
 							success: function(r) {
 								reportTable = Ext.decode(r.responseText);
@@ -1175,7 +1175,7 @@ Ext.onReady( function() {
 									params: Ext.encode(reportTable),
 									failure: function(r) {
 										ns.core.web.mask.hide(ns.app.centerRegion);
-										ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+										ns.alert(r);
 									},
 									success: function(r) {
 										if (ns.app.layout && ns.app.layout.id && ns.app.layout.id === id) {
@@ -1405,7 +1405,7 @@ Ext.onReady( function() {
 										method: 'GET',
 										failure: function(r) {
 											ns.app.viewport.mask.hide();
-                                            ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                                            ns.alert(r);
 										},
 										success: function(r) {
 											var sharing = Ext.decode(r.responseText),
@@ -1961,7 +1961,7 @@ Ext.onReady( function() {
 			listeners: {
 				show: function(w) {
 					Ext.Ajax.request({
-						url: ns.core.init.contextPath + '/api/system/info.json',
+						url: ns.core.init.contextPath + '/api/system/infso.json',
 						success: function(r) {
 							var info = Ext.decode(r.responseText),
 								divStyle = 'padding:3px',
@@ -1981,9 +1981,7 @@ Ext.onReady( function() {
 							w.update(html);
 						},
 						failure: function(r) {
-							html += r.status + '\n' + r.statusText + '\n' + r.responseText;
-
-							w.update(html);
+							w.update(r.status + '\n' + r.statusText + '\n' + r.responseText);
 						},
                         callback: function() {
                             document.body.oncontextmenu = true;
@@ -2523,12 +2521,13 @@ Ext.onReady( function() {
 					failure: function(r) {
 						web.mask.hide(ns.app.centerRegion);
 
-                        if (Ext.Array.contains([403], r.status)) {
-                            ns.alert(NS.i18n.you_do_not_have_access_to_all_items_in_this_favorite);
+                        r = Ext.decode(r.responseText);
+
+                        if (Ext.Array.contains([403], parseInt(r.httpStatusCode))) {
+                            r.message = NS.i18n.you_do_not_have_access_to_all_items_in_this_favorite || r.message;
                         }
-                        else {
-                            ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
-                        }
+
+                        ns.alert(r);
 					},
 					success: function(r) {
 						var layoutConfig = Ext.decode(r.responseText),
@@ -2572,14 +2571,16 @@ Ext.onReady( function() {
 						'Accepts': 'application/json'
 					},
 					disableCaching: false,
-					failure: function(r) {
+					failure: function(r) {    
                         onFailure();
 
-						if (Ext.Array.contains([413, 414], parseInt(r.status))) {
+                        r = Ext.decode(r.responseText);
+
+						if (Ext.Array.contains([413, 414], parseInt(r.httpStatusCode))) {
 							web.analytics.validateUrl(init.contextPath + '/api/analytics.json' + paramString);
 						}
 						else {
-                            ns.alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                            ns.alert(r);
 						}
 					},
 					success: function(r) {
