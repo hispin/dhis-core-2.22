@@ -62,12 +62,7 @@ public class WebMessage
     /**
      * HTTP status.
      */
-    protected String httpStatus = HttpStatus.OK.getReasonPhrase();
-
-    /**
-     * HTTP status code. Default value is 200.
-     */
-    protected Integer httpStatusCode = HttpStatus.OK.value();
+    protected HttpStatus httpStatus = HttpStatus.OK;
 
     /**
      * Non-technical message, should be simple and could possibly be used to display message
@@ -102,22 +97,27 @@ public class WebMessage
         this.status = status;
     }
 
-    public WebMessage( WebMessageStatus status, Integer httpStatusCode )
+    public WebMessage( WebMessageStatus status, HttpStatus httpStatus )
     {
         this.status = status;
-        setHttpStatusCode( httpStatusCode );
+        this.httpStatus = httpStatus;
     }
 
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------     
 
-    public boolean okStatus()
+    public boolean isOk()
     {
         return WebMessageStatus.OK.equals( status );
     }
 
-    public boolean errorStatus()
+    public boolean isWarning()
+    {
+        return WebMessageStatus.WARNING.equals( status );
+    }
+
+    public boolean isError()
     {
         return WebMessageStatus.ERROR.equals( status );
     }
@@ -154,27 +154,19 @@ public class WebMessage
     @JacksonXmlProperty( isAttribute = true )
     public String getHttpStatus()
     {
-        return httpStatus;
+        return httpStatus.getReasonPhrase();
+    }
+
+    public void setHttpStatus( HttpStatus httpStatus )
+    {
+        this.httpStatus = httpStatus;
     }
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
     public Integer getHttpStatusCode()
     {
-        return httpStatusCode;
-    }
-
-    public void setHttpStatusCode( Integer httpStatusCode )
-    {
-        try
-        {
-            this.httpStatus = HttpStatus.valueOf( httpStatusCode ).getReasonPhrase();
-        }
-        catch ( IllegalArgumentException ignored )
-        {
-        }
-
-        this.httpStatusCode = httpStatusCode;
+        return httpStatus.value();
     }
 
     @JsonProperty
@@ -219,7 +211,7 @@ public class WebMessage
         return MoreObjects.toStringHelper( this )
             .add( "status", status )
             .add( "code", code )
-            .add( "httpStatusCode", httpStatusCode )
+            .add( "httpStatus", httpStatus )
             .add( "message", message )
             .add( "devMessage", devMessage )
             .add( "response", response )

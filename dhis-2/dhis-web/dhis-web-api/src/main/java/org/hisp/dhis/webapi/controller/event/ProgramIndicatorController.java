@@ -28,10 +28,6 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.dxf2.webmessage.DescriptiveWebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.i18n.I18n;
@@ -46,6 +42,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
 @RequestMapping( value = ProgramIndicatorSchemaDescriptor.API_ENDPOINT )
@@ -63,18 +62,18 @@ public class ProgramIndicatorController
         throws IOException
     {
         I18n i18n = i18nManager.getI18n();
-        
+
         String result = programIndicatorService.expressionIsValid( expression );
-        
+
         DescriptiveWebMessage message = new DescriptiveWebMessage();
         message.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
         message.setMessage( i18n.getString( result ) );
-        
-        if ( message.okStatus() )
+
+        if ( message.isOk() )
         {
             message.setDescription( programIndicatorService.getExpressionDescription( expression ) );
         }
-        
+
         webMessageService.sendJson( message, response );
     }
 
@@ -83,18 +82,18 @@ public class ProgramIndicatorController
         throws IOException
     {
         I18n i18n = i18nManager.getI18n();
-        
+
         String result = programIndicatorService.filterIsValid( expression );
-        
+
         DescriptiveWebMessage message = new DescriptiveWebMessage();
         message.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
         message.setMessage( i18n.getString( result ) );
-        
-        if ( message.okStatus() )
+
+        if ( message.isOk() )
         {
             message.setDescription( programIndicatorService.getExpressionDescription( expression ) );
         }
-        
+
         webMessageService.sendJson( message, response );
     }
 }
