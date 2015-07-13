@@ -29,9 +29,7 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.view.BasicView;
 import org.hisp.dhis.datacompletion.CompleteDataSetRegistrationRequest;
 import org.hisp.dhis.datacompletion.CompleteDataSetRegistrationRequests;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -41,7 +39,6 @@ import org.hisp.dhis.dataset.CompleteDataSetRegistrations;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
-import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
@@ -54,14 +51,12 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.webapi.utils.InputUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +66,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
-import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_XML;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -107,26 +101,6 @@ public class CompleteDataSetRegistrationController
 
     @Autowired
     private I18nManager i18nManager;
-
-    @Autowired
-    private RenderService renderService;
-
-    @RequestMapping( method = RequestMethod.GET, produces = CONTENT_TYPE_XML )
-    public void getCompleteDataSetRegistrationsXml(
-        @RequestParam Set<String> dataSet,
-        @RequestParam( required = false ) String period,
-        @RequestParam Date startDate,
-        @RequestParam Date endDate,
-        @RequestParam Set<String> orgUnit,
-        @RequestParam( required = false ) boolean children,
-        HttpServletResponse response ) throws IOException
-    {
-        response.setContentType( CONTENT_TYPE_XML );
-        CompleteDataSetRegistrations completeDataSetRegistrations = getCompleteDataSetRegistrations( dataSet, period,
-            startDate, endDate, orgUnit, children );
-
-        JacksonUtils.toXmlWithView( response.getOutputStream(), completeDataSetRegistrations, BasicView.class );
-    }
 
     @RequestMapping( method = RequestMethod.GET, produces = CONTENT_TYPE_JSON )
     public void getCompleteDataSetRegistrationsJson(
@@ -184,66 +158,6 @@ public class CompleteDataSetRegistrationController
             registrationService.getCompleteDataSetRegistrations( dataSets, organisationUnits, periods ) ) );
 
         return completeDataSetRegistrations;
-    }
-
-    @RequestMapping( method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE )
-    public void saveCompleteDataSetRegistrationsJson( HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
-    {
-        CompleteDataSetRegistrations completeDataSetRegistrations = renderService.fromJson( request.getInputStream(),
-            CompleteDataSetRegistrations.class );
-
-        saveCompleteDataSetRegistrations( completeDataSetRegistrations );
-    }
-
-    @RequestMapping( method = RequestMethod.POST, consumes = MediaType.APPLICATION_XML_VALUE )
-    public void saveCompleteDataSetRegistrationsXml( HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
-    {
-        CompleteDataSetRegistrations completeDataSetRegistrations = renderService.fromXml( request.getInputStream(),
-            CompleteDataSetRegistrations.class );
-
-        saveCompleteDataSetRegistrations( completeDataSetRegistrations );
-    }
-
-    private void saveCompleteDataSetRegistrations( CompleteDataSetRegistrations completeDataSetRegistrations ) throws WebMessageException
-    {
-        for ( CompleteDataSetRegistration completeDataSetRegistration : completeDataSetRegistrations.getCompleteDataSetRegistrations() )
-        {
-            Period period = getObject( completeDataSetRegistration.getPeriod() );
-            DataSet dataSet = getObject( completeDataSetRegistration.getDataSet() );
-            DataElementCategoryOptionCombo attributeOptionCombo = getObject( completeDataSetRegistration.getAttributeOptionCombo() );
-            OrganisationUnit organisationUnit = getObject( completeDataSetRegistration.getSource() );
-
-            Date date = completeDataSetRegistration.getDate();
-            String storedBy = completeDataSetRegistration.getStoredBy();
-
-            registerCompleteDataSet( dataSet, period, organisationUnit, attributeOptionCombo, storedBy, date );
-        }
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private <T extends IdentifiableObject> T getObject( T object )
-    {
-        if ( object == null )
-        {
-            return null;
-        }
-
-        if ( Period.class.isInstance( object ) )
-        {
-            return (T) periodService.reloadIsoPeriod( ((Period) object).getRealUid() );
-        }
-
-        if ( object.getUid() != null )
-        {
-            return (T) manager.get( object.getClass(), object.getUid() );
-        }
-
-        if ( object.getCode() != null )
-        {
-            return (T) manager.get( object.getClass(), object.getCode() );
-        }
-
-        return null;
     }
 
     @RequestMapping( method = RequestMethod.POST, produces = "text/plain" )
