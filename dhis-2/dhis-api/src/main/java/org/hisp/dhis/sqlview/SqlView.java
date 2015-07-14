@@ -183,6 +183,14 @@ public class SqlView
     {
         return SqlViewType.QUERY.equals( type );
     }
+
+    /**
+     * Indicates whether this SQL view is a materalized view.
+     */
+    public boolean isMaterializedView()
+    {
+        return SqlViewType.MATERIALIZED_VIEW.equals( type );
+    }
     
     // -------------------------------------------------------------------------
     // Getters and setters

@@ -58,4 +58,6 @@ public interface SqlViewStore
      * @return a non-null description if invalid, and null if valid.
      */
     String testSqlGrammar( String sql );
+    
+    boolean refreshMaterializedView( SqlView sqlView );
 }
