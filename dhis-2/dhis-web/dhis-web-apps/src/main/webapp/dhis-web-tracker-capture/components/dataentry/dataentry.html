@@ -88,6 +88,8 @@
                                class="form-control" 
                                ng-class="{'input-success': eventDateSaved}"
                                d2-date 
+                               max-date="0"
+                               min-date=""
                                ng-model="currentEvent.eventDate"
                                ng-disabled="currentEvent.status === 'SKIPPED' || currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed"    
                                ng-required="true"
@@ -105,7 +107,7 @@
                                placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
                                class="form-control"
                                ng-class="{'input-success': dueDateSaved}"
-                               d2-date 
+                               d2-date                                
                                ng-model="currentEvent.dueDate"
                                blur-or-change="saveDueDate()" 
                                ng-disabled="currentEvent.eventDate || !schedulingEnabled || currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed"/>
