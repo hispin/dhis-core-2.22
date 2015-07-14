@@ -66,11 +66,11 @@
 	</tr>
 	#if( $point )
 	<tr>
-		<td><label for="longitude">$i18n.getString( "longitude_optional" )</label></td>
+		<td><label for="longitude">$i18n.getString( "longitude" )</label></td>
 		<td><input type="text" id="longitude" name="longitude" value="$!{longitude}"></td>
 	</tr>
 	<tr>
-		<td><label for="latitude">$i18n.getString( "latitude_optional" )</label></td>
+		<td><label for="latitude">$i18n.getString( "latitude" )</label></td>
 		<td><input type="text" id="latitude" name="latitude" value="$!{latitude}"></td>
 	</tr>
 	#end
