@@ -101,7 +101,8 @@ public class DataQueryParams
     public static final String KEY_DE_GROUP = "DE_GROUP-";
     
     public static final String DISPLAY_NAME_DATA_X = "Data";
-    public static final String DISPLAY_NAME_CATEGORYOPTIONCOMBO = "Category";
+    public static final String DISPLAY_NAME_CATEGORYOPTIONCOMBO = "Category option combo";
+    public static final String DISPLAY_NAME_ATTRIBUTEOPTIONCOMBO = "Attribute option combo";
     public static final String DISPLAY_NAME_PERIOD = "Period";
     public static final String DISPLAY_NAME_ORGUNIT = "Organisation unit";
     public static final String DISPLAY_NAME_LONGITUDE = "Longitude";

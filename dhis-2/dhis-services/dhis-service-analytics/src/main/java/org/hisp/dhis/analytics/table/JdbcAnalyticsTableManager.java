@@ -234,6 +234,7 @@ public class JdbcAnalyticsTableManager
             "left join _dataelementstructure des on dv.dataelementid = des.dataelementid " +
             "inner join dataelement de on dv.dataelementid=de.dataelementid " +
             "inner join categoryoptioncombo co on dv.categoryoptioncomboid=co.categoryoptioncomboid " +
+            "inner join categoryoptioncombo ao on dv.attributeoptioncomboid=ao.categoryoptioncomboid " +
             "inner join _categoryoptioncomboname aon on dv.attributeoptioncomboid=aon.categoryoptioncomboid " +
             "inner join period pe on dv.periodid=pe.periodid " +
             "inner join _periodstructure ps on dv.periodid=ps.periodid " +
@@ -351,10 +352,11 @@ public class JdbcAnalyticsTableManager
         
         String[] de = { quote( "de" ), "character(11) not null", "de.uid" };
         String[] co = { quote( "co" ), "character(11) not null", "co.uid" };
+        String[] ao = { quote( "ao" ), "character(11) not null", "ao.uid" };
         String[] ou = { quote( "ou" ), "character(11) not null", "ou.uid" };
         String[] level = { quote( "level" ), "integer", "ous.level" };
         
-        columns.addAll( Lists.newArrayList( de, co, ou, level ) );
+        columns.addAll( Lists.newArrayList( de, co, ao, ou, level ) );
 
         if ( isApprovalEnabled() )
         {
