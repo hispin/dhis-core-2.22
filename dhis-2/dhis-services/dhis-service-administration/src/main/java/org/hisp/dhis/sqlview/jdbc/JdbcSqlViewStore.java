@@ -182,4 +182,25 @@ public class JdbcSqlViewStore
             log.warn( "Could not drop view: " + viewName, ex );
         }
     }
+
+    @Override
+    public boolean refreshMaterializedView( SqlView sqlView )
+    {
+        final String sql = "REFRESH MATERIALIZED VIEW " + sqlView.getViewName();
+        
+        log.debug( "Refresh materialized view: " + sql );
+        
+        try
+        {
+            jdbcTemplate.update( sql );
+            
+            return true;
+        }
+        catch ( Exception ex )
+        {
+            log.warn( "Could not refresh materialized view: " + sqlView.getViewName(), ex );
+            
+            return false;
+        }
+    }
 }

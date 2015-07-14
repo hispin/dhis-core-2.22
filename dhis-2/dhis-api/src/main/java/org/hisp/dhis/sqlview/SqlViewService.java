@@ -135,5 +135,19 @@ public interface SqlViewService
      */
     Set<String> getVariables( String sql );
     
+    /**
+     * Tests whether the given SQL view syntax is valid.
+     * 
+     * @param sql the SQL view.
+     * @return null if valid, a non-null descriptive string if invalid.
+     */
     String testSqlGrammar( String sql );
+    
+    /**
+     * Refreshes the materialized view.
+     * 
+     * @param sqlView the SQL view.
+     * @return true if the materialized view was refreshed, false if not.
+     */
+    boolean refreshMaterializedView( SqlView sqlView );
 }

@@ -63,8 +63,20 @@ public class DefaultSqlViewService
     }
 
     // -------------------------------------------------------------------------
-    // Implement methods
+    // CRUD methods
     // -------------------------------------------------------------------------
+
+    @Override
+    public int saveSqlView( SqlView sqlView )
+    {
+        return sqlViewStore.save( sqlView );
+    }
+
+    @Override
+    public void updateSqlView( SqlView sqlView )
+    {
+        sqlViewStore.update( sqlView );
+    }
 
     @Override
     public void deleteSqlView( SqlView sqlView )
@@ -108,18 +120,6 @@ public class DefaultSqlViewService
     }
 
     @Override
-    public int saveSqlView( SqlView sqlView )
-    {
-        return sqlViewStore.save( sqlView );
-    }
-
-    @Override
-    public void updateSqlView( SqlView sqlView )
-    {
-        sqlViewStore.update( sqlView );
-    }
-
-    @Override
     public int getSqlViewCount()
     {
         return sqlViewStore.getCount();
@@ -144,7 +144,7 @@ public class DefaultSqlViewService
     }
     
     // -------------------------------------------------------------------------
-    // SqlView expanded
+    // Service methods
     // -------------------------------------------------------------------------
 
     @Override
@@ -289,5 +289,16 @@ public class DefaultSqlViewService
     public void dropViewTable( SqlView sqlView )
     {
         sqlViewStore.dropViewTable( sqlView );
+    }
+
+    @Override
+    public boolean refreshMaterializedView( SqlView sqlView )
+    {
+        if ( sqlView == null || !sqlView.isMaterializedView() )
+        {
+            return false;
+        }
+        
+        return sqlViewStore.refreshMaterializedView( sqlView );
     }
 }
