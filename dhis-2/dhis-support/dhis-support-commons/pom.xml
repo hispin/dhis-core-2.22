@@ -35,10 +35,6 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-jexl</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.scijava</groupId>
-      <artifactId>jep</artifactId>
-    </dependency>
   </dependencies>
 
   <properties>

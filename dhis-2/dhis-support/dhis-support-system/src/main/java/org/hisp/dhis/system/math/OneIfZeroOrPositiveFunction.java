@@ -1,4 +1,4 @@
-package org.hisp.dhis.commons.math;
+package org.hisp.dhis.system.math;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,17 +29,17 @@ package org.hisp.dhis.commons.math;
  */
 
 /**
- * JEP function which returns the value if the argument is a zero or positive 
- * number, 0 otherwise.
+ * JEP function which returns 1 if the argument is a zero or positive number, 0
+ * otherwise.
  * 
  * @author Lars Helge Overland
  */
-public class ZeroIfNegativeFunction
+public class OneIfZeroOrPositiveFunction
     extends UnaryDoubleFunction
 {
-    public static final String NAME = "zing";
-    
-    public ZeroIfNegativeFunction()
+    public static final String NAME = "oizp";
+
+    public OneIfZeroOrPositiveFunction()
     {
         super();
     }
@@ -47,6 +47,6 @@ public class ZeroIfNegativeFunction
     @Override
     public Double eval( double arg )
     {
-        return Math.max( 0d, arg );
+        return ( arg >= 0d ) ? 1d : 0d;
     }
 }
