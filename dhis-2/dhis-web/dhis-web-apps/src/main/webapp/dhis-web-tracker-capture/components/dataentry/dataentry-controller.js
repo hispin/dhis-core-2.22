@@ -1119,18 +1119,18 @@ trackerCapture.controller('DataEntryController',
         newEvent.status = newEvent.eventDate ? 'ACTIVE' : 'SCHEDULE';
 
         newEvents.events.push(newEvent);
-        DHIS2EventFactory.create(newEvents).then(function (data) {
-            if (data.importSummaries[0].status === 'ERROR') {
+        DHIS2EventFactory.create(newEvents).then(function (response) {
+            if (response.response && response.response.importSummaries[0].status === 'SUCCESS') {
+                newEvent.event = response.response.importSummaries[0].reference;
+                $modalInstance.close(newEvent);
+            }
+            else {                
                 var dialogOptions = {
                     headerText: 'event_creation_error',
-                    bodyText: data.importSummaries[0].description
+                    bodyText: response.message
                 };
 
                 DialogService.showDialog({}, dialogOptions);
-            }
-            else {
-                newEvent.event = data.importSummaries[0].reference;
-                $modalInstance.close(newEvent);
             }
         });
 

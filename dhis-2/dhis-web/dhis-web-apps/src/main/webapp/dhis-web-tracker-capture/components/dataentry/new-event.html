@@ -26,6 +26,8 @@
                            placeholder="{{dhis2CalendarFormat.keyDateFormat}}" 
                            ng-rquired="false" 
                            d2-date
+                           max-date="0"
+                           min-date=""
                            ng-model="dhis2Event.eventDate">
                     <span ng-if="eventDateInvalid" class="error">{{'required'| translate}}</span>
                 </div>
