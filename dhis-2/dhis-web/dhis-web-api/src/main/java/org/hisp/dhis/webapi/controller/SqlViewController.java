@@ -228,4 +228,27 @@ public class SqlViewController
             webMessageService.send( WebMessageUtils.created( "SQL view created" ), response, request );
         }
     }
+    
+    @RequestMapping( value = "/{uid}/refresh", method = RequestMethod.POST )
+    public void refreshMaterializedView( @PathVariable( "uid" ) String uid,
+        HttpServletResponse response, HttpServletRequest request ) throws WebMessageException    
+    {
+        SqlView sqlView = sqlViewService.getSqlViewByUid( uid );
+
+        if ( sqlView == null )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "SQL view not found" ) );
+        }
+
+        boolean result = sqlViewService.refreshMaterializedView( sqlView );
+        
+        if ( !result )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "View could not be refreshed" ) );
+        }
+        else
+        {
+            webMessageService.send( WebMessageUtils.ok( "Materalized view refreshed" ), response, request );
+        }
+    }
 }

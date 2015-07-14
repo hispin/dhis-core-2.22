@@ -66,6 +66,21 @@ function runSqlViewQuery( context ) {
   );
 }
 
+function refreshMaterializedView( context ) {
+	var url = '../api/sqlViews/' + context.uid + '/refresh';
+	
+	$.ajax({
+      type: 'post',
+      url: url,
+      success: function() {
+    	  setHeaderDelayMessage( 'Materialized SQL view refreshed' );
+      },
+      error: function() {
+    	  setHeaderDelayMessage( 'Materialized SQL could not be refreshed' );
+      }
+	});
+}
+
 function showUpdateSqlViewForm(context) {
   location.href = 'showUpdateSqlViewForm.action?id=' + context.id;
 }

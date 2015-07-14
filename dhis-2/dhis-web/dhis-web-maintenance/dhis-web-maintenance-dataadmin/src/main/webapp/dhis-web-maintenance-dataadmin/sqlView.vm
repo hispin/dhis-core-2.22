@@ -21,6 +21,7 @@
   <ul id="contextMenuItems" class="contextMenuItems">
     <li data-enabled="canManage"><a data-target-fn="showSharingDialogWithContext"><i class="fa fa-share"></i>&nbsp;&nbsp;$i18n.getString( "sharing_settings" )</a></li>
     <li data-enabled="canRun"><a data-target-fn="runSqlViewQuery"><i class="fa fa-caret-square-o-right"></i>&nbsp;&nbsp;$i18n.getString( "run" )</a></li>
+    <li data-enabled="canRefresh"><a data-target-fn="refreshMaterializedView"><i class="fa fa-refresh"></i>&nbsp;&nbsp;$i18n.getString( "refresh" )</a></li>
     <li><a data-target-fn="showDataSqlViewForm"><i class="fa fa-table"></i>&nbsp;&nbsp;$i18n.getString( "show_sql_view" )</a></li>
     <li data-enabled="canUpdate"><a data-target-fn="showUpdateSqlViewForm"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "edit" )</a></li>
     <li data-enabled="canDelete"><a data-target-fn="removeSqlViewObject"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;$i18n.getString( "remove" )</a></li>
@@ -47,10 +48,12 @@
 				<tbody id="list">
 					#foreach( $sqlViewObject in $sqlViewObjectList )
 					#set( $canRun = $sqlViewObject.query == false )
+					#set( $canRefresh = $sqlViewObject.materializedView == true )					
 					<tr id="tr${sqlViewObject.id}">
                     <td data-id="$!sqlViewObject.id" data-uid="$!sqlViewObject.uid" data-type="SqlView" data-name="$encoder.htmlEncode( $!sqlViewObject.displayName )"
                       data-can-manage="$security.canManage( $sqlViewObject )"
                       data-can-run="$canRun"
+                      data-can-refresh="$canRefresh"
                       data-can-update="$security.canUpdate( $sqlViewObject )"
                       data-can-delete="$security.canDelete( $sqlViewObject )">
                       $encoder.htmlEncode( $!sqlViewObject.displayName )
