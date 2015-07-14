@@ -127,10 +127,12 @@ public class CodecUtils
      * 
      * @param username the username to use for authentication.
      * @param password the password to use for authentication.
-     * @return the 
+     * @return the encoded string.
      */
     public static String getBasicAuthString( String username, String password )
-    {        
+    {
+        //TODO replace with Java 8 Base64
+        
         String string = username + ":" + password;
         
         return "Basic " + Base64.encodeBase64String( string.getBytes() );

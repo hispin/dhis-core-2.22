@@ -1,4 +1,4 @@
-package org.hisp.dhis.commons.math;
+package org.hisp.dhis.system.math;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,40 +28,45 @@ package org.hisp.dhis.commons.math;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public class ExpressionFunctions
-{
-    public static final String NAMESPACE = "d2";
-    
-    /**
-     * Function which will return zero if the argument is a negative number.
-     * 
-     * @param value the value, must be a number.
-     * @return a Double.
-     */
-    public static Double zing( Number value )
-    {
-        if ( value == null )
-        {
-            throw new IllegalArgumentException( "Argument is null: " + value );
-        }
-        
-        return Math.max( 0d, value.doubleValue() );
-    }
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.function.PostfixMathCommand;
 
-    /**
-     * Function which will return one if the argument is zero or a positive 
-     * number, and zero if not.
-     * 
-     * @param value the value, must be a number.
-     * @return a Double.
-     */
-    public static Double oizp( Number value )
+import java.util.Stack;
+
+/**
+ * Abstract JEP function for a single, numerical argument.
+ * 
+ * @author Lars Helge Overland
+ */
+public abstract class UnaryDoubleFunction
+    extends PostfixMathCommand
+{
+    public UnaryDoubleFunction()
     {
-        if ( value == null )
+        super();
+
+        numberOfParameters = 1;
+    }
+    
+    @Override
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
+    public void run( Stack inStack ) throws ParseException 
+    {
+        checkStack( inStack );
+        
+        Object param = inStack.pop();
+        
+        if ( param == null || !( param instanceof Double ) )
         {
-            throw new IllegalArgumentException( "Argument is null: " + value );
+            throw new ParseException( "Invalid parameter type, must be double: " + param );
         }
         
-        return ( value.doubleValue() >= 0d ) ? 1d : 0d;
+        double arg = ( (Double) param ).doubleValue();
+        
+        Double result = eval( arg );
+        
+        inStack.push( result );
     }
+    
+    public abstract Double eval( double arg );
 }

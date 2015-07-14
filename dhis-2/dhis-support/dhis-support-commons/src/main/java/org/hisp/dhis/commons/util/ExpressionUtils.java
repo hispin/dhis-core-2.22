@@ -33,7 +33,6 @@ import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.JexlException;
 import org.apache.commons.jexl2.MapContext;
-import org.hisp.dhis.commons.math.ExpressionFunctions;
 
 import java.util.HashMap;
 import java.util.Map;
