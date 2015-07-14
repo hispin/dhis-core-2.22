@@ -7,27 +7,32 @@ d2Directives.directive('d2NumberValidator', function() {
             
             function setValidity(numberType, isRequired){
                 if(numberType === 'number'){
-                    ngModel.$validators.number = function(value) { 
+                    ngModel.$validators.number = function(value) {
+                    	value = value === 0 ? value.toString(): value; 
                         return value === 'null' || !value ? !isRequired : dhis2.validation.isNumber(value);
                     };
                 }
                 else if(numberType === 'posInt'){
-                    ngModel.$validators.posInt = function(value) { 
+                    ngModel.$validators.posInt = function(value) {
+                    	value = value === 0 ? value.toString(): value; 
                         return value === 'null' || !value ? !isRequired : dhis2.validation.isPositiveInt(value);
                     };
                 }
                 else if(numberType === 'negInt'){
                     ngModel.$validators.negInt = function(value) {
+                    	value = value === 0 ? value.toString(): value;
                         return value === 'null' || !value ? !isRequired : dhis2.validation.isNegativeInt(value);
                     };
                 }
                 else if(numberType === 'zeroPositiveInt'){
-                    ngModel.$validators.zeroPositiveInt = function(value) { 
+                    ngModel.$validators.zeroPositiveInt = function(value) {
+                    	value = value === 0 ? value.toString(): value; 
                         return value === 'null' || !value ? !isRequired : dhis2.validation.isZeroOrPositiveInt(value);
                     };
                 }
                 else if(numberType === 'int'){
                     ngModel.$validators.int = function(value) {
+                    	value = value === 0 ? value.toString(): value;
                         return value === 'null' || !value ? !isRequired : dhis2.validation.isInt(value);
                     };
                 }
