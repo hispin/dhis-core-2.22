@@ -38,8 +38,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.validator.routines.DoubleValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.hisp.dhis.expression.Operator;
-import org.hisp.dhis.commons.math.OneIfZeroOrPositiveFunction;
-import org.hisp.dhis.commons.math.ZeroIfNegativeFunction;
+import org.hisp.dhis.system.math.OneIfZeroOrPositiveFunction;
+import org.hisp.dhis.system.math.ZeroIfNegativeFunction;
 import org.nfunk.jep.JEP;
 
 /**
