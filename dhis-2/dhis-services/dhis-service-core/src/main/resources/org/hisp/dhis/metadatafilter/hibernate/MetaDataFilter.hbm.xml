@@ -5,7 +5,7 @@
   [<!ENTITY identifiableProperties SYSTEM "classpath://org/hisp/dhis/common/identifiableProperties.hbm">]
   >
 <hibernate-mapping>
-  <class name="org.hisp.dhis.commons.filter.MetaDataFilter" table="metadatafilter">
+  <class name="org.hisp.dhis.common.filter.MetaDataFilter" table="metadatafilter">
 
     <cache usage="read-write" />
 

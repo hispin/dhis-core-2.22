@@ -35,6 +35,8 @@ import static org.hisp.dhis.i18n.I18nUtils.getObjectsBetweenByName;
 import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.hisp.dhis.common.filter.MetaDataFilter;
+import org.hisp.dhis.common.filter.MetaDataFilterService;
 import org.hisp.dhis.i18n.I18nService;
 import org.springframework.transaction.annotation.Transactional;
 

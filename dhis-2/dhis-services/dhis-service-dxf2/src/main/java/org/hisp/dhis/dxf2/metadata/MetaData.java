@@ -57,7 +57,7 @@ import org.hisp.dhis.document.Document;
 import org.hisp.dhis.dxf2.events.event.Event;
 import org.hisp.dhis.eventchart.EventChart;
 import org.hisp.dhis.eventreport.EventReport;
-import org.hisp.dhis.commons.filter.MetaDataFilter;
+import org.hisp.dhis.common.filter.MetaDataFilter;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
