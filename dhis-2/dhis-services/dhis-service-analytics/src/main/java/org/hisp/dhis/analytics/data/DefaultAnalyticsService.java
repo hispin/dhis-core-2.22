@@ -1170,7 +1170,19 @@ public class DefaultAnalyticsService
 
         if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
         {
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORY_OPTION_COMBO, null, DISPLAY_NAME_CATEGORYOPTIONCOMBO, new ArrayList<NameableObject>() );
+            List<NameableObject> cocs = new ArrayList<NameableObject>();
+            
+            for ( String uid : items )
+            {
+                DataElementCategoryOptionCombo coc = idObjectManager.get( DataElementCategoryOptionCombo.class, uid );
+                
+                if ( coc != null )
+                {
+                    cocs.add( coc );
+                }
+            }
+            
+            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORY_OPTION_COMBO, null, DISPLAY_NAME_CATEGORYOPTIONCOMBO, cocs );
 
             return Lists.newArrayList( object );
         }
