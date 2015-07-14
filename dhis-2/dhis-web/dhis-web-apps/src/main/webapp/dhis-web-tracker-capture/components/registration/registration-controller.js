@@ -143,10 +143,9 @@ trackerCapture.controller('RegistrationController',
         }
         
         RegistrationService.registerOrUpdate($scope.tei, $scope.optionSets, $scope.attributesById).then(function(registrationResponse){
-            
-            if(registrationResponse.response && registrationResponse.response.reference && registrationResponse.response.status === 'SUCCESS'){
-                
-                $scope.tei.trackedEntityInstance = registrationResponse.response.reference;
+            var reg = registrationResponse.response && registrationResponse.response.importSummaries && registrationResponse.response.importSummaries[0] ? registrationResponse.response.importSummaries[0] : {};
+            if(reg.reference && reg.status === 'SUCCESS'){                
+                $scope.tei.trackedEntityInstance = reg.reference;
                 
                 if( $scope.registrationMode === 'PROFILE' ){                    
                     reloadProfileWidget();
@@ -163,9 +162,9 @@ trackerCapture.controller('RegistrationController',
                         enrollment.dateOfIncident = $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident;
 
                         EnrollmentService.enroll(enrollment).then(function(enrollmentResponse){
-                            var r = enrollmentResponse.response && enrollmentResponse.response.importSummaries && enrollmentResponse.response.importSummaries[0] ? enrollmentResponse.response.importSummaries[0] : {};
-                            if(r.reference && r.status === 'SUCCESS'){                                
-                                enrollment.enrollment = r.reference;
+                            var en = enrollmentResponse.response && enrollmentResponse.response.importSummaries && enrollmentResponse.response.importSummaries[0] ? enrollmentResponse.response.importSummaries[0] : {};
+                            if(en.reference && en.status === 'SUCCESS'){                                
+                                enrollment.enrollment = en.reference;
                                 $scope.selectedEnrollment = enrollment;                                                                
                                 var dhis2Events = EventUtils.autoGenerateEvents($scope.tei.trackedEntityInstance, $scope.selectedProgram, $scope.selectedOrgUnit, enrollment);
                                 if(dhis2Events.events.length > 0){
