@@ -104,10 +104,10 @@ trackerCapture.controller('RelationshipController',
             if( index !== -1 ){
                 $scope.selectedTei.relationships.splice(index,1);
                 TEIService.update($scope.selectedTei, $scope.optionSets, $scope.attributesById).then(function(response){
-                    if(response.status !== 'SUCCESS'){//update has failed
+                    if(response.response && response.response.status !== 'SUCCESS'){//update has failed
                         var dialogOptions = {
                                 headerText: 'update_error',
-                                bodyText: response.description
+                                bodyText: response.message
                             };
                         DialogService.showDialog({}, dialogOptions);
                         return;
@@ -518,10 +518,10 @@ trackerCapture.controller('RelationshipController',
             tei.relationships.push(relationship);
             
             TEIService.update(tei, $scope.optionSets, $scope.attributesById).then(function(response){
-                if(response.status !== 'SUCCESS'){//update has failed
+                if(response.response && response.response.status !== 'SUCCESS'){//update has failed
                     var dialogOptions = {
                             headerText: 'relationship_error',
-                            bodyText: response.description
+                            bodyText: response.message
                         };
                     DialogService.showDialog({}, dialogOptions);
                     return;
@@ -632,12 +632,10 @@ trackerCapture.controller('RelationshipController',
         $scope.tei = {trackedEntity: selectedTrackedEntity, orgUnit: $scope.selectedOrgUnit.id, attributes: registrationAttributes };   
         var teiId = '';
 
-        TEIService.register($scope.tei, $scope.optionSets, $scope.attributesById).then(function(tei){
-            
-            if(tei.status === 'SUCCESS'){
-                
-                teiId = tei.reference;
-                
+        TEIService.register($scope.tei, $scope.optionSets, $scope.attributesById).then(function(registrationResponse){            
+            var reg = registrationResponse.response && registrationResponse.response.importSummaries && registrationResponse.response.importSummaries[0] ? registrationResponse.response.importSummaries[0] : {};
+            if(reg.reference && reg.status === 'SUCCESS'){                
+                teiId = reg.reference;                
                 //registration is successful and check for enrollment
                 if($scope.selectedProgramForRelative){    
                     //enroll TEI
@@ -647,12 +645,13 @@ trackerCapture.controller('RelationshipController',
                                 dateOfEnrollment: DateUtils.formatFromUserToApi($scope.enrollment.enrollmentDate),
                                 dateOfIncident: $scope.enrollment.incidentDate === '' ? DateUtils.formatFromUserToApi($scope.enrollment.enrollmentDate) : DateUtils.formatFromUserToApi($scope.enrollment.incidentDate)
                             };
-                    EnrollmentService.enroll(enrollment).then(function(data){
-                        if(data.status !== 'SUCCESS'){
+                    EnrollmentService.enroll(enrollment).then(function(enrollmentResponse){
+                        var en = enrollmentResponse.response && enrollmentResponse.response.importSummaries && enrollmentResponse.response.importSummaries[0] ? enrollmentResponse.response.importSummaries[0] : {};
+                        if(en.reference && en.status === 'SUCCESS'){
                             //enrollment has failed
                             var dialogOptions = {
                                     headerText: 'enrollment_error',
-                                    bodyText: data.description
+                                    bodyText: enrollmentResponse.message
                                 };
                             DialogService.showDialog({}, dialogOptions);
                             return;
@@ -664,7 +663,7 @@ trackerCapture.controller('RelationshipController',
                 //registration has failed
                 var dialogOptions = {
                         headerText: 'registration_error',
-                        bodyText: tei.description
+                        bodyText: registrationResponse.message
                     };
                 DialogService.showDialog({}, dialogOptions);
                 return;
