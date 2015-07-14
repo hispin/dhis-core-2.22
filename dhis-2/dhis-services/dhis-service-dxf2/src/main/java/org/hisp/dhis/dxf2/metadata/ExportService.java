@@ -31,7 +31,7 @@ package org.hisp.dhis.dxf2.metadata;
 import net.sf.json.JSONObject;
 import org.hisp.dhis.dxf2.common.FilterOptions;
 import org.hisp.dhis.dxf2.common.Options;
-import org.hisp.dhis.commons.filter.MetaDataFilter;
+import org.hisp.dhis.common.filter.MetaDataFilter;
 import org.hisp.dhis.scheduling.TaskId;
 
 import java.io.IOException;

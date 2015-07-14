@@ -31,7 +31,7 @@ package org.hisp.dhis.webapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.json.JSONObject;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.commons.filter.MetaDataFilter;
+import org.hisp.dhis.common.filter.MetaDataFilter;
 import org.hisp.dhis.dxf2.common.FilterOptions;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
