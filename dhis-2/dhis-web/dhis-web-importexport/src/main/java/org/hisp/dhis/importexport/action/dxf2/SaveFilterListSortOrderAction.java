@@ -29,8 +29,8 @@ package org.hisp.dhis.importexport.action.dxf2;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.hisp.dhis.commons.filter.MetaDataFilter;
-import org.hisp.dhis.commons.filter.MetaDataFilterService;
+import org.hisp.dhis.common.filter.MetaDataFilter;
+import org.hisp.dhis.common.filter.MetaDataFilterService;
 
 import java.util.List;
 

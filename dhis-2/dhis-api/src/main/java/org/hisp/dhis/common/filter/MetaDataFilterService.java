@@ -1,4 +1,4 @@
-package org.hisp.dhis.commons.filter;
+package org.hisp.dhis.common.filter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo

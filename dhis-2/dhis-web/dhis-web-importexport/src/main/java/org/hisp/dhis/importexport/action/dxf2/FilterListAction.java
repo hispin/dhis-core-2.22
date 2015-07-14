@@ -29,8 +29,8 @@ package org.hisp.dhis.importexport.action.dxf2;
  */
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.commons.filter.MetaDataFilter;
-import org.hisp.dhis.commons.filter.MetaDataFilterService;
+import org.hisp.dhis.common.filter.MetaDataFilter;
+import org.hisp.dhis.common.filter.MetaDataFilterService;
 import org.hisp.dhis.paging.ActionPagingSupport;
 
 import java.util.ArrayList;
