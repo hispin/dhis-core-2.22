@@ -28,6 +28,7 @@ package org.hisp.dhis.resourcetable.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_TITLE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE;
 
 import java.util.Date;
@@ -40,6 +41,7 @@ import org.hisp.dhis.system.notification.NotificationLevel;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.commons.util.Clock;
 import org.hisp.dhis.commons.util.DebugUtils;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -88,11 +90,14 @@ public class ResourceTableTask
         }
         catch ( RuntimeException ex )
         {
+            String appTitle = (String) systemSettingManager.getSystemSetting( KEY_APPLICATION_TITLE, TextUtils.EMPTY );
+            
             notifier.notify( taskId, NotificationLevel.ERROR, "Process failed: " + ex.getMessage(), true );
             
             messageService.sendSystemNotification( 
                 "Resource table process failed",
                 "Resource table process failed, please check the logs. Time: " + new DateTime().toString() + ". " +
+                "Application title: " + appTitle + " " +
                 "Message: " + ex.getMessage() + " " +
                 "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
             
