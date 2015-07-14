@@ -1,4 +1,4 @@
-package org.hisp.dhis.oauth2.hibernate;
+package org.hisp.dhis.security.oauth2;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,21 +28,67 @@ package org.hisp.dhis.oauth2.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hibernate.criterion.Restrictions;
-import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
-import org.hisp.dhis.oauth2.OAuth2Client;
-import org.hisp.dhis.oauth2.OAuth2ClientStore;
+import org.hisp.dhis.DhisSpringTest;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class HibernateOAuth2ClientStore
-    extends HibernateIdentifiableObjectStore<OAuth2Client>
-    implements OAuth2ClientStore
+public class OAuth2ClientStoreTest
+    extends DhisSpringTest
 {
+    @Autowired
+    private OAuth2ClientStore oAuth2ClientStore;
+
+    private OAuth2Client clientA;
+
+    private OAuth2Client clientB;
+
+    private OAuth2Client clientC;
+
     @Override
-    public OAuth2Client getByClientId( String cid )
+    public void setUpTest()
     {
-        return (OAuth2Client) getCriteria().add( Restrictions.eq( "cid", cid ) ).uniqueResult();
+        clientA = new OAuth2Client();
+        clientA.setName( "clientA" );
+        clientA.setCid( "clientA" );
+
+        clientB = new OAuth2Client();
+        clientB.setName( "clientB" );
+        clientB.setCid( "clientB" );
+
+        clientC = new OAuth2Client();
+        clientC.setName( "clientC" );
+        clientC.setCid( "clientC" );
+    }
+
+    @Test
+    public void testGetAll()
+    {
+        oAuth2ClientStore.save( clientA );
+        oAuth2ClientStore.save( clientB );
+        oAuth2ClientStore.save( clientC );
+
+        Collection<OAuth2Client> all = oAuth2ClientStore.getAll();
+
+        assertEquals( 3, all.size() );
+    }
+
+    @Test
+    public void testGetByClientID()
+    {
+        oAuth2ClientStore.save( clientA );
+        oAuth2ClientStore.save( clientB );
+        oAuth2ClientStore.save( clientC );
+
+        assertNotNull( oAuth2ClientStore.getByClientId( "clientA" ) );
+        assertNotNull( oAuth2ClientStore.getByClientId( "clientB" ) );
+        assertNotNull( oAuth2ClientStore.getByClientId( "clientC" ) );
     }
 }

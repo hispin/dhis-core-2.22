@@ -28,7 +28,7 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.acl.AccessStringHelper;
+import org.hisp.dhis.security.acl.AccessStringHelper;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

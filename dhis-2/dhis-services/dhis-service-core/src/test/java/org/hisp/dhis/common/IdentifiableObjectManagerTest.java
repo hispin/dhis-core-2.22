@@ -42,7 +42,7 @@ import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.DhisSpringTest;
-import org.hisp.dhis.acl.AccessStringHelper;
+import org.hisp.dhis.security.acl.AccessStringHelper;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementService;

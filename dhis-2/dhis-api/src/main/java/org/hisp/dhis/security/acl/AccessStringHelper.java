@@ -1,4 +1,4 @@
-package org.hisp.dhis.acl;
+package org.hisp.dhis.security.acl;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo

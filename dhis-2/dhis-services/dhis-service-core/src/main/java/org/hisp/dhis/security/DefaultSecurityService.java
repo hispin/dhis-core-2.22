@@ -30,7 +30,7 @@ package org.hisp.dhis.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.acl.AclService;
+import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.i18n.I18n;

@@ -1,4 +1,4 @@
-package org.hisp.dhis.schema;
+package org.hisp.dhis.security;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo

@@ -1,4 +1,4 @@
-package org.hisp.dhis.oauth2;
+package org.hisp.dhis.security.oauth2;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,24 +28,67 @@ package org.hisp.dhis.oauth2;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface OAuth2ClientService
+@Transactional
+public class DefaultOAuth2ClientService implements OAuth2ClientService
 {
-    void saveOAuth2Client( OAuth2Client oAuth2Client );
+    // -------------------------------------------------------------------------
+    // Dependencies
+    // -------------------------------------------------------------------------
 
-    void updateOAuth2Client( OAuth2Client oAuth2Client );
+    @Autowired
+    private OAuth2ClientStore oAuth2ClientStore;
 
-    void deleteOAuth2Client( OAuth2Client oAuth2Client );
+    // -------------------------------------------------------------------------
+    // OAuth2ClientService
+    // -------------------------------------------------------------------------
 
-    OAuth2Client getOAuth2Client( int id );
+    @Override
+    public void saveOAuth2Client( OAuth2Client oAuth2Client )
+    {
+        oAuth2ClientStore.save( oAuth2Client );
+    }
 
-    OAuth2Client getOAuth2Client( String uid );
+    @Override
+    public void updateOAuth2Client( OAuth2Client oAuth2Client )
+    {
+        oAuth2ClientStore.update( oAuth2Client );
+    }
 
-    OAuth2Client getOAuth2ClientByClientId( String cid );
+    @Override
+    public void deleteOAuth2Client( OAuth2Client oAuth2Client )
+    {
+        oAuth2ClientStore.delete( oAuth2Client );
+    }
 
-    Collection<OAuth2Client> getOAuth2Clients();
+    @Override
+    public OAuth2Client getOAuth2Client( int id )
+    {
+        return oAuth2ClientStore.get( id );
+    }
+
+    @Override
+    public OAuth2Client getOAuth2Client( String uid )
+    {
+        return oAuth2ClientStore.getByUid( uid );
+    }
+
+    @Override
+    public OAuth2Client getOAuth2ClientByClientId( String cid )
+    {
+        return oAuth2ClientStore.getByClientId( cid );
+    }
+
+    @Override
+    public Collection<OAuth2Client> getOAuth2Clients()
+    {
+        return oAuth2ClientStore.getAll();
+    }
 }
