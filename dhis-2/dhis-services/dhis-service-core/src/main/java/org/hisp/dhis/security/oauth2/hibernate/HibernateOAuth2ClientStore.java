@@ -1,4 +1,4 @@
-package org.hisp.dhis.common.adapter;
+package org.hisp.dhis.security.oauth2.hibernate;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,34 +28,21 @@ package org.hisp.dhis.common.adapter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.mapping.MapView;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.util.UUID;
+import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.security.oauth2.OAuth2Client;
+import org.hisp.dhis.security.oauth2.OAuth2ClientStore;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class MapViewXmlAdapter extends XmlAdapter<BaseIdentifiableObject, MapView>
+public class HibernateOAuth2ClientStore
+    extends HibernateIdentifiableObjectStore<OAuth2Client>
+    implements OAuth2ClientStore
 {
-    private BaseIdentifiableObjectXmlAdapter baseIdentifiableObjectXmlAdapter = new BaseIdentifiableObjectXmlAdapter();
-
     @Override
-    public MapView unmarshal( BaseIdentifiableObject identifiableObject ) throws Exception
+    public OAuth2Client getByClientId( String cid )
     {
-        MapView mapView = new MapView();
-
-        mapView.setUid( identifiableObject.getUid() );
-        mapView.setLastUpdated( identifiableObject.getLastUpdated() );
-        mapView.setName( identifiableObject.getName() == null ? UUID.randomUUID().toString() : identifiableObject.getName() );
-
-        return mapView;
-    }
-
-    @Override
-    public BaseIdentifiableObject marshal( MapView mapView ) throws Exception
-    {
-        return baseIdentifiableObjectXmlAdapter.marshal( mapView );
+        return (OAuth2Client) getCriteria().add( Restrictions.eq( "cid", cid ) ).uniqueResult();
     }
 }

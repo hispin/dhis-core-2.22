@@ -31,7 +31,7 @@ package org.hisp.dhis.webapi.controller.user;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import org.hisp.dhis.acl.AclService;
+import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.view.DetailedView;

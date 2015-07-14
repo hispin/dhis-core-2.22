@@ -1,4 +1,4 @@
-package org.hisp.dhis.oauth2;
+package org.hisp.dhis.security.oauth2;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo

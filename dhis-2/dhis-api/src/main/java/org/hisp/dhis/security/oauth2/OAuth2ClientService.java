@@ -1,4 +1,4 @@
-package org.hisp.dhis.oauth2;
+package org.hisp.dhis.security.oauth2;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,16 +28,24 @@ package org.hisp.dhis.oauth2;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.system.deletion.DeletionHandler;
+import java.util.Collection;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class OAuth2ClientDeletionHandler extends DeletionHandler
+public interface OAuth2ClientService
 {
-    @Override
-    protected String getClassName()
-    {
-        return OAuth2Client.class.getName();
-    }
+    void saveOAuth2Client( OAuth2Client oAuth2Client );
+
+    void updateOAuth2Client( OAuth2Client oAuth2Client );
+
+    void deleteOAuth2Client( OAuth2Client oAuth2Client );
+
+    OAuth2Client getOAuth2Client( int id );
+
+    OAuth2Client getOAuth2Client( String uid );
+
+    OAuth2Client getOAuth2ClientByClientId( String cid );
+
+    Collection<OAuth2Client> getOAuth2Clients();
 }

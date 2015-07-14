@@ -320,7 +320,7 @@
 
   <bean id="oAuth2ClientImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter"
     scope="prototype">
-    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.oauth2.OAuth2Client" />
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.security.oauth2.OAuth2Client" />
   </bean>
 
   <!-- ADX Service -->

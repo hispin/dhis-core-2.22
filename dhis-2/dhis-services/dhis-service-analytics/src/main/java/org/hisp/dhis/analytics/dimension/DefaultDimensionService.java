@@ -28,7 +28,7 @@ package org.hisp.dhis.analytics.dimension;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.acl.AclService;
+import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.DimensionService;
