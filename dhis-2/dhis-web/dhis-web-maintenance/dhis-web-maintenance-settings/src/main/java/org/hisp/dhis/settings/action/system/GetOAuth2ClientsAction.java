@@ -29,8 +29,8 @@ package org.hisp.dhis.settings.action.system;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.hisp.dhis.oauth2.OAuth2Client;
-import org.hisp.dhis.oauth2.OAuth2ClientService;
+import org.hisp.dhis.security.oauth2.OAuth2Client;
+import org.hisp.dhis.security.oauth2.OAuth2ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

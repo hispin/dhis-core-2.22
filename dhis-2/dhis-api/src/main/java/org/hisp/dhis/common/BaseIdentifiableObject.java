@@ -36,13 +36,12 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.apache.commons.lang3.Validate;
-import org.hisp.dhis.acl.Access;
-import org.hisp.dhis.acl.AccessStringHelper;
+import org.hisp.dhis.security.acl.Access;
+import org.hisp.dhis.security.acl.AccessStringHelper;
 import org.hisp.dhis.common.annotation.Description;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
@@ -55,7 +54,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * @author Bob Jolliffe

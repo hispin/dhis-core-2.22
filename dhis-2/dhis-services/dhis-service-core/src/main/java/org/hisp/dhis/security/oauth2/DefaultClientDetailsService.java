@@ -29,8 +29,6 @@ package org.hisp.dhis.security.oauth2;
  */
 
 import com.google.common.collect.Sets;
-import org.hisp.dhis.oauth2.OAuth2Client;
-import org.hisp.dhis.oauth2.OAuth2ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;

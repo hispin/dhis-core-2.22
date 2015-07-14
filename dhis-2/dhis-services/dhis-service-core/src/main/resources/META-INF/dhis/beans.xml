@@ -21,7 +21,7 @@
 
   <bean id="org.hisp.dhis.schema.PropertyIntrospectorService" class="org.hisp.dhis.schema.Jackson2PropertyIntrospectorService" />
 
-  <bean id="org.hisp.dhis.acl.AclService" class="org.hisp.dhis.acl.DefaultAclService" />
+  <bean id="org.hisp.dhis.security.acl.AclService" class="org.hisp.dhis.security.acl.DefaultAclService" />
 
   <bean id="org.hisp.dhis.node.NodeService" class="org.hisp.dhis.node.DefaultNodeService" />
 
@@ -757,7 +757,7 @@
   <bean id="org.hisp.dhis.user.UserGroupService" class="org.hisp.dhis.user.DefaultUserGroupService">
     <property name="userGroupStore" ref="org.hisp.dhis.user.UserGroupStore" />
     <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
-    <property name="aclService" ref="org.hisp.dhis.acl.AclService" />
+    <property name="aclService" ref="org.hisp.dhis.security.acl.AclService" />
   </bean>
 
   <bean id="org.hisp.dhis.user.UserGroupAccessService" class="org.hisp.dhis.user.DefaultUserGroupAccessService">
@@ -847,15 +847,15 @@
     <property name="legendSetStore" ref="org.hisp.dhis.legend.LegendSetStore" />
   </bean>
 
-  <bean id="org.hisp.dhis.oauth2.OAuth2ClientStore" class="org.hisp.dhis.oauth2.hibernate.HibernateOAuth2ClientStore">
-    <property name="clazz" value="org.hisp.dhis.oauth2.OAuth2Client" />
+  <bean id="org.hisp.dhis.security.oauth2.OAuth2ClientStore" class="org.hisp.dhis.security.oauth2.hibernate.HibernateOAuth2ClientStore">
+    <property name="clazz" value="org.hisp.dhis.security.oauth2.OAuth2Client" />
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="cacheable" value="true" />
   </bean>
 
-  <bean id="oAuth2ClientService" class="org.hisp.dhis.oauth2.DefaultOAuth2ClientService" />
+  <bean id="oAuth2ClientService" class="org.hisp.dhis.security.oauth2.DefaultOAuth2ClientService" />
 
-  <bean class="org.hisp.dhis.oauth2.OAuth2ClientDeletionHandler" />
+  <bean class="org.hisp.dhis.security.oauth2.OAuth2ClientDeletionHandler" />
 
   <bean id="org.hisp.dhis.setting.SystemSettingManager" class="org.hisp.dhis.setting.DefaultSystemSettingManager">
     <property name="systemSettingStore" ref="org.hisp.dhis.setting.SystemSettingStore" />

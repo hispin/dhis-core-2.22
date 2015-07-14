@@ -1,4 +1,4 @@
-package org.hisp.dhis.acl;
+package org.hisp.dhis.security.acl;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -30,7 +30,7 @@ package org.hisp.dhis.acl;
 
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.schema.AuthorityType;
+import org.hisp.dhis.security.AuthorityType;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.user.CurrentUserService;

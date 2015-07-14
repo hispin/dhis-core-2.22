@@ -1,4 +1,4 @@
-package org.hisp.dhis.oauth2;
+package org.hisp.dhis.security;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,67 +28,66 @@ package org.hisp.dhis.oauth2;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.DhisSpringTest;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.DxfNamespaces;
 
-import java.util.Collection;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class OAuth2ClientStoreTest
-    extends DhisSpringTest
+@JacksonXmlRootElement( localName = "authority", namespace = DxfNamespaces.DXF_2_0 )
+public class Authority
 {
-    @Autowired
-    private OAuth2ClientStore oAuth2ClientStore;
+    private AuthorityType type;
 
-    private OAuth2Client clientA;
+    private List<String> authorities;
 
-    private OAuth2Client clientB;
+    public Authority( AuthorityType type )
+    {
+        this.type = type;
+    }
 
-    private OAuth2Client clientC;
+    public Authority( AuthorityType type, List<String> authorities )
+    {
+        this( type );
+        this.authorities = authorities;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public AuthorityType getType()
+    {
+        return type;
+    }
+
+    public void setType( AuthorityType type )
+    {
+        this.type = type;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "authorities", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "authority", namespace = DxfNamespaces.DXF_2_0 )
+    public List<String> getAuthorities()
+    {
+        return authorities;
+    }
+
+    public void setAuthorities( List<String> authorities )
+    {
+        this.authorities = authorities;
+    }
 
     @Override
-    public void setUpTest()
+    public String toString()
     {
-        clientA = new OAuth2Client();
-        clientA.setName( "clientA" );
-        clientA.setCid( "clientA" );
-
-        clientB = new OAuth2Client();
-        clientB.setName( "clientB" );
-        clientB.setCid( "clientB" );
-
-        clientC = new OAuth2Client();
-        clientC.setName( "clientC" );
-        clientC.setCid( "clientC" );
-    }
-
-    @Test
-    public void testGetAll()
-    {
-        oAuth2ClientStore.save( clientA );
-        oAuth2ClientStore.save( clientB );
-        oAuth2ClientStore.save( clientC );
-
-        Collection<OAuth2Client> all = oAuth2ClientStore.getAll();
-
-        assertEquals( 3, all.size() );
-    }
-
-    @Test
-    public void testGetByClientID()
-    {
-        oAuth2ClientStore.save( clientA );
-        oAuth2ClientStore.save( clientB );
-        oAuth2ClientStore.save( clientC );
-
-        assertNotNull( oAuth2ClientStore.getByClientId( "clientA" ) );
-        assertNotNull( oAuth2ClientStore.getByClientId( "clientB" ) );
-        assertNotNull( oAuth2ClientStore.getByClientId( "clientC" ) );
+        return "Authority{" +
+            "type=" + type +
+            ", authorities=" + authorities +
+            '}';
     }
 }

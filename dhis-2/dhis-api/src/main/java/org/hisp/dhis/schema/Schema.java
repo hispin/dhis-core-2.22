@@ -40,6 +40,8 @@ import com.google.common.collect.Maps;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.security.Authority;
+import org.hisp.dhis.security.AuthorityType;
 import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
 

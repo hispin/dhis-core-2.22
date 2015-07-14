@@ -66,7 +66,7 @@ import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.mapping.Map;
 import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.minmax.MinMaxDataElement;
-import org.hisp.dhis.oauth2.OAuth2Client;
+import org.hisp.dhis.security.oauth2.OAuth2Client;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
