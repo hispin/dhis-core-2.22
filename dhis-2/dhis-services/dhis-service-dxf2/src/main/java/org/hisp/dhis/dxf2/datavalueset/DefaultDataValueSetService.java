@@ -94,6 +94,7 @@ import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.commons.collection.CachingMap;
+import org.hisp.dhis.commons.util.Clock;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -536,9 +537,9 @@ public class DefaultDataValueSetService
      */
     private ImportSummary saveDataValueSet( ImportOptions importOptions, TaskId id, DataValueSet dataValueSet )
     {
-        log.debug( "Import options: " + importOptions );
-        notifier.clear( id ).notify( id, "Process started" );
-
+        Clock clock = new Clock( log ).startClock().logTime( "Starting data value import, options: " + importOptions );
+        notifier.clear( id ).notify( id, "Process started" );        
+        
         ImportSummary summary = new ImportSummary();
 
         I18n i18n = i18nManager.getI18n();
@@ -588,7 +589,8 @@ public class DefaultDataValueSetService
         {
             notifier.notify( id, "Loading data elements and organisation units" );
             dataElementMap.putAll( identifiableObjectManager.getIdMap( DataElement.class, dataElementIdScheme ) );
-            orgUnitMap.putAll( getOrgUnitMap( orgUnitIdScheme ) );
+            orgUnitMap.putAll( getOrgUnitMap( orgUnitIdScheme ) );            
+            clock.logTime( "Preheated data element and organisation unit caches" );
         }
         
         IdentifiableObjectCallable<DataElement> dataElementCallable = new IdentifiableObjectCallable<>( 
@@ -672,8 +674,8 @@ public class DefaultDataValueSetService
 
         Date now = new Date();
 
+        clock.logTime( "Validated outer meta-data" );
         notifier.notify( id, "Importing data values" );
-        log.info( "Importing data values" );
 
         while ( dataValueSet.hasNextDataValue() )
         {
@@ -855,7 +857,7 @@ public class DefaultDataValueSetService
         summary.setDescription( "Import process completed successfully" );
 
         notifier.notify( id, INFO, "Import done", true ).addTaskSummary( id, summary );
-        log.info( "Data value import done, total: " + totalCount + ", import: " + importCount + ", update: " + updateCount );
+        clock.logTime( "Data value import done, total: " + totalCount + ", import: " + importCount + ", update: " + updateCount );
 
         dataValueSet.close();
 
