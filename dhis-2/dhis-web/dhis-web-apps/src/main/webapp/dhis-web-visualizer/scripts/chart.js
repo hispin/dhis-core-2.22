@@ -567,13 +567,14 @@ Ext.onReady(function() {
 
 	// namespace
 	DV = {};
+    var NS = DV;
 
-	DV.instances = [];
-	DV.i18n = {};
-	DV.isDebug = false;
-	DV.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
+	NS.instances = [];
+	NS.i18n = {};
+	NS.isDebug = false;
+	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	DV.getCore = function(ns) {
+	NS.getCore = function(ns) {
         var init = ns.init,
             conf = {},
             api = {},
@@ -588,80 +589,79 @@ Ext.onReady(function() {
 		// conf
         (function() {
             conf.finals = {
-                ajax: {
-					path_module: '/dhis-web-visualizer/',
-					path_api: '/api/',
-					path_commons: '/dhis-web-commons-ajax-json/',
-                    data_get: 'chartValues.json',
-                    indicator_get: 'indicatorGroups/',
-                    indicator_getall: 'indicators.json?paging=false&links=false',
-                    indicatorgroup_get: 'indicatorGroups.json?paging=false&links=false',
-                    dataelement_get: 'dataElementGroups/',
-                    dataelement_getall: 'dataElements.json?domainType=aggregate&paging=false&links=false',
-                    dataelementgroup_get: 'dataElementGroups.json?paging=false&links=false',
-                    dataset_get: 'dataSets.json?paging=false&links=false'
-                },
                 dimension: {
-                    data: {
-                        value: 'data',
-                        name: DV.i18n.data,
-                        dimensionName: 'dx',
-                        objectName: 'dx'
-                    },
-                    indicator: {
-                        value: 'indicator',
-                        name: DV.i18n.indicator,
-                        dimensionName: 'dx',
-                        objectName: 'in'
-                    },
-                    dataElement: {
-                        value: 'dataelement',
-                        name: DV.i18n.data_element,
-                        dimensionName: 'dx',
-                        objectName: 'de'
-                    },
-                    operand: {
-                        value: 'operand',
-                        name: 'Operand',
-                        dimensionName: 'dx',
-                        objectName: 'dc'
-                    },
-                    dataSet: {
-                        value: 'dataset',
-                        name: DV.i18n.dataset,
-                        dimensionName: 'dx',
-                        objectName: 'ds'
-                    },
-                    category: {
-                        name: DV.i18n.assigned_categories,
-                        dimensionName: 'co',
-                        objectName: 'co',
-                    },
-                    period: {
-                        value: 'period',
-                        name: DV.i18n.period,
-                        dimensionName: 'pe',
-                        objectName: 'pe',
-                    },
-                    fixedPeriod: {
-                        value: 'periods'
-                    },
-                    relativePeriod: {
-                        value: 'relativePeriods'
-                    },
-                    organisationUnit: {
-                        value: 'organisationUnits',
-                        name: DV.i18n.organisation_units,
-                        dimensionName: 'ou',
-                        objectName: 'ou',
-                    },
-                    dimension: {
-                        value: 'dimension'
-                        //objectName: 'di'
-                    },
-                    value: {
-                        value: 'value'
-                    }
+					data: {
+						value: 'data',
+						name: NS.i18n.data || 'Data',
+						dimensionName: 'dx',
+						objectName: 'dx'
+					},
+					category: {
+						name: NS.i18n.assigned_categories || 'Assigned categories',
+						dimensionName: 'co',
+						objectName: 'co',
+					},
+					indicator: {
+						value: 'indicators',
+						name: NS.i18n.indicators || 'Indicators',
+						dimensionName: 'dx',
+						objectName: 'in'
+					},
+					dataElement: {
+						value: 'dataElements',
+						name: NS.i18n.data_elements || 'Data elements',
+						dimensionName: 'dx',
+						objectName: 'de'
+					},
+					operand: {
+						value: 'operand',
+						name: 'Operand',
+						dimensionName: 'dx',
+						objectName: 'dc'
+					},
+					dataSet: {
+						value: 'dataSets',
+						name: NS.i18n.data_sets || 'Data sets',
+						dimensionName: 'dx',
+						objectName: 'ds'
+					},
+					eventDataItem: {
+						value: 'eventDataItem',
+						name: NS.i18n.event_data_items || 'Event data items',
+						dimensionName: 'dx',
+						objectName: 'di'
+					},
+					programIndicator: {
+						value: 'programIndicator',
+						name: NS.i18n.program_indicators || 'Program indicators',
+						dimensionName: 'dx',
+						objectName: 'pi'
+					},
+					period: {
+						value: 'period',
+						name: NS.i18n.periods || 'Periods',
+						dimensionName: 'pe',
+						objectName: 'pe'
+					},
+					fixedPeriod: {
+						value: 'periods'
+					},
+					relativePeriod: {
+						value: 'relativePeriods'
+					},
+					organisationUnit: {
+						value: 'organisationUnits',
+						name: NS.i18n.organisation_units || 'Organisation units',
+						dimensionName: 'ou',
+						objectName: 'ou'
+					},
+					dimension: {
+						value: 'dimension'
+						//objectName: 'di'
+					},
+					value: {
+						value: 'value'
+					}
                 },
                 chart: {
                     series: 'series',
@@ -712,17 +712,17 @@ Ext.onReady(function() {
 
 			conf.period = {
 				periodTypes: [
-					{id: 'Daily', name: DV.i18n.daily},
-					{id: 'Weekly', name: DV.i18n.weekly},
-					{id: 'Monthly', name: DV.i18n.monthly},
-					{id: 'BiMonthly', name: DV.i18n.bimonthly},
-					{id: 'Quarterly', name: DV.i18n.quarterly},
-					{id: 'SixMonthly', name: DV.i18n.sixmonthly},
-					{id: 'SixMonthlyApril', name: DV.i18n.sixmonthly_april},
-					{id: 'Yearly', name: DV.i18n.yearly},
-					{id: 'FinancialOct', name: DV.i18n.financial_oct},
-					{id: 'FinancialJuly', name: DV.i18n.financial_july},
-					{id: 'FinancialApril', name: DV.i18n.financial_april}
+					{id: 'Daily', name: NS.i18n.daily},
+					{id: 'Weekly', name: NS.i18n.weekly},
+					{id: 'Monthly', name: NS.i18n.monthly},
+					{id: 'BiMonthly', name: NS.i18n.bimonthly},
+					{id: 'Quarterly', name: NS.i18n.quarterly},
+					{id: 'SixMonthly', name: NS.i18n.sixmonthly},
+					{id: 'SixMonthlyApril', name: NS.i18n.sixmonthly_april},
+					{id: 'Yearly', name: NS.i18n.yearly},
+					{id: 'FinancialOct', name: NS.i18n.financial_oct},
+					{id: 'FinancialJuly', name: NS.i18n.financial_july},
+					{id: 'FinancialApril', name: NS.i18n.financial_april}
 				]
 			};
 
@@ -731,11 +731,14 @@ Ext.onReady(function() {
                 west_fieldset_width: 418,
                 west_width_padding: 2,
                 west_fill: 2,
-                west_fill_accordion_indicator: 56,
-                west_fill_accordion_dataelement: 59,
-                west_fill_accordion_dataset: 31,
+				west_fill_accordion_indicator: 81,
+				west_fill_accordion_dataelement: 81,
+				west_fill_accordion_dataset: 56,
+                west_fill_accordion_eventdataitem: 81,
+                west_fill_accordion_programindicator: 81,
                 west_fill_accordion_period: 303,
                 west_fill_accordion_organisationunit: 58,
+                west_fill_accordion_group: 31,
                 west_maxheight_accordion_indicator: 350,
                 west_maxheight_accordion_dataelement: 350,
                 west_maxheight_accordion_dataset: 350,
@@ -1059,19 +1062,19 @@ Ext.onReady(function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(DV.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter.');
+								ns.alert(NS.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter.');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(DV.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter.');
+								ns.alert(NS.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter.');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(DV.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter.');
+								ns.alert(NS.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter.');
 								return;
 							}
 						}
@@ -1126,12 +1129,12 @@ Ext.onReady(function() {
 
 					// at least one dimension specified as column and row
 					if (!config.columns) {
-						ns.alert('No series items selected.');
+						ns.alert('No series items selected');
 						return;
 					}
 
 					if (!config.rows) {
-						ns.alert('No category items selected.');
+						ns.alert('No category items selected');
 						return;
 					}
 
@@ -1146,7 +1149,7 @@ Ext.onReady(function() {
 
 					// at least one period
 					if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						ns.alert('At least one period must be specified as series, category or filter.');
+						ns.alert('At least one period must be specified as series, category or filter');
 						return;
 					}
 
@@ -1199,6 +1202,11 @@ Ext.onReady(function() {
 
                     if (Ext.isString(config.displayProperty)) {
                         layout.displayProperty = config.displayProperty;
+                    }
+
+                    // TODO program
+                    if (Ext.isObject(config.program)) {
+                        layout.program = config.program;
                     }
 
                     // style
@@ -1288,7 +1296,7 @@ Ext.onReady(function() {
 					}
 
 					if (config.rows.length && config.headers.length !== config.rows[0].length) {
-						console.log('Response: headers.length !== rows[0].length');
+						console.log('api.response.Response: headers.length !== rows[0].length');
 					}
 
 					return config;
@@ -2334,24 +2342,42 @@ Ext.onReady(function() {
 			// message
 			web.message = {};
 
-			web.message.alert = function(msg, type) {
+			web.message.alert = function(obj) {
                 var config = {},
+                    type,
                     window;
 
-                if (!msg) {
+                if (!obj || (Ext.isObject(obj) && !obj.message && !obj.responseText)) {
                     return;
                 }
 
-                type = type || 'error';
+                // if response object
+                if (Ext.isObject(obj) && obj.responseText && !obj.message) {
+                    obj = Ext.decode(obj.responseText);
+                }
 
-				config.title = type === 'error' ? DV.i18n.error : (type === 'warning' ? DV.i18n.warning : DV.i18n.info);
+                // if string
+                if (Ext.isString(obj)) {
+                    obj = {
+                        status: 'ERROR',
+                        message: obj
+                    };
+                }
+
+                // web message
+                type = (obj.status || 'INFO').toLowerCase();
+
+				config.title = obj.status;
 				config.iconCls = 'ns-window-title-messagebox ' + type;
 
                 // html
-                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+                config.html = '';
+                config.html += obj.httpStatusCode ? 'Code: ' + obj.httpStatusCode + '<br>' : '';
+                config.html += obj.httpStatus ? 'Status: ' + obj.httpStatus + '<br><br>' : '';
+                config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
 
                 // bodyStyle
-                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
 
                 // destroy handler
                 config.modal = true;
@@ -2377,6 +2403,10 @@ Ext.onReady(function() {
 			web.analytics = {};
 
 			web.analytics.getParamString = function(xLayout, isSorted) {
+
+                // TODO
+                isSorted = false;
+
                 var axisDimensionNames = isSorted ? xLayout.sortedAxisDimensionNames : xLayout.axisDimensionNames,
                     filterDimensions = isSorted ? xLayout.sortedFilterDimensions : xLayout.filterDimensions,
                     dimensionNameIdsMap = isSorted ? xLayout.dimensionNameSortedIdsMap : xLayout.dimensionNameIdsMap,
@@ -2436,7 +2466,12 @@ Ext.onReady(function() {
                 // display property
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
-                return paramString;
+                // TODO program
+                if (xLayout.program && xLayout.program.id) {
+                    paramString += '&program=' + xLayout.program.id;
+                }
+
+                return paramString.replace(/#/g, '.');
             };
 
 			web.analytics.validateUrl = function(url) {
@@ -2599,7 +2634,7 @@ Ext.onReady(function() {
                             }
 
                             trendLineFields.push(regressionKey);
-                            xResponse.metaData.names[regressionKey] = DV.i18n.trend + ' (Total)';
+                            xResponse.metaData.names[regressionKey] = NS.i18n.trend + ' (Total)';
                         }
                         else {
                             for (var i = 0; i < failSafeColumnIds.length; i++) {
@@ -2616,7 +2651,7 @@ Ext.onReady(function() {
                                 }
 
                                 trendLineFields.push(regressionKey);
-                                xResponse.metaData.names[regressionKey] = DV.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
+                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
                             }
                         }
                     }
@@ -2729,7 +2764,7 @@ Ext.onReady(function() {
                         return Ext.Array.max(values);
                     };
 
-                    if (DV.isDebug) {
+                    if (NS.isDebug) {
                         console.log("data", data);
                         console.log("rangeFields", store.rangeFields);
                         console.log("domainFields", store.domainFields);
@@ -3142,7 +3177,7 @@ Ext.onReady(function() {
                         },
                         showMarkers: false,
                         title: function() {
-                            var title = (Ext.isString(xLayout.targetLineTitle) ? xLayout.targetLineTitle : DV.i18n.target) + ' (' + xLayout.targetLineValue + ')',
+                            var title = (Ext.isString(xLayout.targetLineTitle) ? xLayout.targetLineTitle : NS.i18n.target) + ' (' + xLayout.targetLineValue + ')',
                                 ls = xLayout.legendStyle;
                             return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
                         }()
@@ -3163,7 +3198,7 @@ Ext.onReady(function() {
                         },
                         showMarkers: false,
                         title: function() {
-                            var title = (Ext.isString(xLayout.baseLineTitle) ? xLayout.baseLineTitle : DV.i18n.base) + ' (' + xLayout.baseLineValue + ')',
+                            var title = (Ext.isString(xLayout.baseLineTitle) ? xLayout.baseLineTitle : NS.i18n.base) + ' (' + xLayout.baseLineValue + ')',
                                 ls = xLayout.legendStyle;
                             return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
                         }()
@@ -3986,14 +4021,13 @@ Ext.onReady(function() {
 		// alert
         ns.alert = web.message.alert;
 
-		return {
-			conf: conf,
-			api: api,
-			support: support,
-			service: service,
-			web: web,
-			init: init
-		};
+		ns.conf = conf;
+		ns.api = api;
+		ns.support = support;
+		ns.service = service;
+		ns.web = web;
+
+		return ns;
     };
 
     // PLUGIN
