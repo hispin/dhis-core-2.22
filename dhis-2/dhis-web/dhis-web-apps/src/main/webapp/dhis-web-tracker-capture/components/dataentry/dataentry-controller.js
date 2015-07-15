@@ -928,7 +928,12 @@ trackerCapture.controller('DataEntryController',
                 }, true);
 
                 $scope.eventsByStage[key] = sortedEvents;
-                $scope.eventsByStageAsc[key] = angular.copy(angular.copy(sortedEvents).reverse());
+                $scope.eventsByStageAsc[key] = [];
+                //Reverse the order of events, but keep the objects within the array.
+                //angular.copy and reverse did not work - this messed up databinding.
+                angular.forEach(sortedEvents, function(sortedEvent) {
+                    $scope.eventsByStageAsc[key].splice(0,0,sortedEvent);
+                });
 
                 var periods = PeriodService.getPeriods(sortedEvents, stage, $scope.selectedEnrollment).occupiedPeriods;
 
