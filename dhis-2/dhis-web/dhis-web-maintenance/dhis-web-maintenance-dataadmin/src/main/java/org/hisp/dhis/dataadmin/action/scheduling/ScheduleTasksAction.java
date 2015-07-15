@@ -28,24 +28,6 @@ package org.hisp.dhis.dataadmin.action.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.dxf2.synch.SynchronizationManager;
-import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.scheduling.SchedulingManager;
-import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.system.scheduling.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_ANALYTICS_ALL;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_ANALYTICS_LAST_3_YEARS;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_DATAMART_LAST_YEAR;
@@ -63,7 +45,25 @@ import static org.hisp.dhis.system.scheduling.Scheduler.CRON_DAILY_0AM;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_15MIN;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_MIN;
 import static org.hisp.dhis.system.scheduling.Scheduler.STATUS_RUNNING;
-import static org.hisp.dhis.commons.collection.CollectionUtils.emptyIfNull;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.dxf2.synch.SynchronizationManager;
+import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.scheduling.SchedulingManager;
+import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.scheduling.Scheduler;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Lars Helge Overland
@@ -314,7 +314,7 @@ public class ScheduleTasksAction
         }
         else
         {
-            Collection<String> keys = emptyIfNull( schedulingManager.getScheduledKeys() );
+            Collection<String> keys = schedulingManager.getScheduledKeys();
 
             // -----------------------------------------------------------------
             // Resource tables
