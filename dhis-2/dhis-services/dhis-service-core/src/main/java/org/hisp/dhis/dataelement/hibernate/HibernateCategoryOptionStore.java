@@ -43,6 +43,7 @@ public class HibernateCategoryOptionStore
     extends HibernateIdentifiableObjectStore<DataElementCategoryOption>
     implements CategoryOptionStore
 {
+    @Override
     @SuppressWarnings("unchecked")
     public List<DataElementCategoryOption> getCategoryOptions( DataElementCategory category )
     {

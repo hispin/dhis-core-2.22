@@ -278,6 +278,7 @@ public class JdbcEventStore
         return eventRows;
     }
 
+    @Override
     public int getEventCount( EventSearchParams params, List<OrganisationUnit> organisationUnits )
     {
         String sql = getEventSelectQuery( params, organisationUnits );

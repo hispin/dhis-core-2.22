@@ -298,6 +298,7 @@ public class EventReport
         this.endDate = endDate;
     }
 
+    @Override
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
@@ -307,11 +308,13 @@ public class EventReport
         return dataElementValueDimension;
     }
 
+    @Override
     public void setDataElementValueDimension( DataElement dataElementValueDimension )
     {
         this.dataElementValueDimension = dataElementValueDimension;
     }
 
+    @Override
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
@@ -321,6 +324,7 @@ public class EventReport
         return attributeValueDimension;
     }
 
+    @Override
     public void setAttributeValueDimension( TrackedEntityAttribute attributeValueDimension )
     {
         this.attributeValueDimension = attributeValueDimension;
@@ -459,6 +463,7 @@ public class EventReport
         this.hideNaData = hideNaData;
     }
 
+    @Override
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -472,6 +477,7 @@ public class EventReport
         this.outputType = outputType;
     }
 
+    @Override
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -541,6 +547,7 @@ public class EventReport
     // Analytical properties
     // -------------------------------------------------------------------------
 
+    @Override
     @JsonProperty
     @JsonDeserialize( as = BaseDimensionalObject.class )
     @JsonSerialize( as = BaseDimensionalObject.class )

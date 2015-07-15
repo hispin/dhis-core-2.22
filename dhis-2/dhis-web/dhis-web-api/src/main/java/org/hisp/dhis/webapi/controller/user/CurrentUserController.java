@@ -676,7 +676,7 @@ public class CurrentUserController
 
         for ( OrganisationUnit ou : userOrganisationUnits )
         {
-            Set<DataSet> dataSets = new HashSet<DataSet>( Sets.intersection( ou.getDataSets(), userDataSets ) );
+            Set<DataSet> dataSets = new HashSet<>( Sets.intersection( ou.getDataSets(), userDataSets ) );
 
             if ( dataSets.size() > 0 )
             {
@@ -698,7 +698,7 @@ public class CurrentUserController
                 formOrganisationUnit.setParent( organisationUnit.getParent().getUid() );
             }
 
-            Set<DataSet> dataSets = new HashSet<DataSet>( Sets.intersection( organisationUnit.getDataSets(), userDataSets ) );
+            Set<DataSet> dataSets = new HashSet<>( Sets.intersection( organisationUnit.getDataSets(), userDataSets ) );
             i18nService.internationalise( dataSets );
 
             for ( DataSet dataSet : dataSets )

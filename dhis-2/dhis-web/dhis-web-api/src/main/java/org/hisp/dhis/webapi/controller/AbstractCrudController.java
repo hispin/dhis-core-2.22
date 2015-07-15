@@ -35,7 +35,6 @@ import com.google.common.base.Enums;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -72,6 +71,7 @@ import org.hisp.dhis.query.QueryService;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
+import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.webapi.service.ContextService;
@@ -197,7 +197,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             options.getOptions().put( "viewClass", "sharing" );
         }
 
-        handleLinksAndAccess( options, entities, false );
+        handleLinksAndAccess( options, entities );
 
         linkService.generatePagerLinks( pager, getEntityClass() );
 
@@ -959,11 +959,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         }
     }
 
-    protected void handleLinksAndAccess( WebOptions options, List<T> entityList, boolean deepScan )
+    protected void handleLinksAndAccess( WebOptions options, List<T> entityList )
     {
         if ( options != null && options.hasLinks() )
         {
-            linkService.generateLinks( entityList, deepScan );
+            linkService.generateLinks( entityList, false );
         }
 
         if ( entityList != null && aclService.isSupported( getEntityClass() ) )

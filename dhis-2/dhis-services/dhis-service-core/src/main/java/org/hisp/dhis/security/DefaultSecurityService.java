@@ -185,6 +185,7 @@ public class DefaultSecurityService
         return null;
     }
 
+    @Override
     public String validateInvite( UserCredentials credentials )
     {
         if ( credentials == null )

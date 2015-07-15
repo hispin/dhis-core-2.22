@@ -144,6 +144,7 @@ public class TrackedEntityAttribute
         return optionSet != null;
     }
 
+    @Override
     public boolean hasLegendSet()
     {
         return legendSet != null;

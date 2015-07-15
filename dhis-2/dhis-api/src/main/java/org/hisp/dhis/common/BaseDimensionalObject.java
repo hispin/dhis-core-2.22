@@ -280,6 +280,7 @@ public class BaseDimensionalObject
         this.filter = filter;
     }
 
+    @Override
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
