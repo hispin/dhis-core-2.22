@@ -110,18 +110,6 @@ public class CollectionUtils
     }
 
     /**
-     * Returns the Collection if it is not null or a new, empty Collection otherwise.
-     *
-     * @param collection the Collection.
-     * @param <T> the type.
-     * @return the given Collection or a new, empty Collection.
-     */
-    public static <T> Collection<T> emptyIfNull( Collection<T> collection )
-    {
-        return collection != null ? collection : new HashSet<T>();
-    }
-
-    /**
      * Constructs a Map Entry (key, value). Used to construct a Map with asMap.
      *
      * @param key map entry key
