@@ -1,20 +1,21 @@
 Ext.onReady( function() {
 	var NS = DV,
 
-    LayoutWindow,
-	OptionsWindow,
-	FavoriteWindow,
-	SharingWindow,
-	InterpretationWindow,
+        LayoutWindow,
+        OptionsWindow,
+        FavoriteWindow,
+        SharingWindow,
+        InterpretationWindow,
+        AboutWindow,
 
-	extendCore,
-	createViewport,
-	dimConf,
+        extendCore,
+        createViewport,
+        dimConf,
 
-	ns = {
-		core: {},
-		app: {}
-	};
+        ns = {
+            core: {},
+            app: {}
+        };
 
 	// set app config
 	(function() {
@@ -523,7 +524,7 @@ Ext.onReady( function() {
             dimensionStore.removeAll();
 
 			if (!isAll) {
-				//colStore.add({id: dimConf.data.dimensionName, name: dimConf.data.name});
+				colStore.add({id: dimConf.data.dimensionName, name: dimConf.data.name});
 				rowStore.add({id: dimConf.period.dimensionName, name: dimConf.period.name});
 				filterStore.add({id: dimConf.organisationUnit.dimensionName, name: dimConf.organisationUnit.name});
 				dimensionStore.add({id: dimConf.category.dimensionName, name: dimConf.category.name});
@@ -2359,8 +2360,6 @@ Ext.onReady( function() {
 					config = ns.app.optionsWindow.getOptions(),
 					dx = dimConf.data.dimensionName,
 					co = dimConf.category.dimensionName,
-                    pe = dimConf.period.dimensionName,
-                    ou = dimConf.organisationUnit.dimensionName,
 					nameDimArrayMap = {};
 
                 config.type = ns.app.viewport.chartType.getChartType();
@@ -2369,7 +2368,7 @@ Ext.onReady( function() {
                 config.rows = [];
                 config.filters = [];
 
-                // Panel data
+                // panel data
                 for (var i = 0, dim, dimName; i < panels.length; i++) {
                     dim = panels[i].getDimension();
 
@@ -2377,16 +2376,6 @@ Ext.onReady( function() {
                         nameDimArrayMap[dim.dimension] = [dim];
                     }
                 }
-
-				nameDimArrayMap[dx] = Ext.Array.clean([].concat(
-					nameDimArrayMap[dimConf.indicator.objectName] || [],
-					nameDimArrayMap[dimConf.dataElement.objectName] || [],
-					nameDimArrayMap[dimConf.operand.objectName] || [],
-					nameDimArrayMap[dimConf.dataSet.objectName] || []
-				));
-
-                nameDimArrayMap[pe] = nameDimArrayMap[pe] || [];
-                nameDimArrayMap[ou] = nameDimArrayMap[ou] || [];
 
 				// columns, rows, filters
 				for (var i = 0, nameArrays = [columnDimNames, rowDimNames, filterDimNames], axes = [config.columns, config.rows, config.filters], dimNames; i < nameArrays.length; i++) {
@@ -2404,27 +2393,20 @@ Ext.onReady( function() {
 						else if (dimName === dx && nameDimArrayMap.hasOwnProperty(dimName) && nameDimArrayMap[dimName]) {
 							for (var k = 0; k < nameDimArrayMap[dx].length; k++) {
 								axes[i].push(Ext.clone(nameDimArrayMap[dx][k]));
+
+                                // TODO program
+                                if (nameDimArrayMap[dx][k].program) {
+                                    config.program = nameDimArrayMap[dx][k].program;
+                                }
 							}
 						}
 						else if (nameDimArrayMap.hasOwnProperty(dimName) && nameDimArrayMap[dimName]) {
-                            if (nameDimArrayMap[dimName].length) {
-                                for (var k = 0; k < nameDimArrayMap[dimName].length; k++) {
-                                    axes[i].push(Ext.clone(nameDimArrayMap[dimName][k]));
-                                }
-                            }
-                            else {
-                                axes[i].push({
-                                    dimension: dimName,
-                                    items: []
-                                });
-                            }
+							for (var k = 0; k < nameDimArrayMap[dimName].length; k++) {
+								axes[i].push(Ext.clone(nameDimArrayMap[dimName][k]));
+							}
 						}
 					}
 				}
-
-                config.columns = columnDimNames.length ? config.columns : null;
-                config.rows = rowDimNames.length ? config.rows : null;
-                config.filters = filterDimNames.length ? config.filters : null;
 
 				return config;
             };
@@ -2621,13 +2603,14 @@ Ext.onReady( function() {
             layout,
 
             indicatorAvailableStore,
-			indicatorSelectedStore,
             indicatorGroupStore,
 			dataElementAvailableStore,
-			dataElementSelectedStore,
 			dataElementGroupStore,
 			dataSetAvailableStore,
-			dataSetSelectedStore,
+            eventDataItemAvailableStore,
+            programIndicatorAvailableStore,
+            programStore,
+            dataSelectedStore,
 			periodTypeStore,
 			fixedPeriodAvailableStore,
 			fixedPeriodSelectedStore,
@@ -2636,7 +2619,10 @@ Ext.onReady( function() {
 			organisationUnitGroupStore,
 
             isScrolled,
-            onDataSelect,
+            onDataTypeSelect,
+            dataType,
+            dataSelected,
+            
             indicatorLabel,
             indicatorSearch,
             indicatorFilter,
@@ -2658,6 +2644,24 @@ Ext.onReady( function() {
             dataSetAvailable,
             dataSetSelected,
             dataSet,
+            onEventDataItemProgramSelect,
+            eventDataItemProgram,
+            eventDataItemLabel,
+            eventDataItemSearch,
+            eventDataItemFilter,
+            eventDataItemAvailable,
+            eventDataItemSelected,
+            eventDataItem,
+            onProgramIndicatorProgramSelect,
+            programIndicatorProgram,
+            programIndicatorLabel,
+            programIndicatorSearch,
+            programIndicatorFilter,
+            programIndicatorAvailable,
+            programIndicatorSelected,
+            programIndicator,
+            data,
+            
 			rewind,
             relativePeriodDefaults,
             relativePeriod,
@@ -2676,8 +2680,7 @@ Ext.onReady( function() {
             tool,
             toolPanel,
             organisationUnit,
-			dimensionIdAvailableStoreMap = {},
-			dimensionIdSelectedStoreMap = {},
+            dimensionPanelMap = {},
 			getDimensionPanel,
 			getDimensionPanels,
 			update,
@@ -2703,7 +2706,9 @@ Ext.onReady( function() {
             setGui,
             viewport,
 
-			accordionPanels = [];
+			accordionPanels = [],
+
+            dimConf = ns.core.conf.finals.dimension;
 
 		ns.app.stores = ns.app.stores || {};
 
@@ -2893,6 +2898,35 @@ Ext.onReady( function() {
                 this.isPending = false;
                 indicatorSearch.hideFilter();
             },
+            loadDataAndUpdate: function(data, append) {
+                this.clearFilter(); // work around
+                this.loadData(data, append);
+                this.updateFilter();
+            },
+            getRecordsByIds: function(ids) {
+                var records = [];
+
+                ids = Ext.Array.from(ids);
+
+                for (var i = 0, index; i < ids.length; i++) {
+                    index = this.findExact('id', ids[i]);
+
+                    if (index !== -1) {
+                        records.push(this.getAt(index));
+                    }
+                }
+
+                return records;
+            },
+            updateFilter: function() {
+                var selectedStoreIds = dataSelectedStore.getIds();
+
+                this.clearFilter();
+
+                this.filterBy(function(record) {
+                    return !Ext.Array.contains(selectedStoreIds, record.data.id);
+                });
+            },
             loadPage: function(uid, filter, append, noPaging, fn) {
                 var store = this,
 					params = {},
@@ -2916,7 +2950,7 @@ Ext.onReady( function() {
 				else if (uid === 0) {
 					path = '/indicators.json?fields=id,' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
 				}
-				
+
 				if (!path) {
 					return;
 				}
@@ -2928,7 +2962,7 @@ Ext.onReady( function() {
 					params.page = store.nextPage;
 					params.pageSize = 50;
 				}
-				
+
                 store.isPending = true;
                 ns.core.web.mask.show(indicatorAvailable.boundList);
 
@@ -2950,8 +2984,8 @@ Ext.onReady( function() {
             },
             loadStore: function(data, pager, append, fn) {
 				pager = pager || {};
-				
-                this.loadData(data, append);
+
+                this.loadDataAndUpdate(data, append);
                 this.sortStore();
 
                 this.lastPage = this.nextPage;
@@ -2962,7 +2996,7 @@ Ext.onReady( function() {
 
                 this.isPending = false;
 
-                ns.core.web.multiSelect.filterAvailable({store: indicatorAvailableStore}, {store: indicatorSelectedStore});
+                //ns.core.web.multiSelect.filterAvailable({store: indicatorAvailableStore}, {store: indicatorSelectedStore});
 
                 if (fn) {
 					fn();
@@ -2975,23 +3009,6 @@ Ext.onReady( function() {
 			}
 		});
 		ns.app.stores.indicatorAvailable = indicatorAvailableStore;
-
-		indicatorSelectedStore = Ext.create('Ext.data.Store', {
-			fields: ['id', 'name'],
-			data: [],
-            listeners: {
-                add: function() {
-                    onDataSelect();
-                },
-                remove: function() {
-                    onDataSelect();
-                },
-                clear: function() {
-                    onDataSelect();
-                }
-            }
-		});
-		ns.app.stores.indicatorSelected = indicatorSelectedStore;
 
 		indicatorGroupStore = Ext.create('Ext.data.Store', {
 			fields: ['id', 'name', 'index'],
@@ -3039,6 +3056,37 @@ Ext.onReady( function() {
                 this.nextPage = 1;
                 this.isPending = false;
                 dataElementSearch.hideFilter();
+            },
+            loadDataAndUpdate: function(data, append) {
+                this.clearFilter(); // work around
+                this.loadData(data, append);
+                this.updateFilter();
+            },
+            getRecordsByIds: function(ids) {
+                var records = [];
+
+                ids = Ext.Array.from(ids);
+
+                for (var i = 0, index; i < ids.length; i++) {
+                    index = this.findExact('id', ids[i]);
+
+                    if (index !== -1) {
+                        records.push(this.getAt(index));
+                    }
+                }
+
+                return records;
+            },
+            updateFilter: function() {
+                var selectedStoreIds = dataSelectedStore.getIds();
+
+                this.clearFilter();
+
+                if (selectedStoreIds.length) {
+                    this.filterBy(function(record) {
+                        return !Ext.Array.contains(selectedStoreIds, record.data.id);
+                    });
+                }
             },
             loadPage: function(uid, filter, append, noPaging, fn) {
                 uid = (Ext.isString(uid) || Ext.isNumber(uid)) ? uid : dataElementGroup.getValue();
@@ -3156,8 +3204,8 @@ Ext.onReady( function() {
 			},
             loadStore: function(data, pager, append, fn) {
 				pager = pager || {};
-				
-                this.loadData(data, append);
+
+                this.loadDataAndUpdate(data, append);
                 this.sortStore();
 
                 this.lastPage = this.nextPage;
@@ -3168,7 +3216,7 @@ Ext.onReady( function() {
 
                 this.isPending = false;
 
-				ns.core.web.multiSelect.filterAvailable({store: dataElementAvailableStore}, {store: dataElementSelectedStore});
+				//ns.core.web.multiSelect.filterAvailable({store: dataElementAvailableStore}, {store: dataElementSelectedStore});
 
                 if (fn) {
 					fn();
@@ -3179,23 +3227,6 @@ Ext.onReady( function() {
 			}
 		});
 		ns.app.stores.dataElementAvailable = dataElementAvailableStore;
-
-		dataElementSelectedStore = Ext.create('Ext.data.Store', {
-			fields: ['id', 'name'],
-			data: [],
-            listeners: {
-                add: function() {
-                    onDataSelect();
-                },
-                remove: function() {
-                    onDataSelect();
-                },
-                clear: function() {
-                    onDataSelect();
-                }
-            }
-		});
-		ns.app.stores.dataElementSelected = dataElementSelectedStore;
 
 		dataElementGroupStore = Ext.create('Ext.data.Store', {
 			fields: ['id', 'name', 'index'],
@@ -3238,6 +3269,35 @@ Ext.onReady( function() {
                 this.nextPage = 1;
                 this.isPending = false;
                 dataSetSearch.hideFilter();
+            },
+            loadDataAndUpdate: function(data, append) {
+                this.clearFilter(); // work around
+                this.loadData(data, append);
+                this.updateFilter();
+            },
+            getRecordsByIds: function(ids) {
+                var records = [];
+
+                ids = Ext.Array.from(ids);
+
+                for (var i = 0, index; i < ids.length; i++) {
+                    index = this.findExact('id', ids[i]);
+
+                    if (index !== -1) {
+                        records.push(this.getAt(index));
+                    }
+                }
+
+                return records;
+            },
+            updateFilter: function() {
+                var selectedStoreIds = dataSelectedStore.getIds();
+
+                this.clearFilter();
+
+                this.filterBy(function(record) {
+                    return !Ext.Array.contains(selectedStoreIds, record.data.id);
+                });
             },
             loadPage: function(filter, append, noPaging, fn) {
                 var store = this,
@@ -3286,8 +3346,8 @@ Ext.onReady( function() {
             },
             loadStore: function(data, pager, append, fn) {
 				pager = pager || {};
-				
-                this.loadData(data, append);
+
+                this.loadDataAndUpdate(data, append);
                 this.sortStore();
 
                 this.lastPage = this.nextPage;
@@ -3298,7 +3358,7 @@ Ext.onReady( function() {
 
                 this.isPending = false;
 
-				ns.core.web.multiSelect.filterAvailable({store: dataSetAvailableStore}, {store: dataSetSelectedStore});
+				//ns.core.web.multiSelect.filterAvailable({store: dataSetAvailableStore}, {store: dataSetSelectedStore});
 
                 if (fn) {
 					fn();
@@ -3313,22 +3373,188 @@ Ext.onReady( function() {
 		});
 		ns.app.stores.dataSetAvailable = dataSetAvailableStore;
 
-		dataSetSelectedStore = Ext.create('Ext.data.Store', {
+        eventDataItemAvailableStore = Ext.create('Ext.data.Store', {
 			fields: ['id', 'name'],
 			data: [],
+			sortStore: function() {
+				this.sort('name', 'ASC');
+			},
+            loadDataAndUpdate: function(data, append) {
+                this.clearFilter(); // work around
+                this.loadData(data, append);
+                this.updateFilter();
+            },
+            getRecordsByIds: function(ids) {
+                var records = [];
+
+                ids = Ext.Array.from(ids);
+
+                for (var i = 0, index; i < ids.length; i++) {
+                    index = this.findExact('id', ids[i]);
+
+                    if (index !== -1) {
+                        records.push(this.getAt(index));
+                    }
+                }
+
+                return records;
+            },
+            updateFilter: function() {
+                var selectedStoreIds = dataSelectedStore.getIds();
+
+                this.clearFilter();
+
+                this.filterBy(function(record) {
+                    return !Ext.Array.contains(selectedStoreIds, record.data.id);
+                });
+            }
+		});
+		ns.app.stores.eventDataItemAvailable = eventDataItemAvailableStore;
+
+        programIndicatorAvailableStore = Ext.create('Ext.data.Store', {
+			fields: ['id', 'name'],
+			data: [],
+			sortStore: function() {
+				this.sort('name', 'ASC');
+			},
+            loadDataAndUpdate: function(data, append) {
+                this.clearFilter(); // work around
+                this.loadData(data, append);
+                this.updateFilter();
+            },
+            getRecordsByIds: function(ids) {
+                var records = [];
+
+                ids = Ext.Array.from(ids);
+
+                for (var i = 0, index; i < ids.length; i++) {
+                    index = this.findExact('id', ids[i]);
+
+                    if (index !== -1) {
+                        records.push(this.getAt(index));
+                    }
+                }
+
+                return records;
+            },
+            updateFilter: function() {
+                var selectedStoreIds = dataSelectedStore.getIds();
+
+                this.clearFilter();
+
+                this.filterBy(function(record) {
+                    return !Ext.Array.contains(selectedStoreIds, record.data.id);
+                });
+            }
+		});
+		ns.app.stores.programIndicatorAvailable = programIndicatorAvailableStore;
+
+		programStore = Ext.create('Ext.data.Store', {
+			fields: ['id', 'name'],
+			proxy: {
+				type: 'ajax',
+				url: ns.core.init.contextPath + '/api/programs.json?fields=id,name&paging=false',
+				reader: {
+					type: 'json',
+					root: 'programs'
+				},
+				pageParam: false,
+				startParam: false,
+				limitParam: false
+			}
+		});
+		ns.app.stores.program = programStore;
+
+        dataSelectedStore = Ext.create('Ext.data.Store', {
+			fields: ['id', 'name'],
+			data: [],
+            getIds: function() {
+                var records = this.getRange(),
+                    ids = [];
+
+                for (var i = 0; i < records.length; i++) {
+                    ids.push(records[i].data.id);
+                }
+
+                return ids;
+            },
+            addRecords: function(records, objectName) {
+                var prop = 'objectName',
+                    recordsToAdd = [],
+                    objectsToAdd = [];
+
+                records = Ext.Array.from(records);
+
+                if (records.length) {
+                    for (var i = 0, record; i < records.length; i++) {
+                        record = records[i];
+
+                        // record
+                        if (record.data) {
+                            if (objectName) {
+                                record.set(prop, objectName);
+                            }
+                            recordsToAdd.push(record);
+                        }
+                        // object
+                        else {
+                            if (objectName) {
+                                record[prop] = objectName;
+                            }
+                            objectsToAdd.push(record);
+                        }
+                    }
+
+                    if (recordsToAdd.length) {
+                        this.add(recordsToAdd);
+                    }
+
+                    if (objectsToAdd.length) {
+                        this.loadData(objectsToAdd, true);
+                    }
+                }
+            },
+            removeByIds: function(ids) {
+                ids = Ext.Array.from(ids);
+
+                for (var i = 0, index; i < ids.length; i++) {
+                    index = this.findExact('id', ids[i]);
+
+                    if (index !== -1) {
+                        this.removeAt(index);
+                    }
+                }
+            },
+            removeByProperty: function(property, values) {
+                if (!(property && values)) {
+                    return;
+                }
+
+                var recordsToRemove = [];
+
+                values = Ext.Array.from(values);
+
+                this.each(function(record) {
+                    if (Ext.Array.contains(values, record.data[property])) {
+                        recordsToRemove.push(record);
+                    }
+                });
+
+                this.remove(recordsToRemove);
+            },
             listeners: {
                 add: function() {
-                    onDataSelect();
+                    data.updateStoreFilters();
                 },
                 remove: function() {
-                    onDataSelect();
+                    data.updateStoreFilters();
                 },
                 clear: function() {
-                    onDataSelect();
+                    data.updateStoreFilters();
                 }
             }
 		});
-		ns.app.stores.dataSetSelected = dataSetSelectedStore;
+		ns.app.stores.dataSelected = dataSelectedStore;
 
 		periodTypeStore = Ext.create('Ext.data.Store', {
 			fields: ['id', 'name'],
@@ -3432,30 +3658,137 @@ Ext.onReady( function() {
 			return scrollBottom / el.scrollHeight > 0.9;
 		};
 
-        onDataSelect = function() {
-            var win = ns.app.layoutWindow,
-                stores = [indicatorSelectedStore, dataElementSelectedStore, dataSetSelectedStore],
-                dimension = dimConf.data,
-                hasItems;
+        onDataTypeSelect = function(type) {
+            type = type || 'in';
 
-            hasItems = function(storeArray) {
-                for (var i = 0; i < storeArray.length; i++) {
-                    if (storeArray[i].getRange().length) {
-                        return true;
-                    }
-                }
+            if (type === 'in') {
+                indicator.show();
+                dataElement.hide();
+                dataSet.hide();
+                eventDataItem.hide();
+                programIndicator.hide();
 
-                return false;
-            };
-
-            if (hasItems(stores)) {
-                win.addDimension({id: dimension.dimensionName, name: dimension.name});
+                //dataSelected.show();
             }
-            else if (!hasItems(stores) && win.hasDimension(dimension.dimensionName)) {
-                win.removeDimension(dimension.dimensionName);
+            else if (type === 'de') {
+                indicator.hide();
+                dataElement.show();
+                dataSet.hide();
+                eventDataItem.hide();
+                programIndicator.hide();
+            }
+            else if (type === 'ds') {
+                indicator.hide();
+                dataElement.hide();
+                dataSet.show();
+                eventDataItem.hide();
+                programIndicator.hide();
+
+				if (!dataSetAvailableStore.isLoaded) {
+                    dataSetAvailableStore.isLoaded = true;
+					dataSetAvailableStore.loadPage(null, false);
+                }
+            }
+            else if (type === 'di') {
+                indicator.hide();
+                dataElement.hide();
+                dataSet.hide();
+                eventDataItem.show();
+                programIndicator.hide();
+
+                if (!programStore.isLoaded) {
+                    programStore.isLoaded = true;
+                    programStore.load();
+                }
+            }
+            else if (type === 'pi') {
+                indicator.hide();
+                dataElement.hide();
+                dataSet.hide();
+                eventDataItem.hide();
+                programIndicator.show();
+
+                if (!programStore.isLoaded) {
+                    programStore.isLoaded = true;
+                    programStore.load();
+                }
             }
         };
 
+        dataType = Ext.create('Ext.form.field.ComboBox', {
+            cls: 'ns-combo',
+            style: 'margin-bottom:1px',
+            width: ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding,
+            valueField: 'id',
+            displayField: 'name',
+            //emptyText: NS.i18n.data_type,
+            editable: false,
+            queryMode: 'local',
+            value: 'in',
+            store: {
+                fields: ['id', 'name'],
+                data: [
+                     {id: 'in', name: NS.i18n.indicators},
+                     {id: 'de', name: NS.i18n.data_elements},
+                     {id: 'ds', name: NS.i18n.data_sets},
+                     {id: 'di', name: NS.i18n.event_data_items},
+                     {id: 'pi', name: NS.i18n.program_indicators}
+                ]
+            },
+            listeners: {
+                select: function(cb) {
+                    onDataTypeSelect(cb.getValue());
+                }
+            }
+        });
+
+        dataSelected = Ext.create('Ext.ux.form.MultiSelect', {
+			cls: 'ns-toolbar-multiselect-right',
+			width: (ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding) / 2,
+			valueField: 'id',
+			displayField: 'name',
+			ddReorder: true,
+			store: dataSelectedStore,
+			tbar: [
+				{
+					xtype: 'button',
+					icon: 'images/arrowleftdouble.png',
+					width: 22,
+					handler: function() {
+						//ns.core.web.multiSelect.unselectAll(programIndicatorAvailable, programIndicatorSelected);
+                        dataSelectedStore.removeAll();
+                        data.updateStoreFilters();
+					}
+				},
+				{
+					xtype: 'button',
+					icon: 'images/arrowleft.png',
+					width: 22,
+					handler: function() {
+						//ns.core.web.multiSelect.unselect(programIndicatorAvailable, programIndicatorSelected);
+                        dataSelectedStore.removeByIds(dataSelected.getValue());
+                        data.updateStoreFilters();
+					}
+				},
+				'->',
+				{
+					xtype: 'label',
+					text: NS.i18n.selected,
+					cls: 'ns-toolbar-multiselect-right-label'
+				}
+			],
+			listeners: {
+				afterrender: function() {
+					this.boundList.on('itemdblclick', function() {
+						//ns.core.web.multiSelect.unselect(programIndicatorAvailable, this);
+                        dataSelectedStore.removeByIds(dataSelected.getValue());
+                        data.updateStoreFilters();
+					}, this);
+				}
+			}
+		});
+
+        // indicator
         indicatorLabel = Ext.create('Ext.form.Label', {
             text: NS.i18n.available,
             cls: 'ns-toolbar-multiselect-left-label',
@@ -3572,7 +3905,10 @@ Ext.onReady( function() {
 					icon: 'images/arrowright.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.select(indicatorAvailable, indicatorSelected);
+                        if (indicatorAvailable.getValue().length) {
+                            var records = indicatorAvailableStore.getRecordsByIds(indicatorAvailable.getValue());
+                            dataSelectedStore.addRecords(records, 'in');
+                        }
 					}
 				},
 				{
@@ -3581,7 +3917,7 @@ Ext.onReady( function() {
 					width: 22,
 					handler: function() {
 						indicatorAvailableStore.loadPage(null, null, null, true, function() {
-							ns.core.web.multiSelect.selectAll(indicatorAvailable, indicatorSelected);
+                            dataSelectedStore.addRecords(indicatorAvailableStore.getRange(), 'in');
 						});
 					}
 				}
@@ -3596,8 +3932,8 @@ Ext.onReady( function() {
                         }
                     });
 
-					ms.boundList.on('itemdblclick', function() {
-						ns.core.web.multiSelect.select(ms, indicatorSelected);
+					ms.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.addRecords(record, 'in');
 					}, ms);
 				}
 			}
@@ -3609,14 +3945,16 @@ Ext.onReady( function() {
 			valueField: 'id',
 			displayField: 'name',
 			ddReorder: true,
-			store: indicatorSelectedStore,
+			store: dataSelectedStore,
 			tbar: [
 				{
 					xtype: 'button',
 					icon: 'images/arrowleftdouble.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.unselectAll(indicatorAvailable, indicatorSelected);
+                        if (dataSelectedStore.getRange().length) {
+                            dataSelectedStore.removeAll();
+                        }
 					}
 				},
 				{
@@ -3624,7 +3962,9 @@ Ext.onReady( function() {
 					icon: 'images/arrowleft.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.unselect(indicatorAvailable, indicatorSelected);
+                        if (indicatorSelected.getValue().length) {
+                            dataSelectedStore.removeByIds(indicatorSelected.getValue());
+                        }
 					}
 				},
 				'->',
@@ -3636,42 +3976,20 @@ Ext.onReady( function() {
 			],
 			listeners: {
 				afterrender: function() {
-					this.boundList.on('itemdblclick', function() {
-						ns.core.web.multiSelect.unselect(indicatorAvailable, this);
+					this.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.removeByIds(record.data.id);
 					}, this);
 				}
 			}
 		});
 
-		indicator = {
+		indicator = Ext.create('Ext.panel.Panel', {
 			xtype: 'panel',
-			title: '<div class="ns-panel-title-data">' + NS.i18n.indicators + '</div>',
+			//title: '<div class="ns-panel-title-data">' + NS.i18n.indicators + '</div>',
+            preventHeader: true,
 			hideCollapseTool: true,
-			getDimension: function() {
-				var config = {
-					dimension: dimConf.indicator.objectName,
-					items: []
-				};
-
-				indicatorSelectedStore.each( function(r) {
-					config.items.push({
-						id: r.data.id,
-						name: r.data.name
-					});
-				});
-
-				return config.items.length ? config : null;
-			},
-			onExpand: function() {
-				var h = westRegion.hasScrollbar ?
-					ns.core.conf.layout.west_scrollbarheight_accordion_indicator : ns.core.conf.layout.west_maxheight_accordion_indicator;
-				accordion.setThisHeight(h);
-				ns.core.web.multiSelect.setHeight(
-					[indicatorAvailable, indicatorSelected],
-					this,
-					ns.core.conf.layout.west_fill_accordion_indicator
-				);
-			},
+            dimension: dimConf.indicator.objectName,
+            bodyStyle: 'border:0 none',
 			items: [
 				indicatorGroup,
 				{
@@ -3686,15 +4004,16 @@ Ext.onReady( function() {
 			],
 			listeners: {
 				added: function() {
-					accordionPanels.push(this);
+					//accordionPanels.push(this);
 				},
 				expand: function(p) {
-					p.onExpand();
+					//p.onExpand();
 				}
 			}
-		};
+		});
 
-		dataElementLabel = Ext.create('Ext.form.Label', {
+        // data element
+        dataElementLabel = Ext.create('Ext.form.Label', {
             text: NS.i18n.available,
             cls: 'ns-toolbar-multiselect-left-label',
             style: 'margin-right:5px'
@@ -3782,7 +4101,10 @@ Ext.onReady( function() {
 					icon: 'images/arrowright.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.select(dataElementAvailable, dataElementSelected);
+                        if (dataElementAvailable.getValue().length) {
+                            var records = dataElementAvailableStore.getRecordsByIds(dataElementAvailable.getValue());
+                            dataSelectedStore.addRecords(records, 'de');
+                        }
 					}
 				},
 				{
@@ -3791,7 +4113,7 @@ Ext.onReady( function() {
 					width: 22,
 					handler: function() {
 						dataElementAvailableStore.loadPage(null, null, null, true, function() {
-							ns.core.web.multiSelect.selectAll(dataElementAvailable, dataElementSelected);
+                            dataSelectedStore.addRecords(dataElementAvailableStore.getRange(), 'de');
 						});
 					}
 				}
@@ -3806,8 +4128,8 @@ Ext.onReady( function() {
                         }
                     });
 
-					ms.boundList.on('itemdblclick', function() {
-						ns.core.web.multiSelect.select(ms, dataElementSelected);
+					ms.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.addRecords(record, 'de');
 					}, ms);
 				}
 			}
@@ -3819,14 +4141,16 @@ Ext.onReady( function() {
 			valueField: 'id',
 			displayField: 'name',
 			ddReorder: true,
-			store: dataElementSelectedStore,
+			store: dataSelectedStore,
 			tbar: [
 				{
 					xtype: 'button',
 					icon: 'images/arrowleftdouble.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.unselectAll(dataElementAvailable, dataElementSelected);
+                        if (dataSelectedStore.getRange().length) {
+                            dataSelectedStore.removeAll();
+                        }
 					}
 				},
 				{
@@ -3834,7 +4158,9 @@ Ext.onReady( function() {
 					icon: 'images/arrowleft.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.unselect(dataElementAvailable, dataElementSelected);
+                        if (dataElementSelected.getValue().length) {
+                            dataSelectedStore.removeByIds(dataElementSelected.getValue());
+                        }
 					}
 				},
 				'->',
@@ -3846,8 +4172,8 @@ Ext.onReady( function() {
 			],
 			listeners: {
 				afterrender: function() {
-					this.boundList.on('itemdblclick', function() {
-						ns.core.web.multiSelect.unselect(dataElementAvailable, this);
+					this.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.removeByIds(record.data.id);
 					}, this);
 				}
 			}
@@ -3903,40 +4229,19 @@ Ext.onReady( function() {
 			listeners: {
 				select: function(cb) {
 					dataElementGroup.loadAvailable(true);
-					dataElementSelectedStore.removeAll();
+                    dataSelectedStore.removeByProperty('objectName', 'de');
 				}
 			}
 		});
 
-		dataElement = {
+		dataElement = Ext.create('Ext.panel.Panel', {
 			xtype: 'panel',
-			title: '<div class="ns-panel-title-data">' + NS.i18n.data_elements + '</div>',
+			//title: '<div class="ns-panel-title-data">' + NS.i18n.data_elements + '</div>',
+            preventHeader: true,
+            hidden: true,
 			hideCollapseTool: true,
-			getDimension: function() {
-				var config = {
-					dimension: dataElementDetailLevel.getValue(),
-					items: []
-				};
-
-				dataElementSelectedStore.each( function(r) {
-					config.items.push({
-						id: r.data.id,
-						name: r.data.name
-					});
-				});
-
-				return config.items.length ? config : null;
-			},
-			onExpand: function() {
-				var h = ns.app.westRegion.hasScrollbar ?
-					ns.core.conf.layout.west_scrollbarheight_accordion_dataelement : ns.core.conf.layout.west_maxheight_accordion_dataelement;
-				accordion.setThisHeight(h);
-				ns.core.web.multiSelect.setHeight(
-					[dataElementAvailable, dataElementSelected],
-					this,
-					ns.core.conf.layout.west_fill_accordion_indicator
-				);
-			},
+            bodyStyle: 'border:0 none',
+            dimension: dimConf.dataElement.objectName,
 			items: [
 				{
 					xtype: 'container',
@@ -3958,14 +4263,15 @@ Ext.onReady( function() {
 			],
 			listeners: {
 				added: function() {
-					accordionPanels.push(this);
+					//accordionPanels.push(this);
 				},
 				expand: function(p) {
-					p.onExpand();
+					//p.onExpand();
 				}
 			}
-		};
+		});
 
+        // data set
         dataSetLabel = Ext.create('Ext.form.Label', {
             text: NS.i18n.available,
             cls: 'ns-toolbar-multiselect-left-label',
@@ -4047,7 +4353,10 @@ Ext.onReady( function() {
 					icon: 'images/arrowright.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.select(dataSetAvailable, dataSetSelected);
+                        if (dataSetAvailable.getValue().length) {
+                            var records = dataSetAvailableStore.getRecordsByIds(dataSetAvailable.getValue());
+                            dataSelectedStore.addRecords(records, 'ds');
+                        }
 					}
 				},
 				{
@@ -4056,7 +4365,7 @@ Ext.onReady( function() {
 					width: 22,
 					handler: function() {
 						dataSetAvailableStore.loadPage(null, null, true, function() {
-							ns.core.web.multiSelect.selectAll(dataSetAvailable, dataSetSelected);
+                            dataSelectedStore.addRecords(dataSetAvailableStore.getRange(), 'ds');
 						});
 					}
 				}
@@ -4071,9 +4380,9 @@ Ext.onReady( function() {
                         }
                     });
 
-					this.boundList.on('itemdblclick', function() {
-						ns.core.web.multiSelect.select(this, dataSetSelected);
-					}, this);
+					ms.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.addRecords(record, 'ds');
+					}, ms);
 				}
 			}
 		});
@@ -4084,14 +4393,16 @@ Ext.onReady( function() {
 			valueField: 'id',
 			displayField: 'name',
 			ddReorder: true,
-			store: dataSetSelectedStore,
+			store: dataSelectedStore,
 			tbar: [
 				{
 					xtype: 'button',
 					icon: 'images/arrowleftdouble.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.unselectAll(dataSetAvailable, dataSetSelected);
+                        if (dataSelectedStore.getRange().length) {
+                            dataSelectedStore.removeAll();
+                        }
 					}
 				},
 				{
@@ -4099,7 +4410,9 @@ Ext.onReady( function() {
 					icon: 'images/arrowleft.png',
 					width: 22,
 					handler: function() {
-						ns.core.web.multiSelect.unselect(dataSetAvailable, dataSetSelected);
+                        if (dataSetSelected.getValue().length) {
+                            dataSelectedStore.removeByIds(dataSetSelected.getValue());
+                        }
 					}
 				},
 				'->',
@@ -4111,47 +4424,21 @@ Ext.onReady( function() {
 			],
 			listeners: {
 				afterrender: function() {
-					this.boundList.on('itemdblclick', function() {
-						ns.core.web.multiSelect.unselect(dataSetAvailable, this);
+					this.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.removeByIds(record.data.id);
 					}, this);
 				}
 			}
 		});
 
-		dataSet = {
+		dataSet = Ext.create('Ext.panel.Panel', {
 			xtype: 'panel',
-			title: '<div class="ns-panel-title-data">' + NS.i18n.reporting_rates + '</div>',
+			//title: '<div class="ns-panel-title-data">' + NS.i18n.reporting_rates + '</div>',
+            preventHeader: true,
+            hidden: true,
 			hideCollapseTool: true,
-			getDimension: function() {
-				var config = {
-					dimension: dimConf.dataSet.objectName,
-					items: []
-				};
-
-				dataSetSelectedStore.each( function(r) {
-					config.items.push({
-						id: r.data.id,
-						name: r.data.name
-					});
-				});
-
-				return config.items.length ? config : null;
-			},
-			onExpand: function() {
-				var h = ns.app.westRegion.hasScrollbar ?
-					ns.core.conf.layout.west_scrollbarheight_accordion_dataset : ns.core.conf.layout.west_maxheight_accordion_dataset;
-				accordion.setThisHeight(h);
-				ns.core.web.multiSelect.setHeight(
-					[dataSetAvailable, dataSetSelected],
-					this,
-					ns.core.conf.layout.west_fill_accordion_dataset
-				);
-
-				if (!dataSetAvailableStore.isLoaded) {
-                    dataSetAvailableStore.isLoaded = true;
-					dataSetAvailableStore.loadPage(null, false);
-                }
-			},
+            bodyStyle: 'border:0 none',
+            dimension: dimConf.dataSet.objectName,
 			items: [
 				{
 					xtype: 'panel',
@@ -4162,6 +4449,584 @@ Ext.onReady( function() {
 						dataSetSelected
 					]
 				}
+			],
+			listeners: {
+				added: function() {
+					//accordionPanels.push(this);
+				},
+				expand: function(p) {
+					//p.onExpand();
+				}
+			}
+		});
+
+        // event data item
+        onEventDataItemProgramSelect = function(programId, skipSync) {
+            if (!skipSync) {
+                dataSelectedStore.removeByProperty('objectName', ['di','pi']);
+                programIndicatorProgram.setValue(programId);
+                onProgramIndicatorProgramSelect(programId, true);
+            }
+
+            Ext.Ajax.request({
+                url: ns.core.init.contextPath + '/api/programs.json?paging=false&fields=programTrackedEntityAttributes[trackedEntityAttribute[id,name]],programStages[programStageDataElements[dataElement[id,name,type]]]&filter=id:eq:' + programId,
+                success: function(r) {
+                    r = Ext.decode(r.responseText);
+
+                    var isA = Ext.isArray,
+                        isO = Ext.isObject,
+                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
+                        stages = isO(program) && isA(program.programStages) && program.programStages.length ? program.programStages : [],
+                        teas = isO(program) && isA(program.programTrackedEntityAttributes) ? Ext.Array.pluck(program.programTrackedEntityAttributes, 'trackedEntityAttribute') : [],
+                        dataElements = [],
+                        attributes = [],
+                        types = ['int', 'number', 'string', 'bool', 'trueonly'],
+                        data;
+
+                    // data elements
+                    for (var i = 0, stage, elements; i < stages.length; i++) {
+                        stage = stages[i];
+
+                        if (isA(stage.programStageDataElements) && stage.programStageDataElements.length) {
+                            elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
+
+                            for (var j = 0; j < elements.length; j++) {
+                                if (Ext.Array.contains(types, (elements[j].type || '').toLowerCase())) {
+                                    dataElements.push(elements[j]);
+                                }
+                            }
+                        }
+                    }
+
+                    // attributes
+                    for (i = 0; i < teas.length; i++) {
+                        if (Ext.Array.contains(types, (teas[i].type || '').toLowerCase())) {
+                            attributes.push(teas[i]);
+                        }
+                    }
+
+                    data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(dataElements, attributes))) || [];
+
+                    eventDataItemAvailableStore.loadDataAndUpdate(data);
+                }
+            });
+
+        };
+
+		eventDataItemProgram = Ext.create('Ext.form.field.ComboBox', {
+			cls: 'ns-combo',
+			style: 'margin:0 1px 1px 0',
+			width: ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding,
+			valueField: 'id',
+			displayField: 'name',
+			emptyText: NS.i18n.select_program,
+			editable: false,
+			store: programStore,
+			listeners: {
+				select: function(cb) {
+                    onEventDataItemProgramSelect(cb.getValue());
+				}
+			}
+		});
+
+        eventDataItemLabel = Ext.create('Ext.form.Label', {
+            text: NS.i18n.available,
+            cls: 'ns-toolbar-multiselect-left-label',
+            style: 'margin-right:5px'
+        });
+
+        eventDataItemSearch = Ext.create('Ext.button.Button', {
+            width: 22,
+            height: 22,
+            cls: 'ns-button-icon',
+            //disabled: true,
+            style: 'background: url(images/search_14.png) 3px 3px no-repeat',
+            showFilter: function() {
+                eventDataItemLabel.hide();
+                this.hide();
+                eventDataItemFilter.show();
+                eventDataItemFilter.reset();
+            },
+            hideFilter: function() {
+                eventDataItemLabel.show();
+                this.show();
+                eventDataItemFilter.hide();
+                eventDataItemFilter.reset();
+            },
+            handler: function() {
+                this.showFilter();
+            }
+        });
+
+        eventDataItemFilter = Ext.create('Ext.form.field.Trigger', {
+            cls: 'ns-trigger-filter',
+            emptyText: 'Filter available..',
+            height: 22,
+            hidden: true,
+            enableKeyEvents: true,
+            fieldStyle: 'height:22px; border-right:0 none',
+            style: 'height:22px',
+            onTriggerClick: function() {
+				if (this.getValue()) {
+					this.reset();
+					this.onKeyUpHandler();
+
+                    eventDataItemAvailableStore.clearFilter();
+				}
+            },
+            onKeyUpHandler: function() {
+                var value = this.getValue() || '',
+                    store = eventDataItemAvailableStore,
+                    str;
+
+                //if (Ext.isString(value) || Ext.isNumber(value)) {
+                    //store.loadPage(null, this.getValue(), false);
+                //}
+
+                store.filterBy(function(record) {
+                    str = record.data.name || '';
+
+                    return str.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+                });
+            },
+            listeners: {
+                keyup: {
+                    fn: function(cmp) {
+                        cmp.onKeyUpHandler();
+                    },
+                    buffer: 100
+                },
+                show: function(cmp) {
+                    cmp.focus(false, 50);
+                },
+                focus: function(cmp) {
+                    cmp.addCls('ns-trigger-filter-focused');
+                },
+                blur: function(cmp) {
+                    cmp.removeCls('ns-trigger-filter-focused');
+                }
+            }
+        });
+
+		eventDataItemAvailable = Ext.create('Ext.ux.form.MultiSelect', {
+			cls: 'ns-toolbar-multiselect-left',
+			width: (ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding) / 2,
+			valueField: 'id',
+			displayField: 'name',
+			store: eventDataItemAvailableStore,
+			tbar: [
+				eventDataItemLabel,
+                eventDataItemSearch,
+                eventDataItemFilter,
+				'->',
+				{
+					xtype: 'button',
+					icon: 'images/arrowright.png',
+					width: 22,
+					handler: function() {
+                        if (eventDataItemAvailable.getValue().length) {
+                            var records = eventDataItemAvailableStore.getRecordsByIds(eventDataItemAvailable.getValue());
+                            dataSelectedStore.addRecords(records, 'di');
+                        }
+					}
+				},
+				{
+					xtype: 'button',
+					icon: 'images/arrowrightdouble.png',
+					width: 22,
+					handler: function() {
+						//eventDataItemAvailableStore.loadPage(null, null, null, true, function() {
+                            dataSelectedStore.addRecords(eventDataItemAvailableStore.getRange(), 'di');
+						//});
+					}
+				}
+			],
+			listeners: {
+				render: function(ms) {
+                    var el = Ext.get(ms.boundList.getEl().id + '-listEl').dom;
+
+                    //el.addEventListener('scroll', function(e) {
+                        //if (isScrolled(e) && !eventDataItemAvailableStore.isPending) {
+                            //eventDataItemAvailableStore.loadPage(null, null, true);
+                        //}
+                    //});
+
+					ms.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.addRecords(record, 'di');
+					}, ms);
+				}
+			}
+		});
+
+		eventDataItemSelected = Ext.create('Ext.ux.form.MultiSelect', {
+			cls: 'ns-toolbar-multiselect-right',
+			width: (ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding) / 2,
+			valueField: 'id',
+			displayField: 'name',
+			ddReorder: true,
+			store: dataSelectedStore,
+			tbar: [
+				{
+					xtype: 'button',
+					icon: 'images/arrowleftdouble.png',
+					width: 22,
+					handler: function() {
+                        if (dataSelectedStore.getRange().length) {
+                            dataSelectedStore.removeAll();
+                        }
+					}
+				},
+				{
+					xtype: 'button',
+					icon: 'images/arrowleft.png',
+					width: 22,
+					handler: function() {
+                        if (eventDataItemSelected.getValue().length) {
+                            dataSelectedStore.removeByIds(eventDataItemSelected.getValue());
+                        }
+					}
+				},
+				'->',
+				{
+					xtype: 'label',
+					text: NS.i18n.selected,
+					cls: 'ns-toolbar-multiselect-right-label'
+				}
+			],
+			listeners: {
+				afterrender: function() {
+					this.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.removeByIds(record.data.id);
+					}, this);
+				}
+			}
+		});
+
+		eventDataItem = Ext.create('Ext.panel.Panel', {
+			xtype: 'panel',
+			//title: '<div class="ns-panel-title-data">' + NS.i18n.eventDataItems + '</div>',
+            preventHeader: true,
+            hidden: true,
+			hideCollapseTool: true,
+            dimension: dimConf.eventDataItem.objectName,
+            bodyStyle: 'border:0 none',
+			items: [
+				eventDataItemProgram,
+				{
+					xtype: 'panel',
+					layout: 'column',
+					bodyStyle: 'border-style:none',
+					items: [
+                        eventDataItemAvailable,
+						eventDataItemSelected
+					]
+				}
+			],
+			listeners: {
+				added: function() {
+					//accordionPanels.push(this);
+				},
+				expand: function(p) {
+					//p.onExpand();
+				}
+			}
+		});
+
+        // program indicator
+        onProgramIndicatorProgramSelect = function(programId, skipSync) {
+            if (!skipSync) {
+                dataSelectedStore.removeByProperty('objectName', ['di','pi']);
+                eventDataItemProgram.setValue(programId);
+                onEventDataItemProgramSelect(programId, true);
+            }
+
+            Ext.Ajax.request({
+                url: ns.core.init.contextPath + '/api/programs.json?paging=false&fields=programIndicators[id,name]&filter=id:eq:' + programId,
+                success: function(r) {
+                    r = Ext.decode(r.responseText);
+
+                    var isA = Ext.isArray,
+                        isO = Ext.isObject,
+                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
+                        programIndicators = isO(program) && isA(program.programIndicators) && program.programIndicators.length ? program.programIndicators : [],
+                        data = ns.core.support.prototype.array.sort(Ext.Array.clean(programIndicators)) || [];
+
+                    programIndicatorAvailableStore.loadDataAndUpdate(data);
+                }
+            });
+
+        };
+
+		programIndicatorProgram = Ext.create('Ext.form.field.ComboBox', {
+			cls: 'ns-combo',
+			style: 'margin:0 1px 1px 0',
+			width: ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding,
+			valueField: 'id',
+			displayField: 'name',
+			emptyText: NS.i18n.select_program,
+			editable: false,
+			store: programStore,
+			listeners: {
+				select: function(cb) {
+                    onProgramIndicatorProgramSelect(cb.getValue());
+				}
+			}
+		});
+
+        programIndicatorLabel = Ext.create('Ext.form.Label', {
+            text: NS.i18n.available,
+            cls: 'ns-toolbar-multiselect-left-label',
+            style: 'margin-right:5px'
+        });
+
+        programIndicatorSearch = Ext.create('Ext.button.Button', {
+            width: 22,
+            height: 22,
+            cls: 'ns-button-icon',
+            //disabled: true,
+            style: 'background: url(images/search_14.png) 3px 3px no-repeat',
+            showFilter: function() {
+                programIndicatorLabel.hide();
+                this.hide();
+                programIndicatorFilter.show();
+                programIndicatorFilter.reset();
+            },
+            hideFilter: function() {
+                programIndicatorLabel.show();
+                this.show();
+                programIndicatorFilter.hide();
+                programIndicatorFilter.reset();
+            },
+            handler: function() {
+                this.showFilter();
+            }
+        });
+
+        programIndicatorFilter = Ext.create('Ext.form.field.Trigger', {
+            cls: 'ns-trigger-filter',
+            emptyText: 'Filter available..',
+            height: 22,
+            hidden: true,
+            enableKeyEvents: true,
+            fieldStyle: 'height:22px; border-right:0 none',
+            style: 'height:22px',
+            onTriggerClick: function() {
+				if (this.getValue()) {
+					this.reset();
+					this.onKeyUpHandler();
+
+                    programIndicatorAvailableStore.clearFilter();
+				}
+            },
+            onKeyUpHandler: function() {
+                var value = this.getValue() || '',
+                    store = programIndicatorAvailableStore,
+                    str;
+
+                //if (Ext.isString(value) || Ext.isNumber(value)) {
+                    //store.loadPage(null, this.getValue(), false);
+                //}
+
+                store.filterBy(function(record) {
+                    str = record.data.name || '';
+
+                    return str.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+                });
+            },
+            listeners: {
+                keyup: {
+                    fn: function(cmp) {
+                        cmp.onKeyUpHandler();
+                    },
+                    buffer: 100
+                },
+                show: function(cmp) {
+                    cmp.focus(false, 50);
+                },
+                focus: function(cmp) {
+                    cmp.addCls('ns-trigger-filter-focused');
+                },
+                blur: function(cmp) {
+                    cmp.removeCls('ns-trigger-filter-focused');
+                }
+            }
+        });
+
+		programIndicatorAvailable = Ext.create('Ext.ux.form.MultiSelect', {
+			cls: 'ns-toolbar-multiselect-left',
+			width: (ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding) / 2,
+			valueField: 'id',
+			displayField: 'name',
+			store: programIndicatorAvailableStore,
+			tbar: [
+				programIndicatorLabel,
+                programIndicatorSearch,
+                programIndicatorFilter,
+				'->',
+				{
+					xtype: 'button',
+					icon: 'images/arrowright.png',
+					width: 22,
+					handler: function() {
+                        if (programIndicatorAvailable.getValue().length) {
+                            var records = programIndicatorAvailableStore.getRecordsByIds(programIndicatorAvailable.getValue());
+                            dataSelectedStore.addRecords(records, 'pi');
+                        }
+					}
+				},
+				{
+					xtype: 'button',
+					icon: 'images/arrowrightdouble.png',
+					width: 22,
+					handler: function() {
+						//programIndicatorAvailableStore.loadPage(null, null, null, true, function() {
+                            dataSelectedStore.addRecords(programIndicatorAvailableStore.getRange(), 'pi');
+						//});
+					}
+				}
+			],
+			listeners: {
+				render: function(ms) {
+                    var el = Ext.get(ms.boundList.getEl().id + '-listEl').dom;
+
+                    //el.addEventListener('scroll', function(e) {
+                        //if (isScrolled(e) && !programIndicatorAvailableStore.isPending) {
+                            //programIndicatorAvailableStore.loadPage(null, null, true);
+                        //}
+                    //});
+
+					ms.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.addRecords(record, 'pi');
+					}, ms);
+				}
+			}
+		});
+
+		programIndicatorSelected = Ext.create('Ext.ux.form.MultiSelect', {
+			cls: 'ns-toolbar-multiselect-right',
+			width: (ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding) / 2,
+			valueField: 'id',
+			displayField: 'name',
+			ddReorder: true,
+			store: dataSelectedStore,
+			tbar: [
+				{
+					xtype: 'button',
+					icon: 'images/arrowleftdouble.png',
+					width: 22,
+					handler: function() {
+                        if (dataSelectedStore.getRange().length) {
+                            dataSelectedStore.removeAll();
+                        }
+					}
+				},
+				{
+					xtype: 'button',
+					icon: 'images/arrowleft.png',
+					width: 22,
+					handler: function() {
+                        if (programIndicatorSelected.getValue().length) {
+                            dataSelectedStore.removeByIds(programIndicatorSelected.getValue());
+                        }
+					}
+				},
+				'->',
+				{
+					xtype: 'label',
+					text: NS.i18n.selected,
+					cls: 'ns-toolbar-multiselect-right-label'
+				}
+			],
+			listeners: {
+				afterrender: function() {
+					this.boundList.on('itemdblclick', function(bl, record) {
+                        dataSelectedStore.removeByIds(record.data.id);
+					}, this);
+				}
+			}
+		});
+
+		programIndicator = Ext.create('Ext.panel.Panel', {
+			xtype: 'panel',
+			//title: '<div class="ns-panel-title-data">' + NS.i18n.programIndicators + '</div>',
+            preventHeader: true,
+            hidden: true,
+			hideCollapseTool: true,
+            dimension: dimConf.programIndicator.objectName,
+            bodyStyle: 'border:0 none',
+			items: [
+				programIndicatorProgram,
+				{
+					xtype: 'panel',
+					layout: 'column',
+					bodyStyle: 'border-style:none',
+					items: [
+                        programIndicatorAvailable,
+						programIndicatorSelected
+					]
+				}
+			],
+			listeners: {
+				added: function() {
+					//accordionPanels.push(this);
+				},
+				expand: function(p) {
+					//p.onExpand();
+				}
+			}
+		});
+
+        data = {
+			xtype: 'panel',
+			title: '<div class="ns-panel-title-data">' + NS.i18n.data + '</div>',
+			hideCollapseTool: true,
+            dimension: dimConf.data.objectName,
+            updateStoreFilters: function() {
+                indicatorAvailableStore.updateFilter();
+                dataElementAvailableStore.updateFilter();
+                dataSetAvailableStore.updateFilter();
+                eventDataItemAvailableStore.updateFilter();
+                programIndicatorAvailableStore.updateFilter();
+            },
+			getDimension: function() {
+				var config = {
+					dimension: dimConf.data.objectName,
+					items: []
+				};
+
+				dataSelectedStore.each( function(r) {
+					config.items.push({
+						id: r.data.id,
+						name: r.data.name
+					});
+				});
+
+                // TODO program
+                if (eventDataItemProgram.getValue() || programIndicatorProgram.getValue()) {
+                    config.program = {id: eventDataItemProgram.getValue() || programIndicatorProgram.getValue()};
+                }
+
+				return config.items.length ? config : null;
+			},
+			onExpand: function() {
+                var conf = ns.core.conf.layout,
+                    h = westRegion.hasScrollbar ? conf.west_scrollbarheight_accordion_indicator : conf.west_maxheight_accordion_indicator;
+
+				accordion.setThisHeight(h);
+
+				ns.core.web.multiSelect.setHeight([indicatorAvailable, indicatorSelected], this, conf.west_fill_accordion_indicator);
+                ns.core.web.multiSelect.setHeight([dataElementAvailable, dataElementSelected], this, conf.west_fill_accordion_dataelement);
+                ns.core.web.multiSelect.setHeight([dataSetAvailable, dataSetSelected], this, conf.west_fill_accordion_dataset);
+                ns.core.web.multiSelect.setHeight([eventDataItemAvailable, eventDataItemSelected], this, conf.west_fill_accordion_eventdataitem);
+                ns.core.web.multiSelect.setHeight([programIndicatorAvailable, programIndicatorSelected], this, conf.west_fill_accordion_programindicator);
+			},
+			items: [
+                dataType,
+                indicator,
+                dataElement,
+                dataSet,
+                eventDataItem,
+                programIndicator
 			],
 			listeners: {
 				added: function() {
@@ -5153,8 +6018,10 @@ Ext.onReady( function() {
 				dataLabel,
 				dataSearch,
 				dataFilter,
+                selectedAll,
 				available,
 				selected,
+                onSelectAll,
 				panel,
 
 				createPanel,
@@ -5163,10 +6030,10 @@ Ext.onReady( function() {
             onSelect = function() {
                 var win = ns.app.layoutWindow;
 
-                if (selectedStore.getRange().length) {
+                if (selectedStore.getRange().length || selectedAll.getValue()) {
                     win.addDimension({id: dimension.id, name: dimension.name});
                 }
-                else if (!selectedStore.getRange().length && win.hasDimension(dimension.id)) {
+                else if (win.hasDimension(dimension.id)) {
                     win.removeDimension(dimension.id);
                 }
             };
@@ -5226,51 +6093,51 @@ Ext.onReady( function() {
                         store.loadStore(cacheData, {}, append, fn);
                     }
                     else {
-                        if (!append) {
-                            this.lastPage = null;
-                            this.nextPage = 1;
-                        }
+						if (!append) {
+							this.lastPage = null;
+							this.nextPage = 1;
+						}
 
-                        if (store.nextPage === store.lastPage) {
-                            return;
-                        }
+						if (store.nextPage === store.lastPage) {
+							return;
+						}
 
-                        path = '/dimensions/' + dimension.id + '/items.json' + (filter ? '?filter=name:like:' + filter : '');
+						path = '/dimensions/' + dimension.id + '/items.json' + (filter ? '?filter=name:like:' + filter : '');
 
-                        if (noPaging) {
-                            params.paging = false;
-                        }
-                        else {
-                            params.page = store.nextPage;
-                            params.pageSize = 50;
-                        }
+						if (noPaging) {
+							params.paging = false;
+						}
+						else {
+							params.page = store.nextPage;
+							params.pageSize = 50;
+						}
 
-                        store.isPending = true;
-                        ns.core.web.mask.show(available.boundList);
+						store.isPending = true;
+						ns.core.web.mask.show(available.boundList);
 
-                        Ext.Ajax.request({
-                            url: ns.core.init.contextPath + '/api' + path,
-                            params: params,
-                            success: function(r) {
-                                var response = Ext.decode(r.responseText),
-                                    data = response.items || [],
-                                    pager = response.pager;
+						Ext.Ajax.request({
+							url: ns.core.init.contextPath + '/api' + path,
+							params: params,
+							success: function(r) {
+								var response = Ext.decode(r.responseText),
+									data = response.items || [],
+									pager = response.pager;
 
                                 // add to session cache
                                 store.addToStorage(dimension.id, filter, data);
 
-                                store.loadStore(data, pager, append, fn);
-                            },
-                            callback: function() {
-                                store.isPending = false;
-                                ns.core.web.mask.hide(available.boundList);
-                            }
-                        });
-                    }
+								store.loadStore(data, pager, append, fn);
+							},
+							callback: function() {
+								store.isPending = false;
+								ns.core.web.mask.hide(available.boundList);
+							}
+						});
+					}
 				},
 				loadStore: function(data, pager, append, fn) {
 					pager = pager || {};
-					
+
 					this.loadData(data, append);
 					this.lastPage = this.nextPage;
 
@@ -5376,6 +6243,17 @@ Ext.onReady( function() {
 				}
 			});
 
+            selectedAll = Ext.create('Ext.form.field.Checkbox', {
+                cls: 'ns-checkbox',
+                style: 'margin-left: 2px; margin-right: 5px',
+                boxLabel: 'All',
+                listeners: {
+                    change: function(chb, newVal) {
+                        onSelectAll(newVal);
+                    }
+                }
+            });
+
 			available = Ext.create('Ext.ux.form.MultiSelect', {
 				cls: 'ns-toolbar-multiselect-left',
 				width: (ns.core.conf.layout.west_fieldset_width - ns.core.conf.layout.west_width_padding) / 2,
@@ -5399,7 +6277,7 @@ Ext.onReady( function() {
 						xtype: 'button',
 						icon: 'images/arrowrightdouble.png',
 						width: 22,
-						handler: function() {						
+						handler: function() {
 							availableStore.loadPage(null, null, true, function() {
 								ns.core.web.multiSelect.selectAll(available, selected);
 							});
@@ -5452,7 +6330,8 @@ Ext.onReady( function() {
 						xtype: 'label',
 						text: NS.i18n.selected,
 						cls: 'ns-toolbar-multiselect-right-label'
-					}
+					},
+                    selectedAll
 				],
 				listeners: {
 					afterrender: function() {
@@ -5463,8 +6342,20 @@ Ext.onReady( function() {
 				}
 			});
 
-			dimensionIdAvailableStoreMap[dimension.id] = availableStore;
-			dimensionIdSelectedStoreMap[dimension.id] = selectedStore;
+            onSelectAll = function(value) {
+                if (available.boundList && selected.boundList) {
+                    if (value) {
+                        available.boundList.disable();
+                        selected.boundList.disable();
+                    }
+                    else {
+                        available.boundList.enable();
+                        selected.boundList.enable();
+                    }
+                }
+
+                onSelect();
+            };
 
 			//availableStore.on('load', function() {
 				//ns.core.web.multiSelect.filterAvailable(available, selected);
@@ -5474,32 +6365,48 @@ Ext.onReady( function() {
 				xtype: 'panel',
 				title: '<div class="' + iconCls + '">' + dimension.name + '</div>',
 				hideCollapseTool: true,
+                dimension: dimension.id,
 				availableStore: availableStore,
 				selectedStore: selectedStore,
+                selectedAll: selectedAll,
 				getDimension: function() {
-					var config = {
-						dimension: dimension.id,
-						items: []
-					};
+					var config = {};
 
-					selectedStore.each( function(r) {
-						config.items.push({id: r.data.id});
-					});
+                    if (dimension.id) {
+						config.dimension = dimension.id;
+                    }
 
-					return config.items.length ? config : null;
+                    if (selectedStore.getRange().length) {
+                        config.items = [];
+
+                        selectedStore.each( function(r) {
+                            config.items.push({id: r.data.id});
+                        });
+                    }
+
+					return config.dimension ? config : null;
 				},
 				onExpand: function() {
+
+                    // load items
 					if (!availableStore.isLoaded) {
 						availableStore.loadPage();
 					}
 
+                    // enable/disable ui
+                    if (selectedAll.getValue()) {
+                        available.boundList.disable();
+                        selected.boundList.disable();
+                    }
+
+                    // set height
 					var h = ns.app.westRegion.hasScrollbar ?
 						ns.core.conf.layout.west_scrollbarheight_accordion_group : ns.core.conf.layout.west_maxheight_accordion_group;
 					accordion.setThisHeight(h);
 					ns.core.web.multiSelect.setHeight(
 						[available, selected],
 						this,
-						ns.core.conf.layout.west_fill_accordion_dataset
+						ns.core.conf.layout.west_fill_accordion_group
 					);
 				},
 				items: [
@@ -5530,7 +6437,7 @@ Ext.onReady( function() {
 			var panels = [];
 
 			for (var i = 0, panel; i < dimensions.length; i++) {
-				panels.push(getDimensionPanel(dimensions[i], iconCls));
+                panels.push(getDimensionPanel(dimensions[i], iconCls));
 			}
 
 			return panels;
@@ -5557,15 +6464,22 @@ Ext.onReady( function() {
 			height: 700,
 			items: function() {
 				var panels = [
-					indicator,
-					dataElement,
-					dataSet,
+                    data,
 					period,
 					organisationUnit
 				],
-				dims = Ext.clone(ns.core.init.dimensions);
+				dims = Ext.clone(ns.core.init.dimensions),
+                dimPanels = getDimensionPanels(dims, 'ns-panel-title-dimension');
 
-				panels = panels.concat(getDimensionPanels(dims, 'ns-panel-title-dimension'));
+                // idPanelMap
+                for (var i = 0, dimPanel; i < dimPanels.length; i++) {
+                    dimPanel = dimPanels[i];
+
+                    dimensionPanelMap[dimPanel.dimension] = dimPanel;
+                }
+
+                // panels
+				panels = panels.concat(dimPanels);
 
 				last = panels[panels.length - 1];
 				last.cls = 'ns-accordion-last';
@@ -6550,40 +7464,31 @@ Ext.onReady( function() {
 				return;
 			}
 
-			// Indicators
-			indicatorSelectedStore.removeAll();
-			objectName = dimConf.indicator.objectName;
-			if (dimMap[objectName]) {
-				indicatorSelectedStore.add(Ext.clone(recMap[objectName]));
-				ns.core.web.multiSelect.filterAvailable({store: indicatorAvailableStore}, {store: indicatorSelectedStore});
-			}
+            // dx
+            dataSelectedStore.removeAll();
 
-			// Data elements
-			dataElementSelectedStore.removeAll();
-			objectName = dimConf.dataElement.objectName;
-			if (dimMap[objectName]) {
-				dataElementSelectedStore.add(Ext.clone(recMap[objectName]));
-				ns.core.web.multiSelect.filterAvailable({store: dataElementAvailableStore}, {store: dataElementSelectedStore});
-				dataElementDetailLevel.setValue(objectName);
-			}
+			indicatorAvailableStore.removeAll();
+            indicatorGroup.clearValue();
 
-			// Operands
-			objectName = dimConf.operand.objectName;
-			if (dimMap[objectName]) {
-				dataElementSelectedStore.add(Ext.clone(recMap[objectName]));
-				ns.core.web.multiSelect.filterAvailable({store: dataElementAvailableStore}, {store: dataElementSelectedStore});
-				dataElementDetailLevel.setValue(objectName);
-			}
+			dataElementAvailableStore.removeAll();
+            dataElementGroup.clearValue();
+            dataElementDetailLevel.reset();
 
-			// Data sets
-			dataSetSelectedStore.removeAll();
-			objectName = dimConf.dataSet.objectName;
-			if (dimMap[objectName]) {
-				dataSetSelectedStore.add(Ext.clone(recMap[objectName]));
-				ns.core.web.multiSelect.filterAvailable({store: dataSetAvailableStore}, {store: dataSetSelectedStore});
-			}
+			dataSetAvailableStore.removeAll();
 
-			// Periods
+			eventDataItemAvailableStore.removeAll();
+			programIndicatorAvailableStore.removeAll();
+
+            if (Ext.isObject(xLayout.program) && Ext.isString(xLayout.program.id)) {
+                eventDataItemProgram.setValue(xLayout.program.id);
+                onEventDataItemProgramSelect(xLayout.program.id)
+            }
+
+            if (dimMap['dx']) {
+                dataSelectedStore.addRecords(recMap['dx']);
+            }
+
+			// periods
 			fixedPeriodSelectedStore.removeAll();
 			period.resetRelativePeriods();
 			periodRecords = recMap[dimConf.period.objectName] || [];
@@ -6600,25 +7505,32 @@ Ext.onReady( function() {
 			fixedPeriodSelectedStore.add(fixedPeriodRecords);
 			ns.core.web.multiSelect.filterAvailable({store: fixedPeriodAvailableStore}, {store: fixedPeriodSelectedStore});
 
-			// Group sets
-			for (var key in dimensionIdSelectedStoreMap) {
-				if (dimensionIdSelectedStoreMap.hasOwnProperty(key)) {
-					var a = dimensionIdAvailableStoreMap[key],
-						s = dimensionIdSelectedStoreMap[key];
+			// group sets
+			for (var key in dimensionPanelMap) {
+				if (dimensionPanelMap.hasOwnProperty(key)) {
+					var panel = dimensionPanelMap[key],
+                        a = panel.availableStore,
+						s = panel.selectedStore;
 
-					if (s.getCount() > 0) {
-						a.reset();
-						s.removeAll();
-					}
+                    // reset
+                    a.reset();
+                    s.removeAll();
+                    panel.selectedAll.setValue(false);
 
-					if (recMap[key]) {
-						s.add(recMap[key]);
-						ns.core.web.multiSelect.filterAvailable({store: a}, {store: s});
-					}
+                    // add
+                    if (Ext.Array.contains(xLayout.objectNames, key)) {
+                        if (recMap[key]) {
+                            s.add(recMap[key]);
+                            ns.core.web.multiSelect.filterAvailable({store: a}, {store: s});
+                        }
+                        else {
+                            panel.selectedAll.setValue(true);
+                        }
+                    }
 				}
 			}
 
-			// Layout
+			// layout
 			ns.app.viewport.chartType.setChartType(layout.type);
 
 			ns.app.stores.dimension.removeAll();
@@ -6698,12 +7610,12 @@ Ext.onReady( function() {
                 ns.app.stores.dimension.add({id: dimConf.organisationUnit.dimensionName, name: dimConf.organisationUnit.name});
             }
 
-			// Options
+			// options
 			if (ns.app.optionsWindow) {
 				ns.app.optionsWindow.setOptions(layout);
 			}
 
-			// Organisation units
+			// organisation units
 			if (recMap[dimConf.organisationUnit.objectName]) {
 				for (var i = 0, ouRecords = recMap[dimConf.organisationUnit.objectName]; i < ouRecords.length; i++) {
 					if (ouRecords[i].id === 'USER_ORGUNIT') {
@@ -6786,7 +7698,7 @@ Ext.onReady( function() {
 
 					// left gui
 					var viewportHeight = westRegion.getHeight(),
-						numberOfTabs = ns.core.init.dimensions.length + 5,
+						numberOfTabs = ns.core.init.dimensions.length + 3,
 						tabHeight = 28,
 						minPeriodHeight = 380,
 						settingsHeight = 46;

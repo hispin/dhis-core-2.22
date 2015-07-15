@@ -29,6 +29,8 @@ package org.hisp.dhis.commons.util;
  */
 
 /**
+ * Utility class with methods for managing file system paths.
+ * 
  * @author Torgeir Lorange Ostby
  */
 public class PathUtils

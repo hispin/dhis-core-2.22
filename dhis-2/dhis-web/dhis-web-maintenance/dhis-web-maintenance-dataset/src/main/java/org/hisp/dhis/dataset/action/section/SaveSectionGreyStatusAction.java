@@ -162,18 +162,7 @@ public class SaveSectionGreyStatusAction
             optionCombo = categoryService.getDataElementCategoryOptionCombo( optionComboId );
         }
 
-        DataElementOperand operand = new DataElementOperand();
-        operand.setDataElement( dataElement );
-        operand.setCategoryOptionCombo( optionCombo );       
-        
-        if ( dataElementOperandService.getDataElementOperand( operand ) == null )
-        {            
-            dataElementOperandService.addDataElementOperand( operand );
-        }        
-        else
-        {
-            operand = dataElementOperandService.getDataElementOperand( operand );
-        }
+        DataElementOperand operand = dataElementOperandService.getOrAddDataElementOperand( dataElement, optionCombo );
 
         Set<DataElementOperand> greyedFields = section.getGreyedFields();
 

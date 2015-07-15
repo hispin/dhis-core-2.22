@@ -37,6 +37,8 @@ import org.hisp.dhis.commons.filter.Filter;
 public class DataElementWithAggregationFilter
     implements Filter<DataElement>
 {
+    public static final DataElementWithAggregationFilter INSTANCE = new DataElementWithAggregationFilter();
+    
     @Override
     public boolean retain( DataElement element )
     {

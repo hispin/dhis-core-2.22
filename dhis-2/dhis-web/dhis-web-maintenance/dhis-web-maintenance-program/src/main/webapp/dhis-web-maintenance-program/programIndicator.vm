@@ -34,7 +34,7 @@
 						<th>$i18n.getString( "description" )</th>
 					</tr>
 				</thead>
-		  
+				
 				<tbody id="list">
 					#set( $mark = false )
 					#foreach( $programIndicator in $programIndicators )

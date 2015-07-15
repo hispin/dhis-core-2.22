@@ -61,19 +61,12 @@ Ext.onReady( function() {
 		// conf
 		(function() {
 			conf.finals = {
-				url: {
-					path_module: '/dhis-web-pivot/',
-					organisationunitchildren_get: 'getOrganisationUnitChildren.action'
-				},
 				dimension: {
 					data: {
 						value: 'data',
 						name: NS.i18n.data || 'Data',
 						dimensionName: 'dx',
-						objectName: 'dx',
-						warning: {
-							filter: '...'//NS.i18n.wm_multiple_filter_ind_de
-						}
+						objectName: 'dx'
 					},
 					category: {
 						name: NS.i18n.assigned_categories || 'Assigned categories',
@@ -103,6 +96,18 @@ Ext.onReady( function() {
 						name: NS.i18n.data_sets || 'Data sets',
 						dimensionName: 'dx',
 						objectName: 'ds'
+					},
+					eventDataItem: {
+						value: 'eventDataItem',
+						name: NS.i18n.event_data_items || 'Event data items',
+						dimensionName: 'dx',
+						objectName: 'di'
+					},
+					programIndicator: {
+						value: 'programIndicator',
+						name: NS.i18n.program_indicators || 'Program indicators',
+						dimensionName: 'dx',
+						objectName: 'pi'
 					},
 					period: {
 						value: 'period',
@@ -174,11 +179,14 @@ Ext.onReady( function() {
 				west_fieldset_width: 418,
 				west_width_padding: 2,
 				west_fill: 2,
-				west_fill_accordion_indicator: 56,
-				west_fill_accordion_dataelement: 59,
-				west_fill_accordion_dataset: 31,
+				west_fill_accordion_indicator: 81,
+				west_fill_accordion_dataelement: 81,
+				west_fill_accordion_dataset: 56,
+                west_fill_accordion_eventdataitem: 81,
+                west_fill_accordion_programindicator: 81,
 				west_fill_accordion_period: 303,
 				west_fill_accordion_organisationunit: 58,
+                west_fill_accordion_group: 31,
 				west_maxheight_accordion_indicator: 400,
 				west_maxheight_accordion_dataelement: 400,
 				west_maxheight_accordion_dataset: 400,
@@ -569,6 +577,11 @@ Ext.onReady( function() {
 
                     if (Ext.isString(config.userOrganisationUnit)) {
                         layout.userOrganisationUnit = config.userOrganisationUnit;
+                    }
+
+                    // TODO program
+                    if (Ext.isObject(config.program)) {
+                        layout.program = config.program;
                     }
 
                     // validate
@@ -2087,6 +2100,10 @@ Ext.onReady( function() {
 			web.analytics = {};
 
 			web.analytics.getParamString = function(xLayout, isSorted) {
+
+                // TODO
+                isSorted = false;
+
 				var axisDimensionNames = isSorted ? xLayout.sortedAxisDimensionNames : xLayout.axisDimensionNames,
 					filterDimensions = isSorted ? xLayout.sortedFilterDimensions : xLayout.filterDimensions,
 					dimensionNameIdsMap = isSorted ? xLayout.dimensionNameSortedIdsMap : xLayout.dimensionNameIdsMap,
@@ -2106,14 +2123,15 @@ Ext.onReady( function() {
 					items = Ext.clone(dimensionNameIdsMap[dimName]);
 
 					if (dimName === dx) {
-						for (var j = 0, index; j < items.length; j++) {
-							index = items[j].indexOf('#');
+						//for (var j = 0, index; j < items.length; j++) {
+							//index = items[j].indexOf('#');
 
-							if (index > 0) {
-								addCategoryDimension = true;
-								items[j] = items[j].substr(0, index);
-							}
-						}
+							//if (index > 0) {
+								//addCategoryDimension = true;
+								//items[j] = items[j].substr(0, index);
+                                //items[j] = items[j].replace('#', '.');
+							//}
+						//}
 
 						items = Ext.Array.unique(items);
 					}
@@ -2161,7 +2179,12 @@ Ext.onReady( function() {
 					paramString += '&approvalLevel=' + xLayout.dataApprovalLevel.id;
 				}
 
-				return paramString;
+                // TODO program
+                if (xLayout.program && xLayout.program.id) {
+                    paramString += '&program=' + xLayout.program.id;
+                }
+
+				return paramString.replace(/#/g, '.');
 			};
 
 			web.analytics.validateUrl = function(url) {

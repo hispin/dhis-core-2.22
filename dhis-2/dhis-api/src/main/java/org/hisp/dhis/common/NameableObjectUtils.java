@@ -76,7 +76,8 @@ public class NameableObjectUtils
     /**
      * Returns a list typed with the desired erasure based on the given collection.
      * This operation implies an unchecked cast and it is the responsibility of
-     * the caller to make sure the cast is valid.
+     * the caller to make sure the cast is valid. A copy of the given list will
+     * be returned.
      *
      * @param collection the collection.
      * @return a list.
@@ -165,7 +166,7 @@ public class NameableObjectUtils
         
         return list;
     }
-
+    
     /**
      * Returns a mapping between the UID and the nameable objects.
      *

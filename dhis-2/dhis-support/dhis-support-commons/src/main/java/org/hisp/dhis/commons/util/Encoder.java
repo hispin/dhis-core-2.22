@@ -31,6 +31,8 @@ package org.hisp.dhis.commons.util;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
+ * Utility class for encoding.
+ * 
  * @author Lars Helge Overland
  */
 public class Encoder

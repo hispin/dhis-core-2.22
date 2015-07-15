@@ -192,10 +192,8 @@ public interface AnalyticsService
     List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, I18nFormat format );
     
     /**
-     * Returns a list of persisted DimensionalObjects generated from the given 
-     * dimension identifier and list of dimension options. The dx dimension
-     * will be exploded into concrete in|de|ds object identifiers and returned
-     * as separate DimensionalObjects. 
+     * Returns a persisted DimensionalObject generated from the given  dimension 
+     * identifier and list of dimension options.
      * 
      * For the pe dimension items, relative periods represented by enums will be 
      * replaced by real ISO periods relative to the current date. For the ou 
@@ -211,5 +209,5 @@ public interface AnalyticsService
      * @throws IllegalQueryException if no dimensions was found.
      * @return list of DimensionalObjects.
      */
-    List<DimensionalObject> getDimension( String dimension, List<String> items, Date relativePeriodDate, I18nFormat format, boolean allowNull );
+    DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate, I18nFormat format, boolean allowNull );
 }

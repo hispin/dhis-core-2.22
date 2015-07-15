@@ -34,9 +34,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
@@ -83,7 +85,6 @@ public class OrganisationUnitGroupSet
 
     public OrganisationUnitGroupSet()
     {
-
     }
 
     public OrganisationUnitGroupSet( String name, String description, boolean compulsory )
@@ -190,6 +191,12 @@ public class OrganisationUnitGroupSet
     public List<NameableObject> getItems()
     {
         return new ArrayList<NameableObject>( organisationUnitGroups );
+    }
+
+    @Override
+    public DimensionType getDimensionType()
+    {
+        return DimensionType.ORGANISATIONUNIT_GROUPSET;
     }
 
     // -------------------------------------------------------------------------

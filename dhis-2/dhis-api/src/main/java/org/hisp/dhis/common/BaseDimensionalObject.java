@@ -140,6 +140,17 @@ public class BaseDimensionalObject
     // Logic
     // -------------------------------------------------------------------------
 
+    public DimensionalObject instance()
+    {
+        BaseDimensionalObject object = new BaseDimensionalObject( this.uid, 
+            this.dimensionType, this.dimensionName, this.displayName, this.items, this.allItems );
+        
+        object.legendSet = this.legendSet;
+        object.filter = this.filter;
+        
+        return object;
+    }
+    
     @Override
     public boolean hasItems()
     {

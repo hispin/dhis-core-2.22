@@ -41,13 +41,14 @@ Ext.onReady( function() {
 
 	// namespace
 	PT = {};
+	var NS = PT;
 
-	PT.instances = [];
-	PT.i18n = {};
-	PT.isDebug = false;
-	PT.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
+	NS.instances = [];
+	NS.i18n = {};
+	NS.isDebug = false;
+	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	PT.getCore = function(ns) {
+	NS.getCore = function(ns) {
         var init = ns.init,
             conf = {},
             api = {},
@@ -69,27 +70,27 @@ Ext.onReady( function() {
 				dimension: {
 					data: {
 						value: 'data',
-						name: PT.i18n.data || 'Data',
+						name: NS.i18n.data || 'Data',
 						dimensionName: 'dx',
 						objectName: 'dx',
 						warning: {
-							filter: '...'//PT.i18n.wm_multiple_filter_ind_de
+							filter: '...'//NS.i18n.wm_multiple_filter_ind_de
 						}
 					},
 					category: {
-						name: PT.i18n.assigned_categories || 'Assigned categories',
+						name: NS.i18n.assigned_categories || 'Assigned categories',
 						dimensionName: 'co',
 						objectName: 'co',
 					},
 					indicator: {
 						value: 'indicators',
-						name: PT.i18n.indicators || 'Indicators',
+						name: NS.i18n.indicators || 'Indicators',
 						dimensionName: 'dx',
 						objectName: 'in'
 					},
 					dataElement: {
 						value: 'dataElements',
-						name: PT.i18n.data_elements || 'Data elements',
+						name: NS.i18n.data_elements || 'Data elements',
 						dimensionName: 'dx',
 						objectName: 'de'
 					},
@@ -101,13 +102,25 @@ Ext.onReady( function() {
 					},
 					dataSet: {
 						value: 'dataSets',
-						name: PT.i18n.data_sets || 'Data sets',
+						name: NS.i18n.data_sets || 'Data sets',
 						dimensionName: 'dx',
 						objectName: 'ds'
 					},
+					eventDataItem: {
+						value: 'eventDataItem',
+						name: NS.i18n.event_data_items || 'Event data items',
+						dimensionName: 'dx',
+						objectName: 'di'
+					},
+					programIndicator: {
+						value: 'programIndicator',
+						name: NS.i18n.program_indicators || 'Program indicators',
+						dimensionName: 'dx',
+						objectName: 'pi'
+					},
 					period: {
 						value: 'period',
-						name: PT.i18n.periods || 'Periods',
+						name: NS.i18n.periods || 'Periods',
 						dimensionName: 'pe',
 						objectName: 'pe'
 					},
@@ -119,7 +132,7 @@ Ext.onReady( function() {
 					},
 					organisationUnit: {
 						value: 'organisationUnits',
-						name: PT.i18n.organisation_units || 'Organisation units',
+						name: NS.i18n.organisation_units || 'Organisation units',
 						dimensionName: 'ou',
 						objectName: 'ou'
 					},
@@ -155,17 +168,17 @@ Ext.onReady( function() {
 
 			conf.period = {
 				periodTypes: [
-					{id: 'Daily', name: PT.i18n.daily},
-					{id: 'Weekly', name: PT.i18n.weekly},
-					{id: 'Monthly', name: PT.i18n.monthly},
-					{id: 'BiMonthly', name: PT.i18n.bimonthly},
-					{id: 'Quarterly', name: PT.i18n.quarterly},
-					{id: 'SixMonthly', name: PT.i18n.sixmonthly},
-					{id: 'SixMonthlyApril', name: PT.i18n.sixmonthly_april},
-					{id: 'Yearly', name: PT.i18n.yearly},
-					{id: 'FinancialOct', name: PT.i18n.financial_oct},
-					{id: 'FinancialJuly', name: PT.i18n.financial_july},
-					{id: 'FinancialApril', name: PT.i18n.financial_april}
+					{id: 'Daily', name: NS.i18n.daily},
+					{id: 'Weekly', name: NS.i18n.weekly},
+					{id: 'Monthly', name: NS.i18n.monthly},
+					{id: 'BiMonthly', name: NS.i18n.bimonthly},
+					{id: 'Quarterly', name: NS.i18n.quarterly},
+					{id: 'SixMonthly', name: NS.i18n.sixmonthly},
+					{id: 'SixMonthlyApril', name: NS.i18n.sixmonthly_april},
+					{id: 'Yearly', name: NS.i18n.yearly},
+					{id: 'FinancialOct', name: NS.i18n.financial_oct},
+					{id: 'FinancialJuly', name: NS.i18n.financial_july},
+					{id: 'FinancialApril', name: NS.i18n.financial_april}
 				],
                 relativePeriods: []
 			};
@@ -175,9 +188,14 @@ Ext.onReady( function() {
 				west_fieldset_width: 418,
 				west_width_padding: 2,
 				west_fill: 2,
-				west_fill_accordion_indicator: 56,
-				west_fill_accordion_dataelement: 59,
-				west_fill_accordion_dataset: 31,
+				//west_fill_accordion_indicator: 56,
+				west_fill_accordion_indicator: 81,
+				//west_fill_accordion_dataelement: 59,
+				west_fill_accordion_dataelement: 81,
+				//west_fill_accordion_dataset: 31,
+				west_fill_accordion_dataset: 56,
+                west_fill_accordion_eventdataitem: 81,
+                west_fill_accordion_programindicator: 81,
 				west_fill_accordion_period: 303,
 				west_fill_accordion_organisationunit: 58,
 				west_maxheight_accordion_indicator: 400,
@@ -319,7 +337,7 @@ Ext.onReady( function() {
 						var records = [];
 
 						if (!Ext.isArray(config.items)) {
-							console.log('Dimension: items is not an array: ' + config);
+							//console.log('Dimension: items is not an array: ' + config);
 							return;
 						}
 
@@ -330,7 +348,7 @@ Ext.onReady( function() {
 						config.items = Ext.Array.clean(records);
 
 						if (!config.items.length) {
-							console.log('Dimension: has no valid items: ' + config);
+							//console.log('Dimension: has no valid items: ' + config);
 							return;
 						}
 					}
@@ -363,6 +381,8 @@ Ext.onReady( function() {
 				// hideEmptyRows: boolean (false)
 
                 // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
+
+                // dataApprovalLevel: object
 
 				// showHierarchy: boolean (false)
 
@@ -432,19 +452,19 @@ Ext.onReady( function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(PT.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
+								ns.alert(NS.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(PT.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
+								ns.alert(NS.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(PT.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
+								ns.alert(NS.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
 								return;
 							}
 						}
@@ -493,13 +513,13 @@ Ext.onReady( function() {
 						return;
 					}
 
-					config.columns = getValidatedDimensionArray(config.columns);
-					config.rows = getValidatedDimensionArray(config.rows);
-					config.filters = getValidatedDimensionArray(config.filters);
+					//config.columns = getValidatedDimensionArray(config.columns);
+					//config.rows = getValidatedDimensionArray(config.rows);
+					//config.filters = getValidatedDimensionArray(config.filters);
 
 					// at least one dimension specified as column or row
 					if (!(config.columns || config.rows)) {
-						ns.alert(PT.i18n.at_least_one_dimension_must_be_specified_as_row_or_column);
+						ns.alert(NS.i18n.at_least_one_dimension_must_be_specified_as_row_or_column);
 						return;
 					}
 
@@ -514,7 +534,7 @@ Ext.onReady( function() {
 
 					// at least one period
 					if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						ns.alert(PT.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
+						ns.alert(NS.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
 						return;
 					}
 
@@ -540,6 +560,7 @@ Ext.onReady( function() {
 					layout.showDimensionLabels = Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
 					layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
                     layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'DEFAULT';
+					layout.dataApprovalLevel = Ext.isObject(config.dataApprovalLevel) && Ext.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
 
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
 
@@ -567,6 +588,11 @@ Ext.onReady( function() {
 
                     if (Ext.isString(config.userOrganisationUnit)) {
                         layout.userOrganisationUnit = config.userOrganisationUnit;
+                    }
+
+                    // TODO program
+                    if (Ext.isObject(config.program)) {
+                        layout.program = config.program;
                     }
 
                     // validate
@@ -1754,6 +1780,10 @@ Ext.onReady( function() {
 					delete layout.aggregationType;
 				}
 
+				if (layout.dataApprovalLevel && layout.dataApprovalLevel.id === 'DEFAULT') {
+					delete layout.dataApprovalLevel;
+				}
+
 				delete layout.parentGraphMap;
 				delete layout.reportingPeriod;
 				delete layout.organisationUnit;
@@ -2030,7 +2060,7 @@ Ext.onReady( function() {
 
                 type = type || 'error';
 
-				config.title = type === 'error' ? PT.i18n.error : (type === 'warning' ? PT.i18n.warning : PT.i18n.info);
+				config.title = type === 'error' ? NS.i18n.error : (type === 'warning' ? NS.i18n.warning : NS.i18n.info);
 				config.iconCls = 'ns-window-title-messagebox ' + type;
 
                 // html
@@ -2063,6 +2093,10 @@ Ext.onReady( function() {
 			web.analytics = {};
 
 			web.analytics.getParamString = function(xLayout, isSorted) {
+
+                // TODO
+                isSorted = false;
+                
 				var axisDimensionNames = isSorted ? xLayout.sortedAxisDimensionNames : xLayout.axisDimensionNames,
 					filterDimensions = isSorted ? xLayout.sortedFilterDimensions : xLayout.filterDimensions,
 					dimensionNameIdsMap = isSorted ? xLayout.dimensionNameSortedIdsMap : xLayout.dimensionNameIdsMap,
@@ -2131,6 +2165,16 @@ Ext.onReady( function() {
                 if (Ext.isString(xLayout.userOrganisationUnit)) {
 					paramString += '&userOrganisationUnit=' + xLayout.userOrganisationUnit;
 				}
+
+				// data approval level
+				if (Ext.isObject(xLayout.dataApprovalLevel) && Ext.isString(xLayout.dataApprovalLevel.id) && xLayout.dataApprovalLevel.id !== 'DEFAULT') {
+					paramString += '&approvalLevel=' + xLayout.dataApprovalLevel.id;
+				}
+
+                // TODO program
+                if (xLayout.program && xLayout.program.id) {
+                    paramString += '&program=' + xLayout.program.id;
+                }
 
 				return paramString;
 			};
@@ -3055,14 +3099,13 @@ Ext.onReady( function() {
 		// alert
 		ns.alert = web.message.alert;
 
-		return {
-			conf: conf,
-			api: api,
-			support: support,
-			service: service,
-			web: web,
-			init: init
-		};
+		ns.conf = conf;
+		ns.api = api;
+		ns.support = support;
+		ns.service = service;
+		ns.web = web;
+
+		return ns;
 	};
 
 	// PLUGIN

@@ -32,11 +32,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.commons.util.ConversionUtils;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleStore;
 
@@ -90,7 +90,7 @@ public class HibernateValidationRuleStore
     {
         List<ValidationRule> validationRules = new ArrayList<>();
         
-        Collection<Integer> ids = ConversionUtils.getIdentifiers( DataElement.class, dataElements );
+        Collection<Integer> ids = IdentifiableObjectUtils.getIdentifiers( dataElements );
         
         String hql = "select distinct v from ValidationRule v join v.leftSide ls join ls.dataElementsInExpression lsd where lsd.id in (:ids)";
         

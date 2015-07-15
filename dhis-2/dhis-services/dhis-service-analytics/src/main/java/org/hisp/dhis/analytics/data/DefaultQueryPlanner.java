@@ -31,13 +31,11 @@ package org.hisp.dhis.analytics.data;
 import static org.hisp.dhis.analytics.AggregationType.SUM;
 import static org.hisp.dhis.analytics.DataQueryParams.LEVEL_PREFIX;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.DATASET_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.INDICATOR_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
+import static org.hisp.dhis.common.NameableObjectUtils.asTypedList;
 import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE;
 import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
 import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_BOOL;
@@ -65,14 +63,19 @@ import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.MaintenanceModeException;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.commons.collection.PaginatedList;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
 import org.hisp.dhis.system.util.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -97,6 +100,9 @@ public class DefaultQueryPlanner
     @Autowired
     private SystemSettingManager systemSettingManager;
     
+    @Autowired
+    private ProgramIndicatorService programIndicatorService;
+    
     // -------------------------------------------------------------------------
     // DefaultQueryPlanner implementation
     // -------------------------------------------------------------------------
@@ -113,6 +119,9 @@ public class DefaultQueryPlanner
         {
             throw new IllegalQueryException( "Params cannot be null" );
         }
+
+        List<NameableObject> dataElements = ListUtils.union( params.getDataElements(), params.getProgramDataElements() );
+        List<DataElement> nonAggDataElements = FilterUtils.inverseFilter( asTypedList( dataElements, DataElement.class ), AggregatableDataElementFilter.INSTANCE );
         
         if ( params.getDimensions().isEmpty() )
         {
@@ -129,12 +138,12 @@ public class DefaultQueryPlanner
             violation = "At least one period must be specified as dimension or filter";
         }
         
-        if ( params.getFilters().contains( new BaseDimensionalObject( INDICATOR_DIM_ID ) ) )
+        if ( !params.getFilterIndicators().isEmpty() )
         {
             violation = "Indicators cannot be specified as filter";
         }
 
-        if ( params.getFilters().contains( new BaseDimensionalObject( DATASET_DIM_ID ) ) )
+        if ( !params.getFilterDataSets().isEmpty() )
         {
             violation = "Data sets cannot be specified as filter";
         }
@@ -149,24 +158,34 @@ public class DefaultQueryPlanner
             violation = "Dimensions cannot be specified more than once: " + params.getDuplicateDimensions();
         }
         
-        if ( params.hasDimensionOrFilter( DATASET_DIM_ID ) && !params.getDataElementGroupSets().isEmpty() )
+        if ( !params.getAllDataSets().isEmpty() && !params.getDataElementGroupSets().isEmpty() )
         {
             violation = "Data sets and data element group sets cannot be specified simultaneously";
         }
         
-        if ( params.hasDimensionOrFilter( CATEGORYOPTIONCOMBO_DIM_ID ) && !params.hasDimensionOrFilter( DATAELEMENT_DIM_ID ) )
+        if ( params.hasDimensionOrFilter( CATEGORYOPTIONCOMBO_DIM_ID ) && params.getAllDataElements().isEmpty() )
         {
             violation = "Category option combos cannot be specified when data elements are not specified";
         }
+
+        if ( !params.getProgramIndicators().isEmpty() && !params.hasProgram() )
+        {
+            violation = "Program must be specified when program indicators are specified";
+        }
         
-        if ( params.hasDimensionOrFilter( PROGRAM_DATAELEMENT_DIM_ID ) && !params.hasProgram() )
+        if ( !params.getAllProgramDataElements().isEmpty() && !params.hasProgram() )
         {
             violation = "Program must be specified when tracker data elements are specified";
         }
 
-        if ( params.hasDimensionOrFilter( PROGRAM_ATTRIBUTE_DIM_ID ) && !params.hasProgram() )
+        if ( !params.getAllProgramAttributes().isEmpty() && !params.hasProgram() )
         {
             violation = "Program must be specified when program attributes are specified";
+        }
+        
+        if ( !nonAggDataElements.isEmpty() )
+        {
+            violation = "Data elements must be of a type that allows aggregation: " + getUids( nonAggDataElements );
         }
         
         if ( violation != null )
@@ -191,7 +210,7 @@ public class DefaultQueryPlanner
         {
             for ( String column : columns )
             {
-                if ( !params.hasDimensionCollapseDx( column ) )
+                if ( !params.hasDimension( column ) )
                 {
                     violation = "Column must be present as dimension in query: " + column;
                 }
@@ -202,7 +221,7 @@ public class DefaultQueryPlanner
         {
             for ( String row : rows )
             {
-                if ( !params.hasDimensionCollapseDx( row ) )
+                if ( !params.hasDimension( row ) )
                 {
                     violation = "Row must be present as dimension in query: " + row;
                 }
@@ -299,18 +318,7 @@ public class DefaultQueryPlanner
         // Group by data element
         // ---------------------------------------------------------------------
         
-        queryGroups = splitByDimension( queryGroups, DATAELEMENT_DIM_ID, optimalQueries );
-
-        if ( queryGroups.isOptimal( optimalQueries ) )
-        {
-            return queryGroups;
-        }
-
-        // ---------------------------------------------------------------------
-        // Group by data set
-        // ---------------------------------------------------------------------
-        
-        queryGroups = splitByDimension( queryGroups, DATASET_DIM_ID, optimalQueries );
+        queryGroups = splitByDimension( queryGroups, DATA_X_DIM_ID, optimalQueries );
 
         if ( queryGroups.isOptimal( optimalQueries ) )
         {
@@ -485,7 +493,7 @@ public class DefaultQueryPlanner
         
         return queries;        
     }
-    
+
     @Override
     public List<DataQueryParams> groupByOrgUnitLevel( DataQueryParams params )
     {
@@ -529,9 +537,40 @@ public class DefaultQueryPlanner
             log.debug( "Split on org unit level: " + queries.size() );
         }
         
-        return queries;    
+        return queries;
     }
 
+    @Override
+    public List<DataQueryParams> groupByFilterExpression( DataQueryParams params )
+    {
+        List<DataQueryParams> queries = new ArrayList<>();
+        
+        if ( !params.getProgramIndicators().isEmpty() )
+        {
+            ListMap<String, NameableObject> filterProgramIndicatorMap = getFilterProgramIndicatorMap( params.getProgramIndicators() );
+            
+            for ( String filter : filterProgramIndicatorMap.keySet() )
+            {
+                DataQueryParams query = params.instance();
+                query.setProgramIndicators( filterProgramIndicatorMap.get( filter ) );
+                query.setFilterExpression( programIndicatorService.getAnalyticsSQl( filter ) );
+                queries.add( query );
+            }
+        }
+        else
+        {
+            queries.add( params.instance() );
+            return queries;
+        }
+
+        if ( queries.size() > 1 )
+        {
+            log.debug( "Split on filter expression: " + queries.size() );
+        }
+        
+        return queries;
+    }
+    
     private List<DataQueryParams> groupByDataType( DataQueryParams params )
     {
         List<DataQueryParams> queries = new ArrayList<>();
@@ -718,7 +757,7 @@ public class DefaultQueryPlanner
      * Creates a mapping between level and organisation unit for the given organisation
      * units.
      */
-    private ListMap<Integer, NameableObject> getLevelOrgUnitMap( Collection<NameableObject> orgUnits )
+    private ListMap<Integer, NameableObject> getLevelOrgUnitMap( List<NameableObject> orgUnits )
     {
         ListMap<Integer, NameableObject> map = new ListMap<>();
         
@@ -737,9 +776,29 @@ public class DefaultQueryPlanner
     }
     
     /**
+     * Creates a mapping between filter and program indicator for the given
+     * program indicators.
+     */
+    private ListMap<String, NameableObject> getFilterProgramIndicatorMap( List<NameableObject> programIndicators )
+    {
+        ListMap<String, NameableObject> map = new ListMap<>();
+        
+        for ( NameableObject programIndicator : programIndicators )
+        {
+            ProgramIndicator indicator = (ProgramIndicator) programIndicator;
+            
+            String filter = indicator.getFilter();
+            
+            map.putValue( filter, indicator );
+        }
+        
+        return map;
+    }
+    
+    /**
      * Creates a mapping between data type and data element for the given data elements.
      */
-    private ListMap<DataType, NameableObject> getDataTypeDataElementMap( Collection<NameableObject> dataElements )
+    private ListMap<DataType, NameableObject> getDataTypeDataElementMap( List<NameableObject> dataElements )
     {
         ListMap<DataType, NameableObject> map = new ListMap<>();
         
@@ -759,7 +818,7 @@ public class DefaultQueryPlanner
      * Creates a mapping between the aggregation type and data element for the
      * given data elements and period type.
      */
-    private ListMap<AggregationType, NameableObject> getAggregationTypeDataElementMap( Collection<NameableObject> dataElements, PeriodType aggregationPeriodType )
+    private ListMap<AggregationType, NameableObject> getAggregationTypeDataElementMap( List<NameableObject> dataElements, PeriodType aggregationPeriodType )
     {
         ListMap<AggregationType, NameableObject> map = new ListMap<>();
         
@@ -779,7 +838,7 @@ public class DefaultQueryPlanner
      * Creates a mapping between the number of days in the period interval and period
      * for the given periods.
      */
-    private ListMap<Integer, NameableObject> getDaysPeriodMap( Collection<NameableObject> periods )
+    private ListMap<Integer, NameableObject> getDaysPeriodMap( List<NameableObject> periods )
     {
         ListMap<Integer, NameableObject> map = new ListMap<>();
         
@@ -838,8 +897,7 @@ public class DefaultQueryPlanner
     /**
      * Indicates whether disaggregation is allowed for the given input.
      */
-    private boolean isDisaggregation( String aggregationOperator, 
-        PeriodType aggregationPeriodType, PeriodType dataPeriodType )
+    private boolean isDisaggregation( String aggregationOperator, PeriodType aggregationPeriodType, PeriodType dataPeriodType )
     {
         return dataPeriodType != null && aggregationPeriodType != null && aggregationPeriodType.getFrequencyOrder() < dataPeriodType.getFrequencyOrder();
     }

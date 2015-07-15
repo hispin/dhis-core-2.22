@@ -28,7 +28,7 @@ package org.hisp.dhis.analytics;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
@@ -66,7 +66,7 @@ public class DimensionOptionTest
         ouA = createOrganisationUnit( 'A' );
         
         options = new ArrayList<>();
-        options.add( new DimensionItem( DATAELEMENT_DIM_ID, deA ) );
+        options.add( new DimensionItem( DATA_X_DIM_ID, deA ) );
         options.add( new DimensionItem( PERIOD_DIM_ID, peA ) );
         options.add( new DimensionItem( ORGUNIT_DIM_ID, ouA ) );
     }

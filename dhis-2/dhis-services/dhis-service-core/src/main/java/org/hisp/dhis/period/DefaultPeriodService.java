@@ -28,7 +28,7 @@ package org.hisp.dhis.period;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -309,8 +309,8 @@ public class DefaultPeriodService
         
         for ( Period period : periods )
         {
-            hierarchy.getIntersectingPeriods().put( period.getId(), new HashSet<>( getIdentifiers( Period.class, getIntersectingPeriods( period.getStartDate(), period.getEndDate() ) ) ) );
-            hierarchy.getPeriodsBetween().put( period.getId(), new HashSet<>( getIdentifiers( Period.class, getPeriodsBetweenDates( period.getStartDate(), period.getEndDate() ) ) ) );
+            hierarchy.getIntersectingPeriods().put( period.getId(), new HashSet<>( getIdentifiers( getIntersectingPeriods( period.getStartDate(), period.getEndDate() ) ) ) );
+            hierarchy.getPeriodsBetween().put( period.getId(), new HashSet<>( getIdentifiers( getPeriodsBetweenDates( period.getStartDate(), period.getEndDate() ) ) ) );
         }
         
         return hierarchy;

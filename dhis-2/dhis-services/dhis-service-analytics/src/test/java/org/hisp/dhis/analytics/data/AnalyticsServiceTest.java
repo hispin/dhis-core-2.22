@@ -389,9 +389,9 @@ public class AnalyticsServiceTest
         chart.setCategory( DimensionalObject.ORGUNIT_DIM_ID );
         chart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
         
-        chart.getDataElements().add( deA );
-        chart.getDataElements().add( deB );
-        chart.getDataElements().add( deC );
+        chart.addDataDimensionItem( deA );
+        chart.addDataDimensionItem( deB );
+        chart.addDataDimensionItem( deC );
         
         chart.getOrganisationUnits().add( ouA );
         chart.getOrganisationUnits().add( ouB );
@@ -416,9 +416,9 @@ public class AnalyticsServiceTest
         chart.setCategory( ouGroupSetA.getUid() );
         chart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
         
-        chart.getDataElements().add( deA );
-        chart.getDataElements().add( deB );
-        chart.getDataElements().add( deC );
+        chart.addDataDimensionItem( deA );
+        chart.addDataDimensionItem( deB );
+        chart.addDataDimensionItem( deC );
         
         chart.getOrganisationUnitGroups().add( ouGroupA );
         chart.getOrganisationUnitGroups().add( ouGroupB );
@@ -444,9 +444,9 @@ public class AnalyticsServiceTest
         chart.setCategory( ouGroupSetA.getUid() );
         chart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
         
-        chart.getDataElements().add( deA );
-        chart.getDataElements().add( deE );
-        chart.getDataElements().add( deF );
+        chart.addDataDimensionItem( deA );
+        chart.addDataDimensionItem( deE );
+        chart.addDataDimensionItem( deF );
         
         chart.getOrganisationUnitGroups().add( ouGroupA );
         chart.getOrganisationUnitGroups().add( ouGroupB );
@@ -460,7 +460,7 @@ public class AnalyticsServiceTest
         assertEquals( 1, params.getDataElements().size() );
         assertEquals( 2, params.getProgramDataElements().size() );
         assertEquals( 1, params.getFilterPeriods().size() );
-        assertEquals( 3, params.getDimensions().size() );
+        assertEquals( 2, params.getDimensions().size() );
         assertEquals( 1, params.getFilters().size() );
         assertEquals( 3, params.getDimensionOptions( ouGroupSetA.getUid() ).size() );
     }

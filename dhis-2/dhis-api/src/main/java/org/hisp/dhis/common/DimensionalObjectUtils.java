@@ -28,8 +28,8 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObject.DATA_DIMS;
-import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
+import static org.hisp.dhis.common.DataDimensionItem.DATA_DIMENSION_TYPE_CLASS_MAP;
+import static org.hisp.dhis.common.DataDimensionItem.DATA_DIMENSION_TYPE_DOMAIN_MAP;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,11 +38,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.DataDimensionItem.DataDimensionItemType;
 import org.hisp.dhis.common.comparator.ObjectStringValueComparator;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementOperand;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -54,25 +60,10 @@ public class DimensionalObjectUtils
     public static final String ITEM_SEP = "-";
     
     private static final Pattern INT_PATTERN = Pattern.compile( "^(0|-?[1-9]\\d*)$" );
-
+    private static final Pattern DIMENSIONAL_OPERAND_PATTERN = Pattern.compile( "([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})" );
+    
     public static final String TITLE_ITEM_SEP = ", ";
-    
-    /**
-     * Converts a concrete dimensional class identifier to a dimension identifier.
-     * 
-     * @param identifier the identifier.
-     * @return a dimension identifier.
-     */
-    public static String toDimension( String identifier )
-    {
-        if ( DATA_DIMS.contains( identifier ) )
-        {
-            return DATA_X_DIM_ID;
-        }
         
-        return identifier;
-    }
-    
     /**
      * Creates a unique list of dimension identifiers based on the given list
      * of DimensionalObjects.
@@ -88,7 +79,7 @@ public class DimensionalObjectUtils
         {
             for ( DimensionalObject dimension : dimensions )
             {
-                String dim = toDimension( dimension.getDimension() );
+                String dim = dimension.getDimension();
                 
                 if ( dim != null && !dims.contains( dim ) )
                 {
@@ -100,6 +91,52 @@ public class DimensionalObjectUtils
         return dims;
     }
 
+    public static List<DimensionalObject> getCopies( List<DimensionalObject> dimensions )
+    {
+        List<DimensionalObject> list = new ArrayList<>();
+        
+        if ( dimensions != null )
+        {
+            for ( DimensionalObject dimension : dimensions )
+            {
+                DimensionalObject object = ((BaseDimensionalObject) dimension).instance();
+                list.add( object );
+            }
+        }
+        
+        return list;
+    }
+    
+    /**
+     * Returns a list of data dimension options which match the given data 
+     * dimension item type.
+     * 
+     * @param itemType the data dimension item type.
+     * @param dataDimensionOptions the data dimension options.
+     * @return list of nameable objects.
+     */
+    public static List<NameableObject> getByDataDimensionType( DataDimensionItemType itemType, List<NameableObject> dataDimensionOptions )
+    {
+        List<NameableObject> list = new ArrayList<>();
+        
+        for ( NameableObject object : dataDimensionOptions )
+        {
+            if ( !object.getClass().equals( DATA_DIMENSION_TYPE_CLASS_MAP.get( itemType ) ) )
+            {
+                continue;
+            }
+            
+            if ( object.getClass().equals( DataElement.class ) && !( ((DataElement) object).getDomainType().equals( DATA_DIMENSION_TYPE_DOMAIN_MAP.get( itemType ) ) ) )
+            {
+                continue;
+            }
+            
+            list.add( object );
+        }
+        
+        return list;
+    }
+    
     /**
      * Creates a list of dimension identifiers based on the given list of 
      * DimensionalObjects.
@@ -279,7 +316,7 @@ public class DimensionalObjectUtils
         
         return null;
     }
-
+    
     /**
      * Sets items on the given dimension based on the unique values of the matching 
      * column in the given grid. Items are BaseNameableObjects where the name, 
@@ -354,5 +391,53 @@ public class DimensionalObjectUtils
         }
         
         return StringUtils.join( filterItems, TITLE_ITEM_SEP );
+    }
+
+    /**
+     * Indicates whether the given string is a valid full operand expression.
+     * 
+     * @param expression the expression.
+     * @return true if valid full operand expression, false if not.
+     */
+    public static boolean isValidDimensionalOperand( String expression )
+    {
+        return expression != null && DIMENSIONAL_OPERAND_PATTERN.matcher( expression ).matches();
+    }
+
+    /**
+     * Gets a set of unique data elements based on the given collection of operands.
+     * 
+     * @param operands the collection of operands.
+     * @return a set of data elements.
+     */
+    public static Set<NameableObject> getDataElements( Collection<DataElementOperand> operands )
+    {
+        Set<NameableObject> set = Sets.newHashSet();
+        
+        for ( DataElementOperand operand : operands )
+        {
+            set.add( operand.getDataElement() );
+        }
+        
+        return set;
+    }
+    
+    /**
+     * Gets a set of unique category option combos based on the given collection
+     * of operands.
+     * 
+     * @param operands the collection of operands.
+     * @return a set of category option combos.
+     */
+    public static Set<NameableObject> getCategoryOptionCombos( Collection<DataElementOperand> operands )
+    {
+        Set<NameableObject> set = Sets.newHashSet();
+        
+        for ( DataElementOperand operand : operands )
+        {
+            set.add( operand.getCategoryOptionCombo() );
+        }
+        
+        return set;
     }
 }

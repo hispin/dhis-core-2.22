@@ -28,7 +28,7 @@ package org.hisp.dhis.report.impl;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.io.OutputStream;
@@ -188,7 +188,7 @@ public class DefaultReportService
                 {
                     List<Period> relativePeriods = report.getRelatives().getRelativePeriods( reportDate, null, false );
 
-                    String periodString = getCommaDelimitedString( getIdentifiers( Period.class, periodService.reloadPeriods( relativePeriods ) ) );
+                    String periodString = getCommaDelimitedString( getIdentifiers( periodService.reloadPeriods( relativePeriods ) ) );
                     String isoPeriodString = getCommaDelimitedString( IdentifiableObjectUtils.getUids( relativePeriods ) );
 
                     params.put( PARAM_RELATIVE_PERIODS, periodString );

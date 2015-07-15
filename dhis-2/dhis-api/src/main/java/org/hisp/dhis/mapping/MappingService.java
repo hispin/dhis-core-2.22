@@ -33,7 +33,6 @@ import java.util.List;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
-import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 
@@ -139,6 +138,4 @@ public interface MappingService
     int countPeriodMapViews( Period period );
     
     int countOrganisationUnitMapViews( OrganisationUnit organisationUnit );
-
-    int countLegendSetMapViews( LegendSet legendSet );
 }

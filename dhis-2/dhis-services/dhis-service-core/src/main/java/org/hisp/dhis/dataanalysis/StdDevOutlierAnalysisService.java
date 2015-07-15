@@ -39,12 +39,12 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.datavalue.DeflatedDataValue;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.commons.util.ConversionUtils;
 import org.hisp.dhis.system.util.MathUtils;
 
 /**
@@ -76,7 +76,7 @@ public class StdDevOutlierAnalysisService
     {
         log.info( "Starting std dev analysis, no of org units: " + organisationUnits.size() + ", factor: " + stdDevFactor + ", from: " + from );
         
-        Set<Integer> units = new HashSet<>( ConversionUtils.getIdentifiers( OrganisationUnit.class, organisationUnits ) );
+        Set<Integer> units = new HashSet<>( IdentifiableObjectUtils.getIdentifiers( organisationUnits ) );
 
         List<DeflatedDataValue> outlierCollection = new ArrayList<>();
 

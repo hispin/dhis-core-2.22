@@ -102,7 +102,7 @@ public class MockAnalyticsService
     }
 
     @Override
-    public List<DimensionalObject> getDimension( String dimension, List<String> items, Date relativePeriodDate,
+    public DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate,
         I18nFormat format, boolean allowNull )
     {
         throw new NotImplementedException("");

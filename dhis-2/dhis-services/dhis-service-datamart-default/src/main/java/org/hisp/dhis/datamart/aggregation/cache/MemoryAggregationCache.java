@@ -33,11 +33,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.commons.util.ConversionUtils;
 
 /**
  * @author Lars Helge Overland
@@ -97,7 +97,7 @@ public class MemoryAggregationCache
             return periods;
         }
         
-        periods = ConversionUtils.getIdentifiers( Period.class, periodService.getIntersectingPeriods( startDate, endDate ) );
+        periods = IdentifiableObjectUtils.getIdentifiers( periodService.getIntersectingPeriods( startDate, endDate ) );
         
         cache = ( cache == null ) ? new HashMap<String, Collection<Integer>>() : cache;
         
@@ -122,7 +122,7 @@ public class MemoryAggregationCache
             return periods;
         }
         
-        periods = ConversionUtils.getIdentifiers( Period.class, periodService.getPeriodsBetweenDates( startDate, endDate ) );
+        periods = IdentifiableObjectUtils.getIdentifiers( periodService.getPeriodsBetweenDates( startDate, endDate ) );
         
         cache = ( cache == null ) ? new HashMap<String, Collection<Integer>>() : cache;
         
@@ -147,7 +147,7 @@ public class MemoryAggregationCache
             return periods;
         }
         
-        periods = ConversionUtils.getIdentifiers( Period.class, periodService.getPeriodsBetweenDates( periodType, startDate, endDate ) );
+        periods = IdentifiableObjectUtils.getIdentifiers( periodService.getPeriodsBetweenDates( periodType, startDate, endDate ) );
         
         cache = ( cache == null ) ? new HashMap<String, Collection<Integer>>() : cache;
         

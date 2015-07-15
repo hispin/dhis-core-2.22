@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class which represents a range between two indexes.
+ * 
  * @author Lars Helge Overland
  */
 public class PageRange

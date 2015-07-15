@@ -44,19 +44,12 @@ import org.hisp.dhis.period.Period;
 public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     extends HibernateIdentifiableObjectStore<T> implements AnalyticalObjectStore<T>
 {
-    @Override
-    public int countDataSetAnalyticalObject( DataSet dataSet )
-    {
-        Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :dataSet in elements(c.dataSets)" );
-        query.setEntity( "dataSet", dataSet );
-
-        return ((Long) query.uniqueResult()).intValue();
-    }
-
+    //TODO program indicator, tracked entity attribute
+    
     @Override
     public int countIndicatorAnalyticalObject( Indicator indicator )
     {
-        Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :indicator in elements(c.indicators)" );
+        Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.indicator = :indicator" );
         query.setEntity( "indicator", indicator );
 
         return ((Long) query.uniqueResult()).intValue();
@@ -65,8 +58,17 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     @Override
     public int countDataElementAnalyticalObject( DataElement dataElement )
     {
-        Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :dataElement in elements(c.dataElements)" );
+        Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataElement = :dataElement" );
         query.setEntity( "dataElement", dataElement );
+
+        return ((Long) query.uniqueResult()).intValue();
+    }
+
+    @Override
+    public int countDataSetAnalyticalObject( DataSet dataSet )
+    {
+        Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataSet = :dataSet" );
+        query.setEntity( "dataSet", dataSet );
 
         return ((Long) query.uniqueResult()).intValue();
     }

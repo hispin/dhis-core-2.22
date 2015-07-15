@@ -32,6 +32,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Utility class for managing exceptions.
+ * 
  * @author Lars Helge Overland
  */
 public class ExceptionUtils

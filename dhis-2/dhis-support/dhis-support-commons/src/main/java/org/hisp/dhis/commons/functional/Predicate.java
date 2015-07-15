@@ -29,7 +29,7 @@ package org.hisp.dhis.commons.functional;
  */
 
 /**
- * Predicate on {@link T}.
+ * Predicate on T.
  *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */

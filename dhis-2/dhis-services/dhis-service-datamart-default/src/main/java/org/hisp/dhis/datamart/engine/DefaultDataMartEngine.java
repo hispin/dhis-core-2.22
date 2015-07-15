@@ -28,6 +28,7 @@ package org.hisp.dhis.datamart.engine;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_ORGUNITGROUPSET_AGG_LEVEL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ORGUNITGROUPSET_AGG_LEVEL;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
@@ -41,6 +42,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
+import org.hisp.dhis.commons.collection.PaginatedList;
+import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.commons.util.Clock;
+import org.hisp.dhis.commons.util.ConcurrentUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementOperand;
@@ -72,11 +77,6 @@ import org.hisp.dhis.system.filter.DataElementWithAggregationFilter;
 import org.hisp.dhis.system.filter.OrganisationUnitAboveOrEqualToLevelFilter;
 import org.hisp.dhis.system.filter.PastAndCurrentPeriodFilter;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.commons.util.Clock;
-import org.hisp.dhis.commons.util.ConcurrentUtils;
-import org.hisp.dhis.commons.util.ConversionUtils;
-import org.hisp.dhis.commons.filter.FilterUtils;
-import org.hisp.dhis.commons.collection.PaginatedList;
 import org.hisp.dhis.system.util.SystemUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -197,10 +197,10 @@ public class DefaultDataMartEngine
     @Transactional
     public void export( Collection<Integer> periodIds, TaskId id )
     {
-        Collection<Integer> dataElementIds = ConversionUtils.getIdentifiers( DataElement.class, dataElementService.getAllDataElements() );
-        Collection<Integer> indicatorIds = ConversionUtils.getIdentifiers( Indicator.class, indicatorService.getAllIndicators() );
-        Collection<Integer> organisationUnitIds = ConversionUtils.getIdentifiers( OrganisationUnit.class, organisationUnitService.getAllOrganisationUnits() );
-        Collection<Integer> organisationUnitGroupIds = ConversionUtils.getIdentifiers( OrganisationUnitGroup.class, organisationUnitGroupService.getOrganisationUnitGroupsWithGroupSets() );
+        Collection<Integer> dataElementIds = getIdentifiers( dataElementService.getAllDataElements() );
+        Collection<Integer> indicatorIds = getIdentifiers( indicatorService.getAllIndicators() );
+        Collection<Integer> organisationUnitIds = getIdentifiers( organisationUnitService.getAllOrganisationUnits() );
+        Collection<Integer> organisationUnitGroupIds = getIdentifiers( organisationUnitGroupService.getOrganisationUnitGroupsWithGroupSets() );
         
         export( dataElementIds, indicatorIds, periodIds, organisationUnitIds, organisationUnitGroupIds, id );
     }
@@ -316,7 +316,7 @@ public class DefaultDataMartEngine
         // Create crosstabtable
         // ---------------------------------------------------------------------
         
-        final Collection<Integer> intersectingPeriodIds = ConversionUtils.getIdentifiers( Period.class, periodService.getIntersectionPeriods( periods ) );
+        final Collection<Integer> intersectingPeriodIds = getIdentifiers( periodService.getIntersectionPeriods( periods ) );
         final Set<Integer> childrenIds = organisationUnitService.getOrganisationUnitHierarchy().getChildren( organisationUnitIds );
         final List<List<Integer>> childrenPages = new PaginatedList<>( childrenIds ).setNumberOfPages( cpuCores ).getPages();
 

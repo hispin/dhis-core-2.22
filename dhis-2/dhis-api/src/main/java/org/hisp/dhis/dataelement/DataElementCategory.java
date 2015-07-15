@@ -34,8 +34,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
@@ -149,6 +151,12 @@ public class DataElementCategory
     public List<NameableObject> getItems()
     {
         return new ArrayList<NameableObject>( categoryOptions );
+    }
+
+    @Override
+    public DimensionType getDimensionType()
+    {
+        return DimensionType.CATEGORY;
     }
 
     // ------------------------------------------------------------------------

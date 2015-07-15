@@ -46,4 +46,13 @@ public class DimensionalObjectUtilsTest
         assertEquals( null, DimensionalObjectUtils.getPrettyFilter( null ) );
         assertEquals( null, DimensionalObjectUtils.getPrettyFilter( "uid" ) );
     }
+
+    @Test
+    public void testValidFullOperand()
+    {
+        assertTrue( DimensionalObjectUtils.isValidDimensionalOperand( "d4HjsAHkj42.G142kJ2k3Gj" ) );
+        
+        assertFalse( DimensionalObjectUtils.isValidDimensionalOperand( "d4HjsAHkj42" ) );
+        assertFalse( DimensionalObjectUtils.isValidDimensionalOperand( "14HjsAHkj42-G142kJ2k3Gj" ) );
+    }
 }

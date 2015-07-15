@@ -44,6 +44,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
+ * Utility class with methods for streaming input and output.
+ * 
  * @author Lars Helge Overland
  */
 public class StreamUtils

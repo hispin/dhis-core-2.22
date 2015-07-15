@@ -28,6 +28,7 @@ package org.hisp.dhis.completeness.engine;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import org.hisp.dhis.commons.collection.PaginatedList;
+import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.commons.util.Clock;
+import org.hisp.dhis.commons.util.ConcurrentUtils;
 import org.hisp.dhis.completeness.DataSetCompletenessEngine;
 import org.hisp.dhis.completeness.DataSetCompletenessService;
 import org.hisp.dhis.completeness.DataSetCompletenessStore;
@@ -47,11 +52,6 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.filter.DataSetWithOrganisationUnitsFilter;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.commons.util.Clock;
-import org.hisp.dhis.commons.util.ConcurrentUtils;
-import org.hisp.dhis.commons.util.ConversionUtils;
-import org.hisp.dhis.commons.filter.FilterUtils;
-import org.hisp.dhis.commons.collection.PaginatedList;
 import org.hisp.dhis.system.util.SystemUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,8 +115,8 @@ public class DefaultDataSetCompletenessEngine
     @Transactional
     public void exportDataSetCompleteness( Collection<Integer> periodIds, TaskId id )
     {
-        Collection<Integer> dataSetIds = ConversionUtils.getIdentifiers( DataSet.class, dataSetService.getAllDataSets() );
-        Collection<Integer> organisationUnitIds = ConversionUtils.getIdentifiers( OrganisationUnit.class, organisationUnitService.getAllOrganisationUnits() );
+        Collection<Integer> dataSetIds = getIdentifiers( dataSetService.getAllDataSets() );
+        Collection<Integer> organisationUnitIds = getIdentifiers( organisationUnitService.getAllOrganisationUnits() );
 
         exportDataSetCompleteness( dataSetIds, periodIds, organisationUnitIds, id );
     }

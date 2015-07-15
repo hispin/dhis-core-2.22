@@ -34,7 +34,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.commons.util.ConversionUtils;
 
 import com.opensymphony.xwork2.Action;
 
@@ -79,9 +78,9 @@ public class AssignOrganisationUnitToGroupsAction
         this.organisationUnitId = organisationUnitId;
     }
 
-    private Collection<String> organisationUnitGroupId;
+    private Collection<Integer> organisationUnitGroupId;
 
-    public void setOrganisationUnitGroupId( Collection<String> organisationUnitGroupId )
+    public void setOrganisationUnitGroupId( Collection<Integer> organisationUnitGroupId )
     {
         this.organisationUnitGroupId = organisationUnitGroupId;
     }
@@ -95,7 +94,7 @@ public class AssignOrganisationUnitToGroupsAction
     {
         OrganisationUnit unit = organisationUnitService.getOrganisationUnit( organisationUnitId );
         
-        for ( Integer id : ConversionUtils.getIntegerCollection( organisationUnitGroupId ) )
+        for ( Integer id : organisationUnitGroupId )
         {
             OrganisationUnitGroup group = organisationUnitGroupService.getOrganisationUnitGroup( id );
             

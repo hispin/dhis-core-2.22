@@ -650,23 +650,23 @@ public class ReportTableGridTest
     @Test
     public void testGetMultiReportTableA()
     {
-        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 11d );
-        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 12d );
-        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitA.getUid(), 13d );
-        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitB.getUid(), 14d );
-        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 15d );
-        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 16d );
-        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitA.getUid(), 17d );
-        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitB.getUid(), 18d );
+        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 11d );
+        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 12d );
+        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitA.getUid(), 13d );
+        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitB.getUid(), 14d );
+        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 15d );
+        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 16d );
+        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitA.getUid(), 17d );
+        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitB.getUid(), 18d );
 
-        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 21d );
-        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 22d );
-        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitA.getUid(), 23d );
-        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitB.getUid(), 24d );
-        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 25d );
-        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 26d );
-        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitA.getUid(), 27d );
-        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitB.getUid(), 28d );
+        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 21d );
+        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 22d );
+        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitA.getUid(), 23d );
+        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitB.getUid(), 24d );
+        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 25d );
+        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 26d );
+        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitA.getUid(), 27d );
+        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + periodB.getUid() + DIMENSION_SEP + unitB.getUid(), 28d );
 
         valueMap.put( dataSetA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitA.getUid(), 31d );
         valueMap.put( dataSetA.getUid() + DIMENSION_SEP + periodA.getUid() + DIMENSION_SEP + unitB.getUid(), 32d );
@@ -715,23 +715,23 @@ public class ReportTableGridTest
     @Test
     public void testGetMultiReportTableB()
     {
-        valueMap.put( unitA.getUid() + DIMENSION_SEP + indicatorA.getUid() + DIMENSION_SEP + periodA.getUid(), 11d );
-        valueMap.put( unitA.getUid() + DIMENSION_SEP + indicatorA.getUid() + DIMENSION_SEP + periodB.getUid(), 12d );
-        valueMap.put( unitA.getUid() + DIMENSION_SEP + indicatorB.getUid() + DIMENSION_SEP + periodA.getUid(), 13d );
-        valueMap.put( unitA.getUid() + DIMENSION_SEP + indicatorB.getUid() + DIMENSION_SEP + periodB.getUid(), 14d );
-        valueMap.put( unitB.getUid() + DIMENSION_SEP + indicatorA.getUid() + DIMENSION_SEP + periodA.getUid(), 15d );
-        valueMap.put( unitB.getUid() + DIMENSION_SEP + indicatorA.getUid() + DIMENSION_SEP + periodB.getUid(), 16d );
-        valueMap.put( unitB.getUid() + DIMENSION_SEP + indicatorB.getUid() + DIMENSION_SEP + periodA.getUid(), 17d );
-        valueMap.put( unitB.getUid() + DIMENSION_SEP + indicatorB.getUid() + DIMENSION_SEP + periodB.getUid(), 18d );
+        valueMap.put( unitA.getUid() + DIMENSION_SEP + dataElementA.getUid() + DIMENSION_SEP + periodA.getUid(), 11d );
+        valueMap.put( unitA.getUid() + DIMENSION_SEP + dataElementA.getUid() + DIMENSION_SEP + periodB.getUid(), 12d );
+        valueMap.put( unitA.getUid() + DIMENSION_SEP + dataElementB.getUid() + DIMENSION_SEP + periodA.getUid(), 13d );
+        valueMap.put( unitA.getUid() + DIMENSION_SEP + dataElementB.getUid() + DIMENSION_SEP + periodB.getUid(), 14d );
+        valueMap.put( unitB.getUid() + DIMENSION_SEP + dataElementA.getUid() + DIMENSION_SEP + periodA.getUid(), 15d );
+        valueMap.put( unitB.getUid() + DIMENSION_SEP + dataElementA.getUid() + DIMENSION_SEP + periodB.getUid(), 16d );
+        valueMap.put( unitB.getUid() + DIMENSION_SEP + dataElementB.getUid() + DIMENSION_SEP + periodA.getUid(), 17d );
+        valueMap.put( unitB.getUid() + DIMENSION_SEP + dataElementB.getUid() + DIMENSION_SEP + periodB.getUid(), 18d );
 
-        valueMap.put( unitA.getUid() + DIMENSION_SEP + dataElementA.getUid() + DIMENSION_SEP + periodA.getUid(), 21d );
-        valueMap.put( unitA.getUid() + DIMENSION_SEP + dataElementA.getUid() + DIMENSION_SEP + periodB.getUid(), 22d );
-        valueMap.put( unitA.getUid() + DIMENSION_SEP + dataElementB.getUid() + DIMENSION_SEP + periodA.getUid(), 23d );
-        valueMap.put( unitA.getUid() + DIMENSION_SEP + dataElementB.getUid() + DIMENSION_SEP + periodB.getUid(), 24d );
-        valueMap.put( unitB.getUid() + DIMENSION_SEP + dataElementA.getUid() + DIMENSION_SEP + periodA.getUid(), 25d );
-        valueMap.put( unitB.getUid() + DIMENSION_SEP + dataElementA.getUid() + DIMENSION_SEP + periodB.getUid(), 26d );
-        valueMap.put( unitB.getUid() + DIMENSION_SEP + dataElementB.getUid() + DIMENSION_SEP + periodA.getUid(), 27d );
-        valueMap.put( unitB.getUid() + DIMENSION_SEP + dataElementB.getUid() + DIMENSION_SEP + periodB.getUid(), 28d );
+        valueMap.put( unitA.getUid() + DIMENSION_SEP + indicatorA.getUid() + DIMENSION_SEP + periodA.getUid(), 21d );
+        valueMap.put( unitA.getUid() + DIMENSION_SEP + indicatorA.getUid() + DIMENSION_SEP + periodB.getUid(), 22d );
+        valueMap.put( unitA.getUid() + DIMENSION_SEP + indicatorB.getUid() + DIMENSION_SEP + periodA.getUid(), 23d );
+        valueMap.put( unitA.getUid() + DIMENSION_SEP + indicatorB.getUid() + DIMENSION_SEP + periodB.getUid(), 24d );
+        valueMap.put( unitB.getUid() + DIMENSION_SEP + indicatorA.getUid() + DIMENSION_SEP + periodA.getUid(), 25d );
+        valueMap.put( unitB.getUid() + DIMENSION_SEP + indicatorA.getUid() + DIMENSION_SEP + periodB.getUid(), 26d );
+        valueMap.put( unitB.getUid() + DIMENSION_SEP + indicatorB.getUid() + DIMENSION_SEP + periodA.getUid(), 27d );
+        valueMap.put( unitB.getUid() + DIMENSION_SEP + indicatorB.getUid() + DIMENSION_SEP + periodB.getUid(), 28d );
 
         valueMap.put( unitA.getUid() + DIMENSION_SEP + dataSetA.getUid() + DIMENSION_SEP + periodA.getUid(), 31d );
         valueMap.put( unitA.getUid() + DIMENSION_SEP + dataSetA.getUid() + DIMENSION_SEP + periodB.getUid(), 32d );
@@ -790,23 +790,23 @@ public class ReportTableGridTest
     @Test
     public void testGetMultiReportTableC()
     {
-        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 11d );
-        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 12d );
-        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodA.getUid(), 13d );
-        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodB.getUid(), 14d );
-        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 15d );
-        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 16d );
-        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodA.getUid(), 17d );
-        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodB.getUid(), 18d );
+        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 11d );
+        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 12d );
+        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodA.getUid(), 13d );
+        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodB.getUid(), 14d );
+        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 15d );
+        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 16d );
+        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodA.getUid(), 17d );
+        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodB.getUid(), 18d );
 
-        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 21d );
-        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 22d );
-        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodA.getUid(), 23d );
-        valueMap.put( dataElementA.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodB.getUid(), 24d );
-        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 25d );
-        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 26d );
-        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodA.getUid(), 27d );
-        valueMap.put( dataElementB.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodB.getUid(), 28d );
+        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 21d );
+        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 22d );
+        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodA.getUid(), 23d );
+        valueMap.put( indicatorA.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodB.getUid(), 24d );
+        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 25d );
+        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 26d );
+        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodA.getUid(), 27d );
+        valueMap.put( indicatorB.getUid() + DIMENSION_SEP + unitB.getUid() + DIMENSION_SEP + periodB.getUid(), 28d );
 
         valueMap.put( dataSetA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodA.getUid(), 31d );
         valueMap.put( dataSetA.getUid() + DIMENSION_SEP + unitA.getUid() + DIMENSION_SEP + periodB.getUid(), 32d );

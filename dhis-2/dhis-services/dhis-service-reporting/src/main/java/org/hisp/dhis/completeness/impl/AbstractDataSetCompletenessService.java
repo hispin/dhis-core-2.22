@@ -28,6 +28,8 @@ package org.hisp.dhis.completeness.impl;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,7 +41,6 @@ import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.commons.util.ConversionUtils;
 import org.hisp.dhis.completeness.DataSetCompletenessResult;
 import org.hisp.dhis.completeness.DataSetCompletenessService;
 import org.hisp.dhis.completeness.DataSetCompletenessStore;
@@ -201,7 +202,7 @@ public abstract class AbstractDataSetCompletenessService
 
         for ( final DataSet dataSet : dataSets )
         {
-            final List<Integer> periodsBetweenDates = ConversionUtils.getIdentifiers( Period.class,
+            final List<Integer> periodsBetweenDates = getIdentifiers( 
                 periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
 
             final Set<Integer> relevantSources = getRelevantSources( dataSet, children, groupIds );
@@ -236,7 +237,8 @@ public abstract class AbstractDataSetCompletenessService
 
         final Period period = periodService.getPeriod( periodId );
 
-        final List<Integer> periodsBetweenDates = ConversionUtils.getIdentifiers( Period.class, periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
+        final List<Integer> periodsBetweenDates = getIdentifiers( 
+            periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
 
         final List<DataSetCompletenessResult> results = new ArrayList<>();
 
@@ -313,15 +315,14 @@ public abstract class AbstractDataSetCompletenessService
 
     private Set<Integer> getRelevantSources( DataSet dataSet, Set<Integer> sources, Set<Integer> groupIds )
     {
-        Set<Integer> dataSetSources = new HashSet<>( ConversionUtils.getIdentifiers( OrganisationUnit.class,
-            new HashSet<>( dataSet.getSources() ) ) );
+        Set<Integer> dataSetSources = new HashSet<>( getIdentifiers( dataSet.getSources() ) );
 
         if ( groupIds != null )
         {
             for ( Integer groupId : groupIds )
             {
                 OrganisationUnitGroup group = organisationUnitGroupService.getOrganisationUnitGroup( groupId );
-                Collection<Integer> ids = ConversionUtils.getIdentifiers( OrganisationUnitGroup.class, group.getMembers() );
+                List<Integer> ids = getIdentifiers( group.getMembers() );
                 dataSetSources.retainAll( ids );
             }
         }

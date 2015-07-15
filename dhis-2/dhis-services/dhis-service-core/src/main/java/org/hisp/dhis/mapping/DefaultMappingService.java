@@ -34,7 +34,6 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorService;
-import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
@@ -221,7 +220,7 @@ public class DefaultMappingService
         Indicator indicator = indicatorService.getIndicator( indicatorUid );
         OrganisationUnit unit = organisationUnitService.getOrganisationUnit( organisationUnitUid );
 
-        mapView.getIndicators().add( indicator );
+        mapView.addDataDimensionItem( indicator );
         mapView.getPeriods().add( period );
         mapView.getOrganisationUnits().add( unit );
         mapView.getOrganisationUnitLevels().add( level );
@@ -375,11 +374,5 @@ public class DefaultMappingService
     public int countOrganisationUnitMapViews( OrganisationUnit organisationUnit )
     {
         return mapViewStore.countOrganisationUnitAnalyticalObject( organisationUnit );
-    }
-
-    @Override
-    public int countLegendSetMapViews( LegendSet legendSet )
-    {
-        return mapViewStore.countLegendSetMapViews( legendSet );
     }
 }

@@ -46,6 +46,7 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
+import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.commons.filter.FilterUtils;
 
 /**
@@ -83,7 +84,7 @@ public class AnalyticsDataSetReportStore
         params.setDataElements( dataElements );
         params.setPeriod( period );
         params.setOrganisationUnit( unit );
-        params.enableCategoryOptionCombos();
+        params.setCategoryOptionCombos( new ArrayList<NameableObject>() );
         
         if ( dimensions != null )
         {

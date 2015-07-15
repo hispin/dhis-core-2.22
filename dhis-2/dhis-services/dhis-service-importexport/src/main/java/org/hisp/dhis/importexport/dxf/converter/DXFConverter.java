@@ -35,7 +35,6 @@ import org.amplecode.staxwax.writer.XMLWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.cache.HibernateCacheManager;
-import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.ProcessState;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
@@ -91,7 +90,6 @@ import org.hisp.dhis.jdbc.batchhandler.OrganisationUnitBatchHandler;
 import org.hisp.dhis.jdbc.batchhandler.OrganisationUnitGroupBatchHandler;
 import org.hisp.dhis.jdbc.batchhandler.OrganisationUnitGroupMemberBatchHandler;
 import org.hisp.dhis.jdbc.batchhandler.PeriodBatchHandler;
-import org.hisp.dhis.jdbc.batchhandler.ReportTableBatchHandler;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
@@ -100,8 +98,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.report.ReportService;
-import org.hisp.dhis.reporttable.ReportTable;
-import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.validation.ValidationRuleService;
 
 /**
@@ -217,20 +213,6 @@ public class DXFConverter
     public void setReportService( ReportService reportService )
     {
         this.reportService = reportService;
-    }
-
-    private ReportTableService reportTableService;
-
-    public void setReportTableService( ReportTableService reportTableService )
-    {
-        this.reportTableService = reportTableService;
-    }
-
-    private ChartService chartService;
-
-    public void setChartService( ChartService chartService )
-    {
-        this.chartService = chartService;
     }
 
     private BatchHandlerFactory batchHandlerFactory;
@@ -837,43 +819,6 @@ public class DXFConverter
                 converterInvoker.invokeRead( converter, reader, params );
 
                 log.info( "Imported Reports" );
-            }
-            else if ( reader.isStartElement( ReportTableConverter.COLLECTION_NAME ) )
-            {
-                log.debug("Starting ReportTables import");
-
-                state.setMessage( "importing_report_tables" );
-
-                BatchHandler<ReportTable> batchHandler = batchHandlerFactory.createBatchHandler(
-                    ReportTableBatchHandler.class ).init();
-
-                XMLConverter converter = new ReportTableConverter( reportTableService, importObjectService,
-                    dataElementService, categoryService, indicatorService, dataSetService, periodService,
-                    organisationUnitService, objectMappingGenerator.getDataElementMapping( params.skipMapping() ),
-                    objectMappingGenerator.getCategoryComboMapping( params.skipMapping() ), objectMappingGenerator
-                        .getIndicatorMapping( params.skipMapping() ), objectMappingGenerator.getDataSetMapping( params
-                        .skipMapping() ), objectMappingGenerator.getPeriodMapping( params.skipMapping() ),
-                    objectMappingGenerator.getOrganisationUnitMapping( params.skipMapping() ) );
-
-                converterInvoker.invokeRead( converter, reader, params );
-
-                batchHandler.flush();
-
-                log.info( "Imported ReportTables" );
-            }
-            else if ( reader.isStartElement( ChartConverter.COLLECTION_NAME ) )
-            {
-                log.debug("Starting Charts import");
-
-                state.setMessage( "importing_charts" );
-
-                XMLConverter converter = new ChartConverter( chartService, importObjectService, indicatorService,
-                    organisationUnitService, objectMappingGenerator.getIndicatorMapping( params
-                        .skipMapping() ), objectMappingGenerator.getOrganisationUnitMapping( params.skipMapping() ) );
-
-                converterInvoker.invokeRead( converter, reader, params );
-
-                log.info( "Imported Charts" );
             }
         }
 
