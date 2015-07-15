@@ -82,6 +82,7 @@ public class OptionSet
         options.clear();
     }
 
+    @Override
     public int increaseVersion()
     {
         return ++version;
@@ -143,6 +144,7 @@ public class OptionSet
         this.options = options;
     }
 
+    @Override
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public int getVersion()
@@ -150,6 +152,7 @@ public class OptionSet
         return version;
     }
 
+    @Override
     public void setVersion( int version )
     {
         this.version = version;

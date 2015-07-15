@@ -43,6 +43,7 @@ public class HibernateCategoryOptionGroupStore
     extends HibernateIdentifiableObjectStore<CategoryOptionGroup>
     implements CategoryOptionGroupStore
 {
+    @Override
     @SuppressWarnings("unchecked")
     public List<CategoryOptionGroup> getCategoryOptionGroups( CategoryOptionGroupSet groupSet )
     {

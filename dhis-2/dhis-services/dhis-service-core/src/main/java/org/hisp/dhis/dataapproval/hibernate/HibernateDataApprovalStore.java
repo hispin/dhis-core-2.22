@@ -95,6 +95,7 @@ public class HibernateDataApprovalStore
 
     private JdbcTemplate jdbcTemplate;
 
+    @Override
     public void setJdbcTemplate( JdbcTemplate jdbcTemplate )
     {
         this.jdbcTemplate = jdbcTemplate;
@@ -109,6 +110,7 @@ public class HibernateDataApprovalStore
 
     private CurrentUserService currentUserService;
 
+    @Override
     public void setCurrentUserService( CurrentUserService currentUserService )
     {
         this.currentUserService = currentUserService;
@@ -452,6 +454,7 @@ public class HibernateDataApprovalStore
 
             DataElementCategoryOptionCombo optionCombo = ( aoc == null || aoc == 0 ? null : optionComboCache.get( aoc, new Callable<DataElementCategoryOptionCombo>()
             {
+                @Override
                 public DataElementCategoryOptionCombo call() throws ExecutionException
                 {
                     return categoryService.getDataElementCategoryOptionCombo( aoc );
@@ -460,6 +463,7 @@ public class HibernateDataApprovalStore
 
             OrganisationUnit ou = ( orgUnit != null ? orgUnit : orgUnitCache.get( ouId, new Callable<OrganisationUnit>()
             {
+                @Override
                 public OrganisationUnit call() throws ExecutionException
                 {
                     return organisationUnitService.getOrganisationUnit( ouId );

@@ -373,6 +373,7 @@ public class DefaultUserService
         return true;
     }
 
+    @Override
     public boolean canAddOrUpdateUser( Collection<String> userGroups )
     {
         User currentUser = currentUserService.getCurrentUser();

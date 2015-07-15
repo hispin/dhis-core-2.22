@@ -414,6 +414,7 @@ public class DataSet
         return optionCombos;
     }
 
+    @Override
     public int increaseVersion()
     {
         return ++version;
@@ -589,6 +590,7 @@ public class DataSet
         this.mobile = mobile;
     }
 
+    @Override
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -597,6 +599,7 @@ public class DataSet
         return version;
     }
 
+    @Override
     public void setVersion( int version )
     {
         this.version = version;
