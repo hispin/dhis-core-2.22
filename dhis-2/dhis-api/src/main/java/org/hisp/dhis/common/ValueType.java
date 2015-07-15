@@ -30,7 +30,6 @@ package org.hisp.dhis.common;
 
 import java.util.Date;
 
-import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.joda.time.DateTime;
@@ -48,7 +47,7 @@ public enum ValueType
     BOOLEAN( Boolean.class ),
     TRUE_ONLY( Boolean.class ),
     DATE( Date.class ),
-    DATETIME(DateTime.class),
+    DATETIME( DateTime.class ),
     NUMBER( Double.class ),
     UNIT_INTERVAL( Double.class ),
     PERCENTAGE( Double.class ),
@@ -60,12 +59,12 @@ public enum ValueType
     
     private final Class<?> javaClass;
     
-    private ValueType()
+    ValueType()
     {
         this.javaClass = null;
     }
     
-    private ValueType( Class<?> javaClass )
+    ValueType( Class<?> javaClass )
     {
         this.javaClass = javaClass;
     }
