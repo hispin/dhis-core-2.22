@@ -7519,14 +7519,14 @@ Ext.onReady( function() {
 			listeners: {
 				select: function() {
 					var id = this.getValue(),
-						index = id.indexOf('#');
+						index = id.indexOf('.');
 
 					if (index !== -1) {
 						id = id.substr(0, index);
 					}
 
 					Ext.Ajax.request({
-						url: gis.init.contextPath + '/api/dataElements.json?fields=legendSet[id]&paging=false&filter=id:eq:' + this.getValue(),
+						url: gis.init.contextPath + '/api/dataElements.json?fields=legendSet[id]&paging=false&filter=id:eq:' + id,
 						success: function(r) {
 							var set = Ext.decode(r.responseText).dataElements[0].legendSet;
 
@@ -7555,12 +7555,12 @@ Ext.onReady( function() {
 
 		dataElementDetailLevel = Ext.create('Ext.form.field.ComboBox', {
 			cls: 'gis-combo',
-			style: 'margin-left:2px',
+			style: 'margin-left:1px',
 			queryMode: 'local',
 			editable: false,
 			valueField: 'id',
 			displayField: 'text',
-			width: 65 - 2,
+			width: 65 - 1,
 			value: dimConf.dataElement.objectName,
 			onSelect: function() {
 				dataElementGroup.loadAvailable();
@@ -8484,21 +8484,6 @@ Ext.onReady( function() {
 				setWidgetGui,
                 dataDim;
 
-            // TODO detecting data dimension
-            if (Ext.isArray(view.dataDimensionItems) && view.dataDimensionItems.length && Ext.isObject(view.dataDimensionItems[0])) {
-                var obj = view.dataDimensionItems[0];
-
-                if (obj.hasOwnProperty('indicator')) {
-                    dataDim = dimConf.indicator.objectName;
-                }
-                else if (obj.hasOwnProperty('dataElement')) {
-                    dataDim = dimConf.dataElement.objectName;
-                }
-                else if (obj.hasOwnProperty('dataSet')) {
-                    dataDim = dimConf.dataSet.objectName;
-                }
-            }
-
 			objectNameCmpMap[dimConf.indicator.objectName] = indicator;
 			objectNameCmpMap[dimConf.dataElement.objectName] = dataElement;
 			objectNameCmpMap[dimConf.operand.objectName] = dataElement;
@@ -8515,16 +8500,16 @@ Ext.onReady( function() {
 				reset(true);
 
 				// Value type
-				valueType.setValue(dataDim);
-				valueTypeToggler(dataDim);
+				valueType.setValue(dxDim.objectName);
+				valueTypeToggler(dxDim.objectName);
 
-				if (dataDim === dimConf.dataElement.objectName) {
-					dataElementDetailLevel.setValue(dxDim.dimension);
-				}
+            if (dxDim.objectName === dimConf.dataElement.objectName) {
+                dataElementDetailLevel.setValue(dxDim.dimension);
+            }
 
 				// Data
-				objectNameCmpMap[dataDim].store.add(dxDim.items[0]);
-				objectNameCmpMap[dataDim].setValue(dxDim.items[0].id);
+				objectNameCmpMap[dxDim.objectName].store.add(dxDim.items[0]);
+				objectNameCmpMap[dxDim.objectName].setValue(dxDim.items[0].id);
 
 				// Period
 				period.store.add(gis.conf.period.relativePeriodRecordsMap[peDim.items[0].id] ? gis.conf.period.relativePeriodRecordsMap[peDim.items[0].id] : peDim.items[0]);
@@ -8619,6 +8604,7 @@ Ext.onReady( function() {
             if (objectNameCmpMap[vType].getValue()) {
                 view.columns = [{
                     dimension: 'dx',
+                    objectName: vType,
                     items: [{
                         id: objectNameCmpMap[vType].getValue()
                     }]
