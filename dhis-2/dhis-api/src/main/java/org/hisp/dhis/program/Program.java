@@ -347,6 +347,7 @@ public class Program
         this.dateOfIncidentDescription = dateOfIncidentDescription;
     }
 
+    //TODO remove
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getKind()
