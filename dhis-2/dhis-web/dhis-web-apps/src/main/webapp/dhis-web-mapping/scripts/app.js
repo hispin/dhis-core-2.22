@@ -8481,7 +8481,23 @@ Ext.onReady( function() {
 				levels = [],
 				groups = [],
 				setLayerGui,
-				setWidgetGui;
+				setWidgetGui,
+                dataDim;
+
+            // TODO detecting data dimension
+            if (Ext.isArray(view.dataDimensionItems) && view.dataDimensionItems.length && Ext.isObject(view.dataDimensionItems[0])) {
+                var obj = view.dataDimensionItems[0];
+
+                if (obj.hasOwnProperty('indicator')) {
+                    dataDim = dimConf.indicator.objectName;
+                }
+                else if (obj.hasOwnProperty('dataElement')) {
+                    dataDim = dimConf.dataElement.objectName;
+                }
+                else if (obj.hasOwnProperty('dataSet')) {
+                    dataDim = dimConf.dataSet.objectName;
+                }
+            }
 
 			objectNameCmpMap[dimConf.indicator.objectName] = indicator;
 			objectNameCmpMap[dimConf.dataElement.objectName] = dataElement;
@@ -8499,16 +8515,16 @@ Ext.onReady( function() {
 				reset(true);
 
 				// Value type
-				valueType.setValue(vType);
-				valueTypeToggler(vType);
+				valueType.setValue(dataDim);
+				valueTypeToggler(dataDim);
 
-				if (vType === dimConf.dataElement.objectName) {
+				if (dataDim === dimConf.dataElement.objectName) {
 					dataElementDetailLevel.setValue(dxDim.dimension);
 				}
 
 				// Data
-				objectNameCmpMap[dxDim.dimension].store.add(dxDim.items[0]);
-				objectNameCmpMap[dxDim.dimension].setValue(dxDim.items[0].id);
+				objectNameCmpMap[dataDim].store.add(dxDim.items[0]);
+				objectNameCmpMap[dataDim].setValue(dxDim.items[0].id);
 
 				// Period
 				period.store.add(gis.conf.period.relativePeriodRecordsMap[peDim.items[0].id] ? gis.conf.period.relativePeriodRecordsMap[peDim.items[0].id] : peDim.items[0]);
@@ -8602,7 +8618,7 @@ Ext.onReady( function() {
 
             if (objectNameCmpMap[vType].getValue()) {
                 view.columns = [{
-                    dimension: vType,
+                    dimension: 'dx',
                     items: [{
                         id: objectNameCmpMap[vType].getValue()
                     }]
@@ -8638,7 +8654,9 @@ Ext.onReady( function() {
 				};
 			}
 
-			return gis.api.layout.Layout(view);
+            var v = gis.api.layout.Layout(view);
+
+			return v;
 		};
 
         accordionBody = Ext.create('Ext.panel.Panel', {

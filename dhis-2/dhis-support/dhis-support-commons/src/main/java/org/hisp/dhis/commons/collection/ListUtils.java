@@ -30,6 +30,7 @@ package org.hisp.dhis.commons.collection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -77,8 +78,8 @@ public class ListUtils
      * Removes from the given list the elements at the given indexes. Ignores
      * indexes which are out of bounds of list.
      * 
+     * @param list the list to operate on.
      * @param indexes the list to remove elements from.
-     * @param indexes the indexes for the elements to remove.
      */
     public static <T> void removeAll( List<T> list, Integer... indexes )
     {
@@ -261,5 +262,46 @@ public class ListUtils
         }
         
         return list;
+    }
+
+    /**
+     * Converts a List<Double> into a double[].
+     *
+     * @param list the List.
+     * @return a double array.
+     */
+    public static double[] getArray( List<Double> list )
+    {
+        double[] array = new double[list.size()];
+
+        int index = 0;
+
+        for ( Double d : list )
+        {
+            array[index++] = d;
+        }
+
+        return array;
+    }
+
+    /**
+     * Creates a collection of Integers out of a collection of Strings.
+     *
+     * @param strings the collection of Strings.
+     * @return a collection of Integers.
+     */
+    public static List<Integer> getIntegerCollection( Collection<String> strings )
+    {
+        List<Integer> integers = new ArrayList<>();
+
+        if ( strings != null )
+        {
+            for ( String string : strings )
+            {
+                integers.add( Integer.valueOf( string ) );
+            }
+        }
+
+        return integers;
     }
 }

@@ -115,6 +115,13 @@ public class UpdateProgramIndicatorAction
         this.filter = filter;
     }
 
+    private Integer decimals;
+
+    public void setDecimals( Integer decimals )
+    {
+        this.decimals = decimals;
+    }
+
     private String rootDate;
 
     public void setRootDate( String rootDate )
@@ -160,6 +167,7 @@ public class UpdateProgramIndicatorAction
         indicator.setValueType( StringUtils.trimToNull( valueType ) );
         indicator.setExpression( StringUtils.trimToNull( expression ) );
         indicator.setFilter( StringUtils.trimToNull( filter ) );
+        indicator.setDecimals( decimals );
         indicator.setRootDate( StringUtils.trimToNull( rootDate ) );
 
         programIndicatorService.updateProgramIndicator( indicator );

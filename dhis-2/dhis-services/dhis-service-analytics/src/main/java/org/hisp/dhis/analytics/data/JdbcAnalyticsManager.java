@@ -69,14 +69,14 @@ import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.commons.util.DebugUtils;
+import org.hisp.dhis.commons.util.SqlHelper;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.commons.util.SqlHelper;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -208,7 +208,7 @@ public class JdbcAnalyticsManager
      */
     private String getSelectClause( DataQueryParams params )
     {
-        String sql = "select " + getCommaDelimitedQuotedColumns( params.getQueryDimensions() ) + ", ";
+        String sql = "select " + getCommaDelimitedQuotedColumns( params.getDimensions() ) + ", ";
 
         if ( params.isDataType( TEXT ) )
         {
@@ -279,7 +279,7 @@ public class JdbcAnalyticsManager
 
         for ( String partition : params.getPartitions().getPartitions() )
         {
-            sql += "select " + getCommaDelimitedQuotedColumns( params.getQueryDimensions() ) + ", ";
+            sql += "select " + getCommaDelimitedQuotedColumns( params.getDimensions() ) + ", ";
 
             if ( params.isDataType( TEXT ) )
             {
@@ -317,7 +317,7 @@ public class JdbcAnalyticsManager
 
         String sql = "from " + partition + " ";
 
-        for ( DimensionalObject dim : params.getQueryDimensions() )
+        for ( DimensionalObject dim : params.getDimensions() )
         {
             if ( !dim.getItems().isEmpty() )
             {
@@ -378,7 +378,7 @@ public class JdbcAnalyticsManager
 
         if ( params.isAggregation() )
         {
-            sql = "group by " + getCommaDelimitedQuotedColumns( params.getQueryDimensions() );
+            sql = "group by " + getCommaDelimitedQuotedColumns( params.getDimensions() );
         }
 
         return sql;
@@ -407,7 +407,7 @@ public class JdbcAnalyticsManager
             
             StringBuilder key = new StringBuilder();
 
-            for ( DimensionalObject dim : params.getQueryDimensions() )
+            for ( DimensionalObject dim : params.getDimensions() )
             {
                 key.append( rowSet.getString( dim.getDimensionName() ) ).append( DIMENSION_SEP );
             }

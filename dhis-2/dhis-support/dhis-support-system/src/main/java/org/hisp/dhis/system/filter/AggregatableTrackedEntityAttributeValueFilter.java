@@ -31,6 +31,7 @@ package org.hisp.dhis.system.filter;
 import java.util.Set;
 
 import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 import com.google.common.collect.Sets;
@@ -40,7 +41,7 @@ public class AggregatableTrackedEntityAttributeValueFilter
 {
     public static final AggregatableTrackedEntityAttributeValueFilter INSTANCE = new AggregatableTrackedEntityAttributeValueFilter();
     
-    private static final Set<String> TYPES = Sets.newHashSet( TrackedEntityAttribute.TYPE_NUMBER, 
+    private static final Set<String> TYPES = Sets.newHashSet( TrackedEntityAttribute.TYPE_NUMBER, DataElement.VALUE_TYPE_INT,
         TrackedEntityAttribute.TYPE_BOOL, TrackedEntityAttribute.TYPE_OPTION_SET );
     
     //TODO Option set is not robust as it might contain any value type, needs to change with new Enum is in place

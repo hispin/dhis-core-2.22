@@ -52,38 +52,14 @@
 
     <property name="baseLineLabel" />
 
-    <list name="indicators" table="chart_indicators">
-      <cache usage="read-write" />
-      <key column="chartid" foreign-key="fk_chart_indicators_chartid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="indicatorid" class="org.hisp.dhis.indicator.Indicator"
-        foreign-key="fk_chart_indicators_indicatorid" />
-    </list>
-
-    <list name="dataElements" table="chart_dataelements">
-      <cache usage="read-write" />
-      <key column="chartid" foreign-key="fk_chart_dataelements_chartid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="dataelementid" class="org.hisp.dhis.dataelement.DataElement"
-        foreign-key="fk_chart_dataelements_dataelementid" />
-    </list>
-
-    <list name="dataElementOperands" table="chart_dataelementoperands" cascade="all-delete-orphan">
-      <cache usage="read-write" />
-      <key column="chartid" foreign-key="fk_chart_dataelementoperands_chartid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="dataelementoperandid" class="org.hisp.dhis.dataelement.DataElementOperand"
-        foreign-key="fk_chart_dataelementoperands_dataelementoperandid" />
-    </list>
-
-    <list name="dataSets" table="chart_datasets">
-      <cache usage="read-write" />
-      <key column="chartid" foreign-key="fk_chart_datasets_chartid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="datasetid" class="org.hisp.dhis.dataset.DataSet"
-        foreign-key="fk_chart_datasets_datasetid" />
-    </list>
-
+	<list name="dataDimensionItems" table="chart_datadimensionitems" cascade="all, delete-orphan">
+	  <cache usage="read-write" />
+	  <key column="chartid" foreign-key="fk_chart_datadimensionitems_chartid" />
+	  <list-index column="sort_order" base="0" />
+	  <many-to-many column="datadimensionitemid" class="org.hisp.dhis.common.DataDimensionItem"
+        foreign-key="fk_chart_datadimensionitems_datadimensionitemid" />
+	</list>
+	
     <list name="organisationUnits" table="chart_organisationunits">
       <cache usage="read-write" />
       <key column="chartid" foreign-key="fk_chart_organisationunits_chartid" />
@@ -149,6 +125,9 @@
       <many-to-many column="orgunitgroupid" class="org.hisp.dhis.organisationunit.OrganisationUnitGroup"
         foreign-key="fk_chart_itemorgunitgroups_orgunitgroupid" />
     </list>
+    
+    <many-to-one name="program" class="org.hisp.dhis.program.Program" column="programid"
+      foreign-key="fk_chart_programid" />
     
     <property name="userOrganisationUnit" />
 

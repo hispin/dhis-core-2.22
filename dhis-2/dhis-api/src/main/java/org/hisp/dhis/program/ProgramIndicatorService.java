@@ -138,6 +138,14 @@ public interface ProgramIndicatorService
      * @return The description
      */
     String getExpressionDescription( String expression );
+    
+    /**
+     * Get the expression as an analytics SQL clause.
+     * 
+     * @param expression the expression.
+     * @return the SQL string.
+     */
+    String getAnalyticsSQl( String expression );
 
     /**
      * Indicates whether the given program indicator expression is valid.

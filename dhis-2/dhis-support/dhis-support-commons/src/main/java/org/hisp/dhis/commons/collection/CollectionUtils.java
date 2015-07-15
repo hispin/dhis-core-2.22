@@ -43,6 +43,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Utility methods for operations on various collections.
+ * 
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class CollectionUtils

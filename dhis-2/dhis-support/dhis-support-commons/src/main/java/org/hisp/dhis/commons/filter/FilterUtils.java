@@ -28,8 +28,6 @@ package org.hisp.dhis.commons.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.commons.filter.Filter;
-
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -41,18 +39,18 @@ import java.util.Iterator;
 public class FilterUtils
 {
     /**
-     * Filter the given Collection using the provided Filter.
+     * Filters the given collection using the given {@link Filter}.
      *
-     * @param collection the Collection.
-     * @param filter the Filter.
-     * @param <V> the type of the Collection members.
-     * @return the filtered Collection.
+     * @param collection the {@link Collection}.
+     * @param filter the filter.
+     * @param <V> the type of the collection members.
+     * @return the filtered collection, null if any input parameter is null.
      */
     public static <T extends Collection<V>, V> T filter( T collection, Filter<V> filter )
     {
         if ( collection == null || filter == null )
         {
-            return collection;
+            return null;
         }
         
         final Iterator<V> iterator = collection.iterator();
@@ -67,4 +65,33 @@ public class FilterUtils
         
         return collection;
     }
+    
+    /**
+     * Filters the given collection using the given {@link Filter} retaining only
+     * items which does NOT pass the filter evaluation.
+     *
+     * @param collection the {@link Collection}.
+     * @param filter the filter.
+     * @param <V> the type of the collection members.
+     * @return the inverse filtered collection, null if any input parameter is null.
+     */
+    public static <T extends Collection<V>, V> T inverseFilter( T collection, Filter<V> filter )
+    {
+        if ( collection == null || filter == null )
+        {
+            return null;
+        }
+        
+        final Iterator<V> iterator = collection.iterator();
+        
+        while ( iterator.hasNext() )
+        {
+            if ( filter.retain( iterator.next() ) )
+            {
+                iterator.remove();
+            }
+        }
+        
+        return collection;
+    }    
 }

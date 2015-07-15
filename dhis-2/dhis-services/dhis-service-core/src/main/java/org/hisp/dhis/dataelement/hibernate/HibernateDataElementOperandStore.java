@@ -30,9 +30,10 @@ package org.hisp.dhis.dataelement.hibernate;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
-import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementOperandStore;
 
@@ -43,37 +44,30 @@ public class HibernateDataElementOperandStore
     extends HibernateIdentifiableObjectStore<DataElementOperand>
     implements DataElementOperandStore
 {
+    //TODO remove?
+    
     @Override
     @SuppressWarnings( "unchecked" )
     public List<DataElementOperand> getAllOrderedName()
     {
-        String hql = "from DataElementOperand d";
-        
-        return getQuery( hql ).list();
+        return getQuery( "from DataElementOperand d" ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<DataElementOperand> getAllOrderedName( int first, int max )
     {
-        String hql = "from DataElementOperand d";
-        
-        Query query = getQuery( hql );
-        query.setFirstResult( first );
-        query.setMaxResults( max );
-
-        return query.list();
+        return getQuery( "from DataElementOperand d" ).setFirstResult( first ).setMaxResults( max ).list();
     }
-
+    
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<DataElementOperand> getByDataElementGroup( DataElementGroup dataElementGroup )
+    public DataElementOperand get( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo )
     {
-        String hql = "select d from DataElementOperand d, DataElementGroup deg where deg=:dataElementGroup and d.dataElement in elements(deg.members)";
+        List<DataElementOperand> operands = getCriteria( 
+            Restrictions.eq( "dataElement", dataElement ),
+            Restrictions.eq( "categoryOptionCombo", categoryOptionCombo ) ).list();
         
-        Query query = getQuery( hql );
-        query.setEntity( "dataElementGroup", dataElementGroup );
-
-        return query.list();
+        return !operands.isEmpty() ? operands.get( 0 ) : null;
     }
 }

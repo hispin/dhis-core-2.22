@@ -37,11 +37,11 @@ import static org.hisp.dhis.analytics.AggregationType.VARIANCE;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
 import static org.hisp.dhis.commons.util.TextUtils.getQuotedCommaDelimitedString;
 import static org.hisp.dhis.commons.util.TextUtils.removeLastComma;
 import static org.hisp.dhis.commons.util.TextUtils.removeLastOr;
 import static org.hisp.dhis.commons.util.TextUtils.trimEnd;
+import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
 
 import java.util.List;
 
@@ -57,11 +57,13 @@ import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
+import org.hisp.dhis.commons.util.ExpressionUtils;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.system.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -154,7 +156,7 @@ public class JdbcEventAnalyticsManager
     {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
 
-        log.debug( "Analytics event aggregate SQL: " + sql );
+        log.info( "Analytics event aggregate SQL: " + sql );
         
         while ( rowSet.next() )
         {            
@@ -507,7 +509,20 @@ public class JdbcEventAnalyticsManager
                 }
             }
         }
+
+        // ---------------------------------------------------------------------
+        // Filter expression
+        // ---------------------------------------------------------------------
+
+        if ( params.hasFilterExpression() && ValidationUtils.expressionIsValidSQl( params.getFilterExpression() ) )
+        {
+            sql += "and (" + ExpressionUtils.asSql( params.getFilterExpression() ) + ") ";
+        }
         
+        // ---------------------------------------------------------------------
+        // Coordinates
+        // ---------------------------------------------------------------------
+
         if ( params.isCoordinatesOnly() )
         {
             sql += "and (longitude is not null and latitude is not null) ";

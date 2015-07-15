@@ -31,19 +31,19 @@ package org.hisp.dhis.system.filter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hisp.dhis.DhisConvenienceTest;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.MonthlyPeriodType;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.junit.Test;
+
+import com.google.inject.internal.Lists;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class DataElementWithAggregationFilterTest
     extends DhisConvenienceTest
@@ -51,31 +51,27 @@ public class DataElementWithAggregationFilterTest
     @Test
     public void filter()
     {
-        DataElement elementA = createDataElement( 'A' );
-        DataElement elementB = createDataElement( 'B' );
-        DataElement elementC = createDataElement( 'C' );
-        DataElement elementD = createDataElement( 'D' );
+        DataElement elA = createDataElement( 'A' );
+        DataElement elB = createDataElement( 'B' );
+        DataElement elC = createDataElement( 'C' );
+        DataElement elD = createDataElement( 'D' );
         
         DataSet dataSetA = createDataSet( 'A', new MonthlyPeriodType() );
         dataSetA.setSkipAggregation( false );
-        dataSetA.addDataElement( elementA );
-        dataSetA.addDataElement( elementC );
+        dataSetA.addDataElement( elA );
+        dataSetA.addDataElement( elC );
         
         DataSet dataSetB = createDataSet( 'A', new MonthlyPeriodType() );
         dataSetB.setSkipAggregation( true );
-        dataSetB.addDataElement( elementB );
-        dataSetB.addDataElement( elementD );
+        dataSetB.addDataElement( elB );
+        dataSetB.addDataElement( elD );
         
-        List<DataElement> list = new ArrayList<>();
-        list.add( elementA );
-        list.add( elementB );
-        list.add( elementC );
-        list.add( elementD );
+        List<DataElement> list = Lists.newArrayList( elA, elB, elC, elD );
         
         FilterUtils.filter( list, new DataElementWithAggregationFilter() );
         
         assertEquals( 2, list.size() );
-        assertTrue( list.contains( elementA ) );
-        assertTrue( list.contains( elementC ) );
+        assertTrue( list.contains( elA ) );
+        assertTrue( list.contains( elC ) );
     }
 }

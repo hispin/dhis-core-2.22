@@ -28,8 +28,6 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 
 /**
@@ -40,5 +38,5 @@ public interface DataElementOperandStore
 {
     String ID = DataElementOperand.class.getName();
 
-    List<DataElementOperand> getByDataElementGroup( DataElementGroup dataElementGroup );
+    DataElementOperand get( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo );
 }

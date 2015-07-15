@@ -59,7 +59,7 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> boolean exists( Class<T> clazz, String uid );
     
-    <T extends IdentifiableObject> T get( Collection<Class<IdentifiableObject>> classes, String uid );
+    <T extends IdentifiableObject> T get( Collection<Class<? extends IdentifiableObject>> classes, String uid );
 
     <T extends IdentifiableObject> T getByCode( Class<T> clazz, String code );
 

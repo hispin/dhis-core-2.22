@@ -28,12 +28,11 @@ package org.hisp.dhis.dataset.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
-
 import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetStore;
@@ -98,7 +97,7 @@ public class HibernateDataSetStore
     {
         String hql = "select distinct d from DataSet d join d.sources s where s.id in (:ids)";
 
-        return getQuery( hql ).setParameterList( "ids", getIdentifiers( OrganisationUnit.class, sources ) ).list();
+        return getQuery( hql ).setParameterList( "ids", IdentifiableObjectUtils.getIdentifiers( sources ) ).list();
     }
 
     @Override

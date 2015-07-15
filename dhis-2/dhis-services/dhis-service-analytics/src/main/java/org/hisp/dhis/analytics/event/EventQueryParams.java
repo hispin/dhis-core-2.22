@@ -28,9 +28,8 @@ package org.hisp.dhis.analytics.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,6 +66,8 @@ public class EventQueryParams
     private List<QueryItem> items = new ArrayList<>();
     
     private List<QueryItem> itemFilters = new ArrayList<>();
+    
+    private String filter;
     
     private NameableObject value;
     
@@ -113,6 +114,7 @@ public class EventQueryParams
 
         params.partitions = new Partitions( this.partitions );
         params.periodType = this.periodType;
+        params.filterExpression = this.filterExpression;
         
         params.program = this.program;
         params.programStage = this.programStage;
@@ -120,6 +122,7 @@ public class EventQueryParams
         params.endDate = this.endDate;
         params.items = new ArrayList<>( this.items );
         params.itemFilters = new ArrayList<>( this.itemFilters );
+        params.filter = this.filter;
         params.value = this.value;
         params.asc = new ArrayList<>( this.asc );
         params.desc = new ArrayList<>( this.desc );
@@ -175,8 +178,7 @@ public class EventQueryParams
         }
 
         params.setAggregateData( true );
-        params.removeDimensionOrFilter( PROGRAM_DATAELEMENT_DIM_ID );
-        params.removeDimensionOrFilter( PROGRAM_ATTRIBUTE_DIM_ID );
+        params.removeDimension( DATA_X_DIM_ID );
         
         return params;
     }
@@ -382,6 +384,7 @@ public class EventQueryParams
             "End date: " + endDate + ", " +
             "Items: " + items + ", " +
             "Item filters: " + itemFilters + ", " +
+            "Filter: " + filter + ", " +
             "Value: " + value + ", " +
             "Aggregation type: " + aggregationType + ", " +
             "Dimensions: " + dimensions + ", " +
@@ -430,6 +433,16 @@ public class EventQueryParams
     public void setItemFilters( List<QueryItem> itemFilters )
     {
         this.itemFilters = itemFilters;
+    }
+
+    public String getFilter()
+    {
+        return filter;
+    }
+
+    public void setFilter( String filter )
+    {
+        this.filter = filter;
     }
 
     public NameableObject getValue()

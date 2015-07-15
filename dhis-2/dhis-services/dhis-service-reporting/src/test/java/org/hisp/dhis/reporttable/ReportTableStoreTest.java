@@ -225,7 +225,6 @@ public class ReportTableStoreTest
         assertEquals( relativesB, reportTableB.getRelatives() );
 
         assertEquals( "Assualt", reportTableC.getName() );
-        assertEquals( dataSets, reportTableC.getDataSets() );
         assertEquals( periods, reportTableC.getPeriods() );
         assertEquals( units, reportTableC.getOrganisationUnits() );
         assertEquals( false, reportTableC.isDoIndicators() );

@@ -28,15 +28,11 @@ package org.hisp.dhis.importexport.action.exp;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
-import static org.hisp.dhis.commons.util.ConversionUtils.getIntegerCollection;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.ServiceProvider;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -150,16 +146,16 @@ public class DetailedMetaDataExportAction
         this.exportFormat = exportFormat;
     }
 
-    private Collection<String> selectedDataElements = new ArrayList<>();
+    private Collection<Integer> selectedDataElements = new ArrayList<>();
 
-    public void setSelectedDataElements( Collection<String> selectedDataElements )
+    public void setSelectedDataElements( Collection<Integer> selectedDataElements )
     {
         this.selectedDataElements = selectedDataElements;
     }
 
-    private Collection<String> selectedIndicators = new ArrayList<>();
+    private Collection<Integer> selectedIndicators = new ArrayList<>();
 
-    public void setSelectedIndicators( Collection<String> selectedIndicators )
+    public void setSelectedIndicators( Collection<Integer> selectedIndicators )
     {
         this.selectedIndicators = selectedIndicators;
     }
@@ -182,28 +178,22 @@ public class DetailedMetaDataExportAction
         params.setCategoryOptions( null );
         params.setCategoryOptionCombos( null );
         
-        Set<Integer> dataElements = new HashSet<>();
-        
         if ( selectedIndicators.size() > 0 )
         {
             params.setIndicatorTypes( null );
         }
         
-        dataElements.addAll( getIntegerCollection( selectedDataElements ) );
-        
-        params.setIndicators( getIntegerCollection( selectedIndicators ) );
-        
-        for ( String id : selectedIndicators )
+        for ( Integer id : selectedIndicators )
         {
-            Indicator indicator = indicatorService.getIndicator( Integer.parseInt( id ) );
+            Indicator indicator = indicatorService.getIndicator( id );
 
-            dataElements.addAll( getIdentifiers( DataElement.class, expressionService.getDataElementsInExpression( indicator.getNumerator() ) ) );
-            dataElements.addAll( getIdentifiers( DataElement.class, expressionService.getDataElementsInExpression( indicator.getDenominator() ) ) );
+            params.getDataElements().addAll( IdentifiableObjectUtils.getIdentifiers( expressionService.getDataElementsInExpression( indicator.getNumerator() ) ) );
+            params.getDataElements().addAll( IdentifiableObjectUtils.getIdentifiers( expressionService.getDataElementsInExpression( indicator.getDenominator() ) ) );
         }
 
-        for ( Integer id : dataElements )
+        for ( Integer id : selectedDataElements )
         {
-            final DataElement element = dataElementService.getDataElement( id );
+            DataElement element = dataElementService.getDataElement( id );
             
             params.getDataElements().add( element.getId() );
         }

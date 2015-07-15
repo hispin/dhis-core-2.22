@@ -30,18 +30,17 @@ package org.hisp.dhis.system.filter;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.hisp.dhis.DhisConvenienceTest;
-
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class AggregatableDataElementFilterTest
     extends DhisConvenienceTest
@@ -49,39 +48,36 @@ public class AggregatableDataElementFilterTest
     @Test
     public void filter()
     {
-        DataElement elementA = createDataElement( 'A' );
-        DataElement elementB = createDataElement( 'B' );
-        DataElement elementC = createDataElement( 'C' );
-        DataElement elementD = createDataElement( 'D' );
-        DataElement elementE = createDataElement( 'E' );
-        DataElement elementF = createDataElement( 'F' );
+        DataElement elA = createDataElement( 'A' );
+        DataElement elB = createDataElement( 'B' );
+        DataElement elC = createDataElement( 'C' );
+        DataElement elD = createDataElement( 'D' );
+        DataElement elE = createDataElement( 'E' );
+        DataElement elF = createDataElement( 'F' );
         
-        elementA.setType( DataElement.VALUE_TYPE_BOOL );
-        elementB.setType( DataElement.VALUE_TYPE_INT );
-        elementC.setType( DataElement.VALUE_TYPE_DATE );
-        elementD.setType( DataElement.VALUE_TYPE_BOOL );
-        elementE.setType( DataElement.VALUE_TYPE_INT );
-        elementF.setType( DataElement.VALUE_TYPE_DATE );        
+        elA.setType( DataElement.VALUE_TYPE_BOOL );
+        elB.setType( DataElement.VALUE_TYPE_INT );
+        elC.setType( DataElement.VALUE_TYPE_DATE );
+        elD.setType( DataElement.VALUE_TYPE_BOOL );
+        elE.setType( DataElement.VALUE_TYPE_INT );
+        elF.setType( DataElement.VALUE_TYPE_DATE );        
         
-        Set<DataElement> set = new HashSet<>();
+        Set<DataElement> set = Sets.newHashSet( elA, elB, elC, elD, elE, elF );
+                
+        Set<DataElement> reference = Sets.newHashSet( elA, elB, elD, elE );
         
-        set.add( elementA );
-        set.add( elementB );
-        set.add( elementC );
-        set.add( elementD );
-        set.add( elementE );
-        set.add( elementF );
-        
-        Set<DataElement> reference = new HashSet<>();
-        
-        reference.add( elementA );
-        reference.add( elementB );
-        reference.add( elementD );
-        reference.add( elementE );
-        
-        FilterUtils.filter( set, new AggregatableDataElementFilter() );
+        FilterUtils.filter( set, AggregatableDataElementFilter.INSTANCE );
         
         assertEquals( reference.size(), set.size() );
         assertEquals( reference, set );
+        
+        set = Sets.newHashSet( elA, elB, elC, elD, elE, elF );
+
+        Set<DataElement> inverseReference = Sets.newHashSet( elC, elF );
+                
+        FilterUtils.inverseFilter( set, AggregatableDataElementFilter.INSTANCE );
+        
+        assertEquals( inverseReference.size(), set.size() );
+        assertEquals( inverseReference, set );
     }
 }

@@ -1084,6 +1084,7 @@
     <property name="attributeService" ref="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
     <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
     <property name="attributeValueService" ref="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService" />
+    <property name="statementBuilder" ref="statementBuilder" />
   </bean>
 
   <bean id="org.hisp.dhis.relationship.RelationshipService" class="org.hisp.dhis.relationship.DefaultRelationshipService">
@@ -1372,23 +1373,33 @@
     <property name="skipInTests" value="true" />
   </bean>
 
+  <bean id="org.hisp.dhis.startup.FavoriteDataItemUpgrader" class="org.hisp.dhis.startup.FavoriteDataItemUpgrader">
+    <property name="name" value="FavoriteDataItemUpgrader" />
+    <property name="runlevel" value="7" />
+    <property name="skipInTests" value="true" />
+  </bean>
+
   <bean id="org.hisp.dhis.dataentryform.DataEntryFormUpgrader" class="org.hisp.dhis.dataentryform.DataEntryFormUpgrader">
+    <property name="name" value="FavoriteDataItemUpgrader" />
     <property name="dataEntryFormService" ref="org.hisp.dhis.dataentryform.DataEntryFormService" />
     <property name="runlevel" value="7" />
     <property name="skipInTests" value="true" />
   </bean>
 
   <bean id="org.hisp.dhis.startup.ExpressionUpgrader" class="org.hisp.dhis.startup.ExpressionUpgrader">
+    <property name="name" value="ExpressionUpgrader" />
     <property name="runlevel" value="8" />
     <property name="skipInTests" value="true" />
   </bean>
 
   <bean id="org.hisp.dhis.startup.ConfigurationPopulator" class="org.hisp.dhis.startup.ConfigurationPopulator">
+    <property name="name" value="ConfigurationPopulator" />
     <property name="runlevel" value="9" />
     <property name="skipInTests" value="true" />
   </bean>
 
   <bean id="org.hisp.dhis.startup.I18nLocalePopulator" class="org.hisp.dhis.startup.I18nLocalePopulator">
+    <property name="name" value="I18nLocalePopulator" />
     <property name="runlevel" value="9" />
     <property name="skipInTests" value="true" />
   </bean>
@@ -1438,6 +1449,7 @@
           <ref bean="org.hisp.dhis.startup.TableAlteror" />
           <ref bean="org.hisp.dhis.trackedentity.startup.TableAlteror" />
           <ref bean="org.hisp.dhis.startup.MapViewUpgrader" />
+          <ref bean="org.hisp.dhis.startup.FavoriteDataItemUpgrader" />
           <ref bean="org.hisp.dhis.common.IdentityPopulator" />
           <ref bean="org.hisp.dhis.common.TrackerIdentityPopulator" />
           <ref bean="org.hisp.dhis.period.PeriodTypePopulator" />

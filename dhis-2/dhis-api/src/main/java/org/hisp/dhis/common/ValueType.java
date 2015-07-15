@@ -148,7 +148,7 @@ public enum ValueType
      */
     public static ValueType getFromAttribute( TrackedEntityAttribute attribute )
     {
-        if ( TrackedEntityAttribute.TYPE_NUMBER.equals( attribute.getValueType() ) )
+        if ( TrackedEntityAttribute.TYPE_NUMBER.equals( attribute.getValueType() ) || DataElement.VALUE_TYPE_INT.equals( attribute.getValueType() ) )
         {
             return ValueType.NUMBER;
         }

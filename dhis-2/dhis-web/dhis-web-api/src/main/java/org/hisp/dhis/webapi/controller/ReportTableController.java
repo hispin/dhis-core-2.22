@@ -106,6 +106,7 @@ public class ReportTableController
         reportTableService.saveReportTable( reportTable );
 
         response.addHeader( "Location", ReportTableSchemaDescriptor.API_ENDPOINT + "/" + reportTable.getUid() );
+        
         webMessageService.send( WebMessageUtils.created( "Report table created" ), response, request );
     }
 

@@ -3381,10 +3381,7 @@ Ext.onReady( function() {
 					for (var i = 0, dim; i < dimensions.length; i++) {
 						dim = dimensions[i];
 
-						if (dim.dimension === dimConf.indicator.objectName ||
-							dim.dimension === dimConf.dataElement.objectName ||
-							dim.dimension === dimConf.operand.objectName ||
-							dim.dimension === dimConf.dataSet.objectName) {
+						if (dim.dimension === dimConf.data.objectName) {
 							dxDim = dim;
 						}
 						else if (dim.dimension === dimConf.period.objectName) {
@@ -3516,6 +3513,9 @@ Ext.onReady( function() {
 					layout.legendSet = config.legendSet;
 
 					layout.organisationUnitGroupSet = config.organisationUnitGroupSet;
+
+                    // TODO, TMP
+                    layout.dataDimensionItems = config.dataDimensionItems;
 
 					return layout;
 				}();

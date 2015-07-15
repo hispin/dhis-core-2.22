@@ -33,14 +33,9 @@ package org.hisp.dhis.common;
  */
 public enum DimensionType
 {
-    INDICATOR,
-    DATAELEMENT,
-    DATASET,
-    DATAELEMENT_OPERAND,
-    PROGRAM_INDICATOR,
+    DATA_X,
     PROGRAM_DATAELEMENT,
     PROGRAM_ATTRIBUTE,
-    DATA_X,
     DATA_COLLAPSED,
     CATEGORY_OPTION_COMBO,
     ATTRIBUTE_OPTION_COMBO,

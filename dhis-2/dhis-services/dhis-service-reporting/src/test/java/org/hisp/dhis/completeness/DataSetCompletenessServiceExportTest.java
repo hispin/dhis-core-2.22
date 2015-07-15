@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -168,8 +168,8 @@ public class DataSetCompletenessServiceExportTest
         registrationService.saveCompleteDataSetRegistration(
             new CompleteDataSetRegistration( dataSetA, periodC, unitC, null, null, "") );
 
-        completenessEngine.exportDataSetCompleteness( getIdentifiers( DataSet.class, dataSets ),
-            getIdentifiers( Period.class, periods ), getIdentifiers( OrganisationUnit.class, units ), null );
+        completenessEngine.exportDataSetCompleteness( getIdentifiers( dataSets ),
+            getIdentifiers( periods ), getIdentifiers( units ), null );
 
         assertEquals( 100.0, completenessStore.getPercentage( dataSetA.getId(), periodA.getId(), unitB.getId() ),
             DELTA );

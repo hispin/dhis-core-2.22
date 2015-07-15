@@ -28,7 +28,7 @@ package org.hisp.dhis.dataelement.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -203,7 +203,7 @@ public class HibernateDataElementStore
     {
         String hql = "select distinct de from DataElement de join de.dataSets ds where ds.id in (:ids)";
 
-        return getQuery( hql ).setParameterList( "ids", getIdentifiers( DataSet.class, dataSets ) ).list();
+        return getQuery( hql ).setParameterList( "ids", getIdentifiers( dataSets ) ).list();
     }
 
     @Override

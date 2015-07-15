@@ -45,8 +45,8 @@ import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.security.acl.AccessStringHelper;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementService;
-import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.indicator.Indicator;
@@ -58,6 +58,7 @@ import org.hisp.dhis.user.UserService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
@@ -114,8 +115,9 @@ public class IdentifiableObjectManagerTest
 
         dataElementService.addDataElement( dataElementA );
         dataElementService.addDataElement( dataElementB );
-        
-        Set<Class<IdentifiableObject>> classes = IdentifiableObjectUtils.asTypedClassSet( DataElement.class, DataSet.class, Indicator.class );
+
+        Set<Class<? extends IdentifiableObject>> classes = ImmutableSet.<Class<? extends IdentifiableObject>>builder().
+            add( Indicator.class ).add( DataElement.class ).add( DataElementOperand.class ).build();
         
         assertEquals( dataElementA, identifiableObjectManager.get( classes, dataElementA.getUid() ) );
         assertEquals( dataElementB, identifiableObjectManager.get( classes, dataElementB.getUid() ) );

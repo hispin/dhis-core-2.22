@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Utility class for retrieving debugging information.
+ * 
  * @author Lars Helge Overland
  */
 public class DebugUtils

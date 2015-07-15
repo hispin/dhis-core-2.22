@@ -88,6 +88,11 @@ public class ProgramIndicator
     
     private String filter;
 
+    /**
+     * Number of decimals to use for indicator value, null implies default.
+     */
+    private Integer decimals;
+
     private String rootDate;
 
     // -------------------------------------------------------------------------
@@ -97,6 +102,20 @@ public class ProgramIndicator
     public ProgramIndicator()
     {
 
+    }
+
+    // -------------------------------------------------------------------------
+    // Logic
+    // -------------------------------------------------------------------------
+
+    public boolean hasFilter()
+    {
+        return filter != null;
+    }
+
+    public boolean hasDecimals()
+    {
+        return decimals != null && decimals >= 0;
     }
 
     // -------------------------------------------------------------------------
@@ -159,6 +178,19 @@ public class ProgramIndicator
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Integer getDecimals()
+    {
+        return decimals;
+    }
+
+    public void setDecimals( Integer decimals )
+    {
+        this.decimals = decimals;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getRootDate()
     {
         return rootDate;
@@ -183,6 +215,7 @@ public class ProgramIndicator
                 program = programIndicator.getProgram();
                 valueType = programIndicator.getValueType();
                 expression = programIndicator.getExpression();
+                decimals = programIndicator.getDecimals();
                 rootDate = programIndicator.getRootDate();
             }
             else if ( strategy.isMerge() )
@@ -190,6 +223,7 @@ public class ProgramIndicator
                 program = programIndicator.getProgram() == null ? program : programIndicator.getProgram();
                 valueType = programIndicator.getValueType() == null ? valueType : programIndicator.getValueType();
                 expression = programIndicator.getExpression() == null ? expression : programIndicator.getExpression();
+                decimals = programIndicator.getDecimals() == null ? decimals : programIndicator.getDecimals();
                 rootDate = programIndicator.getRootDate() == null ? rootDate : programIndicator.getRootDate();
             }
         }

@@ -35,6 +35,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -46,7 +47,6 @@ import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.system.util.AttributeUtils;
-import org.hisp.dhis.commons.util.ConversionUtils;
 
 import com.opensymphony.xwork2.Action;
 
@@ -269,7 +269,7 @@ public class AddDataElementAction
         dataElement.setUrl( url );
         dataElement.setZeroIsSignificant( zeroIsSignificant );
         dataElement.setCategoryCombo( categoryCombo );
-        dataElement.setAggregationLevels( new ArrayList<>( ConversionUtils.getIntegerCollection( aggregationLevels ) ) );
+        dataElement.setAggregationLevels( new ArrayList<>( ListUtils.getIntegerCollection( aggregationLevels ) ) );
         dataElement.setOptionSet( optionSet );
         dataElement.setCommentOptionSet( commentOptionSet );
         dataElement.setLegendSet( legendSet );

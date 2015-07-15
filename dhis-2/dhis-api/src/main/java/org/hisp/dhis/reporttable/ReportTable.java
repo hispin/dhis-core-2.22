@@ -261,9 +261,9 @@ public class ReportTable
         String reportingPeriodName )
     {
         this.name = name;
-        this.dataElements = dataElements;
-        this.indicators = indicators;
-        this.dataSets = dataSets;
+        addAllDataDimensionItems( dataElements );
+        addAllDataDimensionItems( indicators );
+        addAllDataDimensionItems( dataSets );
         this.periods = periods;
         this.organisationUnits = organisationUnits;
         this.relatives = relatives;
@@ -403,8 +403,8 @@ public class ReportTable
      */
     public boolean isDimensional()
     {
-        return dataElements != null && !dataElements.isEmpty() && (
-            columnDimensions.contains( CATEGORYOPTIONCOMBO_DIM_ID ) || rowDimensions.contains( CATEGORYOPTIONCOMBO_DIM_ID ));
+        return !getDataElements().isEmpty() && (
+            columnDimensions.contains( CATEGORYOPTIONCOMBO_DIM_ID ) || rowDimensions.contains( CATEGORYOPTIONCOMBO_DIM_ID ) );
     }
 
     /**
@@ -754,9 +754,9 @@ public class ReportTable
      */
     private DataElementCategoryCombo getCategoryCombo()
     {
-        if ( dataElements != null && !dataElements.isEmpty() )
+        if ( !getDataElements().isEmpty() )
         {
-            return dataElements.get( 0 ).getCategoryCombo();
+            return getDataElements().get( 0 ).getCategoryCombo();
         }
 
         return null;

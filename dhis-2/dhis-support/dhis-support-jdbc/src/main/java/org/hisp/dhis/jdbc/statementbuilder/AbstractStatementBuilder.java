@@ -60,7 +60,7 @@ public abstract class AbstractStatementBuilder
     @Override
     public String columnQuote( String column )
     {
-        return column != null ? (getColumnQuote() + column + getColumnQuote()) : null;
+        return column != null ? ( getColumnQuote() + column + getColumnQuote() ) : null;
     }
 
     @Override

@@ -33,7 +33,7 @@ jQuery( document ).ready( function()
     </thead>
 	<tbody>
 		<tr>
-			<td style="width:80px"><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+			<td style="width:140px"><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 			<td><input type="text" id="name" name="name" ></td>
 			<td></td>
 		</tr>	
@@ -58,6 +58,21 @@ jQuery( document ).ready( function()
 				<select id="valueType" name="valueType" onchange='programIndicatorOnChange();' >
 					<option value='int'>$i18n.getString('int')</option>
 					<option value='date'>$i18n.getString('date')</option>
+				</select>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
+			<td>
+				<select id="decimals" name="decimals">
+					<option>[$i18n.getString( "default" )]</option>
+					<option value="0">0</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
 				</select>
 			</td>
 			<td></td>
