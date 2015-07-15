@@ -237,13 +237,15 @@ public class DefaultDataApprovalLevelService
 
         return dataApprovalLevels;
     }
-    
+
+    @Override
     public Map<Integer, DataApprovalLevel> getDataApprovalLevelMap()
     {
         List<DataApprovalLevel> levels = dataApprovalLevelStore.getAllDataApprovalLevels();
         
         return Maps.uniqueIndex( levels, new Function<DataApprovalLevel, Integer>()
         {
+            @Override
             public Integer apply( DataApprovalLevel level )
             {
                 return level.getLevel();

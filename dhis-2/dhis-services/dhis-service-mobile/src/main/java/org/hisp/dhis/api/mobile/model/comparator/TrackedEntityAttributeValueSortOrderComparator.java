@@ -35,6 +35,7 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 public class TrackedEntityAttributeValueSortOrderComparator
     implements Comparator<TrackedEntityAttributeValue>
 {
+    @Override
     public int compare( TrackedEntityAttributeValue value0, TrackedEntityAttributeValue value1 )
     {
         if ( value0 == null || value1 == null || value0.getAttribute() == null || value1.getAttribute() == null )

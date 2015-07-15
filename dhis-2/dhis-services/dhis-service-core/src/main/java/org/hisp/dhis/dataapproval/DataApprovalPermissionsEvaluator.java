@@ -226,6 +226,7 @@ class DataApprovalPermissionsEvaluator
         {
             userApprovalLevel = ( USER_APPROVAL_LEVEL_CACHE.get( user.getId() + "-" + da.getOrganisationUnit().getId(), new Callable<DataApprovalLevel>()
             {
+                @Override
                 public DataApprovalLevel call() throws ExecutionException
                 {
                     return dataApprovalLevelService.getUserApprovalLevel( user, dataApproval.getOrganisationUnit() );
