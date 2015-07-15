@@ -93,6 +93,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -182,7 +183,7 @@ public class CurrentUserController
             fields.add( ":all" );
         }
 
-        CollectionNode collectionNode = fieldFilterService.filter( User.class, Arrays.asList( currentUser ), fields );
+        CollectionNode collectionNode = fieldFilterService.filter( User.class, Collections.singletonList( currentUser ), fields );
 
         RootNode rootNode = new RootNode( collectionNode.getChildren().get( 0 ) );
         rootNode.setDefaultNamespace( DxfNamespaces.DXF_2_0 );
