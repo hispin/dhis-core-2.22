@@ -28,8 +28,10 @@
 
     <property name="filter" type="text" />
 
-    <property name="rootDate" />
+    <property name="decimals" />
 
+    <property name="rootDate" />
+    
     <!-- Access properties -->
     <many-to-one name="user" class="org.hisp.dhis.user.User" column="userid" foreign-key="fk_programindicator_userid" />
 

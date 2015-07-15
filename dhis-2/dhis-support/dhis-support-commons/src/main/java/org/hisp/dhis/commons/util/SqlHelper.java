@@ -29,6 +29,8 @@ package org.hisp.dhis.commons.util;
  */
 
 /**
+ * Class with utility methods for constructing SQL strings.
+ * 
  * @author Lars Helge Overland
  */
 public class SqlHelper

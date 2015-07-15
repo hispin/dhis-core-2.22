@@ -29,6 +29,8 @@ package org.hisp.dhis.importexport.dhis14.util;
  */
 
 /**
+ * Utility class with methods for writing and reading CSV content.
+ * 
  * @author Lars Helge Overland
  */
 public class CsvUtils

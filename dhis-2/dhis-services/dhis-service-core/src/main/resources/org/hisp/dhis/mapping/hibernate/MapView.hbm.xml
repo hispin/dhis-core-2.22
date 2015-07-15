@@ -20,37 +20,13 @@
 
     <property name="layer" not-null="true" />
 
-    <list name="dataElements" table="mapview_dataelements">
-      <cache usage="read-write" />
-      <key column="mapviewid" foreign-key="fk_mapview_dataelements_mapviewid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="dataelementid" class="org.hisp.dhis.dataelement.DataElement"
-        foreign-key="fk_mapview_dataelements_dataelementid" />
-    </list>
-
-    <list name="dataElementOperands" table="mapview_dataelementoperands" cascade="all-delete-orphan">
-      <cache usage="read-write" />
-      <key column="mapviewid" foreign-key="fk_mapview_dataelementoperands_mapviewid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="dataelementoperandid" class="org.hisp.dhis.dataelement.DataElementOperand"
-        foreign-key="fk_mapview_dataelementoperands_dataelementoperandid" />
-    </list>
-
-    <list name="indicators" table="mapview_indicators">
-      <cache usage="read-write" />
-      <key column="mapviewid" foreign-key="fk_mapview_indicators_mapviewid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="indicatorid" class="org.hisp.dhis.indicator.Indicator"
-        foreign-key="fk_mapview_indicators_indicatorid" />
-    </list>
-
-    <list name="dataSets" table="mapview_datasets">
-      <cache usage="read-write" />
-      <key column="mapviewid" foreign-key="fk_mapview_datasets_mapviewid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="datasetid" class="org.hisp.dhis.dataset.DataSet"
-        foreign-key="fk_mapview_datasets_datasetid" />
-    </list>
+	<list name="dataDimensionItems" table="mapview_datadimensionitems" cascade="all, delete-orphan">
+	  <cache usage="read-write" />
+	  <key column="mapviewid" foreign-key="fk_mapview_datadimensionitems_mapviewid" />
+	  <list-index column="sort_order" base="0" />
+	  <many-to-many column="datadimensionitemid" class="org.hisp.dhis.common.DataDimensionItem"
+        foreign-key="fk_mapview_datadimensionitems_datadimensionitemid" />
+	</list>
 
     <list name="organisationUnits" table="mapview_organisationunits">
       <cache usage="read-write" />

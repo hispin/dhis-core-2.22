@@ -42,7 +42,7 @@ import org.junit.Test;
 public class OperandTest
 {
     @Test
-    public void getRelevantAggregationLevel()
+    public void testGetRelevantAggregationLevel()
     {
         DataElementOperand operand = new DataElementOperand( "a", "a", "Operand", null, null, new ArrayList<Integer>(), 0 );
         
@@ -59,7 +59,7 @@ public class OperandTest
     }
     
     @Test
-    public void aggregationLevelIsValid()
+    public void testAggregationLevelIsValid()
     {
         DataElementOperand operand = new DataElementOperand( "a", "a", "Operand", null, null, new ArrayList<Integer>(), 0 );
         

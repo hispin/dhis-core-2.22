@@ -28,7 +28,7 @@ package org.hisp.dhis.analytics;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -45,7 +45,10 @@ import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.Period;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -56,10 +59,45 @@ import com.google.common.collect.Lists;
 public class DataQueryParamsTest
     extends DhisConvenienceTest
 {
+    private DataElement deA;
+    private DataElement deB;
+    private DataElement deC;
+    
+    private DataSet dsA;
+    private DataSet dsB;
+
+    @Before
+    public void setUpTest()
+    {
+        deA = createDataElement( 'A' );
+        deB = createDataElement( 'B' );
+        deC = createDataElement( 'C' );
+        
+        dsA = createDataSet( 'A', null );
+        dsB = createDataSet( 'B', null );
+    }
+    
+    @Test
+    public void testSetGetDataElements()
+    {
+        List<? extends NameableObject> dataElements = Lists.newArrayList( deA, deB, deC );
+        List<? extends NameableObject> dataSets = Lists.newArrayList( dsA, dsB );
+        
+        DataQueryParams params = new DataQueryParams();
+        params.setDataElements( dataElements );
+        params.setDataSets( dataSets );
+        
+        assertEquals( 3, params.getDataElements().size() );
+        assertTrue( params.getDataElements().containsAll( dataElements ) );
+
+        assertEquals( 2, params.getDataSets().size() );
+        assertTrue( params.getDataSets().containsAll( dataSets ) );
+    }
+    
     @Test
     public void testGetDimensionFromParam()
     {
-        assertEquals( DATAELEMENT_DIM_ID, DimensionalObjectUtils.getDimensionFromParam( "de:D348asd782j;kj78HnH6hgT;9ds9dS98s2" ) );
+        assertEquals( DATA_X_DIM_ID, DimensionalObjectUtils.getDimensionFromParam( "dx:D348asd782j;kj78HnH6hgT;9ds9dS98s2" ) );
     }
     
     @Test
@@ -115,7 +153,7 @@ public class DataQueryParamsTest
     public void testPruneToDimensionType()
     {
         DataQueryParams params = new DataQueryParams();
-        params.getDimensions().add( new BaseDimensionalObject( DimensionalObject.INDICATOR_DIM_ID, DimensionType.INDICATOR, null, null, 
+        params.getDimensions().add( new BaseDimensionalObject( DimensionalObject.DATA_X_DIM_ID, DimensionType.DATA_X, null, null, 
             Lists.newArrayList( createIndicator( 'A', null ), createIndicator( 'B', null ) ) ) );
         params.getDimensions().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, null, null,
             Lists.newArrayList( createOrganisationUnit( 'A' ), createOrganisationUnit( 'B' ) ) ) );

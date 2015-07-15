@@ -28,7 +28,7 @@ package org.hisp.dhis.importexport.dxf.converter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 
 import java.util.Collection;
 
@@ -122,7 +122,7 @@ public class AggregatedDataValueConverter
                     log.debug( "Using period type: " + periodType.getName() + " for data element: " + dataElement.getName() );
                     
                     values = aggregatedDataValueService.getAggregatedDataValues( dataElement.getId(), 
-                        getIdentifiers( Period.class, periods ), params.getOrganisationUnits() );
+                        getIdentifiers( periods ), params.getOrganisationUnits() );
                     
                     for ( AggregatedDataValue value : values )
                     {

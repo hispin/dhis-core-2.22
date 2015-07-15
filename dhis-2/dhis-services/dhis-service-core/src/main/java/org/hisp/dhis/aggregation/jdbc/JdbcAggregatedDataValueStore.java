@@ -28,7 +28,7 @@ package org.hisp.dhis.aggregation.jdbc;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.sql.ResultSet;
@@ -47,7 +47,6 @@ import org.hisp.dhis.aggregation.StoreIterator;
 import org.hisp.dhis.completeness.DataSetCompletenessResult;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
-import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
@@ -138,7 +137,7 @@ public class JdbcAggregatedDataValueStore
     @Override
     public Double getAggregatedDataValue( DataElement dataElement, DataElementCategoryOption categoryOption, Period period, OrganisationUnit organisationUnit )
     {
-        String ids = getCommaDelimitedString( getIdentifiers( DataElementCategoryOptionCombo.class, categoryOption.getCategoryOptionCombos() ) );
+        String ids = getCommaDelimitedString( getIdentifiers( categoryOption.getCategoryOptionCombos() ) );
         
         final String sql =
             "SELECT SUM(value) " +
@@ -226,7 +225,7 @@ public class JdbcAggregatedDataValueStore
         {
             int rootlevel = rootOrgunit.getLevel();
 
-            String periodids = getCommaDelimitedString( getIdentifiers(Period.class, periods));
+            String periodids = getCommaDelimitedString( getIdentifiers( periods ) );
 
             final String sql =
                 "SELECT dataelementid, categoryoptioncomboid, periodid, adv.organisationunitid, value " +
@@ -259,7 +258,7 @@ public class JdbcAggregatedDataValueStore
     @Override
     public int countDataValuesAtLevel( OrganisationUnit rootOrgunit, OrganisationUnitLevel level, Collection<Period> periods )
     {
-        final String periodids = getCommaDelimitedString( getIdentifiers( Period.class, periods ) );
+        final String periodids = getCommaDelimitedString( getIdentifiers( periods ) );
 
         final String sql =
             "SELECT count(*) " +
@@ -365,7 +364,7 @@ public class JdbcAggregatedDataValueStore
         {
             int rootlevel = rootOrgunit.getLevel();
 
-            String periodids = getCommaDelimitedString( getIdentifiers(Period.class, periods));
+            String periodids = getCommaDelimitedString( getIdentifiers( periods ) );
 
             final String sql =
                 "SELECT aiv.* " +
@@ -400,7 +399,7 @@ public class JdbcAggregatedDataValueStore
     {
         int rootlevel = rootOrgunit.getLevel();
 
-        String periodids = getCommaDelimitedString( getIdentifiers(Period.class, periods));
+        String periodids = getCommaDelimitedString( getIdentifiers( periods ) );
         
         final String sql =
             "SELECT count(*) as rowcount " +

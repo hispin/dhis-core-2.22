@@ -194,7 +194,7 @@ public class DefaultIdentifiableObjectManager
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> T get( Collection<Class<IdentifiableObject>> classes, String uid )
+    public <T extends IdentifiableObject> T get( Collection<Class<? extends IdentifiableObject>> classes, String uid )
     {        
         for ( Class<? extends IdentifiableObject> clazz : classes )
         {

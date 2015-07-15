@@ -33,6 +33,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
+ * Utility class for concurrency operations.
+ * 
  * @author Lars Helge Overland
  */
 public class ConcurrentUtils

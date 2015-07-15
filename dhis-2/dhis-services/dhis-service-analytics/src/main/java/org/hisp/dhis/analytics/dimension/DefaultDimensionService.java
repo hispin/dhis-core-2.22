@@ -28,9 +28,33 @@ package org.hisp.dhis.analytics.dimension;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.DimensionType.CATEGORY;
+import static org.hisp.dhis.common.DimensionType.CATEGORYOPTION_GROUPSET;
+import static org.hisp.dhis.common.DimensionType.DATAELEMENT_GROUPSET;
+import static org.hisp.dhis.common.DimensionType.DATA_X;
+import static org.hisp.dhis.common.DimensionType.ORGANISATIONUNIT;
+import static org.hisp.dhis.common.DimensionType.ORGANISATIONUNIT_GROUPSET;
+import static org.hisp.dhis.common.DimensionType.PERIOD;
+import static org.hisp.dhis.common.DimensionType.PROGRAM_ATTRIBUTE;
+import static org.hisp.dhis.common.DimensionType.PROGRAM_DATAELEMENT;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
+import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_LEVEL;
+import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_ORGUNIT_GROUP;
+import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT;
+import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT_CHILDREN;
+import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT_GRANDCHILDREN;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
+import org.hisp.dhis.common.DataDimensionItem;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
@@ -40,6 +64,7 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
@@ -52,8 +77,6 @@ import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementOperandService;
 import org.hisp.dhis.dataelement.DataElementService;
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -64,24 +87,13 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.period.RelativePeriods;
-import org.hisp.dhis.commons.collection.UniqueArrayList;
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension;
 import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import static org.hisp.dhis.common.DimensionType.*;
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-import static org.hisp.dhis.organisationunit.OrganisationUnit.*;
 
 /**
  * @author Lars Helge Overland
@@ -281,10 +293,6 @@ public class DefaultDimensionService
         final Map<String, DimensionType> dimObjectTypeMap = new HashMap<>();
 
         dimObjectTypeMap.put( DimensionalObject.DATA_X_DIM_ID, DimensionType.DATA_X );
-        dimObjectTypeMap.put( DimensionalObject.INDICATOR_DIM_ID, DimensionType.INDICATOR );
-        dimObjectTypeMap.put( DimensionalObject.DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT );
-        dimObjectTypeMap.put( DimensionalObject.DATASET_DIM_ID, DimensionType.DATASET );
-        dimObjectTypeMap.put( DimensionalObject.DATAELEMENT_OPERAND_ID, DimensionType.DATAELEMENT_OPERAND );
         dimObjectTypeMap.put( DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD );
         dimObjectTypeMap.put( DimensionalObject.ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT );
 
@@ -339,6 +347,11 @@ public class DefaultDimensionService
             else
             {
                 object.setUser( currentUserService.getCurrentUser() );
+            }
+            
+            if ( object.getProgram() != null )
+            {
+                object.setProgram( identifiableObjectManager.get( Program.class, object.getProgram().getUid() ) );
             }
 
             mergeDimensionalObjects( object, object.getColumns() );
@@ -426,21 +439,14 @@ public class DefaultDimensionService
             {
                 List<String> uids = getUids( items );
 
-                if ( INDICATOR.equals( type ) )
+                if ( DATA_X.equals( type ) )
                 {
-                    object.getIndicators().addAll( identifiableObjectManager.getByUidOrdered( Indicator.class, uids ) );
-                }
-                else if ( DATAELEMENT.equals( type ) )
-                {
-                    object.getDataElements().addAll( identifiableObjectManager.getByUidOrdered( DataElement.class, uids ) );
-                }
-                else if ( DATAELEMENT_OPERAND.equals( type ) )
-                {
-                    object.getDataElementOperands().addAll( operandService.getDataElementOperandsByUid( uids ) );
-                }
-                else if ( DATASET.equals( type ) )
-                {
-                    object.getDataSets().addAll( identifiableObjectManager.getByUidOrdered( DataSet.class, uids ) );
+                    for ( String uid : uids )
+                    {
+                        NameableObject dataObject = identifiableObjectManager.get( DataDimensionItem.DATA_DIMENSION_CLASSES, uid );
+                        
+                        object.getDataDimensionItems().add( DataDimensionItem.create( dataObject ) );
+                    }
                 }
                 else if ( PERIOD.equals( type ) )
                 {

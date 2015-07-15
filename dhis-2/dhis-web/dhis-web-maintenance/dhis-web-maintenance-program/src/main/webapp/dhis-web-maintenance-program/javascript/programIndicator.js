@@ -55,7 +55,7 @@ function filterExpressionSelect( event, value, fieldName ) {
 		{
 			option.style.display = "none";
 		}
-    }	    
+    }
 }
 
 function getTrackedEntityDataElements( type ) {
@@ -67,8 +67,7 @@ function getTrackedEntityDataElements( type ) {
     {
       programId: getFieldValue('programId'),
       programStageId: programStageId
-    }
-    , function( json ) {
+    }, function( json ) {
       var dataElements = jQuery('#' + fieldId);
       for( i in json.dataElements ) {
         if( json.dataElements[i].type == 'int' || json.dataElements[i].type == 'date' ) {

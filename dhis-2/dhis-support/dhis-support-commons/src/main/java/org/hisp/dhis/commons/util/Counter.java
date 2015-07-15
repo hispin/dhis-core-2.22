@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Class which can count occurrences of a given key.
+ * 
  * @author Lars Helge Overland
  */
 public class Counter<T>

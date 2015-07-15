@@ -1064,7 +1064,7 @@ public abstract class DhisConvenienceTest
         chart.setAutoFields();
 
         chart.setName( "Chart" + uniqueCharacter );
-        chart.setIndicators( indicators );
+        chart.addAllDataDimensionItems( indicators );
         chart.setPeriods( periods );
         chart.setOrganisationUnits( units );
         chart.setDimensions( DimensionalObject.DATA_X_DIM_ID, DimensionalObject.PERIOD_DIM_ID,
@@ -1248,7 +1248,7 @@ public abstract class DhisConvenienceTest
         return programStage;
     }
 
-    public static ProgramIndicator createProgramIndicator( char uniqueCharacter, Program program, String expression )
+    public static ProgramIndicator createProgramIndicator( char uniqueCharacter, Program program, String expression, String filter )
     {
         ProgramIndicator indicator = new ProgramIndicator();
         indicator.setAutoFields();
@@ -1259,7 +1259,7 @@ public abstract class DhisConvenienceTest
         indicator.setProgram( program );
         indicator.setValueType( ProgramIndicator.VALUE_TYPE_INT );
         indicator.setExpression( expression );
-        indicator.setFilter( null );
+        indicator.setFilter( filter );
         indicator.setRootDate( ProgramIndicator.INCIDENT_DATE );
         
         return indicator;

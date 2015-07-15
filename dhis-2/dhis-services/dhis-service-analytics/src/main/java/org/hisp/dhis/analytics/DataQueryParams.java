@@ -31,23 +31,15 @@ package org.hisp.dhis.analytics;
 import static org.hisp.dhis.analytics.AggregationType.AVERAGE_INT_DISAGGREGATION;
 import static org.hisp.dhis.analytics.AggregationType.AVERAGE_SUM_INT_DISAGGREGATION;
 import static org.hisp.dhis.common.DimensionType.CATEGORYOPTION_GROUPSET;
-import static org.hisp.dhis.common.DimensionType.DATASET;
+import static org.hisp.dhis.common.DimensionType.DATA_X;
 import static org.hisp.dhis.common.DimensionType.ORGANISATIONUNIT;
 import static org.hisp.dhis.common.DimensionType.ORGANISATIONUNIT_GROUPSET;
 import static org.hisp.dhis.common.DimensionType.PERIOD;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.DATAELEMENT_OPERAND_ID;
-import static org.hisp.dhis.common.DimensionalObject.DATASET_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
-import static org.hisp.dhis.common.DimensionalObject.INDICATOR_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_ATTRIBUTE_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_DATAELEMENT_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PROGRAM_INDICATOR_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.DATA_DIMS;
 import static org.hisp.dhis.common.NameableObjectUtils.asList;
 import static org.hisp.dhis.common.NameableObjectUtils.getList;
 
@@ -57,23 +49,25 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.CombinationGenerator;
+import org.hisp.dhis.common.DataDimensionItem.DataDimensionItemType;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.DisplayProperty;
+import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.commons.collection.CollectionUtils;
 import org.hisp.dhis.commons.collection.ListUtils;
+import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -88,6 +82,8 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.system.util.MathUtils;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -109,16 +105,17 @@ public class DataQueryParams
     public static final String DISPLAY_NAME_LATITUDE = "Latitude";
 
     public static final int DX_INDEX = 0;
-    public static final int CO_IN_INDEX = 1;
+    public static final int CO_INDEX = 1;
+
+    public static final Set<Class<? extends IdentifiableObject>> DYNAMIC_DIM_CLASSES = ImmutableSet.<Class<? extends IdentifiableObject>>builder().
+        add( OrganisationUnitGroupSet.class ).add( DataElementGroupSet.class ).add( CategoryOptionGroupSet.class ).add( DataElementCategory.class ).build();
     
-    public static final List<String> FIXED_DIMS = Lists.newArrayList( 
-        DATA_X_DIM_ID, INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID, PERIOD_DIM_ID, ORGUNIT_DIM_ID );
     private static final List<String> DIMENSION_PERMUTATION_IGNORE_DIMS = Lists.newArrayList( 
-        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
+        DATA_X_DIM_ID, CATEGORYOPTIONCOMBO_DIM_ID );    
     public static final List<DimensionType> COMPLETENESS_DIMENSION_TYPES = Lists.newArrayList( 
-        DATASET, PERIOD, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET, CATEGORYOPTION_GROUPSET );
+        DATA_X, PERIOD, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET, CATEGORYOPTION_GROUPSET );
     private static final List<DimensionType> COMPLETENESS_TARGET_DIMENSION_TYPES = Lists.newArrayList( 
-        DATASET, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET );
+        DATA_X, ORGANISATIONUNIT, ORGANISATIONUNIT_GROUPSET );
     
     private static final DimensionItem[] DIM_OPT_ARR = new DimensionItem[0];
     private static final DimensionItem[][] DIM_OPT_2D_ARR = new DimensionItem[0][];
@@ -230,6 +227,11 @@ public class DataQueryParams
      */
     protected transient Map<OrganisationUnit, Integer> dataApprovalLevels = new HashMap<>();
     
+    /**
+     * Filter expression.
+     */
+    protected transient String filterExpression;
+    
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -245,8 +247,8 @@ public class DataQueryParams
     
     public <T extends DataQueryParams> T copyTo( T params )
     {        
-        params.dimensions = new ArrayList<>( this.dimensions );
-        params.filters = new ArrayList<>( this.filters );
+        params.dimensions = DimensionalObjectUtils.getCopies( this.dimensions );
+        params.filters = DimensionalObjectUtils.getCopies( this.filters );
         params.aggregationType = this.aggregationType;
         params.measureCriteria = this.measureCriteria;
         params.skipMeta = this.skipMeta;
@@ -267,6 +269,7 @@ public class DataQueryParams
         params.dataPeriodType = this.dataPeriodType;
         params.skipPartitioning = this.skipPartitioning;
         params.dataApprovalLevels = new HashMap<>( this.dataApprovalLevels );
+        params.filterExpression = this.filterExpression;
         
         return params;
     }
@@ -282,15 +285,12 @@ public class DataQueryParams
      */
     public DataQueryParams conform()
     {
-        if ( !dimensions.contains( new BaseDimensionalObject( DATAELEMENT_DIM_ID ) ) ||
-            dimensions.contains( new BaseDimensionalObject( INDICATOR_DIM_ID ) ) ||
-            dimensions.contains( new BaseDimensionalObject( DATASET_DIM_ID ) ) ||
-            dimensions.contains( new BaseDimensionalObject( PROGRAM_INDICATOR_DIM_ID ) ) ||
-            dimensions.contains( new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ) ) ||
-            dimensions.contains( new BaseDimensionalObject( PROGRAM_ATTRIBUTE_DIM_ID ) ) )
+        if ( !( !getDataElements().isEmpty() && getDataElementOperands().isEmpty() && getIndicators().isEmpty() && getDataSets().isEmpty() ) )
         {
             removeDimension( CATEGORYOPTIONCOMBO_DIM_ID );
         }
+        
+        //TODO program data elements / attributes
         
         return this;
     }
@@ -333,50 +333,6 @@ public class DataQueryParams
         }
         
         return map;
-    }
-    
-    /**
-     * Creates a list of dimensions for use as headers. Will replace any of
-     * the indicator, data element, data set or program data element dimensions 
-     * with the common data x dimension. If the category option combo dimension 
-     * is given but not the data element dimension, the former will be removed.
-     */
-    public List<DimensionalObject> getHeaderDimensions()
-    {
-        List<DimensionalObject> list = new ArrayList<>( dimensions );
-        
-        ListIterator<DimensionalObject> iter = list.listIterator();
-        
-        dimensions : while ( iter.hasNext() )
-        {
-            if ( DATA_DIMS.contains( iter.next().getDimension() ) )
-            {
-                iter.set( new BaseDimensionalObject( DATA_X_DIM_ID, DimensionType.DATA_X, null, DISPLAY_NAME_DATA_X, new ArrayList<NameableObject>() ) );
-                break dimensions;
-            }
-        }
-        
-        list.removeAll( Lists.newArrayList( 
-            new BaseDimensionalObject( INDICATOR_DIM_ID ),
-            new BaseDimensionalObject( DATAELEMENT_DIM_ID ),
-            new BaseDimensionalObject( DATASET_DIM_ID ),
-            new BaseDimensionalObject( PROGRAM_INDICATOR_DIM_ID ),
-            new BaseDimensionalObject( PROGRAM_DATAELEMENT_DIM_ID ),
-            new BaseDimensionalObject( PROGRAM_ATTRIBUTE_DIM_ID ) ) );
-        
-        return list;
-    }
-    
-    /**
-     * Creates a list of dimensions used to query. 
-     */
-    public List<DimensionalObject> getQueryDimensions()
-    {
-        List<DimensionalObject> list = new ArrayList<>( dimensions );
-        
-        list.remove( new BaseDimensionalObject( INDICATOR_DIM_ID ) );
-        
-        return list;
     }
     
     /**
@@ -517,14 +473,6 @@ public class DataQueryParams
         return this;
     }
     
-    /**
-     * Returns the index of the data set dimension in the dimension map.
-     */
-    public int getDataSetDimensionIndex()
-    {
-        return getDimensionIdentifiersAsList().indexOf( DATASET_DIM_ID );
-    }
-
     /**
      * Returns the index of the category option combo dimension in the dimension map.
      */
@@ -768,13 +716,8 @@ public class DataQueryParams
     public List<NameableObject> getDataDimensionAndFilterOptions()
     {
         List<NameableObject> options = new ArrayList<>();
-        
-        for ( String dim : DATA_DIMS )
-        {
-            options.addAll( getDimensionOptions( dim ) );
-            options.addAll( getFilterOptions( dim ) );
-        }
-        
+        options.addAll( getDimensionOptions( DATA_X_DIM_ID ) );
+        options.addAll( getFilterOptions( DATA_X_DIM_ID ) );
         return options;
     }
     
@@ -1033,6 +976,14 @@ public class DataQueryParams
         return programStage != null;
     }
     
+    /**
+     * Indicates whether this object has a filter expression.
+     */
+    public boolean hasFilterExpression()
+    {
+        return filterExpression != null;
+    }
+    
     // -------------------------------------------------------------------------
     // Static methods
     // -------------------------------------------------------------------------
@@ -1057,11 +1008,11 @@ public class DataQueryParams
             List<String> keys = Lists.newArrayList( key.split( DIMENSION_SEP ) );
             
             String de = keys.get( DX_INDEX );
-            String coc = cocEnabled ? keys.get( CO_IN_INDEX ) : null;
+            String coc = cocEnabled ? keys.get( CO_INDEX ) : null;
 
             DataElementOperand operand = new DataElementOperand( de, coc );
             
-            ListUtils.removeAll( keys, DX_INDEX, ( cocEnabled ? CO_IN_INDEX : -1 ) );
+            ListUtils.removeAll( keys, DX_INDEX, ( cocEnabled ? CO_INDEX : -1 ) );
             
             String permKey = StringUtils.join( keys, DIMENSION_SEP );
             
@@ -1072,7 +1023,7 @@ public class DataQueryParams
     }
     
     /**
-     * Returns a mapping of permutation keys and mappings of identifiers and values
+     * Returns a mapping of permutation keys and mappings of data identifiers and values
      * based on the given mapping of dimension option keys and values.
      */
     public static Map<String, Map<String, Double>> getPermutationProgramValueMap( Map<String, Double> valueMap )
@@ -1160,32 +1111,37 @@ public class DataQueryParams
     }
     
     /**
-     * Adds the given dimension to the dimensions of this query. If the dimension
-     * is a data dimensions it will be added to the beginning of the list of dimensions.
+     * Adds the given dimensions to the dimensions of this query. If the dimension
+     * is a data dimension it will be added to the beginning of the list of dimensions.
      */
     public void addDimensions( List<DimensionalObject> dimension )
     {
         for ( DimensionalObject dim : dimension )
         {
-            if ( DATA_DIMS.contains( dim.getDimension() ) )
-            {
-                dimensions.add( 0, dim );
-            }
-            else
-            {
-                dimensions.add( dim );
-            }
+            addDimension( dim );
         }
     }
-    
+
     /**
-     * Adds the given filters to the filters of this query.
+     * Adds the given dimension to the dimensions of this query. If the dimension
+     * is a data dimension it will be added to the beginning of the list of dimensions.
      */
-    public void addFilters( List<DimensionalObject> filters )
+    public void addDimension( DimensionalObject dimension )
     {
-        this.filters.addAll( filters );
+        if ( DATA_X_DIM_ID.equals( dimension.getDimension() ) )
+        {
+            dimensions.add( DX_INDEX, dimension );
+        }
+        else if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension.getDimension() ) )
+        {
+            dimensions.add( CO_INDEX, dimension );
+        }
+        else
+        {
+            dimensions.add( dimension );
+        }
     }
-    
+        
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
@@ -1487,6 +1443,16 @@ public class DataQueryParams
         this.dataApprovalLevels = dataApprovalLevels;
     }
 
+    public String getFilterExpression()
+    {
+        return filterExpression;
+    }
+
+    public void setFilterExpression( String filterExpression )
+    {
+        this.filterExpression = filterExpression;
+    }
+
     // -------------------------------------------------------------------------
     // Get and set helpers for dimensions or filter
     // -------------------------------------------------------------------------
@@ -1503,26 +1469,17 @@ public class DataQueryParams
     }
     
     /**
-     * Retrieves the options for the given dimension identifier. If the dx dimension
-     * is specified, all concrete dimensions (in|de|dc|ds) are returned as a single
-     * dimension. If the co dimension is specified, all category option combos for
-     * the first data element is returned. Returns an empty array if the dimension 
-     * is not present.
+     * Retrieves the options for the given dimension identifier. If the co 
+     * dimension is specified, all category option combos for the first data 
+     * element is returned. Returns an empty array if the dimension is not present.
      */
     public NameableObject[] getDimensionArrayCollapseDxExplodeCoc( String dimension )
     {
         List<NameableObject> items = new ArrayList<>();
         
-        if ( DATA_X_DIM_ID.equals( dimension ) )
+        if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
         {
-            items.addAll( getDimensionOptions( INDICATOR_DIM_ID ) );
-            items.addAll( getDimensionOptions( DATAELEMENT_DIM_ID ) );
-            items.addAll( getDimensionOptions( DATAELEMENT_OPERAND_ID ) );
-            items.addAll( getDimensionOptions( DATASET_DIM_ID ) );
-        }
-        else if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
-        {
-            List<NameableObject> des = getDimensionOrFilter( DATAELEMENT_DIM_ID );
+            List<NameableObject> des = getDataElements();
             
             if ( !des.isEmpty() )
             {
@@ -1556,6 +1513,14 @@ public class DataQueryParams
     }
 
     /**
+     * Indicates whether a dimension or filter with the given identifier exists.
+     */
+    public boolean hasDimension( String key )
+    {
+        return dimensions.indexOf( new BaseDimensionalObject( key ) ) != -1;
+    }
+
+    /**
      * Indicates whether a dimension or filter which specifies dimension items 
      * with the given identifier exists.
      */
@@ -1563,70 +1528,156 @@ public class DataQueryParams
     {
         return !getDimensionOrFilter( key ).isEmpty();
     }
-    
+
     /**
-     * Indicates whether a dimension with the given identifier exists. Returns
-     * true for the dx argument if any of the data dimensions is present.
+     * Sets the given list of data dimension options. Replaces existing options
+     * of the given data dimension type.
+     * 
+     * @param itemType the data dimension type.
+     * @param options the data dimension options.
      */
-    public boolean hasDimensionCollapseDx( String dimension )
+    private void setDataDimensionOptions( DataDimensionItemType itemType, List<? extends NameableObject> options )
     {
-        List<String> dims = getDimensionIdentifiersAsList();
+        List<NameableObject> existing = DimensionalObjectUtils.getByDataDimensionType( itemType, getDimensionOptions( DATA_X_DIM_ID ) );
+        DimensionalObject dimension = getDimension( DATA_X_DIM_ID );
         
-        if ( DATA_X_DIM_ID.equals( dimension ) )
+        if ( dimension == null )
         {
-            return CollectionUtils.intersection( dims, DATA_DIMS ).size() > 0;
+            dimension = new BaseDimensionalObject( DATA_X_DIM_ID, DimensionType.DATA_X, null, DISPLAY_NAME_DATA_X, options );
+            addDimension( dimension );
         }
-        
-        return dims.contains( dimension );
+        else
+        {        
+            dimension.getItems().removeAll( existing );
+            dimension.getItems().addAll( options );
+        }
     }
-            
+    
+    // -------------------------------------------------------------------------
+    // Get and set helpers for dimensions and filters
+    // -------------------------------------------------------------------------
+
+    public List<NameableObject> getAllIndicators()
+    {
+        return ImmutableList.copyOf( ListUtils.union( getIndicators(), getFilterIndicators() ) );
+    }
+    
+    public List<NameableObject> getAllDataElements()
+    {
+        return ImmutableList.copyOf( ListUtils.union( getDataElements(), getFilterDataElements() ) );
+    }
+
+    public List<NameableObject> getAllDataSets()
+    {
+        return ImmutableList.copyOf( ListUtils.union( getDataSets(), getFilterDataSets() ) );
+    }
+
+    public List<NameableObject> getAllProgramAttributes()
+    {
+        return ImmutableList.copyOf( ListUtils.union( getProgramAttributes(), getFilterProgramAttributes() ) );
+    }
+
+    public List<NameableObject> getAllProgramDataElements()
+    {
+        return ImmutableList.copyOf( ListUtils.union( getProgramDataElements(), getFilterProgramDataElements() ) );
+    }
+
+    public DataQueryParams retainDataDimension( DataDimensionItemType itemType )
+    {
+        DimensionalObject dimension = getDimension( DATA_X_DIM_ID );
+        
+        List<NameableObject> items = DimensionalObjectUtils.getByDataDimensionType( itemType, dimension.getItems() );
+        
+        dimension.getItems().clear();
+        dimension.getItems().addAll( items );
+        
+        return this;
+    }
+    
+    public DataQueryParams retainDataDimensions( DataDimensionItemType... itemTypes )
+    {
+        DimensionalObject dimension = getDimension( DATA_X_DIM_ID );
+        
+        List<NameableObject> items = new ArrayList<>();
+        
+        for ( DataDimensionItemType itemType : itemTypes )
+        {
+            items.addAll( DimensionalObjectUtils.getByDataDimensionType( itemType, dimension.getItems() ) );
+        }
+
+        dimension.getItems().clear();
+        dimension.getItems().addAll( items );
+        
+        return this;
+    }
+    
     // -------------------------------------------------------------------------
     // Get and set helpers for dimensions
     // -------------------------------------------------------------------------
   
     public List<NameableObject> getIndicators()
     {
-        return getDimensionOptions( INDICATOR_DIM_ID );
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.INDICATOR, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setIndicators( List<? extends NameableObject> indicators )
     {
-        setDimensionOptions( INDICATOR_DIM_ID, DimensionType.INDICATOR, null, asList( indicators ) );
-    }
-    
-    public void setIndicator( NameableObject indicator )
-    {
-        setIndicators( getList( indicator ) );
+        setDataDimensionOptions( DataDimensionItemType.INDICATOR, indicators );
     }
     
     public List<NameableObject> getDataElements()
     {
-        return getDimensionOptions( DATAELEMENT_DIM_ID );
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, getDimensionOptions( DATA_X_DIM_ID ) ) );
+    }
+    
+    public List<NameableObject> getDataElementOperands()
+    {
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.DATA_ELEMENT_OPERAND, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setDataElements( List<? extends NameableObject> dataElements )
     {
-        setDimensionOptions( DATAELEMENT_DIM_ID, DimensionType.DATAELEMENT, null, asList( dataElements ) );
-    }
-
-    public void setDataElement( NameableObject dataElement )
-    {
-        setDataElements( getList( dataElement ) );
+        setDataDimensionOptions( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, dataElements );
     }
     
     public List<NameableObject> getDataSets()
     {
-        return getDimensionOptions( DATASET_DIM_ID );
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.DATA_SET, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
-    
+
     public void setDataSets( List<? extends NameableObject> dataSets )
     {
-        setDimensionOptions( DATASET_DIM_ID, DimensionType.DATASET, null, asList( dataSets ) );
+        setDataDimensionOptions( DataDimensionItemType.DATA_SET, dataSets );
+    }
+
+    public List<NameableObject> getProgramIndicators()
+    {
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_INDICATOR, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
-    public void setDataSet( NameableObject dataSet )
+    public void setProgramIndicators( List<? extends NameableObject> programIndicators )
     {
-        setDataSets( getList( dataSet ) );
+        setDataDimensionOptions( DataDimensionItemType.PROGRAM_INDICATOR, programIndicators );
+    }
+
+    public List<NameableObject> getProgramDataElements()
+    {
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_DATA_ELEMENT, getDimensionOptions( DATA_X_DIM_ID ) ) );
+    }
+    
+    public void setProgramDataElements( List<? extends NameableObject> programDataElements )
+    {
+        setDataDimensionOptions( DataDimensionItemType.PROGRAM_DATA_ELEMENT, programDataElements );
+    }
+    
+    public List<NameableObject> getProgramAttributes()
+    {
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, getDimensionOptions( DATA_X_DIM_ID ) ) );
+    }
+    
+    public void setProgramAttributes( List<? extends NameableObject> programAttributes )
+    {
+        setDataDimensionOptions( DataDimensionItemType.PROGRAM_ATTRIBUTE, programAttributes );
     }
     
     public List<NameableObject> getPeriods()
@@ -1659,36 +1710,6 @@ public class DataQueryParams
         setOrganisationUnits( getList( organisationUnit ) );
     }
 
-    public List<NameableObject> getProgramIndicators()
-    {
-        return getDimensionOptions( PROGRAM_INDICATOR_DIM_ID );
-    }
-
-    public void setProgramIndicators( List<? extends NameableObject> programIndicators )
-    {
-        setDimensionOptions( PROGRAM_INDICATOR_DIM_ID, DimensionType.PROGRAM_INDICATOR, null, asList( programIndicators ) );
-    }
-    
-    public List<NameableObject> getProgramDataElements()
-    {
-        return getDimensionOptions( PROGRAM_DATAELEMENT_DIM_ID );
-    }
-    
-    public void setProgramDataElements( List<? extends NameableObject> programDataElements )
-    {
-        setDimensionOptions( PROGRAM_DATAELEMENT_DIM_ID, DimensionType.PROGRAM_DATAELEMENT, null, asList( programDataElements ) );
-    }
-    
-    public List<NameableObject> getProgramAttributes()
-    {
-        return getDimensionOptions( PROGRAM_ATTRIBUTE_DIM_ID );
-    }
-    
-    public void setProgramAttributes( List<? extends NameableObject> programAttributes )
-    {
-        setDimensionOptions( PROGRAM_ATTRIBUTE_DIM_ID, DimensionType.PROGRAM_ATTRIBUTE, null, asList( programAttributes ) );
-    }
-    
     public List<DimensionalObject> getDataElementGroupSets()
     {
         List<DimensionalObject> list = new ArrayList<>();
@@ -1727,9 +1748,9 @@ public class DataQueryParams
         setDimensionOptions( category.getUid(), DimensionType.CATEGORY, null, new ArrayList<>( category.getItems() ) );
     }
     
-    public void enableCategoryOptionCombos()
+    public void setCategoryOptionCombos( List<? extends NameableObject> categoryOptionCombos )
     {
-        setDimensionOptions( CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, null, new ArrayList<NameableObject>() );
+        setDimensionOptions( CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, null, asList( categoryOptionCombos ) );
     }
     
     public boolean isCategoryOptionCombosEnabled()
@@ -1740,10 +1761,20 @@ public class DataQueryParams
     // -------------------------------------------------------------------------
     // Get and set helpers for filters
     // -------------------------------------------------------------------------
+
+    public List<NameableObject> getFilterIndicators()
+    {
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.INDICATOR, getFilterOptions( DATA_X_DIM_ID ) ) );
+    }
     
     public List<NameableObject> getFilterDataElements()
     {
-        return getFilterOptions( DATAELEMENT_DIM_ID );
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, getFilterOptions( DATA_X_DIM_ID ) ) );
+    }
+
+    public List<NameableObject> getFilterDataSets()
+    {
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.DATA_SET, getFilterOptions( DATA_X_DIM_ID ) ) );
     }
     
     public List<NameableObject> getFilterPeriods()
@@ -1778,12 +1809,12 @@ public class DataQueryParams
 
     public List<NameableObject> getFilterProgramDataElements()
     {
-        return getFilterOptions( PROGRAM_DATAELEMENT_DIM_ID );
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_DATA_ELEMENT, getFilterOptions( DATA_X_DIM_ID ) ) );
     }
     
     public List<NameableObject> getFilterProgramAttributes()
     {
-        return getFilterOptions( PROGRAM_ATTRIBUTE_DIM_ID );
+        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, getFilterOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setFilter( String filter, DimensionType type, NameableObject item )

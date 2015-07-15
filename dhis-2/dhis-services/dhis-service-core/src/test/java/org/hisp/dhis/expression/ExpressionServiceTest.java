@@ -427,7 +427,7 @@ public class ExpressionServiceTest
         
         assertEquals( "DataElementA*OrganisationUnitGroupA", description );
     }
-
+    
     @Test
     public void testGenerateExpressionMap()
     {

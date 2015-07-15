@@ -28,11 +28,12 @@ package org.hisp.dhis.mapping;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -52,12 +53,11 @@ import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.user.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * For analytical data, organisation units and indicators/data elements are
@@ -189,23 +189,11 @@ public class MapView
     @Override
     public String getName()
     {
-        if ( indicators != null && !indicators.isEmpty() )
+        if ( !dataDimensionItems.isEmpty() && dataDimensionItems.get( 0 ).getNameableObject() != null )
         {
-            return indicators.get( 0 ).getName();
+            return dataDimensionItems.get( 0 ).getNameableObject().getName();
         }
-        else if ( dataElements != null && !dataElements.isEmpty() )
-        {
-            return dataElements.get( 0 ).getName();
-        }
-        else if ( dataElementOperands != null && !dataElementOperands.isEmpty() )
-        {
-            return dataElementOperands.get( 0 ).getName();
-        }
-        else if ( dataSets != null && !dataSets.isEmpty() )
-        {
-            return dataSets.get( 0 ).getName();
-        }
-
+        
         return uid;
     }
 

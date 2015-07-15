@@ -34,6 +34,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64;
 
 /**
+ * Utility class for encoding and decoding operations.
+ * 
  * @author Lars Helge Overland
  */
 public class CodecUtils

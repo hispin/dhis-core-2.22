@@ -21,37 +21,13 @@
 
     <property name="cumulative" />
 
-    <list name="dataElements" table="reporttable_dataelements">
-      <cache usage="read-write" />
-      <key column="reporttableid" foreign-key="fk_reporttable_dataelements_reporttableid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="dataelementid" class="org.hisp.dhis.dataelement.DataElement"
-        foreign-key="fk_reporttable_dataelements_dataelementid" />
-    </list>
-
-    <list name="dataElementOperands" table="reporttable_dataelementoperands" cascade="all-delete-orphan">
-      <cache usage="read-write" />
-      <key column="reporttableid" foreign-key="fk_reporttable_dataelementoperands_reporttableid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="dataelementoperandid" class="org.hisp.dhis.dataelement.DataElementOperand"
-        foreign-key="fk_reporttable_dataelementoperands_dataelementoperandid" />
-    </list>
-
-    <list name="indicators" table="reporttable_indicators">
-      <cache usage="read-write" />
-      <key column="reporttableid" foreign-key="fk_reporttable_indicators_reporttableid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="indicatorid" class="org.hisp.dhis.indicator.Indicator"
-        foreign-key="fk_reporttable_indicators_indicatorid" />
-    </list>
-
-    <list name="dataSets" table="reporttable_datasets">
-      <cache usage="read-write" />
-      <key column="reporttableid" foreign-key="fk_reporttable_datasets_reporttableid" />
-      <list-index column="sort_order" base="0" />
-      <many-to-many column="datasetid" class="org.hisp.dhis.dataset.DataSet"
-        foreign-key="fk_reporttable_datasets_datasetid" />
-    </list>
+	<list name="dataDimensionItems" table="reporttable_datadimensionitems" cascade="all, delete-orphan">
+	  <cache usage="read-write" />
+	  <key column="reporttableid" foreign-key="fk_reporttable_datadimensionitems_reporttableid" />
+	  <list-index column="sort_order" base="0" />
+	  <many-to-many column="datadimensionitemid" class="org.hisp.dhis.common.DataDimensionItem"
+        foreign-key="fk_reporttable_datadimensionitems_datadimensionitemid" />
+	</list>
 
     <list name="organisationUnits" table="reporttable_organisationunits">
       <cache usage="read-write" />
@@ -139,6 +115,9 @@
       <list-index column="sort_order" base="0" />
       <element type="string" column="dimension" />
     </list>
+    
+    <many-to-one name="program" class="org.hisp.dhis.program.Program" column="programid"
+      foreign-key="fk_reporttable_programid" />
 
     <component name="reportParams">
       <property name="paramReportingMonth" />

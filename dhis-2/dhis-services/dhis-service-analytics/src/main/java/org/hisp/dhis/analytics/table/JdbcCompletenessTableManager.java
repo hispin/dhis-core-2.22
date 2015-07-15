@@ -188,7 +188,7 @@ public class JdbcCompletenessTableManager
             columns.add( col );
         }
         
-        String[] ds = { quote( "ds" ), "character(11) not null", "ds.uid" };
+        String[] ds = { quote( "dx" ), "character(11) not null", "ds.uid" };
         
         columns.add( ds );
         

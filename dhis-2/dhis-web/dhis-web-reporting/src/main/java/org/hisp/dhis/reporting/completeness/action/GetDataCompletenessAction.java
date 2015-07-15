@@ -28,7 +28,7 @@ package org.hisp.dhis.reporting.completeness.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -205,7 +205,7 @@ public class GetDataCompletenessAction
                 if ( dataSetId != null && dataSetId != 0 ) // One ds for one ou
                 {
                     mainResults = new ArrayList<>( completenessService.getDataSetCompleteness(
-                        _periodId, getIdentifiers( OrganisationUnit.class, selectedUnit.getChildren() ), dataSetId, groupId ) );
+                        _periodId, getIdentifiers( selectedUnit.getChildren() ), dataSetId, groupId ) );
 
                     footerResults = new ArrayList<>(
                         completenessService.getDataSetCompleteness( _periodId, Arrays.asList( selectedUnit.getId() ),

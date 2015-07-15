@@ -33,7 +33,6 @@ import java.util.Set;
 
 import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementDomain;
 
 import com.google.common.collect.Sets;
 
@@ -50,6 +49,6 @@ public class AggregatableDataElementFilter
     @Override
     public boolean retain( DataElement object )
     {
-        return object != null && TYPES.contains( object.getType() ) && DataElementDomain.AGGREGATE.equals( object.getDomainType() );
+        return object != null && TYPES.contains( object.getType() );
     }
 }

@@ -29,9 +29,9 @@ package org.hisp.dhis.dataanalysis.jdbc;
  */
 
 import static org.hisp.dhis.common.AggregatedValue.ZERO;
-import static org.hisp.dhis.commons.util.ConversionUtils.getIdentifiers;
-import static org.hisp.dhis.system.util.MathUtils.isEqual;
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
+import static org.hisp.dhis.system.util.MathUtils.isEqual;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +43,8 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.commons.collection.PaginatedList;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataanalysis.DataAnalysisStore;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -52,9 +54,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.objectmapper.DeflatedDataValueNameMinMaxRowMapper;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.commons.util.ConversionUtils;
-import org.hisp.dhis.commons.collection.PaginatedList;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
@@ -172,10 +171,10 @@ public class JdbcDataAnalysisStore
             return new ArrayList<>();
         }
         
-        String dataElementIds = getCommaDelimitedString( getIdentifiers( DataElement.class, dataElements ) );
-        String organisationUnitIds = getCommaDelimitedString( getIdentifiers( OrganisationUnit.class, organisationUnits ) );
-        String periodIds = getCommaDelimitedString( getIdentifiers( Period.class, periods ) );
-        String categoryOptionComboIds = getCommaDelimitedString( getIdentifiers( DataElementCategoryOptionCombo.class, categoryOptionCombos ) );
+        String dataElementIds = getCommaDelimitedString( getIdentifiers( dataElements ) );
+        String organisationUnitIds = getCommaDelimitedString( getIdentifiers( organisationUnits ) );
+        String periodIds = getCommaDelimitedString( getIdentifiers( periods ) );
+        String categoryOptionComboIds = getCommaDelimitedString( getIdentifiers( categoryOptionCombos ) );
         
         Map<Integer, String> optionComboMap = DataElementCategoryOptionCombo.getCategoryOptionComboMap( categoryOptionCombos );
         
@@ -229,7 +228,7 @@ public class JdbcDataAnalysisStore
     private List<DeflatedDataValue> getDeflatedDataValues( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo,
         Collection<Period> periods, List<Integer> organisationUnits, Map<Integer, Integer> lowerBoundMap, Map<Integer, Integer> upperBoundMap )
     {
-        String periodIds = TextUtils.getCommaDelimitedString( ConversionUtils.getIdentifiers( Period.class, periods ) );
+        String periodIds = TextUtils.getCommaDelimitedString( getIdentifiers( periods ) );
         
         String sql = 
             "select dv.dataelementid, dv.periodid, dv.sourceid, dv.categoryoptioncomboid, dv.value, dv.storedby, dv.lastupdated, " +

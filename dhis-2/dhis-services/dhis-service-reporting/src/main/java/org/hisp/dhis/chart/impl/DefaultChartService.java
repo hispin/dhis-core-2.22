@@ -38,7 +38,7 @@ import static org.hisp.dhis.chart.BaseChart.TYPE_STACKED_BAR;
 import static org.hisp.dhis.chart.BaseChart.TYPE_STACKED_COLUMN;
 import static org.hisp.dhis.chart.BaseChart.TYPE_METER;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
-import static org.hisp.dhis.commons.util.ConversionUtils.getArray;
+import static org.hisp.dhis.commons.collection.ListUtils.getArray;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -274,7 +274,7 @@ public class DefaultChartService
         chart.setType( TYPE_LINE );
         chart.setDimensions( DimensionalObject.DATA_X_DIM_ID, DimensionalObject.PERIOD_DIM_ID, DimensionalObject.ORGUNIT_DIM_ID );
         chart.setHideLegend( true );
-        chart.getIndicators().add( indicator );
+        chart.addDataDimensionItem( indicator );
         chart.setPeriods( periods );
         chart.getOrganisationUnits().add( unit );
         chart.setHideSubtitle( title );
@@ -300,7 +300,7 @@ public class DefaultChartService
         chart.setType( TYPE_COLUMN );
         chart.setDimensions( DimensionalObject.DATA_X_DIM_ID, DimensionalObject.ORGUNIT_DIM_ID, DimensionalObject.PERIOD_DIM_ID );
         chart.setHideLegend( true );
-        chart.getIndicators().add( indicator );
+        chart.addDataDimensionItem( indicator );
         chart.setPeriods( periods );
         chart.setOrganisationUnits( parent.getSortedChildren() );
         chart.setHideSubtitle( title );

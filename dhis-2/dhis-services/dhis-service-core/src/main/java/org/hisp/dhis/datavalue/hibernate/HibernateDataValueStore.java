@@ -28,6 +28,7 @@ package org.hisp.dhis.datavalue.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
 import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.MapMap;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
@@ -61,8 +63,6 @@ import org.hisp.dhis.system.objectmapper.DataValueRowMapper;
 import org.hisp.dhis.system.objectmapper.DeflatedDataValueRowMapper;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.commons.util.ConversionUtils;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -503,10 +503,10 @@ public class HibernateDataValueStore
             "join categoryoptiongroupmembers cogm on c_c.categoryoptionid = cogm.categoryoptionid ";
 
         String whereCo = coDimensionConstraints == null ? "" :
-            "and c_c.categoryoptionid in (" + TextUtils.getCommaDelimitedString( ConversionUtils.getIdentifiers( DataElementCategoryOption.class, coDimensionConstraints ) ) + ") ";
+            "and c_c.categoryoptionid in (" + TextUtils.getCommaDelimitedString( getIdentifiers( coDimensionConstraints ) ) + ") ";
 
         String whereCog = cogDimensionConstraints == null ? "" :
-            "and cogm.categoryoptiongroupid in (" + TextUtils.getCommaDelimitedString( ConversionUtils.getIdentifiers( CategoryOptionGroup.class, cogDimensionConstraints ) ) + ") ";
+            "and cogm.categoryoptiongroupid in (" + TextUtils.getCommaDelimitedString( getIdentifiers( cogDimensionConstraints ) ) + ") ";
 
         String whereCombo = attributeCombo == null ? "" :
             "and dv.attributeoptioncomboid = " + attributeCombo.getId() + " ";
@@ -516,11 +516,11 @@ public class HibernateDataValueStore
             "join dataelement de on dv.dataelementid = de.dataelementid " +
             "join categoryoptioncombo coc on dv.categoryoptioncomboid = coc.categoryoptioncomboid " +
             "join period p on p.periodid = dv.periodid " + joinCo + joinCog +
-            "where dv.dataelementid in (" + TextUtils.getCommaDelimitedString( ConversionUtils.getIdentifiers( DataElement.class, dataElements ) ) + ") " +
+            "where dv.dataelementid in (" + TextUtils.getCommaDelimitedString( getIdentifiers( dataElements ) ) + ") " +
             "and dv.sourceid = " + source.getId() + " " +
             "and p.startdate <= '" + DateUtils.getMediumDateString( date ) + "' " +
             "and p.enddate >= '" + DateUtils.getMediumDateString( date ) + "' " +
-            "and p.periodtypeid in (" + TextUtils.getCommaDelimitedString( ConversionUtils.getIdentifiers( PeriodType.class, periodTypes ) ) + ") " +
+            "and p.periodtypeid in (" + TextUtils.getCommaDelimitedString( getIds( periodTypes ) ) + ") " +
             whereCo + whereCog + whereCombo;
 
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
@@ -575,5 +575,17 @@ public class HibernateDataValueStore
             "AND sourceid IN ( " + getCommaDelimitedString( sourceIds ) + " )";
         
         return jdbcTemplate.query( sql, new DeflatedDataValueRowMapper() );
+    }
+    
+    private List<Integer> getIds( Collection<PeriodType> periodTypes )
+    {
+        List<Integer> ids = new ArrayList<>();
+        
+        for ( PeriodType pt : periodTypes )
+        {
+            ids.add( pt.getId() );
+        }
+        
+        return ids;
     }
 }

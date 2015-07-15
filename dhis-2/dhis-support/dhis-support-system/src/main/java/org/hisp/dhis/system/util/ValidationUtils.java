@@ -28,22 +28,37 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.validator.routines.DateValidator;
-import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.commons.validator.routines.UrlValidator;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.datavalue.DataValue;
+import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE;
+import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_BOOL;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_DATE;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_DATETIME;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_INT;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_NEGATIVE_INT;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_NUMBER;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_PERCENTAGE;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_POSITIVE_INT;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_TRUE_ONLY;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_UNIT_INTERVAL;
+import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT;
 
 import java.awt.geom.Point2D;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.hisp.dhis.dataelement.DataElement.*;
+import org.apache.commons.validator.routines.DateValidator;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.UrlValidator;
+import org.hisp.dhis.commons.util.TextUtils;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.datavalue.DataValue;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class ValidationUtils
 {
@@ -58,6 +73,45 @@ public class ValidationUtils
     private static int LAT_MAX = 90;
     private static int LAT_MIN = -90;
 
+    private static final Set<Character> SQL_VALID_CHARS = Sets.newHashSet( 
+        '&', '|', '=', '!', '<', '>', '/', '%', '"', '\'', '*', '+', '-', '^', ',', '.' );
+
+    public static final Set<String> ILLEGAL_SQL_KEYWORDS = Sets.newHashSet( "alter", "before", "case", 
+        "commit", "copy", "create", "createdb", "createrole", "createuser", "close", "delete", "destroy", "drop", 
+        "escape", "insert", "select", "rename", "replace", "restore", "return", "update", "when", "write" );
+    
+    /**
+     * Validates whether a filter expression contains malicious code such as SQL 
+     * injection attempts.
+     * 
+     * @param filter the filter string.
+     * @return true if the filter string is valid, false otherwise.
+     */
+    public static boolean expressionIsValidSQl( String filter )
+    {
+        if ( filter == null )
+        {
+            return true;
+        }
+
+        if ( TextUtils.containsAnyIgnoreCase( filter, ILLEGAL_SQL_KEYWORDS ) )
+        {
+            return false;
+        }
+        
+        for ( int i = 0; i < filter.length(); i++ ) 
+        {
+            char ch = filter.charAt( i );
+            
+            if ( !( Character.isWhitespace( ch ) || Character.isLetterOrDigit( ch ) || SQL_VALID_CHARS.contains( ch ) ) )
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
     /**
      * Validates whether an email string is valid.
      *

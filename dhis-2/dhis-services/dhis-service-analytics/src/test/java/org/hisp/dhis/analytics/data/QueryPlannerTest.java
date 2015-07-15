@@ -29,7 +29,6 @@ package org.hisp.dhis.analytics.data;
  */
 
 import static org.hisp.dhis.analytics.AnalyticsTableManager.ANALYTICS_TABLE_NAME;
-import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
@@ -54,7 +53,6 @@ import org.hisp.dhis.analytics.DataQueryGroups;
 import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.analytics.DimensionItem;
 import org.hisp.dhis.analytics.QueryPlanner;
-import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.ListMap;
@@ -196,40 +194,6 @@ public class QueryPlannerTest
     // Tests
     // -------------------------------------------------------------------------
 
-    @Test
-    public void testGetHeaderDimensions()
-    {
-        List<DimensionalObject> expected = new ArrayList<>();
-        expected.add( new BaseDimensionalObject( DATA_X_DIM_ID ) );
-        expected.add( new BaseDimensionalObject( ORGUNIT_DIM_ID ) );
-        expected.add( new BaseDimensionalObject( PERIOD_DIM_ID ) );
-        
-        DataQueryParams params = new DataQueryParams();
-        params.setDataElements( getList( deA, deB ) );
-        params.setOrganisationUnits( getList( ouA, ouB ) );
-        params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ) ) );
-        
-        assertEquals( expected, params.getHeaderDimensions() );
-        
-        params = new DataQueryParams();
-        params.setDataElements( getList( deA, deB ) );
-        params.setIndicators( getList( inA ) );
-        params.setOrganisationUnits( getList( ouA, ouB ) );
-        params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ) ) );
-
-        assertEquals( expected, params.getHeaderDimensions() );
-        
-        expected = new ArrayList<>();
-        expected.add( new BaseDimensionalObject( ORGUNIT_DIM_ID ) );
-        expected.add( new BaseDimensionalObject( PERIOD_DIM_ID ) );
-
-        params = new DataQueryParams();
-        params.setOrganisationUnits( getList( ouA, ouB ) );
-        params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ) ) );
-
-        assertEquals( expected, params.getHeaderDimensions() );
-    }
-    
     @Test
     public void testSetGetCopy()
     {

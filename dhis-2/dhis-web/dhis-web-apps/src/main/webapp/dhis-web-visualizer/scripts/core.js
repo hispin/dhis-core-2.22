@@ -531,80 +531,79 @@ Ext.onReady( function() {
 		// conf
         (function() {
             conf.finals = {
-                ajax: {
-					path_module: '/dhis-web-visualizer/',
-					path_api: '/api/',
-					path_commons: '/dhis-web-commons-ajax-json/',
-                    data_get: 'chartValues.json',
-                    indicator_get: 'indicatorGroups/',
-                    indicator_getall: 'indicators.json?paging=false&links=false',
-                    indicatorgroup_get: 'indicatorGroups.json?paging=false&links=false',
-                    dataelement_get: 'dataElementGroups/',
-                    dataelement_getall: 'dataElements.json?domainType=aggregate&paging=false&links=false',
-                    dataelementgroup_get: 'dataElementGroups.json?paging=false&links=false',
-                    dataset_get: 'dataSets.json?paging=false&links=false'
-                },
                 dimension: {
-                    data: {
-                        value: 'data',
-                        name: NS.i18n.data,
-                        dimensionName: 'dx',
-                        objectName: 'dx'
-                    },
-                    indicator: {
-                        value: 'indicator',
-                        name: NS.i18n.indicator,
-                        dimensionName: 'dx',
-                        objectName: 'in'
-                    },
-                    dataElement: {
-                        value: 'dataelement',
-                        name: NS.i18n.data_element,
-                        dimensionName: 'dx',
-                        objectName: 'de'
-                    },
-                    operand: {
-                        value: 'operand',
-                        name: 'Operand',
-                        dimensionName: 'dx',
-                        objectName: 'dc'
-                    },
-                    dataSet: {
-                        value: 'dataset',
-                        name: NS.i18n.dataset,
-                        dimensionName: 'dx',
-                        objectName: 'ds'
-                    },
-                    category: {
-                        name: NS.i18n.assigned_categories,
-                        dimensionName: 'co',
-                        objectName: 'co',
-                    },
-                    period: {
-                        value: 'period',
-                        name: NS.i18n.period,
-                        dimensionName: 'pe',
-                        objectName: 'pe',
-                    },
-                    fixedPeriod: {
-                        value: 'periods'
-                    },
-                    relativePeriod: {
-                        value: 'relativePeriods'
-                    },
-                    organisationUnit: {
-                        value: 'organisationUnits',
-                        name: NS.i18n.organisation_units,
-                        dimensionName: 'ou',
-                        objectName: 'ou',
-                    },
-                    dimension: {
-                        value: 'dimension'
-                        //objectName: 'di'
-                    },
-                    value: {
-                        value: 'value'
-                    }
+					data: {
+						value: 'data',
+						name: NS.i18n.data || 'Data',
+						dimensionName: 'dx',
+						objectName: 'dx'
+					},
+					category: {
+						name: NS.i18n.assigned_categories || 'Assigned categories',
+						dimensionName: 'co',
+						objectName: 'co',
+					},
+					indicator: {
+						value: 'indicators',
+						name: NS.i18n.indicators || 'Indicators',
+						dimensionName: 'dx',
+						objectName: 'in'
+					},
+					dataElement: {
+						value: 'dataElements',
+						name: NS.i18n.data_elements || 'Data elements',
+						dimensionName: 'dx',
+						objectName: 'de'
+					},
+					operand: {
+						value: 'operand',
+						name: 'Operand',
+						dimensionName: 'dx',
+						objectName: 'dc'
+					},
+					dataSet: {
+						value: 'dataSets',
+						name: NS.i18n.data_sets || 'Data sets',
+						dimensionName: 'dx',
+						objectName: 'ds'
+					},
+					eventDataItem: {
+						value: 'eventDataItem',
+						name: NS.i18n.event_data_items || 'Event data items',
+						dimensionName: 'dx',
+						objectName: 'di'
+					},
+					programIndicator: {
+						value: 'programIndicator',
+						name: NS.i18n.program_indicators || 'Program indicators',
+						dimensionName: 'dx',
+						objectName: 'pi'
+					},
+					period: {
+						value: 'period',
+						name: NS.i18n.periods || 'Periods',
+						dimensionName: 'pe',
+						objectName: 'pe'
+					},
+					fixedPeriod: {
+						value: 'periods'
+					},
+					relativePeriod: {
+						value: 'relativePeriods'
+					},
+					organisationUnit: {
+						value: 'organisationUnits',
+						name: NS.i18n.organisation_units || 'Organisation units',
+						dimensionName: 'ou',
+						objectName: 'ou'
+					},
+					dimension: {
+						value: 'dimension'
+						//objectName: 'di'
+					},
+					value: {
+						value: 'value'
+					}
                 },
                 chart: {
                     series: 'series',
@@ -674,11 +673,14 @@ Ext.onReady( function() {
                 west_fieldset_width: 418,
                 west_width_padding: 2,
                 west_fill: 2,
-                west_fill_accordion_indicator: 56,
-                west_fill_accordion_dataelement: 59,
-                west_fill_accordion_dataset: 31,
+				west_fill_accordion_indicator: 81,
+				west_fill_accordion_dataelement: 81,
+				west_fill_accordion_dataset: 56,
+                west_fill_accordion_eventdataitem: 81,
+                west_fill_accordion_programindicator: 81,
                 west_fill_accordion_period: 303,
                 west_fill_accordion_organisationunit: 58,
+                west_fill_accordion_group: 31,
                 west_maxheight_accordion_indicator: 350,
                 west_maxheight_accordion_dataelement: 350,
                 west_maxheight_accordion_dataset: 350,
@@ -1142,6 +1144,11 @@ Ext.onReady( function() {
 
                     if (Ext.isString(config.displayProperty)) {
                         layout.displayProperty = config.displayProperty;
+                    }
+
+                    // TODO program
+                    if (Ext.isObject(config.program)) {
+                        layout.program = config.program;
                     }
 
                     // style
@@ -2338,6 +2345,10 @@ Ext.onReady( function() {
 			web.analytics = {};
 
 			web.analytics.getParamString = function(xLayout, isSorted) {
+
+                // TODO
+                isSorted = false;
+
                 var axisDimensionNames = isSorted ? xLayout.sortedAxisDimensionNames : xLayout.axisDimensionNames,
                     filterDimensions = isSorted ? xLayout.sortedFilterDimensions : xLayout.filterDimensions,
                     dimensionNameIdsMap = isSorted ? xLayout.dimensionNameSortedIdsMap : xLayout.dimensionNameIdsMap,
@@ -2397,7 +2408,12 @@ Ext.onReady( function() {
                 // display property
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
-                return paramString;
+                // TODO program
+                if (xLayout.program && xLayout.program.id) {
+                    paramString += '&program=' + xLayout.program.id;
+                }
+
+                return paramString.replace(/#/g, '.');
             };
 
 			web.analytics.validateUrl = function(url) {

@@ -29,6 +29,7 @@ package org.hisp.dhis.system.util;
  */
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.hisp.dhis.commons.util.TextUtils.*;
 
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ import org.junit.Test;
 
 /**
  * @author Lars Helge Overland
- * @version $Id $
  */
 public class TextUtilsTest
 {
@@ -58,18 +58,12 @@ public class TextUtilsTest
     @Test
     public void testSubString()
     {
-        assertEquals( "abcdefghij", subString( STRING, 0, 10 ) );
-        
+        assertEquals( "abcdefghij", subString( STRING, 0, 10 ) );        
         assertEquals( "cdef", subString( STRING, 2, 4 ) );
-
-        assertEquals( "ghij", subString( STRING, 6, 4 ) );
-        
+        assertEquals( "ghij", subString( STRING, 6, 4 ) );        
         assertEquals( "ghij", subString( STRING, 6, 6 ) );
-
-        assertEquals( "", subString( STRING, 11, 3 ) );
-        
-        assertEquals( "j", subString( STRING, 9, 1 ) );
-        
+        assertEquals( "", subString( STRING, 11, 3 ) );        
+        assertEquals( "j", subString( STRING, 9, 1 ) );        
         assertEquals( "", subString( STRING, 4, 0 ) );
     }
     
@@ -125,4 +119,16 @@ public class TextUtilsTest
         assertEquals( "greenred[n/a]", TextUtils.join( Arrays.asList( "green", "red", null ), null, "[n/a]" ) );
         assertEquals( "greenred", TextUtils.join( Arrays.asList( "green", "red", null ), null, null ) );
     }
+    
+    @Test
+    public void testSplitSafe()
+    {
+        assertEquals( "green", TextUtils.splitSafe( "red-green-blue", "-", 1 ) );
+        assertEquals( "green", TextUtils.splitSafe( "red.green.blue", "\\.", 1 ) );
+        assertEquals( "red", TextUtils.splitSafe( "red-green-blue", "-", 0 ) );
+        assertEquals( "blue", TextUtils.splitSafe( "red-green-blue", "-", 2 ) );
+        assertNull( TextUtils.splitSafe( "red-green-blue", "-", 3 ) );
+        assertNull( TextUtils.splitSafe( "red-green-blue", "-", -2 ) );
+        assertNull( TextUtils.splitSafe( "red-green-blue-", "-", 3 ) );        
+    }    
 }

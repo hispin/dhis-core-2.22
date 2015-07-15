@@ -29,17 +29,22 @@ package org.hisp.dhis.common;
  */
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
+import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.legend.LegendSet;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
 * @author Lars Helge Overland
@@ -49,13 +54,6 @@ public interface DimensionalObject
 {
     final String DATA_X_DIM_ID = "dx"; // in, de, ds, do
     final String DATA_COLLAPSED_DIM_ID = "dy"; // Collapsed event data dimensions
-    final String INDICATOR_DIM_ID = "in";
-    final String DATAELEMENT_DIM_ID = "de";
-    final String DATASET_DIM_ID = "ds";
-    final String DATAELEMENT_OPERAND_ID = "dc";
-    final String PROGRAM_INDICATOR_DIM_ID = "pi";
-    final String PROGRAM_DATAELEMENT_DIM_ID = "pd";
-    final String PROGRAM_ATTRIBUTE_DIM_ID = "pa";
     final String CATEGORYOPTIONCOMBO_DIM_ID = "co";
     final String ATTRIBUTEOPTIONCOMBO_DIM_ID = "ao";
     final String PERIOD_DIM_ID = "pe";
@@ -72,9 +70,7 @@ public interface DimensionalObject
 
     final String LONGITUDE_DIM_ID = "longitude";
     final String LATITUDE_DIM_ID = "latitude";
-
-    final List<String> DATA_DIMS = Arrays.asList( 
-        INDICATOR_DIM_ID, DATAELEMENT_DIM_ID, DATAELEMENT_OPERAND_ID, DATASET_DIM_ID, PROGRAM_INDICATOR_DIM_ID, PROGRAM_DATAELEMENT_DIM_ID, PROGRAM_ATTRIBUTE_DIM_ID );    
+   
     final List<String> STATIC_DIMS = Arrays.asList( 
         LONGITUDE_DIM_ID, LATITUDE_DIM_ID );
     
@@ -84,15 +80,20 @@ public interface DimensionalObject
         PERIOD_DIM_ID, "Period",
         ORGUNIT_DIM_ID, "Organisation unit" );
     
-    final Map<DimensionType, Class<? extends DimensionalObject>> DYNAMIC_DIMENSION_TYPE_CLASS_MAP = new HashMap<DimensionType, Class<? extends DimensionalObject>>() { {
-        put( DimensionType.CATEGORY, DataElementCategory.class );
-        put( DimensionType.DATAELEMENT_GROUPSET, DataElementGroupSet.class );
-        put( DimensionType.ORGANISATIONUNIT_GROUPSET, OrganisationUnitGroupSet.class );
-        put( DimensionType.CATEGORYOPTION_GROUPSET, CategoryOptionGroupSet.class );
-        put( DimensionType.PROGRAM_ATTRIBUTE, TrackedEntityAttribute.class );
-        put( DimensionType.PROGRAM_DATAELEMENT, DataElement.class );        
-    } };
-    
+    final Map<DimensionType, Class<? extends DimensionalObject>> DYNAMIC_DIMENSION_TYPE_CLASS_MAP = ImmutableMap.<DimensionType, Class<? extends DimensionalObject>>builder().
+        put( DimensionType.CATEGORY, DataElementCategory.class ).
+        put( DimensionType.DATAELEMENT_GROUPSET, DataElementGroupSet.class ).
+        put( DimensionType.ORGANISATIONUNIT_GROUPSET, OrganisationUnitGroupSet.class ).
+        put( DimensionType.CATEGORYOPTION_GROUPSET, CategoryOptionGroupSet.class ).
+        put( DimensionType.PROGRAM_ATTRIBUTE, TrackedEntityAttribute.class ).
+        put( DimensionType.PROGRAM_DATAELEMENT, DataElement.class ).build();              
+
+    final Map<Class<? extends DimensionalObject>, Class<? extends NameableObject>> DIMENSION_CLASS_ITEM_CLASS_MAP = ImmutableMap.<Class<? extends DimensionalObject>, Class<? extends NameableObject>>builder().
+        put( DataElementCategory.class, DataElementCategoryOption.class ).
+        put( DataElementGroupSet.class, DataElementGroup.class ).
+        put( OrganisationUnitGroupSet.class, OrganisationUnitGroup.class ).
+        put( CategoryOptionGroupSet.class, CategoryOptionGroup.class ).build();
+        
     /**
      * Gets the dimension identifier.
      */

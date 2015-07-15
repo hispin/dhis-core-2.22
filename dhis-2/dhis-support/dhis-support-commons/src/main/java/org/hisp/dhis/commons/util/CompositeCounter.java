@@ -29,6 +29,8 @@ package org.hisp.dhis.commons.util;
  */
 
 /**
+ * Class which can count occurrences of a given composite key.
+ * 
  * @author Lars Helge Overland
  */
 public class CompositeCounter

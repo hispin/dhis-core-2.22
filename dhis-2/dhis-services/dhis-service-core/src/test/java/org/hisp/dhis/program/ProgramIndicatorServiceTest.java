@@ -69,6 +69,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ProgramIndicatorServiceTest
     extends DhisSpringTest
 {
+    private static final String COL_QUOTE = "\"";
+    
     @Autowired
     private ProgramIndicatorService programIndicatorService;
 
@@ -152,7 +154,7 @@ public class ProgramIndicatorServiceTest
 
     private ProgramIndicator indicatorI;
 
-    private ProgramIndicator indicatorJ;
+    private ProgramIndicator indicatorJ;    
 
     @Override
     public void setUpTest()
@@ -294,49 +296,50 @@ public class ProgramIndicatorServiceTest
 
         String expressionA = "( " + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.ENROLLMENT_DATE + "} - " + KEY_PROGRAM_VARIABLE + "{"
             + ProgramIndicator.INCIDENT_DATE + "} )  / " + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}";
-        indicatorA = createProgramIndicator( 'A', programA, expressionA );
+        indicatorA = createProgramIndicator( 'A', programA, expressionA, null );
         programA.getProgramIndicators().add( indicatorA );
 
-        indicatorB = createProgramIndicator( 'B', programA, "70" );
+        indicatorB = createProgramIndicator( 'B', programA, "70", null );
         indicatorB.setValueType( ProgramIndicator.VALUE_TYPE_DATE );
         programA.getProgramIndicators().add( indicatorB );
 
-        indicatorC = createProgramIndicator( 'C', programA, "0" );
+        indicatorC = createProgramIndicator( 'C', programA, "0", null );
         programA.getProgramIndicators().add( indicatorC );
 
         String expressionD = "0 + A + 4 + " + ProgramIndicator.KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.INCIDENT_DATE + "}";
-        indicatorD = createProgramIndicator( 'D', programB, expressionD );
+        indicatorD = createProgramIndicator( 'D', programB, expressionD, null );
 
         String expressionE = KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} + " + KEY_DATAELEMENT + "{"
             + psB.getUid() + "." + deA.getUid() + "} - " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} + " + KEY_ATTRIBUTE
             + "{" + atB.getUid() + "}";
-        indicatorE = createProgramIndicator( 'E', programB, expressionE );
+        String filterE = KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} + " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} > 10";
+        indicatorE = createProgramIndicator( 'E', programB, expressionE, filterE );
 
         String expressionF = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + KEY_DATAELEMENT
             + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} + "
             + KEY_ATTRIBUTE + "{" + atB.getUid() + "}";
-        indicatorF = createProgramIndicator( 'F', programB, expressionF );
+        indicatorF = createProgramIndicator( 'F', programB, expressionF, null );
 
         String expressionG = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + KEY_DATAELEMENT
             + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} + "
             + KEY_ATTRIBUTE + "{" + atB.getUid() + "} * " + KEY_CONSTANT + "{" + constantA.getUid() + "}";
-        indicatorG = createProgramIndicator( 'G', programB, expressionG );
+        indicatorG = createProgramIndicator( 'G', programB, expressionG, null );
 
         String expressionH = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - "
             + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_DATAELEMENT + "{"
             + psA.getUid() + "." + deA.getUid() + "}";
-        indicatorH = createProgramIndicator( 'H', programB, expressionH );
+        indicatorH = createProgramIndicator( 'H', programB, expressionH, null );
 
         String expressionI = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.CURRENT_DATE + "} - "
             + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_DATAELEMENT + "{"
             + psA.getUid() + "." + deA.getUid() + "}";
-        indicatorI = createProgramIndicator( 'I', programB, expressionI );
+        indicatorI = createProgramIndicator( 'I', programB, expressionI, null );
         indicatorI.setValueType( VALUE_TYPE_DATE );
 
         String expressionJ = "(" + KEY_ATTRIBUTE + "{" + atC.getUid() + "}  - " + KEY_PROGRAM_VARIABLE + "{"
             + ProgramIndicator.ENROLLMENT_DATE + "} ) + " + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid()
             + "} * " + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}";
-        indicatorJ = createProgramIndicator( 'J', programB, expressionJ );
+        indicatorJ = createProgramIndicator( 'J', programB, expressionJ, null );
         indicatorJ.setValueType( VALUE_TYPE_DATE );
     }
 
@@ -496,6 +499,15 @@ public class ProgramIndicatorServiceTest
 
         description = programIndicatorService.getExpressionDescription( indicatorA.getExpression() );
         assertEquals( "( Enrollment date - Incident date )  / ConstantA", description );
+    }
+
+    @Test
+    public void testGetAnalyticsSQl()
+    {
+        String expected = COL_QUOTE + deA.getUid() + COL_QUOTE + " + " + COL_QUOTE + atA.getUid() + COL_QUOTE + " > 10";
+        String sql = programIndicatorService.getAnalyticsSQl( indicatorE.getFilter() );
+        System.out.println("SQL " + sql);
+        assertEquals( expected, sql );
     }
 
     @Test

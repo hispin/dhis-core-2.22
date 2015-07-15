@@ -135,22 +135,7 @@ public class DefaultDataElementOperandService
 
         return list;
     }
-
-    @Override
-    public DataElementOperand getDataElementOperand( DataElementOperand dataElementOperand )
-    {
-        for ( DataElementOperand operand : getAllDataElementOperands() )
-        {
-            if ( operand.getDataElement().equals( dataElementOperand.getDataElement() )
-                && operand.getCategoryOptionCombo().equalsOnName( dataElementOperand.getCategoryOptionCombo() ) )
-            {
-                return operand;
-            }
-        }
-
-        return null;
-    }
-
+    
     @Override
     public List<DataElementOperand> getAllDataElementOperands()
     {
@@ -162,43 +147,39 @@ public class DefaultDataElementOperandService
     {
         return dataElementOperandStore.getAllOrderedName( first, max );
     }
-
+    
     @Override
-    public List<DataElementOperand> getDataElementOperandByDataElements( Collection<DataElement> dataElements )
+    public DataElementOperand getDataElementOperand( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo )
     {
-        List<DataElementOperand> operands = new ArrayList<>();
-
-        for ( DataElementOperand operand : getAllDataElementOperands() )
+        return dataElementOperandStore.get( dataElement, categoryOptionCombo );
+    }
+    
+    @Override
+    public DataElementOperand getDataElementOperand( String dataElementUid, String categoryOptionComboUid )
+    {
+        DataElement dataElement = dataElementService.getDataElement( dataElementUid );
+        DataElementCategoryOptionCombo categoryOptionCombo = categoryService.getDataElementCategoryOptionCombo( categoryOptionComboUid );
+        
+        if ( dataElement == null || categoryOptionCombo == null )
         {
-            if ( dataElements.contains( operand.getDataElement() ) )
-            {
-                operands.add( operand );
-            }
+            return null;
         }
-
-        return operands;
+        
+        return new DataElementOperand( dataElement, categoryOptionCombo );
     }
 
     @Override
-    public List<DataElementOperand> getDataElementOperandByOptionCombos(
-        Collection<DataElementCategoryOptionCombo> optionCombos )
+    public DataElementOperand getOrAddDataElementOperand( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo )
     {
-        List<DataElementOperand> operands = new ArrayList<>();
-
-        for ( DataElementOperand operand : getAllDataElementOperands() )
+        DataElementOperand operand = getDataElementOperand( dataElement, categoryOptionCombo );
+        
+        if ( operand == null )
         {
-            if ( optionCombos.contains( operand.getCategoryOptionCombo() ) )
-            {
-                operands.add( operand );
-            }
+            operand = new DataElementOperand( dataElement, categoryOptionCombo );
+            
+            addDataElementOperand( operand );
         }
-
-        return operands;
-    }
-
-    @Override
-    public List<DataElementOperand> getDataElementOperandByDataElementGroup( DataElementGroup dataElementGroup )
-    {
-        return dataElementOperandStore.getByDataElementGroup( dataElementGroup );
+        
+        return operand;
     }
 }

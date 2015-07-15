@@ -28,12 +28,11 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
@@ -43,10 +42,12 @@ import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.expression.ExpressionService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * This object can act both as a hydrated persisted object and as a wrapper
@@ -63,6 +64,7 @@ public class DataElementOperand
     extends BaseNameableObject
 {
     public static final String SEPARATOR = ".";
+    public static final String ESCAPED_SEPARATOR = "\\.";
     public static final String NAME_TOTAL = "(Total)";
 
     private static final String TYPE_VALUE = "value";
@@ -277,18 +279,6 @@ public class DataElementOperand
     }
 
     /**
-     * Returns an id based on the DataElement and the
-     * DataElementCategoryOptionCombo.
-     *
-     * @return the id.
-     */
-    @Deprecated
-    public String getPersistedId() //TODO remove
-    {
-        return dataElement.getId() + SEPARATOR + categoryOptionCombo.getId();
-    }
-
-    /**
      * Returns the operand expression which is on the format #{de-uid.coc-uid} .
      *
      * @return the operand expression.
@@ -365,7 +355,7 @@ public class DataElementOperand
     {
         return operandType != null && operandType.equals( TYPE_TOTAL );
     }
-
+    
     /**
      * Updates all transient properties.
      *

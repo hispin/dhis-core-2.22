@@ -39,6 +39,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Utility class with methods for managing strings.
+ * 
  * @author Lars Helge Overland
  */
 public class TextUtils
@@ -264,31 +266,6 @@ public class TextUtils
     }
 
     /**
-     * Transforms a collection of Integers into a comma delimited String. If the
-     * given collection of elements are null or is empty, an empty String is
-     * returned.
-     * 
-     * @param elements the collection of Integers
-     * @return a comma delimited String.
-     */
-    public static String getCommaDelimitedString( Collection<?> elements )
-    {
-        final StringBuilder builder = new StringBuilder();
-        
-        if ( elements != null && !elements.isEmpty() )
-        {
-            for ( Object element : elements )
-            {
-                builder.append( element.toString() ).append( DELIMITER );
-            }
-            
-            return builder.substring( 0, builder.length() - DELIMITER.length() );
-        }
-        
-        return builder.toString();
-    }
-
-    /**
      * Joins the elements of the provided array into a single String containing 
      * the provided list of elements.
      * 
@@ -312,6 +289,31 @@ public class TextUtils
         }
         
         return StringUtils.join( objects, separator );
+    }
+    
+    /**
+     * Transforms a collection of Integers into a comma delimited String. If the
+     * given collection of elements are null or is empty, an empty String is
+     * returned.
+     * 
+     * @param elements the collection of Integers
+     * @return a comma delimited String.
+     */
+    public static String getCommaDelimitedString( Collection<?> elements )
+    {
+        final StringBuilder builder = new StringBuilder();
+        
+        if ( elements != null && !elements.isEmpty() )
+        {
+            for ( Object element : elements )
+            {
+                builder.append( element.toString() ).append( DELIMITER );
+            }
+            
+            return builder.substring( 0, builder.length() - DELIMITER.length() );
+        }
+        
+        return builder.toString();
     }
     
     /**
@@ -466,5 +468,58 @@ public class TextUtils
     {
         matcher.appendTail( sb );
         return sb.toString();
-    }    
+    }
+    
+    /**
+     * Gets the string at the given index of the array produced by splitting
+     * the given string on the given separator. Returns null if the given string
+     * is null or if the given index is out of bounds of the array.
+     * 
+     * @param string the string to split.
+     * @param separator the character to split on.
+     * @param index the index of the string in the resulting array to return.
+     * @return a string.
+     */
+    public static String splitSafe( String string, String separator, int index )
+    {
+        if ( string == null )
+        {
+            return null;
+        }
+        
+        String[] split = string.split( separator );
+        
+        if ( index >= 0 && split.length > index && split[index] != null )
+        {
+            return String.valueOf( split[index] );
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Indicates whether the given string contains any of the given search
+     * strings. The operation ignores case and leading and trailing blanks.
+     * 
+     * @param string the string to check, can be null.
+     * @param searchStrings the strings to check against.
+     * @return true or false.
+     */
+    public static boolean containsAnyIgnoreCase( String string, Collection<String> searchStrings )
+    {
+        if ( string == null || searchStrings == null )
+        {
+            return false;
+        }
+        
+        for ( String searchString : searchStrings )
+        {
+            if ( string.trim().toLowerCase().contains( searchString.trim().toLowerCase() ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }

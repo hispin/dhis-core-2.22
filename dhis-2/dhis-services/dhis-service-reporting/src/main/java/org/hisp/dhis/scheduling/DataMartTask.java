@@ -38,6 +38,8 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.completeness.DataSetCompletenessEngine;
 import org.hisp.dhis.datamart.DataMartEngine;
 import org.hisp.dhis.message.MessageService;
@@ -46,8 +48,6 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.commons.util.ConversionUtils;
-import org.hisp.dhis.commons.util.DebugUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -105,7 +105,7 @@ public class DataMartTask
         
         log.info( "Using periods: " + periods );
         
-        Collection<Integer> periodIds = ConversionUtils.getIdentifiers( Period.class, periodService.reloadPeriods( periods ) );
+        Collection<Integer> periodIds = IdentifiableObjectUtils.getIdentifiers( periodService.reloadPeriods( periods ) );
         
         try
         {
