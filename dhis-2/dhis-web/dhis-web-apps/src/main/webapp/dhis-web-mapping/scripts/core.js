@@ -1734,7 +1734,10 @@ Ext.onReady( function() {
 
 			// Legend
 			gis.viewport.eastRegion.doLayout();
-			layer.legendPanel.expand();
+
+            if (layer.legendPanel) {
+                layer.legendPanel.expand();
+            }
 
 			// Layer
 			if (layer.item) {
@@ -2544,7 +2547,10 @@ Ext.onReady( function() {
 
 			// Legend
 			gis.viewport.eastRegion.doLayout();
-			layer.legendPanel.expand();
+
+            if (layer.legendPanel) {
+                layer.legendPanel.expand();
+            }
 
 			// Layer
 			layer.setLayerOpacity(view.opacity);
