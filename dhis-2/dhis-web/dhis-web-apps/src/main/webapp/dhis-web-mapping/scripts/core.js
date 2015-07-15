@@ -1069,13 +1069,29 @@ Ext.onReady( function() {
 
                 // operand
                 if (Ext.isArray(r.mapViews)) {
-                    for (var i = 0, view; i < r.mapViews.length; i++) {
+                    for (var i = 0, view, objectName; i < r.mapViews.length; i++) {
                         view = r.mapViews[i];
+
+                        // TODO, TMP
+                        if (Ext.isArray(view.dataDimensionItems) && view.dataDimensionItems.length && Ext.isObject(view.dataDimensionItems[0])) {
+                            var item = view.dataDimensionItems[0];
+
+                            if (item.hasOwnProperty('dataElement')) {
+                                objectName = 'de';
+                            }
+                            else if (item.hasOwnProperty('dataSet')) {
+                                objectName = 'ds';
+                            }
+                            else {
+                                objectName = 'in';
+                            }
+                        }
 
                         if (view) {
                             if (Ext.isArray(view.columns) && view.columns.length) {
                                 for (var j = 0, dim; j < view.columns.length; j++) {
                                     dim = view.columns[j];
+                                    dim.objectName = objectName;
 
                                     if (Ext.isArray(dim.items) && dim.items.length) {
                                         for (var k = 0, item; k < dim.items.length; k++) {
@@ -2448,7 +2464,7 @@ Ext.onReady( function() {
                     minSize: view.radiusLow,
                     maxSize: view.radiusHigh
                 };
-
+                
                 layer.core.view = view;
                 layer.core.colorInterpolation = colors;
                 layer.core.applyClassification(options);
@@ -2501,7 +2517,7 @@ Ext.onReady( function() {
                         'de': 'dataElements',
                         'ds': 'dataSets'
                     },
-                    elementUrl = elementMap[view.columns[0].dimension],
+                    elementUrl = elementMap[view.columns[0].objectName],
                     id = view.columns[0].items[0].id;
 
                 Ext.Ajax.request({
@@ -3313,6 +3329,10 @@ Ext.onReady( function() {
 					dimension.dimension = config.dimension;
 					dimension.items = config.items;
 
+                    if (config.objectName) {
+                        dimension.objectName = config.objectName;
+                    }
+
 					return Ext.clone(dimension);
 				}();
 			};
@@ -3513,9 +3533,6 @@ Ext.onReady( function() {
 					layout.legendSet = config.legendSet;
 
 					layout.organisationUnitGroupSet = config.organisationUnitGroupSet;
-
-                    // TODO, TMP
-                    layout.dataDimensionItems = config.dataDimensionItems;
 
 					return layout;
 				}();
