@@ -45,6 +45,7 @@ import org.hisp.dhis.node.types.ComplexNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.node.types.SimpleNode;
 import org.hisp.dhis.schema.PropertyType;
+import org.joda.time.DateTime;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -189,9 +190,8 @@ public class ExcelNodeSerializer extends AbstractNodeSerializer
 
         if ( Date.class.isAssignableFrom( simpleNode.getValue().getClass() ) )
         {
-            SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" );
-            dateFormat.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
-            value = dateFormat.format( (Date) simpleNode.getValue() );
+            DateTime dateTime = new DateTime( simpleNode.getValue() );
+            value = DT_FORMATTER.print( dateTime );
         }
 
         return value;
