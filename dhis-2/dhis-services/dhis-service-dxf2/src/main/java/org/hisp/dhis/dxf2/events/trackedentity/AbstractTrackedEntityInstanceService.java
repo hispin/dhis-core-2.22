@@ -174,10 +174,7 @@ public abstract class AbstractTrackedEntityInstanceService
             trackedEntityInstance.getRelationships().add( relationship );
         }
 
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService
-            .getTrackedEntityAttributeValues( entityInstance );
-
-        for ( TrackedEntityAttributeValue attributeValue : attributeValues )
+        for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
         {
             Attribute attribute = new Attribute();
 
