@@ -134,7 +134,7 @@ function clearFilter() {
 <tr>
 	<td style="width: 200px;"><label for="$!args.id">$!args.text #if($args.mandatory)<em title="$i18n.getString( 'required' )" class="required">*</em>#end</label></td>
 	<td>
-		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,rangelength:[1,230]}}" />
+		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory}}" />
 	</td>
 </tr>
 #end
@@ -204,7 +204,7 @@ jQuery(function() {
 <tr>
 	<td style="width: 200px;"><label for="$!args.id">$!args.text #if($args.mandatory)<em title="$i18n.getString( 'required' )" class="required">*</em>#end</label></td>
 	<td>
-		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,maxlength:230,number:true}}" />
+		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,number:true}}" />
 	</td>
 </tr>
 #end
@@ -219,7 +219,7 @@ jQuery(function() {
 <tr>
 	<td style="width: 200px;"><label for="$!args.id">$!args.text #if($args.mandatory)<em title="$i18n.getString( 'required' )" class="required">*</em>#end</label></td>
 	<td>
-		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,maxlength:230,integer:true}}" />
+		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,integer:true}}" />
 	</td>
 </tr>
 #end
@@ -234,7 +234,7 @@ jQuery(function() {
 <tr>
 	<td style="width: 200px;"><label for="$!args.id">$!args.text #if($args.mandatory)<em title="$i18n.getString( 'required' )" class="required">*</em>#end</label></td>
 	<td>
-		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,maxlength:230,positive_integer:true}}" />
+		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,positive_integer:true}}" />
 	</td>
 </tr>
 #end
@@ -249,7 +249,7 @@ jQuery(function() {
 <tr>
 	<td style="width: 200px;"><label for="$!args.id">$!args.text #if($args.mandatory)<em title="$i18n.getString( 'required' )" class="required">*</em>#end</label></td>
 	<td>
-		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,maxlength:230,negative_integer:true}}" />
+		<input type="text" id="$!args.id" name="$!name" value="$!args.value" class="{validate:{required:$args.mandatory,negative_integer:true}}" />
 	</td>
 </tr>
 #end
