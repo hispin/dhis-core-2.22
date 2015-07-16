@@ -115,10 +115,10 @@ public abstract class AbstractNodeSerializer implements NodeSerializer
         for ( Node node : complexNode.getChildren() )
         {
             dispatcher( node );
-            flushStream();
         }
 
         endWriteComplexNode( complexNode );
+        flushStream();
     }
 
     protected abstract void endWriteComplexNode( ComplexNode complexNode ) throws Exception;
@@ -137,10 +137,10 @@ public abstract class AbstractNodeSerializer implements NodeSerializer
         for ( Node node : collectionNode.getChildren() )
         {
             dispatcher( node );
-            flushStream();
         }
 
         endWriteCollectionNode( collectionNode );
+        flushStream();
     }
 
     protected abstract void endWriteCollectionNode( CollectionNode collectionNode ) throws Exception;

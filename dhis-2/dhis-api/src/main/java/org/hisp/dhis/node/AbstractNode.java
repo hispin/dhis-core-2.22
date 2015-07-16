@@ -60,6 +60,8 @@ public abstract class AbstractNode implements Node
 
     protected List<Node> children = Lists.newArrayList();
 
+    protected ImmutableList<Node> sortedChildren;
+
     protected Property property;
 
     protected AbstractNode( String name, NodeType nodeType )
@@ -188,6 +190,8 @@ public abstract class AbstractNode implements Node
         children.add( child );
         ((AbstractNode) child).setParent( this );
 
+        sortedChildren = null;
+
         return child;
     }
 
@@ -198,6 +202,8 @@ public abstract class AbstractNode implements Node
         {
             children.remove( child );
         }
+
+        sortedChildren = null;
     }
 
     @Override
@@ -212,9 +218,14 @@ public abstract class AbstractNode implements Node
     @Override
     public List<Node> getChildren()
     {
-        List<Node> clone = Lists.newArrayList( children );
-        Collections.sort( clone, OrderComparator.INSTANCE );
-        return ImmutableList.copyOf( clone );
+        if ( sortedChildren == null )
+        {
+            List<Node> clone = Lists.newArrayList( children );
+            Collections.sort( clone, OrderComparator.INSTANCE );
+            sortedChildren = ImmutableList.copyOf( clone );
+        }
+
+        return sortedChildren;
     }
 
     @Override
