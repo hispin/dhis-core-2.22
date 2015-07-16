@@ -12,7 +12,7 @@
     </id>
     &identifiableProperties;
 
-    <set name="attributeValues" inverse="true">
+    <set name="attributeValues" inverse="true" lazy="false">
       <key column="trackedentityinstanceid" />
       <one-to-many class="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue" />
     </set>
@@ -23,13 +23,13 @@
     </set>
 
     <many-to-one name="representative" class="org.hisp.dhis.trackedentity.TrackedEntityInstance" column="representativeid"
-      foreign-key="fk_trackedentityinstance_representativeid" />
+      foreign-key="fk_trackedentityinstance_representativeid" lazy="false" />
 
     <many-to-one name="organisationUnit" class="org.hisp.dhis.organisationunit.OrganisationUnit" column="organisationunitid"
-      foreign-key="fk_trackedentityinstance_organisationunitid" not-null="true" />
+      foreign-key="fk_trackedentityinstance_organisationunitid" not-null="true" lazy="false" />
 
     <many-to-one name="trackedEntity" class="org.hisp.dhis.trackedentity.TrackedEntity"
-      column="trackedentityid" foreign-key="fk_trackedentityinstance_trackedentityid" />
+      column="trackedentityid" foreign-key="fk_trackedentityinstance_trackedentityid" lazy="false" />
 
   </class>
 </hibernate-mapping>
