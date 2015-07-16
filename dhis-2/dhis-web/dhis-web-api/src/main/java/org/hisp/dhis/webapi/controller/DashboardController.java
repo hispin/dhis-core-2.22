@@ -69,6 +69,10 @@ public class DashboardController
     @Autowired
     private DashboardService dashboardService;
 
+    // -------------------------------------------------------------------------
+    // Dashboard
+    // -------------------------------------------------------------------------
+
     @RequestMapping( value = "/q/{query}", method = RequestMethod.GET )
     public String search( @PathVariable String query, @RequestParam( required = false ) Set<String> max,
         Model model, HttpServletResponse response ) throws Exception
@@ -129,6 +133,10 @@ public class DashboardController
 
         dashboardService.deleteDashboard( objects.get( 0 ) );
     }
+
+    // -------------------------------------------------------------------------
+    // Dashboard items
+    // -------------------------------------------------------------------------
 
     @RequestMapping( value = "/{uid}/items", method = RequestMethod.POST, consumes = "application/json" )
     public void postJsonItem( @PathVariable String uid, HttpServletRequest request, HttpServletResponse response ) throws Exception
