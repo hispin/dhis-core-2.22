@@ -35,6 +35,7 @@ import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.ComplexNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.node.types.SimpleNode;
+import org.joda.time.DateTime;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -44,10 +45,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -113,9 +112,8 @@ public class StAXNodeSerializer extends AbstractNodeSerializer
 
         if ( simpleNode.getValue() != null && Date.class.isAssignableFrom( simpleNode.getValue().getClass() ) )
         {
-            SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" );
-            dateFormat.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
-            value = dateFormat.format( (Date) simpleNode.getValue() );
+            DateTime dateTime = new DateTime( simpleNode.getValue() );
+            value = DT_FORMATTER.print( dateTime );
         }
         else
         {
