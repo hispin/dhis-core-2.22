@@ -41,7 +41,7 @@ import org.springframework.http.HttpStatus;
  */
 @JacksonXmlRootElement( localName = "webMessage", namespace = DxfNamespaces.DXF_2_0 )
 @JsonPropertyOrder( {
-    "status", "code", "httpStatus", "httpStatusCode", "message", "devMessage", "response"
+    "httpStatus", "httpStatusCode", "status", "code", "message", "devMessage", "response"
 } )
 public class WebMessage
 {
