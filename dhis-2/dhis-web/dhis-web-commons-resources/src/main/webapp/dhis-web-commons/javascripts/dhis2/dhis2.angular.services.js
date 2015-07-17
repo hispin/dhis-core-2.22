@@ -1107,6 +1107,9 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             var dhisfunctionsevaluated = runDhisFunctions(expression, variablesHash, flag);
             answer = eval(dhisfunctionsevaluated);
         }
+        if(dhis2.validation.isNumber(answer)){
+            answer = Number(answer).toFixed(2);
+        }
         return answer;
     }; 
     
