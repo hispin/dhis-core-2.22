@@ -563,10 +563,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         //send the new event to server
         DHIS2EventFactory.create(dhis2Event).then(function(data) {
-            if (data.importSummaries[0].status === 'ERROR') {
+            if (data.response.importSummaries[0].status === 'ERROR') {
                 var dialogOptions = {
                     headerText: 'event_registration_error',
-                    bodyText: data.importSummaries[0].description
+                    bodyText: data.message
                 };
 
                 DialogService.showDialog({}, dialogOptions);
@@ -574,7 +574,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             else {
                 
                 //add the new event to the grid                
-                newEvent.event = data.importSummaries[0].reference;                
+                newEvent.event = data.response.importSummaries[0].reference;                
                 if( !$scope.dhis2Events ){
                     $scope.dhis2Events = [];                   
                 }
