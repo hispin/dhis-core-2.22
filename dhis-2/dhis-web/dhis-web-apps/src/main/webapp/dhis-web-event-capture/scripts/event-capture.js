@@ -350,7 +350,6 @@ function getProgramStages( programs )
                 var p = d.promise();
                 dhis2.ec.store.get('programStages', program.programStages[0].id).done(function(obj) {
                     if(!obj || obj.version !== program.programStages[0].version) {
-                        //promise = promise.then( getProgramStage( program.programStages[0].id ) );
                         promise = promise.then( getD2Object( program.programStages[0].id, 'programStages', '../api/programStages', 'fields=id,name,version,description,reportDateDescription,captureCoordinates,dataEntryForm,minDaysFromStart,repeatable,preGenerateUID,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,sortOrder,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,name,type,optionSetValue,numberType,textType,formName,optionSet[id]]]', 'idb' ) );
                     }
 
@@ -376,20 +375,6 @@ function getProgramStages( programs )
 
     return mainPromise;    
 }
-
-/*function getProgramStage( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/programStages.json?filter=id:eq:' + id +'&fields=id,name,version,description,reportDateDescription,captureCoordinates,dataEntryForm,minDaysFromStart,repeatable,preGenerateUID,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,sortOrder,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,name,type,optionSetValue,numberType,textType,formName,optionSet[id]]]',
-            type: 'GET'
-        }).done( function( response ){            
-            _.each( _.values( response.programStages ), function( programStage ) {                
-                dhis2.ec.store.set( 'programStages', programStage );
-            });
-        });
-    };
-}*/
 
 function getOptionSets( programs )
 {
@@ -417,7 +402,6 @@ function getOptionSets( programs )
                         dhis2.ec.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {
                             if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetsInPromise.indexOf(prStDe.dataElement.optionSet.id) === -1) {
                                 optionSetsInPromise.push( prStDe.dataElement.optionSet.id );
-                                //promise = promise.then( getOptionSet( prStDe.dataElement.optionSet.id ) );
                                 promise = promise.then( getD2Object( prStDe.dataElement.optionSet.id, 'optionSets', '../api/optionSets', 'fields=id,name,version,options[id,name,code]', 'idb' ) );
                             }
                             d.resolve();
@@ -444,20 +428,6 @@ function getOptionSets( programs )
 
     return mainPromise;    
 }
-
-/*function getOptionSet( id )
-{
-    return function() {
-        return $.ajax( {
-            url: '../api/optionSets.json?filter=id:eq:' + id +'&fields=id,name,version,options[id,name,code]',
-            type: 'GET'
-        }).done( function( response ){            
-            _.each( _.values( response.optionSets ), function( optionSet ) {                
-                dhis2.ec.store.set( 'optionSets', optionSet );
-            });
-        });
-    };
-}*/
 
 function getMetaProgramValidations( programs )
 {    
