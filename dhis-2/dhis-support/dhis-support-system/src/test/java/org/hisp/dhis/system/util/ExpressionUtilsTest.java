@@ -142,11 +142,7 @@ public class ExpressionUtilsTest
         assertEquals( "2 > 1 and 3 < 4", ExpressionUtils.asSql( "2 > 1 && 3 < 4" ) );
         assertEquals( "2 > 1 or 3 < 4", ExpressionUtils.asSql( "2 > 1 || 3 < 4" ) );
         assertEquals( "'a' = 1", ExpressionUtils.asSql( "'a' == 1" ) );
-        assertEquals( "'a' = 3", ExpressionUtils.asSql( "'a' eq 3" ) );
-        assertEquals( "5 != 3", ExpressionUtils.asSql( "5 ne 3" ) );
-        assertEquals( "2 < 3", ExpressionUtils.asSql( "2 lt 3" ) );
-        assertEquals( "10 / 2", ExpressionUtils.asSql( "10 div 2" ) );
-        assertEquals( "10 % 2", ExpressionUtils.asSql( "10 mod 2" ) );
+        assertEquals( "\"oZg33kd9taw\" = 'Female'", ExpressionUtils.asSql( "\"oZg33kd9taw\" == 'Female'" ) );
     }
         
     @Test

@@ -195,5 +195,7 @@ public class ValidationUtilsTest
         assertTrue( expressionIsValidSQl( "\"abcdef12345\" < 30" ) );
         assertTrue( expressionIsValidSQl( "\"abcdef12345\" >= \"bcdefg23456\"" ) );
         assertTrue( expressionIsValidSQl( "\"DO0v7fkhUNd\" > -30000 and \"DO0v7fkhUNd\" < 30000" ) );
+        assertTrue( expressionIsValidSQl( "\"oZg33kd9taw\" == 'Female'" ) );
+        assertTrue( expressionIsValidSQl( "\"oZg33kd9taw\" == 'Female' and \"qrur9Dvnyt5\" <= 5" ) );
     }
 }

@@ -64,14 +64,8 @@ public class ExpressionUtils
         EL_SQL_MAP.put( "&&", "and" );
         EL_SQL_MAP.put( "\\|\\|", "or" );
         EL_SQL_MAP.put( "==", "=" );
-        EL_SQL_MAP.put( "eq", "=" );
-        EL_SQL_MAP.put( "ne", "!=" );
-        EL_SQL_MAP.put( "lt", "<" );
-        EL_SQL_MAP.put( "le", "<=" );
-        EL_SQL_MAP.put( "gt", ">" );
-        EL_SQL_MAP.put( "ge", ">=" );
-        EL_SQL_MAP.put( "div", "/" );
-        EL_SQL_MAP.put( "mod", "%" );
+        
+        //TODO Add support for textual operators like eq, ne and lt
     }
     
     /**
