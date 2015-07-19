@@ -55,7 +55,7 @@
 <input type="hidden" name="programId" id="programId" value="$!program.id"/>
 <input type="hidden" name="dataEntryFormId" id="dataEntryFormId" value="$!program.dataEntryForm.id"/>
 
-<h3>$i18n.getString( "data_entry_form" )</h3>
+<h3>$i18n.getString( "program_registration_form" )</h3>
 <h4>$program.displayName</h4>
 
 <div class="container" >
