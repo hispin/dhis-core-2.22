@@ -162,6 +162,11 @@ public class ExpressionUtils
         }
         catch ( JexlException ex )
         {
+            if ( ex.getMessage().contains( "divide error" ) )
+            {
+                return true; //TODO Masking bug in Jexl, fix
+            }
+            
             return false;
         }
     }
