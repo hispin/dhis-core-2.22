@@ -437,7 +437,12 @@ public class DefaultProgramIndicatorService
             return expr;
         }
         
-        return ExpressionUtils.isBoolean( expr, null ) ? ProgramIndicator.VALID : ProgramIndicator.FILTER_NOT_EVALUATING_TO_TRUE_OR_FALSE;
+        if ( !ExpressionUtils.isBoolean( expr, null ) )
+        {
+            return ProgramIndicator.FILTER_NOT_EVALUATING_TO_TRUE_OR_FALSE;
+        }
+        
+        return ProgramIndicator.VALID;
     }    
     
     /**
@@ -466,7 +471,9 @@ public class DefaultProgramIndicatorService
 
                 if ( programStage != null && dataElement != null )
                 {
-                    matcher.appendReplacement( expr, String.valueOf( 1 ) );
+                    String sample = dataElement.isNumericType() ? String.valueOf( 1 ) : "'A'";
+                    
+                    matcher.appendReplacement( expr, sample );
                 }
                 else
                 {
@@ -479,7 +486,9 @@ public class DefaultProgramIndicatorService
                 
                 if ( attribute != null )
                 {
-                    matcher.appendReplacement( expr, String.valueOf( 1 ) );
+                    String sample = attribute.isNumericType() ? String.valueOf( 1 ) : "'A'";
+                    
+                    matcher.appendReplacement( expr, sample );
                 }
                 else
                 {
