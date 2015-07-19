@@ -3025,7 +3025,7 @@ Ext.onReady( function() {
 										method: 'GET',
 										failure: function(r) {
                                             gis.olmap.mask.hide();
-                                            alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                                            gis.alert(r);
 										},
 										success: function(r) {
 											var sharing = Ext.decode(r.responseText),
@@ -4271,9 +4271,7 @@ Ext.onReady( function() {
 							w.update(html);
 						},
 						failure: function(r) {
-							html += r.status + '\n' + r.statusText + '\n' + r.responseText;
-
-							w.update(html);
+							w.update(r.status + '\n' + r.statusText + '\n' + r.responseText);
 						},
                         callback: function() {
                             document.body.oncontextmenu = true;

@@ -924,6 +924,16 @@ gis-combo .x-form-item-label {
 	background: url('../images/measure_14.png') no-repeat;
 }
 
+.gis-window-title-messagebox {
+    padding-left: 16px;
+    background-position-y: 1px;
+}
+.gis-window-title-messagebox.error {
+    background-image: url('../images/error_m.png');
+}
+.gis-window-title-messagebox.warning {
+    background-image: url('../images/warning.png');
+}
 
 /*----------------------------------------------------------------------------
  * GIS Grid

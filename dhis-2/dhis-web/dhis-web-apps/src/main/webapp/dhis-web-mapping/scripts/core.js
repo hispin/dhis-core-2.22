@@ -1113,12 +1113,13 @@ Ext.onReady( function() {
             failure = function(r) {
                 gis.olmap.mask.hide();
 
-                if (Ext.Array.contains([403], r.status)) {
-                    alert(GIS.i18n.you_do_not_have_access_to_all_items_in_this_favorite);
+                r = Ext.decode(r.responseText);
+
+                if (Ext.Array.contains([403], parseInt(r.httpStatusCode))) {
+                    r.message = GIS.i18n.you_do_not_have_access_to_all_items_in_this_favorite || r.message;
                 }
-                else {
-                    alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
-                }
+
+                gis.alert(r);
             };
 
             if (isPlugin) {
@@ -1134,6 +1135,9 @@ Ext.onReady( function() {
                     url: url,
                     success: function(r) {
                         success(Ext.decode(r.responseText));
+                    },
+                    failure: function(r) {
+                        failure(r);
                     }
                 });
             }
@@ -1408,7 +1412,7 @@ Ext.onReady( function() {
 					url: gis.init.contextPath + '/api/analytics/events/query/' + view.program.id + '.json' + paramString,
 					disableCaching: false,
 					failure: function(r) {
-                        alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                        gis.alert(r);
 					},
 					success: function(r) {
 						success(Ext.decode(r.responseText));
@@ -2389,7 +2393,7 @@ Ext.onReady( function() {
 					url: gis.init.contextPath + '/api/analytics.json' + paramString,
 					disableCaching: false,
 					failure: function(r) {
-                        alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
+                        gis.alert(r);
 					},
 					success: function(r) {
 						success(Ext.decode(r.responseText));
@@ -2669,6 +2673,9 @@ Ext.onReady( function() {
 			store = {},
 			layers = [],
 			gis = {};
+
+        // tmp
+        gis.alert = function() {};
 
 		// conf
 		(function() {
@@ -3251,6 +3258,64 @@ Ext.onReady( function() {
                 return dataDimensions;
             };
 
+            util.message = {};
+
+            util.message.alert = function(obj) {
+                var config = {},
+                    type,
+                    window;
+
+                if (!obj || (Ext.isObject(obj) && !obj.message && !obj.responseText)) {
+                    return;
+                }
+
+                // if response object
+                if (Ext.isObject(obj) && obj.responseText && !obj.message) {
+                    obj = Ext.decode(obj.responseText);
+                }
+
+                // if string
+                if (Ext.isString(obj)) {
+                    obj = {
+                        status: 'ERROR',
+                        message: obj
+                    };
+                }
+
+                // web message
+                type = (obj.status || 'INFO').toLowerCase();
+
+				config.title = obj.status;
+				config.iconCls = 'gis-window-title-messagebox ' + type;
+
+                // html
+                config.html = '';
+                config.html += obj.httpStatusCode ? 'Code: ' + obj.httpStatusCode + '<br>' : '';
+                config.html += obj.httpStatus ? 'Status: ' + obj.httpStatus + '<br><br>' : '';
+                config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
+
+                // bodyStyle
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + gis.viewport.centerRegion.getHeight() / 2 + 'px';
+
+                // destroy handler
+                config.modal = true;
+                config.destroyOnBlur = true;
+
+                // listeners
+                config.listeners = {
+                    show: function(w) {
+                        w.setPosition(w.getPosition()[0], w.getPosition()[1] / 2);
+
+						if (!w.hasDestroyOnBlurHandler) {
+							gis.util.gui.window.addDestroyOnBlurHandler(w);
+						}
+                    }
+                };
+
+                window = Ext.create('Ext.window.Window', config);
+
+                window.show();
+            };
 		}());
 
 		gis.init = init;
@@ -3627,6 +3692,8 @@ Ext.onReady( function() {
 				}();
 			};
 		}());
+
+        gis.alert = util.message.alert;
 
 		gis.api = api;
 		gis.store = store;
