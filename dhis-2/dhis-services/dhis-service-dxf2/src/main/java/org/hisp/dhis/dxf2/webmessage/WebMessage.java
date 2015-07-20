@@ -109,17 +109,17 @@ public class WebMessage
 
     public boolean isOk()
     {
-        return WebMessageStatus.OK.equals( status );
+        return WebMessageStatus.OK == status;
     }
 
     public boolean isWarning()
     {
-        return WebMessageStatus.WARNING.equals( status );
+        return WebMessageStatus.WARNING == status;
     }
 
     public boolean isError()
     {
-        return WebMessageStatus.ERROR.equals( status );
+        return WebMessageStatus.ERROR == status;
     }
 
     // -------------------------------------------------------------------------
