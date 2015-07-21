@@ -280,20 +280,19 @@ public class MessageConversation
     
     public String getSenderDisplayName()
     {
-        boolean hasUser = userFirstname != null || userSurname != null;
-        
-        String displayName = hasUser ? ( userFirstname + " " + userSurname ) : StringUtils.EMPTY;
-        
-        boolean hasLastSender = lastSenderFirstname != null || lastSenderSurname != null;
+        String userDisplayName = getFullNameNullSafe( userFirstname, userSurname );
+        String lastSenderName = getFullNameNullSafe( lastSenderFirstname, lastSenderSurname );
 
-        String lastSenderName = hasLastSender ? ( lastSenderFirstname + " " + lastSenderSurname ) : StringUtils.EMPTY;
-        
-        if ( hasLastSender && !lastSenderName.equals( displayName ) )
+        if ( !userDisplayName.isEmpty() && !lastSenderName.isEmpty() && !userDisplayName.equals( lastSenderName ) )
         {
-            displayName += ", " + lastSenderName;
+            userDisplayName += ", " + lastSenderName;
         }
-        
-        return StringUtils.trimToNull( StringUtils.substring( displayName, 0, 28 ) );
+        else if ( !lastSenderName.isEmpty() )
+        {
+            userDisplayName = lastSenderName;
+        }
+
+        return StringUtils.trimToNull( StringUtils.substring( userDisplayName, 0, 28 ) );
     }
 
     public Set<User> getTopRecipients()
@@ -513,5 +512,15 @@ public class MessageConversation
             removeAllMessages();
             messages.addAll( messageConversation.getMessages() );
         }
+    }
+
+    // -------------------------------------------------------------------------------------------------------
+    // Supportive methods
+    // -------------------------------------------------------------------------------------------------------
+
+    private String getFullNameNullSafe( String firstName, String surname )
+    {
+        return StringUtils.defaultString( firstName ) +
+            ( StringUtils.isBlank( firstName ) ? StringUtils.EMPTY : " " ) + StringUtils.defaultString( surname );
     }
 }
