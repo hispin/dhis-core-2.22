@@ -515,13 +515,13 @@
     <property name="clazz" value="org.hisp.dhis.programrule.ProgramRuleVariable" />
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.programrule.ProgramRuleStore"
     class="org.hisp.dhis.programrule.hibernate.HibernateProgramRuleStore">
     <property name="clazz" value="org.hisp.dhis.programrule.ProgramRule" />
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.programrule.ProgramRuleActionStore"
     class="org.hisp.dhis.programrule.hibernate.HibernateProgramRuleActionStore">
     <property name="clazz" value="org.hisp.dhis.programrule.ProgramRuleAction" />
@@ -539,24 +539,24 @@
     <property name="clazz" value="org.hisp.dhis.trackedentity.TrackedEntity" />
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.eventreport.EventReportStore"
     class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
     <property name="clazz" value="org.hisp.dhis.eventreport.EventReport" />
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.eventchart.EventChartStore"
     class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
     <property name="clazz" value="org.hisp.dhis.eventchart.EventChart" />
-    <property name="sessionFactory" ref="sessionFactory" />      
+    <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-        
+
   <bean id="org.hisp.dhis.sms.command.hibernate.SMSCommandStore"
     class="org.hisp.dhis.sms.command.hibernate.HibernateSMSCommandStore">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-        
+
   <!-- Service definitions -->
 
   <bean id="org.hisp.dhis.dataelement.DataElementOperandService" class="org.hisp.dhis.dataelement.DefaultDataElementOperandService">
@@ -883,6 +883,7 @@
         <value>ecowas</value>
         <value>ecuador</value>
         <value>east_africa_community</value>
+        <value>egypt</value>
         <value>engender_health</value>
         <value>ethiopia</value>
         <value>fhi360</value>
@@ -932,6 +933,7 @@
         <value>solomon_islands</value>
         <value>south_africa</value>
         <value>south_africa_department_of_health</value>
+        <value>south_sudan</value>
         <value>sri_lanka</value>
         <value>sudan</value>
         <value>swaziland</value>
@@ -1113,15 +1115,15 @@
     <property name="programStageStore" ref="org.hisp.dhis.program.ProgramStageStore" />
     <property name="i18nService" ref="org.hisp.dhis.i18n.I18nService" />
   </bean>
-        
+
   <bean id="org.hisp.dhis.programrule.ProgramRuleVariableService" class="org.hisp.dhis.programrule.DefaultProgramRuleVariableService">
     <property name="programRuleVariableStore" ref="org.hisp.dhis.programrule.ProgramRuleVariableStore" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.programrule.ProgramRuleService" class="org.hisp.dhis.programrule.DefaultProgramRuleService">
     <property name="programRuleStore" ref="org.hisp.dhis.programrule.ProgramRuleStore" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.programrule.ProgramRuleActionService" class="org.hisp.dhis.programrule.DefaultProgramRuleActionService">
     <property name="programRuleActionStore" ref="org.hisp.dhis.programrule.ProgramRuleActionStore" />
   </bean>
@@ -1182,7 +1184,7 @@
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityService" class="org.hisp.dhis.trackedentity.DefaultTrackedEntityService">
     <property name="trackedEntityStore" ref="org.hisp.dhis.trackedentity.TrackedEntityStore" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.trackedentitycomment.TrackedEntityCommentService"
     class="org.hisp.dhis.trackedentitycomment.DefaultTrackedEntityCommentService">
     <property name="commentStore" ref="org.hisp.dhis.trackedentitycomment.TrackedEntityCommentStore" />
@@ -1205,11 +1207,11 @@
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="transientIdentifiableProperties" value="true" />
   </bean>
-    
+
   <bean id="org.hisp.dhis.eventreport.EventReportService" class="org.hisp.dhis.eventreport.DefaultEventReportService">
-      <property name="eventReportStore" ref="org.hisp.dhis.eventreport.EventReportStore" />    
+      <property name="eventReportStore" ref="org.hisp.dhis.eventreport.EventReportStore" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.eventchart.EventChartService" class="org.hisp.dhis.eventchart.DefaultEventChartService">
     <property name="eventChartStore" ref="org.hisp.dhis.eventchart.EventChartStore" />
   </bean>
@@ -1260,7 +1262,7 @@
     <property name="incomingSmsService" ref="org.hisp.dhis.sms.incoming.IncomingSmsService" />
   </bean>
 
-  <bean id="org.hisp.dhis.sms.listener.TrackedEntityRegistrationSMSListener" 
+  <bean id="org.hisp.dhis.sms.listener.TrackedEntityRegistrationSMSListener"
     class="org.hisp.dhis.sms.listener.TrackedEntityRegistrationSMSListener">
     <property name="smsCommandService" ref="org.hisp.dhis.sms.command.SMSCommandService" />
     <property name="userService" ref="org.hisp.dhis.user.UserService" />
@@ -1626,17 +1628,17 @@
     class="org.hisp.dhis.program.ProgramStageDeletionHandler">
     <property name="programStageService" ref="org.hisp.dhis.program.ProgramStageService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.programrule.ProgramRuleDeletionHandler"
     class="org.hisp.dhis.programrule.ProgramRuleDeletionHandler">
     <property name="programRuleService" ref="org.hisp.dhis.programrule.ProgramRuleService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.programrule.ProgramRuleVariableDeletionHandler"
     class="org.hisp.dhis.programrule.ProgramRuleVariableDeletionHandler">
     <property name="programRuleVariableService" ref="org.hisp.dhis.programrule.ProgramRuleVariableService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.programrule.ProgramRuleActionDeletionHandler"
     class="org.hisp.dhis.programrule.ProgramRuleActionDeletionHandler">
     <property name="programRuleActionService" ref="org.hisp.dhis.programrule.ProgramRuleActionService" />
@@ -1675,19 +1677,19 @@
 
   <bean id="org.hisp.dhis.program.ProgramIndicatorDeletionHandler"
     class="org.hisp.dhis.program.ProgramIndicatorDeletionHandler" />
-  
+
   <bean id="org.hisp.dhis.eventchart.EventChartDeletionHandler"
     class="org.hisp.dhis.eventchart.EventChartDeletionHandler" />
-  
+
   <bean id="org.hisp.dhis.eventreport.EventReportDeletionHandler"
     class="org.hisp.dhis.eventreport.EventReportDeletionHandler" />
-  
+
   <bean id="org.hisp.dhis.sms.command.SMSCommandDeletionHandler"
     class="org.hisp.dhis.sms.command.SMSCommandDeletionHandler" />
-		
+
   <bean id="org.hisp.dhis.sms.command.code.SMSCodesDeletionHandler"
     class="org.hisp.dhis.sms.command.code.SMSCodesDeletionHandler" />
-  
+
   <!-- DeletionManager -->
 
   <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
@@ -1783,7 +1785,7 @@
       <aop:before pointcut="execution( * org.hisp.dhis.mapping.MappingService.deleteLegendSet(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.mapping.MappingService.deleteMapView(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.mapping.MappingService.deleteMap(..) )" method="intercept" />
-      <aop:before pointcut="execution( * org.hisp.dhis.i18n.I18nLocaleService.delete*(..) )" method="intercept" />      
+      <aop:before pointcut="execution( * org.hisp.dhis.i18n.I18nLocaleService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.trackedentity.TrackedEntityService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.trackedentity.TrackedEntityInstanceService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService.delete*(..) )" method="intercept" />
@@ -1803,10 +1805,10 @@
       <aop:before pointcut="execution( * org.hisp.dhis.validation.ValidationCriteriaService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.caseaggregation.CaseAggregationConditionService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.eventchart.EventChartService.delete*(..) )" method="intercept" />
-      <aop:before pointcut="execution( * org.hisp.dhis.eventreport.EventReportService.delete*(..) )" method="intercept" />        
+      <aop:before pointcut="execution( * org.hisp.dhis.eventreport.EventReportService.delete*(..) )" method="intercept" />
     </aop:aspect>
 
-    <!-- 
+    <!--
     <aop:aspect ref="i18nTranslationInterceptor">
       <aop:after-returning pointcut="execution( * org.hisp.dhis.dataelement.DataElementService.get*(..) )" method="intercept" returning="idObject"/>
     </aop:aspect>
