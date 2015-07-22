@@ -230,7 +230,7 @@ TrackedEntityInstance.listAll = function(page) {
 	
 	$.ajax({
 		type : "GET",
-		url : "../api/trackedEntityInstances.json?ou="
+		url : "../api/trackedEntityInstances/query.json?ou="
 				+ getFieldValue("orgunitId"),
 		data : params,
 		dataType : "json",
