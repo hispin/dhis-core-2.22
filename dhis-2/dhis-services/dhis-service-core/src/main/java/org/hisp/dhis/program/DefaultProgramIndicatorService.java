@@ -61,7 +61,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author Chau Thu Tran
  */
-@Transactional
 public class DefaultProgramIndicatorService
     implements ProgramIndicatorService
 {
@@ -144,54 +143,63 @@ public class DefaultProgramIndicatorService
     // -------------------------------------------------------------------------
 
     @Override
+    @Transactional
     public int addProgramIndicator( ProgramIndicator programIndicator )
     {
         return programIndicatorStore.save( programIndicator );
     }
 
     @Override
+    @Transactional
     public void updateProgramIndicator( ProgramIndicator programIndicator )
     {
         programIndicatorStore.update( programIndicator );
     }
 
     @Override
+    @Transactional
     public void deleteProgramIndicator( ProgramIndicator programIndicator )
     {
         programIndicatorStore.delete( programIndicator );
     }
 
     @Override
+    @Transactional
     public ProgramIndicator getProgramIndicator( int id )
     {
         return i18n( i18nService, programIndicatorStore.get( id ) );
     }
 
     @Override
+    @Transactional
     public ProgramIndicator getProgramIndicator( String name )
     {
         return i18n( i18nService, programIndicatorStore.getByName( name ) );
     }
 
     @Override
+    @Transactional
     public ProgramIndicator getProgramIndicatorByUid( String uid )
     {
         return i18n( i18nService, programIndicatorStore.getByUid( uid ) );
     }
 
     @Override
+    @Transactional
     public ProgramIndicator getProgramIndicatorByShortName( String shortName )
     {
         return i18n( i18nService, programIndicatorStore.getByShortName( shortName ) );
     }
 
     @Override
+    @Transactional
     public List<ProgramIndicator> getAllProgramIndicators()
     {
         return i18n( i18nService, programIndicatorStore.getAll() );
     }
 
     @Override
+    @Transactional
     public String getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramInstance programInstance )
     {
         Double value = getValue( programIndicator, programInstance, null );
@@ -266,11 +274,12 @@ public class DefaultProgramIndicatorService
     }
     
     @Override
+    @Transactional
     public Map<String, String> getProgramIndicatorValues( ProgramInstance programInstance )
     {
         Map<String, String> result = new HashMap<>();
 
-        Collection<ProgramIndicator> programIndicators = new HashSet<>( programInstance.getProgram().getProgramIndicators() );
+        Set<ProgramIndicator> programIndicators = programInstance.getProgram().getProgramIndicators();
 
         for ( ProgramIndicator programIndicator : programIndicators )
         {
@@ -286,6 +295,7 @@ public class DefaultProgramIndicatorService
     }
     
     @Override
+    @Transactional
     public String getExpressionDescription( String expression )
     {
         if ( expression == null )
@@ -410,6 +420,7 @@ public class DefaultProgramIndicatorService
     }
     
     @Override
+    @Transactional
     public String expressionIsValid( String expression )
     {
         String expr = getSubstitutedExpression( expression );
@@ -428,6 +439,7 @@ public class DefaultProgramIndicatorService
     }
     
     @Override
+    @Transactional
     public String filterIsValid( String filter )
     {
         String expr = getSubstitutedExpression( filter );
@@ -520,6 +532,7 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
+    @Transactional
     public Set<DataElement> getDataElementsInIndicators( Collection<ProgramIndicator> indicators )
     {
         Set<DataElement> dataElements = new HashSet<>();
@@ -538,6 +551,7 @@ public class DefaultProgramIndicatorService
     }
     
     @Override
+    @Transactional
     public Set<ProgramStageDataElement> getProgramStageDataElementsInExpression( String expression )
     {
         Set<ProgramStageDataElement> elements = new HashSet<>();
@@ -562,6 +576,7 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
+    @Transactional
     public Set<TrackedEntityAttribute> getAttributesInIndicators( Collection<ProgramIndicator> indicators )
     {
         Set<TrackedEntityAttribute> attributes = new HashSet<>();
@@ -575,6 +590,7 @@ public class DefaultProgramIndicatorService
     }
     
     @Override
+    @Transactional
     public Set<TrackedEntityAttribute> getAttributesInExpression( String expression )
     {
         Set<TrackedEntityAttribute> attributes = new HashSet<>();
@@ -597,6 +613,7 @@ public class DefaultProgramIndicatorService
     }
 
     @Override
+    @Transactional
     public Set<Constant> getConstantsInIndicators( Collection<ProgramIndicator> indicators )
     {
         Set<Constant> constants = new HashSet<>();
@@ -610,6 +627,7 @@ public class DefaultProgramIndicatorService
     }
     
     @Override
+    @Transactional
     public Set<Constant> getConstantsInExpression( String expression )
     {
         Set<Constant> constants = new HashSet<>();
