@@ -45,6 +45,7 @@ import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,7 @@ public class FilteredMetaDataController
         FilterOptions filterOptions = new FilterOptions( JSONObject.fromObject( exportJsonValue ) );
         MetaData metaData = exportService.getFilteredMetaData( filterOptions );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, ContextUtils.CacheStrategy.NO_CACHE, "metaData.xml", true );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.NO_CACHE, "metaData.xml", true );
         JacksonUtils.toXmlWithView( response.getOutputStream(), metaData, ExportView.class );
     }
 
@@ -144,7 +145,7 @@ public class FilteredMetaDataController
         FilterOptions filterOptions = new FilterOptions( JSONObject.fromObject( exportJsonValue ) );
         MetaData metaData = exportService.getFilteredMetaData( filterOptions );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, ContextUtils.CacheStrategy.NO_CACHE, "metaData.json", true );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.NO_CACHE, "metaData.json", true );
         JacksonUtils.toJsonWithView( response.getOutputStream(), metaData, ExportView.class );
     }
 
@@ -155,7 +156,7 @@ public class FilteredMetaDataController
         FilterOptions filterOptions = new FilterOptions( JSONObject.fromObject( exportJsonValue ) );
         MetaData metaData = exportService.getFilteredMetaData( filterOptions );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_ZIP, ContextUtils.CacheStrategy.NO_CACHE, "metaData.xml.zip", true );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_ZIP, CacheStrategy.NO_CACHE, "metaData.xml.zip", true );
         response.addHeader( ContextUtils.HEADER_CONTENT_TRANSFER_ENCODING, "binary" );
 
         ZipOutputStream zip = new ZipOutputStream( response.getOutputStream() );
@@ -171,7 +172,7 @@ public class FilteredMetaDataController
         FilterOptions filterOptions = new FilterOptions( JSONObject.fromObject( exportJsonValue ) );
         MetaData metaData = exportService.getFilteredMetaData( filterOptions );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_ZIP, ContextUtils.CacheStrategy.NO_CACHE, "metaData.json.zip", true );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_ZIP, CacheStrategy.NO_CACHE, "metaData.json.zip", true );
         response.addHeader( ContextUtils.HEADER_CONTENT_TRANSFER_ENCODING, "binary" );
 
         ZipOutputStream zip = new ZipOutputStream( response.getOutputStream() );
@@ -187,7 +188,7 @@ public class FilteredMetaDataController
         FilterOptions filterOptions = new FilterOptions( JSONObject.fromObject( exportJsonValue ) );
         MetaData metaData = exportService.getFilteredMetaData( filterOptions );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_GZIP, ContextUtils.CacheStrategy.NO_CACHE, "metaData.xml.gz", true );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_GZIP, CacheStrategy.NO_CACHE, "metaData.xml.gz", true );
         response.addHeader( ContextUtils.HEADER_CONTENT_TRANSFER_ENCODING, "binary" );
 
         GZIPOutputStream gzip = new GZIPOutputStream( response.getOutputStream() );
@@ -201,7 +202,7 @@ public class FilteredMetaDataController
         FilterOptions filterOptions = new FilterOptions( JSONObject.fromObject( exportJsonValue ) );
         MetaData metaData = exportService.getFilteredMetaData( filterOptions );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_GZIP, ContextUtils.CacheStrategy.NO_CACHE, "metaData.json.gz", true );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_GZIP, CacheStrategy.NO_CACHE, "metaData.json.gz", true );
         response.addHeader( ContextUtils.HEADER_CONTENT_TRANSFER_ENCODING, "binary" );
 
         GZIPOutputStream gzip = new GZIPOutputStream( response.getOutputStream() );
@@ -217,7 +218,7 @@ public class FilteredMetaDataController
     public @ResponseBody String getFilters( HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         List<MetaDataFilter> metaDataFilters = exportService.getFilters();
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, ContextUtils.CacheStrategy.NO_CACHE );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.NO_CACHE );
         return JacksonUtils.toJsonAsString( metaDataFilters );
     }
 
