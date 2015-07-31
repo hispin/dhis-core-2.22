@@ -725,7 +725,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             formattedTei.attributes = attributes;
             var promise = $http.post( '../api/trackedEntityInstances' , formattedTei ).then(function(response){                    
                 return response.data;
-            });            
+            }, function(response) {
+                //Necessary now that import errors gives a 409 response from the server.
+                //The 409 response is treated as an error response.
+                return response.data;
+            });                    
             return promise;            
         },
         processAttributes: function(selectedTei, selectedProgram, selectedEnrollment){
