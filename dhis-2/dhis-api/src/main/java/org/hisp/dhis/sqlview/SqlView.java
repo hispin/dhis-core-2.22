@@ -28,38 +28,37 @@ package org.hisp.dhis.sqlview;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.schema.annotation.PropertyRange;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.cache.CacheableBaseIdentifiableObject;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.schema.annotation.PropertyRange;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Dang Duy Hieu
  */
 @JacksonXmlRootElement( localName = "sqlView", namespace = DxfNamespaces.DXF_2_0 )
 public class SqlView
-    extends BaseIdentifiableObject
+    extends CacheableBaseIdentifiableObject
 {
     public static final String PREFIX_VIEWNAME = "_view";
 
     public static final Set<String> PROTECTED_TABLES = Sets.newHashSet( "users", "userinfo", 
         "trackedentityattribute", "trackedentityattributevalue" );
-    
+
     public static final Set<String> ILLEGAL_KEYWORDS = Sets.newHashSet( "delete", "alter", "update", 
         "create", "drop", "commit", "createdb", "createuser", "insert", "rename", "replace", "restore", "write" );
 

@@ -36,7 +36,6 @@ import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewService;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -82,7 +81,7 @@ public class SqlViewController
         model.addAttribute( "model", grid );
         model.addAttribute( "viewClass", "detailed" );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.RESPECT_SYSTEM_SETTING );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, sqlView.getCacheStrategy() );
 
         return grid != null ? "sqlView" : null;
     }
@@ -101,7 +100,7 @@ public class SqlViewController
 
         Grid grid = sqlViewService.getSqlViewGrid( sqlView, SqlView.getCriteria( criteria ), SqlView.getCriteria( var ) );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.RESPECT_SYSTEM_SETTING );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, sqlView.getCacheStrategy() );
 
         GridUtils.toXml( grid, response.getOutputStream() );
     }
@@ -122,7 +121,7 @@ public class SqlViewController
 
         String filename = CodecUtils.filenameEncode( grid.getTitle() ) + ".csv";
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, filename, true );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, sqlView.getCacheStrategy(), filename, true );
 
         GridUtils.toCsv( grid, response.getWriter() );
     }
@@ -143,7 +142,7 @@ public class SqlViewController
 
         String filename = CodecUtils.filenameEncode( grid.getTitle() ) + ".xls";
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.RESPECT_SYSTEM_SETTING, filename, true );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, sqlView.getCacheStrategy(), filename, true );
 
         GridUtils.toXls( grid, response.getOutputStream() );
     }
@@ -162,7 +161,7 @@ public class SqlViewController
 
         Grid grid = sqlViewService.getSqlViewGrid( sqlView, SqlView.getCriteria( criteria ), SqlView.getCriteria( var ) );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, sqlView.getCacheStrategy() );
 
         GridUtils.toHtml( grid, response.getWriter() );
     }
@@ -181,7 +180,7 @@ public class SqlViewController
 
         Grid grid = sqlViewService.getSqlViewGrid( sqlView, SqlView.getCriteria( criteria ), SqlView.getCriteria( var ) );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, sqlView.getCacheStrategy() );
 
         GridUtils.toHtmlCss( grid, response.getWriter() );
     }
@@ -200,7 +199,7 @@ public class SqlViewController
 
         Grid grid = sqlViewService.getSqlViewGrid( sqlView, SqlView.getCriteria( criteria ), SqlView.getCriteria( var ) );
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.RESPECT_SYSTEM_SETTING );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, sqlView.getCacheStrategy() );
 
         GridUtils.toPdf( grid, response.getOutputStream() );
     }

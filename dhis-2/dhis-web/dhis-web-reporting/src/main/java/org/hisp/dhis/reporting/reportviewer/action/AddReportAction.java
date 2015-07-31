@@ -31,8 +31,10 @@ package org.hisp.dhis.reporting.reportviewer.action;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.commons.action.AbstractRelativePeriodsAction;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.report.Report;
@@ -128,7 +130,7 @@ public class AddReportAction
     
     public void setUploadContentType( String contentType )
     {
-    	this.contentType = contentType;
+        this.contentType = contentType;
     }
     
     private String currentDesign;
@@ -152,6 +154,13 @@ public class AddReportAction
         this.paramOrganisationUnit = paramOrganisationUnit;
     }
 
+    private String cacheStrategy;
+
+    public void setCacheStrategy( String cacheStrategy )
+    {
+        this.cacheStrategy = cacheStrategy;
+    }
+
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -171,6 +180,12 @@ public class AddReportAction
     public String execute()
         throws Exception
     {
+        // ---------------------------------------------------------------------
+        // New report or update existing object?
+        // ---------------------------------------------------------------------
+
+        boolean isNewReport = id == null;
+
         // ---------------------------------------------------------------------
         // Set fileName to the current design file name in case of update
         // ---------------------------------------------------------------------
@@ -193,7 +208,7 @@ public class AddReportAction
         // Create report
         // ---------------------------------------------------------------------
 
-        Report report = ( id == null ) ? new Report() : reportService.getReport( id );
+        Report report = isNewReport ? new Report() : reportService.getReport( id );
         
         ReportTable reportTable = reportTableService.getReportTable( reportTableId );
         
@@ -214,6 +229,20 @@ public class AddReportAction
         if ( file != null )
         {
             report.setDesignContent( FileUtils.readFileToString( file ) );
+        }
+
+        // ---------------------------------------------------------------------
+        // Cache strategy
+        // ---------------------------------------------------------------------
+
+        if ( cacheStrategy != null )
+        {
+            CacheStrategy strategy = EnumUtils.getEnum( CacheStrategy.class, cacheStrategy );
+            report.setCacheStrategy( strategy != null ? strategy : Report.DEFAULT_CACHE_STRATEGY );
+        }
+        else if ( isNewReport )
+        {
+            report.setCacheStrategy( CacheStrategy.RESPECT_SYSTEM_SETTING );
         }
         
         reportService.saveReport( report );
