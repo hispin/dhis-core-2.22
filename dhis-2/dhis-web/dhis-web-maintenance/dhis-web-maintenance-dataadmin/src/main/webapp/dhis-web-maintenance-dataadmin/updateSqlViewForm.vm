@@ -10,6 +10,8 @@
 #set( $type = $i18n.getString( "sql_query_type" ) )
 #end
 
+#set( $cacheStrategy = $sqlViewObject.cacheStrategy.name() )
+
 <form id="updateSqlViewForm" action="updateSqlViewInstance.action" method="post" class="inputForm">
 
 	<div>
@@ -44,7 +46,18 @@
 				<textarea type="text" id="sqlquery" name="sqlquery" style="width:80em;height:20em">$!encoder.htmlEncode( $!sqlViewObject.sqlQuery )</textarea>
 			</td>
 		</tr>
-
+		<tr>
+			<td><label>$encoder.htmlEncode( $i18n.getString( "cache_strategy" ) )</label></td>
+			<td>
+			<select id="cacheStrategy" name="cacheStrategy">
+				<option value="RESPECT_SYSTEM_SETTING" #if( $cacheStrategy == "RESPECT_SYSTEM_SETTING" )selected="selected"#end>$i18n.getString( "respect_system_setting" )</option>
+				<option value="NO_CACHE" #if( $cacheStrategy == "NO_CACHE" )selected="selected"#end>$i18n.getString( "no_cache" )</option>
+				<option value="CACHE_1_HOUR" #if( $cacheStrategy == "CACHE_1_HOUR" )selected="selected"#end>$i18n.getString( "cache_for_one_hour" )</option>
+				<option value="CACHE_6AM_TOMORROW" #if( $cacheStrategy == "CACHE_6AM_TOMORROW" )selected="selected"#end>$i18n.getString( "cache_until_6am_tomorrow" )</option>
+				<option value="CACHE_TWO_WEEKS" #if( $cacheStrategy == "CACHE_TWO_WEEKS" )selected="selected"#end>$i18n.getString( "cache_for_two_weeks" )</option>
+			</select>
+			</td>
+		</tr>
 		<tr>
 			<td></td>
 			<td>
@@ -53,6 +66,4 @@
 			</td>
 		</tr>
 	</table>
-
 </form>
-

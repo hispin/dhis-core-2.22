@@ -826,6 +826,10 @@ public class TableAlteror
         executeSql( "alter table version alter column versionkey set not null" );
         executeSql( "alter table version add constraint version_versionkey_key unique(versionkey)" );
 
+        // Cacheable
+        executeSql( "UPDATE report set cachestrategy='RESPECT_SYSTEM_SETTING' where cachestrategy is null" );
+        executeSql( "UPDATE sqlview set cachestrategy='RESPECT_SYSTEM_SETTING' where cachestrategy is null" );
+
         oauth2();
 
         upgradeDataValuesWithAttributeOptionCombo();

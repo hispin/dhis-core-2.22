@@ -32,6 +32,7 @@ import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.commons.util.CodecUtils;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.DateUtils;
@@ -89,15 +90,6 @@ public class ContextUtils
 
     @Autowired
     private SystemSettingManager systemSettingManager;
-
-    public enum CacheStrategy
-    {
-        NO_CACHE,
-        CACHE_1_HOUR,
-        CACHE_6AM_TOMORROW,
-        CACHE_TWO_WEEKS,
-        RESPECT_SYSTEM_SETTING
-    }
 
     public void configureResponse( HttpServletResponse response, String contentType, CacheStrategy cacheStrategy )
     {

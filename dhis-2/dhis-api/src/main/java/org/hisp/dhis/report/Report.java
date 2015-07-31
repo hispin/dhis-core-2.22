@@ -37,6 +37,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.cache.CacheableBaseIdentifiableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.period.RelativePeriods;
@@ -48,7 +49,7 @@ import org.hisp.dhis.reporttable.ReportTable;
  */
 @JacksonXmlRootElement( localName = "report", namespace = DxfNamespaces.DXF_2_0 )
 public class Report
-    extends BaseIdentifiableObject
+    extends CacheableBaseIdentifiableObject
 {
     private static final long serialVersionUID = 7880117720157807526L;
 
@@ -225,6 +226,7 @@ public class Report
             {
                 designContent = report.getDesignContent() == null ? designContent : report.getDesignContent();
                 reportTable = report.getReportTable() == null ? reportTable : report.getReportTable();
+
             }
         }
     }

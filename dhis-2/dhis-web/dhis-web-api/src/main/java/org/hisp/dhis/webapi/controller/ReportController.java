@@ -43,7 +43,7 @@ import org.hisp.dhis.report.Report;
 import org.hisp.dhis.report.ReportService;
 import org.hisp.dhis.schema.descriptors.ReportSchemaDescriptor;
 import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.webapi.utils.ContextUtils.CacheStrategy;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,7 +204,7 @@ public class ReportController
 
         if ( report.isTypeHtml() )
         {
-            contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
+            contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, report.getCacheStrategy() );
 
             reportService.renderHtmlReport( response.getWriter(), uid, date, organisationUnitUid, format );
         }
@@ -216,7 +216,7 @@ public class ReportController
 
             String filename = CodecUtils.filenameEncode( report.getName() ) + "." + type;
 
-            contextUtils.configureResponse( response, contentType, CacheStrategy.RESPECT_SYSTEM_SETTING, filename, attachment );
+            contextUtils.configureResponse( response, contentType, report.getCacheStrategy(), filename, attachment );
 
             JasperPrint print = reportService.renderReport( response.getOutputStream(), uid, period, organisationUnitUid, type, format );
 

@@ -53,6 +53,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -1414,6 +1415,7 @@ public abstract class DhisConvenienceTest
         sqlView.setDescription( "Description" + uniqueCharacter );
         sqlView.setSqlQuery( sql );
         sqlView.setType( SqlViewType.VIEW );
+        sqlView.setCacheStrategy( CacheStrategy.RESPECT_SYSTEM_SETTING );
 
         return sqlView;
     }

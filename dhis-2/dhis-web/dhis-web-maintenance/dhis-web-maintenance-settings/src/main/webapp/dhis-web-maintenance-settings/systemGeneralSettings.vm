@@ -36,6 +36,7 @@
 <div class="setting">
 <select id="cacheStrategy" name="cacheStrategy">
     <option value="NO_CACHE" #if( $keyCacheStrategy == "NO_CACHE" )selected="selected"#end>$i18n.getString( "no_cache" )</option>
+    <option value="CACHE_1_HOUR" #if( $keyCacheStrategy == "CACHE_1_HOUR" )selected="selected" #end>$i18n.getString( "cache_for_one_hour" )</option>
     <option value="CACHE_6AM_TOMORROW" #if( $keyCacheStrategy == "CACHE_6AM_TOMORROW" )selected="selected"#end>$i18n.getString( "cache_until_6am_tomorrow" )</option>
     <option value="CACHE_TWO_WEEKS" #if( $keyCacheStrategy == "CACHE_TWO_WEEKS" )selected="selected"#end>$i18n.getString( "cache_for_two_weeks" )</option>
 </select>
