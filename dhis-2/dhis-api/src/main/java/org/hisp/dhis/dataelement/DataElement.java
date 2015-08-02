@@ -106,7 +106,7 @@ public class DataElement
     public static final String VALUE_TYPE_LONG_TEXT = "longText";
 
     public static final String AGGREGATION_OPERATOR_SUM = "sum";
-    public static final String AGGREGATION_OPERATOR_AVERAGE_SUM = "average"; // Sum in organisation unit
+    public static final String AGGREGATION_OPERATOR_AVERAGE_SUM = "avg_sum_org_unit"; // Sum in organisation unit
     public static final String AGGREGATION_OPERATOR_AVERAGE = "avg";
     public static final String AGGREGATION_OPERATOR_COUNT = "count";
     public static final String AGGREGATION_OPERATOR_STDDEV = "stddev";

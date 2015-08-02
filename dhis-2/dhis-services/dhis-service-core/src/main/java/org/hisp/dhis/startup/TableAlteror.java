@@ -288,6 +288,7 @@ public class TableAlteror
         executeSql( "UPDATE dataelement SET numbertype='number' where numbertype is null and valuetype='int'" );
         executeSql( "UPDATE dataelement SET valuetype='posInt' where valuetype='positiveNumber'" );
         executeSql( "UPDATE dataelement SET valuetype='negInt' where valuetype='negativeNumber'" );
+        executeSql( "UPDATE dataelement SET aggregationtype='avg_sum_org_unit' where aggregationtype='average'" );
 
         // revert prepare aggregate*Value tables for offline diffs
 

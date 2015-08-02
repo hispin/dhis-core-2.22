@@ -34,19 +34,23 @@ package org.hisp.dhis.analytics;
 public enum AggregationType
 {
     SUM( "sum" ), 
-    AVERAGE_SUM_INT( "avg_sum_int" ), // Sum in organisation unit hierarchy
-    AVERAGE_SUM_INT_DISAGGREGATION( "avg_sum_int_disaggregation" ), // Sum in organisation unit hierarchy
-    AVERAGE_INT( "avg_int" ),
-    AVERAGE_INT_DISAGGREGATION( "avg_int_disaggregation" ),
-    AVERAGE_BOOL( "avg" ),
-    AVERAGE( "average" ), // General average
+    AVERAGE( "avg" ),
+    AVERAGE_SUM_ORG_UNIT( "avg_sum_org_unit" ),
     COUNT( "count" ), 
     STDDEV( "stddev" ), 
     VARIANCE( "variance" ),
     MIN( "min" ),
     MAX( "max" ),
     NONE( "none" ),
-    DEFAULT( "default" );
+    DEFAULT( "default" ),
+
+    // Internal types
+    
+    AVERAGE_SUM_INT( "avg_sum_int" ), // Sum in organisation unit hierarchy
+    AVERAGE_SUM_INT_DISAGGREGATION( "avg_sum_int_disaggregation" ), // Sum in organisation unit hierarchy
+    AVERAGE_INT( "avg_int" ),
+    AVERAGE_INT_DISAGGREGATION( "avg_int_disaggregation" ),
+    AVERAGE_BOOL( "avg_bool" );
 
     private final String value;
 
