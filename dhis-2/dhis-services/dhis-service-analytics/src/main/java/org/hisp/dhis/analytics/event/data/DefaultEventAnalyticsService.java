@@ -684,20 +684,20 @@ public class DefaultEventAnalyticsService
 
         if ( de != null ) //TODO check if part of program
         {
-            return new QueryItem( de, legendSet, de.getType(), de.getOptionSet() );
+            return new QueryItem( de, legendSet, de.getType(), de.getAggregationType(), de.getOptionSet() );
         }
 
         TrackedEntityAttribute at = attributeService.getTrackedEntityAttribute( item );
 
         if ( at != null )
         {
-            return new QueryItem( at, legendSet, at.getValueType(), at.getOptionSet() );
+            return new QueryItem( at, legendSet, at.getValueType(), at.getAggregationType(), at.getOptionSet() );
         }
 
         throw new IllegalQueryException( "Item identifier does not reference any data element or attribute part of the program: " + item );
     }
     
-    private NameableObject getValueDimension( String value )
+    private DimensionalObject getValueDimension( String value )
     {
         if ( value == null )
         {
