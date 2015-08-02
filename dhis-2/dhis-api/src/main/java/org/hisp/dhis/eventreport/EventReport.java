@@ -36,11 +36,11 @@ import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.EventAnalyticalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
@@ -189,7 +189,7 @@ public class EventReport
     /**
      * Value dimension.
      */
-    private transient NameableObject value;
+    private transient DimensionalObject value;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -553,12 +553,12 @@ public class EventReport
     @JsonSerialize( as = BaseDimensionalObject.class )
     @JsonView( { DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public NameableObject getValue()
+    public DimensionalObject getValue()
     {
         return value;
     }
 
-    public void setValue( NameableObject value )
+    public void setValue( DimensionalObject value )
     {
         this.value = value;
     }

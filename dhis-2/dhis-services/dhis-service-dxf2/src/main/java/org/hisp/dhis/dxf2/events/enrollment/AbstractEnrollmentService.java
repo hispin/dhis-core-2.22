@@ -514,7 +514,7 @@ public abstract class AbstractEnrollmentService
 
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
 
-        QueryItem queryItem = new QueryItem( attribute, QueryOperator.EQ, value, attribute.getValueType(), null );
+        QueryItem queryItem = new QueryItem( attribute, QueryOperator.EQ, value, attribute.getValueType(), attribute.getAggregationType(), null );
         params.addAttribute( queryItem );
 
         if ( attribute.getOrgunitScope() && attribute.getProgramScope() )

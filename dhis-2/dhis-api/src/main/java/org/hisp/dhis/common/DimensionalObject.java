@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
@@ -134,6 +135,11 @@ public interface DimensionalObject
      * Indicates whether this dimension has a legend set.
      */
     boolean hasLegendSet();
+    
+    /**
+     * Gets the aggregation type.
+     */
+    AggregationType getAggregationType();
     
     /**
      * Gets the filter. Contains operator and filter. Applicable for events.

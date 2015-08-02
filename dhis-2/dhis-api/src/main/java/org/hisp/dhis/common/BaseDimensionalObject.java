@@ -37,6 +37,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
@@ -76,6 +77,11 @@ public class BaseDimensionalObject
      * The legend set for this dimension.
      */
     protected LegendSet legendSet;
+    
+    /**
+     * The aggregation type for this dimension.
+     */
+    protected AggregationType aggregationType;
     
     /**
      * Filter. Applicable for events. Contains operator and filter on this format:
@@ -135,6 +141,8 @@ public class BaseDimensionalObject
         this.legendSet = legendSet;
         this.filter = filter;
     }
+    
+    // TODO aggregationType in constructors
 
     // -------------------------------------------------------------------------
     // Logic
@@ -261,7 +269,6 @@ public class BaseDimensionalObject
         this.allItems = allItems;
     }
 
-
     @Override
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
@@ -275,6 +282,20 @@ public class BaseDimensionalObject
     public void setLegendSet( LegendSet legendSet )
     {
         this.legendSet = legendSet;
+    }
+
+    @Override
+    @JsonProperty
+    @JsonView( { DimensionalView.class, DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public AggregationType getAggregationType()
+    {
+        return aggregationType;
+    }
+
+    public void setAggregationType( AggregationType aggregationType )
+    {
+        this.aggregationType = aggregationType;
     }
 
     @Override
@@ -325,6 +346,7 @@ public class BaseDimensionalObject
                 dimensionType = dimensionalObject.getDimensionType();
                 dimensionName = dimensionalObject.getDimensionName();
                 legendSet = dimensionalObject.getLegendSet();
+                aggregationType = dimensionalObject.getAggregationType();
                 filter = dimensionalObject.getFilter();
             }
             else if ( strategy.isMerge() )
@@ -332,6 +354,7 @@ public class BaseDimensionalObject
                 dimensionType = dimensionalObject.getDimensionType() == null ? dimensionType : dimensionalObject.getDimensionType();
                 dimensionName = dimensionalObject.getDimensionName() == null ? dimensionName : dimensionalObject.getDimensionName();
                 legendSet = dimensionalObject.getLegendSet() == null ? legendSet : dimensionalObject.getLegendSet();
+                aggregationType = dimensionalObject.getAggregationType() == null ? aggregationType : dimensionalObject.getAggregationType();
                 filter = dimensionalObject.getFilter() == null ? filter : dimensionalObject.getFilter();
             }
 
@@ -351,6 +374,7 @@ public class BaseDimensionalObject
             .add( "items", items )
             .add( "all items", allItems )
             .add( "legend set", legendSet )
+            .add( "aggregation type", aggregationType )
             .add( "filter", filter ).toString();
     }
 }
