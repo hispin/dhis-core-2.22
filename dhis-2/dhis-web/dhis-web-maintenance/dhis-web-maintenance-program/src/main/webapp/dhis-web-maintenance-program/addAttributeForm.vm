@@ -91,7 +91,7 @@
                 <option value="string">$i18n.getString( "text" )</option>
                 <option value="letter">$i18n.getString( "letter_only" )</option>
                 <option value="bool">$i18n.getString( "yes_no" )</option>
-				        <option value="trueOnly">$i18n.getString( "yes_only" )</option>
+				<option value="trueOnly">$i18n.getString( "yes_only" )</option>
                 <option value="date">$i18n.getString( "date" )</option>
                 <option value="phoneNumber">$i18n.getString( "phone_number" )</option>
                 <option value="phoneNumber">$i18n.getString( "email" )</option>
@@ -101,7 +101,22 @@
             </select>
         </td>
         <td></td>
-    </tr>  
+    </tr>
+    
+    <tr>
+        <td><label for="aggregationType">$i18n.getString( "aggregation_type" )</label></td>
+        <td>
+            <select id="aggregationType" name="aggregationType">
+                <option value="AVERAGE">$i18n.getString( "average" )</option>
+                <option value="SUM">$i18n.getString( "sum" )</option>
+                <option value="COUNT">$i18n.getString( "count" )</option>
+                <option value="STDDEV">$i18n.getString( "stddev" )</option>
+                <option value="VARIANCE">$i18n.getString( "variance" )</option>
+                <option value="MIN">$i18n.getString( "min" )</option>
+                <option value="MAX">$i18n.getString( "max" )</option>
+            </select>
+        </td>
+    </tr>
 
 	<tr id="optionSetRow" class="hidden">
 		<td><label for="optionSetId">$i18n.getString( "option_set" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>

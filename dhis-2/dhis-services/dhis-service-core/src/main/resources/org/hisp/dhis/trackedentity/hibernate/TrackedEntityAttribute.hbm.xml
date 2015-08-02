@@ -20,7 +20,14 @@
     <property name="description" type="text"/>
 
     <property name="valueType" column="valuetype" not-null="true" />
-
+    
+    <property name="aggregationType" length="40">
+		<type name="org.hibernate.type.EnumType">
+			<param name="enumClass">org.hisp.dhis.analytics.AggregationType</param>
+			<param name="type">12</param>
+		</type> 
+	</property>
+    
     <many-to-one name="attributeGroup" class="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroup"
       column="trackedentityattributegroupid" foreign-key="fk_trackedentityattribute_attributegroupid" />
 
