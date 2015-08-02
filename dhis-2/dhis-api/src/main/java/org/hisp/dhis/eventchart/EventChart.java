@@ -134,7 +134,7 @@ public class EventChart
     /**
      * Value dimension.
      */
-    private transient NameableObject value;
+    private transient DimensionalObject value;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -388,12 +388,12 @@ public class EventChart
     @JsonSerialize( as = BaseDimensionalObject.class )
     @JsonView( { DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public NameableObject getValue()
+    public DimensionalObject getValue()
     {
         return value;
     }
 
-    public void setValue( NameableObject value )
+    public void setValue( DimensionalObject value )
     {
         this.value = value;
     }

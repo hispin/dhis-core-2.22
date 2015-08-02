@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -517,6 +518,12 @@ public class DataElement
         return legendSet != null;
     }
 
+    @Override
+    public AggregationType getAggregationType()
+    {
+        return aggregationOperator != null ? AggregationType.fromValue( aggregationOperator ) : null;
+    }
+    
     // -------------------------------------------------------------------------
     // Helper getters
     // -------------------------------------------------------------------------
