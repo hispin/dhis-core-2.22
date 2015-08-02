@@ -29,7 +29,9 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
  */
 
 import com.opensymphony.xwork2.Action;
+
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.option.OptionService;
@@ -127,6 +129,13 @@ public class UpdateAttributeAction
         this.valueType = valueType;
     }
 
+    private String aggregationType;
+    
+    public void setAggregationType( String aggregationType )
+    {
+        this.aggregationType = aggregationType;
+    }
+
     private Boolean unique;
 
     public void setUnique( Boolean unique )
@@ -205,6 +214,7 @@ public class UpdateAttributeAction
         trackedEntityAttribute.setCode( StringUtils.trimToNull( code ) );
         trackedEntityAttribute.setDescription( StringUtils.trimToNull( description ) );
         trackedEntityAttribute.setValueType( valueType );
+        trackedEntityAttribute.setAggregationType( AggregationType.fromValue( aggregationType ) );
         trackedEntityAttribute.setExpression( expression );
         trackedEntityAttribute.setDisplayOnVisitSchedule( false );
         trackedEntityAttribute.setOptionSet( null );
