@@ -43,6 +43,7 @@ import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 
 /**
  * Configurable mock implementation of AnalyticsService for testing purposes.
@@ -84,7 +85,8 @@ public class MockAnalyticsService
     @Override
     public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, 
         String measureCriteria, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, 
-        boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty idScheme, String approvalLevel, String program, String stage, I18nFormat format )
+        boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty idScheme, String approvalLevel, String userOrgUnit, 
+        String program, String stage, I18nFormat format )
     {
         throw new NotImplementedException("");
     }
@@ -96,14 +98,14 @@ public class MockAnalyticsService
     }
     
     @Override
-    public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, I18nFormat format )
+    public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, String userOrgUnit, I18nFormat format )
     {
         throw new NotImplementedException("");
     }
 
     @Override
     public DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate,
-        I18nFormat format, boolean allowNull )
+        List<OrganisationUnit> userOrgUnits, I18nFormat format, boolean allowNull )
     {
         throw new NotImplementedException("");
     }

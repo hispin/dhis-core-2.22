@@ -120,12 +120,24 @@ public class DataQueryParams
     private static final DimensionItem[] DIM_OPT_ARR = new DimensionItem[0];
     private static final DimensionItem[][] DIM_OPT_2D_ARR = new DimensionItem[0][];
 
+    /**
+     * The dimensions.
+     */
     protected List<DimensionalObject> dimensions = new ArrayList<>();
     
+    /**
+     * The filters.
+     */
     protected List<DimensionalObject> filters = new ArrayList<>();
 
+    /**
+     * The aggregation type.
+     */
     protected AggregationType aggregationType;
-        
+    
+    /**
+     * The measure criteria, which is measure filters and corresponding values.
+     */
     protected Map<MeasureFilter, Double> measureCriteria = new HashMap<>();
     
     /**
@@ -178,7 +190,7 @@ public class DataQueryParams
      * The required approval level identifier for data to be included in query response.
      */
     protected String approvalLevel;
-
+    
     // -------------------------------------------------------------------------
     // Event properties
     // -------------------------------------------------------------------------
@@ -903,7 +915,7 @@ public class DataQueryParams
     }
     
     /**
-     * Indicates whether this params defines an identifier scheme different from
+     * Indicates whether this query defines an identifier scheme different from
      * UID.
      */
     public boolean hasNonUidOutputIdScheme()
@@ -912,7 +924,7 @@ public class DataQueryParams
     }
 
     /**
-     * Indicates whether this params specifies data approval levels.
+     * Indicates whether this query specifies data approval levels.
      */
     public boolean isDataApproval()
     {
@@ -920,14 +932,13 @@ public class DataQueryParams
     }
     
     /**
-     * Indicates whether this params specifies a approval level.
-     * @return
+     * Indicates whether this query specifies a approval level.
      */
     public boolean hasApprovalLevel()
     {
         return approvalLevel != null;
     }
-    
+        
     /**
      * Ignore data approval constraints for this query.
      */
@@ -937,7 +948,7 @@ public class DataQueryParams
     }
     
     /**
-     * Indicates whether this params requires aggregation of data. No aggregation
+     * Indicates whether this query requires aggregation of data. No aggregation
      * takes place if aggregation type is none or if data type is text.
      */
     public boolean isAggregation()

@@ -432,7 +432,7 @@ public class DefaultEventAnalyticsService
             {
                 String dimensionId = getDimensionFromParam( dim );
                 List<String> items = getDimensionItemsFromParam( dim );                
-                DimensionalObject dimObj = analyticsService.getDimension( dimensionId, items, null, format, true );
+                DimensionalObject dimObj = analyticsService.getDimension( dimensionId, items, null, null, format, true );
                 
                 if ( dimObj != null )
                 {
@@ -451,7 +451,7 @@ public class DefaultEventAnalyticsService
             {
                 String dimensionId = getDimensionFromParam( dim );
                 List<String> items = getDimensionItemsFromParam( dim );                
-                DimensionalObject dimObj = analyticsService.getDimension( dimensionId, items, null, format, true );
+                DimensionalObject dimObj = analyticsService.getDimension( dimensionId, items, null, null, format, true );
                 
                 if ( dimObj != null )
                 {
@@ -509,7 +509,7 @@ public class DefaultEventAnalyticsService
             for ( DimensionalObject dimension : ListUtils.union( object.getColumns(), object.getRows() ) )
             {
                 DimensionalObject dimObj = analyticsService.
-                    getDimension( dimension.getDimension(), getUids( dimension.getItems() ), date, format, true );
+                    getDimension( dimension.getDimension(), getUids( dimension.getItems() ), date, null, format, true );
                 
                 if ( dimObj != null )
                 {
@@ -524,7 +524,7 @@ public class DefaultEventAnalyticsService
             for ( DimensionalObject filter : object.getFilters() )
             {
                 DimensionalObject dimObj = analyticsService.
-                    getDimension( filter.getDimension(), getUids( filter.getItems() ), date, format, true );
+                    getDimension( filter.getDimension(), getUids( filter.getItems() ), date, null, format, true );
                 
                 if ( dimObj != null )
                 {
