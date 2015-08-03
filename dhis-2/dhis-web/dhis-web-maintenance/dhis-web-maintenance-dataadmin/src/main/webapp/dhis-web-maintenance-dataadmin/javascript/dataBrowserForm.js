@@ -3,8 +3,7 @@ jQuery( document ).ready( function ()
 
     selectionTreeSelection.setListenerFunction( organisationUnitModeSelected );
     selectionTreeSelection.setMultipleSelectionAllowed( false );
-    selectionTree.clearSelectedOrganisationUnits();
-    selectionTree.buildSelectionTree();
+    selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 
     datePickerInRange( 'fromDate', 'toDate' );
 

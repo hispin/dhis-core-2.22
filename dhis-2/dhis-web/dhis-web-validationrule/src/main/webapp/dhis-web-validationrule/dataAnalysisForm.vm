@@ -88,8 +88,7 @@
 
           		selectionTreeSelection.setMultipleSelectionAllowed( false );
           		selectionTreeSelection.setListenerFunction( organisationUnitSelected );
-				selectionTree.clearSelectedOrganisationUnits();
-          		selectionTree.buildSelectionTree();
+				selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 
         	</script>
 		</td>
