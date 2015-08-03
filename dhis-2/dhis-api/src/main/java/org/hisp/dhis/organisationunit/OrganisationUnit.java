@@ -28,13 +28,22 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.base.Joiner;
+import static org.hisp.dhis.common.NameableObjectUtils.getDisplayProperty;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -56,22 +65,13 @@ import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.hisp.dhis.user.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.hisp.dhis.common.NameableObjectUtils.getDisplayProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.Joiner;
 
 /**
  * @author Kristian Nordal
@@ -97,8 +97,6 @@ public class OrganisationUnit
     public static final String KEY_ORGUNIT_GROUP = "OU_GROUP-";
 
     private static final List<String> FEATURETYPES = Arrays.asList( FEATURETYPE_NONE, FEATURETYPE_MULTIPOLYGON, FEATURETYPE_POLYGON, FEATURETYPE_POINT );
-
-    private static final Comparator<IdentifiableObject> COMPARATOR = new IdentifiableObjectNameComparator();
 
     private static final Pattern JSON_POINT_PATTERN = Pattern.compile( "(\\[.*?\\])" );
     private static final Pattern JSON_COORDINATE_PATTERN = Pattern.compile( "(\\[{3}.*?\\]{3})" );
@@ -315,9 +313,33 @@ public class OrganisationUnit
     {
         List<OrganisationUnit> sortedChildren = new ArrayList<>( children );
 
-        Collections.sort( sortedChildren, COMPARATOR );
+        Collections.sort( sortedChildren, IdentifiableObjectNameComparator.INSTANCE );
 
         return sortedChildren;
+    }
+
+    public static List<OrganisationUnit> getSortedChildren( Collection<OrganisationUnit> units )
+    {
+        List<OrganisationUnit> children = new ArrayList<OrganisationUnit>();
+        
+        for ( OrganisationUnit unit : units )
+        {
+            children.addAll( unit.getSortedChildren() );
+        }
+        
+        return children;
+    }
+
+    public static List<OrganisationUnit> getSortedGrandChildren( Collection<OrganisationUnit> units )
+    {
+        List<OrganisationUnit> children = new ArrayList<OrganisationUnit>();
+        
+        for ( OrganisationUnit unit : units )
+        {
+            children.addAll( unit.getSortedGrandChildren() );
+        }
+        
+        return children;
     }
 
     public Set<OrganisationUnit> getGrandChildren()
@@ -788,7 +810,7 @@ public class OrganisationUnit
 
         return map;
     }
-
+    
     public boolean hasLevel()
     {
         return level > 0;
