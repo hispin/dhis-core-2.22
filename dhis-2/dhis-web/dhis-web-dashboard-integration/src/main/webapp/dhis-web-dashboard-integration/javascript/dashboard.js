@@ -61,9 +61,8 @@ $( document ).ready( function()
 	$( "#searchField" ).focus();
 	$( "#searchField" ).keyup( dhis2.db.search );
 	
-	selectionTree.clearSelectedOrganisationUnits();
 	selectionTreeSelection.setMultipleSelectionAllowed( true );
-	selectionTree.buildSelectionTree();
+	selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 
 	$.getJSON( "../api/me/user-account.json?" + dhis2.util.cacheBust(), function( json ) {
 		dhis2.db.currentKey = "dhis2.dashboard.current." + json.username;

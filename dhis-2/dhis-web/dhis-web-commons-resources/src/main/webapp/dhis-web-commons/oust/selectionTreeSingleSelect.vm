@@ -8,10 +8,12 @@ jQuery(document).ready( function()
 	#if( $required )
 	selectionTreeSelection.setListenerFunction( selectOrganisationUnit__ );
 	#end
+	
 	#if( $cleanAll )						
-	selectionTree.clearSelectedOrganisationUnits();			
-	#end
+	selectionTree.clearSelectedOrganisationUnitsAndBuildTree();			
+	#else
 	selectionTree.buildSelectionTree();
+	#end
 });
 </script>
 
