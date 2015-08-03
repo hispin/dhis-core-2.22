@@ -5,6 +5,7 @@
 <script type="text/javascript" src="plugin/map.js"></script>
 <script type="text/javascript" src="plugin/eventreport.js"></script>
 <script type="text/javascript" src="plugin/eventchart.js"></script>
+<script type="text/javascript" src="../dhis-web-commons/oust/oust.js"></script>
 <script type="text/javascript" src="javascript/dashboard.js"></script>
 
 <script type="text/javascript">
@@ -57,6 +58,8 @@ jQuery( document ).ready( function() {
 <div id="hitDiv"></div>
 
 <div id="searchButton"><a class="blueButtonLink" href="javascript:dhis2.db.search()">$i18n.getString( "search" )</a></div>
+
+<div id="cogButton"><a class="greyButtonLink" href="javascript:dhis2.db.viewOrgUnitSelector()"><i class="fa fa-cog"></i></a></div>
 
 <div id="dashboardControl" class="horizontalMenu dashboardList">
     <ul>
@@ -115,4 +118,12 @@ jQuery( document ).ready( function() {
     <div><a class="greyButtonLink" href="javascript:dhis2.db.addMessagesContent()">$i18n.getString( "messages" )</a></div>
     <h4>$i18n.getString( "delete_current_dashboard" )</h4>
     <div><a class="greyButtonLink" href="javascript:dhis2.db.removeDashboard()">$i18n.getString( "delete" )</a></div>
+</div>
+
+<div id="orgUnitSelectorForm" class="page">
+	<div id="selectionTree" style="width:340px; height:400px"></div>
+	<div style="padding-top:15px; float:right;">
+		<a class="greyButtonLink" href="javascript:dhis2.db.clearSelectedOrgUnits()">$i18n.getString( "clear" )</a>
+		<a class="greyButtonLink" href="javascript:dhis2.db.updateSelectedOrgUnits()">$i18n.getString( "update" )</a>
+	</div>
 </div>

@@ -136,11 +136,21 @@ function SelectionTree()
 {
     this.clearSelectedOrganisationUnits = function()
     {
-    	$.ajax({ 
+    	$.ajax( { 
     		url: selectionTreePath + 'clearSelectedOrganisationUnits.action',
 			async: false
-    	});
+    	} );
     };
+    
+    this.clearSelectedOrganisationUnitsAndBuildTree = function()
+    {
+    	$.ajax( { 
+    		url: selectionTreePath + 'clearSelectedOrganisationUnits.action',
+			success: function() {
+				selectionTree.buildSelectionTree();
+			}
+    	} );
+    }
 
     this.toggle = function( unitId )
     {
