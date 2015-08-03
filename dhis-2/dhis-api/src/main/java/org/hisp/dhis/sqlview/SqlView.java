@@ -34,10 +34,12 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.cache.CacheableBaseIdentifiableObject;
+import org.hisp.dhis.common.cache.CacheStrategy;
+import org.hisp.dhis.common.cache.Cacheable;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.schema.annotation.PropertyRange;
@@ -52,7 +54,8 @@ import java.util.regex.Pattern;
  */
 @JacksonXmlRootElement( localName = "sqlView", namespace = DxfNamespaces.DXF_2_0 )
 public class SqlView
-    extends CacheableBaseIdentifiableObject
+    extends BaseIdentifiableObject
+    implements Cacheable
 {
     public static final String PREFIX_VIEWNAME = "_view";
 
@@ -66,7 +69,7 @@ public class SqlView
     private static final String REGEX_SEP = "|";
     
     // -------------------------------------------------------------------------
-    // Variables
+    // Properties
     // -------------------------------------------------------------------------
 
     private String description;
@@ -74,6 +77,8 @@ public class SqlView
     private String sqlQuery;
 
     private SqlViewType type;
+
+    private CacheStrategy cacheStrategy = CacheStrategy.RESPECT_SYSTEM_SETTING;
     
     // -------------------------------------------------------------------------
     // Constructors
@@ -235,6 +240,20 @@ public class SqlView
         this.type = type;
     }
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @Override
+    public CacheStrategy getCacheStrategy()
+    {
+        return cacheStrategy;
+    }
+
+    public void setCacheStrategy( CacheStrategy cacheStrategy )
+    {
+        this.cacheStrategy = cacheStrategy;
+    }
+
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -249,12 +268,14 @@ public class SqlView
                 description = sqlView.getDescription();
                 sqlQuery = sqlView.getSqlQuery();
                 type = sqlView.getType();
+                cacheStrategy = sqlView.getCacheStrategy();
             }
             else if ( strategy.isMerge() )
             {
                 description = sqlView.getDescription() == null ? description : sqlView.getDescription();
                 sqlQuery = sqlView.getSqlQuery() == null ? sqlQuery : sqlView.getSqlQuery();
                 type = sqlView.getType() == null ? type : sqlView.getType();
+                cacheStrategy = sqlView.getCacheStrategy() == null ? cacheStrategy : sqlView.getCacheStrategy();
             }
         }
     }
