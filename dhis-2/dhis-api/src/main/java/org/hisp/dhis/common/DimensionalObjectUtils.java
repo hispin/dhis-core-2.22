@@ -243,7 +243,7 @@ public class DimensionalObjectUtils
      * Splits the given string on the ; character and returns the items in a 
      * list. Returns null if the given string is null.
      */
-    public static List<String> getDimensionsFromParam( String param )
+    public static List<String> getItemsFromParam( String param )
     {
         if ( param == null )
         {
