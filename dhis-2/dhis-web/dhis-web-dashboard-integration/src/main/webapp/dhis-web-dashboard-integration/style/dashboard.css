@@ -209,6 +209,13 @@
   left: 834px;
 }
 
+#cogButton
+{
+  position: absolute;
+  margin-top: 6px;
+  left: 907px;
+}
+
 #searchField
 {
   padding: 0;
@@ -329,6 +336,11 @@
 }
 
 #manageDashboardForm
+{
+  display: none;
+}
+
+#orgUnitSelectorForm
 {
   display: none;
 }
