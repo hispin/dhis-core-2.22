@@ -6,9 +6,8 @@ jQuery(document).ready(function() {
 	#end
 	
 	#if ( $!reportParams.isOrganisationUnitSet() )
-    selectionTree.clearSelectedOrganisationUnits();
 	selectionTreeSelection.setMultipleSelectionAllowed( false );
-	selectionTree.buildSelectionTree();
+	selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 	#end
 });
 

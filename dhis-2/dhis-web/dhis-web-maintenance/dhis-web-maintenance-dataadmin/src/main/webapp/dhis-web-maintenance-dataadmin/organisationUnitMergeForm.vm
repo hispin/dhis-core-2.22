@@ -2,8 +2,7 @@
 	jQuery(document).ready(function() {
 	    selectionTreeSelection.setMultipleSelectionAllowed( false );
 	    selectionTreeSelection.setListenerFunction( treeSelected );
-		selectionTree.clearSelectedOrganisationUnits();
-	    selectionTree.buildSelectionTree();
+		selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 	});
 
     var i18n_merging = '$encoder.jsEscape( $i18n.getString( "merging" ), "'" )';

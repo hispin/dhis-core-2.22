@@ -49,8 +49,7 @@ $( function() {
     });
 
     selectionTreeSelection.setMultipleSelectionAllowed( false );
-    selectionTree.clearSelectedOrganisationUnits();
-    selectionTree.buildSelectionTree();
+    selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 
     $.ajax({
        url: '../api/programs.json'

@@ -7,8 +7,7 @@
   $( document ).ready( function() {
     selectionTreeSelection.setMultipleSelectionAllowed( false );
     selectionTreeSelection.setListenerFunction( getFollowupAnalysis );
-    selectionTree.clearSelectedOrganisationUnits();
-    selectionTree.buildSelectionTree();
+    selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 
     $( "#info" ).html( i18n_no_organisation_unit_selected );
     $( "#downloadButtons input:button" ).attr( "disabled", true );

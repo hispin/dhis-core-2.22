@@ -2,10 +2,9 @@
 	jQuery(document).ready(function(){
 		datePickerInRange( 'startDate' , 'endDate' );
 
-		selectionTree.clearSelectedOrganisationUnits();
-		selectionTree.buildSelectionTree();
 		selectionTreeSelection.setMultipleSelectionAllowed( false );
 		selectionTreeSelection.setListenerFunction( organisationUnitSelected );
+		selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 	});
 	
 	var i18n_analysing_please_wait = '$encoder.jsEscape( $i18n.getString( "analysing_please_wait" ) , "'")';

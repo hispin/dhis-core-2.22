@@ -167,7 +167,6 @@ dhis2.dsr.displayPreviousPeriods = function()
 
 dhis2.dsr.drillDownDataSetReport = function( orgUnitId, orgUnitUid )
 {
-	selectionTree.clearSelectedOrganisationUnits();
 	selectionTreeSelection.select( orgUnitId );
 	
 	var dataSetReport = dhis2.dsr.getDataSetReport();

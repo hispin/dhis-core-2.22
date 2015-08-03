@@ -3,8 +3,7 @@
 		datePickerInRange( 'startDate' , 'endDate' );	
 
         selectionTreeSelection.setMultipleSelectionAllowed( true );
-		selectionTree.clearSelectedOrganisationUnits();
-        selectionTree.buildSelectionTree();
+		selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 
         jQuery("#availableDataSets").dhisAjaxSelect({
 			source: "../api/dataSets.json?links=false&paging=false",
