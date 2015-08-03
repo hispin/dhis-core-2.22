@@ -43,12 +43,14 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -196,6 +198,15 @@ public class User
     public OrganisationUnit getOrganisationUnit()
     {
         return CollectionUtils.isEmpty( organisationUnits ) ? null : organisationUnits.iterator().next();
+    }
+    
+    public List<OrganisationUnit> getSortedOrganisationUnits()
+    {
+        List<OrganisationUnit> sortedOrgUnits = new ArrayList<>( organisationUnits );
+        
+        Collections.sort( sortedOrgUnits, IdentifiableObjectNameComparator.INSTANCE );
+        
+        return sortedOrgUnits;
     }
 
     public boolean hasOrganisationUnit()
