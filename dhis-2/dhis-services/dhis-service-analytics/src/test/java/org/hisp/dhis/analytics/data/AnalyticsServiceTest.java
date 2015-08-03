@@ -193,7 +193,7 @@ public class AnalyticsServiceTest
         filterParams.add( "ou:" + ouA.getUid() + ";" + ouB.getUid() + ";" + ouC.getUid() + ";" + ouD.getUid() + ";" + ouE.getUid() );
         
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 4, params.getDataElements().size() );
         assertEquals( 3, params.getPeriods().size() );
@@ -211,7 +211,7 @@ public class AnalyticsServiceTest
         filterParams.add( "ou:" + ouA.getUid() );
         
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 4, params.getDataElements().size() );
         assertEquals( 1, params.getFilterOrganisationUnits().size() );
@@ -227,7 +227,7 @@ public class AnalyticsServiceTest
         filterParams.add( "ou:" + ouA.getUid() );
         
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 2, params.getDataElements().size() );
         assertEquals( 2, params.getProgramDataElements().size() );
@@ -244,7 +244,7 @@ public class AnalyticsServiceTest
         filterParams.add( "ou:" + ouA.getUid() );
         
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 2, params.getDataElements().size() );
         assertEquals( 2, params.getProgramAttributes().size() );
@@ -263,7 +263,7 @@ public class AnalyticsServiceTest
         filterParams.add( "ou:" + ouA.getUid() + ";" + ouB.getUid() + ";" + ouC.getUid() );
         
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 3, params.getDataElements().size() );
         assertEquals( 2, params.getPeriods().size() );
@@ -282,7 +282,7 @@ public class AnalyticsServiceTest
         filterParams.add( "ou:" + ouA.getUid() + ";" + ouB.getUid() );
 
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 4, params.getDataElements().size() );
         assertEquals( 12, params.getPeriods().size() );
@@ -298,7 +298,7 @@ public class AnalyticsServiceTest
         dimensionParams.add( "pe:2011;2012" );
         
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 1, params.getOrganisationUnits().size() );  
         assertEquals( 2, params.getDataElements().size() );
@@ -314,7 +314,7 @@ public class AnalyticsServiceTest
         dimensionParams.add( "pe:2011;2012" );
         
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 3, params.getOrganisationUnits().size() );  
         assertEquals( 2, params.getDataElements().size() );
@@ -330,7 +330,7 @@ public class AnalyticsServiceTest
         dimensionParams.add( "pe:2011;2012" );
         
         DataQueryParams params = analyticsService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );
+            false, false, false, false, false, false, null, null, null, null, null, null, null );
         
         assertEquals( 2, params.getOrganisationUnits().size() );  
         assertEquals( 2, params.getDataElements().size() );
@@ -345,7 +345,7 @@ public class AnalyticsServiceTest
         dimensionParams.add( "pe:2012,2012S1,2012S2" );
         
         analyticsService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );        
+            false, false, false, false, false, false, null, null, null, null, null, null, null );        
     }
     
     @Test( expected = IllegalQueryException.class )
@@ -356,7 +356,7 @@ public class AnalyticsServiceTest
         dimensionParams.add( "pe" );
 
         analyticsService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );        
+            false, false, false, false, false, false, null, null, null, null, null, null, null );        
     }
 
     @Test( expected = IllegalQueryException.class )
@@ -367,7 +367,7 @@ public class AnalyticsServiceTest
         dimensionParams.add( "ou" );
         
         analyticsService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );        
+            false, false, false, false, false, false, null, null, null, null, null, null, null );        
     }
 
     @Test( expected = IllegalQueryException.class )
@@ -378,7 +378,7 @@ public class AnalyticsServiceTest
         dimensionParams.add( "yebo:2012,2012S1,2012S2" );
         
         analyticsService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, null, null, null, null, null, null );        
+            false, false, false, false, false, false, null, null, null, null, null, null, null );        
     }
     
     @Test

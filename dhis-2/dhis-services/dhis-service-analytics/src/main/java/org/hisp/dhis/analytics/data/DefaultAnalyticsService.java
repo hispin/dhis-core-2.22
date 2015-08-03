@@ -973,21 +973,21 @@ public class DefaultAnalyticsService
     public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType,
         String measureCriteria, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit,
         boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, 
-        String approvalLevel, String program, String stage, I18nFormat format )
+        String approvalLevel, String userOrgUnit, String program, String stage, I18nFormat format )
     {
         DataQueryParams params = new DataQueryParams();
-
+        
         params.setAggregationType( aggregationType );
         params.setIgnoreLimit( ignoreLimit );
 
         if ( dimensionParams != null && !dimensionParams.isEmpty() )
         {
-            params.addDimensions( getDimensionalObjects( dimensionParams, format ) );
+            params.addDimensions( getDimensionalObjects( dimensionParams, userOrgUnit, format ) );
         }
 
         if ( filterParams != null && !filterParams.isEmpty() )
         {
-            params.getFilters().addAll( getDimensionalObjects( filterParams, format ) );
+            params.getFilters().addAll( getDimensionalObjects( filterParams, userOrgUnit, format ) );
         }
 
         if ( measureCriteria != null && !measureCriteria.isEmpty() )
@@ -1003,7 +1003,7 @@ public class DefaultAnalyticsService
         params.setDisplayProperty( displayProperty );
         params.setOutputIdScheme( outputIdScheme );
         params.setApprovalLevel( approvalLevel );
-
+        
         if ( program != null )
         {
             params.setProgram( programService.getProgram( program ) );
@@ -1021,7 +1021,7 @@ public class DefaultAnalyticsService
     public DataQueryParams getFromAnalyticalObject( AnalyticalObject object, I18nFormat format )
     {
         DataQueryParams params = new DataQueryParams();
-
+        
         if ( object != null )
         {
             Date date = object.getRelativePeriodDate();
@@ -1030,17 +1030,17 @@ public class DefaultAnalyticsService
 
             for ( DimensionalObject column : object.getColumns() )
             {
-                params.addDimension( getDimension( column.getDimension(), getUids( column.getItems() ), date, format, false ) );
+                params.addDimension( getDimension( column.getDimension(), getUids( column.getItems() ), date, null, format, false ) );
             }
 
             for ( DimensionalObject row : object.getRows() )
             {
-                params.addDimension( getDimension( row.getDimension(), getUids( row.getItems() ), date, format, false ) );
+                params.addDimension( getDimension( row.getDimension(), getUids( row.getItems() ), date, null, format, false ) );
             }
 
             for ( DimensionalObject filter : object.getFilters() )
             {
-                params.getFilters().add( getDimension( filter.getDimension(), getUids( filter.getItems() ), date, format, false ) );
+                params.getFilters().add( getDimension( filter.getDimension(), getUids( filter.getItems() ), date, null, format, false ) );
             }
         }
 
@@ -1048,9 +1048,11 @@ public class DefaultAnalyticsService
     }
 
     @Override
-    public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, I18nFormat format )
+    public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, String userOrgUnit, I18nFormat format )
     {
         List<DimensionalObject> list = new ArrayList<>();
+        
+        List<OrganisationUnit> userOrgUnits = getUserOrgUnits( userOrgUnit );
 
         if ( dimensionParams != null )
         {
@@ -1061,7 +1063,7 @@ public class DefaultAnalyticsService
 
                 if ( dimension != null && items != null )
                 {
-                    list.add( getDimension( dimension, items, null, format, false ) );
+                    list.add( getDimension( dimension, items, null, userOrgUnits, format, false ) );
                 }
             }
         }
@@ -1073,7 +1075,8 @@ public class DefaultAnalyticsService
     // TODO optimize so that org unit levels + boundary are used in query instead of fetching all org units one by one
 
     @Override
-    public DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate, I18nFormat format, boolean allowNull )
+    public DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate, 
+        List<OrganisationUnit> userOrgUnits, I18nFormat format, boolean allowNull )
     {
         final boolean allItems = items.isEmpty();
         
@@ -1215,24 +1218,21 @@ public class DefaultAnalyticsService
 
         if ( ORGUNIT_DIM_ID.equals( dimension ) )
         {
-            User user = currentUserService.getCurrentUser();
-            Set<OrganisationUnit> userOrgUnits = user != null ? user.getOrganisationUnits() : new HashSet<OrganisationUnit>();
-
             List<NameableObject> ous = new UniqueArrayList<>();
             List<Integer> levels = new UniqueArrayList<>();
             List<OrganisationUnitGroup> groups = new UniqueArrayList<>();
 
             for ( String ou : items )
             {
-                if ( KEY_USER_ORGUNIT.equals( ou ) && !userOrgUnits.isEmpty() )
+                if ( KEY_USER_ORGUNIT.equals( ou ) && userOrgUnits != null && !userOrgUnits.isEmpty() )
                 {
                     ous.addAll( userOrgUnits );
                 }
-                else if ( KEY_USER_ORGUNIT_CHILDREN.equals( ou ) && !userOrgUnits.isEmpty() )
+                else if ( KEY_USER_ORGUNIT_CHILDREN.equals( ou ) && userOrgUnits != null && !userOrgUnits.isEmpty() )
                 {
                     ous.addAll( OrganisationUnit.getSortedChildren( userOrgUnits ) );
                 }
-                else if ( KEY_USER_ORGUNIT_GRANDCHILDREN.equals( ou ) && !userOrgUnits.isEmpty() )
+                else if ( KEY_USER_ORGUNIT_GRANDCHILDREN.equals( ou ) && userOrgUnits != null && !userOrgUnits.isEmpty() )
                 {
                     ous.addAll( OrganisationUnit.getSortedGrandChildren( userOrgUnits ) );
                 }
@@ -1528,6 +1528,42 @@ public class DefaultAnalyticsService
         }
 
         return metaData;
+    }
+    
+    /**
+     * Returns a list of user organisation units, looking first at the given user 
+     * org unit parameter, second at the organisation units associated with the
+     * current user. Returns an empty list if no organisation units are found.
+     * 
+     * @param userOrgUnit the user org unit parameter string.
+     * @return a list of organisation units.
+     */
+    private List<OrganisationUnit> getUserOrgUnits( String userOrgUnit)
+    {
+        List<OrganisationUnit> units = new ArrayList<>();
+        
+        User currentUser = currentUserService.getCurrentUser();
+        
+        if ( userOrgUnit != null )
+        {
+            List<String> ous = DimensionalObjectUtils.getItemsFromParam( userOrgUnit );
+            
+            for ( String ou : ous )
+            {
+                OrganisationUnit unit = idObjectManager.get( OrganisationUnit.class, ou );
+                
+                if ( unit != null )
+                {
+                    units.add( unit );
+                }
+            }
+        }
+        else if ( currentUser != null && currentUser.hasOrganisationUnit() )
+        {
+            units = currentUser.getSortedOrganisationUnits();
+        }
+        
+        return units;
     }
 
     /**

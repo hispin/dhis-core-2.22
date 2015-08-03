@@ -40,6 +40,7 @@ import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 
 /**
  * <p>This interface is responsible for retrieving aggregated data. Data will be
@@ -164,6 +165,7 @@ public interface AnalyticsService
      * @param displayProperty the property to display for meta-data.
      * @param outputIdScheme the identifier scheme to use in the query response.
      * @param approvalLevel the approval level identifier.
+     * @param userOrgUnit the user organisation unit to use, overrides current user.
      * @param program the program identifier.
      * @param stage the program stage identifier.
      * @param format the i18n format.
@@ -171,7 +173,8 @@ public interface AnalyticsService
      */
     DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, String measureCriteria, 
         boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, boolean showHierarchy, 
-        DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, String program, String stage, I18nFormat format );
+        DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, String userOrgUnit, 
+        String program, String stage, I18nFormat format );
     
     /**
      * Creates a data query parameter object from the given BaseAnalyticalObject.
@@ -186,10 +189,12 @@ public interface AnalyticsService
      * Creates a list of DimensionalObject from the given set of dimension params.
      * 
      * @param dimensionParams the dimension URL params.
+     * @param userOrgUnit the user organisation unit param, overrides current
+     *        user, can be null.
      * @param format the i18n format.
      * @return a list of DimensionalObject.
      */
-    List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, I18nFormat format );
+    List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, String userOrgUnit, I18nFormat format );
     
     /**
      * Returns a persisted DimensionalObject generated from the given  dimension 
@@ -204,10 +209,13 @@ public interface AnalyticsService
      * @param dimension the dimension identifier.
      * @param items the dimension items.
      * @param relativePeriodDate the date to use for generating relative periods, can be null.
+     * @param userOrgUnits the list of user organisation units, overrides current
+     *        user, can be null.
      * @param format the I18nFormat, can be null.
      * @param allowNull return null if no dimension was found.
      * @throws IllegalQueryException if no dimensions was found.
      * @return list of DimensionalObjects.
      */
-    DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate, I18nFormat format, boolean allowNull );
+    DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate, 
+        List<OrganisationUnit> userOrgUnits, I18nFormat format, boolean allowNull );
 }
