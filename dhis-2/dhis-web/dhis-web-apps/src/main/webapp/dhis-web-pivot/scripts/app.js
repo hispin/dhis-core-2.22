@@ -4395,7 +4395,7 @@ Ext.onReady( function() {
             }
 
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programs.json?paging=false&fields=programTrackedEntityAttributes[trackedEntityAttribute[id,name]],programStages[programStageDataElements[dataElement[id,name,type]]]&filter=id:eq:' + programId,
+                url: ns.core.init.contextPath + '/api/programs.json?paging=false&fields=programTrackedEntityAttributes[trackedEntityAttribute[id,name,valueType]],programStages[programStageDataElements[dataElement[id,name,type]]]&filter=id:eq:' + programId,
                 success: function(r) {
                     r = Ext.decode(r.responseText);
 
@@ -4406,7 +4406,7 @@ Ext.onReady( function() {
                         teas = isO(program) && isA(program.programTrackedEntityAttributes) ? Ext.Array.pluck(program.programTrackedEntityAttributes, 'trackedEntityAttribute') : [],
                         dataElements = [],
                         attributes = [],
-                        types = ['int', 'number', 'string', 'bool', 'trueonly'],
+                        types = ['int', 'string', 'bool', 'trueonly', 'number', 'optionSet'],
                         data;
 
                     // data elements
@@ -4426,7 +4426,7 @@ Ext.onReady( function() {
 
                     // attributes
                     for (i = 0; i < teas.length; i++) {
-                        if (Ext.Array.contains(types, (teas[i].type || '').toLowerCase())) {
+                        if (Ext.Array.contains(types, (teas[i].valueType || '').toLowerCase())) {
                             attributes.push(teas[i]);
                         }
                     }
