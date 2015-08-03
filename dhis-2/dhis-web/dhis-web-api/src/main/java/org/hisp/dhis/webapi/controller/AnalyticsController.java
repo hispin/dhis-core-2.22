@@ -28,7 +28,7 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensionsFromParam;
+import static org.hisp.dhis.common.DimensionalObjectUtils.getItemsFromParam;
 
 import java.util.Set;
 
@@ -101,7 +101,7 @@ public class AnalyticsController
             hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.RESPECT_SYSTEM_SETTING );
-        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
+        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getItemsFromParam( columns ), getItemsFromParam( rows ) );
         model.addAttribute( "model", grid );
         model.addAttribute( "viewClass", "detailed" );
         return "grid";
@@ -134,7 +134,7 @@ public class AnalyticsController
             hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.RESPECT_SYSTEM_SETTING );
-        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
+        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getItemsFromParam( columns ), getItemsFromParam( rows ) );
         GridUtils.toXml( grid, response.getOutputStream() );
     }
 
@@ -165,7 +165,7 @@ public class AnalyticsController
             hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
-        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
+        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getItemsFromParam( columns ), getItemsFromParam( rows ) );
         GridUtils.toHtml( grid, response.getWriter() );
     }
 
@@ -196,7 +196,7 @@ public class AnalyticsController
             hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
-        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
+        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getItemsFromParam( columns ), getItemsFromParam( rows ) );
         GridUtils.toHtmlCss( grid, response.getWriter() );
     }
 
@@ -227,7 +227,7 @@ public class AnalyticsController
             hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "data.csv", true );
-        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
+        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getItemsFromParam( columns ), getItemsFromParam( rows ) );
         GridUtils.toCsv( grid, response.getWriter() );
     }
 
@@ -258,7 +258,7 @@ public class AnalyticsController
             hierarchyMeta, ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.RESPECT_SYSTEM_SETTING, "data.xls", true );
-        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getDimensionsFromParam( columns ), getDimensionsFromParam( rows ) );
+        Grid grid = analyticsService.getAggregatedDataValues( params, tableLayout, getItemsFromParam( columns ), getItemsFromParam( rows ) );
         GridUtils.toXls( grid, response.getOutputStream() );
     }
 
