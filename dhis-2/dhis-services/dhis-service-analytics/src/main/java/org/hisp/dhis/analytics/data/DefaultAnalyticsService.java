@@ -33,6 +33,7 @@ import static org.hisp.dhis.analytics.AnalyticsTableManager.COMPLETENESS_TABLE_N
 import static org.hisp.dhis.analytics.AnalyticsTableManager.COMPLETENESS_TARGET_TABLE_NAME;
 import static org.hisp.dhis.analytics.AnalyticsTableManager.ORGUNIT_TARGET_TABLE_NAME;
 import static org.hisp.dhis.analytics.DataQueryParams.COMPLETENESS_DIMENSION_TYPES;
+import static org.hisp.dhis.analytics.DataQueryParams.CO_INDEX;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_ATTRIBUTEOPTIONCOMBO;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_CATEGORYOPTIONCOMBO;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_DATA_X;
@@ -41,7 +42,6 @@ import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_LONGITUDE;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_ORGUNIT;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PERIOD;
 import static org.hisp.dhis.analytics.DataQueryParams.DX_INDEX;
-import static org.hisp.dhis.analytics.DataQueryParams.CO_INDEX;
 import static org.hisp.dhis.analytics.DataQueryParams.KEY_DE_GROUP;
 import static org.hisp.dhis.common.DimensionalObject.ATTRIBUTEOPTIONCOMBO_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
@@ -1216,6 +1216,7 @@ public class DefaultAnalyticsService
         if ( ORGUNIT_DIM_ID.equals( dimension ) )
         {
             User user = currentUserService.getCurrentUser();
+            Set<OrganisationUnit> userOrgUnits = user != null ? user.getOrganisationUnits() : new HashSet<OrganisationUnit>();
 
             List<NameableObject> ous = new UniqueArrayList<>();
             List<Integer> levels = new UniqueArrayList<>();
@@ -1223,17 +1224,17 @@ public class DefaultAnalyticsService
 
             for ( String ou : items )
             {
-                if ( KEY_USER_ORGUNIT.equals( ou ) && user != null && user.hasOrganisationUnit() )
+                if ( KEY_USER_ORGUNIT.equals( ou ) && !userOrgUnits.isEmpty() )
                 {
-                    ous.add( user.getOrganisationUnit() );
+                    ous.addAll( userOrgUnits );
                 }
-                else if ( KEY_USER_ORGUNIT_CHILDREN.equals( ou ) && user != null && user.hasOrganisationUnit() )
+                else if ( KEY_USER_ORGUNIT_CHILDREN.equals( ou ) && !userOrgUnits.isEmpty() )
                 {
-                    ous.addAll( user.getOrganisationUnit().getSortedChildren() );
+                    ous.addAll( OrganisationUnit.getSortedChildren( userOrgUnits ) );
                 }
-                else if ( KEY_USER_ORGUNIT_GRANDCHILDREN.equals( ou ) && user != null && user.hasOrganisationUnit() )
+                else if ( KEY_USER_ORGUNIT_GRANDCHILDREN.equals( ou ) && !userOrgUnits.isEmpty() )
                 {
-                    ous.addAll( user.getOrganisationUnit().getSortedGrandChildren() );
+                    ous.addAll( OrganisationUnit.getSortedGrandChildren( userOrgUnits ) );
                 }
                 else if ( ou != null && ou.startsWith( KEY_LEVEL ) )
                 {
