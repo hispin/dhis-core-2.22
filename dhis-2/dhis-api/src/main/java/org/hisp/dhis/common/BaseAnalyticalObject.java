@@ -209,6 +209,11 @@ public abstract class BaseAnalyticalObject
     {
         return relatives != null && !relatives.isEmpty();
     }
+    
+    public boolean hasOrganisationUnits()
+    {
+        return organisationUnits != null && !organisationUnits.isEmpty();
+    }
 
     public boolean hasOrganisationUnitLevels()
     {
@@ -218,6 +223,11 @@ public abstract class BaseAnalyticalObject
     public boolean hasItemOrganisationUnitGroups()
     {
         return itemOrganisationUnitGroups != null && !itemOrganisationUnitGroups.isEmpty();
+    }
+    
+    public boolean hasAnyOrganisationUnits()
+    {
+        return hasOrganisationUnits() || hasOrganisationUnitLevels() || hasItemOrganisationUnitGroups() || hasUserOrgUnit();
     }
 
     public boolean hasSortOrder()
@@ -535,7 +545,7 @@ public abstract class BaseAnalyticalObject
         {
             objects.add( new BaseDimensionalObject( dimension, DimensionType.DATA_X, getDataDimensionNameableObjects() ) );
         }
-        else if ( PERIOD_DIM_ID.equals( dimension ) && (!periods.isEmpty() || hasRelativePeriods()) )
+        else if ( PERIOD_DIM_ID.equals( dimension ) && ( !periods.isEmpty() || hasRelativePeriods() ) )
         {
             List<Period> periodList = new ArrayList<>( periods );
 
@@ -553,7 +563,7 @@ public abstract class BaseAnalyticalObject
 
             objects.add( new BaseDimensionalObject( dimension, DimensionType.PERIOD, periodList ) );
         }
-        else if ( ORGUNIT_DIM_ID.equals( dimension ) && (!organisationUnits.isEmpty() || !transientOrganisationUnits.isEmpty() || hasUserOrgUnit()) )
+        else if ( ORGUNIT_DIM_ID.equals( dimension ) && ( hasAnyOrganisationUnits() || !transientOrganisationUnits.isEmpty() ) )
         {
             List<NameableObject> ouList = new ArrayList<>();
             ouList.addAll( organisationUnits );
