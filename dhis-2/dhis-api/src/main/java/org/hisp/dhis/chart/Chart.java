@@ -120,12 +120,12 @@ public class Chart
     @Override
     public void populateAnalyticalProperties()
     {
-        columns.addAll( getDimensionalObjectList( series ) );
-        rows.addAll( getDimensionalObjectList( category ) );
+        columns.add( getDimensionalObject( series ) );
+        rows.add( getDimensionalObject( category ) );
 
         for ( String filter : filterDimensions )
         {
-            filters.addAll( getDimensionalObjectList( filter ) );
+            filters.add( getDimensionalObject( filter ) );
         }
     }
 

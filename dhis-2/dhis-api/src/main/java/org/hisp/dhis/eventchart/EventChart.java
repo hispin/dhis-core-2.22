@@ -167,17 +167,17 @@ public class EventChart
     {
         for ( String column : columnDimensions )
         {
-            columns.addAll( getDimensionalObjectList( column ) );
+            columns.add( getDimensionalObject( column ) );
         }
 
         for ( String row : rowDimensions )
         {
-            rows.addAll( getDimensionalObjectList( row ) );
+            rows.add( getDimensionalObject( row ) );
         }
 
         for ( String filter : filterDimensions )
         {
-            filters.addAll( getDimensionalObjectList( filter ) );
+            filters.add( getDimensionalObject( filter ) );
         }
         
         value = ObjectUtils.firstNonNull( dataElementValueDimension, attributeValueDimension );
