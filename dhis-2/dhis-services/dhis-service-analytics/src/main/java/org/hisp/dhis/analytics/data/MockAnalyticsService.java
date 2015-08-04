@@ -61,13 +61,13 @@ public class MockAnalyticsService
     @Override
     public Grid getAggregatedDataValues( DataQueryParams params )
     {
-        throw new NotImplementedException("");
+        throw new NotImplementedException( "" );
     }
 
     @Override
     public Grid getAggregatedDataValues( DataQueryParams params, boolean tableLayout, List<String> columns, List<String> rows )
     {
-        throw new NotImplementedException("");
+        throw new NotImplementedException( "" );
     }
 
     @Override
@@ -84,29 +84,29 @@ public class MockAnalyticsService
 
     @Override
     public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, 
-        String measureCriteria, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, 
+        String measureCriteria, boolean skipMeta, boolean skipData, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, 
         boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty idScheme, String approvalLevel, String userOrgUnit, 
         String program, String stage, I18nFormat format )
     {
-        throw new NotImplementedException("");
+        throw new NotImplementedException( "" );
     }
 
     @Override
     public DataQueryParams getFromAnalyticalObject( AnalyticalObject object, I18nFormat format )
     {
-        throw new NotImplementedException("");
+        throw new NotImplementedException( "" );
     }
     
     @Override
     public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, String userOrgUnit, I18nFormat format )
     {
-        throw new NotImplementedException("");
+        throw new NotImplementedException( "" );
     }
 
     @Override
     public DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate,
         List<OrganisationUnit> userOrgUnits, I18nFormat format, boolean allowNull )
     {
-        throw new NotImplementedException("");
+        throw new NotImplementedException( "" );
     }
 }
