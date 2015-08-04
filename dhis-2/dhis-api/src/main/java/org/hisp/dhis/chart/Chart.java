@@ -28,10 +28,10 @@ package org.hisp.dhis.chart;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.hisp.dhis.common.AnalyticsType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -39,16 +39,16 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.user.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author Lars Helge Overland
@@ -225,21 +225,6 @@ public class Chart
         this.category = category;
     }
 
-    @Override
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isRewindRelativePeriods()
-    {
-        return rewindRelativePeriods;
-    }
-
-    @Override
-    public void setRewindRelativePeriods( boolean rewindRelativePeriods )
-    {
-        this.rewindRelativePeriods = rewindRelativePeriods;
-    }
-
     // -------------------------------------------------------------------------
     // Merge with
     // -------------------------------------------------------------------------
@@ -252,8 +237,6 @@ public class Chart
         if ( other.getClass().isInstance( this ) )
         {
             Chart chart = (Chart) other;
-
-            rewindRelativePeriods = chart.isRewindRelativePeriods();
 
             if ( strategy.isReplace() )
             {
