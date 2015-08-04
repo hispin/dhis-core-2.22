@@ -63,33 +63,6 @@ public class DimensionalObjectUtils
     private static final Pattern DIMENSIONAL_OPERAND_PATTERN = Pattern.compile( "([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})" );
     
     public static final String TITLE_ITEM_SEP = ", ";
-        
-    /**
-     * Creates a unique list of dimension identifiers based on the given list
-     * of DimensionalObjects.
-     * 
-     * @param dimensions the list of DimensionalObjects.
-     * @return list of dimension identifiers.
-     */
-    public static List<String> getUniqueDimensions( List<DimensionalObject> dimensions )
-    {
-        List<String> dims = new ArrayList<>();
-        
-        if ( dimensions != null )
-        {
-            for ( DimensionalObject dimension : dimensions )
-            {
-                String dim = dimension.getDimension();
-                
-                if ( dim != null && !dims.contains( dim ) )
-                {
-                    dims.add( dim );
-                }
-            }
-        }
-        
-        return dims;
-    }
 
     public static List<DimensionalObject> getCopies( List<DimensionalObject> dimensions )
     {
