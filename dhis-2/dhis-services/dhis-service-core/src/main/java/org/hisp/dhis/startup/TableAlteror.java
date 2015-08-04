@@ -315,7 +315,6 @@ public class TableAlteror
         executeSql( "UPDATE chart SET type='line' where type='line3d'" );
         executeSql( "UPDATE chart SET type='pie' where type='pie'" );
         executeSql( "UPDATE chart SET type='pie' where type='pie3d'" );
-        executeSql( "UPDATE chart SET rewindRelativePeriods = false WHERE rewindRelativePeriods is null" );
 
         executeSql( "UPDATE chart SET type=lower(type), series=lower(series), category=lower(category), filter=lower(filter)" );
 
@@ -334,6 +333,7 @@ public class TableAlteror
         executeSql( "ALTER TABLE chart DROP CONSTRAINT chart_name_key" );
 
         executeSql( "ALTER TABLE chart DROP COLUMN domainaxixlabel" );
+        executeSql( "ALTER TABLE chart DROP COLUMN rewindrelativeperiods" );
 
         executeSql( "ALTER TABLE chart ALTER hideLegend DROP NOT NULL" );
         executeSql( "ALTER TABLE chart ALTER regression DROP NOT NULL" );

@@ -146,8 +146,6 @@
 
     <property name="hideEmptyRows" />
 
-    <property name="rewindRelativePeriods" />
-
     <property name="rangeAxisMaxValue" />
 
     <property name="rangeAxisMinValue" />

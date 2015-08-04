@@ -158,8 +158,6 @@ public abstract class BaseAnalyticalObject
     @Scanned
     protected List<OrganisationUnitGroup> itemOrganisationUnitGroups = new ArrayList<>();
 
-    protected boolean rewindRelativePeriods;
-
     protected String digitGroupSeparator;
 
     protected int sortOrder;
@@ -361,14 +359,7 @@ public abstract class BaseAnalyticalObject
 
             if ( hasRelativePeriods() )
             {
-                if ( rewindRelativePeriods )
-                {
-                    items.addAll( relatives.getRewindedRelativePeriods( 1, date, format, dynamicNames ) );
-                }
-                else
-                {
-                    items.addAll( relatives.getRelativePeriods( date, format, dynamicNames ) );
-                }
+                items.addAll( relatives.getRelativePeriods( date, format, dynamicNames ) );
             }
 
             type = DimensionType.PERIOD;
@@ -891,7 +882,6 @@ public abstract class BaseAnalyticalObject
             userOrganisationUnitChildren = object.isUserOrganisationUnitChildren();
             userOrganisationUnitGrandChildren = object.isUserOrganisationUnitGrandChildren();
             itemOrganisationUnitGroups = object.getItemOrganisationUnitGroups();
-            rewindRelativePeriods = object.isRewindRelativePeriods();
             digitGroupSeparator = object.getDigitGroupSeparator();
             userOrganisationUnit = object.isUserOrganisationUnit();
             sortOrder = object.getSortOrder();
@@ -1124,19 +1114,6 @@ public abstract class BaseAnalyticalObject
     public void setItemOrganisationUnitGroups( List<OrganisationUnitGroup> itemOrganisationUnitGroups )
     {
         this.itemOrganisationUnitGroups = itemOrganisationUnitGroups;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isRewindRelativePeriods()
-    {
-        return rewindRelativePeriods;
-    }
-
-    public void setRewindRelativePeriods( boolean rewindRelativePeriods )
-    {
-        this.rewindRelativePeriods = rewindRelativePeriods;
     }
 
     @JsonProperty
