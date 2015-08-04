@@ -153,9 +153,13 @@ public class MapView
     @Override
     public void populateAnalyticalProperties()
     {
-        columns.addAll( getDimensionalObjectList( DimensionalObject.DATA_X_DIM_ID ) );
-        rows.addAll( getDimensionalObjectList( DimensionalObject.ORGUNIT_DIM_ID ) );
-        filters.addAll( getDimensionalObjectList( DimensionalObject.PERIOD_DIM_ID ) );
+        columns.add( getDimensionalObject( DimensionalObject.DATA_X_DIM_ID ) );
+        rows.add( getDimensionalObject( DimensionalObject.ORGUNIT_DIM_ID ) );
+        
+        if ( !periods.isEmpty() || hasRelativePeriods() )
+        {
+            filters.add( getDimensionalObject( DimensionalObject.PERIOD_DIM_ID ) );
+        }
     }
 
     public List<OrganisationUnit> getAllOrganisationUnits()
