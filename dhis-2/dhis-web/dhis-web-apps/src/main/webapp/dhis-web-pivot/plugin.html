@@ -18,13 +18,13 @@
 		Ext.onReady(function() {
 			var url = 'http://localhost:8080';
 
-			DHIS.getTable({
-				url: url,
-				el: 'table1',
-				uid: 'VkJmOoCE4xu',
-                showDimensionLabels: true,
-                displayDensity: 'compact'
-			});
+			//DHIS.getTable({
+				//url: url,
+				//el: 'table1',
+				//uid: 'VkJmOoCE4xu',
+                //showDimensionLabels: true,
+                //displayDensity: 'compact'
+			//});
 
 			DHIS.getTable({
 				url: url,
@@ -33,17 +33,16 @@
 					{dimension: 'pe', items: [{id: 'LAST_3_MONTHS'}]}
 				],
 				rows: [
-					{dimension: 'ou', items: [{id: 'LEVEL-4'}, {id:'C9uduqDZr9d'}]}
+					{dimension: 'ou', items: [{id: 'USER_ORGUNIT_CHILDREN'}]}
 				],
-				hideEmptyRows: true
+				hideEmptyRows: true,
+                userOrgUnit: ['fdc6uOvgoji', 'e1eIKM1GIF3']
 			});
 		});
 	</script>
 </head>
 
 <body>
-    <h1>TABLE BY UID</h1>
-	<div id="table1"></div>
 
     <h1>TABLE BY CONFIG</h1>
 	<div id="table2"></div>
