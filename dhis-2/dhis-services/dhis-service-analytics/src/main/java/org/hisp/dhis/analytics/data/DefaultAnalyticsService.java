@@ -274,12 +274,15 @@ public class DefaultAnalyticsService
      */
     private void addHeaders( DataQueryParams params, Grid grid )
     {
-        for ( DimensionalObject col : params.getDimensions() )
+        if ( !params.isSkipData() )
         {
-            grid.addHeader( new GridHeader( col.getDimension(), col.getDisplayName(), String.class.getName(), false, true ) );
+            for ( DimensionalObject col : params.getDimensions() )
+            {
+                grid.addHeader( new GridHeader( col.getDimension(), col.getDisplayName(), String.class.getName(), false, true ) );
+            }
+    
+            grid.addHeader( new GridHeader( DataQueryParams.VALUE_ID, VALUE_HEADER_NAME, Double.class.getName(), false, false ) );
         }
-
-        grid.addHeader( new GridHeader( DataQueryParams.VALUE_ID, VALUE_HEADER_NAME, Double.class.getName(), false, false ) );
     }
 
     /**
@@ -291,7 +294,7 @@ public class DefaultAnalyticsService
      */
     private void addIndicatorValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getIndicators().isEmpty() )
+        if ( !params.getIndicators().isEmpty() && !params.isSkipData() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.retainDataDimension( DataDimensionItemType.INDICATOR );
@@ -361,7 +364,7 @@ public class DefaultAnalyticsService
      */
     private void addDataElementValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getDataElements().isEmpty() )
+        if ( !params.getDataElements().isEmpty() && !params.isSkipData() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.retainDataDimension( DataDimensionItemType.AGGREGATE_DATA_ELEMENT );
@@ -386,7 +389,7 @@ public class DefaultAnalyticsService
      */
     private void addDataElementOperands( DataQueryParams params, Grid grid )
     {
-        if ( !params.getDataElementOperands().isEmpty() )
+        if ( !params.getDataElementOperands().isEmpty() && !params.isSkipData() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.retainDataDimension( DataDimensionItemType.DATA_ELEMENT_OPERAND );
@@ -434,7 +437,7 @@ public class DefaultAnalyticsService
      */
     private void addDataSetValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getDataSets().isEmpty() )
+        if ( !params.getDataSets().isEmpty() && !params.isSkipData() )
         {
             // -----------------------------------------------------------------
             // Get complete data set registrations
@@ -512,7 +515,7 @@ public class DefaultAnalyticsService
      */
     private void addProgramIndicatorValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getProgramIndicators().isEmpty() )
+        if ( !params.getProgramIndicators().isEmpty() && !params.isSkipData() )
         {
             // -----------------------------------------------------------------
             // Run queries with different filter expression separately
@@ -579,7 +582,7 @@ public class DefaultAnalyticsService
      */
     private void addProgramDataElementAttributeValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getProgramDataElements().isEmpty() || !params.getProgramAttributes().isEmpty() )
+        if ( !params.getProgramDataElementsAndAttributes().isEmpty() && !params.isSkipData() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.retainDataDimensions( DataDimensionItemType.PROGRAM_DATA_ELEMENT, DataDimensionItemType.PROGRAM_ATTRIBUTE );
@@ -602,7 +605,7 @@ public class DefaultAnalyticsService
      */
     private void addDynamicDimensionValues( DataQueryParams params, Grid grid )
     {
-        if ( params.getDataDimensionAndFilterOptions().isEmpty() )
+        if ( params.getDataDimensionAndFilterOptions().isEmpty() && !params.isSkipData() )
         {
             Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( params.instance() );
 
@@ -971,7 +974,7 @@ public class DefaultAnalyticsService
 
     @Override
     public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType,
-        String measureCriteria, boolean skipMeta, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit,
+        String measureCriteria, boolean skipMeta, boolean skipData, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit,
         boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, 
         String approvalLevel, String userOrgUnit, String program, String stage, I18nFormat format )
     {
@@ -996,6 +999,7 @@ public class DefaultAnalyticsService
         }
 
         params.setSkipMeta( skipMeta );
+        params.setSkipData( skipData );
         params.setSkipRounding( skipRounding );
         params.setHierarchyMeta( hierarchyMeta );
         params.setHideEmptyRows( hideEmptyRows );

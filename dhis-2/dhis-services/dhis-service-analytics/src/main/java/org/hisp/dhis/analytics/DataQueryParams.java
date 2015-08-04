@@ -144,6 +144,11 @@ public class DataQueryParams
      * Indicates if the meta data part of the query response should be omitted.
      */
     protected boolean skipMeta;
+    
+    /**
+     * Indicates if the data part of the query response should be omitted.
+     */
+    protected boolean skipData;
 
     /**
      * Indicates that full precision should be provided for values.
@@ -264,6 +269,7 @@ public class DataQueryParams
         params.aggregationType = this.aggregationType;
         params.measureCriteria = this.measureCriteria;
         params.skipMeta = this.skipMeta;
+        params.skipData = this.skipData;
         params.skipRounding = this.skipRounding;
         params.hierarchyMeta = this.hierarchyMeta;
         params.ignoreLimit = this.ignoreLimit;
@@ -1290,6 +1296,16 @@ public class DataQueryParams
         this.skipMeta = skipMeta;
     }
 
+    public boolean isSkipData()
+    {
+        return skipData;
+    }
+
+    public void setSkipData( boolean skipData )
+    {
+        this.skipData = skipData;
+    }
+
     public boolean isSkipRounding()
     {
         return skipRounding;
@@ -1684,6 +1700,11 @@ public class DataQueryParams
     public List<NameableObject> getProgramAttributes()
     {
         return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, getDimensionOptions( DATA_X_DIM_ID ) ) );
+    }
+    
+    public List<NameableObject> getProgramDataElementsAndAttributes()
+    {
+        return ListUtils.union( getProgramDataElements(), getProgramAttributes() );
     }
     
     public void setProgramAttributes( List<? extends NameableObject> programAttributes )
