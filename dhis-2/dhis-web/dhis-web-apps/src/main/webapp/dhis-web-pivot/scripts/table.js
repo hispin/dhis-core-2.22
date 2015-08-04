@@ -41,14 +41,14 @@ Ext.onReady( function() {
 
 	// namespace
 	PT = {};
-	var NS = PT;
+	var PT = PT;
 
-	NS.instances = [];
-	NS.i18n = {};
-	NS.isDebug = false;
-	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
+	PT.instances = [];
+	PT.i18n = {};
+	PT.isDebug = false;
+	PT.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	NS.getCore = function(ns) {
+	PT.getCore = function(ns) {
         var init = ns.init,
             conf = {},
             api = {},
@@ -63,34 +63,27 @@ Ext.onReady( function() {
 		// conf
 		(function() {
 			conf.finals = {
-				url: {
-					path_module: '/dhis-web-pivot/',
-					organisationunitchildren_get: 'getOrganisationUnitChildren.action'
-				},
 				dimension: {
 					data: {
 						value: 'data',
-						name: NS.i18n.data || 'Data',
+						name: PT.i18n.data || 'Data',
 						dimensionName: 'dx',
-						objectName: 'dx',
-						warning: {
-							filter: '...'//NS.i18n.wm_multiple_filter_ind_de
-						}
+						objectName: 'dx'
 					},
 					category: {
-						name: NS.i18n.assigned_categories || 'Assigned categories',
+						name: PT.i18n.assigned_categories || 'Assigned categories',
 						dimensionName: 'co',
 						objectName: 'co',
 					},
 					indicator: {
 						value: 'indicators',
-						name: NS.i18n.indicators || 'Indicators',
+						name: PT.i18n.indicators || 'Indicators',
 						dimensionName: 'dx',
 						objectName: 'in'
 					},
 					dataElement: {
 						value: 'dataElements',
-						name: NS.i18n.data_elements || 'Data elements',
+						name: PT.i18n.data_elements || 'Data elements',
 						dimensionName: 'dx',
 						objectName: 'de'
 					},
@@ -102,25 +95,25 @@ Ext.onReady( function() {
 					},
 					dataSet: {
 						value: 'dataSets',
-						name: NS.i18n.data_sets || 'Data sets',
+						name: PT.i18n.data_sets || 'Data sets',
 						dimensionName: 'dx',
 						objectName: 'ds'
 					},
 					eventDataItem: {
 						value: 'eventDataItem',
-						name: NS.i18n.event_data_items || 'Event data items',
+						name: PT.i18n.event_data_items || 'Event data items',
 						dimensionName: 'dx',
 						objectName: 'di'
 					},
 					programIndicator: {
 						value: 'programIndicator',
-						name: NS.i18n.program_indicators || 'Program indicators',
+						name: PT.i18n.program_indicators || 'Program indicators',
 						dimensionName: 'dx',
 						objectName: 'pi'
 					},
 					period: {
 						value: 'period',
-						name: NS.i18n.periods || 'Periods',
+						name: PT.i18n.periods || 'Periods',
 						dimensionName: 'pe',
 						objectName: 'pe'
 					},
@@ -132,7 +125,7 @@ Ext.onReady( function() {
 					},
 					organisationUnit: {
 						value: 'organisationUnits',
-						name: NS.i18n.organisation_units || 'Organisation units',
+						name: PT.i18n.organisation_units || 'Organisation units',
 						dimensionName: 'ou',
 						objectName: 'ou'
 					},
@@ -168,17 +161,17 @@ Ext.onReady( function() {
 
 			conf.period = {
 				periodTypes: [
-					{id: 'Daily', name: NS.i18n.daily},
-					{id: 'Weekly', name: NS.i18n.weekly},
-					{id: 'Monthly', name: NS.i18n.monthly},
-					{id: 'BiMonthly', name: NS.i18n.bimonthly},
-					{id: 'Quarterly', name: NS.i18n.quarterly},
-					{id: 'SixMonthly', name: NS.i18n.sixmonthly},
-					{id: 'SixMonthlyApril', name: NS.i18n.sixmonthly_april},
-					{id: 'Yearly', name: NS.i18n.yearly},
-					{id: 'FinancialOct', name: NS.i18n.financial_oct},
-					{id: 'FinancialJuly', name: NS.i18n.financial_july},
-					{id: 'FinancialApril', name: NS.i18n.financial_april}
+					{id: 'Daily', name: PT.i18n.daily},
+					{id: 'Weekly', name: PT.i18n.weekly},
+					{id: 'Monthly', name: PT.i18n.monthly},
+					{id: 'BiMonthly', name: PT.i18n.bimonthly},
+					{id: 'Quarterly', name: PT.i18n.quarterly},
+					{id: 'SixMonthly', name: PT.i18n.sixmonthly},
+					{id: 'SixMonthlyApril', name: PT.i18n.sixmonthly_april},
+					{id: 'Yearly', name: PT.i18n.yearly},
+					{id: 'FinancialOct', name: PT.i18n.financial_oct},
+					{id: 'FinancialJuly', name: PT.i18n.financial_july},
+					{id: 'FinancialApril', name: PT.i18n.financial_april}
 				],
                 relativePeriods: []
 			};
@@ -188,16 +181,14 @@ Ext.onReady( function() {
 				west_fieldset_width: 418,
 				west_width_padding: 2,
 				west_fill: 2,
-				//west_fill_accordion_indicator: 56,
 				west_fill_accordion_indicator: 81,
-				//west_fill_accordion_dataelement: 59,
 				west_fill_accordion_dataelement: 81,
-				//west_fill_accordion_dataset: 31,
 				west_fill_accordion_dataset: 56,
                 west_fill_accordion_eventdataitem: 81,
                 west_fill_accordion_programindicator: 81,
 				west_fill_accordion_period: 303,
 				west_fill_accordion_organisationunit: 58,
+                west_fill_accordion_group: 31,
 				west_maxheight_accordion_indicator: 400,
 				west_maxheight_accordion_dataelement: 400,
 				west_maxheight_accordion_dataset: 400,
@@ -414,7 +405,7 @@ Ext.onReady( function() {
 
                 // displayProperty: string ('name') // 'name', 'shortname', null
 
-                // userOrganisationUnit: string
+                // userOrgUnit: string
 
 				getValidatedDimensionArray = function(dimensionArray) {
 					var dimensionArray = Ext.clone(dimensionArray);
@@ -452,19 +443,19 @@ Ext.onReady( function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(NS.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
+								ns.alert(PT.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(NS.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
+								ns.alert(PT.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(NS.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
+								ns.alert(PT.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
 								return;
 							}
 						}
@@ -519,7 +510,7 @@ Ext.onReady( function() {
 
 					// at least one dimension specified as column or row
 					if (!(config.columns || config.rows)) {
-						ns.alert(NS.i18n.at_least_one_dimension_must_be_specified_as_row_or_column);
+						ns.alert(PT.i18n.at_least_one_dimension_must_be_specified_as_row_or_column);
 						return;
 					}
 
@@ -534,7 +525,7 @@ Ext.onReady( function() {
 
 					// at least one period
 					if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						ns.alert(NS.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
+						ns.alert(PT.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
 						return;
 					}
 
@@ -586,8 +577,8 @@ Ext.onReady( function() {
                         layout.displayProperty = config.displayProperty;
                     }
 
-                    if (Ext.isString(config.userOrganisationUnit)) {
-                        layout.userOrganisationUnit = config.userOrganisationUnit;
+                    if (Ext.Array.from(config.userOrgUnit).length) {
+                        layout.userOrgUnit = Ext.Array.from(config.userOrgUnit);
                     }
 
                     // TODO program
@@ -1259,91 +1250,20 @@ Ext.onReady( function() {
                 // Set items from init/metaData/xLayout
                 for (var i = 0, dim, metaDataDim, items; i < dimensions.length; i++) {
                     dim = dimensions[i];
-                    dim.items = [];
+                    dim.items = [];                    
                     metaDataDim = response.metaData[dim.objectName];
-
-                    // If ou and children
-                    if (dim.dimensionName === ou) {
-                        if (isUserOrgunit || isUserOrgunitChildren || isUserOrgunitGrandChildren) {
-                            var userOu,
-                                userOuc,
-                                userOugc;
-
-                            if (init.user && isUserOrgunit) {
-                                userOu = [];
-
-                                for (var j = 0; j < init.user.ou.length; j++) {
-                                    userOu.push({
-                                        id: init.user.ou[j],
-                                        name: service.layout.getItemName(xLayout, response, init.user.ou[j], false)
-                                    });
-                                }
-                            }
-                            if (init.user && init.user.ouc && isUserOrgunitChildren) {
-                                userOuc = [];
-
-                                for (var j = 0; j < init.user.ouc.length; j++) {
-                                    userOuc.push({
-                                        id: init.user.ouc[j],
-                                        name: service.layout.getItemName(xLayout, response, init.user.ouc[j], false)
-                                    });
-                                }
-
-                                support.prototype.array.sort(userOuc);
-                            }
-                            if (init.user && init.user.ouc && isUserOrgunitGrandChildren) {
-                                var userOuOuc = [].concat(init.user.ou, init.user.ouc),
-                                    responseOu = response.metaData[ou];
-
-                                userOugc = [];
-
-                                for (var j = 0, id; j < responseOu.length; j++) {
-                                    id = responseOu[j];
-
-                                    if (!Ext.Array.contains(userOuOuc, id)) {
-                                        userOugc.push({
-                                            id: id,
-                                            name: service.layout.getItemName(xLayout, response, id, false)
-                                        });
-                                    }
-                                }
-
-                                support.prototype.array.sort(userOugc);
-                            }
-
-                            dim.items = [].concat(userOu || [], userOuc || [], userOugc || []);
-                        }
-                        else if (isLevel || isGroup) {
-                            for (var j = 0, responseOu = response.metaData[ou], id; j < responseOu.length; j++) {
-                                id = responseOu[j];
-
-                                dim.items.push({
-                                    id: id,
-                                    name: service.layout.getItemName(xLayout, response, id, false)
-                                });
-                            }
-
-                            support.prototype.array.sort(dim.items);
-                        }
-                        else {
-                            dim.items = Ext.clone(xLayout.dimensionNameItemsMap[dim.dimensionName]);
+                    
+                    if (Ext.isArray(metaDataDim) && metaDataDim.length) {
+                        var ids = Ext.clone(response.metaData[dim.dimensionName]);
+                        for (var j = 0; j < ids.length; j++) {
+                            dim.items.push({
+                                id: ids[j],
+                                name: response.metaData.names[ids[j]]
+                            });
                         }
                     }
                     else {
-                        // Items: get ids from metadata -> items
-                        if (Ext.isArray(metaDataDim) && metaDataDim.length) {
-                            var ids = Ext.clone(response.metaData[dim.dimensionName]);
-                            for (var j = 0; j < ids.length; j++) {
-                                dim.items.push({
-                                    id: ids[j],
-                                    name: response.metaData.names[ids[j]]
-                                });
-                            }
-                        }
-                        // Items: get items from xLayout
-                        else {
-                            dim.items = Ext.clone(xLayout.objectNameItemsMap[dim.objectName]);
-                        }
+                        dim.items = Ext.clone(xLayout.objectNameItemsMap[dim.objectName]);
                     }
                 }
 
@@ -2050,24 +1970,42 @@ Ext.onReady( function() {
 			// message
 			web.message = {};
 
-			web.message.alert = function(msg, type) {
+			web.message.alert = function(obj) {
                 var config = {},
+                    type,
                     window;
 
-                if (!msg) {
+                if (!obj || (Ext.isObject(obj) && !obj.message && !obj.responseText)) {
                     return;
                 }
 
-                type = type || 'error';
+                // if response object
+                if (Ext.isObject(obj) && obj.responseText && !obj.message) {
+                    obj = Ext.decode(obj.responseText);
+                }
 
-				config.title = type === 'error' ? NS.i18n.error : (type === 'warning' ? NS.i18n.warning : NS.i18n.info);
+                // if string
+                if (Ext.isString(obj)) {
+                    obj = {
+                        status: 'ERROR',
+                        message: obj
+                    };
+                }
+
+                // web message
+                type = (obj.status || 'INFO').toLowerCase();
+
+				config.title = obj.status;
 				config.iconCls = 'ns-window-title-messagebox ' + type;
 
                 // html
-                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+                config.html = '';
+                config.html += obj.httpStatusCode ? 'Code: ' + obj.httpStatusCode + '<br>' : '';
+                config.html += obj.httpStatus ? 'Status: ' + obj.httpStatus + '<br><br>' : '';
+                config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
 
                 // bodyStyle
-                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
 
                 // destroy handler
                 config.modal = true;
@@ -2096,7 +2034,7 @@ Ext.onReady( function() {
 
                 // TODO
                 isSorted = false;
-                
+
 				var axisDimensionNames = isSorted ? xLayout.sortedAxisDimensionNames : xLayout.axisDimensionNames,
 					filterDimensions = isSorted ? xLayout.sortedFilterDimensions : xLayout.filterDimensions,
 					dimensionNameIdsMap = isSorted ? xLayout.dimensionNameSortedIdsMap : xLayout.dimensionNameIdsMap,
@@ -2116,14 +2054,15 @@ Ext.onReady( function() {
 					items = Ext.clone(dimensionNameIdsMap[dimName]);
 
 					if (dimName === dx) {
-						for (var j = 0, index; j < items.length; j++) {
-							index = items[j].indexOf('#');
+						//for (var j = 0, index; j < items.length; j++) {
+							//index = items[j].indexOf('#');
 
-							if (index > 0) {
-								addCategoryDimension = true;
-								items[j] = items[j].substr(0, index);
-							}
-						}
+							//if (index > 0) {
+								//addCategoryDimension = true;
+								//items[j] = items[j].substr(0, index);
+                                //items[j] = items[j].replace('#', '.');
+							//}
+						//}
 
 						items = Ext.Array.unique(items);
 					}
@@ -2162,8 +2101,12 @@ Ext.onReady( function() {
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
                 // user organisation unit
-                if (Ext.isString(xLayout.userOrganisationUnit)) {
-					paramString += '&userOrganisationUnit=' + xLayout.userOrganisationUnit;
+                if (Ext.isArray(xLayout.userOrgUnit) && xLayout.userOrgUnit.length) {
+                    paramString += '&userOrgUnit=';
+                    
+                    for (var i = 0; i < xLayout.userOrgUnit.length; i++) {
+                        paramString += xLayout.userOrgUnit[i] + (i < xLayout.userOrgUnit.length - 1 ? ';' : '');
+                    }
 				}
 
 				// data approval level
@@ -2176,7 +2119,7 @@ Ext.onReady( function() {
                     paramString += '&program=' + xLayout.program.id;
                 }
 
-				return paramString;
+				return paramString.replace(/#/g, '.');
 			};
 
 			web.analytics.validateUrl = function(url) {
