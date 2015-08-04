@@ -28,7 +28,7 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObjectUtils.getUniqueDimensions;
+import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensions;
 
 import java.io.IOException;
 import java.util.Date;
@@ -312,6 +312,6 @@ public class ChartController
             chart.setCategory( chart.getRows().get( 0 ).getDimension() );
         }
 
-        chart.getFilterDimensions().addAll( getUniqueDimensions( chart.getFilters() ) );
+        chart.getFilterDimensions().addAll( getDimensions( chart.getFilters() ) );
     }
 }
