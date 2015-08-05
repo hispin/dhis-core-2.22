@@ -35,7 +35,6 @@ import java.util.List;
 
 import org.hisp.dhis.paging.ActionPagingSupport;
 import org.hisp.dhis.program.ProgramStageInstanceService;
-import org.hisp.dhis.program.SchedulingProgramObject;
 import org.hisp.dhis.sms.outbound.OutboundSms;
 import org.hisp.dhis.sms.outbound.OutboundSmsService;
 import org.hisp.dhis.sms.outbound.OutboundSmsStatus;
@@ -97,13 +96,6 @@ public class ShowSentSMSAction
     public void setFilterStatusType( Integer filterStatusType )
     {
         this.filterStatusType = filterStatusType;
-    }
-
-    private Collection<SchedulingProgramObject> schedulingProgramObjects;
-
-    public Collection<SchedulingProgramObject> getSchedulingProgramObjects()
-    {
-        return schedulingProgramObjects;
     }
 
     private List<String> recipientNames;
@@ -186,7 +178,7 @@ public class ShowSentSMSAction
             }
             recipientNames.add( tempString );
         }
-        schedulingProgramObjects = programStageInstanceService.getSendMesssageEvents();
+
         return SUCCESS;
     }
 
