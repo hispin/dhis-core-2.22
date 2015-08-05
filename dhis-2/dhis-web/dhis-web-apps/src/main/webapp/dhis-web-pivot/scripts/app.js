@@ -2550,7 +2550,7 @@ Ext.onReady( function() {
 
                 onFailure = function(r) {
                     ns.app.viewport.setGui(layout, xLayout, isUpdateGui);
-                    web.mask.hide(ns.app.centerRegion);                    
+                    web.mask.hide(ns.app.centerRegion);
 
                     if (r) {
                         r = Ext.decode(r.responseText);
@@ -2586,7 +2586,7 @@ Ext.onReady( function() {
                         onFailure(r);
 					},
 					success: function(r) {
-                        var metaData = Ext.decode(r.responseText).metaData;                        
+                        var metaData = Ext.decode(r.responseText).metaData;
 
                         Ext.Ajax.request({
                             url: init.contextPath + '/api/analytics.json' + sortedParamString,

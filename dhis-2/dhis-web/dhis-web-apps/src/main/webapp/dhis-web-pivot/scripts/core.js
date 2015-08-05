@@ -346,7 +346,9 @@ Ext.onReady( function() {
 				}();
 			};
 
-			api.layout.Layout = function(config, applyConfig) {
+			api.layout.Layout = function(config, applyConfig, forceApplyConfig) {
+                config = Ext.apply(config, applyConfig);
+
 				var layout = {},
 					getValidatedDimensionArray,
 					validateSpecialCases;
@@ -589,7 +591,7 @@ Ext.onReady( function() {
 						return;
 					}
 
-                    return Ext.apply(layout, applyConfig);
+                    return Ext.apply(layout, forceApplyConfig);
 				}();
 			};
 
@@ -1245,12 +1247,12 @@ Ext.onReady( function() {
 					}
 				};
 
-                // Set items from init/metaData/xLayout
+                // set items from init/metaData/xLayout
                 for (var i = 0, dim, metaDataDim, items; i < dimensions.length; i++) {
                     dim = dimensions[i];
-                    dim.items = [];                    
+                    dim.items = [];
                     metaDataDim = response.metaData[dim.objectName];
-                    
+
                     if (Ext.isArray(metaDataDim) && metaDataDim.length) {
                         var ids = Ext.clone(response.metaData[dim.dimensionName]);
                         for (var j = 0; j < ids.length; j++) {
@@ -1265,7 +1267,7 @@ Ext.onReady( function() {
                     }
                 }
 
-                // Add missing names
+                // add missing names
                 dimensions = Ext.Array.clean([].concat(xLayout.columns || [], xLayout.rows || [], xLayout.filters || []));
 
                 for (var i = 0, idNameMap = response.metaData.names, dimItems; i < dimensions.length; i++) {
@@ -1282,7 +1284,7 @@ Ext.onReady( function() {
                     }
                 }
 
-                // Remove dimensions from layout that do not exist in response
+                // remove dimensions from layout that do not exist in response
                 for (var i = 0, dimensionName; i < xLayout.axisDimensionNames.length; i++) {
                     dimensionName = xLayout.axisDimensionNames[i];
                     if (!Ext.Array.contains(headerNames, dimensionName)) {
@@ -2094,10 +2096,10 @@ Ext.onReady( function() {
                 // display property
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
-                // user organisation unit
+                // user org unit
                 if (Ext.isArray(xLayout.userOrgUnit) && xLayout.userOrgUnit.length) {
                     paramString += '&userOrgUnit=';
-                    
+
                     for (var i = 0; i < xLayout.userOrgUnit.length; i++) {
                         paramString += xLayout.userOrgUnit[i] + (i < xLayout.userOrgUnit.length - 1 ? ';' : '');
                     }
