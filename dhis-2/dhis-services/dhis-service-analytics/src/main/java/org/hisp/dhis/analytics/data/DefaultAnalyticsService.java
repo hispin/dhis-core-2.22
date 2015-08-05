@@ -67,6 +67,7 @@ import static org.hisp.dhis.organisationunit.OrganisationUnit.getParentNameGraph
 import static org.hisp.dhis.period.PeriodType.getPeriodTypeFromIsoString;
 import static org.hisp.dhis.reporttable.ReportTable.IRT2D;
 import static org.hisp.dhis.reporttable.ReportTable.addIfEmpty;
+import static org.hisp.dhis.commons.collection.ListUtils.sort;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,6 +101,7 @@ import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.CombinationGenerator;
 import org.hisp.dhis.common.DataDimensionItem;
 import org.hisp.dhis.common.DataDimensionItem.DataDimensionItemType;
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
@@ -1276,12 +1278,12 @@ public class DefaultAnalyticsService
 
             if ( !levels.isEmpty() )
             {
-                orgUnits.addAll( organisationUnitService.getOrganisationUnitsAtLevels( levels, ousList ) );
+                orgUnits.addAll( sort( organisationUnitService.getOrganisationUnitsAtLevels( levels, ousList ), IdentifiableObjectNameComparator.INSTANCE ) );
             }
 
             if ( !groups.isEmpty() )
             {
-                orgUnits.addAll( organisationUnitService.getOrganisationUnits( groups, ousList ) );
+                orgUnits.addAll( sort( organisationUnitService.getOrganisationUnits( groups, ousList ), IdentifiableObjectNameComparator.INSTANCE ) );
             }
 
             // -----------------------------------------------------------------
