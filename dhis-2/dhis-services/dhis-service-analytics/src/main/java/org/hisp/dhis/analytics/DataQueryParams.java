@@ -1151,7 +1151,9 @@ public class DataQueryParams
         }
         else if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension.getDimension() ) )
         {
-            dimensions.add( CO_INDEX, dimension );
+            int index = !dimensions.isEmpty() && DATA_X_DIM_ID.equals( dimensions.get( 0 ).getDimension() ) ? CO_INDEX : DX_INDEX;
+            
+            dimensions.add( index, dimension );
         }
         else
         {
