@@ -304,4 +304,18 @@ public class ListUtils
 
         return integers;
     }
+    
+    /**
+     * Creates a copy of and sorts the given list.
+     * 
+     * @param list the list to sort.
+     * @param comparator the comparator to use when sorting.
+     * @return a sorted list.
+     */
+    public static <T> List<T> sort( List<T> list, Comparator<? super T> comparator )
+    {
+        List<T> copy = new ArrayList<T>( list );
+        Collections.sort( copy, comparator );
+        return copy;
+    }
 }
