@@ -1050,13 +1050,14 @@ Ext.onReady( function() {
 		return window;
 	};
 
-	GIS.core.MapLoader = function(gis, isSession) {
+	GIS.core.MapLoader = function(gis, isSession, applyViews) {
 		var getMap,
 			setMap,
 			afterLoad,
 			callBack,
 			register = [],
-			loader;
+			loader,
+            applyViews = Ext.isObject(applyConfig) && Ext.Array.from(applyConfig.mapViews).length ? applyConfig.mapViews : null;
 
 		getMap = function() {
             var isPlugin = GIS.plugin && !GIS.app,
@@ -1153,9 +1154,10 @@ Ext.onReady( function() {
 				return;
 			}
 
-			for (var i = 0; i < views.length; i++) {
-				views[i] = gis.api.layout.Layout(views[i]);
-			}
+            for (var i = 0, applyView; i < views.length; i++) {
+                applyView = applyViews ? applyViews[i] : null;
+                views[i] = gis.api.layout.Layout(views[i], applyView);
+            }
 
 			views = Ext.Array.clean(views);
 
@@ -1602,6 +1604,14 @@ Ext.onReady( function() {
 
                     params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
+                    if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
+                        params += '&userOrgUnit=';
+
+                        for (var i = 0; i < view.userOrgUnit.length; i++) {
+                            params += view.userOrgUnit[i] + (i < view.userOrgUnit.length - 1 ? ';' : '');
+                        }
+                    }
+
                     return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params + '&includeGroupSets=true';
                 }(),
                 success,
@@ -1876,6 +1886,14 @@ Ext.onReady( function() {
                     }
 
                     params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+
+                    if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
+                        params += '&userOrgUnit=';
+
+                        for (var i = 0; i < view.userOrgUnit.length; i++) {
+                            params += view.userOrgUnit[i] + (i < view.userOrgUnit.length - 1 ? ';' : '');
+                        }
+                    }
 
                     return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params;
                 }(),
@@ -2230,6 +2248,14 @@ Ext.onReady( function() {
 
                     params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
+                    if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
+                        params += '&userOrgUnit=';
+
+                        for (var i = 0; i < view.userOrgUnit.length; i++) {
+                            params += view.userOrgUnit[i] + (i < view.userOrgUnit.length - 1 ? ';' : '');
+                        }
+                    }
+
                     return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params;
                 }(),
                 success,
@@ -2325,7 +2351,15 @@ Ext.onReady( function() {
 			}
 
             // display property
-            paramString += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+            paramString += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();            
+
+            if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
+                paramString += '&userOrgUnit=';
+
+                for (var i = 0; i < view.userOrgUnit.length; i++) {
+                    paramString += view.userOrgUnit[i] + (i < view.userOrgUnit.length - 1 ? ';' : '');
+                }
+            }
 
 			success = function(json) {
 				var response = gis.api.response.Response(json),
@@ -2356,7 +2390,6 @@ Ext.onReady( function() {
 				// Feature map
 				for (var i = 0, id; i < features.length; i++) {
 					var id = features[i].attributes.id;
-
 					featureMap[id] = true;
 				}
 
@@ -2367,7 +2400,7 @@ Ext.onReady( function() {
 
 					valueMap[id] = value;
 				}
-
+                
 				for (var i = 0; i < features.length; i++) {
 					var feature = features[i],
 						id = feature.attributes.id;
@@ -3408,125 +3441,126 @@ Ext.onReady( function() {
 				}();
 			};
 
-			api.layout.Layout = function(config) {
-				var config = Ext.clone(config),
-					layout = {},
-					getValidatedDimensionArray,
-					validateSpecialCases;
+            api.layout.Layout = function(config, applyConfig, forceApplyConfig) {
+                config = Ext.apply(config, applyConfig);
+                
+                var layout = {},
+                    getValidatedDimensionArray,
+                    validateSpecialCases;
 
-				// layer: string
+                // layer: string
 
-				// columns: [Dimension]
+                // columns: [Dimension]
 
-				// rows: [Dimension]
+                // rows: [Dimension]
 
-				// filters: [Dimension]
+                // filters: [Dimension]
 
-				// classes: integer (5) - 1-7
+                // classes: integer (5) - 1-7
 
-				// method: integer (2) - 2, 3 // 2=equal intervals, 3=equal counts
+                // method: integer (2) - 2, 3 // 2=equal intervals, 3=equal counts
 
-				// colorLow: string ('ff0000')
+                // colorLow: string ('ff0000')
 
-				// colorHigh: string ('00ff00')
+                // colorHigh: string ('00ff00')
 
-				// radiusLow: integer (5)
+                // radiusLow: integer (5)
 
-				// radiusHigh: integer (15)
+                // radiusHigh: integer (15)
 
-				// opacity: integer (0.8) - 0-1
+                // opacity: integer (0.8) - 0-1
 
-				// legendSet: object
+                // legendSet: object
 
                 // areaRadius: integer
 
                 // hidden: boolean (false)
 
-				getValidatedDimensionArray = function(dimensionArray) {
-					var dimensions = [];
+                getValidatedDimensionArray = function(dimensionArray) {
+                    var dimensions = [];
 
-					if (!(dimensionArray && Ext.isArray(dimensionArray) && dimensionArray.length)) {
-						return;
-					}
+                    if (!(dimensionArray && Ext.isArray(dimensionArray) && dimensionArray.length)) {
+                        return;
+                    }
 
-					for (var i = 0, dimension; i < dimensionArray.length; i++) {
-						dimension = api.layout.Dimension(dimensionArray[i]);
+                    for (var i = 0, dimension; i < dimensionArray.length; i++) {
+                        dimension = api.layout.Dimension(dimensionArray[i]);
 
-						if (dimension) {
-							dimensions.push(dimension);
-						}
-					}
+                        if (dimension) {
+                            dimensions.push(dimension);
+                        }
+                    }
 
-					dimensionArray = dimensions;
+                    dimensionArray = dimensions;
 
-					return dimensionArray.length ? dimensionArray : null;
-				};
+                    return dimensionArray.length ? dimensionArray : null;
+                };
 
-				validateSpecialCases = function(config) {
-					var dimensions = Ext.Array.clean([].concat(config.columns || [], config.rows || [], config.filters || [])),
-						map = conf.period.integratedRelativePeriodsMap,
-						dxDim,
-						peDim,
-						ouDim;
+                validateSpecialCases = function(config) {
+                    var dimensions = Ext.Array.clean([].concat(config.columns || [], config.rows || [], config.filters || [])),
+                        map = conf.period.integratedRelativePeriodsMap,
+                        dxDim,
+                        peDim,
+                        ouDim;
 
-					for (var i = 0, dim; i < dimensions.length; i++) {
-						dim = dimensions[i];
+                    for (var i = 0, dim; i < dimensions.length; i++) {
+                        dim = dimensions[i];
 
-						if (dim.dimension === dimConf.data.objectName) {
-							dxDim = dim;
-						}
-						else if (dim.dimension === dimConf.period.objectName) {
-							peDim = dim;
-						}
-						else if (dim.dimension === dimConf.organisationUnit.objectName) {
-							ouDim = dim;
-						}
-					}
+                        if (dim.dimension === dimConf.data.objectName) {
+                            dxDim = dim;
+                        }
+                        else if (dim.dimension === dimConf.period.objectName) {
+                            peDim = dim;
+                        }
+                        else if (dim.dimension === dimConf.organisationUnit.objectName) {
+                            ouDim = dim;
+                        }
+                    }
 
-					if (!ouDim) {
-						alert('No organisation units specified');
-						return;
-					}
+                    if (!ouDim) {
+                        alert('No organisation units specified');
+                        return;
+                    }
 
-					if (dxDim) {
-						dxDim.items = [dxDim.items[0]];
-					}
+                    if (dxDim) {
+                        dxDim.items = [dxDim.items[0]];
+                    }
 
-					if (peDim) {
-						peDim.items = [peDim.items[0]];
-						peDim.items[0].id = map[peDim.items[0].id] ? map[peDim.items[0].id] : peDim.items[0].id;
-					}
+                    if (peDim) {
+                        peDim.items = [peDim.items[0]];
+                        peDim.items[0].id = map[peDim.items[0].id] ? map[peDim.items[0].id] : peDim.items[0].id;
+                    }
 
-					config.columns = [dxDim];
-					config.rows = [ouDim];
-					config.filters = [peDim];
+                    config.columns = [dxDim];
+                    config.rows = [ouDim];
+                    config.filters = [peDim];
 
-					return config;
-				};
+                    return config;
+                };
 
-				return function() {
-					var a = [],
-						objectNames = [],
-						dimConf = conf.finals.dimension,
+                return function() {
+                    var a = [],
+                        objectNames =   [],
+                        dimConf = conf.finals.dimension,
                         layerConf =
-						isOu = false,
-						isOuc = false,
-						isOugc = false;
+                        isOu = false,
+                        isOuc = false,
+                        isOugc = false;
 
-					config = validateSpecialCases(config);
+                    config = validateSpecialCases(config);
 
-					if (!config) {
-						return;
-					}
+                    if (!config) {
+                        return;
+                    }
 
-					config.columns = getValidatedDimensionArray(config.columns);
-					config.rows = getValidatedDimensionArray(config.rows);
-					config.filters = getValidatedDimensionArray(config.filters);
+                    config.columns = getValidatedDimensionArray(config.columns);
+                    config.rows = getValidatedDimensionArray(config.rows);
+                    config.filters = getValidatedDimensionArray(config.filters);
 
-					if (!config.rows) {
-						console.log('Organisation unit dimension is invalid', config.rows);
-						return;
-					}
+                    if (!config.rows) {
+                        console.log('Organisation unit dimension is invalid', config.rows);
+                        return;
+                    }
 
                     if (Ext.Array.contains([gis.layer.thematic1.id, gis.layer.thematic2.id, gis.layer.thematic3.id, gis.layer.thematic4.id], config.layer)) {
                         if (!config.columns) {
@@ -3534,49 +3568,47 @@ Ext.onReady( function() {
                         }
                     }
 
-					// Collect object names and user orgunits
-					for (var i = 0, dim, dims = Ext.Array.clean([].concat(config.columns, config.rows, config.filters)); i < dims.length; i++) {
-						dim = dims[i];
+                    // Collect object names and user orgunits
+                    for (var i = 0, dim, dims = Ext.Array.clean([].concat(config.columns, config.rows, config.filters)); i < dims.length; i++) {
+                        dim = dims[i];
 
-						if (dim) {
+                        if (dim) {
 
-							// Object names
-							if (Ext.isString(dim.dimension)) {
-								objectNames.push(dim.dimension);
-							}
+                            // Object names
+                            if (Ext.isString(dim.dimension)) {
+                                objectNames.push(dim.dimension);
+                            }
 
-							// user orgunits
-							if (dim.dimension === dimConf.organisationUnit.objectName && Ext.isArray(dim.items)) {
-								for (var j = 0; j < dim.items.length; j++) {
-									if (dim.items[j].id === 'USER_ORGUNIT') {
-										isOu = true;
-									}
-									else if (dim.items[j].id === 'USER_ORGUNIT_CHILDREN') {
-										isOuc = true;
-									}
-									else if (dim.items[j].id === 'USER_ORGUNIT_GRANDCHILDREN') {
-										isOugc = true;
-									}
-								}
-							}
-						}
-					}
+                            // user orgunits
+                            if (dim.dimension === dimConf.organisationUnit.objectName && Ext.isArray(dim.items)) {
+                                for (var j = 0; j < dim.items.length; j++) {
+                                    if (dim.items[j].id === 'USER_ORGUNIT') {
+                                        isOu = true;
+                                    } else if (dim.items[j].id === 'USER_ORGUNIT_CHILDREN') {
+                                        isOuc = true;
+                                    } else if (dim.items[j].id === 'USER_ORGUNIT_GRANDCHILDREN') {
+                                        isOugc = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-					// Layout
-					layout.columns = config.columns;
-					layout.rows = config.rows;
-					layout.filters = config.filters;
+                    // Layout
+                    layout.columns = config.columns;
+                    layout.rows = config.rows;
+                    layout.filters = config.filters;
 
-					// Properties
-					layout.layer = Ext.isString(config.layer) && !Ext.isEmpty(config.layer) ? config.layer : 'thematic1';
-					layout.classes = Ext.isNumber(config.classes) && !Ext.isEmpty(config.classes) ? config.classes : 5;
-					layout.method = Ext.isNumber(config.method) && !Ext.isEmpty(config.method) ? config.method : 2;
-					layout.colorLow = Ext.isString(config.colorLow) && !Ext.isEmpty(config.colorLow) ? config.colorLow : 'ff0000';
-					layout.colorHigh = Ext.isString(config.colorHigh) && !Ext.isEmpty(config.colorHigh) ? config.colorHigh : '00ff00';
-					layout.radiusLow = Ext.isNumber(config.radiusLow) && !Ext.isEmpty(config.radiusLow) ? config.radiusLow : 5;
-					layout.radiusHigh = Ext.isNumber(config.radiusHigh) && !Ext.isEmpty(config.radiusHigh) ? config.radiusHigh : 15;
-					layout.opacity = Ext.isNumber(config.opacity) && !Ext.isEmpty(config.opacity) ? config.opacity : gis.conf.layout.layer.opacity;
-					layout.areaRadius = config.areaRadius;
+                    // Properties
+                    layout.layer = Ext.isString(config.layer) && !Ext.isEmpty(config.layer) ? config.layer : 'thematic1';
+                    layout.classes = Ext.isNumber(config.classes) && !Ext.isEmpty(config.classes) ? config.classes : 5;
+                    layout.method = Ext.isNumber(config.method) && !Ext.isEmpty(config.method) ? config.method : 2;
+                    layout.colorLow = Ext.isString(config.colorLow) && !Ext.isEmpty(config.colorLow) ? config.colorLow : 'ff0000';
+                    layout.colorHigh = Ext.isString(config.colorHigh) && !Ext.isEmpty(config.colorHigh) ? config.colorHigh : '00ff00';
+                    layout.radiusLow = Ext.isNumber(config.radiusLow) && !Ext.isEmpty(config.radiusLow) ? config.radiusLow : 5;
+                    layout.radiusHigh = Ext.isNumber(config.radiusHigh) && !Ext.isEmpty(config.radiusHigh) ? config.radiusHigh : 15;
+                    layout.opacity = Ext.isNumber(config.opacity) && !Ext.isEmpty(config.opacity) ? config.opacity : gis.conf.layout.layer.opacity;
+                    layout.areaRadius = config.areaRadius;
 
                     layout.labels = !!config.labels;
 
@@ -3595,19 +3627,23 @@ Ext.onReady( function() {
 
                     layout.hidden = !!config.hidden;
 
-					layout.userOrganisationUnit = isOu;
-					layout.userOrganisationUnitChildren = isOuc;
-					layout.userOrganisationUnitGrandChildren = isOugc;
+                    layout.userOrganisationUnit = isOu;
+                    layout.userOrganisationUnitChildren = isOuc;
+                    layout.userOrganisationUnitGrandChildren = isOugc;
 
-					layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
+                    layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
 
-					layout.legendSet = config.legendSet;
+                    layout.legendSet = config.legendSet;
 
-					layout.organisationUnitGroupSet = config.organisationUnitGroupSet;
+                    layout.organisationUnitGroupSet = config.organisationUnitGroupSet;
 
-					return layout;
-				}();
-			};
+                    if (Ext.Array.from(config.userOrgUnit).length) {
+                        layout.userOrgUnit = Ext.Array.from(config.userOrgUnit);
+                    }
+
+                    return Ext.apply(layout, forceApplyConfig);
+                }();
+            };
 
 			api.response.Header = function(config) {
 				var header = {};
