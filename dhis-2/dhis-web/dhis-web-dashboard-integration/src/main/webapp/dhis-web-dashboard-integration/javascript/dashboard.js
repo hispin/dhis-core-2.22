@@ -1237,7 +1237,7 @@ dhis2.db.viewOrgUnitSelector = function()
 		width: 370,
 		height: 500,
 		resizable: false,
-		title: "Select user organisation unit"
+		title: i18n_user_org_unit_filter
 	} );
 }
 
