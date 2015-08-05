@@ -567,14 +567,14 @@ Ext.onReady(function() {
 
 	// namespace
 	DV = {};
-    var NS = DV;
+    var DV = DV;
 
-	NS.instances = [];
-	NS.i18n = {};
-	NS.isDebug = false;
-	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
+	DV.instances = [];
+	DV.i18n = {};
+	DV.isDebug = false;
+	DV.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	NS.getCore = function(ns) {
+	DV.getCore = function(ns) {
         var init = ns.init,
             conf = {},
             api = {},
@@ -592,24 +592,24 @@ Ext.onReady(function() {
                 dimension: {
 					data: {
 						value: 'data',
-						name: NS.i18n.data || 'Data',
+						name: DV.i18n.data || 'Data',
 						dimensionName: 'dx',
 						objectName: 'dx'
 					},
 					category: {
-						name: NS.i18n.assigned_categories || 'Assigned categories',
+						name: DV.i18n.assigned_categories || 'Assigned categories',
 						dimensionName: 'co',
 						objectName: 'co',
 					},
 					indicator: {
 						value: 'indicators',
-						name: NS.i18n.indicators || 'Indicators',
+						name: DV.i18n.indicators || 'Indicators',
 						dimensionName: 'dx',
 						objectName: 'in'
 					},
 					dataElement: {
 						value: 'dataElements',
-						name: NS.i18n.data_elements || 'Data elements',
+						name: DV.i18n.data_elements || 'Data elements',
 						dimensionName: 'dx',
 						objectName: 'de'
 					},
@@ -621,25 +621,25 @@ Ext.onReady(function() {
 					},
 					dataSet: {
 						value: 'dataSets',
-						name: NS.i18n.data_sets || 'Data sets',
+						name: DV.i18n.data_sets || 'Data sets',
 						dimensionName: 'dx',
 						objectName: 'ds'
 					},
 					eventDataItem: {
 						value: 'eventDataItem',
-						name: NS.i18n.event_data_items || 'Event data items',
+						name: DV.i18n.event_data_items || 'Event data items',
 						dimensionName: 'dx',
 						objectName: 'di'
 					},
 					programIndicator: {
 						value: 'programIndicator',
-						name: NS.i18n.program_indicators || 'Program indicators',
+						name: DV.i18n.program_indicators || 'Program indicators',
 						dimensionName: 'dx',
 						objectName: 'pi'
 					},
 					period: {
 						value: 'period',
-						name: NS.i18n.periods || 'Periods',
+						name: DV.i18n.periods || 'Periods',
 						dimensionName: 'pe',
 						objectName: 'pe'
 					},
@@ -651,7 +651,7 @@ Ext.onReady(function() {
 					},
 					organisationUnit: {
 						value: 'organisationUnits',
-						name: NS.i18n.organisation_units || 'Organisation units',
+						name: DV.i18n.organisation_units || 'Organisation units',
 						dimensionName: 'ou',
 						objectName: 'ou'
 					},
@@ -712,17 +712,17 @@ Ext.onReady(function() {
 
 			conf.period = {
 				periodTypes: [
-					{id: 'Daily', name: NS.i18n.daily},
-					{id: 'Weekly', name: NS.i18n.weekly},
-					{id: 'Monthly', name: NS.i18n.monthly},
-					{id: 'BiMonthly', name: NS.i18n.bimonthly},
-					{id: 'Quarterly', name: NS.i18n.quarterly},
-					{id: 'SixMonthly', name: NS.i18n.sixmonthly},
-					{id: 'SixMonthlyApril', name: NS.i18n.sixmonthly_april},
-					{id: 'Yearly', name: NS.i18n.yearly},
-					{id: 'FinancialOct', name: NS.i18n.financial_oct},
-					{id: 'FinancialJuly', name: NS.i18n.financial_july},
-					{id: 'FinancialApril', name: NS.i18n.financial_april}
+					{id: 'Daily', name: DV.i18n.daily},
+					{id: 'Weekly', name: DV.i18n.weekly},
+					{id: 'Monthly', name: DV.i18n.monthly},
+					{id: 'BiMonthly', name: DV.i18n.bimonthly},
+					{id: 'Quarterly', name: DV.i18n.quarterly},
+					{id: 'SixMonthly', name: DV.i18n.sixmonthly},
+					{id: 'SixMonthlyApril', name: DV.i18n.sixmonthly_april},
+					{id: 'Yearly', name: DV.i18n.yearly},
+					{id: 'FinancialOct', name: DV.i18n.financial_oct},
+					{id: 'FinancialJuly', name: DV.i18n.financial_july},
+					{id: 'FinancialApril', name: DV.i18n.financial_april}
 				]
 			};
 
@@ -901,9 +901,10 @@ Ext.onReady(function() {
 				}();
 			};
 
-            api.layout.Layout = function(config, applyConfig) {
-				var config = Ext.clone(config),
-					layout = {},
+            api.layout.Layout = function(config, applyConfig, forceApplyConfig) {
+                config = Ext.apply(config, applyConfig);
+
+                var layout = {},
 					getValidatedDimensionArray,
 					validateSpecialCases;
 
@@ -956,6 +957,8 @@ Ext.onReady(function() {
                 // parentGraphMap: object
 
                 // displayProperty: string ('name') // 'name', 'shortname', null
+
+                // userOrgUnit: string
 
                 getValidatedDimensionArray = function(dimensionArray) {
 					var dimensionArray = Ext.clone(dimensionArray);
@@ -1062,19 +1065,19 @@ Ext.onReady(function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(NS.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter.');
+								ns.alert(DV.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter.');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(NS.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter.');
+								ns.alert(DV.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter.');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(NS.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter.');
+								ns.alert(DV.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter.');
 								return;
 							}
 						}
@@ -1204,6 +1207,10 @@ Ext.onReady(function() {
                         layout.displayProperty = config.displayProperty;
                     }
 
+                    if (Ext.Array.from(config.userOrgUnit).length) {
+                        layout.userOrgUnit = Ext.Array.from(config.userOrgUnit);
+                    }
+
                     // TODO program
                     if (Ext.isObject(config.program)) {
                         layout.program = config.program;
@@ -1230,7 +1237,7 @@ Ext.onReady(function() {
 						return;
 					}
 
-					return Ext.apply(layout, applyConfig);
+					return Ext.apply(layout, forceApplyConfig);
                 }();
             };
 
@@ -1827,119 +1834,49 @@ Ext.onReady(function() {
 					ou = dimConf.organisationUnit.objectName,
 					layout;
 
-				// Set items from init/metaData/xLayout
-				for (var i = 0, dim, metaDataDim, items; i < dimensions.length; i++) {
-					dim = dimensions[i];
-					dim.items = [];
-					metaDataDim = response.metaData[dim.objectName];
+				// set items from init/metaData/xLayout
+                for (var i = 0, dim, metaDataDim, items; i < dimensions.length; i++) {
+                    dim = dimensions[i];
+                    dim.items = [];
+                    metaDataDim = response.metaData[dim.objectName];
 
-					// If ou and children
-					if (dim.dimensionName === ou) {
-						if (isUserOrgunit || isUserOrgunitChildren || isUserOrgunitGrandChildren) {
-							var userOu,
-								userOuc,
-								userOugc;
+                    if (Ext.isArray(metaDataDim) && metaDataDim.length) {
+                        var ids = Ext.clone(response.metaData[dim.dimensionName]);
+                        for (var j = 0; j < ids.length; j++) {
+                            dim.items.push({
+                                id: ids[j],
+                                name: response.metaData.names[ids[j]]
+                            });
+                        }
+                    }
+                    else {
+                        dim.items = Ext.clone(xLayout.objectNameItemsMap[dim.objectName]);
+                    }
+                }
 
-							if (init.user && isUserOrgunit) {
-								userOu = [];
+                // add missing names
+                dimensions = Ext.Array.clean([].concat(xLayout.columns || [], xLayout.rows || [], xLayout.filters || []));
 
-								for (var j = 0; j < init.user.ou.length; j++) {
-									userOu.push({
-										id: init.user.ou[j],
-										name: response.metaData.names[init.user.ou[j]]
-									});
-								}
-							}
-							if (init.user && init.user.ouc && isUserOrgunitChildren) {
-								userOuc = [];
+                for (var i = 0, idNameMap = response.metaData.names, dimItems; i < dimensions.length; i++) {
+                    dimItems = dimensions[i].items;
 
-								for (var j = 0; j < init.user.ouc.length; j++) {
-									userOuc.push({
-										id: init.user.ouc[j],
-										name: response.metaData.names[init.user.ouc[j]]
-									});
-								}
+                    if (Ext.isArray(dimItems) && dimItems.length) {
+                        for (var j = 0, item; j < dimItems.length; j++) {
+                            item = dimItems[j];
 
-								support.prototype.array.sort(userOuc);
-							}
-							if (init.user && init.user.ouc && isUserOrgunitGrandChildren) {
-								var userOuOuc = [].concat(init.user.ou, init.user.ouc),
-									responseOu = response.metaData[ou];
-
-								userOugc = [];
-
-								for (var j = 0, id; j < responseOu.length; j++) {
-									id = responseOu[j];
-
-									if (!Ext.Array.contains(userOuOuc, id)) {
-										userOugc.push({
-											id: id,
-											name: response.metaData.names[id]
-										});
-									}
-								}
-
-								support.prototype.array.sort(userOugc);
-							}
-
-							dim.items = [].concat(userOu || [], userOuc || [], userOugc || []);
-						}
-						else if (isLevel || isGroup) {
-								for (var j = 0, responseOu = response.metaData[ou], id; j < responseOu.length; j++) {
-									id = responseOu[j];
-
-									dim.items.push({
-										id: id,
-										name: response.metaData.names[id]
-									});
-								}
-
-								support.prototype.array.sort(dim.items);
-							}
-							else {
-								dim.items = Ext.clone(xLayout.dimensionNameItemsMap[dim.dimensionName]);
-							}
-					}
-					else {
-						// Items: get ids from metadata -> items
-						if (Ext.isArray(metaDataDim) && metaDataDim.length) {
-							var ids = Ext.clone(response.metaData[dim.dimensionName]);
-							for (var j = 0; j < ids.length; j++) {
-								dim.items.push({
-									id: ids[j],
-									name: response.metaData.names[ids[j]]
-								});
-							}
-						}
-						// Items: get items from xLayout
-						else {
-							dim.items = Ext.clone(xLayout.objectNameItemsMap[dim.objectName]);
-						}
-					}
-				}
+                            if (Ext.isObject(item) && Ext.isString(idNameMap[item.id]) && !Ext.isString(item.name)) {
+                                item.name = idNameMap[item.id] || '';
+                            }
+                        }
+                    }
+                }
 
 				// Re-layout
 				layout = api.layout.Layout(xLayout);
 
-				if (layout) {
-					dimensions = Ext.Array.clean([].concat(layout.columns || [], layout.rows || [], layout.filters || []));
-
-					for (var i = 0, idNameMap = response.metaData.names, dimItems; i < dimensions.length; i++) {
-						dimItems = dimensions[i].items;
-
-						if (Ext.isArray(dimItems) && dimItems.length) {
-							for (var j = 0, item; j < dimItems.length; j++) {
-								item = dimItems[j];
-
-								if (Ext.isObject(item) && Ext.isString(idNameMap[item.id]) && !Ext.isString(item.name)) {
-									item.name = idNameMap[item.id] || '';
-								}
-							}
-						}
-					}
-
-					return service.layout.getExtendedLayout(layout);
-				}
+                if (layout) {
+                    return service.layout.getExtendedLayout(layout);
+                }
 
 				return null;
 			};
@@ -2403,10 +2340,6 @@ Ext.onReady(function() {
 			web.analytics = {};
 
 			web.analytics.getParamString = function(xLayout, isSorted) {
-
-                // TODO
-                isSorted = false;
-
                 var axisDimensionNames = isSorted ? xLayout.sortedAxisDimensionNames : xLayout.axisDimensionNames,
                     filterDimensions = isSorted ? xLayout.sortedFilterDimensions : xLayout.filterDimensions,
                     dimensionNameIdsMap = isSorted ? xLayout.dimensionNameSortedIdsMap : xLayout.dimensionNameIdsMap,
@@ -2465,6 +2398,15 @@ Ext.onReady(function() {
 
                 // display property
                 paramString += '&displayProperty=' + displayProperty.toUpperCase();
+
+                // user org unit
+                if (Ext.isArray(xLayout.userOrgUnit) && xLayout.userOrgUnit.length) {
+                    paramString += '&userOrgUnit=';
+
+                    for (var i = 0; i < xLayout.userOrgUnit.length; i++) {
+                        paramString += xLayout.userOrgUnit[i] + (i < xLayout.userOrgUnit.length - 1 ? ';' : '');
+                    }
+				}
 
                 // TODO program
                 if (xLayout.program && xLayout.program.id) {
@@ -2634,7 +2576,7 @@ Ext.onReady(function() {
                             }
 
                             trendLineFields.push(regressionKey);
-                            xResponse.metaData.names[regressionKey] = NS.i18n.trend + ' (Total)';
+                            xResponse.metaData.names[regressionKey] = DV.i18n.trend + ' (Total)';
                         }
                         else {
                             for (var i = 0; i < failSafeColumnIds.length; i++) {
@@ -2651,7 +2593,7 @@ Ext.onReady(function() {
                                 }
 
                                 trendLineFields.push(regressionKey);
-                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
+                                xResponse.metaData.names[regressionKey] = DV.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
                             }
                         }
                     }
@@ -2764,7 +2706,7 @@ Ext.onReady(function() {
                         return Ext.Array.max(values);
                     };
 
-                    if (NS.isDebug) {
+                    if (DV.isDebug) {
                         console.log("data", data);
                         console.log("rangeFields", store.rangeFields);
                         console.log("domainFields", store.domainFields);
@@ -3177,7 +3119,7 @@ Ext.onReady(function() {
                         },
                         showMarkers: false,
                         title: function() {
-                            var title = (Ext.isString(xLayout.targetLineTitle) ? xLayout.targetLineTitle : NS.i18n.target) + ' (' + xLayout.targetLineValue + ')',
+                            var title = (Ext.isString(xLayout.targetLineTitle) ? xLayout.targetLineTitle : DV.i18n.target) + ' (' + xLayout.targetLineValue + ')',
                                 ls = xLayout.legendStyle;
                             return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
                         }()
@@ -3198,7 +3140,7 @@ Ext.onReady(function() {
                         },
                         showMarkers: false,
                         title: function() {
-                            var title = (Ext.isString(xLayout.baseLineTitle) ? xLayout.baseLineTitle : NS.i18n.base) + ' (' + xLayout.baseLineValue + ')',
+                            var title = (Ext.isString(xLayout.baseLineTitle) ? xLayout.baseLineTitle : DV.i18n.base) + ' (' + xLayout.baseLineValue + ')',
                                 ls = xLayout.legendStyle;
                             return ls && Ext.isNumber(ls.labelMaxLength) ? title.substr(0, ls.labelMaxLength) + '..' : title;
                         }()
@@ -3372,7 +3314,7 @@ Ext.onReady(function() {
                     return function() {
                         var width = ns.app.centerRegion.getWidth(),
                             height = ns.app.centerRegion.getHeight();
-                            
+
 						this.animate = false;
                         this.setWidth(ns.dashboard ? width : width - 15);
                         this.setHeight(ns.dashboard ? height : height - 40);
@@ -4340,7 +4282,7 @@ Ext.onReady(function() {
                     chart;
 
                 success = function() {
-                    
+
                     ns.app.layout = layout;
                     ns.app.xLayout = xLayout;
                     ns.app.response = response;

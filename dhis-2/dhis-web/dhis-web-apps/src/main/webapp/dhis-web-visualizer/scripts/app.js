@@ -2444,19 +2444,32 @@ Ext.onReady( function() {
 			web.chart.getData = function(layout, isUpdateGui) {
 				var xLayout,
 					paramString,
+                    sortedParamString,
                     onFailure;
 
 				if (!layout) {
 					return;
 				}
 
-                onFailure = function() {
+                onFailure = function(r) {
                     ns.app.viewport.setGui(layout, xLayout, isUpdateGui);
                     web.mask.hide(ns.app.centerRegion);
+
+                    if (r) {
+                        r = Ext.decode(r.responseText);
+
+                        if (Ext.Array.contains([413, 414], parseInt(r.httpStatusCode))) {
+                            web.analytics.validateUrl(init.contextPath + '/api/analytics.json' + paramString);
+                        }
+                        else {
+                            ns.alert(r);
+                        }
+                    }
                 };
 
 				xLayout = service.layout.getExtendedLayout(layout);
-				paramString = web.analytics.getParamString(xLayout, true);
+				paramString = web.analytics.getParamString(xLayout) + '&skipData=true';
+				sortedParamString = web.analytics.getParamString(xLayout, true) + '&skipMeta=true';
 
 				// show mask
 				web.mask.show(ns.app.centerRegion);
@@ -2469,38 +2482,45 @@ Ext.onReady( function() {
 						'Accepts': 'application/json'
 					},
 					disableCaching: false,
-					failure: function(r) {  
+					failure: function(r) {
                         onFailure();
-
-                        r = Ext.decode(r.responseText);
-
-						if (Ext.Array.contains([413, 414], parseInt(r.httpStatusCode))) {
-							web.analytics.validateUrl(init.contextPath + '/api/analytics.json' + paramString);
-						}
-						else {
-                            ns.alert(r);
-						}
 					},
 					success: function(r) {
-						var xResponse,
-							html,
-							response = api.response.Response(Ext.decode(r.responseText));
-                            
-						if (!response) {
-                            onFailure();
-							return;
-						}
+                        var metaData = Ext.decode(r.responseText).metaData;
 
-						// sync xLayout with response
-						xLayout = service.layout.getSyncronizedXLayout(xLayout, response);
+                        Ext.Ajax.request({
+                            url: init.contextPath + '/api/analytics.json' + sortedParamString,
+                            timeout: 60000,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accepts': 'application/json'
+                            },
+                            disableCaching: false,
+                            failure: function(r) {
+                                onFailure(r);
+                            },
+                            success: function(r) {
+                                var response = api.response.Response(Ext.decode(r.responseText));
 
-						if (!xLayout) {
-							return;
-						}
+                                if (!response) {
+                                    onFailure();
+                                    return;
+                                }
 
-						ns.app.paramString = paramString;
+                                response.metaData = metaData;
 
-						web.chart.getChart(layout, xLayout, response, isUpdateGui);
+                                // sync xLayout with response
+                                xLayout = service.layout.getSyncronizedXLayout(xLayout, response);
+
+                                if (!xLayout) {
+                                    return;
+                                }
+
+                                ns.app.paramString = sortedParamString;
+
+                                web.chart.getChart(layout, xLayout, response, isUpdateGui);
+                            }
+                        });
 					}
 				});
 			};
@@ -2622,7 +2642,7 @@ Ext.onReady( function() {
             onDataTypeSelect,
             dataType,
             dataSelected,
-            
+
             indicatorLabel,
             indicatorSearch,
             indicatorFilter,
@@ -2661,7 +2681,7 @@ Ext.onReady( function() {
             programIndicatorSelected,
             programIndicator,
             data,
-            
+
 			rewind,
             relativePeriodDefaults,
             relativePeriod,
@@ -5057,7 +5077,7 @@ Ext.onReady( function() {
                         period.checkboxes.push(chb);
                         relativePeriod.valueComponentMap[chb.relativePeriodId] = chb;
                     }
-                        
+
                     if (chb.relativePeriodId === ns.core.init.systemInfo.analysisRelativePeriod) {
                         chb.setValue(true);
                     }
@@ -6633,7 +6653,7 @@ Ext.onReady( function() {
                     window.open(url, isNewTab ? '_blank' : '_top');
                 }
             }
-        };            
+        };
 
 		downloadButton = Ext.create('Ext.button.Button', {
             text: NS.i18n.download,
