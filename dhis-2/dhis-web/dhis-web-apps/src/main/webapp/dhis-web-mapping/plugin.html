@@ -32,27 +32,30 @@
 			GIS.plugin.getMap({
 				url: url,
 				el: "map1",
-				id: "zx3Aewnjvdi",
-                crossDomain: false
+				id: "jzxTpTUdISq",
+                crossDomain: false,
+                mapViews: [{
+                    userOrgUnit: ['fdc6uOvgoji']
+                }]
 			});
 
-			GIS.plugin.getMap({
-				url: url,
-				el: "map2",
-                crossDomain: false,
-				baseLayer: 'osm',
-				hideLegend: true,
-				mapViews: [
-					{
-						layer: 'boundary',
-						rows: [{dimension: 'ou', items: [{id: 'LEVEL-2'}, {id: 'ImspTQPwCqd'}]}],
-						labels: {
-							fontSize: 14,
-							color: '#00f'
-						}
-					}
-				]
-			});
+			//GIS.plugin.getMap({
+				//url: url,
+				//el: "map2",
+                //crossDomain: false,
+				//baseLayer: 'osm',
+				//hideLegend: true,
+				//mapViews: [
+					//{
+						//layer: 'boundary',
+						//rows: [{dimension: 'ou', items: [{id: 'LEVEL-2'}, {id: 'ImspTQPwCqd'}]}],
+						//labels: {
+							//fontSize: 14,
+							//color: '#00f'
+						//}
+					//}
+				//]
+			//});
 		});
 
 	</script>

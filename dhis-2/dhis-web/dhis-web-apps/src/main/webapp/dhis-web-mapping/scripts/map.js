@@ -2478,13 +2478,14 @@ Ext.onReady(function() {
         return window;
     };
 
-    GIS.core.MapLoader = function(gis) {
+    GIS.core.MapLoader = function(gis, applyConfig) {
         var getMap,
             setMap,
             afterLoad,
             callBack,
             register = [],
-            loader;
+            loader,
+            applyViews = Ext.isObject(applyConfig) && Ext.Array.from(applyConfig.mapViews).length ? applyConfig.mapViews : null;
 
         getMap = function() {
             var type = gis.plugin && gis.crossDomain ? 'jsonp' : 'json',
@@ -2575,8 +2576,9 @@ Ext.onReady(function() {
                 return;
             }
 
-            for (var i = 0; i < views.length; i++) {
-                views[i] = gis.api.layout.Layout(views[i]);
+            for (var i = 0, applyView; i < views.length; i++) {
+                applyView = applyViews ? applyViews[i] : null;
+                views[i] = gis.api.layout.Layout(views[i], applyView);
             }
 
             views = Ext.Array.clean(views);
@@ -2902,89 +2904,90 @@ Ext.onReady(function() {
         return loader;
     };
 
-    GIS.core.LayerLoaderFacility = function(gis, layer) {
-        var olmap = layer.map,
-            compareView,
-            loadOrganisationUnits,
-            loadData,
-            loadLegend,
-            addCircles,
-            afterLoad,
-            loader;
+	GIS.core.LayerLoaderFacility = function(gis, layer) {
+		var olmap = layer.map,
+			compareView,
+			loadOrganisationUnits,
+			loadData,
+			loadLegend,
+			addCircles,
+			afterLoad,
+			loader;
 
-        compareView = function(view, doExecute) {
-            var src = layer.core.view,
-                viewIds,
-                viewDim,
-                srcIds,
-                srcDim;
+		compareView = function(view, doExecute) {
+			var src = layer.core.view,
+				viewIds,
+				viewDim,
+				srcIds,
+				srcDim;
 
-            loader.zoomToVisibleExtent = true;
+			loader.zoomToVisibleExtent = true;
 
-            if (!src) {
-                if (doExecute) {
-                    loadOrganisationUnits(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+			if (!src) {
+				if (doExecute) {
+					loadOrganisationUnits(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            // organisation units
-            viewIds = [];
-            viewDim = view.rows[0];
-            srcIds = [];
-            srcDim = src.rows[0];
+			// organisation units
+			viewIds = [];
+			viewDim = view.rows[0];
+			srcIds = [];
+			srcDim = src.rows[0];
 
-            if (viewDim.items.length === srcDim.items.length) {
-                for (var i = 0; i < viewDim.items.length; i++) {
-                    viewIds.push(viewDim.items[i].id);
-                }
+			if (viewDim.items.length === srcDim.items.length) {
+				for (var i = 0; i < viewDim.items.length; i++) {
+					viewIds.push(viewDim.items[i].id);
+				}
 
-                for (var i = 0; i < srcDim.items.length; i++) {
-                    srcIds.push(srcDim.items[i].id);
-                }
+				for (var i = 0; i < srcDim.items.length; i++) {
+					srcIds.push(srcDim.items[i].id);
+				}
 
-                if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
-                    if (doExecute) {
-                        loadOrganisationUnits(view);
-                    }
-                    return gis.conf.finals.widget.loadtype_organisationunit;
-                }
-            } else {
-                if (doExecute) {
-                    loadOrganisationUnits(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+				if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
+					if (doExecute) {
+						loadOrganisationUnits(view);
+					}
+					return gis.conf.finals.widget.loadtype_organisationunit;
+				}
+			}
+			else {
+				if (doExecute) {
+					loadOrganisationUnits(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            // Group set
-            loader.zoomToVisibleExtent = false;
+			// Group set
+			loader.zoomToVisibleExtent = false;
 
-            if (view.organisationUnitGroupSet.id !== src.organisationUnitGroupSet.id) {
-                if (doExecute) {
-                    loadOrganisationUnits(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+			if (view.organisationUnitGroupSet.id !== src.organisationUnitGroupSet.id) {
+				if (doExecute) {
+					loadOrganisationUnits(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            //if (view.areaRadius !== src.areaRadius) {
-            //if (doExecute) {
-            //loadLegend(view);
-            //}
-            //return gis.conf.finals.widget.loadtype_legend;
-            //}
+			//if (view.areaRadius !== src.areaRadius) {
+				//if (doExecute) {
+					//loadLegend(view);
+				//}
+				//return gis.conf.finals.widget.loadtype_legend;
+			//}
 
-            // always reload legend
-            if (doExecute) {
-                loadLegend(view);
-                return gis.conf.finals.widget.loadtype_legend;
-            }
+			// always reload legend
+			if (doExecute) {
+				loadLegend(view);
+				return gis.conf.finals.widget.loadtype_legend;
+			}
 
-            //gis.olmap.mask.hide();
-        };
+			//gis.olmap.mask.hide();
+		};
 
-        loadOrganisationUnits = function(view) {
+		loadOrganisationUnits = function(view) {
             var items = view.rows[0].items,
-                isJsonp = gis.plugin && gis.crossDomain,
+                isPlugin = GIS.plugin && !GIS.app,
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -2995,7 +2998,15 @@ Ext.onReady(function() {
 
                     params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
-                    return gis.init.contextPath + '/api/geoFeatures.' + (isJsonp ? 'jsonp' : 'json') + params + '&includeGroupSets=true';
+                    if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
+                        params += '&userOrgUnit=';
+
+                        for (var i = 0; i < view.userOrgUnit.length; i++) {
+                            params += view.userOrgUnit[i] + (i < view.userOrgUnit.length - 1 ? ';' : '');
+                        }
+                    }
+
+                    return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params + '&includeGroupSets=true';
                 }(),
                 success,
                 failure;
@@ -3006,17 +3017,13 @@ Ext.onReady(function() {
                     features = gis.util.map.getTransformedFeatureArray(format.read(geojson));
 
                 if (!Ext.isArray(features)) {
-                    if (gis.olmap.mask && !gis.skipMask) {
-                        gis.olmap.mask.hide();
-                    }
+                    olmap.mask.hide();
                     alert(GIS.i18n.invalid_coordinates);
                     return;
                 }
 
                 if (!features.length) {
-                    if (gis.olmap.mask && !gis.skipMask) {
-                        gis.olmap.mask.hide();
-                    }
+                    olmap.mask.hide();
                     alert(GIS.i18n.no_valid_coordinates_found);
                     return;
                 }
@@ -3027,13 +3034,11 @@ Ext.onReady(function() {
             };
 
             failure = function() {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.hide();
-                }
+                olmap.mask.hide();
                 alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
-            if (isJsonp) {
+            if (GIS.plugin && !GIS.app) {
                 Ext.data.JsonP.request({
                     url: url,
                     disableCaching: false,
@@ -3041,7 +3046,8 @@ Ext.onReady(function() {
                         success(r);
                     }
                 });
-            } else {
+            }
+            else {
                 Ext.Ajax.request({
                     url: url,
                     disableCaching: false,
@@ -3052,27 +3058,27 @@ Ext.onReady(function() {
             }
         };
 
-        loadData = function(view, features) {
-            view = view || layer.core.view;
-            features = features || layer.core.featureStore.features;
+		loadData = function(view, features) {
+			view = view || layer.core.view;
+			features = features || layer.core.featureStore.features;
 
-            for (var i = 0; i < features.length; i++) {
-                features[i].attributes.popupText = features[i].attributes.name + ' (' + features[i].attributes[view.organisationUnitGroupSet.id] + ')';
-            }
+			for (var i = 0; i < features.length; i++) {
+				features[i].attributes.popupText = features[i].attributes.name + ' (' + features[i].attributes[view.organisationUnitGroupSet.id] + ')';
+			}
 
-            layer.removeFeatures(layer.features);
-            layer.addFeatures(features);
+			layer.removeFeatures(layer.features);
+			layer.addFeatures(features);
 
-            loadLegend(view);
-        };
+			loadLegend(view);
+		};
 
-        loadLegend = function(view) {
-            var isJsonp = gis.plugin && gis.crossDomain,
-                type = isJsonp ? 'jsonp' : 'json',
+		loadLegend = function(view) {
+            var isPlugin = GIS.plugin && !GIS.app,
+                type = isPlugin ? 'jsonp' : 'json',
                 url = gis.init.contextPath + '/api/organisationUnitGroupSets/' + view.organisationUnitGroupSet.id + '.' + type + '?fields=organisationUnitGroups[id,name,symbol]',
                 success;
 
-            view = view || layer.core.view;
+			view = view || layer.core.view;
 
             // labels
             for (var i = 0, attr; i < layer.features.length; i++) {
@@ -3101,151 +3107,149 @@ Ext.onReady(function() {
                 afterLoad(view);
             };
 
-            if (isJsonp) {
+            if (isPlugin) {
                 Ext.data.JsonP.request({
                     url: url,
-                    disableCaching: false,
                     success: function(r) {
                         success(r);
                     }
                 });
-            } else {
+            }
+            else {
                 Ext.Ajax.request({
                     url: url,
-                    disableCaching: false,
                     success: function(r) {
                         success(Ext.decode(r.responseText));
                     }
                 });
             }
-        };
+		};
 
-        addCircles = function(view) {
-            var radius = view.areaRadius;
+		addCircles = function(view) {
+			var radius = view.areaRadius;
 
-            if (layer.circleLayer) {
-                layer.circleLayer.deactivateControls();
-                layer.circleLayer = null;
-            }
-            if (Ext.isDefined(radius) && radius) {
-                layer.circleLayer = GIS.core.CircleLayer(gis, layer.features, radius);
-                nissa = layer.circleLayer;
-            }
-        };
+			if (layer.circleLayer) {
+				layer.circleLayer.deactivateControls();
+				layer.circleLayer = null;
+			}
+			if (Ext.isDefined(radius) && radius) {
+				layer.circleLayer = GIS.core.CircleLayer(gis, layer.features, radius);
+				nissa = layer.circleLayer;
+			}
+		};
 
-        afterLoad = function(view) {
+		afterLoad = function(view) {
 
-            // Legend
-            gis.viewport.eastRegion.doLayout();
+			// Legend
+			gis.viewport.eastRegion.doLayout();
 
             if (layer.legendPanel) {
                 layer.legendPanel.expand();
             }
 
-            // Layer
-            if (layer.item) {
-                layer.item.setValue(true, view.opacity);
-            } else {
-                layer.setLayerOpacity(view.opacity);
-            }
+			// Layer
+			if (layer.item) {
+				layer.item.setValue(true, view.opacity);
+			}
+			else {
+				layer.setLayerOpacity(view.opacity);
+			}
 
-            // Gui
-            if (loader.updateGui && Ext.isObject(layer.widget)) {
-                layer.widget.setGui(view);
-            }
+			// Gui
+			if (loader.updateGui && Ext.isObject(layer.widget)) {
+				layer.widget.setGui(view);
+			}
 
-            // Zoom
-            if (loader.zoomToVisibleExtent) {
-                olmap.zoomToVisibleExtent();
-            }
+			// Zoom
+			if (loader.zoomToVisibleExtent) {
+				olmap.zoomToVisibleExtent();
+			}
 
-            // Mask
-            if (loader.hideMask) {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.hide();
-                }
-            }
+			// Mask
+			if (loader.hideMask) {
+				olmap.mask.hide();
+			}
 
-            // Map callback
-            if (loader.callBack) {
-                loader.callBack(layer);
-            } else {
-                gis.map = null;
+			// Map callback
+			if (loader.callBack) {
+				loader.callBack(layer);
+			}
+			else {
+				gis.map = null;
 
-                if (gis.viewport.shareButton) {
+				if (gis.viewport.shareButton) {
                     gis.viewport.shareButton.enable();
-                }
-            }
-        };
+				}
+			}
+		};
 
-        loader = {
-            compare: false,
-            updateGui: false,
-            zoomToVisibleExtent: false,
-            hideMask: false,
-            callBack: null,
-            load: function(view) {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.show();
-                }
+		loader = {
+			compare: false,
+			updateGui: false,
+			zoomToVisibleExtent: false,
+			hideMask: false,
+			callBack: null,
+			load: function(view) {
+				gis.olmap.mask.show();
 
-                if (this.compare) {
-                    compareView(view, true);
-                } else {
-                    loadOrganisationUnits(view);
-                }
-            },
-            loadData: loadData,
-            loadLegend: loadLegend
-        };
+				if (this.compare) {
+					compareView(view, true);
+				}
+				else {
+					loadOrganisationUnits(view);
+				}
+			},
+			loadData: loadData,
+			loadLegend: loadLegend
+		};
 
-        return loader;
-    };
+		return loader;
+	};
 
-    GIS.core.LayerLoaderBoundary = function(gis, layer) {
-        var olmap = layer.map,
-            compareView,
-            loadOrganisationUnits,
-            loadData,
-            loadLegend,
-            afterLoad,
-            loader;
+	GIS.core.LayerLoaderBoundary = function(gis, layer) {
+		var olmap = layer.map,
+			compareView,
+			loadOrganisationUnits,
+			loadData,
+			loadLegend,
+			afterLoad,
+			loader;
 
-        compareView = function(view, doExecute) {
-            var src = layer.core.view,
-                viewIds,
-                viewDim,
-                srcIds,
-                srcDim;
+		compareView = function(view, doExecute) {
+			var src = layer.core.view,
+				viewIds,
+				viewDim,
+				srcIds,
+				srcDim;
 
-            if (!src) {
-                if (doExecute) {
-                    loadOrganisationUnits(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+			if (!src) {
+				if (doExecute) {
+					loadOrganisationUnits(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            viewIds = [];
-            viewDim = view.rows[0];
-            srcIds = [];
-            srcDim = src.rows[0];
+			viewIds = [];
+			viewDim = view.rows[0];
+			srcIds = [];
+			srcDim = src.rows[0];
 
-            // organisation units
-            if (viewDim.items.length === srcDim.items.length) {
-                for (var i = 0; i < viewDim.items.length; i++) {
-                    viewIds.push(viewDim.items[i].id);
-                }
+			// organisation units
+			if (viewDim.items.length === srcDim.items.length) {
+				for (var i = 0; i < viewDim.items.length; i++) {
+					viewIds.push(viewDim.items[i].id);
+				}
 
-                for (var i = 0; i < srcDim.items.length; i++) {
-                    srcIds.push(srcDim.items[i].id);
-                }
+				for (var i = 0; i < srcDim.items.length; i++) {
+					srcIds.push(srcDim.items[i].id);
+				}
 
-                if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
-                    if (doExecute) {
-                        loadOrganisationUnits(view);
-                    }
-                    return gis.conf.finals.widget.loadtype_organisationunit;
-                }
+				if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
+					if (doExecute) {
+						loadOrganisationUnits(view);
+					}
+					return gis.conf.finals.widget.loadtype_organisationunit;
+				}
 
                 if (doExecute) {
                     loader.zoomToVisibleExtent = false;
@@ -3253,21 +3257,20 @@ Ext.onReady(function() {
                 }
 
                 return gis.conf.finals.widget.loadtype_legend;
-            } else {
-                if (doExecute) {
-                    loadOrganisationUnits(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+			}
+			else {
+				if (doExecute) {
+					loadOrganisationUnits(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            if (gis.olmap.mask && !gis.skipMask) {
-                gis.olmap.mask.hide();
-            }
-        };
+			gis.olmap.mask.hide();
+		};
 
-        loadOrganisationUnits = function(view) {
-            var items = view.rows[0].items,
-                isJsonp = gis.plugin && gis.crossDomain,
+		loadOrganisationUnits = function(view) {
+			var items = view.rows[0].items,
+                isPlugin = GIS.plugin && !GIS.app,
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -3278,7 +3281,15 @@ Ext.onReady(function() {
 
                     params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
-                    return gis.init.contextPath + '/api/geoFeatures.' + (isJsonp ? 'jsonp' : 'json') + params;
+                    if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
+                        params += '&userOrgUnit=';
+
+                        for (var i = 0; i < view.userOrgUnit.length; i++) {
+                            params += view.userOrgUnit[i] + (i < view.userOrgUnit.length - 1 ? ';' : '');
+                        }
+                    }
+
+                    return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params;
                 }(),
                 success,
                 failure;
@@ -3292,17 +3303,13 @@ Ext.onReady(function() {
                     levelObjectMap = {};
 
                 if (!Ext.isArray(features)) {
-                    if (gis.olmap.mask && !gis.skipMask) {
-                        gis.olmap.mask.hide();
-                    }
+                    olmap.mask.hide();
                     alert(GIS.i18n.invalid_coordinates);
                     return;
                 }
 
                 if (!features.length) {
-                    if (gis.olmap.mask && !gis.skipMask) {
-                        gis.olmap.mask.hide();
-                    }
+                    olmap.mask.hide();
                     alert(GIS.i18n.no_valid_coordinates_found);
                     return;
                 }
@@ -3342,13 +3349,11 @@ Ext.onReady(function() {
             };
 
             failure = function() {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.hide();
-                }
+                olmap.mask.hide();
                 alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
-            if (isJsonp) {
+            if (isPlugin) {
                 Ext.data.JsonP.request({
                     url: url,
                     disableCaching: false,
@@ -3356,7 +3361,8 @@ Ext.onReady(function() {
                         success(r);
                     }
                 });
-            } else {
+            }
+            else {
                 Ext.Ajax.request({
                     url: url,
                     disableCaching: false,
@@ -3368,25 +3374,25 @@ Ext.onReady(function() {
                     }
                 });
             }
-        };
+		};
 
-        loadData = function(view, features) {
-            view = view || layer.core.view;
-            features = features || layer.core.featureStore.features;
+		loadData = function(view, features) {
+			view = view || layer.core.view;
+			features = features || layer.core.featureStore.features;
 
-            for (var i = 0; i < features.length; i++) {
-                features[i].attributes.value = 0;
+			for (var i = 0; i < features.length; i++) {
+				features[i].attributes.value = 0;
                 features[i].attributes.popupText = features[i].attributes.name;
-            }
+			}
 
-            layer.removeFeatures(layer.features);
-            layer.addFeatures(features);
+			layer.removeFeatures(layer.features);
+			layer.addFeatures(features);
 
-            loadLegend(view);
-        };
+			loadLegend(view);
+		};
 
-        loadLegend = function(view) {
-            view = view || layer.core.view;
+		loadLegend = function(view) {
+			view = view || layer.core.view;
 
             // labels
             for (var i = 0, feature; i < layer.features.length; i++) {
@@ -3394,232 +3400,238 @@ Ext.onReady(function() {
                 attr.label = view.labels ? attr.name : '';
             }
 
-            var options = {
-                indicator: gis.conf.finals.widget.value,
-                method: 2,
-                numClasses: 5,
-                colors: layer.core.getColors('000000', '000000'),
-                minSize: 6,
-                maxSize: 6
-            };
+			var options = {
+				indicator: gis.conf.finals.widget.value,
+				method: 2,
+				numClasses: 5,
+				colors: layer.core.getColors('000000', '000000'),
+				minSize: 6,
+				maxSize: 6
+			};
 
-            layer.core.view = view;
+			layer.core.view = view;
 
-            layer.core.applyClassification(options);
+			layer.core.applyClassification(options);
 
             // labels
-            gis.util.layer.setFeatureLabelStyle(layer, view.labels, false, view);
+            layer.core.setFeatureLabelStyle(view.labels, false, view);
 
-            afterLoad(view);
-        };
+			afterLoad(view);
+		};
 
-        afterLoad = function(view) {
+		afterLoad = function(view) {
 
-            // Layer
-            if (layer.item) {
-                layer.item.setValue(true, view.opacity);
-            } else {
-                layer.setLayerOpacity(view.opacity);
-            }
+			// Layer
+			if (layer.item) {
+				layer.item.setValue(true, view.opacity);
+			}
+			else {
+				layer.setLayerOpacity(view.opacity);
+			}
 
-            // Gui
-            if (loader.updateGui && Ext.isObject(layer.widget)) {
-                layer.widget.setGui(view);
-            }
+			// Gui
+			if (loader.updateGui && Ext.isObject(layer.widget)) {
+				layer.widget.setGui(view);
+			}
 
-            // Zoom
-            if (loader.zoomToVisibleExtent) {
-                olmap.zoomToVisibleExtent();
-            }
+			// Zoom
+			if (loader.zoomToVisibleExtent) {
+				olmap.zoomToVisibleExtent();
+			}
 
-            // Mask
-            if (loader.hideMask) {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.hide();
-                }
-            }
+			// Mask
+			if (loader.hideMask) {
+				olmap.mask.hide();
+			}
 
-            // Map callback
-            if (loader.callBack) {
-                loader.callBack(layer);
-            } else {
-                gis.map = null;
+			// Map callback
+			if (loader.callBack) {
+				loader.callBack(layer);
+			}
+			else {
+				gis.map = null;
 
-                if (gis.viewport.shareButton) {
+				if (gis.viewport.shareButton) {
                     gis.viewport.shareButton.enable();
-                }
+				}
+			}
+
+            // mouse events
+            if (layer.unregisterMouseDownEvent) {
+                layer.unregisterMouseDownEvent();
             }
-        };
+		};
 
-        loader = {
-            compare: false,
-            updateGui: false,
-            zoomToVisibleExtent: false,
-            hideMask: false,
-            callBack: null,
-            load: function(view) {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.show();
-                }
+		loader = {
+			compare: false,
+			updateGui: false,
+			zoomToVisibleExtent: false,
+			hideMask: false,
+			callBack: null,
+			load: function(view) {
+				gis.olmap.mask.show();
 
-                if (this.compare) {
-                    compareView(view, true);
-                } else {
-                    loadOrganisationUnits(view);
-                }
-            },
-            loadData: loadData,
-            loadLegend: loadLegend
-        };
+				if (this.compare) {
+					compareView(view, true);
+				}
+				else {
+					loadOrganisationUnits(view);
+				}
+			},
+			loadData: loadData,
+			loadLegend: loadLegend
+		};
 
-        return loader;
-    };
+		return loader;
+	};
 
-    GIS.core.LayerLoaderThematic = function(gis, layer) {
-        var olmap = layer.map,
-            compareView,
-            loadOrganisationUnits,
-            loadData,
-            loadLegend,
-            afterLoad,
-            loader,
-            dimConf = gis.conf.finals.dimension,
-            type = gis.plugin && gis.crossDomain ? 'jsonp' : 'json';
+	GIS.core.LayerLoaderThematic = function(gis, layer) {
+		var olmap = layer.map,
+			compareView,
+			loadOrganisationUnits,
+			loadData,
+			loadLegend,
+			afterLoad,
+			loader,
+			dimConf = gis.conf.finals.dimension;
 
-        compareView = function(view, doExecute) {
-            var src = layer.core.view,
-                viewIds,
-                viewDim,
-                srcIds,
-                srcDim;
+		compareView = function(view, doExecute) {
+			var src = layer.core.view,
+				viewIds,
+				viewDim,
+				srcIds,
+				srcDim;
 
-            loader.zoomToVisibleExtent = true;
+			loader.zoomToVisibleExtent = true;
 
-            if (!src) {
-                if (doExecute) {
-                    loadOrganisationUnits(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+			if (!src) {
+				if (doExecute) {
+					loadOrganisationUnits(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            // organisation units
-            viewIds = [];
-            viewDim = view.rows[0];
-            srcIds = [];
-            srcDim = src.rows[0];
+			// organisation units
+			viewIds = [];
+			viewDim = view.rows[0];
+			srcIds = [];
+			srcDim = src.rows[0];
 
-            if (viewDim.items.length === srcDim.items.length) {
-                for (var i = 0; i < viewDim.items.length; i++) {
-                    viewIds.push(viewDim.items[i].id);
-                }
+			if (viewDim.items.length === srcDim.items.length) {
+				for (var i = 0; i < viewDim.items.length; i++) {
+					viewIds.push(viewDim.items[i].id);
+				}
 
-                for (var i = 0; i < srcDim.items.length; i++) {
-                    srcIds.push(srcDim.items[i].id);
-                }
+				for (var i = 0; i < srcDim.items.length; i++) {
+					srcIds.push(srcDim.items[i].id);
+				}
 
-                if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
-                    if (doExecute) {
-                        loadOrganisationUnits(view);
-                    }
-                    return gis.conf.finals.widget.loadtype_organisationunit;
-                }
-            } else {
-                if (doExecute) {
-                    loadOrganisationUnits(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+				if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
+					if (doExecute) {
+						loadOrganisationUnits(view);
+					}
+					return gis.conf.finals.widget.loadtype_organisationunit;
+				}
+			}
+			else {
+				if (doExecute) {
+					loadOrganisationUnits(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            // data
-            loader.zoomToVisibleExtent = false;
+			// data
+			loader.zoomToVisibleExtent = false;
 
-            viewIds = [];
-            viewDim = view.columns[0];
-            srcIds = [];
-            srcDim = src.columns[0];
+			viewIds = [];
+			viewDim = view.columns[0];
+			srcIds = [];
+			srcDim = src.columns[0];
 
-            if (viewDim.items.length === srcDim.items.length) {
-                for (var i = 0; i < viewDim.items.length; i++) {
-                    viewIds.push(viewDim.items[i].id);
-                }
+			if (viewDim.items.length === srcDim.items.length) {
+				for (var i = 0; i < viewDim.items.length; i++) {
+					viewIds.push(viewDim.items[i].id);
+				}
 
-                for (var i = 0; i < srcDim.items.length; i++) {
-                    srcIds.push(srcDim.items[i].id);
-                }
+				for (var i = 0; i < srcDim.items.length; i++) {
+					srcIds.push(srcDim.items[i].id);
+				}
 
-                if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
-                    if (doExecute) {
-                        loadData(view);
-                    }
-                    return gis.conf.finals.widget.loadtype_organisationunit;
-                }
-            } else {
-                if (doExecute) {
-                    loadData(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+				if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
+					if (doExecute) {
+						loadData(view);
+					}
+					return gis.conf.finals.widget.loadtype_organisationunit;
+				}
+			}
+			else {
+				if (doExecute) {
+					loadData(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            // period
-            viewIds = [];
-            viewDim = view.filters[0];
-            srcIds = [];
-            srcDim = src.filters[0];
+			// period
+			viewIds = [];
+			viewDim = view.filters[0];
+			srcIds = [];
+			srcDim = src.filters[0];
 
-            if (viewDim.items.length === srcDim.items.length) {
-                for (var i = 0; i < viewDim.items.length; i++) {
-                    viewIds.push(viewDim.items[i].id);
-                }
+			if (viewDim.items.length === srcDim.items.length) {
+				for (var i = 0; i < viewDim.items.length; i++) {
+					viewIds.push(viewDim.items[i].id);
+				}
 
-                for (var i = 0; i < srcDim.items.length; i++) {
-                    srcIds.push(srcDim.items[i].id);
-                }
+				for (var i = 0; i < srcDim.items.length; i++) {
+					srcIds.push(srcDim.items[i].id);
+				}
 
-                if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
-                    if (doExecute) {
-                        loadData(view);
-                    }
-                    return gis.conf.finals.widget.loadtype_organisationunit;
-                }
-            } else {
-                if (doExecute) {
-                    loadData(view);
-                }
-                return gis.conf.finals.widget.loadtype_organisationunit;
-            }
+				if (Ext.Array.difference(viewIds, srcIds).length !== 0) {
+					if (doExecute) {
+						loadData(view);
+					}
+					return gis.conf.finals.widget.loadtype_organisationunit;
+				}
+			}
+			else {
+				if (doExecute) {
+					loadData(view);
+				}
+				return gis.conf.finals.widget.loadtype_organisationunit;
+			}
 
-            // legend
-            //if (typeof view.legendSet !== typeof src.legendSet) {
-            //if (doExecute) {
-            //loadLegend(view);
-            //}
-            //return gis.conf.finals.widget.loadtype_legend;
-            //}
-            //else if (view.classes !== src.classes ||
-            //view.method !== src.method ||
-            //view.colorLow !== src.colorLow ||
-            //view.radiusLow !== src.radiusLow ||
-            //view.colorHigh !== src.colorHigh ||
-            //view.radiusHigh !== src.radiusHigh) {
-            //if (doExecute) {
-            //loadLegend(view);
-            //}
-            //return gis.conf.finals.widget.loadtype_legend;
-            //}
+			// legend
+			//if (typeof view.legendSet !== typeof src.legendSet) {
+				//if (doExecute) {
+					//loadLegend(view);
+				//}
+				//return gis.conf.finals.widget.loadtype_legend;
+			//}
+			//else if (view.classes !== src.classes ||
+				//view.method !== src.method ||
+				//view.colorLow !== src.colorLow ||
+				//view.radiusLow !== src.radiusLow ||
+				//view.colorHigh !== src.colorHigh ||
+				//view.radiusHigh !== src.radiusHigh) {
+					//if (doExecute) {
+						//loadLegend(view);
+					//}
+					//return gis.conf.finals.widget.loadtype_legend;
+			//}
 
-            // if no changes - reload legend but do not zoom
-            if (doExecute) {
-                loader.zoomToVisibleExtent = false;
-                loadLegend(view);
-                return gis.conf.finals.widget.loadtype_legend;
-            }
+			// if no changes - reload legend but do not zoom
+			if (doExecute) {
+				loader.zoomToVisibleExtent = false;
+				loadLegend(view);
+				return gis.conf.finals.widget.loadtype_legend;
+			}
 
-            //gis.olmap.mask.hide();
-        };
+			//gis.olmap.mask.hide();
+		};
 
-        loadOrganisationUnits = function(view) {
-            var items = view.rows[0].items,
-                isJsonp = gis.plugin && gis.crossDomain,
+		loadOrganisationUnits = function(view) {
+			var items = view.rows[0].items,
+                isPlugin = GIS.plugin && !GIS.app,
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -3630,7 +3642,15 @@ Ext.onReady(function() {
 
                     params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
-                    return gis.init.contextPath + '/api/geoFeatures.' + (isJsonp ? 'jsonp' : 'json') + params;
+                    if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
+                        params += '&userOrgUnit=';
+
+                        for (var i = 0; i < view.userOrgUnit.length; i++) {
+                            params += view.userOrgUnit[i] + (i < view.userOrgUnit.length - 1 ? ';' : '');
+                        }
+                    }
+
+                    return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params;
                 }(),
                 success,
                 failure;
@@ -3641,17 +3661,13 @@ Ext.onReady(function() {
                     features = gis.util.map.getTransformedFeatureArray(format.read(geojson));
 
                 if (!Ext.isArray(features)) {
-                    if (gis.olmap.mask && !gis.skipMask) {
-                        gis.olmap.mask.hide();
-                    }
+                    olmap.mask.hide();
                     alert(GIS.i18n.invalid_coordinates);
                     return;
                 }
 
                 if (!features.length) {
-                    if (gis.olmap.mask && !gis.skipMask) {
-                        gis.olmap.mask.hide();
-                    }
+                    olmap.mask.hide();
                     alert(GIS.i18n.no_valid_coordinates_found);
                     return;
                 }
@@ -3662,13 +3678,11 @@ Ext.onReady(function() {
             };
 
             failure = function() {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.hide();
-                }
+                olmap.mask.hide();
                 alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
-            if (isJsonp) {
+            if (isPlugin) {
                 Ext.data.JsonP.request({
                     url: url,
                     disableCaching: false,
@@ -3676,7 +3690,8 @@ Ext.onReady(function() {
                         success(r);
                     }
                 });
-            } else {
+            }
+            else {
                 Ext.Ajax.request({
                     url: url,
                     disableCaching: false,
@@ -3688,141 +3703,152 @@ Ext.onReady(function() {
                     }
                 });
             }
-        };
+		};
 
-        loadData = function(view, features) {
-            var success;
+		loadData = function(view, features) {
+			var success;
 
-            view = view || layer.core.view;
-            features = features || layer.core.featureStore.features;
+			view = view || layer.core.view;
+			features = features || layer.core.featureStore.features;
 
-            var dimConf = gis.conf.finals.dimension,
-                paramString = '?',
-                dxItems = view.columns[0].items,
-                isOperand = view.columns[0].dimension === dimConf.operand.objectName,
-                peItems = view.filters[0].items,
-                ouItems = view.rows[0].items;
+			var dimConf = gis.conf.finals.dimension,
+				paramString = '?',
+				dxItems = view.columns[0].items,
+				isOperand = view.columns[0].dimension === dimConf.operand.objectName,
+				peItems = view.filters[0].items,
+				ouItems = view.rows[0].items;
 
-            // ou
-            paramString += 'dimension=ou:';
+			// ou
+			paramString += 'dimension=ou:';
 
-            for (var i = 0; i < ouItems.length; i++) {
-                paramString += ouItems[i].id;
-                paramString += i < ouItems.length - 1 ? ';' : '';
-            }
+			for (var i = 0; i < ouItems.length; i++) {
+				paramString += ouItems[i].id;
+				paramString += i < ouItems.length - 1 ? ';' : '';
+			}
 
-            // dx
-            paramString += '&dimension=dx:';
+			// dx
+			paramString += '&dimension=dx:';
 
-            for (var i = 0; i < dxItems.length; i++) {
-                paramString += isOperand ? dxItems[i].id.split('.')[0] : dxItems[i].id;
-                paramString += i < dxItems.length - 1 ? ';' : '';
-            }
+			for (var i = 0; i < dxItems.length; i++) {
+				paramString += isOperand ? dxItems[i].id.split('.')[0] : dxItems[i].id;
+				paramString += i < dxItems.length - 1 ? ';' : '';
+			}
 
-            paramString += isOperand ? '&dimension=co' : '';
+			paramString += isOperand ? '&dimension=co' : '';
 
-            // pe
-            paramString += '&filter=pe:';
+			// pe
+			paramString += '&filter=pe:';
 
-            for (var i = 0; i < peItems.length; i++) {
-                paramString += peItems[i].id;
-                paramString += i < peItems.length - 1 ? ';' : '';
-            }
+			for (var i = 0; i < peItems.length; i++) {
+				paramString += peItems[i].id;
+				paramString += i < peItems.length - 1 ? ';' : '';
+			}
 
             // display property
-            paramString += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+            paramString += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();            
 
-            success = function(json) {
-                var response = gis.api.response.Response(json),
-                    featureMap = {},
-                    valueMap = {},
-                    ouIndex,
-                    dxIndex,
-                    valueIndex,
-                    newFeatures = [],
-                    dimensions,
-                    items = [];
+            if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
+                paramString += '&userOrgUnit=';
 
-                if (!response) {
-                    if (gis.olmap.mask && !gis.skipMask) {
-                        gis.olmap.mask.hide();
-                    }
-                    return;
+                for (var i = 0; i < view.userOrgUnit.length; i++) {
+                    paramString += view.userOrgUnit[i] + (i < view.userOrgUnit.length - 1 ? ';' : '');
                 }
+            }
 
-                // ou index, value index
-                for (var i = 0; i < response.headers.length; i++) {
-                    if (response.headers[i].name === dimConf.organisationUnit.dimensionName) {
-                        ouIndex = i;
-                    } else if (response.headers[i].name === dimConf.value.dimensionName) {
-                        valueIndex = i;
-                    }
-                }
+			success = function(json) {
+				var response = gis.api.response.Response(json),
+					featureMap = {},
+					valueMap = {},
+					ouIndex,
+					dxIndex,
+					valueIndex,
+					newFeatures = [],
+					dimensions,
+					items = [];
 
-                // Feature map
-                for (var i = 0, id; i < features.length; i++) {
-                    var id = features[i].attributes.id;
+				if (!response) {
+					olmap.mask.hide();
+					return;
+				}
 
-                    featureMap[id] = true;
-                }
+				// ou index, value index
+				for (var i = 0; i < response.headers.length; i++) {
+					if (response.headers[i].name === dimConf.organisationUnit.dimensionName) {
+						ouIndex = i;
+					}
+					else if (response.headers[i].name === dimConf.value.dimensionName) {
+						valueIndex = i;
+					}
+				}
 
-                // Value map
-                for (var i = 0; i < response.rows.length; i++) {
-                    var id = response.rows[i][ouIndex],
-                        value = parseFloat(response.rows[i][valueIndex]);
+				// Feature map
+				for (var i = 0, id; i < features.length; i++) {
+					var id = features[i].attributes.id;
+					featureMap[id] = true;
+				}
 
-                    valueMap[id] = value;
-                }
+				// Value map
+				for (var i = 0; i < response.rows.length; i++) {
+					var id = response.rows[i][ouIndex],
+						value = parseFloat(response.rows[i][valueIndex]);
 
-                for (var i = 0; i < features.length; i++) {
-                    var feature = features[i],
-                        id = feature.attributes.id;
+					valueMap[id] = value;
+				}
+                
+				for (var i = 0; i < features.length; i++) {
+					var feature = features[i],
+						id = feature.attributes.id;
 
-                    if (featureMap.hasOwnProperty(id) && valueMap.hasOwnProperty(id)) {
-                        feature.attributes.value = valueMap[id];
+					if (featureMap.hasOwnProperty(id) && valueMap.hasOwnProperty(id)) {
+						feature.attributes.value = valueMap[id];
                         feature.attributes.popupText = feature.attributes.name + ' (' + feature.attributes.value + ')';
 
-                        newFeatures.push(feature);
-                    }
-                }
+						newFeatures.push(feature);
+					}
+				}
 
-                layer.removeFeatures(layer.features);
-                layer.addFeatures(newFeatures);
+				layer.removeFeatures(layer.features);
+				layer.addFeatures(newFeatures);
 
-                gis.response = response;
+				gis.response = response;
 
-                loadLegend(view);
-            };
+				loadLegend(view);
+			};
 
-            if (gis.plugin && gis.crossDomain) {
-                Ext.data.JsonP.request({
-                    url: gis.init.contextPath + '/api/analytics.jsonp' + paramString,
-                    disableCaching: false,
-                    scope: this,
-                    success: function(r) {
-                        success(r);
-                    }
-                });
-            } else {
-                Ext.Ajax.request({
-                    url: gis.init.contextPath + '/api/analytics.json' + paramString,
-                    disableCaching: false,
-                    failure: function(r) {
-                        alert(r.status + '\n' + r.statusText + '\n' + r.responseText);
-                    },
-                    success: function(r) {
-                        success(Ext.decode(r.responseText));
-                    }
-                });
-            }
-        };
+			if (Ext.isObject(GIS.app)) {
+				Ext.Ajax.request({
+					url: gis.init.contextPath + '/api/analytics.json' + paramString,
+					disableCaching: false,
+					failure: function(r) {
+                        gis.alert(r);
+					},
+					success: function(r) {
+						success(Ext.decode(r.responseText));
+					}
+				});
+			}
+			else if (Ext.isObject(GIS.plugin)) {
+				Ext.data.JsonP.request({
+					url: gis.init.contextPath + '/api/analytics.jsonp' + paramString,
+					disableCaching: false,
+					scope: this,
+					success: function(r) {
+						success(r);
+					}
+				});
+			}
+		};
 
-        loadLegend = function(view) {
-            var bounds,
-                addNames,
-                fn;
+		loadLegend = function(view) {
+            var bounds = [],
+                colors = [],
+                names = [],
+                legends = [],
 
-            view = view || layer.core.view;
+				addNames,
+				fn;
+
+			view = view || layer.core.view;
 
             // labels
             for (var i = 0, feature; i < layer.features.length; i++) {
@@ -3832,31 +3858,32 @@ Ext.onReady(function() {
 
             layer.styleMap = GIS.core.StyleMap(view);
 
-            addNames = function(response) {
+			addNames = function(response) {
 
-                // All dimensions
-                var dimensions = Ext.Array.clean([].concat(view.columns || [], view.rows || [], view.filters || [])),
-                    metaData = response.metaData,
-                    peIds = metaData[dimConf.period.objectName];
+				// All dimensions
+				var dimensions = Ext.Array.clean([].concat(view.columns || [], view.rows || [], view.filters || [])),
+					metaData = response.metaData,
+					peIds = metaData[dimConf.period.objectName];
 
-                for (var i = 0, dimension; i < dimensions.length; i++) {
-                    dimension =  dimensions[i];
+				for (var i = 0, dimension; i < dimensions.length; i++) {
+					dimension = dimensions[i];
 
-                    for (var j = 0, item; j < dimension.items.length; j++) {
-                        item = dimension.items[j];
+					for (var j = 0, item; j < dimension.items.length; j++) {
+						item = dimension.items[j];
 
-                        if (item.id.indexOf('.') !== -1) {
-                            var ids = item.id.split('.');
-                            item.name = metaData.names[ids[0]] + ' ' + metaData.names[ids[1]];
-                        } else {
-                            item.name = metaData.names[item.id];
-                        }
-                    }
-                }
+						if (item.id.indexOf('.') !== -1) {
+							var ids = item.id.split('.');
+							item.name = metaData.names[ids[0]] + ' ' + metaData.names[ids[1]];
+						}
+						else {
+							item.name = metaData.names[item.id];
+						}
+					}
+				}
 
-                // Period name without changing the id
-                view.filters[0].items[0].name = metaData.names[peIds[peIds.length - 1]];
-            };
+				// Period name without changing the id
+				view.filters[0].items[0].name = metaData.names[peIds[peIds.length - 1]];
+			};
 
             fn = function() {
                 addNames(gis.response);
@@ -3871,7 +3898,7 @@ Ext.onReady(function() {
                     minSize: view.radiusLow,
                     maxSize: view.radiusHigh
                 };
-
+                
                 layer.core.view = view;
                 layer.core.colorInterpolation = colors;
                 layer.core.applyClassification(options);
@@ -3879,142 +3906,149 @@ Ext.onReady(function() {
                 afterLoad(view);
             };
 
-            if (!view.legendSet) {
-                fn();
-            }
-            else {
-                var bounds = [],
-                    colors = [],
-                    names = [],
-                    legends = [],
-                    success,
-                    failure,
-                    config = {};
+            loadLegendSet = function(view) {
+                Ext.Ajax.request({
+					url: gis.init.contextPath + '/api/legendSets/' + view.legendSet.id + '.json?fields=' + gis.conf.url.legendSetFields.join(','),
+					scope: this,
+                    disableCaching: false,
+					success: function(r) {
+						legends = Ext.decode(r.responseText).legends;
 
-                success = function(r) {
-                    legends = r.responseText ? Ext.decode(r.responseText).legends : r.legends;
+						Ext.Array.sort(legends, function (a, b) {
+							return a.startValue - b.startValue;
+						});
 
-                    Ext.Array.sort(legends, function(a, b) {
-                        return a.startValue - b.startValue;
-                    });
+						for (var i = 0; i < legends.length; i++) {
+							if (bounds[bounds.length - 1] !== legends[i].startValue) {
+								if (bounds.length !== 0) {
+									colors.push(new mapfish.ColorRgb(240,240,240));
+									names.push('');
+								}
+								bounds.push(legends[i].startValue);
+							}
+							colors.push(new mapfish.ColorRgb());
+							colors[colors.length - 1].setFromHex(legends[i].color);
+							names.push(legends[i].name);
+							bounds.push(legends[i].endValue);
+						}
 
-                    for (var i = 0; i < legends.length; i++) {
-                        if (bounds[bounds.length - 1] !== legends[i].startValue) {
-                            if (bounds.length !== 0) {
-                                colors.push(new mapfish.ColorRgb(240, 240, 240));
-                                names.push('');
-                            }
-                            bounds.push(legends[i].startValue);
-                        }
-                        colors.push(new mapfish.ColorRgb());
-                        colors[colors.length - 1].setFromHex(legends[i].color);
-                        names.push(legends[i].name);
-                        bounds.push(legends[i].endValue);
+						view.legendSet.names = names;
+						view.legendSet.bounds = bounds;
+						view.legendSet.colors = colors;
+					},
+                    callback: function() {
+						fn();
                     }
+				});
+            };
 
-                    view.legendSet.names = names;
-                    view.legendSet.bounds = bounds;
-                    view.legendSet.colors = colors;
-                };
-
-                failure = function(r) {
-                    console.log(r);
-                };
-
-                config.url = gis.init.contextPath + '/api/legendSets/' + view.legendSet.id + '.' + type + '?fields=' + gis.conf.url.legendSetFields.join(',');
-                config.disableCaching = false;
-                config.scope = this;
-                config.success = success;
-                config.failure = failure;
-                config.callback = fn;
-
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                } else {
-                    Ext.Ajax.request(config);
-                }
+			if (view.legendSet) {
+                loadLegendSet(view);
             }
-        };
+			else {
+                var elementMap = {
+                        'in': 'indicators',
+                        'de': 'dataElements',
+                        'ds': 'dataSets'
+                    },
+                    elementUrl = elementMap[view.columns[0].objectName],
+                    id = view.columns[0].items[0].id;
 
-        afterLoad = function(view) {
+                Ext.Ajax.request({
+                    url: gis.init.contextPath + '/api/' + elementUrl + '.json?fields=legendSet[id,name]&paging=false&filter=id:eq:' + id,
+                    success: function(r) {
+                        var set = Ext.decode(r.responseText)[elementUrl][0].legendSet;
 
-            // legend
-            gis.viewport.eastRegion.doLayout();
+                        if (set) {
+                            view.legendSet = set;
+                            loadLegendSet(view);
+                        }
+                        else {
+                            fn();
+                        }
+                    },
+                    failure: function() {
+                        fn();
+                    }
+                });
+			}
+		};
+
+		afterLoad = function(view) {
+
+			// Legend
+			gis.viewport.eastRegion.doLayout();
 
             if (layer.legendPanel) {
                 layer.legendPanel.expand();
             }
 
-            // layer
-            layer.setLayerOpacity(view.opacity);
+			// Layer
+			layer.setLayerOpacity(view.opacity);
 
-            if (layer.item) {
-                layer.item.setValue(true);
-            }
+			if (layer.item) {
+				layer.item.setValue(true);
+			}
 
-            // filter
-            if (layer.filterWindow && layer.filterWindow.isVisible()) {
-                layer.filterWindow.filter();
-            }
+			// Filter
+			if (layer.filterWindow && layer.filterWindow.isVisible()) {
+				layer.filterWindow.filter();
+			}
 
-            // gui
-            if (loader.updateGui && Ext.isObject(layer.widget)) {
-                layer.widget.setGui(view);
-            }
+			// Gui
+			if (loader.updateGui && Ext.isObject(layer.widget)) {
+				layer.widget.setGui(view);
+			}
 
-            // zoom
-            if (loader.zoomToVisibleExtent) {
-                olmap.zoomToVisibleExtent();
-            }
+			// Zoom
+			if (loader.zoomToVisibleExtent) {
+				olmap.zoomToVisibleExtent();
+			}
 
-            // mask
-            if (loader.hideMask) {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.hide();
-                }
-            }
+			// Mask
+			if (loader.hideMask) {
+				olmap.mask.hide();
+			}
 
-            // map callback
-            if (loader.callBack) {
-                loader.callBack(layer);
-            }
-            else {
-                gis.map = null;
-
-                if (gis.viewport.shareButton) {
+			// Map callback
+			if (loader.callBack) {
+				loader.callBack(layer);
+			}
+			else {
+				gis.map = null;
+				if (gis.viewport.shareButton) {
                     gis.viewport.shareButton.enable();
-                }
-            }
+				}
+			}
 
-            // session storage
-            if (GIS.isSessionStorage) {
-                gis.util.layout.setSessionStorage('map', gis.util.layout.getAnalytical());
-            }
-        };
+			// session storage
+			if (GIS.isSessionStorage) {
+				gis.util.layout.setSessionStorage('map', gis.util.layout.getAnalytical());
+			}
+		};
 
-        loader = {
-            compare: false,
-            updateGui: false,
-            zoomToVisibleExtent: false,
-            hideMask: false,
-            callBack: null,
-            load: function(view) {
-                if (gis.olmap.mask && !gis.skipMask) {
-                    gis.olmap.mask.show();
-                }
+		loader = {
+			compare: false,
+			updateGui: false,
+			zoomToVisibleExtent: false,
+			hideMask: false,
+			callBack: null,
+			load: function(view) {
+				gis.olmap.mask.show();
 
-                if (this.compare) {
-                    compareView(view, true);
-                } else {
-                    loadOrganisationUnits(view);
-                }
-            },
-            loadData: loadData,
-            loadLegend: loadLegend
-        };
+				if (this.compare) {
+					compareView(view, true);
+				}
+				else {
+					loadOrganisationUnits(view);
+				}
+			},
+			loadData: loadData,
+			loadLegend: loadLegend
+		};
 
-        return loader;
-    };
+		return loader;
+	};
 
 	GIS.core.CircleLayer = function(gis, features, radius) {
 		var points = gis.util.map.getPointsByFeatures(features),
@@ -4800,9 +4834,10 @@ Ext.onReady(function() {
                 }();
             };
 
-            api.layout.Layout = function(config, applyConfig) {
-                var config = Ext.clone(config),
-                    layout = {},
+            api.layout.Layout = function(config, applyConfig, forceApplyConfig) {
+                config = Ext.apply(config, applyConfig);
+                
+                var layout = {},
                     getValidatedDimensionArray,
                     validateSpecialCases;
 
@@ -4995,7 +5030,11 @@ Ext.onReady(function() {
 
                     layout.organisationUnitGroupSet = config.organisationUnitGroupSet;
 
-                    return Ext.apply(layout, applyConfig);
+                    if (Ext.Array.from(config.userOrgUnit).length) {
+                        layout.userOrgUnit = Ext.Array.from(config.userOrgUnit);
+                    }
+
+                    return Ext.apply(layout, forceApplyConfig);
                 }();
             };
 
@@ -7397,7 +7436,7 @@ Ext.onReady(function() {
                 msg: 'Loading'
             });
 
-            GIS.core.MapLoader(gis).load();
+            GIS.core.MapLoader(gis, config).load();
         }();
     };
 
