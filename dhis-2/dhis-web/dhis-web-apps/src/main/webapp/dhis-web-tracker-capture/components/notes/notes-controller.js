@@ -47,9 +47,7 @@ trackerCapture.controller('NotesController',
             }
         }
     });
-   
-    $scope.searchNoteField = false;
-    
+       
     $scope.addNote = function(){
         
         if(!angular.isUndefined($scope.note) && $scope.note !== ""){
@@ -76,11 +74,6 @@ trackerCapture.controller('NotesController',
     
     $scope.clearNote = function(){
          $scope.note = '';           
-    };
-    
-    $scope.searchNote = function(){        
-        $scope.searchNoteField = $scope.searchNoteField === false ? true : false;
-        $scope.noteSearchText = '';
     };
     
     $scope.showNotes = function(){
