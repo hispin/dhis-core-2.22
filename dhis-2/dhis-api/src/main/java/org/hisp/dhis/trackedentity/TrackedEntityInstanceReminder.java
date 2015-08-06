@@ -90,7 +90,7 @@ public class TrackedEntityInstanceReminder
 
     public static final int SEND_TO_USER_GROUP = 5;
 
-    public static final int SEND_WHEN_TO_EMROLLEMENT = 1;
+    public static final int SEND_WHEN_TO_ENROLLMENT = 1;
 
     public static final int SEND_WHEN_TO_C0MPLETED_EVENT = 2;
 
