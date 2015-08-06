@@ -61,7 +61,9 @@ function filterExpressionSelect( event, value, fieldName ) {
 function getTrackedEntityDataElements( type ) {
   var fieldId = type + '-data-elements';
   clearListById(fieldId);
-  var programStageId = getFieldValue('programStageId');
+  
+  var psSelectId = type + '-program-stage';
+  var programStageId = getFieldValue(psSelectId);
 
   jQuery.getJSON('getTrackedEntityDataElements.action',
     {

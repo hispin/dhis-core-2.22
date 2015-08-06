@@ -49,7 +49,6 @@ import com.opensymphony.xwork2.Action;
 public class GetTrackedEntityDataElementsAction
     implements Action
 {
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -79,9 +78,9 @@ public class GetTrackedEntityDataElementsAction
         this.programId = programId;
     }
 
-    private Integer programStageId;
+    private String programStageId;
 
-    public void setProgramStageId( Integer programStageId )
+    public void setProgramStageId( String programStageId )
     {
         this.programStageId = programStageId;
     }
