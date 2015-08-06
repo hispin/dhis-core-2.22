@@ -281,8 +281,8 @@ public abstract class AbstractEnrollmentService
 
         OrganisationUnit organisationUnit = getOrganisationUnit( enrollment.getOrgUnit() );
 
-        ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( enrollment.getEnrollment(), entityInstance, program,
-            enrollment.getDateOfEnrollment(), enrollment.getDateOfIncident(), organisationUnit );
+        ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program,
+            enrollment.getDateOfEnrollment(), enrollment.getDateOfIncident(), organisationUnit, enrollment.getEnrollment() );
 
         if ( programInstance == null )
         {

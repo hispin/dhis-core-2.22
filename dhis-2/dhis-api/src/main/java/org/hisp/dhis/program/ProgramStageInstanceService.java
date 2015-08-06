@@ -180,20 +180,28 @@ public interface ProgramStageInstanceService
         OrganisationUnit organisationUnit );
 
     /**
-     * For the first case of an anonymous program, the program-instance doesn't
-     * exist, So system has to create a program-instance and
-     * program-stage-instance. The similar thing happens for single event with
-     * registration.
+     * Creates a program stage instance. Will create a program instance in case
+     * the program is single event.
      *
-     * @param entityInstance TrackedEntityInstance
-     * @param program Single event without registration
-     * @param executionDate Report date of the event
-     * @param organisationUnit Orgunit where the event happens
-     * @return ProgramStageInstance ProgramStageInstance object
+     * @param entityInstance the tracked entity instance.
+     * @param program the program.
+     * @param executionDate the report date of the event.
+     * @param organisationUnit the organisation unit where the event took place.
+     * @return ProgramStageInstance a ProgramStageInstance object.
      */
     ProgramStageInstance createProgramStageInstance( TrackedEntityInstance entityInstance, Program program,
         Date executionDate, OrganisationUnit organisationUnit );
 
+    /**
+     * Creates a program stage instance. 
+     *
+     * @param programInstance the program instance.
+     * @param programStage the program stage.
+     * @param enrollmentDate the enrollment date.
+     * @param dateOfIncident the date of incident.
+     * @param organisationUnit the organisation unit where the event took place.
+     * @return ProgramStageInstance a ProgramStageInstance object.
+     */
     ProgramStageInstance createProgramStageInstance( ProgramInstance programInstance, ProgramStage programStage,
         Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit );
 }

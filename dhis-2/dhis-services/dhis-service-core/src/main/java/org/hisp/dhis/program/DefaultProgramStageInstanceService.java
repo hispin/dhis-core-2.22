@@ -395,12 +395,6 @@ public class DefaultProgramStageInstanceService
         updateProgramStageInstance( programStageInstance );
     }
 
-    /**
-     * For the first case of an anonymous program, the program-instance doesn't
-     * exist, So system has to create a program-instance and
-     * program-stage-instance. The similar thing happens for single event with
-     * registration.
-     */
     @Override
     public ProgramStageInstance createProgramStageInstance( TrackedEntityInstance instance, Program program,
         Date executionDate, OrganisationUnit organisationUnit )
@@ -417,6 +411,7 @@ public class DefaultProgramStageInstanceService
         if ( program.isWithoutRegistration()  )
         {
             Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( program );
+            
             if ( programInstances == null || programInstances.size() == 0 )
             {
                 // Add a new program instance if it doesn't exist
@@ -500,6 +495,7 @@ public class DefaultProgramStageInstanceService
         if ( phoneNumbers.size() > 0 )
         {
             String msg = reminderService.getMessageFromTemplate( reminder, programStageInstance, format );
+            
             try
             {
                 outboundSms = new OutboundSms();
