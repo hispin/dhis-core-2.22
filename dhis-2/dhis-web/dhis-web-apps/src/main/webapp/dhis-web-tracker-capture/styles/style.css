@@ -547,6 +547,7 @@ div#searchOuTree h4{
 .add-default-padding {
     margin: 15px !important;
 }
+
 .add-default-top-margin {
     margin-top: 15px !important;    
 }
@@ -582,12 +583,6 @@ div#searchOuTree h4{
     padding: 6px 8px;
     font-size: 14px;
 }
-
-/*input[type=number], input[type=text], input[type=email], input[type=password], textarea, select {
-    border: 1px solid #aaa;
-    padding: 2px 6px;
-    font-size: 14px;
-}*/
 
 /*----------------------------------------------------------------------------*/
 /* Search filters
@@ -690,8 +685,7 @@ div#searchOuTree h4{
     font-size: 14px;
     line-height: 1.0;
     color: #555;
-    //padding: 6px 6px;
-    padding: 6px 0;
+    padding: 6px 6px;
     margin-bottom: 5px;
     margin-top: 5px;
     vertical-align: middle;
