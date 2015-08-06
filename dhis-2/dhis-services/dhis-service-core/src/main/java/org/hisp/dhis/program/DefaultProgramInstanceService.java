@@ -634,16 +634,16 @@ public class DefaultProgramInstanceService
     }
 
     @Override
-    public ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance entityInstance, Program program,
+    public ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, Program program,
         Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit )
     {
-        return enrollTrackedEntityInstance( CodeGenerator.generateCode(), entityInstance, program, enrollmentDate,
-            dateOfIncident, organisationUnit );
+        return enrollTrackedEntityInstance( trackedEntityInstance, program, enrollmentDate,
+            dateOfIncident, organisationUnit, CodeGenerator.generateCode() );
     }
 
     @Override
-    public ProgramInstance enrollTrackedEntityInstance( String uid, TrackedEntityInstance trackedEntityInstance,
-        Program program, Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit )
+    public ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance,
+        Program program, Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit, String uid )
     {
         // ---------------------------------------------------------------------
         // Add program instance

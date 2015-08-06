@@ -335,7 +335,20 @@ public interface ProgramInstanceService
     /**
      * Enroll a TrackedEntityInstance into a program. Must be run inside a transaction.
      *
+     * @param trackedEntityInstance TrackedEntityInstance
+     * @param program               Program
+     * @param enrollmentDate        The date of enrollment
+     * @param dateOfIncident        The date of incident
+     * @param orgunit               Organisation Unit
      * @param uid                   UID to use for new instance
+     * @return ProgramInstance
+     */
+    ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, Program program, 
+        Date enrollmentDate, Date dateOfIncident, OrganisationUnit orgunit, String uid );
+
+    /**
+     * Enroll a TrackedEntityInstance into a program. Must be run inside a transaction.
+     *
      * @param trackedEntityInstance TrackedEntityInstance
      * @param program               Program
      * @param enrollmentDate        The date of enrollment
@@ -343,20 +356,7 @@ public interface ProgramInstanceService
      * @param orgunit               Organisation Unit
      * @return ProgramInstance
      */
-    ProgramInstance enrollTrackedEntityInstance( String uid, TrackedEntityInstance trackedEntityInstance, Program program, 
-        Date enrollmentDate, Date dateOfIncident, OrganisationUnit orgunit );
-
-    /**
-     * Enroll a TrackedEntityInstance into a program. Must be run inside a transaction.
-     *
-     * @param entityInstance TrackedEntityInstance
-     * @param program        Program
-     * @param enrollmentDate The date of enrollment
-     * @param dateOfIncident The date of incident
-     * @param orgunit        Organisation Unit
-     * @return ProgramInstance
-     */
-    ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance entityInstance, Program program, Date enrollmentDate, Date dateOfIncident,
+    ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, Program program, Date enrollmentDate, Date dateOfIncident,
         OrganisationUnit orgunit );
 
     /**
