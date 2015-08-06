@@ -3571,6 +3571,11 @@ Ext.onReady( function() {
                         console.log('Organisation unit dimension is invalid', config.rows);
                         return;
                     }
+                    
+                    if (!config.filters) {
+                        console.log('Please select a valid period', config.filters);
+                        return;
+                    }
 
                     if (Ext.Array.contains([gis.layer.thematic1.id, gis.layer.thematic2.id, gis.layer.thematic3.id, gis.layer.thematic4.id], config.layer)) {
                         if (!config.columns) {
@@ -3594,9 +3599,11 @@ Ext.onReady( function() {
                                 for (var j = 0; j < dim.items.length; j++) {
                                     if (dim.items[j].id === 'USER_ORGUNIT') {
                                         isOu = true;
-                                    } else if (dim.items[j].id === 'USER_ORGUNIT_CHILDREN') {
+                                    }
+                                    else if (dim.items[j].id === 'USER_ORGUNIT_CHILDREN') {
                                         isOuc = true;
-                                    } else if (dim.items[j].id === 'USER_ORGUNIT_GRANDCHILDREN') {
+                                    }
+                                    else if (dim.items[j].id === 'USER_ORGUNIT_GRANDCHILDREN') {
                                         isOugc = true;
                                     }
                                 }

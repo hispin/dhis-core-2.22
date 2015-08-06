@@ -7337,7 +7337,7 @@ Ext.onReady(function() {
         };
 
         initialize = function() {
-            var el = Ext.get(config.el);
+            var el = Ext.get(config.el);            
 
             if (!validateConfig()) {
                 return;
