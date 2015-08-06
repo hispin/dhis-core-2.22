@@ -1050,7 +1050,7 @@ Ext.onReady( function() {
 		return window;
 	};
 
-	GIS.core.MapLoader = function(gis, isSession, applyViews) {
+	GIS.core.MapLoader = function(gis, isSession, applyConfig) {
 		var getMap,
 			setMap,
 			afterLoad,
@@ -1227,7 +1227,9 @@ Ext.onReady( function() {
 
 		loader = {
 			load: function(views) {
-				gis.olmap.mask.show();
+                if (gis.olmap.mask && !gis.skipMask) {
+                    gis.olmap.mask.show();
+                }
 
 				if (gis.map && gis.map.id) {
 					getMap();
@@ -1499,7 +1501,9 @@ Ext.onReady( function() {
 			hideMask: false,
 			callBack: null,
 			load: function(view) {
-				gis.olmap.mask.show();
+                if (gis.olmap.mask && !gis.skipMask) {
+                    gis.olmap.mask.show();
+                }
 
                 loadOrganisationUnits(view);
 			},
@@ -1796,7 +1800,9 @@ Ext.onReady( function() {
 			hideMask: false,
 			callBack: null,
 			load: function(view) {
-				gis.olmap.mask.show();
+                if (gis.olmap.mask && !gis.skipMask) {
+                    gis.olmap.mask.show();
+                }
 
 				if (this.compare) {
 					compareView(view, true);
@@ -2075,7 +2081,9 @@ Ext.onReady( function() {
 			hideMask: false,
 			callBack: null,
 			load: function(view) {
-				gis.olmap.mask.show();
+                if (gis.olmap.mask && !gis.skipMask) {
+                    gis.olmap.mask.show();
+                }
 
 				if (this.compare) {
 					compareView(view, true);
@@ -2640,7 +2648,9 @@ Ext.onReady( function() {
 			hideMask: false,
 			callBack: null,
 			load: function(view) {
-				gis.olmap.mask.show();
+                if (gis.olmap.mask && !gis.skipMask) {
+                    gis.olmap.mask.show();
+                }
 
 				if (this.compare) {
 					compareView(view, true);
