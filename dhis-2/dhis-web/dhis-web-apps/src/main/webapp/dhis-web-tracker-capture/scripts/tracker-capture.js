@@ -1,4 +1,4 @@
-/* global dhis2, angular */
+/* global dhis2, angular, selection, i18n_ajax_login_failed, _ */
 
 dhis2.util.namespace('dhis2.tc');
 
@@ -151,40 +151,28 @@ function downloadMetaData()
     promise = promise.then( getMetaProgramIndicators );
     promise = promise.then( getProgramIndicators );
     promise = promise.then( getOrgUnitLevels );
-    promise.done(function() {
-        
+    promise.done(function() {        
         //Enable ou selection after meta-data has downloaded
-        $( "#orgUnitTree" ).removeClass( "disable-clicks" );
-        
+        $( "#orgUnitTree" ).removeClass( "disable-clicks" );        
         console.log( 'Finished loading meta-data' );        
         selection.responseReceived(); 
     });
 
-    def.resolve();
-    
+    def.resolve();    
 }
 
 function getUserRoles()
 {
-    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
-    
+    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');    
     if( SessionStorageService.get('USER_ROLES') ){
        return; 
     }
     
     var def = $.Deferred();
-
-    $.ajax({
-        url: '../api/me.json?fields=id,name,userCredentials[userRoles[id,authorities]]',
-        type: 'GET'
-    }).done(function(response) {
-        SessionStorageService.set('USER_ROLES', response);
-        def.resolve();
-    }).fail(function(){
-        def.resolve();
-    });
-
-    return def.promise();
+    var promise = def.promise();
+    promise = promise.then( getD2Object(null, 'USER_ROLES', '../api/me.json', 'fields=id,name,userCredentials[userRoles[id,authorities]]', 'sessionStorage') );
+    promise = promise.done(function(){});    
+    def.resolve();
 }
 
 function getCalendarSetting()
@@ -194,18 +182,10 @@ function getCalendarSetting()
     }
     
     var def = $.Deferred();
-
-    $.ajax({
-        url: '../api/systemSettings?key=keyCalendar&key=keyDateFormat',
-        type: 'GET'
-    }).done(function(response) {
-        localStorage['CALENDAR_SETTING'] = JSON.stringify(response);
-        def.resolve();
-    }).fail(function(){
-        def.resolve();
-    });
-
-    return def.promise();
+    var promise = def.promise();
+    promise = promise.then( getD2Object(null, 'CALENDAR_SETTING', '../api/systemSettings', 'key=keyCalendar&key=keyDateFormat', 'localStorage') );
+    promise = promise.done(function(){});    
+    def.resolve();    
 }
 
 function getConstants()
@@ -214,7 +194,7 @@ function getConstants()
         if(res.length > 0){
             return;
         }        
-        return getD2Objects('constants', 'constants', '../api/constants.json', 'paging=false&fields=id,name,displayName,value');        
+        return getD2Objects('constants', 'constants', '../api/constants.json', 'paging=false&fields=id,name,displayName,value', 'idb');        
     });    
 }
 
@@ -224,7 +204,7 @@ function getRelationships()
         if(res.length > 0){
             return;
         }
-        return getD2Objects('relationshipTypes', 'relationshipTypes', '../api/relationshipTypes.json', 'paging=false&fields=id,name,aIsToB,bIsToA,displayName');
+        return getD2Objects('relationshipTypes', 'relationshipTypes', '../api/relationshipTypes.json', 'paging=false&fields=id,name,aIsToB,bIsToA,displayName', 'idb');
     });    
 }
 
@@ -234,25 +214,13 @@ function getTrackedEntities()
         if(res.length > 0){
             return;
         }        
-        return getD2Objects('trackedEntities', 'trackedEntities', '../api/trackedEntities.json', 'paging=false&fields=id,name');
+        return getD2Objects('trackedEntities', 'trackedEntities', '../api/trackedEntities.json', 'paging=false&fields=id,name', 'idb');
     });    
 }
 
 function getMetaPrograms()
 {
-    var def = $.Deferred();
-
-    $.ajax({
-        url: '../api/programs.json',
-        type: 'GET',
-        data:'filter=programType:eq:WITH_REGISTRATION&paging=false&fields=id,version,programTrackedEntityAttributes[trackedEntityAttribute[id,optionSet[id,version]]],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse,programStageDataElements[dataElement[optionSet[id,version]]]]'
-    }).done( function(response) {          
-        def.resolve( response.programs ? response.programs: [] );
-    }).fail(function(){
-        def.resolve( null );
-    });
-    
-    return def.promise(); 
+    return getD2Objects('programs', 'programs', '../api/programs.json', 'filter=programType:eq:WITH_REGISTRATION&paging=false&fields=id,version,programTrackedEntityAttributes[trackedEntityAttribute[id,optionSet[id,version]]],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse,programStageDataElements[dataElement[optionSet[id,version]]]]', 'temp');
 }
 
 function getPrograms( programs )
@@ -568,12 +536,10 @@ function getOrgUnitLevels()
     dhis2.tc.store.getKeys( 'ouLevels').done(function(res){        
         if(res.length > 0){
             return;
-        }
-        
-        return getD2Objects('ouLevels', 'organisationUnitLevels', '../api/organisationUnitLevels.json', 'filter=level:gt:1&fields=id,name,level&paging=false');        
+        }        
+        return getD2Objects('ouLevels', 'organisationUnitLevels', '../api/organisationUnitLevels.json', 'filter=level:gt:1&fields=id,name,level&paging=false', 'idb');        
     }); 
 }
-
 
 function getMetaProgramValidations( programs )
 {    
@@ -701,7 +667,7 @@ function checkAndGetD2Objects( obj, store, url, filter )
     return mainPromise;
 }
 
-function getD2Objects(store, objs, url, filter)
+function getD2Objects(store, objs, url, filter, storage)
 {
     var def = $.Deferred();
 
@@ -710,10 +676,25 @@ function getD2Objects(store, objs, url, filter)
         type: 'GET',
         data: filter
     }).done(function(response) {
-        if(response[objs]){
-            dhis2.tc.store.setAll( store, response[objs] );
-        }            
-        def.resolve();        
+        if(response[objs]){            
+            if(storage === 'idb'){
+                dhis2.tc.store.setAll( store, response[objs] );
+            }
+            if(storage === 'localStorage'){                
+                localStorage[store] = JSON.stringify(response[objs]);
+            }            
+            if(storage === 'sessionStorage'){
+                var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
+                SessionStorageService.set(store, response[objs]);
+            }
+        }
+        
+        if(storage === 'temp'){
+            def.resolve(response[objs] ? response[objs] : []);
+        }
+        else{
+            def.resolve();
+        }    
     }).fail(function(){
         def.resolve();
     });
