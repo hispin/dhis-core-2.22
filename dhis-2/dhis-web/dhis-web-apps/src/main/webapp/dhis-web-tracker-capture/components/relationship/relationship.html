@@ -30,6 +30,7 @@
                     <th ng-repeat="att in attributes" ng-if="att.displayInListNoProgram">
                         {{att.name}}
                     </th>
+                    <th></th>
                 </tr>
                 <tr ng-repeat="rel in relatedTeis">
                     <td title="{{'go_to_dashboard'| translate}}" ng-click="showDashboard(rel.trackedEntityInstance, rel.relId)">{{rel.relName}}</td> 
@@ -37,7 +38,7 @@
                         {{rel.attributes[att.id]}}
                     </td>
                     <td ng-click="removeRelationship(rel)" title="{{'delete_relationship'| translate}}">
-                        <i class="fa fa-trash-o"></i>
+                        <i class="fa fa-trash-o red"></i>
                     </td>
                 </tr>
             </table>           
