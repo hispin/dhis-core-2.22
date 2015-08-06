@@ -380,7 +380,8 @@ public class JdbcEventAnalyticsTableManager
     }
     
     /**
-     * Returns the database column type based on the given value type.
+     * Returns the database column type based on the given value type. For boolean
+     * values, 1 means true, 0 means false and null means no value.
      */
     private String getColumnType( ValueType valueType )
     {
@@ -389,6 +390,10 @@ public class JdbcEventAnalyticsTableManager
             return statementBuilder.getDoubleColumnType();
         }
         else if ( Integer.class.equals( valueType.getJavaClass() ) )
+        {
+            return "integer";
+        }
+        else if ( Boolean.class.equals( valueType.getJavaClass() ) )
         {
             return "integer";
         }
@@ -411,6 +416,10 @@ public class JdbcEventAnalyticsTableManager
         else if ( Integer.class.equals( valueType.getJavaClass() ) )
         {
             return "cast(value as integer)";
+        }
+        else if ( Boolean.class.equals( valueType.getJavaClass() ) )
+        {
+            return "case when value = 'true' then 1 when value = 'false' then 0 else null end";
         }
         else
         {
