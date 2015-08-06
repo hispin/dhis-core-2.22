@@ -98,7 +98,7 @@ public class AddConstantAction
     @Override
     public String execute()
     {
-        Constant constant = new Constant( name, Double.parseDouble( value ) );
+        Constant constant = new Constant( StringUtils.trimToNull( name ), Double.parseDouble( value ) );
         constant.setShortName( StringUtils.trimToNull( shortName ) );
         constant.setCode( StringUtils.trimToNull( code ) );
         constant.setDescription( StringUtils.trimToNull( description ) );

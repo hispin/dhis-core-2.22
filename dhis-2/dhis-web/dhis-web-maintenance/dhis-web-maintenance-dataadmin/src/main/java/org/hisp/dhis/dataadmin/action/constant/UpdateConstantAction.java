@@ -107,7 +107,7 @@ public class UpdateConstantAction
     {
         Constant constant = constantService.getConstant( id );
 
-        constant.setName( name );
+        constant.setName( StringUtils.trimToNull( name ) );
         constant.setShortName( StringUtils.trimToNull( shortName ) );
         constant.setCode( StringUtils.trimToNull( code ) );
         constant.setDescription( StringUtils.trimToNull( description ) );
