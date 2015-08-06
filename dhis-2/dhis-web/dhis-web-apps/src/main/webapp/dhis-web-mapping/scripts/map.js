@@ -3190,7 +3190,9 @@ Ext.onReady(function() {
 			hideMask: false,
 			callBack: null,
 			load: function(view) {
-				gis.olmap.mask.show();
+                if (gis.olmap.mask && !gis.skipMask) {
+                    gis.olmap.mask.show();
+                }
 
 				if (this.compare) {
 					compareView(view, true);
@@ -3469,7 +3471,9 @@ Ext.onReady(function() {
 			hideMask: false,
 			callBack: null,
 			load: function(view) {
-				gis.olmap.mask.show();
+                if (gis.olmap.mask && !gis.skipMask) {
+                    gis.olmap.mask.show();
+                }
 
 				if (this.compare) {
 					compareView(view, true);
@@ -4034,7 +4038,9 @@ Ext.onReady(function() {
 			hideMask: false,
 			callBack: null,
 			load: function(view) {
-				gis.olmap.mask.show();
+                if (gis.olmap.mask && !gis.skipMask) {
+                    gis.olmap.mask.show();
+                }
 
 				if (this.compare) {
 					compareView(view, true);
