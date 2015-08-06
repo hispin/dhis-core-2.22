@@ -250,8 +250,8 @@ public interface ProgramInstanceService
         Integer max );
 
     /**
-     * Retrieve program instances with active status on an orgunit by a program
-     * for a certain period with result limited
+     * Retrieve program instances with active status on an organisation unit by 
+     * a program for a certain period with result limited
      *
      * @param program    Program
      * @param orgunitIds Organisation Units
@@ -266,7 +266,7 @@ public interface ProgramInstanceService
 
     /**
      * Get the number of program instances which are active status and
-     * registered in a certain orgunit by a program for a certain period
+     * registered in a certain organisation unit by a program for a certain period
      *
      * @param program    Program
      * @param orgunitIds Organisation Units
@@ -335,16 +335,16 @@ public interface ProgramInstanceService
     /**
      * Enroll a TrackedEntityInstance into a program. Must be run inside a transaction.
      *
-     * @param uid            UID to use for new instance
-     * @param entityInstance TrackedEntityInstance
-     * @param program        Program
-     * @param enrollmentDate The date of enrollment
-     * @param dateOfIncident The date of incident
-     * @param orgunit        Organisation Unit
-     * @return ProgramInsance
+     * @param uid                   UID to use for new instance
+     * @param trackedEntityInstance TrackedEntityInstance
+     * @param program               Program
+     * @param enrollmentDate        The date of enrollment
+     * @param dateOfIncident        The date of incident
+     * @param orgunit               Organisation Unit
+     * @return ProgramInstance
      */
-    ProgramInstance enrollTrackedEntityInstance( String uid, TrackedEntityInstance entityInstance, Program program, Date enrollmentDate, Date dateOfIncident,
-        OrganisationUnit orgunit );
+    ProgramInstance enrollTrackedEntityInstance( String uid, TrackedEntityInstance trackedEntityInstance, Program program, 
+        Date enrollmentDate, Date dateOfIncident, OrganisationUnit orgunit );
 
     /**
      * Enroll a TrackedEntityInstance into a program. Must be run inside a transaction.
@@ -354,7 +354,7 @@ public interface ProgramInstanceService
      * @param enrollmentDate The date of enrollment
      * @param dateOfIncident The date of incident
      * @param orgunit        Organisation Unit
-     * @return ProgramInsance
+     * @return ProgramInstance
      */
     ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance entityInstance, Program program, Date enrollmentDate, Date dateOfIncident,
         OrganisationUnit orgunit );
