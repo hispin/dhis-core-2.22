@@ -28,6 +28,7 @@ package org.hisp.dhis.dataadmin.action.option;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 
@@ -76,8 +77,8 @@ public class AddOptionSetAction
     public String execute()
         throws Exception
     {
-        OptionSet optionSet = new OptionSet( name );
-        optionSet.setCode( code );
+        OptionSet optionSet = new OptionSet( StringUtils.trimToNull( name ) );
+        optionSet.setCode( StringUtils.trimToNull( code ) );
         optionSet.setVersion( 1 );
 
         optionService.saveOptionSet( optionSet );
