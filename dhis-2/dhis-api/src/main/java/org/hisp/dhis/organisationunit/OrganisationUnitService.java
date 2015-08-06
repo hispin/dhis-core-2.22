@@ -482,6 +482,14 @@ public interface OrganisationUnitService
      * @return true if the organisation unit with the given uid is part of the hierarchy.
      */
     boolean isInUserHierarchy( String uid, Set<OrganisationUnit> organisationUnits );
+    
+    /**
+     * Sets the transient level property of each organisation unit in the given
+     * list. Fetches the organisation unit from the database.
+     * 
+     * @param organisationUnits the collection of organisation units.
+     */
+    void setOrganisationUnitLevel( Collection<OrganisationUnit> organisationUnits );
 
     // -------------------------------------------------------------------------
     // OrganisationUnitHierarchy

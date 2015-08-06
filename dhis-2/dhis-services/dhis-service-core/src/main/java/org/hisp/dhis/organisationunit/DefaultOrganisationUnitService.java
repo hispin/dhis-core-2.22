@@ -813,6 +813,18 @@ public class DefaultOrganisationUnitService
         return organisationUnit != null ? organisationUnit.isDescendant( organisationUnits ) : false;
     }
 
+    @Override
+    public void setOrganisationUnitLevel( Collection<OrganisationUnit> organisationUnits )
+    {
+        for ( OrganisationUnit unit : organisationUnits )
+        {
+            if ( unit != null && !unit.hasLevel() )
+            {
+                unit.setLevel( getLevelOfOrganisationUnit( unit.getId() ) );
+            }
+        }
+    }
+
     // -------------------------------------------------------------------------
     // OrganisationUnitHierarchy
     // -------------------------------------------------------------------------
