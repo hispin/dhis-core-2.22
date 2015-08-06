@@ -1,28 +1,28 @@
 <form name="outerForm" novalidate>   
     
-    <table class="table-borderless table-striped" ng-if='currentEvent && !currentStage.programStageSections.length'>
+    <table class="dhis2-list-table-striped" ng-if='currentEvent && !currentStage.programStageSections.length'>
         <thead>
-            <tr class="col-md-12">
-                <th class="col-md-5">
+            <tr>
+                <th>
                     {{'data_element'| translate}}
                 </th>
-                <th class="col-md-5 align-center">
+                <th>
                     {{'value'| translate}}
                 </th>
-                <th class="col-md-2 align-center" ng-if="allowProvidedElsewhereExists">
+                <th ng-if="allowProvidedElsewhereExists">
                     {{'provided_elsewhere'| translate}}
                 </th>
             </tr>
         </thead>
         <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements" ng-if="!isHidden(prStDe.dataElement.id)">
-            <td class="col-md-5">
+            <td>
                 {{prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name}}
                 <a ng-if="prStDe.dataElement.description" Title="{{prStDe.dataElement.description}}" ng-init="showHelpText[prStDe.dataElement.id] = false;" ng-click="showHelpText[prStDe.dataElement.id] = !showHelpText[prStDe.dataElement.id]">
                     <span class="glyphicon glyphicon-info-sign" ></span>
                     <span ng-show="showHelpText[prStDe.dataElement.id]" ><br>{{prStDe.dataElement.description}}</span>
                 </a>     
             </td>
-            <td class="col-md-5">
+            <td>
                 <ng-form name="innerForm">
                     <div ng-if="prStDe.dataElement.optionSetValue">
                         <div ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDe.dataElement.optionSet.id].options.length >= 7">
@@ -156,7 +156,7 @@
                     </div>
                 </ng-form>                
             </td>
-            <td class="col-md-2" ng-if="allowProvidedElsewhereExists">                
+            <td ng-if="allowProvidedElsewhereExists">                
                 <div class="align-center" ng-show="prStDe.allowProvidedElsewhere">
                     <input type="checkbox" 
                            ng-model="currentEvent.providedElsewhere[prStDe.dataElement.id]" 
@@ -173,28 +173,28 @@
             <accordion-group heading="{{section.name}}" is-open="section.open" ng-repeat='section in currentStage.programStageSections' style="overflow:visible">
                 <table class="dhis2-list-table-striped">                    
                     <thead>                        
-                        <tr class="col-md-12">
-                            <th class="col-md-5">
+                        <tr>
+                            <th>
                                 {{'data_element'| translate}}
                             </th>
-                            <th class="col-md-5 align-center">
+                            <th>
                                 {{'value'| translate}}
                             </th>
-                            <th class="col-md-2 align-center" ng-if="allowProvidedElsewhereExists">
+                            <th ng-if="allowProvidedElsewhereExists">
                                 {{'provided_elsewhere'| translate}}
                             </th>
                         </tr>                        
                     </thead>
                     <tbody id="list">       
-                        <tr class="col-md-12" ng-repeat="de in section.programStageDataElements" ng-if="!isHidden(de.dataElement.id)">
-                            <td class="col-md-5">
+                        <tr ng-repeat="de in section.programStageDataElements" ng-if="!isHidden(de.dataElement.id)">
+                            <td>
                                 {{prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name}}
                                 <a ng-if="prStDes[de.dataElement.id].dataElement.description" Title="{{prStDes[de.dataElement.id].dataElement.description}}" ng-init="showHelpText[de.dataElement.id] = false;" ng-click="showHelpText[de.dataElement.id] = !showHelpText[de.dataElement.id]">
                                     <span class="glyphicon glyphicon-info-sign" ></span>
                                     <span ng-show="showHelpText[de.dataElement.id]" ><br>{{prStDes[de.dataElement.id].dataElement.description}}</span>
                                 </a>                            
                             </td>
-                            <td class="col-md-5">
+                            <td>
                                 <ng-form name="innerForm">
                                     <div ng-if="prStDes[de.dataElement.id].dataElement.optionSetValue">                                        
                                         <div ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options.length >= 7">
@@ -328,7 +328,7 @@
                                     </div>
                                 </ng-form>                                
                             </td>
-                            <td class="col-md-2" ng-if="allowProvidedElsewhereExists">                
+                            <td ng-if="allowProvidedElsewhereExists">                
                                 <div class="align-center" ng-show="prStDes[de.dataElement.id].allowProvidedElsewhere">
                                     <input type="checkbox" 
                                            ng-model="currentEvent.providedElsewhere[prStDes[de.dataElement.id].dataElement.id]"
