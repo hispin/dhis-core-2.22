@@ -9702,6 +9702,7 @@ Ext.onReady( function() {
 
                     var googleHybrid = new OpenLayers.Layer.Google('Google Hybrid', {
                         type: google.maps.MapTypeId.HYBRID,
+                        useTiltImages: false,
                         numZoomLevels: 20,
                         animationEnabled: true,
                         layerType: gis.conf.finals.layer.type_base,
