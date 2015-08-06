@@ -365,6 +365,14 @@ public class UserCredentials
     {
         return username;
     }
+    
+    /**
+     * Sets the last login property to the current date.
+     */
+    public void updateLastLogin()
+    {
+        this.lastLogin = new Date();
+    }
 
     /**
      * Tests whether the credentials contain all needed parameters to

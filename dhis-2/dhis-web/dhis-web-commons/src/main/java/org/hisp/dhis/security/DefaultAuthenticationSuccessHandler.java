@@ -28,16 +28,20 @@ package org.hisp.dhis.security;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.security.intercept.LoginInterceptor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+
+import org.hisp.dhis.security.intercept.LoginInterceptor;
+import org.hisp.dhis.user.UserCredentials;
+import org.hisp.dhis.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 /**
  * Since ActionContext is not available at this point, we set a mark in the
@@ -56,16 +60,29 @@ public class DefaultAuthenticationSuccessHandler
      */
     public static final int DEFAULT_SESSION_TIMEOUT = 60 * 60;
 
+    @Autowired
+    private UserService userService;
+    
     @Override
     public void onAuthenticationSuccess( HttpServletRequest request, HttpServletResponse response, Authentication authentication )
         throws ServletException, IOException
     {
         HttpSession session = request.getSession();
+        
+        String username = ((User)authentication.getPrincipal()).getUsername();
 
-        session.setAttribute( "userIs", ((User)authentication.getPrincipal()).getUsername());
+        session.setAttribute( "userIs", username);
         session.setAttribute( LoginInterceptor.JLI_SESSION_VARIABLE, Boolean.TRUE );
         session.setMaxInactiveInterval( DefaultAuthenticationSuccessHandler.DEFAULT_SESSION_TIMEOUT );
 
+        UserCredentials credentials = userService.getUserCredentialsByUsername( username );
+
+        if ( credentials != null )
+        {
+            credentials.updateLastLogin();
+            userService.updateUserCredentials( credentials );            
+        }
+        
         super.onAuthenticationSuccess( request, response, authentication );
     }
 }
