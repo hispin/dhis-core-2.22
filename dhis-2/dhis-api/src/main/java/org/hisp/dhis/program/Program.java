@@ -249,6 +249,11 @@ public class Program
 
         return null;
     }
+    
+    public boolean isSingleProgramStage()
+    {
+        return programStages != null && programStages.size() == 1;
+    }
 
     @Override
     public int increaseVersion()

@@ -718,7 +718,7 @@ public class ActivityReportingServiceImpl
         patient.getProgramInstances().add( programInstance );
         entityInstanceService.updateTrackedEntityInstance( patient );
         patient = entityInstanceService.getTrackedEntityInstance( patientId );
-        this.sendMessages( programInstance, TrackedEntityInstanceReminder.SEND_WHEN_TO_EMROLLEMENT );
+        this.sendMessages( programInstance, TrackedEntityInstanceReminder.SEND_WHEN_TO_ENROLLMENT );
         return getPatientModel( patient );
     }
 

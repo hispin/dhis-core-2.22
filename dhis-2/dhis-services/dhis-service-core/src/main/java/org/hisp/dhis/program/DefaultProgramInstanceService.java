@@ -642,7 +642,7 @@ public class DefaultProgramInstanceService
     }
 
     @Override
-    public ProgramInstance enrollTrackedEntityInstance( String uid, TrackedEntityInstance entityInstance,
+    public ProgramInstance enrollTrackedEntityInstance( String uid, TrackedEntityInstance trackedEntityInstance,
         Program program, Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit )
     {
         // ---------------------------------------------------------------------
@@ -652,8 +652,7 @@ public class DefaultProgramInstanceService
         ProgramInstance programInstance = new ProgramInstance();
         programInstance.setUid( CodeGenerator.isValidCode( uid ) ? uid : CodeGenerator.generateCode() );
         programInstance.setOrganisationUnit( organisationUnit );
-
-        programInstance.enrollTrackedEntityInstance( entityInstance, program );
+        programInstance.enrollTrackedEntityInstance( trackedEntityInstance, program );
 
         if ( enrollmentDate != null )
         {
@@ -677,11 +676,10 @@ public class DefaultProgramInstanceService
         addProgramInstance( programInstance );
 
         // ---------------------------------------------------------------------
-        // Generate event if program is single event and has program stage.
-        // At some point, programs of type single event should be removed.
+        // Generate event if program is single event
         // ---------------------------------------------------------------------
 
-        if ( program.isRegistration() && program.getProgramStages().size() == 1 )
+        if ( program.isRegistration() && program.isSingleProgramStage() )
         {
             ProgramStage programStage = program.getProgramStages().iterator().next();
             programStageInstanceService.createProgramStageInstance( programInstance, programStage, enrollmentDate,
@@ -694,12 +692,12 @@ public class DefaultProgramInstanceService
 
         List<OutboundSms> outboundSms = programInstance.getOutboundSms();
 
-        if ( outboundSms == null )
+        if ( outboundSms == null ) // TODO remove
         {
             outboundSms = new ArrayList<>();
         }
 
-        outboundSms.addAll( sendMessages( programInstance, TrackedEntityInstanceReminder.SEND_WHEN_TO_EMROLLEMENT ) );
+        outboundSms.addAll( sendMessages( programInstance, TrackedEntityInstanceReminder.SEND_WHEN_TO_ENROLLMENT ) );
 
         // -----------------------------------------------------------------
         // Send message when to completed the program
@@ -707,16 +705,16 @@ public class DefaultProgramInstanceService
 
         List<MessageConversation> messages = programInstance.getMessageConversations();
 
-        if ( messages == null )
+        if ( messages == null ) // TODO remove
         {
             messages = new ArrayList<>();
         }
 
         messages.addAll( sendMessageConversations( programInstance,
-            TrackedEntityInstanceReminder.SEND_WHEN_TO_EMROLLEMENT ) );
+            TrackedEntityInstanceReminder.SEND_WHEN_TO_ENROLLMENT ) );
 
         updateProgramInstance( programInstance );
-        trackedEntityInstanceService.updateTrackedEntityInstance( entityInstance );
+        trackedEntityInstanceService.updateTrackedEntityInstance( trackedEntityInstance );
 
         return programInstance;
     }
