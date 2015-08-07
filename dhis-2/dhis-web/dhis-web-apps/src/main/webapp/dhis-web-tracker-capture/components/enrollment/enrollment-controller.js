@@ -8,6 +8,7 @@ trackerCapture.controller('EnrollmentController',
                 DateUtils,
                 SessionStorageService,
                 CurrentSelection,
+                OrgUnitService,
                 EnrollmentService,
                 ModalService) {
     
@@ -78,7 +79,19 @@ trackerCapture.controller('EnrollmentController',
         $scope.showEnrollmentHistoryDiv = false;
         $scope.selectedEnrollment = enrollment;
         
-        if($scope.selectedEnrollment.enrollment){
+        if($scope.selectedEnrollment.enrollment && $scope.selectedEnrollment.orgUnit){
+            if($scope.selectedEnrollment.orgUnit !== $scope.selectedOrgUnit.id) {
+                OrgUnitService.open().then(function(){
+                    OrgUnitService.get($scope.selectedEnrollment.orgUnit).then(function(ou){
+                        if(ou){
+                            $scope.selectedEnrollment.orgUnitName = $scope.selectedOrgUnit.name;
+                        }                                                       
+                    });           
+                });
+            }
+            else{
+                $scope.selectedEnrollment.orgUnitName = $scope.selectedOrgUnit.name;
+            }
             $scope.broadCastSelections('dashboardWidgets');
         }
     };
@@ -96,7 +109,7 @@ trackerCapture.controller('EnrollmentController',
             $scope.showEnrollmentHistoryDiv = false;
             
             //load new enrollment details
-            $scope.selectedEnrollment = {};            
+            $scope.selectedEnrollment = {orgUnitName: $scope.selectedOrgUnit.name};            
             $scope.loadEnrollmentDetails($scope.selectedEnrollment);
             
             $timeout(function() { 
