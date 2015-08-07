@@ -78,11 +78,18 @@ public class GetTrackedEntityDataElementsAction
         this.programId = programId;
     }
 
-    private String programStageId;
+    private Integer programStageId;
 
-    public void setProgramStageId( String programStageId )
+    public void setProgramStageId( Integer programStageId )
     {
         this.programStageId = programStageId;
+    }
+    
+    private Integer programStageUid;
+
+    public void setProgramStageUid( Integer programStageUid )
+    {
+        this.programStageUid = programStageUid;
     }
 
     private List<DataElement> dataElements;
@@ -99,17 +106,23 @@ public class GetTrackedEntityDataElementsAction
     @Override
     public String execute()
     {
-        if ( programStageId == null )
-        {
-            Program program = programService.getProgram( programId );
-            
-            dataElements = new ArrayList<>( program.getAllDataElements() );
-        }
-        else
+        if ( programStageId != null )
         {
             ProgramStage stage = programStageService.getProgramStage( programStageId );
             
             dataElements = new ArrayList<>( stage.getAllDataElements() );
+        }
+        else if ( programStageUid != null )
+        {
+            ProgramStage stage = programStageService.getProgramStage( programStageUid );
+            
+            dataElements = new ArrayList<>( stage.getAllDataElements() );
+        }
+        else
+        {
+            Program program = programService.getProgram( programId );
+            
+            dataElements = new ArrayList<>( program.getAllDataElements() );
         }
         
         Collections.sort( dataElements, IdentifiableObjectNameComparator.INSTANCE );

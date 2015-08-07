@@ -68,7 +68,7 @@ function getTrackedEntityDataElements( type ) {
   jQuery.getJSON('getTrackedEntityDataElements.action',
     {
       programId: getFieldValue('programId'),
-      programStageId: programStageId
+      programStageUid: programStageId
     }, function( json ) {
       var dataElements = jQuery('#' + fieldId);
       for( i in json.dataElements ) {
