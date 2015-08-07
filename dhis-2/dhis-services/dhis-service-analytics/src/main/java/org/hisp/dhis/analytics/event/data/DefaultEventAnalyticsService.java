@@ -253,12 +253,12 @@ public class DefaultEventAnalyticsService
             Map<String, String> uidNameMap = getUidNameMap( params );
     
             metaData.put( NAMES_META_KEY, uidNameMap );
-            metaData.put( PERIOD_DIM_ID, getUids( params.getDimensionOrFilter( PERIOD_DIM_ID ) ) );
-            metaData.put( ORGUNIT_DIM_ID, getUids( params.getDimensionOrFilter( ORGUNIT_DIM_ID ) ) );
+            metaData.put( PERIOD_DIM_ID, getUids( params.getDimensionOrFilterItems( PERIOD_DIM_ID ) ) );
+            metaData.put( ORGUNIT_DIM_ID, getUids( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ) ) );
 
             User user = currentUserService.getCurrentUser();
 
-            List<OrganisationUnit> organisationUnits = asTypedList( params.getDimensionOrFilter( ORGUNIT_DIM_ID ), OrganisationUnit.class );
+            List<OrganisationUnit> organisationUnits = asTypedList( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ), OrganisationUnit.class );
             Collection<OrganisationUnit> roots = user != null ? user.getOrganisationUnits() : null;
             
             if ( params.isHierarchyMeta() )
@@ -359,7 +359,7 @@ public class DefaultEventAnalyticsService
         if ( params.isHierarchyMeta() )
         {
             metaData.put( OU_HIERARCHY_KEY, getParentGraphMap( asTypedList( 
-                params.getDimensionOrFilter( ORGUNIT_DIM_ID ), OrganisationUnit.class ), roots ) );
+                params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ), OrganisationUnit.class ), roots ) );
         }
 
         if ( params.isPaging() )

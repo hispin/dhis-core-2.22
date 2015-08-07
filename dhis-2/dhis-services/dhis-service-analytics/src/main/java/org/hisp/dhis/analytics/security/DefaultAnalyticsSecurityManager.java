@@ -89,7 +89,7 @@ public class DefaultAnalyticsSecurityManager
         
         User user = currentUserService.getCurrentUser();
         
-        List<NameableObject> queryOrgUnits = params.getDimensionOrFilter( DimensionalObject.ORGUNIT_DIM_ID );
+        List<NameableObject> queryOrgUnits = params.getDimensionOrFilterItems( DimensionalObject.ORGUNIT_DIM_ID );
         
         if ( queryOrgUnits.isEmpty() || user == null || !user.hasDataViewOrganisationUnit() )
         {
