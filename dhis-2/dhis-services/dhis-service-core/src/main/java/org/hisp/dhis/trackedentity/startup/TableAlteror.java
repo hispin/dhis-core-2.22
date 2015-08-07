@@ -308,7 +308,7 @@ public class TableAlteror
         executeSql( "ALTER TABLE programindicator ALTER expression TYPE text" );
         executeSql( "ALTER TABLE programstage ALTER description TYPE text" );
         
-        executeSql( "update programindicator set displayinforms = false where displayinforms is null" );
+        executeSql( "update programindicator set displayinform = false where displayinform is null" );
         
         executeSql( "drop index index_patientdatavalue" );
         

@@ -93,7 +93,7 @@ public class ProgramIndicator
      */
     private Integer decimals;
 
-    private Boolean displayInForms;
+    private Boolean displayInForm;
     
     private String rootDate;
 
@@ -193,14 +193,14 @@ public class ProgramIndicator
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Boolean getDisplayInForms()
+    public Boolean getDisplayInForm()
     {
-        return displayInForms;
+        return displayInForm;
     }
 
-    public void setDisplayInForms( Boolean displayInForms )
+    public void setDisplayInForm( Boolean displayInForm )
     {
-        this.displayInForms = displayInForms;
+        this.displayInForm = displayInForm;
     }
 
     @JsonProperty
@@ -231,7 +231,7 @@ public class ProgramIndicator
                 valueType = programIndicator.getValueType();
                 expression = programIndicator.getExpression();
                 decimals = programIndicator.getDecimals();
-                displayInForms = programIndicator.getDisplayInForms();
+                displayInForm = programIndicator.getDisplayInForm();
                 rootDate = programIndicator.getRootDate();
             }
             else if ( strategy.isMerge() )
@@ -240,7 +240,7 @@ public class ProgramIndicator
                 valueType = programIndicator.getValueType() == null ? valueType : programIndicator.getValueType();
                 expression = programIndicator.getExpression() == null ? expression : programIndicator.getExpression();
                 decimals = programIndicator.getDecimals() == null ? decimals : programIndicator.getDecimals();
-                displayInForms = programIndicator.getDisplayInForms() == null ? displayInForms : programIndicator.getDisplayInForms();
+                displayInForm = programIndicator.getDisplayInForm() == null ? displayInForm : programIndicator.getDisplayInForm();
                 rootDate = programIndicator.getRootDate() == null ? rootDate : programIndicator.getRootDate();
             }
         }
