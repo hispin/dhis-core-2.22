@@ -328,65 +328,68 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
                 MetaDataFactory.getByProgram('programIndicators',programUid).then(function(pis){                    
                     var variables = [];
                     var programRules = [];
-                    angular.forEach(pis, function(pi){                    
-                        var newAction = {
-                                id:pi.id,
-                                content:pi.displayDescription ? pi.displayDescription : pi.name,
-                                data:pi.expression,
-                                programRuleActionType:'DISPLAYKEYVALUEPAIR',
-                                location:'indicators'
+                    angular.forEach(pis, function(pi){
+                        if(pi.displayInForm){
+                            var newAction = {
+                                    id:pi.id,
+                                    content:pi.displayDescription ? pi.displayDescription : pi.name,
+                                    data:pi.expression,
+                                    programRuleActionType:'DISPLAYKEYVALUEPAIR',
+                                    location:'indicators'
+                                };
+                            var newRule = {
+                                    name:pi.name,
+                                    id: pi.id,
+                                    shortname:pi.shortname,
+                                    code:pi.code,
+                                    program:pi.program,
+                                    description:pi.description,
+                                    condition:pi.filter ? pi.filter : 'true',
+                                    programRuleActions: [newAction]
+                                };
+
+                            programRules.push(newRule);
+
+                            var variablesInCondition = newRule.condition.match(/#{\w+.?\w*}/g);
+                            var variablesInData = newAction.data.match(/#{\w+.?\w*}/g);
+
+                            var pushDirectAddressedVariable = function(variableWithCurls) {
+                                var variableName = variableWithCurls.replace("#{","").replace("}","");
+                                var variableNameParts = variableName.split('.');
+
+
+                                if(variableNameParts.length === 2) {
+                                    //this is a programstage and dataelement specification. translate to program variable:
+                                    variables.push({
+                                        name:variableName,
+                                        programRuleVariableSourceType:'DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE',
+                                        dataElement:variableNameParts[1],
+                                        programStage:variableNameParts[0],
+                                        program:programUid
+                                    });
+                                }
+                                else if(variableNameParts.length === 1)
+                                {
+                                    //This is an attribute - let us translate to program variable:
+                                    variables.push({
+                                        name:variableName,
+                                        programRuleVariableSourceType:'TEI_ATTRIBUTE',
+                                        trackedEntityAttribute:variableNameParts[0],
+                                        program:programUid
+                                    });
+                                }
+
                             };
-                        var newRule = {
-                                name:pi.name,
-                                id: pi.id,
-                                shortname:pi.shortname,
-                                code:pi.code,
-                                program:pi.program,
-                                description:pi.description,
-                                condition:pi.filter ? pi.filter : 'true',
-                                programRuleActions: [newAction]
-                            };
 
-                        programRules.push(newRule);
+                            angular.forEach(variablesInCondition, function(variableInCondition) {
+                                pushDirectAddressedVariable(variableInCondition);
+                            });
 
-                        var variablesInCondition = newRule.condition.match(/#{\w+.?\w*}/g);
-                        var variablesInData = newAction.data.match(/#{\w+.?\w*}/g);
-
-                        var pushDirectAddressedVariable = function(variableWithCurls) {
-                            var variableName = variableWithCurls.replace("#{","").replace("}","");
-                            var variableNameParts = variableName.split('.');
-
-
-                            if(variableNameParts.length === 2) {
-                                //this is a programstage and dataelement specification. translate to program variable:
-                                variables.push({
-                                    name:variableName,
-                                    programRuleVariableSourceType:'DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE',
-                                    dataElement:variableNameParts[1],
-                                    programStage:variableNameParts[0],
-                                    program:programUid
-                                });
-                            }
-                            else if(variableNameParts.length === 1)
-                            {
-                                //This is an attribute - let us translate to program variable:
-                                variables.push({
-                                    name:variableName,
-                                    programRuleVariableSourceType:'TEI_ATTRIBUTE',
-                                    trackedEntityAttribute:variableNameParts[0],
-                                    program:programUid
-                                });
-                            }
-
-                        };
-
-                        angular.forEach(variablesInCondition, function(variableInCondition) {
-                            pushDirectAddressedVariable(variableInCondition);
-                        });
-
-                        angular.forEach(variablesInData, function(variableInData) {
-                            pushDirectAddressedVariable(variableInData);
-                        });
+                            angular.forEach(variablesInData, function(variableInData) {
+                                pushDirectAddressedVariable(variableInData);
+                            });
+                        }
+                        
                     });
 
                     var programIndicators = {rules:programRules, variables:variables};
