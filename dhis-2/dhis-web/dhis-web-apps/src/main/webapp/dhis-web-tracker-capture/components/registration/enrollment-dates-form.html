@@ -1,6 +1,14 @@
 <table class="dhis2-list-table-striped dhis2-table-hover">
     <tr>
         <td>
+            {{'enrolling_orgunit' | translate}}
+        </td>
+        <td>
+            <input type="text" class="form-control" value={{selectedEnrollment.orgUnitName}} ng-disabled="true"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
             {{selectedProgram.dateOfEnrollmentDescription}}
         </td>
         <td>

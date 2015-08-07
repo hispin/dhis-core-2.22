@@ -28,6 +28,14 @@
             <table class="table-borderless table-striped">
                 <tr class="col-md-12">
                     <td class="col-md-6">
+                        {{'enrolling_orgunit' | translate}}
+                    </td>
+                    <td class="col-md-6">
+                        <input type="text" class="form-control" value={{selectedEnrollment.orgUnitName}} ng-disabled="true"/>
+                    </td>
+                </tr>
+                <tr class="col-md-12">
+                    <td class="col-md-6">
                         {{selectedProgram.dateOfEnrollmentDescription}}
                     </td>
                     <td class="col-md-6">
