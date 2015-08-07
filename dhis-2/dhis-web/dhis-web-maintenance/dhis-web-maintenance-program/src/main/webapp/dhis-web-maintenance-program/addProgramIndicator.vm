@@ -77,6 +77,11 @@ jQuery( document ).ready( function()
 			</td>
 			<td></td>
 		</tr>
+		<tr>
+			<td><label for="displayInForms">$i18n.getString( "display_in_forms" )</label></td>
+			<td><input type="checkbox" id="displayInForms" name="displayInForms" value="true"></td>
+			<td></td>
+		</tr>
 		<tr id='rootDateTR' style='display:none'>
 			<td><label for="rootDate">$i18n.getString( "date_for_calculating" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 			<td>

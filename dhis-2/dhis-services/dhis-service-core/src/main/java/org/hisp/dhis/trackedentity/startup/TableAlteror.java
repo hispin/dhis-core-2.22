@@ -308,6 +308,8 @@ public class TableAlteror
         executeSql( "ALTER TABLE programindicator ALTER expression TYPE text" );
         executeSql( "ALTER TABLE programstage ALTER description TYPE text" );
         
+        executeSql( "update programindicator set displayinforms = false where displayinforms is null" );
+        
         executeSql( "drop index index_patientdatavalue" );
         
         executeSql( "update program p set dataentryformid = (select dataentryformid from trackedentityform tf where tf.programid=p.programid limit 1)" );

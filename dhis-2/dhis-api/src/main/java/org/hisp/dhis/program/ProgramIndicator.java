@@ -93,6 +93,8 @@ public class ProgramIndicator
      */
     private Integer decimals;
 
+    private Boolean displayInForms;
+    
     private String rootDate;
 
     // -------------------------------------------------------------------------
@@ -191,6 +193,19 @@ public class ProgramIndicator
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Boolean getDisplayInForms()
+    {
+        return displayInForms;
+    }
+
+    public void setDisplayInForms( Boolean displayInForms )
+    {
+        this.displayInForms = displayInForms;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getRootDate()
     {
         return rootDate;
@@ -209,13 +224,14 @@ public class ProgramIndicator
         if ( other.getClass().isInstance( this ) )
         {
             ProgramIndicator programIndicator = (ProgramIndicator) other;
-
+            
             if ( strategy.isReplace() )
             {
                 program = programIndicator.getProgram();
                 valueType = programIndicator.getValueType();
                 expression = programIndicator.getExpression();
                 decimals = programIndicator.getDecimals();
+                displayInForms = programIndicator.getDisplayInForms();
                 rootDate = programIndicator.getRootDate();
             }
             else if ( strategy.isMerge() )
@@ -224,6 +240,7 @@ public class ProgramIndicator
                 valueType = programIndicator.getValueType() == null ? valueType : programIndicator.getValueType();
                 expression = programIndicator.getExpression() == null ? expression : programIndicator.getExpression();
                 decimals = programIndicator.getDecimals() == null ? decimals : programIndicator.getDecimals();
+                displayInForms = programIndicator.getDisplayInForms() == null ? displayInForms : programIndicator.getDisplayInForms();
                 rootDate = programIndicator.getRootDate() == null ? rootDate : programIndicator.getRootDate();
             }
         }
