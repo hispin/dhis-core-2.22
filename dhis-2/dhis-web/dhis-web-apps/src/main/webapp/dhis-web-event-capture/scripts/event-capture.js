@@ -446,7 +446,7 @@ function getMetaProgramIndicators( programs )
 
 function getProgramIndicators( programIndicators )
 {
-    return checkAndGetD2Objects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,expression,displayDescription,rootDate,description,valueType,DisplayName,filter,program[id]');
+    return checkAndGetD2Objects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,displayInForm,expression,displayDescription,rootDate,description,valueType,DisplayName,filter,program[id]');
 }
 
 function getMetaProgramRules( programs )
