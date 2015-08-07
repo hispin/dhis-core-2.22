@@ -30,6 +30,8 @@
 
     <property name="decimals" />
 
+    <property name="displayInForms" />
+    
     <property name="rootDate" />
     
     <!-- Access properties -->
