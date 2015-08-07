@@ -80,8 +80,8 @@
                                            theme="select2" 
                                            ng-required={{eventGridColumn.compulsory}}
                                            name="foo" 
-                                           input-field-id={{eventGridColumn.id}}
-                                           on-select="saveDatavalue()" 
+                                           input-field-id={{eventGridColumn.id}} 
+                                           on-select={{saveDatavalue()}} 
                                            class='form-control'>
                                     <ui-select-match allow-clear="true" class="form-control" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name  || $select.selected}}</ui-select-match>
                                     <ui-select-choices  infinite-scroll="addMoreOptions()"
@@ -300,9 +300,9 @@
                                     <ui-select ng-model="currentEvent[de.dataElement.id]" 
                                                theme="select2" 
                                                ng-required={{prStDes[de.dataElement.id].compulsory}}
-                                               ng-app=""name="foo" 
-                                               ng-app=""input-field-id={{de.dataElement.id}} 
-                                               on-select="saveDataValue()"
+                                               name="foo" 
+                                               input-field-id={{de.dataElement.id}} 
+                                               on-select={{saveDatavalue()}} 
                                                class='form-control'>
                                         <ui-select-match allow-clear="true" class="form-control" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name || $select.selected}}</ui-select-match>
                                         <ui-select-choices  infinite-scroll="addMoreOptions()"
