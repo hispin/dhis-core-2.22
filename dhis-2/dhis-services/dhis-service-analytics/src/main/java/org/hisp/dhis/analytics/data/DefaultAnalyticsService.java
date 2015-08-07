@@ -366,7 +366,7 @@ public class DefaultAnalyticsService
      */
     private void addDataElementValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getDataElements().isEmpty() && !params.isSkipData() )
+        if ( !params.getAllDataElements().isEmpty() && !params.isSkipData() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.retainDataDimension( DataDimensionItemType.AGGREGATE_DATA_ELEMENT );
@@ -584,7 +584,7 @@ public class DefaultAnalyticsService
      */
     private void addProgramDataElementAttributeValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getProgramDataElementsAndAttributes().isEmpty() && !params.isSkipData() )
+        if ( !params.getAllProgramDataElementsAndAttributes().isEmpty() && !params.isSkipData() )
         {
             DataQueryParams dataSourceParams = params.instance();
             dataSourceParams.retainDataDimensions( DataDimensionItemType.PROGRAM_DATA_ELEMENT, DataDimensionItemType.PROGRAM_ATTRIBUTE );
@@ -651,8 +651,8 @@ public class DefaultAnalyticsService
             Calendar calendar = PeriodType.getCalendar();
 
             List<String> periodUids = calendar.isIso8601() ? 
-                getUids( params.getDimensionOrFilter( PERIOD_DIM_ID ) ) :
-                    getLocalPeriodIdentifiers( params.getDimensionOrFilter( PERIOD_DIM_ID ), calendar );
+                getUids( params.getDimensionOrFilterItems( PERIOD_DIM_ID ) ) :
+                    getLocalPeriodIdentifiers( params.getDimensionOrFilterItems( PERIOD_DIM_ID ), calendar );
 
             metaData.put( PERIOD_DIM_ID, periodUids );
             metaData.put( CATEGORYOPTIONCOMBO_DIM_ID, cocNameMap.keySet() );
@@ -671,7 +671,7 @@ public class DefaultAnalyticsService
 
             User user = currentUserService.getCurrentUser();
             
-            List<OrganisationUnit> organisationUnits = asTypedList( params.getDimensionOrFilter( ORGUNIT_DIM_ID ), OrganisationUnit.class );
+            List<OrganisationUnit> organisationUnits = asTypedList( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ), OrganisationUnit.class );
             Collection<OrganisationUnit> roots = user != null ? user.getOrganisationUnits() : null;
             
             if ( params.isHierarchyMeta() )

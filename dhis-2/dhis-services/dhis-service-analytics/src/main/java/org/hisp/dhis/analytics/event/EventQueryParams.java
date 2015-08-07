@@ -195,7 +195,7 @@ public class EventQueryParams
      */
     public void replacePeriodsWithStartEndDates()
     {
-        List<Period> periods = NameableObjectUtils.asTypedList( getDimensionOrFilter( PERIOD_DIM_ID ), Period.class );
+        List<Period> periods = NameableObjectUtils.asTypedList( getDimensionOrFilterItems( PERIOD_DIM_ID ), Period.class );
         
         for ( Period period : periods )
         {
@@ -345,7 +345,7 @@ public class EventQueryParams
     {
         Set<OrganisationUnit> children = new HashSet<>();
         
-        for ( NameableObject object : getDimensionOrFilter( DimensionalObject.ORGUNIT_DIM_ID ) )
+        for ( NameableObject object : getDimensionOrFilterItems( DimensionalObject.ORGUNIT_DIM_ID ) )
         {
             OrganisationUnit unit = (OrganisationUnit) object;            
             children.addAll( unit.getChildren() );

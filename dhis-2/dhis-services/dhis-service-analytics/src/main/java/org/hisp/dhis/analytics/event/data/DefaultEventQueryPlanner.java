@@ -196,7 +196,7 @@ public class DefaultEventQueryPlanner
         
         if ( params.hasDimensionOrFilter( DimensionalObject.ORGUNIT_DIM_ID ) )
         {
-            for ( NameableObject object : params.getDimensionOrFilter( DimensionalObject.ORGUNIT_DIM_ID ) )
+            for ( NameableObject object : params.getDimensionOrFilterItems( DimensionalObject.ORGUNIT_DIM_ID ) )
             {
                 OrganisationUnit unit = (OrganisationUnit) object; 
                 unit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( unit.getId() ) );

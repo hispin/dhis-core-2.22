@@ -654,7 +654,7 @@ public class DataQueryParams
 
         if ( dataPeriodType != null )
         {
-            for ( NameableObject aggregatePeriod : getDimensionOrFilter( PERIOD_DIM_ID ) )
+            for ( NameableObject aggregatePeriod : getDimensionOrFilterItems( PERIOD_DIM_ID ) )
             {
                 Period dataPeriod = dataPeriodType.createPeriod( ((Period) aggregatePeriod).getStartDate() );
                 
@@ -759,6 +759,17 @@ public class DataQueryParams
         int index = dimensions.indexOf( new BaseDimensionalObject( dimension ) );
         
         return index != -1 ? dimensions.get( index ) : null;
+    }
+
+    /**
+     * Retrieves the dimension or filter with the given dimension identifier. 
+     * Returns null if the dimension or filter is not present.
+     */
+    public DimensionalObject getDimensionOrFilter( String dimension )
+    {
+        DimensionalObject dim = getDimension( dimension );
+        
+        return dim != null ? dim : getFilter( dimension );
     }
     
     /**
@@ -1490,7 +1501,7 @@ public class DataQueryParams
      * Retrieves the options for the the dimension or filter with the given 
      * identifier. Returns an empty list if the dimension or filter is not present.
      */
-    public List<NameableObject> getDimensionOrFilter( String key )
+    public List<NameableObject> getDimensionOrFilterItems( String key )
     {
         List<NameableObject> dimensionOptions = getDimensionOptions( key );
         
@@ -1555,7 +1566,7 @@ public class DataQueryParams
      */
     public boolean hasDimensionOrFilterWithItems( String key )
     {
-        return !getDimensionOrFilter( key ).isEmpty();
+        return !getDimensionOrFilterItems( key ).isEmpty();
     }
 
     /**
@@ -1600,7 +1611,7 @@ public class DataQueryParams
     {
         return ImmutableList.copyOf( ListUtils.union( getDataSets(), getFilterDataSets() ) );
     }
-
+    
     public List<NameableObject> getAllProgramAttributes()
     {
         return ImmutableList.copyOf( ListUtils.union( getProgramAttributes(), getFilterProgramAttributes() ) );
@@ -1611,9 +1622,14 @@ public class DataQueryParams
         return ImmutableList.copyOf( ListUtils.union( getProgramDataElements(), getFilterProgramDataElements() ) );
     }
 
+    public List<NameableObject> getAllProgramDataElementsAndAttributes()
+    {
+        return ListUtils.union( getAllProgramAttributes(), getAllProgramDataElements() );
+    }
+    
     public DataQueryParams retainDataDimension( DataDimensionItemType itemType )
     {
-        DimensionalObject dimension = getDimension( DATA_X_DIM_ID );
+        DimensionalObject dimension = getDimensionOrFilter( DATA_X_DIM_ID );
         
         List<NameableObject> items = DimensionalObjectUtils.getByDataDimensionType( itemType, dimension.getItems() );
         
@@ -1625,7 +1641,7 @@ public class DataQueryParams
     
     public DataQueryParams retainDataDimensions( DataDimensionItemType... itemTypes )
     {
-        DimensionalObject dimension = getDimension( DATA_X_DIM_ID );
+        DimensionalObject dimension = getDimensionOrFilter( DATA_X_DIM_ID );
         
         List<NameableObject> items = new ArrayList<>();
         
@@ -1702,11 +1718,6 @@ public class DataQueryParams
     public List<NameableObject> getProgramAttributes()
     {
         return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, getDimensionOptions( DATA_X_DIM_ID ) ) );
-    }
-    
-    public List<NameableObject> getProgramDataElementsAndAttributes()
-    {
-        return ListUtils.union( getProgramDataElements(), getProgramAttributes() );
     }
     
     public void setProgramAttributes( List<? extends NameableObject> programAttributes )
@@ -1789,7 +1800,7 @@ public class DataQueryParams
     
     public boolean isCategoryOptionCombosEnabled()
     {
-        return !getDimensionOrFilter( CATEGORYOPTIONCOMBO_DIM_ID ).isEmpty();
+        return !getDimensionOrFilterItems( CATEGORYOPTIONCOMBO_DIM_ID ).isEmpty();
     }
     
     // -------------------------------------------------------------------------
