@@ -30,7 +30,7 @@
 
     <property name="decimals" />
 
-    <property name="displayInForms" />
+    <property name="displayInForm" />
     
     <property name="rootDate" />
     

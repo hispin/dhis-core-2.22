@@ -136,11 +136,11 @@ public class AddProgramIndicatorAction
         this.decimals = decimals;
     }
     
-    private Boolean displayInForms;
+    private Boolean displayInForm;
 
-    public void setDisplayInForms( Boolean displayInForms )
+    public void setDisplayInForm( Boolean displayInForm )
     {
-        this.displayInForms = displayInForms;
+        this.displayInForm = displayInForm;
     }
 
     private String rootDate;
@@ -184,7 +184,7 @@ public class AddProgramIndicatorAction
         indicator.setExpression( StringUtils.trimToNull( expression ) );
         indicator.setFilter( StringUtils.trimToNull( filter ) );
         indicator.setDecimals( decimals );
-        indicator.setDisplayInForms( displayInForms );
+        indicator.setDisplayInForm( displayInForm );
         indicator.setRootDate( StringUtils.trimToNull( rootDate ) );
 
         programIndicatorService.addProgramIndicator( indicator );
