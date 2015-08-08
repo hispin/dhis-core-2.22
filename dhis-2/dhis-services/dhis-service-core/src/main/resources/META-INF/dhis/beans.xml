@@ -822,7 +822,7 @@
     <property name="i18nService" ref="org.hisp.dhis.i18n.I18nService" />
   </bean>
 
-  <bean id="org.hisp.dhis.commons.filter.MetaDataFilterService" class="org.hisp.dhis.commons.filter.DefaultMetaDataFilterService">
+  <bean id="org.hisp.dhis.common.filter.MetaDataFilterService" class="org.hisp.dhis.commons.filter.DefaultMetaDataFilterService">
     <property name="metaDataFilterStore" ref="org.hisp.dhis.filter.MetaDataFilterStore" />
     <property name="i18nService" ref="org.hisp.dhis.i18n.I18nService" />
   </bean>
