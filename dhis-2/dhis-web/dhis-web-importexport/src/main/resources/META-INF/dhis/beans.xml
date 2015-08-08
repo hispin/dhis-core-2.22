@@ -214,17 +214,17 @@
 
   <bean id="org.hisp.dhis.importexport.action.dxf2.FilterListAction"
     class="org.hisp.dhis.importexport.action.dxf2.FilterListAction" scope="prototype">
-    <property name="metaDataFilterService" ref="org.hisp.dhis.filter.MetaDataFilterService" />
+    <property name="metaDataFilterService" ref="org.hisp.dhis.common.filter.MetaDataFilterService" />
   </bean>
 
   <bean id="org.hisp.dhis.importexport.action.dxf2.GetFilterListSortOrderAction"
     class="org.hisp.dhis.importexport.action.dxf2.GetFilterListSortOrderAction" scope="prototype">
-    <property name="metaDataFilterService" ref="org.hisp.dhis.filter.MetaDataFilterService" />
+    <property name="metaDataFilterService" ref="org.hisp.dhis.common.filter.MetaDataFilterService" />
   </bean>
 
   <bean id="org.hisp.dhis.importexport.action.dxf2.SaveFilterListSortOrderAction"
     class="org.hisp.dhis.importexport.action.dxf2.SaveFilterListSortOrderAction" scope="prototype">
-    <property name="metaDataFilterService" ref="org.hisp.dhis.filter.MetaDataFilterService" />
+    <property name="metaDataFilterService" ref="org.hisp.dhis.common.filter.MetaDataFilterService" />
   </bean>
 
   <bean id="org.hisp.dhis.importexport.action.dxf2.FilterExportFormAction"
@@ -233,7 +233,7 @@
   
   <bean id="org.hisp.dhis.importexport.action.dxf2.ShowUpdateFilterExportFormAction"
     class="org.hisp.dhis.importexport.action.dxf2.ShowUpdateFilterExportFormAction" scope="prototype">
-    <property name="metaDataFilterService" ref="org.hisp.dhis.filter.MetaDataFilterService" />
+    <property name="metaDataFilterService" ref="org.hisp.dhis.common.filter.MetaDataFilterService" />
   </bean>
   
 </beans>
