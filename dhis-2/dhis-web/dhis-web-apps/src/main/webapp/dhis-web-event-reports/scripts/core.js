@@ -1911,8 +1911,8 @@ Ext.onReady( function() {
                     names,
 					headers,
                     booleanNameMap = {
-                        'true': ER.i18n.yes || 'Yes',
-                        'false': ER.i18n.no || 'No'
+                        '1': ER.i18n.yes || 'Yes',
+                        '0': ER.i18n.no || 'No'
                     };
 
 				response = Ext.clone(response);
