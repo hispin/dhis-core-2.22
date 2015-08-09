@@ -8,6 +8,7 @@ trackerCapture.controller('DashboardController',
                 $modal,
                 $timeout,
                 $filter,
+                $translate,
                 TCStorageService,
                 orderByFilter,
                 SessionStorageService,
@@ -18,6 +19,7 @@ trackerCapture.controller('DashboardController',
                 ProgramFactory,
                 DHIS2EventFactory,
                 DashboardLayoutService,
+                DialogService,
                 AttributesFactory,
                 CurrentSelection,
                 AuthorityService) {
@@ -353,7 +355,20 @@ trackerCapture.controller('DashboardController',
         var currentLayout = getCurrentDashboardLayout();
         angular.extend(layout, currentLayout);
         delete layout.DEFAULT;
-        DashboardLayoutService.saveLayout(layout, true).then(function(){                          
+        DashboardLayoutService.saveLayout(layout, true).then(function(){
+            var dialogOptions = {
+                    headerText: 'success',
+                    bodyText: $translate.instant('dashboard_layout_saved')
+                };
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }, function(){
+            var dialogOptions = {
+                    headerText: 'error',
+                    bodyText: $translate.instant('dashboard_layout_not_saved')
+                };
+            DialogService.showDialog({}, dialogOptions);
+            return;
         });
     };
     $scope.showHideWidgets = function(){
