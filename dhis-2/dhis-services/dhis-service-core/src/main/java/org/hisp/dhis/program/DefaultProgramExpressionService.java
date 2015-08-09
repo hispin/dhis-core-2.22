@@ -54,7 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DefaultProgramExpressionService
     implements ProgramExpressionService
 {
-    private static final String regExp = "\\[(" + OBJECT_PROGRAM_STAGE_DATAELEMENT + "|" + OBJECT_PROGRAM_STAGE + ")"
+    private static final String REGEXP = "\\[(" + OBJECT_PROGRAM_STAGE_DATAELEMENT + "|" + OBJECT_PROGRAM_STAGE + ")"
         + SEPARATOR_OBJECT + "([a-zA-Z0-9\\- ]+[" + SEPARATOR_ID + "([a-zA-Z0-9\\- ]|" + DUE_DATE + "|" + REPORT_DATE
         + ")+]*)\\]";
 
@@ -116,6 +116,7 @@ public class DefaultProgramExpressionService
         ProgramStageInstance programStageInstance, Map<String, String> dataValueMap )
     {
         String value = "";
+        
         if ( programExpression.getExpression().contains( ProgramExpression.DUE_DATE ) )
         {
             value = DateUtils.getMediumDateString( programStageInstance.getDueDate() );
@@ -127,7 +128,7 @@ public class DefaultProgramExpressionService
         else
         {
             StringBuffer description = new StringBuffer();
-            Pattern pattern = Pattern.compile( regExp );
+            Pattern pattern = Pattern.compile( REGEXP );
             Matcher matcher = pattern.matcher( programExpression.getExpression() );
 
             while ( matcher.find() )
@@ -135,6 +136,7 @@ public class DefaultProgramExpressionService
                 String key = matcher.group().replaceAll( "[\\[\\]]", "" ).split( SEPARATOR_OBJECT )[1];
 
                 String dataValue = dataValueMap.get( key );
+                
                 if ( dataValue == null )
                 {
                     return null;
@@ -156,9 +158,10 @@ public class DefaultProgramExpressionService
     {
         StringBuffer description = new StringBuffer();
 
-        Pattern pattern = Pattern.compile( regExp );
+        Pattern pattern = Pattern.compile( REGEXP );
         Matcher matcher = pattern.matcher( programExpression );
         int countFormula = 0;
+        
         while ( matcher.find() )
         {
             countFormula++;
@@ -180,7 +183,8 @@ public class DefaultProgramExpressionService
             else if ( !name.equals( DUE_DATE ) && !name.equals( REPORT_DATE )  )
             {
                 DataElement dataElement = dataElementService.getDataElement( name );
-                if( dataElement == null )
+                
+                if ( dataElement == null )
                 {
                     return INVALID_CONDITION;
                 }
@@ -197,11 +201,10 @@ public class DefaultProgramExpressionService
         StringBuffer tail = new StringBuffer();
         matcher.appendTail( tail );
         
-        if( countFormula > 1 || !tail.toString().isEmpty() || ( countFormula == 0 && !tail.toString().isEmpty() ) )
+        if ( countFormula > 1 || !tail.toString().isEmpty() || ( countFormula == 0 && !tail.toString().isEmpty() ) )
         {
             return INVALID_CONDITION;
-        }
-        
+        }        
 
         return description.toString();
     }
@@ -211,8 +214,9 @@ public class DefaultProgramExpressionService
     {
         Collection<DataElement> dataElements = new HashSet<>();
 
-        Pattern pattern = Pattern.compile( regExp );
+        Pattern pattern = Pattern.compile( REGEXP );
         Matcher matcher = pattern.matcher( programExpression );
+        
         while ( matcher.find() )
         {
             String match = matcher.group();
