@@ -3961,7 +3961,12 @@ Ext.onReady(function() {
                 Ext.Ajax.request({
                     url: gis.init.contextPath + '/api/' + elementUrl + '.json?fields=legendSet[id,name]&paging=false&filter=id:eq:' + id,
                     success: function(r) {
-                        var set = Ext.decode(r.responseText)[elementUrl][0].legendSet;
+                        var elements = Ext.decode(r.responseText)[elementUrl],
+                            set;
+
+                        if (Ext.Array.from(elements).length) {
+                            set = Ext.isObject(elements[0]) ? elements[0].legendSet || null : null;
+                        }
 
                         if (set) {
                             view.legendSet = set;
@@ -7337,7 +7342,7 @@ Ext.onReady(function() {
         };
 
         initialize = function() {
-            var el = Ext.get(config.el);
+            var el = Ext.get(config.el);            
 
             if (!validateConfig()) {
                 return;
