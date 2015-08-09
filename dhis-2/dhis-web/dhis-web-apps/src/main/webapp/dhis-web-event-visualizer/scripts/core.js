@@ -2554,8 +2554,8 @@ Ext.onReady( function() {
                     names,
 					headers,
                     booleanNameMap = {
-                        'true': EV.i18n.yes || 'Yes',
-                        'false': EV.i18n.no || 'No'
+                        '1': EV.i18n.yes || 'Yes',
+                        '0': EV.i18n.no || 'No'
                     };
 
 				response = Ext.clone(response);

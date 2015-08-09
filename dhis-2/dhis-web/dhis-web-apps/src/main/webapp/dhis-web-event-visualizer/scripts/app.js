@@ -751,16 +751,16 @@ Ext.onReady( function() {
                 this.getData = function(idArray) {
                     var data = [], yes = {}, no = {};
 
-                    yes[idProperty] = 'true';
+                    yes[idProperty] = '1';
                     yes[nameProperty] = NS.i18n.yes;
-                    no[idProperty] = 'false';
+                    no[idProperty] = '0';
                     no[nameProperty] = NS.i18n.no;
 
                     for (var i = 0; i < idArray.length; i++) {
-                        if (idArray[i] === 'true' || idArray[i] === true) {
+                        if (idArray[i] === '1' || idArray[i] === 1) {
                             data.push(yes);
                         }
-                        else if (idArray[i] === 'false' || idArray[i] === false) {
+                        else if (idArray[i] === '0' || idArray[i] === 0) {
                             data.push(no);
                         }
                     }
@@ -770,7 +770,7 @@ Ext.onReady( function() {
 
                 this.searchStore = Ext.create('Ext.data.Store', {
 					fields: [idProperty, nameProperty],
-					data: container.getData(['true', 'false'])
+					data: container.getData(['1', '0'])
 				});
 
                 // function
