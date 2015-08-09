@@ -2483,7 +2483,7 @@ Ext.onReady( function() {
 					},
 					disableCaching: false,
 					failure: function(r) {
-                        onFailure();
+                        onFailure(r);
 					},
 					success: function(r) {
                         var metaData = Ext.decode(r.responseText).metaData;
