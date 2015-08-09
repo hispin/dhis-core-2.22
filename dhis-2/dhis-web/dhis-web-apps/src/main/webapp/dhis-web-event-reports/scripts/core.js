@@ -3405,8 +3405,8 @@ Ext.onReady( function() {
                     names = xResponse.metaData.names,
                     optionNames = xResponse.metaData.optionNames,
                     booleanNames = {
-                        'true': NS.i18n.yes,
-                        'false': NS.i18n.no
+                        '1': NS.i18n.yes,
+                        '0': NS.i18n.no
                     },
                     pager = xResponse.metaData.pager,
                     count = pager.page * pager.pageSize - pager.pageSize
@@ -3445,7 +3445,6 @@ Ext.onReady( function() {
 					for (var j = 0, str, header, name; j < dimensionHeaders.length; j++) {
 						header = dimensionHeaders[j];
 						str = row[header.index];
-
                         str = optionNames[header.name + str] || optionNames[str] || booleanNames[str] || names[str] || str;
 						name = web.report.query.format(str);
 
