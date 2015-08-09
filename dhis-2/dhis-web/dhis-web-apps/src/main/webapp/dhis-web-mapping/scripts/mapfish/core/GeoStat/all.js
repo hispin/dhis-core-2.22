@@ -728,6 +728,7 @@ mapfish.GeoStat.createThematic = function(name) {
                 isPlugin = this.gis.plugin,
                 element = document.createElement("div"),
                 style = {},
+                legendNames = view.legendSet ? view.legendSet.names || {} : {},
 				child,
                 id,
                 name;
@@ -764,14 +765,14 @@ mapfish.GeoStat.createThematic = function(name) {
 					child = document.createElement("div");
 					child.style.backgroundColor = this.colorInterpolation[i].toHexString();
 					child.style.width = style.colorWidth;
-					child.style.height = view.legendSet.names[i] ? '25px' : style.colorHeight;
+					child.style.height = legendNames[i] ? '25px' : style.colorHeight;
 					child.style.cssFloat = 'left';
 					child.style.marginRight = style.colorMarginRight;
 					element.appendChild(child);
 
 					child = document.createElement("div");
-					child.style.lineHeight = view.legendSet.names[i] ? "12px" : "7px";
-					child.innerHTML = '<b style="color:#222; font-size:10px !important">' + (view.legendSet.names[i] || '') + '</b><br/>' + this.classification.bins[i].label;
+					child.style.lineHeight = legendNames[i] ? "12px" : "7px";
+					child.innerHTML = '<b style="color:#222; font-size:10px !important">' + (legendNames[i] || '') + '</b><br/>' + this.classification.bins[i].label;
 					element.appendChild(child);
 
 					child = document.createElement("div");

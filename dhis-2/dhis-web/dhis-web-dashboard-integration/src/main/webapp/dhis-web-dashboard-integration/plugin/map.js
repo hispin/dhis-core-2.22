@@ -6575,6 +6575,7 @@ Ext.onReady(function() {
                         response = this.gis.response,
                         isPlugin = this.gis.plugin,
                         element = document.createElement("div"),
+                        legendNames = view.legendSet ? view.legendSet.names || {} : {},
                         style = {},
                         child,
                         id,
@@ -6613,16 +6614,16 @@ Ext.onReady(function() {
                             child.style.fontSize = style.fontSize;
                             child.style.backgroundColor = this.colorInterpolation[i].toHexString();
                             child.style.width = style.colorWidth;
-                            child.style.height = view.legendSet.names[i] ? '22px' : style.colorHeight;
+                            child.style.height = legendNames[i] ? '22px' : style.colorHeight;
                             child.style.cssFloat = 'left';
                             child.style.marginRight = style.colorMarginRight;
                             element.appendChild(child);
 
                             child = document.createElement("div");
-                            child.style.height = view.legendSet.names[i] ? '22px' : style.colorHeight;
+                            child.style.height = legendNames[i] ? '22px' : style.colorHeight;
                             child.style.fontSize = style.fontSize;
-                            child.style.lineHeight = view.legendSet.names[i] ? "12px" : "7px";
-                            child.innerHTML = '<div style="color:#222; font-size:10px !important; height:11px; line-height:12px; font-weight:bold;">' + (view.legendSet.names[i] || '') + '</div>';
+                            child.style.lineHeight = legendNames[i] ? "12px" : "7px";
+                            child.innerHTML = '<div style="color:#222; font-size:10px !important; height:11px; line-height:12px; font-weight:bold;">' + (legendNames[i] || '') + '</div>';
                             child.innerHTML += '<div style="color:#222; font-size:10px !important; height:11px; line-height:12px">' + this.classification.bins[i].label + '</div>';
                             element.appendChild(child);
 
