@@ -156,7 +156,7 @@ public class JdbcEventAnalyticsManager
     {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
 
-        log.info( "Analytics event aggregate SQL: " + sql );
+        log.debug( "Analytics event aggregate SQL: " + sql );
         
         while ( rowSet.next() )
         {            
