@@ -291,7 +291,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 //check if dataelement has optionset								
                                 if (prStDe.dataElement.optionSetValue) {
                                     var optionSetId = prStDe.dataElement.optionSet.id;                 
-                                    newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + ' on-select={{saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')}} >' +
+                                    newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + ' on-select="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')" >' +
                                             '<ui-select-match allow-clear="true" style="width:100%;" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
                                             '<ui-select-choices  infinite-scroll="addMoreOptions()" infinite-scroll-distance="2"' +
                                             ' repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:infiniteScroll.currentOptions">' +
