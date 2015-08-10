@@ -1578,7 +1578,7 @@ public class DataQueryParams
      */
     private void setDataDimensionOptions( DataDimensionItemType itemType, List<? extends NameableObject> options )
     {
-        List<NameableObject> existing = DimensionalObjectUtils.getByDataDimensionType( itemType, getDimensionOptions( DATA_X_DIM_ID ) );
+        List<NameableObject> existing = AnalyticsUtils.getByDataDimensionType( itemType, getDimensionOptions( DATA_X_DIM_ID ) );
         DimensionalObject dimension = getDimension( DATA_X_DIM_ID );
         
         if ( dimension == null )
@@ -1631,7 +1631,7 @@ public class DataQueryParams
     {
         DimensionalObject dimension = getDimensionOrFilter( DATA_X_DIM_ID );
         
-        List<NameableObject> items = DimensionalObjectUtils.getByDataDimensionType( itemType, dimension.getItems() );
+        List<NameableObject> items = AnalyticsUtils.getByDataDimensionType( itemType, dimension.getItems() );
         
         dimension.getItems().clear();
         dimension.getItems().addAll( items );
@@ -1647,7 +1647,7 @@ public class DataQueryParams
         
         for ( DataDimensionItemType itemType : itemTypes )
         {
-            items.addAll( DimensionalObjectUtils.getByDataDimensionType( itemType, dimension.getItems() ) );
+            items.addAll( AnalyticsUtils.getByDataDimensionType( itemType, dimension.getItems() ) );
         }
 
         dimension.getItems().clear();
@@ -1662,7 +1662,7 @@ public class DataQueryParams
   
     public List<NameableObject> getIndicators()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.INDICATOR, getDimensionOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.INDICATOR, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setIndicators( List<? extends NameableObject> indicators )
@@ -1672,12 +1672,12 @@ public class DataQueryParams
     
     public List<NameableObject> getDataElements()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, getDimensionOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
     public List<NameableObject> getDataElementOperands()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.DATA_ELEMENT_OPERAND, getDimensionOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.DATA_ELEMENT_OPERAND, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setDataElements( List<? extends NameableObject> dataElements )
@@ -1687,7 +1687,7 @@ public class DataQueryParams
     
     public List<NameableObject> getDataSets()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.DATA_SET, getDimensionOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.DATA_SET, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
 
     public void setDataSets( List<? extends NameableObject> dataSets )
@@ -1697,7 +1697,7 @@ public class DataQueryParams
 
     public List<NameableObject> getProgramIndicators()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_INDICATOR, getDimensionOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_INDICATOR, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setProgramIndicators( List<? extends NameableObject> programIndicators )
@@ -1707,7 +1707,7 @@ public class DataQueryParams
 
     public List<NameableObject> getProgramDataElements()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_DATA_ELEMENT, getDimensionOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_DATA_ELEMENT, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setProgramDataElements( List<? extends NameableObject> programDataElements )
@@ -1717,7 +1717,7 @@ public class DataQueryParams
     
     public List<NameableObject> getProgramAttributes()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, getDimensionOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, getDimensionOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setProgramAttributes( List<? extends NameableObject> programAttributes )
@@ -1809,17 +1809,17 @@ public class DataQueryParams
 
     public List<NameableObject> getFilterIndicators()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.INDICATOR, getFilterOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.INDICATOR, getFilterOptions( DATA_X_DIM_ID ) ) );
     }
     
     public List<NameableObject> getFilterDataElements()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, getFilterOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, getFilterOptions( DATA_X_DIM_ID ) ) );
     }
 
     public List<NameableObject> getFilterDataSets()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.DATA_SET, getFilterOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.DATA_SET, getFilterOptions( DATA_X_DIM_ID ) ) );
     }
     
     public List<NameableObject> getFilterPeriods()
@@ -1854,12 +1854,12 @@ public class DataQueryParams
 
     public List<NameableObject> getFilterProgramDataElements()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_DATA_ELEMENT, getFilterOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_DATA_ELEMENT, getFilterOptions( DATA_X_DIM_ID ) ) );
     }
     
     public List<NameableObject> getFilterProgramAttributes()
     {
-        return ImmutableList.copyOf( DimensionalObjectUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, getFilterOptions( DATA_X_DIM_ID ) ) );
+        return ImmutableList.copyOf( AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, getFilterOptions( DATA_X_DIM_ID ) ) );
     }
     
     public void setFilter( String filter, DimensionType type, NameableObject item )

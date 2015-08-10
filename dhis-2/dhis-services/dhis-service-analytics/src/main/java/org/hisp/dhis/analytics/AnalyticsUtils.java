@@ -28,19 +28,24 @@ package org.hisp.dhis.analytics;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.DataDimensionItem.DATA_DIMENSION_TYPE_CLASS_MAP;
+import static org.hisp.dhis.common.DataDimensionItem.DATA_DIMENSION_TYPE_DOMAIN_MAP;
 import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hisp.dhis.common.DataDimensionItem.DataDimensionItemType;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.commons.util.TextUtils;
+import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.system.util.ReflectionUtils;
 
 /**
  * @author Lars Helge Overland
@@ -99,4 +104,37 @@ public class AnalyticsUtils
         
         return sql;
     }
+
+    /**
+     * Returns a list of data dimension options which match the given data 
+     * dimension item type.
+     * 
+     * @param itemType the data dimension item type.
+     * @param dataDimensionOptions the data dimension options.
+     * @return list of nameable objects.
+     */
+    public static List<NameableObject> getByDataDimensionType( DataDimensionItemType itemType, List<NameableObject> dataDimensionOptions )
+    {
+        List<NameableObject> list = new ArrayList<>();
+        
+        for ( NameableObject object : dataDimensionOptions )
+        {
+            Class<?> clazz = ReflectionUtils.getRealClass( object.getClass() );
+            
+            if ( !clazz.equals( DATA_DIMENSION_TYPE_CLASS_MAP.get( itemType ) ) )
+            {
+                continue;
+            }
+            
+            if ( clazz.equals( DataElement.class ) && !( ((DataElement) object).getDomainType().equals( DATA_DIMENSION_TYPE_DOMAIN_MAP.get( itemType ) ) ) )
+            {
+                continue;
+            }
+            
+            list.add( object );
+        }
+        
+        return list;
+    }
+    
 }
