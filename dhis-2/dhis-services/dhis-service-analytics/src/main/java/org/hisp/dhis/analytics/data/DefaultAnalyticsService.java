@@ -1028,6 +1028,8 @@ public class DefaultAnalyticsService
     {
         DataQueryParams params = new DataQueryParams();
         
+        List<OrganisationUnit> userOrgUnits = getUserOrgUnits( null );
+        
         if ( object != null )
         {
             Date date = object.getRelativePeriodDate();
@@ -1036,17 +1038,17 @@ public class DefaultAnalyticsService
 
             for ( DimensionalObject column : object.getColumns() )
             {
-                params.addDimension( getDimension( column.getDimension(), getUids( column.getItems() ), date, null, format, false ) );
+                params.addDimension( getDimension( column.getDimension(), getUids( column.getItems() ), date, userOrgUnits, format, false ) );
             }
 
             for ( DimensionalObject row : object.getRows() )
             {
-                params.addDimension( getDimension( row.getDimension(), getUids( row.getItems() ), date, null, format, false ) );
+                params.addDimension( getDimension( row.getDimension(), getUids( row.getItems() ), date, userOrgUnits, format, false ) );
             }
 
             for ( DimensionalObject filter : object.getFilters() )
             {
-                params.getFilters().add( getDimension( filter.getDimension(), getUids( filter.getItems() ), date, null, format, false ) );
+                params.getFilters().add( getDimension( filter.getDimension(), getUids( filter.getItems() ), date, userOrgUnits, format, false ) );
             }
         }
 
@@ -1551,7 +1553,7 @@ public class DefaultAnalyticsService
      * @param userOrgUnit the user org unit parameter string.
      * @return a list of organisation units.
      */
-    private List<OrganisationUnit> getUserOrgUnits( String userOrgUnit)
+    private List<OrganisationUnit> getUserOrgUnits( String userOrgUnit )
     {
         List<OrganisationUnit> units = new ArrayList<>();
         
