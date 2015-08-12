@@ -50,9 +50,11 @@ import java.util.Map;
  */
 public class DefaultSchemaService implements SchemaService
 {
-    private Map<Class<?>, Schema> classSchemaMap = Maps.newHashMap();
+    private Map<Class<?>, Schema> classSchemaMap = new HashMap<>();
 
-    private Map<String, Schema> singularSchemaMap = Maps.newHashMap();
+    private Map<String, Schema> singularSchemaMap = new HashMap<>();
+
+    private Map<Class<?>, Schema> dynamicClassSchemaMap = new HashMap<>();
 
     @Autowired
     private PropertyIntrospectorService propertyIntrospectorService;
@@ -104,6 +106,11 @@ public class DefaultSchemaService implements SchemaService
             return classSchemaMap.get( klass );
         }
 
+        if ( dynamicClassSchemaMap.containsKey( klass ) )
+        {
+            return dynamicClassSchemaMap.get( klass );
+        }
+
         return null;
     }
 
@@ -133,7 +140,7 @@ public class DefaultSchemaService implements SchemaService
 
         updateSelf( schema );
 
-        classSchemaMap.put( klass, schema );
+        dynamicClassSchemaMap.put( klass, schema );
 
         return schema;
     }
