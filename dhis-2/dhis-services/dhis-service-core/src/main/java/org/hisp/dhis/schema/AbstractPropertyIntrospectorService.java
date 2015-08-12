@@ -40,6 +40,9 @@ import org.hibernate.persister.collection.CollectionPersister;
 import org.hibernate.persister.entity.Joinable;
 import org.hibernate.type.AssociationType;
 import org.hibernate.type.CollectionType;
+import org.hibernate.type.DoubleType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.LongType;
 import org.hibernate.type.ManyToOneType;
 import org.hibernate.type.OneToOneType;
 import org.hibernate.type.SetType;
@@ -281,7 +284,8 @@ public abstract class AbstractPropertyIntrospectorService
                 property.setMax( column.getLength() );
                 property.setLength( column.getLength() );
 
-                if ( TextType.class.isInstance( type ) )
+                if ( TextType.class.isInstance( type ) || LongType.class.isInstance( type )
+                    || IntegerType.class.isInstance( type ) || DoubleType.class.isInstance( type ) )
                 {
                     property.setMin( 0 );
                     property.setMax( Integer.MAX_VALUE );
