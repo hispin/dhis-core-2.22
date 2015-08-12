@@ -43,6 +43,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
@@ -602,6 +603,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                 // this is nasty, but we have types in the system which have shortName, but which do -not- require not-null )
                 && !TrackedEntityAttribute.class.isAssignableFrom( object.getClass() )
                 && !TrackedEntity.class.isAssignableFrom( object.getClass() )
+                && !DataElementCategoryOption.class.isAssignableFrom( object.getClass() )
                 && !CategoryOptionGroupSet.class.isAssignableFrom( object.getClass() )
                 && !DashboardItem.class.isAssignableFrom( object.getClass() )
                 && !ProgramStageDataElement.class.isAssignableFrom( object.getClass() ) )
