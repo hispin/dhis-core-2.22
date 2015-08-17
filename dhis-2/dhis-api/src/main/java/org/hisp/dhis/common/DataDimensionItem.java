@@ -164,7 +164,7 @@ public class DataDimensionItem
             return trackedEntityAttribute;
         }
         
-        throw new IllegalStateException( "Data dimension is null" );
+        return null;
     }
     
     // -------------------------------------------------------------------------
