@@ -166,11 +166,12 @@ public class OrganisationUnit
 
     public OrganisationUnit()
     {
-
+        setAutoFields(); // to have getPath working properly, we need to set auto fields (for uid etc)
     }
 
     public OrganisationUnit( String name )
     {
+        this();
         this.name = name;
     }
 
