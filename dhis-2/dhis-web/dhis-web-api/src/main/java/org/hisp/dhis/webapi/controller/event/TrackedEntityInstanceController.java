@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
@@ -52,7 +53,6 @@ import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -382,7 +382,7 @@ public class TrackedEntityInstanceController
                 importSummary.setImportCount( null );
             }
 
-            webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
+            webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
         }
     }
 
