@@ -93,7 +93,8 @@ public class DefaultAppManager
 
         return apps;
     }
-    
+
+    @Override
     public App getApp( String key )
     {
         List<App> apps = getApps();
