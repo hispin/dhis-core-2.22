@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -89,26 +90,29 @@ public class AppController
     private ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     @RequestMapping( method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_JSON )
-    public void getApps( HttpServletResponse response )
+    public void getApps( @RequestParam(required=false) String key, HttpServletResponse response )
         throws IOException
     {
-        List<App> apps = appManager.getApps();
-
-        renderService.toJson( response.getOutputStream(), apps );
-    }
-
-    @RequestMapping( method = RequestMethod.GET )
-    public void getAppByKey( @RequestParam String key, HttpServletRequest request, HttpServletResponse response ) throws IOException
-    {
-        App app = appManager.getApp( key );
+        List<App> apps = new ArrayList<App>();
         
-        if ( app == null )
+        if ( key != null )
         {
-            response.sendError( HttpServletResponse.SC_NOT_FOUND );
-            return;
+            App app = appManager.getApp( key );
+            
+            if ( app == null )
+            {
+                response.sendError( HttpServletResponse.SC_NOT_FOUND );
+                return;
+            }
+            
+            apps.add( app );
+        }
+        else
+        {
+            apps = appManager.getApps();
         }
         
-        renderService.toJson( response.getOutputStream(), app );
+        renderService.toJson( response.getOutputStream(), apps );
     }
 
     @RequestMapping( method = RequestMethod.POST )
