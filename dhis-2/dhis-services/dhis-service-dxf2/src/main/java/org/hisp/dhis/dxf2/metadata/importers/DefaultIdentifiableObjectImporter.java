@@ -726,8 +726,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         }
         else if ( DataElementOperand.class.isInstance( identifiableObject ) )
         {
-            DataElementOperand dataElementOperand = dataElementOperandService.getDataElementOperandByUid( identifiableObject.getUid() );
-            return dataElementOperand;
+            return dataElementOperandService.getDataElementOperandByUid( identifiableObject.getUid() );
         }
 
         return objectBridge.getObject( identifiableObject );
