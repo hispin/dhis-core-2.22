@@ -144,6 +144,7 @@ import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.system.util.ReflectionUtils;
 import org.hisp.dhis.system.util.SystemUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -1332,7 +1333,9 @@ public class DefaultAnalyticsService
 
         if ( dimObject != null && dimObject.isDataDimension() )
         {
-            Class<? extends NameableObject> itemClass = DimensionalObject.DIMENSION_CLASS_ITEM_CLASS_MAP.get( dimObject.getClass() );
+            Class<?> dimClass = ReflectionUtils.getRealClass( dimObject.getClass() );
+            
+            Class<? extends NameableObject> itemClass = DimensionalObject.DIMENSION_CLASS_ITEM_CLASS_MAP.get( dimClass );
             
             List<NameableObject> dimItems = !allItems ? asList( idObjectManager.getByUidOrdered( itemClass, items ) ) : dimObject.getItems();
                         
