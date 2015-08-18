@@ -93,6 +93,21 @@ public class DefaultAppManager
 
         return apps;
     }
+    
+    public App getApp( String key )
+    {
+        List<App> apps = getApps();
+        
+        for ( App app : apps )
+        {
+            if ( key.equals( app.getKey() ) )
+            {
+                return app;
+            }
+        }
+        
+        return null;
+    }
 
     @Override
     public List<App> getAccessibleApps()
