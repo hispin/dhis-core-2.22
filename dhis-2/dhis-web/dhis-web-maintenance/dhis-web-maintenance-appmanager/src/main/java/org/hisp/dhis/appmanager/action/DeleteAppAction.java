@@ -40,23 +40,19 @@ import com.opensymphony.xwork2.Action;
 public class DeleteAppAction
     implements Action
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-    
-    @Autowired
-    private AppManager appManager;
-
-    // -------------------------------------------------------------------------
-    // Input & Output
-    // -------------------------------------------------------------------------
-
     private I18n i18n;
 
     public void setI18n( I18n i18n )
     {
         this.i18n = i18n;
     }
+
+    @Autowired
+    private AppManager appManager;
+
+    // -------------------------------------------------------------------------
+    // Input & Output
+    // -------------------------------------------------------------------------
 
     private String appName;
     
