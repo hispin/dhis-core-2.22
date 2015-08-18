@@ -28,32 +28,24 @@ package org.hisp.dhis.dxf2.metadata.importers;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.PredicateUtils.idObjectCollectionsWithScanned;
-import static org.hisp.dhis.system.util.PredicateUtils.idObjects;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
-import org.hisp.dhis.dataelement.DataElementCategoryOption;
-import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DataDimensionItem;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategoryDimension;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementOperandService;
 import org.hisp.dhis.dataentryform.DataEntryForm;
@@ -81,6 +73,7 @@ import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.program.ProgramValidation;
 import org.hisp.dhis.schema.SchemaService;
+import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.system.util.ReflectionUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -91,9 +84,17 @@ import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.hisp.dhis.system.util.PredicateUtils.idObjectCollectionsWithScanned;
+import static org.hisp.dhis.system.util.PredicateUtils.idObjects;
 
 /**
  * Importer that can handle IdentifiableObject and NameableObject.
@@ -711,7 +712,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         {
             return null;
         }
-        else if ( Period.class.isAssignableFrom( identifiableObject.getClass() ) )
+        else if ( Period.class.isInstance( identifiableObject ) )
         {
             Period period = (Period) identifiableObject;
 
@@ -722,6 +723,11 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             }
 
             return period;
+        }
+        else if ( DataElementOperand.class.isInstance( identifiableObject ) )
+        {
+            DataElementOperand dataElementOperand = dataElementOperandService.getDataElementOperandByUid( identifiableObject.getUid() );
+            return dataElementOperand;
         }
 
         return objectBridge.getObject( identifiableObject );
@@ -929,10 +935,9 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         private Set<DataElementOperand> compulsoryDataElementOperands = new HashSet<>();
         private Set<DataElementOperand> greyedFields = new HashSet<>();
         private List<DataElementOperand> dataElementOperands = new ArrayList<>();
-
         private List<ProgramTrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
-
         private List<DataElementCategoryDimension> categoryDimensions = new ArrayList<>();
+        private List<DataDimensionItem> dataDimensionItems = new ArrayList<>();
 
         private User user;
 
@@ -952,6 +957,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             dataElementOperands = Lists.newArrayList( extractDataElementOperands( object, "dataElementOperands" ) );
             programTrackedEntityAttributes = extractProgramTrackedEntityAttributes( object );
             categoryDimensions = extractCategoryDimensions( object );
+            dataDimensionItems = extractDataDimensionItems( object );
         }
 
         public void delete( T object )
@@ -985,6 +991,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             saveDataElementOperands( object, "dataElementOperands", dataElementOperands );
             saveProgramTrackedEntityAttributes( object, programTrackedEntityAttributes );
             saveCategoryDimensions( object, categoryDimensions );
+            saveDataDimensionItems( object, dataDimensionItems );
         }
 
         private void saveDataEntryForm( T object, String fieldName, DataEntryForm dataEntryForm )
@@ -1265,6 +1272,42 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                     Map<Field, Object> identifiableObjects = detachFields( programTrackedEntityAttribute );
                     reattachFields( programTrackedEntityAttribute, identifiableObjects, user );
                     programTrackedEntityAttributeList.add( programTrackedEntityAttribute );
+                }
+            }
+        }
+
+        private List<DataDimensionItem> extractDataDimensionItems( T object )
+        {
+            List<DataDimensionItem> dataDimensionItems = new ArrayList<>();
+
+            if ( BaseAnalyticalObject.class.isInstance( object ) )
+            {
+                BaseAnalyticalObject analyticalObject = (BaseAnalyticalObject) object;
+                dataDimensionItems = new ArrayList<>( analyticalObject.getDataDimensionItems() );
+                analyticalObject.getDataDimensionItems().clear();
+            }
+
+            return dataDimensionItems;
+        }
+
+        private void saveDataDimensionItems( T object, Collection<DataDimensionItem> dataDimensionItems )
+        {
+            if ( BaseAnalyticalObject.class.isInstance( object ) )
+            {
+                BaseAnalyticalObject analyticalObject = (BaseAnalyticalObject) object;
+
+                for ( DataDimensionItem dataDimensionItem : dataDimensionItems )
+                {
+                    Map<Field, Object> identifiableObjects = detachFields( dataDimensionItem );
+                    reattachFields( dataDimensionItem, identifiableObjects, user );
+
+                    if ( dataDimensionItem.getDataElementOperand() != null )
+                    {
+                        dataDimensionItem.getDataElementOperand().setId( 0 );
+                        dataElementOperandService.addDataElementOperand( dataDimensionItem.getDataElementOperand() );
+                    }
+
+                    analyticalObject.getDataDimensionItems().add( dataDimensionItem );
                 }
             }
         }

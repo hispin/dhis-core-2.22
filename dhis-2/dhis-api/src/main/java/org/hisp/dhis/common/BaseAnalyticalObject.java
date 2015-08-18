@@ -115,7 +115,6 @@ public abstract class BaseAnalyticalObject
     // Persisted properties
     // -------------------------------------------------------------------------
     
-    @Scanned
     protected List<DataDimensionItem> dataDimensionItems = new ArrayList<>();
     
     @Scanned
