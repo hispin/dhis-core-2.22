@@ -30,6 +30,7 @@ package org.hisp.dhis.dataelement;
 
 import java.util.List;
 
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.GenericDimensionalObjectStore;
 
 /**
@@ -38,9 +39,9 @@ import org.hisp.dhis.common.GenericDimensionalObjectStore;
 public interface CategoryStore
     extends GenericDimensionalObjectStore<DataElementCategory>
 {
-    List<DataElementCategory> getCategoriesByDimensionType( String dimensionType );
+    List<DataElementCategory> getCategoriesByDimensionType( DataDimensionType dataDimensionType );
     
-    List<DataElementCategory> getCategories( String dimensionType, boolean dataDimension );
+    List<DataElementCategory> getCategories( DataDimensionType dataDimensionType, boolean dataDimension );
     
-    List<DataElementCategory> getCategoriesNoAcl( String dimensionType, boolean dataDimension );
+    List<DataElementCategory> getCategoriesNoAcl( DataDimensionType dataDimensionType, boolean dataDimension );
 }

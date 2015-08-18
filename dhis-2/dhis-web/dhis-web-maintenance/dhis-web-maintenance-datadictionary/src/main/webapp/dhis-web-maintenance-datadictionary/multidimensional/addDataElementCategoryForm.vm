@@ -43,11 +43,11 @@
       <td><input type="checkbox" id="dataDimension" name="dataDimension" value="true" /></td>
     </tr>
     <tr>
-      <td><label>$i18n.getString( "dimension_type" )</td>
+      <td><label>$i18n.getString( "data_dimension_type" )</td>
       <td>
-        <select id="dimensionType" name="dimensionType">
-          <option value="disaggregation" selected="selected">$i18n.getString( "disaggregation" )</option>
-          <option value="attribute">$i18n.getString( "attribute" )</option>
+        <select id="dataDimensionType" name="dataDimensionType">
+          <option value="DISAGGREGATION" selected="selected">$i18n.getString( "disaggregation" )</option>
+          <option value="ATTRIBUTE">$i18n.getString( "attribute" )</option>
         </select>
       </td>
     </tr>
@@ -56,11 +56,11 @@
     </tr>
   </table>  
 
-#jqSelected({
-   "prefix": "co",
-   "i18n_available": "available_category_options",
-   "i18n_selected": "selected_category_options"
- })
+  #jqSelected({
+    "prefix": "co",
+    "i18n_available": "available_category_options",
+    "i18n_selected": "selected_category_options"
+  })
 
   <p>
   	<input type="submit" value="$i18n.getString( 'add' )" style="width:100px">

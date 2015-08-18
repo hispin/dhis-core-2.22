@@ -48,11 +48,11 @@
       <td><input type="checkbox" id="dataDimension" name="dataDimension" value="true"#if( $dataElementCategory.dataDimension ) checked="checked"#end/></td>
     </tr>
     <tr>
-      <td><label>$i18n.getString( "dimension_type" )</td>
+      <td><label>$i18n.getString( "data_dimension_type" )</td>
       <td>
-        <select id="dimensionType" name="dimensionType" disabled="disabled">
-          <option value="disaggregation"#if( "disaggregation" == $dataElementCategory.dimensionType ) selected="selected"#end>$i18n.getString( "disaggregation" )</option>
-          <option value="attribute"#if( "attribute" == $dataElementCategory.dimensionType ) selected="selected"#end>$i18n.getString( "attribute" )</option>
+        <select id="dataDmensionType" name="dataDimensionType" disabled="disabled">
+          <option value="DISAGGREGATION"#if( "DISAGGREGATION" == $dataElementCategory.dataDimensionType ) selected="selected"#end>$i18n.getString( "disaggregation" )</option>
+          <option value="ATTRIBUTE"#if( "ATTRIBUTE" == $dataElementCategory.dataDimensionType ) selected="selected"#end>$i18n.getString( "attribute" )</option>
         </select>
       </td>
     </tr>

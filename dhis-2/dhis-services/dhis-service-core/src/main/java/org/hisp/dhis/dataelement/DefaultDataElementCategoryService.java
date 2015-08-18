@@ -41,6 +41,7 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.GenericDimensionalObjectStore;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
@@ -228,25 +229,25 @@ public class DefaultDataElementCategoryService
     @Override
     public List<DataElementCategory> getDisaggregationCategories()
     {
-        return i18n( i18nService, categoryStore.getCategoriesByDimensionType( DataElementCategoryCombo.DIMENSION_TYPE_DISAGGREGATION ) );
+        return i18n( i18nService, categoryStore.getCategoriesByDimensionType( DataDimensionType.DISAGGREGATION ) );
     }
 
     @Override
     public List<DataElementCategory> getDisaggregationDataDimensionCategoriesNoAcl()
     {
-        return i18n( i18nService, categoryStore.getCategoriesNoAcl( DataElementCategoryCombo.DIMENSION_TYPE_DISAGGREGATION, true ) );
+        return i18n( i18nService, categoryStore.getCategoriesNoAcl( DataDimensionType.DISAGGREGATION, true ) );
     }
 
     @Override
     public List<DataElementCategory> getAttributeCategories()
     {
-        return i18n( i18nService, categoryStore.getCategoriesByDimensionType( DataElementCategoryCombo.DIMENSION_TYPE_ATTTRIBUTE ) );
+        return i18n( i18nService, categoryStore.getCategoriesByDimensionType( DataDimensionType.ATTRIBUTE ) );
     }
 
     @Override
     public List<DataElementCategory> getAttributeDataDimensionCategoriesNoAcl()
     {
-        return i18n( i18nService, categoryStore.getCategoriesNoAcl( DataElementCategoryCombo.DIMENSION_TYPE_ATTTRIBUTE, true ) );
+        return i18n( i18nService, categoryStore.getCategoriesNoAcl( DataDimensionType.ATTRIBUTE, true ) );
     }
 
     @Override
@@ -483,8 +484,7 @@ public class DefaultDataElementCategoryService
     }
 
     @Override
-    public List<DataElementCategoryCombo> getDataElementCategoryCombosBetweenByName( String name, int first,
-        int max )
+    public List<DataElementCategoryCombo> getDataElementCategoryCombosBetweenByName( String name, int first, int max )
     {
         return i18n( i18nService, categoryComboStore.getAllLikeName( name, first, max ) );
     }
@@ -492,16 +492,13 @@ public class DefaultDataElementCategoryService
     @Override
     public List<DataElementCategoryCombo> getDisaggregationCategoryCombos()
     {
-        return i18n( i18nService,
-            categoryComboStore
-                .getCategoryCombosByDimensionType( DataElementCategoryCombo.DIMENSION_TYPE_DISAGGREGATION ) );
+        return i18n( i18nService, categoryComboStore.getCategoryCombosByDimensionType( DataDimensionType.DISAGGREGATION ) );
     }
 
     @Override
     public List<DataElementCategoryCombo> getAttributeCategoryCombos()
     {
-        return i18n( i18nService,
-            categoryComboStore.getCategoryCombosByDimensionType( DataElementCategoryCombo.DIMENSION_TYPE_ATTTRIBUTE ) );
+        return i18n( i18nService, categoryComboStore.getCategoryCombosByDimensionType( DataDimensionType.ATTRIBUTE ) );
     }
 
     @Override

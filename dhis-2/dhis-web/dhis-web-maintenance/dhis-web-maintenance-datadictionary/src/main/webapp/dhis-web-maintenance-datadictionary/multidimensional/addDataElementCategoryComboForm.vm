@@ -3,7 +3,7 @@
     jQuery(document).ready(	function(){
         dhis2.coc.clearAndSetAjaxSelect(dhis2.coc.getType(), false);
 
-        $('#dimensionType').on('change', function( e ) {
+        $('#dataDimensionType').on('change', function( e ) {
             dhis2.coc.clearAndSetAjaxSelect(dhis2.coc.getType(), true);
         });
 
@@ -42,11 +42,11 @@
 		<td><input type="text" id="code" name="code" ></td>
 	 </tr>	
       <tr>
-      	<td><label>$i18n.getString( "dimension_type" )</td>
+      	<td><label>$i18n.getString( "data_dimension_type" )</td>
       	<td>
-          <select id="dimensionType" name="dimensionType">
-            <option value="disaggregation" selected="selected">$i18n.getString( "disaggregation" )</option>
-            <option value="attribute">$i18n.getString( "attribute" )</option>
+          <select id="dataDimensionType" name="dataDimensionType">
+            <option value="DISAGGREGATION" selected="selected">$i18n.getString( "disaggregation" )</option>
+            <option value="ATTRIBUTE">$i18n.getString( "attribute" )</option>
           </select>
         </td>
       </tr>
@@ -67,9 +67,9 @@
     "i18n_selected": "selected_categories"
   })
 
-	<p>
-		<input type="submit" name="add" value="$i18n.getString( 'add' )" style="width:10em" />
-		<input type="button" name="cancel" onclick="dhis2.commons.redirectCurrentPage( 'categoryCombo.action' )" value="$i18n.getString( 'cancel' )" style="width:10em" />
-	</p>
+  <p>
+    <input type="submit" name="add" value="$i18n.getString( 'add' )" style="width:10em" />
+    <input type="button" name="cancel" onclick="dhis2.commons.redirectCurrentPage( 'categoryCombo.action' )" value="$i18n.getString( 'cancel' )" style="width:10em" />
+  </p>
 
 </form>

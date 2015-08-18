@@ -39,7 +39,7 @@ public enum DataElementDomain
 
     private final String value;
 
-    private DataElementDomain( String value )
+    DataElementDomain( String value )
     {
         this.value = value;
     }

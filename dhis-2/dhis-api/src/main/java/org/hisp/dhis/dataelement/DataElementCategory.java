@@ -37,6 +37,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -69,7 +70,7 @@ public class DataElementCategory
 
     public static final String DEFAULT_NAME = "default";
 
-    private String dataDimensionType;
+    private DataDimensionType dataDimensionType;
 
     @Scanned
     private List<DataElementCategoryOption> categoryOptions = new ArrayList<>();
@@ -189,12 +190,12 @@ public class DataElementCategory
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDataDimensionType()
+    public DataDimensionType getDataDimensionType()
     {
         return dataDimensionType;
     }
 
-    public void setDataDimensionType( String dataDimensionType )
+    public void setDataDimensionType( DataDimensionType dataDimensionType )
     {
         this.dataDimensionType = dataDimensionType;
     }
