@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hisp.dhis.paging.ActionPagingSupport;
-import org.hisp.dhis.program.ProgramStageInstanceService;
 import org.hisp.dhis.sms.outbound.OutboundSms;
 import org.hisp.dhis.sms.outbound.OutboundSmsService;
 import org.hisp.dhis.sms.outbound.OutboundSmsStatus;
@@ -44,7 +43,6 @@ import org.hisp.dhis.user.UserService;
 public class ShowSentSMSAction
     extends ActionPagingSupport<OutboundSms>
 {
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -54,13 +52,6 @@ public class ShowSentSMSAction
     public void setOutboundSmsService( OutboundSmsService outboundSmsService )
     {
         this.outboundSmsService = outboundSmsService;
-    }
-
-    private ProgramStageInstanceService programStageInstanceService;
-
-    public void setProgramStageInstanceService( ProgramStageInstanceService programStageInstanceService )
-    {
-        this.programStageInstanceService = programStageInstanceService;
     }
 
     private UserService userService;
