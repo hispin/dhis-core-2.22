@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 
@@ -39,7 +40,6 @@ import com.opensymphony.xwork2.Action;
 
 /**
  * @author Selamawit
- * @version $Id$
  */
 public class AddDataElementCategoryAction
     implements Action
@@ -80,11 +80,11 @@ public class AddDataElementCategoryAction
         this.dataDimension = dataDimension;
     }
 
-    private String dimensionType;
+    private String dataDimensionType;
 
-    public void setDimensionType( String dimensionType )
+    public void setDataDimensionType( String dataDimensionType )
     {
-        this.dimensionType = dimensionType;
+        this.dataDimensionType = dataDimensionType;
     }
 
     private List<String> coSelected = new ArrayList<>();
@@ -105,7 +105,7 @@ public class AddDataElementCategoryAction
         dataElementCategory.setName( StringUtils.trimToNull( name ) );
         dataElementCategory.setCode( StringUtils.trimToNull( code ) );
         dataElementCategory.setDataDimension( dataDimension );
-        dataElementCategory.setDataDimensionType( dimensionType );
+        dataElementCategory.setDataDimensionType( DataDimensionType.valueOf( dataDimensionType ) );
 
         for ( String id : coSelected )
         {

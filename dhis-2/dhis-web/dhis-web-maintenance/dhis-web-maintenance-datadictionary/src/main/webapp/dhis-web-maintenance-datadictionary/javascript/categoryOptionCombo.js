@@ -48,6 +48,6 @@ dhis2.coc = {
         });
     },
     getType: function () {
-        return $('#dimensionType').val().toLowerCase();
+        return $('#dataDimensionType').val().toUpperCase();
     }
 };

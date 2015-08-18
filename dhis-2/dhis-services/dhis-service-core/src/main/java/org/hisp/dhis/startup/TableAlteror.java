@@ -28,13 +28,19 @@ package org.hisp.dhis.startup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.quick.StatementHolder;
 import org.amplecode.quick.StatementManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.jdbc.batchhandler.RelativePeriodsBatchHandler;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -42,13 +48,6 @@ import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -742,10 +741,6 @@ public class TableAlteror
         executeSql( "ALTER TABLE dataset DROP COLUMN symbol" );
         executeSql( "ALTER TABLE users ALTER COLUMN password DROP NOT NULL" );
 
-        executeSql( "update categorycombo set dimensiontype = '"
-            + DataElementCategoryCombo.DIMENSION_TYPE_DISAGGREGATION + "' where dimensiontype is null" );
-        executeSql( "update dataelementcategory set dimensiontype = '"
-            + DataElementCategoryCombo.DIMENSION_TYPE_DISAGGREGATION + "' where dimensiontype is null" );
         executeSql( "update dataset set categorycomboid = " + defaultCategoryComboId + " where categorycomboid is null" );
 
         // set default dataDimension on orgUnitGroupSet and deGroupSet
@@ -831,6 +826,15 @@ public class TableAlteror
         executeSql( "UPDATE report set cachestrategy='RESPECT_SYSTEM_SETTING' where cachestrategy is null" );
         executeSql( "UPDATE sqlview set cachestrategy='RESPECT_SYSTEM_SETTING' where cachestrategy is null" );
 
+        executeSql( "update categorycombo set datadimensiontype = 'DISAGGREGATION' where dimensiontype = 'disaggregation'" );
+        executeSql( "update categorycombo set datadimensiontype = 'ATTRIBUTE' where dimensiontype = 'attribute'" );
+        executeSql( "update categorycombo set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
+        executeSql( "alter table categorycombo drop column dimensiontype" );
+        executeSql( "update dataelementcategory set datadimensiontype = 'DISAGGREGATION' where dimensiontype = 'disaggregation'" );
+        executeSql( "update dataelementcategory set datadimensiontype = 'ATTRIBUTE' where dimensiontype = 'attribute'" );
+        executeSql( "update dataelementcategory set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
+        executeSql( "alter table dataelementcategory drop column dimensiontype" );
+        
         oauth2();
 
         upgradeDataValuesWithAttributeOptionCombo();

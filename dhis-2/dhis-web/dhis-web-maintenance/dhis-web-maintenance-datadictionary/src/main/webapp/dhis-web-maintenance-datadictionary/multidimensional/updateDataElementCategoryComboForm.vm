@@ -3,7 +3,7 @@
 	jQuery(document).ready(	function(){
         dhis2.coc.clearAndSetAjaxSelect(dhis2.coc.getType(), false);
 
-        $('#dimensionType').on('change', function( e ) {
+        $('#dataDimensionType').on('change', function( e ) {
             dhis2.coc.clearAndSetAjaxSelect(dhis2.coc.getType(), true);
         });
 
@@ -42,11 +42,11 @@
 		<td><input type="text" id="code" name="code" value="$!encoder.htmlEncode( $dataElementCategoryCombo.code )"></td>
 	 </tr>	
       <tr>
-        <td><label>$i18n.getString( "dimension_type" )</td>
+        <td><label>$i18n.getString( "data_dimension_type" )</td>
         <td>
-          <select id="dimensionType" name="dimensionType" disabled="disabled">
-            <option value="disaggregation"#if( "disaggregation" == $dataElementCategoryCombo.dimensionType ) selected="selected"#end>$i18n.getString( "disaggregation" )</option>
-            <option value="attribute"#if( "attribute" == $dataElementCategoryCombo.dimensionType ) selected="selected"#end>$i18n.getString( "attribute" )</option>
+          <select id="dataDimensionType" name="dataDimensionType" disabled="disabled">
+            <option value="DISAGGREGATION"#if( "DISAGGREGATION" == $dataElementCategoryCombo.dataDimensionType ) selected="selected"#end>$i18n.getString( "disaggregation" )</option>
+            <option value="ATTRIBUTE"#if( "ATTRIBUTE" == $dataElementCategoryCombo.dataDimensionType ) selected="selected"#end>$i18n.getString( "attribute" )</option>
           </select>
         </td>
       </tr>

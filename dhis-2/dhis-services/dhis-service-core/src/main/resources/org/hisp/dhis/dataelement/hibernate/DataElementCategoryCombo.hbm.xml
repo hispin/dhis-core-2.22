@@ -32,8 +32,8 @@
         foreign-key="fk_categorycombo_categoryoptioncomboid" unique="true" />
     </set>
     
-    <property name="dimensionType" column="dimensiontype" />
-    
+    <property name="dataDimensionType" column="datadimensiontype" type="org.hisp.dhis.common.DataDimensionTypeUserType" />
+
     <property name="skipTotal" column="skiptotal" />
     
     <!-- Access properties -->
