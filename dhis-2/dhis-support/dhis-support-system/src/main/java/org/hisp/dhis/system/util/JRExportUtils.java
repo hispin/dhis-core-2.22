@@ -29,18 +29,14 @@ package org.hisp.dhis.system.util;
  */
 
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
-import net.sf.jasperreports.engine.JRAbstractExporter;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 
 /**
  * Supports PDF, HMTL and XLS exports.
@@ -51,15 +47,7 @@ public class JRExportUtils
 {
     public static final String TYPE_XLS = "xls";
     public static final String TYPE_PDF = "pdf";
-    public static final String TYPE_HTML = "html";
     
-    private static final Map<String, JRExportProvider> exporters = new HashMap<String, JRExportProvider>() {    
-    {
-        put( TYPE_XLS, new JRXlsExportProvider() );
-        put( TYPE_PDF, new JRPdfExportProvider() );
-        put( TYPE_HTML, new JRHtmlExportProvider() );
-    } };
-
     /**
      * Export the provided JasperPrint the format given by type.
      *
@@ -71,56 +59,28 @@ public class JRExportUtils
     public static void export( String type, OutputStream out, JasperPrint jasperPrint )
         throws JRException
     {
-        JRExportProvider provider = exporters.get( type );
-        
-        if ( provider != null )
+        if ( TYPE_XLS.equals( type ) )
         {
-            JRAbstractExporter exporter = provider.provide();
+            SimpleXlsReportConfiguration config = new SimpleXlsReportConfiguration();
             
-            exporter.setParameter( JRExporterParameter.OUTPUT_STREAM, out );
-            exporter.setParameter( JRExporterParameter.JASPER_PRINT, jasperPrint );
+            config.setDetectCellType( true );
+            config.setRemoveEmptySpaceBetweenRows( true );
+            config.setRemoveEmptySpaceBetweenRows( true );
+            config.setCollapseRowSpan( true );
+            config.setWhitePageBackground( false );
+            
+            JRXlsExporter exporter = new JRXlsExporter();
+            exporter.setExporterInput( new SimpleExporterInput( jasperPrint ) );
+            exporter.setExporterOutput( new SimpleOutputStreamExporterOutput( out ) );
+            exporter.setConfiguration( config );
             exporter.exportReport();
         }
-    }
-    
-    private interface JRExportProvider
-    {
-        JRAbstractExporter provide();
-    }
-    
-    private static class JRXlsExportProvider implements JRExportProvider
-    {
-        @Override
-        public JRAbstractExporter provide()
+        else if ( TYPE_PDF.equals( type ) )
         {
-            JRXlsExporter exporter = new JRXlsExporter();
-            exporter.setParameter( JRXlsAbstractExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE );
-            exporter.setParameter( JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE );
-            exporter.setParameter( JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE );
-            exporter.setParameter( JRXlsAbstractExporterParameter.IS_COLLAPSE_ROW_SPAN, Boolean.TRUE );
-            exporter.setParameter( JRXlsAbstractExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE );
-            return exporter;
-        }
-    }
-    
-    private static class JRPdfExportProvider implements JRExportProvider
-    {
-        @Override
-        public JRAbstractExporter provide()
-        {
-            return new JRPdfExporter();
-        }
-    }
-    
-    private static class JRHtmlExportProvider implements JRExportProvider
-    {
-        @Override
-        public JRAbstractExporter provide()
-        {
-            JRHtmlExporter exporter = new JRHtmlExporter();
-            exporter.setParameter( JRHtmlExporterParameter.IMAGES_URI, "../jasperReports/img?image=" );
-            
-            return exporter;
+            JRPdfExporter exporter = new JRPdfExporter();
+            exporter.setExporterInput( new SimpleExporterInput( jasperPrint ) );
+            exporter.setExporterOutput( new SimpleOutputStreamExporterOutput( out ) );
+            exporter.exportReport();
         }
     }
 }
