@@ -1,4 +1,4 @@
-package org.hisp.dhis.dataelement.hibernate;
+package org.hisp.dhis.common;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,25 +28,35 @@ package org.hisp.dhis.dataelement.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
-import org.hibernate.criterion.Restrictions;
-import org.hisp.dhis.common.DataDimensionType;
-import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
-import org.hisp.dhis.dataelement.CategoryComboStore;
-import org.hisp.dhis.dataelement.DataElementCategoryCombo;
-
 /**
  * @author Lars Helge Overland
  */
-public class HibernateCategoryComboStore
-    extends HibernateIdentifiableObjectStore<DataElementCategoryCombo>
-    implements CategoryComboStore
+public enum DataDimensionType
 {
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<DataElementCategoryCombo> getCategoryCombosByDimensionType( DataDimensionType dataDimensionType )
+    DISAGGREGATION("disaggregation"), ATTRIBUTE("attribute");
+    
+    private final String value;
+
+    DataDimensionType( String value )
     {
-        return getSharingCriteria( Restrictions.or( Restrictions.eq( "dataDimensionType", dataDimensionType ), Restrictions.eq( "name", "default" ) ) ).list();
+        this.value = value;
+    }
+
+    public static DataDimensionType fromValue( String value )
+    {
+        for ( DataDimensionType type : DataDimensionType.values() )
+        {
+            if ( type.value.equalsIgnoreCase( value ) )
+            {
+                return type;
+            }
+        }
+
+        return null;
+    }
+    
+    public String getValue()
+    {
+        return value;
     }
 }

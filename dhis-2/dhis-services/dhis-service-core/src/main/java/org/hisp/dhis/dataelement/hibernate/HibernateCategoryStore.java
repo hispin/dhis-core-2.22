@@ -31,6 +31,7 @@ package org.hisp.dhis.dataelement.hibernate;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.CategoryStore;
 import org.hisp.dhis.dataelement.DataElementCategory;
@@ -44,26 +45,26 @@ public class HibernateCategoryStore
 {
     @Override
     @SuppressWarnings("unchecked")
-    public List<DataElementCategory> getCategoriesByDimensionType( String dimensionType )
+    public List<DataElementCategory> getCategoriesByDimensionType( DataDimensionType dataDimensionType )
     {
-        return getSharingCriteria( Restrictions.eq( "dataDimensionType", dimensionType ) ).list();
+        return getSharingCriteria( Restrictions.eq( "dataDimensionType", dataDimensionType ) ).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<DataElementCategory> getCategories( String dimensionType, boolean dataDimension )
+    public List<DataElementCategory> getCategories( DataDimensionType dataDimensionType, boolean dataDimension )
     {
         return getSharingCriteria( 
-            Restrictions.eq( "dataDimensionType", dimensionType ),
+            Restrictions.eq( "dataDimensionType", dataDimensionType ),
             Restrictions.eq( "dataDimension", dataDimension ) ).list();
     }
     
     @Override
     @SuppressWarnings("unchecked")
-    public List<DataElementCategory> getCategoriesNoAcl( String dimensionType, boolean dataDimension )
+    public List<DataElementCategory> getCategoriesNoAcl( DataDimensionType dataDimensionType, boolean dataDimension )
     {
         return getCriteria( 
-            Restrictions.eq( "dataDimensionType", dimensionType ),
+            Restrictions.eq( "dataDimensionType", dataDimensionType ),
             Restrictions.eq( "dataDimension", dataDimension ) ).list();
     }
 }

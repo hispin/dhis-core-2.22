@@ -34,8 +34,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.CombinationGenerator;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
@@ -62,10 +64,7 @@ public class DataElementCategoryCombo
     private static final long serialVersionUID = 1549406078091077760L;
 
     public static final String DEFAULT_CATEGORY_COMBO_NAME = "default";
-
-    public static final String DIMENSION_TYPE_DISAGGREGATION = "disaggregation";
-    public static final String DIMENSION_TYPE_ATTTRIBUTE = "attribute";
-
+    
     /**
      * A set with categories.
      */
@@ -78,7 +77,7 @@ public class DataElementCategoryCombo
      */
     private Set<DataElementCategoryOptionCombo> optionCombos = new HashSet<>();
 
-    private String dimensionType;
+    private DataDimensionType dataDimensionType;
 
     private boolean skipTotal;
 
@@ -322,14 +321,14 @@ public class DataElementCategoryCombo
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDimensionType()
+    public DataDimensionType getDataDimensionType()
     {
-        return dimensionType;
+        return dataDimensionType;
     }
 
-    public void setDimensionType( String dimensionType )
+    public void setDataDimensionType( DataDimensionType dataDimensionType )
     {
-        this.dimensionType = dimensionType;
+        this.dataDimensionType = dataDimensionType;
     }
 
     @JsonProperty
@@ -352,11 +351,22 @@ public class DataElementCategoryCombo
 
         if ( other.getClass().isInstance( this ) )
         {
-            DataElementCategoryCombo dataElementCategoryCombo = (DataElementCategoryCombo) other;
+            DataElementCategoryCombo categoryCombo = (DataElementCategoryCombo) other;
+
+            skipTotal = categoryCombo.isSkipTotal();
+
+            if ( strategy.isReplace() )
+            {
+                dataDimensionType = categoryCombo.getDataDimensionType();
+            }
+            else if ( strategy.isMerge() )
+            {
+                dataDimensionType = categoryCombo.getDataDimensionType() == null ? dataDimensionType : categoryCombo.getDataDimensionType();
+            }
 
             removeAllDataElementCategories();
 
-            for ( DataElementCategory dataElementCategory : dataElementCategoryCombo.getCategories() )
+            for ( DataElementCategory dataElementCategory : categoryCombo.getCategories() )
             {
                 addDataElementCategory( dataElementCategory );
             }
