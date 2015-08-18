@@ -35,11 +35,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedOutputStream;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,6 +55,7 @@ import org.amplecode.staxwax.reader.XMLReader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.util.XMLChar;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.dataelement.CategoryComboMap;
@@ -73,13 +72,12 @@ import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.datavalueset.PipedImporter;
+import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.period.Period;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.xerces.util.XMLChar;
-import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 
 /**
  * @author bobj
@@ -134,10 +132,6 @@ public class DefaultADXDataService
         ImportSummaries importSummaries = new ImportSummaries();
 
         adxReader.moveToStartElement( ADXConstants.ROOT, ADXConstants.NAMESPACE );
-
-        Set<DataElementCategory> attributeCategories = new HashSet<>( categoryService.getAttributeCategories() );
-
-        Set<DataElementCategory> categories = new HashSet<>( categoryService.getAllDataElementCategories() );
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -414,7 +408,6 @@ public class DefaultADXDataService
         Map<String, DataElementCategory> categoryMap = createCategoryMap( catCombo );
 
         Map<String, String> attributeOptions = new HashMap<>();
-        Set<String> attributeKeys = attributes.keySet();
         
         for ( String category : categoryMap.keySet() )
         {
