@@ -97,6 +97,20 @@ public class AppController
         renderService.toJson( response.getOutputStream(), apps );
     }
 
+    @RequestMapping( method = RequestMethod.GET )
+    public void getAppByKey( @RequestParam String key, HttpServletRequest request, HttpServletResponse response ) throws IOException
+    {
+        App app = appManager.getApp( key );
+        
+        if ( app == null )
+        {
+            response.sendError( HttpServletResponse.SC_NOT_FOUND );
+            return;
+        }
+        
+        renderService.toJson( response.getOutputStream(), app );
+    }
+
     @RequestMapping( method = RequestMethod.POST )
     @ResponseStatus( HttpStatus.NO_CONTENT )
     @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )

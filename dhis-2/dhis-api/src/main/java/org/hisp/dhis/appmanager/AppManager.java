@@ -54,6 +54,14 @@ public interface AppManager
      * @return list of installed apps
      */
     List<App> getApps();
+    
+    /**
+     * Returns the app with the given key (folder name).
+     * 
+     * @param key the app key.
+     * @return the app with the given key.
+     */
+    App getApp( String key );
 
     List<App> getAccessibleApps();
 
