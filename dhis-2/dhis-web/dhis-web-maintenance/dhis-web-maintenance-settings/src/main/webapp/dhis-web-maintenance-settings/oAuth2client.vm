@@ -75,17 +75,17 @@
     <tr>
       <td><label for="name">$i18n.getString( "grant_types" )</label></td>
       <td>
-        <input type="checkbox" id="gtPassword" name="gtPassword">Password<br/>
-        <input type="checkbox" id="gtRefreshToken" name="gtRefreshToken">Refresh Token<br/>
-        <input type="checkbox" id="gtAuthorizationCode" name="gtAuthorizationCode">Authorization Code<br/>
+        <input type="checkbox" id="gtPassword" name="gtPassword"><label for="gtPassword">$i18n.getString( "password" )</label><br/>
+        <input type="checkbox" id="gtRefreshToken" name="gtRefreshToken"><label for="gtRefreshToken">$i18n.getString( "refresh_token" )</label><br/>
+        <input type="checkbox" id="gtAuthorizationCode" name="gtAuthorizationCode"><label for="gtAuthorizationCode">$i18n.getString( "authorization_code" )</label><br/>
       </td>
     </tr>
     <tr>
       <td><label for="name">$i18n.getString( "redirect_uris" )</label></td>
       <td>
         <input id="redirectUri" type="text" value="https://">
-        <button type="button" id="addRedirectUri" style="height: 22px;"><i class="fa fa-plus"></i> Add</button>
-        <button type="button" id="removeRedirectUri" style="height: 22px;"><i class="fa fa-minus"></i> Remove</button>
+        <button type="button" id="addRedirectUri" style="height: 22px;"><i class="fa fa-plus"></i> $i18n.getString( "add" )</button>
+        <button type="button" id="removeRedirectUri" style="height: 22px;"><i class="fa fa-minus"></i> $i18n.getString( "remove" )</button>
       </td>
     </tr>
     <tr>
