@@ -1,25 +1,26 @@
 <script type="text/javascript">
-	jQuery(function() {
-        validation('addCategoryOptionGroupForm', function ( form ) {
-            form.submit();
-        },function(){
-            $("#coSelected").find("option").attr("selected", "selected");
-			if(jQuery("#coSelected option").length > 0 ){
-				setFieldValue('hasOptions', 'true');
-			}
-		});
+  jQuery(function() {
+    validation('addCategoryOptionGroupForm', function(form) {
+      form.submit();
+    }, function() {
+			#tblDynamicAttributesJavascript()
+      $("#coSelected").find("option").attr("selected", "selected");
+      if( jQuery("#coSelected option").length > 0 ) {
+        setFieldValue('hasOptions', 'true');
+      }
+    });
 
-        checkValueIsExist("name", "validateCategoryOptionGroup.action");
-		checkValueIsExist( "shortName", "validateCategoryOptionGroup.action" );
-	    checkValueIsExist( "code", "validateCategoryOptionGroup.action" );
-		
-        $('#coAvailable').selected({
-          url: '../api/categoryOptions.json',
-          target: $('#coSelected'),
-          search: $('#coAvailableSearch'),
-          iterator: 'categoryOptions'
-        });
-	});
+    checkValueIsExist("name", "validateCategoryOptionGroup.action");
+    checkValueIsExist("shortName", "validateCategoryOptionGroup.action");
+    checkValueIsExist("code", "validateCategoryOptionGroup.action");
+
+    $('#coAvailable').selected({
+      url: '../api/categoryOptions.json',
+      target: $('#coSelected'),
+      search: $('#coAvailableSearch'),
+      iterator: 'categoryOptions'
+    });
+  });
 </script>
 
 <h3>$i18n.getString( "create_new_category_option_group" )</h3>
@@ -44,6 +45,8 @@
 		<td><input type="text" id="code" name="code" /></td>
 	</tr>
 </table>
+
+#tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
 
 #jqSelected({
   "prefix": "co",

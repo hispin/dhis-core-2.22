@@ -61,7 +61,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   <!-- Data Element Group -->
 
   <bean id="org.hisp.dhis.dd.action.dataelementgroup.ShowAddDataElementGroupForm" class="org.hisp.dhis.dd.action.dataelementgroup.ShowAddDataElementGroupForm"
-  	scope="prototype">
+    scope="prototype">
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
   </bean>
 
@@ -71,7 +71,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   </bean>
 
   <bean id="org.hisp.dhis.dd.action.dataelementgroup.RenameDEGroupNameEditorAction" class="org.hisp.dhis.dd.action.dataelementgroup.RenameDEGroupNameEditorAction"
-    scope="prototype"/>
+    scope="prototype" />
 
   <bean id="org.hisp.dhis.dd.action.dataelementgroup.GetDataElementGroupListAction" class="org.hisp.dhis.dd.action.dataelementgroup.GetDataElementGroupListAction"
     scope="prototype">
@@ -203,7 +203,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   </bean>
 
   <bean id="org.hisp.dhis.dd.action.indicatorgroup.RenameIndicatorGroupNameEditorAction" class="org.hisp.dhis.dd.action.indicatorgroup.RenameIndicatorGroupNameEditorAction"
-    scope="prototype"/>
+    scope="prototype" />
 
   <bean id="org.hisp.dhis.dd.action.indicatorgroup.AssignGroupsForIndicatorAction" class="org.hisp.dhis.dd.action.indicatorgroup.AssignGroupsForIndicatorAction"
     scope="prototype">
@@ -283,8 +283,8 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   <!-- Indicator -->
 
   <bean id="org.hisp.dhis.dd.action.indicator.ShowAddIndicatorForm" class="org.hisp.dhis.dd.action.indicator.ShowAddIndicatorForm"
-  	scope="prototype">
-	<property name="indicatorService" ref="org.hisp.dhis.indicator.IndicatorService" />
+    scope="prototype">
+    <property name="indicatorService" ref="org.hisp.dhis.indicator.IndicatorService" />
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
     <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />
   </bean>
@@ -364,19 +364,20 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
   <!-- CategoryOption -->
 
+  <bean id="org.hisp.dhis.dd.action.category.ShowAddDataElementCategoryOptionAction"
+    class="org.hisp.dhis.dd.action.category.ShowAddDataElementCategoryOptionAction" scope="prototype"/>
+
   <bean id="org.hisp.dhis.dd.action.category.GetDataElementCategoryOptionListAction" class="org.hisp.dhis.dd.action.category.GetDataElementCategoryOptionListAction"
     scope="prototype">
     <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.category.AddDataElementCategoryOptionAction" class="org.hisp.dhis.dd.action.category.AddDataElementCategoryOptionAction"
     scope="prototype">
-    <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
 
   <bean id="org.hisp.dhis.dd.action.category.UpdateDataElementCategoryOptionAction" class="org.hisp.dhis.dd.action.category.UpdateDataElementCategoryOptionAction"
     scope="prototype">
-    <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
 
   <bean id="org.hisp.dhis.dd.action.category.RemoveDataElementCategoryOptionAction" class="org.hisp.dhis.dd.action.category.RemoveDataElementCategoryOptionAction"
@@ -384,16 +385,16 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
 
- <bean id="org.hisp.dhis.dd.action.category.GetDataElementCategoryOptionAction" class="org.hisp.dhis.dd.action.category.GetDataElementCategoryOptionAction"
+  <bean id="org.hisp.dhis.dd.action.category.GetDataElementCategoryOptionAction" class="org.hisp.dhis.dd.action.category.GetDataElementCategoryOptionAction"
     scope="prototype">
     <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.category.ValidateDataElementCategoryOptionAction" class="org.hisp.dhis.dd.action.category.ValidateDataElementCategoryOptionAction"
     scope="prototype">
     <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
-  
+
   <!-- CategoryCombo -->
 
   <bean id="org.hisp.dhis.dd.action.categorycombo.GetDataElementCategoryListAction" class="org.hisp.dhis.dd.action.categorycombo.GetDataElementCategoryListAction"
@@ -432,85 +433,89 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   </bean>
 
   <!-- CategoryOptionGroup  -->
-  
+
+  <bean id="org.hisp.dhis.dd.action.categoryoptiongroup.ShowAddCategoryOptionGroupAction" class="org.hisp.dhis.dd.action.categoryoptiongroup.ShowAddCategoryOptionGroupAction"
+    scope="prototype">
+  </bean>
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroup.AddCategoryOptionGroupAction" class="org.hisp.dhis.dd.action.categoryoptiongroup.AddCategoryOptionGroupAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroup.GetCategoryOptionGroupAction" class="org.hisp.dhis.dd.action.categoryoptiongroup.GetCategoryOptionGroupAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroup.GetCategoryOptionGroupListAction" class="org.hisp.dhis.dd.action.categoryoptiongroup.GetCategoryOptionGroupListAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroup.RemoveCategoryOptionGroupAction" class="org.hisp.dhis.dd.action.categoryoptiongroup.RemoveCategoryOptionGroupAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroup.ShowUpdateCategoryOptionGroupAction" class="org.hisp.dhis.dd.action.categoryoptiongroup.ShowUpdateCategoryOptionGroupAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroup.UpdateCategoryOptionGroupAction" class="org.hisp.dhis.dd.action.categoryoptiongroup.UpdateCategoryOptionGroupAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroup.ValidateCategoryOptionGroupAction" class="org.hisp.dhis.dd.action.categoryoptiongroup.ValidateCategoryOptionGroupAction"
     scope="prototype">
   </bean>
-  
-   <!-- CategoryOptionGroupSet  -->
-  
+
+  <!-- CategoryOptionGroupSet  -->
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroupset.AddCategoryOptionGroupSetAction" class="org.hisp.dhis.dd.action.categoryoptiongroupset.AddCategoryOptionGroupSetAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroupset.GetCategoryOptionGroupSetAction" class="org.hisp.dhis.dd.action.categoryoptiongroupset.GetCategoryOptionGroupSetAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroupset.GetCategoryOptionGroupSetListAction" class="org.hisp.dhis.dd.action.categoryoptiongroupset.GetCategoryOptionGroupSetListAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroupset.RemoveCategoryOptionGroupSetAction" class="org.hisp.dhis.dd.action.categoryoptiongroupset.RemoveCategoryOptionGroupSetAction"
     scope="prototype">
   </bean>
-    
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroupset.ShowUpdateCategoryOptionGroupSetAction" class="org.hisp.dhis.dd.action.categoryoptiongroupset.ShowUpdateCategoryOptionGroupSetAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroupset.UpdateCategoryOptionGroupSetAction" class="org.hisp.dhis.dd.action.categoryoptiongroupset.UpdateCategoryOptionGroupSetAction"
     scope="prototype">
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.categoryoptiongroupset.ValidateCategoryOptionGroupSetAction" class="org.hisp.dhis.dd.action.categoryoptiongroupset.ValidateCategoryOptionGroupSetAction"
     scope="prototype">
   </bean>
-  
-   <!-- CategoryOptionCombo -->
+
+  <!-- CategoryOptionCombo -->
 
   <bean id="org.hisp.dhis.dd.action.category.GetCategoryOptionComboListAction" class="org.hisp.dhis.dd.action.category.GetCategoryOptionComboListAction"
     scope="prototype">
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.category.GetCategoryOptionComboAction" class="org.hisp.dhis.dd.action.category.GetCategoryOptionComboAction"
     scope="prototype">
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.category.UpdateCategoryOptionComboAction" class="org.hisp.dhis.dd.action.category.UpdateCategoryOptionComboAction"
     scope="prototype">
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.dd.action.category.ValidateCategoryOptionComboAction" class="org.hisp.dhis.dd.action.category.ValidateCategoryOptionComboAction"
     scope="prototype">
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
   </bean>
-  
+
 </beans>

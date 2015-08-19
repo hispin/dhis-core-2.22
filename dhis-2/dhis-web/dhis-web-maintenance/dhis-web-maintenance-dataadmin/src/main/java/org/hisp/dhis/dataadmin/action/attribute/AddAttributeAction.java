@@ -183,6 +183,20 @@ public class AddAttributeAction
         this.trackedEntityAttributeAttribute = trackedEntityAttributeAttribute;
     }
 
+    private boolean categoryOptionAttribute;
+
+    public void setCategoryOptionAttribute( boolean categoryOptionAttribute )
+    {
+        this.categoryOptionAttribute = categoryOptionAttribute;
+    }
+
+    private boolean categoryOptionGroupAttribute;
+
+    public void setCategoryOptionGroupAttribute( boolean categoryOptionGroupAttribute )
+    {
+        this.categoryOptionGroupAttribute = categoryOptionGroupAttribute;
+    }
+
     private String optionSetUid;
 
     public void setOptionSetUid( String optionSetUid )
@@ -226,6 +240,8 @@ public class AddAttributeAction
         attribute.setProgramStageAttribute( programStageAttribute );
         attribute.setTrackedEntityAttribute( trackedEntityAttribute );
         attribute.setTrackedEntityAttributeAttribute( trackedEntityAttributeAttribute );
+        attribute.setCategoryOptionAttribute( categoryOptionAttribute );
+        attribute.setCategoryOptionGroupAttribute( categoryOptionGroupAttribute );
         attribute.setOptionSet( optionSet );
 
         attributeService.addAttribute( attribute );

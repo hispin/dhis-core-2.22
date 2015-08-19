@@ -28,13 +28,13 @@ package org.hisp.dhis.attribute.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeStore;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author mortenoh
@@ -47,97 +47,111 @@ public class HibernateAttributeStore
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getDataElementAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "dataElementAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "dataElementAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getDataElementGroupAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "dataElementGroupAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "dataElementGroupAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getIndicatorAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "indicatorAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "indicatorAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getIndicatorGroupAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "indicatorGroupAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "indicatorGroupAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getDataSetAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "dataSetAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "dataSetAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getOrganisationUnitAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "organisationUnitAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "organisationUnitAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getOrganisationUnitGroupAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "organisationUnitGroupAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "organisationUnitGroupAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getOrganisationUnitGroupSetAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "organisationUnitGroupSetAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "organisationUnitGroupSetAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getUserAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "userAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "userAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getUserGroupAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "userGroupAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "userGroupAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getProgramAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "programAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "programAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getProgramStageAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "programStageAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "programStageAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getTrackedEntityAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "trackedEntityAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "trackedEntityAttribute", true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Attribute> getTrackedEntityAttributeAttributes()
     {
-        return new ArrayList<Attribute>( getCriteria( Restrictions.eq( "trackedEntityAttributeAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria( Restrictions.eq( "trackedEntityAttributeAttribute", true ) ).list() );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Attribute> getCategoryOptionAttributes()
+    {
+        return new ArrayList<>( getCriteria( Restrictions.eq( "categoryOptionAttribute", true ) ).list() );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Attribute> getCategoryOptionGroupAttributes()
+    {
+        return new ArrayList<>( getCriteria( Restrictions.eq( "categoryOptionGroupAttribute", true ) ).list() );
     }
 }

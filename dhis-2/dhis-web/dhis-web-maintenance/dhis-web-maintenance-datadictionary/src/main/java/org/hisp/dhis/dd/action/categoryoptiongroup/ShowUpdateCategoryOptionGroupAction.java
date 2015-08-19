@@ -29,14 +29,19 @@ package org.hisp.dhis.dd.action.categoryoptiongroup;
  */
 
 import com.opensymphony.xwork2.Action;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
+import org.hisp.dhis.system.util.AttributeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chau Thu Tran
@@ -50,6 +55,9 @@ public class ShowUpdateCategoryOptionGroupAction
 
     @Autowired
     private DataElementCategoryService dataElementCategoryService;
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------
     // Input && Output
@@ -76,6 +84,21 @@ public class ShowUpdateCategoryOptionGroupAction
         return categoryOptions;
     }
 
+    private List<Attribute> attributes;
+
+
+    public List<Attribute> getAttributes()
+    {
+        return attributes;
+    }
+
+    private Map<Integer, String> attributeValues = new HashMap<>();
+
+    public Map<Integer, String> getAttributeValues()
+    {
+        return attributeValues;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -87,6 +110,10 @@ public class ShowUpdateCategoryOptionGroupAction
         categoryOptionGroup = dataElementCategoryService.getCategoryOptionGroup( id );
 
         categoryOptions = new ArrayList<>( categoryOptionGroup.getMembers() );
+
+        attributes = new ArrayList<>( attributeService.getCategoryOptionGroupAttributes() );
+
+        attributeValues = AttributeUtils.getAttributeValueMap( categoryOptionGroup.getAttributeValues() );
 
         Collections.sort( categoryOptions );
 

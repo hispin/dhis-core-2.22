@@ -63,6 +63,8 @@
       <input type="checkbox" id="programStageAttribute" name="programStageAttribute" value="true" /><label for="programStageAttribute">$i18n.getString( 'program_stage' )</label> <br />
       <input type="checkbox" id="trackedEntityAttribute" name="trackedEntityAttribute" value="true" /><label for="trackedEntityAttribute">$i18n.getString( 'tracked_entity' )</label> <br />
       <input type="checkbox" id="trackedEntityAttributeAttribute" name="trackedEntityAttributeAttribute" value="true" /><label for="trackedEntityAttributeAttribute">$i18n.getString( 'tracked_entity_attribute' )</label> <br />
+			<input type="checkbox" id="categoryOptionAttribute" name="categoryOptionAttribute" value="true" /><label for="categoryOptionAttribute">$i18n.getString( 'category_option' )</label> <br />
+			<input type="checkbox" id="categoryOptionGroupAttribute" name="categoryOptionGroupAttribute" value="true" /><label for="categoryOptionGroupAttribute">$i18n.getString( 'category_option_group' )</label> <br />
 		</td>
 	</tr>
 

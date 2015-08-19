@@ -29,11 +29,14 @@ package org.hisp.dhis.dd.action.category;
  */
 
 import com.opensymphony.xwork2.Action;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jim Grace
@@ -49,15 +52,31 @@ public class ShowAddDataElementCategoryOptionAction
     @Autowired
     private OrganisationUnitSelectionManager selectionManager;
 
+    @Autowired
+    private AttributeService attributeService;
+
+    // -------------------------------------------------------------------------
+    // Output
+    // -------------------------------------------------------------------------
+
+    private List<Attribute> attributes;
+
+    public List<Attribute> getAttributes()
+    {
+        return attributes;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
 
     @Override
     public String execute()
-            throws Exception
+        throws Exception
     {
         selectionManager.setSelectedOrganisationUnits( new ArrayList<OrganisationUnit>() );
+
+        attributes = new ArrayList<>( attributeService.getCategoryOptionAttributes() );
 
         return SUCCESS;
     }
