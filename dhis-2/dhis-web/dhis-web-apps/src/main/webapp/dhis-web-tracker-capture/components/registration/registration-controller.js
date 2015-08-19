@@ -5,12 +5,14 @@ trackerCapture.controller('RegistrationController',
                 $scope,
                 $location,
                 $timeout,
+                $modal,
                 AttributesFactory,
                 DHIS2EventFactory,
                 TEService,
                 CustomFormService,
                 EnrollmentService,
                 DialogService,
+                ModalService,
                 CurrentSelection,
                 OptionSetService,
                 EventUtils,
@@ -24,19 +26,6 @@ trackerCapture.controller('RegistrationController',
     $scope.selectedTei = {};
     $scope.tei = {};
     $scope.registrationMode = null;
-    
-    //Infinite Scroll
-    $scope.infiniteScroll = {};
-    $scope.infiniteScroll.optionsToAdd = 20;
-    $scope.infiniteScroll.currentOptions = 20;
-    
-    $scope.resetInfScroll = function() {
-        $scope.infiniteScroll.currentOptions = $scope.infiniteScroll.optionsToAdd;
-    };
-  
-    $scope.addMoreOptions = function(){
-        $scope.infiniteScroll.currentOptions += $scope.infiniteScroll.optionsToAdd;
-    }; 
     
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
@@ -97,9 +86,9 @@ trackerCapture.controller('RegistrationController',
         }
     });
         
-    $scope.getAttributes = function(_mode){
+    $scope.getAttributes = function(_mode){        
         var mode = _mode ? _mode : 'ENROLLMENT';
-        AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
+        AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){            
             $scope.attributes = atts;
             $scope.customFormExists = false;
             if($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedProgram.dataEntryForm && $scope.selectedProgram.dataEntryForm.htmlCode){
@@ -112,35 +101,37 @@ trackerCapture.controller('RegistrationController',
                 $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
             }
         });
+    }; 
+    
+    var goToDashboard = function(destination, teiId){
+        //reset form
+        $scope.selectedTei = {};
+        $scope.selectedEnrollment = {};
+        $scope.outerForm.submitted = false;
+
+        if(destination === 'DASHBOARD') {
+            $location.path('/dashboard').search({tei: teiId,                                            
+                                    program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
+        }            
+        else if(destination === 'RELATIONSHIP' ){
+            $scope.tei.trackedEntityInstance = teiId;
+            $scope.broadCastSelections();
+        }
     };
     
-    $scope.registerEntity = function(destination){        
-
-        //check for form validity
-        $scope.outerForm.submitted = true;        
-        if( $scope.outerForm.$invalid ){
-            return false;
-        }                   
-        
-        //form is valid, continue the registration
-        //get selected entity        
-        if(!$scope.selectedTei.trackedEntityInstance){
-            $scope.selectedTei.trackedEntity = $scope.tei.trackedEntity = $scope.selectedProgram && $scope.selectedProgram.trackedEntity && $scope.selectedProgram.trackedEntity.id ? $scope.selectedProgram.trackedEntity.id : $scope.trackedEntities.selected.id;
-            $scope.selectedTei.orgUnit = $scope.tei.orgUnit = $scope.selectedOrgUnit.id;
-            $scope.selectedTei.attributes = $scope.selectedTei.attributes = [];
-        }
-        
-        //get tei attributes and their values
-        //but there could be a case where attributes are non-mandatory and
-        //registration form comes empty, in this case enforce at least one value        
-        
-        var result = RegistrationService.processForm($scope.tei, $scope.selectedTei, $scope.attributesById);
-        $scope.formEmpty = result.formEmpty;
-        $scope.tei = result.tei;
-        
-        if($scope.formEmpty){//registration form is empty
-            return false;
-        }
+    var reloadProfileWidget = function(){
+        var selections = CurrentSelection.get();
+        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});        
+        $timeout(function() { 
+            $rootScope.$broadcast('profileWidget', {});            
+        }, 100);
+    };
+    
+    var notifyRegistrtaionCompletion = function(destination, teiId){
+        goToDashboard( destination ? destination : 'DASHBOARD', teiId );
+    };
+    
+    var performRegistration = function(destination){
         
         RegistrationService.registerOrUpdate($scope.tei, $scope.optionSets, $scope.attributesById).then(function(registrationResponse){
             var reg = registrationResponse.response ? registrationResponse.response : {};            
@@ -199,8 +190,64 @@ trackerCapture.controller('RegistrationController',
                 DialogService.showDialog({}, dialogOptions);
                 return;
             }
-        });        
+        });
+        
     };
+    
+    $scope.registerEntity = function(destination){        
+
+        //check for form validity
+        $scope.outerForm.submitted = true;        
+        if( $scope.outerForm.$invalid ){
+            return false;
+        }                   
+        
+        //form is valid, continue the registration
+        //get selected entity        
+        if(!$scope.selectedTei.trackedEntityInstance){
+            $scope.selectedTei.trackedEntity = $scope.tei.trackedEntity = $scope.selectedProgram && $scope.selectedProgram.trackedEntity && $scope.selectedProgram.trackedEntity.id ? $scope.selectedProgram.trackedEntity.id : $scope.trackedEntities.selected.id;
+            $scope.selectedTei.orgUnit = $scope.tei.orgUnit = $scope.selectedOrgUnit.id;
+            $scope.selectedTei.attributes = $scope.selectedTei.attributes = [];
+        }
+        
+        //get tei attributes and their values
+        //but there could be a case where attributes are non-mandatory and
+        //registration form comes empty, in this case enforce at least one value        
+        
+        var result = RegistrationService.processForm($scope.tei, $scope.selectedTei, $scope.attributesById, $scope.selectedProgram);
+        $scope.formEmpty = result.formEmpty;
+        $scope.tei = result.tei;
+        
+        if($scope.formEmpty){//registration form is empty
+            return false;
+        }
+        
+        if(!result.validation.valid){//validation exists           
+            var modalInstance = $modal.open({
+                templateUrl: 'components/registration/validation-message.html',
+                controller: 'ValidationMessageController',
+                resolve: {
+                    validation: function () {
+                        return result.validation;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (res) {
+                if(!res) {//strict validation
+                    return false;
+                }
+                else{//not-strict validation
+                    performRegistration(destination);
+                }
+            }, function () {
+            });        
+        }
+        else{//no validation
+            performRegistration(destination);
+        }        
+    };
+    
     
     $scope.broadCastSelections = function(){
         angular.forEach($scope.tei.attributes, function(att){
@@ -215,6 +262,9 @@ trackerCapture.controller('RegistrationController',
         }, 100);
     };
     
+    /*$scope.validationAndSkipLogic = function(tei, field){
+    };*/
+    
     $scope.interacted = function(field) {
         var status = false;
         if(field){            
@@ -222,32 +272,20 @@ trackerCapture.controller('RegistrationController',
         }
         return status;        
     };
-    
-    var goToDashboard = function(destination, teiId){
-        //reset form
-        $scope.selectedTei = {};
-        $scope.selectedEnrollment = {};
-        $scope.outerForm.submitted = false;
+})
 
-        if(destination === 'DASHBOARD') {
-            $location.path('/dashboard').search({tei: teiId,                                            
-                                    program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
-        }            
-        else if(destination === 'RELATIONSHIP' ){
-            $scope.tei.trackedEntityInstance = teiId;
-            $scope.broadCastSelections();
-        }
+.controller('ValidationMessageController',
+        function ($scope,
+                $modalInstance,                
+                validation) {
+                    
+    $scope.validationResult = validation;
+
+    $scope.proceed = function () {
+        $modalInstance.close(true);
     };
-    
-    var reloadProfileWidget = function(){
-        var selections = CurrentSelection.get();
-        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});        
-        $timeout(function() { 
-            $rootScope.$broadcast('profileWidget', {});            
-        }, 100);
-    };
-    
-    var notifyRegistrtaionCompletion = function(destination, teiId){
-        goToDashboard( destination ? destination : 'DASHBOARD', teiId );
+
+    $scope.cancel = function () {
+        $modalInstance.close(false);
     };
 });

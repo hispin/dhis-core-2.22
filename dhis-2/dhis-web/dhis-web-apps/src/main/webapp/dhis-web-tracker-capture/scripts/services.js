@@ -514,7 +514,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* service to deal with TEI registration and update */
-.service('RegistrationService', function(TEIService, $q){
+.service('RegistrationService', function(TEIService, $q, $translate){
     return {
         registerOrUpdate: function(tei, optionSets, attributesById){
             if(tei){
@@ -532,19 +532,42 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 return def.promise;
             }            
         },
-        processForm: function(existingTei, formTei, attributesById){
+        processForm: function(existingTei, formTei, attributesById, program){
             var tei = angular.copy(existingTei);
+            var enrollmentValidation = {valid: true, messages: [], attributes: []};
+            if(program && program.validationCriterias){
+                for(var key in program.validationCriterias){
+                    angular.forEach(program.validationCriterias[key], function(vc){
+                        if(vc.property && vc.value){                                    
+                            if(vc.operator === 0){
+                                enrollmentValidation.valid = vc.value === formTei[key];
+                            }
+                            else if(vc.operator === 1){                                
+                                enrollmentValidation.valid = vc.value > formTei[key];
+                            }
+                            else{
+                                enrollmentValidation.valid = vc.value < formTei[key];
+                            }
+
+                            if(!enrollmentValidation.valid){
+                                enrollmentValidation.messages.push({name: attributesById[key].name, expected: vc.value, found: formTei[key] ? formTei[key] : $translate.instant('empty')});                                    
+                            }                                
+                        }
+                    });                    
+                }
+            }            
+            
             tei.attributes = [];
-            var formEmpty = true;
+            var formEmpty = true;            
             for(var k in attributesById){
                 if( formTei[k] ){
                     var att = attributesById[k];
                     tei.attributes.push({attribute: att.id, value: formTei[k], displayName: att.name, type: att.valueType});
-                    formEmpty = false;
+                    formEmpty = false;              
                 }
                 delete tei[k];
             }
-            return {tei: tei, formEmpty: formEmpty};
+            return {tei: tei, formEmpty: formEmpty, validation: enrollmentValidation};
         }
     };
 })
