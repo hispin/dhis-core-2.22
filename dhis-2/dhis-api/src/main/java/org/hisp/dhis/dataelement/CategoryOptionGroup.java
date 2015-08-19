@@ -153,11 +153,11 @@ public class CategoryOptionGroup
 
             if ( strategy.isReplace() )
             {
-                groupSet = categoryOptionGroup.getGroupSet() == null ? groupSet : categoryOptionGroup.getGroupSet();
+                groupSet = categoryOptionGroup.getGroupSet();
             }
             else if ( strategy.isMerge() )
             {
-                groupSet = categoryOptionGroup.getGroupSet();
+                groupSet = categoryOptionGroup.getGroupSet() == null ? groupSet : categoryOptionGroup.getGroupSet();
             }
 
             members.clear();
