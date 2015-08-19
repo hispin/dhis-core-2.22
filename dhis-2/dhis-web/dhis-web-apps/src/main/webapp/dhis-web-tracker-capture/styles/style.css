@@ -1066,7 +1066,7 @@ ul.tree ul li:last-child:before {
     cursor: pointer;
 }
 
- .form-horizontal .control-label {
+.form-horizontal .control-label {
     display: table-cell;
     vertical-align: middle;
 }
@@ -1118,5 +1118,9 @@ div.event-paging span.seperator
 }
 
 input, button, select, textarea {
-  color: #444;
+    color: #444;
+}
+
+.program-drop-down > .dropdown-menu > li > a {
+    white-space: normal !important;
 }
