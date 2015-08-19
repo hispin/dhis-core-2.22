@@ -1246,7 +1246,7 @@ dhis2.db.viewOrgUnitSelector = function()
 dhis2.db.updateSelectedOrgUnits = function()
 {
 	var ous = selectionTreeSelection.getSelectedUid();
-	dhis2.db.currentUserOrgUnit = ous;	
+	dhis2.db.currentUserOrgUnit = ous;
 	dhis2.db.renderDashboard( dhis2.db.current() );
 	$( "#orgUnitSelectorForm" ).dialog( "destroy" );
 }
@@ -1255,5 +1255,6 @@ dhis2.db.clearSelectedOrgUnits = function()
 {
 	dhis2.db.currentUserOrgUnit = [];
 	selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
-	dhis2.db.updateSelectedOrgUnits();
+	dhis2.db.renderDashboard( dhis2.db.current() );
+	$( "#orgUnitSelectorForm" ).dialog( "destroy" );
 }
