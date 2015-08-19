@@ -28,18 +28,19 @@ package org.hisp.dhis.dd.action.category;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
-
-import com.opensymphony.xwork2.Action;
-
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
+import org.hisp.dhis.system.util.AttributeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Lars Helge Overland
@@ -51,18 +52,17 @@ public class AddDataElementCategoryOptionAction
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private DataElementCategoryService dataElementCategoryService;
-
-    public void setDataElementCategoryService( DataElementCategoryService dataElementCategoryService )
-    {
-        this.dataElementCategoryService = dataElementCategoryService;
-    }
 
     @Autowired
     private CalendarService calendarService;
 
     @Autowired
     private OrganisationUnitSelectionManager selectionManager;
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------
     // Input
@@ -103,6 +103,13 @@ public class AddDataElementCategoryOptionAction
         this.endDate = endDate;
     }
 
+    private List<String> jsonAttributeValues;
+
+    public void setJsonAttributeValues( List<String> jsonAttributeValues )
+    {
+        this.jsonAttributeValues = jsonAttributeValues;
+    }
+
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -141,7 +148,13 @@ public class AddDataElementCategoryOptionAction
         dataElementCategoryOption.setCode( StringUtils.trimToNull( code ) );
         dataElementCategoryOption.setStartDate( sDate );
         dataElementCategoryOption.setEndDate( eDate );
-        dataElementCategoryOption.getOrganisationUnits().addAll ( selectionManager.getSelectedOrganisationUnits() );
+        dataElementCategoryOption.getOrganisationUnits().addAll( selectionManager.getSelectedOrganisationUnits() );
+
+        if ( jsonAttributeValues != null )
+        {
+            AttributeUtils.updateAttributeValuesFromJson( dataElementCategoryOption.getAttributeValues(), jsonAttributeValues,
+                attributeService );
+        }
 
         dataElementCategoryService.addDataElementCategoryOption( dataElementCategoryOption );
 

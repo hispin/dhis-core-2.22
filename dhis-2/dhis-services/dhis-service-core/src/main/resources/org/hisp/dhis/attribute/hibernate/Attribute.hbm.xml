@@ -49,6 +49,10 @@
 
     <property name="trackedEntityAttributeAttribute" not-null="false" />
 
+    <property name="categoryOptionAttribute" not-null="false" />
+
+    <property name="categoryOptionGroupAttribute" not-null="false" />
+
     <property name="sortOrder" />
 
     <set name="attributeValues" inverse="true" lazy="true">

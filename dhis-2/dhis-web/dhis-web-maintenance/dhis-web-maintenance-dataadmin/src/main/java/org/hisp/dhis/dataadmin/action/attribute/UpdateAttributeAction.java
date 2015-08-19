@@ -29,7 +29,6 @@ package org.hisp.dhis.dataadmin.action.attribute;
  */
 
 import com.opensymphony.xwork2.Action;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
@@ -190,6 +189,20 @@ public class UpdateAttributeAction
         this.trackedEntityAttributeAttribute = trackedEntityAttributeAttribute;
     }
 
+    private boolean categoryOptionAttribute;
+
+    public void setCategoryOptionAttribute( boolean categoryOptionAttribute )
+    {
+        this.categoryOptionAttribute = categoryOptionAttribute;
+    }
+
+    private boolean categoryOptionGroupAttribute;
+
+    public void setCategoryOptionGroupAttribute( boolean categoryOptionGroupAttribute )
+    {
+        this.categoryOptionGroupAttribute = categoryOptionGroupAttribute;
+    }
+
     private String optionSetUid;
 
     public void setOptionSetUid( String optionSetUid )
@@ -238,6 +251,8 @@ public class UpdateAttributeAction
             attribute.setProgramStageAttribute( programStageAttribute );
             attribute.setTrackedEntityAttribute( trackedEntityAttribute );
             attribute.setTrackedEntityAttributeAttribute( trackedEntityAttributeAttribute );
+            attribute.setCategoryOptionAttribute( categoryOptionAttribute );
+            attribute.setCategoryOptionGroupAttribute( categoryOptionGroupAttribute );
 
             attributeService.updateAttribute( attribute );
 

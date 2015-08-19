@@ -205,6 +205,18 @@ public class DefaultAttributeService
     }
 
     @Override
+    public List<Attribute> getCategoryOptionAttributes()
+    {
+        return new ArrayList<>( i18n( i18nService, attributeStore.getCategoryOptionAttributes() ) );
+    }
+
+    @Override
+    public List<Attribute> getCategoryOptionGroupAttributes()
+    {
+        return new ArrayList<>( i18n( i18nService, attributeStore.getCategoryOptionGroupAttributes() ) );
+    }
+
+    @Override
     public int getAttributeCount()
     {
         return attributeStore.getCount();

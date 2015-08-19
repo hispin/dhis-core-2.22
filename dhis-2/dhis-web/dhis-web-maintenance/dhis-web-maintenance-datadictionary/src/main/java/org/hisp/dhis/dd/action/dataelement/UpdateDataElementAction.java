@@ -28,11 +28,7 @@ package org.hisp.dhis.dd.action.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.commons.collection.ListUtils;
@@ -50,9 +46,12 @@ import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.system.util.AttributeUtils;
-
-import com.opensymphony.xwork2.Action;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -220,7 +219,7 @@ public class UpdateDataElementAction
     }
 
     private Integer selectedCommentOptionSetId;
-    
+
     public void setSelectedCommentOptionSetId( Integer selectedCommentOptionSetId )
     {
         this.selectedCommentOptionSetId = selectedCommentOptionSetId;
@@ -254,9 +253,9 @@ public class UpdateDataElementAction
         dataElement.setCode( StringUtils.trimToNull( code ) );
         dataElement.setDescription( StringUtils.trimToNull( description ) );
         dataElement.setFormName( StringUtils.trimToNull( formName ) );
-        dataElement.setDomainType( DataElementDomain.fromValue( domainType )  );
+        dataElement.setDomainType( DataElementDomain.fromValue( domainType ) );
         dataElement.setType( valueType );
-        
+
         if ( DataElement.VALUE_TYPE_STRING.equalsIgnoreCase( valueType ) )
         {
             dataElement.setTextType( textType );
@@ -267,7 +266,7 @@ public class UpdateDataElementAction
             dataElement.setNumberType( numberType );
             dataElement.setTextType( null );
         }
-        
+
         dataElement.setAggregationOperator( aggregationOperator );
         dataElement.setUrl( url );
         dataElement.setZeroIsSignificant( zeroIsSignificant );

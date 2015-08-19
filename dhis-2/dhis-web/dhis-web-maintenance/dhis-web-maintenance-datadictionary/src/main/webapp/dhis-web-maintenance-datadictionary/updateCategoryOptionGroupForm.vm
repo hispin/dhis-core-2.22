@@ -1,34 +1,34 @@
 <script type="text/javascript">
-    jQuery(function() {
-        validation( 'updateCategoryOptionGroupForm', function( form )
-        {
-            form.submit();
-        },function(){
-            $("#coSelected").find("option").attr("selected", "selected");
-            if(jQuery("#coSelected option").length > 0 ){
-                setFieldValue('hasOptions', 'true');
-            }
-        });
-
-        checkValueIsExist( "name", "validateCategoryOptionGroup.action", {
-            id : getFieldValue( 'id' )
-        } );
-
-        checkValueIsExist( "shortName", "validateCategoryOptionGroup.action", {
-            id : getFieldValue( 'id' )
-        } );
-
-        checkValueIsExist( "code", "validateCategoryOptionGroup.action", {
-            id : getFieldValue( 'id' )
-        } );
-
-        $('#coAvailable').selected({
-          url: '../api/categoryOptions.json',
-          target: $('#coSelected'),
-          search: $('#coAvailableSearch'),
-          iterator: 'categoryOptions'
-        });
+  jQuery(function() {
+    validation('updateCategoryOptionGroupForm', function(form) {
+      form.submit();
+    }, function() {
+      #tblDynamicAttributesJavascript()
+      $("#coSelected").find("option").attr("selected", "selected");
+      if( jQuery("#coSelected option").length > 0 ) {
+        setFieldValue('hasOptions', 'true');
+      }
     });
+
+    checkValueIsExist("name", "validateCategoryOptionGroup.action", {
+      id: getFieldValue('id')
+    });
+
+    checkValueIsExist("shortName", "validateCategoryOptionGroup.action", {
+      id: getFieldValue('id')
+    });
+
+    checkValueIsExist("code", "validateCategoryOptionGroup.action", {
+      id: getFieldValue('id')
+    });
+
+    $('#coAvailable').selected({
+      url: '../api/categoryOptions.json',
+      target: $('#coSelected'),
+      search: $('#coAvailableSearch'),
+      iterator: 'categoryOptions'
+    });
+  });
 </script>
 
 <h3>$i18n.getString( "edit_category_option_group" )</h3>
@@ -58,6 +58,8 @@
         <td><input type="text" id="code" name="code" value="$!encoder.htmlEncode( $categoryOptionGroup.code )"></td>
     </tr>
 </table>
+
+#tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
 
 #jqSelected({
   "prefix": "co",

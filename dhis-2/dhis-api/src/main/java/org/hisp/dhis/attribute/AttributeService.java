@@ -193,11 +193,25 @@ public interface AttributeService
     List<Attribute> getTrackedEntityAttributes();
 
     /**
-     * Gets attributes which are associated with programs.
+     * Gets attributes which are associated with tracked entity attributes
      *
-     * @return a set of attributes which are associated with programs.
+     * @return a set of attributes which are associated with tracked entity attributes
      */
     List<Attribute> getTrackedEntityAttributeAttributes();
+
+    /**
+     * Gets attributes which are associated with category option attributes
+     *
+     * @return a set of attributes which are associated with category option attributes
+     */
+    List<Attribute> getCategoryOptionAttributes();
+
+    /**
+     * Gets attributes which are associated with category option group attributes
+     *
+     * @return a set of attributes which are associated with category option group attributes
+     */
+    List<Attribute> getCategoryOptionGroupAttributes();
 
     /**
      * Gets the number of attributes.
