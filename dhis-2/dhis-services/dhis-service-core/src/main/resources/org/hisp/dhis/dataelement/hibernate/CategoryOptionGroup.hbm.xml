@@ -26,6 +26,14 @@
         foreign-key="fk_categoryoptiongroupmembers_categoryoptiongroupid" />
     </set>
 
+    <!-- Dynamic attribute values -->
+
+    <set name="attributeValues" table="categoryoptiongroupattributevalues">
+      <cache usage="read-write" />
+      <key column="categoryoptiongroupid" />
+      <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />
+    </set>
+
     <!-- Access properties -->
     <many-to-one name="user" class="org.hisp.dhis.user.User" column="userid" foreign-key="fk_categoryoptiongroup_userid" />
 
