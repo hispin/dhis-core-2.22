@@ -42,13 +42,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.DataDimensionType;
-import org.hisp.dhis.common.GenericDimensionalObjectStore;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IdentifiableProperty;
-import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.i18n.I18nService;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Sets;
@@ -101,9 +100,9 @@ public class DefaultDataElementCategoryService
         this.categoryOptionGroupStore = categoryOptionGroupStore;
     }
 
-    private GenericDimensionalObjectStore<CategoryOptionGroupSet> categoryOptionGroupSetStore;
+    private CategoryOptionGroupSetStore categoryOptionGroupSetStore;
 
-    public void setCategoryOptionGroupSetStore( GenericDimensionalObjectStore<CategoryOptionGroupSet> categoryOptionGroupSetStore )
+    public void setCategoryOptionGroupSetStore( CategoryOptionGroupSetStore categoryOptionGroupSetStore )
     {
         this.categoryOptionGroupSetStore = categoryOptionGroupSetStore;
     }
@@ -1066,6 +1065,18 @@ public class DefaultDataElementCategoryService
     public List<CategoryOptionGroupSet> getAllCategoryOptionGroupSets()
     {
         return categoryOptionGroupSetStore.getAll();
+    }
+    
+    @Override
+    public List<CategoryOptionGroupSet> getDisaggregationCategoryOptionGroupSetsNoAcl()
+    {
+        return categoryOptionGroupSetStore.getCategoryOptionGroupSetsNoAcl( DataDimensionType.DISAGGREGATION, true );
+    }
+
+    @Override
+    public List<CategoryOptionGroupSet> getAttributeCategoryOptionGroupSetsNoAcl()
+    {
+        return categoryOptionGroupSetStore.getCategoryOptionGroupSetsNoAcl( DataDimensionType.ATTRIBUTE, true );
     }
 
     @Override

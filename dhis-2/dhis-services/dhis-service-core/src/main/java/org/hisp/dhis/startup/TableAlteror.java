@@ -836,6 +836,8 @@ public class TableAlteror
         executeSql( "update dataelementcategory set datadimensiontype = 'ATTRIBUTE' where dimensiontype = 'attribute'" );
         executeSql( "update dataelementcategory set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
         executeSql( "alter table dataelementcategory drop column dimensiontype" );
+        executeSql( "update categoryoptiongroupset set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
+        executeSql( "update categoryoptiongroup set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
         
         oauth2();
 

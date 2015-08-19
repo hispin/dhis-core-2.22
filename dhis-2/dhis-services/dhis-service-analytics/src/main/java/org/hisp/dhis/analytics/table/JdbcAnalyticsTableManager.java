@@ -227,7 +227,8 @@ public class JdbcAnalyticsTableManager
             "from datavalue dv " +
             "left join _dataelementgroupsetstructure degs on dv.dataelementid=degs.dataelementid " +
             "left join _organisationunitgroupsetstructure ougs on dv.sourceid=ougs.organisationunitid " +
-            "left join _categoryoptiongroupsetstructure cogs on dv.attributeoptioncomboid=cogs.categoryoptioncomboid " +
+            "left join _categoryoptiongroupsetstructure cogs on dv.categoryoptioncomboid=cogs.categoryoptioncomboid " +
+            "left join _categoryoptiongroupsetstructure aogs on dv.attributeoptioncomboid=aogs.categoryoptioncomboid " +
             "left join _categorystructure dcs on dv.categoryoptioncomboid=dcs.categoryoptioncomboid " +
             "left join _categorystructure acs on dv.attributeoptioncomboid=acs.categoryoptioncomboid " +
             "left join _orgunitstructure ous on dv.sourceid=ous.organisationunitid " +
@@ -286,22 +287,25 @@ public class JdbcAnalyticsTableManager
     {
         List<String[]> columns = new ArrayList<>();
 
-        Collection<DataElementGroupSet> dataElementGroupSets =
+        List<DataElementGroupSet> dataElementGroupSets =
             idObjectManager.getDataDimensionsNoAcl( DataElementGroupSet.class );
         
-        Collection<OrganisationUnitGroupSet> orgUnitGroupSets = 
+        List<OrganisationUnitGroupSet> orgUnitGroupSets = 
             idObjectManager.getDataDimensionsNoAcl( OrganisationUnitGroupSet.class );
         
-        Collection<CategoryOptionGroupSet> categoryOptionGroupSets =
-            idObjectManager.getDataDimensionsNoAcl( CategoryOptionGroupSet.class );
+        List<CategoryOptionGroupSet> disaggregationCategoryOptionGroupSets =
+            categoryService.getDisaggregationCategoryOptionGroupSetsNoAcl();
         
-        Collection<DataElementCategory> disaggregationCategories =
+        List<CategoryOptionGroupSet> attributeCategoryOptionGroupSets =
+            categoryService.getAttributeCategoryOptionGroupSetsNoAcl();
+        
+        List<DataElementCategory> disaggregationCategories =
             categoryService.getDisaggregationDataDimensionCategoriesNoAcl();
         
-        Collection<DataElementCategory> attributeCategories =
+        List<DataElementCategory> attributeCategories =
             categoryService.getAttributeDataDimensionCategoriesNoAcl();
 
-        Collection<OrganisationUnitLevel> levels =
+        List<OrganisationUnitLevel> levels =
             organisationUnitService.getOrganisationUnitLevels();
         
         for ( DataElementGroupSet groupSet : dataElementGroupSets )
@@ -316,9 +320,15 @@ public class JdbcAnalyticsTableManager
             columns.add( col );
         }
 
-        for ( CategoryOptionGroupSet groupSet : categoryOptionGroupSets )
+        for ( CategoryOptionGroupSet groupSet : disaggregationCategoryOptionGroupSets )
         {
             String[] col = { quote( groupSet.getUid() ), "character(11)", "cogs." + quote( groupSet.getUid() ) };
+            columns.add( col );
+        }
+
+        for ( CategoryOptionGroupSet groupSet : attributeCategoryOptionGroupSets )
+        {
+            String[] col = { quote( groupSet.getUid() ), "character(11)", "aogs." + quote( groupSet.getUid() ) };
             columns.add( col );
         }
         

@@ -28,9 +28,16 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.GenericDimensionalObjectStore;
 
+/**
+ * @author Lars Helge Overland
+ */
 public interface CategoryOptionGroupSetStore
     extends GenericDimensionalObjectStore<CategoryOptionGroupSet>
 {
+    List<CategoryOptionGroupSet> getCategoryOptionGroupSetsNoAcl( DataDimensionType dataDimensionType, boolean dataDimension );
 }
