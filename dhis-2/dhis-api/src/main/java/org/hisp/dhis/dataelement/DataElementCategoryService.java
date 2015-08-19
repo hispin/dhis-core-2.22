@@ -678,7 +678,11 @@ public interface DataElementCategoryService
     List<CategoryOptionGroupSet> getCategoryOptionGroupSetsBetweenByName( int first, int max, String name );
 
     List<CategoryOptionGroupSet> getAllCategoryOptionGroupSets();
-
+    
+    List<CategoryOptionGroupSet> getDisaggregationCategoryOptionGroupSetsNoAcl();
+    
+    List<CategoryOptionGroupSet> getAttributeCategoryOptionGroupSetsNoAcl();
+    
     CategoryOptionGroupSet getCategoryOptionGroupSetByName( String name );
 
     int getCategoryOptionGroupSetCount();
