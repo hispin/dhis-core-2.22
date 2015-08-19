@@ -31,6 +31,7 @@ package org.hisp.dhis.dd.action.categoryoptiongroupset;
 import com.opensymphony.xwork2.Action;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -78,6 +79,13 @@ public class AddCategoryOptionGroupSetAction
     {
         this.dataDimension = dataDimension;
     }
+    
+    private String dataDimensionType;
+
+    public void setDataDimensionType( String dataDimensionType )
+    {
+        this.dataDimensionType = dataDimensionType;
+    }
 
     private Set<String> cogSelected = new HashSet<>();
 
@@ -97,6 +105,7 @@ public class AddCategoryOptionGroupSetAction
         CategoryOptionGroupSet categoryOptionGroupSet = new CategoryOptionGroupSet( StringUtils.trimToNull( name ) );
         categoryOptionGroupSet.setDescription( StringUtils.trimToNull( description ) );
         categoryOptionGroupSet.setDataDimension( dataDimension );
+        categoryOptionGroupSet.setDataDimensionType( DataDimensionType.valueOf( dataDimensionType ) );
 
         List<CategoryOptionGroup> members = new ArrayList<>();
 

@@ -57,6 +57,15 @@
         <td><label for="code">$i18n.getString( "code" )</label></td>
         <td><input type="text" id="code" name="code" value="$!encoder.htmlEncode( $categoryOptionGroup.code )"></td>
     </tr>
+	<tr>
+		<td><label>$i18n.getString( "data_dimension_type" )</td>
+		<td>
+			<select id="dataDmensionType" name="dataDimensionType" disabled="disabled">
+				<option value="DISAGGREGATION"#if( "DISAGGREGATION" == $categoryOptionGroup.dataDimensionType ) selected="selected"#end>$i18n.getString( "disaggregation" )</option>
+				<option value="ATTRIBUTE"#if( "ATTRIBUTE" == $categoryOptionGroup.dataDimensionType ) selected="selected"#end>$i18n.getString( "attribute" )</option>
+			</select>
+		</td>
+	</tr>
 </table>
 
 #tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
