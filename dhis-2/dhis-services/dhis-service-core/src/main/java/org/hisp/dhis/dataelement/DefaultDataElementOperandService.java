@@ -182,4 +182,18 @@ public class DefaultDataElementOperandService
         
         return operand;
     }
+
+    @Override
+    public DataElementOperand getOrAddDataElementOperand( String dataElementUid, String categoryOptionComboUid )
+    {
+        DataElement dataElement = dataElementService.getDataElement( dataElementUid );
+        DataElementCategoryOptionCombo categoryOptionCombo = categoryService.getDataElementCategoryOptionCombo( categoryOptionComboUid );
+        
+        if ( dataElement == null || categoryOptionCombo == null )
+        {
+            return null;
+        }
+        
+        return getOrAddDataElementOperand( dataElement, categoryOptionCombo );
+    }
 }
