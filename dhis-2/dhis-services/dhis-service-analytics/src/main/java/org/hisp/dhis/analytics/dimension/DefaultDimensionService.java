@@ -447,7 +447,7 @@ public class DefaultDimensionService
                     {
                         if ( DimensionalObjectUtils.isValidDimensionalOperand( uid ) )
                         {
-                            DataElementOperand operand = operandService.getDataElementOperand( 
+                            DataElementOperand operand = operandService.getOrAddDataElementOperand( 
                                 splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 0 ), splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 1 ) );
                             
                             if ( operand != null )
