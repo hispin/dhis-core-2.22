@@ -401,8 +401,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                             //check if attribute has optionset
                             if (att.optionSetValue) {
-                                var optionSetId = att.optionSet.id;
-                                newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + ' >' +
+                                var optionSetId = att.optionSet.id;                                
+                                newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + '  on-select="validationAndSkipLogic(selectedTei,\'' + attId + '\')" >' +
                                         '<ui-select-match style="width:100%;" allow-clear="true" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
                                         '<ui-select-choices ' +
                                         'repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:30">' +
