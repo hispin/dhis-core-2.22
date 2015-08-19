@@ -400,4 +400,11 @@ public interface Calendar
      * @return is iso8601 based
      */
     boolean isIso8601();
+
+    /**
+     * Get start of year as month/day, important especially for Nepali calendar
+     *
+     * @return
+     */
+    DateTimeUnit startOfYear();
 }
