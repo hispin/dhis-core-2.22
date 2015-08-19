@@ -31,6 +31,7 @@ package org.hisp.dhis.dataelement.hibernate;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -48,5 +49,14 @@ public class HibernateCategoryOptionGroupStore
     public List<CategoryOptionGroup> getCategoryOptionGroups( CategoryOptionGroupSet groupSet )
     {
         return getSharingCriteria( Restrictions.eq( "groupSet", groupSet ) ).list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<CategoryOptionGroup> getCategoryOptionGroupsNoAcl( DataDimensionType dataDimensionType, boolean dataDimension )
+    {
+        return getCriteria( 
+            Restrictions.eq( "dataDimensionType", dataDimensionType ),
+            Restrictions.eq( "dataDimension", dataDimension ) ).list();
     }
 }
