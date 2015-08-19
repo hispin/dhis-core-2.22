@@ -186,7 +186,7 @@ Ext.onReady( function() {
 				west_fill_accordion_dataset: 56,
                 west_fill_accordion_eventdataitem: 81,
                 west_fill_accordion_programindicator: 81,
-				west_fill_accordion_period: 303,
+				west_fill_accordion_period: 310,
 				west_fill_accordion_organisationunit: 58,
                 west_fill_accordion_group: 31,
 				west_maxheight_accordion_indicator: 400,
@@ -299,8 +299,6 @@ Ext.onReady( function() {
 						console.log('api.layout.Record: id is not text: ' + config);
 						return;
 					}
-
-					config.id = config.id.replace('.', '#');
 
 					return config;
 				}();
@@ -1760,18 +1758,6 @@ Ext.onReady( function() {
 					}
 				}());
 
-				// extend metadata
-				(function() {
-					for (var i = 0, id, splitId ; i < ids.length; i++) {
-						id = ids[i];
-
-						if (id.indexOf('#') !== -1) {
-							splitId = id.split('#');
-							response.metaData.names[id] = response.metaData.names[splitId[0]] + ' ' + response.metaData.names[splitId[1]];
-						}
-					}
-				}());
-
 				// create value id map
 				(function() {
 					var valueHeaderIndex = response.nameHeaderMap[conf.finals.dimension.value.value].index,
@@ -2052,16 +2038,6 @@ Ext.onReady( function() {
 					items = Ext.clone(dimensionNameIdsMap[dimName]);
 
 					if (dimName === dx) {
-						//for (var j = 0, index; j < items.length; j++) {
-							//index = items[j].indexOf('#');
-
-							//if (index > 0) {
-								//addCategoryDimension = true;
-								//items[j] = items[j].substr(0, index);
-                                //items[j] = items[j].replace('#', '.');
-							//}
-						//}
-
 						items = Ext.Array.unique(items);
 					}
 
@@ -2146,8 +2122,6 @@ Ext.onReady( function() {
 					valueMap = xResponse.idValueMap,
 					direction = xLayout.sorting ? xLayout.sorting.direction : 'DESC',
 					layout;
-
-                id = Ext.isString(id) ? id.replace('#', '') : id;
 
 				dim.ids = [];
 
@@ -2567,7 +2541,7 @@ Ext.onReady( function() {
 							uuids = [];
 
 							// meta data uid
-							id = ((xColAxis ? xColAxis.ids[j] : '') + (xRowAxis ? xRowAxis.ids[i] : '')).replace('#', '');
+							id = ((xColAxis ? xColAxis.ids[j] : '') + (xRowAxis ? xRowAxis.ids[i] : ''));
 
                             // value html element id
 							uuid = Ext.data.IdGenerator.get('uuid').generate();
