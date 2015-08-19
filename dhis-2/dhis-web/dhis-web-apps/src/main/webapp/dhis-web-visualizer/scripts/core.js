@@ -1773,8 +1773,18 @@ Ext.onReady( function() {
 
 						return false;
 					}(),
-					ou = dimConf.organisationUnit.objectName,
-					layout;
+                    co = dimConf.category.objectName,
+                    ou = dimConf.organisationUnit.objectName,
+                    headerNames = function() {
+                        var headerNames = [];
+
+                        for (var i = 0; i < response.headers.length; i++) {
+                            headerNames.push(response.headers[i].name);
+                        }
+
+                        return headerNames;
+                    }(),
+                    layout;
 
 				// set items from init/metaData/xLayout
                 for (var i = 0, dim, metaDataDim, items; i < dimensions.length; i++) {
@@ -2288,33 +2298,35 @@ Ext.onReady( function() {
                     paramString = '?',
                     addCategoryDimension = false,
                     map = xLayout.dimensionNameItemsMap,
-                    dx = dimConf.indicator.dimensionName,
+					dx = dimConf.indicator.dimensionName,
+					co = dimConf.category.dimensionName,
                     aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
                     displayProperty = xLayout.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name';
 
                 for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
                     dimName = axisDimensionNames[i];
 
-                    paramString += 'dimension=' + dimName;
+					paramString += 'dimension=' + dimName;
 
-                    items = Ext.clone(dimensionNameIdsMap[dimName]);
+					items = Ext.clone(dimensionNameIdsMap[dimName]);
 
-                    if (dimName === dx) {
-                        for (var j = 0, index; j < items.length; j++) {
-                            index = items[j].indexOf('#');
+					if (dimName === dx) {
+						//for (var j = 0, index; j < items.length; j++) {
+							//index = items[j].indexOf('#');
 
-                            if (index > 0) {
-                                addCategoryDimension = true;
-                                items[j] = items[j].substr(0, index);
-                            }
-                        }
+							//if (index > 0) {
+								//addCategoryDimension = true;
+								//items[j] = items[j].substr(0, index);
+                                //items[j] = items[j].replace('#', '.');
+							//}
+						//}
 
-                        items = Ext.Array.unique(items);
-                    }
+						items = Ext.Array.unique(items);
+					}
 
-                    if (dimName !== dimConf.category.dimensionName) {
-                        paramString += ':' + items.join(';');
-                    }
+					if (dimName !== co) {
+						paramString += ':' + items.join(';');
+					}
 
                     if (i < (axisDimensionNames.length - 1)) {
                         paramString += '&';
@@ -2463,7 +2475,7 @@ Ext.onReady( function() {
                         obj[conf.finals.data.domain] = xResponse.metaData.names[category];
 
                         for (var j = 0, id, value; j < columnIds.length; j++) {
-                            id = support.prototype.str.replaceAll(columnIds[j], '#', '') + support.prototype.str.replaceAll(rowIds[i], '#', '');
+                            id = support.prototype.str.replaceAll(columnIds[j], '#', '.') + support.prototype.str.replaceAll(rowIds[i], '#', '.');
                             value = xResponse.idValueMap[id];
                             rowValues.push(value);
 
@@ -2914,7 +2926,10 @@ Ext.onReady( function() {
                     else {
                         for (var i = 0, id, name, mxl, ids; i < store.rangeFields.length; i++) {
                             id = failSafeColumnIdMap[store.rangeFields[i]];
-                            name = xResponse.metaData.names[id];
+
+                            if (Ext.isString(id)) {
+                                name = xResponse.metaData.names[id.replace('#', '.')];
+                            }
 
                             if (ls && ls.labelMaxLength) {
                                 var mxl = parseInt(ls.labelMaxLength);
