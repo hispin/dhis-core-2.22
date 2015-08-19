@@ -73,7 +73,7 @@ public class DataElementCategoryOptionComboDeletionHandler
     @Override
     public String allowDeleteDataElementCategoryOption( DataElementCategoryOption categoryOption )
     {
-        final String sql =
+        final String dvSql =
             "select count(*) from datavalue dv " +
             "where dv.categoryoptioncomboid in ( " +
                 "select cc.categoryoptioncomboid from categoryoptioncombos_categoryoptions cc " +
@@ -82,13 +82,29 @@ public class DataElementCategoryOptionComboDeletionHandler
                 "select cc.categoryoptioncomboid from categoryoptioncombos_categoryoptions cc " +
                 "where cc.categoryoptionid = " + categoryOption.getId() + " );";
         
-        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
+        if ( jdbcTemplate.queryForObject( dvSql, Integer.class ) > 0 )
+        {
+            return ERROR;
+        }
+        
+        final String crSql = 
+            "select count(*) from completedatasetregistration cdr " +
+            "where cdr.attributeoptioncomboid in ( " +
+                "select cc.categoryoptioncomboid from categoryoptioncombos_categoryoptions cc " +
+                "where cc.categoryoptionid = " + categoryOption.getId() + " );";
+        
+        if ( jdbcTemplate.queryForObject( crSql, Integer.class ) > 0 )
+        {
+            return ERROR;
+        }
+        
+        return null;
     }
     
     @Override
     public String allowDeleteDataElementCategoryCombo( DataElementCategoryCombo categoryCombo )
     {
-        final String sql =
+        final String dvSql =
             "select count(*) from datavalue dv " +
             "where dv.categoryoptioncomboid in ( " +
                 "select co.categoryoptioncomboid from categorycombos_optioncombos co " +
@@ -97,7 +113,23 @@ public class DataElementCategoryOptionComboDeletionHandler
                 "select co.categoryoptioncomboid from categorycombos_optioncombos co " +
                 "where co.categorycomboid=" + categoryCombo.getId() + " );";
         
-        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
+        if ( jdbcTemplate.queryForObject( dvSql, Integer.class ) > 0 )
+        {
+            return ERROR;
+        }
+        
+        final String crSql =
+            "select count(*) from completedatasetregistration cdr " +
+            "where cdr.attributeoptioncomboid in ( " +
+                "select co.categoryoptioncomboid from categorycombos_optioncombos co " +
+                "where co.categorycomboid=" + categoryCombo.getId() + " );";
+        
+        if ( jdbcTemplate.queryForObject( crSql, Integer.class ) > 0 )
+        {
+            return ERROR;
+        }
+        
+        return null;
     }
     
     @Override
