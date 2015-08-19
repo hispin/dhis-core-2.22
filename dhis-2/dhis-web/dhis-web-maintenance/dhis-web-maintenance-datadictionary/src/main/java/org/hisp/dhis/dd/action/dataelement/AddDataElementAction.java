@@ -49,6 +49,7 @@ import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.system.util.AttributeUtils;
 
 import com.opensymphony.xwork2.Action;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -60,40 +61,20 @@ public class AddDataElementAction
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private DataElementService dataElementService;
 
-    public void setDataElementService( DataElementService dataElementService )
-    {
-        this.dataElementService = dataElementService;
-    }
-
+    @Autowired
     private DataElementCategoryService dataElementCategoryService;
 
-    public void setDataElementCategoryService( DataElementCategoryService dataElementCategoryService )
-    {
-        this.dataElementCategoryService = dataElementCategoryService;
-    }
-
+    @Autowired
     private AttributeService attributeService;
 
-    public void setAttributeService( AttributeService attributeService )
-    {
-        this.attributeService = attributeService;
-    }
-
+    @Autowired
     private OptionService optionService;
 
-    public void setOptionService( OptionService optionService )
-    {
-        this.optionService = optionService;
-    }
-
+    @Autowired
     private LegendService legendService;
-
-    public void setLegendService( LegendService legendService )
-    {
-        this.legendService = legendService;
-    }
 
     // -------------------------------------------------------------------------
     // Input

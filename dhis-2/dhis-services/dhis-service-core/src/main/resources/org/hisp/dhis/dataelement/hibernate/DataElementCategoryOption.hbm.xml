@@ -3,7 +3,7 @@
   "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"
   [<!ENTITY identifiableProperties SYSTEM "classpath://org/hisp/dhis/common/identifiableProperties.hbm">]
->
+  >
 
 <hibernate-mapping>
   <class name="org.hisp.dhis.dataelement.DataElementCategoryOption" table="dataelementcategoryoption">
@@ -47,6 +47,14 @@
       <cache usage="read-write" />
       <key column="categoryoptionid" />
       <many-to-many class="org.hisp.dhis.dataelement.CategoryOptionGroup" column="categoryoptiongroupid" />
+    </set>
+
+    <!-- Dynamic attribute values -->
+
+    <set name="attributeValues" table="dataelementcategoryoptionattributevalues">
+      <cache usage="read-write" />
+      <key column="categoryoptionid" />
+      <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />
     </set>
 
     <!-- Access properties -->
