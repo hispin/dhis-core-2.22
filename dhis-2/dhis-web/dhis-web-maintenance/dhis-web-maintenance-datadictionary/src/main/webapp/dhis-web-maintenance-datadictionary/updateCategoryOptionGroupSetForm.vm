@@ -54,6 +54,15 @@
             </select>
         </td>
     </tr>
+	<tr>
+		<td><label>$i18n.getString( "data_dimension_type" )</td>
+		<td>
+			<select id="dataDmensionType" name="dataDimensionType" disabled="disabled">
+				<option value="DISAGGREGATION"#if( "DISAGGREGATION" == $categoryOptionGroupSet.dataDimensionType ) selected="selected"#end>$i18n.getString( "disaggregation" )</option>
+				<option value="ATTRIBUTE"#if( "ATTRIBUTE" == $categoryOptionGroupSet.dataDimensionType ) selected="selected"#end>$i18n.getString( "attribute" )</option>
+			</select>
+		</td>
+	</tr>
 </table>
 
 #jqSelected({

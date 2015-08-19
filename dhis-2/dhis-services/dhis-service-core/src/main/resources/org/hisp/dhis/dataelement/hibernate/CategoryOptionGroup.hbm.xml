@@ -26,6 +26,8 @@
         foreign-key="fk_categoryoptiongroupmembers_categoryoptiongroupid" />
     </set>
 
+    <property name="dataDimensionType" column="datadimensiontype" type="org.hisp.dhis.common.DataDimensionTypeUserType" />
+
     <!-- Dynamic attribute values -->
 
     <set name="attributeValues" table="categoryoptiongroupattributevalues">

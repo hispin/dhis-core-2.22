@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.Action;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.system.util.AttributeUtils;
@@ -82,6 +83,13 @@ public class AddCategoryOptionGroupAction
         this.code = code;
     }
 
+    private String dataDimensionType;
+
+    public void setDataDimensionType( String dataDimensionType )
+    {
+        this.dataDimensionType = dataDimensionType;
+    }
+
     private Set<String> coSelected = new HashSet<>();
 
     public void setCoSelected( Set<String> coSelected )
@@ -107,6 +115,7 @@ public class AddCategoryOptionGroupAction
         CategoryOptionGroup categoryOptionGroup = new CategoryOptionGroup( StringUtils.trimToNull( name ) );
         categoryOptionGroup.setShortName( StringUtils.trimToNull( shortName ) );
         categoryOptionGroup.setCode( StringUtils.trimToNull( code ) );
+        categoryOptionGroup.setDataDimensionType( DataDimensionType.valueOf( dataDimensionType ) );
 
         for ( String id : coSelected )
         {
