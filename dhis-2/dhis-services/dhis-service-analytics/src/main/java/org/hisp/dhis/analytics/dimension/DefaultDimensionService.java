@@ -38,6 +38,7 @@ import static org.hisp.dhis.common.DimensionType.PERIOD;
 import static org.hisp.dhis.common.DimensionType.PROGRAM_ATTRIBUTE;
 import static org.hisp.dhis.common.DimensionType.PROGRAM_DATAELEMENT;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
+import static org.hisp.dhis.commons.util.TextUtils.splitSafe;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_LEVEL;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_ORGUNIT_GROUP;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT;
@@ -75,6 +76,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
+import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementOperandService;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.legend.LegendSet;
@@ -443,9 +445,25 @@ public class DefaultDimensionService
                 {
                     for ( String uid : uids )
                     {
-                        NameableObject dataObject = identifiableObjectManager.get( DataDimensionItem.DATA_DIMENSION_CLASSES, uid );
-                        
-                        object.getDataDimensionItems().add( DataDimensionItem.create( dataObject ) );
+                        if ( DimensionalObjectUtils.isValidDimensionalOperand( uid ) )
+                        {
+                            DataElementOperand operand = operandService.getDataElementOperand( 
+                                splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 0 ), splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 1 ) );
+                            
+                            if ( operand != null )
+                            {
+                                object.getDataDimensionItems().add( DataDimensionItem.create( operand ) );
+                            }
+                        }
+                        else
+                        {
+                            NameableObject dataObject = identifiableObjectManager.get( DataDimensionItem.DATA_DIMENSION_CLASSES, uid );
+                            
+                            if ( dataObject != null )
+                            {
+                                object.getDataDimensionItems().add( DataDimensionItem.create( dataObject ) );
+                            }
+                        }
                     }
                 }
                 else if ( PERIOD.equals( type ) )
