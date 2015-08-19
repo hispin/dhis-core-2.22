@@ -38,6 +38,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.apache.commons.collections.CollectionUtils;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -62,13 +63,14 @@ public class CategoryOptionGroupSet
     @Scanned
     private List<CategoryOptionGroup> members = new ArrayList<>();
 
+    private DataDimensionType dataDimensionType;
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
     public CategoryOptionGroupSet()
     {
-
     }
 
     public CategoryOptionGroupSet( String name )
@@ -138,6 +140,19 @@ public class CategoryOptionGroupSet
         this.members = members;
     }
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public DataDimensionType getDataDimensionType()
+    {
+        return dataDimensionType;
+    }
+
+    public void setDataDimensionType( DataDimensionType dataDimensionType )
+    {
+        this.dataDimensionType = dataDimensionType;
+    }
+
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
@@ -163,6 +178,15 @@ public class CategoryOptionGroupSet
         {
             CategoryOptionGroupSet categoryOptionGroupSet = (CategoryOptionGroupSet) other;
 
+            if ( strategy.isReplace() )
+            {
+                dataDimensionType = categoryOptionGroupSet.getDataDimensionType();
+            }
+            else if ( strategy.isMerge() )
+            {
+                dataDimensionType = categoryOptionGroupSet.getDataDimensionType() == null ? dataDimensionType : categoryOptionGroupSet.getDataDimensionType();
+            }
+            
             members.clear();
 
             for ( CategoryOptionGroup categoryOptionGroup : categoryOptionGroupSet.getMembers() )

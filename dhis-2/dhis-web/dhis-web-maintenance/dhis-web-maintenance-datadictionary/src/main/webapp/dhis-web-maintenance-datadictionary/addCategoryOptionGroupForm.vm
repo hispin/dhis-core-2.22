@@ -44,6 +44,15 @@
 		<td><label for="code">$i18n.getString( "code" )</label></td>
 		<td><input type="text" id="code" name="code" /></td>
 	</tr>
+	<tr>
+		<td><label>$i18n.getString( "data_dimension_type" )</td>
+		<td>
+			<select id="dataDimensionType" name="dataDimensionType">
+				<option value="DISAGGREGATION" selected="selected">$i18n.getString( "disaggregation" )</option>
+				<option value="ATTRIBUTE">$i18n.getString( "attribute" )</option>
+			</select>
+		</td>
+    </tr>
 </table>
 
 #tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
