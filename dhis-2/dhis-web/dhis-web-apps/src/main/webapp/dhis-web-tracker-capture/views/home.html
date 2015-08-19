@@ -108,7 +108,7 @@
             <div id="selectDropDownParent" class="input-group col-md-4">            
                 <button type="button" class="select-dropdown-button form-control" ng-show="programs.length > 0">{{selectedProgram ? selectedProgram.name : 'please_select_a_program'| translate}}</button>
                 <button type="button" class="select-dropdown-button form-control" ng-show="programs.length < 1" ng-disabled="true">{{programs.length > 0 ? 'please_select_a_program' : 'no_program_exists'| translate}}</button>
-                <div class="input-group-btn">
+                <div class="input-group-btn program-drop-down">
                     <button class="btn btn-default select-dropdown-caret" type="button" title="{{'list_programs'| translate}}" data-toggle="dropdown" ng-disabled="programs.length < 1"><i class="fa fa-caret-down"></i></button>
                     <ul id="selectDropDown" class="dropdown-menu dropdown-menu-right">
                         <li>
