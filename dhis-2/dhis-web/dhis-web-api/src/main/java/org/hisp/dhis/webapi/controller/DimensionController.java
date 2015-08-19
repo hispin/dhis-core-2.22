@@ -130,21 +130,20 @@ public class DimensionController
     }
 
     @RequestMapping( value = "/constraints", method = RequestMethod.GET )
-    public String getDimensionConstraints( @RequestParam( value = "links", defaultValue = "true", required = false ) Boolean links,
-        Model model )
+    public @ResponseBody RootNode getDimensionConstraints( @RequestParam( value = "links", defaultValue = "true", required = false ) Boolean links )
     {
-        WebMetaData metaData = new WebMetaData();
-
-        metaData.setDimensions( dimensionService.getDimensionConstraints() );
-
-        model.addAttribute( "model", metaData );
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+        List<DimensionalObject> dimensionConstraints = dimensionService.getDimensionConstraints();
 
         if ( links )
         {
-            linkService.generateLinks( metaData, false );
+            linkService.generateLinks( dimensionConstraints, false );
         }
 
-        return "dimensions";
+        RootNode rootNode = NodeUtils.createMetadata();
+        rootNode.addChild( fieldFilterService.filter( getEntityClass(), dimensionConstraints, fields ) );
+
+        return rootNode;
     }
 
     @RequestMapping( value = "/dataSet/{uid}", method = RequestMethod.GET )
