@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 
 import org.hisp.dhis.analytics.AnalyticsTable;
+import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -84,6 +85,7 @@ public class JdbcEventAnalyticsTableManager
     private List<AnalyticsTable> getTables( List<Integer> dataYears )
     {
         List<AnalyticsTable> tables = new ArrayList<>();
+        Calendar calendar = PeriodType.getCalendar();
 
         Collections.sort( dataYears );
         
@@ -91,7 +93,7 @@ public class JdbcEventAnalyticsTableManager
 
         for ( Integer year : dataYears )
         {
-            Period period = PartitionUtils.getPeriod( year );
+            Period period = PartitionUtils.getPeriod( calendar, year );
             
             List<Integer> programs = getDataPrograms( period );
             
