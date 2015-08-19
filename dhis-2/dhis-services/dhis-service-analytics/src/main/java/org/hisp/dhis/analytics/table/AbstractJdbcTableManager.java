@@ -42,6 +42,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsIndex;
 import org.hisp.dhis.analytics.AnalyticsTable;
 import org.hisp.dhis.analytics.AnalyticsTableManager;
+import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.commons.collection.ListUtils;
@@ -52,6 +53,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.resourcetable.ResourceTableService;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,14 +146,15 @@ public abstract class AbstractJdbcTableManager
     private List<AnalyticsTable> getTables( List<Integer> dataYears )
     {
         List<AnalyticsTable> tables = new ArrayList<>();
-        
+        Calendar calendar = PeriodType.getCalendar();
+
         Collections.sort( dataYears );
         
         String baseName = getTableName();
         
         for ( Integer year : dataYears )
         {
-            Period period = PartitionUtils.getPeriod( year );
+            Period period = PartitionUtils.getPeriod( calendar, year );
             
             tables.add( new AnalyticsTable( baseName, getDimensionColumns( null ), period ) );
         }
