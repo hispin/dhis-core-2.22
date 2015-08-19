@@ -483,6 +483,12 @@ public class NepaliCalendar extends AbstractCalendar
         return new DateTimeUnit( curYear, curMonth, curDay, dayOfWeek );
     }
 
+    @Override
+    public DateTimeUnit startOfYear()
+    {
+        return startIso;
+    }
+
     // check if day is more than current maximum for month, don't overflow, just set to maximum
     // set day of week
     private void updateDateUnit( DateTimeUnit result )

@@ -257,4 +257,10 @@ public abstract class AbstractCalendar implements Calendar
     {
         return false;
     }
+
+    @Override
+    public DateTimeUnit startOfYear()
+    {
+        return new DateTimeUnit( 0, 1, 1 );
+    }
 }
