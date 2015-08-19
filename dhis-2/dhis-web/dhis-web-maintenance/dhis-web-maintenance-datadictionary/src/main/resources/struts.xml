@@ -601,7 +601,7 @@
       <param name="anyAuthorities">F_CATEGORY_OPTION_GROUP_PUBLIC_ADD, F_CATEGORY_OPTION_GROUP_PRIVATE_ADD</param>
     </action>
 
-    <action name="showAddCategoryOptionGroupForm" class="org.hisp.dhis.dd.action.NoAction">
+    <action name="showAddCategoryOptionGroupForm" class="org.hisp.dhis.dd.action.categoryoptiongroup.ShowAddCategoryOptionGroupAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-datadictionary/addCategoryOptionGroupForm.vm</param>
       <param name="javascripts">javascript/categoryOptionGroup.js</param>

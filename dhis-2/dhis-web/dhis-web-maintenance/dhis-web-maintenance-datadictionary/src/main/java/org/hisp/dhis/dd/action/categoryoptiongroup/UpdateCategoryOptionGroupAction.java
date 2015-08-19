@@ -31,11 +31,14 @@ package org.hisp.dhis.dd.action.categoryoptiongroup;
 import com.opensymphony.xwork2.Action;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
+import org.hisp.dhis.system.util.AttributeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,6 +53,9 @@ public class UpdateCategoryOptionGroupAction
 
     @Autowired
     private DataElementCategoryService dataElementCategoryService;
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------
     // Input
@@ -90,6 +96,13 @@ public class UpdateCategoryOptionGroupAction
         this.coSelected = coSelected;
     }
 
+    private List<String> jsonAttributeValues;
+
+    public void setJsonAttributeValues( List<String> jsonAttributeValues )
+    {
+        this.jsonAttributeValues = jsonAttributeValues;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -107,6 +120,12 @@ public class UpdateCategoryOptionGroupAction
         for ( String id : coSelected )
         {
             categoryOptionGroup.addCategoryOption( dataElementCategoryService.getDataElementCategoryOption( id ) );
+        }
+
+        if ( jsonAttributeValues != null )
+        {
+            AttributeUtils.updateAttributeValuesFromJson( categoryOptionGroup.getAttributeValues(), jsonAttributeValues,
+                attributeService );
         }
 
         dataElementCategoryService.updateCategoryOptionGroup( categoryOptionGroup );

@@ -86,6 +86,10 @@ public class Attribute
 
     private boolean trackedEntityAttributeAttribute;
 
+    private boolean categoryOptionAttribute;
+
+    private boolean categoryOptionGroupAttribute;
+
     private boolean mandatory;
 
     private Integer sortOrder;
@@ -316,6 +320,32 @@ public class Attribute
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isCategoryOptionAttribute()
+    {
+        return categoryOptionAttribute;
+    }
+
+    public void setCategoryOptionAttribute( boolean categoryOptionAttribute )
+    {
+        this.categoryOptionAttribute = categoryOptionAttribute;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isCategoryOptionGroupAttribute()
+    {
+        return categoryOptionGroupAttribute;
+    }
+
+    public void setCategoryOptionGroupAttribute( boolean categoryOptionGroupAttribute )
+    {
+        this.categoryOptionGroupAttribute = categoryOptionGroupAttribute;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public OptionSet getOptionSet()
     {
         return optionSet;
@@ -372,6 +402,8 @@ public class Attribute
             programStageAttribute = attribute.isProgramStageAttribute();
             trackedEntityAttribute = attribute.isTrackedEntityAttribute();
             trackedEntityAttributeAttribute = attribute.isTrackedEntityAttributeAttribute();
+            categoryOptionAttribute = attribute.isCategoryOptionAttribute();
+            categoryOptionGroupAttribute = attribute.isCategoryOptionGroupAttribute();
             mandatory = attribute.isMandatory();
 
             if ( strategy.isReplace() )
@@ -410,6 +442,8 @@ public class Attribute
             .add( "programStageAttribute", programStageAttribute )
             .add( "trackedEntityAttribute", trackedEntityAttribute )
             .add( "trackedEntityAttributeAttribute", trackedEntityAttributeAttribute )
+            .add( "categoryOptionAttribute", categoryOptionAttribute )
+            .add( "categoryOptionGroupAttribute", categoryOptionGroupAttribute )
             .add( "mandatory", mandatory )
             .add( "attributeValues", attributeValues )
             .toString();

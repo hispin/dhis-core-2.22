@@ -1,28 +1,33 @@
 <script type="text/javascript">
-    jQuery(document).ready(	function() {
-	    validation2( 'editDataElementCategoryOptionForm', function( form ){ form.submit()}, {
-			'beforeValidateHandler': function() { listValidator( 'memberValidator', 'categoryOptions' ); },
-			'rules': getValidationRules("dateElementCategoryOption")
-		});
+  jQuery(document).ready(function() {
+    validation2('editDataElementCategoryOptionForm', function(form) {
+      form.submit()
+    }, {
+      'beforeValidateHandler': function() {
+        listValidator('memberValidator', 'categoryOptions');
+        #tblDynamicAttributesJavascript()
+      },
+      'rules': getValidationRules("dateElementCategoryOption")
+    });
 
-        $('#startDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
-        $('#endDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
+    $('#startDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
+    $('#endDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
 
-        selection.clearSelected(); // Sync ouwt from server
-        selection.setOfflineLevel( 1 );
-        selection.setMultipleSelectionAllowed( true );
-        selection.setUnselectAllowed( true );
-        selection.setAutoSelectRoot( false );
+    selection.clearSelected(); // Sync ouwt from server
+    selection.setOfflineLevel(1);
+    selection.setMultipleSelectionAllowed(true);
+    selection.setUnselectAllowed(true);
+    selection.setAutoSelectRoot(false);
 
-        #if ( $moreOptionsPresent ) showMoreOrFewerOptions(); #end
+    #if ( $moreOptionsPresent ) showMoreOrFewerOptions(); #end
 
-        checkValueIsExist( "name", "validateDataElementCategoryOption.action", {id: $dataElementCategoryOption.id} );
-        checkValueIsExist( "shortName", "validateDataElementCategoryOption.action", {id: $dataElementCategoryOption.id} );
-        checkValueIsExist( "code", "validateDataElementCategoryOption.action", {id: $dataElementCategoryOption.id} );
-        
-        dhis2.period.picker.createInstance('#startDate');
-        dhis2.period.picker.createInstance('#endDate');
-	});
+    checkValueIsExist("name", "validateDataElementCategoryOption.action", { id: $dataElementCategoryOption.id});
+    checkValueIsExist("shortName", "validateDataElementCategoryOption.action", { id: $dataElementCategoryOption.id});
+    checkValueIsExist("code", "validateDataElementCategoryOption.action", { id: $dataElementCategoryOption.id});
+
+    dhis2.period.picker.createInstance('#startDate');
+    dhis2.period.picker.createInstance('#endDate');
+  });
 
     var i18n_confirm_delete = '$encoder.jsEscape( $i18n.getString( "confirm_delete_data_element_category_option" ) , "'")';
     var i18n_specify_category_option_name = '$encoder.jsEscape( $i18n.getString( "specify_category_option_name" ) , "'")';
@@ -62,6 +67,8 @@
     </tr>
   </table>
   
+  #tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
+
   <div id="showMoreOptions" style="margin: 20px 0;"><a href="javascript:showMoreOrFewerOptions()">$i18n.getString( "show_more_options" )</a></div>
   
   <div id="moreOptions" style="display:none">

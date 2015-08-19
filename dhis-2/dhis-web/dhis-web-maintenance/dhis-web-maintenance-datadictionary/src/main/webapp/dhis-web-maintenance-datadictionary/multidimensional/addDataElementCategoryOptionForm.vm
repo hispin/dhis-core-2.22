@@ -1,24 +1,31 @@
 <script type="text/javascript">
-	jQuery(document).ready(	function() {
-		validation( 'addDataElementCategoryOptionForm', function(form){
-		form.submit();
-	});
-        $('#startDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
-        $('#endDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
+  jQuery(document).ready(function() {
+    validation2('addDataElementCategoryOptionForm', function(form) {
+      form.submit()
+    }, {
+      'beforeValidateHandler': function() {
+        listValidator('memberValidator', 'categoryOptions');
+        #tblDynamicAttributesJavascript()
+      },
+      'rules': getValidationRules("dateElementCategoryOption")
+    });
 
-        selection.setOfflineLevel( 1 );
-        selection.setMultipleSelectionAllowed( true );
-        selection.setUnselectAllowed( true );
-        selection.setAutoSelectRoot( false );
-        selection.clearSelected();
+    $('#startDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
+    $('#endDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
 
-        checkValueIsExist( "name", "validateDataElementCategoryOption.action" );
-        checkValueIsExist( "shortName", "validateDataElementCategoryOption.action" );
-        checkValueIsExist( "code", "validateDataElementCategoryOption.action" );
-        
-        dhis2.period.picker.createInstance('#startDate');
-        dhis2.period.picker.createInstance('#endDate');        
-	});
+    selection.setOfflineLevel(1);
+    selection.setMultipleSelectionAllowed(true);
+    selection.setUnselectAllowed(true);
+    selection.setAutoSelectRoot(false);
+    selection.clearSelected();
+
+    checkValueIsExist("name", "validateDataElementCategoryOption.action");
+    checkValueIsExist("shortName", "validateDataElementCategoryOption.action");
+    checkValueIsExist("code", "validateDataElementCategoryOption.action");
+
+    dhis2.period.picker.createInstance('#startDate');
+    dhis2.period.picker.createInstance('#endDate');
+  });
 
     var i18n_specify_category_option_name = '$encoder.jsEscape( $i18n.getString( "specify_category_option_name" ) , "'")';
     var i18n_category_option_name_already_exists = '$encoder.jsEscape( $i18n.getString( "category_option_name_already_exists" ) , "'")';
@@ -36,10 +43,10 @@
 <h3>$i18n.getString( "create_new_data_element_category_option" )</h3>
 
 <form id="addDataElementCategoryOptionForm" name="addDataElementCategoryOptionForm" action="addDataElementCategoryOption.action" method="post" class="inputForm">
-  
+
   <table>
     <tr>
-      <th colspan="2">$i18n.getString( "details" )</th>      
+      <th colspan="2">$i18n.getString( "details" )</th>
     </tr>
     <tr>
       <td style="width: 100px"><label>$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
@@ -54,11 +61,13 @@
 	  <td><input type="text" id="code" name="code"/></td>
     </tr>
   </table>
-  
+
+  #tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
+
   <div id="showMoreOptions" style="margin: 20px 0;"><a href="javascript:showMoreOrFewerOptions()">$i18n.getString( "show_more_options" )</a></div>
-  
+
   <div id="moreOptions" style="display:none">
-    
+
   <table>
     <tr>
       <td style="width: 100px"><label for="startDate">$i18n.getString( 'start_date' )</label></td>
@@ -89,5 +98,5 @@
     <input type="submit"  value="$i18n.getString( 'add' )" style="width:10em">
     <input type="button" onclick="dhis2.commons.redirectCurrentPage( 'categoryOption.action' )" value="$i18n.getString( 'cancel' )" style="width:10em"/>
   </p>
-  
+
 </form>
