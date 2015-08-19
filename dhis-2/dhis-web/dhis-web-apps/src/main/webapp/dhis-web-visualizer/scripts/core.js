@@ -795,8 +795,6 @@ Ext.onReady( function() {
 						return;
 					}
 
-					config.id = config.id.replace('.', '#');
-
 					return config;
 				}();
 			};
@@ -2065,18 +2063,6 @@ Ext.onReady( function() {
 					}
 				}());
 
-				// extend metadata
-				(function() {
-					for (var i = 0, id, splitId ; i < ids.length; i++) {
-						id = ids[i];
-
-						if (id.indexOf('#') !== -1) {
-							splitId = id.split('#');
-							response.metaData.names[id] = response.metaData.names[splitId[0]] + ' ' + response.metaData.names[splitId[1]];
-						}
-					}
-				}());
-
 				// create value id map
 				(function() {
 					var valueHeaderIndex = response.nameHeaderMap[conf.finals.dimension.value.value].index,
@@ -2311,16 +2297,6 @@ Ext.onReady( function() {
 					items = Ext.clone(dimensionNameIdsMap[dimName]);
 
 					if (dimName === dx) {
-						//for (var j = 0, index; j < items.length; j++) {
-							//index = items[j].indexOf('#');
-
-							//if (index > 0) {
-								//addCategoryDimension = true;
-								//items[j] = items[j].substr(0, index);
-                                //items[j] = items[j].replace('#', '.');
-							//}
-						//}
-
 						items = Ext.Array.unique(items);
 					}
 
@@ -2475,7 +2451,7 @@ Ext.onReady( function() {
                         obj[conf.finals.data.domain] = xResponse.metaData.names[category];
 
                         for (var j = 0, id, value; j < columnIds.length; j++) {
-                            id = support.prototype.str.replaceAll(columnIds[j], '#', '.') + support.prototype.str.replaceAll(rowIds[i], '#', '.');
+                            id = columnIds[j] + rowIds[i];
                             value = xResponse.idValueMap[id];
                             rowValues.push(value);
 
@@ -2926,10 +2902,7 @@ Ext.onReady( function() {
                     else {
                         for (var i = 0, id, name, mxl, ids; i < store.rangeFields.length; i++) {
                             id = failSafeColumnIdMap[store.rangeFields[i]];
-
-                            if (Ext.isString(id)) {
-                                name = xResponse.metaData.names[id.replace('#', '.')];
-                            }
+                            name = xResponse.metaData.names[id];
 
                             if (ls && ls.labelMaxLength) {
                                 var mxl = parseInt(ls.labelMaxLength);
