@@ -37,21 +37,10 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
   <bean id="org.hisp.dhis.dd.action.dataelement.AddDataElementAction" class="org.hisp.dhis.dd.action.dataelement.AddDataElementAction"
     scope="prototype">
-    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
-    <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
-    <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
-    <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />
   </bean>
 
   <bean id="org.hisp.dhis.dd.action.dataelement.UpdateDataElementAction" class="org.hisp.dhis.dd.action.dataelement.UpdateDataElementAction"
     scope="prototype">
-    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
-    <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
-    <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
-    <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
-    <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />
   </bean>
 
   <bean id="org.hisp.dhis.dd.action.dataelement.ShowDataElementFormAction" class="org.hisp.dhis.dd.action.dataelement.ShowDataElementFormAction"
