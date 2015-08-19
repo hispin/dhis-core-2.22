@@ -55,9 +55,10 @@ public class PartitionUtils
 
     public static final String SEP = "_";
 
-    public static Period getPeriod( Integer year )
+    public static Period getPeriod( Calendar calendar, Integer year )
     {
-        DateTime time = new DateTime( year, 1, 1, 1, 1 );
+        DateTimeUnit startOfYear = calendar.startOfYear();
+        DateTime time = new DateTime( year, startOfYear.getMonth(), startOfYear.getDay(), 1, 1 );
 
         return PERIODTYPE.createPeriod( time.toDate() );
     }
