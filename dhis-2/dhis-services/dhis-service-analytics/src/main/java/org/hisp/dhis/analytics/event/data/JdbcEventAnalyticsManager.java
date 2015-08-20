@@ -28,12 +28,6 @@ package org.hisp.dhis.analytics.event.data;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.analytics.AggregationType.COUNT;
-import static org.hisp.dhis.analytics.AggregationType.MAX;
-import static org.hisp.dhis.analytics.AggregationType.MIN;
-import static org.hisp.dhis.analytics.AggregationType.STDDEV;
-import static org.hisp.dhis.analytics.AggregationType.SUM;
-import static org.hisp.dhis.analytics.AggregationType.VARIANCE;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
@@ -324,34 +318,9 @@ public class JdbcEventAnalyticsManager
         {
             String column = statementBuilder.columnQuote( params.getValue().getUid() );
             
-            if ( params.isAggregationType( SUM ) )
-            {
-                return "sum(" + column + ")";
-            }
-            else if ( params.isAggregationType( COUNT ) )
-            {
-                return "count(" + column + ")";
-            }
-            else if ( params.isAggregationType( STDDEV ) )
-            {
-                return "stddev(" + column + ")";
-            }
-            else if ( params.isAggregationType( VARIANCE ) )
-            {
-                return "variance(" + column + ")";
-            }
-            else if ( params.isAggregationType( MIN ) )
-            {
-                return "min(" + column + ")";
-            }
-            else if ( params.isAggregationType( MAX ) )
-            {
-                return "max(" + column + ")";
-            }
-            else // AVERAGE
-            {
-                return "avg(" + column + ")";
-            }
+            String function = params.getAggregationTypeFallback().getValue();
+            
+            return function + "(" + column + ")";
         }
         else
         {
