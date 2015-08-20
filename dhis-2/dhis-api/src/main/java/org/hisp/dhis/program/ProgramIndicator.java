@@ -230,6 +230,7 @@ public class ProgramIndicator
                 program = programIndicator.getProgram();
                 valueType = programIndicator.getValueType();
                 expression = programIndicator.getExpression();
+                filter = programIndicator.getFilter();
                 decimals = programIndicator.getDecimals();
                 displayInForm = programIndicator.getDisplayInForm();
                 rootDate = programIndicator.getRootDate();
@@ -239,6 +240,7 @@ public class ProgramIndicator
                 program = programIndicator.getProgram() == null ? program : programIndicator.getProgram();
                 valueType = programIndicator.getValueType() == null ? valueType : programIndicator.getValueType();
                 expression = programIndicator.getExpression() == null ? expression : programIndicator.getExpression();
+                filter = programIndicator.getFilter() == null ? filter : programIndicator.getFilter();
                 decimals = programIndicator.getDecimals() == null ? decimals : programIndicator.getDecimals();
                 displayInForm = programIndicator.getDisplayInForm() == null ? displayInForm : programIndicator.getDisplayInForm();
                 rootDate = programIndicator.getRootDate() == null ? rootDate : programIndicator.getRootDate();
