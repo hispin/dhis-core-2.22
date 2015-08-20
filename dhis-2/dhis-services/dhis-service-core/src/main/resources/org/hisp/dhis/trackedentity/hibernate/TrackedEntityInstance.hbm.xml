@@ -31,5 +31,7 @@
     <many-to-one name="trackedEntity" class="org.hisp.dhis.trackedentity.TrackedEntity"
       column="trackedentityid" foreign-key="fk_trackedentityinstance_trackedentityid" lazy="false" />
 
+<!-- new code to add one column -->
+       <property name ="active" column="active" />
   </class>
 </hibernate-mapping>

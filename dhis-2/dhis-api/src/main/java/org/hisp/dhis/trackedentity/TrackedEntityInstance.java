@@ -69,11 +69,13 @@ public class TrackedEntityInstance
 
     private TrackedEntity trackedEntity;
 
+    private boolean active;
+    
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
-    public TrackedEntityInstance()
+	public TrackedEntityInstance()
     {
     }
 
@@ -166,4 +168,16 @@ public class TrackedEntityInstance
     {
         this.trackedEntity = trackedEntity;
     }
+ 
+    
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+ 	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 }
