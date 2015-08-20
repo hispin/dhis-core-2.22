@@ -59,6 +59,11 @@ public enum AggregationType
         this.value = value;
     }
 
+    public String getValue()
+    {
+        return value;
+    }
+
     public static AggregationType fromValue( String value )
     {
         for ( AggregationType type : AggregationType.values() )

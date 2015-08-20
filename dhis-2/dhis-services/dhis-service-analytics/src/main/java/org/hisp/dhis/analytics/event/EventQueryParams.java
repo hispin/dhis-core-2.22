@@ -287,7 +287,7 @@ public class EventQueryParams
     /**
      * Returns the aggregation type for this query, first by looking at the
      * aggregation type of the query, second by looking at the aggregation type
-     * of the value dimension.
+     * of the value dimension, third by returning AVERAGE;
      */
     public AggregationType getAggregationTypeFallback()
     {
@@ -300,7 +300,7 @@ public class EventQueryParams
             return value.getAggregationType();
         }
         
-        return null;
+        return AggregationType.AVERAGE;
     }
 
     /**
