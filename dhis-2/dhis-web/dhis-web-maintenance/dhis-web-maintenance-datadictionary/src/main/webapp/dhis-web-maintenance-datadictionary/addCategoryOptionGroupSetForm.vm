@@ -1,23 +1,23 @@
+<script src="javascript/addCategoryOptionGroupSet.js"></script>
 <script type="text/javascript">
-	jQuery(function() {
-        validation('addCategoryOptionGroupSetForm', function ( form ) {
-            form.submit();
-        },function(){
-            $("#cogSelected").find("option").attr("selected", "selected");
-			if(jQuery("#cogSelected option").length > 0 ){
-				setFieldValue('hasOptions', 'true');
-			}
-		});
+  jQuery(function() {
+    dhis2.cogs.clearAndSetAjaxSelect(dhis2.cogs.getType(), false);
 
-        checkValueIsExist("name", "validateCategoryOptionGroupSet.action");
-		
-        $('#cogAvailable').selected({
-          url: '../api/categoryOptionGroups.json',
-          target: $('#cogSelected'),
-          search: $('#cogAvailableSearch'),
-          iterator: 'categoryOptionGroups'
-        });
-	});
+    $('#dataDimensionType').on('change', function(e) {
+      dhis2.cogs.clearAndSetAjaxSelect(dhis2.cogs.getType(), true);
+    });
+
+    validation('addCategoryOptionGroupSetForm', function(form) {
+      form.submit();
+    }, function() {
+      $("#cogSelected").find("option").attr("selected", "selected");
+      if( jQuery("#cogSelected option").length > 0 ) {
+        setFieldValue('hasOptions', 'true');
+      }
+    });
+
+    checkValueIsExist("name", "validateCategoryOptionGroupSet.action");
+  });
 </script>
 
 <h3>$i18n.getString( "create_new_category_option_group_set" )</h3>
