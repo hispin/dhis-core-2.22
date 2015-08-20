@@ -114,7 +114,7 @@
 		</td>
 	</tr>
 	<tr>
-        <th style="padding-top:15px">$i18n.getString( "expression" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) oizp(x) zing(x)</span></th>
+        <th style="padding-top:15px">$i18n.getString( "expression" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) zing(x)</span></th>
     </tr>
 	<tr>
 		<td>
