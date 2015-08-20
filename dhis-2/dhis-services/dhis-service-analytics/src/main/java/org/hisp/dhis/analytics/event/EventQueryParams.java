@@ -68,8 +68,6 @@ public class EventQueryParams
     
     private List<QueryItem> itemFilters = new ArrayList<>();
     
-    private String filter;
-    
     private DimensionalObject value;
     
     private List<String> asc = new ArrayList<>();
@@ -123,7 +121,6 @@ public class EventQueryParams
         params.endDate = this.endDate;
         params.items = new ArrayList<>( this.items );
         params.itemFilters = new ArrayList<>( this.itemFilters );
-        params.filter = this.filter;
         params.value = this.value;
         params.asc = new ArrayList<>( this.asc );
         params.desc = new ArrayList<>( this.desc );
@@ -421,7 +418,6 @@ public class EventQueryParams
             "End date: " + endDate + ", " +
             "Items: " + items + ", " +
             "Item filters: " + itemFilters + ", " +
-            "Filter: " + filter + ", " +
             "Value: " + value + ", " +
             "Aggregation type: " + aggregationType + ", " +
             "Dimensions: " + dimensions + ", " +
@@ -470,16 +466,6 @@ public class EventQueryParams
     public void setItemFilters( List<QueryItem> itemFilters )
     {
         this.itemFilters = itemFilters;
-    }
-
-    public String getFilter()
-    {
-        return filter;
-    }
-
-    public void setFilter( String filter )
-    {
-        this.filter = filter;
     }
 
     public DimensionalObject getValue()
