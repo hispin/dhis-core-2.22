@@ -63,6 +63,21 @@ jQuery( document ).ready( function()
 			<td></td>
 		</tr>
 		<tr>
+	        <td><label for="aggregationType">$i18n.getString( "aggregation_type" )</label></td>
+	        <td>
+	            <select id="aggregationType" name="aggregationType">
+	                <option value="AVERAGE">$i18n.getString( "average" )</option>
+	                <option value="SUM">$i18n.getString( "sum" )</option>
+	                <option value="COUNT">$i18n.getString( "count" )</option>
+	                <option value="STDDEV">$i18n.getString( "stddev" )</option>
+	                <option value="VARIANCE">$i18n.getString( "variance" )</option>
+	                <option value="MIN">$i18n.getString( "min" )</option>
+	                <option value="MAX">$i18n.getString( "max" )</option>
+	                <option value="MAX">$i18n.getString( "custom" )</option>
+	            </select>
+	        </td>
+	    </tr>
+		<tr>
 			<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
 			<td>
 				<select id="decimals" name="decimals">

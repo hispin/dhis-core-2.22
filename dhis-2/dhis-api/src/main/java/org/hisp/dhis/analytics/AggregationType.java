@@ -43,6 +43,7 @@ public enum AggregationType
     MAX( "max" ),
     NONE( "none" ),
     DEFAULT( "default" ),
+    CUSTOM( "custom" ),
 
     // Internal types
     
@@ -63,7 +64,7 @@ public enum AggregationType
     {
         return value;
     }
-
+    
     public static AggregationType fromValue( String value )
     {
         for ( AggregationType type : AggregationType.values() )

@@ -72,7 +72,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
@@ -539,37 +538,6 @@ public class DefaultQueryPlanner
         
         return queries;
     }
-
-    @Override
-    public List<DataQueryParams> groupByFilterExpression( DataQueryParams params )
-    {
-        List<DataQueryParams> queries = new ArrayList<>();
-        
-        if ( !params.getProgramIndicators().isEmpty() )
-        {
-            ListMap<String, NameableObject> filterProgramIndicatorMap = getFilterProgramIndicatorMap( params.getProgramIndicators() );
-            
-            for ( String filter : filterProgramIndicatorMap.keySet() )
-            {
-                DataQueryParams query = params.instance();
-                query.setProgramIndicators( filterProgramIndicatorMap.get( filter ) );
-                query.setFilterExpression( programIndicatorService.getAnalyticsSQl( filter ) );
-                queries.add( query );
-            }
-        }
-        else
-        {
-            queries.add( params.instance() );
-            return queries;
-        }
-
-        if ( queries.size() > 1 )
-        {
-            log.debug( "Split on filter expression: " + queries.size() );
-        }
-        
-        return queries;
-    }
     
     private List<DataQueryParams> groupByDataType( DataQueryParams params )
     {
@@ -770,26 +738,6 @@ public class DefaultQueryPlanner
             ou.setLevel( level );
             
             map.putValue( level, orgUnit );
-        }
-        
-        return map;
-    }
-    
-    /**
-     * Creates a mapping between filter and program indicator for the given
-     * program indicators.
-     */
-    private ListMap<String, NameableObject> getFilterProgramIndicatorMap( List<NameableObject> programIndicators )
-    {
-        ListMap<String, NameableObject> map = new ListMap<>();
-        
-        for ( NameableObject programIndicator : programIndicators )
-        {
-            ProgramIndicator indicator = (ProgramIndicator) programIndicator;
-            
-            String filter = indicator.getFilter();
-            
-            map.putValue( filter, indicator );
         }
         
         return map;
