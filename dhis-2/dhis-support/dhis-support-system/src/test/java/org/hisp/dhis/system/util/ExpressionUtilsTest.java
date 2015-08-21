@@ -157,10 +157,13 @@ public class ExpressionUtilsTest
         assertTrue( ExpressionUtils.isValid( "d2:zing(1)", null ) );
         assertTrue( ExpressionUtils.isValid( "(d2:zing(1)+d2:zing(1))*50/1", null ) );
         assertTrue( ExpressionUtils.isValid( "1/(1/100)", null ) );
+        assertTrue( ExpressionUtils.isValid( "SUM(1)", null ) );
+        assertTrue( ExpressionUtils.isValid( "average(2+1)", null ) );
         
         assertFalse( ExpressionUtils.isValid( "2 a 3", null ) );
         assertFalse( ExpressionUtils.isValid( "v2 + 3", vars ) );
         assertFalse( ExpressionUtils.isValid( "4 + abc", vars ) );
         assertFalse( ExpressionUtils.isValid( "'goat' == goat", null ) );
+        assertFalse( ExpressionUtils.isValid( "aver(2+1)", null ) );
     }
 }

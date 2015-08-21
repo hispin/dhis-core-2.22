@@ -73,7 +73,7 @@ jQuery( document ).ready( function()
 	                <option value="VARIANCE">$i18n.getString( "variance" )</option>
 	                <option value="MIN">$i18n.getString( "min" )</option>
 	                <option value="MAX">$i18n.getString( "max" )</option>
-	                <option value="MAX">$i18n.getString( "custom" )</option>
+	                <option value="CUSTOM">$i18n.getString( "custom" )</option>
 	            </select>
 	        </td>
 	    </tr>
