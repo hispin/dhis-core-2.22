@@ -1037,32 +1037,6 @@ public class DataQueryParams
     }
     
     /**
-     * Returns a mapping of permutation keys and mappings of data identifiers and values
-     * based on the given mapping of dimension option keys and values.
-     */
-    public static Map<String, Map<String, Double>> getPermutationProgramValueMap( Map<String, Double> valueMap )
-    {
-        MapMap<String, String, Double> permutationMap = new MapMap<>();
-        
-        for ( String key : valueMap.keySet() )
-        {
-            List<String> keys = Lists.newArrayList( key.split( DIMENSION_SEP ) );
-            
-            String dxUid = keys.get( DX_INDEX );
-            
-            keys.remove( DX_INDEX );
-            
-            String permKey = StringUtils.join( keys, DIMENSION_SEP );
-            
-            Double value = valueMap.get( key );
-            
-            permutationMap.putEntry( permKey, dxUid, value );
-        }
-        
-        return permutationMap;
-    }
-
-    /**
      * Returns a mapping of permutations keys (org unit id or null) and mappings
      * of org unit group and counts, based on the given mapping of dimension option
      * keys and counts.

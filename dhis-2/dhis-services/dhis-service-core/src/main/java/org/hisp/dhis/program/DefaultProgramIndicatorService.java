@@ -30,7 +30,6 @@ package org.hisp.dhis.program;
 
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -230,49 +229,6 @@ public class DefaultProgramIndicatorService
         return null;
     }
 
-    @Override
-    public Double getProgramIndicatorValue( ProgramIndicator indicator, Map<String, Double> valueMap )
-    {
-        StringBuffer buffer = new StringBuffer();
-
-        String expression = indicator.getExpression();
-        
-        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
-        
-        while ( matcher.find() )
-        {
-            String key = matcher.group( 1 );
-            
-            Double value = null;
-
-            //TODO query by program stage
-            
-            if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
-            {
-                String de = matcher.group( 3 );
-                
-                value = valueMap.get( de );
-            }
-            else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) || ProgramIndicator.KEY_CONSTANT.equals( key ) )
-            {
-                String uid = matcher.group( 2 );
-                
-                value = valueMap.get( uid );
-            }
-            
-            if ( value == null )
-            {
-                return null;
-            }
-            
-            matcher.appendReplacement( buffer, Matcher.quoteReplacement( String.valueOf( value ) ) );
-        }
-
-        expression = TextUtils.appendTail( matcher, buffer );
-
-        return MathUtils.calculateExpression( expression );
-    }
-    
     @Override
     @Transactional
     public Map<String, String> getProgramIndicatorValues( ProgramInstance programInstance )
@@ -530,25 +486,6 @@ public class DefaultProgramIndicatorService
 
         return expr.toString();
     }
-
-    @Override
-    @Transactional
-    public Set<DataElement> getDataElementsInIndicators( Collection<ProgramIndicator> indicators )
-    {
-        Set<DataElement> dataElements = new HashSet<>();
-        
-        for ( ProgramIndicator indicator : indicators )
-        {
-            Set<ProgramStageDataElement> psds = getProgramStageDataElementsInExpression( indicator.getExpression() );
-            
-            for ( ProgramStageDataElement psd : psds )
-            {
-                dataElements.add( psd.getDataElement() );
-            }
-        }
-        
-        return dataElements;
-    }
     
     @Override
     @Transactional
@@ -574,20 +511,6 @@ public class DefaultProgramIndicatorService
         
         return elements;
     }
-
-    @Override
-    @Transactional
-    public Set<TrackedEntityAttribute> getAttributesInIndicators( Collection<ProgramIndicator> indicators )
-    {
-        Set<TrackedEntityAttribute> attributes = new HashSet<>();
-        
-        for ( ProgramIndicator indicator : indicators )
-        {
-            attributes.addAll( getAttributesInExpression( indicator.getExpression() ) );
-        }
-        
-        return attributes;
-    }
     
     @Override
     @Transactional
@@ -612,20 +535,6 @@ public class DefaultProgramIndicatorService
         return attributes;        
     }
 
-    @Override
-    @Transactional
-    public Set<Constant> getConstantsInIndicators( Collection<ProgramIndicator> indicators )
-    {
-        Set<Constant> constants = new HashSet<>();
-        
-        for ( ProgramIndicator indicator : indicators )
-        {
-            constants.addAll( getConstantsInExpression( indicator.getExpression() ) );
-        }
-        
-        return constants;
-    }
-    
     @Override
     @Transactional
     public Set<Constant> getConstantsInExpression( String expression )
