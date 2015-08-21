@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -87,6 +88,8 @@ public class ProgramIndicator
     private String expression;
     
     private String filter;
+    
+    private AggregationType aggregationType;
 
     /**
      * Number of decimals to use for indicator value, null implies default.
@@ -103,7 +106,6 @@ public class ProgramIndicator
 
     public ProgramIndicator()
     {
-
     }
 
     // -------------------------------------------------------------------------
@@ -118,6 +120,14 @@ public class ProgramIndicator
     public boolean hasDecimals()
     {
         return decimals != null && decimals >= 0;
+    }
+    
+    /**
+     * Returns aggregation type, if not exists returns AVERAGE.
+     */
+    public AggregationType getAggregationTypeFallback()
+    {
+        return aggregationType != null ? aggregationType : AggregationType.AVERAGE;
     }
 
     // -------------------------------------------------------------------------
@@ -175,6 +185,19 @@ public class ProgramIndicator
     public void setFilter( String filter )
     {
         this.filter = filter;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public AggregationType getAggregationType()
+    {
+        return aggregationType;
+    }
+
+    public void setAggregationType( AggregationType aggregationType )
+    {
+        this.aggregationType = aggregationType;
     }
 
     @JsonProperty

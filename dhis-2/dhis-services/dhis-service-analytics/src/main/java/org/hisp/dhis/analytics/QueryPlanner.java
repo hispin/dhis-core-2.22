@@ -105,13 +105,6 @@ public interface QueryPlanner
     List<DataQueryParams> groupByOrgUnitLevel( DataQueryParams params );
     
     /**
-     * If program indicators appear as dimensions; groups the given query into
-     * sub queries based on the filter of the program indicators. Sets the 
-     * program indicator filter on queries which contain program indicators.
-     */
-    List<DataQueryParams> groupByFilterExpression( DataQueryParams params );
-
-    /**
      * Groups the given query into sub queries based on its periods and which 
      * partition it should be executed against. Sets the partition table name on
      * each query. Queries are grouped based on periods if appearing as a 

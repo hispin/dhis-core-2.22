@@ -244,11 +244,6 @@ public class DataQueryParams
      */
     protected transient Map<OrganisationUnit, Integer> dataApprovalLevels = new HashMap<>();
     
-    /**
-     * Filter expression.
-     */
-    protected transient String filterExpression;
-    
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -287,7 +282,6 @@ public class DataQueryParams
         params.dataPeriodType = this.dataPeriodType;
         params.skipPartitioning = this.skipPartitioning;
         params.dataApprovalLevels = new HashMap<>( this.dataApprovalLevels );
-        params.filterExpression = this.filterExpression;
         
         return params;
     }
@@ -1003,15 +997,7 @@ public class DataQueryParams
     {
         return programStage != null;
     }
-    
-    /**
-     * Indicates whether this object has a filter expression.
-     */
-    public boolean hasFilterExpression()
-    {
-        return filterExpression != null;
-    }
-    
+        
     // -------------------------------------------------------------------------
     // Static methods
     // -------------------------------------------------------------------------
@@ -1481,16 +1467,6 @@ public class DataQueryParams
     public void setDataApprovalLevels( Map<OrganisationUnit, Integer> dataApprovalLevels )
     {
         this.dataApprovalLevels = dataApprovalLevels;
-    }
-
-    public String getFilterExpression()
-    {
-        return filterExpression;
-    }
-
-    public void setFilterExpression( String filterExpression )
-    {
-        this.filterExpression = filterExpression;
     }
 
     // -------------------------------------------------------------------------

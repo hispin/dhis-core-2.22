@@ -56,8 +56,8 @@ import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.system.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -84,6 +84,9 @@ public class JdbcEventAnalyticsManager
     
     @Autowired
     private StatementBuilder statementBuilder;
+    
+    @Autowired
+    private ProgramIndicatorService programIndicatorService;
     
     // -------------------------------------------------------------------------
     // EventAnalyticsManager implementation
@@ -158,7 +161,14 @@ public class JdbcEventAnalyticsManager
 
             if ( params.isAggregateData() )
             {
-                grid.addValue( params.getValue().getUid() );
+                if ( params.hasValueDimension() )
+                {
+                    grid.addValue( params.getValue().getUid() );
+                }
+                else if ( params.hasProgramIndicatorDimension() )
+                {
+                    grid.addValue( params.getProgramIndicator().getUid() );
+                }                
             }
             else
             {
@@ -176,7 +186,7 @@ public class JdbcEventAnalyticsManager
                 grid.addValue( dimensionValue );
             }
             
-            if ( params.hasValueDimension() )
+            if ( params.hasValueDimension() || params.hasProgramIndicatorDimension() )
             {
                 double value = rowSet.getDouble( "value" );
                 grid.addValue( params.isSkipRounding() ? value : MathUtils.getRounded( value ) );
@@ -316,11 +326,21 @@ public class JdbcEventAnalyticsManager
         
         if ( params.hasValueDimension() ) // && isNumeric
         {
-            String column = statementBuilder.columnQuote( params.getValue().getUid() );
-            
             String function = params.getAggregationTypeFallback().getValue();
             
-            return function + "(" + column + ")";
+            String expression = statementBuilder.columnQuote( params.getValue().getUid() );
+            
+            return function + "(" + expression + ")";
+        }
+        else if ( params.hasProgramIndicatorDimension() )
+        {
+            String function = params.getProgramIndicator().getAggregationTypeFallback().getValue();
+            
+            String expression = programIndicatorService.getAnalyticsSQl( params.getProgramIndicator().getExpression() );
+            
+            return function + "(" + expression + ")";
+            
+            //TODO check if expression is valid and safe SQL
         }
         else
         {
@@ -483,9 +503,11 @@ public class JdbcEventAnalyticsManager
         // Filter expression
         // ---------------------------------------------------------------------
 
-        if ( params.hasFilterExpression() && ValidationUtils.expressionIsValidSQl( params.getFilterExpression() ) )
+        if ( params.hasProgramIndicatorDimension() && params.getProgramIndicator().hasFilter() )
         {
-            String sqlFilter = ExpressionUtils.asSql( params.getFilterExpression() );
+            String filter = programIndicatorService.getAnalyticsSQl( params.getProgramIndicator().getFilter() );
+            
+            String sqlFilter = ExpressionUtils.asSql( filter );
             
             sql += "and (" + sqlFilter + ") ";
         }

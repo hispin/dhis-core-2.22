@@ -56,6 +56,7 @@ import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentif
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.common.NameableObjectUtils.asList;
 import static org.hisp.dhis.common.NameableObjectUtils.asTypedList;
+import static org.hisp.dhis.commons.collection.ListUtils.sort;
 import static org.hisp.dhis.commons.util.TextUtils.splitSafe;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_LEVEL;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_ORGUNIT_GROUP;
@@ -67,7 +68,6 @@ import static org.hisp.dhis.organisationunit.OrganisationUnit.getParentNameGraph
 import static org.hisp.dhis.period.PeriodType.getPeriodTypeFromIsoString;
 import static org.hisp.dhis.reporttable.ReportTable.IRT2D;
 import static org.hisp.dhis.reporttable.ReportTable.addIfEmpty;
-import static org.hisp.dhis.commons.collection.ListUtils.sort;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -101,7 +101,6 @@ import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.CombinationGenerator;
 import org.hisp.dhis.common.DataDimensionItem;
 import org.hisp.dhis.common.DataDimensionItem.DataDimensionItemType;
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
@@ -115,6 +114,7 @@ import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.commons.util.DebugUtils;
@@ -136,7 +136,6 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.period.comparator.AscendingPeriodEndDateComparator;
-import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStageService;
@@ -255,9 +254,7 @@ public class DefaultAnalyticsService
 
         addDataSetValues( params, grid );
         
-        addProgramIndicatorValues( params, grid );
-        
-        addProgramDataElementAttributeValues( params, grid );
+        addProgramDataElementAttributeIndicatorValues( params, grid );
 
         addDynamicDimensionValues( params, grid );
 
@@ -510,85 +507,19 @@ public class DefaultAnalyticsService
     }
 
     /**
-     * Adds program indicator values to the given grid based on the given data query
-     * parameters.
-     *
-     * @param params the data query parameters.
-     * @param grid the grid.
-     */
-    private void addProgramIndicatorValues( DataQueryParams params, Grid grid )
-    {
-        if ( !params.getProgramIndicators().isEmpty() && !params.isSkipData() )
-        {
-            // -----------------------------------------------------------------
-            // Run queries with different filter expression separately
-            // -----------------------------------------------------------------
-
-            List<DataQueryParams> queries = queryPlanner.groupByFilterExpression( params );
-            
-            for ( DataQueryParams query : queries )
-            {
-                DataQueryParams dataSourceParams = query.instance();
-                dataSourceParams.retainDataDimension( DataDimensionItemType.PROGRAM_INDICATOR );
-                
-                List<ProgramIndicator> indicators = asTypedList( dataSourceParams.getProgramIndicators() );
-                
-                //TODO constants
-    
-                // -----------------------------------------------------------------
-                // Get indicator values
-                // -----------------------------------------------------------------
-    
-                List<List<DimensionItem>> dimensionItemPermutations = dataSourceParams.getDimensionItemPermutations();
-                
-                Map<String, Map<String, Double>> permutationOperandValueMap = getProgramPermutationOperandValueMap( dataSourceParams );
-    
-                for ( ProgramIndicator indicator : indicators )
-                {
-                    for ( List<DimensionItem> dimensionItems : dimensionItemPermutations )
-                    {
-                        String permKey = DimensionItem.asItemKey( dimensionItems );
-                        
-                        Map<String, Double> valueMap = permutationOperandValueMap.get( permKey );
-    
-                        if ( valueMap == null )
-                        {
-                            continue;
-                        }
-    
-                        Double value = programIndicatorService.getProgramIndicatorValue( indicator, valueMap );
-                        
-                        if ( value != null )
-                        {
-                            List<DimensionItem> row = new ArrayList<>( dimensionItems );
-    
-                            row.add( DX_INDEX, new DimensionItem( DATA_X_DIM_ID, indicator ) );
-                            
-                            Double roundedValue = indicator.hasDecimals() ? MathUtils.getRounded( value, indicator.getDecimals() ) : MathUtils.getRounded( value );
-                            
-                            grid.addRow();
-                            grid.addValues( DimensionItem.getItemIdentifiers( row ) );
-                            grid.addValue( dataSourceParams.isSkipRounding() ? value : roundedValue );
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    /**
      * Adds program data element values to the given grid based on the given data
      * query parameters.
      * 
      * @param params the data query parameters.
      * @param grid the grid.
      */
-    private void addProgramDataElementAttributeValues( DataQueryParams params, Grid grid )
+    private void addProgramDataElementAttributeIndicatorValues( DataQueryParams params, Grid grid )
     {
-        if ( !params.getAllProgramDataElementsAndAttributes().isEmpty() && !params.isSkipData() )
+        if ( ( !params.getAllProgramDataElementsAndAttributes().isEmpty() || !params.getProgramIndicators().isEmpty() ) && !params.isSkipData() )
         {
             DataQueryParams dataSourceParams = params.instance();
-            dataSourceParams.retainDataDimensions( DataDimensionItemType.PROGRAM_DATA_ELEMENT, DataDimensionItemType.PROGRAM_ATTRIBUTE );
+            dataSourceParams.retainDataDimensions( DataDimensionItemType.PROGRAM_DATA_ELEMENT, 
+                DataDimensionItemType.PROGRAM_ATTRIBUTE, DataDimensionItemType.PROGRAM_INDICATOR );
             
             EventQueryParams eventQueryParams = EventQueryParams.fromDataQueryParams( dataSourceParams );
             
@@ -1373,41 +1304,6 @@ public class DefaultAnalyticsService
         DataQueryParams.putPermutationOperandValueMap( permOperandValueMap, aggregatedDataOptionCombosMap, true );
         
         return permOperandValueMap;
-    }
-    
-    /**
-     * Returns a mapping of permutation keys and mappings of program data elements
-     * / program attributes and values based on the given query.
-     * 
-     * @param params the data query parameters.
-     */
-    private Map<String, Map<String, Double>> getProgramPermutationOperandValueMap( DataQueryParams params )
-    {        
-        Map<String, Map<String, Double>> permutationMap = new HashMap<>();
-             
-        List<ProgramIndicator> programIndicators = asTypedList( params.getProgramIndicators() );
-        List<NameableObject> dataElements = asList( programIndicatorService.getDataElementsInIndicators( programIndicators ) );
-        List<NameableObject> attributes = asList( programIndicatorService.getAttributesInIndicators( programIndicators ) );
-        List<NameableObject> dataItems = ListUtils.union( dataElements, attributes );
-        
-        if ( !dataElements.isEmpty() || !attributes.isEmpty() )
-        {
-            DataQueryParams dataSourceParams = params.instance().removeDimension( DATA_X_DIM_ID );
-            
-            dataSourceParams.getDimensions().add( DX_INDEX, new BaseDimensionalObject( 
-                DATA_X_DIM_ID, DimensionType.DATA_X, dataItems ) );
-            
-            EventQueryParams eventQueryParams = EventQueryParams.fromDataQueryParams( dataSourceParams );
-            eventQueryParams.setSkipRounding( true );
-            
-            Grid grid = eventAnalyticsService.getAggregatedEventData( eventQueryParams );
-            
-            Map<String, Double> valueMap = grid.getAsMap( grid.getWidth() - 1, DIMENSION_SEP );
-            
-            permutationMap.putAll( DataQueryParams.getPermutationProgramValueMap( valueMap ) );
-        }
-        
-        return permutationMap;
     }
     
     /**
