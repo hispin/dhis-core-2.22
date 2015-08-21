@@ -36,6 +36,7 @@ import static org.hisp.dhis.commons.util.TextUtils.removeLastComma;
 import static org.hisp.dhis.commons.util.TextUtils.removeLastOr;
 import static org.hisp.dhis.commons.util.TextUtils.trimEnd;
 import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
+import static org.hisp.dhis.system.util.MathUtils.getRounded;
 
 import java.util.List;
 
@@ -58,8 +59,8 @@ import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
-import org.hisp.dhis.system.util.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -188,10 +189,16 @@ public class JdbcEventAnalyticsManager
                 grid.addValue( dimensionValue );
             }
             
-            if ( params.hasValueDimension() || params.hasProgramIndicatorDimension() )
+            if ( params.hasValueDimension() )
             {
                 double value = rowSet.getDouble( "value" );
-                grid.addValue( params.isSkipRounding() ? value : MathUtils.getRounded( value ) );
+                grid.addValue( params.isSkipRounding() ? value : getRounded( value ) );
+            }
+            else if ( params.hasProgramIndicatorDimension() )
+            {
+                double value = rowSet.getDouble( "value" );
+                ProgramIndicator indicator = params.getProgramIndicator();
+                grid.addValue( indicator.hasDecimals() ? getRounded( value, indicator.getDecimals() ) : getRounded( value ) );
             }
             else
             {
