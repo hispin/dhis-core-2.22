@@ -10,8 +10,8 @@
       'rules': getValidationRules("dateElementCategoryOption")
     });
 
-    $('#startDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
-    $('#endDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
+    $('#startDate').calendarsPicker();
+    $('#endDate').calendarsPicker();
 
     selection.setOfflineLevel(1);
     selection.setMultipleSelectionAllowed(true);
