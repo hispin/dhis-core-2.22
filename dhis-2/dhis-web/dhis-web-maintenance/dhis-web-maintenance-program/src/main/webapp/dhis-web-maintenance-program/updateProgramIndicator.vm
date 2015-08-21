@@ -73,6 +73,7 @@ jQuery( document ).ready( function()
                 <option value="VARIANCE"#if( $programIndicator.aggregationType == 'VARIANCE' ) selected="selected"#end>$i18n.getString( "variance" )</option>
                 <option value="MIN"#if( $programIndicator.aggregationType == 'MIN' ) selected="selected"#end>$i18n.getString( "min" )</option>
                 <option value="MAX"#if( $programIndicator.aggregationType == 'MAX' ) selected="selected"#end>$i18n.getString( "max" )</option>
+	            <option value="CUSTOM"#if( $programIndicator.aggregationType == 'CUSTOM' ) selected="selected"#end>$i18n.getString( "custom" )</option>
             </select>
         </td>
     </tr>
