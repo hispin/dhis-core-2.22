@@ -42,6 +42,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.analytics.event.EventAnalyticsManager;
 import org.hisp.dhis.analytics.event.EventQueryParams;
@@ -52,6 +53,7 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.commons.util.ExpressionUtils;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.Option;
@@ -335,6 +337,8 @@ public class JdbcEventAnalyticsManager
         else if ( params.hasProgramIndicatorDimension() )
         {
             String function = params.getProgramIndicator().getAggregationTypeFallback().getValue();
+            
+            function = TextUtils.emptyIfEqual( function, AggregationType.CUSTOM.getValue() );
             
             String expression = programIndicatorService.getAnalyticsSQl( params.getProgramIndicator().getExpression() );
             
