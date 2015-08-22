@@ -18,7 +18,8 @@ trackerCapture.controller('RegistrationController',
                 EventUtils,
                 RegistrationService,
                 DateUtils,
-                SessionStorageService) {
+                SessionStorageService,
+                 CustomIDGenerationService) {
     
     $scope.today = DateUtils.getToday();
     $scope.trackedEntityForm = null;
@@ -116,6 +117,11 @@ trackerCapture.controller('RegistrationController',
         else if(destination === 'RELATIONSHIP' ){
             $scope.tei.trackedEntityInstance = teiId;
             $scope.broadCastSelections();
+        }else if (destination === 'SELF'){
+            $scope.selectedEnrollment = {dateOfEnrollment: $scope.today, dateOfIncident: $scope.today, orgUnitName: $scope.selectedOrgUnit.name};
+            $timeout(function() {
+                $rootScope.$broadcast('registrationWidget', {registrationMode: 'REGISTRATION'});
+            });
         }
     };
     
@@ -128,7 +134,11 @@ trackerCapture.controller('RegistrationController',
     };
     
     var notifyRegistrtaionCompletion = function(destination, teiId){
-        goToDashboard( destination ? destination : 'DASHBOARD', teiId );
+        CustomIDGenerationService.validateAndCreateCustomId($scope.tei,$scope.selectedEnrollment.program,$scope.attributes,destination).then(function(){
+            goToDashboard( destination ? destination : 'DASHBOARD', teiId );
+
+        });
+
     };
     
     var performRegistration = function(destination){
@@ -137,8 +147,9 @@ trackerCapture.controller('RegistrationController',
             var reg = registrationResponse.response ? registrationResponse.response : {};            
             if(reg.reference && reg.status === 'SUCCESS'){                
                 $scope.tei.trackedEntityInstance = reg.reference;
-                
-                if( $scope.registrationMode === 'PROFILE' ){                    
+
+                if( $scope.registrationMode === 'PROFILE' ){
+
                     reloadProfileWidget();
                 }
                 else{

@@ -275,7 +275,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],dataEntryForm[name,style,htmlCode,format],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]],validationCriterias[id,name,operator,value,property]'
+            data: 'fields=id,name,type,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],dataEntryForm[name,style,htmlCode,format],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]],validationCriterias[id,name,operator,value,property],attributeValues'
         }).done( function( program ){            
             var ou = {};
             if(program.organisationUnits){
@@ -474,7 +474,7 @@ function getTrackedEntityAttributes( data )
             dhis2.tc.store.get('attributes', teAttribute.id).done(function(obj) {
                 if((!obj || obj.version !== teAttribute.version) && attributesInPromise.indexOf(teAttribute.id) === -1) {
                     attributesInPromise.push( teAttribute.id );
-                    promise = promise.then( getD2Object( teAttribute.id, 'attributes', '../api/trackedEntityAttributes', 'fields=id,name,code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version]', 'idb' ) );
+                    promise = promise.then( getD2Object( teAttribute.id, 'attributes', '../api/trackedEntityAttributes', 'fields=id,name,code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version],attributeValues', 'idb' ) );
                 }
                 d.resolve();
             });
