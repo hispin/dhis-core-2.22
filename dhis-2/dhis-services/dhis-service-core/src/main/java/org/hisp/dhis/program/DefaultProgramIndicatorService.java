@@ -38,6 +38,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import org.hisp.dhis.commons.sqlfunc.OneIfZeroOrPositiveSqlFunction;
+import org.hisp.dhis.commons.sqlfunc.SqlFunction;
+import org.hisp.dhis.commons.sqlfunc.ZeroIfNegativeSqlFunction;
 import org.hisp.dhis.commons.util.ExpressionUtils;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.constant.Constant;
@@ -57,12 +60,18 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * @author Chau Thu Tran
  */
 public class DefaultProgramIndicatorService
     implements ProgramIndicatorService
 {
+    private static final Map<String, SqlFunction> SQL_FUNC_MAP = ImmutableMap.<String, SqlFunction>builder().
+        put( ZeroIfNegativeSqlFunction.KEY, new ZeroIfNegativeSqlFunction() ).
+        put( OneIfZeroOrPositiveSqlFunction.KEY, new OneIfZeroOrPositiveSqlFunction() ).build();
+    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -339,7 +348,11 @@ public class DefaultProgramIndicatorService
         {
             return null;
         }
-        
+
+        // ---------------------------------------------------------------------
+        // Data elements, attributes, constants
+        // ---------------------------------------------------------------------
+
         StringBuffer buffer = new StringBuffer();
 
         Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
@@ -370,9 +383,36 @@ public class DefaultProgramIndicatorService
             }
         }
         
-        matcher.appendTail( buffer );
+        expression = TextUtils.appendTail( matcher, buffer );
 
-        return buffer.toString();
+        // ---------------------------------------------------------------------
+        // Functions
+        // ---------------------------------------------------------------------
+
+        buffer = new StringBuffer();
+        
+        matcher = ProgramIndicator.SQL_FUNC_PATTERN.matcher( expression );
+        
+        while ( matcher.find() )
+        {
+            String func = matcher.group( 1 );
+            String column = matcher.group( 2 );
+            
+            SqlFunction function = SQL_FUNC_MAP.get( func );
+            
+            if ( function == null )
+            {
+                throw new IllegalStateException( "Function not recognized: " + func );
+            }
+            
+            String result = function.evaluate( column );
+            
+            matcher.appendReplacement( buffer, result );
+        }
+
+        expression = TextUtils.appendTail( matcher, buffer );
+
+        return expression;
     }
     
     @Override

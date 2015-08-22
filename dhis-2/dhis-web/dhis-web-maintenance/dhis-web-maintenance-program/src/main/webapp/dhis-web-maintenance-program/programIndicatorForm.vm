@@ -5,7 +5,7 @@
 		<th>$i18n.getString( "expression" )</th>
 	</tr>
 	<tr>
-		<td><div class="message message-info" style="margin-top:10px">The expression defines how the indicator is calculated</div></td> 
+		<td><div class="message message-info" style="margin-top:10px">The expression defines how the indicator is calculated.</div></td> 
 	</tr>
 	<tr>
 		<td>
@@ -114,7 +114,7 @@
 		</td>
 	</tr>
 	<tr>
-        <th style="padding-top:15px">$i18n.getString( "expression" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) zing(x)</span></th>
+        <th style="padding-top:15px">$i18n.getString( "expression" ) <span class="tipText">Tip: use zing(x) oizp(x)</span></th>
     </tr>
 	<tr>
 		<td>
@@ -234,7 +234,7 @@
 		</td>
 	</tr>
 	<tr>
-        <th style="padding-top:15px">$i18n.getString( "filter" ) <span class="tipText">Tip: use abs(x) sin(x) cos(x) tan(x) ln(x) log(x) sqrt(x) mod(x,y) oizp(x) zing(x)</span></th>
+        <th style="padding-top:15px">$i18n.getString( "filter" ) <span class="tipText">Tip: use oizp(x) zing(x)</span></th>
     </tr>	
 	<tr>
 		<td>
