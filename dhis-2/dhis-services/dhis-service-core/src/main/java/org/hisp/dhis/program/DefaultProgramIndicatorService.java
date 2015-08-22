@@ -48,6 +48,8 @@ import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.expression.ExpressionService;
+import org.hisp.dhis.i18n.I18n;
+import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.system.util.DateUtils;
@@ -58,6 +60,7 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.ImmutableMap;
@@ -145,6 +148,9 @@ public class DefaultProgramIndicatorService
     {
         this.statementBuilder = statementBuilder;
     }
+    
+    @Autowired
+    private I18nManager i18nManager;
 
     // -------------------------------------------------------------------------
     // ProgramIndicatorService implementation
@@ -268,6 +274,8 @@ public class DefaultProgramIndicatorService
             return null;
         }
         
+        I18n i18n = i18nManager.getI18n();
+        
         StringBuffer description = new StringBuffer();
 
         Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
@@ -287,7 +295,6 @@ public class DefaultProgramIndicatorService
                 if ( programStage != null && dataElement != null )
                 {
                     String programStageName = programStage.getDisplayName();
-
                     String dataelementName = dataElement.getDisplayName();
 
                     matcher.appendReplacement( description, programStageName + ProgramIndicator.SEPARATOR_ID + dataelementName );
@@ -313,25 +320,11 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
-                if ( ProgramIndicator.VAR_CURRENT_DATE.equals( uid ) )
+                String varName = i18n.getString( uid );
+                
+                if ( varName != null )
                 {
-                    matcher.appendReplacement( description, "Current date" );
-                }
-                else if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( uid ) )
-                {
-                    matcher.appendReplacement( description, "Enrollment date" );
-                }
-                else if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( uid ) )
-                {
-                    matcher.appendReplacement( description, "Incident date" );
-                }
-                else if ( ProgramIndicator.VAR_VALUE_COUNT.equals( uid ) )
-                {
-                    matcher.appendReplacement( description, "Value count" );
-                }
-                else if ( ProgramIndicator.VAR_ZERO_POS_VALUE_COUNT.equals( uid ) )
-                {
-                    matcher.appendReplacement( description, "Zero or positive value count" );
+                    matcher.appendReplacement( description, varName );
                 }
             }
         }
