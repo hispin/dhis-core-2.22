@@ -147,7 +147,7 @@ public class DefaultProgramIndicatorService
     }
 
     // -------------------------------------------------------------------------
-    // Implementation methods
+    // ProgramIndicatorService implementation
     // -------------------------------------------------------------------------
 
     @Override
@@ -218,11 +218,11 @@ public class DefaultProgramIndicatorService
             {
                 Date baseDate = new Date();
 
-                if ( ProgramIndicator.INCIDENT_DATE.equals( programIndicator.getRootDate() ) )
+                if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( programIndicator.getRootDate() ) )
                 {
                     baseDate = programInstance.getDateOfIncident();
                 }
-                else if ( ProgramIndicator.ENROLLMENT_DATE.equals( programIndicator.getRootDate() ) )
+                else if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( programIndicator.getRootDate() ) )
                 {
                     baseDate = programInstance.getEnrollmentDate();
                 }
@@ -313,15 +313,15 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
-                if ( ProgramIndicator.CURRENT_DATE.equals( uid ) )
+                if ( ProgramIndicator.VAR_CURRENT_DATE.equals( uid ) )
                 {
                     matcher.appendReplacement( description, "Current date" );
                 }
-                else if ( ProgramIndicator.ENROLLMENT_DATE.equals( uid ) )
+                else if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( uid ) )
                 {
                     matcher.appendReplacement( description, "Enrollment date" );
                 }
-                else if ( ProgramIndicator.INCIDENT_DATE.equals( uid ) )
+                else if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( uid ) )
                 {
                     matcher.appendReplacement( description, "Incident date" );
                 }
@@ -714,15 +714,15 @@ public class DefaultProgramIndicatorService
                 Date currentDate = new Date();
                 Date date = null;
                 
-                if ( ProgramIndicator.ENROLLMENT_DATE.equals( uid ) )
+                if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( uid ) )
                 {
                     date = programInstance.getEnrollmentDate();
                 }
-                else if ( ProgramIndicator.INCIDENT_DATE.equals( uid ) )
+                else if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( uid ) )
                 {
                     date = programInstance.getDateOfIncident();
                 }
-                else if ( ProgramIndicator.CURRENT_DATE.equals( uid ) )
+                else if ( ProgramIndicator.VAR_CURRENT_DATE.equals( uid ) )
                 {
                     date = currentDate;
                 }

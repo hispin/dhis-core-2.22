@@ -30,12 +30,6 @@ package org.hisp.dhis.program;
 
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
@@ -45,6 +39,12 @@ import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 /**
  * @author Chau Thu Tran
  */
@@ -53,22 +53,21 @@ public class ProgramIndicator
     extends BaseNameableObject
 {
     public static final String SEPARATOR_ID = "\\.";
+    public static final String SEP_OBJECT = ":";
     public static final String KEY_DATAELEMENT = "#";
     public static final String KEY_ATTRIBUTE = "A";
     public static final String KEY_PROGRAM_VARIABLE = "V";
     public static final String KEY_CONSTANT = "C";
-    public static final String INCIDENT_DATE = "incident_date";
-    public static final String ENROLLMENT_DATE = "enrollment_date";
-    public static final String CURRENT_DATE = "current_date";
+    public static final String VAR_INCIDENT_DATE = "incident_date";
+    public static final String VAR_ENROLLMENT_DATE = "enrollment_date";
+    public static final String VAR_CURRENT_DATE = "current_date";
     public static final String VAR_VALUE_COUNT = "value_count";
     public static final String VAR_ZERO_POS_VALUE_COUNT = "zero_pos_value_count";
     public static final String VALUE_TYPE_DATE = "date";
     public static final String VALUE_TYPE_INT = "int";
     
-    public static String SEP_OBJECT = ":";
-
     private static final String EXPRESSION_REGEXP = "(" + KEY_DATAELEMENT + "|" + KEY_ATTRIBUTE + "|" + KEY_PROGRAM_VARIABLE + "|" + KEY_CONSTANT + ")\\{(\\w+|" + 
-        INCIDENT_DATE + "|" + ENROLLMENT_DATE + "|" + CURRENT_DATE + ")" + SEPARATOR_ID + "?(\\w*)\\}";
+        VAR_INCIDENT_DATE + "|" + VAR_ENROLLMENT_DATE + "|" + VAR_CURRENT_DATE + ")" + SEPARATOR_ID + "?(\\w*)\\}";
     private static final String SQL_FUNC_REGEXP = "d2:(.+?)\\((.+?)\\)";
 
     public static final Pattern EXPRESSION_PATTERN = Pattern.compile( EXPRESSION_REGEXP );

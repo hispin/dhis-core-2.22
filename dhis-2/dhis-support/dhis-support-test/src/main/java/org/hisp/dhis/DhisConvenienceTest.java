@@ -1261,7 +1261,7 @@ public abstract class DhisConvenienceTest
         indicator.setValueType( ProgramIndicator.VALUE_TYPE_INT );
         indicator.setExpression( expression );
         indicator.setFilter( filter );
-        indicator.setRootDate( ProgramIndicator.INCIDENT_DATE );
+        indicator.setRootDate( ProgramIndicator.VAR_INCIDENT_DATE );
         
         return indicator;
     }
