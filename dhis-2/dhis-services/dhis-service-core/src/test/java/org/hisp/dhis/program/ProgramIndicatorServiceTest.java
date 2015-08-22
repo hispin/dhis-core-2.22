@@ -504,11 +504,40 @@ public class ProgramIndicatorServiceTest
     public void testGetAnalyticsSQl()
     {
         String expected = COL_QUOTE + deA.getUid() + COL_QUOTE + " + " + COL_QUOTE + atA.getUid() + COL_QUOTE + " > 10";
-        String sql = programIndicatorService.getAnalyticsSQl( indicatorE.getFilter() );
-        System.out.println("SQL " + sql);
-        assertEquals( expected, sql );
+        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( indicatorE.getFilter() ) );
     }
 
+    @Test
+    public void testGetAnalyticsSqlWithFunctionsA()
+    {
+        String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
+        String expected = "case when " + col + " < 0 then 0 else " + col + " end";
+        String expression = "d2:zing(" + col + ")";
+
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+    }
+
+    @Test
+    public void testGetAnalyticsSqlWithFunctionsB()
+    {
+        String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
+        String expected = "case when " + col + " >= 0 then 1 else " + col + " end";
+        String expression = "d2:oizp(" + col + ")";
+
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+    }
+
+    @Test( expected = IllegalStateException.class )
+    public void testGetAnalyticsSqlWithFunctionsC()
+    {
+        String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
+        String expected = "case when " + col + " >= 0 then 1 else " + col + " end";
+        String expression = "d2:xyza(" + col + ")";
+
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+    }
+    
     @Test
     public void testExpressionIsValid()
     {
