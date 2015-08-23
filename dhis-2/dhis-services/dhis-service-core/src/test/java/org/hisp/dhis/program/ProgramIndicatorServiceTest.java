@@ -522,7 +522,7 @@ public class ProgramIndicatorServiceTest
     public void testGetAnalyticsSqlWithFunctionsB()
     {
         String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
-        String expected = "case when " + col + " >= 0 then 1 else " + col + " end";
+        String expected = "case when " + col + " >= 0 then 1 else 0 end";
         String expression = "d2:oizp(" + col + ")";
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
