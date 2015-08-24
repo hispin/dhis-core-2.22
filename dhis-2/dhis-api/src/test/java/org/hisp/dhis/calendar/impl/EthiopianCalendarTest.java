@@ -29,43 +29,32 @@ package org.hisp.dhis.calendar.impl;
  */
 
 import org.hisp.dhis.calendar.Calendar;
-import org.hisp.dhis.calendar.ChronologyBasedCalendar;
-import org.joda.time.DateTimeZone;
-import org.joda.time.chrono.EthiopicChronology;
-import org.springframework.stereotype.Component;
+import org.hisp.dhis.calendar.DateTimeUnit;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-@Component
-public class EthiopianCalendar extends ChronologyBasedCalendar
+public class EthiopianCalendarTest
 {
-    private static final Calendar self = new EthiopianCalendar();
+    private Calendar calendar;
 
-    public static Calendar getInstance()
+    @Before
+    public void init()
     {
-        return self;
+        calendar = EthiopianCalendar.getInstance();
     }
 
-    protected EthiopianCalendar()
+    @Test
+    public void testIsoStartOfYear()
     {
-        super( EthiopicChronology.getInstance( DateTimeZone.getDefault() ) );
-    }
+        DateTimeUnit startOfYear = calendar.isoStartOfYear( 2007 );
 
-    @Override
-    public String name()
-    {
-        return "ethiopian";
-    }
-
-    @Override
-    public int daysInMonth( int year, int month )
-    {
-        if ( month < 12 )
-        {
-            return 30;
-        }
-
-        return 30 + super.daysInMonth( year, 13 );
+        assertEquals( 2014, startOfYear.getYear() );
+        assertEquals( 9, startOfYear.getMonth() );
+        assertEquals( 11, startOfYear.getDay() );
     }
 }

@@ -197,13 +197,6 @@ public abstract class ChronologyBasedCalendar extends AbstractCalendar
     }
 
     @Override
-    public int monthsInYear()
-    {
-        LocalDate localDate = new LocalDate( 1, 1, 1, chronology );
-        return localDate.toDateTimeAtStartOfDay().monthOfYear().getMaximumValue();
-    }
-
-    @Override
     public int daysInWeek()
     {
         LocalDate localDate = new LocalDate( 1, 1, 1, chronology );
