@@ -29,7 +29,7 @@ if( dhis2.tc.memoryOnly ) {
 dhis2.tc.store = new dhis2.storage.Store({
     name: 'dhis2tc',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'trackedEntities', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'programIndicators', 'ouLevels', 'programRuleVariables', 'programRules','constants']      
+    objectStores: ['programs', 'programStages', 'trackedEntities', 'attributes', 'attributeGroups','relationshipTypes', 'optionSets', 'programValidations', 'programIndicators', 'ouLevels', 'programRuleVariables', 'programRules','constants']      
 });
 
 (function($) {
@@ -151,6 +151,7 @@ function downloadMetaData()
     promise = promise.then( getMetaProgramIndicators );
     promise = promise.then( getProgramIndicators );
     promise = promise.then( getOrgUnitLevels );
+    promise = promise.then( getTrackedEntityAttributeGroups );
     promise.done(function() {        
         //Enable ou selection after meta-data has downloaded
         $( "#orgUnitTree" ).removeClass( "disable-clicks" );        
@@ -552,6 +553,16 @@ function getOrgUnitLevels()
             return;
         }        
         return getD2Objects('ouLevels', 'organisationUnitLevels', '../api/organisationUnitLevels.json', 'filter=level:gt:1&fields=id,name,level&paging=false', 'idb');        
+    }); 
+}
+
+function getTrackedEntityAttributeGroups()
+{
+    dhis2.tc.store.getKeys( 'attributeGroups').done(function(res){        
+        if(res.length > 0){
+            return;
+        }        
+        return getD2Objects('attributeGroups', 'trackedEntityAttributeGroups', '../api/trackedEntityAttributeGroups.json', 'fields=id,name,trackedEntityAttributes[id]&paging=false', 'idb');        
     }); 
 }
 
