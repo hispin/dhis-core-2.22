@@ -424,11 +424,11 @@ public class DefaultTrackedEntityInstanceService
             throw new IllegalQueryException( violation );
         }
     }
-
+    
     @Override
     public TrackedEntityInstanceQueryParams getFromUrl( String query, Set<String> attribute, Set<String> filter,
         Set<String> ou, OrganisationUnitSelectionMode ouMode, String program, ProgramStatus programStatus,
-        Boolean followUp, Date programStartDate, Date programEndDate, String trackedEntity, EventStatus eventStatus,
+        Boolean followUp, Date programStartDate, Date programEndDate, String trackedEntity, Boolean active, EventStatus eventStatus,
         Date eventStartDate, Date eventEndDate, boolean skipMeta, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging )
     {
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
@@ -483,7 +483,12 @@ public class DefaultTrackedEntityInstanceService
         {
             throw new IllegalQueryException( "Tracked entity does not exist: " + program );
         }
-
+        
+        if ( active != null  )
+        {
+            params.setActive( active );
+        }
+        
         params.setQuery( queryFilter );
         params.setProgram( pr );
         params.setProgramStatus( programStatus );

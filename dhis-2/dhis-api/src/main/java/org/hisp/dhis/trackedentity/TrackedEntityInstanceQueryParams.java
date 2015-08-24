@@ -121,6 +121,12 @@ public class TrackedEntityInstanceQueryParams
     private TrackedEntity trackedEntity;
     
     /**
+     * Tracked entity of the instances status.
+     */
+    private Boolean active;
+    
+    
+    /**
      * Selection mode for the specified organisation units.
      */
     private OrganisationUnitSelectionMode organisationUnitMode;
@@ -521,7 +527,7 @@ public class TrackedEntityInstanceQueryParams
         return "[Query: " + query + ", Attributes: " + attributes + ", filters: " + filters + 
             ", program: " + program + ", program status " + programStatus + ", follow up: " + followUp + 
             ", program start date: " + programStartDate + ", program end date: " + programEndDate + 
-            ", tracked entity: " + trackedEntity + ", org unit mode: " + organisationUnitMode + 
+            ", tracked entity: " + trackedEntity + ", active: " + active + ", org unit mode: " + organisationUnitMode + 
             ", event start date: " + eventStartDate + ", event end date: " + eventEndDate + 
             ", event status: " + eventStatus + "]";
     }
@@ -638,6 +644,17 @@ public class TrackedEntityInstanceQueryParams
     public void setTrackedEntity( TrackedEntity trackedEntity )
     {
         this.trackedEntity = trackedEntity;
+    }
+    
+    //
+    public Boolean getActive()
+    {
+        return active;
+    }
+
+    public void setActive( Boolean active )
+    {
+        this.active = active;
     }
 
     public OrganisationUnitSelectionMode getOrganisationUnitMode()

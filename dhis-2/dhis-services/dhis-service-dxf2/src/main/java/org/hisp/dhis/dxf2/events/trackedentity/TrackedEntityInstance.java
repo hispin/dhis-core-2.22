@@ -48,6 +48,8 @@ public class TrackedEntityInstance
     private String trackedEntity;
 
     private String trackedEntityInstance;
+    
+    private Boolean active;
 
     private String orgUnit;
     
@@ -99,6 +101,18 @@ public class TrackedEntityInstance
     public void setTrackedEntityInstance( String trackedEntityInstance )
     {
         this.trackedEntityInstance = trackedEntityInstance;
+    }
+
+    @JsonProperty( required = true )
+    @JacksonXmlProperty( isAttribute = true )
+    public Boolean getActive()
+    {
+        return active;
+    }
+
+    public void setActive( Boolean active )
+    {
+        this.active = active;
     }
 
     @JsonProperty( required = true )
@@ -175,6 +189,7 @@ public class TrackedEntityInstance
         if ( created != null ? !created.equals( that.created ) : that.created != null ) return false;
         if ( relationships != null ? !relationships.equals( that.relationships ) : that.relationships != null ) return false;
         if ( trackedEntity != null ? !trackedEntity.equals( that.trackedEntity ) : that.trackedEntity != null ) return false;
+        if ( active != null ? !active.equals( that.active ) : that.active != null ) return false;
         if ( trackedEntityInstance != null ? !trackedEntityInstance.equals( that.trackedEntityInstance ) : that.trackedEntityInstance != null )
             return false;
 
@@ -186,6 +201,7 @@ public class TrackedEntityInstance
     {
         int result = trackedEntity != null ? trackedEntity.hashCode() : 0;
         result = 31 * result + (trackedEntityInstance != null ? trackedEntityInstance.hashCode() : 0);
+        result = 31 * result + (active != null ? active.hashCode() : 0);
         result = 31 * result + (orgUnit != null ? orgUnit.hashCode() : 0);
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (relationships != null ? relationships.hashCode() : 0);
@@ -199,6 +215,7 @@ public class TrackedEntityInstance
         return "TrackedEntityInstance{" +
             "trackedEntity='" + trackedEntity + '\'' +
             ", trackedEntityInstance='" + trackedEntityInstance + '\'' +
+            "active='" + active + '\'' +
             ", orgUnit='" + orgUnit + '\'' +
             ", created='" + created + '\'' +
             ", relationships=" + relationships +

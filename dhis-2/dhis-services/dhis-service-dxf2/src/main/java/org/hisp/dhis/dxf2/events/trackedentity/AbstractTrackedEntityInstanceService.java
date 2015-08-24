@@ -144,6 +144,7 @@ public abstract class AbstractTrackedEntityInstanceService
         trackedEntityInstance.setTrackedEntityInstance( entityInstance.getUid() );
         trackedEntityInstance.setOrgUnit( entityInstance.getOrganisationUnit().getUid() );
         trackedEntityInstance.setTrackedEntity( entityInstance.getTrackedEntity().getUid() );
+        trackedEntityInstance.setActive( entityInstance.isActive() );
         trackedEntityInstance.setCreated( entityInstance.getCreated().toString() );
         trackedEntityInstance.setLastUpdated( entityInstance.getLastUpdated().toString() );
 

@@ -117,6 +117,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Date programStartDate,
         @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
+        @RequestParam( required = false ) Boolean active,
         @RequestParam( required = false ) EventStatus eventStatus,
         @RequestParam( required = false ) Date eventStartDate,
         @RequestParam( required = false ) Date eventEndDate,
@@ -136,7 +137,7 @@ public class TrackedEntityInstanceController
 
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
-            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
+            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,active,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         List<TrackedEntityInstance> trackedEntityInstances = trackedEntityInstanceService.getTrackedEntityInstances( instanceService.getTrackedEntityInstances( params ) );
@@ -160,6 +161,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Date programStartDate,
         @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
+        @RequestParam( required = false ) Boolean active,
         @RequestParam( required = false ) EventStatus eventStatus,
         @RequestParam( required = false ) Date eventStartDate,
         @RequestParam( required = false ) Date eventEndDate,
@@ -173,7 +175,7 @@ public class TrackedEntityInstanceController
     {
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
-            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
+            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,active, 
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.NO_CACHE );
@@ -198,6 +200,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Date programStartDate,
         @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
+        @RequestParam( required = false ) Boolean active,
         @RequestParam( required = false ) EventStatus eventStatus,
         @RequestParam( required = false ) Date eventStartDate,
         @RequestParam( required = false ) Date eventEndDate,
@@ -211,7 +214,7 @@ public class TrackedEntityInstanceController
     {
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
-            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
+            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,active,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.NO_CACHE );
@@ -232,6 +235,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Date programStartDate,
         @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
+        @RequestParam( required = false ) Boolean active,
         @RequestParam( required = false ) EventStatus eventStatus,
         @RequestParam( required = false ) Date eventStartDate,
         @RequestParam( required = false ) Date eventEndDate,
@@ -245,7 +249,7 @@ public class TrackedEntityInstanceController
     {
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
-            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
+            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,active,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.NO_CACHE );
@@ -266,6 +270,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Date programStartDate,
         @RequestParam( required = false ) Date programEndDate,
         @RequestParam( required = false ) String trackedEntity,
+        @RequestParam( required = false ) Boolean active,
         @RequestParam( required = false ) EventStatus eventStatus,
         @RequestParam( required = false ) Date eventStartDate,
         @RequestParam( required = false ) Date eventEndDate,
@@ -279,7 +284,7 @@ public class TrackedEntityInstanceController
     {
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
-            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
+            program, programStatus, followUp, programStartDate, programEndDate, trackedEntity, active, 
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.NO_CACHE );
