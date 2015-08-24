@@ -80,6 +80,12 @@ public class QuarterlyPeriodType
         start.setMonth( ((dateTimeUnit.getMonth() - 1) - ((dateTimeUnit.getMonth() - 1) % 3)) + 1 );
         start.setDay( 1 );
 
+        if ( start.getMonth() > 12 )
+        {
+            start.setYear( start.getYear() + 1 );
+            start.setMonth( 1 );
+        }
+
         DateTimeUnit end = new DateTimeUnit( start );
         end = calendar.plusMonths( end, 2 );
         end.setDay( calendar.daysInMonth( end.getYear(), end.getMonth() ) );
