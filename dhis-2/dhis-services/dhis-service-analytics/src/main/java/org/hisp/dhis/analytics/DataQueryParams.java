@@ -244,11 +244,6 @@ public class DataQueryParams
      */
     protected transient Map<OrganisationUnit, Integer> dataApprovalLevels = new HashMap<>();
     
-    /**
-     * Filter expression.
-     */
-    protected transient String filterExpression;
-    
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -287,7 +282,6 @@ public class DataQueryParams
         params.dataPeriodType = this.dataPeriodType;
         params.skipPartitioning = this.skipPartitioning;
         params.dataApprovalLevels = new HashMap<>( this.dataApprovalLevels );
-        params.filterExpression = this.filterExpression;
         
         return params;
     }
@@ -1003,15 +997,7 @@ public class DataQueryParams
     {
         return programStage != null;
     }
-    
-    /**
-     * Indicates whether this object has a filter expression.
-     */
-    public boolean hasFilterExpression()
-    {
-        return filterExpression != null;
-    }
-    
+        
     // -------------------------------------------------------------------------
     // Static methods
     // -------------------------------------------------------------------------
@@ -1050,32 +1036,6 @@ public class DataQueryParams
         }
     }
     
-    /**
-     * Returns a mapping of permutation keys and mappings of data identifiers and values
-     * based on the given mapping of dimension option keys and values.
-     */
-    public static Map<String, Map<String, Double>> getPermutationProgramValueMap( Map<String, Double> valueMap )
-    {
-        MapMap<String, String, Double> permutationMap = new MapMap<>();
-        
-        for ( String key : valueMap.keySet() )
-        {
-            List<String> keys = Lists.newArrayList( key.split( DIMENSION_SEP ) );
-            
-            String dxUid = keys.get( DX_INDEX );
-            
-            keys.remove( DX_INDEX );
-            
-            String permKey = StringUtils.join( keys, DIMENSION_SEP );
-            
-            Double value = valueMap.get( key );
-            
-            permutationMap.putEntry( permKey, dxUid, value );
-        }
-        
-        return permutationMap;
-    }
-
     /**
      * Returns a mapping of permutations keys (org unit id or null) and mappings
      * of org unit group and counts, based on the given mapping of dimension option
@@ -1481,16 +1441,6 @@ public class DataQueryParams
     public void setDataApprovalLevels( Map<OrganisationUnit, Integer> dataApprovalLevels )
     {
         this.dataApprovalLevels = dataApprovalLevels;
-    }
-
-    public String getFilterExpression()
-    {
-        return filterExpression;
-    }
-
-    public void setFilterExpression( String filterExpression )
-    {
-        this.filterExpression = filterExpression;
     }
 
     // -------------------------------------------------------------------------

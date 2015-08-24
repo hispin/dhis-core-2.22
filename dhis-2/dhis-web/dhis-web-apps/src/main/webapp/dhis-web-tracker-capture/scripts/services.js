@@ -538,19 +538,27 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             if(program && program.validationCriterias){
                 for(var key in program.validationCriterias){
                     angular.forEach(program.validationCriterias[key], function(vc){
-                        if(vc.property && vc.value){                                    
+                        var att = attributesById[key];
+                        var operator = '';
+                        if(vc.property && vc.value && att && att.valueType){
+                            if(att.valueType === 'number' && dhis2.validation.isNumber(vc.value)){
+                                vc.value = parseInt(vc.value);
+                            }
                             if(vc.operator === 0){
-                                enrollmentValidation.valid = vc.value === formTei[key];
+                                enrollmentValidation.valid = formTei[key] === vc.value;
+                                operator = $translate.instant('equals_to');
                             }
                             else if(vc.operator === 1){                                
-                                enrollmentValidation.valid = vc.value > formTei[key];
+                                enrollmentValidation.valid = formTei[key] > vc.value;
+                                operator = $translate.instant('greater_than');
                             }
                             else{
-                                enrollmentValidation.valid = vc.value < formTei[key];
+                                enrollmentValidation.valid = formTei[key] < vc.value;
+                                operator = $translate.instant('less_than');
                             }
 
                             if(!enrollmentValidation.valid){
-                                enrollmentValidation.messages.push({name: attributesById[key].name, expected: vc.value, found: formTei[key] ? formTei[key] : $translate.instant('empty')});                                    
+                                enrollmentValidation.messages.push({name: attributesById[key].name, operator: operator, expected: vc.value, found: formTei[key] ? formTei[key] : $translate.instant('empty')});
                             }                                
                         }
                     });                    

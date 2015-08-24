@@ -30,9 +30,12 @@ package org.hisp.dhis.calendar.impl;
 
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.ChronologyBasedCalendar;
+import org.hisp.dhis.calendar.DateTimeUnit;
 import org.joda.time.DateTimeZone;
 import org.joda.time.chrono.EthiopicChronology;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -56,5 +59,49 @@ public class EthiopianCalendar extends ChronologyBasedCalendar
     public String name()
     {
         return "ethiopian";
+    }
+
+    @Override
+    public DateTimeUnit toIso( DateTimeUnit dateTimeUnit )
+    {
+        dateTimeUnit = normalize( dateTimeUnit );
+        return super.toIso( dateTimeUnit );
+    }
+
+    @Override
+    public DateTimeUnit fromIso( Date date )
+    {
+        return super.fromIso( date );
+    }
+
+    @Override
+    public DateTimeUnit fromIso( DateTimeUnit dateTimeUnit )
+    {
+        return super.fromIso( dateTimeUnit );
+    }
+
+    @Override
+    public int daysInMonth( int year, int month )
+    {
+        if ( month < 12 )
+        {
+            return 30;
+        }
+
+        return 30 + super.daysInMonth( year, 13 );
+    }
+
+    private DateTimeUnit normalize( DateTimeUnit dateTimeUnit )
+    {
+        if ( dateTimeUnit.getMonth() < 12 || dateTimeUnit.getDay() <= 30 )
+        {
+            return dateTimeUnit;
+        }
+
+        dateTimeUnit = new DateTimeUnit( dateTimeUnit );
+        dateTimeUnit.setDay( dateTimeUnit.getDay() - 30 );
+        dateTimeUnit.setMonth( 13 );
+
+        return dateTimeUnit;
     }
 }

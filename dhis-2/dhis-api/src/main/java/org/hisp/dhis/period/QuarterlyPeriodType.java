@@ -52,7 +52,7 @@ public class QuarterlyPeriodType
     private static final long serialVersionUID = -5973809094923012052L;
 
     private static final String ISO_FORMAT = "yyyyQn";
-    
+
     private static final String ISO8601_DURATION = "P1Q";
 
     /**
@@ -77,8 +77,14 @@ public class QuarterlyPeriodType
     {
         DateTimeUnit start = new DateTimeUnit( dateTimeUnit );
 
-        start.setMonth( ( ( dateTimeUnit.getMonth() - 1 ) - ( ( dateTimeUnit.getMonth() - 1 ) % 3 ) ) + 1 );
+        start.setMonth( ((dateTimeUnit.getMonth() - 1) - ((dateTimeUnit.getMonth() - 1) % 3)) + 1 );
         start.setDay( 1 );
+
+        if ( start.getMonth() > 12 )
+        {
+            start.setYear( start.getYear() + 1 );
+            start.setMonth( 1 );
+        }
 
         DateTimeUnit end = new DateTimeUnit( start );
         end = calendar.plusMonths( end, 2 );
@@ -147,7 +153,7 @@ public class QuarterlyPeriodType
     public List<Period> generateRollingPeriods( Date date )
     {
         date = createPeriod( date ).getStartDate();
-        
+
         return generateRollingPeriods( createLocalDateUnitInstance( date ) );
     }
 
@@ -185,7 +191,7 @@ public class QuarterlyPeriodType
             case 10:
                 return dateTimeUnit.getYear() + "Q4";
             default:
-                throw new IllegalArgumentException( "Month not valid [1,4,7,10]" );
+                throw new IllegalArgumentException( "Month not valid [1,4,7,10], was given " + dateTimeUnit.getMonth() );
         }
     }
 
@@ -197,11 +203,11 @@ public class QuarterlyPeriodType
     {
         return ISO_FORMAT;
     }
-    
+
     @Override
-    public String getIso8601Duration() 
+    public String getIso8601Duration()
     {
-        return ISO8601_DURATION; 
+        return ISO8601_DURATION;
     }
 
 

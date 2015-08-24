@@ -457,6 +457,19 @@ public class TextUtils
     }
 
     /**
+     * Returns the empty string if the given string is equal to the given test,
+     * the string if not.
+     * 
+     * @param string the string.
+     * @param test the test to check the string for equality.
+     * @return a string.
+     */
+    public static String emptyIfEqual( String string, String test )
+    {
+        return test != null && test.equals( string ) ? EMPTY : string;
+    }
+    
+    /**
      * Invokes append tail on matcher with the given string buffer, and returns
      * the string buffer as a string.
      * 

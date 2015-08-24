@@ -413,7 +413,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             else {
                                 //check attribute type and generate corresponding angular input field
                                 if (att.valueType === "number") {
-                                    newInputField = '<input type="text" ' +
+                                    newInputField = '<input type="number" ' +
                                             ' d2-number-validator ' +
                                             ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';

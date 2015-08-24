@@ -30,7 +30,6 @@ package org.hisp.dhis.program;
 
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +38,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import org.hisp.dhis.commons.sqlfunc.OneIfZeroOrPositiveSqlFunction;
+import org.hisp.dhis.commons.sqlfunc.SqlFunction;
+import org.hisp.dhis.commons.sqlfunc.ZeroIfNegativeSqlFunction;
 import org.hisp.dhis.commons.util.ExpressionUtils;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.constant.Constant;
@@ -46,6 +48,8 @@ import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.expression.ExpressionService;
+import org.hisp.dhis.i18n.I18n;
+import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.system.util.DateUtils;
@@ -56,7 +60,10 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * @author Chau Thu Tran
@@ -64,6 +71,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class DefaultProgramIndicatorService
     implements ProgramIndicatorService
 {
+    private static final Map<String, SqlFunction> SQL_FUNC_MAP = ImmutableMap.<String, SqlFunction>builder().
+        put( ZeroIfNegativeSqlFunction.KEY, new ZeroIfNegativeSqlFunction() ).
+        put( OneIfZeroOrPositiveSqlFunction.KEY, new OneIfZeroOrPositiveSqlFunction() ).build();
+    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -137,9 +148,12 @@ public class DefaultProgramIndicatorService
     {
         this.statementBuilder = statementBuilder;
     }
+    
+    @Autowired
+    private I18nManager i18nManager;
 
     // -------------------------------------------------------------------------
-    // Implementation methods
+    // ProgramIndicatorService implementation
     // -------------------------------------------------------------------------
 
     @Override
@@ -210,11 +224,11 @@ public class DefaultProgramIndicatorService
             {
                 Date baseDate = new Date();
 
-                if ( ProgramIndicator.INCIDENT_DATE.equals( programIndicator.getRootDate() ) )
+                if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( programIndicator.getRootDate() ) )
                 {
                     baseDate = programInstance.getDateOfIncident();
                 }
-                else if ( ProgramIndicator.ENROLLMENT_DATE.equals( programIndicator.getRootDate() ) )
+                else if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( programIndicator.getRootDate() ) )
                 {
                     baseDate = programInstance.getEnrollmentDate();
                 }
@@ -230,49 +244,6 @@ public class DefaultProgramIndicatorService
         return null;
     }
 
-    @Override
-    public Double getProgramIndicatorValue( ProgramIndicator indicator, Map<String, Double> valueMap )
-    {
-        StringBuffer buffer = new StringBuffer();
-
-        String expression = indicator.getExpression();
-        
-        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
-        
-        while ( matcher.find() )
-        {
-            String key = matcher.group( 1 );
-            
-            Double value = null;
-
-            //TODO query by program stage
-            
-            if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
-            {
-                String de = matcher.group( 3 );
-                
-                value = valueMap.get( de );
-            }
-            else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) || ProgramIndicator.KEY_CONSTANT.equals( key ) )
-            {
-                String uid = matcher.group( 2 );
-                
-                value = valueMap.get( uid );
-            }
-            
-            if ( value == null )
-            {
-                return null;
-            }
-            
-            matcher.appendReplacement( buffer, Matcher.quoteReplacement( String.valueOf( value ) ) );
-        }
-
-        expression = TextUtils.appendTail( matcher, buffer );
-
-        return MathUtils.calculateExpression( expression );
-    }
-    
     @Override
     @Transactional
     public Map<String, String> getProgramIndicatorValues( ProgramInstance programInstance )
@@ -303,6 +274,8 @@ public class DefaultProgramIndicatorService
             return null;
         }
         
+        I18n i18n = i18nManager.getI18n();
+        
         StringBuffer description = new StringBuffer();
 
         Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
@@ -322,7 +295,6 @@ public class DefaultProgramIndicatorService
                 if ( programStage != null && dataElement != null )
                 {
                     String programStageName = programStage.getDisplayName();
-
                     String dataelementName = dataElement.getDisplayName();
 
                     matcher.appendReplacement( description, programStageName + ProgramIndicator.SEPARATOR_ID + dataelementName );
@@ -348,25 +320,11 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
             {
-                if ( ProgramIndicator.CURRENT_DATE.equals( uid ) )
+                String varName = i18n.getString( uid );
+                
+                if ( varName != null )
                 {
-                    matcher.appendReplacement( description, "Current date" );
-                }
-                else if ( ProgramIndicator.ENROLLMENT_DATE.equals( uid ) )
-                {
-                    matcher.appendReplacement( description, "Enrollment date" );
-                }
-                else if ( ProgramIndicator.INCIDENT_DATE.equals( uid ) )
-                {
-                    matcher.appendReplacement( description, "Incident date" );
-                }
-                else if ( ProgramIndicator.VAR_VALUE_COUNT.equals( uid ) )
-                {
-                    matcher.appendReplacement( description, "Value count" );
-                }
-                else if ( ProgramIndicator.VAR_ZERO_POS_VALUE_COUNT.equals( uid ) )
-                {
-                    matcher.appendReplacement( description, "Zero or positive value count" );
+                    matcher.appendReplacement( description, varName );
                 }
             }
         }
@@ -383,7 +341,11 @@ public class DefaultProgramIndicatorService
         {
             return null;
         }
-        
+
+        // ---------------------------------------------------------------------
+        // Data elements, attributes, constants
+        // ---------------------------------------------------------------------
+
         StringBuffer buffer = new StringBuffer();
 
         Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
@@ -414,9 +376,36 @@ public class DefaultProgramIndicatorService
             }
         }
         
-        matcher.appendTail( buffer );
+        expression = TextUtils.appendTail( matcher, buffer );
 
-        return buffer.toString();
+        // ---------------------------------------------------------------------
+        // Functions
+        // ---------------------------------------------------------------------
+
+        buffer = new StringBuffer();
+        
+        matcher = ProgramIndicator.SQL_FUNC_PATTERN.matcher( expression );
+        
+        while ( matcher.find() )
+        {
+            String func = matcher.group( 1 );
+            String column = matcher.group( 2 );
+            
+            SqlFunction function = SQL_FUNC_MAP.get( func );
+            
+            if ( function == null )
+            {
+                throw new IllegalStateException( "Function not recognized: " + func );
+            }
+            
+            String result = function.evaluate( column );
+            
+            matcher.appendReplacement( buffer, result );
+        }
+
+        expression = TextUtils.appendTail( matcher, buffer );
+
+        return expression;
     }
     
     @Override
@@ -530,25 +519,6 @@ public class DefaultProgramIndicatorService
 
         return expr.toString();
     }
-
-    @Override
-    @Transactional
-    public Set<DataElement> getDataElementsInIndicators( Collection<ProgramIndicator> indicators )
-    {
-        Set<DataElement> dataElements = new HashSet<>();
-        
-        for ( ProgramIndicator indicator : indicators )
-        {
-            Set<ProgramStageDataElement> psds = getProgramStageDataElementsInExpression( indicator.getExpression() );
-            
-            for ( ProgramStageDataElement psd : psds )
-            {
-                dataElements.add( psd.getDataElement() );
-            }
-        }
-        
-        return dataElements;
-    }
     
     @Override
     @Transactional
@@ -574,20 +544,6 @@ public class DefaultProgramIndicatorService
         
         return elements;
     }
-
-    @Override
-    @Transactional
-    public Set<TrackedEntityAttribute> getAttributesInIndicators( Collection<ProgramIndicator> indicators )
-    {
-        Set<TrackedEntityAttribute> attributes = new HashSet<>();
-        
-        for ( ProgramIndicator indicator : indicators )
-        {
-            attributes.addAll( getAttributesInExpression( indicator.getExpression() ) );
-        }
-        
-        return attributes;
-    }
     
     @Override
     @Transactional
@@ -612,20 +568,6 @@ public class DefaultProgramIndicatorService
         return attributes;        
     }
 
-    @Override
-    @Transactional
-    public Set<Constant> getConstantsInIndicators( Collection<ProgramIndicator> indicators )
-    {
-        Set<Constant> constants = new HashSet<>();
-        
-        for ( ProgramIndicator indicator : indicators )
-        {
-            constants.addAll( getConstantsInExpression( indicator.getExpression() ) );
-        }
-        
-        return constants;
-    }
-    
     @Override
     @Transactional
     public Set<Constant> getConstantsInExpression( String expression )
@@ -765,15 +707,15 @@ public class DefaultProgramIndicatorService
                 Date currentDate = new Date();
                 Date date = null;
                 
-                if ( ProgramIndicator.ENROLLMENT_DATE.equals( uid ) )
+                if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( uid ) )
                 {
                     date = programInstance.getEnrollmentDate();
                 }
-                else if ( ProgramIndicator.INCIDENT_DATE.equals( uid ) )
+                else if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( uid ) )
                 {
                     date = programInstance.getDateOfIncident();
                 }
-                else if ( ProgramIndicator.CURRENT_DATE.equals( uid ) )
+                else if ( ProgramIndicator.VAR_CURRENT_DATE.equals( uid ) )
                 {
                     date = currentDate;
                 }

@@ -32,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
@@ -128,7 +129,14 @@ public class AddProgramIndicatorAction
     {
         this.filter = filter;
     }
+
+    private String aggregationType;
     
+    public void setAggregationType( String aggregationType )
+    {
+        this.aggregationType = aggregationType;
+    }
+
     private Integer decimals;
 
     public void setDecimals( Integer decimals )
@@ -183,6 +191,7 @@ public class AddProgramIndicatorAction
         indicator.setValueType( StringUtils.trimToNull( valueType ) );
         indicator.setExpression( StringUtils.trimToNull( expression ) );
         indicator.setFilter( StringUtils.trimToNull( filter ) );
+        indicator.setAggregationType( AggregationType.valueOf( aggregationType ) );
         indicator.setDecimals( decimals );
         indicator.setDisplayInForm( displayInForm );
         indicator.setRootDate( StringUtils.trimToNull( rootDate ) );

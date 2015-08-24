@@ -1,4 +1,4 @@
-package org.hisp.dhis.common;
+package org.hisp.dhis.commons.sqlfunc;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -31,20 +31,13 @@ package org.hisp.dhis.common;
 /**
  * @author Lars Helge Overland
  */
-public enum DimensionType
+public interface SqlFunction
 {
-    DATA_X,
-    PROGRAM_DATAELEMENT,
-    PROGRAM_ATTRIBUTE,
-    PROGRAM_INDICATOR,
-    DATA_COLLAPSED,
-    CATEGORY_OPTION_COMBO,
-    ATTRIBUTE_OPTION_COMBO,
-    PERIOD,
-    ORGANISATIONUNIT,
-    CATEGORYOPTION_GROUPSET,
-    DATAELEMENT_GROUPSET,
-    ORGANISATIONUNIT_GROUPSET,
-    CATEGORY,
-    STATIC
+    /**
+     * Evaluates the function using the given column name.
+     * 
+     * @param column the quoted column name.
+     * @return the result of the evaluation.
+     */
+    String evaluate( String column );
 }

@@ -5,7 +5,7 @@
     <table class="table table-striped table-bordered">  
         <tr ng-repeat="message in validationResult.messages">            
             <td>
-                {{message.name}} {{'is_expected' | translate}} <strong>{{message.expected}}</strong> {{'but_found' | translate}} <strong>{{message.found}}</strong>
+                {{message.name}} {{'is_expected_to_be' | translate}} <strong>{{message.operator}} {{message.expected}}</strong> {{'but_found' | translate}} <strong>{{message.found}}</strong>
             </td>
         </tr>                                    
     </table>

@@ -63,6 +63,21 @@ jQuery( document ).ready( function()
 		<td></td>
 	</tr>
 	<tr>
+        <td><label for="aggregationType">$i18n.getString( "aggregation_type" )</label></td>
+        <td>
+            <select id="aggregationType" name="aggregationType">
+                <option value="AVERAGE"#if( $programIndicator.aggregationType == 'AVERAGE' ) selected="selected"#end>$i18n.getString( "average" )</option>
+                <option value="SUM"#if( $programIndicator.aggregationType == 'SUM' ) selected="selected"#end>$i18n.getString( "sum" )</option>
+                <option value="COUNT"#if( $programIndicator.aggregationType == 'COUNT' ) selected="selected"#end>$i18n.getString( "count" )</option>
+                <option value="STDDEV"#if( $programIndicator.aggregationType == 'STDDEV' ) selected="selected"#end>$i18n.getString( "stddev" )</option>
+                <option value="VARIANCE"#if( $programIndicator.aggregationType == 'VARIANCE' ) selected="selected"#end>$i18n.getString( "variance" )</option>
+                <option value="MIN"#if( $programIndicator.aggregationType == 'MIN' ) selected="selected"#end>$i18n.getString( "min" )</option>
+                <option value="MAX"#if( $programIndicator.aggregationType == 'MAX' ) selected="selected"#end>$i18n.getString( "max" )</option>
+	            <option value="CUSTOM"#if( $programIndicator.aggregationType == 'CUSTOM' ) selected="selected"#end>$i18n.getString( "custom" )</option>
+            </select>
+        </td>
+    </tr>
+	<tr>
 		<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
 		<td>
 			<select id="decimals" name="decimals">

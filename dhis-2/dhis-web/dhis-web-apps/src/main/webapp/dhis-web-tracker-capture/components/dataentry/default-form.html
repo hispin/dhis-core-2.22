@@ -151,6 +151,14 @@
                         </div>
                     </div>
                     <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                    <div class="alert alert-warning alert-dismissible" role="alert" ng-if="warningMessages[prStDe.dataElement.id]">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{warningMessages[prStDe.dataElement.id]}}
+                    </div>
+                    <div class="alert alert-danger alert-dismissible" role="alert" ng-if="errorMessages[prStDe.dataElement.id]">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{errorMessages[prStDe.dataElement.id]}}
+                    </div>
                     </div>
                 </ng-form>                
             </td>
@@ -201,7 +209,7 @@
                                                         ng-required={{prStDes[de.dataElement.id].compulsory}} 
                                                         ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
                                                         name="foo" 
-                                                        on-select="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)}}"  
+                                                        on-select="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)"  
                                                         style="width:100%;">
                                                 <ui-select-match allow-clear="true" ng-class={{getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false)}} style="width:100%; height:34px; line-height:1.0; padding: 2px 6px; margin-top:5px" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name  || $select.selected}}</ui-select-match>
                                                 <ui-select-choices  repeat="option.name as option in optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options | filter: $select.search | limitTo:30">
@@ -319,9 +327,17 @@
                                                 ng-blur="saveDatavalue(prStDes[de.dataElement.id])" 
                                                 name="foo"/>
                                         </div>
-                                    </div>                                    
-                                    <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
-                                    </div>
+	                                    <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+	                                    </div>
+                                        <div class="alert alert-warning alert-dismissible" role="alert" ng-if="warningMessages[de.dataElement.id]">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            {{warningMessages[de.dataElement.id]}}
+                                        </div>
+                                        <div class="alert alert-danger alert-dismissible" role="alert" ng-if="errorMessages[de.dataElement.id]">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            {{errorMessages[de.dataElement.id]}}
+                                        </div>
+                                    </div>    
                                 </ng-form>                                
                             </td>
                             <td ng-if="allowProvidedElsewhereExists">                

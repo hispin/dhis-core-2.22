@@ -28,8 +28,8 @@ package org.hisp.dhis.analytics.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,6 +52,7 @@ import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
@@ -67,10 +68,12 @@ public class EventQueryParams
     private List<QueryItem> items = new ArrayList<>();
     
     private List<QueryItem> itemFilters = new ArrayList<>();
-    
-    private String filter;
-    
+        
     private DimensionalObject value;
+        
+    private List<ProgramIndicator> itemProgramIndicators = new ArrayList<>();
+
+    private ProgramIndicator programIndicator;
     
     private List<String> asc = new ArrayList<>();
     
@@ -115,7 +118,6 @@ public class EventQueryParams
 
         params.partitions = new Partitions( this.partitions );
         params.periodType = this.periodType;
-        params.filterExpression = this.filterExpression;
         
         params.program = this.program;
         params.programStage = this.programStage;
@@ -123,8 +125,9 @@ public class EventQueryParams
         params.endDate = this.endDate;
         params.items = new ArrayList<>( this.items );
         params.itemFilters = new ArrayList<>( this.itemFilters );
-        params.filter = this.filter;
         params.value = this.value;
+        params.itemProgramIndicators = new ArrayList<>( this.itemProgramIndicators );
+        params.programIndicator = this.programIndicator;
         params.asc = new ArrayList<>( this.asc );
         params.desc = new ArrayList<>( this.desc );
         params.organisationUnitMode = this.organisationUnitMode;
@@ -162,7 +165,7 @@ public class EventQueryParams
             TrackedEntityAttribute element = (TrackedEntityAttribute) object;            
             QueryItem item = new QueryItem( element, element.getLegendSet(), element.getValueType(), element.getAggregationType(), element.getOptionSet() );
             params.getItems().add( item );
-        }
+        }        
 
         for ( NameableObject object : dataQueryParams.getFilterProgramDataElements() )
         {
@@ -178,6 +181,12 @@ public class EventQueryParams
             params.getItemFilters().add( item );
         }
 
+        for ( NameableObject object : dataQueryParams.getProgramIndicators() )
+        {
+            ProgramIndicator programIndicator = (ProgramIndicator) object;
+            params.getItemProgramIndicators().add( programIndicator );
+        }
+        
         params.setAggregateData( true );
         params.removeDimension( DATA_X_DIM_ID );
         
@@ -290,7 +299,7 @@ public class EventQueryParams
     /**
      * Returns the aggregation type for this query, first by looking at the
      * aggregation type of the query, second by looking at the aggregation type
-     * of the value dimension.
+     * of the value dimension, third by returning AVERAGE;
      */
     public AggregationType getAggregationTypeFallback()
     {
@@ -303,7 +312,7 @@ public class EventQueryParams
             return value.getAggregationType();
         }
         
-        return null;
+        return AggregationType.AVERAGE;
     }
 
     /**
@@ -314,6 +323,7 @@ public class EventQueryParams
     public boolean isAggregationType( AggregationType aggregationType )
     {
         AggregationType type = getAggregationTypeFallback();
+        
         return type != null && type.equals( aggregationType );
     }    
     
@@ -393,7 +403,12 @@ public class EventQueryParams
     {
         return value != null;
     }
-        
+    
+    public boolean hasProgramIndicatorDimension()
+    {
+        return programIndicator != null;
+    }
+    
     /**
      * Indicates whether the program of this query requires registration of
      * tracked entity instances.
@@ -421,8 +436,9 @@ public class EventQueryParams
             "End date: " + endDate + ", " +
             "Items: " + items + ", " +
             "Item filters: " + itemFilters + ", " +
-            "Filter: " + filter + ", " +
             "Value: " + value + ", " +
+            "Item program indicators: " + itemProgramIndicators + ", " +
+            "Program indicator: " + programIndicator + ", " +
             "Aggregation type: " + aggregationType + ", " +
             "Dimensions: " + dimensions + ", " +
             "Filters: " + filters + "]";
@@ -472,16 +488,6 @@ public class EventQueryParams
         this.itemFilters = itemFilters;
     }
 
-    public String getFilter()
-    {
-        return filter;
-    }
-
-    public void setFilter( String filter )
-    {
-        this.filter = filter;
-    }
-
     public DimensionalObject getValue()
     {
         return value;
@@ -490,6 +496,26 @@ public class EventQueryParams
     public void setValue( DimensionalObject value )
     {
         this.value = value;
+    }
+
+    public List<ProgramIndicator> getItemProgramIndicators()
+    {
+        return itemProgramIndicators;
+    }
+
+    public void setItemProgramIndicators( List<ProgramIndicator> itemProgramIndicators )
+    {
+        this.itemProgramIndicators = itemProgramIndicators;
+    }
+
+    public ProgramIndicator getProgramIndicator()
+    {
+        return programIndicator;
+    }
+
+    public void setProgramIndicator( ProgramIndicator programIndicator )
+    {
+        this.programIndicator = programIndicator;
     }
 
     public List<String> getAsc()

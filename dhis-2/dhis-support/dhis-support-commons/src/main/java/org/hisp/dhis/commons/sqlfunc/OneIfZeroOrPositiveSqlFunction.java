@@ -1,4 +1,4 @@
-package org.hisp.dhis.common;
+package org.hisp.dhis.commons.sqlfunc;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,22 +29,19 @@ package org.hisp.dhis.common;
  */
 
 /**
+ * Function which evaluates numerical values to one if zero or positive, zero
+ * otherwise.
+ * 
  * @author Lars Helge Overland
  */
-public enum DimensionType
+public class OneIfZeroOrPositiveSqlFunction
+    implements SqlFunction
 {
-    DATA_X,
-    PROGRAM_DATAELEMENT,
-    PROGRAM_ATTRIBUTE,
-    PROGRAM_INDICATOR,
-    DATA_COLLAPSED,
-    CATEGORY_OPTION_COMBO,
-    ATTRIBUTE_OPTION_COMBO,
-    PERIOD,
-    ORGANISATIONUNIT,
-    CATEGORYOPTION_GROUPSET,
-    DATAELEMENT_GROUPSET,
-    ORGANISATIONUNIT_GROUPSET,
-    CATEGORY,
-    STATIC
+    public static final String KEY = "oizp";
+    
+    @Override
+    public String evaluate( String column )
+    {
+        return "case when " + column + " >= 0 then 1 else 0 end";
+    }
 }

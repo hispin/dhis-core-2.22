@@ -10,9 +10,6 @@
       'rules': getValidationRules("dateElementCategoryOption")
     });
 
-    $('#startDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
-    $('#endDate').calendarsPicker('option', 'maxDate', dhis2.period.calendar.add(dhis2.period.calendar.today(), 100, 'y'));
-
     selection.clearSelected(); // Sync ouwt from server
     selection.setOfflineLevel(1);
     selection.setMultipleSelectionAllowed(true);
@@ -25,14 +22,16 @@
     checkValueIsExist("shortName", "validateDataElementCategoryOption.action", { id: $dataElementCategoryOption.id});
     checkValueIsExist("code", "validateDataElementCategoryOption.action", { id: $dataElementCategoryOption.id});
 
-    dhis2.period.picker.createInstance('#startDate');
-    dhis2.period.picker.createInstance('#endDate');
+    // dhis2.period.picker.createInstance('#startDate', false, { 'maxDate': null });
+    // dhis2.period.picker.createInstance('#endDate', false, { 'maxDate': null });
+
+    dhis2.period.picker.createRangedInstance('#startDate', '#endDate', false, { 'maxDate': null })
   });
 
-    var i18n_confirm_delete = '$encoder.jsEscape( $i18n.getString( "confirm_delete_data_element_category_option" ) , "'")';
-    var i18n_specify_category_option_name = '$encoder.jsEscape( $i18n.getString( "specify_category_option_name" ) , "'")';
-    var i18n_category_option_name_already_exists = '$encoder.jsEscape( $i18n.getString( "category_option_name_already_exists" ) , "'")';
-	var i18n_option_rename_successfully = '$encoder.jsEscape( $i18n.getString( "option_rename_successfully" ) , "'")';
+  var i18n_confirm_delete = '$encoder.jsEscape( $i18n.getString( "confirm_delete_data_element_category_option" ) , "'")';
+  var i18n_specify_category_option_name = '$encoder.jsEscape( $i18n.getString( "specify_category_option_name" ) , "'")';
+  var i18n_category_option_name_already_exists = '$encoder.jsEscape( $i18n.getString( "category_option_name_already_exists" ) , "'")';
+  var i18n_option_rename_successfully = '$encoder.jsEscape( $i18n.getString( "option_rename_successfully" ) , "'")';
 </script>
 
 <style type="text/css">
@@ -46,12 +45,12 @@
 <h3>$i18n.getString( "edit_data_element_category_option" )</h3>
 
 <form id="editDataElementCategoryOptionForm" name="editDataElementCategoryOptionForm" action="updateDataElementCategoryOption.action" method="post" class="inputForm">
-  
+
   <input type="hidden" id="id" name="id" value="$dataElementCategoryOption.id"/>
-  
+
   <table>
     <tr>
-      <th colspan="2">$i18n.getString( "details" )</th>      
+      <th colspan="2">$i18n.getString( "details" )</th>
     </tr>
     <tr>
       <td style="width: 100px"><label>$i18n.getString( "name" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
@@ -66,13 +65,13 @@
 	  <td><input type="text" id="code" name="code" value="$!encoder.htmlEncode( $dataElementCategoryOption.code )" /></td>
     </tr>
   </table>
-  
+
   #tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
 
   <div id="showMoreOptions" style="margin: 20px 0;"><a href="javascript:showMoreOrFewerOptions()">$i18n.getString( "show_more_options" )</a></div>
-  
+
   <div id="moreOptions" style="display:none">
-    
+
   <table>
     <tr>
       <td style="width: 100px"><label for="startDate">$i18n.getString( 'start_date' )</label></td>
@@ -103,5 +102,5 @@
     <input type="submit" value="$i18n.getString( 'save' )" style="width:10em"/>
 	<input type="button" onclick="dhis2.commons.redirectCurrentPage( 'categoryOption.action' )" value="$i18n.getString( 'cancel' )" style="width:10em"/></p>
   </p>
-  
+
 </form>
