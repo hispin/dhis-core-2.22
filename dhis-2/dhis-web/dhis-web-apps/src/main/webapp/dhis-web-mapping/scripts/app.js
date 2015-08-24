@@ -697,13 +697,6 @@ Ext.onReady( function() {
 			layer.window.widget = layer.widget;
 			GIS.core.createSelectHandlers(gis, layer);
 
-			layer = gis.layer.boundary;
-			layer.menu = GIS.app.LayerMenu(layer);
-			layer.widget = GIS.app.LayerWidgetBoundary(layer);
-			layer.window = GIS.app.WidgetWindow(layer);
-			layer.window.widget = layer.widget;
-			GIS.core.createSelectHandlers(gis, layer);
-
 			layer = gis.layer.thematic1;
 			layer.menu = GIS.app.LayerMenu(layer);
 			layer.widget = GIS.app.LayerWidgetThematic(layer);
@@ -727,6 +720,13 @@ Ext.onReady( function() {
 			layer = gis.layer.thematic4;
 			layer.menu = GIS.app.LayerMenu(layer);
 			layer.widget = GIS.app.LayerWidgetThematic(layer);
+			layer.window = GIS.app.WidgetWindow(layer);
+			layer.window.widget = layer.widget;
+			GIS.core.createSelectHandlers(gis, layer);
+
+			layer = gis.layer.boundary;
+			layer.menu = GIS.app.LayerMenu(layer);
+			layer.widget = GIS.app.LayerWidgetBoundary(layer);
 			layer.window = GIS.app.WidgetWindow(layer);
 			layer.window.widget = layer.widget;
 			GIS.core.createSelectHandlers(gis, layer);
@@ -2712,19 +2712,6 @@ Ext.onReady( function() {
 						view = Ext.clone(layer.core.view);
 
                         view.hidden = !layer.visibility;
-
-						// operand
-						if (Ext.isArray(view.columns) && view.columns.length) {
-							for (var j = 0; j < view.columns.length; j++) {
-								for (var k = 0, item; k < view.columns[j].items.length; k++) {
-									item = view.columns[j].items[k];
-
-									if (item.id.indexOf('#') !== -1) {
-										item.id = item.id.replace('#', '.');
-									}
-								}
-							}
-						}
 
 						// add
 						view.layer = layer.id;
@@ -7230,10 +7217,6 @@ Ext.onReady( function() {
 						this.load({
 							scope: this,
 							callback: function() {
-								this.each(function(r) {
-                                    r.set('id', r.data.id.split('#').join('.'));
-								});
-
 								this.sortStore();
 
 								if (Ext.isFunction(callbackFn)) {
@@ -9086,12 +9069,6 @@ Ext.onReady( function() {
 						width: 26
 					});
 					a.push({
-						iconCls: 'gis-btn-icon-' + gis.layer.boundary.id,
-						menu: gis.layer.boundary.menu,
-						tooltip: GIS.i18n.boundary_layer,
-						width: 26
-					});
-					a.push({
 						iconCls: 'gis-btn-icon-' + gis.layer.thematic1.id,
 						menu: gis.layer.thematic1.menu,
 						tooltip: GIS.i18n.thematic_layer + ' 1',
@@ -9113,6 +9090,12 @@ Ext.onReady( function() {
 						iconCls: 'gis-btn-icon-' + gis.layer.thematic4.id,
 						menu: gis.layer.thematic4.menu,
 						tooltip: GIS.i18n.thematic_layer + ' 4',
+						width: 26
+					});
+					a.push({
+						iconCls: 'gis-btn-icon-' + gis.layer.boundary.id,
+						menu: gis.layer.boundary.menu,
+						tooltip: GIS.i18n.boundary_layer,
 						width: 26
 					});
 					a.push({
