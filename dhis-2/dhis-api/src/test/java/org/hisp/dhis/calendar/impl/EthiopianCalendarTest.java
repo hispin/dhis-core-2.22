@@ -57,4 +57,20 @@ public class EthiopianCalendarTest
         assertEquals( 9, startOfYear.getMonth() );
         assertEquals( 11, startOfYear.getDay() );
     }
+
+    @Test
+    public void testDaysInMonth()
+    {
+        int month12 = calendar.daysInMonth( 2007, 12 );
+        int month13 = calendar.daysInMonth( 2007, 13 );
+
+        assertEquals( 36, month12 );
+        assertEquals( 36, month13 );
+
+        month12 = calendar.daysInMonth( 2004, 12 );
+        month13 = calendar.daysInMonth( 2004, 13 );
+
+        assertEquals( 35, month12 );
+        assertEquals( 35, month13 );
+    }
 }
