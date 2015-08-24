@@ -32,6 +32,7 @@ import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.period.Cal;
 import org.hisp.dhis.period.DailyPeriodType;
+import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.QuarterlyPeriodType;
 import org.junit.Before;
@@ -93,13 +94,23 @@ public class EthiopianCalendarTest
     }
 
     @Test
-    @Ignore
     public void testGenerateQuarterlyPeriods()
     {
         Date startDate = new Cal( 1975, 1, 1, true ).time();
-        Date endDate = new Cal( 1976, 1, 2, true ).time();
+        Date endDate = new Cal( 2025, 1, 2, true ).time();
 
         List<Period> quarters = new QuarterlyPeriodType().generatePeriods( calendar, startDate, endDate );
-        assertEquals( 5, quarters.size() );
+        assertEquals( 201, quarters.size() );
+    }
+
+    @Test
+    @Ignore
+    public void testGenerateMonthlyPeriods()
+    {
+        Date startDate = new Cal( 1975, 1, 1, true ).time();
+        Date endDate = new Cal( 2025, 1, 2, true ).time();
+
+        List<Period> monthly = new MonthlyPeriodType().generatePeriods( calendar, startDate, endDate );
+        assertEquals( 601, monthly.size() );
     }
 }

@@ -52,7 +52,7 @@ public class MonthlyPeriodType
     private static final long serialVersionUID = -6920058214699654387L;
 
     private static final String ISO_FORMAT = "yyyyMM";
-    
+
     private static final String ISO8601_DURATION = "P1M";
 
     /**
@@ -77,6 +77,12 @@ public class MonthlyPeriodType
     {
         DateTimeUnit start = new DateTimeUnit( dateTimeUnit );
         start.setDay( 1 );
+
+        if ( start.getMonth() > 12 )
+        {
+            start.setYear( start.getYear() + 1 );
+            start.setMonth( 1 );
+        }
 
         DateTimeUnit end = new DateTimeUnit( dateTimeUnit );
         end.setDay( calendar.daysInMonth( end.getYear(), end.getMonth() ) );
@@ -173,9 +179,9 @@ public class MonthlyPeriodType
     }
 
     @Override
-    public String getIso8601Duration() 
+    public String getIso8601Duration()
     {
-        return ISO8601_DURATION; 
+        return ISO8601_DURATION;
     }
 
 
