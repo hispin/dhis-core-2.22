@@ -265,13 +265,13 @@ Ext.onReady( function() {
 			});
 
 			defaultHoverWindow.show();
+                
+            var cr = gis.viewport.centerRegion,
+                crp = cr.getPosition(),
+                x = crp[0] + (cr.getWidth() / 2) - (defaultHoverWindow.getWidth() / 2),
+                y = crp[1] + (GIS.app ? 32 : 0);
 
-			var eastX = gis.viewport.eastRegion.getPosition()[0],
-				centerX = gis.viewport.centerRegion.getPosition()[0],
-				centerRegionCenterX = centerX + ((eastX - centerX) / 2),
-				centerRegionY = gis.viewport.centerRegion.getPosition()[1] + (GIS.app ? 32 : 0);
-
-			defaultHoverWindow.setPosition(centerRegionCenterX - (defaultHoverWindow.getWidth() / 2), centerRegionY);
+			defaultHoverWindow.setPosition(x, y);
 
             layer.registerMouseDownEvent();
 		};
