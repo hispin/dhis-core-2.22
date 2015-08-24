@@ -28,11 +28,7 @@ package org.hisp.dhis.calendar;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Date;
-import java.util.TimeZone;
-
-import javax.validation.constraints.NotNull;
-
+import com.google.common.base.MoreObjects;
 import org.joda.time.Chronology;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -40,7 +36,9 @@ import org.joda.time.IllegalInstantException;
 import org.joda.time.LocalDateTime;
 import org.joda.time.chrono.ISOChronology;
 
-import com.google.common.base.MoreObjects;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Class representing a specific calendar date.
@@ -281,24 +279,13 @@ public class DateTimeUnit
     }
 
     /**
-     * Converts dateUnit to Joda-Time DateTime
+     * Converts dateUnit to Joda-Time DateTime using ISO chronology
      *
      * @return Populated DateTime object
      */
     public DateTime toJodaDateTime()
     {
-        try
-        {
-            return new DateTime( year, month, day, hour, minute, second, millis, ISOChronology.getInstance( DateTimeZone.forTimeZone( timeZone ) ) );
-        }
-        catch ( IllegalInstantException ex )
-        {
-            LocalDateTime localDateTime = new LocalDateTime( year, month, day, hour, minute, second, millis,
-                ISOChronology.getInstance( DateTimeZone.forTimeZone( timeZone ) ) );
-
-            return localDateTime.toLocalDate().toDateTimeAtStartOfDay();
-        }
-
+        return toJodaDateTime( ISOChronology.getInstance() );
     }
 
     /**
@@ -309,7 +296,17 @@ public class DateTimeUnit
      */
     public DateTime toJodaDateTime( Chronology chronology )
     {
-        return toJodaDateTime().withChronology( chronology );
+        try
+        {
+            return new DateTime( year, month, day, hour, minute, second, millis, chronology.withZone( DateTimeZone.forTimeZone( timeZone ) ) );
+        }
+        catch ( IllegalInstantException ex )
+        {
+            LocalDateTime localDateTime = new LocalDateTime( year, month, day, hour, minute, second, millis,
+                chronology.withZone( DateTimeZone.forTimeZone( timeZone ) ) );
+
+            return localDateTime.toLocalDate().toDateTimeAtStartOfDay();
+        }
     }
 
     /**

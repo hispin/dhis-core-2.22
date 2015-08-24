@@ -30,8 +30,14 @@ package org.hisp.dhis.calendar.impl;
 
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
+import org.hisp.dhis.period.Cal;
+import org.hisp.dhis.period.DailyPeriodType;
+import org.hisp.dhis.period.Period;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -72,5 +78,15 @@ public class EthiopianCalendarTest
 
         assertEquals( 35, month12 );
         assertEquals( 35, month13 );
+    }
+
+    @Test
+    public void testGenerateDailyPeriods()
+    {
+        Date startDate = new Cal( 1975, 1, 1, true ).time();
+        Date endDate = new Cal( 2025, 1, 2, true ).time();
+
+        List<Period> days = new DailyPeriodType().generatePeriods( calendar, startDate, endDate );
+        assertEquals( 18264, days.size() );
     }
 }
