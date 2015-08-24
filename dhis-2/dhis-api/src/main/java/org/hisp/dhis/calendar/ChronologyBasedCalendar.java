@@ -41,7 +41,7 @@ import java.util.Date;
  */
 public abstract class ChronologyBasedCalendar extends AbstractCalendar
 {
-    private final Chronology chronology;
+    protected final Chronology chronology;
 
     protected ChronologyBasedCalendar( Chronology chronology )
     {
@@ -312,5 +312,12 @@ public abstract class ChronologyBasedCalendar extends AbstractCalendar
     {
         DateTime dateTime = dateTimeUnit.toJodaDateTime( chronology );
         return DateTimeUnit.fromJodaDateTime( dateTime.minusYears( years ), dateTimeUnit.isIso8601() );
+    }
+
+    @Override
+    public DateTimeUnit isoStartOfYear( int year )
+    {
+        DateTime dateTime = new DateTime( year, 1, 1, 0, 0, chronology ).withChronology( ISOChronology.getInstance() );
+        return DateTimeUnit.fromJodaDateTime( dateTime );
     }
 }
