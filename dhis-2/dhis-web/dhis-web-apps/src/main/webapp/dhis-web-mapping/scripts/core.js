@@ -3,9 +3,9 @@ Ext.onReady( function() {
 	// ext config
 	Ext.Ajax.method = 'GET';
 
-    Ext.isIE = function() {
-        return /trident/.test(Ext.userAgent);
-    }();
+    Ext.isIE = (/trident/.test(Ext.userAgent));
+
+    Ext.isIE11 = Ext.isIE && (/rv:11.0/.test(Ext.userAgent));
 
 	// gis
 	GIS = {
@@ -82,11 +82,11 @@ Ext.onReady( function() {
 		olmap.closeAllLayers = function() {
 			gis.layer.event.core.reset();
 			gis.layer.facility.core.reset();
-			gis.layer.boundary.core.reset();
 			gis.layer.thematic1.core.reset();
 			gis.layer.thematic2.core.reset();
 			gis.layer.thematic3.core.reset();
 			gis.layer.thematic4.core.reset();
+			gis.layer.boundary.core.reset();
 		};
 
 		addControl('zoomIn', olmap.zoomIn);
@@ -159,7 +159,7 @@ Ext.onReady( function() {
 			gis: gis
 		});
 
-		layers.boundary = GIS.core.VectorLayer(gis, 'boundary', GIS.i18n.boundary_layer, {opacity: gis.conf.layout.layer.opacity});
+		layers.boundary = GIS.core.VectorLayer(gis, 'boundary', GIS.i18n.boundary_layer, {opacity: 1});
 		layers.boundary.core = new mapfish.GeoStat.Boundary(gis.olmap, {
 			layer: layers.boundary,
 			gis: gis
@@ -1085,23 +1085,6 @@ Ext.onReady( function() {
                             }
                             else {
                                 objectName = 'in';
-                            }
-                        }
-
-                        if (view) {
-                            if (Ext.isArray(view.columns) && view.columns.length) {
-                                for (var j = 0, dim; j < view.columns.length; j++) {
-                                    dim = view.columns[j];
-                                    dim.objectName = objectName;
-
-                                    if (Ext.isArray(dim.items) && dim.items.length) {
-                                        for (var k = 0, item; k < dim.items.length; k++) {
-                                            item = dim.items[k];
-
-                                            item.id = item.id.replace('#', '.');
-                                        }
-                                    }
-                                }
                             }
                         }
                     }
@@ -3378,29 +3361,27 @@ Ext.onReady( function() {
 			api.response = {};
 
 			api.layout.Record = function(config) {
-				var record = {};
+				var record;
 
 				// id: string
 
-				return function() {
-					if (!Ext.isObject(config)) {
-						console.log('Record config is not an object', config);
-						return;
-					}
+                if (!Ext.isObject(config)) {
+                    console.log('Record config is not an object', config);
+                    return;
+                }
 
-					if (!Ext.isString(config.id)) {
-						console.log('Record id is not text', config);
-						return;
-					}
+                if (!Ext.isString(config.id)) {
+                    console.log('Record id is not text', config);
+                    return;
+                }
 
-					record.id = config.id.replace('#', '.');
+                record = Ext.clone(config);
 
-					if (Ext.isString(config.name)) {
-						record.name = config.name;
-					}
+                if (Ext.isString(config.name)) {
+                    record.name = config.name;
+                }
 
-					return Ext.clone(record);
-				}();
+                return record;
 			};
 
 			api.layout.Dimension = function(config) {
@@ -3410,50 +3391,48 @@ Ext.onReady( function() {
 
 				// items: [Record]
 
-				return function() {
-					if (!Ext.isObject(config)) {
-						//console.log('Dimension config is not an object: ' + config);
-						return;
-					}
+                if (!Ext.isObject(config)) {
+                    //console.log('Dimension config is not an object: ' + config);
+                    return;
+                }
 
-					if (!Ext.isString(config.dimension)) {
-						console.log('Dimension name is not text', config);
-						return;
-					}
+                if (!Ext.isString(config.dimension)) {
+                    console.log('Dimension name is not text', config);
+                    return;
+                }
 
-					if (config.dimension !== conf.finals.dimension.category.objectName) {
-						var records = [];
+                if (config.dimension !== conf.finals.dimension.category.objectName) {
+                    var records = [];
 
-						if (!Ext.isArray(config.items)) {
-							console.log('Dimension items is not an array', config);
-							return;
-						}
-
-						for (var i = 0; i < config.items.length; i++) {
-							record = api.layout.Record(config.items[i]);
-
-							if (record) {
-								records.push(record);
-							}
-						}
-
-						config.items = records;
-
-						if (!config.items.length) {
-							console.log('Dimension has no valid items', config);
-							return;
-						}
-					}
-
-					dimension.dimension = config.dimension;
-					dimension.items = config.items;
-
-                    if (config.objectName) {
-                        dimension.objectName = config.objectName;
+                    if (!Ext.isArray(config.items)) {
+                        console.log('Dimension items is not an array', config);
+                        return;
                     }
 
-					return Ext.clone(dimension);
-				}();
+                    for (var i = 0; i < config.items.length; i++) {
+                        record = api.layout.Record(config.items[i]);
+
+                        if (record) {
+                            records.push(record);
+                        }
+                    }
+
+                    config.items = records;
+
+                    if (!config.items.length) {
+                        console.log('Dimension has no valid items', config);
+                        return;
+                    }
+                }
+
+                dimension.dimension = config.dimension;
+                dimension.items = config.items;
+
+                if (config.objectName) {
+                    dimension.objectName = config.objectName;
+                }
+
+                return Ext.clone(dimension);
 			};
 
             api.layout.Layout = function(config, applyConfig, forceApplyConfig) {
@@ -3577,10 +3556,10 @@ Ext.onReady( function() {
                         return;
                     }
                     
-                    if (!config.filters) {
-                        console.log('Please select a valid period', config.filters);
-                        return;
-                    }
+                    //if (!config.filters) {
+                        //console.log('Please select a valid period', config.filters);
+                        //return;
+                    //}
 
                     if (Ext.Array.contains([gis.layer.thematic1.id, gis.layer.thematic2.id, gis.layer.thematic3.id, gis.layer.thematic4.id], config.layer)) {
                         if (!config.columns) {
@@ -3762,11 +3741,11 @@ Ext.onReady( function() {
 
 		layers.push(
 			gis.layer.openStreetMap,
+			gis.layer.boundary,
 			gis.layer.thematic4,
 			gis.layer.thematic3,
 			gis.layer.thematic2,
 			gis.layer.thematic1,
-			gis.layer.boundary,
 			gis.layer.facility,
 			gis.layer.event
 		);
