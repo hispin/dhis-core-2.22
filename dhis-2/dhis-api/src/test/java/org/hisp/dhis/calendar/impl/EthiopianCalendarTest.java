@@ -33,7 +33,9 @@ import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.period.Cal;
 import org.hisp.dhis.period.DailyPeriodType;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.period.QuarterlyPeriodType;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -88,5 +90,16 @@ public class EthiopianCalendarTest
 
         List<Period> days = new DailyPeriodType().generatePeriods( calendar, startDate, endDate );
         assertEquals( 18264, days.size() );
+    }
+
+    @Test
+    @Ignore
+    public void testGenerateQuarterlyPeriods()
+    {
+        Date startDate = new Cal( 1975, 1, 1, true ).time();
+        Date endDate = new Cal( 1976, 1, 2, true ).time();
+
+        List<Period> quarters = new QuarterlyPeriodType().generatePeriods( calendar, startDate, endDate );
+        assertEquals( 5, quarters.size() );
     }
 }
