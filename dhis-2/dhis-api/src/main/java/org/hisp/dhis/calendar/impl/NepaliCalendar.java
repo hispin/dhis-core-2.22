@@ -484,7 +484,7 @@ public class NepaliCalendar extends AbstractCalendar
     }
 
     @Override
-    public DateTimeUnit startOfYear()
+    public DateTimeUnit isoStartOfYear( int year )
     {
         return startIso;
     }

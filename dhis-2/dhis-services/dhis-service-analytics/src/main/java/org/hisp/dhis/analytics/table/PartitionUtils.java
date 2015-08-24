@@ -57,7 +57,7 @@ public class PartitionUtils
 
     public static Period getPeriod( Calendar calendar, Integer year )
     {
-        DateTimeUnit startOfYear = calendar.startOfYear();
+        DateTimeUnit startOfYear = calendar.isoStartOfYear( year );
         DateTime time = new DateTime( year, startOfYear.getMonth(), startOfYear.getDay(), 1, 1 );
 
         return PERIODTYPE.createPeriod( time.toDate() );

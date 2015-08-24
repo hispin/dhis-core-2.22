@@ -406,5 +406,5 @@ public interface Calendar
      *
      * @return
      */
-    DateTimeUnit startOfYear();
+    DateTimeUnit isoStartOfYear( int year );
 }
