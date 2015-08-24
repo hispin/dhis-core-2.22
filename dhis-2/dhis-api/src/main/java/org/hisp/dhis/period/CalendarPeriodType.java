@@ -139,7 +139,7 @@ public abstract class CalendarPeriodType
     public List<Period> generateRollingPeriods( Date date )
     {
         DateTimeUnit dateTime = createLocalDateUnitInstance( date );
-        
+
         return generateRollingPeriods( dateTime );
     }
 
@@ -170,6 +170,11 @@ public abstract class CalendarPeriodType
         return periods;
     }
 
+    public List<Period> generatePeriods( Date startDate, Date endDate )
+    {
+        return generatePeriods( getCalendar(), startDate, endDate );
+    }
+
     /**
      * Generates a list of all Periods between the given start and end date. The
      * first period will span the start date. The last period will span the end
@@ -179,13 +184,11 @@ public abstract class CalendarPeriodType
      * @param endDate   the end date.
      * @return a list of Periods for the defined time span.
      */
-    public List<Period> generatePeriods( Date startDate, Date endDate )
+    public List<Period> generatePeriods( Calendar calendar, Date startDate, Date endDate )
     {
         List<Period> periods = new ArrayList<>();
 
         Period period = createPeriod( startDate );
-
-        Calendar calendar = getCalendar();
 
         while ( period.getStartDate().before( endDate ) )
         {
