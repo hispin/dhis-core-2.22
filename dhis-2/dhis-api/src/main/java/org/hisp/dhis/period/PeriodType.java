@@ -62,7 +62,7 @@ public abstract class PeriodType
     implements Serializable
 {
     // Cache for period lookup, uses calendar.name() + periodType.getName() + date.getTime() as key
-    
+
     private static Cache<String, Period> periodCache = CacheBuilder.newBuilder()
         .expireAfterAccess( 5, TimeUnit.MINUTES )
         .initialCapacity( 10000 )
@@ -310,14 +310,14 @@ public abstract class PeriodType
         DateTimeUnit from = calendar.toIso( start );
         DateTimeUnit to = calendar.toIso( end );
 
-        return new Period( this, from.toJdkDate(), to.toJdkDate(), getIsoDate( from ) );
+        return new Period( this, from.toJdkDate(), to.toJdkDate(), getIsoDate( start ) );
     }
 
     public Period toIsoPeriod( DateTimeUnit dateTimeUnit )
     {
         return toIsoPeriod( dateTimeUnit, dateTimeUnit );
     }
-    
+
     public abstract String getIso8601Duration();
 
     public abstract Period createPeriod( DateTimeUnit dateTimeUnit, org.hisp.dhis.calendar.Calendar calendar );
@@ -456,17 +456,17 @@ public abstract class PeriodType
     public static List<Period> getPeriodsFromIsoStrings( List<String> isoPeriods )
     {
         List<Period> periods = new ArrayList<>();
-        
+
         for ( String isoPeriod : isoPeriods )
         {
             Period period = getPeriodFromIsoString( isoPeriod );
-            
+
             if ( period != null )
             {
                 periods.add( period );
             }
         }
-        
+
         return periods;
     }
 
