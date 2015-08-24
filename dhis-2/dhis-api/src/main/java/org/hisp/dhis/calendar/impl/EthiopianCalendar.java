@@ -30,6 +30,7 @@ package org.hisp.dhis.calendar.impl;
 
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.ChronologyBasedCalendar;
+import org.hisp.dhis.calendar.DateTimeUnit;
 import org.joda.time.DateTimeZone;
 import org.joda.time.chrono.EthiopicChronology;
 import org.springframework.stereotype.Component;
@@ -56,5 +57,11 @@ public class EthiopianCalendar extends ChronologyBasedCalendar
     public String name()
     {
         return "ethiopian";
+    }
+
+    @Override
+    public DateTimeUnit startOfYear()
+    {
+        return new DateTimeUnit( 0, 9, 11 );
     }
 }
