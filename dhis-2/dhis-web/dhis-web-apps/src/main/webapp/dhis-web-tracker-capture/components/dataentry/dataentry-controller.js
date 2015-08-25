@@ -21,7 +21,8 @@ trackerCapture.controller('DataEntryController',
                 TrackerRulesExecutionService,
                 CustomFormService,
                 PeriodService,
-                TrackerRulesFactory) {
+                TrackerRulesFactory,
+                  ProgramStageSequencingService) {
 
     //Data entry form
     $scope.outerForm = {};
@@ -318,6 +319,8 @@ trackerCapture.controller('DataEntryController',
 
         var dummyEvent = EventUtils.createDummyEvent($scope.eventsByStage[stage.id], $scope.selectedEntity, $scope.selectedProgram, stage, $scope.selectedOrgUnit, $scope.selectedEnrollment);
 
+        dummyEvent= ProgramStageSequencingService.applySequencingOperationIfStageFlagged(dummyEvent,$scope.currentEvent,$scope.eventsByStage,$scope.programStages,$scope.stagesById,$scope.prStDes,$scope.currentStage);
+
         var modalInstance = $modal.open({
             templateUrl: 'components/dataentry/new-event.html',
             controller: 'EventCreationController',
@@ -516,6 +519,7 @@ trackerCapture.controller('DataEntryController',
 
                 //Run rules on updated data:
                 $scope.executeRules();
+                ProgramStageSequencingService.updateCurrentEventAfterDataValueChange($scope.currentEvent,ev.dataValues[0]);
             });
 
         }

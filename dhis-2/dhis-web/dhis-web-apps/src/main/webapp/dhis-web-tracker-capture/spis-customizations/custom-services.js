@@ -92,7 +92,7 @@ angular.module('trackerCaptureServices')
                         "orgUnit": tei.orgUnit,
                         "attributes": tei.attributes
                     }
-                    var promise = $http.put( '../api/trackedEntityInstances/'+teI.trackedEntity,teI ).then(function(response){
+                    $http.put( '../api/trackedEntityInstances/'+teI.trackedEntity,teI ).then(function(response){
                         if (response.data.response.status == "SUCCESS"){
 
                             alert("Beneficiary Id : " + customId);
@@ -152,5 +152,112 @@ angular.module('trackerCaptureServices')
 
                 return def;
             }
+        }
+    })
+
+    .service('ProgramStageSequencingService',function(CalendarService,$filter,orderByFilter) {
+        return {
+            updateCurrentEventAfterDataValueChange: function(currentEvent,dataValue){
+                var isDePresent = false;
+
+                if (!currentEvent.dataValues){
+                    currentEvent.dataValues = [];
+                }
+                for (var i=0;i< currentEvent.dataValues.length;i++){
+                    if (currentEvent.dataValues[i].dataElement == dataValue.dataElement){
+                        currentEvent.dataValues[i].value = dataValue.value;
+                        isDePresent = true;
+                    }
+                }
+
+                if (!isDePresent){
+
+                    currentEvent.dataValues.push(dataValue);
+                }
+            },
+            getTargetStage : function(programStages,stagesById,currentStage){
+                
+                for (var i=0; i < programStages.length; i++){
+                    if (programStages[i].sortOrder == (currentStage.sortOrder % programStages.length)+1){
+                        return programStages[i];
+                    }
+                }
+                return currentStage;
+            },
+            addOffsetAndFormatDate : function(referenceDate,offset){
+                var calendarSetting = CalendarService.getSetting();
+
+                var date = moment(referenceDate, calendarSetting.momentFormat).add('d', offset)._d;
+                date = $filter('date')(date, calendarSetting.keyDateFormat);
+                
+                return date;
+            },
+            applySequencingOperationIfStageFlagged: function (dummyEvent,currentEvent,eventsByStage,programStages,stagesById,prStDes,currentStage) {
+
+                // initial checking for null values - happens when no events exist
+                if (!currentEvent || !currentStage)
+                    return dummyEvent;
+
+                var isStageSequencingEnabled = false;
+                var isDeValid = false;
+                var customTimeInterval = null;
+                var isCustomTimeIntervalEnabled = false;
+                var targetProgramStage = this.getTargetStage(programStages,stagesById,currentStage);
+
+
+                //check if stage is valid
+                for (var stageIndex=0;stageIndex<currentStage.attributeValues.length;stageIndex++){
+                    if (currentStage.attributeValues[stageIndex].attribute.code == "isStageSequencingEnabled" && currentStage.attributeValues[stageIndex].value == "true"){
+                        isStageSequencingEnabled = true;
+                    }
+                    if (currentStage.attributeValues[stageIndex].attribute.code == "isCustomTimeIntervalEnabled" && currentStage.attributeValues[stageIndex].value == "true"){
+                        isCustomTimeIntervalEnabled  = true;
+                    }
+                    if (currentStage.attributeValues[stageIndex].attribute.code == "customTimeInterval" && currentStage.attributeValues[stageIndex].value ){
+                        customTimeInterval  = currentStage.attributeValues[stageIndex].value;
+                    }
+
+                }
+                
+                if (isCustomTimeIntervalEnabled ){
+                    if (currentStage.periodType || !customTimeInterval){
+                        return dummyEvent;
+                    }
+                        var timeRange = customTimeInterval.split("-");
+                        var evs = eventsByStage[currentStage.id];
+
+                        evs = orderByFilter(evs, '-eventDate');
+                        dummyEvent.dueDate = this.addOffsetAndFormatDate(evs[0].eventDate,timeRange[evs.length] ? timeRange[evs.length-1] : 0);
+                    return dummyEvent;
+                }
+                
+               
+                if (!isStageSequencingEnabled || !currentEvent.dataValues){
+                    return dummyEvent;
+                }
+
+                for (var dataValueIndex=0;dataValueIndex<currentEvent.dataValues.length;dataValueIndex++){
+                    for (var dataElementAttributeValueIndex=0;dataElementAttributeValueIndex<prStDes[currentEvent.dataValues[dataValueIndex].dataElement].dataElement.attributeValues.length;dataElementAttributeValueIndex++){
+                        if (prStDes[currentEvent.dataValues[dataValueIndex].dataElement].dataElement.attributeValues[dataElementAttributeValueIndex].attribute.code == "stageSequencingSkipLogicDataValue" &&
+                            prStDes[currentEvent.dataValues[dataValueIndex].dataElement].dataElement.attributeValues[dataElementAttributeValueIndex].value == currentEvent.dataValues[dataValueIndex].value){
+                            isDeValid = true;
+                        }
+                    }
+                }
+
+                if (isDeValid){
+                    dummyEvent.programStage = targetProgramStage.id;
+                    dummyEvent.name = targetProgramStage.name;
+                    dummyEvent.reportDateDescription = targetProgramStage.reportDateDescription;
+
+                    if (!targetProgramStage.periodType){
+                        dummyEvent.dueDate = this.addOffsetAndFormatDate(currentEvent.eventDate,targetProgramStage.standardInterval ?  targetProgramStage.standardInterval : 0);
+                    }
+                }
+
+                return dummyEvent;
+            }
+
+
         }
     })
