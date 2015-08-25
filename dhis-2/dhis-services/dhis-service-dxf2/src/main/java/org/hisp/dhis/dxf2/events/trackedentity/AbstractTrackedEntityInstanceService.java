@@ -329,7 +329,14 @@ public abstract class AbstractTrackedEntityInstanceService
 
             return importSummary;
         }
-
+        
+        if( trackedEntityInstance.getActive() != null )
+        {
+            System.out.println( "trackedEntityInstance.getActive() -- " + trackedEntityInstance.getActive() );
+            
+            entityInstance.setActive( trackedEntityInstance.getActive() );
+        }
+        
         removeRelationships( entityInstance );
         removeAttributeValues( entityInstance );
         teiService.updateTrackedEntityInstance( entityInstance );
