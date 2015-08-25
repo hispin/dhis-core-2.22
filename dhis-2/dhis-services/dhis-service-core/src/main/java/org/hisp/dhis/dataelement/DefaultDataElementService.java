@@ -42,12 +42,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hisp.dhis.common.GenericDimensionalObjectStore;
 import org.hisp.dhis.common.GenericNameableObjectStore;
 import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.comparator.DataElementCategoryComboSizeComparator;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.i18n.I18nService;
@@ -142,16 +141,7 @@ public class DefaultDataElementService
     @Override
     public List<DataElement> getDataElements( final Collection<Integer> identifiers )
     {
-        List<DataElement> dataElements = getAllDataElements();
-
-        return identifiers == null ? dataElements : FilterUtils.filter( dataElements, new Filter<DataElement>()
-        {
-            @Override
-            public boolean retain( DataElement dataElement )
-            {
-                return identifiers.contains( dataElement.getId() );
-            }
-        } );
+        return getAllDataElements().stream().filter( p -> identifiers.contains( p.getId() ) ).collect( Collectors.toList() );
     }
 
     @Override
@@ -176,20 +166,11 @@ public class DefaultDataElementService
     }
 
     @Override
-    public Set<DataElement> getDataElementsByZeroIsSignificantAndGroup( boolean zeroIsSignificant,
-        DataElementGroup dataElementGroup )
+    public Set<DataElement> getDataElementsByZeroIsSignificantAndGroup( boolean zeroIsSignificant, DataElementGroup dataElementGroup )
     {
-        Set<DataElement> dataElements = new HashSet<>();
-
-        for ( DataElement element : dataElementGroup.getMembers() )
-        {
-            if ( element.isZeroIsSignificant() )
-            {
-                dataElements.add( element );
-            }
-        }
-
-        return dataElements;
+        Set<DataElement> dataElements = new HashSet<>( dataElementGroup.getMembers() );
+        
+        return dataElements.stream().filter( p -> p.isZeroIsSignificant() ).collect( Collectors.toSet() );
     }
 
     @Override
@@ -201,7 +182,7 @@ public class DefaultDataElementService
     @Override
     public DataElement getDataElementByName( String name )
     {
-        List<DataElement> dataElements = new ArrayList<>( dataElementStore.getAllEqName( name ) );
+        List<DataElement> dataElements = dataElementStore.getAllEqName( name );
 
         if ( dataElements.isEmpty() )
         {
@@ -220,14 +201,9 @@ public class DefaultDataElementService
     @Override
     public DataElement getDataElementByShortName( String shortName )
     {
-        List<DataElement> dataElements = new ArrayList<>( dataElementStore.getAllEqShortName( shortName ) );
+        List<DataElement> dataElements = dataElementStore.getAllEqShortName( shortName );
 
-        if ( dataElements.isEmpty() )
-        {
-            return null;
-        }
-
-        return i18n( i18nService, dataElements.get( 0 ) );
+        return !dataElements.isEmpty() ? i18n( i18nService, dataElements.get( 0 ) ) : null;
     }
 
     @Override
@@ -245,16 +221,7 @@ public class DefaultDataElementService
     @Override
     public List<DataElement> getDataElementsByPeriodType( final PeriodType periodType )
     {
-        List<DataElement> dataElements = getAllDataElements();
-
-        return FilterUtils.filter( dataElements, new Filter<DataElement>()
-        {
-            @Override
-            public boolean retain( DataElement dataElement )
-            {
-                return dataElement.getPeriodType() != null && dataElement.getPeriodType().equals( periodType );
-            }
-        } );
+        return getAllDataElements().stream().filter( p -> p.getPeriodType() != null && p.getPeriodType().equals( periodType ) ).collect( Collectors.toList() );
     }
 
     @Override
@@ -459,16 +426,7 @@ public class DefaultDataElementService
     @Override
     public List<DataElementGroup> getDataElementGroups( final Collection<Integer> identifiers )
     {
-        List<DataElementGroup> groups = getAllDataElementGroups();
-
-        return identifiers == null ? groups : FilterUtils.filter( groups, new Filter<DataElementGroup>()
-        {
-            @Override
-            public boolean retain( DataElementGroup object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
+        return getAllDataElementGroups().stream().filter( p -> identifiers.contains( p.getId() ) ).collect( Collectors.toList() );
     }
 
     @Override
@@ -492,21 +450,15 @@ public class DefaultDataElementService
     @Override
     public DataElementGroup getDataElementGroupByName( String name )
     {
-        List<DataElementGroup> dataElementGroups = new ArrayList<>(
-            dataElementGroupStore.getAllEqName( name ) );
+        List<DataElementGroup> dataElementGroups = dataElementGroupStore.getAllEqName( name );
 
-        if ( dataElementGroups.isEmpty() )
-        {
-            return null;
-        }
-
-        return i18n( i18nService, dataElementGroups.get( 0 ) );
+        return !dataElementGroups.isEmpty() ? i18n( i18nService, dataElementGroups.get( 0 ) ) : null;
     }
 
     @Override
     public DataElementGroup getDataElementGroupByShortName( String shortName )
     {
-        List<DataElementGroup> dataElementGroups = new ArrayList<>( dataElementGroupStore.getAllEqShortName( shortName ) );
+        List<DataElementGroup> dataElementGroups = dataElementGroupStore.getAllEqShortName( shortName );
 
         if ( dataElementGroups.isEmpty() )
         {
@@ -602,28 +554,15 @@ public class DefaultDataElementService
     @Override
     public DataElementGroupSet getDataElementGroupSetByName( String name )
     {
-        List<DataElementGroupSet> dataElementGroupSets = new ArrayList<>(
-            dataElementGroupSetStore.getAllEqName( name ) );
+        List<DataElementGroupSet> dataElementGroupSets = dataElementGroupSetStore.getAllEqName( name );
 
-        if ( dataElementGroupSets.isEmpty() )
-        {
-            return null;
-        }
-
-        return i18n( i18nService, dataElementGroupSets.get( 0 ) );
+        return !dataElementGroupSets.isEmpty() ? i18n( i18nService, dataElementGroupSets.get( 0 ) ) : null;
     }
 
     @Override
     public List<DataElementGroupSet> getCompulsoryDataElementGroupSetsWithMembers()
     {
-        return FilterUtils.filter( getAllDataElementGroupSets(), new Filter<DataElementGroupSet>()
-        {
-            @Override
-            public boolean retain( DataElementGroupSet object )
-            {
-                return object.isCompulsory() && object.hasDataElementGroups();
-            }
-        } );
+        return getAllDataElementGroupSets().stream().filter( p -> p.isCompulsory() && p.hasDataElementGroups() ).collect( Collectors.toList() );
     }
 
     @Override
@@ -635,16 +574,7 @@ public class DefaultDataElementService
     @Override
     public List<DataElementGroupSet> getDataElementGroupSets( final Collection<Integer> identifiers )
     {
-        List<DataElementGroupSet> groupSets = getAllDataElementGroupSets();
-
-        return identifiers == null ? groupSets : FilterUtils.filter( groupSets, new Filter<DataElementGroupSet>()
-        {
-            @Override
-            public boolean retain( DataElementGroupSet object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
+        return getAllDataElementGroupSets().stream().filter( p -> identifiers.contains( p.getId() ) ).collect( Collectors.toList() );
     }
 
     @Override

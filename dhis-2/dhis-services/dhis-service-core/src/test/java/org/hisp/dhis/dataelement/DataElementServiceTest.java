@@ -34,7 +34,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
@@ -55,7 +57,6 @@ public class DataElementServiceTest
 
     @Test
     public void testAddDataElement()
-        throws Exception
     {
         DataElement dataElementA = createDataElement( 'A' );
         DataElement dataElementB = createDataElement( 'B' );
@@ -91,7 +92,6 @@ public class DataElementServiceTest
 
     @Test
     public void testUpdateDataElement()
-        throws Exception
     {
         DataElement dataElementA = createDataElement( 'A' );
         
@@ -111,7 +111,6 @@ public class DataElementServiceTest
 
     @Test
     public void testDeleteAndGetDataElement()
-        throws Exception
     {
         DataElement dataElementA = createDataElement( 'A' );
         DataElement dataElementB = createDataElement( 'B' );
@@ -152,7 +151,6 @@ public class DataElementServiceTest
 
     @Test
     public void testGetDataElementByCode()
-        throws Exception
     {
         DataElement dataElementA = createDataElement( 'A' );
         DataElement dataElementB = createDataElement( 'B' );
@@ -182,7 +180,6 @@ public class DataElementServiceTest
 
     @Test
     public void testGetDataElementByName()
-        throws Exception
     {
         DataElement dataElementA = createDataElement( 'A' );
         DataElement dataElementB = createDataElement( 'B' );
@@ -205,7 +202,6 @@ public class DataElementServiceTest
 
     @Test
     public void testGetDataElementByShortName()
-        throws Exception
     {
         DataElement dataElementA = createDataElement( 'A' );
         DataElement dataElementB = createDataElement( 'B' );
@@ -228,7 +224,6 @@ public class DataElementServiceTest
 
     @Test
     public void testGetAllDataElements()
-        throws Exception
     {
         assertEquals( 0, dataElementService.getAllDataElements().size() );
 
@@ -287,7 +282,6 @@ public class DataElementServiceTest
 
     @Test
     public void testGetDataElementsByAggregationOperator()
-        throws Exception
     {
         assertEquals( 0, dataElementService.getDataElementsByAggregationOperator(
             DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM ).size() );
@@ -368,7 +362,6 @@ public class DataElementServiceTest
 
     @Test
     public void testAddDataElementGroup()
-        throws Exception
     {
         DataElementGroup dataElementGroupA = new DataElementGroup( "DataElementGroupA" );
         DataElementGroup dataElementGroupB = new DataElementGroup( "DataElementGroupB" );
@@ -396,7 +389,6 @@ public class DataElementServiceTest
 
     @Test
     public void testUpdateDataElementGroup()
-        throws Exception
     {
         DataElementGroup dataElementGroupA = new DataElementGroup( "DataElementGroupA" );
         DataElementGroup dataElementGroupB = new DataElementGroup( "DataElementGroupB" );
@@ -432,7 +424,6 @@ public class DataElementServiceTest
 
     @Test
     public void testDeleteAndGetDataElementGroup()
-        throws Exception
     {
         DataElementGroup dataElementGroupA = new DataElementGroup( "DataElementGroupA" );
         DataElementGroup dataElementGroupB = new DataElementGroup( "DataElementGroupB" );
@@ -476,7 +467,6 @@ public class DataElementServiceTest
 
     @Test
     public void testGetDataElementGroupByName()
-        throws Exception
     {
         DataElementGroup dataElementGroupA = new DataElementGroup( "DataElementGroupA" );
         DataElementGroup dataElementGroupB = new DataElementGroup( "DataElementGroupB" );
@@ -498,5 +488,38 @@ public class DataElementServiceTest
 
         DataElementGroup dataElementGroupC = dataElementService.getDataElementGroupByName( "DataElementGroupC" );
         assertNull( dataElementGroupC );
+    }
+    
+    @Test
+    public void testGetDataElementsByZeroIsSignificantAndGroup()
+    {
+        DataElementGroup dataElementGroupA = new DataElementGroup( "DataElementGroupA" );
+        
+        DataElement dataElementA = createDataElement( 'A' );
+        dataElementA.setZeroIsSignificant( true );
+        DataElement dataElementB = createDataElement( 'B' );
+        dataElementB.setZeroIsSignificant( false );
+        DataElement dataElementC = createDataElement( 'C' );
+        dataElementC.setZeroIsSignificant( true );
+        DataElement dataElementD = createDataElement( 'D' );
+        dataElementD.setZeroIsSignificant( false );
+        
+        dataElementGroupA.addDataElement( dataElementA );
+        dataElementGroupA.addDataElement( dataElementB );
+        dataElementGroupA.addDataElement( dataElementC );
+        dataElementGroupA.addDataElement( dataElementD );
+
+        dataElementService.addDataElement( dataElementA );
+        dataElementService.addDataElement( dataElementB );
+        dataElementService.addDataElement( dataElementC );
+        dataElementService.addDataElement( dataElementD );
+
+        dataElementService.addDataElementGroup( dataElementGroupA );
+        
+        Set<DataElement> expected = new HashSet<>();
+        expected.add( dataElementA );
+        expected.add( dataElementC );
+        
+        assertEquals( expected, dataElementService.getDataElementsByZeroIsSignificantAndGroup( true, dataElementGroupA ) );
     }
 }
