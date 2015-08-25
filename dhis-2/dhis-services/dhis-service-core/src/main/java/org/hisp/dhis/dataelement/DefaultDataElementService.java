@@ -28,28 +28,31 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericDimensionalObjectStore;
-import org.hisp.dhis.common.GenericNameableObjectStore;
-import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.dataelement.comparator.DataElementCategoryComboSizeComparator;
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.i18n.I18nService;
-import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
-import org.springframework.transaction.annotation.Transactional;
+import static org.hisp.dhis.i18n.I18nUtils.getCountByName;
+import static org.hisp.dhis.i18n.I18nUtils.getObjectsBetween;
+import static org.hisp.dhis.i18n.I18nUtils.getObjectsBetweenByName;
+import static org.hisp.dhis.i18n.I18nUtils.getObjectsByName;
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hisp.dhis.i18n.I18nUtils.*;
+import org.hisp.dhis.common.GenericDimensionalObjectStore;
+import org.hisp.dhis.common.GenericNameableObjectStore;
+import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.dataelement.comparator.DataElementCategoryComboSizeComparator;
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.i18n.I18nService;
+import org.hisp.dhis.period.PeriodType;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Kristian Nordal
@@ -517,24 +520,6 @@ public class DefaultDataElementService
     public DataElementGroup getDataElementGroupByCode( String code )
     {
         return i18n( i18nService, dataElementGroupStore.getByCode( code ) );
-    }
-
-    @Override
-    public List<DataElementGroup> getGroupsContainingDataElement( DataElement dataElement )
-    {
-        List<DataElementGroup> groups = getAllDataElementGroups();
-
-        Iterator<DataElementGroup> iterator = groups.iterator();
-
-        while ( iterator.hasNext() )
-        {
-            if ( !iterator.next().getMembers().contains( dataElement ) )
-            {
-                iterator.remove();
-            }
-        }
-
-        return groups;
     }
 
     @Override
