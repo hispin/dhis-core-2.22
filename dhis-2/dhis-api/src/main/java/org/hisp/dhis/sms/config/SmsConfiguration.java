@@ -97,7 +97,9 @@ public class SmsConfiguration
     @XmlElements( { @XmlElement( name = "bulksms", type = BulkSmsGatewayConfig.class ),
         @XmlElement( name = "clickatell", type = ClickatellGatewayConfig.class ),
         @XmlElement( name = "http", type = GenericHttpGatewayConfig.class ),
-        @XmlElement( name = "modem", type = ModemGatewayConfig.class ) } )
+        @XmlElement( name = "modem", type = ModemGatewayConfig.class ),
+        @XmlElement( name = "smscountry", type = SmscountryGateWayConfig.class )} )
+         
     public List<SmsGatewayConfig> getGateways()
     {
         return gateways;

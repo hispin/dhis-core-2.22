@@ -68,12 +68,25 @@ public class GateWayFactory
         else if ( config instanceof SMPPGatewayConfig )
         {
             return createSMPPGatewayConfig( (SMPPGatewayConfig) config );
+        }else if (config instanceof SmscountryGateWayConfig){
+        	return createSmscountryGateWayConfig((SmscountryGateWayConfig)config);
         }
 
         throw new SmsServiceException( "Gateway config of unknown type: " + config.getClass().getName() );
     }
 
-    public AGateway createSMPPGatewayConfig( SMPPGatewayConfig config )
+    private AGateway createSmscountryGateWayConfig(SmscountryGateWayConfig c) {
+    	 SmscountryGateWay gateway = new SmscountryGateWay( c.getName(), c.getUrlTemplate(),
+    	            c.getParameters() );
+    	 System.out.println("createSmscountryGateWayConfig() : setting outbound true");
+    	        gateway.setOutbound( true );
+    	    System.out.println("createSmscountryGateWayConfig() :  outbound ="+gateway.isOutbound());
+
+    	        gateway.setInbound( false );
+    	        return gateway;
+	}
+
+	public AGateway createSMPPGatewayConfig( SMPPGatewayConfig config )
     {
         AGateway gateway = new JSMPPGateway( config.getName(), config.getAddress(), config.getPort(),
             new BindAttributes( config.getUsername(), config.getPassword(), "cp", BindType.TRANSCEIVER ) );

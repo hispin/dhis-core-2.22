@@ -91,6 +91,7 @@
     <dependency>
       <groupId>org.smslib</groupId>
       <artifactId>smslib</artifactId>
+     
     </dependency>
     <dependency>
       <groupId>com.googlecode.jsmpp</groupId>

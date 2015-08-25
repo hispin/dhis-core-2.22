@@ -26,6 +26,7 @@
 					<option value="bulksms" #if ( $!index == $!bulkIndex ) selected='selected' #end>$i18n.getString( "bulk_gw" )</option>
 					<option value="clickatell" #if ( $!index == $!clickatellIndex ) selected='selected' #end>$i18n.getString( "clickatell_gw" )</option>
 					<option value="http" #if ( $!index == $!httpIndex ) selected='selected' #end>$i18n.getString( "generic_http_gw" )</option>
+					<option value="smscountry" #if ( $!index == $!smscountryIndex ) selected='selected' #end>$i18n.getString( "smscountry" )</option>					
 					<option value="modem" #if ( $!index == $!modemIndex ) selected='selected' #end>$i18n.getString( "modem_gw" )</option>
 					<option value="smpp_gw" #if ( $!index == $!smppIndex ) selected='selected' #end>$i18n.getString( "smpp_gw" )</option>					
 				</select>
@@ -173,6 +174,27 @@
 				<td><input type="text" name="urlTemplate" id="urlTemplate" style="width: 28em" value="$!encoder.htmlEncode( $!httpGateway.urlTemplate )"/></td>
 			</tr>
 		</tbody>
+		#set( $smscountryGateway = $!gatewayConfigMap.get( $smscountryIndex ) )
+		#set( $params = $!smscountryGateway.getParameters() )
+		<tbody id="smscountryFields">
+			<tr>
+				<td>$i18n.getString( "gateway_name" ):</td>
+				<td><input type="text" name="name" id="name" style="width: 28em" value="$!encoder.htmlEncode( $!smscountryGateway.name )"/></td>
+			</tr>
+			<tr>
+				<td>$i18n.getString( "username" ) <em title="$i18n.getString( 'required' )" class="required">*</em>:</td>
+				<td><input type="text" name="username" id="username" style="width: 28em" value="$!params.get( 'username' )"/></td>
+			</tr>
+			<tr>
+				<td>$i18n.getString( "password" ) <em title="$i18n.getString( 'required' )" class="required">*</em>:</td>
+				<td><input type="password" name="password" id="password" style="width: 28em" value="$!params.get( 'password' )"/></td>
+			</tr>
+			<tr>
+				<td>$i18n.getString( "url_template" ) <em title="$i18n.getString( 'required' )" class="required">*</em>:</td>
+				<td><input type="text" name="urlTemplate" id="urlTemplate" style="width: 28em" value="$!encoder.htmlEncode( $!smscountryGateway.urlTemplate )"/></td>
+			</tr>
+		</tbody>
+		
 		<tr>
 			<td colspan="2" align="right"><input type="submit" value="$i18n.getString( 'save_settings' )" style="width:8em"/>
 			<input type="button" value="$i18n.getString( 'back' )" onclick="window.location.href='showSMSConfigureForm.action'" style="width:8em"/></td>

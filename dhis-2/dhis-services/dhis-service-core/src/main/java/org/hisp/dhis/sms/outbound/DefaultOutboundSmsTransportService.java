@@ -33,6 +33,7 @@ import java.lang.Character.UnicodeBlock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.sms.SmsPublisher;
@@ -44,6 +45,7 @@ import org.hisp.dhis.sms.config.GenericHttpGatewayConfig;
 import org.hisp.dhis.sms.config.SMPPGatewayConfig;
 import org.hisp.dhis.sms.config.SmsConfiguration;
 import org.hisp.dhis.sms.config.SmsGatewayConfig;
+import org.hisp.dhis.sms.config.SmscountryGateWayConfig;
 import org.hisp.dhis.sms.outbound.OutboundSmsTransportService;
 import org.smslib.AGateway;
 import org.smslib.GatewayException;
@@ -65,6 +67,7 @@ public class DefaultOutboundSmsTransportService
     private static final String HTTP_GATEWAY = "generic_http_gw";
     private static final String MODEM_GATEWAY = "modem_gw";
     private static final String SMPP_GATEWAY = "smpp_gw";
+    private static final String SMSCOUNTRY_GATEWAY="smscountry_gw";
     
     public static final Map<String, String> gatewayMap = new HashMap<>(); //TODO fix, poor solution
 
@@ -202,6 +205,7 @@ public class DefaultOutboundSmsTransportService
                 try
                 {                    
                     gateway = gatewayFactory.create( gatewayConfig );
+                	gateway.setOutbound(true);
 
                     service.addGateway( gateway );
 
@@ -222,6 +226,9 @@ public class DefaultOutboundSmsTransportService
                         gatewayMap.put( SMPP_GATEWAY, gateway.getGatewayId() );
                         // Service.getInstance().setInboundMessageNotification(
                         // new InboundNotification() );
+                    }else if(gatewayConfig instanceof SmscountryGateWayConfig ){
+                    	System.out.println("reloadconfig():======"+gateway.isOutbound());
+                    	gatewayMap.put(SMSCOUNTRY_GATEWAY,gateway.getGatewayId());
                     }
                     else
                     {
@@ -306,6 +313,10 @@ public class DefaultOutboundSmsTransportService
         else if ( gatewayConfig instanceof SMPPGatewayConfig )
         {
             gatewayId = gatewayMap.get( SMPP_GATEWAY );
+        }
+        else if(gatewayConfig instanceof SmscountryGateWayConfig){
+
+            gatewayId = gatewayMap.get( SMSCOUNTRY_GATEWAY );
         }
         else
         {
@@ -417,13 +428,15 @@ public class DefaultOutboundSmsTransportService
         try
         {
             log.info( "Sending message " + sms );
-
+            System.out.println(gatewayId);
             if ( gatewayId == null || gatewayId.isEmpty() )
             {
                 sent = getService().sendMessage( outboundMessage );
             }
             else
             {
+                System.out.println("inside 2 para");
+
                 sent = getService().sendMessage( outboundMessage, gatewayId );
             }
         }

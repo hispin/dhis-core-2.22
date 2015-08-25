@@ -10,7 +10,10 @@ function changeValueType( value )
     	showById( "clickatellFields" );
     } else if ( value == "smpp_gw"){
     	showById( "smppFields" );
-    } else {
+    } else if (value == "smscountry"){
+    	showById( "smscountryFields" );
+
+    }else {
 	    showById( "genericHTTPFields" );
 	}
 	currentType = value;
@@ -23,6 +26,8 @@ function hideAll()
 	 hideById( "smppFields" );
 	 hideById( "clickatellFields" );
 	 hideById( "genericHTTPFields" );
+	 hideById( "smscountryFields" );
+
 	 
 }
 
@@ -60,12 +65,19 @@ function getValidationRulesGateway()
 			'clickatellFields input[id=password]' : { 'required' : true },
 			'clickatellFields input[id=apiId]' : { 'required' : true }
 		};
-	} else {
+	} else if (currentType == 'smscountry'){
 		rules = {
-			'genericHTTPFields input[id=name]' : { 'required' : true },
-			'genericHTTPFields input[id=username]' : { 'required' : true },
-			'genericHTTPFields input[id=password]' : { 'required' : true },
-			'genericHTTPFields input[id=urlTemplate]' : { 'required' : true }
+				'smscountryFields input[id=name]' : { 'required' : true },
+				'smscountryFields input[id=username]' : { 'required' : true },
+				'smscountryFields input[id=password]' : { 'required' : true },
+				'smscountryFields input[id=urlTemplate]' : { 'required' : true }
+			};
+	}else {
+		rules = {
+			'smscountryFields input[id=name]' : { 'required' : true },
+			'smscountryFields input[id=username]' : { 'required' : true },
+			'smscountryFields input[id=password]' : { 'required' : true },
+			'smscountryFields input[id=urlTemplate]' : { 'required' : true }
 		};
 	}
 
@@ -184,7 +196,30 @@ function saveGatewayConfig()
 			} );
 		}
 	}
-	else
+	else if ( currentType == 'smscountry' )
+	{
+		var username = getFieldValue( 'smscountryFields input[id=username]' );
+		var password = getFieldValue( 'smscountryFields input[id=password]' );
+		var URL = getFieldValue( 'smscountryFields input[id=urlTemplate]' );
+		if( username == "" || password == "" || URL == "" )
+		{	
+			showErrorMessage( i18n_required_data_error );
+		}
+		else
+		{
+			lockScreen();
+			jQuery.postJSON( "saveSmscountryConfig.action", {
+				gatewayType: getFieldValue( 'gatewayType' ),
+				name: getFieldValue( 'smscountryFields input[id=name]' ),
+				username: getFieldValue( 'smscountryFields input[id=username]' ),
+				password: getFieldValue( 'smscountryFields input[id=password]' ),
+				urlTemplate: getFieldValue( 'smscountryFields input[id=urlTemplate]' )
+			}, function ( json ) {
+				unLockScreen();
+				showMessage( json );
+			} );
+		}
+	}else
 	{
 		var username = getFieldValue( 'genericHTTPFields input[id=username]' );
 		var password = getFieldValue( 'genericHTTPFields input[id=password]' );

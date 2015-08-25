@@ -130,6 +130,12 @@
       <param name="requiredAuthorities">F_MOBILE_SETTINGS</param>
     </action>
 
+	<action name="saveSmscountryConfig" class="org.hisp.dhis.mobile.action.UpdateSmscountryGateWayConfigAction">
+      <result name="success" type="velocity-json">../dhis-web-commons/ajax/jsonResponseSuccess.vm</result>
+      <param name="onExceptionReturn">plainTextError</param>
+      <param name="requiredAuthorities">F_MOBILE_SETTINGS</param>
+    </action>
+    
     <action name="updateDefaultGateway" class="org.hisp.dhis.mobile.action.UpdateDefaultGatewayAction">
       <result name="success" type="velocity-json">../dhis-web-commons/ajax/jsonResponseSuccess.vm</result>
       <param name="onExceptionReturn">plainTextError</param>
