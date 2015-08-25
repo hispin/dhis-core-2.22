@@ -464,11 +464,7 @@ public interface DataElementService
 
     DataElementGroupSet getDataElementGroupSetByName( String name );
 
-    List<DataElementGroupSet> getCompulsoryDataElementGroupSets();
-
     List<DataElementGroupSet> getCompulsoryDataElementGroupSetsWithMembers();
-
-    List<DataElementGroupSet> getCompulsoryDataElementGroupSetsNotAssignedTo( DataElement dataElement );
 
     List<DataElementGroupSet> getAllDataElementGroupSets();
 

@@ -614,22 +614,6 @@ public class DefaultDataElementService
     }
 
     @Override
-    public List<DataElementGroupSet> getCompulsoryDataElementGroupSets()
-    {
-        List<DataElementGroupSet> groupSets = new ArrayList<>();
-
-        for ( DataElementGroupSet groupSet : getAllDataElementGroupSets() )
-        {
-            if ( groupSet.isCompulsory() )
-            {
-                groupSets.add( groupSet );
-            }
-        }
-
-        return groupSets;
-    }
-
-    @Override
     public List<DataElementGroupSet> getCompulsoryDataElementGroupSetsWithMembers()
     {
         return FilterUtils.filter( getAllDataElementGroupSets(), new Filter<DataElementGroupSet>()
@@ -640,22 +624,6 @@ public class DefaultDataElementService
                 return object.isCompulsory() && object.hasDataElementGroups();
             }
         } );
-    }
-
-    @Override
-    public List<DataElementGroupSet> getCompulsoryDataElementGroupSetsNotAssignedTo( DataElement dataElement )
-    {
-        List<DataElementGroupSet> groupSets = new ArrayList<>();
-
-        for ( DataElementGroupSet groupSet : getCompulsoryDataElementGroupSets() )
-        {
-            if ( !groupSet.isMemberOfDataElementGroups( dataElement ) && groupSet.hasDataElementGroups() )
-            {
-                groupSets.add( groupSet );
-            }
-        }
-
-        return groupSets;
     }
 
     @Override
