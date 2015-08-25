@@ -506,10 +506,7 @@ var d2Directives = angular.module('d2Directives', [])
         link: function (scope, element, attrs) {
             var contextMenu = $("#contextMenu");
 
-            element.click(function (e) {
-                var selectedItem = $.parseJSON(attrs.selectedItem);
-                ContextMenuSelectedItem.setSelectedItem(selectedItem);
-
+            element.click(function (e) {                
                 var menuHeight = contextMenu.height();
                 var menuWidth = contextMenu.width();
                 var winHeight = $(window).height();
