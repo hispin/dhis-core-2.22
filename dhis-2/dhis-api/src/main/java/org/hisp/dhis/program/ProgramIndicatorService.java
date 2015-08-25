@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hisp.dhis.constant.Constant;
+import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
@@ -156,7 +157,7 @@ public interface ProgramIndicatorService
      *         {@link ProgramIndicator.INVALID_VARIABLES_IN_EXPRESSION}.
      */
     String filterIsValid( String filter );
-        
+    
     /**
      * Get all {@link ProgramStageDataElement} part of the expression.
      * 

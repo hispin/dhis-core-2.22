@@ -15,8 +15,8 @@
 				<li><a href="#expression-tab1">$i18n.getString("data_elements")</a></li>
 				#if($program.programType=='WITH_REGISTRATION')
 					<li><a href="#expression-tab2">$i18n.getString("attributes")</a></li>
-					<li><a href="#expression-tab3">$i18n.getString("variables")</a></li>
 				#end
+				<li><a href="#expression-tab3">$i18n.getString("variables")</a></li>
 				<li><a href="#expression-tab4">$i18n.getString("constants")</a></li>
 			</ul>	
 			
@@ -43,7 +43,7 @@
 		      </table>
 			</div>
 			
-		#if($program.programType=='WITH_REGISTRATION')
+			#if($program.programType=='WITH_REGISTRATION')
 		
 			<div id="expression-tab2">
 				<table style="width:100%">
@@ -64,6 +64,8 @@
 				</tr>
 		      </table>
 			</div>
+			
+			#end
 			
 			<div id="expression-tab3">
 				<table style="width:100%">
@@ -87,8 +89,6 @@
 				</tr>
 				</table>
 			</div>
-			
-		#end
 		
 			<div id="expression-tab4">
 				<table style="width:100%">
@@ -158,10 +158,10 @@
 		<div id="filter-tabs" style="width:670px">
 			<ul>
 				<li><a href="#filter-tab1">$i18n.getString("data_elements")</a></li>
-				#if($program.type!='3')
+				#if($program.programType=='WITH_REGISTRATION')
 					<li><a href="#filter-tab2">$i18n.getString("attributes")</a></li>
-					<li><a href="#filter-tab3">$i18n.getString("variables")</a></li>
 				#end
+				<li><a href="#filter-tab3">$i18n.getString("variables")</a></li>
 				<li><a href="#filter-tab4">$i18n.getString("constants")</a></li>
 			</ul>	
 			
@@ -187,7 +187,7 @@
 		      </table>
 			</div>
 			
-		#if($program.type!='3')
+			#if($program.programType=='WITH_REGISTRATION')
 		
 			<div id="filter-tab2">
 				<table style="width:100%">
@@ -208,6 +208,8 @@
 				</tr>
 		      </table>
 			</div>
+			
+			#end
 			
 			<div id="filter-tab3">
 				<table style="width:100%">
@@ -231,8 +233,6 @@
 				</tr>
 				</table>
 			</div>
-						
-		#end
 		
 			<div id="filter-tab4">
 				<table style="width:100%">

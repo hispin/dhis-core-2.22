@@ -28,6 +28,7 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hisp.dhis.analytics.AggregationType;
@@ -36,6 +37,7 @@ import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.RegexUtils;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
@@ -44,6 +46,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 
 /**
  * @author Chau Thu Tran
@@ -132,7 +135,21 @@ public class ProgramIndicator
     {
         return aggregationType != null ? aggregationType : AggregationType.AVERAGE;
     }
-
+    
+    /**
+     * Returns a set of data element and attribute identifiers part of the given
+     * input expression.
+     * 
+     * @param input the expression.
+     * @return a set of UIDs.
+     */
+    public static Set<String> getDataElementAndAttributeIdentifiers( String input )
+    {
+        return Sets.union( 
+            RegexUtils.getMatches( DATAELEMENT_PATTERN, input, 2 ),
+            RegexUtils.getMatches( ATTRIBUTE_PATTERN, input, 1 ) );
+    }
+    
     // -------------------------------------------------------------------------
     // Getters && Setters
     // -------------------------------------------------------------------------

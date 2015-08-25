@@ -267,19 +267,19 @@ public class DefaultUserService
 
     public boolean validateUserQueryParams( UserQueryParams params )
     {
-        if ( params.isCanManage() && (params.getUser() == null || !params.getUser().hasManagedGroups()) )
+        if ( params.isCanManage() && ( params.getUser() == null || !params.getUser().hasManagedGroups() ) )
         {
             log.warn( "Cannot get managed users as user does not have any managed groups" );
             return false;
         }
 
-        if ( params.isAuthSubset() && (params.getUser() == null || !params.getUser().getUserCredentials().hasAuthorities()) )
+        if ( params.isAuthSubset() && ( params.getUser() == null || !params.getUser().getUserCredentials().hasAuthorities() ) )
         {
             log.warn( "Cannot get users with authority subset as user does not have any authorities" );
             return false;
         }
 
-        if ( params.isDisjointRoles() && (params.getUser() == null || !params.getUser().getUserCredentials().hasUserAuthorityGroups()) )
+        if ( params.isDisjointRoles() && ( params.getUser() == null || !params.getUser().getUserCredentials().hasUserAuthorityGroups() ) )
         {
             log.warn( "Cannot get users with disjoint roles as user does not have any user roles" );
             return false;

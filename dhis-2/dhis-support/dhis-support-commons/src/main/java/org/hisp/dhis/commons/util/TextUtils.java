@@ -193,8 +193,8 @@ public class TextUtils
     }
     
     /**
-     * Removes the last occurence of the word "or" from the given string,
-     * including potential trailing spaces, case-insentitive.
+     * Removes the last occurrence of the word "or" from the given string,
+     * including potential trailing spaces, case-insensitive.
      * 
      * @param string the string.
      * @return the chopped string.
@@ -207,8 +207,8 @@ public class TextUtils
     }
 
     /**
-     * Removes the last occurence of the word "and" from the given string,
-     * including potential trailing spaces, case-insentitive.
+     * Removes the last occurrence of the word "and" from the given string,
+     * including potential trailing spaces, case-insensitive.
      * 
      * @param string the string.
      * @return the chopped string.
@@ -221,7 +221,7 @@ public class TextUtils
     }
 
     /**
-     * Removes the last occurence of comma (",") from the given string,
+     * Removes the last occurrence of comma (",") from the given string,
      * including potential trailing spaces.
      * 
      * @param string the string.
@@ -232,6 +232,20 @@ public class TextUtils
         string = StringUtils.stripEnd( string, " " );
         
         return StringUtils.removeEndIgnoreCase( string, "," );
+    }
+
+    /**
+     * Removes the last occurrence of the the given string, including potential 
+     * trailing spaces.
+     * 
+     * @param string the string.
+     * @return the chopped string.
+     */
+    public static String removeLast( String string, String remove )
+    {
+        string = StringUtils.stripEnd( string, " " );
+        
+        return StringUtils.removeEndIgnoreCase( string,  remove );
     }
     
     /**
