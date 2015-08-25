@@ -11,6 +11,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope,
                 $modal,
                 $timeout,
+                $translate,
                 $anchorScroll,
                 orderByFilter,
                 SessionStorageService,
@@ -73,6 +74,15 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.$watch('selectedOrgUnit', function() {
         
         if(angular.isObject($scope.selectedOrgUnit)){
+            
+            $scope.pleaseSelectLabel = $translate.instant('please_select');
+            $scope.registeringUnitLabel = $translate.instant('registering_unit');
+            $scope.eventCaptureLabel = $translate.instant('event_capture');
+            $scope.programLabel = $translate.instant('program');
+            $scope.searchLabel = $translate.instant('search');
+            $scope.yesLabel = $translate.instant('yes');
+            $scope.noLabel = $translate.instant('no');
+            
             SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);
             
             $scope.userAuthority = AuthorityService.getUserAuthorities(SessionStorageService.get('USER_ROLES'));
@@ -258,7 +268,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                                         //converting int string value to number for proper sorting.
                                         if($scope.prStDes[dataValue.dataElement].dataElement.type === 'int'){
                                             if( dhis2.validation.isNumber(val)  ){
-                                                val = new Number(val);
+                                                //val = new Number(val);
+                                                val = parseFloat(val, 10);
                                             }                                
                                         }
                                         if($scope.prStDes[dataValue.dataElement].dataElement.optionSetValue){                                            
@@ -272,6 +283,11 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                                         if($scope.prStDes[dataValue.dataElement].dataElement.type === 'date'){
                                             val = DateUtils.formatFromApiToUser(val);                                               
                                         }
+                                        
+                                        if($scope.prStDes[dataValue.dataElement].dataElement.type === 'bool'){
+                                            val = val === 'true' ? $scope.yesLabel : $scope.noLabel;                                
+                                        }
+                                        
                                         if( $scope.prStDes[dataValue.dataElement].dataElement.type === 'trueOnly'){
                                             if(val === 'true'){
                                                 val = true;
@@ -301,8 +317,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     if(!$scope.sortHeader.id){
                         $scope.sortEventGrid({name: $scope.selectedProgramStage.reportDateDescription ? $scope.selectedProgramStage.reportDateDescription : 'incident_date', id: 'event_date', type: 'date', compulsory: false, showFilter: false, show: true});
                     }
-                }     
-                
+                }
                 
                 $scope.eventFetched = true;
             });
@@ -421,7 +436,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }
     };
     
-    $scope.showEventList = function(){
+    $scope.showEventList = function(dhis2Event){        
+        ContextMenuSelectedItem.setSelectedItem(dhis2Event);
         $scope.eventRegistration = false;
         $scope.editingEventInFull = false;
         $scope.editingEventInGrid = false;
@@ -682,7 +698,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
        
     $scope.updateEventDataValue = function(currentEvent, dataElement){
-
         $scope.updateSuccess = false;
         
         //get current element
