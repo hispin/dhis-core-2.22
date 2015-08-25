@@ -91,9 +91,8 @@ public class GetDataElementAction
     public String execute()
     {
         dataElement = dataElementService.getDataElement( id );
-
-        dataElementGroups = new ArrayList<>( dataElementService
-            .getGroupsContainingDataElement( dataElement ) );
+        
+        dataElementGroups = new ArrayList<>( dataElement.getGroups() );
         
         Collections.sort( dataElementGroups, IdentifiableObjectNameComparator.INSTANCE );
 
