@@ -76,8 +76,9 @@
 				<tr>
 					<td>
 						<select multiple id="expression-variables" name="expression-variables" size="7" style="width:100%" ondblclick="insertVariable('expression');" >
+							<option value="execution_date">$i18n.getString( "execution_date" )</option>
 							<option value="incident_date">$i18n.getString( "incident_date" )</option>
-							<option value="enrollment_date">$i18n.getString( "date_of_enrollment" )</option>
+							<option value="enrollment_date">$i18n.getString( "enrollment_date" )</option>
 							<option value="current_date">$i18n.getString( "current_date" )</option>
 							<option value="value_count">$i18n.getString( "value_count" )</option>
 							<option value="zero_pos_value_count">$i18n.getString( "zero_pos_value_count" )</option>
@@ -159,6 +160,7 @@
 				<li><a href="#filter-tab1">$i18n.getString("data_elements")</a></li>
 				#if($program.type!='3')
 					<li><a href="#filter-tab2">$i18n.getString("attributes")</a></li>
+					<li><a href="#filter-tab3">$i18n.getString("variables")</a></li>
 				#end
 				<li><a href="#filter-tab4">$i18n.getString("constants")</a></li>
 			</ul>	
@@ -205,6 +207,29 @@
 					</td>
 				</tr>
 		      </table>
+			</div>
+			
+			<div id="filter-tab3">
+				<table style="width:100%">
+				  <tr>
+				    <td>
+					  <input type='text' id='filter-var-search' onKeyUp="filterExpressionSelect(event, this.value, 'filter-variables');" placeholder="$i18n.getString('filter')" />
+					  <input type='button' value='$i18n.getString("clear")' onClick="setFieldValue('filter-var-search', '');" />			
+					</td>
+		        </tr>
+				<tr>
+					<td>
+						<select multiple id="filter-variables" name="filter-variables" size="7" style="width:100%" ondblclick="insertVariable('filter');" >
+							<option value="execution_date">$i18n.getString( "execution_date" )</option>
+							<option value="incident_date">$i18n.getString( "incident_date" )</option>
+							<option value="enrollment_date">$i18n.getString( "enrollment_date" )</option>
+							<option value="current_date">$i18n.getString( "current_date" )</option>
+							<option value="value_count">$i18n.getString( "value_count" )</option>
+							<option value="zero_pos_value_count">$i18n.getString( "zero_pos_value_count" )</option>
+						</select>
+					</td>
+				</tr>
+				</table>
 			</div>
 						
 		#end

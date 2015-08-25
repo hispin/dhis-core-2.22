@@ -715,6 +715,10 @@ public class DefaultProgramIndicatorService
                 {
                     date = programInstance.getDateOfIncident();
                 }
+                else if ( ProgramIndicator.VAR_EXECUTION_DATE.equals( uid ) )
+                {
+                    date = programStageInstance != null ? programStageInstance.getExecutionDate() : null;
+                }
                 else if ( ProgramIndicator.VAR_CURRENT_DATE.equals( uid ) )
                 {
                     date = currentDate;

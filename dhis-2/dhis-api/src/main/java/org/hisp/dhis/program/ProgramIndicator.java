@@ -58,11 +58,14 @@ public class ProgramIndicator
     public static final String KEY_ATTRIBUTE = "A";
     public static final String KEY_PROGRAM_VARIABLE = "V";
     public static final String KEY_CONSTANT = "C";
+    
+    public static final String VAR_EXECUTION_DATE = "execution_date";
     public static final String VAR_INCIDENT_DATE = "incident_date";
     public static final String VAR_ENROLLMENT_DATE = "enrollment_date";
     public static final String VAR_CURRENT_DATE = "current_date";
     public static final String VAR_VALUE_COUNT = "value_count";
     public static final String VAR_ZERO_POS_VALUE_COUNT = "zero_pos_value_count";
+    
     public static final String VALUE_TYPE_DATE = "date";
     public static final String VALUE_TYPE_INT = "int";
     
