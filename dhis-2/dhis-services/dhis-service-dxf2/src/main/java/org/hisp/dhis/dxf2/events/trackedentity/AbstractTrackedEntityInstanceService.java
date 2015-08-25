@@ -332,8 +332,6 @@ public abstract class AbstractTrackedEntityInstanceService
         
         if( trackedEntityInstance.getActive() != null )
         {
-            System.out.println( "trackedEntityInstance.getActive() -- " + trackedEntityInstance.getActive() );
-            
             entityInstance.setActive( trackedEntityInstance.getActive() );
         }
         
