@@ -36,13 +36,12 @@ import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
-import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.i18n.I18nService;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -379,26 +378,6 @@ public class DefaultIndicatorService
     }
 
     @Override
-    public List<IndicatorGroup> getGroupsContainingIndicator( Indicator indicator )
-    {
-        List<IndicatorGroup> groups = getAllIndicatorGroups();
-
-        Iterator<IndicatorGroup> iterator = groups.iterator();
-
-        while ( iterator.hasNext() )
-        {
-            IndicatorGroup group = iterator.next();
-
-            if ( !group.getMembers().contains( indicator ) )
-            {
-                iterator.remove();
-            }
-        }
-
-        return groups;
-    }
-
-    @Override
     public int getIndicatorGroupCount()
     {
         return indicatorGroupStore.getCount();
@@ -476,22 +455,6 @@ public class DefaultIndicatorService
     }
 
     @Override
-    public List<IndicatorGroupSet> getCompulsoryIndicatorGroupSets()
-    {
-        List<IndicatorGroupSet> groupSets = new ArrayList<>();
-
-        for ( IndicatorGroupSet groupSet : getAllIndicatorGroupSets() )
-        {
-            if ( groupSet.isCompulsory() )
-            {
-                groupSets.add( groupSet );
-            }
-        }
-
-        return groupSets;
-    }
-
-    @Override
     public List<IndicatorGroupSet> getCompulsoryIndicatorGroupSetsWithMembers()
     {
         return FilterUtils.filter( getAllIndicatorGroupSets(), new Filter<IndicatorGroupSet>()
@@ -502,22 +465,6 @@ public class DefaultIndicatorService
                 return object.isCompulsory() && object.hasIndicatorGroups();
             }
         } );
-    }
-
-    @Override
-    public List<IndicatorGroupSet> getCompulsoryIndicatorGroupSetsNotAssignedTo( Indicator indicator )
-    {
-        List<IndicatorGroupSet> groupSets = new ArrayList<>();
-
-        for ( IndicatorGroupSet groupSet : getCompulsoryIndicatorGroupSets() )
-        {
-            if ( !groupSet.isMemberOfIndicatorGroups( indicator ) && groupSet.hasIndicatorGroups() )
-            {
-                groupSets.add( groupSet );
-            }
-        }
-
-        return groupSets;
     }
 
     @Override
