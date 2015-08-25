@@ -683,6 +683,7 @@ public class DataApprovalServiceCategoryOptionGroupTest
         System.out.println();
     }
 
+    @SuppressWarnings("unused")
     private void generateAllApprovalsAndPermissions()
     {
         generateUserApprovalsAndPermissions( superUser, dataSetA, periodA, null );
