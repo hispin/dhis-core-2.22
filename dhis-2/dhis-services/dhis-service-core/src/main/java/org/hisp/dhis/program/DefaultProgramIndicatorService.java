@@ -783,6 +783,10 @@ public class DefaultProgramIndicatorService
         {
             return "executiondate";
         }
+        else if ( ProgramIndicator.VAR_CURRENT_DATE.equals( var ) )
+        {
+            return "'" + DateUtils.getLongDateString() + "'";
+        }
         else if ( ProgramIndicator.VAR_VALUE_COUNT.equals( var ) )
         {
             String sql = "nullif((";
