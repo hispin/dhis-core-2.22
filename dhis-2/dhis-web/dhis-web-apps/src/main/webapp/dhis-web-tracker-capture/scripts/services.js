@@ -255,6 +255,10 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             if( program.userRoles.hasOwnProperty( userRoles[i].id ) ){
                 hasRole = true;
             }
+            
+            if(!hasRole && userRoles[i].authorities && userRoles[i].authorities.indexOf('ALL') !== -1){
+                hasRole = true;
+            }
         }        
         return hasRole;        
     };
