@@ -1442,10 +1442,10 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 return;
             }
             
-            //grid.headers[0-4] = Instance, Created, Last updated, Org unit, Tracked entity
-            //grid.headers[5..] = Attribute, Attribute,.... 
+            //grid.headers[0-5] = Instance, Created, Last updated, Org unit, Tracked entity, Inactive
+            //grid.headers[6..] = Attribute, Attribute,.... 
             var attributes = [];
-            for(var i=5; i<grid.headers.length; i++){
+            for(var i=6; i<grid.headers.length; i++){
                 attributes.push({id: grid.headers[i].name, name: grid.headers[i].column, type: grid.headers[i].type});
             }
 
@@ -1468,6 +1468,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                         entity.created = DateUtils.formatFromApiToUser( row[1] );
                         entity.orgUnit = row[3];                              
                         entity.type = row[4];
+                        entity.inactive = row[5] !== "" ? row[5] : false;
 
                         OrgUnitService.get(row[3]).then(function(ou){
                             if(ou){
@@ -1475,7 +1476,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             }                                                       
                         });
 
-                        for(var i=5; i<row.length; i++){
+                        for(var i=6; i<row.length; i++){
                             if(row[i] && row[i] !== ''){
                                 isEmpty = false;
                                 var val = row[i];
@@ -1516,6 +1517,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             //also add extra columns which are not part of attributes (orgunit for example)
             columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'string', displayInListNoProgram: false});
             columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'date', displayInListNoProgram: false});
+            columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'boolean', displayInListNoProgram: false});
 
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){

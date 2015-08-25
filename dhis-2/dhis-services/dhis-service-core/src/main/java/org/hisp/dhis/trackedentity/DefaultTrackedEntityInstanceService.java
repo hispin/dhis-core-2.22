@@ -275,6 +275,7 @@ public class DefaultTrackedEntityInstanceService
         grid.addHeader( new GridHeader( LAST_UPDATED_ID, "Last updated" ) );
         grid.addHeader( new GridHeader( ORG_UNIT_ID, "Org unit" ) );
         grid.addHeader( new GridHeader( TRACKED_ENTITY_ID, "Tracked entity" ) );
+        grid.addHeader( new GridHeader( INACTIVE_ID, "Inactive" ) );
 
         for ( QueryItem item : params.getAttributes() )
         {
@@ -297,6 +298,7 @@ public class DefaultTrackedEntityInstanceService
             grid.addValue( entity.get( LAST_UPDATED_ID ) );
             grid.addValue( entity.get( ORG_UNIT_ID ) );
             grid.addValue( entity.get( TRACKED_ENTITY_ID ) );
+            grid.addValue( entity.get( INACTIVE_ID ) );
 
             tes.add( entity.get( TRACKED_ENTITY_ID ) );
 
