@@ -88,7 +88,7 @@ public class GetAssignedIndicatorGroupsAction
         {
             Indicator indicator = indicatorService.getIndicator( indicatorId );
 
-            indicatorGroups = new ArrayList<>( indicatorService.getGroupsContainingIndicator( indicator ) );
+            indicatorGroups = new ArrayList<>( indicator.getGroups() );
 
             Collections.sort( indicatorGroups, IdentifiableObjectNameComparator.INSTANCE );
         }
