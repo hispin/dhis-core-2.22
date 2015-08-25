@@ -35,10 +35,10 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.security.PasswordManager;
 import org.hisp.dhis.security.RestoreOptions;
 import org.hisp.dhis.security.RestoreType;
 import org.hisp.dhis.security.SecurityService;
-import org.hisp.dhis.security.migration.MigrationPasswordManager;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.User;
@@ -102,7 +102,7 @@ public class AccountController
     private ConfigurationService configurationService;
 
     @Autowired
-    private MigrationPasswordManager passwordManager;
+    private PasswordManager passwordManager;
 
     @Autowired
     private SecurityService securityService;
@@ -447,7 +447,7 @@ public class AccountController
             return;
         }
 
-        if ( !passwordManager.legacyOrCurrentMatches( oldPassword, credentials.getPassword(), credentials.getUsername() ) )
+        if ( !passwordManager.matches( oldPassword, credentials.getPassword() ) )
         {
             result.put( "status", "NON_MATCHING_PASSWORD" );
             result.put( "message", "Old password is wrong, please correct and try again." );
