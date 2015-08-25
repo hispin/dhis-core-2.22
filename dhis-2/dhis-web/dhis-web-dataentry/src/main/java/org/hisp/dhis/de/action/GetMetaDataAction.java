@@ -221,7 +221,7 @@ public class GetMetaDataAction
 
         for ( DataElement dataElement : dataElements )
         {
-            if ( dataElement.getOptionSet() != null )
+            if ( dataElement != null && dataElement.getOptionSet() != null )
             {
                 dataElementsWithOptionSet.add( dataElement );
             }
