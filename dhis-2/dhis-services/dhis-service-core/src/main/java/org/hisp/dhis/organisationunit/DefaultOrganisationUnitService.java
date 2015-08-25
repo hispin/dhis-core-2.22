@@ -207,20 +207,6 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public void searchOrganisationUnitByName( List<OrganisationUnit> orgUnits, String key )
-    {
-        Iterator<OrganisationUnit> iterator = orgUnits.iterator();
-
-        while ( iterator.hasNext() )
-        {
-            if ( !iterator.next().getName().toLowerCase().contains( key.toLowerCase() ) )
-            {
-                iterator.remove();
-            }
-        }
-    }
-
-    @Override
     public List<OrganisationUnit> getOrganisationUnits( final Collection<Integer> identifiers )
     {
         List<OrganisationUnit> objects = getAllOrganisationUnits();
