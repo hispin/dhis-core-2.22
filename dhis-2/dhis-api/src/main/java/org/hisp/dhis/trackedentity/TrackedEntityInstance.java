@@ -68,6 +68,8 @@ public class TrackedEntityInstance
     private TrackedEntityInstance representative;
 
     private TrackedEntity trackedEntity;
+    
+    private Boolean inactive = false;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -166,4 +168,16 @@ public class TrackedEntityInstance
     {
         this.trackedEntity = trackedEntity;
     }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
+	public Boolean isInactive() {
+		return inactive;
+	}
+
+	public void setInactive(Boolean inactive) {
+		this.inactive = inactive;
+	}
 }

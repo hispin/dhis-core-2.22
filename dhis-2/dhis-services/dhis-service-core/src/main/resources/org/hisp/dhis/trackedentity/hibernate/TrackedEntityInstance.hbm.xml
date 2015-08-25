@@ -12,6 +12,8 @@
     </id>
     &identifiableProperties;
 
+	<property name="inactive" column="inactive" />
+	
     <set name="attributeValues" inverse="true" lazy="false">
       <key column="trackedentityinstanceid" />
       <one-to-many class="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue" />

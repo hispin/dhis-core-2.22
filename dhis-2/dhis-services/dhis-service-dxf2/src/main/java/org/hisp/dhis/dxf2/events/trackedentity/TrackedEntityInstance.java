@@ -58,6 +58,8 @@ public class TrackedEntityInstance
     private List<Relationship> relationships = new ArrayList<>();
 
     private List<Attribute> attributes = new ArrayList<>();
+    
+    private Boolean inactive;
 
     public TrackedEntityInstance()
     {
@@ -161,6 +163,17 @@ public class TrackedEntityInstance
     {
         this.attributes = attributes;
     }
+    
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
+    public Boolean isInactive() {
+		return inactive;
+	}
+
+	public void setInactive(Boolean inactive) {
+		this.inactive = inactive;
+	}
 
     @Override
     public boolean equals( Object o )
@@ -204,5 +217,5 @@ public class TrackedEntityInstance
             ", relationships=" + relationships +
             ", attributes=" + attributes +
             '}';
-    }
+    }	
 }
