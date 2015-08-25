@@ -227,7 +227,7 @@ angular.module('trackerCaptureServices')
                         var evs = eventsByStage[currentStage.id];
 
                         evs = orderByFilter(evs, '-eventDate');
-                        dummyEvent.dueDate = this.addOffsetAndFormatDate(evs[0].eventDate,timeRange[evs.length] ? timeRange[evs.length-1] : 0);
+                        dummyEvent.dueDate = this.addOffsetAndFormatDate(evs[0].eventDate,timeRange[evs.length] ? timeRange[evs.length] : 0);
                     return dummyEvent;
                 }
                 
