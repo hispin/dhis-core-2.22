@@ -353,7 +353,7 @@ public class DefaultProgramIndicatorService
         while ( matcher.find() )
         {
             String key = matcher.group( 1 );
-            String uid = statementBuilder.columnQuote( matcher.group( 2 ) );
+            String val = matcher.group( 2 );
             
             if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
             {
@@ -363,15 +363,24 @@ public class DefaultProgramIndicatorService
             }
             else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
             {
-                matcher.appendReplacement( buffer, uid );
+                matcher.appendReplacement( buffer, statementBuilder.columnQuote( val ) );
             }
             else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
             {
-                Constant constant = constantService.getConstant( uid );
+                Constant constant = constantService.getConstant( val );
                 
                 if ( constant != null )
                 {
                     matcher.appendReplacement( buffer, String.valueOf( constant.getValue() ) );
+                }
+            }
+            else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
+            {
+                String sql = getVariableAsSql( val, expression );
+                
+                if ( sql != null )
+                {
+                    matcher.appendReplacement( buffer, sql );
                 }
             }
         }
@@ -757,6 +766,47 @@ public class DefaultProgramIndicatorService
         expression = TextUtils.appendTail( matcher, buffer );
         
         return MathUtils.calculateExpression( expression );
+    }
+    
+    /**
+     * Creates a SQL select clause from the given program indicator variable 
+     * based on the given expression. Wraps the count variables with 
+     * <code>nullif</code> to avoid potential division by zero.
+     * 
+     * @param var the program indicator variable.
+     * @param expression the program indicator expression.
+     * @return a SQL select clause.
+     */
+    private String getVariableAsSql( String var, String expression )
+    {
+        if ( ProgramIndicator.VAR_EXECUTION_DATE.equals( var ) )
+        {
+            return "executiondate";
+        }
+        else if ( ProgramIndicator.VAR_VALUE_COUNT.equals( var ) )
+        {
+            String sql = "nullif((";
+            
+            for ( String uid : ProgramIndicator.getDataElementAndAttributeIdentifiers( expression ) )
+            {
+                sql += "case when " + statementBuilder.columnQuote( uid ) + " is not null then 1 else 0 end + ";
+            }
+            
+            return TextUtils.removeLast( sql, "+" ) + "),0)";
+        }
+        else if ( ProgramIndicator.VAR_ZERO_POS_VALUE_COUNT.equals( var ) )
+        {
+            String sql = "nullif((";
+            
+            for ( String uid : ProgramIndicator.getDataElementAndAttributeIdentifiers( expression ) )
+            {
+                sql += "case when " + statementBuilder.columnQuote( uid ) + " > 0 then 1 else 0 end + ";
+            }
+            
+            return TextUtils.removeLast( sql, "+" ) + "),0)";
+        }
+        
+        return null;
     }
 
     private boolean isZeroOrPositive( String value )
