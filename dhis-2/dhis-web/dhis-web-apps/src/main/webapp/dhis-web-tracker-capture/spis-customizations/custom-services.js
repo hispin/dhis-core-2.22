@@ -120,7 +120,7 @@ angular.module('trackerCaptureServices')
                 ProgramFactory.get(programUid).then(function(program){
                     for (var i=0;i<program.attributeValues.length;i++)
                     {
-                        if (program.attributeValues[i].attribute.name == 'Allow registration' && program.attributeValues[i].value == "true"){
+                        if (program.attributeValues[i].attribute.code == 'allowRegistration' && program.attributeValues[i].value == "true"){
                                 isValidProgram = true; break;
                         }
                     }
@@ -128,7 +128,7 @@ angular.module('trackerCaptureServices')
                     angular.forEach(tEAttributes, function (tEAttribute) {
                         for (var j=0;j<tEAttribute.attributeValues.length;j++)
                         {
-                            if (tEAttribute.attributeValues[j].attribute.name == 'Custom ID' && tEAttribute.attributeValues[j].value == "true") {
+                            if (tEAttribute.attributeValues[j].attribute.code == 'toBeUsedForCustomID' && tEAttribute.attributeValues[j].value == "true") {
                                 isValidAttribute = true;
                                 customIDAttribute = {
                                     attribute : tEAttribute.id,
@@ -261,3 +261,20 @@ angular.module('trackerCaptureServices')
 
         }
     })
+
+    .service('HideProgramFromDashboardService', function(){
+        return {
+            isProgramToBeUsedForRegistration : function(program){
+
+                for(var i=0;i < program.attributeValues.length;i++){
+                    if (program.attributeValues[i].attribute.code == "allowRegistration" && program.attributeValues[i].value == "true"){
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        })
+
+

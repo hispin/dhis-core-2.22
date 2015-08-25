@@ -22,7 +22,8 @@ trackerCapture.controller('DashboardController',
                 DialogService,
                 AttributesFactory,
                 CurrentSelection,
-                AuthorityService) {
+                AuthorityService,
+                 HideProgramFromDashboardService) {
     //selections
     $scope.selectedTeiId = ($location.search()).tei; 
     $scope.selectedProgramId = ($location.search()).program; 
@@ -201,7 +202,7 @@ trackerCapture.controller('DashboardController',
 
                                 //get programs valid for the selected ou and tei
                                 angular.forEach(programs, function(program){                                    
-                                    if( program.trackedEntity.id === $scope.selectedTei.trackedEntity ){
+                                    if( program.trackedEntity.id === $scope.selectedTei.trackedEntity && !HideProgramFromDashboardService.isProgramToBeUsedForRegistration(program)){
                                         $scope.programs.push(program);
                                         $scope.programNames[program.id] = {id: program.id, name: program.name};
 										angular.forEach(program.programStages, function(stage){                
