@@ -269,34 +269,6 @@ public class DataSetServiceTest
         assertTrue( dataSets.contains( dataSetB ) );
     }
 
-    @Test
-    public void testGetSourcesAssociatedWithDataSet()
-    {
-        DataSet dataSetA = createDataSet( 'A', periodType );
-        DataSet dataSetB = createDataSet( 'B', periodType );
-
-        dataSetA.getSources().add( unitA );
-        dataSetA.getSources().add( unitB );
-        dataSetB.getSources().add( unitE );
-
-        dataSetB.getSources().add( unitC );
-        dataSetB.getSources().add( unitD );
-        dataSetB.getSources().add( unitE );
-
-        dataSetService.addDataSet( dataSetA );
-        dataSetService.addDataSet( dataSetB );
-
-        List<OrganisationUnit> sources = new ArrayList<>();
-
-        sources.add( unitA );
-        sources.add( unitB );
-        sources.add( unitC );
-        sources.add( unitD );
-
-        assertEquals( 2, dataSetService.getSourcesAssociatedWithDataSet( dataSetA, sources ) );
-        assertEquals( 2, dataSetService.getSourcesAssociatedWithDataSet( dataSetB, sources ) );
-    }
-
     // -------------------------------------------------------------------------
     // LockException
     // -------------------------------------------------------------------------

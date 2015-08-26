@@ -140,21 +140,16 @@ public class DefaultTrackedEntityAttributeService
     @Override
     public List<TrackedEntityAttribute> getTrackedEntityAttributesWithoutProgram()
     {
-        List<TrackedEntityAttribute> result = attributeStore.getAll();
+        List<TrackedEntityAttribute> result = new ArrayList<>( attributeStore.getAll() );
 
         List<Program> programs = programService.getAllPrograms();
 
-        if ( result != null )
+        for ( Program program : programs )
         {
-            for ( Program program : programs )
-            {
-                result.removeAll( program.getProgramAttributes() );
-            }
-
-            return result;
+            result.removeAll( program.getProgramAttributes() );
         }
 
-        return new ArrayList<>();
+        return result;
     }
 
     @Override
