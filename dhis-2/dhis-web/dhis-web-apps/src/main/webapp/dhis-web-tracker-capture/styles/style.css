@@ -1124,3 +1124,7 @@ input, button, select, textarea {
 .program-drop-down > .dropdown-menu > li > a {
     white-space: normal !important;
 }
+
+.inactive-tei{
+    color: #ff4000;
+}
