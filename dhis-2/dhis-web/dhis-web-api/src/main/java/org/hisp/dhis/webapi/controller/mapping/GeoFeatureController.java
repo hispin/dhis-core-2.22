@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +101,7 @@ public class GeoFeatureController
     public void getGeoFeaturesJson(
         @RequestParam String ou,
         @RequestParam( required = false ) DisplayProperty displayProperty,
+        @RequestParam( required = false ) Date relativePeriodDate,
         @RequestParam( required = false ) String userOrgUnit,
         @RequestParam( defaultValue = "false", value = "includeGroupSets" ) boolean rpIncludeGroupSets,
         @RequestParam Map<String, String> parameters,
@@ -108,7 +110,7 @@ public class GeoFeatureController
         WebOptions options = new WebOptions( parameters );
         boolean includeGroupSets = "detailed".equals( options.getViewClass() ) || rpIncludeGroupSets;
 
-        List<GeoFeature> features = getGeoFeatures( ou, displayProperty, userOrgUnit, request, response, includeGroupSets );
+        List<GeoFeature> features = getGeoFeatures( ou, displayProperty, relativePeriodDate, userOrgUnit, request, response, includeGroupSets );
         
         if ( features == null )
         {
@@ -123,6 +125,7 @@ public class GeoFeatureController
     public void getGeoFeaturesJsonP(
         @RequestParam String ou,
         @RequestParam( required = false ) DisplayProperty displayProperty,
+        @RequestParam( required = false ) Date relativePeriodDate,
         @RequestParam( required = false ) String userOrgUnit,
         @RequestParam( defaultValue = "callback" ) String callback,
         @RequestParam( defaultValue = "false", value = "includeGroupSets" ) boolean rpIncludeGroupSets,
@@ -132,7 +135,7 @@ public class GeoFeatureController
         WebOptions options = new WebOptions( parameters );
         boolean includeGroupSets = "detailed".equals( options.getViewClass() ) || rpIncludeGroupSets;
 
-        List<GeoFeature> features = getGeoFeatures( ou, displayProperty, userOrgUnit, request, response, includeGroupSets );
+        List<GeoFeature> features = getGeoFeatures( ou, displayProperty, relativePeriodDate, userOrgUnit, request, response, includeGroupSets );
 
         if ( features == null )
         {
@@ -153,20 +156,21 @@ public class GeoFeatureController
      * 
      * @param ou the organisation unit parameter.
      * @param displayProperty the display property.
+     * @param relativePeriodDate the date to use as basis for relative periods.
      * @param userOrgUnit the user organisation unit parameter.
      * @param request the HTTP request.
      * @param response the HTTP response.
      * @param includeGroupSets whether to include organisation unit group sets.
      * @return a list of geo features or null.
      */
-    private List<GeoFeature> getGeoFeatures( String ou, DisplayProperty displayProperty, 
+    private List<GeoFeature> getGeoFeatures( String ou, DisplayProperty displayProperty, Date relativePeriodDate, 
         String userOrgUnit, HttpServletRequest request, HttpServletResponse response, boolean includeGroupSets )
     {
         Set<String> set = new HashSet<>();
         set.add( ou );
 
         DataQueryParams params = analyticsService.getFromUrl( set, null, AggregationType.SUM, null,
-            false, false, false, false, false, false, false, displayProperty, null, null, userOrgUnit, null, null, null );
+            false, false, false, false, false, false, false, displayProperty, null, null, relativePeriodDate, userOrgUnit, null, null, null );
 
         DimensionalObject dim = params.getDimension( DimensionalObject.ORGUNIT_DIM_ID );
 

@@ -910,7 +910,7 @@ public class DefaultAnalyticsService
     public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType,
         String measureCriteria, boolean skipMeta, boolean skipData, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit,
         boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, 
-        String approvalLevel, String userOrgUnit, String program, String stage, I18nFormat format )
+        String approvalLevel, Date relativePeriodDate, String userOrgUnit, String program, String stage, I18nFormat format )
     {
         DataQueryParams params = new DataQueryParams();
         
@@ -919,12 +919,12 @@ public class DefaultAnalyticsService
 
         if ( dimensionParams != null && !dimensionParams.isEmpty() )
         {
-            params.addDimensions( getDimensionalObjects( dimensionParams, userOrgUnit, format ) );
+            params.addDimensions( getDimensionalObjects( dimensionParams, relativePeriodDate, userOrgUnit, format ) );
         }
 
         if ( filterParams != null && !filterParams.isEmpty() )
         {
-            params.getFilters().addAll( getDimensionalObjects( filterParams, userOrgUnit, format ) );
+            params.getFilters().addAll( getDimensionalObjects( filterParams, relativePeriodDate, userOrgUnit, format ) );
         }
 
         if ( measureCriteria != null && !measureCriteria.isEmpty() )
@@ -988,7 +988,7 @@ public class DefaultAnalyticsService
     }
 
     @Override
-    public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, String userOrgUnit, I18nFormat format )
+    public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, Date relativePeriodDate, String userOrgUnit, I18nFormat format )
     {
         List<DimensionalObject> list = new ArrayList<>();
         
@@ -1003,7 +1003,7 @@ public class DefaultAnalyticsService
 
                 if ( dimension != null && items != null )
                 {
-                    list.add( getDimension( dimension, items, null, userOrgUnits, format, false ) );
+                    list.add( getDimension( dimension, items, relativePeriodDate, userOrgUnits, format, false ) );
                 }
             }
         }
