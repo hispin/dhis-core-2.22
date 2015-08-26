@@ -16,7 +16,7 @@
 
     <property name="value" length="50000" />
 
-    <property name="storedBy" column="storedby" length="100" />
+    <property name="storedBy" column="storedby" />
 
     <property name="created" column="created" type="timestamp" />
 
