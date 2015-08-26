@@ -64,14 +64,25 @@ public class EthiopianCalendar extends ChronologyBasedCalendar
     @Override
     public DateTimeUnit toIso( DateTimeUnit dateTimeUnit )
     {
-        dateTimeUnit = normalize( dateTimeUnit );
+        if ( dateTimeUnit.getMonth() > 12 )
+        {
+            throw new RuntimeException( "Illegal month, must be between 1 and 12, was given " + dateTimeUnit.getMonth() );
+        }
+
         return super.toIso( dateTimeUnit );
     }
 
     @Override
     public DateTimeUnit fromIso( Date date )
     {
-        return super.fromIso( date );
+        DateTimeUnit dateTimeUnit = super.fromIso( date );
+
+        if ( dateTimeUnit.getMonth() > 12 )
+        {
+            throw new RuntimeException( "Illegal month, must be between 1 and 12, was given " + dateTimeUnit.getMonth() );
+        }
+
+        return dateTimeUnit;
     }
 
     @Override
@@ -81,27 +92,48 @@ public class EthiopianCalendar extends ChronologyBasedCalendar
     }
 
     @Override
-    public int daysInMonth( int year, int month )
+    public DateTimeUnit plusDays( DateTimeUnit dateTimeUnit, int days )
     {
-        if ( month < 12 )
+        dateTimeUnit = super.plusDays( dateTimeUnit, days );
+
+        if ( dateTimeUnit.getMonth() > 12 )
         {
-            return 30;
+            dateTimeUnit.setYear( dateTimeUnit.getYear() + 1 );
+            dateTimeUnit.setMonth( 1 );
+            dateTimeUnit.setDay( 1 );
         }
-
-        return 30 + super.daysInMonth( year, 13 );
-    }
-
-    private DateTimeUnit normalize( DateTimeUnit dateTimeUnit )
-    {
-        if ( dateTimeUnit.getMonth() < 12 || dateTimeUnit.getDay() <= 30 )
-        {
-            return dateTimeUnit;
-        }
-
-        dateTimeUnit = new DateTimeUnit( dateTimeUnit );
-        dateTimeUnit.setDay( dateTimeUnit.getDay() - 30 );
-        dateTimeUnit.setMonth( 13 );
 
         return dateTimeUnit;
+    }
+
+    @Override
+    public DateTimeUnit plusMonths( DateTimeUnit dateTimeUnit, int months )
+    {
+        dateTimeUnit = super.plusMonths( dateTimeUnit, months );
+
+        if ( dateTimeUnit.getMonth() > 12 )
+        {
+            dateTimeUnit.setYear( dateTimeUnit.getYear() + 1 );
+            dateTimeUnit.setMonth( 1 );
+        }
+
+        return dateTimeUnit;
+    }
+
+    @Override
+    public int daysInYear( int year )
+    {
+        return 12 * 30;
+    }
+
+    @Override
+    public int daysInMonth( int year, int month )
+    {
+        if ( month > 12 )
+        {
+            throw new RuntimeException( "Illegal month, must be between 1 and 12, was given " + month );
+        }
+
+        return 30;
     }
 }

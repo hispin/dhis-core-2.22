@@ -50,7 +50,7 @@ public class DailyPeriodType
     private static final long serialVersionUID = 5371766471215556241L;
 
     public static final String ISO_FORMAT = "yyyyMMdd";
-    
+
     private static final String ISO8601_DURATION = "P1D";
 
     /**
@@ -166,11 +166,11 @@ public class DailyPeriodType
     {
         return ISO_FORMAT;
     }
-    
+
     @Override
-    public String getIso8601Duration() 
+    public String getIso8601Duration()
     {
-        return ISO8601_DURATION; 
+        return ISO8601_DURATION;
     }
 
 
