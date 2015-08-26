@@ -1,11 +1,11 @@
 <div class="panel panel-info" ng-controller="RelationshipController">
     <div class="panel-heading handle bold">
         {{relationshipWidget.title| translate}}
-        <span class="nav-pills" ng-if="selectedTei && selectedProgram.relationshipText">
+        <span class="nav-pills" ng-if="selectedTei && selectedProgram.relationshipText  && !selectedTei.inactive">
             | <a href ng-click="showAddRelationship(true)" title="{{'add_relationship'| translate}}"><span ng-class="{true: 'widget-link-active', false: 'widget-link'} [showAddRelationshipDiv]">{{selectedProgram.relationshipText}}</span></a>
         </span>        
         
-        <span class="nav-pills" ng-if="selectedTei">
+        <span class="nav-pills" ng-if="selectedTei  && !selectedTei.inactive">
             | <a href ng-click="showAddRelationship(false)" title="{{'add_relationship'| translate}}"><span ng-class="{true: 'widget-link-active', false: 'widget-link'} [showAddRelationshipDiv]">{{'add' | translate}}</span></a>
         </span>
         
@@ -37,7 +37,7 @@
                     <td title="{{'go_to_dashboard'| translate}}" ng-click="showDashboard(rel.trackedEntityInstance, rel.relId)" ng-repeat="att in attributes" ng-if="att.displayInListNoProgram">
                         {{rel.attributes[att.id]}}
                     </td>
-                    <td ng-click="removeRelationship(rel)" title="{{'delete_relationship'| translate}}">
+                    <td ng-click="removeRelationship(rel)" title="{{'delete_relationship'| translate}}" ng-if="!selectedTei.inactive">
                         <i class="fa fa-trash-o red"></i>
                     </td>
                 </tr>

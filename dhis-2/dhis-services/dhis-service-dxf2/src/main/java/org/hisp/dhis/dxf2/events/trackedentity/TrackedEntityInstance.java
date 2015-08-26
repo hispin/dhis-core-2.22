@@ -216,6 +216,7 @@ public class TrackedEntityInstance
             ", created='" + created + '\'' +
             ", relationships=" + relationships +
             ", attributes=" + attributes +
+            ", inactive=" + inactive +
             '}';
     }	
 }

@@ -5,7 +5,7 @@
         <span class="nav-pills" ng-show="selectedProgram && currentEnrollment && currentEnrollment !== selectedEnrollment">
             | <a href ng-click="loadEnrollmentDetails(currentEnrollment)" title="{{'current'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [showEnrollmentDiv]">{{'current'| translate}}</span></a>
         </span>
-        <span class="nav-pills" ng-show="selectedProgram && !currentEnrollment">
+        <span class="nav-pills" ng-show="selectedProgram && !currentEnrollment && !selectedTei.inactive">
             | <a href ng-click="showNewEnrollment()" title="{{'new'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [showEnrollmentDiv]">{{'new'| translate}}</span></a>
         </span>
         <span class="nav-pills" ng-show="hasEnrollmentHistory">
@@ -56,13 +56,13 @@
 
                 <button type="button" 
                         class="btn btn-primary"
-                        ng-disabled="selectedEnrollment.status !== 'ACTIVE'"
+                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || selectedTei.inactive"
                         ng-click="completeEnrollment()">
                     {{'complete'| translate}}
                 </button>
                 <button type="button" 
                         class="btn btn-warning"
-                        ng-disabled="selectedEnrollment.status !== 'ACTIVE'"
+                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || selectedTei.inactive"
                         ng-click="terminateEnrollment()">
                     {{'terminate'| translate}}
                 </button>   
@@ -70,7 +70,7 @@
                 <button type="button"
                         title="{{'unmark_for_followup'| translate}}"
                         class="btn btn-danger horizonal-spacing"
-                        ng-disabled="selectedEnrollment.status !== 'ACTIVE'"
+                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || selectedTei.inactive"
                         ng-if="selectedEnrollment.followup"
                         ng-click="markForFollowup()">
                     <i class="fa fa-exclamation-triangle"></i>
@@ -78,7 +78,7 @@
                 <button type="button" 
                         title="{{'mark_for_followup'| translate}}"
                         class="btn btn-default horizonal-spacing"
-                        ng-disabled="selectedEnrollment.status !== 'ACTIVE'"
+                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || selectedTei.inactive"
                         ng-if="!selectedEnrollment.followup"
                         ng-click="markForFollowup()">
                     <i class="fa fa-exclamation-triangle"></i>

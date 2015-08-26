@@ -160,6 +160,12 @@ trackerCapture.controller('DashboardController',
         }
     };
     
+    var setInactiveMessage = function(){
+        if($scope.selectedTei.inactive){
+            setHeaderDelayMessage($translate.instant('tei_inactive_only_read'));
+        }
+    };
+    
     if($scope.selectedTeiId){
         
         //get option sets
@@ -181,6 +187,8 @@ trackerCapture.controller('DashboardController',
                 //Fetch the selected entity
                 TEIService.get($scope.selectedTeiId, $scope.optionSets, $scope.attributesById).then(function(response){
                     $scope.selectedTei = response;
+                    
+                    setInactiveMessage();                   
 
                     //get the entity type
                     TEService.get($scope.selectedTei.trackedEntity).then(function(te){                    
@@ -228,6 +236,7 @@ trackerCapture.controller('DashboardController',
             });
         });
     }    
+    
     
     //listen for any change to program selection
     //it is possible that such could happen during enrollment.
@@ -352,6 +361,7 @@ trackerCapture.controller('DashboardController',
 
             $scope.selectedTei.inactive = st;
             TEIService.update($scope.selectedTei, $scope.optionSets, $scope.attributesById).then(function (data) {
+                setInactiveMessage();
                 $scope.broadCastSelections($scope.selectedTei);                
             });
         }, function(){            
