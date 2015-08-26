@@ -42,7 +42,7 @@ public class BiMonthlyPeriodType
     extends CalendarPeriodType
 {
     private static final String ISO_FORMAT = "yyyyMMB";
-    
+
     private static final String ISO8601_DURATION = "P2M";
 
     /**
@@ -140,7 +140,7 @@ public class BiMonthlyPeriodType
         Calendar cal = getCalendar();
 
         dateTimeUnit.setDay( 1 );
-        dateTimeUnit = cal.minusMonths( dateTimeUnit, ( dateTimeUnit.getMonth() % 2 ) + 10 );
+        dateTimeUnit = cal.minusMonths( dateTimeUnit, (dateTimeUnit.getMonth() % 2) + 10 );
 
         List<Period> periods = Lists.newArrayList();
 
@@ -154,9 +154,9 @@ public class BiMonthlyPeriodType
     }
 
     @Override
-    public String getIsoDate( DateTimeUnit dateTimeUnit )
+    public String getIsoDate( DateTimeUnit dateTimeUnit, Calendar calendar )
     {
-        return String.format( "%d%02dB", dateTimeUnit.getYear(), ( dateTimeUnit.getMonth() + 1 ) / 2 );
+        return String.format( "%d%02dB", dateTimeUnit.getYear(), (dateTimeUnit.getMonth() + 1) / 2 );
     }
 
     @Override
@@ -180,8 +180,8 @@ public class BiMonthlyPeriodType
     }
 
     @Override
-    public String getIso8601Duration() 
+    public String getIso8601Duration()
     {
-        return ISO8601_DURATION; 
+        return ISO8601_DURATION;
     }
 }

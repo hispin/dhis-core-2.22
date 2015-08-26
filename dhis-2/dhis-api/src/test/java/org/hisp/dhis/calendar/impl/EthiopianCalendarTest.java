@@ -35,6 +35,7 @@ import org.hisp.dhis.period.DailyPeriodType;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.QuarterlyPeriodType;
+import org.hisp.dhis.period.WeeklyPeriodType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -107,5 +108,54 @@ public class EthiopianCalendarTest
 
         List<Period> monthly = new MonthlyPeriodType().generatePeriods( calendar, startDate, endDate );
         assertEquals( 601, monthly.size() );
+    }
+
+    @Test
+    public void testGenerateWeeklyPeriods()
+    {
+        Date startDate = new Cal( 1975, 1, 1, true ).time();
+        Date endDate = new Cal( 2025, 1, 2, true ).time();
+
+        List<Period> weeks = new WeeklyPeriodType().generatePeriods( calendar, startDate, endDate );
+        assertEquals( 2610, weeks.size() );
+    }
+
+    @Test
+    public void testPlusDays()
+    {
+        DateTimeUnit dateTimeUnit = new DateTimeUnit( 2006, 1, 1 );
+
+        DateTimeUnit testDateTimeUnit = calendar.plusDays( dateTimeUnit, 43 );
+        assertEquals( 2006, testDateTimeUnit.getYear() );
+        assertEquals( 2, testDateTimeUnit.getMonth() );
+        assertEquals( 14, testDateTimeUnit.getDay() );
+
+        testDateTimeUnit = calendar.plusDays( dateTimeUnit, 65 );
+        assertEquals( 2006, testDateTimeUnit.getYear() );
+        assertEquals( 3, testDateTimeUnit.getMonth() );
+        assertEquals( 6, testDateTimeUnit.getDay() );
+
+        testDateTimeUnit = calendar.plusDays( dateTimeUnit, (12 * 30) + 5 );
+        assertEquals( 2007, testDateTimeUnit.getYear() );
+        assertEquals( 1, testDateTimeUnit.getMonth() );
+        assertEquals( 6, testDateTimeUnit.getDay() );
+
+        dateTimeUnit = new DateTimeUnit( 2006, 2, 29 );
+
+        testDateTimeUnit = calendar.plusDays( dateTimeUnit, 10 );
+        assertEquals( 2006, testDateTimeUnit.getYear() );
+        assertEquals( 3, testDateTimeUnit.getMonth() );
+        assertEquals( 9, testDateTimeUnit.getDay() );
+    }
+
+    @Test
+    public void testMinusDays()
+    {
+        DateTimeUnit dateTimeUnit = new DateTimeUnit( 2007, 1, 1 );
+
+        DateTimeUnit testDateTimeUnit = calendar.minusDays( dateTimeUnit, 2 );
+        assertEquals( 2006, testDateTimeUnit.getYear() );
+        assertEquals( 12, testDateTimeUnit.getMonth() );
+        assertEquals( 29, testDateTimeUnit.getDay() );
     }
 }
