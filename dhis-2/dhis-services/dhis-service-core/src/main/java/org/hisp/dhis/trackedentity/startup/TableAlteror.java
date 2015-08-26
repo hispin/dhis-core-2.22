@@ -314,6 +314,9 @@ public class TableAlteror
         
         executeSql( "update program p set dataentryformid = (select dataentryformid from trackedentityform tf where tf.programid=p.programid limit 1)" );
         executeSql( "drop table trackedentityform" );
+
+        executeSql( "alter table trackedentitydatavalue alter column storedby TYPE character varying(255)" );
+        executeSql( "alter table datavalue alter column storedby TYPE character varying(255)" );
         
         updateProgramStageList();
         updateProgramAttributeList();
