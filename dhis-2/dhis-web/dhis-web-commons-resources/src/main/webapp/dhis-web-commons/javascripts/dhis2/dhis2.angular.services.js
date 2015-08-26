@@ -1207,6 +1207,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     location:action.location, 
                                     action:action.programRuleActionType,
                                     dataElement:action.dataElement,
+                                    trackedEntityAttribute:action.trackedEntityAttribute,
                                     content:action.content,
                                     data:action.data,
                                     ineffect:undefined
