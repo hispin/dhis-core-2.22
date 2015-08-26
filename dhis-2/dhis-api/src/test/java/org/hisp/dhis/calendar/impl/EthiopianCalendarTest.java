@@ -36,7 +36,6 @@ import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.QuarterlyPeriodType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -67,20 +66,17 @@ public class EthiopianCalendarTest
         assertEquals( 11, startOfYear.getDay() );
     }
 
-    @Test
-    public void testDaysInMonth()
+    @Test( expected = RuntimeException.class )
+    public void testDaysInMonth13()
     {
-        int month12 = calendar.daysInMonth( 2007, 12 );
-        int month13 = calendar.daysInMonth( 2007, 13 );
+        calendar.daysInMonth( 2007, 13 );
+    }
 
-        assertEquals( 36, month12 );
-        assertEquals( 36, month13 );
-
-        month12 = calendar.daysInMonth( 2004, 12 );
-        month13 = calendar.daysInMonth( 2004, 13 );
-
-        assertEquals( 35, month12 );
-        assertEquals( 35, month13 );
+    @Test
+    public void testDaysInYear()
+    {
+        int daysInYear = calendar.daysInYear( 2006 );
+        assertEquals( 12 * 30, daysInYear );
     }
 
     @Test
@@ -90,7 +86,7 @@ public class EthiopianCalendarTest
         Date endDate = new Cal( 2025, 1, 2, true ).time();
 
         List<Period> days = new DailyPeriodType().generatePeriods( calendar, startDate, endDate );
-        assertEquals( 18264, days.size() );
+        assertEquals( 18001, days.size() );
     }
 
     @Test
@@ -104,7 +100,6 @@ public class EthiopianCalendarTest
     }
 
     @Test
-    @Ignore
     public void testGenerateMonthlyPeriods()
     {
         Date startDate = new Cal( 1975, 1, 1, true ).time();
