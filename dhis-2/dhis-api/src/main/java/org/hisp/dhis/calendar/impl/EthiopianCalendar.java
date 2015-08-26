@@ -224,4 +224,10 @@ public class EthiopianCalendar extends ChronologyBasedCalendar
     {
         return 7;
     }
+
+    @Override
+    public DateTimeUnit isoStartOfYear( int year )
+    {
+        return fromIso( super.isoStartOfYear( year ) );
+    }
 }
