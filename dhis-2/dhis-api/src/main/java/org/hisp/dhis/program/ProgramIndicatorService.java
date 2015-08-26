@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hisp.dhis.constant.Constant;
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
