@@ -209,50 +209,6 @@ public class DataEntryFormServiceTest
     }
 
     @Test
-    public void testGetAvailableDataSets()
-    {
-        DataEntryForm dataEntryFormA = new DataEntryForm( "DataEntryForm-A" );
-        DataEntryForm dataEntryFormB = new DataEntryForm( "DataEntryForm-B" );
-        
-        DataSet dataSetA = new DataSet( "DataSet-A", periodType );
-        DataSet dataSetB = new DataSet( "DataSet-B", periodType );
-        DataSet dataSetC = new DataSet( "DataSet-C", periodType );
-
-        dataSetA.setDataEntryForm( dataEntryFormA );
-        dataSetB.setDataEntryForm( dataEntryFormB );
-        
-        dataSetService.addDataSet( dataSetA );
-        dataSetService.addDataSet( dataSetB );
-        dataSetService.addDataSet( dataSetC );
-        
-        List<DataSet> dataSets = dataSetService.getAvailableDataSets();
-
-        assertEquals( dataSets.size(), 1 );
-    }
-
-    @Test
-    public void testGetAssignedDataSets()
-    {
-        DataEntryForm dataEntryFormA = new DataEntryForm( "DataEntryForm-A" );
-        DataEntryForm dataEntryFormB = new DataEntryForm( "DataEntryForm-B" );
-        
-        DataSet dataSetA = new DataSet( "DataSet-A", periodType );
-        DataSet dataSetB = new DataSet( "DataSet-B", periodType );
-        DataSet dataSetC = new DataSet( "DataSet-C", periodType );
-
-        dataSetA.setDataEntryForm( dataEntryFormA );
-        dataSetB.setDataEntryForm( dataEntryFormB );
-        
-        dataSetService.addDataSet( dataSetA );
-        dataSetService.addDataSet( dataSetB );
-        dataSetService.addDataSet( dataSetC );
-        
-        List<DataSet> dataSets = dataSetService.getAssignedDataSets();
-
-        assertEquals( dataSets.size(), 2 );
-    }
-
-    @Test
     public void testGetOperands()
     {
         String html = "<table><tr><td><input id=\"abc-def-val\" style=\"width:4em;text-align:center\" /></td></tr></table>";
