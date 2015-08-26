@@ -44,7 +44,7 @@ public class FinancialOctoberPeriodType
     private static final long serialVersionUID = -1623576547899897811L;
 
     private static final String ISO_FORMAT = "yyyyOct";
-    
+
     private static final String ISO8601_DURATION = "P1Y";
 
     public static final String NAME = "FinancialOct";
@@ -62,7 +62,7 @@ public class FinancialOctoberPeriodType
     }
 
     @Override
-    public String getIsoDate( DateTimeUnit dateTimeUnit )
+    public String getIsoDate( DateTimeUnit dateTimeUnit, org.hisp.dhis.calendar.Calendar calendar )
     {
         return String.format( "%dOct", dateTimeUnit.getYear() );
     }
@@ -72,11 +72,11 @@ public class FinancialOctoberPeriodType
     {
         return ISO_FORMAT;
     }
-    
+
     @Override
-    public String getIso8601Duration() 
+    public String getIso8601Duration()
     {
-        return ISO8601_DURATION; 
+        return ISO8601_DURATION;
     }
 
 }

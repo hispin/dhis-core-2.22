@@ -29,7 +29,6 @@ package org.hisp.dhis.period;
  */
 
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
 
@@ -52,7 +51,7 @@ public class YearlyPeriodType
     private static final long serialVersionUID = 3893035414025085437L;
 
     private static final String ISO_FORMAT = "yyyy";
-    
+
     private static final String ISO8601_DURATION = "P1Y";
 
     /**
@@ -122,7 +121,7 @@ public class YearlyPeriodType
     public List<Period> generatePeriods( DateTimeUnit dateTimeUnit )
     {
         Calendar cal = getCalendar();
-        
+
         dateTimeUnit = cal.minusYears( dateTimeUnit, 5 );
         dateTimeUnit.setDay( 1 );
         dateTimeUnit.setMonth( 1 );
@@ -162,7 +161,7 @@ public class YearlyPeriodType
     public List<Period> generateLast5Years( Date date )
     {
         Calendar cal = getCalendar();
-        
+
         DateTimeUnit dateTimeUnit = createLocalDateUnitInstance( date );
         dateTimeUnit = cal.minusYears( dateTimeUnit, 4 );
         dateTimeUnit.setDay( 1 );
@@ -180,7 +179,7 @@ public class YearlyPeriodType
     }
 
     @Override
-    public String getIsoDate( DateTimeUnit dateTimeUnit )
+    public String getIsoDate( DateTimeUnit dateTimeUnit, Calendar calendar )
     {
         return String.valueOf( dateTimeUnit.getYear() );
     }
@@ -190,11 +189,11 @@ public class YearlyPeriodType
     {
         return ISO_FORMAT;
     }
-    
+
     @Override
-    public String getIso8601Duration() 
+    public String getIso8601Duration()
     {
-        return ISO8601_DURATION; 
+        return ISO8601_DURATION;
     }
 
 
@@ -202,7 +201,7 @@ public class YearlyPeriodType
     public Date getRewindedDate( Date date, Integer rewindedPeriods )
     {
         Calendar cal = getCalendar();
-        
+
         date = date != null ? date : new Date();
         rewindedPeriods = rewindedPeriods != null ? rewindedPeriods : 1;
 

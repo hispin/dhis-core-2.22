@@ -161,7 +161,7 @@ public class MonthlyPeriodType
     }
 
     @Override
-    public String getIsoDate( DateTimeUnit dateTimeUnit )
+    public String getIsoDate( DateTimeUnit dateTimeUnit, Calendar calendar )
     {
         return String.format( "%d%02d", dateTimeUnit.getYear(), dateTimeUnit.getMonth() );
     }

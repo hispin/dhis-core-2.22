@@ -300,9 +300,7 @@ public abstract class PeriodType
 
     public Period toIsoPeriod( DateTimeUnit start, DateTimeUnit end )
     {
-        org.hisp.dhis.calendar.Calendar cal = getCalendar();
-
-        return toIsoPeriod( start, end, cal );
+        return toIsoPeriod( start, end, getCalendar() );
     }
 
     protected Period toIsoPeriod( DateTimeUnit start, DateTimeUnit end, org.hisp.dhis.calendar.Calendar calendar )
@@ -310,7 +308,7 @@ public abstract class PeriodType
         DateTimeUnit from = calendar.toIso( start );
         DateTimeUnit to = calendar.toIso( end );
 
-        return new Period( this, from.toJdkDate(), to.toJdkDate(), getIsoDate( start ) );
+        return new Period( this, from.toJdkDate(), to.toJdkDate(), getIsoDate( start, calendar ) );
     }
 
     public Period toIsoPeriod( DateTimeUnit dateTimeUnit )
@@ -525,7 +523,18 @@ public abstract class PeriodType
      * @param dateTimeUnit Period
      * @return the period as string
      */
-    public abstract String getIsoDate( DateTimeUnit dateTimeUnit );
+    public String getIsoDate( DateTimeUnit dateTimeUnit )
+    {
+        return getIsoDate( dateTimeUnit, getCalendar() );
+    }
+
+    /**
+     * Returns an iso8601 formatted string representation of the dataUnit
+     *
+     * @param dateTimeUnit Period
+     * @return the period as string
+     */
+    public abstract String getIsoDate( DateTimeUnit dateTimeUnit, org.hisp.dhis.calendar.Calendar calendar );
 
     /**
      * Generates a period based on the given iso8601 formatted string.
