@@ -138,6 +138,14 @@ public class TrackedEntityAttribute
     }
 
     /**
+     * Indicates whether the value type of this attribute is date.
+     */
+    public boolean isDateType()
+    {
+        return TYPE_DATE.equals( valueType );
+    }
+
+    /**
      * Indicates whether this attribute has an option set.
      */
     public boolean hasOptionSet()

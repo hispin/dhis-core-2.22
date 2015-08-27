@@ -32,7 +32,6 @@ import java.util.Date;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.joda.time.DateTime;
 
 /**
  * @author Lars Helge Overland
@@ -47,7 +46,7 @@ public enum ValueType
     BOOLEAN( Boolean.class ),
     TRUE_ONLY( Boolean.class ),
     DATE( Date.class ),
-    DATETIME( DateTime.class ),
+    DATETIME( Date.class ),
     NUMBER( Double.class ),
     UNIT_INTERVAL( Double.class ),
     PERCENTAGE( Double.class ),
