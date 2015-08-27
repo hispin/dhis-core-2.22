@@ -188,9 +188,10 @@ public abstract class CalendarPeriodType
     {
         List<Period> periods = new ArrayList<>();
 
-        Period period = createPeriod( startDate );
+        Period period = createPeriod( startDate, calendar );
+        Period endPeriod = createPeriod( endDate, calendar );
 
-        while ( period.getStartDate().before( endDate ) )
+        while ( period.getStartDate().before( endPeriod.getEndDate() ) )
         {
             periods.add( period );
             period = getNextPeriod( period, calendar );

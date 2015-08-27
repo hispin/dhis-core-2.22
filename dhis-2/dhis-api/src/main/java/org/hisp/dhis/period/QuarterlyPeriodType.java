@@ -178,7 +178,7 @@ public class QuarterlyPeriodType
     }
 
     @Override
-    public String getIsoDate( DateTimeUnit dateTimeUnit )
+    public String getIsoDate( DateTimeUnit dateTimeUnit, org.hisp.dhis.calendar.Calendar calendar  )
     {
         switch ( dateTimeUnit.getMonth() )
         {

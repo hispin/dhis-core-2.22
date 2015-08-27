@@ -33,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -42,6 +43,7 @@ import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStageSection;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
  * @author markusbekken
@@ -98,6 +100,18 @@ public class ProgramRuleAction
      * </ul>
      */
     private DataElement dataElement;
+    
+    /**
+     * The data element that is affected by the rule action.
+     * Used for:
+     * <p/>
+     * <ul>
+     * <li>hidefield</li>
+     * <li>showwarning</li>
+     * <li>showerror</li>
+     * </ul>
+     */
+    private TrackedEntityAttribute attribute;
 
     /**
      * The program stage section that is affected by the rule action.
@@ -133,12 +147,13 @@ public class ProgramRuleAction
 
     }
 
-    public ProgramRuleAction( String name, ProgramRule programRule, ProgramRuleActionType programRuleActionType, DataElement dataElement, String location, String content, String data )
+    public ProgramRuleAction( String name, ProgramRule programRule, ProgramRuleActionType programRuleActionType, DataElement dataElement, TrackedEntityAttribute attribute, String location, String content, String data )
     {
         this.name = name;
         this.programRule = programRule;
         this.programRuleActionType = programRuleActionType;
         this.dataElement = dataElement;
+        this.attribute = attribute;
         this.location = location;
         this.content = content;
         this.data = data;
@@ -186,6 +201,20 @@ public class ProgramRuleAction
     {
         this.dataElement = dataElement;
     }
+    
+    @JsonProperty( "trackedEntityAttribute" )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( localName = "trackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
+    public TrackedEntityAttribute getAttribute()
+    {
+        return attribute;
+    }
+
+    public void setAttribute( TrackedEntityAttribute attribute )
+    {
+        this.attribute = attribute;
+    }
+
 
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
@@ -254,6 +283,7 @@ public class ProgramRuleAction
                 location = programRuleAction.getLocation();
                 content = programRuleAction.getContent();
                 data = programRuleAction.getData();
+                attribute = programRuleAction.getAttribute();
             }
             else if ( strategy.isMerge() )
             {
@@ -264,6 +294,7 @@ public class ProgramRuleAction
                 location = programRuleAction.getLocation() == null ? location : programRuleAction.getLocation();
                 content = programRuleAction.getContent() == null ? content : programRuleAction.getContent();
                 data = programRuleAction.getData() == null ? data : programRuleAction.getData();
+                attribute = programRuleAction.getAttribute() == null ? attribute : programRuleAction.getAttribute();
             }
         }
     }

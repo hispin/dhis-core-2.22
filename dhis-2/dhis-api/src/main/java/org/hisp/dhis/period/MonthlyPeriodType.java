@@ -78,12 +78,6 @@ public class MonthlyPeriodType
         DateTimeUnit start = new DateTimeUnit( dateTimeUnit );
         start.setDay( 1 );
 
-        if ( start.getMonth() > 12 )
-        {
-            start.setYear( start.getYear() + 1 );
-            start.setMonth( 1 );
-        }
-
         DateTimeUnit end = new DateTimeUnit( dateTimeUnit );
         end.setDay( calendar.daysInMonth( end.getYear(), end.getMonth() ) );
 
@@ -106,7 +100,7 @@ public class MonthlyPeriodType
         DateTimeUnit dateTimeUnit = calendar.fromIso( DateTimeUnit.fromJdkDate( period.getStartDate() ) );
         dateTimeUnit = calendar.plusMonths( dateTimeUnit, 1 );
 
-        return createPeriod( calendar.toIso( dateTimeUnit ), calendar );
+        return createPeriod( dateTimeUnit, calendar );
     }
 
     @Override
@@ -167,7 +161,7 @@ public class MonthlyPeriodType
     }
 
     @Override
-    public String getIsoDate( DateTimeUnit dateTimeUnit )
+    public String getIsoDate( DateTimeUnit dateTimeUnit, Calendar calendar )
     {
         return String.format( "%d%02d", dateTimeUnit.getYear(), dateTimeUnit.getMonth() );
     }

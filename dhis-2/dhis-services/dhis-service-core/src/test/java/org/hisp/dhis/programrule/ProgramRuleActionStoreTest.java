@@ -75,9 +75,9 @@ public class ProgramRuleActionStoreTest
     @Test
     public void testGetByProgram()
     {
-        ProgramRuleAction actionA = new ProgramRuleAction( "ActionA", programRuleA, ProgramRuleActionType.ASSIGNVARIABLE, null, null, "$myvar", "true");        
-        ProgramRuleAction actionB = new ProgramRuleAction( "ActionB", programRuleA, ProgramRuleActionType.DISPLAYTEXT, null, "con","Hello", "$placeofliving");
-        ProgramRuleAction actionC = new ProgramRuleAction( "ActionC", programRuleA, ProgramRuleActionType.HIDEFIELD, dataElementA, null, null, null);
+        ProgramRuleAction actionA = new ProgramRuleAction( "ActionA", programRuleA, ProgramRuleActionType.ASSIGNVARIABLE, null, null, null, "$myvar", "true");        
+        ProgramRuleAction actionB = new ProgramRuleAction( "ActionB", programRuleA, ProgramRuleActionType.DISPLAYTEXT, null, null, "con","Hello", "$placeofliving");
+        ProgramRuleAction actionC = new ProgramRuleAction( "ActionC", programRuleA, ProgramRuleActionType.HIDEFIELD, dataElementA, null, null, null, null);
        
         actionStore.save( actionA );
         actionStore.save( actionB );

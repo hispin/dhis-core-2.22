@@ -19,8 +19,10 @@ trackerCapture.controller('RegistrationController',
                 RegistrationService,
                 DateUtils,
                 SessionStorageService,
-                 CustomIDGenerationService) {
-    
+                 CustomIDGenerationService,
+                TrackerRulesFactory,
+                TrackerRulesExecutionService) {
+
     $scope.today = DateUtils.getToday();
     $scope.trackedEntityForm = null;
     $scope.customForm = null;    
@@ -61,6 +63,11 @@ trackerCapture.controller('RegistrationController',
         $scope.trackedEntities.selected = $scope.trackedEntities.available[0];
     });
     
+    $scope.allProgramRules = [];
+    TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+        $scope.allProgramRules = rules;
+    });  
+
     //watch for selection of program
     $scope.$watch('selectedProgram', function() {        
         $scope.trackedEntityForm = null;
@@ -108,7 +115,7 @@ trackerCapture.controller('RegistrationController',
         //reset form
         $scope.selectedTei = {};
         $scope.selectedEnrollment = {};
-        $scope.outerForm.submitted = false;
+        $scope.outerForm.submitted = false;         
 
         if(destination === 'DASHBOARD') {
             $location.path('/dashboard').search({tei: teiId,                                            
@@ -273,9 +280,94 @@ trackerCapture.controller('RegistrationController',
         }, 100);
     };
     
-    /*$scope.validationAndSkipLogic = function(tei, field){
-    };*/
+    var processRuleEffect = function(){
+
+        angular.forEach($rootScope.ruleeffects['registration'], function (effect) {
+            if (effect.dataElement) {
+                //in the data entry controller we only care about the "hidefield", showerror and showwarning actions
+                if (effect.action === "HIDEFIELD") {
+                    if (effect.dataElement) {
+                        if (effect.ineffect && affectedEvent[effect.dataElement.id]) {
+                            //If a field is going to be hidden, but contains a value, we need to take action;
+                            if (effect.content) {
+                                //TODO: Alerts is going to be replaced with a proper display mecanism.
+                                alert(effect.content);
+                            }
+                            else {
+                                //TODO: Alerts is going to be replaced with a proper display mecanism.
+                                alert($scope.prStDes[effect.dataElement.id].dataElement.formName + "Was blanked out and hidden by your last action");
+                            }
+
+                            //Blank out the value:
+                            affectedEvent[effect.dataElement.id] = "";
+                            $scope.saveDatavalueForEvent($scope.prStDes[effect.dataElement.id], null, affectedEvent);
+                        }
+
+                        $scope.hiddenFields[effect.dataElement.id] = effect.ineffect;
+                    }
+                    else {
+                        $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
+                    }
+                } else if (effect.action === "SHOWERROR") {
+                    if (effect.dataElement) {
+                        
+                        if(effect.ineffect) {
+                            $scope.errorMessages[effect.dataElement.id] = effect.content;
+                        } else {
+                            $scope.errorMessages[effect.dataElement.id] = false;
+                        }
+                    }
+                    else {
+                        $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
+                    }
+                } else if (effect.action === "SHOWWARNING") {
+                    if (effect.dataElement) {
+                        if(effect.ineffect) {
+                            $scope.warningMessages[effect.dataElement.id] = effect.content;
+                        } else {
+                            $scope.warningMessages[effect.dataElement.id] = false;
+                        }
+                    }
+                    else {
+                        $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
+                    }
+                }
+            }
+        });
+    };
     
+    $scope.executeRules = function () {   
+        var flag = {debug: true, verbose: true};
+        
+        //repopulate attributes with updated values
+        $scope.selectedTei.attributes = [];
+        
+        angular.forEach($scope.attributes, function(metaAttribute){
+            var newAttributeInArray = {attribute:metaAttribute.id,
+                code:metaAttribute.code,
+                displayName:metaAttribute.displayName,
+                type:metaAttribute.valueType
+            };
+            if($scope.selectedTei[newAttributeInArray.attribute]){
+                newAttributeInArray.value = $scope.selectedTei[newAttributeInArray.attribute];
+            }
+            
+           $scope.selectedTei.attributes.push(newAttributeInArray);
+        });
+        TrackerRulesExecutionService.executeRules($scope.allProgramRules, 'registration', null, null, $scope.selectedTei, $scope.selectedEnrollment, flag);
+
+    };
+    
+    $scope.teiValueUpdated = function(tei, field){
+        $scope.executeRules();
+    };
+    
+    //listen for rule effect changes
+    $scope.$on('ruleeffectsupdated', function (event, args) {
+        processRuleEffect(args.event);
+    });
+
+
     $scope.interacted = function(field) {
         var status = false;
         if(field){            

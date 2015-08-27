@@ -166,6 +166,7 @@ public interface AnalyticsService
      * @param displayProperty the property to display for meta-data.
      * @param outputIdScheme the identifier scheme to use in the query response.
      * @param approvalLevel the approval level identifier.
+     * @param relativePeriodDate the date to use as basis for relative periods.
      * @param userOrgUnit the user organisation unit to use, overrides current user.
      * @param program the program identifier.
      * @param stage the program stage identifier.
@@ -174,7 +175,7 @@ public interface AnalyticsService
      */
     DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, String measureCriteria, 
         boolean skipMeta, boolean skipData, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, boolean showHierarchy, 
-        DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, String userOrgUnit, 
+        DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, Date relativePeriodDate, String userOrgUnit, 
         String program, String stage, I18nFormat format );
     
     /**
@@ -190,12 +191,13 @@ public interface AnalyticsService
      * Creates a list of DimensionalObject from the given set of dimension params.
      * 
      * @param dimensionParams the dimension URL params.
+     * @param relativePeriodDate the date to use as basis for relative periods.
      * @param userOrgUnit the user organisation unit param, overrides current
      *        user, can be null.
      * @param format the i18n format.
      * @return a list of DimensionalObject.
      */
-    List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, String userOrgUnit, I18nFormat format );
+    List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, Date relativePeriodDate, String userOrgUnit, I18nFormat format );
     
     /**
      * Returns a persisted DimensionalObject generated from the given  dimension 

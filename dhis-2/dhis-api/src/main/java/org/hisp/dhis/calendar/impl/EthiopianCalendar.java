@@ -64,14 +64,25 @@ public class EthiopianCalendar extends ChronologyBasedCalendar
     @Override
     public DateTimeUnit toIso( DateTimeUnit dateTimeUnit )
     {
-        dateTimeUnit = normalize( dateTimeUnit );
+        if ( dateTimeUnit.getMonth() > 12 )
+        {
+            throw new RuntimeException( "Illegal month, must be between 1 and 12, was given " + dateTimeUnit.getMonth() );
+        }
+
         return super.toIso( dateTimeUnit );
     }
 
     @Override
     public DateTimeUnit fromIso( Date date )
     {
-        return super.fromIso( date );
+        DateTimeUnit dateTimeUnit = super.fromIso( date );
+
+        if ( dateTimeUnit.getMonth() > 12 )
+        {
+            throw new RuntimeException( "Illegal month, must be between 1 and 12, was given " + dateTimeUnit.getMonth() );
+        }
+
+        return dateTimeUnit;
     }
 
     @Override
@@ -81,27 +92,142 @@ public class EthiopianCalendar extends ChronologyBasedCalendar
     }
 
     @Override
-    public int daysInMonth( int year, int month )
+    public DateTimeUnit plusDays( DateTimeUnit dateTimeUnit, int days )
     {
-        if ( month < 12 )
+        int curYear = dateTimeUnit.getYear();
+        int curMonth = dateTimeUnit.getMonth();
+        int curDay = dateTimeUnit.getDay();
+        int dayOfWeek = dateTimeUnit.getDayOfWeek();
+
+        while ( days != 0 )
         {
-            return 30;
+            curDay++;
+
+            if ( curDay > 30 )
+            {
+                curMonth++;
+                curDay = 1;
+            }
+
+            if ( curMonth > 12 )
+            {
+                curYear++;
+                curMonth = 1;
+            }
+
+            dayOfWeek++;
+
+            if ( dayOfWeek > 7 )
+            {
+                dayOfWeek = 1;
+            }
+
+            days--;
         }
 
-        return 30 + super.daysInMonth( year, 13 );
+        return new DateTimeUnit( curYear, curMonth, curDay, dayOfWeek );
     }
 
-    private DateTimeUnit normalize( DateTimeUnit dateTimeUnit )
+    @Override
+    public DateTimeUnit minusDays( DateTimeUnit dateTimeUnit, int days )
     {
-        if ( dateTimeUnit.getMonth() < 12 || dateTimeUnit.getDay() <= 30 )
+        int curYear = dateTimeUnit.getYear();
+        int curMonth = dateTimeUnit.getMonth();
+        int curDay = dateTimeUnit.getDay();
+        int dayOfWeek = dateTimeUnit.getDayOfWeek();
+
+        while ( days != 0 )
         {
-            return dateTimeUnit;
+            curDay--;
+
+            if ( curDay == 0 )
+            {
+                curMonth--;
+
+                if ( curMonth == 0 )
+                {
+                    curYear--;
+                    curMonth = 12;
+                }
+
+                curDay = 30;
+            }
+
+            dayOfWeek--;
+
+            if ( dayOfWeek == 0 )
+            {
+                dayOfWeek = 7;
+            }
+
+            days--;
         }
 
-        dateTimeUnit = new DateTimeUnit( dateTimeUnit );
-        dateTimeUnit.setDay( dateTimeUnit.getDay() - 30 );
-        dateTimeUnit.setMonth( 13 );
+        return new DateTimeUnit( curYear, curMonth, curDay, dayOfWeek );
+    }
 
-        return dateTimeUnit;
+    @Override
+    public DateTimeUnit plusWeeks( DateTimeUnit dateTimeUnit, int weeks )
+    {
+        return plusDays( dateTimeUnit, weeks * 7 );
+    }
+
+    @Override
+    public DateTimeUnit minusWeeks( DateTimeUnit dateTimeUnit, int weeks )
+    {
+        return minusDays( dateTimeUnit, weeks * 7 );
+    }
+
+    @Override
+    public DateTimeUnit plusMonths( DateTimeUnit dateTimeUnit, int months )
+    {
+        return plusDays( dateTimeUnit, months * 30 );
+    }
+
+    @Override
+    public DateTimeUnit minusMonths( DateTimeUnit dateTimeUnit, int months )
+    {
+        return minusDays( dateTimeUnit, months * 30 );
+    }
+
+    @Override
+    public DateTimeUnit plusYears( DateTimeUnit dateTimeUnit, int years )
+    {
+        return plusDays( dateTimeUnit, years * (12 * 30) );
+    }
+
+    @Override
+    public DateTimeUnit minusYears( DateTimeUnit dateTimeUnit, int years )
+    {
+        return minusDays( dateTimeUnit, years * (12 * 30) );
+    }
+
+    @Override
+    public int daysInYear( int year )
+    {
+        return 12 * 30;
+    }
+
+    @Override
+    public int daysInMonth( int year, int month )
+    {
+        if ( month > 12 )
+        {
+            throw new RuntimeException( "Illegal month, must be between 1 and 12, was given " + month );
+        }
+
+        return 30;
+    }
+
+    @Override
+    public int daysInWeek()
+    {
+        return 7;
+    }
+
+    @Override
+    public DateTimeUnit isoStartOfYear( int year )
+    {
+        return fromIso( super.isoStartOfYear( year ) );
     }
 }

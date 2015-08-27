@@ -771,7 +771,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 }
 
                 var valueFound = false;
-                if(programVariable.programRuleVariableSourceType === "DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE"){
+                //If variable evs is not defined, it means the rules is run before any events is registered, skip the types that require an event
+                if(programVariable.programRuleVariableSourceType === "DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE" && evs){
                     if(programStageId) {
                         angular.forEach(evs.byStage[programStageId], function(event) {
                             if(angular.isDefined(event[dataElementId])
@@ -787,7 +788,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                     }
 
                 }
-                else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_NEWEST_EVENT_PROGRAM"){
+                else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_NEWEST_EVENT_PROGRAM" && evs){
                     angular.forEach(evs.all, function(event) {
                         if(angular.isDefined(event[dataElementId])
                                 && event[dataElementId] !== null ){
@@ -796,14 +797,14 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                          }
                     });
                 }
-                else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_CURRENT_EVENT"){
+                else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_CURRENT_EVENT" && evs){
                     if(angular.isDefined(executingEvent[dataElementId])
                             && executingEvent[dataElementId] !== null ){
                         valueFound = true;
                         variables = pushVariable(variables, programVariable.name, executingEvent[dataElementId], allDes[dataElementId].dataElement.type, valueFound, '#' );
                     }      
                 }
-                else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_PREVIOUS_EVENT"){
+                else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_PREVIOUS_EVENT" && evs){
                     //Only continue checking for a value if there is more than one event.
                     if(evs.all && evs.all.length > 1) {
                         var previousvalue = null;
@@ -840,7 +841,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 else if(programVariable.programRuleVariableSourceType === "CALCULATED_VALUE"){
                     //We won't assign the calculated variables at this step. The rules execution will calculate and assign the variable.
                 }
-                else if(programVariable.programRuleVariableSourceType === "NUMBEROFEVENTS_PROGRAMSTAGE"){
+                else if(programVariable.programRuleVariableSourceType === "NUMBEROFEVENTS_PROGRAMSTAGE" && evs){
                     var numberOfEvents = 0;
                     if( programStageId && evs.byStage[programStageId] ) {
                         numberOfEvents = evs.byStage[programStageId].length;
@@ -849,14 +850,18 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                     variables = pushVariable(variables, programVariable.name, numberOfEvents, 'int', valueFound, '#' );
                 }
                 else {
-                    //Missing handing of ruletype
-                    $log.warn("Unknown programRuleVariableSourceType:" + programVariable.programRuleVariableSourceType);
+                    //If the rules was executed without events, we ended up in this else clause as expected, as most of the variables require an event to be mapped
+                    if(evs)
+                    {
+                        //If the rules was executed and events was supplied, we should have found an if clause for the the source type, and not ended up in this dead end else. 
+                        $log.warn("Unknown programRuleVariableSourceType:" + programVariable.programRuleVariableSourceType);
+                    }
                 }
 
 
                 if(!valueFound){
                     //If there is still no value found, assign default value:
-                    if(dataElementId) {
+                    if(dataElementId && allDes) {
                         var dataElement = allDes[dataElementId];
                         if( dataElement ) {
                             variables = pushVariable(variables, programVariable.name, "", dataElement.dataElement.type, false, '#' );
@@ -996,14 +1001,16 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     };
     
     var runDhisFunctions = function(expression, variablesHash, flag){
-        //Called from "runExpression". Only proceed with this logic in case there seems to be dhis function calls: "dhis." is present.
-        if(angular.isDefined(expression) && expression.indexOf("dhis.") !== -1){   
-            var dhisFunctions = [{name:"dhis.daysbetween",parameters:2},
-                                {name:"dhis.yearsbetween",parameters:2},
-                                {name:"dhis.floor",parameters:1},
-                                {name:"dhis.modulus",parameters:2},
-                                {name:"dhis.concatenate"},
-                                {name:"dhis.adddays",parameters:2}];
+        //Called from "runExpression". Only proceed with this logic in case there seems to be dhis function calls: "d2:" is present.
+        if(angular.isDefined(expression) && expression.indexOf("d2:") !== -1){   
+            var dhisFunctions = [{name:"d2:daysbetween",parameters:2},
+                                {name:"d2:yearsbetween",parameters:2},
+                                {name:"d2:floor",parameters:1},
+                                {name:"d2:modulus",parameters:2},
+                                {name:"d2:concatenate"},
+                                {name:"d2:adddays",parameters:2},
+                                {name:"d2:zing",parameters:1},
+                                {name:"d2:oizp",parameters:1}];
 
             angular.forEach(dhisFunctions, function(dhisFunction){
                 //Replace each * with a regex that matches each parameter, allowing commas only inside single quotation marks.
@@ -1032,8 +1039,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         }
                     }
 
-                    //Special block for dhis.weeksBetween(*,*) - add such a block for all other dhis functions.
-                    if(dhisFunction.name === "dhis.daysbetween")
+                    //Special block for d2:weeksBetween(*,*) - add such a block for all other dhis functions.
+                    if(dhisFunction.name === "d2:daysbetween")
                     {
                         var firstdate = $filter('trimquotes')(parameters[0]);
                         var seconddate = $filter('trimquotes')(parameters[1]);
@@ -1042,7 +1049,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         //Replace the end evaluation of the dhis function:
                         expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'days'));
                     }
-                    else if(dhisFunction.name === "dhis.yearsbetween")
+                    else if(dhisFunction.name === "d2:yearsbetween")
                     {
                         var firstdate = $filter('trimquotes')(parameters[0]);
                         var seconddate = $filter('trimquotes')(parameters[1]);
@@ -1051,13 +1058,13 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         //Replace the end evaluation of the dhis function:
                         expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'years'));
                     }
-                    else if(dhisFunction.name === "dhis.floor")
+                    else if(dhisFunction.name === "d2:floor")
                     {
                         var floored = Math.floor(parameters[0]);
                         //Replace the end evaluation of the dhis function:
                         expression = expression.replace(callToThisFunction, floored);
                     }
-                    else if(dhisFunction.name === "dhis.modulus")
+                    else if(dhisFunction.name === "d2:modulus")
                     {
                         var dividend = Number(parameters[0]);
                         var divisor = Number(parameters[1]);
@@ -1065,7 +1072,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         //Replace the end evaluation of the dhis function:
                         expression = expression.replace(callToThisFunction, rest);
                     }
-                    else if(dhisFunction.name === "dhis.concatenate")
+                    else if(dhisFunction.name === "d2:concatenate")
                     {
                         var returnString = "'";
                         for (var i = 0; i < parameters.length; i++) {
@@ -1074,7 +1081,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         returnString += "'";
                         expression = expression.replace(callToThisFunction, returnString);
                     }
-                    else if(dhisFunction.name === "dhis.adddays")
+                    else if(dhisFunction.name === "d2:adddays")
                     {
                         var date = $filter('trimquotes')(parameters[0]);
                         var daystoadd = $filter('trimquotes')(parameters[1]);
@@ -1082,6 +1089,25 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         var newdatestring = "'" + newdate + "'";
                         //Replace the end evaluation of the dhis function:
                         expression = expression.replace(callToThisFunction, newdatestring);
+                    }else if(dhisFunction.name === "d2:zing")
+                    {
+                        var number = parameters[0];
+                        if( number < 0 ) {
+                            number = 0;
+                        }
+                        
+                        //Replace the end evaluation of the dhis function:
+                        expression = expression.replace(callToThisFunction, number);
+                    }else if(dhisFunction.name === "d2:oizp")
+                    {
+                        var number = parameters[0];
+                        var output = 1;
+                        if( number < 0 ) {
+                            output = 0;
+                        }
+                        
+                        //Replace the end evaluation of the dhis function:
+                        expression = expression.replace(callToThisFunction, output);
                     }
                 });
             });
@@ -1181,6 +1207,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     location:action.location, 
                                     action:action.programRuleActionType,
                                     dataElement:action.dataElement,
+                                    trackedEntityAttribute:action.trackedEntityAttribute,
                                     content:action.content,
                                     data:action.data,
                                     ineffect:undefined

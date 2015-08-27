@@ -29,7 +29,6 @@ package org.hisp.dhis.period;
  */
 
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
 
@@ -52,7 +51,7 @@ public class YearlyPeriodType
     private static final long serialVersionUID = 3893035414025085437L;
 
     private static final String ISO_FORMAT = "yyyy";
-    
+
     private static final String ISO8601_DURATION = "P1Y";
 
     /**
@@ -121,9 +120,9 @@ public class YearlyPeriodType
     @Override
     public List<Period> generatePeriods( DateTimeUnit dateTimeUnit )
     {
-        Calendar cal = getCalendar();
-        
-        dateTimeUnit = cal.minusYears( dateTimeUnit, 5 );
+        Calendar calendar = getCalendar();
+
+        dateTimeUnit = calendar.minusYears( dateTimeUnit, 5 );
         dateTimeUnit.setDay( 1 );
         dateTimeUnit.setMonth( 1 );
 
@@ -131,8 +130,8 @@ public class YearlyPeriodType
 
         for ( int i = 0; i < 11; ++i )
         {
-            periods.add( createPeriod( dateTimeUnit, cal ) );
-            dateTimeUnit = cal.plusYears( dateTimeUnit, 1 );
+            periods.add( createPeriod( dateTimeUnit, calendar ) );
+            dateTimeUnit = calendar.plusYears( dateTimeUnit, 1 );
         }
 
         return periods;
@@ -161,10 +160,10 @@ public class YearlyPeriodType
     @Override
     public List<Period> generateLast5Years( Date date )
     {
-        Calendar cal = getCalendar();
-        
+        Calendar calendar = getCalendar();
+
         DateTimeUnit dateTimeUnit = createLocalDateUnitInstance( date );
-        dateTimeUnit = cal.minusYears( dateTimeUnit, 4 );
+        dateTimeUnit = calendar.minusYears( dateTimeUnit, 4 );
         dateTimeUnit.setDay( 1 );
         dateTimeUnit.setMonth( 1 );
 
@@ -172,15 +171,15 @@ public class YearlyPeriodType
 
         for ( int i = 0; i < 5; ++i )
         {
-            periods.add( createPeriod( dateTimeUnit, cal ) );
-            dateTimeUnit = cal.plusYears( dateTimeUnit, 1 );
+            periods.add( createPeriod( dateTimeUnit, calendar ) );
+            dateTimeUnit = calendar.plusYears( dateTimeUnit, 1 );
         }
 
         return periods;
     }
 
     @Override
-    public String getIsoDate( DateTimeUnit dateTimeUnit )
+    public String getIsoDate( DateTimeUnit dateTimeUnit, Calendar calendar )
     {
         return String.valueOf( dateTimeUnit.getYear() );
     }
@@ -190,25 +189,24 @@ public class YearlyPeriodType
     {
         return ISO_FORMAT;
     }
-    
-    @Override
-    public String getIso8601Duration() 
-    {
-        return ISO8601_DURATION; 
-    }
 
+    @Override
+    public String getIso8601Duration()
+    {
+        return ISO8601_DURATION;
+    }
 
     @Override
     public Date getRewindedDate( Date date, Integer rewindedPeriods )
     {
-        Calendar cal = getCalendar();
-        
+        Calendar calendar = getCalendar();
+
         date = date != null ? date : new Date();
         rewindedPeriods = rewindedPeriods != null ? rewindedPeriods : 1;
 
         DateTimeUnit dateTimeUnit = createLocalDateUnitInstance( date );
-        dateTimeUnit = cal.minusYears( dateTimeUnit, rewindedPeriods );
+        dateTimeUnit = calendar.minusYears( dateTimeUnit, rewindedPeriods );
 
-        return cal.toIso( dateTimeUnit ).toJdkDate();
+        return calendar.toIso( dateTimeUnit ).toJdkDate();
     }
 }
