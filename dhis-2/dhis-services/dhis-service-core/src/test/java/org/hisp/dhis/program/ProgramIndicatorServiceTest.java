@@ -528,8 +528,19 @@ public class ProgramIndicatorServiceTest
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
     }
 
-    @Test( expected = IllegalStateException.class )
+    @Test
     public void testGetAnalyticsSqlWithFunctionsC()
+    {
+        String col1 = COL_QUOTE + deA.getUid() + COL_QUOTE;
+        String col2 = COL_QUOTE + deB.getUid() + COL_QUOTE;
+        String expected = "(cast(" + col2 + " as date) - cast(" + col1 + " as date))";
+        String expression = "d2:daysBetween(" + col1 + "," + col2 + ")";
+
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+    }
+
+    @Test( expected = IllegalStateException.class )
+    public void testGetAnalyticsSqlWithFunctionsInvalid()
     {
         String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
         String expected = "case when " + col + " >= 0 then 1 else " + col + " end";

@@ -155,6 +155,7 @@ public class ExpressionUtilsTest
         assertTrue( ExpressionUtils.isValid( "2 + 8", null ) );
         assertTrue( ExpressionUtils.isValid( "3 - v1", vars ) );
         assertTrue( ExpressionUtils.isValid( "d2:zing(1)", null ) );
+        assertTrue( ExpressionUtils.isValid( "d2:daysBetween('2015-02-01','2015-04-02')", null ) );
         assertTrue( ExpressionUtils.isValid( "(d2:zing(1)+d2:zing(1))*50/1", null ) );
         assertTrue( ExpressionUtils.isValid( "1/(1/100)", null ) );
         assertTrue( ExpressionUtils.isValid( "SUM(1)", null ) );
