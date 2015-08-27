@@ -22,18 +22,9 @@ trackerCapture.controller('DashboardController',
                 DialogService,
                 AttributesFactory,
                 CurrentSelection,
-<<<<<<< TREE
-                 AuthorityService
-                ) {
-
-                AuthorityService,HideProgramFromDashboardService)
-            {
-
-=======
                 ModalService,
                 AuthorityService,
                  HideProgramFromDashboardService) {
->>>>>>> MERGE-SOURCE
     //selections
     $scope.selectedTeiId = ($location.search()).tei; 
     $scope.selectedProgramId = ($location.search()).program; 
@@ -155,8 +146,8 @@ trackerCapture.controller('DashboardController',
             setWidgetsSize();
             $scope.broadCastSelections();            
         });        
-    };
-
+    };    
+    
     var setWidgetsSize = function(){        
         
         $scope.widgetSize = {smaller: "col-sm-6 col-md-4", bigger: "col-sm-6 col-md-8"};

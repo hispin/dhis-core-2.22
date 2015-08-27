@@ -915,7 +915,7 @@ a:active {
     z-index: 2000; //has to be greater than bootsrap's modal z-index
 }
 
-/*Necessary to override the .panel-group .panel { overflow: hidden; } in bootstrap.*/
+//Necessary to override the .panel-group .panel { overflow: hidden; } in bootstrap.
 .panel-group .panel {
     overflow: visible;
 }
@@ -1123,11 +1123,8 @@ input, button, select, textarea {
 
 .program-drop-down > .dropdown-menu > li > a {
     white-space: normal !important;
-<<<<<<< TREE
-}
-=======
 }
 
 .inactive-tei{
     color: #ff4000;
-}>>>>>>> MERGE-SOURCE
+}
