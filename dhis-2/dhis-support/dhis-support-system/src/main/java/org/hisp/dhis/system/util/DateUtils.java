@@ -53,7 +53,6 @@ import static org.hisp.dhis.period.Period.DEFAULT_DATE_FORMAT;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class DateUtils
 {

@@ -28,6 +28,13 @@ package org.hisp.dhis.commons.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * @author Lars Helge Overland
+ */
 public class ExpressionFunctions
 {
     public static final String NAMESPACE = "d2";
@@ -63,5 +70,24 @@ public class ExpressionFunctions
         }
         
         return ( value.doubleValue() >= 0d ) ? 1d : 0d;
+    }
+    
+    /**
+     * Function which will return the number of days between the two given dates.
+     * 
+     * @param start the start date. 
+     * @param end the end date.
+     * @return number of days between dates.
+     */
+    public static Long daysBetween( String start, String end )
+        throws ParseException
+    {
+        SimpleDateFormat format = new SimpleDateFormat();
+        format.applyPattern( "yyyy-MM-dd" );
+        
+        Date startDate = format.parse( start );
+        Date endDate = format.parse( end );
+        
+        return ( startDate.getTime() - endDate.getTime() ) / 31536000000l;
     }
 }

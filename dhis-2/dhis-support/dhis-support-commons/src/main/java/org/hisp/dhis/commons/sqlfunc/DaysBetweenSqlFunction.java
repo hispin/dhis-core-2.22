@@ -29,19 +29,16 @@ package org.hisp.dhis.commons.sqlfunc;
  */
 
 /**
- * Function which evaluates numerical values to zero if negative, unchanged if
- * zero or positive.
- * 
  * @author Lars Helge Overland
  */
-public class ZeroIfNegativeSqlFunction
+public class DaysBetweenSqlFunction
     implements SqlFunction
 {
-    public static final String KEY = "zing";
+    public static final String KEY = "daysBetween";
     
     @Override
-    public String evaluate( String arg1, String arg2, String arg )
-    {
-        return "case when " + arg1 + " < 0 then 0 else " + arg1 + " end";
+    public String evaluate( String arg1, String arg2, String arg3 )
+    {        
+        return "(cast(" + arg2 + " as date) - cast(" + arg1 + " as date))";
     }
 }
