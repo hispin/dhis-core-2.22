@@ -386,7 +386,7 @@ function saveAction( programRuleId )
                 var key = row.find(".actionDEs").val();
                 
                 if(attributeList[key]){
-                    json_Data.attribute = {id: key};
+                    json_Data.trackedEntityAttribute = {id: key};
                 }
                 else{
                     json_Data.dataElement = {id: key};

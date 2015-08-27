@@ -115,7 +115,7 @@
 									+ ',"program":{"id":"' + "$!ruleVariable.program.id" + '"}}' )
 								
 								<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
-									<td>$!encoder.htmlEncode($ruleVariable.attribute.displayName)</td>
+									<td>$!encoder.htmlEncode($ruleVariable.trackedEntityAttribute.displayName)</td>
 									<td><input type='button' teAttId='$ruleVariable.trackedEntityAttribute.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:100%;' onclick='insertVariable(this)'/></td>
 								</tr>
 							#else
@@ -182,13 +182,6 @@
 										 #set($clazz = "class='listRow'")
 								 #end            
 								 #set($idx = $idx + 1 )
-								 
-                                                                 #set( $actionFieldName = $action.dataElement.displayName )
-                                                                 #if( !$actionFieldName )                                                                    
-                                                                    #set( $actionFieldName = $action.attribute.name )
-                                                                    Hi
-                                                                    $!encoder.htmlEncode( $actionFieldName )
-                                                                 #end
                                                                  
 								 <tr $clazz id="$action.uid">                                                            
 									 <td>
@@ -200,13 +193,13 @@
 										 </select>
 									 </td>
 									 <td><input type='text' class='content' style='width:97%;' value='$!encoder.htmlEncode( $action.content )'/></td>
-									 <td>
+									 <td>                                                                                
 										<span class="deCell" #if($action.programRuleActionType=='HIDESECTION') style='display:none;' #end>
 											<select style='width:100%;'>                                                                                                
                                                                                             #if( $action.dataElement && $action.dataElement.displayName != 'undefined')
                                                                                                 <option class='actionDEs' value="$action.dataElement.uid">$!encoder.htmlEncode( $action.dataElement.displayName )</option>
                                                                                             #else
-                                                                                                <option class='actionDEs' value="$action.attribute.uid">$!encoder.htmlEncode( $action.attribute.displayName )</option>
+                                                                                                <option class='actionDEs' value="$action.attribute.id">$!encoder.htmlEncode( $action.attribute.name )</option>
                                                                                             #end
 											</select>
 										</span>

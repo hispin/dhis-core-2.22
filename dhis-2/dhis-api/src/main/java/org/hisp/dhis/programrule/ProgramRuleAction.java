@@ -202,7 +202,7 @@ public class ProgramRuleAction
         this.dataElement = dataElement;
     }
     
-    @JsonProperty
+    @JsonProperty( "trackedEntityAttribute" )
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityAttribute getAttribute()
