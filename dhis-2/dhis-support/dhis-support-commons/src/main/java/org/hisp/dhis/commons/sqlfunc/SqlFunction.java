@@ -42,5 +42,5 @@ public interface SqlFunction
      * 
      * @return the result of the evaluation.
      */
-    String evaluate( String arg1, String arg2, String arg );
+    String evaluate( String arg1, String arg2, String arg3 );
 }

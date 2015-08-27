@@ -71,6 +71,20 @@ public class ExpressionFunctions
         
         return ( value.doubleValue() >= 0d ) ? 1d : 0d;
     }
+
+    /**
+     * Functions which will return the true value if the condition is true, false
+     * value if not.
+     * 
+     * @param condititon the condition.
+     * @param trueValue the true value.
+     * @param falseValue the false value.
+     * @return a String.
+     */
+    public static Object condition( String condititon, Object trueValue, Object falseValue )
+    {
+        return ExpressionUtils.isTrue( condititon, null ) ? trueValue : falseValue;        
+    }
     
     /**
      * Function which will return the number of days between the two given dates.

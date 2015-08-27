@@ -40,7 +40,7 @@ public class OneIfZeroOrPositiveSqlFunction
     public static final String KEY = "oizp";
     
     @Override
-    public String evaluate( String arg1, String arg2, String arg )
+    public String evaluate( String arg1, String arg2, String arg3 )
     {
         return "case when " + arg1 + " >= 0 then 1 else 0 end";
     }
