@@ -34,10 +34,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
 import org.hisp.dhis.paging.ActionPagingSupport;
 
@@ -53,13 +53,6 @@ public class GetOrganisationUnitListAction
     // Dependencies
     // -------------------------------------------------------------------------
     
-    private OrganisationUnitService organisationUnitService;
-
-    public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
-    {
-        this.organisationUnitService = organisationUnitService;
-    }
-
     private OrganisationUnitSelectionManager selectionManager;
 
     public void setSelectionManager( OrganisationUnitSelectionManager selectionManager )
@@ -121,7 +114,7 @@ public class GetOrganisationUnitListAction
 
         if ( isNotBlank( key ) )
         {
-            organisationUnitService.searchOrganisationUnitByName( organisationUnits, key );
+            organisationUnits = organisationUnits.stream().filter( p -> p.getName().toLowerCase().contains( key.toLowerCase() ) ).collect( Collectors.toList() );
         }
 
         this.paging = createPaging( organisationUnits.size() );

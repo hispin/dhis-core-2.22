@@ -401,17 +401,6 @@ public interface DataElementService
      */
     DataElementGroup getDataElementGroupByCode( String code );
 
-
-    /**
-     * Returns all DataElementGroups which contain the given DataElement.
-     *
-     * @param dataElement the DataElement which the DataElementGroups must
-     *                    contain.
-     * @return a collection of all DataElementGroups that contain the given
-     *         DataElement.
-     */
-    List<DataElementGroup> getGroupsContainingDataElement( DataElement dataElement );
-
     /**
      * Returns data elements with identifier in the given id.
      *
@@ -475,11 +464,7 @@ public interface DataElementService
 
     DataElementGroupSet getDataElementGroupSetByName( String name );
 
-    List<DataElementGroupSet> getCompulsoryDataElementGroupSets();
-
     List<DataElementGroupSet> getCompulsoryDataElementGroupSetsWithMembers();
-
-    List<DataElementGroupSet> getCompulsoryDataElementGroupSetsNotAssignedTo( DataElement dataElement );
 
     List<DataElementGroupSet> getAllDataElementGroupSets();
 

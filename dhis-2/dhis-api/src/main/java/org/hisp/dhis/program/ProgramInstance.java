@@ -74,7 +74,7 @@ public class ProgramInstance
 
     private OrganisationUnit organisationUnit;
 
-    private Date dateOfIncident; // TODO rename to incidenceDate
+    private Date dateOfIncident; // TODO rename to incidentDate
 
     private Date enrollmentDate;
 

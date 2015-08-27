@@ -1,4 +1,4 @@
-package org.hisp.dhis.security;
+package org.hisp.dhis.common;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,27 +28,37 @@ package org.hisp.dhis.security;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import  org.springframework.security.authentication.dao.SaltSource;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * This interface adds a method for getting a salt based on a username. The
- * reason for this is that before you the user has been added to the database
- * you only have the username to base the salt on. The alternative is to add the
- * user to database first and then encode and set the password later, but then
- * we need a User to UserDetails converter.
- * 
- * @author Torgeir Lorange Ostby
- * @version $Id: UsernameSaltSource.java 3109 2007-03-19 17:05:21Z torgeilo $
+ * @author Lars Helge Overland
  */
-public interface UsernameSaltSource
-    extends SaltSource
+public class RegexUtils
 {
     /**
-     * Creates and returns a salt based on the given username.
-     *
-     * @param username
-     *            the username to base the salt on.
-     * @return a salt based on the given username.
+     * Return the matches in the given input based on the given pattern.
+     * 
+     * @param pattern the pattern.
+     * @param input the input.
+     * @param group the group, can be null.
+     * @return a set of matches.
      */
-    Object getSalt( String username );
+    public static Set<String> getMatches( Pattern pattern, String input, Integer group )
+    {
+        group = group != null ? group : 0;
+        
+        Set<String> set = new HashSet<>();
+        
+        Matcher matcher = pattern.matcher( input );
+        
+        while ( matcher.find() )
+        {
+            set.add( matcher.group( group ) );
+        }
+        
+        return set;
+    }
 }

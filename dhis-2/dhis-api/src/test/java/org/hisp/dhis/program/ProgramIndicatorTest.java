@@ -1,4 +1,4 @@
-package org.hisp.dhis.security;
+package org.hisp.dhis.program;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,24 +28,24 @@ package org.hisp.dhis.security;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import  org.springframework.security.core.userdetails.UserDetails;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Set;
+import org.junit.Test;
+import com.google.common.collect.Sets;
 
 /**
- * @author Torgeir Lorange Ostby
- * @version $Id: DefaultUsernameSaltSource.java 3109 2007-03-19 17:05:21Z torgeilo $
- */
-public class DefaultUsernameSaltSource
-    implements UsernameSaltSource
+* @author Lars Helge Overland
+*/
+public class ProgramIndicatorTest
 {
-    @Override
-    public Object getSalt( UserDetails userDetails )
+    @Test
+    public void testGetIdentifiers()
     {
-        return getSalt( userDetails.getUsername() );
-    }
-
-    @Override
-    public Object getSalt( String username )
-    {
-        return username.hashCode();
+        String expression = "#{chG8sINMf11.yD5mUKAm3aK} + #{chG8sINMf11.UaGD9u0kaur} - A{y1Bhi6xHtVk}";
+        
+        Set<String> expected = Sets.newHashSet( "yD5mUKAm3aK", "UaGD9u0kaur", "y1Bhi6xHtVk" );
+        
+        assertEquals( expected, ProgramIndicator.getDataElementAndAttributeIdentifiers( expression ) );
     }
 }

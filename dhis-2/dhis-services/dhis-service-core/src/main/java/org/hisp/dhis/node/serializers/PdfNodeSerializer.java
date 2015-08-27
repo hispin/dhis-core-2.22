@@ -28,9 +28,10 @@ package org.hisp.dhis.node.serializers;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import com.lowagie.text.Document;
-import com.lowagie.text.pdf.PdfPTable;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.List;
+
 import org.hisp.dhis.node.AbstractNodeSerializer;
 import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.types.CollectionNode;
@@ -43,11 +44,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import com.google.common.collect.Lists;
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfPTable;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>

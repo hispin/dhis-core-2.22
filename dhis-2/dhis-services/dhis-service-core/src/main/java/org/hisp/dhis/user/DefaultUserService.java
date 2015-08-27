@@ -40,7 +40,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.security.migration.MigrationPasswordManager;
+import org.hisp.dhis.security.PasswordManager;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.UserAuthorityGroupCanIssueFilter;
 import org.hisp.dhis.system.util.DateUtils;
@@ -118,9 +118,9 @@ public class DefaultUserService
         this.systemSettingManager = systemSettingManager;
     }
 
-    private MigrationPasswordManager passwordManager;
+    private PasswordManager passwordManager;
 
-    public void setPasswordManager( MigrationPasswordManager passwordManager )
+    public void setPasswordManager( PasswordManager passwordManager )
     {
         this.passwordManager = passwordManager;
     }
@@ -267,19 +267,19 @@ public class DefaultUserService
 
     public boolean validateUserQueryParams( UserQueryParams params )
     {
-        if ( params.isCanManage() && (params.getUser() == null || !params.getUser().hasManagedGroups()) )
+        if ( params.isCanManage() && ( params.getUser() == null || !params.getUser().hasManagedGroups() ) )
         {
             log.warn( "Cannot get managed users as user does not have any managed groups" );
             return false;
         }
 
-        if ( params.isAuthSubset() && (params.getUser() == null || !params.getUser().getUserCredentials().hasAuthorities()) )
+        if ( params.isAuthSubset() && ( params.getUser() == null || !params.getUser().getUserCredentials().hasAuthorities() ) )
         {
             log.warn( "Cannot get users with authority subset as user does not have any authorities" );
             return false;
         }
 
-        if ( params.isDisjointRoles() && (params.getUser() == null || !params.getUser().getUserCredentials().hasUserAuthorityGroups()) )
+        if ( params.isDisjointRoles() && ( params.getUser() == null || !params.getUser().getUserCredentials().hasUserAuthorityGroups() ) )
         {
             log.warn( "Cannot get users with disjoint roles as user does not have any user roles" );
             return false;
@@ -555,7 +555,7 @@ public class DefaultUserService
     public void encodeAndSetPassword( UserCredentials userCredentials, String rawPassword )
     {
         boolean isNewPassword = StringUtils.isBlank( userCredentials.getPassword() ) ||
-            !passwordManager.legacyOrCurrentMatches( rawPassword, userCredentials.getPassword(), userCredentials.getUsername() );
+            !passwordManager.matches( rawPassword, userCredentials.getPassword() );
 
         if ( isNewPassword )
         {

@@ -73,6 +73,8 @@ public class TrackedEntityInstance
     private TrackedEntityInstance representative;
 
     private TrackedEntity trackedEntity;
+    
+    private Boolean inactive = false;
 
     private boolean active = true;
 
@@ -181,9 +183,17 @@ public class TrackedEntityInstance
     {
         return active;
     }
+    @JacksonXmlElementWrapper( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
+	public Boolean isInactive() {
+		return inactive;
+	}
 
     public void setActive( boolean active )
     {
         this.active = active;
     }
+	public void setInactive(Boolean inactive) {
+		this.inactive = inactive;
+	}
 }

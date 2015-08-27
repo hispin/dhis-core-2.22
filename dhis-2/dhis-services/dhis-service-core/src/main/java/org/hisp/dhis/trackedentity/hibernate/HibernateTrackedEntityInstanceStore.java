@@ -228,7 +228,7 @@ public class HibernateTrackedEntityInstanceStore
 
         String sql = "select tei.uid as " + TRACKED_ENTITY_INSTANCE_ID + ", " + "tei.created as " + CREATED_ID + ", "
             + "tei.lastupdated as " + LAST_UPDATED_ID + ", " + "ou.uid as " + ORG_UNIT_ID + ", " + "te.uid as "
-            + TRACKED_ENTITY_ID + ", ";
+            + TRACKED_ENTITY_ID + ", " + "tei.inactive as " + INACTIVE_ID + ", ";
 
         for ( QueryItem item : params.getAttributes() )
         {
@@ -273,6 +273,7 @@ public class HibernateTrackedEntityInstanceStore
             map.put( LAST_UPDATED_ID, rowSet.getString( LAST_UPDATED_ID ) );
             map.put( ORG_UNIT_ID, rowSet.getString( ORG_UNIT_ID ) );
             map.put( TRACKED_ENTITY_ID, rowSet.getString( TRACKED_ENTITY_ID ) );
+            map.put( INACTIVE_ID, rowSet.getString( INACTIVE_ID ) );
 
             for ( QueryItem item : params.getAttributes() )
             {

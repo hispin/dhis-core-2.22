@@ -160,15 +160,6 @@ public interface OrganisationUnitService
     List<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean status, Date lastUpdated );
 
     /**
-     * Returns all OrganisationUnits with corresponding name key based on the given list.
-     *
-     * @param orgUnits the collection of organization unit objects.
-     * @param key      the name key.
-     * @return a collection of OrganisationUnits.
-     */
-    void searchOrganisationUnitByName( List<OrganisationUnit> orgUnits, String key );
-
-    /**
      * Returns all OrganisationUnits with corresponding identifiers.
      *
      * @param identifiers the collection of identifiers.

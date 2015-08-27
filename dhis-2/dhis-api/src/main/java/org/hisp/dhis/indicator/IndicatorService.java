@@ -132,8 +132,6 @@ public interface IndicatorService
 
     List<IndicatorGroup> getIndicatorGroupByName( String name );
 
-    List<IndicatorGroup> getGroupsContainingIndicator( Indicator indicator );
-
     List<IndicatorGroup> getIndicatorGroupsBetween( int first, int max );
 
     List<IndicatorGroup> getIndicatorGroupsBetweenByName( String name, int first, int max );
@@ -160,11 +158,7 @@ public interface IndicatorService
 
     List<IndicatorGroupSet> getIndicatorGroupSetByName( String name );
 
-    List<IndicatorGroupSet> getCompulsoryIndicatorGroupSets();
-
     List<IndicatorGroupSet> getCompulsoryIndicatorGroupSetsWithMembers();
-
-    List<IndicatorGroupSet> getCompulsoryIndicatorGroupSetsNotAssignedTo( Indicator indicator );
 
     List<IndicatorGroupSet> getAllIndicatorGroupSets();
 

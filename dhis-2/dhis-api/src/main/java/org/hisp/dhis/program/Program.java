@@ -74,9 +74,9 @@ public class Program
 
     private int version;
 
-    private String dateOfEnrollmentDescription;
+    private String dateOfEnrollmentDescription; //TODO rename to enrollmentDateDescription
 
-    private String dateOfIncidentDescription;
+    private String dateOfIncidentDescription; //TODO rename to incidentDateDescription
 
     @Scanned
     private Set<OrganisationUnit> organisationUnits = new HashSet<>();

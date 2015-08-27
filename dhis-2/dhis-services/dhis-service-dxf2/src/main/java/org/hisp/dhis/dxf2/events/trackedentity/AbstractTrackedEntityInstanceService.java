@@ -147,6 +147,7 @@ public abstract class AbstractTrackedEntityInstanceService
         trackedEntityInstance.setActive( entityInstance.isActive() );
         trackedEntityInstance.setCreated( entityInstance.getCreated().toString() );
         trackedEntityInstance.setLastUpdated( entityInstance.getLastUpdated().toString() );
+        trackedEntityInstance.setInactive( entityInstance.isInactive());
 
         Collection<Relationship> relationships = relationshipService.getRelationshipsForTrackedEntityInstance( entityInstance );
 

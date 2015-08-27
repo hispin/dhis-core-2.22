@@ -22,6 +22,7 @@ trackerCapture.controller('DashboardController',
                 DialogService,
                 AttributesFactory,
                 CurrentSelection,
+                ModalService,
                 AuthorityService,
                  HideProgramFromDashboardService) {
     //selections
@@ -319,10 +320,16 @@ trackerCapture.controller('DashboardController',
         getDashboardLayout();
     };
     
-    $scope.broadCastSelections = function(){
+    $scope.broadCastSelections = function(tei){
         
         var selections = CurrentSelection.get();
-        $scope.selectedTei = selections.tei;
+        if(tei){
+            $scope.selectedTei = tei;
+        }
+        else{
+            $scope.selectedTei = selections.tei;
+        }
+        
         $scope.trackedEntity = selections.te;
         $scope.optionSets = selections.optionSets;
         
@@ -332,6 +339,25 @@ trackerCapture.controller('DashboardController',
         }, 100);
     };     
     
+    $scope.activiateTEI = function(){
+        var st = !$scope.selectedTei.inactive || $scope.selectedTei.inactive === '' ? true : false;
+        
+        var modalOptions = {
+            closeButtonText: 'no',
+            actionButtonText: 'yes',
+            headerText: st ? 'deactivate_tei' : 'activate_tei',
+            bodyText: 'are_you_sure_to_proceed'
+        };
+
+        ModalService.showModal({}, modalOptions).then(function (result) {
+
+            $scope.selectedTei.inactive = st;
+            TEIService.update($scope.selectedTei, $scope.optionSets, $scope.attributesById).then(function (data) {
+                $scope.broadCastSelections($scope.selectedTei);                
+            });
+        }, function(){            
+        });
+    };
     $scope.back = function(){
         $location.path('/').search({program: $scope.selectedProgramId});                   
     };

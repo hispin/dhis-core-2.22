@@ -22,17 +22,17 @@
     <div ng-show="selectedOrgUnit && userAuthority.canAddOrUpdateEvent">
         
         <h3>
-            {{'event_capture'| translate}}
+            {{eventCaptureLabel}}
         </h3>
         
         <!-- selection begins-->
         <table>
             <tr>
-                <td><label>{{'registering_unit'| translate}}</label></td>
-                <td><input type="text" class="fixed-width-text" selected-org-unit ng-model="selectedOrgUnit.name" value="{{selectedOrgUnit.name|| 'please_select'| translate}}" disabled="" style="height:14px"></td>                        	                            
+                <td><label>{{registeringUnitLabel}}</label></td>
+                <td><input type="text" class="fixed-width-text" selected-org-unit ng-model="selectedOrgUnit.name" value="{{selectedOrgUnit.name|| pleaseSelectLabel}}" disabled="" style="height:14px"></td>                        	                            
             </tr>
             <tr>
-                <td><label>{{'program'| translate}}</label></td>
+                <td><label>{{programLabel}}</label></td>
                 <td>
                     <select id="programId" 
                             class="fixed-width-select"
@@ -41,7 +41,7 @@
                             ng-options="program as program.name for program in programs | orderBy: 'name'" 
                             ng-change="getProgramDetails()"
                             ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid">
-                        <option value="">{{'please_select'| translate}}</option>
+                        <option value="">{{pleaseSelectLabel}}</option>
                     </select>      
                 </td>
                 <td style='padding-left: 10px;'>
