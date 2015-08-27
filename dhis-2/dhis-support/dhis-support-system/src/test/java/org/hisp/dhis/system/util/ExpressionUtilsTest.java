@@ -51,13 +51,21 @@ public class ExpressionUtilsTest
         assertEquals( 3d, ExpressionUtils.evaluateToDouble( "3", null ), DELTA );
         assertEquals( 3.45, ExpressionUtils.evaluateToDouble( "3.45", null ), DELTA );
         assertEquals( 5d, ExpressionUtils.evaluateToDouble( "2 + 3", null ), DELTA );
-        assertEquals( 15.6, ExpressionUtils.evaluateToDouble( "12.4 + 3.2", null ), DELTA );        
+        assertEquals( 15.6, ExpressionUtils.evaluateToDouble( "12.4 + 3.2", null ), DELTA );
+        assertEquals( 2.0, ExpressionUtils.evaluateToDouble( "2 > 1 ? 2.0 : 1.0", null ), DELTA );
         assertEquals( 3d, ExpressionUtils.evaluateToDouble( "d2:zing(3)", null ), DELTA );        
         assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:zing(-3) + 2.0", null ), DELTA );
         assertEquals( 4d, ExpressionUtils.evaluateToDouble( "d2:zing(-1) + 4 + d2:zing(-2)", null ), DELTA );
         assertEquals( 0d, ExpressionUtils.evaluateToDouble( "d2:oizp(-4)", null ), DELTA );
         assertEquals( 1d, ExpressionUtils.evaluateToDouble( "d2:oizp(0)", null ), DELTA );
         assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:oizp(-4) + d2:oizp(0) + d2:oizp(3.0)", null ), DELTA );
+    }
+
+    @Test
+    public void testEvaluateToInteger()
+    {
+        assertEquals( 21l, (long) ExpressionUtils.evaluateToInteger( "7*3", null ) );
+        assertEquals( 3l, (long) ExpressionUtils.evaluateToInteger( "d2:daysBetween('2015-03-01','2015-03-04')", null ) );
     }
 
     @Test

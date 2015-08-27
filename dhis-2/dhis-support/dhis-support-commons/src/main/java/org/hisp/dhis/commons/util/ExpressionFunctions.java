@@ -79,7 +79,7 @@ public class ExpressionFunctions
      * @param end the end date.
      * @return number of days between dates.
      */
-    public static Long daysBetween( String start, String end )
+    public static Integer daysBetween( String start, String end )
         throws ParseException
     {
         SimpleDateFormat format = new SimpleDateFormat();
@@ -88,6 +88,6 @@ public class ExpressionFunctions
         Date startDate = format.parse( start );
         Date endDate = format.parse( end );
         
-        return ( startDate.getTime() - endDate.getTime() ) / 31536000000l;
+        return new Long( ( endDate.getTime() - startDate.getTime() ) / 86400000 ).intValue();
     }
 }
