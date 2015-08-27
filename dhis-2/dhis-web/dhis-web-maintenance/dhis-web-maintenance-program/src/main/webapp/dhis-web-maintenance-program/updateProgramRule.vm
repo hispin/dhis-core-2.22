@@ -115,8 +115,8 @@
 									+ ',"program":{"id":"' + "$!ruleVariable.program.id" + '"}}' )
 								
 								<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">
-									<td>$!encoder.htmlEncode($ruleVariable.trackedEntityAttribute.displayName)</td>
-									<td><input type='button' teAttId='$ruleVariable.trackedEntityAttribute.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:100%;' onclick='insertVariable(this)'/></td>
+									<td>$!encoder.htmlEncode($ruleVariable.attribute.name)</td>
+									<td><input type='button' teAttId='$ruleVariable.trackedEntityAttribute.uid' realValue='$ruleVariable.name' value='A{$ruleVariable.name}' style='width:100%;' onclick='insertVariable(this)'/></td>
 								</tr>
 							#else
 								#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
