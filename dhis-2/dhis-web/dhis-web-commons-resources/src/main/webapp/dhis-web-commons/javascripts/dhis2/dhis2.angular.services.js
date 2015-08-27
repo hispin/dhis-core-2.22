@@ -1187,8 +1187,13 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         $rootScope.ruleeffects = {};
                     }
 
-                    if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event] )){
-                        $rootScope.ruleeffects[executingEvent.event] = {};
+                    var ruleEffectKey = executingEvent.event ? executingEvent.event : executingEvent;
+                    if( executingEvent.event && angular.isUndefined( $rootScope.ruleeffects[ruleEffectKey] )){
+                        $rootScope.ruleeffects[ruleEffectKey] = {};
+                    }
+                    
+                    if(!angular.isObject(executingEvent) && angular.isUndefined( $rootScope.ruleeffects[ruleEffectKey] )){
+                        $rootScope.ruleeffects[ruleEffectKey] = {};
                     }
 
                     var updatedEffectsExits = false;
@@ -1210,8 +1215,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                         angular.forEach(rule.programRuleActions, function(action){
                             //In case the effect-hash is not populated, add entries
-                            if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event][action.id] )){
-                                $rootScope.ruleeffects[executingEvent.event][action.id] =  {
+                            if(angular.isUndefined( $rootScope.ruleeffects[ruleEffectKey][action.id] )){
+                                $rootScope.ruleeffects[ruleEffectKey][action.id] =  {
                                     id:action.id,
                                     location:action.location, 
                                     action:action.programRuleActionType,
@@ -1229,7 +1234,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             if(ruleEffective && action.data)
                             {
                                 //Preserve old data for comparison:
-                                var oldData = $rootScope.ruleeffects[executingEvent.event][action.id].data;
+                                var oldData = $rootScope.ruleeffects[ruleEffectKey][action.id].data;
                                 
                                 //The key data might be containing a dollar sign denoting that the key data is a variable.
                                 //To make a lookup in variables hash, we must make a lookup without the dollar sign in the variable name
@@ -1239,37 +1244,37 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 if(angular.isDefined(variablesHash[nameWithoutBrackets]))
                                 {
                                     //The variable exists, and is replaced with its corresponding value
-                                    $rootScope.ruleeffects[executingEvent.event][action.id].data =
+                                    $rootScope.ruleeffects[ruleEffectKey][action.id].data =
                                         variablesHash[nameWithoutBrackets].variableValue;
                                 }
                                 else if(action.data.indexOf('{') !== -1)
                                 {
                                     //Since the value couldnt be looked up directly, and contains a dollar sign, the expression was more complex
                                     //Now we will have to make a thorough replacement and separate evaluation to find the correct value:
-                                    $rootScope.ruleeffects[executingEvent.event][action.id].data = replaceVariables(action.data, variablesHash);
+                                    $rootScope.ruleeffects[ruleEffectKey][action.id].data = replaceVariables(action.data, variablesHash);
                                     //In a scenario where the data contains a complex expression, evaluate the expression to compile(calculate) the result:
-                                    $rootScope.ruleeffects[executingEvent.event][action.id].data = runExpression($rootScope.ruleeffects[executingEvent.event][action.id].data, action.data, "action:" + action.id, flag, variablesHash);
+                                    $rootScope.ruleeffects[ruleEffectKey][action.id].data = runExpression($rootScope.ruleeffects[ruleEffectKey][action.id].data, action.data, "action:" + action.id, flag, variablesHash);
                                 }
                                 
-                                if(oldData !== $rootScope.ruleeffects[executingEvent.event][action.id].data) {
+                                if(oldData !== $rootScope.ruleeffects[ruleEffectKey][action.id].data) {
                                     updatedEffectsExits = true;
                                 }
                             }
 
                             //Update the rule effectiveness if it changed in this evaluation;
-                            if($rootScope.ruleeffects[executingEvent.event][action.id].ineffect !== ruleEffective)
+                            if($rootScope.ruleeffects[ruleEffectKey][action.id].ineffect !== ruleEffective)
                             {
                                 //There is a change in the rule outcome, we need to update the effect object.
                                 updatedEffectsExits = true;
-                                $rootScope.ruleeffects[executingEvent.event][action.id].ineffect = ruleEffective;
+                                $rootScope.ruleeffects[ruleEffectKey][action.id].ineffect = ruleEffective;
                             }
 
                             //In case the rule is of type "assign variable" and the rule is effective,
                             //the variable data result needs to be applied to the correct variable:
-                            if($rootScope.ruleeffects[executingEvent.event][action.id].action === "ASSIGNVARIABLE" && $rootScope.ruleeffects[executingEvent.event][action.id].ineffect){
+                            if($rootScope.ruleeffects[ruleEffectKey][action.id].action === "ASSIGNVARIABLE" && $rootScope.ruleeffects[ruleEffectKey][action.id].ineffect){
                                 //from earlier evaluation, the data portion of the ruleeffect now contains the value of the variable to be assign.
                                 //the content portion of the ruleeffect defines the name for the variable, when dollar is removed:
-                                var variabletoassign = $rootScope.ruleeffects[executingEvent.event][action.id].content.replace("#{","").replace("}","");
+                                var variabletoassign = $rootScope.ruleeffects[ruleEffectKey][action.id].content.replace("#{","").replace("}","");
 
                                 if(!angular.isDefined(variablesHash[variabletoassign])){
                                     $log.warn("Variable " + variabletoassign + " was not defined.");
@@ -1277,11 +1282,11 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                                 //Even if the variable is not defined: we assign it:
                                 if(variablesHash[variabletoassign] && 
-                                        variablesHash[variabletoassign].variableValue !== $rootScope.ruleeffects[executingEvent.event][action.id].data){
+                                        variablesHash[variabletoassign].variableValue !== $rootScope.ruleeffects[ruleEffectKey][action.id].data){
                                     //If the variable was actually updated, we assume that there is an updated ruleeffect somewhere:
                                     updatedEffectsExits = true;
                                     //Then we assign the new value:
-                                    variablesHash[variabletoassign].variableValue = $rootScope.ruleeffects[executingEvent.event][action.id].data;
+                                    variablesHash[variabletoassign].variableValue = $rootScope.ruleeffects[ruleEffectKey][action.id].data;
                                 }
                             }
                         });
@@ -1289,7 +1294,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                     //Broadcast rules finished if there was any actual changes to the event.
                     if(updatedEffectsExits){
-                        $rootScope.$broadcast("ruleeffectsupdated", { event: executingEvent.event });
+                        $rootScope.$broadcast("ruleeffectsupdated", { event: ruleEffectKey });
                     }
                 }
 
