@@ -48,7 +48,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -62,7 +61,6 @@ public abstract class PeriodType
     implements Serializable
 {
     // Cache for period lookup, uses calendar.name() + periodType.getName() + date.getTime() as key
-
     private static Cache<String, Period> periodCache = CacheBuilder.newBuilder()
         .expireAfterAccess( 5, TimeUnit.MINUTES )
         .initialCapacity( 10000 )
@@ -245,14 +243,7 @@ public abstract class PeriodType
     {
         try
         {
-            return periodCache.get( getCacheKey( date ), new Callable<Period>()
-            {
-                @Override
-                public Period call() throws Exception
-                {
-                    return createPeriod( createCalendarInstance( date ) );
-                }
-            } );
+            return periodCache.get( getCacheKey( date ), () -> createPeriod( createCalendarInstance( date ) ) );
         }
         catch ( ExecutionException ignored )
         {
@@ -282,14 +273,7 @@ public abstract class PeriodType
     {
         try
         {
-            return periodCache.get( getCacheKey( calendar, date ), new Callable<Period>()
-            {
-                @Override
-                public Period call() throws Exception
-                {
-                    return createPeriod( calendar.fromIso( DateTimeUnit.fromJdkDate( date ) ), calendar );
-                }
-            } );
+            return periodCache.get( getCacheKey( calendar, date ), () -> createPeriod( calendar.fromIso( DateTimeUnit.fromJdkDate( date ) ), calendar ) );
         }
         catch ( ExecutionException ignored )
         {
@@ -448,7 +432,7 @@ public abstract class PeriodType
     /**
      * Returns a list of periods based on the given date string in ISO format.
      *
-     * @param isoPeriod the date string in ISO format.
+     * @param isoPeriods the date strings in ISO format.
      * @return a period.
      */
     public static List<Period> getPeriodsFromIsoStrings( List<String> isoPeriods )
