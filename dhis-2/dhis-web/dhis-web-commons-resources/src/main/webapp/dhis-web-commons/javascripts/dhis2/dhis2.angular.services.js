@@ -395,7 +395,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     this.getAttributesAsString(attributes) +
                                     ' d2-focus-next-on-enter' +
                                     ' ng-model="selectedTei.' + attId + '" ' +
-                                    ' ng-disabled="editingDisabled"' +
+                                    ' ng-disabled="editingDisabled || isHidden(attributesById.' + attId + '.id)"' +
                                     ' d2-validation ' +
                                     ' ng-required=" ' + (att.mandatory || att.unique) + '" ';
 
@@ -762,6 +762,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             return pushVariable(variables, variablename, variableValue, variableType, variablefound, variablePrefix);
         },
         getVariables: function(allProgramRules, executingEvent, evs, allDes, selectedEntity, selectedEnrollment) {
+            
             var variables = {};
             
             var programVariables = allProgramRules.programVariables;            
@@ -769,6 +770,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             programVariables = programVariables.concat(allProgramRules.programIndicators.variables);
 
             angular.forEach(programVariables, function(programVariable) {
+                
                 var dataElementId = programVariable.dataElement;
                 if(programVariable.dataElement && programVariable.dataElement.id) {
                     dataElementId = programVariable.dataElement.id;

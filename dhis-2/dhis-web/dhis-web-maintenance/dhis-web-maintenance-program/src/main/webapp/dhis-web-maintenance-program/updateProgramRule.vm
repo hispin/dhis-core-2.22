@@ -111,7 +111,7 @@
 							#if( $ruleVariable.sourceType == "TEI_ATTRIBUTE" )
 								#set( $json_Data='{"name":"' + $ruleVariable.name + '"'
 									+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
-									+ ',"trackedEntityAttribute":{ "id":"' + $ruleVariable.dataElement.id + '"}'
+									+ ',"trackedEntityAttribute":{ "id":"' + $ruleVariable.attribute.id + '"}'
 									+ ',"program":{"id":"' + "$!ruleVariable.program.id" + '"}}' )
 								
 								<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">

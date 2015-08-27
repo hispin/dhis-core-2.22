@@ -104,7 +104,7 @@
                                                         #if( $ruleVariable.sourceType == 'TEI_ATTRIBUTE')
                                                             #set( $json_Data='{"name":"' + $ruleVariable.name + '"'
 								+ ',"sourceType":"' + $ruleVariable.sourceType + '"'
-								+ ',"trackedEntityAttribute":{ "id":"' + $ruleVariable.trackedEntityAttribute.id + '"}'
+								+ ',"trackedEntityAttribute":{ "id":"' + $ruleVariable.attribute.id + '"}'
 								+ ',"program":{"id":"' + $ruleVariable.program.id + '"}}' )
                                                         #else
                                                             #set( $json_Data='{"name":"' + $ruleVariable.name + '"'

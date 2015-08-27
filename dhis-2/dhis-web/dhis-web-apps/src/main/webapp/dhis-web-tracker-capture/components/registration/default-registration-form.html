@@ -1,6 +1,6 @@
 <h3 ng-if="widget !== 'PROFILE'">{{'profile'| translate}}</h3>
 <table class="dhis2-list-table-striped dhis2-table-hover">
-    <tr ng-repeat="attribute in attributes">
+    <tr ng-repeat="attribute in attributes" ng-if="!hiddenFields[attribute.id]">
         <td>
             {{attribute.name}}<span ng-if="attribute.mandatory || attribute.unique" class="required">*</span>
         </td>
