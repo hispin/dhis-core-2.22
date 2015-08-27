@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import org.hisp.dhis.commons.sqlfunc.ConditionalSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.DaysBetweenSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.OneIfZeroOrPositiveSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.SqlFunction;
@@ -75,7 +76,8 @@ public class DefaultProgramIndicatorService
     private static final Map<String, SqlFunction> SQL_FUNC_MAP = ImmutableMap.<String, SqlFunction>builder().
         put( ZeroIfNegativeSqlFunction.KEY, new ZeroIfNegativeSqlFunction() ).
         put( OneIfZeroOrPositiveSqlFunction.KEY, new OneIfZeroOrPositiveSqlFunction() ).
-        put( DaysBetweenSqlFunction.KEY, new DaysBetweenSqlFunction() ).build();
+        put( DaysBetweenSqlFunction.KEY, new DaysBetweenSqlFunction() ).
+        put( ConditionalSqlFunction.KEY, new ConditionalSqlFunction() ).build();
     
     // -------------------------------------------------------------------------
     // Dependencies

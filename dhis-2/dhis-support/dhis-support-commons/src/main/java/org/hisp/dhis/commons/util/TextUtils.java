@@ -523,7 +523,7 @@ public class TextUtils
         
         return null;
     }
-    
+        
     /**
      * Indicates whether the given string contains any of the given search
      * strings. The operation ignores case and leading and trailing blanks.

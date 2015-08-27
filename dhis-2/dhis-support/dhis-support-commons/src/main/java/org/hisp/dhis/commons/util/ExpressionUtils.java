@@ -104,34 +104,17 @@ public class ExpressionUtils
     {
         Object result = evaluate( expression, vars );
         
-        if ( result == null || !isNumeric( String.valueOf( result ) ) )
+        if ( result == null )
         {
-            throw new IllegalStateException( "Result must be not null and numeric: " + result );
+            throw new IllegalStateException( "Result must be not null" );
+        }
+        
+        if ( !isNumeric( String.valueOf( result ) ) )
+        {
+            throw new IllegalStateException( "Result must be numeric: " + result + ", " + result.getClass() );
         }
         
         return Double.valueOf( String.valueOf( result ) );
-    }
-
-    /**
-     * Evaluates the given expression. The given variables will be substituted 
-     * in the expression. Converts the result of the evaluation to an Integer.
-     * Throws an IllegalStateException if the result could not be converted to
-     * a Double
-     * 
-     * @param expression the expression.
-     * @param vars the variables, can be null.
-     * @return the result of the evaluation.
-     */
-    public static Integer evaluateToInteger( String expression, Map<String, Object> vars )
-    {
-        Object result = evaluate( expression, vars );
-        
-        if ( result == null || !isNumeric( String.valueOf( result ) ) )
-        {
-            throw new IllegalStateException( "Result must be not null and numeric: " + result );
-        }
-        
-        return Integer.valueOf( String.valueOf( result ) );
     }
     
     /**
