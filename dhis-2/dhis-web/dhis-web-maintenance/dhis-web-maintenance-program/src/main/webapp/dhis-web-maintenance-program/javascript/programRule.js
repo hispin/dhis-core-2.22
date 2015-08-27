@@ -416,7 +416,7 @@ $( document ).ajaxStop(function() {
 	if( status == 1 )
 	{
 		status = 0;
-		//window.location.href='programRule.action?id=' + getFieldValue('programLocalId');
+		window.location.href='programRule.action?id=' + getFieldValue('programLocalId');
 	}
 }); 
 
