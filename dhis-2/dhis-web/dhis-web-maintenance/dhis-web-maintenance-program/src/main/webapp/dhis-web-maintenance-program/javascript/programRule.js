@@ -65,7 +65,10 @@ function removeDuplicateOptions()
 	$("#sourceFieldList tr").each(function(){
 		var deName = $(this).find('td:first').html();
 		var deId = $(this).find('input').attr("deId");
-		program_DataElements[deId] = deName;
+                if(deId){
+                    program_DataElements[deId] = deName;
+                }
+		
 	});
 	
 	$("#programRuleVariableDiv #dataElementId option").each(function () {
@@ -317,6 +320,7 @@ function validateProgramRule()
 
 function addProgramRule()
 {
+        console.log('trying to save program rule');
 	lockScreen();
 	var json_Data = { 
 		"name": getFieldValue('name'),
@@ -337,6 +341,7 @@ function addProgramRule()
 			,contentType: "application/json"
 			,data: JSON.stringify(json_Data)
 			,success: function(data){
+                                console.log('data:  ', data);
 				if( data.response && data.response.lastImported ){
 					saveProgramRuleVariable();
 					saveAction( data.response.lastImported );	
@@ -369,17 +374,26 @@ function saveProgramRuleVariable()
 
 function saveAction( programRuleId )
 {
+        console.log('trying to save action..');
 	$("#actionTB tr").each(function(){
 		var row = $(this);
 		var json_Data = { 
 			"programRuleActionType": row.find(".actionList").val(),
-			"programRule":{ "id":programRuleId },
-			"dataElement":{ "id": row.find(".actionDEs").val() },
-			"programStageSection":{ "id": row.find(".actionSections").val() },
+			"programRule":{ "id":programRuleId },			
 			"content": row.find(".content").val()
-		}
-		
-		var actionId = $(this).attr('id');		
+		};		
+                
+                var key = row.find(".actionDEs").val();
+                
+                if(attributeList[key]){
+                    json_Data.attribute = {id: key};
+                }
+                else{
+                    json_Data.dataElement = {id: key};
+                    json_Data.programStageSection = {id: row.find(".actionSections").val() };
+                }
+
+                var actionId = $(this).attr('id');		
 		var actionMethod = ( actionId === undefined ) ? "POST" : "PUT";
 		var url = ( actionId === undefined ) ? "../api/programRuleActions/" : "../api/programRuleActions/" + actionId;
 	
@@ -402,7 +416,7 @@ $( document ).ajaxStop(function() {
 	if( status == 1 )
 	{
 		status = 0;
-		window.location.href='programRule.action?id=' + getFieldValue('programLocalId');
+		//window.location.href='programRule.action?id=' + getFieldValue('programLocalId');
 	}
 }); 
 
@@ -447,13 +461,21 @@ function addSourceFieldForm()
 }
 
 function addMoreAction()
-{
+{        
 	var table = $("#actionTB");
 	var dataElementSelector = "<select class='actionDEs' style='width:100%;' >";
+        dataElementSelector += "<optgroup label='" + i18n_data_element_label + "'>";
 	for( var i in program_DataElements )
 	{
 		dataElementSelector += "<option value='" + i + "'>" + program_DataElements[i] + "</option>";
 	}
+        dataElementSelector += "</optgroup>";
+        dataElementSelector += "<optgroup label='" + i18n_program_attribute_label + "'>";
+	for( var key in attributeList)
+	{
+		dataElementSelector += "<option value='" + key + "'>" + attributeList[key] + "</option>";
+	}
+        dataElementSelector += "</optgroup>";
 	dataElementSelector += "</select>";
 	
 	var clazz = "class='listAlternateRow'";
