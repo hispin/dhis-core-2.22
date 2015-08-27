@@ -12,7 +12,6 @@ trackerCapture.controller('RegistrationController',
                 CustomFormService,
                 EnrollmentService,
                 DialogService,
-                ModalService,
                 CurrentSelection,
                 OptionSetService,
                 EventUtils,
@@ -61,16 +60,17 @@ trackerCapture.controller('RegistrationController',
         $scope.trackedEntities.available = entities;   
         $scope.trackedEntities.selected = $scope.trackedEntities.available[0];
     });
-    
-    $scope.allProgramRules = [];
-    TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-        $scope.allProgramRules = rules;
-    });  
 
     //watch for selection of program
     $scope.$watch('selectedProgram', function() {        
         $scope.trackedEntityForm = null;
         $scope.customForm = null;
+        
+        $scope.allProgramRules = [];
+        TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+            $scope.allProgramRules = rules;
+        });
+        
         if($scope.registrationMode === 'REGISTRATION'){
             $scope.getAttributes($scope.registrationMode);
         }        
