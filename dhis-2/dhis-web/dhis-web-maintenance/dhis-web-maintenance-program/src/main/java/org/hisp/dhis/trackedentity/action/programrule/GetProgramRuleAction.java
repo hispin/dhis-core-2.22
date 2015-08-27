@@ -27,9 +27,10 @@
  */
 package org.hisp.dhis.trackedentity.action.programrule;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.programrule.ProgramRule;
 import org.hisp.dhis.programrule.ProgramRuleService;
 import org.hisp.dhis.programrule.ProgramRuleVariable;
@@ -55,6 +56,9 @@ public class GetProgramRuleAction
     
     @Autowired
     private ProgramRuleVariableService variableService;
+    
+    @Autowired
+    private ProgramService programService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -73,6 +77,13 @@ public class GetProgramRuleAction
     {
         return programRule;
     }
+    
+    private Program program;
+
+    public Program getProgram()
+    {
+        return program;
+    }
 
     private List<ProgramRuleVariable> ruleVariables;
 
@@ -90,8 +101,10 @@ public class GetProgramRuleAction
         throws Exception
     {
         programRule = programRuleService.getProgramRule( id );
-       
-        ruleVariables = new ArrayList<>( variableService.getProgramRuleVariable( programRule.getProgram() ));
+        
+        program = programService.getProgram( programRule.getProgram().getId() );
+        
+        ruleVariables = variableService.getProgramRuleVariable( program ); 
         
         return SUCCESS;
     }

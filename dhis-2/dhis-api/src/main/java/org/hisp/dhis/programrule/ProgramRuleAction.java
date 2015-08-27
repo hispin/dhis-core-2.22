@@ -202,9 +202,9 @@ public class ProgramRuleAction
         this.dataElement = dataElement;
     }
     
-    @JsonProperty( "trackedEntityAttribute" )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( localName = "trackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public TrackedEntityAttribute getAttribute()
     {
         return attribute;
