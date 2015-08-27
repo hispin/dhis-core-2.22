@@ -402,7 +402,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             //check if attribute has optionset
                             if (att.optionSetValue) {
                                 var optionSetId = att.optionSet.id;                                
-                                newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + '  on-select="validationAndSkipLogic(selectedTei,\'' + attId + '\')" >' +
+                                newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + '  on-select="teiValueUpdated(selectedTei,\'' + attId + '\')" >' +
                                         '<ui-select-match style="width:100%;" allow-clear="true" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
                                         '<ui-select-choices ' +
                                         'repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:30">' +
@@ -415,12 +415,12 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 if (att.valueType === "number") {
                                     newInputField = '<input type="number" ' +
                                             ' d2-number-validator ' +
-                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else if (att.valueType === "bool") {
                                     newInputField = '<select ' +
-                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' > ' +
                                             ' <option value="">{{\'please_select\'| translate}}</option>' +
                                             ' <option value="false">{{\'no\'| translate}}</option>' +
@@ -432,22 +432,22 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
                                             ' max-date="' + attMaxDate + '"' + '\'' +
                                             ' d2-date' +
-                                            ' blur-or-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' blur-or-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else if (att.valueType === "trueOnly") {
                                     newInputField = '<input type="checkbox" ' +
-                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else if (att.valueType === "email") {
                                     newInputField = '<input type="email" ' +
-                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else {
                                     newInputField = '<input type="text" ' +
-                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                             }

@@ -121,11 +121,11 @@
 							#set($idx = $idx + 1 )
 							<tr class="$clazz" jsonData='$json_Data' id="$ruleVariable.uid">                                                                
                                                                 #if( $ruleVariable.sourceType == 'TEI_ATTRIBUTE')
-                                                                    <td>$!encoder.htmlEncode($ruleVariable.trackedEntityAttribute) $!encoder.htmlEncode($ruleVariable.trackedEntityAttribute.displayName)</td>
-                                                                    <td><input type='button' teAttId='$ruleVariable.trackedEntityAttribute.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:150px;' onclick='insertVariable(this)'/> <strong>[ATT]</strong></td>
+                                                                    <td>$!encoder.htmlEncode($ruleVariable.trackedEntityAttribute) $!encoder.htmlEncode($ruleVariable.attribute.name)</td>
+                                                                    <td><input type='button' teAttId='$ruleVariable.trackedEntityAttribute.uid' realValue='$ruleVariable.name' value='A{$ruleVariable.name}' style='width:150px;' onclick='insertVariable(this)'/></td>
                                                                 #else
                                                                     <td>$!encoder.htmlEncode($ruleVariable.dataElement.displayName)</td>
-                                                                    <td><input type='button' deId='$ruleVariable.dataElement.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:150px;' onclick='insertVariable(this)'/> <strong>[DE]</strong></td>
+                                                                    <td><input type='button' deId='$ruleVariable.dataElement.uid' realValue='$ruleVariable.name' value='#{$ruleVariable.name}' style='width:150px;' onclick='insertVariable(this)'/></td>
                                                                 #end								
 							</tr>
 						#end
