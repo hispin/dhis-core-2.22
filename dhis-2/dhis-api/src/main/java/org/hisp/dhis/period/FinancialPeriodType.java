@@ -65,7 +65,7 @@ public abstract class FinancialPeriodType
 
         if ( !past )
         {
-            dateTimeUnit = getCalendar().minusYears( dateTimeUnit, 1 );
+            dateTimeUnit = calendar.minusYears( dateTimeUnit, 1 );
         }
 
         dateTimeUnit.setMonth( getBaseMonth() + 1 );
@@ -74,8 +74,8 @@ public abstract class FinancialPeriodType
         DateTimeUnit start = new DateTimeUnit( dateTimeUnit );
         DateTimeUnit end = new DateTimeUnit( dateTimeUnit );
 
-        end = getCalendar().plusYears( end, 1 );
-        end = getCalendar().minusDays( end, 1 );
+        end = calendar.plusYears( end, 1 );
+        end = calendar.minusDays( end, 1 );
 
         return toIsoPeriod( start, end, calendar );
     }
