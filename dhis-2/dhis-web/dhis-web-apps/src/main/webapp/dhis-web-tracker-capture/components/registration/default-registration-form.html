@@ -1,3 +1,19 @@
+<script>
+    function updateAge (dobElement){
+
+        if (dobElement.id == "qZPfmKnzzEv"){
+
+            var date = dobElement.value;
+            dob = new Date(date);
+            var today = new Date();
+            var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+            $('#m1WveVHBwuN').val(age);
+            document.getElementById("m1WveVHBwuN").disabled = true
+        }
+
+    }
+
+</script>
 <h3 ng-if="widget !== 'PROFILE'">{{'profile'| translate}}</h3>
 <table class="dhis2-list-table-striped dhis2-table-hover">
     <tr ng-repeat="attribute in attributes">
@@ -32,7 +48,10 @@
                                ng-model="selectedTei[attribute.id]"
                                ng-disabled="editingDisabled" 
                                blur-or-change="teiValueUpdated(selectedTei, attribute.id)"
-                               ng-required="attribute.mandatory || attribute.unique"/>
+                               ng-required="attribute.mandatory || attribute.unique"
+                               id = "{{attribute.id}}"
+                               onblur="updateAge(this)"
+                                />
                     </span>
                     <span ng-switch-when="trueOnly">
                         <input type="checkbox" 
@@ -62,7 +81,8 @@
                                ng-model="selectedTei[attribute.id]" 
                                ng-disabled="editingDisabled" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
-                               ng-required="attribute.mandatory || attribute.unique"/>
+                               ng-required="attribute.mandatory || attribute.unique"
+                               id = "{{attribute.id}}"/>
                     </span>
                     <span ng-switch-when="email">
                         <input type="email" 
