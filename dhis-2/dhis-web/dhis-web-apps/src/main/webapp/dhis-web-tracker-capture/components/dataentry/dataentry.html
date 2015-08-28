@@ -165,11 +165,11 @@
                     <a href ng-click="completeIncompleteEvent()" 
                        class="btn btn-warning" 
                        ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id"
-                       ng-if="currentEvent.eventDate && (currentEvent.status === 'SCHEDULE' || currentEvent.status === 'ACTIVE' || currentEvent.status === 'VISITED')">{{'complete'| translate}}</a>
+                       ng-if="currentEvent.eventDate && (currentEvent.status === 'SCHEDULE' || currentEvent.status === 'ACTIVE' || currentEvent.status === 'VISITED')">{{'complete1'| translate}}</a>
                     <a href ng-click="completeIncompleteEvent()" 
                        class="btn btn-warning"
                        ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id"
-                       ng-if="currentEvent.eventDate && currentEvent.status === 'COMPLETED'">{{'incomplete'| translate}}</a>                       
+                       ng-if="currentEvent.eventDate && currentEvent.status === 'COMPLETED'">{{'incomplete1'| translate}}</a>
                     <a href ng-click="validateEvent()" 
                        class="btn btn-info" 
                        ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id" 
