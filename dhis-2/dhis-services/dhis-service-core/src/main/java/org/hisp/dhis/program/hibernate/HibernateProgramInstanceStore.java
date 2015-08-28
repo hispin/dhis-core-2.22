@@ -481,7 +481,7 @@ public class HibernateProgramInstanceStore
             + "              ON pa.trackedentityattributeid=pav.trackedentityattributeid " + "       WHERE pi.status= "
             + ProgramInstance.STATUS_ACTIVE
             + "         and prm.templatemessage is not NULL and prm.templatemessage != ''   "
-            + "         and pg.type=1 and prm.daysallowedsendmessage is not null and pa.valuetype='phoneNumber' "
+            + "         and pg.type like 'WITH_REGISTRATION' and prm.daysallowedsendmessage is not null and pa.valuetype='phoneNumber' "
             + "         and ( DATE(now()) - DATE(pi." + dateToCompare + ") ) = prm.daysallowedsendmessage "
             + "         and prm.whenToSend is null and prm.dateToCompare='" + dateToCompare + "' and prm.sendto = "
             + TrackedEntityInstanceReminder.SEND_TO_TRACKED_ENTITY_INSTANCE;
@@ -499,7 +499,7 @@ public class HibernateProgramInstanceStore
             + "           ON prm.programid = pi.programid " + "    WHERE pi.status = " + ProgramInstance.STATUS_ACTIVE
             + "      and org.phonenumber is not NULL and org.phonenumber != '' "
             + "      and prm.templatemessage is not NULL and prm.templatemessage != '' "
-            + "      and pg.type=1 and prm.daysallowedsendmessage is not null " + "      and ( DATE(now()) - DATE( pi."
+            + "      and pg.type like 'WITH_REGISTRATION' and prm.daysallowedsendmessage is not null " + "      and ( DATE(now()) - DATE( pi."
             + dateToCompare + " ) ) = prm.daysallowedsendmessage " + "      and prm.dateToCompare='" + dateToCompare
             + "'     and prm.whenToSend is null and prm.sendto =  " + TrackedEntityInstanceReminder.SEND_TO_ORGUGNIT_REGISTERED;
     }
@@ -520,7 +520,7 @@ public class HibernateProgramInstanceStore
             + ProgramInstance.STATUS_ACTIVE
             + "         and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "         and prm.templatemessage is not NULL and prm.templatemessage != '' "
-            + "         and pg.type=1 and prm.daysallowedsendmessage is not null "
+            + "         and pg.type like 'WITH_REGISTRATION' and prm.daysallowedsendmessage is not null "
             + "         and ( DATE(now()) - DATE( "
             + dateToCompare
             + " ) ) = prm.daysallowedsendmessage "
@@ -543,7 +543,7 @@ public class HibernateProgramInstanceStore
             + "   INNER JOIN userinfo uif " + "       ON uif.userinfoid = ugm.userid " + "  WHERE pi.status= "
             + ProgramInstance.STATUS_ACTIVE + "       and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "       and prm.templatemessage is not NULL and prm.templatemessage != '' "
-            + "       and pg.type=1 and prm.daysallowedsendmessage is not null " + "       and (  DATE(now()) - DATE("
+            + "       and pg.type like 'WITH_REGISTRATION' and prm.daysallowedsendmessage is not null " + "       and (  DATE(now()) - DATE("
             + dateToCompare + ") ) = prm.daysallowedsendmessage " + "       and prm.whentosend is null "
             + "       and prm.sendto = " + TrackedEntityInstanceReminder.SEND_TO_USER_GROUP;
     }
