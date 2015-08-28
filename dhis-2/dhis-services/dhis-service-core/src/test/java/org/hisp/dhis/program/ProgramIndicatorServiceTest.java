@@ -543,8 +543,8 @@ public class ProgramIndicatorServiceTest
     public void testGetAnalyticsSqlWithFunctionsD()
     {
         String col1 = COL_QUOTE + deA.getUid() + COL_QUOTE;
-        String expected = "case when (" + col1 + " > 3) then '10' else '5' end";
-        String expression = "d2:condition(" + col1 + " > 3,10,5)";
+        String expected = "case when (" + col1 + " > 3) then 10 else 5 end";
+        String expression = "d2:condition('" + col1 + " > 3',10,5)";
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
     }
