@@ -12,7 +12,7 @@ angular.module('trackerCaptureServices')
         return {
             getOu: function (ou) {
                 var def = $q.defer();
-                $http.get('../api/organisationUnits/' + ou.id + ".json?fields=id,name,code,parent[id],attributeValues[attribute[id,name],value]").then(function (response) {
+                $http.get('../api/organisationUnits/' + ou.id + ".json?fields=id,name,code,parent[id],attributeValues[attribute[id,name,code],value]").then(function (response) {
 
                     def.resolve(response.data);
                 });
