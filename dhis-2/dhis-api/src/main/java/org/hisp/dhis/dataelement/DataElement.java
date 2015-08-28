@@ -268,6 +268,14 @@ public class DataElement
     }
 
     /**
+     * Indicates whether the value type of this data element is date.
+     */
+    public boolean isDateType()
+    {
+        return VALUE_TYPE_DATE.equals( type ) || VALUE_TYPE_DATETIME.equals( type );
+    }
+    
+    /**
      * Returns the value type. If value type is int and the number type exists,
      * the number type is returned, otherwise the type is returned.
      */

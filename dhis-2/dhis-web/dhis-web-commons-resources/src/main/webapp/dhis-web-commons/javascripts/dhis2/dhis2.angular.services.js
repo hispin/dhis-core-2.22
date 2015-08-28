@@ -395,14 +395,14 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     this.getAttributesAsString(attributes) +
                                     ' d2-focus-next-on-enter' +
                                     ' ng-model="selectedTei.' + attId + '" ' +
-                                    ' ng-disabled="editingDisabled"' +
+                                    ' ng-disabled="editingDisabled || isHidden(attributesById.' + attId + '.id)"' +
                                     ' d2-validation ' +
                                     ' ng-required=" ' + (att.mandatory || att.unique) + '" ';
 
                             //check if attribute has optionset
                             if (att.optionSetValue) {
                                 var optionSetId = att.optionSet.id;                                
-                                newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + '  on-select="validationAndSkipLogic(selectedTei,\'' + attId + '\')" >' +
+                                newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + '  on-select="teiValueUpdated(selectedTei,\'' + attId + '\')" >' +
                                         '<ui-select-match style="width:100%;" allow-clear="true" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
                                         '<ui-select-choices ' +
                                         'repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:30">' +
@@ -415,12 +415,12 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 if (att.valueType === "number") {
                                     newInputField = '<input type="number" ' +
                                             ' d2-number-validator ' +
-                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else if (att.valueType === "bool") {
                                     newInputField = '<select ' +
-                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' > ' +
                                             ' <option value="">{{\'please_select\'| translate}}</option>' +
                                             ' <option value="false">{{\'no\'| translate}}</option>' +
@@ -432,22 +432,22 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
                                             ' max-date="' + attMaxDate + '"' + '\'' +
                                             ' d2-date' +
-                                            ' blur-or-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' blur-or-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else if (att.valueType === "trueOnly") {
                                     newInputField = '<input type="checkbox" ' +
-                                            ' ng-change="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else if (att.valueType === "email") {
                                     newInputField = '<input type="email" ' +
-                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                                 else {
                                     newInputField = '<input type="text" ' +
-                                            ' ng-blur="validationAndSkipLogic(selectedTei,\'' + attId + '\')" ' +
+                                            ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
                             }
@@ -721,11 +721,16 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         variableValue = $filter('trimquotes')(variableValue);
 
         //Append single quotation marks in case the variable is of text or date type:
-        if(variableType === 'string' || variableType === 'date') {
-            variableValue = "'" + variableValue + "'";
+        if(variableType === 'string' || variableType === 'date' || variableType === 'optionSet') {
+            if(variableValue) {
+                variableValue = "'" + variableValue + "'";
+            } else {
+                variableValue = "''";
+            }
+                
         }
         else if(variableType === 'bool' || variableType === 'trueOnly') {
-            if(eval(variableValue)) {
+            if(variableValue && eval(variableValue)) {
                 variableValue = true;
             }
             else {
@@ -733,7 +738,11 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             }
         }
         else if(variableType === "int" || variableType === "number") {
-            variableValue = Number(variableValue);
+            if(variableValue) {
+                variableValue = Number(variableValue);
+            } else {
+                variableValue = 0;
+            }  
         }
         else{
             $log.warn("unknown datatype:" + variableType);
@@ -753,6 +762,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             return pushVariable(variables, variablename, variableValue, variableType, variablefound, variablePrefix);
         },
         getVariables: function(allProgramRules, executingEvent, evs, allDes, selectedEntity, selectedEnrollment) {
+            
             var variables = {};
             
             var programVariables = allProgramRules.programVariables;            
@@ -760,6 +770,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             programVariables = programVariables.concat(allProgramRules.programIndicators.variables);
 
             angular.forEach(programVariables, function(programVariable) {
+                
                 var dataElementId = programVariable.dataElement;
                 if(programVariable.dataElement && programVariable.dataElement.id) {
                     dataElementId = programVariable.dataElement.id;
@@ -1178,8 +1189,13 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         $rootScope.ruleeffects = {};
                     }
 
-                    if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event] )){
-                        $rootScope.ruleeffects[executingEvent.event] = {};
+                    var ruleEffectKey = executingEvent.event ? executingEvent.event : executingEvent;
+                    if( executingEvent.event && angular.isUndefined( $rootScope.ruleeffects[ruleEffectKey] )){
+                        $rootScope.ruleeffects[ruleEffectKey] = {};
+                    }
+                    
+                    if(!angular.isObject(executingEvent) && angular.isUndefined( $rootScope.ruleeffects[ruleEffectKey] )){
+                        $rootScope.ruleeffects[ruleEffectKey] = {};
                     }
 
                     var updatedEffectsExits = false;
@@ -1201,8 +1217,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                         angular.forEach(rule.programRuleActions, function(action){
                             //In case the effect-hash is not populated, add entries
-                            if(angular.isUndefined( $rootScope.ruleeffects[executingEvent.event][action.id] )){
-                                $rootScope.ruleeffects[executingEvent.event][action.id] =  {
+                            if(angular.isUndefined( $rootScope.ruleeffects[ruleEffectKey][action.id] )){
+                                $rootScope.ruleeffects[ruleEffectKey][action.id] =  {
                                     id:action.id,
                                     location:action.location, 
                                     action:action.programRuleActionType,
@@ -1220,7 +1236,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             if(ruleEffective && action.data)
                             {
                                 //Preserve old data for comparison:
-                                var oldData = $rootScope.ruleeffects[executingEvent.event][action.id].data;
+                                var oldData = $rootScope.ruleeffects[ruleEffectKey][action.id].data;
                                 
                                 //The key data might be containing a dollar sign denoting that the key data is a variable.
                                 //To make a lookup in variables hash, we must make a lookup without the dollar sign in the variable name
@@ -1230,37 +1246,37 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 if(angular.isDefined(variablesHash[nameWithoutBrackets]))
                                 {
                                     //The variable exists, and is replaced with its corresponding value
-                                    $rootScope.ruleeffects[executingEvent.event][action.id].data =
+                                    $rootScope.ruleeffects[ruleEffectKey][action.id].data =
                                         variablesHash[nameWithoutBrackets].variableValue;
                                 }
                                 else if(action.data.indexOf('{') !== -1)
                                 {
                                     //Since the value couldnt be looked up directly, and contains a dollar sign, the expression was more complex
                                     //Now we will have to make a thorough replacement and separate evaluation to find the correct value:
-                                    $rootScope.ruleeffects[executingEvent.event][action.id].data = replaceVariables(action.data, variablesHash);
+                                    $rootScope.ruleeffects[ruleEffectKey][action.id].data = replaceVariables(action.data, variablesHash);
                                     //In a scenario where the data contains a complex expression, evaluate the expression to compile(calculate) the result:
-                                    $rootScope.ruleeffects[executingEvent.event][action.id].data = runExpression($rootScope.ruleeffects[executingEvent.event][action.id].data, action.data, "action:" + action.id, flag, variablesHash);
+                                    $rootScope.ruleeffects[ruleEffectKey][action.id].data = runExpression($rootScope.ruleeffects[ruleEffectKey][action.id].data, action.data, "action:" + action.id, flag, variablesHash);
                                 }
                                 
-                                if(oldData !== $rootScope.ruleeffects[executingEvent.event][action.id].data) {
+                                if(oldData !== $rootScope.ruleeffects[ruleEffectKey][action.id].data) {
                                     updatedEffectsExits = true;
                                 }
                             }
 
                             //Update the rule effectiveness if it changed in this evaluation;
-                            if($rootScope.ruleeffects[executingEvent.event][action.id].ineffect !== ruleEffective)
+                            if($rootScope.ruleeffects[ruleEffectKey][action.id].ineffect !== ruleEffective)
                             {
                                 //There is a change in the rule outcome, we need to update the effect object.
                                 updatedEffectsExits = true;
-                                $rootScope.ruleeffects[executingEvent.event][action.id].ineffect = ruleEffective;
+                                $rootScope.ruleeffects[ruleEffectKey][action.id].ineffect = ruleEffective;
                             }
 
                             //In case the rule is of type "assign variable" and the rule is effective,
                             //the variable data result needs to be applied to the correct variable:
-                            if($rootScope.ruleeffects[executingEvent.event][action.id].action === "ASSIGNVARIABLE" && $rootScope.ruleeffects[executingEvent.event][action.id].ineffect){
+                            if($rootScope.ruleeffects[ruleEffectKey][action.id].action === "ASSIGNVARIABLE" && $rootScope.ruleeffects[ruleEffectKey][action.id].ineffect){
                                 //from earlier evaluation, the data portion of the ruleeffect now contains the value of the variable to be assign.
                                 //the content portion of the ruleeffect defines the name for the variable, when dollar is removed:
-                                var variabletoassign = $rootScope.ruleeffects[executingEvent.event][action.id].content.replace("#{","").replace("}","");
+                                var variabletoassign = $rootScope.ruleeffects[ruleEffectKey][action.id].content.replace("#{","").replace("}","");
 
                                 if(!angular.isDefined(variablesHash[variabletoassign])){
                                     $log.warn("Variable " + variabletoassign + " was not defined.");
@@ -1268,11 +1284,11 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                                 //Even if the variable is not defined: we assign it:
                                 if(variablesHash[variabletoassign] && 
-                                        variablesHash[variabletoassign].variableValue !== $rootScope.ruleeffects[executingEvent.event][action.id].data){
+                                        variablesHash[variabletoassign].variableValue !== $rootScope.ruleeffects[ruleEffectKey][action.id].data){
                                     //If the variable was actually updated, we assume that there is an updated ruleeffect somewhere:
                                     updatedEffectsExits = true;
                                     //Then we assign the new value:
-                                    variablesHash[variabletoassign].variableValue = $rootScope.ruleeffects[executingEvent.event][action.id].data;
+                                    variablesHash[variabletoassign].variableValue = $rootScope.ruleeffects[ruleEffectKey][action.id].data;
                                 }
                             }
                         });
@@ -1280,7 +1296,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                     //Broadcast rules finished if there was any actual changes to the event.
                     if(updatedEffectsExits){
-                        $rootScope.$broadcast("ruleeffectsupdated", { event: executingEvent.event });
+                        $rootScope.$broadcast("ruleeffectsupdated", { event: ruleEffectKey });
                     }
                 }
 

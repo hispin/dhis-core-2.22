@@ -29,6 +29,7 @@ package org.hisp.dhis.analytics.table;
  */
 
 import static org.hisp.dhis.commons.util.TextUtils.removeLast;
+import static org.hisp.dhis.system.util.MathUtils.NUMERIC_LENIENT_REGEXP;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +50,6 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
@@ -223,8 +223,10 @@ public class JdbcEventAnalyticsTableManager
     public List<String[]> getDimensionColumns( AnalyticsTable table )
     {
         final String dbl = statementBuilder.getDoubleColumnType();
-        final String numericClause = " and value " + statementBuilder.getRegexpMatch() + " '"
-            + MathUtils.NUMERIC_LENIENT_REGEXP + "'";
+        final String numericClause = " and value " + statementBuilder.getRegexpMatch() + " '" + NUMERIC_LENIENT_REGEXP + "'";
+        final String dateClause = " and value " + statementBuilder.getRegexpMatch() + " '" + DATE_REGEXP + "'";
+        
+        //TODO dateClause regexp
 
         List<String[]> columns = new ArrayList<>();
 
@@ -260,7 +262,7 @@ public class JdbcEventAnalyticsTableManager
         {
             ValueType valueType = ValueType.getFromDataElement( dataElement );
             String dataType = getColumnType( valueType );
-            String dataClause = dataElement.isNumericType() ? numericClause : "";
+            String dataClause = dataElement.isNumericType() ? numericClause : dataElement.isDateType() ? dateClause : "";
             String select = getSelectClause( valueType );
 
             String sql = "(select " + select + " from trackedentitydatavalue where programstageinstanceid=psi.programstageinstanceid " + 
@@ -288,7 +290,7 @@ public class JdbcEventAnalyticsTableManager
         {
             ValueType valueType = ValueType.getFromAttribute( attribute );
             String dataType = getColumnType( valueType );
-            String dataClause = attribute.isNumericType() ? numericClause : "";
+            String dataClause = attribute.isNumericType() ? numericClause : attribute.isDateType() ? dateClause : "";
             String select = getSelectClause( valueType );
 
             String sql = "(select " + select + " from trackedentityattributevalue where trackedentityinstanceid=pi.trackedentityinstanceid " + 
@@ -399,6 +401,10 @@ public class JdbcEventAnalyticsTableManager
         {
             return "integer";
         }
+        else if ( Date.class.equals( valueType.getJavaClass() ) )
+        {
+            return "timestamp";
+        }
         else
         {
             return "character varying(255)";
@@ -422,6 +428,10 @@ public class JdbcEventAnalyticsTableManager
         else if ( Boolean.class.equals( valueType.getJavaClass() ) )
         {
             return "case when value = 'true' then 1 when value = 'false' then 0 else null end";
+        }
+        else if ( Date.class.equals( valueType.getJavaClass() ) )
+        {
+            return "cast(value as timestamp)";
         }
         else
         {

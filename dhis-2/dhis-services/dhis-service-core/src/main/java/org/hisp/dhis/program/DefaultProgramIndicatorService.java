@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import org.hisp.dhis.commons.sqlfunc.ConditionalSqlFunction;
+import org.hisp.dhis.commons.sqlfunc.DaysBetweenSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.OneIfZeroOrPositiveSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.SqlFunction;
 import org.hisp.dhis.commons.sqlfunc.ZeroIfNegativeSqlFunction;
@@ -73,7 +75,9 @@ public class DefaultProgramIndicatorService
 {
     private static final Map<String, SqlFunction> SQL_FUNC_MAP = ImmutableMap.<String, SqlFunction>builder().
         put( ZeroIfNegativeSqlFunction.KEY, new ZeroIfNegativeSqlFunction() ).
-        put( OneIfZeroOrPositiveSqlFunction.KEY, new OneIfZeroOrPositiveSqlFunction() ).build();
+        put( OneIfZeroOrPositiveSqlFunction.KEY, new OneIfZeroOrPositiveSqlFunction() ).
+        put( DaysBetweenSqlFunction.KEY, new DaysBetweenSqlFunction() ).
+        put( ConditionalSqlFunction.KEY, new ConditionalSqlFunction() ).build();
     
     // -------------------------------------------------------------------------
     // Dependencies
@@ -398,7 +402,9 @@ public class DefaultProgramIndicatorService
         while ( matcher.find() )
         {
             String func = matcher.group( 1 );
-            String column = matcher.group( 2 );
+            String arg1 = matcher.group( 2 );
+            String arg2 = matcher.group( 3 );
+            String arg3 = matcher.group( 4 );
             
             SqlFunction function = SQL_FUNC_MAP.get( func );
             
@@ -407,7 +413,7 @@ public class DefaultProgramIndicatorService
                 throw new IllegalStateException( "Function not recognized: " + func );
             }
             
-            String result = function.evaluate( column );
+            String result = function.evaluate( arg1, arg2, arg3 );
             
             matcher.appendReplacement( buffer, result );
         }
@@ -481,7 +487,7 @@ public class DefaultProgramIndicatorService
 
                 if ( programStage != null && dataElement != null )
                 {
-                    String sample = dataElement.isNumericType() ? String.valueOf( 1 ) : "'A'";
+                    String sample = dataElement.isNumericType() ? String.valueOf( 1 ) : dataElement.isDateType() ? "'2000-01-01'" : "'A'";
                     
                     matcher.appendReplacement( expr, sample );
                 }
@@ -496,7 +502,7 @@ public class DefaultProgramIndicatorService
                 
                 if ( attribute != null )
                 {
-                    String sample = attribute.isNumericType() ? String.valueOf( 1 ) : "'A'";
+                    String sample = attribute.isNumericType() ? String.valueOf( 1 ) : attribute.isDateType() ? "'2000-01-01'" : "'A'";
                     
                     matcher.appendReplacement( expr, sample );
                 }

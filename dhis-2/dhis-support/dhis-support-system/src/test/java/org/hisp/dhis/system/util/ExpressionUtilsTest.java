@@ -51,13 +51,16 @@ public class ExpressionUtilsTest
         assertEquals( 3d, ExpressionUtils.evaluateToDouble( "3", null ), DELTA );
         assertEquals( 3.45, ExpressionUtils.evaluateToDouble( "3.45", null ), DELTA );
         assertEquals( 5d, ExpressionUtils.evaluateToDouble( "2 + 3", null ), DELTA );
-        assertEquals( 15.6, ExpressionUtils.evaluateToDouble( "12.4 + 3.2", null ), DELTA );        
+        assertEquals( 15.6, ExpressionUtils.evaluateToDouble( "12.4 + 3.2", null ), DELTA );
+        assertEquals( 2.0, ExpressionUtils.evaluateToDouble( "2 > 1 ? 2.0 : 1.0", null ), DELTA );
+        assertEquals( 1.0, ExpressionUtils.evaluateToDouble( "2 > 4 ? 2.0 : 1.0", null ), DELTA );
         assertEquals( 3d, ExpressionUtils.evaluateToDouble( "d2:zing(3)", null ), DELTA );        
         assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:zing(-3) + 2.0", null ), DELTA );
         assertEquals( 4d, ExpressionUtils.evaluateToDouble( "d2:zing(-1) + 4 + d2:zing(-2)", null ), DELTA );
         assertEquals( 0d, ExpressionUtils.evaluateToDouble( "d2:oizp(-4)", null ), DELTA );
         assertEquals( 1d, ExpressionUtils.evaluateToDouble( "d2:oizp(0)", null ), DELTA );
         assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:oizp(-4) + d2:oizp(0) + d2:oizp(3.0)", null ), DELTA );
+        assertEquals( 3d, ExpressionUtils.evaluateToDouble( "d2:daysBetween('2015-03-01','2015-03-04')", null ), DELTA );
     }
 
     @Test
@@ -72,6 +75,16 @@ public class ExpressionUtilsTest
         assertEquals( 4d, ExpressionUtils.evaluateToDouble( "d2:zing(v1)", vars ), DELTA );
         assertEquals( 0d, ExpressionUtils.evaluateToDouble( "d2:zing(v2)", vars ), DELTA );
         assertEquals( 4d, ExpressionUtils.evaluateToDouble( "d2:zing(v1) + d2:zing(v2)", vars ), DELTA );
+    }
+
+    @Test
+    public void testEvaluate()
+    {
+        assertEquals( 4, ExpressionUtils.evaluate( "d2:condition('3 > 2',4,3)", null ) );
+        assertEquals( 3, ExpressionUtils.evaluate( "d2:condition('5 > 7',4,3)", null ) );
+        assertEquals( "yes", ExpressionUtils.evaluate( "d2:condition(\"'goat' == 'goat'\",'yes','no')", null ) );
+        assertEquals( "no", ExpressionUtils.evaluate( "d2:condition(\"'goat' != 'goat'\",'yes','no')", null ) );
+        assertEquals( "indoor", ExpressionUtils.evaluate( "d2:condition(\"'weather' == 'nice'\",'beach','indoor')", null ) );
     }
     
     @Test
@@ -155,7 +168,9 @@ public class ExpressionUtilsTest
         assertTrue( ExpressionUtils.isValid( "2 + 8", null ) );
         assertTrue( ExpressionUtils.isValid( "3 - v1", vars ) );
         assertTrue( ExpressionUtils.isValid( "d2:zing(1)", null ) );
+        assertTrue( ExpressionUtils.isValid( "d2:daysBetween('2015-02-01','2015-04-02')", null ) );
         assertTrue( ExpressionUtils.isValid( "(d2:zing(1)+d2:zing(1))*50/1", null ) );
+        assertTrue( ExpressionUtils.isValid( "d2:condition('1 > 100',5,100)", null ) );
         assertTrue( ExpressionUtils.isValid( "1/(1/100)", null ) );
         assertTrue( ExpressionUtils.isValid( "SUM(1)", null ) );
         assertTrue( ExpressionUtils.isValid( "average(2+1)", null ) );

@@ -104,14 +104,19 @@ public class ExpressionUtils
     {
         Object result = evaluate( expression, vars );
         
-        if ( result == null || !isNumeric( String.valueOf( result ) ) )
+        if ( result == null )
         {
-            throw new IllegalStateException( "Result must be not null and numeric: " + result );
+            throw new IllegalStateException( "Result must be not null" );
+        }
+        
+        if ( !isNumeric( String.valueOf( result ) ) )
+        {
+            throw new IllegalStateException( "Result must be numeric: " + result + ", " + result.getClass() );
         }
         
         return Double.valueOf( String.valueOf( result ) );
     }
-
+    
     /**
      * Evaluates the given expression to true or false. The given variables will 
      * be substituted in the expression.

@@ -69,6 +69,8 @@ public abstract class AbstractJdbcTableManager
     implements AnalyticsTableManager
 {
     protected static final Log log = LogFactory.getLog( JdbcAnalyticsTableManager.class );
+    
+    protected static final String DATE_REGEXP = "^\\d{4}-\\d{2}-\\d{2}(\\s|T)?(\\d{2}:\\d{2}:\\d{2})?$";
 
     public static final String PREFIX_ORGUNITGROUPSET = "ougs_";
     public static final String PREFIX_ORGUNITLEVEL = "uidlevel";
