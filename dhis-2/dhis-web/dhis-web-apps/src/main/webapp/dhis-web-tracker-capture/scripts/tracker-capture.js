@@ -270,6 +270,25 @@ function getPrograms( programs )
     return mainPromise;
 }
 
+function processMetaDataAttribute( obj )
+{
+    if(!obj){
+        return;
+    }
+    
+    if(obj.attributeValues){
+        for(var i=0; i<obj.attributeValues.length; i++){
+            if(obj.attributeValues[i].value && obj.attributeValues[i].attribute && obj.attributeValues[i].attribute.code){
+                obj[obj.attributeValues[i].attribute.code] = obj.attributeValues[i].value === 'true' ? true : obj.attributeValues[i].value;
+            }
+        }
+    }
+    
+    //delete obj.attributeValues;
+   
+    return obj;    
+}
+
 function getProgram( id )
 {
     return function() {
@@ -308,7 +327,7 @@ function getProgram( id )
             }            
             program.validationCriterias = vc;
             
-            dhis2.tc.store.set( 'programs', program );  
+            dhis2.tc.store.set( 'programs', processMetaDataAttribute( program ) );
         });
     };
 }

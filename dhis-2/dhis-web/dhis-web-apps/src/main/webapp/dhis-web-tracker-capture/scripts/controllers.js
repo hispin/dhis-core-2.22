@@ -110,7 +110,12 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             
             ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
                 $scope.programs = response.programs;
-                $scope.selectedProgram = response.selectedProgram;
+                
+                angular.forEach($scope.programs, function(pr){
+                    if(pr.allowRegistration){
+                        $scope.selectedProgram = pr;
+                    }
+                });
                 
                 $scope.processAttributes();                
                 $scope.search($scope.searchMode.listAll);
@@ -121,12 +126,12 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.getProgramAttributes = function(program){ 
         $scope.selectedProgram = program;
         
-        if($scope.selectedProgram){
+        /*if($scope.selectedProgram){
             $location.path('/').search({program: $scope.selectedProgram.id});
         }
         else{
             $location.path('/').search({});
-        }
+        }*/
 
         $scope.trackedEntityList = null;        
         
