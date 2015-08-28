@@ -24,7 +24,7 @@ angular.module('trackerCaptureServices')
                 promise.then(function (ou) {
 
                         for (var i=0;i<ou.attributeValues.length;i++){
-                            if (ou.attributeValues[i].attribute.name == "Facility code"){
+                            if (ou.attributeValues[i].attribute.code == "facilityCode"){
                                 result =   ou.attributeValues[i].value  + result;
                             }
                         }
