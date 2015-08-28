@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Application_Filing_Report" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6b81d499-43bb-41dc-804d-68a5ef9007ef">
+	<property name="ireport.zoom" value="1.7715610000000044"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="92"/>
+	<parameter name="organisationunits_uid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["K9mSNCOH0PJ"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organisationunit_level" class="java.lang.String">
+		<defaultValueExpression><![CDATA["4"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="periods_iso" class="java.lang.String">
+		<defaultValueExpression><![CDATA["201507"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="referencedate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{periods_iso}.substring(0,4)+"-"+$P{periods_iso}.substring(4,6)+"-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organisationunit_name" class="java.lang.String"/>
+	<parameter name="period_name" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select sagFinal.scheme,sum(PLHIV_FSW) PLHIV_FSW, sum(FSW) FSW, sum(TG)TG, sum(TG_PLHIV)TG_PLHIV, sum(MSM)MSM, sum(MSM_PLHIV)MSM_PLHIV, sum(IDU) IDU , sum(IDU_PLHIV) IDU_PLHIV , sum(PLHIV) PLHIV , sum(fam)fam, sum(quarter_tot)quarter_tot ,
+coalesce(sum(PLHIV_FSW),0)+coalesce(sum(FSW),0)+coalesce(sum(TG),0)+coalesce(sum(TG_PLHIV),0)+coalesce(sum(MSM),0)+coalesce(sum(MSM_PLHIV),0)+coalesce(sum(IDU),0)+coalesce(sum(IDU_PLHIV),0)+coalesce(sum(PLHIV),0)+coalesce(sum(fam),0) sum
+from
+(
+  select fin.*,fin2.quarter_tot
+  from
+  (
+	select name,organisationunitid,scheme, sum(PLHIV_FSW) PLHIV_FSW, sum(FSW) FSW, sum(TG) TG, sum(TG_PLHIV) TG_PLHIV, sum(MSM) MSM, sum(MSM_PLHIV) MSM_PLHIV, sum(IDU) IDU , sum(IDU_PLHIV) IDU_PLHIV , sum(PLHIV) PLHIV ,sum(fam) fam
+	from
+	(
+	select name,organisationunitid,scheme, case when val like 'PLHIV+FSW'  then tot end PLHIV_FSW,
+	case when val like 'FSW' then tot end FSW,
+	case when val like 'TG' then tot end TG,
+	case when val like 'PLHIV+TG' then tot end TG_PLHIV,
+	case when val like 'PLHIV+MSM' then tot end MSM_PLHIV,
+	case when val like 'MSM' then tot end MSM,
+	case when val like 'IDU' then tot end IDU,
+	case when val like 'PLHIV+IDU' then tot end IDU_PLHIV,
+	case when val like 'PLHIV' then tot end PLHIV,
+	case when val like 'Family of the community' then tot end fam
+	from
+	(	select sag.name,sag1.organisationunitid,sag1.scheme,sag1.val,count(programstageinstanceid) tot from
+		(
+		select os.organisationunitid,ou.name,os.level from organisationunit ou
+		inner join _orgunitstructure os on case
+		when cast($P{organisationunit_level} as integer)=1 then ou.uid=os.uidlevel1
+		when cast($P{organisationunit_level} as integer)=2 then ou.uid=os.uidlevel2
+		when cast($P{organisationunit_level} as integer)=3 then ou.uid=os.uidlevel3
+		when cast($P{organisationunit_level} as integer)=4 then ou.uid=os.uidlevel4
+		when cast($P{organisationunit_level} as integer)=5 then ou.uid=os.uidlevel5
+		when cast($P{organisationunit_level} as integer)=6 then ou.uid=os.uidlevel6
+		end
+		where ou.uid like $P{organisationunits_uid}
+		)sag
+		inner join
+		(
+		select p.name scheme,te.value val,td.programstageinstanceid,pgi.organisationunitid
+		from trackedentitydatavalue td
+		inner join programstageinstance pgi on pgi.programstageinstanceid=td.programstageinstanceid
+		inner join dataelement de on de.dataelementid = td.dataelementid
+		inner join programinstance pi on pgi.programinstanceid=pi.programinstanceid
+		inner join trackedentityattributevalue te on te.trackedentityinstanceid=pi.trackedentityinstanceid
+		inner join trackedentityattribute tea on tea.trackedentityattributeid = te.trackedentityattributeid
+		inner join programstage pg on pg.programstageid=pgi.programstageid
+		inner join program p on p.programid=pg.programid
+		where de.dataelementid = 2744
+		and pg.name like 'Beneficiary follow-up stage'
+		and tea.uid='Y57XUbBrJk3'
+		and td.value like 'true'
+		and extract(month from cast(pgi.executiondate as timestamp))::integer = extract(month from cast($P{referencedate} as timestamp)+interval '1 month')::integer
+		and extract(year from cast(pgi.executiondate as timestamp))::integer = extract( year from cast($P{referencedate} as timestamp)+interval '1 month')::integer
+
+		)sag1
+		on sag.organisationunitid=sag1.organisationunitid
+		group by sag.name,sag1.organisationunitid,sag1.scheme,sag1.val
+	)asd
+	)final
+	group by scheme,name,organisationunitid
+  )fin
+inner join
+(
+select name,organisationunitid,scheme, sum(tot) quarter_tot
+from
+(
+	select sag.name,sag1.organisationunitid,sag1.scheme,sag1.val,count(programstageinstanceid) tot from
+	(
+	select os.organisationunitid,ou.name,os.level from organisationunit ou
+	inner join _orgunitstructure os on case
+	when cast($P{organisationunit_level} as integer)=1 then ou.uid=os.uidlevel1
+	when cast($P{organisationunit_level} as integer)=2 then ou.uid=os.uidlevel2
+	when cast($P{organisationunit_level} as integer)=3 then ou.uid=os.uidlevel3
+	when cast($P{organisationunit_level} as integer)=4 then ou.uid=os.uidlevel4
+	when cast($P{organisationunit_level} as integer)=5 then ou.uid=os.uidlevel5
+	when cast($P{organisationunit_level} as integer)=6 then ou.uid=os.uidlevel6
+	end
+	where ou.uid like $P{organisationunits_uid}
+	)sag
+	inner join
+	(
+		select p.name scheme,te.value val,td.programstageinstanceid,pgi.organisationunitid
+		from trackedentitydatavalue td
+		inner join programstageinstance pgi on pgi.programstageinstanceid=td.programstageinstanceid
+		inner join dataelement de on de.dataelementid = td.dataelementid
+		inner join programinstance pi on pgi.programinstanceid=pi.programinstanceid
+		inner join trackedentityattributevalue te on te.trackedentityinstanceid=pi.trackedentityinstanceid
+		inner join trackedentityattribute tea on tea.trackedentityattributeid = te.trackedentityattributeid
+		inner join programstage pg on pg.programstageid=pgi.programstageid
+		inner join program p on p.programid=pg.programid
+		where de.dataelementid = 2744
+		and pg.name like 'Beneficiary follow-up stage'
+		and tea.uid='Y57XUbBrJk3'
+		and td.value like 'true'
+		and extract(quarter from cast(pgi.executiondate as timestamp))::integer = extract(quarter from cast($P{referencedate} as timestamp)+interval '1 month')::integer
+		and extract(year from cast(pgi.executiondate as timestamp))::integer = extract( year from cast($P{referencedate} as timestamp)+interval '1 month')::integer
+
+	)sag1
+	on sag.organisationunitid=sag1.organisationunitid
+	group by sag.name,sag1.organisationunitid,sag1.scheme,sag1.val
+)asd
+group by name,organisationunitid,scheme
+)fin2
+on fin.organisationunitid=fin2.organisationunitid
+and fin.scheme=fin2.scheme
+)sagFinal
+group by sagFinal.scheme]]>
+	</queryString>
+	<field name="scheme" class="java.lang.String"/>
+	<field name="plhiv_fsw" class="java.math.BigDecimal"/>
+	<field name="fsw" class="java.math.BigDecimal"/>
+	<field name="tg" class="java.math.BigDecimal"/>
+	<field name="tg_plhiv" class="java.math.BigDecimal"/>
+	<field name="msm" class="java.math.BigDecimal"/>
+	<field name="msm_plhiv" class="java.math.BigDecimal"/>
+	<field name="idu" class="java.math.BigDecimal"/>
+	<field name="idu_plhiv" class="java.math.BigDecimal"/>
+	<field name="plhiv" class="java.math.BigDecimal"/>
+	<field name="fam" class="java.math.BigDecimal"/>
+	<field name="quarter_tot" class="java.math.BigDecimal"/>
+	<field name="sum" class="java.math.BigDecimal"/>
+	<variable name="organisationunits_uid" class="java.lang.String"/>
+	<variable name="startdate" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{periods_iso}.substring(0,4)+"-"+$P{periods_iso}.substring(4,6)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="34" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="29" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="114" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="192" y="65" width="68" height="20" backcolor="#CCFFFF" uuid="0fbddda9-d100-4b9b-9275-ee74bbc57d2a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[        FSW]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="328" y="65" width="68" height="20" backcolor="#CCFFFF" uuid="a92fdf13-a421-434e-ade6-1a2be850b363"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[         TG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="139" y="65" width="53" height="49" backcolor="#CCFFFF" uuid="b9ad85b0-4ab4-4067-af97-0f850eee747d"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cumulative till this month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="75" y="65" width="64" height="49" backcolor="#CCFFFF" uuid="f39ad87e-cca8-42bd-a95c-161505442db1"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ During the month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="223" y="85" width="37" height="29" backcolor="#CCFFFF" uuid="27e5d834-654b-40e2-99a8-573229ec729f"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Non PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="511" y="65" width="44" height="49" backcolor="#CCFFFF" uuid="dfea56f2-85c8-46fa-9c79-758f46027350"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Family members/Others]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="65" width="75" height="49" backcolor="#CCFFFF" uuid="674ff69d-39c7-4cbb-bfb3-7fbaded052ab"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Scheme/ Service]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="192" y="85" width="31" height="29" backcolor="#CCFFFF" uuid="94854669-e75c-43a2-a60f-f3cc03e53f97"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="260" y="65" width="68" height="20" backcolor="#CCFFFF" uuid="f06b343e-a870-4a7d-88a6-f61c5713e830"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[         MSM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="45" width="75" height="20" backcolor="#CCFFFF" uuid="3683bf81-56ea-48d6-bc85-e04c15fb2ddf"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="25" width="555" height="20" backcolor="#CCFFFF" uuid="259c2b58-1651-415a-aef8-3d6e68dfdb83"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of Applications Filed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="5" width="555" height="20" backcolor="#CCFFFF" uuid="b226df7f-90d6-4a95-a3a4-13aaf35e130a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Application Filing Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="260" y="85" width="31" height="29" backcolor="#CCFFFF" uuid="b91d40af-25fd-4963-a269-e18935e3fd8a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="291" y="85" width="37" height="29" backcolor="#CCFFFF" uuid="efa6276e-80eb-4446-854e-b3935015e46e"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Non PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="328" y="85" width="31" height="29" backcolor="#CCFFFF" uuid="8fffb627-0e29-4d88-98ea-ab1b6c4b1110"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="359" y="85" width="37" height="29" backcolor="#CCFFFF" uuid="2003fa63-f51c-490b-b997-47a29d5cdb80"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Non PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="396" y="65" width="68" height="20" backcolor="#CCFFFF" uuid="7943016e-6fdb-4926-8155-15c6f2f81adc"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="427" y="85" width="37" height="29" backcolor="#CCFFFF" uuid="f4be44ab-7f60-4acf-81fd-0a2e5baa2f18"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Non PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="396" y="85" width="31" height="29" backcolor="#CCFFFF" uuid="b8696a23-157c-4bc3-a8b3-8c24dcd3551c"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="464" y="65" width="47" height="49" backcolor="#CCFFFF" uuid="1b618427-7a1a-40e7-ab63-985388172886"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLHIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="396" y="45" width="68" height="20" backcolor="#CCFFFF" uuid="a0da761f-2d3d-4118-b754-21a7c9c9a79e"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="75" y="45" width="321" height="20" uuid="eb850e43-b482-4df3-a9bd-96089c7bab49"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{organisationunit_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="464" y="45" width="91" height="20" uuid="03517dd2-0c19-4f34-9185-79fc3c8e30e3"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{period_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="0" width="75" height="20" backcolor="#CCFFFF" uuid="b870f23d-8bf3-40ea-a619-9ebc441a6c20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph lineSpacing="Proportional"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{scheme}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="192" y="0" width="31" height="20" uuid="82748fbb-840d-4e44-b0e1-b6526cbbf502"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fsw}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="223" y="0" width="37" height="20" uuid="fe1d69a5-df6c-48a8-a80d-ed7147b01a3a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{plhiv_fsw}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="260" y="0" width="31" height="20" uuid="d3ccef7d-085c-4ea3-be71-224ca5afb441"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{msm}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="291" y="0" width="37" height="20" uuid="ac7b5b72-6a0e-487d-b126-28f7310fc7e2"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{msm_plhiv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="328" y="0" width="31" height="20" uuid="0ac0113d-a3d2-44c1-9ccf-3f5ba56ac3e7"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tg}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="359" y="0" width="37" height="20" uuid="53a836ff-1eb3-4336-90fe-c5e21d93fcd5"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tg_plhiv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="511" y="0" width="44" height="20" uuid="dd6004f2-26bc-439c-bec7-f4ae1fcadbfb"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fam}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="139" y="0" width="53" height="20" uuid="6c868469-3561-40d4-9dbb-76c0d4a8d3e6"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{quarter_tot}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="0" width="64" height="20" uuid="716add7f-1116-40ae-bc16-8bf4a4f9a4c6"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{sum}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="396" y="0" width="31" height="20" uuid="635524d1-5731-4289-9a44-fd2171040742"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{idu}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="427" y="0" width="37" height="20" uuid="f0a50a23-e1d9-4f33-a58d-dc77d71ee617"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{idu_plhiv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="464" y="0" width="47" height="20" uuid="ded21ce4-ffb1-487c-9932-fad6ba94f11b"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{plhiv}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
