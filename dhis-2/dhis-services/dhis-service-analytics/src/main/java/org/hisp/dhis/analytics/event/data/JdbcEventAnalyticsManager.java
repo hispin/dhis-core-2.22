@@ -328,6 +328,8 @@ public class JdbcEventAnalyticsManager
 
     /**
      * Returns the count clause based on the output type.
+     * 
+     * TODO include output type if aggregation type is count
      */
     private String getAggregateClause( EventQueryParams params )
     {

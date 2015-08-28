@@ -33,5 +33,5 @@ package org.hisp.dhis.analytics;
  */
 public enum EventOutputType
 {
-    EVENT, ENROLLMENT, TRACKED_ENTITY_INSTANCE
+    EVENT, ENROLLMENT, TRACKED_ENTITY_INSTANCE;
 }

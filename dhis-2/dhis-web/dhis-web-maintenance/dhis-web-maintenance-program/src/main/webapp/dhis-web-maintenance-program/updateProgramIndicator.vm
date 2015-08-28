@@ -76,6 +76,16 @@ jQuery( document ).ready( function()
 	            <option value="CUSTOM"#if( $programIndicator.aggregationType == 'CUSTOM' ) selected="selected"#end>$i18n.getString( "custom" )</option>
             </select>
         </td>
+    </tr>    
+    <tr>
+    	<td><label for="eventOutputType">$i18n.getString( "event_output_type" )</label></td>
+    	<td>
+    		<select id="eventOutputType" name="eventOutputType">
+    			<option value="EVENT"#if( $programIndicator.eventOutputType == 'EVENT' ) selected="selected"#end>$i18n.getString( "event" )</option>
+    			<option value="ENROLLMENT"#if( $programIndicator.eventOutputType == 'ENROLLMENT' ) selected="selected"#end>$i18n.getString( "enrollment" )</option>
+    			<option value="TRACKED_ENTITY_INSTANCE"#if( $programIndicator.eventOutputType == 'TRACKED_ENTITY_INSTANCE' ) selected="selected"#end>$i18n.getString( "tracked_entity_instance" )</option>
+    		</select>
+    	</td>
     </tr>
 	<tr>
 		<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
