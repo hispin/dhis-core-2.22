@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -97,6 +98,8 @@ public class ProgramIndicator
     
     private AggregationType aggregationType;
 
+    private EventOutputType eventOutputType;
+        
     /**
      * Number of decimals to use for indicator value, null implies default.
      */
@@ -218,6 +221,19 @@ public class ProgramIndicator
     public void setAggregationType( AggregationType aggregationType )
     {
         this.aggregationType = aggregationType;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public EventOutputType getEventOutputType()
+    {
+        return eventOutputType;
+    }
+
+    public void setEventOutputType( EventOutputType eventOutputType )
+    {
+        this.eventOutputType = eventOutputType;
     }
 
     @JsonProperty

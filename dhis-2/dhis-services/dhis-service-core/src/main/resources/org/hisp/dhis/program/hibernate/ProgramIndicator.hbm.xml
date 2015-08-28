@@ -35,6 +35,13 @@
 		</type> 
 	</property>
     
+    <property name="eventOutputType" length="40">
+		<type name="org.hibernate.type.EnumType">
+			<param name="enumClass">org.hisp.dhis.analytics.EventOutputType</param>
+			<param name="type">12</param>
+		</type> 
+	</property>
+    
     <property name="decimals" />
 
     <property name="displayInForm" />

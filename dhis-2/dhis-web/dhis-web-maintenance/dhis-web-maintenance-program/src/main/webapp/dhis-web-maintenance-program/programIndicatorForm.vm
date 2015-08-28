@@ -115,7 +115,7 @@
 		</td>
 	</tr>
 	<tr>
-        <th style="padding-top:15px">$i18n.getString( "expression" ) <span class="tipText">Tip: use d2:daysBetween(x,y) d2:zing(x) d2:oizp(x)</span></th>
+        <th style="padding-top:15px">$i18n.getString( "expression" ) <span class="tipText">Tip: use d2:daysBetween(x,y) d2:condition(bool-expr,true-val,false-val) d2:zing(x) d2:oizp(x)</span></th>
     </tr>
 	<tr>
 		<td>
@@ -259,7 +259,7 @@
 		</td>
 	</tr>
 	<tr>
-        <th style="padding-top:15px">$i18n.getString( "filter" ) <span class="tipText">Tip: use d2:daysBetween(x,y) d2:zing(x) d2:oizp(x)</span></th>
+        <th style="padding-top:15px">$i18n.getString( "filter" ) <span class="tipText">Tip: use d2:daysBetween(x,y) d2:condition(bool-expr,true-val,false-val) d2:zing(x) d2:oizp(x)</span></th>
     </tr>	
 	<tr>
 		<td>
