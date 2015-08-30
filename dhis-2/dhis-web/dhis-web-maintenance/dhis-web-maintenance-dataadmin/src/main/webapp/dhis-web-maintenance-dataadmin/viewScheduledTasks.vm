@@ -65,51 +65,6 @@
 </select>
 </div>
 
-<div id="moreOptionsLink" style="margin-bottom:10px"><a href="javascript:toggleMoreOptions()">$i18n.getString( "show_more_options" )</a></div>
-
-<div style="display:none" id="moreOptionsDiv">
-
-<!-- Data mart -->
-
-<div class="settingHeader">$i18n.getString( "data_mart" )</div>
-
-<div class="settingLabel settingIndent">$i18n.getString( "data_mart_task_strategy" )</div>
-
-<div class="setting settingIndent">
-<select id="dataMartStrategy" name="dataMartStrategy" class="scheduling" onchange="toggleDataMart()">
-    <option value="disabled">$i18n.getString( "disabled" )</option>
-    <option value="allDaily"#if( $dataMartStrategy && $dataMartStrategy == "allDaily" ) selected="selected"#end>$i18n.getString( "last_year_daily" )</option>
-</select>
-</div>
-
-<div class="settingLabel settingIndent">$i18n.getString( "aggregation_period_types" )</div>
-
-<div class="setting settingIndent">
-    <input type="checkbox" id="weekly" class="scheduling dataMart" name="scheduledPeriodTypes" value="Weekly"#if( $scheduledPeriodTypes.contains( "Weekly" ) ) checked="checked"#end> <label for="weekly">$i18n.getString( "Weekly" )</label>&nbsp;
-    <input type="checkbox" id="monthly" class="scheduling dataMart" name="scheduledPeriodTypes" value="Monthly"#if( $scheduledPeriodTypes.contains( "Monthly" ) ) checked="checked"#end> <label for="monthly">$i18n.getString( "Monthly" )</label>&nbsp;
-    <input type="checkbox" id="biMonthly" class="scheduling dataMart" name="scheduledPeriodTypes" value="BiMonthly"#if( $scheduledPeriodTypes.contains( "BiMonthly" ) ) checked="checked"#end> <label for="biMonthly">$i18n.getString( "BiMonthly" )</label>&nbsp;
-    <input type="checkbox" id="quarterly" class="scheduling dataMart" name="scheduledPeriodTypes" value="Quarterly"#if( $scheduledPeriodTypes.contains( "Quarterly" ) ) checked="checked"#end> <label for="quarterly">$i18n.getString( "Quarterly" )</label><br>
-    <input type="checkbox" id="sixMonthly" class="scheduling dataMart" name="scheduledPeriodTypes" value="SixMonthly"#if( $scheduledPeriodTypes.contains( "SixMonthly" ) ) checked="checked"#end> <label for="sixMonthly">$i18n.getString( "SixMonthly" )</label>&nbsp;
-    <input type="checkbox" id="sixMonthlyApril" class="scheduling dataMart" name="scheduledPeriodTypes" value="SixMonthlyApril"#if( $scheduledPeriodTypes.contains( "SixMonthlyApril" ) ) checked="checked"#end> <label for="sixMonthlyApril">$i18n.getString( "SixMonthlyApril" )</label>&nbsp;
-    <input type="checkbox" id="yearly" class="scheduling dataMart" name="scheduledPeriodTypes" value="Yearly"#if( $scheduledPeriodTypes.contains( "Yearly" ) ) checked="checked"#end> <label for="yearly">$i18n.getString( "Yearly" )</label>&nbsp;
-    <input type="checkbox" id="financialYearly" class="scheduling dataMart" name="scheduledPeriodTypes" value="FinancialJuly"#if( $scheduledPeriodTypes.contains( "FinancialJuly" ) ) checked="checked"#end> <label for="financialYearly">$i18n.getString( "financial_yearly" )</label>			
-</div>
-
-<div class="settingLabel settingIndent">$i18n.getString( "organisation_unit_group_set_aggregation_level" )</div>
-
-<div class="setting settingIndent">
-<select id="orgUnitGroupSetAggLevel" name="orgUnitGroupSetAggLevel" class="scheduling dataMart">
-    <option value="0"#if( $orgUnitGroupSetAggLevel && $orgUnitGroupSetAggLevel == 0 ) selected="selected"#end>[$i18n.getString( "no_aggregation" )]</option>
-	#foreach( $level in $levels )
-	<option value="$level.level"#if( $orgUnitGroupSetAggLevel && $orgUnitGroupSetAggLevel == $level.level ) selected="selected"#end>$encoder.htmlEncode( $level.displayName )</option>
-	#end
-</select>
-</div>
-
-<div style="margin-bottom:10px"><a href="javascript:toggleMoreOptions()">$i18n.getString( "show_fewer_options" )</a></div>
-
-</div>
-
 <!-- Submit -->
 
 <div class="setting">

@@ -28,23 +28,12 @@ package org.hisp.dhis.reporting.datamart.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.hisp.dhis.analytics.table.scheduling.AnalyticsTableTask;
-import org.hisp.dhis.period.CalendarPeriodType;
-import org.hisp.dhis.period.Period;
-import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.scheduling.DataMartTask;
 import org.hisp.dhis.scheduling.ScheduledTasks;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.scheduling.Scheduler;
-import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -80,55 +69,9 @@ public class StartExportAction
     {
         this.analyticsTableTask = analyticsTableTask;
     }
-
-    private DataMartTask dataMartTask;
-
-    public void setDataMartTask( DataMartTask dataMartTask )
-    {
-        this.dataMartTask = dataMartTask;
-    }
     
     @Autowired
     private Notifier notifier;
-
-    // -------------------------------------------------------------------------
-    // Input
-    // -------------------------------------------------------------------------
-
-    private Set<String> periodTypes = new HashSet<>();
-    
-    public void setPeriodTypes( Set<String> periodTypes )
-    {
-        this.periodTypes = periodTypes;
-    }
-
-    private String startDate;
-    
-    public void setStartDate( String startDate )
-    {
-        this.startDate = startDate;
-    }
-
-    private String endDate;
-
-    public void setEndDate( String endDate )
-    {
-        this.endDate = endDate;
-    }
-    
-    private boolean analytics;
-
-    public void setAnalytics( boolean analytics )
-    {
-        this.analytics = analytics;
-    }
-
-    private boolean dataMart;
-
-    public void setDataMart( boolean dataMart )
-    {
-        this.dataMart = dataMart;
-    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -138,54 +81,17 @@ public class StartExportAction
     public String execute()
         throws Exception
     {
-        TaskId taskId = new TaskId( TaskCategory.DATAMART, currentUserService.getCurrentUser() );
+        TaskId taskId = new TaskId( TaskCategory.ANALYTICS_TABLES, currentUserService.getCurrentUser() );
         
         notifier.clear( taskId );
         
         ScheduledTasks tasks = new ScheduledTasks();
-
-        // ---------------------------------------------------------------------
-        // Analytics
-        // ---------------------------------------------------------------------
-
-        if ( analytics )
-        {        
-            analyticsTableTask.setTaskId( taskId );
-            
-            tasks.addTask( analyticsTableTask );
-        }        
-
-        // ---------------------------------------------------------------------
-        // Data mart
-        // ---------------------------------------------------------------------
-
-        if ( dataMart )
-        {
-            Date start = DateUtils.getMediumDate( startDate );
-            Date end = DateUtils.getMediumDate( endDate );
-            
-            List<Period> periods = new ArrayList<>();
-            
-            for ( String type : periodTypes )
-            {
-                CalendarPeriodType periodType = (CalendarPeriodType) PeriodType.getPeriodTypeByName( type );
-                
-                periods.addAll( periodType.generatePeriods( start, end ) );
-            }
-    
-            if ( periods.size() > 0 )
-            {
-                dataMartTask.setPeriods( periods );
-                dataMartTask.setTaskId( taskId );
-            
-                tasks.addTask( dataMartTask );
-            }
-        }
+     
+        analyticsTableTask.setTaskId( taskId );
         
-        if ( !tasks.isEmpty() )
-        {
-            scheduler.executeTask( tasks );
-        }
+        tasks.addTask( analyticsTableTask );
+        
+        scheduler.executeTask( tasks );
         
         return SUCCESS;
     }

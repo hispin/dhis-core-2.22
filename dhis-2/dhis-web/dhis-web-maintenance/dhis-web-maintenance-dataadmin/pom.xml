@@ -57,10 +57,6 @@
       <groupId>org.hisp.dhis</groupId>
       <artifactId>dhis-service-administration</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.hisp.dhis</groupId>
-      <artifactId>dhis-service-datamart-default</artifactId>
-    </dependency>
 	
   </dependencies>
   <properties>

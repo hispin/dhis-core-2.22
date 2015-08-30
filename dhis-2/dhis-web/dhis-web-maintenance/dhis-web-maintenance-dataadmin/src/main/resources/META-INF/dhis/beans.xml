@@ -10,8 +10,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     scope="prototype">
     <property name="maintenanceService" ref="org.hisp.dhis.maintenance.MaintenanceService" />
     <property name="completenessService" ref="compulsoryDataCompletenessService" />
-    <property name="aggregatedDataValueService" ref="org.hisp.dhis.aggregation.AggregatedDataValueService" />
-    <property name="dataMartManager" ref="org.hisp.dhis.datamart.DataMartManager" />
     <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
     <property name="resourceTableService" ref="org.hisp.dhis.resourcetable.ResourceTableService" />

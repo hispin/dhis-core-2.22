@@ -295,11 +295,6 @@
       </dependency>
       <dependency>
         <groupId>org.hisp.dhis</groupId>
-        <artifactId>dhis-service-datamart-default</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hisp.dhis</groupId>
         <artifactId>dhis-service-importexport</artifactId>
         <version>${project.version}</version>
       </dependency>

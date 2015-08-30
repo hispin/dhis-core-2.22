@@ -288,16 +288,6 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="org.hisp.dhis.aggregation.AggregatedDataValueStore" class="org.hisp.dhis.aggregation.jdbc.JdbcAggregatedDataValueStore">
-    <property name="statementManager" ref="statementManager" />
-    <property name="statementBuilder" ref="statementBuilder" />
-    <property name="jdbcTemplate" ref="jdbcTemplate" />
-  </bean>
-
-  <bean id="org.hisp.dhis.aggregation.AggregatedOrgUnitDataValueStore" class="org.hisp.dhis.aggregation.jdbc.JdbcAggregatedOrgUnitDataValueStore">
-    <property name="jdbcTemplate" ref="jdbcTemplate" />
-  </bean>
-
   <bean id="org.hisp.dhis.message.MessageConversationStore" class="org.hisp.dhis.message.hibernate.HibernateMessageConversationStore">
     <property name="clazz" value="org.hisp.dhis.message.MessageConversation" />
     <property name="sessionFactory" ref="sessionFactory" />
@@ -771,15 +761,6 @@
 
   <bean id="org.hisp.dhis.translation.TranslationService" class="org.hisp.dhis.translation.DefaultTranslationService">
     <property name="translationStore" ref="org.hisp.dhis.translation.TranslationStore" />
-  </bean>
-
-  <bean id="org.hisp.dhis.aggregation.AggregatedDataValueService" class="org.hisp.dhis.aggregation.DefaultAggregatedDataValueService">
-    <property name="aggregatedDataValueStore" ref="org.hisp.dhis.aggregation.AggregatedDataValueStore" />
-  </bean>
-
-  <bean id="org.hisp.dhis.aggregation.AggregatedOrgUnitDataValueService"
-    class="org.hisp.dhis.aggregation.DefaultAggregatedOrgUnitDataValueService">
-    <property name="aggregatedDataValueStore" ref="org.hisp.dhis.aggregation.AggregatedOrgUnitDataValueStore" />
   </bean>
 
   <bean id="org.hisp.dhis.message.MessageService" class="org.hisp.dhis.message.DefaultMessageService">

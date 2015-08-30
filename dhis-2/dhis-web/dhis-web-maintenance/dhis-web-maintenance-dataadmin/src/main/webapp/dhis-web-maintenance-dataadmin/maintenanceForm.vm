@@ -12,16 +12,6 @@
 </p>
 
 <p>
-	<input type="checkbox" id="clearDataMart"/>
-	<label for="clearDataMart">$i18n.getString( "clear_data_mart" )</label>
-</p>
-
-<p>
-	<input type="checkbox" id="dataMartIndex"/>
-	<label for="dataMartIndex">$i18n.getString( "rebuild_data_mart_index" )</label>
-</p>
-
-<p>
 	<input type="checkbox" id="zeroValues"/>
 	<label for="zeroValues">$i18n.getString( "clear_zero_values" )</label>
 </p>

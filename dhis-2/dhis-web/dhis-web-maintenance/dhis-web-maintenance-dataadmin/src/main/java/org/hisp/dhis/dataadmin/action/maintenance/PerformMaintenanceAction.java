@@ -28,21 +28,20 @@ package org.hisp.dhis.dataadmin.action.maintenance;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import javax.annotation.Resource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.aggregation.AggregatedDataValueService;
 import org.hisp.dhis.analytics.AnalyticsTableService;
 import org.hisp.dhis.completeness.DataSetCompletenessService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
-import org.hisp.dhis.datamart.DataMartManager;
 import org.hisp.dhis.maintenance.MaintenanceService;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.resourcetable.ResourceTableService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Lars Helge Overland
@@ -85,20 +84,6 @@ public class PerformMaintenanceAction
         this.completenessService = completenessService;
     }
 
-    private AggregatedDataValueService aggregatedDataValueService;
-
-    public void setAggregatedDataValueService( AggregatedDataValueService aggregatedDataValueService )
-    {
-        this.aggregatedDataValueService = aggregatedDataValueService;
-    }
-
-    private DataMartManager dataMartManager;
-
-    public void setDataMartManager( DataMartManager dataMartManager )
-    {
-        this.dataMartManager = dataMartManager;
-    }
-
     private CurrentUserService currentUserService;
 
     public void setCurrentUserService( CurrentUserService currentUserService )
@@ -132,20 +117,6 @@ public class PerformMaintenanceAction
     public void setClearAnalytics( boolean clearAnalytics )
     {
         this.clearAnalytics = clearAnalytics;
-    }
-
-    private boolean clearDataMart;
-
-    public void setClearDataMart( boolean clearDataMart )
-    {
-        this.clearDataMart = clearDataMart;
-    }
-
-    public boolean dataMartIndex;
-
-    public void setDataMartIndex( boolean dataMartIndex )
-    {
-        this.dataMartIndex = dataMartIndex;
     }
 
     private boolean zeroValues;
@@ -224,32 +195,6 @@ public class PerformMaintenanceAction
             eventAnalyticsTableService.dropTables();
 
             log.info( "'" + username + "': Cleared analytics tables" );
-        }
-
-        if ( clearDataMart )
-        {
-            aggregatedDataValueService.dropDataMart();
-            aggregatedDataValueService.createDataMart();
-
-            log.info( "'" + username + "': Cleared data mart" );
-        }
-
-        if ( dataMartIndex )
-        {
-            dataMartManager.dropDataValueIndex();
-            dataMartManager.dropIndicatorValueIndex();
-            dataMartManager.dropOrgUnitDataValueIndex();
-            dataMartManager.dropOrgUnitIndicatorValueIndex();
-
-            dataMartManager.createDataValueIndex();
-            dataMartManager.createIndicatorValueIndex();
-            dataMartManager.createOrgUnitDataValueIndex();
-            dataMartManager.createOrgUnitIndicatorValueIndex();
-
-            completenessService.dropIndex();
-            completenessService.createIndex();
-
-            log.info( "'" + username + "': Rebuilt data mart indexes" );
         }
 
         if ( zeroValues )

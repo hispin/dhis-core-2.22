@@ -30,7 +30,6 @@ package org.hisp.dhis.startup;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.aggregation.AggregatedDataValueService;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,18 +49,13 @@ public class TableCreator
     @Autowired
     private JdbcTemplate jdbcTemplate;
     
-    @Autowired
-    private AggregatedDataValueService aggregatedDataValueService;    
-    
     // -------------------------------------------------------------------------
     // StartupRoutine implementation
     // -------------------------------------------------------------------------
 
     @Override
     public void execute()
-    {
-        aggregatedDataValueService.createDataMart();
-        
+    {        
         createSilently( "create unique index dataapproval_unique on dataapproval(datasetid,periodid,organisationunitid,attributeoptioncomboid,dataapprovallevelid)", "dataapproval_unique" );
         createSilently( "create index in_datavalueaudit on datavalueaudit(dataelementid,periodid,organisationunitid,categoryoptioncomboid,attributeoptioncomboid)", "in_datavalueaudit" );
     }

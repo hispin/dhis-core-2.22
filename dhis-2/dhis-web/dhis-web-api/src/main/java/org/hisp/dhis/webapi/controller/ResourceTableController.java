@@ -28,9 +28,12 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.analytics.table.scheduling.AnalyticsTableTask;
 import org.hisp.dhis.resourcetable.scheduling.ResourceTableTask;
-import org.hisp.dhis.scheduling.DataMartTask;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.scheduling.Scheduler;
@@ -45,10 +48,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author Lars Helge Overland
  */
@@ -60,9 +59,6 @@ public class ResourceTableController
 
     @Resource( name = "analyticsAllTask" )
     private AnalyticsTableTask analyticsTableTask;
-
-    @Autowired
-    private DataMartTask dataMartTask;
 
     @Autowired
     private ResourceTableTask resourceTableTask;
@@ -94,22 +90,11 @@ public class ResourceTableController
         analyticsTableTask.setSkipAggregate( skipAggregate );
         analyticsTableTask.setSkipEvents( skipEvents );
         analyticsTableTask.setLastYears( lastYears );
-        analyticsTableTask.setTaskId( new TaskId( TaskCategory.DATAMART, currentUserService.getCurrentUser() ) );
+        analyticsTableTask.setTaskId( new TaskId( TaskCategory.ANALYTICS_TABLES, currentUserService.getCurrentUser() ) );
 
         scheduler.executeTask( analyticsTableTask );
 
         webMessageService.send( WebMessageUtils.ok( "Initiated analytics table update" ), response, request );
-    }
-
-    @RequestMapping( value = "/dataMart", method = { RequestMethod.PUT, RequestMethod.POST } )
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_DATA_MART_ADMIN')" )
-    public void dataMart( HttpServletResponse response, HttpServletRequest request )
-    {
-        dataMartTask.setTaskId( new TaskId( TaskCategory.DATAMART, currentUserService.getCurrentUser() ) );
-
-        scheduler.executeTask( dataMartTask );
-
-        webMessageService.send( WebMessageUtils.ok( "Initiated data mart update" ), response, request );
     }
 
     @RequestMapping( method = { RequestMethod.PUT, RequestMethod.POST } )
