@@ -787,11 +787,11 @@ public class DefaultProgramIndicatorService
     {
         if ( ProgramIndicator.VAR_EXECUTION_DATE.equals( var ) )
         {
-            return "cast(executiondate as date)";
+            return "executiondate";
         }
         else if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( var ) )
         {
-            return "cast(enrollmentdate as date)";
+            return "enrollmentdate";
         }
         else if ( ProgramIndicator.VAR_CURRENT_DATE.equals( var ) )
         {
