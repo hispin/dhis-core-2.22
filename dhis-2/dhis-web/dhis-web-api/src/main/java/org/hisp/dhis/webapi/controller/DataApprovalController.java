@@ -28,8 +28,20 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataapproval.DataApproval;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
@@ -67,19 +79,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static com.google.common.collect.Lists.newArrayList;
-
 /**
  * This controller uses both /dataApprovals and /dataAcceptances.
  *
@@ -89,8 +88,6 @@ import static com.google.common.collect.Lists.newArrayList;
 @RequestMapping
 public class DataApprovalController
 {
-    private final static Log log = LogFactory.getLog( DataApprovalController.class );
-
     public static final String APPROVALS_PATH = "/dataApprovals";
     private static final String STATUS_PATH = APPROVALS_PATH + "/status";
     private static final String MULTIPLE_SAVE_RESOURCE_PATH = APPROVALS_PATH + "/multiple";
@@ -136,8 +133,6 @@ public class DataApprovalController
         @RequestParam String ou, HttpServletResponse response )
         throws IOException, WebMessageException
     {
-        log.info( "GET " + APPROVALS_PATH + "?ds=" + ds + "&pe=" + pe + "&ou=" + ou );
-
         DataSet dataSet = dataSetService.getDataSet( ds );
 
         if ( dataSet == null )
@@ -306,8 +301,6 @@ public class DataApprovalController
         @RequestParam String pe,
         @RequestParam String ou, HttpServletResponse response ) throws WebMessageException
     {
-        log.info( "POST " + APPROVALS_PATH + "?ds=" + ds + "&pe=" + pe + "&ou=" + ou );
-
         DataSet dataSet = dataSetService.getDataSet( ds );
 
         if ( dataSet == null )
@@ -430,8 +423,6 @@ public class DataApprovalController
         @RequestParam String pe,
         @RequestParam String ou, HttpServletResponse response ) throws WebMessageException
     {
-        log.info( "POST " + APPROVALS_PATH + ACCEPTANCES_PATH + "?ds=" + ds + "&pe=" + pe + "&ou=" + ou );
-
         DataSet dataSet = dataSetService.getDataSet( ds );
 
         if ( dataSet == null )
@@ -553,8 +544,6 @@ public class DataApprovalController
         @RequestParam String pe,
         @RequestParam String ou, HttpServletResponse response ) throws WebMessageException
     {
-        log.info( "DELETE " + APPROVALS_PATH + "?ds=" + ds + "&pe=" + pe + "&ou=" + ou );
-
         Set<DataSet> dataSets = new HashSet<>( objectManager.getByUid( DataSet.class, ds ) );
 
         if ( dataSets.size() != ds.size() )
@@ -603,8 +592,6 @@ public class DataApprovalController
         @RequestParam String pe,
         @RequestParam String ou, HttpServletResponse response ) throws WebMessageException
     {
-        log.info( "DELETE " + APPROVALS_PATH + ACCEPTANCES_PATH + "?ds=" + ds + "&pe=" + pe + "&ou=" + ou );
-
         DataSet dataSet = dataSetService.getDataSet( ds );
 
         if ( dataSet == null )

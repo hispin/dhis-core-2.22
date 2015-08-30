@@ -35,14 +35,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.completeness.DataSetCompletenessResult;
 import org.hisp.dhis.completeness.DataSetCompletenessService;
@@ -163,15 +161,8 @@ public abstract class AbstractDataSetCompletenessService
                     {
                         final String periodKey = dataSet.getPeriodType().getName() + period.getStartDate().toString() + period.getEndDate().toString();
                         
-                        final List<Integer> periodsBetweenDates = periodCache.get( periodKey, new Callable<List<Integer>>()
-                        {
-                            public List<Integer> call()
-                                throws Exception
-                            {
-                                List<Period> periods = periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() );
-                                return IdentifiableObjectUtils.getIdentifiers( periods );
-                            }
-                        } );
+                        final List<Integer> periodsBetweenDates = periodCache.get( periodKey, 
+                            () -> getIdentifiers( periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) ) );
                         
                         final DataSetCompletenessResult result = getDataSetCompleteness( period, periodsBetweenDates, unit, relevantSources, dataSet );
 

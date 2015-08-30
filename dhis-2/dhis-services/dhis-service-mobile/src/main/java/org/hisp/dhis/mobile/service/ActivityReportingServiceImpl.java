@@ -1252,14 +1252,8 @@ public class ActivityReportingServiceImpl
     // side, we only need name and id
     private org.hisp.dhis.api.mobile.model.LWUITmodel.Program getMobileProgramWithoutData( Program program )
     {
-        Comparator<ProgramStageDataElement> OrderBySortOrder = new Comparator<ProgramStageDataElement>()
-        {
-            @Override
-            public int compare( ProgramStageDataElement i1, ProgramStageDataElement i2 )
-            {
-                return i1.getSortOrder().compareTo( i2.getSortOrder() );
-            }
-        };
+        Comparator<ProgramStageDataElement> orderBySortOrder = 
+            ( ProgramStageDataElement i1, ProgramStageDataElement i2 ) -> i1.getSortOrder().compareTo( i2.getSortOrder() );
 
         org.hisp.dhis.api.mobile.model.LWUITmodel.Program anonymousProgramMobile = new org.hisp.dhis.api.mobile.model.LWUITmodel.Program();
 
@@ -1271,14 +1265,11 @@ public class ActivityReportingServiceImpl
         {
             anonymousProgramMobile.setVersion( program.getVersion() );
 
-            // anonymousProgramMobile.setStatus( ProgramInstance.STATUS_ACTIVE
-            // );
-
             ProgramStage programStage = program.getProgramStages().iterator().next();
 
             List<ProgramStageDataElement> programStageDataElements = new ArrayList<>(
                 programStage.getProgramStageDataElements() );
-            Collections.sort( programStageDataElements, OrderBySortOrder );
+            Collections.sort( programStageDataElements, orderBySortOrder );
 
             List<org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStage> mobileProgramStages = new ArrayList<>();
 

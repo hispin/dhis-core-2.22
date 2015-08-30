@@ -28,18 +28,19 @@ package org.hisp.dhis.oum.action.organisationunitgroupset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
-import org.hisp.dhis.commons.collection.ListUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Lars Helge Overland
@@ -139,14 +140,7 @@ public class ValidateGroupSetAction
                 units.addAll( organisationUnitGroupService.getOrganisationUnitGroup( groupId ).getMembers() );
             }
 
-            Collection<OrganisationUnit> duplicates = ListUtils.getDuplicates( units, new Comparator<OrganisationUnit>()
-            {
-                @Override
-                public int compare( OrganisationUnit o1, OrganisationUnit o2 )
-                {
-                    return o1.getName().compareTo( o2.getName() );
-                }
-            } );
+            Collection<OrganisationUnit> duplicates = ListUtils.getDuplicates( units, IdentifiableObjectNameComparator.INSTANCE );
 
             if ( duplicates.size() > 0 )
             {

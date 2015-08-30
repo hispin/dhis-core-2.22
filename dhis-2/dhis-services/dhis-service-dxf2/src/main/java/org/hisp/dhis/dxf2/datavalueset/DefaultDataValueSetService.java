@@ -46,7 +46,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
@@ -57,6 +56,9 @@ import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IllegalQueryException;
+import org.hisp.dhis.commons.collection.CachingMap;
+import org.hisp.dhis.commons.util.Clock;
+import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -93,9 +95,6 @@ import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.commons.collection.CachingMap;
-import org.hisp.dhis.commons.util.Clock;
-import org.hisp.dhis.commons.util.DebugUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.csvreader.CsvReader;
@@ -739,14 +738,8 @@ public class DefaultDataValueSetService
                 attrOptionCombo = fallbackCategoryOptionCombo;
             }
             
-            boolean inUserHierarchy = orgUnitInHierarchyMap.get( orgUnit.getUid(), new Callable<Boolean>()
-            {
-                @Override
-                public Boolean call() throws Exception
-                {
-                    return organisationUnitService.isInUserHierarchy( orgUnit.getUid(), currentOrgUnits );
-                }
-            } );
+            boolean inUserHierarchy = orgUnitInHierarchyMap.get( orgUnit.getUid(), 
+                () -> organisationUnitService.isInUserHierarchy( orgUnit.getUid(), currentOrgUnits ) );
             
             if ( !inUserHierarchy )
             {
