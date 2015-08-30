@@ -33,7 +33,7 @@ package org.hisp.dhis.scheduling;
  */
 public enum TaskCategory
 {
-    DATAMART,
+    ANALYTICS_TABLES,
     RESOURCETABLE_UPDATE,
     ANALYTICSTABLE_UPDATE,
     MONITORING,

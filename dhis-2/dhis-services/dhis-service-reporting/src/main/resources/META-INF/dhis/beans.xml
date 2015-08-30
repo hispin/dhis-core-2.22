@@ -91,7 +91,6 @@
 
   <bean id="compulsoryDataCompletenessService" class="org.hisp.dhis.completeness.impl.CompulsoryDataSetCompletenessService">
     <property name="batchHandlerFactory" ref="batchHandlerFactory" />
-    <property name="aggregationCache" ref="org.hisp.dhis.datamart.aggregation.cache.AggregationCache" />
     <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
     <property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
     <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
@@ -189,7 +188,6 @@
       <map>
         <entry key="resourceTableTask" value-ref="resourceTableTask" />
         <entry key="resourceTable15MinTask" value-ref="resourceTable15MinTask" />
-        <entry key="dataMartLastYearTask" value-ref="dataMartLastYearTask" />
         <entry key="analyticsAllTask" value-ref="analyticsAllTask" />
         <entry key="analyticsLast3YearsTask" value-ref="analyticsLast3YearsTask" />
         <entry key="monitoringLastDayTask" value-ref="monitoringLastDayTask" />
@@ -199,8 +197,6 @@
   </bean>
 
   <!-- Scheduled tasks -->
-
-  <bean id="dataMartLastYearTask" class="org.hisp.dhis.scheduling.DataMartTask" scope="prototype" />
 
   <bean id="org.hisp.dhis.common.ReportingIdentityPopulator" class="org.hisp.dhis.common.IdentityPopulator">
     <property name="name" value="ReportingIdentityPopulator" />

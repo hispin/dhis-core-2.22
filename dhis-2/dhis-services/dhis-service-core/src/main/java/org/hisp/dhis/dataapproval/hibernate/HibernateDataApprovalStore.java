@@ -89,6 +89,8 @@ public class HibernateDataApprovalStore
 {
     private static final Log log = LogFactory.getLog( HibernateDataApprovalStore.class );
 
+    private static final int MAX_APPROVAL_LEVEL = 99999999;
+    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -338,7 +340,7 @@ public class HibernateDataApprovalStore
 
         int orgUnitLevelAbove = 0;
 
-        int highestApprovalOrgUnitLevel = 99999999;
+        int highestApprovalOrgUnitLevel = MAX_APPROVAL_LEVEL;
 
         for ( DataApprovalLevel dal : approvalLevels )
         {

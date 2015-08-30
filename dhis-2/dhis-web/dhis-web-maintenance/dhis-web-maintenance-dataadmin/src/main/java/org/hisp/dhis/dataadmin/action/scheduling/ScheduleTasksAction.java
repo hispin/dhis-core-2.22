@@ -30,17 +30,12 @@ package org.hisp.dhis.dataadmin.action.scheduling;
 
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_ANALYTICS_ALL;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_ANALYTICS_LAST_3_YEARS;
-import static org.hisp.dhis.scheduling.SchedulingManager.TASK_DATAMART_LAST_YEAR;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_DATA_SYNCH;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_MONITORING_LAST_DAY;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE_15_MINS;
-import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_ORGUNITGROUPSET_AGG_LEVEL;
-import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_SCHEDULED_PERIOD_TYPES;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ORGUNITGROUPSET_AGG_LEVEL;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_SCHEDULED_PERIOD_TYPES;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_DAILY_0AM;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_15MIN;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_MIN;
@@ -48,9 +43,7 @@ import static org.hisp.dhis.system.scheduling.Scheduler.STATUS_RUNNING;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -129,42 +122,6 @@ public class ScheduleTasksAction
         this.analyticsStrategy = analyticsStrategy;
     }
 
-    private Set<String> scheduledPeriodTypes = new HashSet<>();
-
-    public Set<String> getScheduledPeriodTypes()
-    {
-        return scheduledPeriodTypes;
-    }
-
-    public void setScheduledPeriodTypes( Set<String> scheduledPeriodTypes )
-    {
-        this.scheduledPeriodTypes = scheduledPeriodTypes;
-    }
-
-    private Integer orgUnitGroupSetAggLevel;
-
-    public Integer getOrgUnitGroupSetAggLevel()
-    {
-        return orgUnitGroupSetAggLevel;
-    }
-
-    public void setOrgUnitGroupSetAggLevel( Integer orgUnitGroupSetAggLevel )
-    {
-        this.orgUnitGroupSetAggLevel = orgUnitGroupSetAggLevel;
-    }
-
-    private String dataMartStrategy;
-
-    public String getDataMartStrategy()
-    {
-        return dataMartStrategy;
-    }
-
-    public void setDataMartStrategy( String dataMartStrategy )
-    {
-        this.dataMartStrategy = dataMartStrategy;
-    }
-
     private String monitoringStrategy;
 
     public String getMonitoringStrategy()
@@ -240,14 +197,10 @@ public class ScheduleTasksAction
     // -------------------------------------------------------------------------
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public String execute()
     {
         if ( schedule )
         {
-            systemSettingManager.saveSystemSetting( KEY_SCHEDULED_PERIOD_TYPES, (HashSet<String>) scheduledPeriodTypes );
-            systemSettingManager.saveSystemSetting( KEY_ORGUNITGROUPSET_AGG_LEVEL, orgUnitGroupSetAggLevel );
-
             if ( Scheduler.STATUS_RUNNING.equals( schedulingManager.getTaskStatus() ) )
             {
                 schedulingManager.stopTasks();
@@ -280,15 +233,6 @@ public class ScheduleTasksAction
                 else if ( STRATEGY_LAST_3_YEARS_DAILY.equals( analyticsStrategy ) )
                 {
                     cronKeyMap.putValue( CRON_DAILY_0AM, TASK_ANALYTICS_LAST_3_YEARS );
-                }
-
-                // -------------------------------------------------------------
-                // Data mart
-                // -------------------------------------------------------------
-
-                if ( STRATEGY_ALL_DAILY.equals( dataMartStrategy ) )
-                {
-                    cronKeyMap.putValue( CRON_DAILY_0AM, TASK_DATAMART_LAST_YEAR );
                 }
 
                 // -------------------------------------------------------------
@@ -342,15 +286,6 @@ public class ScheduleTasksAction
                 analyticsStrategy = STRATEGY_LAST_3_YEARS_DAILY;
             }
 
-            // -----------------------------------------------------------------
-            // Data mart
-            // -----------------------------------------------------------------
-
-            if ( keys.contains( TASK_DATAMART_LAST_YEAR ) )
-            {
-                dataMartStrategy = STRATEGY_ALL_DAILY;
-            }
-
             // -------------------------------------------------------------
             // Monitoring
             // -------------------------------------------------------------
@@ -369,9 +304,6 @@ public class ScheduleTasksAction
                 dataSynchStrategy = STRATEGY_ENABLED;
             }
         }
-
-        scheduledPeriodTypes = (Set<String>) systemSettingManager.getSystemSetting( KEY_SCHEDULED_PERIOD_TYPES, DEFAULT_SCHEDULED_PERIOD_TYPES );
-        orgUnitGroupSetAggLevel = (Integer) systemSettingManager.getSystemSetting( KEY_ORGUNITGROUPSET_AGG_LEVEL, DEFAULT_ORGUNITGROUPSET_AGG_LEVEL );
 
         status = schedulingManager.getTaskStatus();
         running = STATUS_RUNNING.equals( status );

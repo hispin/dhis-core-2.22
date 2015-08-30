@@ -35,16 +35,18 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.completeness.DataSetCompletenessResult;
 import org.hisp.dhis.completeness.DataSetCompletenessService;
 import org.hisp.dhis.completeness.DataSetCompletenessStore;
-import org.hisp.dhis.datamart.aggregation.cache.AggregationCache;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.jdbc.batchhandler.DataSetCompletenessResultBatchHandler;
@@ -77,13 +79,6 @@ public abstract class AbstractDataSetCompletenessService
     public void setBatchHandlerFactory( BatchHandlerFactory batchHandlerFactory )
     {
         this.batchHandlerFactory = batchHandlerFactory;
-    }
-
-    private AggregationCache aggregationCache;
-
-    public void setAggregationCache( AggregationCache aggregationCache )
-    {
-        this.aggregationCache = aggregationCache;
     }
 
     private OrganisationUnitService organisationUnitService;
@@ -149,7 +144,9 @@ public abstract class AbstractDataSetCompletenessService
 
         OrganisationUnitHierarchy hierarchy = organisationUnitService.getOrganisationUnitHierarchy();
         hierarchy.prepareChildren( units );
-
+        
+        final CachingMap<String, List<Integer>> periodCache = new CachingMap<>();
+        
         for ( final DataSet dataSet : dataSets )
         {
             int dataSetFrequencyOrder = dataSet.getPeriodType().getFrequencyOrder();
@@ -164,9 +161,18 @@ public abstract class AbstractDataSetCompletenessService
                 {
                     if ( period.getPeriodType() != null && period.getPeriodType().getFrequencyOrder() >= dataSetFrequencyOrder )
                     {
-                        final Collection<Integer> periodsBetweenDates =
-                            aggregationCache.getPeriodsBetweenDatesPeriodType( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() );
-
+                        final String periodKey = dataSet.getPeriodType().getName() + period.getStartDate().toString() + period.getEndDate().toString();
+                        
+                        final List<Integer> periodsBetweenDates = periodCache.get( periodKey, new Callable<List<Integer>>()
+                        {
+                            public List<Integer> call()
+                                throws Exception
+                            {
+                                List<Period> periods = periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() );
+                                return IdentifiableObjectUtils.getIdentifiers( periods );
+                            }
+                        } );
+                        
                         final DataSetCompletenessResult result = getDataSetCompleteness( period, periodsBetweenDates, unit, relevantSources, dataSet );
 
                         if ( result.getSources() > 0 )
@@ -179,8 +185,6 @@ public abstract class AbstractDataSetCompletenessService
         }
 
         batchHandler.flush();
-
-        aggregationCache.clearCache();
 
         log.info( "Completeness export task done" );
 
