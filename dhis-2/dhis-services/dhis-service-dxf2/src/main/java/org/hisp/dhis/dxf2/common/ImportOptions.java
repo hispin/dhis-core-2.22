@@ -28,9 +28,13 @@ package org.hisp.dhis.dxf2.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.IdentifiableProperty.UID;
+
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.importexport.ImportStrategy;
+
+import com.google.common.base.MoreObjects;
 
 /**
  * The idScheme is a general setting which will apply to all objects. The idSchemes
@@ -41,8 +45,8 @@ import org.hisp.dhis.importexport.ImportStrategy;
  */
 public class ImportOptions
 {
-    private static final ImportOptions DEFAULT_OPTIONS = new ImportOptions(
-        IdentifiableProperty.UID, IdentifiableProperty.UID, false, true, ImportStrategy.NEW_AND_UPDATES, false );
+    private static final ImportOptions DEFAULT_OPTIONS = new ImportOptions().
+        setDataElementIdScheme( UID ).setOrgUnitIdScheme( UID ).setPreheatCache( true ).setImportStrategy( ImportStrategy.NEW_AND_UPDATES );
 
     private IdentifiableProperty idScheme;
 
@@ -56,13 +60,15 @@ public class ImportOptions
 
     private boolean async;
 
-    private ImportStrategy importStrategy;
+    private ImportStrategy importStrategy = ImportStrategy.CREATE_AND_UPDATE;
 
     private MergeStrategy mergeStrategy = MergeStrategy.MERGE_IF_NOT_NULL;
 
     private boolean skipExistingCheck;
 
     private boolean sharing;
+    
+    private Boolean strictPeriods;
 
     //--------------------------------------------------------------------------
     // Constructors
@@ -71,33 +77,12 @@ public class ImportOptions
     public ImportOptions()
     {
     }
-
-    public ImportOptions( ImportStrategy importStrategy )
-    {
-        this.importStrategy = importStrategy;
-    }
-
-    public ImportOptions( IdentifiableProperty dataElementIdScheme, IdentifiableProperty orgUnitIdScheme,
-        boolean dryRun, boolean preheatCache, ImportStrategy importStrategy, boolean skipExistingCheck )
-    {
-        this.dataElementIdScheme = dataElementIdScheme;
-        this.orgUnitIdScheme = orgUnitIdScheme;
-        this.preheatCache = preheatCache;
-        this.dryRun = dryRun;
-        this.importStrategy = importStrategy;
-        this.skipExistingCheck = skipExistingCheck;
-    }
-
-    public ImportOptions( IdentifiableProperty idScheme, IdentifiableProperty dataElementIdScheme, IdentifiableProperty orgUnitIdScheme,
-        boolean dryRun, boolean preheatCache, ImportStrategy importStrategy, boolean skipExistingCheck )
+    
+    public ImportOptions( IdentifiableProperty idScheme, IdentifiableProperty dataElementIdScheme, IdentifiableProperty orgUnitIdscheme )
     {
         this.idScheme = idScheme;
         this.dataElementIdScheme = dataElementIdScheme;
-        this.orgUnitIdScheme = orgUnitIdScheme;
-        this.preheatCache = preheatCache;
-        this.dryRun = dryRun;
-        this.importStrategy = importStrategy;
-        this.skipExistingCheck = skipExistingCheck;
+        this.orgUnitIdScheme = orgUnitIdscheme;
     }
 
     //--------------------------------------------------------------------------
@@ -107,6 +92,11 @@ public class ImportOptions
     public static ImportOptions getDefaultImportOptions()
     {
         return DEFAULT_OPTIONS;
+    }
+    
+    public boolean hasStrictPeriods()
+    {
+        return strictPeriods != null;
     }
 
     //--------------------------------------------------------------------------
@@ -120,12 +110,12 @@ public class ImportOptions
 
     public IdentifiableProperty getDataElementIdScheme()
     {
-        return dataElementIdScheme != null ? dataElementIdScheme : (idScheme != null ? idScheme : IdentifiableProperty.UID);
+        return dataElementIdScheme != null ? dataElementIdScheme : ( idScheme != null ? idScheme : IdentifiableProperty.UID );
     }
 
     public IdentifiableProperty getOrgUnitIdScheme()
     {
-        return orgUnitIdScheme != null ? orgUnitIdScheme : (idScheme != null ? idScheme : IdentifiableProperty.UID);
+        return orgUnitIdScheme != null ? orgUnitIdScheme : ( idScheme != null ? idScheme : IdentifiableProperty.UID );
     }
 
     public boolean isDryRun()
@@ -136,6 +126,11 @@ public class ImportOptions
     public boolean isPreheatCache()
     {
         return preheatCache;
+    }
+
+    public boolean isAsync()
+    {
+        return async;
     }
 
     public ImportStrategy getImportStrategy()
@@ -158,75 +153,99 @@ public class ImportOptions
         return skipExistingCheck;
     }
 
-    //--------------------------------------------------------------------------
-    // Set methods
-    //--------------------------------------------------------------------------
-
-    public void setIdScheme( String scheme )
-    {
-        this.idScheme = scheme != null ? IdentifiableProperty.valueOf( scheme.toUpperCase() ) : null;
-    }
-
-    public void setDataElementIdScheme( String scheme )
-    {
-        this.dataElementIdScheme = scheme != null ? IdentifiableProperty.valueOf( scheme.toUpperCase() ) : null;
-    }
-
-    public void setOrgUnitIdScheme( String scheme )
-    {
-        this.orgUnitIdScheme = scheme != null ? IdentifiableProperty.valueOf( scheme.toUpperCase() ) : null;
-    }
-
-    public void setDryRun( boolean dryRun )
-    {
-        this.dryRun = dryRun;
-    }
-
-    public void setPreheatCache( boolean preheatCache )
-    {
-        this.preheatCache = preheatCache;
-    }
-
-    public boolean isAsync()
-    {
-        return async;
-    }
-
-    public void setAsync( boolean async )
-    {
-        this.async = async;
-    }
-
-    public void setStrategy( String strategy )
-    {
-        this.importStrategy = strategy != null ? ImportStrategy.valueOf( strategy.toUpperCase() ) : null;
-    }
-
-    public void setImportStrategy( String strategy )
-    {
-        this.importStrategy = strategy != null ? ImportStrategy.valueOf( strategy.toUpperCase() ) : null;
-    }
-
-    public void setSkipExistingCheck( boolean skipExistingCheck )
-    {
-        this.skipExistingCheck = skipExistingCheck;
-    }
-
     public boolean isSharing()
     {
         return sharing;
     }
 
-    public void setSharing( boolean sharing )
+    public Boolean getStrictPeriods()
+    {
+        return strictPeriods;
+    }
+
+    //--------------------------------------------------------------------------
+    // Set methods
+    //--------------------------------------------------------------------------
+
+    public ImportOptions setIdScheme( IdentifiableProperty scheme )
+    {
+        this.idScheme = scheme != null ? scheme : null;
+        return this;
+    }
+
+    public ImportOptions setDataElementIdScheme( IdentifiableProperty scheme )
+    {
+        this.dataElementIdScheme = scheme != null ? scheme : null;
+        return this;
+    }
+
+    public ImportOptions setOrgUnitIdScheme( IdentifiableProperty scheme )
+    {
+        this.orgUnitIdScheme = scheme != null ? scheme : null;
+        return this;
+    }
+
+    public ImportOptions setDryRun( boolean dryRun )
+    {
+        this.dryRun = dryRun;
+        return this;
+    }
+
+    public ImportOptions setPreheatCache( boolean preheatCache )
+    {
+        this.preheatCache = preheatCache;
+        return this;
+    }
+
+    public ImportOptions setAsync( boolean async )
+    {
+        this.async = async;
+        return this;
+    }
+
+    public ImportOptions setStrategy( ImportStrategy strategy )
+    {
+        this.importStrategy = strategy != null ? strategy : null;
+        return this;
+    }
+
+    public ImportOptions setImportStrategy( ImportStrategy strategy )
+    {
+        this.importStrategy = strategy != null ? strategy : null;
+        return this;
+    }
+
+    public ImportOptions setSkipExistingCheck( boolean skipExistingCheck )
+    {
+        this.skipExistingCheck = skipExistingCheck;
+        return this;
+    }
+
+    public ImportOptions setSharing( boolean sharing )
     {
         this.sharing = sharing;
+        return this;
+    }
+
+    public ImportOptions setStrictPeriods( Boolean strictPeriods )
+    {
+        this.strictPeriods = strictPeriods;
+        return this;
     }
 
     @Override
     public String toString()
     {
-        return "[Id scheme: " + idScheme + ", data element id scheme: " + dataElementIdScheme + ", org unit id scheme: " +
-            orgUnitIdScheme + ", dry run: " + dryRun + ", preheat cache: " + preheatCache + ", async: " +
-            async + ", strategy: " + importStrategy + ", skip check: " + skipExistingCheck + "]";
+        return MoreObjects.toStringHelper( this.getClass() ).
+            add( "Id scheme", idScheme ).
+            add( "Data element id scheme", dataElementIdScheme ).
+            add( "Org unit id scheme", orgUnitIdScheme ).
+            add( "Dry run", dryRun ).
+            add( "Preheat cache", preheatCache ).
+            add( "Async", async ).
+            add( "Import strategy", importStrategy ).
+            add( "Skip existing check", skipExistingCheck ).
+            add( "Sharing", sharing ).
+            add( "Strict periods", strictPeriods ).toString();
     }
 }

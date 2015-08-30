@@ -28,11 +28,16 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.lowagie.text.Document;
-import com.lowagie.text.pdf.PdfWriter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.IdentifiableProperty;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -41,7 +46,6 @@ import org.hisp.dhis.dxf2.pdfform.PdfDataEntryFormService;
 import org.hisp.dhis.dxf2.pdfform.PdfDataEntryFormUtil;
 import org.hisp.dhis.dxf2.pdfform.PdfFormFontSettings;
 import org.hisp.dhis.i18n.I18nManager;
-import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.scheduling.TaskCategory;
@@ -50,7 +54,6 @@ import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.webapi.utils.PdfDataEntryFormImportUtil;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +63,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * @author James Chang <jamesbchang@gmail.com>
@@ -75,8 +73,6 @@ import java.util.Date;
 @RequestMapping( value = "/pdfForm" )
 public class PdfFormController
 {
-    private static final Log log = LogFactory.getLog( PdfFormController.class );
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -145,14 +141,6 @@ public class PdfFormController
     public void sendFormPdfDataSet( HttpServletRequest request, HttpServletResponse response )
         throws Exception
     {
-        ImportStrategy strategy = ImportStrategy.NEW_AND_UPDATES;
-        IdentifiableProperty dataElementIdScheme = IdentifiableProperty.UID;
-        IdentifiableProperty orgUnitIdScheme = IdentifiableProperty.UID;
-
-        ImportOptions options = new ImportOptions( dataElementIdScheme, orgUnitIdScheme, false, true, strategy, false );
-
-        log.info( options );
-
         TaskId taskId = new TaskId( TaskCategory.DATAVALUE_IMPORT, currentUserService.getCurrentUser() );
 
         notifier.clear( taskId );
@@ -161,7 +149,7 @@ public class PdfFormController
 
         in = StreamUtils.wrapAndCheckCompressionFormat( in );
 
-        dataValueSetService.saveDataValueSetPdf( in, options, taskId );
+        dataValueSetService.saveDataValueSetPdf( in, ImportOptions.getDefaultImportOptions(), taskId );
 
         webMessageService.send( WebMessageUtils.ok( "Import successful." ), response, request );
     }

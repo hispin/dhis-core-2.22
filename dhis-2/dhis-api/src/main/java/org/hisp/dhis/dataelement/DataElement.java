@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeValue;
@@ -62,6 +63,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 
 /**
  * A DataElement is a definition (meta-information about) of the entities that
@@ -339,7 +341,7 @@ public class DataElement
 
     /**
      * Returns the PeriodType of the DataElement, based on the PeriodType of the
-     * DataSet which the DataElement is registered for. If this data element has
+     * DataSet which the DataElement is associated with. If this data element has
      * multiple data sets, the data set with the highest collection frequency is
      * returned.
      */
@@ -348,6 +350,15 @@ public class DataElement
         DataSet dataSet = getDataSet();
 
         return dataSet != null ? dataSet.getPeriodType() : null;
+    }
+    
+    /**
+     * Returns the PeriodTypes of the DataElement, based on the PeriodType of the
+     * DataSets which the DataElement is associated with.
+     */
+    public Set<PeriodType> getPeriodTypes()
+    {
+        return Sets.newHashSet( dataSets ).stream().map( dataSet -> dataSet.getPeriodType() ).collect( Collectors.toSet() );
     }
 
     /**

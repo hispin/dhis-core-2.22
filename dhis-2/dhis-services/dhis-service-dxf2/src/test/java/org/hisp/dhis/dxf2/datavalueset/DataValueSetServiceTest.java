@@ -30,8 +30,6 @@ package org.hisp.dhis.dxf2.datavalueset;
 
 import static org.hisp.dhis.common.IdentifiableProperty.CODE;
 import static org.hisp.dhis.common.IdentifiableProperty.UID;
-import static org.hisp.dhis.importexport.ImportStrategy.NEW_AND_UPDATES;
-import static org.hisp.dhis.importexport.ImportStrategy.UPDATES;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -52,9 +50,10 @@ import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datavalue.DataValue;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.jdbc.batchhandler.DataValueBatchHandler;
 import org.hisp.dhis.mock.MockCurrentUserService;
 import org.hisp.dhis.mock.batchhandler.MockBatchHandler;
@@ -185,6 +184,12 @@ public class DataValueSetServiceTest
         dataElementService.addDataElement( deB );
         dataElementService.addDataElement( deC );
         dataElementService.addDataElement( deD );
+        
+        dsA.addDataElement( deA );
+        dsA.addDataElement( deB );
+        dsA.addDataElement( deC );
+        dsA.addDataElement( deD );        
+        
         dataSetService.addDataSet( dsA );
         organisationUnitService.addOrganisationUnit( ouA );
         organisationUnitService.addOrganisationUnit( ouB );
@@ -286,7 +291,7 @@ public class DataValueSetServiceTest
     {
         in = new ClassPathResource( "datavalueset/dataValueSetBcode.xml" ).getInputStream();
         
-        ImportOptions options = new ImportOptions( CODE, CODE, CODE, false, true, NEW_AND_UPDATES, false );
+        ImportOptions options = new ImportOptions( CODE, CODE, CODE );
         ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
 
         assertEquals( summary.getConflicts().toString(), 0, summary.getConflicts().size() );
@@ -305,7 +310,7 @@ public class DataValueSetServiceTest
     {
         in = new ClassPathResource( "datavalueset/dataValueSetBcode.xml" ).getInputStream();
         
-        ImportOptions options = new ImportOptions( CODE, CODE, CODE, false, false, NEW_AND_UPDATES, false );
+        ImportOptions options = new ImportOptions( CODE, CODE, CODE ).setPreheatCache( false );
         ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
 
         assertEquals( summary.getConflicts().toString(), 0, summary.getConflicts().size() );
@@ -342,7 +347,7 @@ public class DataValueSetServiceTest
     {
         in = new ClassPathResource( "datavalueset/dataValueSetB.xml" ).getInputStream();
         
-        ImportOptions options = new ImportOptions( UID, UID, UID, true, true, NEW_AND_UPDATES, false );
+        ImportOptions options = new ImportOptions( UID, UID, UID ).setDryRun( true );
         
         ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
 
@@ -361,7 +366,7 @@ public class DataValueSetServiceTest
     {
         in = new ClassPathResource( "datavalueset/dataValueSetB.xml" ).getInputStream();
         
-        ImportOptions options = new ImportOptions( UID, UID, UID, false, true, UPDATES, false );
+        ImportOptions options = new ImportOptions( UID, UID, UID ).setImportStrategy( ImportStrategy.UPDATES );
         
         ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
 
@@ -471,6 +476,24 @@ public class DataValueSetServiceTest
         
         assertNotNull( dataValues );
         assertEquals( 1, dataValues.size() ); 
+    }
+
+    @Test
+    public void testImportDataValuesWithNonStrictPeriods()
+        throws Exception
+    {
+        in = new ClassPathResource( "datavalueset/dataValueSetNonStrict.xml" ).getInputStream();
+
+        ImportOptions options = new ImportOptions().setStrictPeriods( true );
+
+        ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
+
+        assertEquals( summary.getConflicts().toString(), 2, summary.getConflicts().size() );
+        assertEquals( 1, summary.getImportCount().getImported() );
+        assertEquals( 0, summary.getImportCount().getUpdated() );
+        assertEquals( 0, summary.getImportCount().getDeleted() );
+        assertEquals( 2, summary.getImportCount().getIgnored() );
+        assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
     }
 
     // -------------------------------------------------------------------------

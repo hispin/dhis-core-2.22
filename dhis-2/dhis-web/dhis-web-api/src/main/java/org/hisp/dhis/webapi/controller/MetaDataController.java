@@ -239,7 +239,7 @@ public class MetaDataController
     @RequestMapping( value = MetaDataController.RESOURCE_PATH, method = RequestMethod.DELETE, consumes = { "application/xml", "text/*" } )
     public void deleteXml( ImportOptions importOptions, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
-        importOptions.setImportStrategy( ImportStrategy.DELETE.name() );
+        importOptions.setImportStrategy( ImportStrategy.DELETE );
         importXml( importOptions, response, request );
     }
 
@@ -261,7 +261,7 @@ public class MetaDataController
     @RequestMapping( value = MetaDataController.RESOURCE_PATH, method = RequestMethod.DELETE, consumes = "application/json" )
     public void deleteJson( ImportOptions importOptions, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
-        importOptions.setImportStrategy( ImportStrategy.DELETE.name() );
+        importOptions.setImportStrategy( ImportStrategy.DELETE );
         importJson( importOptions, response, request );
     }
 
@@ -286,7 +286,7 @@ public class MetaDataController
     @RequestMapping( value = { MetaDataController.RESOURCE_PATH + ".zip", MetaDataController.RESOURCE_PATH + ".xml.zip" }, method = RequestMethod.DELETE, consumes = { "application/xml", "text/*" } )
     public void deleteZippedXml( ImportOptions importOptions, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
-        importOptions.setImportStrategy( ImportStrategy.DELETE.name() );
+        importOptions.setImportStrategy( ImportStrategy.DELETE );
         importZippedXml( importOptions, response, request );
     }
 
@@ -311,7 +311,7 @@ public class MetaDataController
     @RequestMapping( value = { MetaDataController.RESOURCE_PATH + ".zip", MetaDataController.RESOURCE_PATH + ".json.zip" }, method = RequestMethod.DELETE, consumes = "application/json" )
     public void deleteZippedJson( ImportOptions importOptions, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
-        importOptions.setImportStrategy( ImportStrategy.DELETE.name() );
+        importOptions.setImportStrategy( ImportStrategy.DELETE );
         importZippedJson( importOptions, response, request );
     }
 
@@ -334,7 +334,7 @@ public class MetaDataController
     @RequestMapping( value = { MetaDataController.RESOURCE_PATH + ".gz", MetaDataController.RESOURCE_PATH + ".xml.gz" }, method = RequestMethod.DELETE, consumes = { "application/xml", "text/*" } )
     public void deleteGZippedXml( ImportOptions importOptions, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
-        importOptions.setImportStrategy( ImportStrategy.DELETE.name() );
+        importOptions.setImportStrategy( ImportStrategy.DELETE );
         importGZippedXml( importOptions, response, request );
     }
 
@@ -357,7 +357,7 @@ public class MetaDataController
     @RequestMapping( value = { MetaDataController.RESOURCE_PATH + ".gz", MetaDataController.RESOURCE_PATH + ".json.gz" }, method = RequestMethod.DELETE, consumes = "application/json" )
     public void deleteGZippedJson( ImportOptions importOptions, HttpServletResponse response, HttpServletRequest request ) throws IOException
     {
-        importOptions.setImportStrategy( ImportStrategy.DELETE.name() );
+        importOptions.setImportStrategy( ImportStrategy.DELETE );
         importGZippedJson( importOptions, response, request );
     }
 

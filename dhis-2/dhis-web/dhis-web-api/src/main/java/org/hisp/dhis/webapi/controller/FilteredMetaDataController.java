@@ -260,7 +260,7 @@ public class FilteredMetaDataController
         MetaData metaData = new ObjectMapper().readValue( json.getString( "metaData" ), MetaData.class );
 
         ImportOptions importOptions = new ImportOptions();
-        importOptions.setStrategy( strategy.toString() );
+        importOptions.setStrategy( strategy );
         importOptions.setDryRun( dryRun );
 
         scheduler.executeTask( new ImportMetaDataTask( user.getUid(), importService, importOptions, taskId, metaData ) );

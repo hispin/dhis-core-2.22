@@ -129,7 +129,7 @@ public class DefaultGmlImportService
     {
         if ( !importOptions.getImportStrategy().isUpdate() )
         {
-            importOptions.setImportStrategy( ImportStrategy.UPDATE.name() );
+            importOptions.setImportStrategy( ImportStrategy.UPDATE );
             log.warn( "Changed GML import strategy to update. Only updates are supported." );
         }
 
