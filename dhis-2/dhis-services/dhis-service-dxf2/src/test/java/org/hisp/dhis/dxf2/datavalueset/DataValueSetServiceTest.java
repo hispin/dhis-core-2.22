@@ -148,6 +148,7 @@ public class DataValueSetServiceTest
         deC = createDataElement( 'C', categoryComboDef );
         deD = createDataElement( 'D', categoryComboDef );
         dsA = createDataSet( 'A', new MonthlyPeriodType() );
+        dsA.setCategoryCombo( categoryComboDef );
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );
         ouC = createOrganisationUnit( 'C' );
@@ -481,7 +482,7 @@ public class DataValueSetServiceTest
     }
 
     @Test
-    public void testImportDataValuesWithNonStrictPeriods()
+    public void testImportDataValuesWithStrictPeriods()
         throws Exception
     {
         in = new ClassPathResource( "datavalueset/dataValueSetNonStrict.xml" ).getInputStream();
@@ -499,12 +500,30 @@ public class DataValueSetServiceTest
     }
 
     @Test
-    public void testImportDataValuesWithNonStrictCategoryOptionCombos()
+    public void testImportDataValuesWithStrictCategoryOptionCombos()
         throws Exception
     {
         in = new ClassPathResource( "datavalueset/dataValueSetNonStrict.xml" ).getInputStream();
 
         ImportOptions options = new ImportOptions().setStrictCategoryOptionCombos( true );
+
+        ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
+
+        assertEquals( summary.getConflicts().toString(), 1, summary.getConflicts().size() );
+        assertEquals( 2, summary.getImportCount().getImported() );
+        assertEquals( 0, summary.getImportCount().getUpdated() );
+        assertEquals( 0, summary.getImportCount().getDeleted() );
+        assertEquals( 1, summary.getImportCount().getIgnored() );
+        assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
+    }
+
+    @Test
+    public void testImportDataValuesWithStrictAttributeOptionCombos()
+        throws Exception
+    {
+        in = new ClassPathResource( "datavalueset/dataValueSetNonStrict.xml" ).getInputStream();
+
+        ImportOptions options = new ImportOptions().setStrictAttributeOptionCombos( true );
 
         ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
 
