@@ -107,6 +107,12 @@ public interface SystemSettingManager
     final String KEY_CORS_WHITELIST = "keyCorsWhitelist";
     final String KEY_REQUIRE_ADD_TO_VIEW = "keyRequireAddToView";
     final String KEY_ALLOW_OBJECT_ASSIGNMENT = "keyAllowObjectAssignment";
+    
+    final String KEY_DATA_IMPORT_STRICT_PERIODS = "keyDataImportStrictPeriods";
+    final String KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS = "keyDataImportStrictCategoryOptionCombos";
+    final String KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS = "keyDataImportStrictAttributeOptionCombos";
+    final String KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO = "keyDataImportRequireCategoryOptionCombo";
+    final String KEY_DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO = "keyDataImportRequireAttributeOptionCombo";
 
     final String DEFAULT_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY = "lastMonth";
     final String DEFAULT_FLAG = "dhis2";

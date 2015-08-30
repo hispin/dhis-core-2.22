@@ -76,7 +76,7 @@ public class ImportMetaDataGmlTask
     @Override
     public void run()
     {
-        importOptions.setImportStrategy( ImportStrategy.UPDATE.name() );
+        importOptions.setImportStrategy( ImportStrategy.UPDATE );
         gmlImportService.importGml( inputStream, userUid, importOptions, taskId );
     }
 }

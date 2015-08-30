@@ -35,6 +35,7 @@ import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
 import static org.hisp.dhis.system.util.DateUtils.parseDate;
+import static org.hisp.dhis.setting.SystemSettingManager.*;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -87,7 +88,9 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
+import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.callable.CategoryOptionComboAclCallable;
 import org.hisp.dhis.system.callable.IdentifiableObjectCallable;
 import org.hisp.dhis.system.callable.PeriodCallable;
@@ -135,7 +138,10 @@ public class DefaultDataValueSetService
 
     @Autowired
     private DataValueSetStore dataValueSetStore;
-
+    
+    @Autowired
+    private SystemSettingManager systemSettingManager;
+    
     @Autowired
     private I18nManager i18nManager;
 
@@ -569,7 +575,10 @@ public class DefaultDataValueSetService
             ImportStrategy.valueOf( dataValueSet.getStrategy() ) : importOptions.getImportStrategy();
 
         boolean skipExistingCheck = importOptions.isSkipExistingCheck();
-
+        
+        boolean strictPeriods = importOptions.hasStrictPeriods() ? importOptions.getStrictPeriods() : 
+            (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
+        
         //----------------------------------------------------------------------
         // Create meta-data maps
         //----------------------------------------------------------------------
@@ -578,6 +587,7 @@ public class DefaultDataValueSetService
         CachingMap<String, OrganisationUnit> orgUnitMap = new CachingMap<>();
         CachingMap<String, DataElementCategoryOptionCombo> optionComboMap = new CachingMap<>();
         CachingMap<String, Period> periodMap = new CachingMap<>();
+        CachingMap<String, Set<PeriodType>> dataElementPeriodTypesMap = new CachingMap<>();
         CachingMap<String, Boolean> orgUnitInHierarchyMap = new CachingMap<>();
 
         //----------------------------------------------------------------------
@@ -709,7 +719,7 @@ public class DefaultDataValueSetService
                 summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(), "Period not valid" ) );
                 continue;
             }
-
+            
             if ( orgUnit == null )
             {
                 summary.getConflicts().add( new ImportConflict( dataValue.getOrgUnit(), "Organisation unit not found or not acccessible" ) );
@@ -768,6 +778,16 @@ public class DefaultDataValueSetService
                 continue;
             }
 
+            // -----------------------------------------------------------------
+            // Constraints
+            // -----------------------------------------------------------------
+
+            if ( strictPeriods && !dataElementPeriodTypesMap.get( dataValue.getDataElement(), () -> dataElement.getPeriodTypes() ).contains( period.getPeriodType() ) )
+            {
+                summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(), "Period type of period: " + dataValue.getPeriod() + " not valid for data element: " + dataValue.getDataElement() ) );
+                continue;
+            }
+            
             internalValue.setDataElement( dataElement );
             internalValue.setPeriod( period );
             internalValue.setSource( orgUnit );

@@ -67,7 +67,7 @@ public class CsvMetaDataImportTest
     
     private InputStream input;
     
-    private final ImportOptions importOptions = new ImportOptions( ImportStrategy.NEW_AND_UPDATES );
+    private final ImportOptions importOptions = new ImportOptions().setImportStrategy( ImportStrategy.NEW_AND_UPDATES );
     
     @Test
     public void testDataElementImport()

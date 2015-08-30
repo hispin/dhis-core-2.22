@@ -35,13 +35,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.csv.CsvImportService;
 import org.hisp.dhis.dxf2.gml.GmlImportService;
-import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.importexport.action.util.ImportMetaDataCsvTask;
@@ -54,7 +55,6 @@ import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.scheduling.Scheduler;
-import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationRule;
@@ -171,7 +171,7 @@ public class MetaDataImportAction
         in = StreamUtils.wrapAndCheckCompressionFormat( in );
 
         ImportOptions importOptions = new ImportOptions();
-        importOptions.setStrategy( strategy.toString() );
+        importOptions.setStrategy( strategy );
         importOptions.setDryRun( dryRun );
         importOptions.setPreheatCache( preheatCache );
 

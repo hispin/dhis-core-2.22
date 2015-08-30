@@ -28,29 +28,32 @@ package org.hisp.dhis.importexport.action.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+import org.hisp.dhis.common.IdentifiableProperty;
+import org.hisp.dhis.commons.util.StreamUtils;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.events.event.EventService;
 import org.hisp.dhis.dxf2.events.event.Events;
 import org.hisp.dhis.dxf2.events.event.ImportEventTask;
 import org.hisp.dhis.dxf2.events.event.ImportEventsTask;
 import org.hisp.dhis.dxf2.events.event.csv.CsvEventService;
-import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.scheduling.Scheduler;
-import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class ImportEventAction implements Action
+public class ImportEventAction 
+    implements Action
 {
     public static final String FORMAT_CSV = "csv";
 
@@ -102,9 +105,9 @@ public class ImportEventAction implements Action
         this.payloadFormat = payloadFormat;
     }
 
-    private String orgUnitIdScheme = "UID";
+    private IdentifiableProperty orgUnitIdScheme = IdentifiableProperty.UID;
 
-    public void setOrgUnitIdScheme( String orgUnitIdScheme )
+    public void setOrgUnitIdScheme( IdentifiableProperty orgUnitIdScheme )
     {
         this.orgUnitIdScheme = orgUnitIdScheme;
     }
