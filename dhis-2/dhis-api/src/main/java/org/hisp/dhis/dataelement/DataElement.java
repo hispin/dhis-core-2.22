@@ -338,6 +338,38 @@ public class DataElement
         Collections.sort( list, DataSetFrequencyComparator.INSTANCE );
         return !list.isEmpty() ? list.get( 0 ) : null;
     }
+    
+    /**
+     * Returns the category combinations associated with the data sets of this
+     * data element.
+     */
+    public Set<DataElementCategoryCombo> getDataSetCategoryCombos()
+    {
+        Set<DataElementCategoryCombo> categoryCombos = new HashSet<>();
+        
+        for ( DataSet dataSet : dataSets )
+        {
+            categoryCombos.add( dataSet.getCategoryCombo() );
+        }
+        
+        return categoryCombos;
+    }
+
+    /**
+     * Returns the category options combinations associated with the data sets of this
+     * data element.
+     */
+    public Set<DataElementCategoryOptionCombo> getDataSetCategoryOptionCombos()
+    {
+        Set<DataElementCategoryOptionCombo> categoryOptionCombos = new HashSet<>();
+        
+        for ( DataSet dataSet : dataSets )
+        {
+            categoryOptionCombos.addAll( dataSet.getCategoryCombo().getOptionCombos() );
+        }
+        
+        return categoryOptionCombos;
+    }
 
     /**
      * Returns the PeriodType of the DataElement, based on the PeriodType of the
