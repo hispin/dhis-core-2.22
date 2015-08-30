@@ -46,7 +46,7 @@ import com.google.common.base.MoreObjects;
 public class ImportOptions
 {
     private static final ImportOptions DEFAULT_OPTIONS = new ImportOptions().
-        setDataElementIdScheme( UID ).setOrgUnitIdScheme( UID ).setPreheatCache( true ).setImportStrategy( ImportStrategy.NEW_AND_UPDATES );
+        setDataElementIdScheme( UID ).setOrgUnitIdScheme( UID ).setImportStrategy( ImportStrategy.NEW_AND_UPDATES );
 
     private IdentifiableProperty idScheme;
 
@@ -56,7 +56,7 @@ public class ImportOptions
 
     private boolean dryRun;
 
-    private boolean preheatCache = true;
+    private boolean preheatCache;
 
     private boolean async;
 
