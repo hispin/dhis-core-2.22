@@ -307,7 +307,7 @@ public class DataValueSetServiceTest
     }
 
     @Test
-    public void testImportDataValuesXmlWithCodePreheatCacheFalseB()
+    public void testImportDataValuesXmlWithCodePreheatCacheFalse()
         throws Exception
     {
         in = new ClassPathResource( "datavalueset/dataValueSetBcode.xml" ).getInputStream();
@@ -324,7 +324,7 @@ public class DataValueSetServiceTest
         
         assertImportDataValues( summary );
     }
-    
+
     @Test
     public void testImportDataValuesCsv()
         throws Exception
