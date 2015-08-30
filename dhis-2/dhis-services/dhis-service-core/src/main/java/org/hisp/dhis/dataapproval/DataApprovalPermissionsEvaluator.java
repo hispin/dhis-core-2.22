@@ -31,9 +31,9 @@ package org.hisp.dhis.dataapproval;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -42,9 +42,9 @@ import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 
 /**
  * This package private class holds the context for deciding on data approval permissions.
@@ -224,14 +224,8 @@ class DataApprovalPermissionsEvaluator
 
         try
         {
-            userApprovalLevel = ( USER_APPROVAL_LEVEL_CACHE.get( user.getId() + "-" + da.getOrganisationUnit().getId(), new Callable<DataApprovalLevel>()
-            {
-                @Override
-                public DataApprovalLevel call() throws ExecutionException
-                {
-                    return dataApprovalLevelService.getUserApprovalLevel( user, dataApproval.getOrganisationUnit() );
-                }
-            } ) );
+            userApprovalLevel = USER_APPROVAL_LEVEL_CACHE.get( user.getId() + "-" + da.getOrganisationUnit().getId(), 
+                () -> dataApprovalLevelService.getUserApprovalLevel( user, dataApproval.getOrganisationUnit() ) );
         }
         catch ( CacheLoader.InvalidCacheLoadException ex )
         {

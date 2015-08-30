@@ -141,7 +141,7 @@ public class ListUtils
      * @param comparator the comparator.
      * @return a set of duplicates from the given list.
      */
-    public static <T> Set<T> getDuplicates( List<T> list, Comparator<T> comparator )
+    public static <T> Set<T> getDuplicates( List<T> list, Comparator<? super T> comparator )
     {
         Set<T> duplicates = new HashSet<>();
         

@@ -33,7 +33,6 @@ import static org.hisp.dhis.commons.collection.ListUtils.getDuplicates;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -46,6 +45,8 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -73,8 +74,6 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.filter.OrganisationUnitGroupWithoutGroupSetFilter;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
 import org.springframework.transaction.annotation.Transactional;
@@ -240,14 +239,7 @@ public class DefaultDataIntegrityService
         for ( DataElementGroupSet groupSet : groupSets )
         {
             Collection<DataElement> duplicates = getDuplicates(  
-                new ArrayList<>( groupSet.getDataElements() ), new Comparator<DataElement>()
-                {
-                    @Override
-                    public int compare( DataElement d1, DataElement d2 )
-                    {
-                        return d1.getName().compareTo( d2.getName() );
-                    }                    
-                } );
+                new ArrayList<>( groupSet.getDataElements() ), IdentifiableObjectNameComparator.INSTANCE );
             
             for ( DataElement duplicate : duplicates )
             {
@@ -478,14 +470,7 @@ public class DefaultDataIntegrityService
         for ( IndicatorGroupSet groupSet : groupSets )
         {
             Collection<Indicator> duplicates = getDuplicates( 
-                new ArrayList<>( groupSet.getIndicators() ), new Comparator<Indicator>()
-                {
-                    @Override
-                    public int compare( Indicator o1, Indicator o2 )
-                    {
-                        return o1.getName().compareTo( o2.getName() );
-                    }
-                } );
+                new ArrayList<>( groupSet.getIndicators() ), IdentifiableObjectNameComparator.INSTANCE );
             
             for ( Indicator duplicate : duplicates )
             {
@@ -606,14 +591,7 @@ public class DefaultDataIntegrityService
         for ( OrganisationUnitGroupSet groupSet : groupSets )
         {
             Collection<OrganisationUnit> duplicates = getDuplicates( 
-                new ArrayList<>( groupSet.getOrganisationUnits() ), new Comparator<OrganisationUnit>()
-                {
-                    @Override
-                    public int compare( OrganisationUnit o1, OrganisationUnit o2 )
-                    {
-                        return o1.getName().compareTo( o2.getName() );
-                    }                    
-                } );
+                new ArrayList<>( groupSet.getOrganisationUnits() ), IdentifiableObjectNameComparator.INSTANCE );
             
             for ( OrganisationUnit duplicate : duplicates )
             {

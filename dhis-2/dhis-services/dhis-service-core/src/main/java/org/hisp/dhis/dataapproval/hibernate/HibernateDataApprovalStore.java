@@ -28,6 +28,8 @@ package org.hisp.dhis.dataapproval.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
+import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 import static org.hisp.dhis.dataapproval.DataApprovalState.ACCEPTED_HERE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.APPROVED_ABOVE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.APPROVED_HERE;
@@ -36,18 +38,13 @@ import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_ABOVE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_READY;
 import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_WAITING;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL;
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
-import static org.hisp.dhis.commons.util.TextUtils.getCommaDelimitedString;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -55,6 +52,8 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.commons.collection.CachingMap;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataapproval.DataApproval;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
@@ -72,13 +71,13 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Jim Grace
@@ -454,23 +453,9 @@ public class HibernateDataApprovalStore
             DataApprovalLevel statusLevel = ( level == 0 ? null : levelMap.get( level ) ); // null if not approved
             DataApprovalLevel daLevel = ( statusLevel == null ? lowestApprovalLevelForOrgUnit : statusLevel );
 
-            DataElementCategoryOptionCombo optionCombo = ( aoc == null || aoc == 0 ? null : optionComboCache.get( aoc, new Callable<DataElementCategoryOptionCombo>()
-            {
-                @Override
-                public DataElementCategoryOptionCombo call() throws ExecutionException
-                {
-                    return categoryService.getDataElementCategoryOptionCombo( aoc );
-                }
-            } ) );
+            DataElementCategoryOptionCombo optionCombo = aoc == null || aoc == 0 ? null : optionComboCache.get( aoc, () -> categoryService.getDataElementCategoryOptionCombo( aoc ) );
 
-            OrganisationUnit ou = ( orgUnit != null ? orgUnit : orgUnitCache.get( ouId, new Callable<OrganisationUnit>()
-            {
-                @Override
-                public OrganisationUnit call() throws ExecutionException
-                {
-                    return organisationUnitService.getOrganisationUnit( ouId );
-                }
-            } ) );
+            OrganisationUnit ou = orgUnit != null ? orgUnit : orgUnitCache.get( ouId, () -> organisationUnitService.getOrganisationUnit( ouId ) );
 
             if ( ou != null )
             {
