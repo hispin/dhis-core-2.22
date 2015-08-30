@@ -103,6 +103,7 @@ public class DataValueSetServiceTest
     private DataElementCategoryOption categoryOptionA;
     private DataElementCategoryOption categoryOptionB;
     private DataElementCategory categoryA;
+    private DataElementCategoryCombo categoryComboDef;
     private DataElementCategoryCombo categoryComboA;
     private DataElementCategoryOptionCombo ocA;
     private DataElementCategoryOptionCombo ocB;
@@ -137,14 +138,15 @@ public class DataValueSetServiceTest
         categoryOptionB = createCategoryOption( 'B' );
         categoryA = createDataElementCategory( 'A', categoryOptionA, categoryOptionB );
         categoryComboA = createCategoryCombo( 'A', categoryA );
+        categoryComboDef = categoryService.getDefaultDataElementCategoryCombo();
         ocDef = categoryService.getDefaultDataElementCategoryOptionCombo();
         
         ocA = createCategoryOptionCombo( categoryComboA, categoryOptionA );
         ocB = createCategoryOptionCombo( categoryComboA, categoryOptionB );
-        deA = createDataElement( 'A' );
-        deB = createDataElement( 'B' );
-        deC = createDataElement( 'C' );
-        deD = createDataElement( 'D' );
+        deA = createDataElement( 'A', categoryComboDef );
+        deB = createDataElement( 'B', categoryComboDef );
+        deC = createDataElement( 'C', categoryComboDef );
+        deD = createDataElement( 'D', categoryComboDef );
         dsA = createDataSet( 'A', new MonthlyPeriodType() );
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );
@@ -493,6 +495,24 @@ public class DataValueSetServiceTest
         assertEquals( 0, summary.getImportCount().getUpdated() );
         assertEquals( 0, summary.getImportCount().getDeleted() );
         assertEquals( 2, summary.getImportCount().getIgnored() );
+        assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
+    }
+
+    @Test
+    public void testImportDataValuesWithNonStrictCategoryOptionCombos()
+        throws Exception
+    {
+        in = new ClassPathResource( "datavalueset/dataValueSetNonStrict.xml" ).getInputStream();
+
+        ImportOptions options = new ImportOptions().setStrictCategoryOptionCombos( true );
+
+        ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
+
+        assertEquals( summary.getConflicts().toString(), 1, summary.getConflicts().size() );
+        assertEquals( 2, summary.getImportCount().getImported() );
+        assertEquals( 0, summary.getImportCount().getUpdated() );
+        assertEquals( 0, summary.getImportCount().getDeleted() );
+        assertEquals( 1, summary.getImportCount().getIgnored() );
         assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
     }
 

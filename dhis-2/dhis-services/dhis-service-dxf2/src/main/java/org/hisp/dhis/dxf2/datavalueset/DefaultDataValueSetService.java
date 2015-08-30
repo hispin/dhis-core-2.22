@@ -578,6 +578,8 @@ public class DefaultDataValueSetService
         
         boolean strictPeriods = importOptions.hasStrictPeriods() ? importOptions.getStrictPeriods() : 
             (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
+        boolean strictCategoryOptionCombos = importOptions.hasStrictCategoryOptionCombos() ? importOptions.getStrictCategoryOptionCombos() :
+            (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS, false );
         
         //----------------------------------------------------------------------
         // Create meta-data maps
@@ -588,6 +590,7 @@ public class DefaultDataValueSetService
         CachingMap<String, DataElementCategoryOptionCombo> optionComboMap = new CachingMap<>();
         CachingMap<String, Period> periodMap = new CachingMap<>();
         CachingMap<String, Set<PeriodType>> dataElementPeriodTypesMap = new CachingMap<>();
+        CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementCategoryOptionComboMap = new CachingMap<>();
         CachingMap<String, Boolean> orgUnitInHierarchyMap = new CachingMap<>();
 
         //----------------------------------------------------------------------
@@ -782,9 +785,19 @@ public class DefaultDataValueSetService
             // Constraints
             // -----------------------------------------------------------------
 
-            if ( strictPeriods && !dataElementPeriodTypesMap.get( dataValue.getDataElement(), () -> dataElement.getPeriodTypes() ).contains( period.getPeriodType() ) )
+            if ( strictPeriods && !dataElementPeriodTypesMap.get( dataValue.getDataElement(), 
+                () -> dataElement.getPeriodTypes() ).contains( period.getPeriodType() ) )
             {
-                summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(), "Period type of period: " + dataValue.getPeriod() + " not valid for data element: " + dataValue.getDataElement() ) );
+                summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(), 
+                    "Period type of period: " + dataValue.getPeriod() + " not valid for data element: " + dataValue.getDataElement() ) );
+                continue;
+            }
+            
+            if ( strictCategoryOptionCombos && !dataElementCategoryOptionComboMap.get( dataValue.getDataElement(),
+                () -> dataElement.getCategoryCombo().getOptionCombos() ).contains( categoryOptionCombo ) )
+            {
+                summary.getConflicts().add( new ImportConflict( dataValue.getCategoryOptionCombo(), 
+                    "Category option combo: " + dataValue.getCategoryOptionCombo() + " must be part of category combo of data element: " + dataValue.getDataElement() ) );
                 continue;
             }
             
