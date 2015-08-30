@@ -70,6 +70,8 @@ public class ImportOptions
     
     private Boolean strictPeriods;
 
+    private Boolean strictCategoryOptionCombos;
+    
     //--------------------------------------------------------------------------
     // Constructors
     //--------------------------------------------------------------------------
@@ -97,6 +99,11 @@ public class ImportOptions
     public boolean hasStrictPeriods()
     {
         return strictPeriods != null;
+    }
+    
+    public boolean hasStrictCategoryOptionCombos()
+    {
+        return strictCategoryOptionCombos != null;
     }
 
     //--------------------------------------------------------------------------
@@ -161,6 +168,11 @@ public class ImportOptions
     public Boolean getStrictPeriods()
     {
         return strictPeriods;
+    }
+
+    public Boolean getStrictCategoryOptionCombos()
+    {
+        return strictCategoryOptionCombos;
     }
 
     //--------------------------------------------------------------------------
@@ -233,6 +245,12 @@ public class ImportOptions
         return this;
     }
 
+    public ImportOptions setStrictCategoryOptionCombos( Boolean strictCategoryOptionCombos )
+    {
+        this.strictCategoryOptionCombos = strictCategoryOptionCombos;
+        return this;
+    }
+
     @Override
     public String toString()
     {
@@ -246,6 +264,7 @@ public class ImportOptions
             add( "Import strategy", importStrategy ).
             add( "Skip existing check", skipExistingCheck ).
             add( "Sharing", sharing ).
-            add( "Strict periods", strictPeriods ).toString();
+            add( "Strict periods", strictPeriods ).
+            add( "Strict category option combos", strictCategoryOptionCombos ).toString();
     }
 }
