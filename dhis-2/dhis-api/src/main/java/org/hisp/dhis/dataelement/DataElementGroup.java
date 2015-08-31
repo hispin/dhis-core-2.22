@@ -40,6 +40,7 @@ import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
@@ -130,9 +131,9 @@ public class DataElementGroup
      * Returns the value type of the data elements in this group. Uses an arbitrary
      * member to determine the value type.
      */
-    public String getValueType()
+    public ValueType getValueType()
     {
-        return members != null && !members.isEmpty() ? members.iterator().next().getType() : null;
+        return members != null && !members.isEmpty() ? members.iterator().next().getValueType() : null;
     }
 
     /**
