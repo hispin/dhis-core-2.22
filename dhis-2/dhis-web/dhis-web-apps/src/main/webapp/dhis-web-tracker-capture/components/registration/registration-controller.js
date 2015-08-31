@@ -368,6 +368,14 @@ trackerCapture.controller('RegistrationController',
     };
     
     $scope.teiValueUpdated = function(tei, field){
+        if(field === "qZPfmKnzzEv"){
+            var date = $scope.selectedTei["qZPfmKnzzEv"];
+            var dob = new Date(date);
+            var today = new Date();
+            var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
+
+            $scope.selectedTei["m1WveVHBwuN"] = age;
+        }
         $scope.executeRules();
     };
     
