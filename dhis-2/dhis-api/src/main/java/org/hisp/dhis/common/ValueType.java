@@ -29,7 +29,6 @@ package org.hisp.dhis.common;
  */
 
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
@@ -57,7 +56,7 @@ public enum ValueType
     INTEGER_NEGATIVE( Integer.class ),
     INTEGER_ZERO_OR_POSITIVE( Integer.class ),
     TRACKER_ASSOCIATE( TrackedEntityInstance.class ),
-    OPTION_SET( OptionSet.class ),
+    OPTION_SET( String.class ),
     USERNAME( String.class );
 
     private final Class<?> javaClass;
