@@ -68,7 +68,7 @@ trackerCapture.controller('TeiReportController',
                 ev.statusColor = EventUtils.getEventStatusColor(ev); 
 
                 if(ev.eventDate){
-                    ev.eventDate = DateUtils.format(ev.eventDate);
+                    ev.eventDate = DateUtils.formatFromApiToUser(ev.eventDate);
                     ev.sortingDate = ev.eventDate;
                 }
                 else{
@@ -115,51 +115,49 @@ trackerCapture.controller('TeiReportController',
         //they are needed to assign data element names for event data values
         $scope.stagesById = [];  
         $scope.allowProvidedElsewhereExists = [];
+        $scope.prStDes = [];
         
         ProgramStageFactory.getByProgram($scope.selectedProgram).then(function(stages){
             $scope.programStages = stages;
             angular.forEach(stages, function(stage){
                 var providedElsewhereExists = false;
-                for(var i=0; i<stage.programStageDataElements.length && !providedElsewhereExists; i++){                
-                    if(stage.programStageDataElements[i].allowProvidedElsewhere){
+                for(var i=0; i<stage.programStageDataElements.length; i++){                
+                    if(stage.programStageDataElements[i].allowProvidedElsewhere && !providedElsewhereExists){
                         providedElsewhereExists = true;
                         $scope.allowProvidedElsewhereExists[stage.id] = true;
-                    }                
+                    }
+                    $scope.prStDes[stage.programStageDataElements[i].dataElement.id] = stage.programStageDataElements[i];
                 }
 
                 $scope.stagesById[stage.id] = stage;
-            });
-        });
+            });        
         
-        //program reports come grouped in enrollment, process for each enrollment
-        $scope.enrollments = [];        
-        angular.forEach(Object.keys($scope.selectedReport.enrollments), function(enr){        
-            //format report data values
-            angular.forEach($scope.selectedReport.enrollments[enr], function(ev){
+            //program reports come grouped in enrollment, process for each enrollment
+            $scope.enrollments = [];        
+            angular.forEach(Object.keys($scope.selectedReport.enrollments), function(enr){        
+                //format report data values
+                angular.forEach($scope.selectedReport.enrollments[enr], function(ev){
 
-                angular.forEach(ev.notes, function(note){
-                    note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
-                }); 
-
-                if(ev.dataValues){
-                    angular.forEach(ev.dataValues, function(dv){
-                        if(dv.dataElement){
-                            ev[dv.dataElement] = dv;
-                        }                    
+                    angular.forEach(ev.notes, function(note){
+                        note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
                     });
-                }
-            });
 
-            //get enrollment details
-            EnrollmentService.get(enr).then(function(enrollment){
-                enrollment.dateOfEnrollment = DateUtils.formatFromApiToUser(enrollment.dateOfEnrollment);
-                enrollment.dateOfIncident = DateUtils.formatFromApiToUser(enrollment.dateOfIncident);            
-                angular.forEach(enrollment.notes, function(note){
-                    note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
-                });            
-                $scope.enrollments.push(enrollment);               
-            });
-        });    
+                    if(ev.dataValues){
+                        ev = EventUtils.processEvent(ev, $scope.stagesById[ev.programStage], $scope.optionSets, $scope.prStDes);
+                    }
+                });
+
+                //get enrollment details
+                EnrollmentService.get(enr).then(function(enrollment){
+                    enrollment.dateOfEnrollment = DateUtils.formatFromApiToUser(enrollment.dateOfEnrollment);
+                    enrollment.dateOfIncident = DateUtils.formatFromApiToUser(enrollment.dateOfIncident);            
+                    angular.forEach(enrollment.notes, function(note){
+                        note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
+                    });            
+                    $scope.enrollments.push(enrollment);               
+                });
+            });    
+        });
     };
     
     $scope.close = function(){

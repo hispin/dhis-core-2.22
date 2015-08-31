@@ -93,7 +93,7 @@
                                     {{prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name}}
                                 </td>
                                 <td>
-                                    {{dhis2Event[prStDe.dataElement.id].value}}          
+                                    {{dhis2Event[prStDe.dataElement.id]}}
                                 </td>
                                 <td ng-if="allowProvidedElsewhereExists[dhis2Event.programStage]">
                                     <span ng-if="dhis2Event[prStDe.dataElement.id].providedElsewhere"><i class="fa fa-check"></i></span>
