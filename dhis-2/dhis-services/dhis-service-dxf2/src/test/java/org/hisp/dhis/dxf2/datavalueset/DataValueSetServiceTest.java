@@ -535,6 +535,42 @@ public class DataValueSetServiceTest
         assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
     }
 
+    @Test
+    public void testImportDataValuesWithRequiredCategoryOptionCombo()
+        throws Exception
+    {
+        in = new ClassPathResource( "datavalueset/dataValueSetNonStrict.xml" ).getInputStream();
+
+        ImportOptions options = new ImportOptions().setRequireCategoryOptionCombo( true );
+
+        ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
+
+        assertEquals( summary.getConflicts().toString(), 2, summary.getConflicts().size() );
+        assertEquals( 1, summary.getImportCount().getImported() );
+        assertEquals( 0, summary.getImportCount().getUpdated() );
+        assertEquals( 0, summary.getImportCount().getDeleted() );
+        assertEquals( 2, summary.getImportCount().getIgnored() );
+        assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
+    }
+
+    @Test
+    public void testImportDataValuesWithRequiredAttributeOptionCombo()
+        throws Exception
+    {
+        in = new ClassPathResource( "datavalueset/dataValueSetNonStrict.xml" ).getInputStream();
+
+        ImportOptions options = new ImportOptions().setRequireAttributeOptionCombo( true );
+
+        ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
+
+        assertEquals( summary.getConflicts().toString(), 2, summary.getConflicts().size() );
+        assertEquals( 1, summary.getImportCount().getImported() );
+        assertEquals( 0, summary.getImportCount().getUpdated() );
+        assertEquals( 0, summary.getImportCount().getDeleted() );
+        assertEquals( 2, summary.getImportCount().getIgnored() );
+        assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
+    }
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
