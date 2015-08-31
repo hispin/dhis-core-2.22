@@ -74,6 +74,10 @@ public class ImportOptions
     
     private boolean strictAttributeOptionCombos;
     
+    private boolean requireCategoryOptionCombo;
+    
+    private boolean requireAttributeOptionCombo;
+    
     //--------------------------------------------------------------------------
     // Constructors
     //--------------------------------------------------------------------------
@@ -172,6 +176,16 @@ public class ImportOptions
         return strictAttributeOptionCombos;
     }
 
+    public boolean isRequireCategoryOptionCombo()
+    {
+        return requireCategoryOptionCombo;
+    }
+
+    public boolean isRequireAttributeOptionCombo()
+    {
+        return requireAttributeOptionCombo;
+    }
+
     //--------------------------------------------------------------------------
     // Set methods
     //--------------------------------------------------------------------------
@@ -254,6 +268,18 @@ public class ImportOptions
         return this;
     }
 
+    public ImportOptions setRequireCategoryOptionCombo( boolean requireCategoryOptionCombo )
+    {
+        this.requireCategoryOptionCombo = requireCategoryOptionCombo;
+        return this;
+    }
+
+    public ImportOptions setRequireAttributeOptionCombo( boolean requireAttributeOptionCombo )
+    {
+        this.requireAttributeOptionCombo = requireAttributeOptionCombo;
+        return this;
+    }
+
     @Override
     public String toString()
     {
@@ -270,6 +296,8 @@ public class ImportOptions
             add( "Strict periods", strictPeriods ).
             add( "Strict category option combos", strictCategoryOptionCombos ).
             add( "Strict attr option combos", strictAttributeOptionCombos ).
+            add( "Require category option combo", requireCategoryOptionCombo ).
+            add( "Require attribute option combo", requireAttributeOptionCombo ).
             toString();
     }
 }

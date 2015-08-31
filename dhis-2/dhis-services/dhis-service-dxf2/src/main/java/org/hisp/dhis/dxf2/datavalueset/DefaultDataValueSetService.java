@@ -579,6 +579,8 @@ public class DefaultDataValueSetService
         boolean strictPeriods = importOptions.isStrictPeriods() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
         boolean strictCategoryOptionCombos = importOptions.isStrictCategoryOptionCombos() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS, false );
         boolean strictAttrOptionCombos = importOptions.isStrictAttributeOptionCombos() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS, false );
+        boolean requireCategoryOptionCombo = importOptions.isRequireCategoryOptionCombo() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO, false );
+        boolean requireAttrOptionCombo = importOptions.isRequireAttributeOptionCombo() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO, false );
         
         //----------------------------------------------------------------------
         // Create meta-data maps
@@ -743,16 +745,6 @@ public class DefaultDataValueSetService
                 continue;
             }
 
-            if ( categoryOptionCombo == null )
-            {
-                categoryOptionCombo = fallbackCategoryOptionCombo;
-            }
-
-            if ( attrOptionCombo == null )
-            {
-                attrOptionCombo = fallbackCategoryOptionCombo;
-            }
-            
             boolean inUserHierarchy = orgUnitInHierarchyMap.get( orgUnit.getUid(), 
                 () -> organisationUnitService.isInUserHierarchy( orgUnit.getUid(), currentOrgUnits ) );
             
@@ -787,6 +779,32 @@ public class DefaultDataValueSetService
             // Constraints
             // -----------------------------------------------------------------
 
+            if ( categoryOptionCombo == null )
+            {
+                if ( requireCategoryOptionCombo )
+                {
+                    summary.getConflicts().add( new ImportConflict( dataValue.getValue(), "Category option combo is required but is not specified" ) );
+                    continue;
+                }
+                else
+                {
+                    categoryOptionCombo = fallbackCategoryOptionCombo;
+                }
+            }
+
+            if ( attrOptionCombo == null )
+            {
+                if ( requireAttrOptionCombo )
+                {
+                    summary.getConflicts().add( new ImportConflict( dataValue.getValue(), "Attribute option combo is required but is not specified" ) );
+                    continue;
+                }
+                else
+                {
+                    attrOptionCombo = fallbackCategoryOptionCombo;
+                }
+            }
+            
             if ( strictPeriods && !dataElementPeriodTypesMap.get( dataValue.getDataElement(), 
                 () -> dataElement.getPeriodTypes() ).contains( period.getPeriodType() ) )
             {
