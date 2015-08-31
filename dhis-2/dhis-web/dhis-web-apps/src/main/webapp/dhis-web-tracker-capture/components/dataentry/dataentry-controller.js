@@ -346,7 +346,7 @@ trackerCapture.controller('DataEntryController',
                 newEvent.name = dummyEvent.name;
                 newEvent.reportDateDescription = dummyEvent.reportDateDescription;
                 newEvent.sortingDate = ev.eventDate ? ev.eventDate : ev.dueDate,
-                        newEvent.statusColor = EventUtils.getEventStatusColor(ev);
+                newEvent.statusColor = EventUtils.getEventStatusColor(ev);
                 newEvent.eventDate = DateUtils.formatFromApiToUser(ev.eventDate);
                 newEvent.dueDate = DateUtils.formatFromApiToUser(ev.dueDate);
                 newEvent.enrollmentStatus = dummyEvent.enrollmentStatus;
