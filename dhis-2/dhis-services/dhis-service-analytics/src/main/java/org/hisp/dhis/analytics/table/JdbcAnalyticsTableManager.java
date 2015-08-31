@@ -30,6 +30,8 @@ package org.hisp.dhis.analytics.table;
 
 import static org.hisp.dhis.commons.util.TextUtils.getQuotedCommaDelimitedString;
 import static org.hisp.dhis.dataapproval.DataApprovalLevelService.APPROVAL_LEVEL_UNAPPROVED;
+import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE;
+import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -168,7 +170,8 @@ public class JdbcAnalyticsTableManager
             
             String intClause = 
                 "dv.value " + statementBuilder.getRegexpMatch() + " '" + MathUtils.NUMERIC_LENIENT_REGEXP + "' " +
-                "and ( dv.value != '0' or de.aggregationtype = 'average' or de.zeroissignificant = true ) ";
+                "and ( dv.value != '0' or de.aggregationtype in ('" + AGGREGATION_OPERATOR_AVERAGE + ',' + AGGREGATION_OPERATOR_AVERAGE_SUM + "') " +
+                "or de.zeroissignificant = true ) ";
             
             populateTable( table, "cast(dv.value as " + dbl + ")", "null", DataElement.VALUE_TYPE_INT, intClause, approvalClause );
             
