@@ -260,7 +260,7 @@ public class JdbcEventAnalyticsTableManager
 
         for ( DataElement dataElement : table.getProgram().getAllDataElements() )
         {
-            ValueType valueType = ValueType.getFromDataElement( dataElement );
+            ValueType valueType = dataElement.getValueType();
             String dataType = getColumnType( valueType );
             String dataClause = dataElement.isNumericType() ? numericClause : dataElement.isDateType() ? dateClause : "";
             String select = getSelectClause( valueType );
@@ -275,7 +275,7 @@ public class JdbcEventAnalyticsTableManager
         for ( DataElement dataElement : table.getProgram().getDataElementsWithLegendSet() )
         {
             String column = quote( dataElement.getUid() + PartitionUtils.SEP + dataElement.getLegendSet().getUid() );
-            String select = getSelectClause( ValueType.getFromDataElement( dataElement ) );
+            String select = getSelectClause( dataElement.getValueType() );
             
             String sql = "(select l.uid from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
                 "inner join trackedentitydatavalue dv on l.startvalue <= " + select + " and l.endvalue > " + select + " " +
