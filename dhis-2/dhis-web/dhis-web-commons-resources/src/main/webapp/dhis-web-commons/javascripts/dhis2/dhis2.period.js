@@ -596,7 +596,7 @@ $.extend(dhis2.period.MonthlyGenerator.prototype, {
     var year = offset + this.calendar.today().year();
     var periods = [];
     
-    for( var month = 1; month <= this.calendar.monthsInYear(year); month++ ) {
+    for( var month = 1; month <= getHMISMonthsInYear(this.calendar, year); month++ ) {
       var startDate = this.calendar.newDate(year, month, 1);
       var endDate = this.calendar.newDate(startDate).set(startDate.daysInMonth(month), 'd');
 
@@ -685,7 +685,7 @@ $.extend(dhis2.period.QuarterlyGenerator.prototype, {
     var year = offset + this.calendar.today().year();
     var periods = [];
 
-    for( var month = 1, idx = 1; month <= this.calendar.monthsInYear(year); month += 3, idx++ ) {
+    for( var month = 1, idx = 1; month <= getHMISMonthsInYear(this.calendar, year); month += 3, idx++ ) {
       var startDate = this.calendar.newDate(year, month, 1);
       var endDate = this.calendar.newDate(startDate).set(month + 2, 'm');
       endDate.set(endDate.daysInMonth(month + 2), 'd');
@@ -976,3 +976,17 @@ dhis2.period.FinancialOctoberGenerator = function( calendar, format ) {
 };
 
 dhis2.period.FinancialOctoberGenerator.prototype = Object.create(dhis2.period.FinancialBaseGenerator.prototype);
+
+/**
+ * Convenience method to get DHIS2/HMIS months in a year 
+ */
+function getHMISMonthsInYear( calendar, year ) {
+	
+	var monthsInYear = calendar.monthsInYear(year);
+	
+	if( $.calendars.calendars.ethiopian && calendar instanceof $.calendars.calendars.ethiopian ){
+		monthsInYear = monthsInYear - 1;
+	}
+  	
+  	return monthsInYear;
+}
