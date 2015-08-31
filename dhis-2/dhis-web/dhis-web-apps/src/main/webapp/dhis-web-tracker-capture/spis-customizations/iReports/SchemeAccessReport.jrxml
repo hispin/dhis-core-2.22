@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Scheme_Access_Report" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6b81d499-43bb-41dc-804d-68a5ef9007ef">
 	<property name="ireport.zoom" value="1.7715610000000044"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="244"/>
 	<property name="ireport.y" value="92"/>
 	<parameter name="organisationunits_uid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["K9mSNCOH0PJ"]]></defaultValueExpression>
@@ -64,7 +64,7 @@ from
 		inner join programstage pg on pg.programstageid=pgi.programstageid
 		inner join program p on p.programid=pg.programid
 		where de.dataelementid = 2708
-		and pg.name like 'Application follow-up stage'
+		and pg.name like 'Application follow-up'
 		and tea.uid='Y57XUbBrJk3'
 		and td.value like 'Application approved'
 		and extract(month from cast(pgi.executiondate as timestamp))::integer = extract(month from cast($P{referencedate} as timestamp)+interval '1 month')::integer
@@ -107,7 +107,7 @@ from
 		inner join programstage pg on pg.programstageid=pgi.programstageid
 		inner join program p on p.programid=pg.programid
 		where de.dataelementid = 2708
-		and pg.name like 'Application follow-up stage'
+		and pg.name like 'Application follow-up'
 		and tea.uid='Y57XUbBrJk3'
 		and td.value like 'Application approved'
 		and extract(quarter from cast(pgi.executiondate as timestamp))::integer = extract(quarter from cast($P{referencedate} as timestamp)+interval '1 month')::integer
@@ -220,7 +220,7 @@ group by sagFinal.scheme]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Non PLHIV]]></text>
+				<text><![CDATA[PLHIV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="511" y="65" width="44" height="49" backcolor="#CCFFFF" uuid="dfea56f2-85c8-46fa-9c79-758f46027350"/>
@@ -262,7 +262,7 @@ group by sagFinal.scheme]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PLHIV]]></text>
+				<text><![CDATA[Non PLHIV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="260" y="65" width="68" height="20" backcolor="#CCFFFF" uuid="f06b343e-a870-4a7d-88a6-f61c5713e830"/>
@@ -332,7 +332,7 @@ group by sagFinal.scheme]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PLHIV]]></text>
+				<text><![CDATA[Non PLHIV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="291" y="85" width="37" height="29" backcolor="#CCFFFF" uuid="efa6276e-80eb-4446-854e-b3935015e46e"/>
@@ -346,7 +346,7 @@ group by sagFinal.scheme]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Non PLHIV]]></text>
+				<text><![CDATA[PLHIV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="328" y="85" width="31" height="29" backcolor="#CCFFFF" uuid="8fffb627-0e29-4d88-98ea-ab1b6c4b1110"/>
@@ -360,7 +360,7 @@ group by sagFinal.scheme]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PLHIV]]></text>
+				<text><![CDATA[Non PLHIV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="359" y="85" width="37" height="29" backcolor="#CCFFFF" uuid="2003fa63-f51c-490b-b997-47a29d5cdb80"/>
@@ -374,7 +374,7 @@ group by sagFinal.scheme]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Non PLHIV]]></text>
+				<text><![CDATA[PLHIV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="396" y="65" width="68" height="20" backcolor="#CCFFFF" uuid="7943016e-6fdb-4926-8155-15c6f2f81adc"/>
@@ -402,7 +402,7 @@ group by sagFinal.scheme]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Non PLHIV]]></text>
+				<text><![CDATA[PLHIV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="396" y="85" width="31" height="29" backcolor="#CCFFFF" uuid="b8696a23-157c-4bc3-a8b3-8c24dcd3551c"/>
@@ -416,7 +416,7 @@ group by sagFinal.scheme]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PLHIV]]></text>
+				<text><![CDATA[Non PLHIV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="464" y="65" width="47" height="49" backcolor="#CCFFFF" uuid="1b618427-7a1a-40e7-ab63-985388172886"/>

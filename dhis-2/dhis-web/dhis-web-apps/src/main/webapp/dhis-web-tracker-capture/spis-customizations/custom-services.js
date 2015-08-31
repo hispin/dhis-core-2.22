@@ -7,7 +7,7 @@
 angular.module('trackerCaptureServices')
 
 
-    .service('CustomIDGenerationService',function($http,$q,ProgramFactory){
+    .service('CustomIDGenerationService',function($http,$q,ProgramFactory,RegistrationService){
 
         return {
             getOu: function (ou) {
@@ -70,7 +70,7 @@ angular.module('trackerCaptureServices')
                 return thisDef;
 
             },
-            createCustomIdAndSave: function(tei,customIDAttribute){
+            createCustomIdAndSave: function(tei,customIDAttribute,optionSets,attributesById){
                 var def = $.Deferred();
 
                 this.createCustomId(tei.orgUnit).then(function(customId){
@@ -92,21 +92,20 @@ angular.module('trackerCaptureServices')
                         "orgUnit": tei.orgUnit,
                         "attributes": tei.attributes
                     }
-                    $http.put( '../api/trackedEntityInstances/'+teI.trackedEntity,teI ).then(function(response){
-                        if (response.data.response.status == "SUCCESS"){
+                    RegistrationService.registerOrUpdate(tei,optionSets,attributesById).then(function(response){
+                        if (response.response.status == "SUCCESS"){
 
                             alert("Beneficiary Id : " + customId);
                         }
                         def.resolve(response.data);
-
-                    });
+                    })
 
 
                 })
 
                 return def;
             },
-            validateAndCreateCustomId : function(tei,programUid,tEAttributes,destination) {
+            validateAndCreateCustomId : function(tei,programUid,tEAttributes,destination,optionSets,attributesById) {
                 var def = $.Deferred();
                 var thiz = this;
                 var customIDAttribute;
@@ -142,7 +141,7 @@ angular.module('trackerCaptureServices')
                     })
 
                     if (isValidAttribute && isValidProgram){
-                        thiz.createCustomIdAndSave(tei,customIDAttribute).then(function(response){
+                        thiz.createCustomIdAndSave(tei,customIDAttribute,optionSets,attributesById).then(function(response){
                             def.resolve(response);
                         });
                     }else{
