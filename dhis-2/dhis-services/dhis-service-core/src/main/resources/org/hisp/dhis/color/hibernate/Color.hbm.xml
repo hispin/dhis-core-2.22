@@ -6,22 +6,16 @@
   >
 
 <hibernate-mapping>
-  <class name="org.hisp.dhis.legend.Legend" table="maplegend">
+  <class name="org.hisp.dhis.color.Color" table="color">
 
-    <id name="id" column="maplegendid">
+    <id name="id" column="colorid">
       <generator class="native" />
     </id>
     &identifiableProperties;
 
     <property name="name" column="name" not-null="true" unique="false" length="230" />
 
-    <property name="startValue" column="startvalue" index="maplegend_startvalue" />
-
-    <property name="endValue" column="endvalue" index="maplegend_endvalue" />
-
     <property name="color" column="color" />
-
-    <property name="image" column="image" />
 
   </class>
 </hibernate-mapping>
