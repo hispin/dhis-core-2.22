@@ -120,12 +120,19 @@
   </bean>
 
   <bean id="dataElementGroupSetImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
-    <constructor-arg name="importerClass" type="java.lang.Class"
-      value="org.hisp.dhis.dataelement.DataElementGroupSet" />
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.dataelement.DataElementGroupSet" />
   </bean>
 
   <bean id="chartImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.chart.Chart" />
+  </bean>
+
+  <bean id="colorImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.color.Color" />
+  </bean>
+
+  <bean id="colorSetImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.color.ColorSet" />
   </bean>
 
   <bean id="constantImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">

@@ -1,4 +1,4 @@
-package org.hisp.dhis.legend;
+package org.hisp.dhis.color;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,106 +28,66 @@ package org.hisp.dhis.legend;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
- * @author Jan Henrik Overland
+ * @author Lars Helge Overland
  */
-@JacksonXmlRootElement( localName = "legend", namespace = DxfNamespaces.DXF_2_0 )
-public class Legend
+@JacksonXmlRootElement( localName = "colorSet", namespace = DxfNamespaces.DXF_2_0 )
+public class ColorSet
     extends BaseIdentifiableObject
 {
-    private Double startValue;
+    @Scanned
+    private List<Color> colors = new ArrayList<>();
 
-    private Double endValue;
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
 
-    private String color;
+    public ColorSet()
+    {
+    }
+
+    // -------------------------------------------------------------------------
+    // Logic
+    // -------------------------------------------------------------------------
+
+    public void removeAllColors()
+    {
+        colors.clear();
+    }
     
-    private String image;
-
-    public Legend()
-    {
-    }
-
-    public Legend( String name, Double startValue, Double endValue, String color, String image )
-    {
-        this.name = name;
-        this.startValue = startValue;
-        this.endValue = endValue;
-        this.color = color;
-        this.image = image;
-    }
-
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
 
-    @Override
-    public boolean haveUniqueNames()
-    {
-        return false;
-    }
-
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Double getStartValue()
+    @JacksonXmlElementWrapper( localName = "colors", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "color", namespace = DxfNamespaces.DXF_2_0 )
+    public List<Color> getColors()
     {
-        return startValue;
+        return colors;
     }
 
-    public void setStartValue( Double startValue )
+    public void setColors( List<Color> colors )
     {
-        this.startValue = startValue;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Double getEndValue()
-    {
-        return endValue;
-    }
-
-    public void setEndValue( Double endValue )
-    {
-        this.endValue = endValue;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getColor()
-    {
-        return color;
-    }
-
-    public void setColor( String color )
-    {
-        this.color = color;
-    }   
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getImage()
-    {
-        return image;
-    }
-
-    public void setImage( String image )
-    {
-        this.image = image;
+        this.colors = colors;
     }
 
     @Override
@@ -137,22 +97,10 @@ public class Legend
 
         if ( other.getClass().isInstance( this ) )
         {
-            Legend legend = (Legend) other;
+            ColorSet colorSet = (ColorSet) other;
 
-            if ( strategy.isReplace() )
-            {
-                startValue = legend.getStartValue();
-                endValue = legend.getEndValue();
-                color = legend.getColor();
-                image = legend.getImage();
-            }
-            else if ( strategy.isMerge() )
-            {
-                startValue = legend.getStartValue() == null ? startValue : legend.getStartValue();
-                endValue = legend.getEndValue() == null ? endValue : legend.getEndValue();
-                color = legend.getColor() == null ? color : legend.getColor();
-                image = legend.getImage() == null ? image : legend.getImage();
-            }
+            removeAllColors();
+            colors.addAll( colorSet.getColors() );
         }
     }
 }

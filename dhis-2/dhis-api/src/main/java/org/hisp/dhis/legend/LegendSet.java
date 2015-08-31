@@ -74,7 +74,7 @@ public class LegendSet
     // Logic
     // -------------------------------------------------------------------------
 
-    public void removeAllMapLegends()
+    public void removeAllLegends()
     {
         legends.clear();
     }
@@ -141,7 +141,7 @@ public class LegendSet
                 symbolizer = legendSet.getSymbolizer() == null ? symbolizer : legendSet.getSymbolizer();
             }
 
-            removeAllMapLegends();
+            removeAllLegends();
             legends.addAll( legendSet.getLegends() );
         }
     }

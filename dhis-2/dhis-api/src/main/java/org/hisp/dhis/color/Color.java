@@ -1,4 +1,4 @@
-package org.hisp.dhis.legend;
+package org.hisp.dhis.color;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -41,68 +41,30 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
- * @author Jan Henrik Overland
+ * @author Lars Helge Overland
  */
-@JacksonXmlRootElement( localName = "legend", namespace = DxfNamespaces.DXF_2_0 )
-public class Legend
+@JacksonXmlRootElement( localName = "color", namespace = DxfNamespaces.DXF_2_0 )
+public class Color
     extends BaseIdentifiableObject
 {
-    private Double startValue;
-
-    private Double endValue;
-
     private String color;
-    
-    private String image;
 
-    public Legend()
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
+
+    public Color()
     {
     }
-
-    public Legend( String name, Double startValue, Double endValue, String color, String image )
+    
+    public Color( String color )
     {
-        this.name = name;
-        this.startValue = startValue;
-        this.endValue = endValue;
         this.color = color;
-        this.image = image;
     }
 
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
-
-    @Override
-    public boolean haveUniqueNames()
-    {
-        return false;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Double getStartValue()
-    {
-        return startValue;
-    }
-
-    public void setStartValue( Double startValue )
-    {
-        this.startValue = startValue;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Double getEndValue()
-    {
-        return endValue;
-    }
-
-    public void setEndValue( Double endValue )
-    {
-        this.endValue = endValue;
-    }
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
@@ -117,19 +79,6 @@ public class Legend
         this.color = color;
     }   
 
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getImage()
-    {
-        return image;
-    }
-
-    public void setImage( String image )
-    {
-        this.image = image;
-    }
-
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -137,21 +86,15 @@ public class Legend
 
         if ( other.getClass().isInstance( this ) )
         {
-            Legend legend = (Legend) other;
+            Color colorObj = (Color) other;
 
             if ( strategy.isReplace() )
             {
-                startValue = legend.getStartValue();
-                endValue = legend.getEndValue();
-                color = legend.getColor();
-                image = legend.getImage();
+                color = colorObj.getColor();
             }
             else if ( strategy.isMerge() )
             {
-                startValue = legend.getStartValue() == null ? startValue : legend.getStartValue();
-                endValue = legend.getEndValue() == null ? endValue : legend.getEndValue();
-                color = legend.getColor() == null ? color : legend.getColor();
-                image = legend.getImage() == null ? image : legend.getImage();
+                color = colorObj.getColor() == null ? color : colorObj.getColor();
             }
         }
     }
