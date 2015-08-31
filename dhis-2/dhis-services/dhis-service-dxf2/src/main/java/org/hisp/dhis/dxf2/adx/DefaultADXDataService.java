@@ -297,7 +297,7 @@ public class DefaultADXDataService
             attributesToDXF( ADXConstants.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
         }
         // if dataelement type is string we need to pick out the 'annotation' element
-        if ( dataElement.getType().equals( DataElement.VALUE_TYPE_STRING ) )
+        if ( dataElement.getValueType().isText() )
         {
             adxReader.moveToStartElement( ADXConstants.ANNOTATION, ADXConstants.DATAVALUE );
             if ( adxReader.isStartElement( ADXConstants.ANNOTATION ) )

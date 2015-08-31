@@ -28,14 +28,8 @@ package org.hisp.dhis.webapi.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.hisp.dhis.common.NameableObjectUtils;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -51,9 +45,15 @@ import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.webapi.webdomain.form.Field;
 import org.hisp.dhis.webapi.webdomain.form.Form;
 import org.hisp.dhis.webapi.webdomain.form.Group;
-import org.hisp.dhis.webapi.webdomain.form.InputType;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -208,12 +208,12 @@ public class FormUtils
             dataElements.add( programStageDataElement.getDataElement() );
         }
 
-        return inputFromDataElements( dataElements, new ArrayList<DataElementOperand>() );
+        return inputFromDataElements( dataElements, new ArrayList<>() );
     }
 
     private static List<Field> inputFromDataElements( List<DataElement> dataElements )
     {
-        return inputFromDataElements( dataElements, new ArrayList<DataElementOperand>() );
+        return inputFromDataElements( dataElements, new ArrayList<>() );
     }
 
     private static List<Field> inputFromDataElements( List<DataElement> dataElements,
@@ -223,8 +223,7 @@ public class FormUtils
 
         for ( DataElement dataElement : dataElements )
         {
-            for ( DataElementCategoryOptionCombo categoryOptionCombo : dataElement.getCategoryCombo()
-                .getSortedOptionCombos() )
+            for ( DataElementCategoryOptionCombo categoryOptionCombo : dataElement.getCategoryCombo().getSortedOptionCombos() )
             {
                 if ( !isDisabled( dataElement, categoryOptionCombo, greyedFields ) )
                 {
@@ -271,66 +270,9 @@ public class FormUtils
         return false;
     }
 
-    private static InputType inputTypeFromDataElement( DataElement dataElement )
+    private static ValueType inputTypeFromDataElement( DataElement dataElement )
     {
-        // TODO harmonize / use map
-
-        if ( DataElement.VALUE_TYPE_STRING.equals( dataElement.getType() ) )
-        {
-            if ( DataElement.VALUE_TYPE_TEXT.equals( dataElement.getTextType() ) )
-            {
-                return InputType.TEXT;
-            }
-            if ( DataElement.VALUE_TYPE_LONG_TEXT.equals( dataElement.getTextType() ) )
-            {
-                return InputType.LONG_TEXT;
-            }
-        }
-        else if ( DataElement.VALUE_TYPE_INT.equals( dataElement.getType() ) )
-        {
-            if ( DataElement.VALUE_TYPE_NUMBER.equals( dataElement.getNumberType() ) )
-            {
-                return InputType.NUMBER;
-            }
-            else if ( DataElement.VALUE_TYPE_INT.equals( dataElement.getNumberType() ) )
-            {
-                return InputType.INTEGER;
-            }
-            else if ( DataElement.VALUE_TYPE_POSITIVE_INT.equals( dataElement.getNumberType() ) )
-            {
-                return InputType.INTEGER_POSITIVE;
-            }
-            else if ( DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT.equals( dataElement.getNumberType() ) )
-            {
-                return InputType.INTEGER_ZERO_OR_POSITIVE;
-            }
-            else if ( DataElement.VALUE_TYPE_NEGATIVE_INT.equals( dataElement.getNumberType() ) )
-            {
-                return InputType.INTEGER_NEGATIVE;
-            }
-            else if ( DataElement.VALUE_TYPE_UNIT_INTERVAL.equals( dataElement.getNumberType() ) )
-            {
-                return InputType.UNIT_INTERVAL;
-            }
-            else if ( DataElement.VALUE_TYPE_PERCENTAGE.equals( dataElement.getNumberType() ) )
-            {
-                return InputType.PERCENTAGE;
-            }
-        }
-        else if ( DataElement.VALUE_TYPE_BOOL.equals( dataElement.getType() ) )
-        {
-            return InputType.BOOLEAN;
-        }
-        else if ( DataElement.VALUE_TYPE_TRUE_ONLY.equals( dataElement.getType() ) )
-        {
-            return InputType.TRUE_ONLY;
-        }
-        else if ( DataElement.VALUE_TYPE_DATE.equals( dataElement.getType() ) )
-        {
-            return InputType.DATE;
-        }
-
-        return null;
+        return dataElement.getValueType();
     }
 
     public static void fillWithDataValues( Form form, Collection<DataValue> dataValues )
