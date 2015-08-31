@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.ValueType;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -46,10 +47,10 @@ public class Field
     private String categoryOptionCombo;
 
     private String value;
-    
+
     private String comment;
 
-    private InputType type;
+    private ValueType type;
 
     private String optionSet;
 
@@ -119,12 +120,12 @@ public class Field
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public InputType getType()
+    public ValueType getType()
     {
         return type;
     }
 
-    public void setType( InputType type )
+    public void setType( ValueType type )
     {
         this.type = type;
     }
