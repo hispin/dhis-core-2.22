@@ -501,7 +501,7 @@ public class FacilityReportingServiceImpl
 
         if ( dataValue == null )
         {
-            dataValue = new org.hisp.dhis.datavalue.DataValue( dataElement, period, unit, catOptCombo, catOptCombo,
+            dataValue = new org.hisp.dhis.datavalue.DataValue( dataElement, period, unit, catOptCombo, categoryService.getDefaultDataElementCategoryOptionCombo(),
                 value, "", new Date(), "" );
             dataValueService.addDataValue( dataValue );
         }
