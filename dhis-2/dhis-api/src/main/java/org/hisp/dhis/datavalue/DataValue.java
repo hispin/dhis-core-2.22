@@ -28,16 +28,16 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.ImportableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * @author Kristian Nordal
@@ -52,7 +52,7 @@ public class DataValue
     private static final long serialVersionUID = 6269303850789110610L;
 
     private static final Pattern ZERO_PATTERN = Pattern.compile( "^0(\\.0*)?$" );
-    
+
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
@@ -102,12 +102,12 @@ public class DataValue
     }
 
     /**
-     * @param dataElement the data element.
-     * @param period the period.
-     * @param source the organisation unit.
+     * @param dataElement         the data element.
+     * @param period              the period.
+     * @param source              the organisation unit.
      * @param categoryOptionCombo the category option combo.
      */
-    public DataValue( DataElement dataElement, Period period, OrganisationUnit source, 
+    public DataValue( DataElement dataElement, Period period, OrganisationUnit source,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
     {
         this.dataElement = dataElement;
@@ -119,17 +119,17 @@ public class DataValue
     }
 
     /**
-     * @param dataElement the data element.
-     * @param period the period.
-     * @param source the organisation unit.
-     * @param categoryOptionCombo the category option combo.
+     * @param dataElement          the data element.
+     * @param period               the period.
+     * @param source               the organisation unit.
+     * @param categoryOptionCombo  the category option combo.
      * @param attributeOptionCombo the attribute option combo.
-     * @param value the value.
-     * @param storedBy the user that stored this data value.
-     * @param lastUpdated the time of the last update to this data value.
-     * @param comment the comment.
+     * @param value                the value.
+     * @param storedBy             the user that stored this data value.
+     * @param lastUpdated          the time of the last update to this data value.
+     * @param comment              the comment.
      */
-    public DataValue( DataElement dataElement, Period period, OrganisationUnit source, DataElementCategoryOptionCombo categoryOptionCombo, 
+    public DataValue( DataElement dataElement, Period period, OrganisationUnit source, DataElementCategoryOptionCombo categoryOptionCombo,
         DataElementCategoryOptionCombo attributeOptionCombo, String value, String storedBy, Date lastUpdated, String comment )
     {
         this.dataElement = dataElement;
@@ -165,14 +165,13 @@ public class DataValue
     {
         return getCategoryOptionCombo();
     }
-    
+
     /**
      * Indicates whether the value is a zero.
      */
     public boolean isZero()
     {
-        return dataElement != null && dataElement.getType().equals( DataElement.VALUE_TYPE_INT )
-            && value != null && ZERO_PATTERN.matcher( value ).find();
+        return dataElement != null && dataElement.getValueType().isNumeric() && value != null && ZERO_PATTERN.matcher( value ).find();
     }
 
     /**
@@ -192,7 +191,7 @@ public class DataValue
     {
         return comment != null && !comment.isEmpty();
     }
-    
+
     public void toggleFollowUp()
     {
         if ( this.followup == null )
@@ -204,7 +203,7 @@ public class DataValue
             this.followup = !this.followup;
         }
     }
-    
+
     // -------------------------------------------------------------------------
     // hashCode and equals
     // -------------------------------------------------------------------------
@@ -229,12 +228,12 @@ public class DataValue
 
         final DataValue other = (DataValue) o;
 
-        return 
-            dataElement.equals( other.getDataElement() ) && 
-            period.equals( other.getPeriod() ) && 
-            source.equals( other.getSource() ) &&
-            categoryOptionCombo.equals( other.getCategoryOptionCombo() ) &&
-            attributeOptionCombo.equals( other.getAttributeOptionCombo() );
+        return
+            dataElement.equals( other.getDataElement() ) &&
+                period.equals( other.getPeriod() ) &&
+                source.equals( other.getSource() ) &&
+                categoryOptionCombo.equals( other.getCategoryOptionCombo() ) &&
+                attributeOptionCombo.equals( other.getAttributeOptionCombo() );
     }
 
     @Override
@@ -251,7 +250,7 @@ public class DataValue
 
         return result;
     }
-    
+
     @Override
     public String toString()
     {
@@ -363,7 +362,7 @@ public class DataValue
     {
         this.lastUpdated = lastUpdated;
     }
-    
+
     public String getComment()
     {
         return comment;

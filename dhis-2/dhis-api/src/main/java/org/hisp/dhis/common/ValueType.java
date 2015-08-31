@@ -81,6 +81,11 @@ public enum ValueType
         return this == INTEGER || this == INTEGER_POSITIVE || this == INTEGER_NEGATIVE || this == INTEGER_ZERO_OR_POSITIVE;
     }
 
+    public boolean isNumeric()
+    {
+        return this.isInteger() || this == NUMBER;
+    }
+
     public boolean isText()
     {
         return this == TEXT || this == LONG_TEXT;
