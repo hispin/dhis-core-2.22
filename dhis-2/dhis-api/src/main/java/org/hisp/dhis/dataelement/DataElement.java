@@ -28,15 +28,13 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.dataset.DataSet.NO_EXPIRY;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
@@ -44,6 +42,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
@@ -57,13 +56,14 @@ import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.hisp.dhis.util.ObjectUtils;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.hisp.dhis.dataset.DataSet.NO_EXPIRY;
 
 /**
  * A DataElement is a definition (meta-information about) of the entities that
@@ -74,7 +74,7 @@ import com.google.common.collect.Sets;
  * children. The sum of the children represent the same entity as the parent.
  * Hierarchies of DataElements are used to give more fine- or course-grained
  * representations of the entities.
- * <p/>
+ * <p>
  * DataElement acts as a DimensionSet in the dynamic dimensional model, and as a
  * DimensionOption in the static DataElement dimension.
  *
@@ -119,6 +119,11 @@ public class DataElement
     public static final String AGGREGATION_OPERATOR_NONE = "none";
 
     /**
+     * Data element value type (int, boolean, etc)
+     */
+    private ValueType valueType;
+
+    /**
      * The name to appear in forms.
      */
     private String formName;
@@ -129,7 +134,7 @@ public class DataElement
     protected transient String displayFormName;
 
     /**
-     * The domain of this DataElement; e.g. DataElementDomainType.aggregate or
+     * The domain of this DataElement; e.g. DataElementDomainType.AGGREGATE or
      * DataElementDomainType.TRACKER.
      */
     private DataElementDomain domainType;
@@ -276,7 +281,7 @@ public class DataElement
     {
         return VALUE_TYPE_DATE.equals( type ) || VALUE_TYPE_DATETIME.equals( type );
     }
-    
+
     /**
      * Returns the value type. If value type is int and the number type exists,
      * the number type is returned, otherwise the type is returned.
@@ -338,7 +343,7 @@ public class DataElement
         Collections.sort( list, DataSetFrequencyComparator.INSTANCE );
         return !list.isEmpty() ? list.get( 0 ) : null;
     }
-    
+
     /**
      * Returns the category combinations associated with the data sets of this
      * data element.
@@ -346,12 +351,12 @@ public class DataElement
     public Set<DataElementCategoryCombo> getDataSetCategoryCombos()
     {
         Set<DataElementCategoryCombo> categoryCombos = new HashSet<>();
-        
+
         for ( DataSet dataSet : dataSets )
         {
             categoryCombos.add( dataSet.getCategoryCombo() );
         }
-        
+
         return categoryCombos;
     }
 
@@ -362,12 +367,12 @@ public class DataElement
     public Set<DataElementCategoryOptionCombo> getDataSetCategoryOptionCombos()
     {
         Set<DataElementCategoryOptionCombo> categoryOptionCombos = new HashSet<>();
-        
+
         for ( DataSet dataSet : dataSets )
         {
             categoryOptionCombos.addAll( dataSet.getCategoryCombo().getOptionCombos() );
         }
-        
+
         return categoryOptionCombos;
     }
 
@@ -383,7 +388,7 @@ public class DataElement
 
         return dataSet != null ? dataSet.getPeriodType() : null;
     }
-    
+
     /**
      * Returns the PeriodTypes of the DataElement, based on the PeriodType of the
      * DataSets which the DataElement is associated with.
@@ -415,16 +420,16 @@ public class DataElement
      * Number of periods in the future to open for data capture, 0 means capture
      * not allowed for current period. Based on the data sets of which this data
      * element is a member.
-     */    
+     */
     public int getOpenFuturePeriods()
     {
         Set<Integer> openPeriods = new HashSet<>();
-        
+
         for ( DataSet dataSet : dataSets )
         {
             openPeriods.add( dataSet.getOpenFuturePeriods() );
         }
-        
+
         return ObjectUtils.firstNonNull( Collections.max( openPeriods ), 0 );
     }
 
@@ -473,7 +478,7 @@ public class DataElement
     {
         return categoryCombo != null;
     }
-    
+
     /**
      * Tests whether the DataElement is associated with a
      * DataElementCategoryCombo with more than one DataElementCategory, or any
@@ -574,7 +579,7 @@ public class DataElement
     {
         return aggregationOperator != null ? AggregationType.fromValue( aggregationOperator ) : null;
     }
-    
+
     // -------------------------------------------------------------------------
     // Helper getters
     // -------------------------------------------------------------------------
@@ -585,10 +590,23 @@ public class DataElement
     {
         return optionSet != null;
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public ValueType getValueType()
+    {
+        return ValueType.getFromDataElement( this );
+    }
+
+    public void setValueType( ValueType valueType )
+    {
+        this.valueType = valueType;
+    }
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
