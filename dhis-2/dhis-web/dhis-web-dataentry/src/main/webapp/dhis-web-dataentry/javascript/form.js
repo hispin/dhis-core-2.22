@@ -84,7 +84,7 @@ dhis2.de.fetchedDataSets = {};
 
 // Constants
 
-dhis2.de.cst.defaultType = 'int';
+dhis2.de.cst.defaultType = 'INTEGER';
 dhis2.de.cst.defaultName = '[unknown]';
 dhis2.de.cst.dropDownMaxItems = 30;
 dhis2.de.cst.formulaPattern = /#\{.+?\}/g;
@@ -284,11 +284,11 @@ dhis2.de.ajaxLogin = function()
             }
         } );
     } );
-}
+};
 
 dhis2.de.loadMetaData = function()
 {
-	var def = $.Deferred();
+    var def = $.Deferred();
 	
     $.ajax( {
     	url: 'getMetaData.action',
@@ -483,7 +483,7 @@ dhis2.de.uploadLocalData = function()
             }
         } );
     } )( dataValuesArray );
-}
+};
 
 dhis2.de.addEventListeners = function()
 {
@@ -492,8 +492,7 @@ dhis2.de.addEventListeners = function()
         var id = $( this ).attr( 'id' );
 
         // If entry field is a date picker, remove old target field, and change id
-        
-        if ( /-dp$/.test( id ) ) 
+        if ( /-dp$/.test( id ) )
         {
             var dpTargetId = id.substring( 0, id.length - 3 );
             $( '#' + dpTargetId ).remove();
@@ -533,10 +532,9 @@ dhis2.de.addEventListeners = function()
             keyPress( event, this );
         } );
 
-        if ( type == 'date' )
+        if ( type == 'DATE' )
         {
             // Fake event, needed for valueBlur / valueFocus when using date-picker
-        	
             var fakeEvent = {
                 target: {
                     id: id + '-dp'
@@ -553,8 +551,8 @@ dhis2.de.addEventListeners = function()
                 onShow: function() {
                     valueFocus(fakeEvent);
                 },
-				minDate: null,
-				maxDate: null
+                minDate: null,
+                maxDate: null
             } );
         }		
     } );
