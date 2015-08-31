@@ -110,6 +110,7 @@ public interface SystemSettingManager
     
     final String KEY_DATA_IMPORT_STRICT_PERIODS = "keyDataImportStrictPeriods";
     final String KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS = "keyDataImportStrictCategoryOptionCombos";
+    final String KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS = "keyDataImportStrictOrganisationUnits";
     final String KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS = "keyDataImportStrictAttributeOptionCombos";
     final String KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO = "keyDataImportRequireCategoryOptionCombo";
     final String KEY_DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO = "keyDataImportRequireAttributeOptionCombo";

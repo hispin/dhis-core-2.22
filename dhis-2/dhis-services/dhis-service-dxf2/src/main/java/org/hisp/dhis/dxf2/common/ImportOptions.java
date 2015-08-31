@@ -74,6 +74,8 @@ public class ImportOptions
     
     private boolean strictAttributeOptionCombos;
     
+    private boolean strictOrganisationUnits;
+    
     private boolean requireCategoryOptionCombo;
     
     private boolean requireAttributeOptionCombo;
@@ -176,6 +178,11 @@ public class ImportOptions
         return strictAttributeOptionCombos;
     }
 
+    public boolean isStrictOrganisationUnits()
+    {
+        return strictOrganisationUnits;
+    }
+
     public boolean isRequireCategoryOptionCombo()
     {
         return requireCategoryOptionCombo;
@@ -268,6 +275,12 @@ public class ImportOptions
         return this;
     }
 
+    public ImportOptions setStrictOrganisationUnits( boolean strictOrganisationUnits )
+    {
+        this.strictOrganisationUnits = strictOrganisationUnits;
+        return this;
+    }
+
     public ImportOptions setRequireCategoryOptionCombo( boolean requireCategoryOptionCombo )
     {
         this.requireCategoryOptionCombo = requireCategoryOptionCombo;
@@ -296,6 +309,7 @@ public class ImportOptions
             add( "Strict periods", strictPeriods ).
             add( "Strict category option combos", strictCategoryOptionCombos ).
             add( "Strict attr option combos", strictAttributeOptionCombos ).
+            add( "Strict org units", strictCategoryOptionCombos ).
             add( "Require category option combo", requireCategoryOptionCombo ).
             add( "Require attribute option combo", requireAttributeOptionCombo ).
             toString();

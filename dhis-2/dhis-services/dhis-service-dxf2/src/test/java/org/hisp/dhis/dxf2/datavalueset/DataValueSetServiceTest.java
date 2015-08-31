@@ -193,10 +193,14 @@ public class DataValueSetServiceTest
         dsA.addDataElement( deC );
         dsA.addDataElement( deD );        
         
-        dataSetService.addDataSet( dsA );
         organisationUnitService.addOrganisationUnit( ouA );
         organisationUnitService.addOrganisationUnit( ouB );
         organisationUnitService.addOrganisationUnit( ouC );
+        
+        dsA.addOrganisationUnit( ouA );
+        dsA.addOrganisationUnit( ouC );
+        
+        dataSetService.addDataSet( dsA );
         periodService.addPeriod( peA );
         periodService.addPeriod( peB );
         
@@ -568,6 +572,24 @@ public class DataValueSetServiceTest
         assertEquals( 0, summary.getImportCount().getUpdated() );
         assertEquals( 0, summary.getImportCount().getDeleted() );
         assertEquals( 2, summary.getImportCount().getIgnored() );
+        assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
+    }
+
+    @Test
+    public void testImportDataValuesWithStrictOrganisationUnits()
+        throws Exception
+    {
+        in = new ClassPathResource( "datavalueset/dataValueSetNonStrict.xml" ).getInputStream();
+
+        ImportOptions options = new ImportOptions().setStrictOrganisationUnits( true );
+
+        ImportSummary summary = dataValueSetService.saveDataValueSet( in, options );
+
+        assertEquals( summary.getConflicts().toString(), 1, summary.getConflicts().size() );
+        assertEquals( 2, summary.getImportCount().getImported() );
+        assertEquals( 0, summary.getImportCount().getUpdated() );
+        assertEquals( 0, summary.getImportCount().getDeleted() );
+        assertEquals( 1, summary.getImportCount().getIgnored() );
         assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
     }
 

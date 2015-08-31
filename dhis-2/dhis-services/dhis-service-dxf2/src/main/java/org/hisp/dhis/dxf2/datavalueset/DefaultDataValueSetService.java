@@ -51,6 +51,7 @@ import java.util.Set;
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.staxwax.factory.XMLFactory;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -569,16 +570,15 @@ public class DefaultDataValueSetService
 
         log.info( "Scheme: " + idScheme + ", data element scheme: " + dataElementIdScheme + ", org unit scheme: " + orgUnitIdScheme );
 
-        boolean dryRun = dataValueSet.getDryRun() != null ? dataValueSet.getDryRun() : importOptions.isDryRun();
-
         ImportStrategy strategy = dataValueSet.getStrategy() != null ?
             ImportStrategy.valueOf( dataValueSet.getStrategy() ) : importOptions.getImportStrategy();
 
-        boolean skipExistingCheck = importOptions.isSkipExistingCheck();
-        
+        boolean dryRun = dataValueSet.getDryRun() != null ? dataValueSet.getDryRun() : importOptions.isDryRun();
+        boolean skipExistingCheck = importOptions.isSkipExistingCheck();        
         boolean strictPeriods = importOptions.isStrictPeriods() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
         boolean strictCategoryOptionCombos = importOptions.isStrictCategoryOptionCombos() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS, false );
         boolean strictAttrOptionCombos = importOptions.isStrictAttributeOptionCombos() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS, false );
+        boolean strictOrgUnits = importOptions.isStrictOrganisationUnits() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS, false );
         boolean requireCategoryOptionCombo = importOptions.isRequireCategoryOptionCombo() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO, false );
         boolean requireAttrOptionCombo = importOptions.isRequireAttributeOptionCombo() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO, false );
         
@@ -593,6 +593,7 @@ public class DefaultDataValueSetService
         CachingMap<String, Set<PeriodType>> dataElementPeriodTypesMap = new CachingMap<>();
         CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementCategoryOptionComboMap = new CachingMap<>();
         CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementAttrOptionComboMap = new CachingMap<>();
+        CachingMap<String, Boolean> dataElementOrgUnitMap = new CachingMap<>();
         CachingMap<String, Boolean> orgUnitInHierarchyMap = new CachingMap<>();
 
         //----------------------------------------------------------------------
@@ -805,7 +806,7 @@ public class DefaultDataValueSetService
                 }
             }
             
-            if ( strictPeriods && !dataElementPeriodTypesMap.get( dataValue.getDataElement(), 
+            if ( strictPeriods && !dataElementPeriodTypesMap.get( dataElement.getUid(), 
                 () -> dataElement.getPeriodTypes() ).contains( period.getPeriodType() ) )
             {
                 summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(), 
@@ -813,7 +814,7 @@ public class DefaultDataValueSetService
                 continue;
             }
             
-            if ( strictCategoryOptionCombos && !dataElementCategoryOptionComboMap.get( dataValue.getDataElement(),
+            if ( strictCategoryOptionCombos && !dataElementCategoryOptionComboMap.get( dataElement.getUid(),
                 () -> dataElement.getCategoryCombo().getOptionCombos() ).contains( categoryOptionCombo ) )
             {
                 summary.getConflicts().add( new ImportConflict( categoryOptionCombo.getUid(), 
@@ -821,11 +822,19 @@ public class DefaultDataValueSetService
                 continue;
             }
             
-            if ( strictAttrOptionCombos && !dataElementAttrOptionComboMap.get( dataValue.getDataElement(),
+            if ( strictAttrOptionCombos && !dataElementAttrOptionComboMap.get( dataElement.getUid(),
                 () -> dataElement.getDataSetCategoryOptionCombos() ).contains( attrOptionCombo ) )
             {
                 summary.getConflicts().add( new ImportConflict( attrOptionCombo.getUid(),
                     "Attribute option combo: " + attrOptionCombo.getUid() + " must be part of category combo of data sets of data element: " + dataElement.getUid() ) );
+                continue;
+            }
+            
+            if ( strictOrgUnits && BooleanUtils.isFalse( dataElementOrgUnitMap.get( dataElement.getUid() + orgUnit.getUid(),
+                () -> dataElement.hasDataSetOrganisationUnit( orgUnit ) ) ) )
+            {
+                summary.getConflicts().add( new ImportConflict( orgUnit.getUid(),
+                    "Data element: " + dataElement.getUid() + " must be assigned through data sets to organisation unit: " + orgUnit.getUid() ) );
                 continue;
             }
             
