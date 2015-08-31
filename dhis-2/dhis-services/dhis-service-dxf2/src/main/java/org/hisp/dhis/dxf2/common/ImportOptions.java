@@ -68,11 +68,11 @@ public class ImportOptions
 
     private boolean sharing;
     
-    private Boolean strictPeriods;
+    private boolean strictPeriods;
 
-    private Boolean strictCategoryOptionCombos;
+    private boolean strictCategoryOptionCombos;
     
-    private Boolean strictAttributeOptionCombos;
+    private boolean strictAttributeOptionCombos;
     
     //--------------------------------------------------------------------------
     // Constructors
@@ -98,21 +98,6 @@ public class ImportOptions
         return DEFAULT_OPTIONS;
     }
     
-    public boolean hasStrictPeriods()
-    {
-        return strictPeriods != null;
-    }
-    
-    public boolean hasStrictCategoryOptionCombos()
-    {
-        return strictCategoryOptionCombos != null;
-    }
-
-    public boolean hasStrictAttributeOptionCombos()
-    {
-        return strictAttributeOptionCombos != null;
-    }
-
     //--------------------------------------------------------------------------
     // Get methods
     //--------------------------------------------------------------------------
@@ -171,18 +156,18 @@ public class ImportOptions
     {
         return sharing;
     }
-
-    public Boolean getStrictPeriods()
+    
+    public boolean isStrictPeriods()
     {
         return strictPeriods;
     }
 
-    public Boolean getStrictCategoryOptionCombos()
+    public boolean isStrictCategoryOptionCombos()
     {
         return strictCategoryOptionCombos;
     }
 
-    public Boolean getStrictAttributeOptionCombos()
+    public boolean isStrictAttributeOptionCombos()
     {
         return strictAttributeOptionCombos;
     }
@@ -251,19 +236,19 @@ public class ImportOptions
         return this;
     }
 
-    public ImportOptions setStrictPeriods( Boolean strictPeriods )
+    public ImportOptions setStrictPeriods( boolean strictPeriods )
     {
         this.strictPeriods = strictPeriods;
         return this;
     }
 
-    public ImportOptions setStrictCategoryOptionCombos( Boolean strictCategoryOptionCombos )
+    public ImportOptions setStrictCategoryOptionCombos( boolean strictCategoryOptionCombos )
     {
         this.strictCategoryOptionCombos = strictCategoryOptionCombos;
         return this;
     }
 
-    public ImportOptions setStrictAttributeOptionCombos( Boolean strictAttributeOptionCombos )
+    public ImportOptions setStrictAttributeOptionCombos( boolean strictAttributeOptionCombos )
     {
         this.strictAttributeOptionCombos = strictAttributeOptionCombos;
         return this;

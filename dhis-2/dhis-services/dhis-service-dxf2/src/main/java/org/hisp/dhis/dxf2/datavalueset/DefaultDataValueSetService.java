@@ -576,12 +576,9 @@ public class DefaultDataValueSetService
 
         boolean skipExistingCheck = importOptions.isSkipExistingCheck();
         
-        boolean strictPeriods = importOptions.hasStrictPeriods() ? importOptions.getStrictPeriods() : 
-            (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
-        boolean strictCategoryOptionCombos = importOptions.hasStrictCategoryOptionCombos() ? importOptions.getStrictCategoryOptionCombos() :
-            (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS, false );
-        boolean strictAttrOptionCombos = importOptions.hasStrictAttributeOptionCombos() ? importOptions.getStrictAttributeOptionCombos() :
-            (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS, false );
+        boolean strictPeriods = importOptions.isStrictPeriods() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
+        boolean strictCategoryOptionCombos = importOptions.isStrictCategoryOptionCombos() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS, false );
+        boolean strictAttrOptionCombos = importOptions.isStrictAttributeOptionCombos() || (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS, false );
         
         //----------------------------------------------------------------------
         // Create meta-data maps
