@@ -747,11 +747,10 @@ public class DefaultQueryPlanner
 
         for ( NameableObject element : dataElements )
         {
-            DataElement de = (DataElement) element;
+            DataElement dataElement = (DataElement) element;
+            DataType dataType = dataElement.getValueType().isText() ? DataType.TEXT : DataType.NUMERIC;
 
-            DataType dataType = DataElement.VALUE_TYPE_STRING.equals( de.getType() ) ? DataType.TEXT : DataType.NUMERIC;
-
-            map.putValue( dataType, de );
+            map.putValue( dataType, dataElement );
         }
 
         return map;
