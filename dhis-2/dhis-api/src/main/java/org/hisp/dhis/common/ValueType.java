@@ -53,9 +53,8 @@ public enum ValueType
     INTEGER( Integer.class ),
     INTEGER_POSITIVE( Integer.class ),
     INTEGER_NEGATIVE( Integer.class ),
-    INTEGER_ZERO_OR_POSITIVE( Integer.class ),
-    NEGATIVE_INTEGER( Integer.class );
-    
+    INTEGER_ZERO_OR_POSITIVE( Integer.class );
+
     private final Class<?> javaClass;
     
     ValueType()
