@@ -696,8 +696,6 @@ public class DefaultDataValueSetService
         {
             org.hisp.dhis.dxf2.datavalue.DataValue dataValue = dataValueSet.getNextDataValue();
 
-            DataValue internalValue = new DataValue();
-
             totalCount++;
 
             final DataElement dataElement = dataElementMap.get( trimToNull( dataValue.getDataElement() ), dataElementCallable.setId( trimToNull( dataValue.getDataElement() ) ) );
@@ -714,8 +712,6 @@ public class DefaultDataValueSetService
             // Validation
             // -----------------------------------------------------------------
 
-            // TODO Use objects instead of data value references to handle outer objects
-            
             if ( dataElement == null )
             {
                 summary.getConflicts().add( new ImportConflict( dataValue.getDataElement(), "Data element not found or not acccessible" ) );
@@ -837,42 +833,42 @@ public class DefaultDataValueSetService
                     "Data element: " + dataElement.getUid() + " must be assigned through data sets to organisation unit: " + orgUnit.getUid() ) );
                 continue;
             }
+
+            boolean zeroInsignificant = ValidationUtils.dataValueIsZeroAndInsignificant( dataValue.getValue(), dataElement );
+
+            if ( zeroInsignificant )
+            {
+                summary.getConflicts().add( new ImportConflict( dataValue.getValue(), "Value is zero and not significant, must match data element: " + dataElement.getUid() ) );
+                continue;
+            }
+
+            String storedByValid = ValidationUtils.storedByIsValid( dataValue.getStoredBy() );
+
+            if ( storedByValid != null )
+            {
+                summary.getConflicts().add( new ImportConflict( dataValue.getStoredBy(), i18n.getString( storedByValid ) ) );
+                continue;
+            }
             
+            String storedBy = dataValue.getStoredBy() == null || dataValue.getStoredBy().trim().isEmpty() ? currentUser : dataValue.getStoredBy();
+
+            // -----------------------------------------------------------------
+            // Create data value
+            // -----------------------------------------------------------------
+
+            DataValue internalValue = new DataValue();
+
             internalValue.setDataElement( dataElement );
             internalValue.setPeriod( period );
             internalValue.setSource( orgUnit );
             internalValue.setCategoryOptionCombo( categoryOptionCombo );
             internalValue.setAttributeOptionCombo( attrOptionCombo );
             internalValue.setValue( trimToNull( dataValue.getValue() ) );
-
-            String storedByValid = ValidationUtils.storedByIsValid( dataValue.getStoredBy() );
-
-            if ( dataValue.getStoredBy() == null || dataValue.getStoredBy().trim().isEmpty() )
-            {
-                internalValue.setStoredBy( currentUser );
-            }
-            else if ( storedByValid == null )
-            {
-                internalValue.setStoredBy( dataValue.getStoredBy() );
-            }
-            else
-            {
-                summary.getConflicts().add( new ImportConflict( dataValue.getStoredBy(), i18n.getString( storedByValid ) ) );
-                continue;
-            }
-
+            internalValue.setStoredBy( storedBy );
             internalValue.setCreated( dataValue.hasCreated() ? parseDate( dataValue.getCreated() ) : now );
             internalValue.setLastUpdated( dataValue.hasLastUpdated() ? parseDate( dataValue.getLastUpdated() ) : now );
             internalValue.setComment( trimToNull( dataValue.getComment() ) );
             internalValue.setFollowup( dataValue.getFollowup() );
-
-            boolean zeroInsignificant = ValidationUtils.dataValueIsZeroAndInsignificant( internalValue.getValue(), dataElement );
-
-            if ( zeroInsignificant )
-            {
-                summary.getConflicts().add( new ImportConflict( internalValue.getValue(), "Value is zero and not significant, must match data element: " + dataElement.getUid() ) );
-                continue;
-            }
 
             // -----------------------------------------------------------------
             // Save, update or delete data value
