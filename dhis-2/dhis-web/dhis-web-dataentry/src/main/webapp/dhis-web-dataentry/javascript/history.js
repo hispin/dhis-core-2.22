@@ -48,7 +48,7 @@ function CommentSaver( de, co, comment )
             url: '../api/dataValues',
             data: dataValue,
             dataType: 'json',
-            type: 'post',
+            type: 'POST',
             success: handleSuccess,
             error: handleError
         } );

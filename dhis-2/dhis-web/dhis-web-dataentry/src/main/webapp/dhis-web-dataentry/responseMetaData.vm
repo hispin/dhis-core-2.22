@@ -13,7 +13,7 @@
 "dataElements": {
 #set( $size = $dataElements.size() )
 #foreach( $dataElement in $dataElements )
-"${dataElement.uid}":"$encoder.jsonEncode( ${dataElement.getDetailedNumberType()} )"#if( $velocityCount < $size ),#end
+"${dataElement.uid}":"${dataElement.getValueType()}"#if( $velocityCount < $size ),#end
 #end },
 
 "optionSets": {

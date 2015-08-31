@@ -150,14 +150,14 @@ dhis2.de.generateExpression = function( expression )
 
 function saveVal( dataElementId, optionComboId, fieldId, feedbackId )
 {
-	var fieldIds = fieldId.split( "-" );
+    var fieldIds = fieldId.split( "-" );
 
-	feedbackId = '#' + ( feedbackId || fieldId );
+    feedbackId = '#' + ( feedbackId || fieldId );
 
-	if ( fieldIds.length > 3 )
-	{
-		dhis2.de.currentOrganisationUnitId = fieldIds[0];
-	}
+    if ( fieldIds.length > 3 )
+    {
+      dhis2.de.currentOrganisationUnitId = fieldIds[0];
+    }
 
     fieldId = '#' + fieldId;
 
@@ -169,43 +169,44 @@ function saveVal( dataElementId, optionComboId, fieldId, feedbackId )
 
     var periodId = $( '#selectedPeriodId' ).val();
 
-	var warning = undefined;
+    var warning = undefined;
 
-	var existing = !!( dhis2.de.currentExistingValue && dhis2.de.currentExistingValue != '' );
+    var existing = !!( dhis2.de.currentExistingValue && dhis2.de.currentExistingValue != '' );
 	
     if ( value )
     {
-        if ( type == 'string' || type == 'int' || type == 'number' || type == 'posInt' || type == 'negInt' || type == 'zeroPositiveInt' || type == 'unitInterval' || type == 'percentage' )
+        if ( type == 'TEXT' || type == 'NUMBER' || type == 'INTEGER' || type == 'INTEGER_POSITIVE' || type == 'INTEGER_NEGATIVE'
+          || type == 'INTEGER_ZERO_OR_POSITIVE' || type == 'UNIT_INTERVAL' || type == 'PERCENTAGE' )
         {
             if ( value.length > dhis2.de.cst.valueMaxLength )
             {
                 return dhis2.de.alertField( fieldId, i18n_value_too_long + '\n\n' + dataElementName );
             }
-            if ( type == 'int' && !dhis2.validation.isInt( value ) )
-            {
-                return dhis2.de.alertField( fieldId, i18n_value_must_integer + '\n\n' + dataElementName );
-            }
-            if ( type == 'number' && !dhis2.validation.isNumber( value ) )
+            if ( type == 'NUMBER' && !dhis2.validation.isNumber( value ) )
             {
                 return dhis2.de.alertField( fieldId, i18n_value_must_number + '\n\n' + dataElementName );
             }
-            if ( type == 'posInt' && !dhis2.validation.isPositiveInt( value ) )
+            if ( type == 'INTEGER' && !dhis2.validation.isInt( value ) )
+            {
+                return dhis2.de.alertField( fieldId, i18n_value_must_integer + '\n\n' + dataElementName );
+            }
+            if ( type == 'INTEGER_POSITIVE' && !dhis2.validation.isPositiveInt( value ) )
             {
                 return dhis2.de.alertField( fieldId, i18n_value_must_positive_integer + '\n\n' + dataElementName );
             }
-            if ( type == 'negInt' && !dhis2.validation.isNegativeInt( value ) )
+            if ( type == 'INTEGER_NEGATIVE' && !dhis2.validation.isNegativeInt( value ) )
             {
                 return dhis2.de.alertField( fieldId, i18n_value_must_negative_integer + '\n\n' + dataElementName );
             }
-            if ( type == 'zeroPositiveInt' && !dhis2.validation.isZeroOrPositiveInt( value ) )
+            if ( type == 'INTEGER_ZERO_OR_POSITIVE' && !dhis2.validation.isZeroOrPositiveInt( value ) )
             {
                 return dhis2.de.alertField( fieldId, i18n_value_must_zero_or_positive_integer + '\n\n' + dataElementName );
             }
-            if ( type == 'unitInterval' && !dhis2.validation.isUnitInterval( value ) )
+            if ( type == 'UNIT_INTERVAL' && !dhis2.validation.isUnitInterval( value ) )
             {
             	return dhis2.de.alertField( fieldId, i18n_value_must_unit_interval + '\n\n' + dataElementName );
             }
-            if ( type == 'percentage' && !dhis2.validation.isPercentage( value ) )
+            if ( type == 'PERCENTAGE' && !dhis2.validation.isPercentage( value ) )
             {
             	return dhis2.de.alertField( fieldId, i18n_value_must_percentage + '\n\n' + dataElementName );
             }
