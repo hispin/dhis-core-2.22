@@ -28,18 +28,12 @@ package org.hisp.dhis.light.dataentry.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.struts2.StrutsStatics;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -64,8 +58,13 @@ import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.util.ContextUtils;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author mortenoh
@@ -301,7 +300,7 @@ public class SaveSectionFormAction
 
         for ( String key : parameterMap.keySet() )
         {
-            if ( key.startsWith( "DE" ) && key.indexOf( "OC" ) != -1 )
+            if ( key.startsWith( "DE" ) && key.contains( "OC" ) )
             {
                 String[] splitKey = key.split( "OC" );
                 Integer dataElementId = Integer.parseInt( splitKey[0].substring( 2 ) );
@@ -309,34 +308,30 @@ public class SaveSectionFormAction
                 String value = parameterMap.get( key );
 
                 DataElement dataElement = dataElementService.getDataElement( dataElementId );
-                DataElementCategoryOptionCombo categoryOptionCombo = categoryService
-                    .getDataElementCategoryOptionCombo( optionComboId );
-
-                DataValue dataValue = dataValueService
-                    .getDataValue( dataElement, period, organisationUnit, categoryOptionCombo );
+                DataElementCategoryOptionCombo categoryOptionCombo = categoryService.getDataElementCategoryOptionCombo( optionComboId );
+                DataValue dataValue = dataValueService.getDataValue( dataElement, period, organisationUnit, categoryOptionCombo );
 
                 value = value.trim();
-                Boolean valueIsEmpty = (value == null || value.length() == 0);
+                Boolean valueIsEmpty = value.length() == 0;
 
                 // validate types
                 Boolean correctType = true;
-                String type = dataElement.getType();
-                String numberType = dataElement.getNumberType();
+                ValueType valueType = dataElement.getValueType();
 
                 if ( !valueIsEmpty )
                 {
-                    if ( type.equals( DataElement.VALUE_TYPE_STRING ) )
+                    if ( valueType.isText() )
                     {
                     }
-                    else if ( type.equals( DataElement.VALUE_TYPE_BOOL ) )
+                    else if ( ValueType.BOOLEAN == valueType )
                     {
-                        if ( !valueIsEmpty && !ValueUtils.isBoolean( value ) )
+                        if ( !ValueUtils.isBoolean( value ) )
                         {
                             correctType = false;
                             typeViolations.put( key, "\"" + value + "\"" + " " + i18n.getString( "is_invalid_boolean" ) );
                         }
                     }
-                    else if ( type.equals( DataElement.VALUE_TYPE_DATE ) )
+                    else if ( ValueType.DATE == valueType )
                     {
                         if ( !ValueUtils.isDate( value ) )
                         {
@@ -344,8 +339,7 @@ public class SaveSectionFormAction
                             typeViolations.put( key, "\"" + value + "\"" + " " + i18n.getString( "is_invalid_date" ) );
                         }
                     }
-                    else if ( type.equals( DataElement.VALUE_TYPE_INT )
-                        && numberType.equals( DataElement.VALUE_TYPE_NUMBER ) )
+                    else if ( ValueType.NUMBER == valueType )
                     {
                         if ( !MathUtils.isNumeric( value ) )
                         {
@@ -353,8 +347,7 @@ public class SaveSectionFormAction
                             typeViolations.put( key, "\"" + value + "\"" + " " + i18n.getString( "is_invalid_number" ) );
                         }
                     }
-                    else if ( type.equals( DataElement.VALUE_TYPE_INT )
-                        && numberType.equals( DataElement.VALUE_TYPE_INT ) )
+                    else if ( ValueType.INTEGER == valueType )
                     {
                         if ( !MathUtils.isInteger( value ) )
                         {
@@ -362,8 +355,7 @@ public class SaveSectionFormAction
                             typeViolations.put( key, "\"" + value + "\"" + " " + i18n.getString( "is_invalid_integer" ) );
                         }
                     }
-                    else if ( type.equals( DataElement.VALUE_TYPE_INT )
-                        && numberType.equals( DataElement.VALUE_TYPE_POSITIVE_INT ) )
+                    else if ( ValueType.INTEGER_POSITIVE == valueType )
                     {
                         if ( !MathUtils.isPositiveInteger( value ) )
                         {
@@ -371,8 +363,7 @@ public class SaveSectionFormAction
                             typeViolations.put( key, "\"" + value + "\"" + " " + i18n.getString( "is_invalid_positive_integer" ) );
                         }
                     }
-                    else if ( type.equals( DataElement.VALUE_TYPE_INT )
-                        && numberType.equals( DataElement.VALUE_TYPE_NEGATIVE_INT ) )
+                    else if ( ValueType.INTEGER_NEGATIVE == valueType )
                     {
                         if ( !MathUtils.isNegativeInteger( value ) )
                         {
@@ -380,8 +371,7 @@ public class SaveSectionFormAction
                             typeViolations.put( key, "\"" + value + "\"" + " " + i18n.getString( "is_invalid_negative_integer" ) );
                         }
                     }
-                    else if ( type.equals( DataElement.VALUE_TYPE_INT)
-                        && numberType.equals( DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT ) )
+                    else if ( ValueType.INTEGER_ZERO_OR_POSITIVE == valueType )
                     {
                         if ( !MathUtils.isZeroOrPositiveInteger( value ) )
                         {
@@ -427,7 +417,7 @@ public class SaveSectionFormAction
         }
 
         DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo(); //TODO
-        
+
         CompleteDataSetRegistration registration = registrationService.getCompleteDataSetRegistration( dataSet, period,
             organisationUnit, optionCombo );
 
