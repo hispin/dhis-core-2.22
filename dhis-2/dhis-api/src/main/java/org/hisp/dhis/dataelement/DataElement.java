@@ -269,7 +269,7 @@ public class DataElement
      */
     public boolean isNumericType()
     {
-        return valueType.isNumeric();
+        return getValueType().isNumeric();
     }
 
     /**
