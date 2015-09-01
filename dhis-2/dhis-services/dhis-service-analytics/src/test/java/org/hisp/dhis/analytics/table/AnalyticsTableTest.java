@@ -30,7 +30,10 @@ package org.hisp.dhis.analytics.table;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.hisp.dhis.analytics.AnalyticsTable;
+import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.YearlyPeriodType;
 import org.hisp.dhis.program.Program;
@@ -43,7 +46,7 @@ import org.junit.Test;
 public class AnalyticsTableTest
 {
     @Test
-    public void test()
+    public void testGetTableName()
     {
         Program program = new Program( "ProgramA", "DescriptionA" );
         program.setUid( "UIDA" );
@@ -53,5 +56,23 @@ public class AnalyticsTableTest
         AnalyticsTable tableA = new AnalyticsTable( "analytics_event", null, period, program );
         
         assertEquals( "analytics_event_2014_uida", tableA.getTableName() );
+    }
+    
+    @Test
+    public void testEquals()
+    {
+        Period periodA = new YearlyPeriodType().createPeriod( new DateTime( 2014, 1, 1, 0, 0 ).toDate() );
+        Period periodB = new YearlyPeriodType().createPeriod( new DateTime( 2015, 1, 1, 0, 0 ).toDate() );
+        
+        AnalyticsTable tableA = new AnalyticsTable( "analytics", null, periodA );
+        AnalyticsTable tableB = new AnalyticsTable( "analytics", null, periodA );
+        AnalyticsTable tableC = new AnalyticsTable( "analytics", null, periodB );
+        
+        List<AnalyticsTable> uniqueList = new UniqueArrayList<>();
+        uniqueList.add( tableA );
+        uniqueList.add( tableB );
+        uniqueList.add( tableC );
+        
+        assertEquals( 2, uniqueList.size() );
     }
 }

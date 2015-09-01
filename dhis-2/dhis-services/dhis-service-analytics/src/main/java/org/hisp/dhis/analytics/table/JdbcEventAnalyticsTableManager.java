@@ -43,6 +43,7 @@ import org.hisp.dhis.analytics.AnalyticsTable;
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
+import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
@@ -84,7 +85,7 @@ public class JdbcEventAnalyticsTableManager
     
     private List<AnalyticsTable> getTables( List<Integer> dataYears )
     {
-        List<AnalyticsTable> tables = new ArrayList<>();
+        List<AnalyticsTable> tables = new UniqueArrayList<>();
         Calendar calendar = PeriodType.getCalendar();
 
         Collections.sort( dataYears );
