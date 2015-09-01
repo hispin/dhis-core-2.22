@@ -28,15 +28,19 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Lists;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.chart.Chart;
+import org.hisp.dhis.color.Color;
+import org.hisp.dhis.color.ColorSet;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.common.filter.MetaDataFilter;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.dashboard.Dashboard;
 import org.hisp.dhis.dashboard.DashboardItem;
@@ -57,7 +61,6 @@ import org.hisp.dhis.document.Document;
 import org.hisp.dhis.dxf2.events.event.Event;
 import org.hisp.dhis.eventchart.EventChart;
 import org.hisp.dhis.eventreport.EventReport;
-import org.hisp.dhis.common.filter.MetaDataFilter;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
@@ -97,11 +100,9 @@ import org.hisp.dhis.validation.ValidationCriteria;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleGroup;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -210,7 +211,7 @@ public class MetaData
     private List<Event> events = new ArrayList<>();
 
     private List<EventReport> eventReports = new ArrayList<>();
-    
+
     private List<EventChart> eventCharts = new ArrayList<>();
 
     private List<Program> programs = new ArrayList<>();
@@ -236,6 +237,10 @@ public class MetaData
     private List<TrackedEntityAttributeGroup> trackedEntityAttributeGroups = new ArrayList<>();
 
     private List<Translation> translations = new ArrayList<>();
+
+    private List<Color> colors = new ArrayList<>();
+
+    private List<ColorSet> colorSets = new ArrayList<>();
 
     public MetaData()
     {
@@ -1061,7 +1066,7 @@ public class MetaData
 
     @JsonProperty
     @JacksonXmlElementWrapper( localName = "metaDataFilters", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "filter", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "metaDataFilter", namespace = DxfNamespaces.DXF_2_0 )
     public List<MetaDataFilter> getMetaDataFilters()
     {
         return metaDataFilters;
@@ -1070,6 +1075,32 @@ public class MetaData
     public void setMetaDataFilters( List<MetaDataFilter> metaDataFilters )
     {
         this.metaDataFilters = metaDataFilters;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "colors", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "color", namespace = DxfNamespaces.DXF_2_0 )
+    public List<Color> getColors()
+    {
+        return colors;
+    }
+
+    public void setColors( List<Color> colors )
+    {
+        this.colors = colors;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "colorSets", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "colorSet", namespace = DxfNamespaces.DXF_2_0 )
+    public List<ColorSet> getColorSets()
+    {
+        return colorSets;
+    }
+
+    public void setColorSets( List<ColorSet> colorSets )
+    {
+        this.colorSets = colorSets;
     }
 
     @Override
@@ -1128,6 +1159,8 @@ public class MetaData
             ", trackedEntities=" + trackedEntities +
             ", trackedEntityAttributes=" + trackedEntityAttributes +
             ", trackedEntityAttributeGroups=" + trackedEntityAttributeGroups +
+            ", colors=" + colors +
+            ", colorSets=" + colorSets +
             '}';
     }
 }
