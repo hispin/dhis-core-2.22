@@ -28,15 +28,13 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.dataset.DataSet.NO_EXPIRY;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
@@ -59,13 +57,14 @@ import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.hisp.dhis.util.ObjectUtils;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.hisp.dhis.dataset.DataSet.NO_EXPIRY;
 
 /**
  * A DataElement is a definition (meta-information about) of the entities that
@@ -250,10 +249,7 @@ public class DataElement
             }
         }
 
-        for ( DataElementGroup group : updates )
-        {
-            addDataElementGroup( group );
-        }
+        updates.forEach( this::addDataElementGroup );
     }
 
     public void addDataSet( DataSet dataSet )
@@ -273,7 +269,7 @@ public class DataElement
      */
     public boolean isNumericType()
     {
-        return VALUE_TYPE_INT.equals( type );
+        return valueType.isNumeric();
     }
 
     /**
@@ -281,7 +277,8 @@ public class DataElement
      */
     public boolean isDateType()
     {
-        return VALUE_TYPE_DATE.equals( type ) || VALUE_TYPE_DATETIME.equals( type );
+        // TODO optimize when using persisted valueType
+        return ValueType.DATE == getValueType() || ValueType.DATETIME == getValueType();
     }
 
     /**
@@ -388,13 +385,13 @@ public class DataElement
         {
             if ( dataSet.getSources().contains( unit ) )
             {
-                return true;    
+                return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Returns the PeriodType of the DataElement, based on the PeriodType of the
      * DataSet which the DataElement is associated with. If this data element has
