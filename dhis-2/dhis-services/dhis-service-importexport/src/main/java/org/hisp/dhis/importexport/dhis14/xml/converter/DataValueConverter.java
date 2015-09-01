@@ -344,7 +344,6 @@ public class DataValueConverter
                 out.write( SEPARATOR_B );
                 out.write( SEPARATOR_B );
             }
-
             else if ( ValueType.DATE == valueType || ValueType.DATETIME == valueType )
             {
                 out.write( SEPARATOR_B );
