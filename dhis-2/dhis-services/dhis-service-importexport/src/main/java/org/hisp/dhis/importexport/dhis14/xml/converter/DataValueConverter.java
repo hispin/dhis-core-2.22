@@ -28,16 +28,10 @@ package org.hisp.dhis.importexport.dhis14.xml.converter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.importexport.dhis14.util.CsvUtils.*;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
 import org.amplecode.quick.BatchHandler;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.commons.collection.MimicingHashMap;
+import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -58,12 +52,18 @@ import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.commons.collection.MimicingHashMap;
-import org.hisp.dhis.commons.util.StreamUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import static org.hisp.dhis.importexport.dhis14.util.CsvUtils.*;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class DataValueConverter
     extends DataValueImporter
@@ -313,11 +313,11 @@ public class DataValueConverter
 
     private ZipOutputStream getCSVDataExportField( ZipOutputStream out, DeflatedDataValue value )
     {
-        String dataElementType = dataElementService.getDataElement( value.getDataElementId() ).getType();
+        ValueType valueType = dataElementService.getDataElement( value.getDataElementId() ).getValueType();
 
         try
         {
-            if ( dataElementType.equals( DataElement.VALUE_TYPE_STRING ) )
+            if ( valueType.isText() )
             {
                 out.write( getCsvValue( csvEncode( value.getValue() ) ) );
                 out.write( SEPARATOR_B );
@@ -326,7 +326,7 @@ public class DataValueConverter
                 out.write( SEPARATOR_B );
                 out.write( SEPARATOR_B );
             }
-            else if ( dataElementType.equals( DataElement.VALUE_TYPE_BOOL ) )
+            else if ( ValueType.BOOLEAN == valueType )
             {
                 out.write( SEPARATOR_B );
                 out.write( getCsvValue( csvEncode( Dhis14TypeHandler.convertBooleanToDhis14( value.getValue() ) ) ) );
@@ -335,12 +335,7 @@ public class DataValueConverter
                 out.write( SEPARATOR_B );
                 out.write( SEPARATOR_B );
             }
-
-            else if ( dataElementType.equals( DataElement.VALUE_TYPE_NUMBER )
-                || dataElementType.equals( DataElement.VALUE_TYPE_INT )
-                || dataElementType.equals( DataElement.VALUE_TYPE_NEGATIVE_INT )
-                || dataElementType.equals( DataElement.VALUE_TYPE_POSITIVE_INT )
-                || dataElementType.equals( DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT ) )
+            else if ( valueType.isNumeric() )
             {
                 out.write( SEPARATOR_B );
                 out.write( SEPARATOR_B );
@@ -350,8 +345,7 @@ public class DataValueConverter
                 out.write( SEPARATOR_B );
             }
 
-            else if ( dataElementType.equals( DataElement.VALUE_TYPE_DATE )
-                || dataElementType.equals( DataElement.VALUE_TYPE_DATETIME ) )
+            else if ( ValueType.DATE == valueType || ValueType.DATETIME == valueType )
             {
                 out.write( SEPARATOR_B );
                 out.write( SEPARATOR_B );
