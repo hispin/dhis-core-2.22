@@ -313,7 +313,6 @@ public class DataValueConverter
 
     private ZipOutputStream getCSVDataExportField( ZipOutputStream out, DeflatedDataValue value )
     {
-
         String dataElementType = dataElementService.getDataElement( value.getDataElementId() ).getType();
 
         try
@@ -327,7 +326,6 @@ public class DataValueConverter
                 out.write( SEPARATOR_B );
                 out.write( SEPARATOR_B );
             }
-
             else if ( dataElementType.equals( DataElement.VALUE_TYPE_BOOL ) )
             {
                 out.write( SEPARATOR_B );

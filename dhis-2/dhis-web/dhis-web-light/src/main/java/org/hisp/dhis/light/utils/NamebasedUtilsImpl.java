@@ -28,11 +28,7 @@ package org.hisp.dhis.light.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.mobile.service.ModelMapping;
 import org.hisp.dhis.program.Program;
@@ -43,27 +39,32 @@ import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.system.util.MathUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 public class NamebasedUtilsImpl
     implements NamebasedUtils
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
-  
+
     private ProgramService programService;
 
     public void setProgramService( ProgramService programService )
     {
         this.programService = programService;
     }
-    
+
     private ProgramStageService programStageService;
-    
+
     public void setProgramStageService( ProgramStageService programStageService )
     {
         this.programStageService = programStageService;
     }
-    
+
     @Override
     public ProgramStage getProgramStage( int programId, int programStageId )
     {
@@ -80,59 +81,58 @@ public class NamebasedUtilsImpl
         }
         return null;
     }
-  
+
     @Override
     public String getTypeViolation( DataElement dataElement, String value )
     {
-        String type = dataElement.getType();
-        String numberType = dataElement.getNumberType();
+        ValueType valueType = dataElement.getValueType();
 
-        if ( type.equals( DataElement.VALUE_TYPE_STRING ) )
+        if ( valueType.isText() )
         {
         }
-        else if ( type.equals( DataElement.VALUE_TYPE_BOOL ) )
+        else if ( ValueType.BOOLEAN == valueType )
         {
             if ( !ValueUtils.isBoolean( value ) )
             {
                 return "is_invalid_boolean";
             }
         }
-        else if ( type.equals( DataElement.VALUE_TYPE_DATE ) )
+        else if ( ValueType.DATE == valueType )
         {
             if ( !ValueUtils.isDate( value ) )
             {
                 return "is_invalid_date";
             }
         }
-        else if ( type.equals( DataElement.VALUE_TYPE_INT ) && numberType.equals( DataElement.VALUE_TYPE_NUMBER ) )
+        else if ( ValueType.NUMBER == valueType )
         {
             if ( !MathUtils.isNumeric( value ) )
             {
                 return "is_invalid_number";
             }
         }
-        else if ( type.equals( DataElement.VALUE_TYPE_INT ) && numberType.equals( DataElement.VALUE_TYPE_INT ) )
+        else if ( ValueType.INTEGER == valueType )
         {
             if ( !MathUtils.isInteger( value ) )
             {
                 return "is_invalid_integer";
             }
         }
-        else if ( type.equals( DataElement.VALUE_TYPE_INT ) && numberType.equals( DataElement.VALUE_TYPE_POSITIVE_INT ) )
+        else if ( ValueType.INTEGER_POSITIVE == valueType )
         {
             if ( !MathUtils.isPositiveInteger( value ) )
             {
                 return "is_invalid_positive_integer";
             }
         }
-        else if ( type.equals( DataElement.VALUE_TYPE_INT ) && numberType.equals( DataElement.VALUE_TYPE_NEGATIVE_INT ) )
+        else if ( ValueType.INTEGER_NEGATIVE == valueType )
         {
             if ( !MathUtils.isNegativeInteger( value ) )
             {
                 return "is_invalid_negative_integer";
             }
         }
-        else if ( type.equals( DataElement.VALUE_TYPE_INT ) && numberType.equals( DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT ) )
+        else if ( ValueType.INTEGER_ZERO_OR_POSITIVE == valueType )
         {
             if ( !MathUtils.isZeroOrPositiveInteger( value ) )
             {
@@ -155,21 +155,21 @@ public class NamebasedUtilsImpl
 
         return null;
     }
-    
+
     @Override
     public List<org.hisp.dhis.api.mobile.model.DataElement> transformDataElementsToMobileModel( Integer programStageId )
     {
         ProgramStage programStage = programStageService.getProgramStage( programStageId );
-        
+
         List<org.hisp.dhis.api.mobile.model.DataElement> des = new ArrayList<>();
 
-        List<ProgramStageDataElement> programStageDataElements =  new ArrayList<>(programStage.getProgramStageDataElements());
+        List<ProgramStageDataElement> programStageDataElements = new ArrayList<>( programStage.getProgramStageDataElements() );
 
         des = transformDataElementsToMobileModel( programStageDataElements );
-        
+
         return des;
     }
-    
+
     @Override
     public List<org.hisp.dhis.api.mobile.model.DataElement> transformDataElementsToMobileModel( List<ProgramStageDataElement> programStageDataElements )
     {
