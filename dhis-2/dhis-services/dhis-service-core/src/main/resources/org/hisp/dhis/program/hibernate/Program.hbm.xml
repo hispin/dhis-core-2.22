@@ -88,6 +88,9 @@
 
     <property name="dataEntryMethod" />
 
+	<many-to-one name="categoryCombo" class="org.hisp.dhis.dataelement.DataElementCategoryCombo"
+      column="categorycomboid" foreign-key="fk_program_categorycomboid" />
+      
     <many-to-one name="trackedEntity" class="org.hisp.dhis.trackedentity.TrackedEntity"
       column="trackedentityid" foreign-key="fk_program_trackedentityid" />
 

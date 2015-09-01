@@ -43,6 +43,7 @@ import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.relationship.RelationshipType;
@@ -127,6 +128,11 @@ public class Program
     private Set<AttributeValue> attributeValues = new HashSet<>();
 
     private DataEntryForm dataEntryForm;
+    
+    /**
+     * The CategoryCombo used for data attributes.
+     */
+    private DataElementCategoryCombo categoryCombo;
     
     // -------------------------------------------------------------------------
     // Constructors
@@ -632,6 +638,29 @@ public class Program
     public void setDataEntryForm( DataEntryForm dataEntryForm )
     {
         this.dataEntryForm = dataEntryForm;
+    }
+    
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public DataElementCategoryCombo getCategoryCombo()
+    {
+        return categoryCombo;
+    }
+
+    public void setCategoryCombo( DataElementCategoryCombo categoryCombo )
+    {
+        this.categoryCombo = categoryCombo;
+    }
+    
+    /**
+     * Indicates whether this program has a category combination which is different
+     * from the default category combination.
+     */
+    public boolean hasCategoryCombo()
+    {
+        return categoryCombo != null && !DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME.equals( categoryCombo.getName() );
     }
     
     @Override

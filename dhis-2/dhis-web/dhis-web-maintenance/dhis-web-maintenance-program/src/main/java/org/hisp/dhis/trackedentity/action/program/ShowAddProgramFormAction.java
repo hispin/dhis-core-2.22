@@ -28,6 +28,7 @@ package org.hisp.dhis.trackedentity.action.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,8 @@ import java.util.Map;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramType;
@@ -95,6 +98,9 @@ public class ShowAddProgramFormAction
     @Autowired
     private AttributeService attributeService;
 
+    @Autowired
+    private DataElementCategoryService categoryService;
+    
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -147,6 +153,13 @@ public class ShowAddProgramFormAction
     {
         return attributeValues;
     }
+    
+    private List<DataElementCategoryCombo> categoryCombos = new ArrayList<>();
+    
+    public List<DataElementCategoryCombo> getCategoryCombos()
+    {
+        return categoryCombos;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -173,6 +186,8 @@ public class ShowAddProgramFormAction
         Collections.sort( trackedEntities, IdentifiableObjectNameComparator.INSTANCE );
 
         attributes = attributeService.getProgramAttributes();
+        
+        categoryCombos = new ArrayList<>( categoryService.getAttributeCategoryCombos() );
 
         return SUCCESS;
     }

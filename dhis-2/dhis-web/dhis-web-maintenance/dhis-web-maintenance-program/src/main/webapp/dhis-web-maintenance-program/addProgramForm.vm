@@ -119,6 +119,17 @@
 			<td></td>
 		</tr>
 		
+		<tr>
+      		<td><label>$i18n.getString( "category_combo" )</label></td>
+      		<td>
+      	  		<select id="categoryComboId" name="categoryComboId">
+      	  			#foreach( $categoryCombo in $categoryCombos )
+      	  	  			<option value="$categoryCombo.id" #if( $categoryCombo.isDefault() ) selected="selected"#end>$encoder.htmlEncode( $categoryCombo.displayName )</option>
+	  	    		#end
+  	      		</select>
+	    	</td>
+      	</tr>
+		
 		<tr name='nonAnonymous'><td>&nbsp;</td></tr>
 		<tr name='nonAnonymous'>
 			<th colspan="2">$i18n.getString( "enrollment_details" )</th>
