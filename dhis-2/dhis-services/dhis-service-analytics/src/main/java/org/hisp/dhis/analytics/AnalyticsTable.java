@@ -125,12 +125,6 @@ public class AnalyticsTable
         return program != null;
     }
 
-    @Override
-    public String toString()
-    {
-        return getTableName();
-    }
-
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -173,5 +167,85 @@ public class AnalyticsTable
     public void setProgram( Program program )
     {
         this.program = program;
+    }
+
+    // -------------------------------------------------------------------------
+    // hashCode, equals, toString
+    // -------------------------------------------------------------------------
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( ( baseName == null ) ? 0 : baseName.hashCode() );
+        result = prime * result + ( ( period == null ) ? 0 : period.hashCode() );
+        result = prime * result + ( ( program == null ) ? 0 : program.hashCode() );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object object )
+    {
+        if ( this == object )
+        {
+            return true;
+        }
+        
+        if ( object == null )
+        {
+            return false;
+        }
+        
+        if ( getClass() != object.getClass() )
+        {
+            return false;
+        }
+        
+        AnalyticsTable other = (AnalyticsTable) object;
+        
+        if ( baseName == null )
+        {
+            if ( other.baseName != null )
+            {
+                return false;
+            }
+        }
+        else if ( !baseName.equals( other.baseName ) )
+        {
+            return false;
+        }
+        
+        if ( period == null )
+        {
+            if ( other.period != null )
+            {
+                return false;
+            }
+        }
+        else if ( !period.equals( other.period ) )
+        {
+            return false;
+        }
+        
+        if ( program == null )
+        {
+            if ( other.program != null )
+            {
+                return false;
+            }
+        }
+        else if ( !program.equals( other.program ) )
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
+    @Override
+    public String toString()
+    {
+        return getTableName();
     }
 }
