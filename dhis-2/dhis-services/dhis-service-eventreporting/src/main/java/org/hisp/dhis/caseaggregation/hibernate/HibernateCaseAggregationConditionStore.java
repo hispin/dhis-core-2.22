@@ -28,38 +28,6 @@ package org.hisp.dhis.caseaggregation.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.OBJECT_ORGUNIT_COMPLETE_PROGRAM_STAGE;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.OBJECT_PROGRAM;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.OBJECT_PROGRAM_STAGE;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.OBJECT_PROGRAM_STAGE_DATAELEMENT;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.OBJECT_PROGRAM_STAGE_PROPERTY;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.OBJECT_TRACKED_ENTITY_ATTRIBUTE;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.OBJECT_TRACKED_ENTITY_PROGRAM_STAGE_PROPERTY;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.PARAM_PERIOD_END_DATE;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.PARAM_PERIOD_ID;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.PARAM_PERIOD_ISO_DATE;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.PARAM_PERIOD_START_DATE;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.SEPARATOR_ID;
-import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.SEPARATOR_OBJECT;
-import static org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager.TASK_AGGREGATE_QUERY_BUILDER_LAST_12_MONTH;
-import static org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager.TASK_AGGREGATE_QUERY_BUILDER_LAST_3_MONTH;
-import static org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager.TASK_AGGREGATE_QUERY_BUILDER_LAST_6_MONTH;
-import static org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager.TASK_AGGREGATE_QUERY_BUILDER_LAST_MONTH;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -69,7 +37,9 @@ import org.hisp.dhis.caseaggregation.CaseAggregationCondition;
 import org.hisp.dhis.caseaggregation.CaseAggregationConditionStore;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -89,15 +59,29 @@ import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.hisp.dhis.caseaggregation.CaseAggregationCondition.*;
+import static org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager.*;
+
 /**
  * @author Chau Thu Tran
- * 
  * @version HibernateCaseAggregationConditionStore.java Nov 18, 2010 9:36:20 AM
  */
 public class HibernateCaseAggregationConditionStore
@@ -142,20 +126,20 @@ public class HibernateCaseAggregationConditionStore
 
     @Autowired
     DataValueService dataValueService;
-    
+
     @Autowired
     private PeriodService periodService;
-    
+
     @Autowired
     private OrganisationUnitService orgunitService;
 
     @Autowired
     private DataElementCategoryService categoryService;
-    
+
 
     @Autowired
     private TrackedEntityAttributeService attributeService;
-    
+
     // -------------------------------------------------------------------------
     // Implementation Methods
     // -------------------------------------------------------------------------
@@ -296,24 +280,24 @@ public class HibernateCaseAggregationConditionStore
     }
 
     @Override
-    public void insertAggregateValue( String sql, DataElement dataElement, DataElementCategoryOptionCombo optionCombo, 
+    public void insertAggregateValue( String sql, DataElement dataElement, DataElementCategoryOptionCombo optionCombo,
         DataElementCategoryOptionCombo attributeOptionCombo, Collection<Integer> orgunitIds, Period period )
-    {        
+    {
         try
         {
-            SqlRowSet row = jdbcTemplate.queryForRowSet(sql);
-            while (row.next())
+            SqlRowSet row = jdbcTemplate.queryForRowSet( sql );
+            while ( row.next() )
             {
-                int value = row.getInt("value");
+                int value = row.getInt( "value" );
                 OrganisationUnit source = orgunitService.getOrganisationUnit( row.getInt( "sourceid" ) );
-                
+
                 DataValue dataValue = dataValueService.getDataValue( dataElement, period, source, optionCombo );
-                
+
                 if ( dataValue == null )
                 {
                     dataValue = new DataValue( dataElement, period, source, optionCombo, attributeOptionCombo );
                     dataValue.setValue( value + "" );
-                    dataValue.setStoredBy( row.getString("storedby") );
+                    dataValue.setStoredBy( row.getString( "storedby" ) );
                     dataValueService.addDataValue( dataValue );
                 }
                 else if ( dataValue != null && value == 0 && !dataElement.isZeroIsSignificant() )
@@ -324,7 +308,7 @@ public class HibernateCaseAggregationConditionStore
                 {
                     dataValue.setValue( value + "" );
                     dataValueService.updateDataValue( dataValue );
-                } 
+                }
             }
         }
         catch ( Exception ex )
@@ -332,18 +316,18 @@ public class HibernateCaseAggregationConditionStore
             ex.printStackTrace();
         }
     }
-    
+
     @Override
     public void insertAggregateValue( String sql, int dataElementId, int optionComboId, Collection<Integer> orgunitIds,
         Period period )
     {
-         try
+        try
         {
             final String deleteDataValueSql = "delete from datavalue where dataelementid=" + dataElementId
                 + " and categoryoptioncomboid=" + optionComboId + " and sourceid in ("
                 + TextUtils.getCommaDelimitedString( orgunitIds ) + ") " + "and periodid = " + period.getId();
             jdbcTemplate.update( deleteDataValueSql );
-            
+
             jdbcTemplate.update( sql );
 
         }
@@ -352,7 +336,7 @@ public class HibernateCaseAggregationConditionStore
             ex.printStackTrace();
         }
     }
-    
+
     @Override
     public String parseExpressionToSql( boolean isInsert, CaseAggregationCondition aggregationCondition,
         int attributeOptionComboId, Collection<Integer> orgunitIds )
@@ -371,7 +355,7 @@ public class HibernateCaseAggregationConditionStore
 
     @Override
     public String parseExpressionToSql( boolean isInsert, String caseExpression, String operator, Integer aggregateDeId,
-        String aggregateDeName, Integer optionComboId, String optionComboName,  int attributeOptioncomboId, Integer deSumId,
+        String aggregateDeName, Integer optionComboId, String optionComboName, int attributeOptioncomboId, Integer deSumId,
         Collection<Integer> orgunitIds )
     {
         String select = "SELECT '" + aggregateDeId + "' as dataelementid, '" + optionComboId
@@ -449,9 +433,9 @@ public class HibernateCaseAggregationConditionStore
             }
 
             sql += "GROUP BY ou.organisationunitid ) from organisationunit ou where ou.organisationunitid in ( " + TextUtils.getCommaDelimitedString( orgunitIds ) + " ) ";
-            
+
         }
-        
+
         return sql;
     }
 
@@ -469,44 +453,44 @@ public class HibernateCaseAggregationConditionStore
         {
             orgunitIds.retainAll( _orgunitIds );
         }
-        
-        if (  !orgunitIds.isEmpty()  )
+
+        if ( !orgunitIds.isEmpty() )
         {
             String sql = "select caseaggregationconditionid, aggregationdataelementid, optioncomboid, "
                 + "aggregationexpression as caseexpression, operator as caseoperator, desum as desumid "
                 + "from caseaggregationcondition where caseaggregationconditionid = " + condition.getCaseAggregateId();
-            
+
             SqlRowSet rs = jdbcTemplate.queryForRowSet( sql );
-    
+
             if ( rs.next() )
             {
-                 String caseExpression = rs.getString( "caseexpression" );
-                 int dataElementId = rs.getInt( "aggregationdataelementid" );
-                 int optionComboId = rs.getInt( "optioncomboid" );
-                 String caseOperator = rs.getString( "caseoperator" );
-                 int deSumId = rs.getInt( "desumid" );
-                 String insertParamsSql = parseExpressionToSql( true, caseExpression, caseOperator, dataElementId, "de_name", optionComboId, "optioncombo_name", attributeOptioncomboId, deSumId, _orgunitIds );
-                 
+                String caseExpression = rs.getString( "caseexpression" );
+                int dataElementId = rs.getInt( "aggregationdataelementid" );
+                int optionComboId = rs.getInt( "optioncomboid" );
+                String caseOperator = rs.getString( "caseoperator" );
+                int deSumId = rs.getInt( "desumid" );
+                String insertParamsSql = parseExpressionToSql( true, caseExpression, caseOperator, dataElementId, "de_name", optionComboId, "optioncombo_name", attributeOptioncomboId, deSumId, _orgunitIds );
+
                 for ( Period period : periods )
                 {
                     String insertSql = replacePeriodSql( insertParamsSql, period );
                     insertAggregateValue( insertSql, dataElementId, optionComboId, _orgunitIds, period );
                 }
-    
+
             }
         }
     }
 
     /**
      * Return standard SQL from query builder formula
-     * 
+     *
      * @param caseExpression The query builder expression
-     * @param operator There are six operators, includes Number of persons,
-     *        Number of visits, Sum, Average, Minimum and Maximum of data
-     *        element values.
-     * @param deType Aggregate Data element type
-     * @param orgunitIds The ids of organisation units where to aggregate data
-     *        value
+     * @param operator       There are six operators, includes Number of persons,
+     *                       Number of visits, Sum, Average, Minimum and Maximum of data
+     *                       element values.
+     * @param deType         Aggregate Data element type
+     * @param orgunitIds     The ids of organisation units where to aggregate data
+     *                       value
      */
     private String createSQL( String caseExpression, String operator, Collection<Integer> orgunitIds )
     {
@@ -516,7 +500,7 @@ public class HibernateCaseAggregationConditionStore
         StringBuffer sqlResult = new StringBuffer();
 
         String sqlOrgunitCompleted = "";
-        
+
         // Date dataElement - dateOfIncident/executionDate/enrollmentDate
 
         Map<Integer, String> minusDe1SQLMap = new HashMap<>();
@@ -529,18 +513,18 @@ public class HibernateCaseAggregationConditionStore
             String programStageIdStr = matcherMinus.group( 2 );
             String dataElementId = matcherMinus.group( 3 );
             String dateProperty = matcherMinus.group( 5 );
-            String compareSide =  matcherMinus.group( 6 ) +  matcherMinus.group( 7 );
+            String compareSide = matcherMinus.group( 6 ) + matcherMinus.group( 7 );
 
             Integer programId = null;
             Integer programStageId = null;
-            if( !programIdStr.equals(IN_CONDITION_GET_ALL))
+            if ( !programIdStr.equals( IN_CONDITION_GET_ALL ) )
             {
-                programId =  Integer.parseInt( programIdStr );
+                programId = Integer.parseInt( programIdStr );
             }
-            
-            if( !programStageIdStr.equals(IN_CONDITION_GET_ALL))
+
+            if ( !programStageIdStr.equals( IN_CONDITION_GET_ALL ) )
             {
-                programStageId =  Integer.parseInt( programStageIdStr );
+                programStageId = Integer.parseInt( programStageIdStr );
             }
 
             minusDe1SQLMap.put(
@@ -553,7 +537,7 @@ public class HibernateCaseAggregationConditionStore
 
             idxDe1++;
         }
-        
+
         // dateOfIncident/executionDate/enrollmentDate - Date dataElement
 
         Map<Integer, String> minusDe2SQLMap = new HashMap<>();
@@ -566,13 +550,13 @@ public class HibernateCaseAggregationConditionStore
             String programIdStr = matcherMinusDE1.group( 3 );
             String programStageIdStr = matcherMinusDE1.group( 4 );
             String dataElementId = matcherMinusDE1.group( 5 );
-            String compareSide =  matcherMinusDE1.group( 6 ) +  matcherMinusDE1.group( 7 );
-            
+            String compareSide = matcherMinusDE1.group( 6 ) + matcherMinusDE1.group( 7 );
+
             Integer programId = null;
             Integer programStageId = null;
             if ( !programIdStr.equals( IN_CONDITION_GET_ALL ) )
             {
-                programId = Integer.parseInt(programIdStr );
+                programId = Integer.parseInt( programIdStr );
             }
 
             if ( !programStageIdStr.equals( IN_CONDITION_GET_ALL ) )
@@ -590,14 +574,14 @@ public class HibernateCaseAggregationConditionStore
 
             idxDe2++;
         }
-           
+
         // Date dataElement - Date dataElement
 
         Map<Integer, String> minus2DeSQLMap = new HashMap<>();
         int idx2De = 0;
         Pattern patternMinus2 = Pattern.compile( CaseAggregationCondition.minus2DataelementRegExp );
         Matcher matcherMinus2 = patternMinus2.matcher( caseExpression );
-        
+
         while ( matcherMinus2.find() )
         {
             String[] ids1 = matcherMinus2.group( 2 ).split( SEPARATOR_ID );
@@ -609,10 +593,10 @@ public class HibernateCaseAggregationConditionStore
                     matcherMinus2.group( 6 ) + matcherMinus2.group( 7 ) ) );
             caseExpression = caseExpression.replace( matcherMinus2.group( 0 ),
                 CaseAggregationCondition.MINUS_2DATAELEMENT_OPERATOR + "_" + idx2De );
-            
+
             idx2De++;
         }
-        
+
         // currentDate/ dateOfIncident/executionDate/enrollmentDate - Date attribute
 
         Map<Integer, String> minusAttr1SQLMap = new HashMap<>();
@@ -626,21 +610,21 @@ public class HibernateCaseAggregationConditionStore
             String compareSide = matcherMinus3.group( 4 ) + matcherMinus3.group( 5 );
             minusAttr1SQLMap.put(
                 idxAttr1,
-                getConditionForMisusAttribute1( attributeId, property , compareSide ) );
+                getConditionForMisusAttribute1( attributeId, property, compareSide ) );
 
             caseExpression = caseExpression.replace( matcherMinus3.group( 0 ),
                 CaseAggregationCondition.MINUS_ATTRIBUTE_OPERATOR_TYPE_ONE + "_" + idxAttr1 );
 
             idxAttr1++;
         }
-        
-        
+
+
         // Date attribute - currentDate/ dateOfIncident/executionDate/enrollmentDate
 
         Map<Integer, String> minusAttr2SQLMap = new HashMap<>();
         int idxAttr2 = 0;
         Pattern patternAttr2Minus = Pattern.compile( CaseAggregationCondition.minusAttributeRegExp2 );
-       
+
         Matcher matcherAttr2Minus = patternAttr2Minus.matcher( caseExpression );
         while ( matcherAttr2Minus.find() )
         {
@@ -653,8 +637,8 @@ public class HibernateCaseAggregationConditionStore
 
             idxAttr2++;
         }
-        
-        
+
+
         //  Date attribute - Date attribute
 
         Map<Integer, String> minus2AttrSQLMap = new HashMap<>();
@@ -674,7 +658,7 @@ public class HibernateCaseAggregationConditionStore
             idx2Attr++;
         }
 
-        
+
         // Run nornal expression
         String[] expression = caseExpression.split( "(AND|OR)" );
         caseExpression = caseExpression.replaceAll( "AND", " ) AND " );
@@ -797,29 +781,29 @@ public class HibernateCaseAggregationConditionStore
             sql = sql
                 .replace( CaseAggregationCondition.MINUS_2DATAELEMENT_OPERATOR + "_" + i, minus2DeSQLMap.get( i ) );
         }
-        
+
         for ( int i = 0; i < idxAttr1; i++ )
         {
             sql = sql
                 .replace( CaseAggregationCondition.MINUS_ATTRIBUTE_OPERATOR_TYPE_ONE + "_" + i, minusAttr1SQLMap.get( i ) );
         }
-        
+
         for ( int i = 0; i < idxAttr2; i++ )
         {
             sql = sql
                 .replace( CaseAggregationCondition.MINUS_ATTRIBUTE_OPERATOR_TYPE_TWO + "_" + i, minusAttr2SQLMap.get( i ) );
         }
-        
+
         for ( int i = 0; i < idx2Attr; i++ )
         {
             sql = sql
                 .replace( CaseAggregationCondition.MINUS_2ATTRIBUTE_OPERATOR + "_" + i, minus2AttrSQLMap.get( i ) );
         }
-        
-        sql = sql.replaceAll( CaseAggregationCondition.CURRENT_DATE, "now()");
-        
+
+        sql = sql.replaceAll( CaseAggregationCondition.CURRENT_DATE, "now()" );
+
         sql += " ) ";
-        if( hasDataelementCriteria( caseExpression ) )
+        if ( hasDataelementCriteria( caseExpression ) )
         {
             sql += " and psi.organisationunitid=ou.organisationunitid ";
         }
@@ -827,18 +811,17 @@ public class HibernateCaseAggregationConditionStore
         {
             sql += " and pi.organisationunitid=ou.organisationunitid ";
         }
-        
+
         return sql;
     }
 
     /**
      * Return standard SQL of the expression to compare data value as null
-     * 
      */
     private String getConditionForDataElement( boolean isExist, int programId, String programStageId,
         int dataElementId, Collection<Integer> orgunitIds )
     {
-        String keyExist = (isExist == true) ? "EXISTS" : "NOT EXISTS";
+        String keyExist = isExist ? "EXISTS" : "NOT EXISTS";
 
         String sql = " " + keyExist + " ( SELECT * "
             + "FROM trackedentitydatavalue _pdv inner join programstageinstance _psi "
@@ -856,8 +839,9 @@ public class HibernateCaseAggregationConditionStore
 
         if ( isExist )
         {
-            DataElement dataElement = dataElementService.getDataElement( dataElementId );
-            if ( dataElement.getType().equals( DataElement.VALUE_TYPE_INT ) )
+            ValueType valueType = dataElementService.getDataElement( dataElementId ).getValueType();
+
+            if ( valueType.isNumeric() )
             {
                 sql += " AND ( cast( _pdv.value as " + statementBuilder.getDoubleColumnType() + " )  ) ";
             }
@@ -878,7 +862,6 @@ public class HibernateCaseAggregationConditionStore
     /**
      * Return standard SQL of a dynamic tracked-entity-attribute expression. E.g
      * [CA:1] OR [CA:1.age]
-     * 
      */
     private String getConditionForTrackedEntityAttribute( String attributeId, Collection<Integer> orgunitIds,
         boolean isExist )
@@ -912,7 +895,7 @@ public class HibernateCaseAggregationConditionStore
 
             if ( isExist )
             {
-                TrackedEntityAttribute attribute =attributeService.getTrackedEntityAttribute( Integer.parseInt( attributeId ) );
+                TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( Integer.parseInt( attributeId ) );
                 if ( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_NUMBER ) )
                 {
                     sql += " AND cast( _pav.value as " + statementBuilder.getDoubleColumnType() + " )  ";
@@ -939,7 +922,6 @@ public class HibernateCaseAggregationConditionStore
     /**
      * Return standard SQL of the program-property expression. E.g
      * [PC:executionDate]
-     * 
      */
     private String getConditionForTrackedEntityProgramStageProperty( String propertyName, String operator )
     {
@@ -954,7 +936,6 @@ public class HibernateCaseAggregationConditionStore
      * Return standard SQL of the program expression. E.g
      * [PP:DATE@enrollmentdate#-DATE@dateofincident#] for geting the number of
      * days between date of enrollment and date of incident.
-     * 
      */
     private String getConditionForProgramProperty( String operator, String property )
     {
@@ -970,7 +951,6 @@ public class HibernateCaseAggregationConditionStore
     /**
      * Return standard SQL to retrieve the number of persons enrolled into the
      * program. E.g [PG:1]
-     * 
      */
     private String getConditionForProgram( String programId, String operator, Collection<Integer> orgunitIds )
     {
@@ -990,7 +970,6 @@ public class HibernateCaseAggregationConditionStore
     /**
      * Return standard SQL to retrieve the number of visits a program-stage. E.g
      * [PS:1]
-     * 
      */
     private String getConditionForProgramStage( String programStageId, Collection<Integer> orgunitIds )
     {
@@ -1000,8 +979,8 @@ public class HibernateCaseAggregationConditionStore
         {
             sql += "AND _psi.programstageid=" + programStageId;
         }
-        
-        sql+= "  AND _psi.executiondate >= '" + PARAM_PERIOD_START_DATE
+
+        sql += "  AND _psi.executiondate >= '" + PARAM_PERIOD_START_DATE
             + "' AND _psi.executiondate <= '" + PARAM_PERIOD_END_DATE + "' AND _psi.organisationunitid in ("
             + TextUtils.getCommaDelimitedString( orgunitIds ) + ")  ";
 
@@ -1012,7 +991,6 @@ public class HibernateCaseAggregationConditionStore
      * Return standard SQL to retrieve the x-time of a person visited one
      * program-stage. E.g a mother came to a hospital 3th time for third
      * trimester.
-     * 
      */
     private String getConditionForCountProgramStage( String programStageId, String operator,
         Collection<Integer> orgunitIds )
@@ -1031,7 +1009,6 @@ public class HibernateCaseAggregationConditionStore
     /**
      * Return standard SQL to retrieve the number of days between report-date
      * and due-date. E.g [PSP:DATE@executionDate#-DATE@dueDate#]
-     * 
      */
     private String getConditionForProgramStageProperty( String property, String operator, Collection<Integer> orgunitIds )
     {
@@ -1047,9 +1024,8 @@ public class HibernateCaseAggregationConditionStore
     /**
      * Return standard SQL to retrieve the number of children orgunits has all
      * program-stage-instance completed and due-date. E.g [PSIC:1]
-     * 
+     *
      * @flag True if there are many stages in the expression
-     * 
      */
     private String getConditionForOrgunitProgramStageCompleted( String programStageId, String operator,
         Collection<Integer> orgunitIds, boolean flag )
@@ -1079,24 +1055,24 @@ public class HibernateCaseAggregationConditionStore
             + "                  AND _pdv.dataelementid=" + dataElementId
             + "                 AND _psi.organisationunitid in (" + TextUtils.getCommaDelimitedString( orgunitIds )
             + ") ";
-        
-        
-        if (programId != null) 
+
+
+        if ( programId != null )
         {
             sql += " AND _pi.programid = " + programId;
         }
- 
-        if (programId != null)
+
+        if ( programId != null )
         {
             sql += " AND _psi.programstageid = " + programStageId;
         }
-               
+
         sql += " AND ( _psi.executionDate BETWEEN '" + PARAM_PERIOD_START_DATE + "' AND '" + PARAM_PERIOD_END_DATE
             + "') " + "                 AND ( DATE(_pdv.value) - DATE(" + dateProperty + ") " + compareSide + "  ) ";
-       
-       return sql;
+
+        return sql;
     }
-    
+
     private String getConditionForMinusDataElement2( Collection<Integer> orgunitIds, Integer programId, Integer programStageId,
         Integer dataElementId, String dateProperty, String compareSide )
     {
@@ -1107,22 +1083,22 @@ public class HibernateCaseAggregationConditionStore
             + "                  AND _pdv.dataelementid=" + dataElementId
             + "                 AND _psi.organisationunitid in (" + TextUtils.getCommaDelimitedString( orgunitIds )
             + ") ";
-        
-        
-        if (programId != null) 
+
+
+        if ( programId != null )
         {
             sql += " AND _pi.programid = " + programId;
         }
- 
-        if (programId != null)
+
+        if ( programId != null )
         {
             sql += " AND _psi.programstageid = " + programStageId;
         }
-        
-       sql += " AND ( _psi.executionDate BETWEEN '" + PARAM_PERIOD_START_DATE + "' AND '" + PARAM_PERIOD_END_DATE
+
+        sql += " AND ( _psi.executionDate BETWEEN '" + PARAM_PERIOD_START_DATE + "' AND '" + PARAM_PERIOD_END_DATE
             + "') " + "                 AND ( DATE(" + dateProperty + ") - DATE(_pdv.value) " + compareSide + "  ) ";
-       
-       return sql;
+
+        return sql;
     }
 
     private String getConditionForMisus2DataElement( Collection<Integer> orgunitIds, String programStageId1,
@@ -1172,53 +1148,52 @@ public class HibernateCaseAggregationConditionStore
             + " and  _teav.trackedentityattributeid =  " + attribute2 + " ) as a2 "
             + " WHERE DATE(a1.value ) - DATE(a2.value) " + compareSide;
     }
-    
+
     private String getConditionForMisusAttribute1( String attribute, String dateProperty, String compareSide )
     {
-        if( dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE ) 
-            ||  dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE ) )
-    {
-       return " EXISTS ( select * from trackedentityattributevalue _teav "
-           + "inner join programinstance _pi on _teav.trackedentityinstanceid=_pi.trackedentityinstanceid "
-           + "where _teav.trackedentityattributeid=" + attribute + " and date(" + dateProperty + ") - date(_teav.value) " + compareSide ;
-    }
-    else if( dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_REPORT_DATE ) )
-    {
-        return " EXISTS ( select * from trackedentityattributevalue _teav "
-            + "inner join programinstance _pi on _teav.trackedentityinstanceid=_pi.trackedentityinstanceid "
-            + "inner join programstageinstance _psi on _psi.programinstanceid=_pi.programinstanceid "
-            + "where _teav.trackedentityattributeid=" + attribute + " and date(" + dateProperty + ") - date(_teav.value) " + compareSide ;
-    }
-    
-     return " EXISTS (select * from trackedentityattributevalue _teav where _teav.trackedentityattributeid="
-        + attribute + " and date(now()) - date(_teav.value)  " + compareSide;
-    }
-    
-    private String getConditionForMisusAttribute2( String attribute, String dateProperty, String compareSide )
-    {
-        if( dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE ) 
-                ||  dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE ) )
+        if ( dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE )
+            || dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE ) )
         {
-           return " EXISTS ( select * from trackedentityattributevalue _teav "
-               + "inner join programinstance _pi on _teav.trackedentityinstanceid=_pi.trackedentityinstanceid "
-               + "where _teav.trackedentityattributeid=" + attribute + " and date(_teav.value) - date(" + dateProperty + ") " + compareSide ;
+            return " EXISTS ( select * from trackedentityattributevalue _teav "
+                + "inner join programinstance _pi on _teav.trackedentityinstanceid=_pi.trackedentityinstanceid "
+                + "where _teav.trackedentityattributeid=" + attribute + " and date(" + dateProperty + ") - date(_teav.value) " + compareSide;
         }
-        else if( dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_REPORT_DATE ) )
+        else if ( dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_REPORT_DATE ) )
         {
             return " EXISTS ( select * from trackedentityattributevalue _teav "
                 + "inner join programinstance _pi on _teav.trackedentityinstanceid=_pi.trackedentityinstanceid "
                 + "inner join programstageinstance _psi on _psi.programinstanceid=_pi.programinstanceid "
-                + "where _teav.trackedentityattributeid=" + attribute + " and date(_teav.value) - date(" + dateProperty + ") " + compareSide ;
+                + "where _teav.trackedentityattributeid=" + attribute + " and date(" + dateProperty + ") - date(_teav.value) " + compareSide;
         }
-        
-         return " EXISTS (select * from trackedentityattributevalue _teav where _teav.trackedentityattributeid="
+
+        return " EXISTS (select * from trackedentityattributevalue _teav where _teav.trackedentityattributeid="
+            + attribute + " and date(now()) - date(_teav.value)  " + compareSide;
+    }
+
+    private String getConditionForMisusAttribute2( String attribute, String dateProperty, String compareSide )
+    {
+        if ( dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE )
+            || dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE ) )
+        {
+            return " EXISTS ( select * from trackedentityattributevalue _teav "
+                + "inner join programinstance _pi on _teav.trackedentityinstanceid=_pi.trackedentityinstanceid "
+                + "where _teav.trackedentityattributeid=" + attribute + " and date(_teav.value) - date(" + dateProperty + ") " + compareSide;
+        }
+        else if ( dateProperty.equals( CaseAggregationCondition.OBJECT_PROGRAM_PROPERTY_REPORT_DATE ) )
+        {
+            return " EXISTS ( select * from trackedentityattributevalue _teav "
+                + "inner join programinstance _pi on _teav.trackedentityinstanceid=_pi.trackedentityinstanceid "
+                + "inner join programstageinstance _psi on _psi.programinstanceid=_pi.programinstanceid "
+                + "where _teav.trackedentityattributeid=" + attribute + " and date(_teav.value) - date(" + dateProperty + ") " + compareSide;
+        }
+
+        return " EXISTS (select * from trackedentityattributevalue _teav where _teav.trackedentityattributeid="
             + attribute + " and date(_teav.value) - date(now()) " + compareSide;
     }
 
     /**
      * Return the Ids of organisation units which entity instances registered or
      * events happened.
-     * 
      */
     @Override
     public Collection<Integer> getServiceOrgunit()
@@ -1354,8 +1329,8 @@ public class HibernateCaseAggregationConditionStore
 
         CalendarPeriodType periodType = (CalendarPeriodType) PeriodType.getPeriodTypeByName( periodTypeName );
         List<Period> periods = new ArrayList<Period>( periodType.generatePeriods( startDate, endDate ) );
-        periods = periodService.reloadPeriods(periods );
-       
+        periods = periodService.reloadPeriods( periods );
+
         return periods;
     }
 
@@ -1424,7 +1399,7 @@ public class HibernateCaseAggregationConditionStore
 
         return false;
     }
-   
+
     private String replacePeriodSql( String sql, Period period )
     {
         sql = sql.replaceAll( "COMBINE", "" );
@@ -1434,5 +1409,5 @@ public class HibernateCaseAggregationConditionStore
         sql = sql.replaceAll( PARAM_PERIOD_ISO_DATE, period.getIsoDate() );
 
         return sql;
-    }    
+    }
 }

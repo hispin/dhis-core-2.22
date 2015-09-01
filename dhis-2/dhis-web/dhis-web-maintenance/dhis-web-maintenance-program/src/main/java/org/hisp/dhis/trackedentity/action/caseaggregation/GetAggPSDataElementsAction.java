@@ -28,19 +28,17 @@ package org.hisp.dhis.trackedentity.action.caseaggregation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Iterator;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
- * 
  * @version $Id: GetAggPSDataElementsAction.java Dec 22, 2011 9:24:49 AM $
  */
 public class GetAggPSDataElementsAction
@@ -63,7 +61,7 @@ public class GetAggPSDataElementsAction
     {
         this.psId = psId;
     }
-    
+
     public Integer getPsId()
     {
         return psId;
@@ -84,7 +82,7 @@ public class GetAggPSDataElementsAction
     public String execute()
     {
         ProgramStage stage = programStageService.getProgramStage( psId );
-        
+
         dataElementList = stage.getAllDataElements();
 
         if ( dataElementList != null && !dataElementList.isEmpty() )
@@ -95,7 +93,7 @@ public class GetAggPSDataElementsAction
             {
                 DataElement de = deIterator.next();
 
-                if ( !de.getType().equals( DataElement.VALUE_TYPE_INT ) )
+                if ( !de.getValueType().isNumeric() )
                 {
                     deIterator.remove();
                 }

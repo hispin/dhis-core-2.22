@@ -28,8 +28,6 @@ package org.hisp.dhis.dataelementhistory;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
 import org.apache.commons.math3.util.Precision;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -40,6 +38,8 @@ import org.hisp.dhis.minmax.MinMaxDataElementService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
+
+import java.util.List;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -80,7 +80,7 @@ public class DefaultHistoryRetriever
     public DataElementHistory getHistory( DataElement dataElement, DataElementCategoryOptionCombo optionCombo,
         OrganisationUnit organisationUnit, Period lastPeriod, int historyLength )
     {
-        if ( !dataElement.getType().equals( DataElement.VALUE_TYPE_INT ) )
+        if ( !dataElement.getValueType().isNumeric() )
         {
             return null; // TODO
         }
@@ -172,10 +172,10 @@ public class DefaultHistoryRetriever
     /**
      * Finds the lowest value entered in the periode given by
      * history.historyLenght.
-     * 
+     *
      * @param history DataElementHistory
      * @return the lowest Double value entred. If no values are entred,
-     *         Double.MAX_VALUE is returned
+     * Double.MAX_VALUE is returned
      */
     private Double getMinValue( DataElementHistory history )
     {
@@ -199,10 +199,10 @@ public class DefaultHistoryRetriever
     /**
      * Finds the highest value entered in the periode given by
      * history.historyLenght.
-     * 
+     *
      * @param history DataElementHistory
      * @return the highest entred value. If no value is entred
-     *         Double.NEGATIVE_INFINITY is returned
+     * Double.NEGATIVE_INFINITY is returned
      */
     private Double getMaxValue( DataElementHistory history )
     {

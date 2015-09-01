@@ -28,14 +28,7 @@ package org.hisp.dhis.validationrule.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -45,7 +38,13 @@ import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -104,7 +103,7 @@ public class GetFilteredDataElementsAction
     {
         return periodTypeName;
     }
-    
+
     private String filter;
 
     public void setFilter( String filter )
@@ -154,7 +153,7 @@ public class GetFilteredDataElementsAction
             List<DataSet> dataSets = new ArrayList<>( dataSetService.getDataSetsByPeriodType( periodType ) );
 
             Collections.sort( dataSets, IdentifiableObjectNameComparator.INSTANCE );
-            
+
             // -----------------------------------------------------------------
             // Get available dataelements into the dataSets
             // -----------------------------------------------------------------
@@ -163,10 +162,10 @@ public class GetFilteredDataElementsAction
 
             for ( DataSet dataSet : dataSets )
             {
-                 members.addAll( dataSet.getDataElements() );
+                members.addAll( dataSet.getDataElements() );
             }
 
-            dataElements = new ArrayList<>(getIntegerDataElements( members ));
+            dataElements = new ArrayList<>( getIntegerDataElements( members ) );
         }
         else
         {
@@ -212,7 +211,7 @@ public class GetFilteredDataElementsAction
 
         while ( iterator.hasNext() )
         {
-            if ( !iterator.next().getType().equals( DataElement.VALUE_TYPE_INT ) )
+            if ( !iterator.next().getValueType().isNumeric() )
             {
                 iterator.remove();
             }

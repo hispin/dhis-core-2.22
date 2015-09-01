@@ -28,13 +28,6 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.format.Colour;
@@ -46,7 +39,6 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
-
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.databrowser.MetaValue;
@@ -56,6 +48,13 @@ import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Dang Duy Hieu
@@ -67,10 +66,10 @@ public class ExcelUtils
 
     public static final WritableCellFormat FORMAT_LABEL = new WritableCellFormat( new WritableFont( WritableFont.ARIAL, 13,
         WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.BLACK ) );
-    
+
     public static final WritableCellFormat FORMAT_TEXT = new WritableCellFormat( new WritableFont( WritableFont.ARIAL, 11,
         WritableFont.NO_BOLD, false ) );
-    
+
     public static void printDataElementHeaders( WritableSheet sheet, I18n i18n, int row,
         int column )
         throws RowsExceededException, WriteException
@@ -143,7 +142,7 @@ public class ExcelUtils
 
     }
 
-    public static void addOrganisationUnitCellToSheet( WritableSheet sheet, 
+    public static void addOrganisationUnitCellToSheet( WritableSheet sheet,
         OrganisationUnit unit, I18n i18n, I18nFormat i18nFormat, int row, int column )
         throws RowsExceededException, WriteException
     {
@@ -224,7 +223,7 @@ public class ExcelUtils
             for ( GridHeader col : grid.getVisibleHeaders() )
             {
                 //TODO use i18nFormat.formatDate for label
-                
+
                 sheet.addCell( new Label( column++, 3, col.getName(), cellFormat ) );
             }
         }
@@ -265,8 +264,8 @@ public class ExcelUtils
 
                 for ( Object rowItem : rows )
                 {
-                    String temp = (String)rowItem;
-                    
+                    String temp = (String) rowItem;
+
                     if ( temp == null )
                     {
                         temp = "";
@@ -296,9 +295,9 @@ public class ExcelUtils
 
     /**
      * Creates a writable workbook.
-     * 
+     *
      * @param outputStream The output stream to write the document content.
-     * @param pageSize the page size.
+     * @param pageSize     the page size.
      * @return A Document.
      */
     public static WritableWorkbook openWorkbook( OutputStream outputStream )
@@ -307,7 +306,7 @@ public class ExcelUtils
         {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding( "UTF-8" );
-            
+
             return Workbook.createWorkbook( outputStream, ws );
         }
         catch ( IOException e )
