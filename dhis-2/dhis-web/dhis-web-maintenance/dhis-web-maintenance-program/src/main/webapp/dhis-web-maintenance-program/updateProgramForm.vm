@@ -128,6 +128,16 @@
 			</td>
 			<td></td>
 		</tr>
+		<tr>
+        	<td><label>$i18n.getString( "category_combo" )</label></td>
+        	<td>
+          		<select id="categoryComboId" name="categoryComboId">
+            		#foreach( $categoryCombo in $categoryCombos )
+              			<option value="$categoryCombo.id" #if( $program.categoryCombo.id == $categoryCombo.id ) selected="selected"#end>$encoder.htmlEncode( $categoryCombo.displayName )</option>
+            		#end
+          		</select>
+        	</td>
+      	</tr>
 		
 		<tr name='nonAnonymous'><td>&nbsp;</td></tr>
 		

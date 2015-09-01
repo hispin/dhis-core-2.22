@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.Action;
 
 import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
@@ -74,6 +75,9 @@ public class UpdateProgramAction
 
     @Autowired
     private AttributeService attributeService;
+    
+    @Autowired
+    private DataElementCategoryService categoryService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -260,6 +264,13 @@ public class UpdateProgramAction
     {
         this.jsonAttributeValues = jsonAttributeValues;
     }
+    
+    private Integer categoryComboId;
+
+    public void setCategoryComboId( Integer categoryComboId )
+    {
+        this.categoryComboId = categoryComboId;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -358,6 +369,11 @@ public class UpdateProgramAction
         if ( jsonAttributeValues != null )
         {
             AttributeUtils.updateAttributeValuesFromJson( program.getAttributeValues(), jsonAttributeValues, attributeService );
+        }
+        
+        if ( categoryComboId != null )
+        {
+                program.setCategoryCombo( categoryService.getDataElementCategoryCombo( categoryComboId ) );
         }
 
         programService.updateProgram( program );
