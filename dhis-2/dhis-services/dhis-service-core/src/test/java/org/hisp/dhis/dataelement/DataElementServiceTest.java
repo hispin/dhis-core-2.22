@@ -69,11 +69,11 @@ public class DataElementServiceTest
         assertNotNull( dataElementA.getUid() );
         assertNotNull( dataElementB.getUid() );
         assertNotNull( dataElementC.getUid() );
-        
+
         assertNotNull( dataElementA.getLastUpdated() );
         assertNotNull( dataElementB.getLastUpdated() );
         assertNotNull( dataElementC.getLastUpdated() );
-        
+
         dataElementA = dataElementService.getDataElement( idA );
         assertNotNull( dataElementA );
         assertEquals( idA, dataElementA.getId() );
@@ -94,11 +94,11 @@ public class DataElementServiceTest
     public void testUpdateDataElement()
     {
         DataElement dataElementA = createDataElement( 'A' );
-        
+
         int idA = dataElementService.addDataElement( dataElementA );
         assertNotNull( dataElementA.getUid() );
         assertNotNull( dataElementA.getLastUpdated() );
-        
+
         dataElementA = dataElementService.getDataElement( idA );
         assertEquals( DataElement.VALUE_TYPE_INT, dataElementA.getType() );
 
@@ -128,21 +128,21 @@ public class DataElementServiceTest
         assertNotNull( dataElementService.getDataElement( idD ) );
 
         dataElementService.deleteDataElement( dataElementB );
-        
+
         assertNotNull( dataElementService.getDataElement( idA ) );
         assertNull( dataElementService.getDataElement( idB ) );
         assertNotNull( dataElementService.getDataElement( idC ) );
         assertNotNull( dataElementService.getDataElement( idD ) );
 
         dataElementService.deleteDataElement( dataElementC );
-        
+
         assertNotNull( dataElementService.getDataElement( idA ) );
         assertNull( dataElementService.getDataElement( idB ) );
         assertNull( dataElementService.getDataElement( idC ) );
         assertNotNull( dataElementService.getDataElement( idD ) );
 
         dataElementService.deleteDataElement( dataElementD );
-        
+
         assertNotNull( dataElementService.getDataElement( idA ) );
         assertNull( dataElementService.getDataElement( idB ) );
         assertNull( dataElementService.getDataElement( idC ) );
@@ -173,7 +173,7 @@ public class DataElementServiceTest
         assertNotNull( dataElementB );
         assertEquals( idB, dataElementB.getId() );
         assertEquals( "DataElementB", dataElementB.getName() );
-        
+
         DataElement dataElementE = dataElementService.getDataElementByCode( "codeE" );
         assertNull( dataElementE );
     }
@@ -258,7 +258,7 @@ public class DataElementServiceTest
         DataElement dataElementB = createDataElement( 'B' );
         DataElement dataElementC = createDataElement( 'C' );
         DataElement dataElementD = createDataElement( 'D' );
-        
+
         dataElementA.setType( DataElement.VALUE_TYPE_INT );
         dataElementB.setType( DataElement.VALUE_TYPE_BOOL );
         dataElementC.setType( DataElement.VALUE_TYPE_STRING );
@@ -307,7 +307,7 @@ public class DataElementServiceTest
         assertEquals( 3, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM )
             .size() );
     }
-    
+
     @Test
     public void testGetDataElementsByDomainType()
     {
@@ -489,12 +489,12 @@ public class DataElementServiceTest
         DataElementGroup dataElementGroupC = dataElementService.getDataElementGroupByName( "DataElementGroupC" );
         assertNull( dataElementGroupC );
     }
-    
+
     @Test
     public void testGetDataElementsByZeroIsSignificantAndGroup()
     {
         DataElementGroup dataElementGroupA = new DataElementGroup( "DataElementGroupA" );
-        
+
         DataElement dataElementA = createDataElement( 'A' );
         dataElementA.setZeroIsSignificant( true );
         DataElement dataElementB = createDataElement( 'B' );
@@ -503,7 +503,7 @@ public class DataElementServiceTest
         dataElementC.setZeroIsSignificant( true );
         DataElement dataElementD = createDataElement( 'D' );
         dataElementD.setZeroIsSignificant( false );
-        
+
         dataElementGroupA.addDataElement( dataElementA );
         dataElementGroupA.addDataElement( dataElementB );
         dataElementGroupA.addDataElement( dataElementC );
@@ -515,11 +515,11 @@ public class DataElementServiceTest
         dataElementService.addDataElement( dataElementD );
 
         dataElementService.addDataElementGroup( dataElementGroupA );
-        
+
         Set<DataElement> expected = new HashSet<>();
         expected.add( dataElementA );
         expected.add( dataElementC );
-        
+
         assertEquals( expected, dataElementService.getDataElementsByZeroIsSignificantAndGroup( true, dataElementGroupA ) );
     }
 }

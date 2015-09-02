@@ -28,11 +28,13 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Lars Helge Overland
@@ -59,6 +61,19 @@ public enum ValueType
     OPTION_SET( String.class ),
     USERNAME( String.class );
 
+    public static List<String> INTEGER_TYPE_STRINGS = Lists.newArrayList(
+        INTEGER.toString(), INTEGER_POSITIVE.toString(), INTEGER_NEGATIVE.toString(), INTEGER_ZERO_OR_POSITIVE.toString()
+    );
+
+    public static List<String> NUMERIC_TYPE_STRINGS = Lists.newArrayList(
+        INTEGER.toString(), INTEGER_POSITIVE.toString(), INTEGER_NEGATIVE.toString(), INTEGER_ZERO_OR_POSITIVE.toString(),
+        NUMBER.toString(), UNIT_INTERVAL.toString(), PERCENTAGE.toString()
+    );
+
+    public static List<String> TEXT_TYPE_STRINGS = Lists.newArrayList(
+        TEXT.toString(), LONG_TEXT.toString()
+    );
+
     private final Class<?> javaClass;
 
     ValueType()
@@ -83,7 +98,7 @@ public enum ValueType
 
     public boolean isNumeric()
     {
-        return this.isInteger() || this == NUMBER;
+        return this.isInteger() || this == NUMBER || this == UNIT_INTERVAL || this == PERCENTAGE;
     }
 
     public boolean isText()

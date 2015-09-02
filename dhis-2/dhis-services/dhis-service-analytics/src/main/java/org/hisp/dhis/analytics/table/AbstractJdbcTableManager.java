@@ -162,7 +162,7 @@ public abstract class AbstractJdbcTableManager
             
             tables.add( new AnalyticsTable( baseName, getDimensionColumns( null ), period ) );
         }
-        
+
         return tables;
     }
     

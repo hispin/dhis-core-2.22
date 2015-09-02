@@ -616,12 +616,42 @@ public class DataElement
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public ValueType getValueType()
     {
-        return ValueType.getFromDataElement( this );
+        return valueType != null ? valueType : ValueType.getFromDataElement( this );
     }
 
     public void setValueType( ValueType valueType )
     {
         this.valueType = valueType;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType( String type )
+    {
+        this.type = type;
+    }
+
+    public String getNumberType()
+    {
+        return numberType;
+    }
+
+    public void setNumberType( String numberType )
+    {
+        this.numberType = numberType;
+    }
+
+    public String getTextType()
+    {
+        return textType;
+    }
+
+    public void setTextType( String textType )
+    {
+        this.textType = textType;
     }
 
     @JsonProperty
@@ -649,32 +679,6 @@ public class DataElement
     public void setDomainType( DataElementDomain domainType )
     {
         this.domainType = domainType;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getTextType()
-    {
-        return textType;
-    }
-
-    public void setTextType( String textType )
-    {
-        this.textType = textType;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType( String type )
-    {
-        this.type = type;
     }
 
     @JsonProperty
@@ -772,19 +776,6 @@ public class DataElement
     public void setZeroIsSignificant( boolean zeroIsSignificant )
     {
         this.zeroIsSignificant = zeroIsSignificant;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getNumberType()
-    {
-        return numberType;
-    }
-
-    public void setNumberType( String numberType )
-    {
-        this.numberType = numberType;
     }
 
     @JsonProperty( "attributeValues" )
