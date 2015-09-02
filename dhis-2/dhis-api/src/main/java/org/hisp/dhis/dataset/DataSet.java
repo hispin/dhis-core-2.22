@@ -155,11 +155,6 @@ public class DataSet
     private int timelyDays;
 
     /**
-     * Indicating whether aggregation should be skipped.
-     */
-    private boolean skipAggregation;
-
-    /**
      * User group which will receive notifications when data set is marked
      * complete.
      */
@@ -634,19 +629,6 @@ public class DataSet
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isSkipAggregation()
-    {
-        return skipAggregation;
-    }
-
-    public void setSkipAggregation( boolean skipAggregation )
-    {
-        this.skipAggregation = skipAggregation;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public UserGroup getNotificationRecipients()
     {
         return notificationRecipients;
@@ -829,7 +811,6 @@ public class DataSet
             renderAsTabs = dataSet.isRenderAsTabs();
             renderHorizontally = dataSet.isRenderHorizontally();
             expiryDays = dataSet.getExpiryDays();
-            skipAggregation = dataSet.isSkipAggregation();
             openFuturePeriods = dataSet.getOpenFuturePeriods();
             fieldCombinationRequired = dataSet.isFieldCombinationRequired();
             mobile = dataSet.isMobile();
