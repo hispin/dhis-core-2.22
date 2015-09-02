@@ -62,6 +62,8 @@ public class ProgramStageInstance
 
     private OrganisationUnit organisationUnit;
 
+    private DataElementCategoryOptionCombo attributeOptionCombo;
+
     private List<OutboundSms> outboundSms = new ArrayList<>();
 
     private List<MessageConversation> messageConversations = new ArrayList<>();
@@ -78,8 +80,6 @@ public class ProgramStageInstance
 
     private Date completedDate;
     
-    private DataElementCategoryOptionCombo attributeOptionCombo;
-
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -190,6 +190,16 @@ public class ProgramStageInstance
     {
         this.organisationUnit = organisationUnit;
     }
+    
+    public DataElementCategoryOptionCombo getAttributeOptionCombo()
+    {
+        return attributeOptionCombo;
+    }
+
+    public void setAttributeOptionCombo( DataElementCategoryOptionCombo attributeOptionCombo )
+    {
+        this.attributeOptionCombo = attributeOptionCombo;
+    }
 
     public List<OutboundSms> getOutboundSms()
     {
@@ -290,15 +300,5 @@ public class ProgramStageInstance
 
             return EventStatus.SCHEDULE;
         }
-    }
-    
-    public DataElementCategoryOptionCombo getAttributeOptionCombo()
-    {
-        return attributeOptionCombo;
-    }
-
-    public void setAttributeOptionCombo( DataElementCategoryOptionCombo attributeOptionCombo )
-    {
-        this.attributeOptionCombo = attributeOptionCombo;
     }
 }
