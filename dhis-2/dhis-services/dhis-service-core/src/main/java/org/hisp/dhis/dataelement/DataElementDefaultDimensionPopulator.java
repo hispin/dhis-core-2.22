@@ -96,8 +96,6 @@ public class DataElementDefaultDimensionPopulator
 
         DataElementCategoryCombo categoryCombo = categoryService.getDataElementCategoryComboByName( defaultName );
 
-        log.info( "Linked default category with default concept" );
-
         if ( categoryCombo == null )
         {
             categoryService.generateDefaultDimension();
@@ -114,8 +112,6 @@ public class DataElementDefaultDimensionPopulator
 
         Collection<DataElement> dataElements = dataElementService.getAllDataElements();
 
-        boolean dataElementUpdated = false;
-
         for ( DataElement dataElement : dataElements )
         {
             if ( dataElement.getCategoryCombo() == null )
@@ -123,14 +119,7 @@ public class DataElementDefaultDimensionPopulator
                 dataElement.setCategoryCombo( categoryCombo );
 
                 dataElementService.updateDataElement( dataElement );
-
-                dataElementUpdated = true;
             }
-        }
-
-        if ( dataElementUpdated )
-        {
-            log.info( "Assigned data elements not assigned to any dimension to the default dimension" );
         }
     }
 }
