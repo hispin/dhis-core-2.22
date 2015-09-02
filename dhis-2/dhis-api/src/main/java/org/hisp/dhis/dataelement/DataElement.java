@@ -836,6 +836,7 @@ public class DataElement
                 type = dataElement.getType();
                 numberType = dataElement.getNumberType();
                 textType = dataElement.getTextType();
+                valueType = dataElement.getValueType();
                 aggregationOperator = dataElement.getAggregationOperator();
                 categoryCombo = dataElement.getCategoryCombo();
                 url = dataElement.getUrl();
@@ -849,6 +850,7 @@ public class DataElement
                 type = dataElement.getType() == null ? type : dataElement.getType();
                 numberType = dataElement.getNumberType() == null ? numberType : dataElement.getNumberType();
                 textType = dataElement.getTextType() == null ? textType : dataElement.getTextType();
+                valueType = dataElement.getValueType() == null ? valueType : dataElement.getValueType();
                 aggregationOperator = dataElement.getAggregationOperator() == null ? aggregationOperator : dataElement.getAggregationOperator();
                 categoryCombo = dataElement.getCategoryCombo() == null ? categoryCombo : dataElement.getCategoryCombo();
                 url = dataElement.getUrl() == null ? url : dataElement.getUrl();
