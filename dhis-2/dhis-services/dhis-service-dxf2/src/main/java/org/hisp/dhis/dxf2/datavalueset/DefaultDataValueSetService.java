@@ -748,7 +748,15 @@ public class DefaultDataValueSetService
             
             if ( !inUserHierarchy )
             {
-                summary.getConflicts().add( new ImportConflict( dataValue.getOrgUnit(), "Organisation unit not in hierarchy of current user: " + currentUser ) );
+                summary.getConflicts().add( new ImportConflict( orgUnit.getUid(), "Organisation unit not in hierarchy of current user: " + currentUser ) );
+                continue;
+            }
+            
+            boolean invalidFuturePeriod = period.isFuture() && dataElement.getOpenFuturePeriods() <= 0;
+            
+            if ( invalidFuturePeriod )
+            {
+                summary.getConflicts().add( new ImportConflict( period.getIsoDate(), "Data element does not allow for future periods through data sets: " + dataElement.getUid() ) );
                 continue;
             }
 

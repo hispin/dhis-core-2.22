@@ -270,8 +270,9 @@ public class Period
     }
 
     /**
-     * Determines whether this is a future period in relation to the current time.
-     * @return true if this period ends in the future, false otherwise (the period has ended).
+     * Determines whether this is a future period relative to the current time.
+     * 
+     * @return true if this period ends in the future, false otherwise.
      */
     public boolean isFuture()
     {
