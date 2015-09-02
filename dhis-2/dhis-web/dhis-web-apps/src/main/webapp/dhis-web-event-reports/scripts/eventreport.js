@@ -167,33 +167,7 @@ Ext.onReady( function() {
 					{id: 'FinancialJuly', name: ER.i18n.financial_july},
 					{id: 'FinancialApril', name: ER.i18n.financial_april}
 				],
-                relativePeriods: [
-                    'THIS_WEEK',
-                    'LAST_WEEK',
-                    'LAST_4_WEEKS',
-                    'LAST_12_WEEKS',
-                    'LAST_52_WEEKS',
-                    'THIS_MONTH',
-                    'LAST_MONTH',
-                    'LAST_3_MONTHS',
-                    'LAST_6_MONTHS',
-                    'LAST_12_MONTHS',
-                    'THIS_BIMONTH',
-                    'LAST_BIMONTH',
-                    'LAST_6_BIMONTHS',
-                    'THIS_QUARTER',
-                    'LAST_QUARTER',
-                    'LAST_4_QUARTERS',
-                    'THIS_SIX_MONTH',
-                    'LAST_SIX_MONTH',
-                    'LAST_2_SIXMONTHS',
-                    'THIS_FINANCIAL_YEAR',
-                    'LAST_FINANCIAL_YEAR',
-                    'LAST_5_FINANCIAL_YEARS',
-                    'THIS_YEAR',
-                    'LAST_YEAR',
-                    'LAST_5_YEARS'
-                ]
+                relativePeriods: []
 			};
 
                 // aggregation type
@@ -222,7 +196,7 @@ Ext.onReady( function() {
                 west_fill_accordion_indicator: 56,
                 west_fill_accordion_dataelement: 59,
                 west_fill_accordion_dataset: 31,
-                west_fill_accordion_period: 330,
+                west_fill_accordion_period: 335,
                 west_fill_accordion_organisationunit: 58,
                 west_maxheight_accordion_indicator: 450,
                 west_maxheight_accordion_dataset: 350,
@@ -401,7 +375,7 @@ Ext.onReady( function() {
 
                 // collapseDataDimensions: boolean (false)
 
-                // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_INSTANCE', 'ENROLLMENT'
+                // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_IERTANCE', 'ENROLLMENT'
 
                 // aggregationType: string ('default') - 'default', 'count', 'sum'
 
@@ -614,6 +588,11 @@ Ext.onReady( function() {
 					//layout.sortOrder = Ext.isNumber(config.sortOrder) ? config.sortOrder : 0;
 					//layout.topLimit = Ext.isNumber(config.topLimit) ? config.topLimit : 0;
 
+                    // relative period date
+                    if (support.prototype.date.getYYYYMMDD(config.relativePeriodDate)) {
+                        layout.relativePeriodDate = support.prototype.date.getYYYYMMDD(config.relativePeriodDate);
+                    }
+
 					if (!validateSpecialCases()) {
 						return;
 					}
@@ -680,7 +659,7 @@ Ext.onReady( function() {
 
 					if (!(Ext.isArray(config.rows) && config.rows.length > 0)) {
 						//alert('No values found');
-						//return;
+						//return; // for ER, not for PT
 					}
 
 					if (config.rows.length > 0 && config.headers.length !== config.rows[0].length) {
@@ -989,6 +968,26 @@ Ext.onReady( function() {
 
 				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.report.digitGroupSeparator[separator]);
 			};
+
+                // date
+            support.prototype.date = {};
+
+            support.prototype.date.getYYYYMMDD = function(param) {
+                if (!Ext.isString(param)) {
+                    if (!(Object.prototype.toString.call(param) === '[object Date]' && param.toString() !== 'Invalid date')) {
+                        return null;
+                    }
+                }
+
+                var date = new Date(param),
+                    month = '' + (1 + date.getMonth()),
+                    day = '' + date.getDate();
+
+                month = month.length === 1 ? '0' + month : month;
+                day = day.length === 1 ? '0' + day : day;
+
+                return date.getFullYear() + '-' + month + '-' + day;
+            };
 
 			// color
 			support.color = {};
@@ -1968,8 +1967,8 @@ Ext.onReady( function() {
                     names,
 					headers,
                     booleanNameMap = {
-                        'true': ER.i18n.yes || 'Yes',
-                        'false': ER.i18n.no || 'No'
+                        '1': ER.i18n.yes || 'Yes',
+                        '0': ER.i18n.no || 'No'
                     };
 
 				response = Ext.clone(response);
@@ -2026,6 +2025,60 @@ Ext.onReady( function() {
                             support.prototype.array.sort(objects, 'ASC', 'sortingId');
                             header.ids = Ext.Array.pluck(objects, 'id');
                         }
+                        else if (header.type === 'java.lang.Boolean') {
+							var objects = [];
+
+                            for (var k = 0, id, fullId, name, isHierarchy; k < response.rows.length; k++) {
+                                id = response.rows[k][i] || emptyId;
+
+                                // hide NA data
+                                if (xLayout.hideNaData && id === emptyId) {
+                                    continue;
+                                }
+
+                                fullId = header.name + id;
+                                isHierarchy = service.layout.isHierarchy(xLayout, response, id);
+
+                                // add dimension name prefix if not pe/ou
+                                name = isMeta ? '' : header.column + ' ';
+
+                                // add hierarchy if ou and showHierarchy
+                                name = isHierarchy ? service.layout.getHierarchyName(ouHierarchy, names, id) : (names[id] || id);
+
+                                names[fullId] = name;
+
+                                // update rows
+                                response.rows[k][i] = fullId;
+
+                                // update ou hierarchy
+                                if (isHierarchy) {
+									ouHierarchy[fullId] = ouHierarchy[id];
+								}
+
+                                // update boolean metadata
+                                response.metaData.booleanNames[id] = booleanNameMap[id];
+                                response.metaData.booleanNames[fullId] = booleanNameMap[id];
+
+								objects.push({
+									id: fullId,
+									sortingId: id
+								});
+                            }
+
+                            // sort
+                            objects.sort(function(a, b) {
+                                if (a.sortingId === emptyId) {
+                                    return 1;
+                                }
+                                else if (b.sortingId === emptyId) {
+                                    return -1;
+                                }
+
+                                return a.sortingId - b.sortingId;
+                            });
+
+                            header.ids = Ext.Array.pluck(objects, 'id');
+                        }
                         else if (header.name === 'pe') {
                             var selectedItems = xLayout.dimensionNameIdsMap['pe'],
                                 isRelative = false;
@@ -2073,15 +2126,9 @@ Ext.onReady( function() {
 									ouHierarchy[fullId] = ouHierarchy[id];
 								}
 
-                                // update boolean metadata
-                                if (header.type === 'java.lang.Boolean') {
-                                    response.metaData.booleanNames[id] = booleanNameMap[id];
-                                    response.metaData.booleanNames[fullId] = booleanNameMap[id];
-                                }
-
 								objects.push({
 									id: fullId,
-									sortingId: header.name === 'pe' ? fullId : name
+									sortingId: name
 								});
                             }
 
@@ -2262,26 +2309,37 @@ Ext.onReady( function() {
 			};
 
 			web.window.addHideOnBlurHandler = function(w) {
-				var el = Ext.get(Ext.query('.x-mask')[0]);
+				var masks = Ext.query('.x-mask');
 
-				el.on('click', function() {
-					if (w.hideOnBlur) {
-						w.hide();
-					}
-				});
+                for (var i = 0, el; i < masks.length; i++) {
+                    el = Ext.get(masks[i]);
+
+                    if (el.getWidth() == Ext.getBody().getWidth()) {
+                        el.on('click', function() {
+                            if (w.hideOnBlur) {
+                                w.hide();
+                            }
+                        });
+                    }
+                }
 
 				w.hasHideOnBlurHandler = true;
 			};
 
 			web.window.addDestroyOnBlurHandler = function(w) {
-				var maskElements = Ext.query('.x-mask'),
-                    el = Ext.get(maskElements[0]);
+				var masks = Ext.query('.x-mask');
 
-				el.on('click', function() {
-					if (w.destroyOnBlur) {
-						w.destroy();
-					}
-				});
+                for (var i = 0, el; i < masks.length; i++) {
+                    el = Ext.get(masks[i]);
+
+                    if (el.getWidth() == Ext.getBody().getWidth()) {
+                        el.on('click', function() {
+                            if (w.destroyOnBlur) {
+                                w.destroy();
+                            }
+                        });
+                    }
+                }
 
 				w.hasDestroyOnBlurHandler = true;
 			};
@@ -2289,24 +2347,42 @@ Ext.onReady( function() {
 			// message
 			web.message = {};
 
-			web.message.alert = function(msg, type) {
+			web.message.alert = function(obj) {
                 var config = {},
+                    type,
                     window;
 
-                if (!msg) {
+                if (!obj || (Ext.isObject(obj) && !obj.message && !obj.responseText)) {
                     return;
                 }
 
-                type = type || 'error';
+                // if response object
+                if (Ext.isObject(obj) && obj.responseText && !obj.message) {
+                    obj = Ext.decode(obj.responseText);
+                }
 
-				config.title = type === 'error' ? ER.i18n.error : (type === 'warning' ? ER.i18n.warning : ER.i18n.info);
+                // if string
+                if (Ext.isString(obj)) {
+                    obj = {
+                        status: 'ERROR',
+                        message: obj
+                    };
+                }
+
+                // web message
+                type = (obj.status || 'INFO').toLowerCase();
+
+				config.title = obj.status;
 				config.iconCls = 'ns-window-title-messagebox ' + type;
 
                 // html
-                config.html = msg + (msg.substr(msg.length - 1) === '.' ? '' : '.');
+                config.html = '';
+                config.html += obj.httpStatusCode ? 'Code: ' + obj.httpStatusCode + '<br>' : '';
+                config.html += obj.httpStatus ? 'Status: ' + obj.httpStatus + '<br><br>' : '';
+                config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
 
                 // bodyStyle
-                config.bodyStyle = 'padding: 10px; background: #fff; max-width: 350px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
 
                 // destroy handler
                 config.modal = true;
@@ -2460,6 +2536,11 @@ Ext.onReady( function() {
                 if (view.collapseDataDimensions) {
                     paramString += '&collapseDataDimensions=true';
                 }
+                
+                // relative period date
+                if (view.relativePeriodDate) {
+                    paramString += '&relativePeriodDate=' + view.relativePeriodDate;
+                }
 
                 return paramString;
             };
@@ -2477,7 +2558,10 @@ Ext.onReady( function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                ns.alert(msg, 'warning');
+                ns.alert({
+                    status: 'INFO',
+                    message: msg
+                });
 			};
 
 			// report
@@ -3381,6 +3465,10 @@ Ext.onReady( function() {
 					rows = xResponse.rows,
                     names = xResponse.metaData.names,
                     optionNames = xResponse.metaData.optionNames,
+                    booleanNames = {
+                        '1': ER.i18n.yes,
+                        '0': ER.i18n.no
+                    },
                     pager = xResponse.metaData.pager,
                     count = pager.page * pager.pageSize - pager.pageSize
 					cls = 'pivot',
@@ -3418,8 +3506,7 @@ Ext.onReady( function() {
 					for (var j = 0, str, header, name; j < dimensionHeaders.length; j++) {
 						header = dimensionHeaders[j];
 						str = row[header.index];
-                        //str = names.hasOwnProperty(str) ? names[str] : str;
-                        str = optionNames[header.name + str] || optionNames[str] || names[str] || str;
+                        str = optionNames[header.name + str] || optionNames[str] || booleanNames[str] || names[str] || str;
 						name = web.report.query.format(str);
 
 						//if (header.name === 'ouname' && layout.showHierarchy) {
