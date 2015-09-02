@@ -74,9 +74,6 @@ public class TableAlteror
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
-    @Autowired
-    private DataElementService dataElementService;
-
     // -------------------------------------------------------------------------
     // Execute
     // -------------------------------------------------------------------------
