@@ -727,6 +727,8 @@ public class TableAlteror
         executeSql( "UPDATE dataset SET version=0 WHERE version IS NULL" );
         executeSql( "UPDATE program SET version=0 WHERE version IS NULL" );
         executeSql( "update program set categorycomboid = " + defaultCategoryComboId + " where categorycomboid is null" );
+        executeSql( "update programstageinstance set attributeOptionCombo = " + defaultOptionComboId + " where attributeOptionCombo is null" );
+        
 
         executeSql( "ALTER TABLE datavalue ALTER COLUMN lastupdated TYPE timestamp" );
         executeSql( "ALTER TABLE completedatasetregistration ALTER COLUMN date TYPE timestamp" );
