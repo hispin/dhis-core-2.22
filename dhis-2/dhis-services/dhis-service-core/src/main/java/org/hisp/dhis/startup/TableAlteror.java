@@ -158,6 +158,7 @@ public class TableAlteror
         executeSql( "ALTER TABLE indicator DROP COLUMN numeratoraggregationtype" );
         executeSql( "ALTER TABLE indicator DROP COLUMN denominatoraggregationtype" );
         executeSql( "ALTER TABLE dataset DROP COLUMN locked" );
+        executeSql( "ALTER TABLE dataset DROP COLUMN skipaggregation" );
         executeSql( "ALTER TABLE configuration DROP COLUMN completenessrecipientsid" );
         executeSql( "ALTER TABLE dataelement DROP COLUMN alternativename" );
         executeSql( "ALTER TABLE indicator DROP COLUMN alternativename" );

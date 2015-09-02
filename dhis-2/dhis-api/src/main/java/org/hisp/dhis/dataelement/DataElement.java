@@ -322,16 +322,6 @@ public class DataElement
     }
 
     /**
-     * Returns whether aggregation should be skipped for this data element, based
-     * on the setting of the data set which this data element is a members of,
-     * if any.
-     */
-    public boolean isSkipAggregation()
-    {
-        return dataSets != null && dataSets.size() > 0 && dataSets.iterator().next().isSkipAggregation();
-    }
-
-    /**
      * Returns the data set of this data element. If this data element has
      * multiple data sets, the data set with the highest collection frequency is
      * returned.

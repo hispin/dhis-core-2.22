@@ -107,7 +107,6 @@ public class DataSetBatchHandler
         statementBuilder.setColumn( "timelydays" );
         statementBuilder.setColumn( "notifycompletinguser" );
         statementBuilder.setColumn( "approvedata" );
-        statementBuilder.setColumn( "skipaggregation" );
         statementBuilder.setColumn( "fieldcombinationrequired" );
         statementBuilder.setColumn( "validcompleteonly" );
         statementBuilder.setColumn( "novaluerequirescomment" );
@@ -132,7 +131,6 @@ public class DataSetBatchHandler
         statementBuilder.setValue( dataSet.getTimelyDays() );
         statementBuilder.setValue( dataSet.isNotifyCompletingUser() );
         statementBuilder.setValue( dataSet.isApproveData() );
-        statementBuilder.setValue( dataSet.isSkipAggregation() );
         statementBuilder.setValue( dataSet.isFieldCombinationRequired() );
         statementBuilder.setValue( dataSet.isValidCompleteOnly() );
         statementBuilder.setValue( dataSet.isNoValueRequiresComment() );
