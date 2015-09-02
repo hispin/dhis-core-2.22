@@ -81,7 +81,7 @@ public class StartExportAction
     public String execute()
         throws Exception
     {
-        TaskId taskId = new TaskId( TaskCategory.ANALYTICS_TABLES, currentUserService.getCurrentUser() );
+        TaskId taskId = new TaskId( TaskCategory.ANALYTICSTABLE_UPDATE, currentUserService.getCurrentUser() );
         
         notifier.clear( taskId );
         

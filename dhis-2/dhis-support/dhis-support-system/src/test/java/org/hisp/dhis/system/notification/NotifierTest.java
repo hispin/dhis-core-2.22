@@ -28,7 +28,7 @@ package org.hisp.dhis.system.notification;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.scheduling.TaskCategory.ANALYTICS_TABLES;
+import static org.hisp.dhis.scheduling.TaskCategory.ANALYTICSTABLE_UPDATE;
 import static org.hisp.dhis.scheduling.TaskCategory.DATAVALUE_IMPORT;
 import static org.hisp.dhis.scheduling.TaskCategory.METADATA_IMPORT;
 import static org.junit.Assert.assertEquals;
@@ -54,7 +54,7 @@ public class NotifierTest
     private User user = createUser( 'A' );
     
     private TaskId id1 = new TaskId( DATAVALUE_IMPORT, user );
-    private TaskId id2 = new TaskId( ANALYTICS_TABLES, user );
+    private TaskId id2 = new TaskId( ANALYTICSTABLE_UPDATE, user );
     private TaskId id3 = new TaskId( METADATA_IMPORT, user );
     
     @Test
