@@ -28,13 +28,19 @@ package org.hisp.dhis.startup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.quick.StatementHolder;
 import org.amplecode.quick.StatementManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.jdbc.batchhandler.RelativePeriodsBatchHandler;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -42,13 +48,6 @@ import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -843,6 +842,20 @@ public class TableAlteror
         executeSql( "update categoryoptiongroupset set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
         executeSql( "update categoryoptiongroup set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
 
+        // Remove data mart
+        executeSql( "drop table aggregateddatasetcompleteness" );
+        executeSql( "drop table aggregateddatasetcompleteness_temp" );
+        executeSql( "drop table aggregateddatavalue" );
+        executeSql( "drop table aggregateddatavalue_temp" );
+        executeSql( "drop table aggregatedindicatorvalue" );
+        executeSql( "drop table aggregatedindicatorvalue_temp" );
+        executeSql( "drop table aggregatedorgunitdatasetcompleteness" );
+        executeSql( "drop table aggregatedorgunitdatasetcompleteness_temp" );
+        executeSql( "drop table aggregatedorgunitdatavalue" );
+        executeSql( "drop table aggregatedorgunitdatavalue_temp" );
+        executeSql( "drop table aggregatedorgunitindicatorvalue" );
+        executeSql( "drop table aggregatedorgunitindicatorvalue_temp" );
+        
         oauth2();
 
         upgradeDataValuesWithAttributeOptionCombo();
