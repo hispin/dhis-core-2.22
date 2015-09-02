@@ -82,7 +82,7 @@ public class HibernateDataElementStore
 
         types.add( DataElement.VALUE_TYPE_INT );
         types.add( DataElement.VALUE_TYPE_BOOL );
-        
+
         return getCriteria( Restrictions.in( "type", types ) ).list();
     }
 
@@ -145,7 +145,7 @@ public class HibernateDataElementStore
         Query query = getQuery( hql );
 
         query.executeUpdate();
-        
+
         //TODO improve
 
         if ( !dataElementIds.isEmpty() )
@@ -262,7 +262,7 @@ public class HibernateDataElementStore
 
         Query query = getQuery( hql );
         query.setInteger( "dataSetId", dataSet.getId() );
-        
+
         if ( max != null )
         {
             query.setMaxResults( max );

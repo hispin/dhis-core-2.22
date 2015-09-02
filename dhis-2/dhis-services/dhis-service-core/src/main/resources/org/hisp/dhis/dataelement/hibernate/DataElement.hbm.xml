@@ -28,13 +28,20 @@
 
     <property name="textType" column="textType" length="16" />
 
+    <property name="valueType" column="vtype" length="36" access="property" not-null="false">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.common.ValueType</param>
+        <param name="useNamed">true</param>
+        <param name="type">12</param>
+      </type>
+    </property>
+
     <property name="domainType" column="domainType" type="org.hisp.dhis.dataelement.DataElementDomainUserType" not-null="true" />
 
     <property name="aggregationOperator" not-null="true" column="aggregationtype" length="16" />
 
     <many-to-one name="categoryCombo" class="org.hisp.dhis.dataelement.DataElementCategoryCombo"
-      column="categorycomboid"
-      foreign-key="fk_dataelement_categorycomboid" />
+      column="categorycomboid" foreign-key="fk_dataelement_categorycomboid" />
 
     <property name="url" />
 

@@ -28,19 +28,13 @@ package org.hisp.dhis.startup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.quick.StatementHolder;
 import org.amplecode.quick.StatementManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.jdbc.batchhandler.RelativePeriodsBatchHandler;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -48,6 +42,13 @@ import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -72,6 +73,9 @@ public class TableAlteror
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
+
+    @Autowired
+    private DataElementService dataElementService;
 
     // -------------------------------------------------------------------------
     // Execute
@@ -724,7 +728,7 @@ public class TableAlteror
 
         executeSql( "UPDATE optionset SET version=0 WHERE version IS NULL" );
         executeSql( "UPDATE dataset SET version=0 WHERE version IS NULL" );
-        executeSql( "UPDATE program SET version=0 WHERE version IS NULL" );        
+        executeSql( "UPDATE program SET version=0 WHERE version IS NULL" );
         executeSql( "update program set categorycomboid = " + defaultCategoryComboId + " where categorycomboid is null" );
 
         executeSql( "ALTER TABLE datavalue ALTER COLUMN lastupdated TYPE timestamp" );
@@ -839,7 +843,7 @@ public class TableAlteror
         executeSql( "alter table dataelementcategory drop column dimensiontype" );
         executeSql( "update categoryoptiongroupset set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
         executeSql( "update categoryoptiongroup set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
-        
+
         oauth2();
 
         upgradeDataValuesWithAttributeOptionCombo();
@@ -853,9 +857,30 @@ public class TableAlteror
         upgradeAggregationType( "chart" );
 
         updateRelativePeriods();
+        updateValueTypes();
         organisationUnitService.updatePaths();
 
         log.info( "Tables updated" );
+    }
+
+    private void updateValueTypes()
+    {
+        executeSql( "update dataelement set vtype='NUMBER' where valuetype='int' and numbertype='number' and vtype is null" );
+        executeSql( "update dataelement set vtype='INTEGER' where valuetype='int' and numbertype='int' and vtype is null" );
+        executeSql( "update dataelement set vtype='INTEGER_POSITIVE' where valuetype='int' and numbertype='posInt' and vtype is null" );
+        executeSql( "update dataelement set vtype='INTEGER_NEGATIVE' where valuetype='int' and numbertype='negInt' and vtype is null" );
+        executeSql( "update dataelement set vtype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt' and vtype is null" );
+        executeSql( "update dataelement set vtype='PERCENTAGE' where valuetype='int' and numbertype='percentage' and vtype is null" );
+        executeSql( "update dataelement set vtype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval' and vtype is null" );
+
+        executeSql( "update dataelement set vtype='TEXT' where valuetype='string' and texttype='text' and vtype is null" );
+        executeSql( "update dataelement set vtype='LONG_TEXT' where valuetype='string' and texttype='longText' and vtype is null" );
+
+        executeSql( "update dataelement set vtype='DATE' where valuetype='date' and vtype is null" );
+        executeSql( "update dataelement set vtype='DATETIME' where valuetype='datetime' and vtype is null" );
+        executeSql( "update dataelement set vtype='BOOLEAN' where valuetype='bool' and vtype is null" );
+        executeSql( "update dataelement set vtype='TRUE_ONLY' where valuetype='trueOnly' and vtype is null" );
+        executeSql( "update dataelement set vtype='USERNAME' where valuetype='username' and vtype is null" );
     }
 
     public void oauth2()

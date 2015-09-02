@@ -31,6 +31,7 @@ package org.hisp.dhis.dd.action.dataelement;
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -267,12 +268,12 @@ public class UpdateDataElementAction
             dataElement.setTextType( null );
         }
 
+        dataElement.setValueType( ValueType.getFromDataElement( dataElement ) );
         dataElement.setAggregationOperator( aggregationOperator );
         dataElement.setUrl( url );
         dataElement.setZeroIsSignificant( zeroIsSignificant );
         dataElement.setCategoryCombo( categoryCombo );
-        dataElement.setAggregationLevels( new ArrayList<>( ListUtils
-            .getIntegerCollection( aggregationLevels ) ) );
+        dataElement.setAggregationLevels( new ArrayList<>( ListUtils.getIntegerCollection( aggregationLevels ) ) );
         dataElement.setOptionSet( optionSet );
         dataElement.setCommentOptionSet( commentOptionSet );
         dataElement.setLegendSet( legendSet );
@@ -291,8 +292,7 @@ public class UpdateDataElementAction
                 .parseInt( dataElementGroupSets.get( i ) ) );
 
             DataElementGroup oldGroup = groupSet.getGroup( dataElement );
-            DataElementGroup newGroup = dataElementService.getDataElementGroup( Integer.parseInt( dataElementGroups
-                .get( i ) ) );
+            DataElementGroup newGroup = dataElementService.getDataElementGroup( Integer.parseInt( dataElementGroups.get( i ) ) );
 
             if ( oldGroup != null && oldGroup.getMembers().remove( dataElement ) )
             {
@@ -309,8 +309,7 @@ public class UpdateDataElementAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElement.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( dataElement.getAttributeValues(), jsonAttributeValues, attributeService );
         }
 
         dataElementService.updateDataElement( dataElement );

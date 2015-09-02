@@ -87,29 +87,29 @@
 	<tr>
 		<td><label for="valueType">$i18n.getString( "value_type" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
 		<td>
-            <select id="valueType" name="valueType" onchange="changeValueType( this.value )">
-				<option value="int" #if( $!dataElement.type == 'int' ) selected="selected" #end >$i18n.getString( "number" )</option>
-				<option value="string" #if( $!dataElement.type == 'string' ) selected="selected" #end >$i18n.getString( "text" )</option>
-                <option value="bool" #if( $!dataElement.type == 'bool' ) selected="selected" #end >$i18n.getString( "yes_no" )</option>
-				<option value="trueOnly" #if( $!dataElement.type == 'trueOnly' ) selected="selected" #end >$i18n.getString( "yes_only" )</option>
-				<option value="date" #if( $!dataElement.type == 'date' ) selected="selected" #end >$i18n.getString( "date" )</option>
-				<option value="username" #if( $!dataElement.type == 'username' ) selected="selected" #end >$i18n.getString( "user_name" )</option>
-			</select>
+      <select id="valueType" name="valueType" onchange="changeValueType( this.value )">
+        <option value="int" #if( $!dataElement.type == 'int' ) selected="selected" #end >$i18n.getString( "number" )</option>
+        <option value="string" #if( $!dataElement.type == 'string' ) selected="selected" #end >$i18n.getString( "text" )</option>
+        <option value="bool" #if( $!dataElement.type == 'bool' ) selected="selected" #end >$i18n.getString( "yes_no" )</option>
+        <option value="trueOnly" #if( $!dataElement.type == 'trueOnly' ) selected="selected" #end >$i18n.getString( "yes_only" )</option>
+        <option value="date" #if( $!dataElement.type == 'date' ) selected="selected" #end >$i18n.getString( "date" )</option>
+        <option value="username" #if( $!dataElement.type == 'username' ) selected="selected" #end >$i18n.getString( "user_name" )</option>
+      </select>
 		</td>
 	</tr>
     <tr id='numberTypeTR' #if( $!dataElement.id > 0 && $!dataElement.type != 'int' ) style="display:none" #end>
 		<td><label for="numberValueType">$i18n.getString( "number_value_type" )</label></td>
 		<td>
-            <select id="numberType" name="numberType">
-				<option value="number" #if( $!dataElement.numberType == 'number' ) selected="selected" #end style="min-width:246px;">$i18n.getString( "number" )</option>
-				<option value="int" #if( $!dataElement.numberType == 'int' ) selected="selected" #end>$i18n.getString( "int" )</option>
-				<option value="posInt" #if( $!dataElement.numberType == 'posInt' ) selected="selected" #end>$i18n.getString( "positive_integer" )</option>
-				<option value="negInt" #if( $!dataElement.numberType == 'negInt' ) selected="selected" #end>$i18n.getString( "negative_integer" )</option>
-				<option value="zeroPositiveInt" #if( $!dataElement.numberType == 'zeroPositiveInt' ) selected="selected" #end>$i18n.getString( "zero_positive_int" )</option>
-				<option value="unitInterval" #if( $!dataElement.numberType == 'unitInterval' ) selected="selected" #end>$i18n.getString( "unit_interval" )</option>
-				<option value="percentage" #if( $!dataElement.numberType == 'percentage' ) selected="selected" #end>$i18n.getString( "percentage" )</option>
-			</select>
-			<script>
+      <select id="numberType" name="numberType">
+        <option value="number" #if( $!dataElement.numberType == 'number' ) selected="selected" #end style="min-width:246px;">$i18n.getString( "number" )</option>
+        <option value="int" #if( $!dataElement.numberType == 'int' ) selected="selected" #end>$i18n.getString( "int" )</option>
+        <option value="posInt" #if( $!dataElement.numberType == 'posInt' ) selected="selected" #end>$i18n.getString( "positive_integer" )</option>
+        <option value="negInt" #if( $!dataElement.numberType == 'negInt' ) selected="selected" #end>$i18n.getString( "negative_integer" )</option>
+        <option value="zeroPositiveInt" #if( $!dataElement.numberType == 'zeroPositiveInt' ) selected="selected" #end>$i18n.getString( "zero_positive_int" )</option>
+        <option value="unitInterval" #if( $!dataElement.numberType == 'unitInterval' ) selected="selected" #end>$i18n.getString( "unit_interval" )</option>
+        <option value="percentage" #if( $!dataElement.numberType == 'percentage' ) selected="selected" #end>$i18n.getString( "percentage" )</option>
+      </select>
+      <script>
 			</script>
  		</td>
  	</tr>
@@ -126,14 +126,14 @@
 		<td><label for="aggregationOperatorSelect" id="lblOperator">$i18n.getString( "aggregation_operator" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
 		<td>
 			<select id="aggregationOperatorSelect" name="aggregationOperator">
-				<option value="sum" #if( $!dataElement.aggregationOperator == 'sum' ) selected="selected" #end>$i18n.getString( "sum" )</option>
-				<option value="avg_sum_org_unit" #if( $!dataElement.aggregationOperator == 'avg_sum_org_unit' ) selected="selected" #end>$i18n.getString( "average_sum_in_org_unit_hierarchy" )</option>
-				<option value="avg" #if( $!dataElement.aggregationOperator == 'avg' ) selected="selected" #end>$i18n.getString( "average" )</option>
-                <option value="count" #if( $!dataElement.aggregationOperator == 'count' ) selected="selected" #end>$i18n.getString( "count" )</option>
-                <option value="stddev" #if( $!dataElement.aggregationOperator == 'stddev' ) selected="selected" #end>$i18n.getString( "stddev" )</option>
-                <option value="variance" #if( $!dataElement.aggregationOperator == 'variance' ) selected="selected" #end>$i18n.getString( "variance" )</option>
-                <option value="min" #if( $!dataElement.aggregationOperator == 'min' ) selected="selected" #end>$i18n.getString( "min" )</option>
-                <option value="max" #if( $!dataElement.aggregationOperator == 'max' ) selected="selected" #end>$i18n.getString( "max" )</option>
+        <option value="sum" #if( $!dataElement.aggregationOperator == 'sum' ) selected="selected" #end>$i18n.getString( "sum" )</option>
+        <option value="avg_sum_org_unit" #if( $!dataElement.aggregationOperator == 'avg_sum_org_unit' ) selected="selected" #end>$i18n.getString( "average_sum_in_org_unit_hierarchy" )</option>
+        <option value="avg" #if( $!dataElement.aggregationOperator == 'avg' ) selected="selected" #end>$i18n.getString( "average" )</option>
+        <option value="count" #if( $!dataElement.aggregationOperator == 'count' ) selected="selected" #end>$i18n.getString( "count" )</option>
+        <option value="stddev" #if( $!dataElement.aggregationOperator == 'stddev' ) selected="selected" #end>$i18n.getString( "stddev" )</option>
+        <option value="variance" #if( $!dataElement.aggregationOperator == 'variance' ) selected="selected" #end>$i18n.getString( "variance" )</option>
+        <option value="min" #if( $!dataElement.aggregationOperator == 'min' ) selected="selected" #end>$i18n.getString( "min" )</option>
+        <option value="max" #if( $!dataElement.aggregationOperator == 'max' ) selected="selected" #end>$i18n.getString( "max" )</option>
 			</select>
 		</td>
 	</tr>
