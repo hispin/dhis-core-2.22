@@ -594,6 +594,7 @@ public class DefaultDataValueSetService
         CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementCategoryOptionComboMap = new CachingMap<>();
         CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementAttrOptionComboMap = new CachingMap<>();
         CachingMap<String, Boolean> dataElementOrgUnitMap = new CachingMap<>();
+        CachingMap<String, Integer> dataElementOpenFuturePeriodsMap = new CachingMap<>();
         CachingMap<String, Boolean> orgUnitInHierarchyMap = new CachingMap<>();
 
         //----------------------------------------------------------------------
@@ -752,7 +753,8 @@ public class DefaultDataValueSetService
                 continue;
             }
             
-            boolean invalidFuturePeriod = period.isFuture() && dataElement.getOpenFuturePeriods() <= 0;
+            boolean invalidFuturePeriod = period.isFuture() && dataElementOpenFuturePeriodsMap.get( dataElement.getUid(),
+                () -> dataElement.getOpenFuturePeriods()  ) <= 0;
             
             if ( invalidFuturePeriod )
             {
@@ -815,7 +817,7 @@ public class DefaultDataValueSetService
                 () -> dataElement.getPeriodTypes() ).contains( period.getPeriodType() ) )
             {
                 summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(), 
-                    "Period type of period: " + period.getIsoDate() + " not valid for data element: " + dataValue.getDataElement() ) );
+                    "Period type of period: " + period.getIsoDate() + " not valid for data element: " + dataElement.getUid() ) );
                 continue;
             }
             
