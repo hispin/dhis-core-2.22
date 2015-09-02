@@ -28,23 +28,14 @@ package org.hisp.dhis.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml3;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_BOOL;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_LONG_TEXT;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_TRUE_ONLY;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.commons.collection.CachingMap;
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
@@ -54,10 +45,17 @@ import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.system.callable.IdentifiableObjectCallable;
-import org.hisp.dhis.commons.collection.CachingMap;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml3;
 
 /**
  * @author Bharath Kumar
@@ -116,7 +114,7 @@ public class DefaultDataEntryFormService
         {
             dataEntryForm.setFormat( DataEntryForm.CURRENT_FORMAT );
         }
-        
+
         return dataEntryFormStore.save( dataEntryForm );
     }
 
@@ -157,7 +155,7 @@ public class DefaultDataEntryFormService
         {
             return null;
         }
-        
+
         StringBuffer sb = new StringBuffer();
 
         Matcher inputMatcher = INPUT_PATTERN.matcher( htmlCode );
@@ -200,14 +198,14 @@ public class DefaultDataEntryFormService
         {
             return null;
         }
-        
+
         CachingMap<String, DataElementCategoryOptionCombo> optionComboMap = new CachingMap<>();
 
         optionComboMap.putAll( IdentifiableObjectUtils.getUidObjectMap( dataSet.getDataElementOptionCombos() ) );
-        
-        IdentifiableObjectCallable<DataElementCategoryOptionCombo> optionComboCallabel = 
+
+        IdentifiableObjectCallable<DataElementCategoryOptionCombo> optionComboCallabel =
             new IdentifiableObjectCallable<DataElementCategoryOptionCombo>( idObjectManager, DataElementCategoryOptionCombo.class, null );
-        
+
         StringBuffer sb = new StringBuffer();
 
         Matcher inputMatcher = INPUT_PATTERN.matcher( dataEntryForm.getHtmlCode() );
@@ -269,8 +267,8 @@ public class DefaultDataEntryFormService
                 continue;
             }
 
-            inputHtml = inputHtml.contains( EMPTY_VALUE_TAG ) ? inputHtml.replace( EMPTY_VALUE_TAG, displayValue ) : inputHtml.replace( TAG_CLOSE, ( displayValue + TAG_CLOSE ) );
-            inputHtml = inputHtml.contains( EMPTY_TITLE_TAG ) ? inputHtml.replace( EMPTY_TITLE_TAG, displayTitle ) : inputHtml.replace( TAG_CLOSE, ( displayTitle + TAG_CLOSE ) );
+            inputHtml = inputHtml.contains( EMPTY_VALUE_TAG ) ? inputHtml.replace( EMPTY_VALUE_TAG, displayValue ) : inputHtml.replace( TAG_CLOSE, (displayValue + TAG_CLOSE) );
+            inputHtml = inputHtml.contains( EMPTY_TITLE_TAG ) ? inputHtml.replace( EMPTY_TITLE_TAG, displayTitle ) : inputHtml.replace( TAG_CLOSE, (displayTitle + TAG_CLOSE) );
 
             inputMatcher.appendReplacement( sb, inputHtml );
         }
@@ -289,20 +287,20 @@ public class DefaultDataEntryFormService
         {
             return null;
         }
-        
+
         // ---------------------------------------------------------------------
         // Inline javascript/html to add to HTML before output
         // ---------------------------------------------------------------------
 
         Map<String, DataElement> dataElementMap = getDataElementMap( dataSet );
-        
+
         CachingMap<String, DataElementCategoryOptionCombo> optionComboMap = new CachingMap<>();
-        
+
         optionComboMap.putAll( IdentifiableObjectUtils.getUidObjectMap( dataSet.getDataElementOptionCombos() ) );
-        
-        IdentifiableObjectCallable<DataElementCategoryOptionCombo> optionComboCallabel = 
-            new IdentifiableObjectCallable<DataElementCategoryOptionCombo>( idObjectManager, DataElementCategoryOptionCombo.class, null );
-        
+
+        IdentifiableObjectCallable<DataElementCategoryOptionCombo> optionComboCallabel =
+            new IdentifiableObjectCallable<>( idObjectManager, DataElementCategoryOptionCombo.class, null );
+
         int i = 1;
 
         StringBuffer sb = new StringBuffer();
@@ -339,16 +337,17 @@ public class DefaultDataEntryFormService
                 {
                     return i18n.getString( "category_option_combo_with_id" ) + ": " + optionComboId + " " + i18n.getString( "does_not_exist_in_data_set" );
                 }
-                
-                if ( dataSet.isDataElementDecoration() && dataElement.hasDescription() ) 
-                {
-                    String titleTag = " title=\"" +  escapeHtml3( dataElement.getDisplayDescription() ) + "\" ";
-                    inputHtml = inputHtml.replaceAll( "title=\".*?\"", "" ).replace( TAG_CLOSE, titleTag + TAG_CLOSE );
-                }                
-                
-                String appendCode = "";
 
-                if ( VALUE_TYPE_BOOL.equals( dataElement.getType() ) )
+                if ( dataSet.isDataElementDecoration() && dataElement.hasDescription() )
+                {
+                    String titleTag = " title=\"" + escapeHtml3( dataElement.getDisplayDescription() ) + "\" ";
+                    inputHtml = inputHtml.replaceAll( "title=\".*?\"", "" ).replace( TAG_CLOSE, titleTag + TAG_CLOSE );
+                }
+
+                String appendCode = "";
+                ValueType valueType = dataElement.getValueType();
+
+                if ( ValueType.BOOLEAN == valueType )
                 {
                     inputHtml = inputHtml.replace( "input", "select" );
                     inputHtml = inputHtml.replaceAll( "value=\".*?\"", "" );
@@ -360,7 +359,7 @@ public class DefaultDataEntryFormService
                     appendCode += "<option value=\"false\">" + i18n.getString( "no" ) + "</option>";
                     appendCode += "</select>";
                 }
-                else if ( VALUE_TYPE_TRUE_ONLY.equals( dataElement.getType() ) )
+                else if ( ValueType.TRUE_ONLY == valueType )
                 {
                     appendCode += " name=\"entrytrueonly\" class=\"entrytrueonly\" type=\"checkbox\" tabindex=\"" + i++ + "\"" + TAG_CLOSE;
                 }
@@ -368,17 +367,17 @@ public class DefaultDataEntryFormService
                 {
                     appendCode += " name=\"entryoptionset\" class=\"entryoptionset\" tabindex=\"" + i++ + "\"" + TAG_CLOSE;
                 }
-                else if ( VALUE_TYPE_LONG_TEXT.equals( dataElement.getTextType() ) )
+                else if ( ValueType.LONG_TEXT == valueType )
                 {
                     inputHtml = inputHtml.replace( "input", "textarea" );
-                    
+
                     appendCode += " name=\"entryfield\" class=\"entryfield entryarea\" tabindex=\"" + i++ + "\"" + "></textarea>";
                 }
                 else
                 {
                     appendCode += " type=\"text\" name=\"entryfield\" class=\"entryfield\" tabindex=\"" + i++ + "\"" + TAG_CLOSE;
                 }
-                
+
                 inputHtml = inputHtml.replace( TAG_CLOSE, appendCode );
 
                 inputHtml += "<span id=\"" + dataElement.getUid() + "-dataelement\" style=\"display:none\">" + dataElement.getFormNameFallback() + "</span>";
@@ -393,7 +392,7 @@ public class DefaultDataEntryFormService
                 inputHtml = inputHtml.replace( TAG_CLOSE, " type=\"text\" class=\"indicator\"" + TAG_CLOSE );
             }
 
-            inputMatcher.appendReplacement( sb, inputHtml );            
+            inputMatcher.appendReplacement( sb, inputHtml );
         }
 
         inputMatcher.appendTail( sb );
