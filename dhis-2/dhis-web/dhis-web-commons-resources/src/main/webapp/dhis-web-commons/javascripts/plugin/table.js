@@ -586,6 +586,11 @@ Ext.onReady( function() {
                         layout.program = config.program;
                     }
 
+                    // relative period date
+                    if (support.prototype.date.getYYYYMMDD(config.relativePeriodDate)) {
+                        layout.relativePeriodDate = support.prototype.date.getYYYYMMDD(config.relativePeriodDate);
+                    }
+
                     // validate
 					if (!validateSpecialCases()) {
 						return;
@@ -820,6 +825,26 @@ Ext.onReady( function() {
 
 				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.report.digitGroupSeparator[separator]);
 			};
+
+                // date
+            support.prototype.date = {};
+
+            support.prototype.date.getYYYYMMDD = function(param) {
+                if (!Ext.isString(param)) {
+                    if (!(Object.prototype.toString.call(param) === '[object Date]' && param.toString() !== 'Invalid date')) {
+                        return null;
+                    }
+                }
+
+                var date = new Date(param),
+                    month = '' + (1 + date.getMonth()),
+                    day = '' + date.getDate();
+
+                month = month.length === 1 ? '0' + month : month;
+                day = day.length === 1 ? '0' + day : day;
+
+                return date.getFullYear() + '-' + month + '-' + day;
+            };
 
 			// color
 			support.color = {};
@@ -2091,6 +2116,11 @@ Ext.onReady( function() {
                 // TODO program
                 if (xLayout.program && xLayout.program.id) {
                     paramString += '&program=' + xLayout.program.id;
+                }
+
+                // relative period date
+                if (xLayout.relativePeriodDate) {
+                    paramString += '&relativePeriodDate=' + xLayout.relativePeriodDate;
                 }
 
 				return paramString.replace(/#/g, '.');
