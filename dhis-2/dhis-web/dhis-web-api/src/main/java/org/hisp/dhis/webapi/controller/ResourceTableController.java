@@ -90,7 +90,7 @@ public class ResourceTableController
         analyticsTableTask.setSkipAggregate( skipAggregate );
         analyticsTableTask.setSkipEvents( skipEvents );
         analyticsTableTask.setLastYears( lastYears );
-        analyticsTableTask.setTaskId( new TaskId( TaskCategory.ANALYTICS_TABLES, currentUserService.getCurrentUser() ) );
+        analyticsTableTask.setTaskId( new TaskId( TaskCategory.ANALYTICSTABLE_UPDATE, currentUserService.getCurrentUser() ) );
 
         scheduler.executeTask( analyticsTableTask );
 

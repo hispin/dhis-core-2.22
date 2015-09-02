@@ -33,7 +33,6 @@ package org.hisp.dhis.scheduling;
  */
 public enum TaskCategory
 {
-    ANALYTICS_TABLES,
     RESOURCETABLE_UPDATE,
     ANALYTICSTABLE_UPDATE,
     MONITORING,

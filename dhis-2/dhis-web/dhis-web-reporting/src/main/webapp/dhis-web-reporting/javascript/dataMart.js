@@ -22,6 +22,6 @@ function startExport()
 
 function pingNotificationsTimeout()
 {
-	pingNotifications( 'ANALYTICS_TABLES', 'notificationTable' );
+	pingNotifications( 'ANALYTICSTABLE_UPDATE', 'notificationTable' );
 	setTimeout( "pingNotificationsTimeout()", 2500 );
 }
