@@ -1270,7 +1270,7 @@ public class DefaultAnalyticsService
             
             List<NameableObject> dimItems = !allItems ? asList( idObjectManager.getByUidOrdered( itemClass, items ) ) : dimObject.getItems();
                         
-            DimensionalObject object = new BaseDimensionalObject( dimension, dimObject.getDimensionType(), null, null, dimItems, allItems );
+            DimensionalObject object = new BaseDimensionalObject( dimension, dimObject.getDimensionType(), null, dimObject.getName(), dimItems, allItems );
             
             return object;
         }
