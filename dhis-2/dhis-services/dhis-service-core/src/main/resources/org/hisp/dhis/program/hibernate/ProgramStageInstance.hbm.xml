@@ -22,12 +22,13 @@
     <many-to-one name="programStage" class="org.hisp.dhis.program.ProgramStage"
       column="programstageid" not-null="true" foreign-key="fk_programstageinstance_programstageid" />
 
+    <many-to-one name="attributeOptionCombo" class="org.hisp.dhis.dataelement.DataElementCategoryOptionCombo" 
+      column="attributeoptioncomboid" foreign-key="fk_programstageinstance_attributeoptioncomboid" />
+
     <property name="dueDate" column="duedate" />
 
     <property name="executionDate" column="executiondate" type="timestamp" index="programstageinstance_executiondate" />
     
-    <key-many-to-one name="attributeOptionCombo" class="org.hisp.dhis.dataelement.DataElementCategoryOptionCombo" column="attributeoptioncomboid" foreign-key="fk_programstageinstance_attributeoptioncomboid" />
-
     <many-to-one name="organisationUnit"
       class="org.hisp.dhis.organisationunit.OrganisationUnit" column="organisationunitid"
       foreign-key="fk_programstageinstance_organisationunitid" index="programstageinstance_organisationunitid" />
