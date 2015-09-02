@@ -29,6 +29,7 @@ package org.hisp.dhis.program;
  */
 
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.message.MessageConversation;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -76,6 +77,8 @@ public class ProgramStageInstance
     private String completedUser;
 
     private Date completedDate;
+    
+    private DataElementCategoryOptionCombo attributeOptionCombo;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -287,5 +290,15 @@ public class ProgramStageInstance
 
             return EventStatus.SCHEDULE;
         }
+    }
+    
+    public DataElementCategoryOptionCombo getAttributeOptionCombo()
+    {
+        return attributeOptionCombo;
+    }
+
+    public void setAttributeOptionCombo( DataElementCategoryOptionCombo attributeOptionCombo )
+    {
+        this.attributeOptionCombo = attributeOptionCombo;
     }
 }
