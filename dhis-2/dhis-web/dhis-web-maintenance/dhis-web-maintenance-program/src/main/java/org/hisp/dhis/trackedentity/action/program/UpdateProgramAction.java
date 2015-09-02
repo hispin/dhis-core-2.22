@@ -118,11 +118,11 @@ public class UpdateProgramAction
         this.dateOfIncidentDescription = dateOfIncidentDescription;
     }
 
-    private String type;
+    private ProgramType programType;
 
-    public void setType( String type )
+    public void setProgramType( ProgramType programType )
     {
-        this.type = type;
+        this.programType = programType;
     }
 
     private Boolean displayProvidedOtherFacility;
@@ -289,7 +289,6 @@ public class UpdateProgramAction
         selectEnrollmentDatesInFuture = (selectEnrollmentDatesInFuture == null) ? false : selectEnrollmentDatesInFuture;
         selectIncidentDatesInFuture = (selectIncidentDatesInFuture == null) ? false : selectIncidentDatesInFuture;
         dataEntryMethod = (dataEntryMethod == null) ? false : dataEntryMethod;
-        ProgramType programType = ProgramType.fromValue( type );
         
         Program program = programService.getProgram( id );
         program.setName( StringUtils.trimToNull( name ) );
