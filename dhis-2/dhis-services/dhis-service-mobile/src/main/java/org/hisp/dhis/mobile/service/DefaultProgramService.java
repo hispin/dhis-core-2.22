@@ -28,12 +28,6 @@ package org.hisp.dhis.mobile.service;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.hisp.dhis.api.mobile.IProgramService;
 import org.hisp.dhis.api.mobile.model.DataElement;
 import org.hisp.dhis.api.mobile.model.Model;
@@ -50,6 +44,12 @@ import org.hisp.dhis.relationship.RelationshipTypeService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DefaultProgramService
     implements IProgramService
@@ -201,7 +201,7 @@ public class DefaultProgramService
         pr.setVersion( program.getVersion() );
         pr.setDateOfEnrollmentDescription( program.getDateOfEnrollmentDescription() );
         pr.setDateOfIncidentDescription( program.getDateOfIncidentDescription() );
-        if( program.getTrackedEntity() != null && program.getTrackedEntity().getName() != null)
+        if ( program.getTrackedEntity() != null && program.getTrackedEntity().getName() != null )
         {
             pr.setTrackedEntityName( program.getTrackedEntity().getName() );
         }
@@ -219,7 +219,7 @@ public class DefaultProgramService
             prStg.setReportDate( "" );
 
             prStg.setReportDateDescription( programStage.getReportDateDescription() );
-            
+
             prStg.setDueDate( "" );
 
             prStg.setId( programStage.getId() );
@@ -248,12 +248,9 @@ public class DefaultProgramService
             for ( ProgramStageDataElement programStageDataElement : programStageDataElements )
             {
                 org.hisp.dhis.dataelement.DataElement dataElement = programStageDataElement.getDataElement();
-
-                org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement de = ModelMapping
-                    .getDataElementLWUIT( dataElement );
+                org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement de = ModelMapping.getDataElementLWUIT( dataElement );
 
                 de.setCompulsory( programStageDataElement.isCompulsory() );
-
                 de.setNumberType( programStageDataElement.getDataElement().getNumberType() );
 
                 des.add( de );
@@ -263,6 +260,7 @@ public class DefaultProgramService
 
             // Set all program sections
             List<org.hisp.dhis.api.mobile.model.LWUITmodel.Section> mobileSections = new ArrayList<>();
+
             if ( programStage.getProgramStageSections().size() > 0 )
             {
                 for ( ProgramStageSection eachSection : programStage.getProgramStageSections() )
@@ -274,11 +272,12 @@ public class DefaultProgramService
                     // Set all data elements' id, then we could have full from
                     // data element list of program stage
                     List<Integer> dataElementIds = new ArrayList<>();
-                    for ( ProgramStageDataElement eachPogramStageDataElement : eachSection
-                        .getProgramStageDataElements() )
+
+                    for ( ProgramStageDataElement eachPogramStageDataElement : eachSection.getProgramStageDataElements() )
                     {
                         dataElementIds.add( eachPogramStageDataElement.getDataElement().getId() );
                     }
+
                     mobileSection.setDataElementIds( dataElementIds );
                     mobileSections.add( mobileSection );
                 }
@@ -326,7 +325,7 @@ public class DefaultProgramService
         {
             mobileAttribute.setDisplayedInList( false );
         }
-        
+
         mobileAttribute.setMandatory( ppa.isMandatory() );
 
         if ( pa.getValueType().equals( TrackedEntityAttribute.TYPE_OPTION_SET ) )
