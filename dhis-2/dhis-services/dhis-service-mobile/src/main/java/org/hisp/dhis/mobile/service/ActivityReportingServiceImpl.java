@@ -28,20 +28,6 @@ package org.hisp.dhis.mobile.service;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.hisp.dhis.api.mobile.ActivityReportingService;
 import org.hisp.dhis.api.mobile.NotAllowedException;
 import org.hisp.dhis.api.mobile.model.Activity;
@@ -51,14 +37,14 @@ import org.hisp.dhis.api.mobile.model.Beneficiary;
 import org.hisp.dhis.api.mobile.model.DataValue;
 import org.hisp.dhis.api.mobile.model.Interpretation;
 import org.hisp.dhis.api.mobile.model.InterpretationComment;
-import org.hisp.dhis.api.mobile.model.OptionSet;
-import org.hisp.dhis.api.mobile.model.PatientAttribute;
-import org.hisp.dhis.api.mobile.model.Task;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.LostEvent;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.Notification;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.Patient;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.PatientList;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.Section;
+import org.hisp.dhis.api.mobile.model.OptionSet;
+import org.hisp.dhis.api.mobile.model.PatientAttribute;
+import org.hisp.dhis.api.mobile.model.Task;
 import org.hisp.dhis.api.mobile.model.comparator.ActivityComparator;
 import org.hisp.dhis.api.mobile.model.comparator.TrackedEntityAttributeValueSortOrderComparator;
 import org.hisp.dhis.chart.Chart;
@@ -120,6 +106,20 @@ import org.hisp.dhis.user.UserQueryParams;
 import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ActivityReportingServiceImpl
     implements ActivityReportingService
@@ -814,7 +814,7 @@ public class ActivityReportingServiceImpl
             {
                 org.hisp.dhis.api.mobile.model.PatientAttribute patientAttribute = new org.hisp.dhis.api.mobile.model.PatientAttribute(
                     value.getAttribute().getName(), value.getValue(), value.getAttribute().getValueType(), false, value
-                        .getAttribute().getDisplayInListNoProgram(), new OptionSet() );
+                    .getAttribute().getDisplayInListNoProgram(), new OptionSet() );
 
                 patientAtts.add( patientAttribute );
             }
@@ -871,14 +871,14 @@ public class ActivityReportingServiceImpl
                 relationshipMobile.setbIsToA( eachRelationship.getRelationshipType().getaIsToB() );
                 relationshipMobile.setPersonBId( eachRelationship.getEntityInstanceA().getId() );
             }
-            
+
             // get relative's name
             TrackedEntityInstance relative = entityInstanceService.getTrackedEntityInstance( relationshipMobile
                 .getPersonBId() );
             List<TrackedEntityAttributeValue> attributes = new ArrayList<TrackedEntityAttributeValue>(
                 relative.getAttributeValues() );
             List<TrackedEntityAttributeValue> attributesInList = new ArrayList<TrackedEntityAttributeValue>();
-            
+
             for ( TrackedEntityAttributeValue value : attributes )
             {
                 if ( value != null && value.getAttribute().getDisplayInListNoProgram() )
@@ -898,7 +898,7 @@ public class ActivityReportingServiceImpl
                 }
             }
             relationshipMobile.setPersonBName( relativeName );
-            
+
             relationshipList.add( relationshipMobile );
         }
         patientModel.setRelationships( relationshipList );
@@ -1065,6 +1065,7 @@ public class ActivityReportingServiceImpl
             // Value
             TrackedEntityDataValue patientDataValue = dataValueService.getTrackedEntityDataValue( programStageInstance,
                 programStageDataElement.getDataElement() );
+
             if ( patientDataValue != null )
             {
                 // Convert to standard date format before send to client
@@ -1175,7 +1176,7 @@ public class ActivityReportingServiceImpl
 
         List<Program> tempPrograms = null;
         ProgramType programType = ProgramType.fromValue( type );
-        
+
         if ( programType == ProgramType.WITHOUT_REGISTRATION )
         {
             tempPrograms = new ArrayList<>(
@@ -1252,7 +1253,7 @@ public class ActivityReportingServiceImpl
     // side, we only need name and id
     private org.hisp.dhis.api.mobile.model.LWUITmodel.Program getMobileProgramWithoutData( Program program )
     {
-        Comparator<ProgramStageDataElement> orderBySortOrder = 
+        Comparator<ProgramStageDataElement> orderBySortOrder =
             ( ProgramStageDataElement i1, ProgramStageDataElement i2 ) -> i1.getSortOrder().compareTo( i2.getSortOrder() );
 
         org.hisp.dhis.api.mobile.model.LWUITmodel.Program anonymousProgramMobile = new org.hisp.dhis.api.mobile.model.LWUITmodel.Program();
@@ -1429,7 +1430,7 @@ public class ActivityReportingServiceImpl
     public List<org.hisp.dhis.api.mobile.model.PatientAttribute> getPatientAttributesForMobile( String programId )
     {
         List<org.hisp.dhis.api.mobile.model.PatientAttribute> list = new ArrayList<>();
-        
+
         for ( TrackedEntityAttribute pa : getPatientAtts( programId ) )
         {
             PatientAttribute patientAttribute = new PatientAttribute();
@@ -1441,7 +1442,7 @@ public class ActivityReportingServiceImpl
 
             list.add( patientAttribute );
         }
-        
+
         return list;
     }
 
@@ -1500,7 +1501,7 @@ public class ActivityReportingServiceImpl
         TrackedEntityInstance newTrackedEntityInstance = entityInstanceService
             .getTrackedEntityInstance( this.patientId );
         String errorMsg = null;
-        
+
         try
         {
             for ( org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramInstance mobileProgramInstance : patient
@@ -1510,7 +1511,7 @@ public class ActivityReportingServiceImpl
                 enrollProgram( patientId + "-" + mobileProgramInstance.getProgramId(),
                     mobileProgramInstance.getProgramStageInstances(), incidentDate );
             }
-            
+
             Program program = programService.getProgram( Integer.parseInt( programIdText ) );
             String[] errorCode = entityInstanceService.validateTrackedEntityInstance( newTrackedEntityInstance,
                 program, format ).split( "_" );
@@ -1533,8 +1534,8 @@ public class ActivityReportingServiceImpl
         {
             e.printStackTrace();
         }
-        
-        if(errorMsg!=null)
+
+        if ( errorMsg != null )
         {
             throw new NotAllowedException( errorMsg );
         }
@@ -1954,7 +1955,7 @@ public class ActivityReportingServiceImpl
     public org.hisp.dhis.api.mobile.model.LWUITmodel.Patient generateRepeatableEvent( int orgUnitId, String eventInfo )
         throws NotAllowedException
     {
-      //OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( orgUnitId );
+        //OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( orgUnitId );
 
         String[] keys = eventInfo.split( "_" );
         ProgramStage programStage = programStageService.getProgramStage( Integer.parseInt( keys[4] ) );
@@ -2113,7 +2114,7 @@ public class ActivityReportingServiceImpl
         }
 
         UserQueryParams params = new UserQueryParams();
-        params.setQuery( keyword );        
+        params.setQuery( keyword );
         users = userService.getUsers( params );
 
         for ( User userCore : users )
@@ -2569,7 +2570,7 @@ public class ActivityReportingServiceImpl
                 {
                     errorMsg = "Duplicate value of "
                         + attributeService.getTrackedEntityAttribute( Integer.parseInt( errorCode[1] ) )
-                            .getDisplayName();
+                        .getDisplayName();
                 }
                 else
                 {

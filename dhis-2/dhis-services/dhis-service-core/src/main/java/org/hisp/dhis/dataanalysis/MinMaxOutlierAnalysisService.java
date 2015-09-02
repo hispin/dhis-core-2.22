@@ -28,23 +28,12 @@ package org.hisp.dhis.dataanalysis;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_INT;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_NEGATIVE_INT;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_POSITIVE_INT;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -59,6 +48,13 @@ import org.hisp.dhis.system.filter.DataElementTypeFilter;
 import org.hisp.dhis.system.util.MathUtils;
 import org.joda.time.DateTime;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Lars Helge Overland
  */
@@ -66,27 +62,27 @@ public class MinMaxOutlierAnalysisService
     implements MinMaxDataAnalysisService
 {
     private static final Log log = LogFactory.getLog( MinMaxOutlierAnalysisService.class );
-    
+
     private static final Filter<DataElement> DATALEMENT_INT_FILTER = new DataElementTypeFilter( DataElement.VALUE_TYPE_INT );
-    
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
-    
+
     private DataAnalysisStore dataAnalysisStore;
 
     public void setDataAnalysisStore( DataAnalysisStore dataAnalysisStore )
     {
         this.dataAnalysisStore = dataAnalysisStore;
     }
-    
+
     private MinMaxDataElementService minMaxDataElementService;
 
     public void setMinMaxDataElementService( MinMaxDataElementService minMaxDataElementService )
     {
         this.minMaxDataElementService = minMaxDataElementService;
     }
-    
+
     private BatchHandlerFactory batchHandlerFactory;
 
     public void setBatchHandlerFactory( BatchHandlerFactory batchHandlerFactory )
@@ -103,21 +99,21 @@ public class MinMaxOutlierAnalysisService
         Collection<DataElement> dataElements, Collection<Period> periods, Double stdDevFactor, Date from )
     {
         Set<DataElement> elements = new HashSet<>( dataElements );
-        
+
         FilterUtils.filter( elements, DATALEMENT_INT_FILTER );
-        
+
         Set<DataElementCategoryOptionCombo> categoryOptionCombos = new HashSet<>();
-        
+
         for ( DataElement dataElement : elements )
         {
             categoryOptionCombos.addAll( dataElement.getCategoryCombo().getOptionCombos() );
         }
 
         log.debug( "Starting min-max analysis, no of data elements: " + elements.size() + ", no of org units: " + organisationUnits.size() );
-        
+
         return dataAnalysisStore.getMinMaxViolations( elements, categoryOptionCombos, periods, organisationUnits, MAX_OUTLIERS );
     }
-    
+
     @Override
     public void generateMinMaxValues( Collection<OrganisationUnit> organisationUnits,
         Collection<DataElement> dataElements, Double stdDevFactor )
@@ -127,57 +123,59 @@ public class MinMaxOutlierAnalysisService
         Set<Integer> orgUnitIds = new HashSet<>( IdentifiableObjectUtils.getIdentifiers( organisationUnits ) );
 
         Date from = new DateTime( 1, 1, 1, 1, 1 ).toDate();
-        
+
         minMaxDataElementService.removeMinMaxDataElements( dataElements, organisationUnits );
 
         log.debug( "Deleted existing min-max values" );
 
         BatchHandler<MinMaxDataElement> batchHandler = batchHandlerFactory.createBatchHandler( MinMaxDataElementBatchHandler.class ).init();
-        
+
         for ( DataElement dataElement : dataElements )
         {
-            if ( VALUE_TYPE_INT.equals( dataElement.getType() ) )
+            ValueType valueType = dataElement.getValueType();
+
+            if ( valueType.isNumeric() )
             {
                 Collection<DataElementCategoryOptionCombo> categoryOptionCombos = dataElement.getCategoryCombo().getOptionCombos();
 
                 for ( DataElementCategoryOptionCombo categoryOptionCombo : categoryOptionCombos )
                 {
                     Map<Integer, Double> standardDeviations = dataAnalysisStore.getStandardDeviation( dataElement, categoryOptionCombo, orgUnitIds, from );
-                    
+
                     Map<Integer, Double> averages = dataAnalysisStore.getAverage( dataElement, categoryOptionCombo, standardDeviations.keySet(), from );
-                    
+
                     for ( Integer unit : averages.keySet() )
                     {
                         Double stdDev = standardDeviations.get( unit );
                         Double avg = averages.get( unit );
-                        
+
                         if ( stdDev != null && avg != null )
                         {
                             int min = (int) MathUtils.getLowBound( stdDev, stdDevFactor, avg );
                             int max = (int) MathUtils.getHighBound( stdDev, stdDevFactor, avg );
-                            
-                            if ( VALUE_TYPE_POSITIVE_INT.equals( dataElement.getNumberType() ) || VALUE_TYPE_ZERO_OR_POSITIVE_INT.equals( dataElement.getNumberType() ) )
+
+                            if ( ValueType.INTEGER_POSITIVE == valueType || ValueType.INTEGER_ZERO_OR_POSITIVE == valueType )
                             {
                                 min = Math.max( 0, min ); // Cannot be < 0
                             }
-                            
-                            if ( VALUE_TYPE_NEGATIVE_INT.equals( dataElement.getNumberType() ) )
+
+                            if ( ValueType.INTEGER_NEGATIVE == valueType )
                             {
                                 max = Math.min( 0, max ); // Cannot be > 0
                             }
-                            
+
                             OrganisationUnit source = new OrganisationUnit();
                             source.setId( unit );
-                            
+
                             batchHandler.addObject( new MinMaxDataElement( source, dataElement, categoryOptionCombo, min, max, true ) );
                         }
-                    }                        
+                    }
                 }
             }
         }
-        
+
         log.info( "Min-max value generation done" );
-        
+
         batchHandler.flush();
     }
 }
