@@ -17,7 +17,6 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 SessionStorageService,
                 MetaDataFactory,
                 DateUtils,
-                OptionSetService,
                 OrgUnitFactory,
                 OperatorFactory,
                 ProgramFactory,
