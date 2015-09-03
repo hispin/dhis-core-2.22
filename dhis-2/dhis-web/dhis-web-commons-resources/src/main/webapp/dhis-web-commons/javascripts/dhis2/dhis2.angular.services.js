@@ -216,6 +216,78 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     };
 })
 
+/* Service for option name<->code conversion */
+.factory('OptionSetService', function() { 
+    return {        
+        getCode: function(options, key){
+            if(options){
+                for(var i=0; i<options.length; i++){
+                    if( key === options[i].name){
+                        return options[i].code;
+                    }
+                }
+            }            
+            return key;
+        },        
+        getName: function(options, key){
+            if(options){
+                for(var i=0; i<options.length; i++){                    
+                    if( key === options[i].code){
+                        return options[i].name;
+                    }
+                }
+            }            
+            return key;
+        }
+    };
+})
+
+/* service for common utils */
+.service('CommonUtils', function(DateUtils, OptionSetService){    
+    
+    return {
+        formatDataValue: function(val, obj, optionSets, destination){                               
+            if(val && 
+                    obj.valueType === 'NUMBER' || 
+                    obj.valueType === 'INTEGER' ||
+                    obj.valueType === 'INTEGER_POSITIVE' ||
+                    obj.valueType === 'INTEGER_NEGATIVE' ||
+                    obj.valueType === 'INTEGER_ZERO_OR_POSITIVE'){
+                if( dhis2.validation.isNumber(val)  ){                            
+                    val = parseInt(val);
+                }
+            }
+            if(val && obj.optionSetValue && obj.optionSet && obj.optionSet.id && optionSets[obj.optionSet.id].options  ){
+                if(destination === 'USER'){
+                    val = OptionSetService.getName(optionSets[obj.optionSet.id].options, val);
+                }
+                else{
+                    val = OptionSetService.getCode(optionSets[obj.optionSet.id].options, val);
+                }
+
+            }
+            if(val && obj.valueType === 'DATE'){
+                if(destination === 'USER'){
+                    val = DateUtils.formatFromApiToUser(val);
+                }
+                else{
+                    val = DateUtils.formatFromUserToApi(val);
+                }            
+            }
+            if(obj.valueType === 'TRUE_ONLY'){
+
+                if(destination === 'USER'){
+                    val = val === 'true' ? true : '';
+                }
+                else{
+                    val = val === true ? 'true' : '';
+                }            
+            }         
+            return val;
+        }
+    };    
+})
+
 /* service for dealing with custom form */
 .service('CustomFormService', function ($translate) {
 
