@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.DataQueryParams;
@@ -47,8 +48,6 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.commons.collection.ListUtils;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.option.OptionSet;
@@ -301,14 +300,8 @@ public class EventQueryParams
      */
     public EventQueryParams removeProgramIndicatorItems()
     {
-        FilterUtils.filter( items, new Filter<QueryItem>()
-        {
-            public boolean retain( QueryItem object )
-            {
-                return !object.isProgramIndicator();
-            }
-        } );
-        
+        items = items.stream().filter( item -> !item.isProgramIndicator() ).collect( Collectors.toList() );
+        itemFilters = itemFilters.stream().filter( item -> !item.isProgramIndicator() ).collect( Collectors.toList() );
         return this;
     }
 
