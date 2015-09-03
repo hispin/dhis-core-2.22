@@ -51,10 +51,10 @@
 
                                     <!-- filter icon begins -->
                                     <span class='pull-right hideInPrint'>
-                                        <span ng-show="eventGridColumn.type !='date' && eventGridColumn.type !='int'">
+                                        <span ng-show="!eventGridColumn.filterWithRange">
                                             <a href ng-click="searchInGrid(eventGridColumn)" title="{{searchLabel}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [filterText[eventGridColumn.id] == undefined || filterText[eventGridColumn.id] == '']"><i class="fa fa-search"></i></span></a>
                                         </span>
-                                        <span ng-show="eventGridColumn.type ==='date' || eventGridColumn.type ==='int'">
+                                        <span ng-show="eventGridColumn.filterWithRange">
                                             <a href ng-click="searchInGrid(eventGridColumn)" title="{{searchLabel}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [(filterText[eventGridColumn.id].start == undefined || filterText[eventGridColumn.id].start == '') && (filterText[eventGridColumn.id].end == undefined || filterText[eventGridColumn.id].end == '')]"><i class="fa fa-search"></i></span></a>
                                         </span>                                                    
                                     </span>
@@ -62,10 +62,26 @@
 
                                     <!-- filter input field begins -->
                                     <span ng-show="eventGridColumn.showFilter">  
-                                        <span ng-switch="eventGridColumn.type">
-                                            <span ng-switch-when="int">
+                                        <span ng-switch="eventGridColumn.valueType">
+                                            <span ng-switch-when="NUMBER">
                                                 <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
                                                 <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                            </span>
+                                            <span ng-switch-when="INTEGER">
+                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                            </span>
+                                            <span ng-switch-when="INTEGER_POSITIVE">
+                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" min="1" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" min="1" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                            </span>
+                                            <span ng-switch-when="INTEGER_NEGATIVE">
+                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" max="-1" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" max="-1" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                            </span>
+                                            <span ng-switch-when="INTEGER_ZERO_OR_POSITIVE">
+                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" min="0" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" min="0" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
                                             </span>
                                             <span ng-switch-when="date">
                                                 <input style="width: 70%;" placeholder="{{'start_date' | translate}}" type="text" ng-model="filterText[eventGridColumn.id].start" d2-date readonly="readonly">
@@ -98,7 +114,7 @@
                                 <div d2-context-menu 
                                     ng-click="showEventList(dhis2Event)"
                                     ng-show="currentEvent.event !== dhis2Event.event && eventGridColumn.id !== 'comment'">                                    
-                                    <span ng-switch="eventGridColumn.type">
+                                    <span ng-switch="eventGridColumn.valueType">
                                         <span ng-switch-when="bool">
                                             <span ng-if="dhis2Event[eventGridColumn.id] == 'false'">{{noLabel}}</span>
                                             <span ng-if="dhis2Event[eventGridColumn.id] == 'true'">{{yesLabel}}</span>
@@ -171,7 +187,7 @@
                                                     </label>
                                                 </span> 
                                             </div>
-                                            <div ng-if="!prStDes[eventGridColumn.id].dataElement.optionSetValue" ng-switch="eventGridColumn.type">                                            
+                                            <div ng-if="!prStDes[eventGridColumn.id].dataElement.optionSetValue" ng-switch="eventGridColumn.valueType">                                            
                                                 <div ng-switch-when="int">
                                                     <input type="number"                                                            
                                                            d2-number-validator

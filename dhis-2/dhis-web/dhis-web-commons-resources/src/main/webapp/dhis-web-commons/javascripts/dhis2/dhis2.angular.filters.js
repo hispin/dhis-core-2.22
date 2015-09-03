@@ -24,12 +24,16 @@ var d2Filters = angular.module('d2Filters', [])
             
             for(var key in filters){
                 
-                if(filterTypes[key] === 'date'){
+                if(filterTypes[key] === 'DATE'){
                     if(filters[key].start || filters[key].end){
                         dateFilter[key] = filters[key];
                     }
                 }
-                else if(filterTypes[key] === 'int'){
+                else if(filterTypes[key] === 'NUMBER' || 
+                			filterTypes[key] === 'INTEGER' ||
+                			filterTypes[key] === 'INTEGER_POSITIVE' || 
+                			filterTypes[key] === 'INTEGER_NEGATIVE' || 
+                			filterTypes[key] === 'INTEGER_ZERO_OR_POSITIVE'){
                     if(filters[key].start || filters[key].end){
                         numberFilter[key] = filters[key];
                     }
