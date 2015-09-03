@@ -144,6 +144,11 @@ public class QueryItem
         return filters != null && !filters.isEmpty();
     }
 
+    public boolean isProgramIndicator()
+    {
+        return DimensionType.PROGRAM_INDICATOR.equals( item.getDimensionType() );
+    }
+        
     public static List<QueryItem> getQueryItems( Collection<TrackedEntityAttribute> attributes )
     {
         List<QueryItem> queryItems = new ArrayList<>();

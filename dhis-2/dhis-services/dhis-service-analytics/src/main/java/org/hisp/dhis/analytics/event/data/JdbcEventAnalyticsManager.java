@@ -397,7 +397,7 @@ public class JdbcEventAnalyticsManager
         
         for ( QueryItem queryItem : params.getItems() )
         {
-            if ( DimensionType.PROGRAM_INDICATOR.equals( queryItem.getItem().getDimensionType() ) )
+            if ( queryItem.isProgramIndicator() )
             {
                 ProgramIndicator in = (ProgramIndicator) queryItem.getItem();
                 
