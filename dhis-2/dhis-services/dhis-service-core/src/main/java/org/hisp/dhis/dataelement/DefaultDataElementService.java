@@ -210,12 +210,6 @@ public class DefaultDataElementService
     }
 
     @Override
-    public List<DataElement> getDataElementsByType( String type )
-    {
-        return i18n( i18nService, dataElementStore.getDataElementsByType( type ) );
-    }
-
-    @Override
     public List<DataElement> getDataElementsByValueTypes( List<ValueType> valueTypes )
     {
         return i18n( i18nService, dataElementStore.getDataElementsByValueTypes( valueTypes ) );

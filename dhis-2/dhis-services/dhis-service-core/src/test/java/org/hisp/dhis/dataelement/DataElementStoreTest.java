@@ -307,30 +307,6 @@ public class DataElementStoreTest
     }
 
     @Test
-    public void testGetDataElementsByType()
-    {
-        assertEquals( 0, dataElementStore.getDataElementsByType( DataElement.VALUE_TYPE_INT ).size() );
-        assertEquals( 0, dataElementStore.getDataElementsByType( DataElement.VALUE_TYPE_BOOL ).size() );
-
-        DataElement dataElementA = createDataElement( 'A' );
-        dataElementA.setType( DataElement.VALUE_TYPE_INT );
-        DataElement dataElementB = createDataElement( 'B' );
-        dataElementB.setType( DataElement.VALUE_TYPE_BOOL );
-        DataElement dataElementC = createDataElement( 'C' );
-        dataElementC.setType( DataElement.VALUE_TYPE_BOOL );
-        DataElement dataElementD = createDataElement( 'D' );
-        dataElementD.setType( DataElement.VALUE_TYPE_BOOL );
-
-        dataElementStore.save( dataElementA );
-        dataElementStore.save( dataElementB );
-        dataElementStore.save( dataElementC );
-        dataElementStore.save( dataElementD );
-
-        assertEquals( 1, dataElementStore.getDataElementsByType( DataElement.VALUE_TYPE_INT ).size() );
-        assertEquals( 3, dataElementStore.getDataElementsByType( DataElement.VALUE_TYPE_BOOL ).size() );
-    }
-
-    @Test
     public void testGetDataElementAggregationLevels()
     {
         List<Integer> aggregationLevels = Arrays.asList( 3, 5 );
