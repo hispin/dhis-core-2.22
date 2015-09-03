@@ -254,7 +254,6 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) Set<String> indicator,
         @RequestParam( required = false ) String ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
@@ -268,7 +267,7 @@ public class EventAnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter, indicator, ouMode,
+        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter, ouMode,
             asc, desc, skipMeta, skipData, hierarchyMeta, coordinatesOnly, displayProperty, page, pageSize, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.RESPECT_SYSTEM_SETTING );
@@ -286,7 +285,6 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) Set<String> indicator,
         @RequestParam( required = false ) String ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
@@ -300,7 +298,7 @@ public class EventAnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter, indicator,
+        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
             ouMode, asc, desc, skipMeta, skipData, hierarchyMeta, coordinatesOnly, displayProperty, page, pageSize, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.xml", false );
@@ -316,7 +314,6 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) Set<String> indicator,
         @RequestParam( required = false ) String ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
@@ -330,7 +327,7 @@ public class EventAnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter, indicator,
+        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
             ouMode, asc, desc, skipMeta, skipData, hierarchyMeta, coordinatesOnly, displayProperty, page, pageSize, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.xls", true );
@@ -346,7 +343,6 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) Set<String> indicator,
         @RequestParam( required = false ) String ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
@@ -360,7 +356,7 @@ public class EventAnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter, indicator,
+        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
             ouMode, asc, desc, skipMeta, skipData, hierarchyMeta, coordinatesOnly, displayProperty, page, pageSize, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.csv", true );
@@ -376,7 +372,6 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) Set<String> indicator,
         @RequestParam( required = false ) String ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
@@ -390,7 +385,7 @@ public class EventAnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter, indicator,
+        EventQueryParams params = analyticsService.getFromUrl( program, stage, startDate, endDate, dimension, filter,
             ouMode, asc, desc, skipMeta, skipData, hierarchyMeta, coordinatesOnly, displayProperty, page, pageSize, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING, "events.html", false );

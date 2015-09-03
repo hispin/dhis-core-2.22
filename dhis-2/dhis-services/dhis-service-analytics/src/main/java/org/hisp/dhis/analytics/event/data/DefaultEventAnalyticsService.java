@@ -85,8 +85,6 @@ import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramIndicator;
-import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
@@ -129,16 +127,13 @@ public class DefaultEventAnalyticsService
 
     @Autowired
     private DataElementService dataElementService;
-    
-    @Autowired
-    private ProgramIndicatorService programIndicatorService;
-    
+
     @Autowired
     private TrackedEntityAttributeService attributeService;
     
     @Autowired
     private OrganisationUnitService organisationUnitService;
-    
+
     @Autowired
     private LegendService legendService;
 
@@ -322,11 +317,6 @@ public class DefaultEventAnalyticsService
         {
             grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSetUid(), item.getLegendSetUid() ) );
         }
-        
-        for ( ProgramIndicator in : params.getItemProgramIndicators() )
-        {
-            grid.addHeader( new GridHeader( in.getUid(), in.getName(), Double.class.getName(), false, true ) );
-        }
 
         // ---------------------------------------------------------------------
         // Data
@@ -389,7 +379,7 @@ public class DefaultEventAnalyticsService
         boolean hierarchyMeta, boolean showHierarchy, SortOrder sortOrder, Integer limit, EventOutputType outputType, boolean collapseDataDimensions, 
         boolean aggregateData, DisplayProperty displayProperty, I18nFormat format )
     {
-        EventQueryParams params = getFromUrl( program, stage, startDate, endDate, dimension, filter, null, null, null, null,
+        EventQueryParams params = getFromUrl( program, stage, startDate, endDate, dimension, filter, null, null, null,
             skipMeta, skipData, hierarchyMeta, false, displayProperty, null, null, format );
                 
         params.setValue( getValueDimension( value ) );
@@ -407,9 +397,8 @@ public class DefaultEventAnalyticsService
 
     @Override
     public EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate,
-        Set<String> dimension, Set<String> filter, Set<String> indicator, String ouMode, Set<String> asc, Set<String> desc,
-        boolean skipMeta, boolean skipData, boolean hierarchyMeta, boolean coordinatesOnly, 
-        DisplayProperty displayProperty, Integer page, Integer pageSize, I18nFormat format )
+        Set<String> dimension, Set<String> filter, String ouMode, Set<String> asc, Set<String> desc,
+        boolean skipMeta, boolean skipData, boolean hierarchyMeta, boolean coordinatesOnly, DisplayProperty displayProperty, Integer page, Integer pageSize, I18nFormat format )
     {
         EventQueryParams params = new EventQueryParams();
 
@@ -477,19 +466,6 @@ public class DefaultEventAnalyticsService
                 else
                 {
                     params.getItemFilters().add( getQueryItem( dim ) );
-                }
-            }
-        }
-        
-        if ( indicator != null )
-        {
-            for ( String uid : indicator )
-            {
-                ProgramIndicator in = programIndicatorService.getProgramIndicatorByUid( uid );
-                
-                if ( in != null )
-                {
-                    params.getItemProgramIndicators().add( in );
                 }
             }
         }
@@ -565,11 +541,6 @@ public class DefaultEventAnalyticsService
                 {
                     params.getItemFilters().add( getQueryItem( filter.getDimension(), filter.getFilter() ) );
                 }
-            }
-            
-            for ( ProgramIndicator in : object.getItemProgramIndicators() )
-            {
-                params.getItemProgramIndicators().add( in );
             }
 
             params.setProgram( object.getProgram() );

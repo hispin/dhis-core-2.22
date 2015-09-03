@@ -74,7 +74,6 @@ import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.period.comparator.AscendingPeriodComparator;
 import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension;
 import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
 import org.hisp.dhis.user.User;
@@ -158,9 +157,6 @@ public abstract class BaseAnalyticalObject
     @Scanned
     protected List<OrganisationUnitGroup> itemOrganisationUnitGroups = new ArrayList<>();
 
-    @Scanned
-    protected List<ProgramIndicator> itemProgramIndicators = new ArrayList<>();
-    
     protected String digitGroupSeparator;
 
     protected int sortOrder;
@@ -221,11 +217,6 @@ public abstract class BaseAnalyticalObject
     public boolean hasItemOrganisationUnitGroups()
     {
         return itemOrganisationUnitGroups != null && !itemOrganisationUnitGroups.isEmpty();
-    }
-    
-    public boolean hasItemProgramIndicators()
-    {
-        return itemProgramIndicators != null && !itemProgramIndicators.isEmpty();
     }
     
     public boolean hasSortOrder()
@@ -849,7 +840,6 @@ public abstract class BaseAnalyticalObject
         userOrganisationUnitChildren = false;
         userOrganisationUnitGrandChildren = false;
         itemOrganisationUnitGroups.clear();
-        itemProgramIndicators.clear();
     }
 
     @Override
@@ -889,7 +879,6 @@ public abstract class BaseAnalyticalObject
             userOrganisationUnitChildren = object.isUserOrganisationUnitChildren();
             userOrganisationUnitGrandChildren = object.isUserOrganisationUnitGrandChildren();
             itemOrganisationUnitGroups = object.getItemOrganisationUnitGroups();
-            itemProgramIndicators = object.getItemProgramIndicators();
             digitGroupSeparator = object.getDigitGroupSeparator();
             userOrganisationUnit = object.isUserOrganisationUnit();
             sortOrder = object.getSortOrder();
@@ -1122,20 +1111,6 @@ public abstract class BaseAnalyticalObject
     public void setItemOrganisationUnitGroups( List<OrganisationUnitGroup> itemOrganisationUnitGroups )
     {
         this.itemOrganisationUnitGroups = itemOrganisationUnitGroups;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "itemProgramIndicators", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "itemProgramIndicator", namespace = DxfNamespaces.DXF_2_0 )
-    public List<ProgramIndicator> getItemProgramIndicators()
-    {
-        return itemProgramIndicators;
-    }
-
-    public void setItemProgramIndicators( List<ProgramIndicator> itemProgramIndicators )
-    {
-        this.itemProgramIndicators = itemProgramIndicators;
     }
 
     @JsonProperty
