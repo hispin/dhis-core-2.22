@@ -273,7 +273,7 @@ public class GetHistoryAction
 
         historyInvalid = dataElementHistory == null;
 
-        minMaxInvalid = !DataElement.VALUE_TYPE_INT.equals( dataElement.getType() );
+        minMaxInvalid = !dataElement.getValueType().isNumeric();
 
         commentOptionSet = dataElement.getCommentOptionSet();
         

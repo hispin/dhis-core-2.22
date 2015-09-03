@@ -309,7 +309,7 @@ public class ValidationUtils
             return null;
         }
 
-        if ( dataElement == null || dataElement.getType() == null || dataElement.getType().isEmpty() )
+        if ( dataElement == null || dataElement.getValueType() == null )
         {
             return "data_element_or_type_null_or_empty";
         }
@@ -390,7 +390,7 @@ public class ValidationUtils
     {
         String aggOperator = dataElement.getAggregationOperator();
 
-        return VALUE_TYPE_INT.equals( dataElement.getType() ) && MathUtils.isZero( value ) && !dataElement.isZeroIsSignificant() &&
+        return dataElement.getValueType().isNumeric() && MathUtils.isZero( value ) && !dataElement.isZeroIsSignificant() &&
             !(AGGREGATION_OPERATOR_AVERAGE_SUM.equals( aggOperator ) || AGGREGATION_OPERATOR_AVERAGE.equals( aggOperator ));
     }
 

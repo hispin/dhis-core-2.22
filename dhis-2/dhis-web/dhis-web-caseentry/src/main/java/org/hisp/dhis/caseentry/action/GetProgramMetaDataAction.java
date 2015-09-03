@@ -28,8 +28,14 @@ package org.hisp.dhis.caseentry.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
-import org.hisp.dhis.dataelement.DataElement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
@@ -38,12 +44,7 @@ import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -143,7 +144,7 @@ public class GetProgramMetaDataAction implements Action
                     optionSets.add( programStageDataElement.getDataElement().getOptionSet() );
                 }
 
-                if ( programStageDataElement.getDataElement().getType().equals( DataElement.VALUE_TYPE_USER_NAME ) )
+                if ( ValueType.USERNAME.equals( programStageDataElement.getDataElement().getValueType() ) )
                 {
                     usernames = true;
                 }
