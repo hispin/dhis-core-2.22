@@ -89,6 +89,7 @@
         <select id="valueType" name="valueType" onchange="typeOnChange();">
           <option value="NUMBER" selected="selected">$i18n.getString( "number" )</option>
           <option value="TEXT">$i18n.getString( "text" )</option>
+          <option value="LONG_TEXT">$i18n.getString( "long_text" )</option>
           <option value="LETTER">$i18n.getString( "letter_only" )</option>
           <option value="BOOLEAN">$i18n.getString( "yes_no" )</option>
           <option value="TRUE_ONLY">$i18n.getString( "yes_only" )</option>

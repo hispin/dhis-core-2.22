@@ -118,9 +118,9 @@ public class UpdateAttributeAction
         this.description = description;
     }
 
-    private String valueType;
+    private ValueType valueType;
 
-    public void setValueType( String valueType )
+    public void setValueType( ValueType valueType )
     {
         this.valueType = valueType;
     }
@@ -209,7 +209,7 @@ public class UpdateAttributeAction
         trackedEntityAttribute.setShortName( StringUtils.trimToNull( shortName ) );
         trackedEntityAttribute.setCode( StringUtils.trimToNull( code ) );
         trackedEntityAttribute.setDescription( StringUtils.trimToNull( description ) );
-        trackedEntityAttribute.setValueType( ValueType.fromValue( valueType ) );
+        trackedEntityAttribute.setValueType( valueType );
         trackedEntityAttribute.setAggregationType( AggregationType.fromValue( aggregationType ) );
         trackedEntityAttribute.setExpression( expression );
         trackedEntityAttribute.setDisplayOnVisitSchedule( false );

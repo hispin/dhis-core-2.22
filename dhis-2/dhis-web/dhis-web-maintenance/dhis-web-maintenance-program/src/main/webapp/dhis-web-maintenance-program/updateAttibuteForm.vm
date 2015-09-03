@@ -85,6 +85,7 @@
           <select id="valueType" name="valueType" onchange="typeOnChange();">
             <option value="NUMBER" #if( $attribute.valueType == 'NUMBER' ) selected="selected" #end>$i18n.getString( "number" )</option>
             <option value="TEXT" #if( $attribute.valueType == 'TEXT' ) selected="selected" #end>$i18n.getString( "text" )</option>
+            <option value="LONG_TEXT" #if( $attribute.valueType == 'LONG_TEXT' ) selected="selected" #end>$i18n.getString( "long_text" )</option>
             <option value="LETTER" #if( $attribute.valueType == 'LETTER' ) selected="selected" #end>$i18n.getString( "letter_only" )</option>
             <option value="BOOLEAN" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'BOOLEAN' ) selected="selected" #end>$i18n.getString( "yes_no" )</option>
             <option value="TRUE_ONLY" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'TRUE_ONLY' ) selected="selected" #end >$i18n.getString( "yes_only" )</option>
