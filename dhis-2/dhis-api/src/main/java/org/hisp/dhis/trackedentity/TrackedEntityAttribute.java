@@ -28,27 +28,27 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.hisp.dhis.attribute.AttributeValue;
-import org.hisp.dhis.common.BaseDimensionalObject;
-import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.option.Option;
-import org.hisp.dhis.option.OptionSet;
-import org.hisp.dhis.schema.annotation.PropertyRange;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.common.BaseDimensionalObject;
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.option.Option;
+import org.hisp.dhis.option.OptionSet;
+import org.hisp.dhis.schema.annotation.PropertyRange;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Abyot Asalefew
@@ -71,8 +71,8 @@ public class TrackedEntityAttribute
 
     private String description;
 
-    private String valueType;
-    
+    private ValueType valueType;
+
     private Boolean inherit = false;
 
     private TrackedEntityAttributeGroup attributeGroup;
@@ -115,8 +115,7 @@ public class TrackedEntityAttribute
 
     }
 
-    public TrackedEntityAttribute( String name, String description, String valueType, Boolean inherit,
-        Boolean displayOnVisitSchedule )
+    public TrackedEntityAttribute( String name, String description, ValueType valueType, Boolean inherit, Boolean displayOnVisitSchedule )
     {
         this.name = name;
         this.description = description;
@@ -134,7 +133,7 @@ public class TrackedEntityAttribute
      */
     public boolean isNumericType()
     {
-        return TYPE_NUMBER.equals( valueType );
+        return valueType.isNumeric();
     }
 
     /**
@@ -142,7 +141,7 @@ public class TrackedEntityAttribute
      */
     public boolean isDateType()
     {
-        return TYPE_DATE.equals( valueType );
+        return valueType.isDate();
     }
 
     /**
@@ -169,7 +168,7 @@ public class TrackedEntityAttribute
         {
             return false;
         }
-        
+
         for ( Option option : getOptionSet().getOptions() )
         {
             if ( value.equals( option.getCode() ) )
@@ -191,7 +190,7 @@ public class TrackedEntityAttribute
     {
         return optionSet != null;
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -228,12 +227,12 @@ public class TrackedEntityAttribute
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getValueType()
+    public ValueType getValueType()
     {
         return valueType;
     }
 
-    public void setValueType( String valueType )
+    public void setValueType( ValueType valueType )
     {
         this.valueType = valueType;
     }

@@ -489,7 +489,7 @@ public class DefaultProgramStageInstanceService
     private OutboundSms sendEventMessage( TrackedEntityInstanceReminder reminder,
         ProgramStageInstance programStageInstance, TrackedEntityInstance entityInstance, I18nFormat format )
     {
-        Set<String> phoneNumbers = reminderService.getPhonenumbers( reminder, entityInstance );
+        Set<String> phoneNumbers = reminderService.getPhoneNumbers( reminder, entityInstance );
         OutboundSms outboundSms = null;
 
         if ( phoneNumbers.size() > 0 )

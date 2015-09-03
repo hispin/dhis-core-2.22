@@ -35,6 +35,7 @@ import org.hisp.dhis.api.mobile.model.ModelList;
 import org.hisp.dhis.api.mobile.model.OptionSet;
 import org.hisp.dhis.api.mobile.model.Program;
 import org.hisp.dhis.api.mobile.model.ProgramStage;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageSection;
@@ -314,7 +315,7 @@ public class DefaultProgramService
 
         org.hisp.dhis.api.mobile.model.PatientAttribute mobileAttribute = new org.hisp.dhis.api.mobile.model.PatientAttribute();
         mobileAttribute.setName( pa.getName() );
-        mobileAttribute.setType( pa.getValueType() );
+        // mobileAttribute.setType( pa.getValueType() );
         mobileAttribute.setValue( "" );
 
         if ( ppa.isDisplayInList() )
@@ -328,7 +329,7 @@ public class DefaultProgramService
 
         mobileAttribute.setMandatory( ppa.isMandatory() );
 
-        if ( pa.getValueType().equals( TrackedEntityAttribute.TYPE_OPTION_SET ) )
+        if ( ValueType.OPTION_SET == pa.getValueType() )
         {
             OptionSet optionSet = new OptionSet();
 

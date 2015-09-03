@@ -1364,7 +1364,7 @@ public abstract class DhisConvenienceTest
 
         attribute.setName( "Attribute" + uniqueChar );
         attribute.setDescription( "Attribute" + uniqueChar );
-        attribute.setValueType( TrackedEntityAttribute.TYPE_STRING );
+        attribute.setValueType( ValueType.TEXT );
 
         return attribute;
     }
@@ -1373,14 +1373,14 @@ public abstract class DhisConvenienceTest
      * @param uniqueChar A unique character to identify the object.
      * @return TrackedEntityAttribute
      */
-    public static TrackedEntityAttribute createTrackedEntityAttribute( char uniqueChar, String type )
+    public static TrackedEntityAttribute createTrackedEntityAttribute( char uniqueChar, ValueType valueType )
     {
         TrackedEntityAttribute attribute = new TrackedEntityAttribute();
         attribute.setAutoFields();
 
         attribute.setName( "Attribute" + uniqueChar );
         attribute.setDescription( "Attribute" + uniqueChar );
-        attribute.setValueType( type );
+        attribute.setValueType( valueType );
 
         return attribute;
     }

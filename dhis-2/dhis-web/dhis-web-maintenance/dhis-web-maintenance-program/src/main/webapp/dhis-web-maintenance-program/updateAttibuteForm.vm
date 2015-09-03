@@ -79,27 +79,26 @@
 		</td>		
 		<td></td>				
 	</tr>
-	
-    <tr>
+      <tr>
         <td><label for="valueType">$i18n.getString( "value_type" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
         <td>
-            <select id="valueType" name="valueType" onchange="typeOnChange();">
-                <option value="number" #if( $attribute.valueType == 'number' ) selected="selected" #end>$i18n.getString( "number" )</option>
-                <option value="string" #if( $attribute.valueType == 'string' ) selected="selected" #end>$i18n.getString( "text" )</option>
-                <option value="letter" #if( $attribute.valueType == 'letter' ) selected="selected" #end>$i18n.getString( "letter_only" )</option>
-				<option value="bool" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'bool' ) selected="selected" #end>$i18n.getString( "yes_no" )</option>
-                <option value="trueOnly" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'trueOnly' ) selected="selected" #end >$i18n.getString( "yes_only" )</option>
-                <option value="date" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'date' ) selected="selected" #end>$i18n.getString( "date" )</option>
-                <option value="phoneNumber" #if( $attribute.valueType == 'phoneNumber' ) selected="selected" #end>$i18n.getString( "phone_number" )</option>
-                <option value="email" #if( $attribute.valueType == 'email' ) selected="selected" #end>$i18n.getString( "email" )</option>
-                <option value="trackerAssociate" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'trackerAssociate' ) selected="selected" #end>$i18n.getString( "tracker_associate" )</option>
-                <option value="users" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'users' ) selected="selected" #end>$i18n.getString( "users" )</option>
-                <option value="optionSet" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'optionSet' ) selected="selected" #end>$i18n.getString( "option_set" )</option>
-            </select>
+          <select id="valueType" name="valueType" onchange="typeOnChange();">
+            <option value="NUMBER" #if( $attribute.valueType == 'NUMBER' ) selected="selected" #end>$i18n.getString( "number" )</option>
+            <option value="TEXT" #if( $attribute.valueType == 'TEXT' ) selected="selected" #end>$i18n.getString( "text" )</option>
+            <option value="LETTER" #if( $attribute.valueType == 'LETTER' ) selected="selected" #end>$i18n.getString( "letter_only" )</option>
+            <option value="BOOLEAN" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'BOOLEAN' ) selected="selected" #end>$i18n.getString( "yes_no" )</option>
+            <option value="TRUE_ONLY" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'TRUE_ONLY' ) selected="selected" #end >$i18n.getString( "yes_only" )</option>
+            <option value="DATE" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'DATE' ) selected="selected" #end>$i18n.getString( "date" )</option>
+            <option value="PHONE_NUMBER" #if( $attribute.valueType == 'PHONE_NUMBER' ) selected="selected" #end>$i18n.getString( "phone_number" )</option>
+            <option value="EMAIL" #if( $attribute.valueType == 'EMAIL' ) selected="selected" #end>$i18n.getString( "email" )</option>
+            <option value="TRACKER_ASSOCIATE" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'TRACKER_ASSOCIATE' ) selected="selected" #end>$i18n.getString( "tracker_associate" )</option>
+            <option value="USERNAME" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'USERNAME' ) selected="selected" #end>$i18n.getString( "users" )</option>
+            <option value="OPTION_SET" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'OPTION_SET' ) selected="selected" #end>$i18n.getString( "option_set" )</option>
+          </select>
         </td>
-    </tr>
+      </tr>
 
-    <tr>
+      <tr>
         <td><label for="aggregationType">$i18n.getString( "aggregation_type" )</label></td>
         <td>
             <select id="aggregationType" name="aggregationType">

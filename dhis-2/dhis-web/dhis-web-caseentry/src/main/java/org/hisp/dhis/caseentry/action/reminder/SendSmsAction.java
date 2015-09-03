@@ -172,7 +172,7 @@ public class SendSmsAction
         reminder.setTemplateMessage( msg );
         reminder.setSendTo( sendTo );
 
-        Set<String> phoneNumbers = reminderService.getPhonenumbers( reminder, programStageInstance
+        Set<String> phoneNumbers = reminderService.getPhoneNumbers( reminder, programStageInstance
             .getProgramInstance().getEntityInstance() );
 
         try
@@ -212,7 +212,7 @@ public class SendSmsAction
         reminder.setTemplateMessage( msg );
         reminder.setSendTo( sendTo );
 
-        Set<String> phoneNumbers = reminderService.getPhonenumbers( reminder, programInstance.getEntityInstance() );
+        Set<String> phoneNumbers = reminderService.getPhoneNumbers( reminder, programInstance.getEntityInstance() );
 
         try
         {

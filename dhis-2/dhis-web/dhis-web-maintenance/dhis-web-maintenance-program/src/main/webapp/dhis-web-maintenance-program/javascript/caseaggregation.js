@@ -4,7 +4,7 @@
 
 function getDataElementsByDataset() {
   var dataSets = document.getElementById('dataSets');
-  var dataSetId = dataSets.options[ dataSets.selectedIndex ].value;
+  var dataSetId = dataSets.options[dataSets.selectedIndex].value;
   setFieldValue('aggregationDataElementId', '');
   setFieldValue('aggregationDataElementInput', '');
 
@@ -24,12 +24,12 @@ function autoCompletedField() {
     .autocomplete({
       delay: 0,
       minLength: 0,
-      source: function( request, response ) {
+      source: function(request, response) {
         $.ajax({
           url: "getDataElementsByDataset.action?id=" + getFieldValue('dataSets') + "&query=" + input.val(),
           dataType: "json",
-          success: function( data ) {
-            response($.map(data.dataElements, function( item ) {
+          success: function(data) {
+            response($.map(data.dataElements, function(item) {
               return {
                 label: item.name,
                 id: item.id
@@ -38,15 +38,15 @@ function autoCompletedField() {
           }
         });
       },
-      select: function( event, ui ) {
+      select: function(event, ui) {
         input.val(ui.item.value);
         setFieldValue('aggregationDataElementId', ui.item.id);
         input.autocomplete("close");
       },
-      change: function( event, ui ) {
+      change: function(event, ui) {
         if( !ui.item ) {
           var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex($(this).val()) + "$", "i"),
-            valid = false;
+          valid = false;
           select.children("option").each(function() {
             if( $(this).text().match(matcher) ) {
               this.selected = valid = true;
@@ -64,7 +64,7 @@ function autoCompletedField() {
       }
     }).addClass("ui-widget");
 
-  input.data("uiAutocomplete")._renderItem = function( ul, item ) {
+  input.data("uiAutocomplete")._renderItem = function(ul, item) {
     return $("<li></li>")
       .data("item.autocomplete", item)
       .append("<a>" + item.label + "</a>")
@@ -122,7 +122,7 @@ function getParams() {
   }
 
   jQuery.getJSON('getParamsByProgram.action', { programId: programId }
-    , function( json ) {
+    , function(json) {
       enable('programProperty');
       var programstage = jQuery('#programStageId');
 
@@ -141,7 +141,7 @@ function getParams() {
       getTrackedEntityDataElements();
 
       clearListById('caseProperty');
-	  clearListById('casePropertyBackups');
+      clearListById('casePropertyBackups');
       var type = jQuery('#programId option:selected').attr('programType');
       if( type != '3' ) {
         var caseProperty = jQuery('#caseProperty');
@@ -150,8 +150,8 @@ function getParams() {
           var id = json.attributes[i].id;
           var name = json.attributes[i].name;
           var optionSet = json.attributes[i].optionSet;
-         
- 		  caseProperty.append("<option value='" + id + "' title='" + name + "' optionSet='" + optionSet + "'>" + name + "</option>");
+
+          caseProperty.append("<option value='" + id + "' title='" + name + "' optionSet='" + optionSet + "'>" + name + "</option>");
           casePropertyBackups.append("<option value='" + id + "' title='" + name + "' optionSet='" + optionSet + "'>" + name + "</option>");
         }
       }
@@ -165,7 +165,7 @@ function getProgramStages() {
   clearListById('orgunitProgramStageId');
 
   jQuery.getJSON('getProgramStages.action', { id: programId }
-    , function( json ) {
+    , function(json) {
       enable('programProperty');
       var programstage = jQuery('#orgunitProgramStageId');
 
@@ -194,7 +194,7 @@ function getTrackedEntityDataElements() {
       programId: getFieldValue('programId'),
       programStageId: programStageId
     }
-    , function( json ) {
+    , function(json) {
       if( programStageId != '' ) {
         enable('programStageProperty');
       }
@@ -209,7 +209,7 @@ function getTrackedEntityDataElements() {
       var deSumId = jQuery('#deSumId');
       deSumId.append("<option value='' >" + i18n_please_select + "</option>");
       for( i in json.dataElements ) {
-		var id =  json.dataElements[i].localid;
+        var id = json.dataElements[i].localid;
         dataElements.append("<option value='" + id + "' title='" + json.dataElements[i].name + "' dename='" + json.dataElements[i].name + "' decode='" + json.dataElements[i].code + "' optionSet='" + json.dataElements[i].optionset + "' valuetype='" + json.dataElements[i].type + "'>" + json.dataElements[i].name + "</option>");
         dataElementBackups.append("<option value='" + id + "' title='" + json.dataElements[i].name + "' dename='" + json.dataElements[i].name + "' decode='" + json.dataElements[i].code + "' optionSet='" + json.dataElements[i].optionset + "' valuetype='" + json.dataElements[i].type + "'>" + json.dataElements[i].name + "</option>");
         if( json.dataElements[i].type == 'int' ) {
@@ -224,7 +224,7 @@ function getTrackedEntityDataElements() {
 // Insert items into Condition
 //-----------------------------------------------------------------
 
-function insertDataElement( element ) {
+function insertDataElement(element) {
   var progamId = getFieldValue('programId');
   var programStageId = getFieldValue('programStageId');
   programStageId = ( programStageId == "" ) ? "*" : programStageId;
@@ -234,7 +234,7 @@ function insertDataElement( element ) {
   getConditionDescription();
 }
 
-function insertInfo( element, isProgramStageProperty ) {
+function insertInfo(element, isProgramStageProperty) {
   var id = "";
   if( isProgramStageProperty ) {
     id = getFieldValue('programStageId');
@@ -248,12 +248,12 @@ function insertInfo( element, isProgramStageProperty ) {
   getConditionDescription();
 }
 
-function insertOperator( value ) {
+function insertOperator(value) {
   insertTextCommon('aggregationCondition', ' ' + value + ' ');
   getConditionDescription();
 }
 
-function insertBoolValue( value ) {
+function insertBoolValue(value) {
   insertTextCommon("aggregationCondition", " ='" + value + "' ");
   getConditionDescription();
 }
@@ -262,7 +262,7 @@ function insertBoolValue( value ) {
 // Remove Case Aggregation Condition
 // -----------------------------------------------------------------------------
 
-function removeCaseAggregation( context ) {
+function removeCaseAggregation(context) {
   removeItem(context.id, context.name, i18n_confirm_delete, 'removeCaseAggregation.action');
 }
 
@@ -270,12 +270,12 @@ function removeCaseAggregation( context ) {
 // View details
 // -----------------------------------------------------------------------------
 
-function showUpdateCaseAggregationForm( context ) {
+function showUpdateCaseAggregationForm(context) {
   location.href = 'showUpdateCaseAggregationForm.action?id=' + context.id;
 }
 
-function showCaseAggregationDetails( context ) {
-  jQuery.getJSON('getCaseAggregation.action', { id: context.id }, function( json ) {
+function showCaseAggregationDetails(context) {
+  jQuery.getJSON('getCaseAggregation.action', { id: context.id }, function(json) {
     setInnerHTML('nameField', json.caseAggregation.name);
     setInnerHTML('operatorField', json.caseAggregation.operator);
     setInnerHTML('aggregationDataElementField', json.caseAggregation.aggregationDataElement);
@@ -295,7 +295,7 @@ function getConditionDescription() {
   $.postUTF8('getCaseAggregationDescription.action',
     {
       condition: getFieldValue('aggregationCondition')
-    }, function( data ) {
+    }, function(data) {
       byId('aggregationDescription').innerHTML = data;
     }, 'html');
 }
@@ -311,7 +311,7 @@ function testCaseAggregationCondition() {
       condition: getFieldValue('aggregationCondition'),
       deSumId: getFieldValue('deSumId'),
       operator: operator
-    }, function( json ) {
+    }, function(json) {
       var type = json.response;
 
       if( type == "input" ) {
@@ -323,10 +323,10 @@ function testCaseAggregationCondition() {
     });
 }
 
-function getoptionSetValues( sourceId, targetId ) {
+function getoptionSetValues(sourceId, targetId) {
   clearListById(targetId);
 
-  var optionSetValues = jQuery('select[id=' + sourceId + '] option:selected').attr('optionSet');
+  var optionSetValues = jQuery('select[id=' + sourceId + '] option:selected').attr('TRACKER_ASSOCIATE');
   if( optionSetValues ) {
     var arrValues = new Array();
     arrValues = optionSetValues.replace(/[//[]+/g, '').replace(/]/g, '').split(', ');
@@ -344,13 +344,13 @@ function getoptionSetValues( sourceId, targetId ) {
   }
 }
 
-function insertSingleValue( elementId ) {
+function insertSingleValue(elementId) {
   var element = byId(elementId);
   insertTextCommon('aggregationCondition', "=" + element.options[element.selectedIndex].value);
   getConditionDescription();
 }
 
-function insertMultiValues( elementId ) {
+function insertMultiValues(elementId) {
   var list = jQuery('select[id=' + elementId + '] option')
   if( list.length == 0 ) {
     return;
@@ -374,11 +374,11 @@ function getCaseAggConditionByDataset() {
   $.get('getCaseAggConditionByDataset.action',
     {
       dataSetId: getFieldValue('dataSetId'),
-	  key: getFieldValue('key')
+      key: getFieldValue('key')
     }
-    , function( html ) {
+    , function(html) {
       setInnerHTML('list', html);
-	  setTableStyles();
+      setTableStyles();
     });
 }
 
@@ -386,7 +386,7 @@ function showAddCaseAggregationForm() {
   window.location.href = 'showAddCaseAggregationForm.action?dataSetId=' + getFieldValue('dataSetId');
 }
 
-function operatorOnchange( operator ) {
+function operatorOnchange(operator) {
   if( operator == 'sum' || operator == 'avg'
     || operator == 'min' || operator == 'max' ) {
     enable('deSumId');
@@ -396,7 +396,7 @@ function operatorOnchange( operator ) {
   }
 }
 
-function filterDataElement( event, value, fieldName, backupFieldsName ) {
+function filterDataElement(event, value, fieldName, backupFieldsName) {
   // Remove all options in data element fields
   var field = jQuery('#' + fieldName + " option ").remove();
   var valueType = getFieldValue('deValueType');
@@ -415,18 +415,18 @@ function filterDataElement( event, value, fieldName, backupFieldsName ) {
 
 }
 
-function filterAttribute( event, value, fieldName, backupFieldsName ) {
+function filterAttribute(event, value, fieldName, backupFieldsName) {
   // Remove all options in data element fields
   var field = jQuery('#' + fieldName + " option ").remove();
   jQuery('#' + backupFieldsName + " option ").each(function() {
     var option = jQuery(this);
-     if( option.text().toLowerCase().indexOf(value.toLowerCase()) != -1 ) {
-        jQuery('#' + fieldName).append("<option value='" + option.attr('value') + "' title='" + option.attr('value') + "' optionSet='" + option.attr('optionSet') + "' >" + option.text() + "</option>");
-      }
+    if( option.text().toLowerCase().indexOf(value.toLowerCase()) != -1 ) {
+      jQuery('#' + fieldName).append("<option value='" + option.attr('value') + "' title='" + option.attr('value') + "' optionSet='" + option.attr('optionSet') + "' >" + option.text() + "</option>");
+    }
   });
 }
 
-function sortByOnChange( sortBy ) {
+function sortByOnChange(sortBy) {
   if( sortBy == 1 ) {
     jQuery('#dataElements').each(function() {
 
@@ -434,7 +434,7 @@ function sortByOnChange( sortBy ) {
       var selectedValue = $(this).val();
 
       // sort it out
-      $(this).html($("option", $(this)).sort(function( a, b ) {
+      $(this).html($("option", $(this)).sort(function(a, b) {
         return $(a).attr('dename') == $(b).attr('dename') ? 0 : $(a).attr('dename') < $(b).attr('dename') ? -1 : 1
       }));
 
@@ -450,7 +450,7 @@ function sortByOnChange( sortBy ) {
       var selectedValue = $(this).val();
 
       // sort it out
-      $(this).html($("option", $(this)).sort(function( a, b ) {
+      $(this).html($("option", $(this)).sort(function(a, b) {
         return $(a).attr('decode') == $(b).attr('decode') ? 0 : $(a).attr('decode') < $(b).attr('decode') ? -1 : 1
       }));
 
@@ -461,7 +461,7 @@ function sortByOnChange( sortBy ) {
   }
 }
 
-function displayNameOnChange( displayName ) {
+function displayNameOnChange(displayName) {
   // display - name
   if( displayName == '1' ) {
     jQuery('#dataElements option').each(function() {
@@ -505,113 +505,110 @@ function cancelOnClick() {
   window.location.href = 'caseAggregation.action?dataSetId=' + dataSetId;
 }
 
-function attributeAutocompletedField( idField, optionSetUid, btnId, optionId )
-{
-	$("#" + btnId).unbind('click');
-	enable(btnId);
-	var input = jQuery( "#" + idField );
-	var select = jQuery( "#attributeId" );
-	input.autocomplete({
-		  delay: 0,
-		  minLength: 0,
-		  source: function( request, response ) {
-			$.ajax({
-			    url: "getOptions.action?id=" + optionSetUid + "&query=" + input.val(),
-				dataType: "json",
-			    success: function( data ) {
-				response( $.map( data.options, function ( item ) {
-					return {
-						label: item.n,
-						id: item.c
-					};
-				} ));
-			  }
-			});
-		  },
-		  select: function( event, ui ) {
-			input.val(ui.item.label);
-			jQuery("#" + optionId).append( "<option value='" + ui.item.id + "'>" + ui.item.label + "</option>" );
-			input.autocomplete("close");
-			
-			return false;
-		  },
-		  change: function( event, ui ) {
-			if( !ui.item ) {
-			  var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex($(this).val()) + "$", "i"),
-				valid = false;
-			  select.children("option").each(function() {
-				if( $(this).text().match(matcher) ) {
-				  this.selected = valid = true;
-				  return false;
-				}
-			  });
-			  if( !valid ) {
-				// remove invalid value, as it didn't match anything
-				$(this).val("");
-				select.val("");
-				input.data("uiAutocomplete").term = "";
-				return false;
-			  }
-			}
-		  }
-		}).addClass("ui-widget");
+function attributeAutocompletedField(idField, optionSetUid, btnId, optionId) {
+  $("#" + btnId).unbind('click');
+  enable(btnId);
+  var input = jQuery("#" + idField);
+  var select = jQuery("#attributeId");
+  input.autocomplete({
+    delay: 0,
+    minLength: 0,
+    source: function(request, response) {
+      $.ajax({
+        url: "getOptions.action?id=" + optionSetUid + "&query=" + input.val(),
+        dataType: "json",
+        success: function(data) {
+          response($.map(data.options, function(item) {
+            return {
+              label: item.n,
+              id: item.c
+            };
+          }));
+        }
+      });
+    },
+    select: function(event, ui) {
+      input.val(ui.item.label);
+      jQuery("#" + optionId).append("<option value='" + ui.item.id + "'>" + ui.item.label + "</option>");
+      input.autocomplete("close");
 
-	input.data("uiAutocomplete")._renderItem = function( ul, item ) {
-		return $("<li></li>")
-		  .data("item.autocomplete", item)
-		  .append("<a>" + item.label + "</a>")
-		  .appendTo(ul);
-	  };
+      return false;
+    },
+    change: function(event, ui) {
+      if( !ui.item ) {
+        var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex($(this).val()) + "$", "i"),
+        valid = false;
+        select.children("option").each(function() {
+          if( $(this).text().match(matcher) ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+        if( !valid ) {
+          // remove invalid value, as it didn't match anything
+          $(this).val("");
+          select.val("");
+          input.data("uiAutocomplete").term = "";
+          return false;
+        }
+      }
+    }
+  }).addClass("ui-widget");
 
-	var wrapper = this.wrapper = $("<span style='width:200px'>")
-		.addClass("ui-combobox")
-		.insertAfter(input);
+  input.data("uiAutocomplete")._renderItem = function(ul, item) {
+    return $("<li></li>")
+      .data("item.autocomplete", item)
+      .append("<a>" + item.label + "</a>")
+      .appendTo(ul);
+  };
 
-	var button = $("#" + btnId)
-		.attr("tabIndex", -1)
-		.attr("title", i18n_show_all_items)
-		.appendTo(wrapper)
-		.button({
-		  icons: {
-			primary: "ui-icon-triangle-1-s"
-		  },
-		  text: false
-		})
-		.click(function() {
-		  // close if already visible
-		  if( input.autocomplete("widget").is(":visible") ) {
-			input.autocomplete("close");
-			return;
-		  }
-		  // work around a bug (likely same cause as #5265)
-		  $(this).blur();
-		  // pass empty string as value to search for, displaying all results
-		  input.autocomplete("search", "");
-		  input.focus();
-		});
+  var wrapper = this.wrapper = $("<span style='width:200px'>")
+    .addClass("ui-combobox")
+    .insertAfter(input);
+
+  var button = $("#" + btnId)
+    .attr("tabIndex", -1)
+    .attr("title", i18n_show_all_items)
+    .appendTo(wrapper)
+    .button({
+      icons: {
+        primary: "ui-icon-triangle-1-s"
+      },
+      text: false
+    })
+    .click(function() {
+      // close if already visible
+      if( input.autocomplete("widget").is(":visible") ) {
+        input.autocomplete("close");
+        return;
+      }
+      // work around a bug (likely same cause as #5265)
+      $(this).blur();
+      // pass empty string as value to search for, displaying all results
+      input.autocomplete("search", "");
+      input.focus();
+    });
 }
 
-function split( val ) {
-  return val.split( /,\s*/ );
+function split(val) {
+  return val.split(/,\s*/);
 }
 
-function getSuggestedValues( _this, suggestedField, btnId, optionId )
-{
-	clearListById(optionId);
-	var field = jQuery( '#' + suggestedField );
-	var option =  jQuery("#" + _this.id + " option:selected" );
-	if( option.attr('optionset') != "" ){
-		attributeAutocompletedField( suggestedField, option.attr('optionset'), btnId, optionId );
-		enable(suggestedField);
-		jQuery( '#' + btnId ).css("display", "");
-	}
-	else{
-		disable(suggestedField);
-		jQuery( '#' + btnId ).css("display", "none");
-	}
+function getSuggestedValues(_this, suggestedField, btnId, optionId) {
+  clearListById(optionId);
+  var field = jQuery('#' + suggestedField);
+  var option = jQuery("#" + _this.id + " option:selected");
+  if( option.attr('optionset') != "" ) {
+    attributeAutocompletedField(suggestedField, option.attr('optionset'), btnId, optionId);
+    enable(suggestedField);
+    jQuery('#' + btnId).css("display", "");
+  }
+  else {
+    disable(suggestedField);
+    jQuery('#' + btnId).css("display", "none");
+  }
 }
 
-function removeOption( elementId )
-{
-	jQuery('#' + elementId + ' option:selected').remove();
+function removeOption(elementId) {
+  jQuery('#' + elementId + ' option:selected').remove();
 }

@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.ValueType;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -43,7 +44,7 @@ public class Attribute
 
     private String attribute;
 
-    private String type;
+    private ValueType valueType;
 
     private String code;
 
@@ -58,10 +59,10 @@ public class Attribute
         this.value = value;
     }
 
-    public Attribute( String attribute, String type, String value )
+    public Attribute( String attribute, ValueType valueType, String value )
     {
         this.attribute = attribute;
-        this.type = type;
+        this.valueType = valueType;
         this.value = value;
     }
 
@@ -91,14 +92,14 @@ public class Attribute
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
-    public String getType()
+    public ValueType getValueType()
     {
-        return type;
+        return valueType;
     }
 
-    public void setType( String type )
+    public void setValueType( ValueType valueType )
     {
-        this.type = type;
+        this.valueType = valueType;
     }
 
     @JsonProperty
@@ -139,7 +140,7 @@ public class Attribute
             return false;
         if ( displayName != null ? !displayName.equals( attribute1.displayName ) : attribute1.displayName != null )
             return false;
-        if ( type != null ? !type.equals( attribute1.type ) : attribute1.type != null )
+        if ( valueType != null ? !valueType.equals( attribute1.valueType ) : attribute1.valueType != null )
             return false;
         if ( code != null ? !code.equals( attribute1.code ) : attribute1.code != null )
             return false;
@@ -154,7 +155,7 @@ public class Attribute
     {
         int result = displayName != null ? displayName.hashCode() : 0;
         result = 31 * result + (attribute != null ? attribute.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (valueType != null ? valueType.hashCode() : 0);
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
@@ -164,6 +165,6 @@ public class Attribute
     public String toString()
     {
         return "Attribute{" + "displayName='" + displayName + '\'' + ", attribute='" + attribute + '\'' + ", type='"
-            + type + '\'' + ", code='" + code + '\'' + ", value='" + value + '\'' + '}';
+            + valueType + '\'' + ", code='" + code + '\'' + ", value='" + value + '\'' + '}';
     }
 }

@@ -28,7 +28,7 @@
 								<option value="" selected="selected">[$i18n.getString( "please_select" )]</option>
 								#set($attribute = '')
 								#foreach($programAttribute in $program.programAttributes)
-									#if( $programAttribute.attribute.valueType!='trackerAssociate')
+									#if( $programAttribute.attribute.valueType!='TRACKER_ASSOCIATE')
 										set($opt="")
 										#foreach($option in $programAttribute.attribute.optionSet.options)
 											#set($opt=$opt + ';' + $option.code + ':' + $option.name )

@@ -69,7 +69,7 @@ public enum ValueType
         INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE, NUMBER, UNIT_INTERVAL, PERCENTAGE
     );
 
-    public static List<ValueType> TEXT_TYPES = Lists.newArrayList( TEXT, LONG_TEXT );
+    public static List<ValueType> TEXT_TYPES = Lists.newArrayList( TEXT, LONG_TEXT, LETTER );
 
     public static List<String> INTEGER_TYPE_STRINGS = Lists.newArrayList(
         INTEGER.toString(), INTEGER_POSITIVE.toString(), INTEGER_NEGATIVE.toString(), INTEGER_ZERO_OR_POSITIVE.toString()
@@ -80,7 +80,7 @@ public enum ValueType
         NUMBER.toString(), UNIT_INTERVAL.toString(), PERCENTAGE.toString()
     );
 
-    public static List<String> TEXT_TYPE_STRINGS = Lists.newArrayList( TEXT.toString(), LONG_TEXT.toString() );
+    public static List<String> TEXT_TYPE_STRINGS = Lists.newArrayList( TEXT.toString(), LONG_TEXT.toString(), LETTER.toString() );
 
     private final Class<?> javaClass;
 
@@ -112,6 +112,11 @@ public enum ValueType
     public boolean isText()
     {
         return this == TEXT || this == LONG_TEXT;
+    }
+
+    public boolean isDate()
+    {
+        return this == DATE || this == DATETIME;
     }
 
     /**
@@ -219,5 +224,18 @@ public enum ValueType
         }
 
         return ValueType.TEXT; // Fall back
+    }
+
+    public static ValueType fromValue( String value )
+    {
+        for ( ValueType valueType : ValueType.values() )
+        {
+            if ( valueType.toString().equalsIgnoreCase( value ) )
+            {
+                return valueType;
+            }
+        }
+
+        return null;
     }
 }

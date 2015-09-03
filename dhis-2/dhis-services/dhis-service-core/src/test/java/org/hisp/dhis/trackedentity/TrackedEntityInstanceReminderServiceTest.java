@@ -28,14 +28,8 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.mock.MockI18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -53,6 +47,13 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Chau Thu Tran
@@ -192,10 +193,10 @@ public class TrackedEntityInstanceReminderServiceTest
     }
 
     @Test
-    public void testGetPhonenumbers()
+    public void testGetPhoneNumbers()
     {
         TrackedEntityAttribute attribute = createTrackedEntityAttribute( 'A' );
-        attribute.setValueType( TrackedEntityAttribute.TYPE_PHONE_NUMBER );
+        attribute.setValueType( ValueType.PHONE_NUMBER );
         attributeService.addTrackedEntityAttribute( attribute );
 
         TrackedEntityAttributeValue attributeValue = createTrackedEntityAttributeValue( 'A', entityInstance, attribute );
@@ -205,7 +206,7 @@ public class TrackedEntityInstanceReminderServiceTest
         entityInstance.getAttributeValues().add( attributeValue );
         entityInstanceService.updateTrackedEntityInstance( entityInstance );
 
-        Set<String> phoneNumbers = reminderService.getPhonenumbers( reminderA, entityInstance );
+        Set<String> phoneNumbers = reminderService.getPhoneNumbers( reminderA, entityInstance );
         assertEquals( 1, phoneNumbers.size() );
         assertTrue( phoneNumbers.contains( "123456789" ) );
     }

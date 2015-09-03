@@ -28,16 +28,9 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nService;
@@ -57,7 +50,14 @@ import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 /**
  * @author Abyot Asalefew
@@ -113,7 +113,7 @@ public class DefaultProgramService
 
     @Autowired
     private TrackedEntityAttributeValueService attributeValueService;
-    
+
     // -------------------------------------------------------------------------
     // Implementation methods
     // -------------------------------------------------------------------------
@@ -177,7 +177,7 @@ public class DefaultProgramService
     }
 
     @Override
-    public List<Program> getPrograms( ProgramType type)
+    public List<Program> getPrograms( ProgramType type )
     {
         return i18n( i18nService, programStore.getByType( type ) );
     }
@@ -201,7 +201,7 @@ public class DefaultProgramService
     }
 
     @Override
-    public List<Program> getProgramsByCurrentUser( ProgramType type)
+    public List<Program> getProgramsByCurrentUser( ProgramType type )
     {
         return i18n( i18nService, getByCurrentUser( type ) );
     }
@@ -283,7 +283,7 @@ public class DefaultProgramService
     }
 
     @Override
-    public List<Program> getByCurrentUser( ProgramType type)
+    public List<Program> getByCurrentUser( ProgramType type )
     {
         List<Program> programs = new ArrayList<>();
 
@@ -307,7 +307,7 @@ public class DefaultProgramService
 
         return programs;
     }
-    
+
 
     @Override
     public String prepareDataEntryFormForAdd( String htmlCode, Program program, Collection<User> healthWorkers,
@@ -466,22 +466,23 @@ public class DefaultProgramService
             + "\" tabindex=\"" + index + "\" style=\"" + style + "\"";
 
         inputHtml += "\" class=\"" + hidden + " {validate:{required:" + mandatory;
-        if ( TrackedEntityAttribute.TYPE_NUMBER.equals( attribute.getValueType() ) )
+
+        if ( ValueType.NUMBER == attribute.getValueType() )
         {
             inputHtml += ",number:true";
         }
-        else   if ( TrackedEntityAttribute.TYPE_PHONE_NUMBER.equals( attribute.getValueType() ) )
+        else if ( ValueType.PHONE_NUMBER == attribute.getValueType() )
         {
             inputHtml += ",phone:true";
         }
+
         inputHtml += "}}\" ";
 
-
-        if ( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_PHONE_NUMBER ) )
-        {            
+        if ( ValueType.PHONE_NUMBER == attribute.getValueType() )
+        {
             inputHtml += " phoneNumber value=\"" + value + "\"" + TAG_CLOSE;
         }
-        else if ( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_TRUE_ONLY ) )
+        else if ( ValueType.TRUE_ONLY == attribute.getValueType() )
         {
             inputHtml += " type='checkbox' value='true' ";
             if ( value.equals( "true" ) )
@@ -489,7 +490,7 @@ public class DefaultProgramService
                 inputHtml += " checked ";
             }
         }
-        else if ( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_BOOL ) )
+        else if ( ValueType.BOOLEAN == attribute.getValueType() )
         {
             inputHtml = inputHtml.replaceFirst( "input", "select" ) + ">";
 
@@ -514,7 +515,7 @@ public class DefaultProgramService
 
             inputHtml += "</select>";
         }
-        else if ( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_OPTION_SET ) )
+        else if ( ValueType.OPTION_SET == attribute.getValueType() )
         {
             inputHtml = inputHtml.replaceFirst( "input", "select" ) + ">";
             inputHtml += "<option value=\"\" selected>" + i18n.getString( "no_value" ) + "</option>";
@@ -530,18 +531,20 @@ public class DefaultProgramService
             }
             inputHtml += "</select>";
         }
-        else if ( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_DATE ) )
+        else if ( ValueType.DATE == attribute.getValueType() )
         {
             String jQueryCalendar = "<script>";
-            if( allowDateInFuture ){
+            if ( allowDateInFuture )
+            {
                 jQueryCalendar += "datePicker";
             }
-            else{
+            else
+            {
                 jQueryCalendar += "datePickerValid";
             }
             jQueryCalendar += "(\"attr" + attribute.getId() + "\", false, false);</script>";
-            
-           inputHtml += " value=\"" + value + "\"" + TAG_CLOSE;
+
+            inputHtml += " value=\"" + value + "\"" + TAG_CLOSE;
             inputHtml += jQueryCalendar;
         }
         else

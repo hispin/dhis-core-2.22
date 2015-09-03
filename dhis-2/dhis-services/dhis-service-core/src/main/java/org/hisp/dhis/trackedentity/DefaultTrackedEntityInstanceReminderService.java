@@ -28,8 +28,15 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder.ATTRIBUTE;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder.ATTRIBUTE_PATTERN;
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.program.ProgramInstance;
+import org.hisp.dhis.program.ProgramStageInstance;
+import org.hisp.dhis.system.util.DateUtils;
+import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
+import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,14 +46,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
-import org.hisp.dhis.i18n.I18nFormat;
-import org.hisp.dhis.program.ProgramInstance;
-import org.hisp.dhis.program.ProgramStageInstance;
-import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
-import org.hisp.dhis.user.User;
-import org.hisp.dhis.user.UserService;
+import static org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder.ATTRIBUTE;
+import static org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder.ATTRIBUTE_PATTERN;
 
 /**
  * @author Chau Thu Tran
@@ -188,7 +189,7 @@ public class DefaultTrackedEntityInstanceReminderService
 
         return templateMessage;
     }
-    
+
     @Override
     public List<String> getAttributeUids( String message )
     {
@@ -209,66 +210,69 @@ public class DefaultTrackedEntityInstanceReminderService
     }
 
     @Override
-    public Set<String> getPhonenumbers( TrackedEntityInstanceReminder reminder, TrackedEntityInstance entityInstance )
+    public Set<String> getPhoneNumbers( TrackedEntityInstanceReminder reminder, TrackedEntityInstance entityInstance )
     {
         Set<String> phoneNumbers = new HashSet<>();
         switch ( reminder.getSendTo() )
         {
-        case TrackedEntityInstanceReminder.SEND_TO_ALL_USERS_IN_ORGUGNIT_REGISTERED:
-            Collection<User> users = entityInstance.getOrganisationUnit().getUsers();
-            for ( User user : users )
-            {
-                if ( user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty() )
+            case TrackedEntityInstanceReminder.SEND_TO_ALL_USERS_IN_ORGUGNIT_REGISTERED:
+                Collection<User> users = entityInstance.getOrganisationUnit().getUsers();
+
+                for ( User user : users )
                 {
-                    phoneNumbers.add( user.getPhoneNumber() );
-                }
-            }
-            break;
-        case TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS:
-            if ( entityInstance.getAttributeValues() != null )
-            {
-                for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
-                {
-                    if ( attributeValue.getAttribute().getValueType().equals( TrackedEntityAttribute.TYPE_USERS ) )
+                    if ( user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty() )
                     {
-                        User user = userService.getUser( Integer.parseInt( attributeValue.getValue() ) );
-                        if ( user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty() )
+                        phoneNumbers.add( user.getPhoneNumber() );
+                    }
+                }
+                break;
+            case TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS:
+                if ( entityInstance.getAttributeValues() != null )
+                {
+                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+                    {
+                        if ( ValueType.USERNAME == attributeValue.getAttribute().getValueType() )
                         {
-                            phoneNumbers.add( user.getPhoneNumber() );
+                            User user = userService.getUser( Integer.parseInt( attributeValue.getValue() ) );
+
+                            if ( user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty() )
+                            {
+                                phoneNumbers.add( user.getPhoneNumber() );
+                            }
                         }
                     }
                 }
-            }
-            break;
-        case TrackedEntityInstanceReminder.SEND_TO_ORGUGNIT_REGISTERED:
-            if ( entityInstance.getOrganisationUnit().getPhoneNumber() != null
-                && !entityInstance.getOrganisationUnit().getPhoneNumber().isEmpty() )
-            {
-                phoneNumbers.add( entityInstance.getOrganisationUnit().getPhoneNumber() );
-            }
-            break;
-        case TrackedEntityInstanceReminder.SEND_TO_USER_GROUP:
-            for ( User user : reminder.getUserGroup().getMembers() )
-            {
-                if ( user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty() )
+                break;
+            case TrackedEntityInstanceReminder.SEND_TO_ORGUGNIT_REGISTERED:
+                if ( entityInstance.getOrganisationUnit().getPhoneNumber() != null
+                    && !entityInstance.getOrganisationUnit().getPhoneNumber().isEmpty() )
                 {
-                    phoneNumbers.add( user.getPhoneNumber() );
+                    phoneNumbers.add( entityInstance.getOrganisationUnit().getPhoneNumber() );
                 }
-            }
-            break;
-        default:
-            if ( entityInstance.getAttributeValues() != null )
-            {
-                for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+                break;
+            case TrackedEntityInstanceReminder.SEND_TO_USER_GROUP:
+                for ( User user : reminder.getUserGroup().getMembers() )
                 {
-                    if ( attributeValue.getAttribute().getValueType().equals( TrackedEntityAttribute.TYPE_PHONE_NUMBER ) )
+                    if ( user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty() )
                     {
-                        phoneNumbers.add( attributeValue.getValue() );
+                        phoneNumbers.add( user.getPhoneNumber() );
                     }
                 }
-            }
-            break;
+                break;
+            default:
+                if ( entityInstance.getAttributeValues() != null )
+                {
+                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+                    {
+                        if ( ValueType.PHONE_NUMBER == attributeValue.getAttribute().getValueType() )
+                        {
+                            phoneNumbers.add( attributeValue.getValue() );
+                        }
+                    }
+                }
+                break;
         }
+
         return phoneNumbers;
     }
 
@@ -279,29 +283,29 @@ public class DefaultTrackedEntityInstanceReminderService
 
         switch ( reminder.getSendTo() )
         {
-        case TrackedEntityInstanceReminder.SEND_TO_ALL_USERS_IN_ORGUGNIT_REGISTERED:
-            users.addAll( entityInstance.getOrganisationUnit().getUsers() );
-            break;
-        case TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS:
-            if ( entityInstance.getAttributeValues() != null )
-            {
-                for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+            case TrackedEntityInstanceReminder.SEND_TO_ALL_USERS_IN_ORGUGNIT_REGISTERED:
+                users.addAll( entityInstance.getOrganisationUnit().getUsers() );
+                break;
+            case TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS:
+                if ( entityInstance.getAttributeValues() != null )
                 {
-                    if ( attributeValue.getAttribute().getValueType().equals( TrackedEntityAttribute.TYPE_USERS ) )
+                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
                     {
-                        users.add( userService.getUser( Integer.parseInt( attributeValue.getValue() ) ) );
+                        if ( ValueType.USERNAME == attributeValue.getAttribute().getValueType() )
+                        {
+                            users.add( userService.getUser( Integer.parseInt( attributeValue.getValue() ) ) );
+                        }
                     }
                 }
-            }
-            break;
-        case TrackedEntityInstanceReminder.SEND_TO_USER_GROUP:
-            if ( reminder.getUserGroup().getMembers().size() > 0 )
-            {
-                users.addAll( reminder.getUserGroup().getMembers() );
-            }
-            break;
-        default:
-            break;
+                break;
+            case TrackedEntityInstanceReminder.SEND_TO_USER_GROUP:
+                if ( reminder.getUserGroup().getMembers().size() > 0 )
+                {
+                    users.addAll( reminder.getUserGroup().getMembers() );
+                }
+                break;
+            default:
+                break;
         }
         return users;
     }

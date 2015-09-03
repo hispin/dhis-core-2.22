@@ -896,7 +896,7 @@ public class DefaultProgramInstanceService
     {
         I18nFormat format = i18nManager.getI18nFormat();
 
-        Set<String> phoneNumbers = reminderService.getPhonenumbers( reminder, entityInstance );
+        Set<String> phoneNumbers = reminderService.getPhoneNumbers( reminder, entityInstance );
         OutboundSms outboundSms = null;
 
         if ( phoneNumbers.size() > 0 )
