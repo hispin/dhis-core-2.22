@@ -169,10 +169,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.newDhis2Event = {};
 
                 $scope.eventGridColumns.push({name: 'form_id', id: 'uid', valueType: 'string', compulsory: false, showFilter: false, show: false});
-                $scope.filterTypes['uid'] = 'string';                
+                $scope.filterTypes['uid'] = 'TEXT';                
 
                 $scope.eventGridColumns.push({name: $scope.selectedProgramStage.reportDateDescription ? $scope.selectedProgramStage.reportDateDescription : 'incident_date', id: 'event_date', type: 'date', compulsory: false, showFilter: false, show: true});
-                $scope.filterTypes['event_date'] = 'date';
+                $scope.filterTypes['event_date'] = 'DATE';
                 $scope.filterText['event_date']= {};
 
                 angular.forEach($scope.selectedProgramStage.programStageDataElements, function(prStDe){
@@ -181,11 +181,17 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
 
                     //generate grid headers using program stage data elements
                     //create a template for new event
-                    //for date type dataelements, filtering is based on start and end dates                    
+                    //for date type dataelements, filtering is based on start and end dates
                     $scope.eventGridColumns.push({name: prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name, 
                                                   id: prStDe.dataElement.id, 
                                                   valueType: prStDe.dataElement.valueType, 
                                                   compulsory: prStDe.compulsory, 
+                                                  filterWithRange: prStDe.dataElement.valueType === 'DATE' || 
+                                                                        prStDe.dataElement.valueType === 'NUMBER' || 
+                                                                        prStDe.dataElement.valueType === 'INTEGER' || 
+                                                                        prStDe.dataElement.valueType === 'INTEGER_POSITIVE' || 
+                                                                        prStDe.dataElement.valueType === 'INTEGER_NEGATIVE' || 
+                                                                        prStDe.dataElement.valueType === 'INTEGER_ZERO_OR_POSITIVE' ? true : false,  
                                                   showFilter: false, 
                                                   show: prStDe.displayInReports});
 
