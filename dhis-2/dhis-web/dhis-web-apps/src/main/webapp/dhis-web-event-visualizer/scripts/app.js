@@ -7438,7 +7438,7 @@ Ext.onReady( function() {
 						iconCls: 'ns-menu-item-datasource',
 						handler: function() {
 							if (ns.core.init.contextPath && ns.app.paramString) {
-								window.open(ns.core.init.contextPath + ns.core.web.analytics.getParamString(ns.app.layout, 'html'), '_blank');
+								window.open(ns.core.init.contextPath + ns.core.web.analytics.getParamString(ns.app.layout, 'html+css'), '_blank');
 							}
 						}
 					},
