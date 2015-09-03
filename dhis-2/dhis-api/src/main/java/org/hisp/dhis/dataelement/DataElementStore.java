@@ -95,14 +95,6 @@ public interface DataElementStore
     List<DataElement> getDataElementsByDomainType( DataElementDomain domainType, int first, int max );
 
     /**
-     * Returns all DataElements with the given type.
-     *
-     * @param type the type.
-     * @return all DataElements with the given type.
-     */
-    List<DataElement> getDataElementsByType( String type );
-
-    /**
      * Returns all DataElements with the given value types.
      *
      * @param valueTypes The value types.
