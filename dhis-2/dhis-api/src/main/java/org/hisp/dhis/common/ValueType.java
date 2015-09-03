@@ -112,9 +112,14 @@ public enum ValueType
      */
     public static ValueType getFromDataElement( DataElement dataElement )
     {
-        if ( DataElement.VALUE_TYPE_STRING.equals( dataElement.getType() ) )
+        return getFromDataElementTypes( dataElement.getType(), dataElement.getNumberType(), dataElement.getTextType() );
+    }
+
+    public static ValueType getFromDataElementTypes( String type, String numberType, String textType )
+    {
+        if ( DataElement.VALUE_TYPE_STRING.equals( type ) )
         {
-            if ( DataElement.VALUE_TYPE_LONG_TEXT.equals( dataElement.getTextType() ) )
+            if ( DataElement.VALUE_TYPE_LONG_TEXT.equals( textType ) )
             {
                 return ValueType.LONG_TEXT;
             }
@@ -123,29 +128,29 @@ public enum ValueType
                 return ValueType.TEXT;
             }
         }
-        else if ( DataElement.VALUE_TYPE_INT.equals( dataElement.getType() ) )
+        else if ( DataElement.VALUE_TYPE_INT.equals( type ) )
         {
-            if ( DataElement.VALUE_TYPE_UNIT_INTERVAL.equals( dataElement.getNumberType() ) )
+            if ( DataElement.VALUE_TYPE_UNIT_INTERVAL.equals( numberType ) )
             {
                 return ValueType.UNIT_INTERVAL;
             }
-            else if ( DataElement.VALUE_TYPE_PERCENTAGE.equals( dataElement.getNumberType() ) )
+            else if ( DataElement.VALUE_TYPE_PERCENTAGE.equals( numberType ) )
             {
                 return ValueType.PERCENTAGE;
             }
-            else if ( DataElement.VALUE_TYPE_INT.equals( dataElement.getNumberType() ) )
+            else if ( DataElement.VALUE_TYPE_INT.equals( numberType ) )
             {
                 return ValueType.INTEGER;
             }
-            else if ( DataElement.VALUE_TYPE_POSITIVE_INT.equals( dataElement.getNumberType() ) )
+            else if ( DataElement.VALUE_TYPE_POSITIVE_INT.equals( numberType ) )
             {
                 return ValueType.INTEGER_POSITIVE;
             }
-            else if ( DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT.equals( dataElement.getNumberType() ) )
+            else if ( DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT.equals( numberType ) )
             {
                 return ValueType.INTEGER_ZERO_OR_POSITIVE;
             }
-            else if ( DataElement.VALUE_TYPE_NEGATIVE_INT.equals( dataElement.getNumberType() ) )
+            else if ( DataElement.VALUE_TYPE_NEGATIVE_INT.equals( numberType ) )
             {
                 return ValueType.INTEGER_NEGATIVE;
             }
@@ -154,23 +159,23 @@ public enum ValueType
                 return ValueType.NUMBER;
             }
         }
-        else if ( DataElement.VALUE_TYPE_BOOL.equals( dataElement.getType() ) )
+        else if ( DataElement.VALUE_TYPE_BOOL.equals( numberType ) )
         {
             return ValueType.BOOLEAN;
         }
-        else if ( DataElement.VALUE_TYPE_TRUE_ONLY.equals( dataElement.getType() ) )
+        else if ( DataElement.VALUE_TYPE_TRUE_ONLY.equals( numberType ) )
         {
             return ValueType.TRUE_ONLY;
         }
-        else if ( DataElement.VALUE_TYPE_DATE.equals( dataElement.getType() ) )
+        else if ( DataElement.VALUE_TYPE_DATE.equals( numberType ) )
         {
             return ValueType.DATE;
         }
-        else if ( DataElement.VALUE_TYPE_DATETIME.equals( dataElement.getType() ) )
+        else if ( DataElement.VALUE_TYPE_DATETIME.equals( numberType ) )
         {
             return ValueType.DATETIME;
         }
-        else if ( DataElement.VALUE_TYPE_USER_NAME.equals( dataElement.getType() ) )
+        else if ( DataElement.VALUE_TYPE_USER_NAME.equals( numberType ) )
         {
             return ValueType.USERNAME;
         }

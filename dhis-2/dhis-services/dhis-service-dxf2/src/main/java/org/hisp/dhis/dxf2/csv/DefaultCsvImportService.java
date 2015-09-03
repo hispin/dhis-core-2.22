@@ -28,21 +28,13 @@ package org.hisp.dhis.dxf2.csv;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.csvreader.CsvReader;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -64,7 +56,15 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.csvreader.CsvReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
 
 /**
  * @author Lars Helge Overland
@@ -74,7 +74,7 @@ public class DefaultCsvImportService
 {
     @Autowired
     private DataElementCategoryService categoryService;
-    
+
     @Autowired
     private ExpressionService expressionService;
 
@@ -175,7 +175,7 @@ public class DefaultCsvImportService
         throws IOException
     {
         DataElementCategoryCombo categoryCombo = categoryService.getDefaultDataElementCategoryCombo();
-        
+
         List<DataElement> list = new ArrayList<>();
 
         while ( reader.readRecord() )
@@ -190,14 +190,20 @@ public class DefaultCsvImportService
                 object.setShortName( getSafe( values, 3, object.getName(), 50 ) );
                 object.setDescription( getSafe( values, 4, null, null ) );
                 object.setFormName( getSafe( values, 5, null, 230 ) );
-                
+
                 String domainType = getSafe( values, 6, DataElementDomain.AGGREGATE.getValue(), 16 );
                 object.setDomainType( DataElementDomain.fromValue( domainType ) );
 
                 object.setType( getSafe( values, 7, DataElement.VALUE_TYPE_INT, 16 ) );
                 object.setNumberType( getSafe( values, 8, DataElement.VALUE_TYPE_NUMBER, 16 ) );
                 object.setTextType( getSafe( values, 9, null, 16 ) );
-                object.setAggregationOperator( getSafe( values, 10, DataElement.AGGREGATION_OPERATOR_SUM, 16 ) );                
+                object.setValueType( ValueType.getFromDataElementTypes(
+                    getSafe( values, 7, DataElement.VALUE_TYPE_INT, 16 ),
+                    getSafe( values, 8, DataElement.VALUE_TYPE_NUMBER, 16 ),
+                    getSafe( values, 9, null, 16 )
+                ) );
+
+                object.setAggregationOperator( getSafe( values, 10, DataElement.AGGREGATION_OPERATOR_SUM, 16 ) );
                 String categoryComboUid = getSafe( values, 11, null, 11 );
                 object.setUrl( getSafe( values, 12, null, 255 ) );
                 object.setZeroIsSignificant( Boolean.valueOf( getSafe( values, 13, "false", null ) ) );
@@ -214,7 +220,7 @@ public class DefaultCsvImportService
                 {
                     object.setCategoryCombo( categoryCombo );
                 }
-                
+
                 if ( optionSetUid != null )
                 {
                     OptionSet optionSet = new OptionSet();
@@ -228,7 +234,7 @@ public class DefaultCsvImportService
                     optionSet.setUid( commentOptionSetUid );
                     object.setCommentOptionSet( optionSet );
                 }
-                
+
                 list.add( object );
             }
         }
@@ -255,7 +261,7 @@ public class DefaultCsvImportService
 
         return list;
     }
-    
+
     private List<ValidationRule> validationRulesFromCsv( CsvReader reader )
         throws IOException
     {
@@ -266,10 +272,10 @@ public class DefaultCsvImportService
             String[] values = reader.getValues();
 
             if ( values != null && values.length > 0 )
-            {            
+            {
                 Expression leftSide = new Expression();
                 Expression rightSide = new Expression();
-                
+
                 ValidationRule object = new ValidationRule();
                 setIdentifiableObject( object, values );
                 object.setDescription( getSafe( values, 3, null, 255 ) );
@@ -278,27 +284,27 @@ public class DefaultCsvImportService
                 object.setRuleType( getSafe( values, 6, ValidationRule.RULE_TYPE_VALIDATION, 255 ) );
                 object.setOperator( Operator.safeValueOf( getSafe( values, 7, Operator.equal_to.toString(), 255 ) ) );
                 object.setPeriodType( PeriodType.getByNameIgnoreCase( getSafe( values, 8, MonthlyPeriodType.NAME, 255 ) ) );
-                
+
                 leftSide.setExpression( getSafe( values, 9, null, 255 ) );
                 leftSide.setDescription( getSafe( values, 10, null, 255 ) );
                 leftSide.setMissingValueStrategy( MissingValueStrategy.safeValueOf( getSafe( values, 11, MissingValueStrategy.NEVER_SKIP.toString(), 50 ) ) );
                 leftSide.setDataElementsInExpression( expressionService.getDataElementsInExpression( leftSide.getExpression() ) );
-                
+
                 rightSide.setExpression( getSafe( values, 12, null, 255 ) );
                 rightSide.setDescription( getSafe( values, 13, null, 255 ) );
-                rightSide.setMissingValueStrategy( MissingValueStrategy.safeValueOf( getSafe( values, 14,  MissingValueStrategy.NEVER_SKIP.toString(), 50 ) ) );
+                rightSide.setMissingValueStrategy( MissingValueStrategy.safeValueOf( getSafe( values, 14, MissingValueStrategy.NEVER_SKIP.toString(), 50 ) ) );
                 rightSide.setDataElementsInExpression( expressionService.getDataElementsInExpression( rightSide.getExpression() ) );
-                
+
                 object.setLeftSide( leftSide );
                 object.setRightSide( rightSide );
-                
+
                 list.add( object );
             }
         }
-        
+
         return list;
     }
-    
+
     private List<OrganisationUnit> organisationUnitsFromCsv( CsvReader reader )
         throws IOException
     {
@@ -326,14 +332,14 @@ public class DefaultCsvImportService
                 object.setAddress( getSafe( values, 14, null, 255 ) );
                 object.setEmail( getSafe( values, 15, null, 150 ) );
                 object.setPhoneNumber( getSafe( values, 16, null, 150 ) );
-                                
+
                 if ( parentUid != null )
                 {
                     OrganisationUnit parent = new OrganisationUnit();
                     parent.setUid( parentUid );
                     parent.setCode( parentUid );
                     parent.setName( parentUid );
-                    
+
                     object.setParent( parent );
                 }
 
@@ -366,7 +372,7 @@ public class DefaultCsvImportService
 
     /**
      * Option set format:
-     * 
+     * <p>
      * <ul>
      * <li>option set name</li>
      * <li>option set uid</li>
@@ -383,7 +389,7 @@ public class DefaultCsvImportService
         Map<String, OptionSet> nameOptionSetMap = new HashMap<>();
 
         // Read option sets and options and put in maps
-        
+
         while ( reader.readRecord() )
         {
             String[] values = reader.getValues();
@@ -392,7 +398,7 @@ public class DefaultCsvImportService
             {
                 OptionSet optionSet = new OptionSet();
                 setIdentifiableObject( optionSet, values );
-                
+
                 Option option = new Option();
                 option.setName( getSafe( values, 3, null, 230 ) );
                 option.setUid( getSafe( values, 4, CodeGenerator.generateCode(), 11 ) );
@@ -402,25 +408,25 @@ public class DefaultCsvImportService
                 {
                     continue;
                 }
-                
+
                 nameOptionSetMap.put( optionSet.getName(), optionSet );
-                
+
                 nameOptionMap.putValue( optionSet.getName(), option );
-                
+
                 metaData.getOptions().add( option );
             }
         }
 
         // Read option sets from map and set in meta data
-        
+
         for ( String optionSetName : nameOptionSetMap.keySet() )
         {
             OptionSet optionSet = nameOptionSetMap.get( optionSetName );
-            
+
             List<Option> options = new ArrayList<>( nameOptionMap.get( optionSetName ) );
-            
+
             optionSet.setOptions( options );
-            
+
             metaData.getOptionSets().add( optionSet );
         }
     }
@@ -431,7 +437,7 @@ public class DefaultCsvImportService
 
     /**
      * Sets the name, uid and code properties on the given object.
-     * 
+     *
      * @param object the object to set identifiable properties.
      * @param values the array of property values.
      */
@@ -444,11 +450,11 @@ public class DefaultCsvImportService
 
     /**
      * Returns a string from the given array avoiding exceptions.
-     * 
-     * @param values the string array.
-     * @param index the array index of the string to get.
+     *
+     * @param values       the string array.
+     * @param index        the array index of the string to get.
      * @param defaultValue the default value in case index is out of bounds.
-     * @param maxChars the max number of characters to return for the string.
+     * @param maxChars     the max number of characters to return for the string.
      */
     private static String getSafe( String[] values, int index, String defaultValue, Integer maxChars )
     {
