@@ -432,7 +432,7 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
                     var programRuleVariablesArray = [];
                     //Loop through and add the variables belonging to this program
                     angular.forEach(variables, function(variable){
-                       if(variable.program.id == programUid) {
+                       if(variable.program.id === programUid) {
                             programRuleVariablesArray.push(variable);
                        }
                     });

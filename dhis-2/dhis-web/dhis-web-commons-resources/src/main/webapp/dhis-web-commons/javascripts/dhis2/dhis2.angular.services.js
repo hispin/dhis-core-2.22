@@ -359,7 +359,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     ' ng-disabled="isHidden(prStDes.' + fieldId + '.dataElement.id) || selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
                                     ' ng-required="{{prStDes.' + fieldId + '.compulsory}}" ';
 
-                            if (prStDe && prStDe.dataElement && prStDe.dataElement.type) {
+                            if (prStDe && prStDe.dataElement && prStDe.dataElement.valueType) {
                                 //check if dataelement has optionset								
                                 if (prStDe.dataElement.optionSetValue) {
                                     var optionSetId = prStDe.dataElement.optionSet.id;                 
@@ -373,14 +373,18 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 }
                                 else {
                                     //check data element type and generate corresponding angular input field
-                                    if (prStDe.dataElement.type === "int") {
+                                    if (prStDe.dataElement.valueType === "NUMBER" || 
+                                    		prStDe.dataElement.valueType === "INTEGER" || 
+                                    		prStDe.dataElement.valueType === "INTEGER_POSITIVE" ||
+                                    		prStDe.dataElement.valueType === "INTEGER_NEGATIVE" ||
+                                    		prStDe.dataElement.valueType === "INTEGER_ZERO_OR_POSITIVE") {
                                         newInputField = '<input type="number" ' +
                                                 ' d2-number-validator ' +
-                                                ' number-type="' + prStDe.dataElement.numberType + '" ' +
+                                                ' number-type="' + prStDe.dataElement.valueType + '" ' +
                                                 ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
-                                    else if (prStDe.dataElement.type === "bool") {
+                                    else if (prStDe.dataElement.valueType === "BOOLEAN") {
                                         newInputField = '<select ' +
                                                 ' ng-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')" ' +
                                                 commonInputFieldProperty + '>' +
@@ -389,7 +393,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 '<option value="true">{{\'yes\'| translate}}</option>' +
                                                 '</select> ';
                                     }
-                                    else if (prStDe.dataElement.type === "date") {
+                                    else if (prStDe.dataElement.valueType === "DATE") {
                                         var maxDate = prStDe.allowFutureDate ? '' : 0;
                                         newInputField = '<input type="text" ' +
                                                 ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
@@ -399,9 +403,14 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 ' blur-or-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
-                                    else if (prStDe.dataElement.type === "trueOnly") {
+                                    else if (prStDe.dataElement.valueType === "TRUE_ONLY") {
                                         newInputField = '<input type="checkbox" ' +
                                                 ' ng-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
+                                                commonInputFieldProperty + ' >';
+                                    }
+                                    else if (prStDe.dataElement.valueType === "LONG_TEXT") {
+                                        newInputField = '<textarea row ="3" ' +
+                                                ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
                                     else {
@@ -793,7 +802,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         variableValue = $filter('trimquotes')(variableValue);
 
         //Append single quotation marks in case the variable is of text or date type:
-        if(variableType === 'string' || variableType === 'date' || variableType === 'optionSet') {
+        if(variableType === 'TEXT' || variableType === 'DATE' || variableType === 'OPTION_SET') {
             if(variableValue) {
                 variableValue = "'" + variableValue + "'";
             } else {
@@ -801,7 +810,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             }
                 
         }
-        else if(variableType === 'bool' || variableType === 'trueOnly') {
+        else if(variableType === 'BOOLEAN' || variableType === 'TRUE_ONLY') {
             if(variableValue && eval(variableValue)) {
                 variableValue = true;
             }
@@ -809,7 +818,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 variableValue = false;
             }
         }
-        else if(variableType === "int" || variableType === "number") {
+        else if(variableType === "INTEGER" || variableType === "NUMBER" || variableType === "INTEGER_POSITIVE" || variableType === "INTEGER_NEGATIVE" || variableType === "INTEGER_ZERO_OR_POSITIVE") {
             if(variableValue) {
                 variableValue = Number(variableValue);
             } else {
@@ -861,7 +870,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             if(angular.isDefined(event[dataElementId])
                                     && event[dataElementId] !== null ){
                                 valueFound = true;
-                                variables = pushVariable(variables, programVariable.name, event[dataElementId], allDes[dataElementId].dataElement.type, valueFound, '#');
+                                variables = pushVariable(variables, programVariable.name, event[dataElementId], allDes[dataElementId].dataElement.valueType, valueFound, '#');
                             }
                         });
                     } else {
@@ -876,7 +885,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         if(angular.isDefined(event[dataElementId])
                                 && event[dataElementId] !== null ){
                             valueFound = true;
-                            variables = pushVariable(variables, programVariable.name, event[dataElementId], allDes[dataElementId].dataElement.type, valueFound, '#' );
+                            variables = pushVariable(variables, programVariable.name, event[dataElementId], allDes[dataElementId].dataElement.valueType, valueFound, '#' );
                          }
                     });
                 }
@@ -884,7 +893,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                     if(angular.isDefined(executingEvent[dataElementId])
                             && executingEvent[dataElementId] !== null ){
                         valueFound = true;
-                        variables = pushVariable(variables, programVariable.name, executingEvent[dataElementId], allDes[dataElementId].dataElement.type, valueFound, '#' );
+                        variables = pushVariable(variables, programVariable.name, executingEvent[dataElementId], allDes[dataElementId].dataElement.valueType, valueFound, '#' );
                     }      
                 }
                 else if(programVariable.programRuleVariableSourceType === "DATAELEMENT_PREVIOUS_EVENT" && evs){
@@ -903,7 +912,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             else if(evs.all[i] === executingEvent) {
                                 //We have iterated to the newest event - store the last collected variable value - if any is found:
                                 if(valueFound) {
-                                    variables = pushVariable(variables, programVariable.name, previousvalue, allDes[dataElementId].dataElement.type, valueFound, '#' );
+                                    variables = pushVariable(variables, programVariable.name, previousvalue, allDes[dataElementId].dataElement.valueType, valueFound, '#' );
                                 }
                                 //Set currentEventPassed, ending the iteration:
                                 currentEventPassed = true;
@@ -916,7 +925,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         if(!valueFound) {
                             if(attribute.attribute === programVariable.trackedEntityAttribute.id) {
                                 valueFound = true;
-                                variables = pushVariable(variables, programVariable.name, attribute.value, attribute.type, valueFound, 'A' );
+                                variables = pushVariable(variables, programVariable.name, attribute.value, attribute.valueType, valueFound, 'A' );
                             }
                         }
                     });
@@ -947,38 +956,38 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                     if(dataElementId && allDes) {
                         var dataElement = allDes[dataElementId];
                         if( dataElement ) {
-                            variables = pushVariable(variables, programVariable.name, "", dataElement.dataElement.type, false, '#' );
+                            variables = pushVariable(variables, programVariable.name, "", dataElement.dataElement.valueType, false, '#' );
                         } 
                         else {
                             $log.warn("Variable #{" + programVariable.name + "} is linked to a dataelement that is not part of the program");
-                            variables = pushVariable(variables, programVariable.name, "", "string",false, '#' );
+                            variables = pushVariable(variables, programVariable.name, "", "TEXT",false, '#' );
                         }
                     }
                     else if (programVariable.trackedEntityAttribute) {
                         //The variable is an attribute, set correct prefix and a blank value
-                        variables = pushVariable(variables, programVariable.name, "", "string",false, 'A' );
+                        variables = pushVariable(variables, programVariable.name, "", "TEXT",false, 'A' );
                     }
                     else {
                         //Fallback for calculated(assigned) values:
-                        variables = pushVariable(variables, programVariable.name, "", "string",false, '#' );
+                        variables = pushVariable(variables, programVariable.name, "", "TEXT",false, '#' );
                     }
                 }
             });
 
             //add context variables:
             //last parameter "valuefound" is always true for event date
-            variables = pushVariable(variables, 'incident_date', executingEvent.eventDate, 'date', true, 'V' );
-            variables = pushVariable(variables, 'current_date', DateUtils.getToday(), 'date', true, 'V' );
+            variables = pushVariable(variables, 'incident_date', executingEvent.eventDate, 'DATE', true, 'V' );
+            variables = pushVariable(variables, 'current_date', DateUtils.getToday(), 'DATE', true, 'V' );
             if(selectedEnrollment){
-                variables = pushVariable(variables, 'enrollment_date', selectedEnrollment.dateOfEnrollment, 'date', true, 'V' );
+                variables = pushVariable(variables, 'enrollment_date', selectedEnrollment.dateOfEnrollment, 'DATE', true, 'V' );
             }
 
-            //variables = pushVariable(variables, 'value_count', executingEvent.eventDate, 'date', true, 'V' );
-            //variables = pushVariable(variables, 'zero_pos_value_count', executingEvent.eventDate, 'date', true, 'V' );
+            //variables = pushVariable(variables, 'value_count', executingEvent.eventDate, 'DATE', true, 'V' );
+            //variables = pushVariable(variables, 'zero_pos_value_count', executingEvent.eventDate, 'DATE', true, 'V' );
 
             //Push all constant values:
             angular.forEach(allProgramRules.constants, function(constant){
-                variables = pushVariable(variables, constant.id, constant.value, 'int', true, 'C' );
+                variables = pushVariable(variables, constant.id, constant.value, 'INTEGER', true, 'C' );
             });
 
             return variables;
