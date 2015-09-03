@@ -105,14 +105,14 @@ public class HibernateDataElementStore
     @SuppressWarnings( "unchecked" )
     public List<DataElement> getDataElementsByValueTypes( List<ValueType> valueTypes )
     {
-        return getCriteria( Restrictions.in( "vtype", valueTypes ) ).list();
+        return getCriteria( Restrictions.in( "valueType", valueTypes ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<DataElement> getDataElementsByValueType( ValueType valueType )
     {
-        return getCriteria( Restrictions.eq( "vtype", valueType ) ).list();
+        return getCriteria( Restrictions.eq( "valueType", valueType ) ).list();
     }
 
     @Override
