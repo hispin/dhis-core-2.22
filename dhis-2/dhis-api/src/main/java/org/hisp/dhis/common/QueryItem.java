@@ -111,7 +111,7 @@ public class QueryItem
 
     public String getTypeAsString()
     {
-        return valueType.getJavaClass().toString();
+        return valueType.getJavaClass().getName();
     }
 
     public boolean isNumeric()

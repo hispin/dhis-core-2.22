@@ -88,6 +88,7 @@ public interface EventAnalyticsService
      * @param endDate the end date.
      * @param dimension the set of dimensions.
      * @param filter the set of filters.
+     * @param indicator the set of program indicators.
      * @param ouMode the organisation unit mode.
      * @param asc the dimensions to be sorted ascending.
      * @param desc the dimensions to be sorted descending.
@@ -100,9 +101,15 @@ public interface EventAnalyticsService
      * @param pageSize the page size.
      * @param format the i18n format.
      */
-    EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate, Set<String> dimension, Set<String> filter, 
+    EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate, Set<String> dimension, Set<String> filter, Set<String> indicator,
         String ouMode, Set<String> asc, Set<String> desc, boolean skipMeta, boolean skipData, boolean hierarchyMeta, boolean coordinatesOnly, 
         DisplayProperty displayProperty, Integer page, Integer pageSize, I18nFormat format );
     
+    /**
+     * Get query from event analytical object.
+     * 
+     * @param object the event analytical object.
+     * @param format the i18n format.
+     */
     EventQueryParams getFromAnalyticalObject( EventAnalyticalObject object, I18nFormat format );
 }

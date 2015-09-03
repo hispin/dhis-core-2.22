@@ -173,6 +173,8 @@ public class JdbcAnalyticsTableManager
                 "and ( dv.value != '0' or de.aggregationtype in ('" + AGGREGATION_OPERATOR_AVERAGE + ',' + AGGREGATION_OPERATOR_AVERAGE_SUM + "') " +
                 "or de.zeroissignificant = true ) ";
             
+            //TODO upgrade to ValueType enum when database column has been renamed
+            
             populateTable( table, "cast(dv.value as " + dbl + ")", "null", DataElement.VALUE_TYPE_INT, intClause, approvalClause );
             
             populateTable( table, "1", "null", DataElement.VALUE_TYPE_BOOL, "dv.value = 'true'", approvalClause );
