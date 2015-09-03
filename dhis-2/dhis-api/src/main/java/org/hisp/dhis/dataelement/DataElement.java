@@ -35,10 +35,12 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
+
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
@@ -586,6 +588,16 @@ public class DataElement
         return aggregationOperator != null ? AggregationType.fromValue( aggregationOperator ) : null;
     }
 
+    // -------------------------------------------------------------------------
+    // DimensionalObject
+    // -------------------------------------------------------------------------
+
+    @Override
+    public DimensionType getDimensionType()
+    {
+        return DimensionType.PROGRAM_DATAELEMENT;
+    }
+    
     // -------------------------------------------------------------------------
     // Helper getters
     // -------------------------------------------------------------------------

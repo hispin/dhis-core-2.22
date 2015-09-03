@@ -28,16 +28,14 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.Sets;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
+import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.BaseNameableObject;
+import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
@@ -45,15 +43,19 @@ import org.hisp.dhis.common.RegexUtils;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
-import java.util.Set;
-import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 
 /**
  * @author Chau Thu Tran
  */
 @JacksonXmlRootElement( localName = "programIndicator", namespace = DxfNamespaces.DXF_2_0 )
 public class ProgramIndicator
-    extends BaseNameableObject
+    extends BaseDimensionalObject
 {
     public static final String SEPARATOR_ID = "\\.";
     public static final String SEP_OBJECT = ":";
@@ -94,8 +96,6 @@ public class ProgramIndicator
     private String expression;
 
     private String filter;
-
-    private AggregationType aggregationType;
 
     private EventOutputType eventOutputType;
 
@@ -153,7 +153,17 @@ public class ProgramIndicator
     }
 
     // -------------------------------------------------------------------------
-    // Getters && Setters
+    // DimensionalObject
+    // -------------------------------------------------------------------------
+
+    @Override
+    public DimensionType getDimensionType()
+    {
+        return DimensionType.PROGRAM_INDICATOR;
+    }
+    
+    // -------------------------------------------------------------------------
+    // Getters and setters
     // -------------------------------------------------------------------------
 
     @JsonProperty
@@ -207,19 +217,6 @@ public class ProgramIndicator
     public void setFilter( String filter )
     {
         this.filter = filter;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public AggregationType getAggregationType()
-    {
-        return aggregationType;
-    }
-
-    public void setAggregationType( AggregationType aggregationType )
-    {
-        this.aggregationType = aggregationType;
     }
 
     @JsonProperty

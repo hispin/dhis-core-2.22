@@ -76,6 +76,7 @@ import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -85,6 +86,8 @@ import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
@@ -130,6 +133,9 @@ public class DefaultEventAnalyticsService
 
     @Autowired
     private TrackedEntityAttributeService attributeService;
+    
+    @Autowired
+    ProgramIndicatorService programIndicatorService;
     
     @Autowired
     private OrganisationUnitService organisationUnitService;
@@ -699,6 +705,13 @@ public class DefaultEventAnalyticsService
         if ( at != null )
         {
             return new QueryItem( at, legendSet, at.getValueType(), at.getAggregationType(), at.getOptionSet() );
+        }
+        
+        ProgramIndicator pi = programIndicatorService.getProgramIndicatorByUid( item );
+        
+        if ( pi != null )
+        {
+            return new QueryItem( pi, legendSet, ValueType.NUMBER, pi.getAggregationType(), null );
         }
 
         throw new IllegalQueryException( "Item identifier does not reference any data element or attribute part of the program: " + item );

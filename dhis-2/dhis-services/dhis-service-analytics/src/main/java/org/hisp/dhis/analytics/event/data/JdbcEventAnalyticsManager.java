@@ -50,6 +50,7 @@ import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.Grid;
+import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
@@ -61,6 +62,7 @@ import org.hisp.dhis.option.Option;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
+import org.hisp.dhis.system.util.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -273,8 +275,6 @@ public class JdbcEventAnalyticsManager
 
     private void getEvents( Grid grid, EventQueryParams params, String sql )
     {
-        int rowLength = grid.getHeaders().size();
-
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
 
         log.debug( "Analytics event query SQL: " + sql );
@@ -283,11 +283,21 @@ public class JdbcEventAnalyticsManager
         {
             grid.addRow();
             
-            for ( int i = 0; i < rowLength; i++ )
+            int index = 1;
+            
+            for ( GridHeader header : grid.getHeaders() )
             {
-                int index = i + 1;
+                if ( Double.class.getName().equals( header.getType() ) )
+                {
+                    double val = rowSet.getDouble( index );
+                    grid.addValue( params.isSkipRounding() ? val : MathUtils.getRounded( val ) );
+                }
+                else
+                {
+                    grid.addValue( rowSet.getString( index ) );
+                }
                 
-                grid.addValue( rowSet.getString( index ) );
+                index++;
             }
         }
     }
@@ -386,8 +396,17 @@ public class JdbcEventAnalyticsManager
         }
         
         for ( QueryItem queryItem : params.getItems() )
-        {            
-            sql += statementBuilder.columnQuote( queryItem.getItemName() ) + ",";
+        {
+            if ( DimensionType.PROGRAM_INDICATOR.equals( queryItem.getItem().getDimensionType() ) )
+            {
+                ProgramIndicator in = (ProgramIndicator) queryItem.getItem();
+                
+                sql += "(" + programIndicatorService.getAnalyticsSQl( in.getExpression() ) + "),";
+            }
+            else
+            {
+                sql += statementBuilder.columnQuote( queryItem.getItemName() ) + ",";
+            }
         }
         
         return removeLastComma( sql );
