@@ -76,6 +76,8 @@ public class EventRow
     private List<DataValue> dataValues = new ArrayList<>();
     
     private List<Note> notes = new ArrayList<>();
+    
+    private String attributeCategoryOptions;
 
     public EventRow()
     {
@@ -238,6 +240,18 @@ public class EventRow
     {
         this.followup = followup;
     }
+    
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getAttributeCategoryOptions()
+    {
+        return attributeCategoryOptions;
+    }
+
+    public void setAttributeCategoryOptions( String attributeCategoryOptions )
+    {
+        this.attributeCategoryOptions = attributeCategoryOptions;
+    } 
 
     @Override
     public boolean equals( Object o )
@@ -303,7 +317,8 @@ public class EventRow
             ", registrationOrgUnit='" + orgUnit + '\'' +
             ", trackedEntityInstance='" + trackedEntityInstance + '\'' + 
             ", eventDate='" + eventDate + '\'' + 
-            ", dueDate='" + dueDate + '\'' +            
+            ", dueDate='" + dueDate + '\'' +        
+            ", attributeCategoryOptions=" + attributeCategoryOptions +
             '}';
     }
 }
