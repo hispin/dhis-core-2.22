@@ -545,7 +545,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                         var att = attributesById[key];
                         var operator = '';
                         if(vc.property && vc.value && att && att.valueType){
-                            if(att.valueType === 'number' && dhis2.validation.isNumber(vc.value)){
+                            if(att.valueType === 'NUMBER' && dhis2.validation.isNumber(vc.value)){
                                 vc.value = parseInt(vc.value);
                             }
                             if(vc.operator === 0){
@@ -574,7 +574,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             for(var k in attributesById){
                 if( formTei[k] ){
                     var att = attributesById[k];
-                    tei.attributes.push({attribute: att.id, value: formTei[k], displayName: att.name, type: att.valueType});
+                    tei.attributes.push({attribute: att.id, value: formTei[k], displayName: att.name, valueType: att.valueType});
                     formEmpty = false;              
                 }
                 delete tei[k];
@@ -925,7 +925,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             if(att.valueType){
                 type = att.valueType;
             }
-            if(type === 'trueOnly'){
+            if(type === 'TRUE_ONLY'){
                 if(destination === 'USER'){
                     val = val === 'true' ? true : '';
                 }
@@ -935,7 +935,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             else{
                 if(val){                    
-                    if( type === 'number' ){
+                    if( type === 'NUMBER' ){
                         if(dhis2.validation.isNumber(val)){                            
                             //val = new Number(val);
                             val = parseInt(val);                            
@@ -945,7 +945,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             val = parseInt('0');      
                         }
                     }
-                    if(type === 'date'){
+                    if(type === 'DATE'){
                         if(destination === 'USER'){
                             val = DateUtils.formatFromApiToUser(val);
                         }
@@ -1250,13 +1250,13 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         
         angular.forEach(attributes, function(attribute){           
 
-            if(attribute.valueType === 'date' || attribute.valueType === 'number'){
+            if(attribute.valueType === 'DATE' || attribute.valueType === 'NUMBER'){
                 var q = '';
                 
                 if(attribute.operator === OperatorFactory.defaultOperators[0]){
                     if(attribute.exactValue && attribute.exactValue !== ''){
                         query.hasValue = true;
-                        if(attribute.valueType === 'date'){
+                        if(attribute.valueType === 'DATE'){
                             attribute.exactValue = DateUtils.formatFromUserToApi(attribute.exactValue);
                         }
                         q += 'EQ:' + attribute.exactValue + ':';
@@ -1265,14 +1265,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 if(attribute.operator === OperatorFactory.defaultOperators[1]){
                     if(attribute.startValue && attribute.startValue !== ''){
                         query.hasValue = true;
-                        if(attribute.valueType === 'date'){
+                        if(attribute.valueType === 'DATE'){
                             attribute.startValue = DateUtils.formatFromUserToApi(attribute.startValue);
                         }
                         q += 'GT:' + attribute.startValue + ':';
                     }
                     if(attribute.endValue && attribute.endValue !== ''){
                         query.hasValue = true;
-                        if(attribute.valueType === 'date'){
+                        if(attribute.valueType === 'DATE'){
                             attribute.endValue = DateUtils.formatFromUserToApi(attribute.endValue);
                         }
                         q += 'LT:' + attribute.endValue + ':';
@@ -1515,9 +1515,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             var columns = attributes ? angular.copy(attributes) : [];
        
             //also add extra columns which are not part of attributes (orgunit for example)
-            columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'string', displayInListNoProgram: false});
-            columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'date', displayInListNoProgram: false});
-            columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'boolean', displayInListNoProgram: false});
+            columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'TEXT', displayInListNoProgram: false});
+            columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'DATE', displayInListNoProgram: false});
+            columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'BOOLEAN', displayInListNoProgram: false});
 
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){
@@ -1529,7 +1529,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }                
                 column.showFilter = false;                
                 filterTypes[column.id] = column.valueType;
-                if(column.valueType === 'date' || column.valueType === 'number' ){
+                if(column.valueType === 'DATE' || column.valueType === 'NUMBER' ){
                     filterText[column.id]= {};
                 }
             });
@@ -1560,7 +1560,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
 })
 
-.service('EventUtils', function(DateUtils, CommonUtils, PeriodService, CalendarService, OptionSetService, $filter, orderByFilter){
+.service('EventUtils', function(DateUtils, CommonUtils, PeriodService, CalendarService, $filter, orderByFilter){
     
     var getEventDueDate = function(eventsByStage, programStage, enrollment){       
         
