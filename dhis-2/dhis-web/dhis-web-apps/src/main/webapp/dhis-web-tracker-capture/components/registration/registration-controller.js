@@ -13,7 +13,7 @@ trackerCapture.controller('RegistrationController',
                 EnrollmentService,
                 DialogService,
                 CurrentSelection,
-                OptionSetService,
+                MetaDataFactory,
                 EventUtils,
                 RegistrationService,
                 DateUtils,
@@ -26,7 +26,7 @@ trackerCapture.controller('RegistrationController',
     $scope.customForm = null;    
     $scope.selectedTei = {};
     $scope.tei = {};
-    $scope.registrationMode = null;    
+    $scope.registrationMode = 'REGISTRATION';    
     $scope.hiddenFields = {};
     $scope.errorMessages = {};
     $scope.warningMessages = {};
@@ -46,7 +46,7 @@ trackerCapture.controller('RegistrationController',
     $scope.optionSets = CurrentSelection.getOptionSets();        
     if(!$scope.optionSets){
         $scope.optionSets = [];
-        OptionSetService.getAll().then(function(optionSets){
+        MetaDataFactory.getAll('optionSets').then(function(optionSets){
             angular.forEach(optionSets, function(optionSet){                        
                 $scope.optionSets[optionSet.id] = optionSet;
             });

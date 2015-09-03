@@ -14,7 +14,7 @@ trackerCapture.controller('DashboardController',
                 SessionStorageService,
                 TEIService, 
                 TEService,
-                OptionSetService,
+                MetaDataFactory,
                 EnrollmentService,
                 ProgramFactory,
                 DHIS2EventFactory,
@@ -169,8 +169,8 @@ trackerCapture.controller('DashboardController',
     if($scope.selectedTeiId){
         
         //get option sets
-        $scope.optionSets = [];
-        OptionSetService.getAll().then(function(optionSets){            
+        $scope.optionSets = [];     
+        MetaDataFactory.getAll('optionSets').then(function(optionSets){            
             angular.forEach(optionSets, function(optionSet){
                 $scope.optionSets[optionSet.id] = optionSet;
             });
