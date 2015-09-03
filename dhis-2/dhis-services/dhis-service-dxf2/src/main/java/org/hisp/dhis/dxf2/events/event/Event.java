@@ -81,6 +81,8 @@ public class Event
     private String created;
 
     private String lastUpdated;
+    
+    private String attributeCategoryOptions;
 
     public Event()
     {
@@ -303,6 +305,18 @@ public class Event
     {
         this.lastUpdated = lastUpdated;
     }
+    
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getAttributeCategoryOptions()
+    {
+        return attributeCategoryOptions;
+    }
+
+    public void setAttributeCategoryOptions( String attributeCategoryOptions )
+    {
+        this.attributeCategoryOptions = attributeCategoryOptions;
+    } 
 
     @Override
     public boolean equals( Object o )
@@ -338,6 +352,7 @@ public class Event
             ", storedBy='" + storedBy + '\'' +
             ", coordinate=" + coordinate +
             ", dataValues=" + dataValues +
+            ", attributeCategoryOptions=" + attributeCategoryOptions +
             '}';
-    }
+    }       
 }
