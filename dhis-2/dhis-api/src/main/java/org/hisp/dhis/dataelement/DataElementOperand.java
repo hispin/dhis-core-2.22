@@ -28,11 +28,12 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
@@ -42,17 +43,15 @@ import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.expression.ExpressionService;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * This object can act both as a hydrated persisted object and as a wrapper
  * object (but not both at the same time).
- * <p/>
+ * <p>
  * This object implements IdentifiableObject but does not have any UID. Instead
  * the UID is generated based on the data element and category option combo which
  * this object is based on.
@@ -94,8 +93,6 @@ public class DataElementOperand
 
     private String operandName;
 
-    private String valueType;
-
     private String aggregationOperator;
 
     private List<Integer> aggregationLevels = new ArrayList<>();
@@ -135,14 +132,13 @@ public class DataElementOperand
         this.operandName = operandName;
     }
 
-    public DataElementOperand( String dataElementId, String optionComboId, String operandName, String valueType,
+    public DataElementOperand( String dataElementId, String optionComboId, String operandName,
         String aggregationOperator, List<Integer> aggregationLevels, int frequencyOrder )
     {
         this.dataElementId = dataElementId;
         this.optionComboId = optionComboId;
         this.operandId = dataElementId + SEPARATOR + optionComboId;
         this.operandName = operandName;
-        this.valueType = valueType;
         this.aggregationOperator = aggregationOperator;
         this.aggregationLevels = aggregationLevels;
         this.frequencyOrder = frequencyOrder;
@@ -355,7 +351,7 @@ public class DataElementOperand
     {
         return operandType != null && operandType.equals( TYPE_TOTAL );
     }
-    
+
     /**
      * Updates all transient properties.
      *
@@ -371,7 +367,6 @@ public class DataElementOperand
         this.aggregationOperator = dataElement.getAggregationOperator();
         this.frequencyOrder = dataElement.getFrequencyOrder();
         this.aggregationLevels = new ArrayList<>( dataElement.getAggregationLevels() );
-        this.valueType = dataElement.getType();
 
         this.uid = dataElementId + SEPARATOR + optionComboId;
         this.name = getPrettyName( dataElement, categoryOptionCombo );
@@ -390,7 +385,6 @@ public class DataElementOperand
         this.aggregationOperator = dataElement.getAggregationOperator();
         this.frequencyOrder = dataElement.getFrequencyOrder();
         this.aggregationLevels = new ArrayList<>( dataElement.getAggregationLevels() );
-        this.valueType = dataElement.getType();
 
         this.uid = dataElementId;
         this.name = getPrettyName( dataElement, null );
@@ -504,19 +498,6 @@ public class DataElementOperand
     @JsonProperty
     @JsonView( { DetailedView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getValueType()
-    {
-        return valueType;
-    }
-
-    public void setValueType( String valueType )
-    {
-        this.valueType = valueType;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getAggregationOperator()
     {
         return aggregationOperator;
@@ -596,7 +577,6 @@ public class DataElementOperand
             ", optionComboId=" + optionComboId +
             ", operandId='" + operandId + '\'' +
             ", operandName='" + operandName + '\'' +
-            ", valueType='" + valueType + '\'' +
             ", aggregationOperator='" + aggregationOperator + '\'' +
             ", aggregationLevels=" + aggregationLevels +
             ", frequencyOrder=" + frequencyOrder +
