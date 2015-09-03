@@ -28,13 +28,13 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.trackedentity.TrackedEntityInstance;
-
 import java.util.Date;
 import java.util.List;
+
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -189,36 +189,6 @@ public enum ValueType
             return ValueType.DATETIME;
         }
         else if ( DataElement.VALUE_TYPE_USER_NAME.equals( type ) )
-        {
-            return ValueType.USERNAME;
-        }
-
-        return ValueType.TEXT; // Fall back
-    }
-
-    /**
-     * TODO replace string value type on attribute with ValueType and remove
-     * this method.
-     */
-    public static ValueType getFromAttribute( TrackedEntityAttribute attribute )
-    {
-        if ( TrackedEntityAttribute.TYPE_NUMBER.equals( attribute.getValueType() ) || DataElement.VALUE_TYPE_INT.equals( attribute.getValueType() ) )
-        {
-            return ValueType.NUMBER;
-        }
-        else if ( TrackedEntityAttribute.TYPE_BOOL.equals( attribute.getValueType() ) || TrackedEntityAttribute.TYPE_TRUE_ONLY.equals( attribute.getValueType() ) )
-        {
-            return ValueType.BOOLEAN;
-        }
-        else if ( TrackedEntityAttribute.TYPE_DATE.equals( attribute.getValueType() ) )
-        {
-            return ValueType.DATE;
-        }
-        else if ( TrackedEntityAttribute.TYPE_TRACKER_ASSOCIATE.equals( attribute.getValueType() ) )
-        {
-            return ValueType.TRACKER_ASSOCIATE;
-        }
-        else if ( TrackedEntityAttribute.TYPE_USERS.equals( attribute.getValueType() ) )
         {
             return ValueType.USERNAME;
         }

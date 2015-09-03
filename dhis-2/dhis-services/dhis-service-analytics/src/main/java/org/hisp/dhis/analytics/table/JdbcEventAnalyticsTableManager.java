@@ -289,10 +289,9 @@ public class JdbcEventAnalyticsTableManager
 
         for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributes() )
         {
-            ValueType valueType = ValueType.getFromAttribute( attribute );
-            String dataType = getColumnType( valueType );
+            String dataType = getColumnType( attribute.getValueType() );
             String dataClause = attribute.isNumericType() ? numericClause : attribute.isDateType() ? dateClause : "";
-            String select = getSelectClause( valueType );
+            String select = getSelectClause( attribute.getValueType() );
 
             String sql = "(select " + select + " from trackedentityattributevalue where trackedentityinstanceid=pi.trackedentityinstanceid " + 
                 "and trackedentityattributeid=" + attribute.getId() + dataClause + ") as " + quote( attribute.getUid() );
@@ -304,7 +303,7 @@ public class JdbcEventAnalyticsTableManager
         for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributesWithLegendSet() )
         {
             String column = quote( attribute.getUid() + PartitionUtils.SEP + attribute.getLegendSet().getUid() );
-            String select = getSelectClause( ValueType.getFromAttribute( attribute ) );
+            String select = getSelectClause( attribute.getValueType() );
             
             String sql = "(select l.uid from maplegend l inner join maplegendsetmaplegend lsl on l.maplegendid=lsl.maplegendid " +
                 "inner join trackedentityattributevalue av on l.startvalue <= " + select + " and l.endvalue > " + select + " " +
