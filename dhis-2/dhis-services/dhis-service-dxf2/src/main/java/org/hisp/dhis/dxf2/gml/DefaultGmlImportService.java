@@ -287,7 +287,7 @@ public class DefaultGmlImportService
             idProperty == IdentifiableProperty.UID ? organisationUnitService.getOrganisationUnitsByUid( identifiers ) :
             idProperty == IdentifiableProperty.CODE ? organisationUnitService.getOrganisationUnitsByCodes( identifiers ) :
             idProperty == IdentifiableProperty.NAME ? organisationUnitService.getOrganisationUnitsByNames( identifiers ) :
-            new HashSet<OrganisationUnit>();
+                new HashSet<>();
 
         return Maps.uniqueIndex( orgUnits,
             new Function<OrganisationUnit, String>()

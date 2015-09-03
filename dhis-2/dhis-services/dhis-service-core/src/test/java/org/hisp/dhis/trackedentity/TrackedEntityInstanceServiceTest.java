@@ -214,8 +214,8 @@ public class TrackedEntityInstanceServiceTest
         attributeValues.add( attributeValue );
 
         entityInstanceService.updateTrackedEntityInstance( entityInstanceA3, entityInstanceB1.getUid(),
-            relationshipTypeId, attributeValues, new ArrayList<TrackedEntityAttributeValue>(),
-            new ArrayList<TrackedEntityAttributeValue>() );
+            relationshipTypeId, attributeValues, new ArrayList<>(),
+            new ArrayList<>() );
         assertEquals( "B", entityInstanceService.getTrackedEntityInstance( idA ).getName() );
     }
 }

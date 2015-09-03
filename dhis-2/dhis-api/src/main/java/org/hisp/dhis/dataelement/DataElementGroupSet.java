@@ -200,7 +200,7 @@ public class DataElementGroupSet
     @JacksonXmlProperty( localName = "item", namespace = DxfNamespaces.DXF_2_0 )
     public List<NameableObject> getItems()
     {
-        return new ArrayList<NameableObject>( members );
+        return new ArrayList<>( members );
     }
 
     @Override

@@ -261,8 +261,8 @@ public class OrganisationUnitController
         @RequestParam( value = "properties", required = false, defaultValue = "true" ) boolean rpProperties,
         HttpServletResponse response ) throws IOException
     {
-        rpLevels = rpLevels != null ? rpLevels : new ArrayList<Integer>();
-        rpParents = rpParents != null ? rpParents : new ArrayList<String>();
+        rpLevels = rpLevels != null ? rpLevels : new ArrayList<>();
+        rpParents = rpParents != null ? rpParents : new ArrayList<>();
 
         List<OrganisationUnit> parents = new ArrayList<>( manager.getByUid( OrganisationUnit.class, rpParents ) );
 

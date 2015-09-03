@@ -573,7 +573,7 @@ public class CurrentUserController
 
                         if ( programAssociations.get( organisationUnit.getUid() ) == null )
                         {
-                            programAssociations.put( organisationUnit.getUid(), new ArrayList<Program>() );
+                            programAssociations.put( organisationUnit.getUid(), new ArrayList<>() );
                         }
 
                         programAssociations.get( organisationUnit.getUid() ).add( program );

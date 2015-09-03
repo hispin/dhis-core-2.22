@@ -47,7 +47,7 @@ public class ValidationSummary
 {
     private List<ValidationResult> validationRuleViolations = new ArrayList<>();
     
-    private List<DataElementOperand> commentRequiredViolations = new ArrayList<DataElementOperand>();
+    private List<DataElementOperand> commentRequiredViolations = new ArrayList<>();
     
     public ValidationSummary()
     {

@@ -77,7 +77,7 @@ public class LinearNodePipeline implements NodePipeline
 
     public void addTransformer( NodeTransformer nodeTransformer )
     {
-        nodeTransformers.add( new NodeTransformerWithArgs( checkNotNull( nodeTransformer ), new ArrayList<String>() ) );
+        nodeTransformers.add( new NodeTransformerWithArgs( checkNotNull( nodeTransformer ), new ArrayList<>() ) );
     }
 
     public void addTransformer( NodeTransformer nodeTransformer, List<String> arguments )

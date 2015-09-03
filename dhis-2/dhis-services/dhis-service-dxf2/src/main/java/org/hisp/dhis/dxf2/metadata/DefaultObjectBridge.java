@@ -247,7 +247,7 @@ public class DefaultObjectBridge
                     else
                     {
                         // add an empty map here, since we could still have some auto-generated properties
-                        nameMap.put( (Class<? extends IdentifiableObject>) clazz, new HashMap<String, IdentifiableObject>() );
+                        nameMap.put( (Class<? extends IdentifiableObject>) clazz, new HashMap<>() );
 
                         // find all auto-generated props and add them
                         for ( Map.Entry<String, IdentifiableObject> entry : map.entrySet() )
@@ -652,7 +652,7 @@ public class DefaultObjectBridge
         }
         else
         {
-            uuidMap.put( klass, new HashMap<String, IdentifiableObject>() );
+            uuidMap.put( klass, new HashMap<>() );
             map = uuidMap.get( klass );
         }
 
@@ -680,7 +680,7 @@ public class DefaultObjectBridge
         }
         else
         {
-            uidMap.put( identifiableObject.getClass(), new HashMap<String, IdentifiableObject>() );
+            uidMap.put( identifiableObject.getClass(), new HashMap<>() );
             map = uidMap.get( identifiableObject.getClass() );
         }
 
@@ -708,7 +708,7 @@ public class DefaultObjectBridge
         }
         else
         {
-            codeMap.put( identifiableObject.getClass(), new HashMap<String, IdentifiableObject>() );
+            codeMap.put( identifiableObject.getClass(), new HashMap<>() );
             map = codeMap.get( identifiableObject.getClass() );
         }
 
@@ -741,7 +741,7 @@ public class DefaultObjectBridge
         }
         else
         {
-            nameMap.put( identifiableObject.getClass(), new HashMap<String, IdentifiableObject>() );
+            nameMap.put( identifiableObject.getClass(), new HashMap<>() );
             map = nameMap.get( identifiableObject.getClass() );
         }
 

@@ -635,12 +635,12 @@ public class DefaultOrganisationUnitService
 
         if ( parent == null )
         {
-            return new ArrayList<OrganisationUnit>( result );
+            return new ArrayList<>( result );
         }
 
         final Set<OrganisationUnit> subTree = new HashSet<>( getOrganisationUnitWithChildren( parent.getId() ) );
 
-        List<OrganisationUnit> intersection = new ArrayList<OrganisationUnit>( Sets.intersection( subTree,
+        List<OrganisationUnit> intersection = new ArrayList<>( Sets.intersection( subTree,
             result ) );
 
         return limit && intersection.size() > MAX_LIMIT ? intersection.subList( 0, MAX_LIMIT )

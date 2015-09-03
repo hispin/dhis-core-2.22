@@ -276,6 +276,6 @@ public class NameableObjectUtils
      */
     public static <T extends NameableObject> List<T> getCopyNullSafe( List<T> objects )
     {
-        return objects != null ? new ArrayList<>( objects ) : new ArrayList<T>();
+        return objects != null ? new ArrayList<>( objects ) : new ArrayList<>();
     }
 }

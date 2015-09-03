@@ -356,10 +356,10 @@ public class DefaultProgramService
     {
         try
         {
-            List<RelationshipType> relationshipTypes = new ArrayList<RelationshipType>(
+            List<RelationshipType> relationshipTypes = new ArrayList<>(
                 relationshipTypeService.getAllRelationshipTypes() );
 
-            List<org.hisp.dhis.api.mobile.model.LWUITmodel.RelationshipType> mobileRelationshipTypes = new ArrayList<org.hisp.dhis.api.mobile.model.LWUITmodel.RelationshipType>();
+            List<org.hisp.dhis.api.mobile.model.LWUITmodel.RelationshipType> mobileRelationshipTypes = new ArrayList<>();
             for ( RelationshipType relType : relationshipTypes )
             {
                 org.hisp.dhis.api.mobile.model.LWUITmodel.RelationshipType mobileRelType = new org.hisp.dhis.api.mobile.model.LWUITmodel.RelationshipType();

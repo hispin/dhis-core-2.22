@@ -74,7 +74,7 @@ public class ShowAddDataElementCategoryOptionAction
     public String execute()
         throws Exception
     {
-        selectionManager.setSelectedOrganisationUnits( new ArrayList<OrganisationUnit>() );
+        selectionManager.setSelectedOrganisationUnits( new ArrayList<>() );
 
         attributes = new ArrayList<>( attributeService.getCategoryOptionAttributes() );
 

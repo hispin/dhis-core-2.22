@@ -85,7 +85,7 @@ public class ProgramValidationStoreTest
         OrganisationUnit organisationUnit = createOrganisationUnit( 'A' );
         organisationUnitService.addOrganisationUnit( organisationUnit );
 
-        program = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnit );
+        program = createProgram( 'A', new HashSet<>(), organisationUnit );
         programService.addProgram( program );
 
         stageA = new ProgramStage( "A", program );

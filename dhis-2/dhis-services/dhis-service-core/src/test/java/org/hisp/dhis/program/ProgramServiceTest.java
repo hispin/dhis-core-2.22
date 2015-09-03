@@ -78,13 +78,13 @@ public class ProgramServiceTest
         organisationUnitB = createOrganisationUnit( 'B' );
         organisationUnitService.addOrganisationUnit( organisationUnitB );
 
-        programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );
+        programA = createProgram( 'A', new HashSet<>(), organisationUnitA );
         programA.setUid( "UID-A" );
 
-        programB = createProgram( 'B', new HashSet<ProgramStage>(), organisationUnitA );
+        programB = createProgram( 'B', new HashSet<>(), organisationUnitA );
         programB.setUid( "UID-B" );
 
-        programC = createProgram( 'C', new HashSet<ProgramStage>(), organisationUnitB );
+        programC = createProgram( 'C', new HashSet<>(), organisationUnitB );
         programC.setUid( "UID-C" );
     }
 

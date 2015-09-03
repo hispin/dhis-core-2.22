@@ -204,7 +204,7 @@ public class DefaultDataEntryFormService
         optionComboMap.putAll( IdentifiableObjectUtils.getUidObjectMap( dataSet.getDataElementOptionCombos() ) );
 
         IdentifiableObjectCallable<DataElementCategoryOptionCombo> optionComboCallabel =
-            new IdentifiableObjectCallable<DataElementCategoryOptionCombo>( idObjectManager, DataElementCategoryOptionCombo.class, null );
+            new IdentifiableObjectCallable<>( idObjectManager, DataElementCategoryOptionCombo.class, null );
 
         StringBuffer sb = new StringBuffer();
 

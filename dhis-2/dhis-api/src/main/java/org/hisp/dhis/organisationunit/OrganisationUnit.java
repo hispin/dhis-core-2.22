@@ -321,7 +321,7 @@ public class OrganisationUnit
 
     public static List<OrganisationUnit> getSortedChildren( Collection<OrganisationUnit> units )
     {
-        List<OrganisationUnit> children = new ArrayList<OrganisationUnit>();
+        List<OrganisationUnit> children = new ArrayList<>();
         
         for ( OrganisationUnit unit : units )
         {
@@ -333,7 +333,7 @@ public class OrganisationUnit
 
     public static List<OrganisationUnit> getSortedGrandChildren( Collection<OrganisationUnit> units )
     {
-        List<OrganisationUnit> children = new ArrayList<OrganisationUnit>();
+        List<OrganisationUnit> children = new ArrayList<>();
         
         for ( OrganisationUnit unit : units )
         {

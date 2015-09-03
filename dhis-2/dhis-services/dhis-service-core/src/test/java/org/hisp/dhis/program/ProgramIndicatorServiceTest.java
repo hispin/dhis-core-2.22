@@ -166,7 +166,7 @@ public class ProgramIndicatorServiceTest
         // Program
         // ---------------------------------------------------------------------
 
-        programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnit );
+        programA = createProgram( 'A', new HashSet<>(), organisationUnit );
         programService.addProgram( programA );
 
         psA = new ProgramStage( "StageA", programA );
@@ -183,7 +183,7 @@ public class ProgramIndicatorServiceTest
         programA.setProgramStages( programStages );
         programService.updateProgram( programA );
 
-        programB = createProgram( 'B', new HashSet<ProgramStage>(), organisationUnit );
+        programB = createProgram( 'B', new HashSet<>(), organisationUnit );
         programService.addProgram( programB );
 
         // ---------------------------------------------------------------------

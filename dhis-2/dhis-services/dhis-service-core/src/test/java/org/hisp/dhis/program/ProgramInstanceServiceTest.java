@@ -126,7 +126,7 @@ public class ProgramInstanceServiceTest
         orgunitIds.add( idA );
         orgunitIds.add( idB );
 
-        programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );
+        programA = createProgram( 'A', new HashSet<>(), organisationUnitA );
 
         TrackedEntityInstanceReminder reminderA = new TrackedEntityInstanceReminder( "A", 0,
             "Test program message template", TrackedEntityInstanceReminder.ENROLLEMENT_DATE_TO_COMPARE,
@@ -158,10 +158,10 @@ public class ProgramInstanceServiceTest
         programA.setProgramStages( programStages );
         programService.updateProgram( programA );
 
-        programB = createProgram( 'B', new HashSet<ProgramStage>(), organisationUnitA );
+        programB = createProgram( 'B', new HashSet<>(), organisationUnitA );
         programService.addProgram( programB );
 
-        programC = createProgram( 'C', new HashSet<ProgramStage>(), organisationUnitA );
+        programC = createProgram( 'C', new HashSet<>(), organisationUnitA );
         programService.addProgram( programC );
 
         entityInstanceA = createTrackedEntityInstance( 'A', organisationUnitA );

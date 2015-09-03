@@ -84,7 +84,7 @@ public class ProgramRuleServiceTest
         
         programStageA = createProgramStage( 'A', 1 );
         programStageA.setProgram( programA );
-        Set<ProgramStage> stagesA = new HashSet<ProgramStage>();
+        Set<ProgramStage> stagesA = new HashSet<>();
         stagesA.add( programStageA );
         programA.setProgramStages( stagesA );
         

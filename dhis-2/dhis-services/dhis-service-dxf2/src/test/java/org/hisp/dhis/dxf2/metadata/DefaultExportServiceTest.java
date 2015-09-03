@@ -143,7 +143,7 @@ public class DefaultExportServiceTest
     @Test
     public void exportMetaDataTest() throws IOException, XPathExpressionException
     {
-        Options options = new Options( new HashMap<String, String>() );
+        Options options = new Options( new HashMap<>() );
         MetaData metaData = exportService.getMetaData( options );
 
         String metaDataXml = JacksonUtils.toXmlAsString( metaData );

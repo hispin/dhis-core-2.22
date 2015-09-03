@@ -151,7 +151,7 @@ public class DataElementCategory
     @JacksonXmlProperty( localName = "item", namespace = DxfNamespaces.DXF_2_0 )
     public List<NameableObject> getItems()
     {
-        return new ArrayList<NameableObject>( categoryOptions );
+        return new ArrayList<>( categoryOptions );
     }
 
     @Override

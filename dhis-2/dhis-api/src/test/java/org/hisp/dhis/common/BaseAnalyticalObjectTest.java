@@ -151,7 +151,7 @@ public class BaseAnalyticalObjectTest
         row.add( oB );
         
         assertEquals( "a1-b1-c1", BaseAnalyticalObject.getIdentifier( column, row ) );
-        assertEquals( "b1", BaseAnalyticalObject.getIdentifier( new ArrayList<NameableObject>(), row ) );
+        assertEquals( "b1", BaseAnalyticalObject.getIdentifier( new ArrayList<>(), row ) );
         assertEquals( "b1", BaseAnalyticalObject.getIdentifier( null, row ) );
     }
     

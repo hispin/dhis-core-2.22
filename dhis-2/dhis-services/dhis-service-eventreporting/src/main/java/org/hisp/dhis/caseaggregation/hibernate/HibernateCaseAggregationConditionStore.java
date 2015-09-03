@@ -1328,7 +1328,7 @@ public class HibernateCaseAggregationConditionStore
         Date endDate = calEndDate.getTime();
 
         CalendarPeriodType periodType = (CalendarPeriodType) PeriodType.getPeriodTypeByName( periodTypeName );
-        List<Period> periods = new ArrayList<Period>( periodType.generatePeriods( startDate, endDate ) );
+        List<Period> periods = new ArrayList<>( periodType.generatePeriods( startDate, endDate ) );
         periods = periodService.reloadPeriods( periods );
 
         return periods;

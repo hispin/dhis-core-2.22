@@ -167,7 +167,7 @@ public class MaintenanceController
                 continue;
             }
 
-            output.put( property.getName(), new HashMap<String, List<ValidationViolation>>() );
+            output.put( property.getName(), new HashMap<>() );
 
             Collection<?> collection = (Collection<?>) property.getGetterMethod().invoke( metaData );
 

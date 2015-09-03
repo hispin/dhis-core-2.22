@@ -221,7 +221,7 @@ public class FacilityController
         if ( fields.indexOf( ':' ) >= 0 )
         {
             Map<String, Object> properties = facility.getProperties();
-            facility.setProperties( new HashMap<String, Object>() );
+            facility.setProperties( new HashMap<>() );
 
             for ( String s : strings )
             {

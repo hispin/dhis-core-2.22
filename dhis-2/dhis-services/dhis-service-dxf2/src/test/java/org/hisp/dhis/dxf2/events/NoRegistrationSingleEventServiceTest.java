@@ -100,7 +100,7 @@ public class NoRegistrationSingleEventServiceTest
         programStageA = createProgramStage( 'A', 0 );
         identifiableObjectManager.save( programStageA );
 
-        programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );
+        programA = createProgram( 'A', new HashSet<>(), organisationUnitA );
         programA.setProgramType( ProgramType.WITHOUT_REGISTRATION );
         identifiableObjectManager.save( programA );
 

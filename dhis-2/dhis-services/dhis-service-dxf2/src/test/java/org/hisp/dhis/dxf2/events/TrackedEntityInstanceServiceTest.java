@@ -100,7 +100,7 @@ public class TrackedEntityInstanceServiceTest
         femaleA.setTrackedEntity( trackedEntity );
         femaleB.setTrackedEntity( trackedEntity );
 
-        programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );
+        programA = createProgram( 'A', new HashSet<>(), organisationUnitA );
         manager.save( organisationUnitA );
         manager.save( organisationUnitB );
         manager.save( maleA );

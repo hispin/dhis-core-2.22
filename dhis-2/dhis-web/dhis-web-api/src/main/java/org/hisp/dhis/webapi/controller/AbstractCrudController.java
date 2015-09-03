@@ -916,7 +916,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
      */
     protected final List<T> getEntity( String uid )
     {
-        return getEntity( uid, new WebOptions( new HashMap<String, String>() ) );
+        return getEntity( uid, new WebOptions( new HashMap<>() ) );
     }
 
     protected List<T> getEntity( String uid, WebOptions options )

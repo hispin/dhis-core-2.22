@@ -281,7 +281,7 @@ public class DataSetController
      */
     private WebOptions filterMetadataOptions()
     {
-        WebOptions options = new WebOptions( new HashMap<String, String>() );
+        WebOptions options = new WebOptions( new HashMap<>() );
         options.setAssumeTrue( false );
         options.addOption( "categoryOptionCombos", "true" );
         options.addOption( "dataElements", "true" );

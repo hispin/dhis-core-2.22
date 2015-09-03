@@ -127,7 +127,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -136,7 +136,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -145,7 +145,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -154,7 +154,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -163,7 +163,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -172,7 +172,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -181,7 +181,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -190,7 +190,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -199,7 +199,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -208,7 +208,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -217,7 +217,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -226,7 +226,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -235,7 +235,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 
@@ -244,7 +244,7 @@ public class FacilityAdvice extends ResponseEntityExceptionHandler
     {
         headers.add( "Content-Type", MediaType.APPLICATION_JSON_VALUE );
 
-        return new ResponseEntity<Object>( MessageUtils.jsonMessage(
+        return new ResponseEntity<>( MessageUtils.jsonMessage(
             Integer.toString( status.value() ), ex.getMessage() ), status );
     }
 }

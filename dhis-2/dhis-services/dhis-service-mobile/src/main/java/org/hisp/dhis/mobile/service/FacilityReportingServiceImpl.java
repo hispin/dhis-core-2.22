@@ -163,7 +163,7 @@ public class FacilityReportingServiceImpl
             if ( !currentDataSets.contains( dataSet ) )
             {
                 if ( updatedDataSetList.getAddedDataSets() == null )
-                    updatedDataSetList.setAddedDataSets( new ArrayList<DataSet>() );
+                    updatedDataSetList.setAddedDataSets( new ArrayList<>() );
                 updatedDataSetList.getAddedDataSets().add( dataSet );
                 currentDataSets.add( dataSet );
             }
@@ -175,7 +175,7 @@ public class FacilityReportingServiceImpl
             if ( !dataSets.contains( dataSet ) )
             {
                 if ( updatedDataSetList.getDeletedDataSets() == null )
-                    updatedDataSetList.setDeletedDataSets( new ArrayList<DataSet>() );
+                    updatedDataSetList.setDeletedDataSets( new ArrayList<>() );
                 updatedDataSetList.getDeletedDataSets().add( new DataSet( dataSet ) );
             }
         }
@@ -196,7 +196,7 @@ public class FacilityReportingServiceImpl
             if ( dataSets.get( i ).getVersion() != currentDataSets.get( i ).getVersion() )
             {
                 if ( updatedDataSetList.getModifiedDataSets() == null )
-                    updatedDataSetList.setModifiedDataSets( new ArrayList<DataSet>() );
+                    updatedDataSetList.setModifiedDataSets( new ArrayList<>() );
                 updatedDataSetList.getModifiedDataSets().add( dataSets.get( i ) );
             }
         }
@@ -292,7 +292,7 @@ public class FacilityReportingServiceImpl
                 for ( int i = 0; i < dataElementList.size(); i++ )
                 {
                 	List<Model> categoryOptionCombos = dataElementList.get( i ).getCategoryOptionCombos().getModels();
-                    List<Model> newCategoryOptionCombos = new ArrayList<Model>();
+                    List<Model> newCategoryOptionCombos = new ArrayList<>();
 
                     for ( int j = 0; j < categoryOptionCombos.size(); j++ )
                     {

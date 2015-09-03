@@ -177,7 +177,7 @@ public class GetMetaDataAction
         return defaultCategoryCombo;
     }
 
-    private Map<String, List<DataElementCategoryOption>> categoryOptionMap = new HashMap<String, List<DataElementCategoryOption>>();
+    private Map<String, List<DataElementCategoryOption>> categoryOptionMap = new HashMap<>();
 
     public Map<String, List<DataElementCategoryOption>> getCategoryOptionMap()
     {

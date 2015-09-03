@@ -109,7 +109,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getConceptMap()
     {
-        return conceptMap.get() != null ? new HashMap<>( conceptMap.get() ) : new HashMap<Object, String>();
+        return conceptMap.get() != null ? new HashMap<>( conceptMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -129,7 +129,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getCategoryMap()
     {
-        return categoryMap.get() != null ? new HashMap<>( categoryMap.get() ) : new HashMap<Object, String>();
+        return categoryMap.get() != null ? new HashMap<>( categoryMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -149,7 +149,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getCategoryOptionMap()
     {
-        return categoryOptionMap.get() != null ? new HashMap<>( categoryOptionMap.get() ) : new HashMap<Object, String>();
+        return categoryOptionMap.get() != null ? new HashMap<>( categoryOptionMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -169,7 +169,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getCategoryComboMap()
     {
-        return categoryComboMap.get() != null ? new HashMap<>( categoryComboMap.get() ) : new HashMap<Object, String>();
+        return categoryComboMap.get() != null ? new HashMap<>( categoryComboMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -203,7 +203,7 @@ public class NameMappingUtil
      */
     public static Map<Object, DataElementCategoryOptionCombo> getCategoryOptionComboMap()
     {
-        return categoryOptionComboMap.get() != null ? new HashMap<>( categoryOptionComboMap.get() ) : new HashMap<Object, DataElementCategoryOptionCombo>();
+        return categoryOptionComboMap.get() != null ? new HashMap<>( categoryOptionComboMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -223,7 +223,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getDataElementMap()
     {
-        return dataElementMap.get() != null ? new HashMap<>( dataElementMap.get() ) : new HashMap<Object, String>();
+        return dataElementMap.get() != null ? new HashMap<>( dataElementMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -243,7 +243,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getDataElementGroupMap()
     {
-        return dataElementGroupMap.get() != null ? new HashMap<>( dataElementGroupMap.get() ) : new HashMap<Object, String>();
+        return dataElementGroupMap.get() != null ? new HashMap<>( dataElementGroupMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -263,7 +263,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getDataElementGroupSetMap()
     {
-        return dataElementGroupSetMap.get() != null ? new HashMap<>( dataElementGroupSetMap.get() ) : new HashMap<Object, String>();
+        return dataElementGroupSetMap.get() != null ? new HashMap<>( dataElementGroupSetMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -283,7 +283,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getIndicatorMap()
     {
-        return indicatorMap.get() != null ? new HashMap<>( indicatorMap.get() ) : new HashMap<Object, String>();
+        return indicatorMap.get() != null ? new HashMap<>( indicatorMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -303,7 +303,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getIndicatorGroupMap()
     {
-        return indicatorGroupMap.get() != null ? new HashMap<>( indicatorGroupMap.get() ) : new HashMap<Object, String>();
+        return indicatorGroupMap.get() != null ? new HashMap<>( indicatorGroupMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -323,7 +323,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getIndicatorGroupSetMap()
     {
-        return indicatorGroupSetMap.get() != null ? new HashMap<>( indicatorGroupSetMap.get() ) : new HashMap<Object, String>();
+        return indicatorGroupSetMap.get() != null ? new HashMap<>( indicatorGroupSetMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -343,7 +343,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getIndicatorTypeMap()
     {
-        return indicatorTypeMap.get() != null ? new HashMap<>( indicatorTypeMap.get() ) : new HashMap<Object, String>();
+        return indicatorTypeMap.get() != null ? new HashMap<>( indicatorTypeMap.get() ) : new HashMap<>();
     }
     
     // -------------------------------------------------------------------------
@@ -372,7 +372,7 @@ public class NameMappingUtil
      */
     public static Map<Object, Period> getPeriodMap()
     {
-        return periodMap.get() != null ? new HashMap<>( periodMap.get() ) : new HashMap<Object, Period>();
+        return periodMap.get() != null ? new HashMap<>( periodMap.get() ) : new HashMap<>();
     }
     
     // -------------------------------------------------------------------------
@@ -392,7 +392,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getDataSetMap()
     {
-        return dataSetMap.get() != null ? new HashMap<>( dataSetMap.get() ) : new HashMap<Object, String>();
+        return dataSetMap.get() != null ? new HashMap<>( dataSetMap.get() ) : new HashMap<>();
     }
     
     // -------------------------------------------------------------------------
@@ -412,7 +412,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getOrganisationUnitMap()
     {
-        return organisationUnitMap.get() != null ? new HashMap<>( organisationUnitMap.get() ) : new HashMap<Object, String>();
+        return organisationUnitMap.get() != null ? new HashMap<>( organisationUnitMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -432,7 +432,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getOrganisationUnitGroupMap()
     {
-        return organisationUnitGroupMap.get() != null ? new HashMap<>( organisationUnitGroupMap.get() ) : new HashMap<Object, String>();
+        return organisationUnitGroupMap.get() != null ? new HashMap<>( organisationUnitGroupMap.get() ) : new HashMap<>();
     }
     
     // -------------------------------------------------------------------------
@@ -452,7 +452,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getGroupSetMap()
     {
-        return organisationUnitGroupSetMap.get() != null ? new HashMap<>( organisationUnitGroupSetMap.get() ) : new HashMap<Object, String>();
+        return organisationUnitGroupSetMap.get() != null ? new HashMap<>( organisationUnitGroupSetMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -472,7 +472,7 @@ public class NameMappingUtil
      */
     public static Map<Object, String> getReportTableMap()
     {
-        return reportTableMap.get() != null ? new HashMap<>( reportTableMap.get() ) : new HashMap<Object, String>();
+        return reportTableMap.get() != null ? new HashMap<>( reportTableMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -486,7 +486,7 @@ public class NameMappingUtil
     
     public static Map<Object, String> getDataElementAggregationOperatorMap()
     {
-        return dataElementAggregationOperatorMap.get() != null ? new LoggingHashMap<>( dataElementAggregationOperatorMap.get() ) : new HashMap<Object, String>();
+        return dataElementAggregationOperatorMap.get() != null ? new LoggingHashMap<>( dataElementAggregationOperatorMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------
@@ -507,7 +507,7 @@ public class NameMappingUtil
 
     public static Map<Object, String> getDataEntryFormMap()
     {
-        return dataEntryFormMap.get() != null ? new HashMap<>( dataEntryFormMap.get() ) : new HashMap<Object, String>();
+        return dataEntryFormMap.get() != null ? new HashMap<>( dataEntryFormMap.get() ) : new HashMap<>();
     }
     
 
@@ -529,7 +529,7 @@ public class NameMappingUtil
 
     public static Map<Object, String> getConstantMap()
     {
-        return constantMap.get() != null ? new HashMap<>( constantMap.get() ) : new HashMap<Object, String>();
+        return constantMap.get() != null ? new HashMap<>( constantMap.get() ) : new HashMap<>();
     }
     
     // -------------------------------------------------------------------------
