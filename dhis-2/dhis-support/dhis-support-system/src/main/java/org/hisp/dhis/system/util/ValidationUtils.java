@@ -315,6 +315,7 @@ public class ValidationUtils
         }
 
         ValueType valueType = dataElement.getValueType();
+        System.err.println( "valueType: " + valueType );
 
         if ( value.length() > VALUE_MAX_LENGTH )
         {
