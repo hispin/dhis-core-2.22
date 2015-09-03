@@ -29,6 +29,7 @@ package org.hisp.dhis.dataelement;
  */
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -280,10 +281,8 @@ public class DataElementServiceTest
     @Test
     public void testGetDataElementsByAggregationOperator()
     {
-        assertEquals( 0, dataElementService.getDataElementsByAggregationOperator(
-            DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM ).size() );
-        assertEquals( 0, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM )
-            .size() );
+        assertEquals( 0, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM ).size() );
+        assertEquals( 0, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM ).size() );
 
         DataElement dataElementA = createDataElement( 'A' );
         dataElementA.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM );
@@ -301,6 +300,50 @@ public class DataElementServiceTest
 
         assertEquals( 1, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM ).size() );
         assertEquals( 3, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM ).size() );
+    }
+
+    @Test
+    public void testGetDataElementsByValueType()
+    {
+        DataElement dataElementA = createDataElement( 'A', ValueType.NUMBER );
+        DataElement dataElementB = createDataElement( 'B', ValueType.NUMBER );
+        DataElement dataElementC = createDataElement( 'C', ValueType.BOOLEAN );
+        DataElement dataElementD = createDataElement( 'D', ValueType.TEXT );
+
+        dataElementService.addDataElement( dataElementA );
+        dataElementService.addDataElement( dataElementB );
+        dataElementService.addDataElement( dataElementC );
+        dataElementService.addDataElement( dataElementD );
+
+        assertEquals( 2, dataElementService.getDataElementsByValueType( ValueType.NUMBER ).size() );
+        assertEquals( 1, dataElementService.getDataElementsByValueType( ValueType.BOOLEAN ).size() );
+        assertEquals( 1, dataElementService.getDataElementsByValueType( ValueType.TEXT ).size() );
+        assertEquals( 0, dataElementService.getDataElementsByValueType( ValueType.LONG_TEXT ).size() );
+        assertEquals( 0, dataElementService.getDataElementsByValueType( ValueType.INTEGER ).size() );
+        assertEquals( 0, dataElementService.getDataElementsByValueType( ValueType.INTEGER_POSITIVE ).size() );
+        assertEquals( 0, dataElementService.getDataElementsByValueType( ValueType.INTEGER_NEGATIVE ).size() );
+    }
+
+    @Test
+    public void testGetDataElementsByValueTypes()
+    {
+        DataElement dataElementA = createDataElement( 'A', ValueType.INTEGER );
+        DataElement dataElementB = createDataElement( 'B', ValueType.INTEGER_POSITIVE );
+        DataElement dataElementC = createDataElement( 'C', ValueType.INTEGER_ZERO_OR_POSITIVE );
+        DataElement dataElementD = createDataElement( 'D', ValueType.NUMBER );
+        DataElement dataElementE = createDataElement( 'E', ValueType.TEXT );
+        DataElement dataElementF = createDataElement( 'F', ValueType.LONG_TEXT );
+
+        dataElementService.addDataElement( dataElementA );
+        dataElementService.addDataElement( dataElementB );
+        dataElementService.addDataElement( dataElementC );
+        dataElementService.addDataElement( dataElementD );
+        dataElementService.addDataElement( dataElementE );
+        dataElementService.addDataElement( dataElementF );
+
+        assertEquals( 3, dataElementService.getDataElementsByValueTypes( ValueType.INTEGER_TYPES ).size() );
+        assertEquals( 4, dataElementService.getDataElementsByValueTypes( ValueType.NUMERIC_TYPES ).size() );
+        assertEquals( 2, dataElementService.getDataElementsByValueTypes( ValueType.TEXT_TYPES ).size() );
     }
 
     // -------------------------------------------------------------------------

@@ -362,6 +362,27 @@ public abstract class DhisConvenienceTest
 
     /**
      * @param uniqueCharacter A unique character to identify the object.
+     */
+    public static DataElement createDataElement( char uniqueCharacter, ValueType valueType )
+    {
+        DataElement dataElement = new DataElement();
+        dataElement.setAutoFields();
+
+        dataElement.setUid( BASE_DE_UID + uniqueCharacter );
+        dataElement.setName( "DataElement" + uniqueCharacter );
+        dataElement.setShortName( "DataElementShort" + uniqueCharacter );
+        dataElement.setCode( "DataElementCode" + uniqueCharacter );
+        dataElement.setDescription( "DataElementDescription" + uniqueCharacter );
+        dataElement.setType( DataElement.VALUE_TYPE_INT ); // remove
+        dataElement.setValueType( valueType );
+        dataElement.setDomainType( DataElementDomain.AGGREGATE );
+        dataElement.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+
+        return dataElement;
+    }
+
+    /**
+     * @param uniqueCharacter A unique character to identify the object.
      * @param categoryCombo   The category combo.
      */
     public static DataElement createDataElement( char uniqueCharacter, DataElementCategoryCombo categoryCombo )
@@ -383,6 +404,21 @@ public abstract class DhisConvenienceTest
     {
         DataElement dataElement = createDataElement( uniqueCharacter );
         dataElement.setType( type );
+        dataElement.setDomainType( DataElementDomain.AGGREGATE );
+        dataElement.setAggregationOperator( aggregationOperator );
+
+        return dataElement;
+    }
+
+    /**
+     * @param uniqueCharacter     A unique character to identify the object.
+     * @param valueType           The value type.
+     * @param aggregationOperator The aggregation operator.
+     */
+    public static DataElement createDataElement( char uniqueCharacter, ValueType valueType, String aggregationOperator )
+    {
+        DataElement dataElement = createDataElement( uniqueCharacter );
+        dataElement.setValueType( valueType );
         dataElement.setDomainType( DataElementDomain.AGGREGATE );
         dataElement.setAggregationOperator( aggregationOperator );
 

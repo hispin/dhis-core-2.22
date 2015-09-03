@@ -61,6 +61,16 @@ public enum ValueType
     OPTION_SET( String.class ),
     USERNAME( String.class );
 
+    public static List<ValueType> INTEGER_TYPES = Lists.newArrayList(
+        INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE
+    );
+
+    public static List<ValueType> NUMERIC_TYPES = Lists.newArrayList(
+        INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE, NUMBER, UNIT_INTERVAL, PERCENTAGE
+    );
+
+    public static List<ValueType> TEXT_TYPES = Lists.newArrayList( TEXT, LONG_TEXT );
+
     public static List<String> INTEGER_TYPE_STRINGS = Lists.newArrayList(
         INTEGER.toString(), INTEGER_POSITIVE.toString(), INTEGER_NEGATIVE.toString(), INTEGER_ZERO_OR_POSITIVE.toString()
     );
@@ -70,9 +80,7 @@ public enum ValueType
         NUMBER.toString(), UNIT_INTERVAL.toString(), PERCENTAGE.toString()
     );
 
-    public static List<String> TEXT_TYPE_STRINGS = Lists.newArrayList(
-        TEXT.toString(), LONG_TEXT.toString()
-    );
+    public static List<String> TEXT_TYPE_STRINGS = Lists.newArrayList( TEXT.toString(), LONG_TEXT.toString() );
 
     private final Class<?> javaClass;
 
