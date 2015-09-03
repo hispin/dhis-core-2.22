@@ -28,6 +28,7 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
 
@@ -104,7 +105,7 @@ public class ValidationUtilsTest
     public void testDataValueIsZeroAndInsignificant()
     {
         DataElement de = new DataElement( "DEA" );
-        de.setType( DataElement.VALUE_TYPE_INT );
+        de.setValueType( ValueType.INTEGER );
         de.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
 
         assertTrue( dataValueIsZeroAndInsignificant( "0", de ) );
@@ -118,7 +119,7 @@ public class ValidationUtilsTest
     public void testDataValueIsValid()
     {
         DataElement de = new DataElement( "DEA" );
-        de.setType( DataElement.VALUE_TYPE_INT );
+        de.setValueType( ValueType.INTEGER );
 
         assertNull( dataValueIsValid( null, de ) );
         assertNull( dataValueIsValid( "", de ) );
@@ -126,46 +127,46 @@ public class ValidationUtilsTest
         assertNull( dataValueIsValid( "34", de ) );
         assertNotNull( dataValueIsValid( "Yes", de ) );
 
-        de.setNumberType( DataElement.VALUE_TYPE_NUMBER );
+        de.setValueType( ValueType.NUMBER );
 
         assertNull( dataValueIsValid( "3.7", de ) );
         assertNotNull( dataValueIsValid( "No", de ) );
 
-        de.setNumberType( DataElement.VALUE_TYPE_POSITIVE_INT );
+        de.setValueType( ValueType.INTEGER_POSITIVE );
 
         assertNull( dataValueIsValid( "3", de ) );
         assertNotNull( dataValueIsValid( "-4", de ) );
 
-        de.setNumberType( DataElement.VALUE_TYPE_ZERO_OR_POSITIVE_INT );
+        de.setValueType( ValueType.INTEGER_ZERO_OR_POSITIVE );
 
         assertNull( dataValueIsValid( "3", de ) );
         assertNotNull( dataValueIsValid( "-4", de ) );
 
-        de.setNumberType( DataElement.VALUE_TYPE_NEGATIVE_INT );
+        de.setValueType( ValueType.INTEGER_NEGATIVE );
 
         assertNull( dataValueIsValid( "-3", de ) );
         assertNotNull( dataValueIsValid( "4", de ) );
 
-        de.setType( DataElement.VALUE_TYPE_TEXT );
+        de.setValueType( ValueType.TEXT );
 
         assertNull( dataValueIsValid( "0", de ) );
 
-        de.setType( DataElement.VALUE_TYPE_BOOL );
+        de.setValueType( ValueType.BOOLEAN );
 
         assertNull( dataValueIsValid( "true", de ) );
         assertNotNull( dataValueIsValid( "yes", de ) );
 
-        de.setType( DataElement.VALUE_TYPE_TRUE_ONLY );
+        de.setValueType( ValueType.TRUE_ONLY );
 
         assertNull( dataValueIsValid( "true", de ) );
         assertNotNull( dataValueIsValid( "false", de ) );
 
-        de.setType( DataElement.VALUE_TYPE_DATE );
+        de.setValueType( ValueType.DATE );
         assertNull( dataValueIsValid( "2013-04-01", de ) );
         assertNotNull( dataValueIsValid( "2012304-01", de ) );
         assertNotNull( dataValueIsValid( "Date", de ) );
 
-        de.setType( DataElement.VALUE_TYPE_DATETIME );
+        de.setValueType( ValueType.DATETIME );
         assertNull( dataValueIsValid( "2013-04-01T11:00:00.000Z", de ) );
         assertNotNull( dataValueIsValid( "2013-04-01", de ) );
         assertNotNull( dataValueIsValid( "abcd", de ) );
