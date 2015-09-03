@@ -28,15 +28,14 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.util.ObjectUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Class which encapsulates a query parameter and value. Operator and filter
@@ -112,12 +111,12 @@ public class QueryItem
 
     public String getTypeAsString()
     {
-        return ObjectUtils.VALUE_TYPE_JAVA_CLASS_MAP.get( valueType ).getName();
+        return valueType.getJavaClass().toString();
     }
 
     public boolean isNumeric()
     {
-        return Double.class.equals( ObjectUtils.VALUE_TYPE_JAVA_CLASS_MAP.get( valueType ) );
+        return valueType.isNumeric();
     }
 
     public boolean hasLegendSet()
