@@ -168,7 +168,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.filterTypes = {};                               
                 $scope.newDhis2Event = {};
 
-                $scope.eventGridColumns.push({name: 'form_id', id: 'uid', type: 'string', compulsory: false, showFilter: false, show: false});
+                $scope.eventGridColumns.push({name: 'form_id', id: 'uid', valueType: 'string', compulsory: false, showFilter: false, show: false});
                 $scope.filterTypes['uid'] = 'string';                
 
                 $scope.eventGridColumns.push({name: $scope.selectedProgramStage.reportDateDescription ? $scope.selectedProgramStage.reportDateDescription : 'incident_date', id: 'event_date', type: 'date', compulsory: false, showFilter: false, show: true});
@@ -184,7 +184,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     //for date type dataelements, filtering is based on start and end dates                    
                     $scope.eventGridColumns.push({name: prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name, 
                                                   id: prStDe.dataElement.id, 
-                                                  type: prStDe.dataElement.type, 
+                                                  valueType: prStDe.dataElement.valueType, 
                                                   compulsory: prStDe.compulsory, 
                                                   showFilter: false, 
                                                   show: prStDe.displayInReports});
