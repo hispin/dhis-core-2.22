@@ -241,10 +241,12 @@ public class JdbcEventStore
 
             if ( rowSet.getString( "pav_value" ) != null && rowSet.getString( "ta_uid" ) != null )
             {
+                String valueType = rowSet.getString( "ta_valuetype" );
+                
                 Attribute attribute = new Attribute();
                 attribute.setValue( rowSet.getString( "pav_value" ) );
                 attribute.setDisplayName( rowSet.getString( "ta_name" ) );
-                attribute.setValueType( ValueType.fromValue( rowSet.getString( "ta_valuetype" ) ) );
+                attribute.setValueType( valueType != null ? ValueType.valueOf( valueType.toUpperCase() ) : null );
                 attribute.setAttribute( rowSet.getString( "ta_uid" ) );
 
                 eventRow.getAttributes().add( attribute );

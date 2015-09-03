@@ -225,18 +225,4 @@ public enum ValueType
 
         return ValueType.TEXT; // Fall back
     }
-
-    //TODO remove and replace with ValueType.valueOf
-    public static ValueType fromValue( String value )
-    {
-        for ( ValueType valueType : ValueType.values() )
-        {
-            if ( valueType.toString().equalsIgnoreCase( value ) )
-            {
-                return valueType;
-            }
-        }
-
-        return null;
-    }
 }
