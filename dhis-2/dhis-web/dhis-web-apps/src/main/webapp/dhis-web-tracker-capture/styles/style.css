@@ -349,6 +349,16 @@ input[type=date]::-webkit-inner-spin-button, input[type=date]::-webkit-outer-spi
     background-color: #ebf0f6
 }
 
+table.table-striped tr.selected > td {
+    background-color: #d9edf7;;
+}
+
+table.table-striped tr td.optionset {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+
 .dhis2-table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
     background-color: #dfe9f4;
     cursor: pointer;

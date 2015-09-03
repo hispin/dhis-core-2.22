@@ -38,6 +38,7 @@ trackerCapture.controller('DataEntryController',
     $scope.hiddenFields = {};
     $scope.errorMessages = {};
     $scope.warningMessages = {};
+    $scope.tableMaxNumberOfDataElements = 10;
     
 
     var userProfile = SessionStorageService.get('USER_PROFILE');
@@ -202,8 +203,8 @@ trackerCapture.controller('DataEntryController',
                     $scope.stagesById[stage.id] = stage;
                     $scope.eventsByStage[stage.id] = [];
 
-                    //If one of the stages has less than 7 data elements, allow sorting as table:
-                    if (stage.programStageDataElements.length < 7) {
+                    //If one of the stages has less than $scope.tableMaxNumberOfDataElements data elements, allow sorting as table:
+                    if (stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements) {
                         $scope.stagesCanBeShownAsTable = true;
                     }
                 });
@@ -275,7 +276,7 @@ trackerCapture.controller('DataEntryController',
     };
 
     $scope.stageCanBeShownAsTable = function (stage) {
-        if (stage.programStageDataElements && stage.programStageDataElements.length < 7) {
+        if (stage.programStageDataElements && stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements) {
             return true;
         }
         return false;
@@ -284,7 +285,7 @@ trackerCapture.controller('DataEntryController',
     $scope.toggleEventsTableDisplay = function () {
         $scope.showEventsAsTables = !$scope.showEventsAsTables;
         angular.forEach($scope.programStages, function (stage) {
-            if (stage.programStageDataElements.length < 7) {
+            if (stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements) {
                 stage.displayEventsInTable = $scope.showEventsAsTables;
                 if ($scope.currentStage === stage) {
                     $scope.getDataEntryForm();
@@ -414,6 +415,12 @@ trackerCapture.controller('DataEntryController',
 
                 $scope.getDataEntryForm();
             }
+        }
+    };
+    
+    $scope.switchToEventRow = function (event) {
+        if($scope.currentEvent !== event) {
+            $scope.showDataEntry(event,false);
         }
     };
 
