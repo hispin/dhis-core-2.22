@@ -3795,7 +3795,7 @@ Ext.onReady( function() {
                 var layoutWindow = ns.app.aggregateLayoutWindow;
 
                 this.each( function(record) {
-                    if (Ext.Array.contains(['int', 'number'], record.data.valueType)) {
+                    if (Ext.Array.contains(ns.core.conf.valueType.numericTypes, record.data.valueType)) {
                         layoutWindow.valueStore.add(record.data);
                     }
                 });
@@ -4364,19 +4364,19 @@ Ext.onReady( function() {
 					return 'Ext.ux.panel.OrganisationUnitGroupSetContainer';
 				}
 
-				if (element.valueType === 'int' || element.valueType === 'number') {
+				if (Ext.Array.contains(ns.core.conf.valueType.numericTypes, element.valueType)) {
 					return 'Ext.ux.panel.DataElementIntegerContainer';
 				}
 
-				if (element.valueType === 'string') {
+				if (Ext.Array.contains(ns.core.conf.valueType.textTypes, element.valueType)) {
 					return 'Ext.ux.panel.DataElementStringContainer';
 				}
 
-				if (element.valueType === 'date') {
+				if (Ext.Array.contains(ns.core.conf.valueType.dateTypes, element.valueType)) {
 					return 'Ext.ux.panel.DataElementDateContainer';
 				}
 
-				if (element.valueType === 'bool' || element.valueType === 'trueOnly') {
+				if (Ext.Array.contains(ns.core.conf.valueType.booleanTypes, element.valueType)) {
 					return 'Ext.ux.panel.DataElementBooleanContainer';
 				}
 
@@ -4417,7 +4417,7 @@ Ext.onReady( function() {
 				allElements = [],
                 aggWindow = ns.app.aggregateLayoutWindow,
                 //queryWindow = ns.app.queryLayoutWindow,
-                includeKeys = ['int', 'number', 'bool', 'boolean', 'trueOnly'],
+                includeKeys = ns.core.conf.valueType.aggregateTypes,
                 ignoreKeys = ['pe', 'ou'],
                 recordMap = {
 					'pe': {id: 'pe', name: 'Periods'},
@@ -4455,7 +4455,7 @@ Ext.onReady( function() {
 				element = dataElements[i];
 				allElements.push(element);
 
-				if (element.valueType === 'int' && element.filter) {
+				if (Ext.Array.contains(ns.core.conf.valueType.numericTypes, element.valueType) && element.filter) {
 					a = element.filter.split(':');
 					numberOfElements = a.length / 2;
 
