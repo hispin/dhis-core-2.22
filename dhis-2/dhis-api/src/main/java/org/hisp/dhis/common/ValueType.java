@@ -159,23 +159,23 @@ public enum ValueType
                 return ValueType.NUMBER;
             }
         }
-        else if ( DataElement.VALUE_TYPE_BOOL.equals( numberType ) )
+        else if ( DataElement.VALUE_TYPE_BOOL.equals( type ) )
         {
             return ValueType.BOOLEAN;
         }
-        else if ( DataElement.VALUE_TYPE_TRUE_ONLY.equals( numberType ) )
+        else if ( DataElement.VALUE_TYPE_TRUE_ONLY.equals( type ) )
         {
             return ValueType.TRUE_ONLY;
         }
-        else if ( DataElement.VALUE_TYPE_DATE.equals( numberType ) )
+        else if ( DataElement.VALUE_TYPE_DATE.equals( type ) )
         {
             return ValueType.DATE;
         }
-        else if ( DataElement.VALUE_TYPE_DATETIME.equals( numberType ) )
+        else if ( DataElement.VALUE_TYPE_DATETIME.equals( type ) )
         {
             return ValueType.DATETIME;
         }
-        else if ( DataElement.VALUE_TYPE_USER_NAME.equals( numberType ) )
+        else if ( DataElement.VALUE_TYPE_USER_NAME.equals( type ) )
         {
             return ValueType.USERNAME;
         }
