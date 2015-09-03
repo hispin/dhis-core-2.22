@@ -29,6 +29,7 @@ package org.hisp.dhis.dataelement;
  */
 
 import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.hierarchy.HierarchyViolationException;
 import org.hisp.dhis.period.PeriodType;
@@ -114,7 +115,7 @@ public interface DataElementService
      *
      * @param key the name of the DataElement to return.
      * @return List of DataElements with a given key, or all dataelements if no
-     *         match.
+     * match.
      */
     List<DataElement> searchDataElementsByName( String key );
 
@@ -130,7 +131,7 @@ public interface DataElementService
      * Returns all DataElements.
      *
      * @return a list of all DataElements, or an empty list if there
-     *         are no DataElements.
+     * are no DataElements.
      */
     List<DataElement> getAllDataElements();
 
@@ -166,8 +167,8 @@ public interface DataElementService
      * @param aggregationOperator the aggregation operator of the DataElements
      *                            to return.
      * @return a list of all DataElements with the given aggregation
-     *         operator, or an empty collection if no DataElements have the
-     *         aggregation operator.
+     * operator, or an empty collection if no DataElements have the
+     * aggregation operator.
      */
     List<DataElement> getDataElementsByAggregationOperator( String aggregationOperator );
 
@@ -193,8 +194,23 @@ public interface DataElementService
      * @param type the type.
      * @return all DataElements with the given type.
      */
-
     List<DataElement> getDataElementsByType( String type );
+
+    /**
+     * Returns all DataElements with the given value types.
+     *
+     * @param valueTypes The value types.
+     * @return all DataElements with the given value types.
+     */
+    List<DataElement> getDataElementsByValueTypes( List<ValueType> valueTypes );
+
+    /**
+     * Returns all DataElements with the given type.
+     *
+     * @param valueType The value type.
+     * @return all DataElements with the given value type.
+     */
+    List<DataElement> getDataElementsByValueType( ValueType valueType );
 
     /**
      * Returns the DataElements with the given PeriodType.
@@ -237,7 +253,7 @@ public interface DataElementService
      * DataElementGroupSets.
      *
      * @return all DataElements which are associated with one or more
-     *         DataElementGroupSets.
+     * DataElementGroupSets.
      */
     List<DataElement> getDataElementsWithGroupSets();
 
@@ -380,7 +396,7 @@ public interface DataElementService
      * Returns all DataElementGroups.
      *
      * @return a collection of all DataElementGroups, or an empty collection if
-     *         no DataElementGroups exist.
+     * no DataElementGroups exist.
      */
     List<DataElementGroup> getAllDataElementGroups();
 

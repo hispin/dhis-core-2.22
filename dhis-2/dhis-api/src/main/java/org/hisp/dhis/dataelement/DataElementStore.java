@@ -28,17 +28,18 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.GenericDimensionalObjectStore;
+import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.dataset.DataSet;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.hisp.dhis.common.GenericDimensionalObjectStore;
-import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.dataset.DataSet;
-
 /**
  * Defines the functionality for persisting DataElements and DataElementGroups.
- * 
+ *
  * @author Torgeir Lorange Ostby
  */
 public interface DataElementStore
@@ -52,7 +53,7 @@ public interface DataElementStore
 
     /**
      * Returns List of DataElements with a given key.
-     * 
+     *
      * @param key the name of the DataElement to return.
      * @return List of DataElements with a given key, or all dataelements if no match.
      */
@@ -61,25 +62,25 @@ public interface DataElementStore
     /**
      * Returns all DataElements with types that are possible to aggregate. The
      * types are currently INT and BOOL.
-     * 
+     *
      * @return all DataElements with types that are possible to aggregate.
      */
     List<DataElement> getAggregateableDataElements();
 
     /**
      * Returns all DataElements with a given aggregation operator.
-     * 
+     *
      * @param aggregationOperator the aggregation operator of the DataElements
-     *        to return.
+     *                            to return.
      * @return a collection of all DataElements with the given aggregation
-     *         operator, or an empty collection if no DataElements have the
-     *         aggregation operator.
+     * operator, or an empty collection if no DataElements have the
+     * aggregation operator.
      */
     List<DataElement> getDataElementsByAggregationOperator( String aggregationOperator );
 
     /**
      * Returns all DataElements with the given domain type.
-     * 
+     *
      * @param domainType the domainType.
      * @return all DataElements with the given domainType.
      */
@@ -95,16 +96,31 @@ public interface DataElementStore
 
     /**
      * Returns all DataElements with the given type.
-     * 
+     *
      * @param type the type.
      * @return all DataElements with the given type.
      */
-
     List<DataElement> getDataElementsByType( String type );
 
     /**
+     * Returns all DataElements with the given value types.
+     *
+     * @param valueTypes The value types.
+     * @return all DataElements with the given value types.
+     */
+    List<DataElement> getDataElementsByValueTypes( List<ValueType> valueTypes );
+
+    /**
+     * Returns all DataElements with the given value type.
+     *
+     * @param valueType The value type.
+     * @return all DataElements with the given value type.
+     */
+    List<DataElement> getDataElementsByValueType( ValueType valueType );
+
+    /**
      * Returns all DataElements with the given category combo.
-     * 
+     *
      * @param categoryCombo the DataElementCategoryCombo.
      * @return all DataElements with the given category combo.
      */
@@ -113,58 +129,59 @@ public interface DataElementStore
     /**
      * Returns all DataElements which are associated with one or more
      * DataElementGroupSets.
-     * 
+     *
      * @return all DataElements which are associated with one or more
-     *         DataElementGroupSets.
+     * DataElementGroupSets.
      */
     List<DataElement> getDataElementsWithGroupSets();
 
     /**
-     * Defines the given data elements as zero is significant. 
-     * 
+     * Defines the given data elements as zero is significant.
+     *
      * @param dataElementIds identifiers of data elements where zero is significant.
      */
     void setZeroIsSignificantForDataElements( Collection<Integer> dataElementIds );
-    
+
     /**
      * Returns all DataElement which zeroIsSignificant property is true or false
-     * @param zeroIsSignificant is zeroIsSignificant property 
+     *
+     * @param zeroIsSignificant is zeroIsSignificant property
      * @return a collection of all DataElement
      */
     List<DataElement> getDataElementsByZeroIsSignificant( boolean zeroIsSignificant );
-    
+
     /**
      * Returns all DataElements which are not member of any DataElementGroups.
-     * 
+     *
      * @return all DataElements which are not member of any DataElementGroups.
      */
     List<DataElement> getDataElementsWithoutGroups();
-    
+
     /**
      * Returns all DataElements which are not assigned to any DataSets.
-     * 
+     *
      * @return all DataElements which are not assigned to any DataSets.
      */
     List<DataElement> getDataElementsWithoutDataSets();
-    
+
     /**
      * Returns all DataElements which are assigned to at least one DataSet.
-     * 
+     *
      * @return all DataElements which are assigned to at least one DataSet.
      */
     List<DataElement> getDataElementsWithDataSets();
-    
+
     /**
      * Returns all DataElements which are assigned to any of the given DataSets.
-     * 
+     *
      * @param dataSets the collection of DataSets.
      * @return all DataElements which are assigned to any of the given DataSets.
      */
     List<DataElement> getDataElementsByDataSets( Collection<DataSet> dataSets );
-    
+
     /**
      * Returns all DataElements which have the given aggregation level assigned.
-     * 
+     *
      * @param aggregationLevel the aggregation level.
      * @return all DataElements which have the given aggregation level assigned.
      */
@@ -173,12 +190,12 @@ public interface DataElementStore
     /**
      * Returns a mapping of data element uid and associated category option combo
      * uids.
-     * 
+     *
      * @param dataElementUids the uids of the data elements to include in the map.
      * @return a ListMap.
      */
     ListMap<String, String> getDataElementCategoryOptionComboMap( Set<String> dataElementUids );
-    
+
     List<DataElement> get( DataSet dataSet, String key, Integer max );
 
     int getCountByDomainType( DataElementDomain domainType );

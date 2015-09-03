@@ -28,11 +28,15 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.i18n.I18nUtils.getCountByName;
-import static org.hisp.dhis.i18n.I18nUtils.getObjectsBetween;
-import static org.hisp.dhis.i18n.I18nUtils.getObjectsBetweenByName;
-import static org.hisp.dhis.i18n.I18nUtils.getObjectsByName;
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
+import org.hisp.dhis.common.GenericDimensionalObjectStore;
+import org.hisp.dhis.common.GenericNameableObjectStore;
+import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.dataelement.comparator.DataElementCategoryComboSizeComparator;
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.i18n.I18nService;
+import org.hisp.dhis.period.PeriodType;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,14 +48,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.hisp.dhis.common.GenericDimensionalObjectStore;
-import org.hisp.dhis.common.GenericNameableObjectStore;
-import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.dataelement.comparator.DataElementCategoryComboSizeComparator;
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.i18n.I18nService;
-import org.hisp.dhis.period.PeriodType;
-import org.springframework.transaction.annotation.Transactional;
+import static org.hisp.dhis.i18n.I18nUtils.*;
 
 /**
  * @author Kristian Nordal
@@ -169,7 +166,7 @@ public class DefaultDataElementService
     public Set<DataElement> getDataElementsByZeroIsSignificantAndGroup( boolean zeroIsSignificant, DataElementGroup dataElementGroup )
     {
         Set<DataElement> dataElements = new HashSet<>( dataElementGroup.getMembers() );
-        
+
         return dataElements.stream().filter( p -> p.isZeroIsSignificant() ).collect( Collectors.toSet() );
     }
 
@@ -216,6 +213,18 @@ public class DefaultDataElementService
     public List<DataElement> getDataElementsByType( String type )
     {
         return i18n( i18nService, dataElementStore.getDataElementsByType( type ) );
+    }
+
+    @Override
+    public List<DataElement> getDataElementsByValueTypes( List<ValueType> valueTypes )
+    {
+        return i18n( i18nService, dataElementStore.getDataElementsByValueTypes( valueTypes ) );
+    }
+
+    @Override
+    public List<DataElement> getDataElementsByValueType( ValueType valueType )
+    {
+        return i18n( i18nService, dataElementStore.getDataElementsByValueType( valueType ) );
     }
 
     @Override
