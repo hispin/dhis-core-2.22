@@ -162,7 +162,7 @@ public class RegistrationMultiEventsServiceTest
         identifiableObjectManager.save( programStageA );
         identifiableObjectManager.save( programStageB );
 
-        programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );
+        programA = createProgram( 'A', new HashSet<>(), organisationUnitA );
         programA.setProgramType( ProgramType.WITH_REGISTRATION );
         identifiableObjectManager.save( programA );
 

@@ -178,7 +178,7 @@ public class DefaultDataValueSetService
         
         if ( periods != null && !periods.isEmpty() )
         {
-            params.getPeriods().addAll( periodService.reloadIsoPeriods( new ArrayList<String>( periods ) ) );
+            params.getPeriods().addAll( periodService.reloadIsoPeriods( new ArrayList<>( periods ) ) );
         }
         else if ( startDate != null && endDate != null )
         {
@@ -193,7 +193,7 @@ public class DefaultDataValueSetService
             
             if ( includeChildren )
             {
-                params.getOrganisationUnits().addAll( new HashSet<OrganisationUnit>( 
+                params.getOrganisationUnits().addAll( new HashSet<>(
                     organisationUnitService.getOrganisationUnitsWithChildren( getUids( params.getOrganisationUnits() ) ) ) );
             }
         }

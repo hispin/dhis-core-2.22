@@ -295,7 +295,7 @@ public class TextUtils
             return null;
         }
         
-        List<T> objects = new ArrayList<T>( list );
+        List<T> objects = new ArrayList<>( list );
         
         if ( nullReplacement != null )
         {

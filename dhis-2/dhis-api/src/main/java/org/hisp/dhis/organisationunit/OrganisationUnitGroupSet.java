@@ -190,7 +190,7 @@ public class OrganisationUnitGroupSet
     @JacksonXmlProperty( localName = "item", namespace = DxfNamespaces.DXF_2_0 )
     public List<NameableObject> getItems()
     {
-        return new ArrayList<NameableObject>( organisationUnitGroups );
+        return new ArrayList<>( organisationUnitGroups );
     }
 
     @Override

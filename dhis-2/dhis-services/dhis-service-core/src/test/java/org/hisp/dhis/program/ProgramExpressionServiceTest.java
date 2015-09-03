@@ -110,7 +110,7 @@ public class ProgramExpressionServiceTest
         OrganisationUnit organisationUnit = createOrganisationUnit( 'A' );
         organisationUnitService.addOrganisationUnit( organisationUnit );
 
-        Program program = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnit );
+        Program program = createProgram( 'A', new HashSet<>(), organisationUnit );
         programService.addProgram( program );
 
         stageA = new ProgramStage( "StageA", program );

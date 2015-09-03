@@ -233,7 +233,7 @@ public class CsdController
     private Csd createCsd( Iterable<OrganisationUnit> organisationUnits )
     {
         Csd csd = new Csd();
-        csd.getFacilityDirectory().setFacilities( new ArrayList<Facility>() );
+        csd.getFacilityDirectory().setFacilities( new ArrayList<>() );
 
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {

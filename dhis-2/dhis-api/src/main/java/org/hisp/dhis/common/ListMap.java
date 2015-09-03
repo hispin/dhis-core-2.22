@@ -57,7 +57,7 @@ public class ListMap<T, V>
     public List<V> putValue( T key, V value )
     {
         List<V> list = this.get( key );
-        list = list == null ? new ArrayList<V>() : list;        
+        list = list == null ? new ArrayList<>() : list;
         list.add( value );
         super.put( key, list );        
         return null;

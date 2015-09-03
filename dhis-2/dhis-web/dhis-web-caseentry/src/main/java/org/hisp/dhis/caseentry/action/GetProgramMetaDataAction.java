@@ -117,7 +117,7 @@ public class GetProgramMetaDataAction implements Action
         for ( Program program : programs )
         {
             Set<OrganisationUnit> organisationUnits = program.getOrganisationUnits();
-            programAssociations.put( program.getUid(), new HashSet<String>() );
+            programAssociations.put( program.getUid(), new HashSet<>() );
 
             for ( OrganisationUnit organisationUnit : organisationUnits )
             {

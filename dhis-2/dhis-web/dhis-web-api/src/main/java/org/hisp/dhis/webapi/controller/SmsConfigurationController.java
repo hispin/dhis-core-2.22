@@ -80,7 +80,7 @@ public class SmsConfigurationController
 
         SmsConfiguration smsConfiguration = new SmsConfiguration();
 
-        SmsGatewayConfig gatewayConfig = new GenericHttpGatewayConfig( "http://storset.org/", new HashMap<String, String>() );
+        SmsGatewayConfig gatewayConfig = new GenericHttpGatewayConfig( "http://storset.org/", new HashMap<>() );
         smsConfiguration.setGateways( Collections.singletonList( gatewayConfig ) );
 
         model.addAttribute( "model", smsConfiguration );

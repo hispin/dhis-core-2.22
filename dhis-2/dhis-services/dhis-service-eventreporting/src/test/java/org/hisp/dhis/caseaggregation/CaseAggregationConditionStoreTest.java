@@ -227,7 +227,7 @@ public class CaseAggregationConditionStoreTest
         // Program && Program stages
         // ---------------------------------------------------------------------
 
-        program = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnit );
+        program = createProgram( 'A', new HashSet<>(), organisationUnit );
         int programId = programService.addProgram( program );
 
         ProgramStage stageA = new ProgramStage( "Stage-A", program );

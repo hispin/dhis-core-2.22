@@ -28,10 +28,12 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Lars Helge Overland
@@ -42,11 +44,11 @@ public class DataValueTest
     public void testIsZero()
     {
         DataElement dataElement = new DataElement( "A" );
-        dataElement.setType( DataElement.VALUE_TYPE_INT );
-        
+        dataElement.setValueType( ValueType.NUMBER );
+
         DataValue dataValue = new DataValue();
         dataValue.setDataElement( dataElement );
-        
+
         dataValue.setValue( "5" );
         assertFalse( dataValue.isZero() );
 
@@ -55,16 +57,16 @@ public class DataValueTest
 
         dataValue.setValue( "0.00001" );
         assertFalse( dataValue.isZero() );
-        
+
         dataValue.setValue( "String" );
-        assertFalse( dataValue.isZero() );        
+        assertFalse( dataValue.isZero() );
 
         dataValue.setValue( "0" );
         assertTrue( dataValue.isZero() );
-        
+
         dataValue.setValue( "0.0" );
         assertTrue( dataValue.isZero() );
-        
+
         dataValue.setValue( "0.0000" );
         assertTrue( dataValue.isZero() );
     }

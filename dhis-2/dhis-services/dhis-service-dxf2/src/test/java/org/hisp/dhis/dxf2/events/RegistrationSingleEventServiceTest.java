@@ -138,7 +138,7 @@ public class RegistrationSingleEventServiceTest
         programStageA = createProgramStage( 'A', 0 );
         identifiableObjectManager.save( programStageA );
 
-        programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );        
+        programA = createProgram( 'A', new HashSet<>(), organisationUnitA );
         programA.setProgramType( ProgramType.WITH_REGISTRATION );
         identifiableObjectManager.save( programA );
 

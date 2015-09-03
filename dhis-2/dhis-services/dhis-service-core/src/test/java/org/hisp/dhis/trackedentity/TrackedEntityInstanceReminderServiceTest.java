@@ -130,7 +130,7 @@ public class TrackedEntityInstanceReminderServiceTest
         entityInstance = createTrackedEntityInstance( 'A', organisationUnit );
         entityInstanceService.addTrackedEntityInstance( entityInstance );
 
-        Program program = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnit );
+        Program program = createProgram( 'A', new HashSet<>(), organisationUnit );
         reminderA = new TrackedEntityInstanceReminder( "A", 0, "Test program message template",
             TrackedEntityInstanceReminder.ENROLLEMENT_DATE_TO_COMPARE,
             TrackedEntityInstanceReminder.SEND_TO_TRACKED_ENTITY_INSTANCE,

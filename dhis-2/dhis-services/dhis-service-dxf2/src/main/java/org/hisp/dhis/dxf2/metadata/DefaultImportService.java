@@ -163,7 +163,7 @@ public class DefaultImportService
             {
                 if ( Collection.class.isAssignableFrom( value.getClass() ) )
                 {
-                    List<?> objects = new ArrayList<Object>( (Collection<?>) value );
+                    List<?> objects = new ArrayList<>( (Collection<?>) value );
 
                     if ( !objects.isEmpty() )
                     {

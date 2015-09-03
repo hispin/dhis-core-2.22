@@ -66,7 +66,7 @@ public class ExpressionUtilsTest
     @Test
     public void testEvaluateToDoubleWithVars()
     {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         
         vars.put( "v1", 4d );
         vars.put( "v2", -5d );
@@ -107,7 +107,7 @@ public class ExpressionUtilsTest
     @Test
     public void testIsTrueWithVars()
     {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         
         vars.put( "v1", "4" );
         vars.put( "v2", "12" );
@@ -132,7 +132,7 @@ public class ExpressionUtilsTest
     @Test
     public void testIsBoolean()
     {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         
         vars.put( "uA2hsh8j26j", "FEMALE" );
         vars.put( "v2", "12" );
@@ -161,7 +161,7 @@ public class ExpressionUtilsTest
     @Test
     public void testIsValid()
     {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         
         vars.put( "v1", "12" );
         

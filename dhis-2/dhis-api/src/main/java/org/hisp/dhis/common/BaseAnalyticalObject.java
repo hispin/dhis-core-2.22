@@ -605,11 +605,11 @@ public abstract class BaseAnalyticalObject
         }
         else if ( DATA_COLLAPSED_DIM_ID.contains( dimension ) )
         {
-            return new BaseDimensionalObject( dimension, DimensionType.DATA_COLLAPSED, new ArrayList<NameableObject>() );
+            return new BaseDimensionalObject( dimension, DimensionType.DATA_COLLAPSED, new ArrayList<>() );
         }
         else if ( STATIC_DIMS.contains( dimension ) )
         {
-            return new BaseDimensionalObject( dimension, DimensionType.STATIC, new ArrayList<NameableObject>() );
+            return new BaseDimensionalObject( dimension, DimensionType.STATIC, new ArrayList<>() );
         }
         else
         {
@@ -773,8 +773,8 @@ public abstract class BaseAnalyticalObject
         List<String> ids = new ArrayList<>();
 
         List<NameableObject> dimensions = new ArrayList<>();
-        dimensions.addAll( column != null ? column : new ArrayList<NameableObject>() );
-        dimensions.addAll( row != null ? row : new ArrayList<NameableObject>() );
+        dimensions.addAll( column != null ? column : new ArrayList<>() );
+        dimensions.addAll( row != null ? row : new ArrayList<>() );
 
         for ( NameableObject item : dimensions )
         {

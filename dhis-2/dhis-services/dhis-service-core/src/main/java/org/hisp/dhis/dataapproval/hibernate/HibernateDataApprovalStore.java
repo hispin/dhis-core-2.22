@@ -198,7 +198,7 @@ public class HibernateDataApprovalStore
         
         final User user = currentUserService.getCurrentUser();
 
-        Set<DataSet> validDataSets = new HashSet<DataSet>();
+        Set<DataSet> validDataSets = new HashSet<>();
         for ( DataSet set : dataSets )
         {
             if ( set.isApproveData() )

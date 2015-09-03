@@ -180,7 +180,7 @@ public class ProgramStageInstanceServiceTest
         /**
          * Program A
          */
-        programA = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnitA );
+        programA = createProgram( 'A', new HashSet<>(), organisationUnitA );
         programService.addProgram( programA );
 
         stageA = new ProgramStage( "A", programA );
@@ -240,7 +240,7 @@ public class ProgramStageInstanceServiceTest
          * Program B
          */
 
-        Program programB = createProgram( 'B', new HashSet<ProgramStage>(), organisationUnitB );
+        Program programB = createProgram( 'B', new HashSet<>(), organisationUnitB );
         programService.addProgram( programB );
 
         stageC = new ProgramStage( "C", programB );

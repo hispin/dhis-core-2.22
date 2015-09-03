@@ -192,7 +192,7 @@ public class DefaultTrackedEntityInstanceReminderService
     @Override
     public List<String> getAttributeUids( String message )
     {
-        List<String> atttributeUids = new ArrayList<String>();
+        List<String> atttributeUids = new ArrayList<>();
 
         Matcher matcher = ATTRIBUTE_PATTERN.matcher( message );
 

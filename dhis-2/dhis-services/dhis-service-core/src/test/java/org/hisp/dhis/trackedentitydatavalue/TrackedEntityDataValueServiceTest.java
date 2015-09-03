@@ -127,7 +127,7 @@ public class TrackedEntityDataValueServiceTest
         entityInstance = createTrackedEntityInstance( 'A', organisationUnit );
         entityInstanceService.addTrackedEntityInstance( entityInstance );
 
-        Program program = createProgram( 'A', new HashSet<ProgramStage>(), organisationUnit );
+        Program program = createProgram( 'A', new HashSet<>(), organisationUnit );
         programService.addProgram( program );
 
         ProgramStage stageA = createProgramStage( 'A', 0 );

@@ -96,7 +96,7 @@ public class MockCurrentUserService
     @Override
     public Set<OrganisationUnit> getCurrentUserOrganisationUnits()
     {
-        return currentUser != null ? currentUser.getOrganisationUnits() : new HashSet<OrganisationUnit>();
+        return currentUser != null ? currentUser.getOrganisationUnits() : new HashSet<>();
     }
 
     @Override

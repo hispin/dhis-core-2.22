@@ -112,7 +112,7 @@ public class DefaultCurrentUserService
     {
         User user = getCurrentUser();
         
-        return user != null ? new HashSet<OrganisationUnit>( user.getOrganisationUnits() ) : new HashSet<OrganisationUnit>();
+        return user != null ? new HashSet<>( user.getOrganisationUnits() ) : new HashSet<>();
     }
     
     @Override

@@ -93,7 +93,7 @@ public class AppController
     public void getApps( @RequestParam(required=false) String key, HttpServletResponse response )
         throws IOException
     {
-        List<App> apps = new ArrayList<App>();
+        List<App> apps = new ArrayList<>();
         
         if ( key != null )
         {

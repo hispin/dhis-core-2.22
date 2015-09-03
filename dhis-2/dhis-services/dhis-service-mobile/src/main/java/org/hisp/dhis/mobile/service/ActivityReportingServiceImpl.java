@@ -875,9 +875,9 @@ public class ActivityReportingServiceImpl
             // get relative's name
             TrackedEntityInstance relative = entityInstanceService.getTrackedEntityInstance( relationshipMobile
                 .getPersonBId() );
-            List<TrackedEntityAttributeValue> attributes = new ArrayList<TrackedEntityAttributeValue>(
+            List<TrackedEntityAttributeValue> attributes = new ArrayList<>(
                 relative.getAttributeValues() );
-            List<TrackedEntityAttributeValue> attributesInList = new ArrayList<TrackedEntityAttributeValue>();
+            List<TrackedEntityAttributeValue> attributesInList = new ArrayList<>();
 
             for ( TrackedEntityAttributeValue value : attributes )
             {
@@ -926,7 +926,7 @@ public class ActivityReportingServiceImpl
         ProgramInstance programInstance )
     {
         List<org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStage> mobileProgramStages = new ArrayList<>();
-        List<ProgramStageInstance> proStageInstanceList = new ArrayList<ProgramStageInstance>(
+        List<ProgramStageInstance> proStageInstanceList = new ArrayList<>(
             programInstance.getProgramStageInstances() );
 
         Collections.sort( proStageInstanceList, new ProgramStageInstanceVisitDateComparator() );
@@ -1283,7 +1283,7 @@ public class ActivityReportingServiceImpl
             mobileProgramStage.setCompleted( false );
             mobileProgramStage.setRepeatable( false );
             mobileProgramStage.setSingleEvent( true );
-            mobileProgramStage.setSections( new ArrayList<Section>() );
+            mobileProgramStage.setSections( new ArrayList<>() );
 
             // get report date
             mobileProgramStage.setReportDate( PeriodUtil.dateToString( new Date() ) );
@@ -1561,8 +1561,8 @@ public class ActivityReportingServiceImpl
         // get attributes to be saved/updated/deleted
         Collection<TrackedEntityAttribute> attributes = attributeService.getAllTrackedEntityAttributes();
 
-        List<TrackedEntityAttributeValue> valuesForSave = new ArrayList<TrackedEntityAttributeValue>();
-        List<TrackedEntityAttributeValue> valuesForUpdate = new ArrayList<TrackedEntityAttributeValue>();
+        List<TrackedEntityAttributeValue> valuesForSave = new ArrayList<>();
+        List<TrackedEntityAttributeValue> valuesForUpdate = new ArrayList<>();
         Collection<TrackedEntityAttributeValue> valuesForDelete = null;
 
         TrackedEntityAttributeValue attributeValue = null;
@@ -1684,7 +1684,7 @@ public class ActivityReportingServiceImpl
         throws NotAllowedException
     {
         TrackedEntityInstanceQueryParams param = new TrackedEntityInstanceQueryParams();
-        List<TrackedEntityAttribute> displayAttributes = new ArrayList<TrackedEntityAttribute>(
+        List<TrackedEntityAttribute> displayAttributes = new ArrayList<>(
             attributeService.getTrackedEntityAttributesDisplayInList() );
 
         for ( TrackedEntityAttribute trackedEntityAttribute : displayAttributes )
@@ -1753,7 +1753,7 @@ public class ActivityReportingServiceImpl
          */
         int instanceIndex = 0;
         int teIndex = 4;
-        List<Integer> attributesIndex = new ArrayList<Integer>();
+        List<Integer> attributesIndex = new ArrayList<>();
         List<GridHeader> headers = trackedEntityInstanceGrid.getHeaders();
         int index = 0;
         for ( GridHeader header : headers )
@@ -2501,8 +2501,8 @@ public class ActivityReportingServiceImpl
         TrackedEntityInstance patientWeb = new TrackedEntityInstance();
         patientWeb.setOrganisationUnit( organisationUnitService.getOrganisationUnit( orgUnitId ) );
 
-        Set<TrackedEntityAttribute> patientAttributeSet = new HashSet<TrackedEntityAttribute>();
-        Set<TrackedEntityAttributeValue> patientAttributeValues = new HashSet<TrackedEntityAttributeValue>();
+        Set<TrackedEntityAttribute> patientAttributeSet = new HashSet<>();
+        Set<TrackedEntityAttributeValue> patientAttributeValues = new HashSet<>();
 
         Collection<org.hisp.dhis.api.mobile.model.PatientAttribute> attributesMobile = patient.getAttributes();
 

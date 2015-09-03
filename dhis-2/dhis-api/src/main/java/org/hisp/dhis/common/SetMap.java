@@ -51,7 +51,7 @@ public class SetMap<T, V>
     public Set<V> putValue( T key, V value )
     {
         Set<V> set = this.get( key );
-        set = set == null ? new HashSet<V>() : set;        
+        set = set == null ? new HashSet<>() : set;
         set.add( value );
         return super.put( key, set );
     }
@@ -59,7 +59,7 @@ public class SetMap<T, V>
     public Set<V> getSet( T key )
     {
         Set<V> set = this.get( key );
-        set = set == null ? new HashSet<V>() : set;
+        set = set == null ? new HashSet<>() : set;
         return super.put( key, set );
     }
 }
