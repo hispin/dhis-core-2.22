@@ -4123,7 +4123,7 @@ Ext.onReady( function() {
                 var layoutWindow = ns.app.aggregateLayoutWindow;
 
                 this.each( function(record) {
-                    if (Ext.Array.contains(['int', 'number'], (record.data.valueType || record.data.type))) {
+                    if (Ext.Array.contains(['int', 'number'], record.data.valueType)) {
                         layoutWindow.valueStore.add(record.data);
                     }
                 });
@@ -4472,7 +4472,7 @@ Ext.onReady( function() {
             }
             else {
                 Ext.Ajax.request({
-                    url: ns.core.init.contextPath + '/api/programStages.json?filter=id:eq:' + stageId + '&fields=programStageDataElements[dataElement[id,' + ns.core.init.namePropertyUrl + ',type,optionSet[id,name]]]',
+                    url: ns.core.init.contextPath + '/api/programStages.json?filter=id:eq:' + stageId + '&fields=programStageDataElements[dataElement[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name]]]',
                     success: function(r) {
                         var objects = Ext.decode(r.responseText).programStages,
                             dataElements;
@@ -4688,7 +4688,6 @@ Ext.onReady( function() {
 			var getUxType,
 				ux;
 
-            element.type = element.type || element.valueType;
 			index = index || dataElementSelected.items.items.length;
 
 			getUxType = function(element) {
@@ -4697,19 +4696,19 @@ Ext.onReady( function() {
 					return 'Ext.ux.panel.OrganisationUnitGroupSetContainer';
 				}
 
-				if (element.type === 'int' || element.type === 'number') {
+				if (element.valueType === 'int' || element.valueType === 'number') {
 					return 'Ext.ux.panel.DataElementIntegerContainer';
 				}
 
-				if (element.type === 'string') {
+				if (element.valueType === 'string') {
 					return 'Ext.ux.panel.DataElementStringContainer';
 				}
 
-				if (element.type === 'date') {
+				if (element.valueType === 'date') {
 					return 'Ext.ux.panel.DataElementDateContainer';
 				}
 
-				if (element.type === 'bool' || element.type === 'trueOnly') {
+				if (element.valueType === 'bool' || element.valueType === 'trueOnly') {
 					return 'Ext.ux.panel.DataElementBooleanContainer';
 				}
 
@@ -4788,7 +4787,7 @@ Ext.onReady( function() {
 				element = dataElements[i];
 				allElements.push(element);
 
-				if (element.type === 'int' && element.filter) {
+				if (element.valueType === 'int' && element.filter) {
 					a = element.filter.split(':');
 					numberOfElements = a.length / 2;
 
@@ -4810,7 +4809,6 @@ Ext.onReady( function() {
 			// panel, store
             for (var i = 0, element, ux, store; i < allElements.length; i++) {
 				element = allElements[i];
-                element.type = element.type || element.valueType;
                 element.name = element.name || element.displayName;
                 recordMap[element.id] = element;
 
@@ -4823,7 +4821,7 @@ Ext.onReady( function() {
                     }
                 }
 
-                store = Ext.Array.contains(includeKeys, element.type) || element.optionSet ? aggWindow.rowStore : aggWindow.fixedFilterStore;
+                store = Ext.Array.contains(includeKeys, element.valueType) || element.optionSet ? aggWindow.rowStore : aggWindow.fixedFilterStore;
 
                 aggWindow.addDimension(element, store, valueStore);
                 queryWindow.colStore.add(element);
@@ -4866,7 +4864,7 @@ Ext.onReady( function() {
 					for (var i = 0, store, record, dim; i < layout.filters.length; i++) {
                         dim = layout.filters[i];
 						record = recordMap[dim.dimension];
-						store = Ext.Array.contains(includeKeys, element.type) || element.optionSet ? aggWindow.filterStore : aggWindow.fixedFilterStore;
+						store = Ext.Array.contains(includeKeys, element.valueType) || element.optionSet ? aggWindow.filterStore : aggWindow.fixedFilterStore;
 
                         //aggWindow.addDimension(record || extendDim(Ext.clone(dim)), store, null, true);
                         store.add(record || extendDim(Ext.clone(dim)));
