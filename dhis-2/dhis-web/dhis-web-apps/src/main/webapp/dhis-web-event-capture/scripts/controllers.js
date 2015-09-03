@@ -168,10 +168,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.filterTypes = {};                               
                 $scope.newDhis2Event = {};
 
-                $scope.eventGridColumns.push({name: 'form_id', id: 'uid', valueType: 'string', compulsory: false, showFilter: false, show: false});
+                $scope.eventGridColumns.push({name: 'form_id', id: 'uid', valueType: 'TEXT', compulsory: false, filterWithRange: false, showFilter: false, show: false});
                 $scope.filterTypes['uid'] = 'TEXT';                
 
-                $scope.eventGridColumns.push({name: $scope.selectedProgramStage.reportDateDescription ? $scope.selectedProgramStage.reportDateDescription : 'incident_date', id: 'event_date', type: 'date', compulsory: false, showFilter: false, show: true});
+                $scope.eventGridColumns.push({name: $scope.selectedProgramStage.reportDateDescription ? $scope.selectedProgramStage.reportDateDescription : 'incident_date', id: 'event_date', valueType: 'DATE', filterWithRange: true, compulsory: false, showFilter: false, show: true});
                 $scope.filterTypes['event_date'] = 'DATE';
                 $scope.filterText['event_date']= {};
 
@@ -289,11 +289,11 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     }
 
                     if($scope.noteExists && !GridColumnService.columnExists($scope.eventGridColumns, 'comment')){
-                        $scope.eventGridColumns.push({name: 'comment', id: 'comment', type: 'string', compulsory: false, showFilter: false, show: true});
+                        $scope.eventGridColumns.push({name: 'comment', id: 'comment', type: 'TEXT', filterWithRange: false, compulsory: false, showFilter: false, show: true});
                     }
                     
                     if(!$scope.sortHeader.id){
-                        $scope.sortEventGrid({name: $scope.selectedProgramStage.reportDateDescription ? $scope.selectedProgramStage.reportDateDescription : 'incident_date', id: 'event_date', type: 'date', compulsory: false, showFilter: false, show: true});
+                        $scope.sortEventGrid({name: $scope.selectedProgramStage.reportDateDescription ? $scope.selectedProgramStage.reportDateDescription : 'incident_date', id: 'event_date', type: 'DATE', compulsory: false, showFilter: false, show: true});
                     }
                 }
                 
@@ -399,8 +399,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         if($scope.formHasUnsavedData()){
             var modalOptions = {
-                closeButtonText: 'cancel',
-                actionButtonText: 'proceed',
+                closeButtonText: 'no',
+                actionButtonText: 'yes',
                 headerText: 'warning',
                 bodyText: 'unsaved_data_exists_proceed'
             };
