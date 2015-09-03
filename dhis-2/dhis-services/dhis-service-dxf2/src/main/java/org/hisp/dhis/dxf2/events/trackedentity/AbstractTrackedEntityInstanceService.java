@@ -35,6 +35,7 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
@@ -146,7 +147,7 @@ public abstract class AbstractTrackedEntityInstanceService
         trackedEntityInstance.setTrackedEntity( entityInstance.getTrackedEntity().getUid() );
         trackedEntityInstance.setCreated( entityInstance.getCreated().toString() );
         trackedEntityInstance.setLastUpdated( entityInstance.getLastUpdated().toString() );
-        trackedEntityInstance.setInactive( entityInstance.isInactive());
+        trackedEntityInstance.setInactive( entityInstance.isInactive() );
 
         Collection<Relationship> relationships = relationshipService.getRelationshipsForTrackedEntityInstance( entityInstance );
 
@@ -181,7 +182,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
             attribute.setDisplayName( attributeValue.getAttribute().getDisplayName() );
             attribute.setAttribute( attributeValue.getAttribute().getUid() );
-            attribute.setType( attributeValue.getAttribute().getValueType() );
+            attribute.setValueType( attributeValue.getAttribute().getValueType() );
             attribute.setCode( attributeValue.getAttribute().getCode() );
             attribute.setValue( attributeValue.getValue() );
 
@@ -328,12 +329,12 @@ public abstract class AbstractTrackedEntityInstanceService
             importSummary.getImportCount().incrementIgnored();
 
             return importSummary;
-        }        
-        
+        }
+
         entityInstance.setInactive( trackedEntityInstance.isInactive() );
-        
+
         removeRelationships( entityInstance );
-        removeAttributeValues( entityInstance );        
+        removeAttributeValues( entityInstance );
         teiService.updateTrackedEntityInstance( entityInstance );
 
         updateRelationships( trackedEntityInstance, entityInstance );
@@ -570,30 +571,30 @@ public abstract class AbstractTrackedEntityInstanceService
             importConflicts.add( new ImportConflict( "Attribute.value", "Value length is greater than 256 chars for attribute: " + attribute ) );
         }
 
-        if ( TrackedEntityAttribute.TYPE_NUMBER.equals( teAttribute.getValueType() ) && !MathUtils.isNumeric( attribute.getValue() ) )
+        if ( ValueType.NUMBER == teAttribute.getValueType() && !MathUtils.isNumeric( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not numeric for attribute: " + attribute ) );
         }
-        else if ( TrackedEntityAttribute.TYPE_BOOL.equals( teAttribute.getValueType() ) && !MathUtils.isBool( attribute.getValue() ) )
+        else if ( ValueType.BOOLEAN == teAttribute.getValueType() && !MathUtils.isBool( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not boolean for attribute: " + attribute ) );
         }
-        else if ( TrackedEntityAttribute.TYPE_DATE.equals( teAttribute.getValueType() ) && !DateUtils.dateIsValid( attribute.getValue() ) )
+        else if ( ValueType.DATE == teAttribute.getValueType() && !DateUtils.dateIsValid( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not date for attribute: " + attribute ) );
         }
-        else if ( TrackedEntityAttribute.TYPE_TRUE_ONLY.equals( teAttribute.getValueType() ) && !"true".equals( attribute.getValue() ) )
+        else if ( ValueType.TRUE_ONLY == teAttribute.getValueType() && !"true".equals( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not true (true-only value type) for attribute: " + attribute ) );
         }
-        else if ( TrackedEntityAttribute.TYPE_USERS.equals( teAttribute.getValueType() ) )
+        else if ( ValueType.USERNAME == teAttribute.getValueType() )
         {
             if ( userService.getUserCredentialsByUsername( attribute.getValue() ) == null )
             {
                 importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid username for attribute: " + attribute ) );
             }
         }
-        else if ( TrackedEntityAttribute.TYPE_OPTION_SET.equals( teAttribute.getValueType() ) && !teAttribute.isValidOptionValue( attribute.getValue() ) )
+        else if ( ValueType.OPTION_SET == teAttribute.getValueType() && !teAttribute.isValidOptionValue( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid option for attribute: " + attribute ) );
         }

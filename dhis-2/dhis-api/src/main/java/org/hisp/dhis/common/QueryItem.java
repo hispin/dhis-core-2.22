@@ -28,34 +28,34 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
- * Class which encapsulates a query parameter and value. Operator and filter 
+ * Class which encapsulates a query parameter and value. Operator and filter
  * are inherited from QueryFilter.
- * 
+ *
  * @author Lars Helge Overland
  */
 public class QueryItem
 {
     private DimensionalObject item;
-    
+
     private LegendSet legendSet;
 
     private List<QueryFilter> filters = new ArrayList<>();
-    
-    private String valueType;
-    
+
+    private ValueType valueType;
+
     private AggregationType aggregationType;
-    
+
     private OptionSet optionSet;
 
     // -------------------------------------------------------------------------
@@ -67,7 +67,7 @@ public class QueryItem
         this.item = item;
     }
 
-    public QueryItem( DimensionalObject item, LegendSet legendSet, String valueType, AggregationType aggregationType, OptionSet optionSet )
+    public QueryItem( DimensionalObject item, LegendSet legendSet, ValueType valueType, AggregationType aggregationType, OptionSet optionSet )
     {
         this.item = item;
         this.legendSet = legendSet;
@@ -75,71 +75,71 @@ public class QueryItem
         this.aggregationType = aggregationType;
         this.optionSet = optionSet;
     }
-    
-    public QueryItem( DimensionalObject item, QueryOperator operator, String filter, String valueType, AggregationType aggregationType, OptionSet optionSet )
+
+    public QueryItem( DimensionalObject item, QueryOperator operator, String filter, ValueType valueType, AggregationType aggregationType, OptionSet optionSet )
     {
         this.item = item;
         this.valueType = valueType;
         this.aggregationType = aggregationType;
         this.optionSet = optionSet;
-        
+
         if ( operator != null && filter != null )
         {
             this.filters.add( new QueryFilter( operator, filter ) );
         }
     }
-        
+
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
-    
+
     public String getItemId()
     {
         return item.getUid();
     }
-    
+
     public String getItemName()
     {
         String itemName = item.getUid();
-        
+
         if ( legendSet != null )
         {
             itemName += "_" + legendSet.getUid();
         }
-        
+
         return itemName;
     }
-    
+
     public String getTypeAsString()
     {
         return ObjectUtils.VALUE_TYPE_JAVA_CLASS_MAP.get( valueType ).getName();
     }
-    
+
     public boolean isNumeric()
     {
         return Double.class.equals( ObjectUtils.VALUE_TYPE_JAVA_CLASS_MAP.get( valueType ) );
     }
-    
+
     public boolean hasLegendSet()
     {
         return legendSet != null;
     }
-    
+
     public boolean hasOptionSet()
     {
         return optionSet != null;
     }
-    
+
     public String getLegendSetUid()
     {
         return legendSet != null ? legendSet.getUid() : null;
     }
-    
+
     public String getOptionSetUid()
     {
         return optionSet != null ? optionSet.getUid() : null;
     }
-    
+
     public boolean hasFilter()
     {
         return filters != null && !filters.isEmpty();
@@ -148,19 +148,19 @@ public class QueryItem
     public static List<QueryItem> getQueryItems( Collection<TrackedEntityAttribute> attributes )
     {
         List<QueryItem> queryItems = new ArrayList<>();
-        
+
         for ( TrackedEntityAttribute attribute : attributes )
         {
             queryItems.add( new QueryItem( attribute, attribute.getLegendSet(), attribute.getValueType(), attribute.getAggregationType(), attribute.hasOptionSet() ? attribute.getOptionSet() : null ) );
         }
-        
+
         return queryItems;
     }
-    
+
     // -------------------------------------------------------------------------
     // hashCode, equals and toString
     // -------------------------------------------------------------------------
-    
+
     @Override
     public int hashCode()
     {
@@ -174,19 +174,19 @@ public class QueryItem
         {
             return true;
         }
-        
+
         if ( object == null )
         {
             return false;
         }
-        
+
         if ( getClass() != object.getClass() )
         {
             return false;
         }
-        
+
         final QueryItem other = (QueryItem) object;
-        
+
         return item.equals( other.getItem() );
     }
 
@@ -195,7 +195,7 @@ public class QueryItem
     {
         return "[Item: " + item + ", legend set: " + legendSet + ", filters: " + filters + ", value type: " + valueType + ", optionSet: " + optionSet + "]";
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -230,12 +230,12 @@ public class QueryItem
         this.filters = filters;
     }
 
-    public String getValueType()
+    public ValueType getValueType()
     {
         return valueType;
     }
 
-    public void setValueType( String valueType )
+    public void setValueType( ValueType valueType )
     {
         this.valueType = valueType;
     }

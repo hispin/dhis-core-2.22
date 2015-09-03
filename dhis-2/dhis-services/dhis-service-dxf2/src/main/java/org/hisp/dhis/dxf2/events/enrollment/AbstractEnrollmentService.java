@@ -35,6 +35,7 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.events.event.Note;
@@ -619,34 +620,30 @@ public abstract class AbstractEnrollmentService
             importConflicts.add( new ImportConflict( "Attribute.value", "Value length is greater than 256 chars." ) );
         }
 
-        if ( TrackedEntityAttribute.TYPE_NUMBER.equals( teAttribute.getValueType() )
-            && !MathUtils.isNumeric( attribute.getValue() ) )
+        if ( ValueType.NUMBER == teAttribute.getValueType() && !MathUtils.isNumeric( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not numeric." ) );
         }
-        else if ( TrackedEntityAttribute.TYPE_BOOL.equals( teAttribute.getValueType() )
-            && !MathUtils.isBool( attribute.getValue() ) )
+        else if ( ValueType.BOOLEAN == teAttribute.getValueType() && !MathUtils.isBool( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not boolean." ) );
         }
-        else if ( TrackedEntityAttribute.TYPE_DATE.equals( teAttribute.getValueType() )
-            && !DateUtils.dateIsValid( attribute.getValue() ) )
+        else if ( ValueType.DATE == teAttribute.getValueType() && !DateUtils.dateIsValid( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not date." ) );
         }
-        else if ( TrackedEntityAttribute.TYPE_TRUE_ONLY.equals( teAttribute.getValueType() )
-            && "true".equals( attribute.getValue() ) )
+        else if ( ValueType.TRUE_ONLY == teAttribute.getValueType() && "true".equals( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not true (true-only value type)." ) );
         }
-        else if ( TrackedEntityAttribute.TYPE_USERS.equals( teAttribute.getValueType() ) )
+        else if ( ValueType.USERNAME == teAttribute.getValueType() )
         {
             if ( userService.getUserCredentialsByUsername( attribute.getValue() ) == null )
             {
                 importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid username." ) );
             }
         }
-        else if ( TrackedEntityAttribute.TYPE_OPTION_SET.equals( teAttribute.getValueType() )
+        else if ( ValueType.OPTION_SET == teAttribute.getValueType()
             && !teAttribute.getOptionSet().getOptionCodes().contains( attribute.getValue() ) )
         {
             importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid option code." ) );

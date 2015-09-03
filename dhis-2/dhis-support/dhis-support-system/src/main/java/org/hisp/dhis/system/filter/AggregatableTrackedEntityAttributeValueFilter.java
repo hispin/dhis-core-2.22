@@ -28,24 +28,23 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Set;
-
+import com.google.common.collect.Sets;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
-import com.google.common.collect.Sets;
+import java.util.Set;
 
 public class AggregatableTrackedEntityAttributeValueFilter
     implements Filter<TrackedEntityAttribute>
 {
     public static final AggregatableTrackedEntityAttributeValueFilter INSTANCE = new AggregatableTrackedEntityAttributeValueFilter();
-    
-    private static final Set<String> TYPES = Sets.newHashSet( TrackedEntityAttribute.TYPE_NUMBER, DataElement.VALUE_TYPE_INT,
-        TrackedEntityAttribute.TYPE_BOOL, TrackedEntityAttribute.TYPE_OPTION_SET );
-    
-    //TODO Option set is not robust as it might contain any value type, needs to change with new Enum is in place
 
+    private static final Set<ValueType> TYPES = Sets.newHashSet(
+        ValueType.INTEGER, ValueType.INTEGER_POSITIVE, ValueType.INTEGER_NEGATIVE, ValueType.INTEGER_ZERO_OR_POSITIVE, ValueType.NUMBER,
+        ValueType.UNIT_INTERVAL, ValueType.PERCENTAGE, ValueType.BOOLEAN, ValueType.OPTION_SET );
+
+    //TODO Option set is not robust as it might contain any value type, needs to change with new Enum is in place
     @Override
     public boolean retain( TrackedEntityAttribute object )
     {

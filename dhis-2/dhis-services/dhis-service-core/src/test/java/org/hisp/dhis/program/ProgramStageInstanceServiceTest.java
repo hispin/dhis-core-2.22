@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.event.EventStatus;
@@ -167,7 +168,7 @@ public class ProgramStageInstanceServiceTest
         entityInstanceService.addTrackedEntityInstance( entityInstanceB );
 
         TrackedEntityAttribute attribute = createTrackedEntityAttribute( 'A' );
-        attribute.setValueType( TrackedEntityAttribute.TYPE_PHONE_NUMBER );
+        attribute.setValueType( ValueType.PHONE_NUMBER );
         attributeService.addTrackedEntityAttribute( attribute );
 
         TrackedEntityAttributeValue attributeValue = createTrackedEntityAttributeValue( 'A', entityInstanceA, attribute );

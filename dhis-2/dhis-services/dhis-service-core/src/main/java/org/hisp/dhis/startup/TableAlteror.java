@@ -28,13 +28,6 @@ package org.hisp.dhis.startup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.quick.StatementHolder;
@@ -48,6 +41,13 @@ import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -728,7 +728,7 @@ public class TableAlteror
         executeSql( "UPDATE program SET version=0 WHERE version IS NULL" );
         executeSql( "update program set categorycomboid = " + defaultCategoryComboId + " where categorycomboid is null" );
         executeSql( "update programstageinstance set attributeOptionCombo = " + defaultOptionComboId + " where attributeOptionCombo is null" );
-        
+
 
         executeSql( "ALTER TABLE datavalue ALTER COLUMN lastupdated TYPE timestamp" );
         executeSql( "ALTER TABLE completedatasetregistration ALTER COLUMN date TYPE timestamp" );
@@ -856,7 +856,7 @@ public class TableAlteror
         executeSql( "drop table aggregatedorgunitdatavalue_temp" );
         executeSql( "drop table aggregatedorgunitindicatorvalue" );
         executeSql( "drop table aggregatedorgunitindicatorvalue_temp" );
-        
+
         oauth2();
 
         upgradeDataValuesWithAttributeOptionCombo();
@@ -894,6 +894,18 @@ public class TableAlteror
         executeSql( "update dataelement set vtype='BOOLEAN' where valuetype='bool' and vtype is null" );
         executeSql( "update dataelement set vtype='TRUE_ONLY' where valuetype='trueOnly' and vtype is null" );
         executeSql( "update dataelement set vtype='USERNAME' where valuetype='username' and vtype is null" );
+
+        executeSql( "update trackedentityattribute set valuetype='TEXT' where valuetype='string'" );
+        executeSql( "update trackedentityattribute set valuetype='PHONE_NUMBER' where valuetype='phoneNumber'" );
+        executeSql( "update trackedentityattribute set valuetype='EMAIL' where valuetype='email'" );
+        executeSql( "update trackedentityattribute set valuetype='NUMBER' where valuetype='number'" );
+        executeSql( "update trackedentityattribute set valuetype='LETTER' where valuetype='letter'" );
+        executeSql( "update trackedentityattribute set valuetype='BOOLEAN' where valuetype='bool'" );
+        executeSql( "update trackedentityattribute set valuetype='TRUE_ONLY' where valuetype='trueOnly'" );
+        executeSql( "update trackedentityattribute set valuetype='DATE' where valuetype='date'" );
+        executeSql( "update trackedentityattribute set valuetype='OPTION_SET' where valuetype='optionSet'" );
+        executeSql( "update trackedentityattribute set valuetype='TRACKER_ASSOCIATE' where valuetype='trackerAssociate'" );
+        executeSql( "update trackedentityattribute set valuetype='USERNAME' where valuetype='users'" );
     }
 
     public void oauth2()

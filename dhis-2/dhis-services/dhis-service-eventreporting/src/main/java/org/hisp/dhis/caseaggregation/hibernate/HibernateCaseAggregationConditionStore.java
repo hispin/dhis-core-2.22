@@ -896,7 +896,8 @@ public class HibernateCaseAggregationConditionStore
             if ( isExist )
             {
                 TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( Integer.parseInt( attributeId ) );
-                if ( attribute.getValueType().equals( TrackedEntityAttribute.TYPE_NUMBER ) )
+
+                if ( ValueType.NUMBER == attribute.getValueType() )
                 {
                     sql += " AND cast( _pav.value as " + statementBuilder.getDoubleColumnType() + " )  ";
                 }

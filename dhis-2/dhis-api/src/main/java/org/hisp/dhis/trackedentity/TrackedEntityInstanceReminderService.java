@@ -96,7 +96,7 @@ public interface TrackedEntityInstanceReminderService
      *         orgunit phone numbers, phone numbers of DHIS users at the orgunit
      *         OR phone numbers of DHIS users in a user group.
      */
-    Set<String> getPhonenumbers( TrackedEntityInstanceReminder reminder, TrackedEntityInstance instance );
+    Set<String> getPhoneNumbers( TrackedEntityInstanceReminder reminder, TrackedEntityInstance instance );
 
     /**
      * Retrieve DHIS users from a template which is defined to send messages to

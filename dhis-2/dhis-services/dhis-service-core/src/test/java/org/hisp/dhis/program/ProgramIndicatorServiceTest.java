@@ -28,22 +28,8 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.program.ProgramIndicator.KEY_ATTRIBUTE;
-import static org.hisp.dhis.program.ProgramIndicator.KEY_CONSTANT;
-import static org.hisp.dhis.program.ProgramIndicator.KEY_DATAELEMENT;
-import static org.hisp.dhis.program.ProgramIndicator.KEY_PROGRAM_VARIABLE;
-import static org.hisp.dhis.program.ProgramIndicator.VALUE_TYPE_DATE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
@@ -63,6 +49,14 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static org.hisp.dhis.program.ProgramIndicator.*;
+import static org.junit.Assert.*;
+
 /**
  * @author Chau Thu Tran
  */
@@ -70,7 +64,7 @@ public class ProgramIndicatorServiceTest
     extends DhisSpringTest
 {
     private static final String COL_QUOTE = "\"";
-    
+
     @Autowired
     private ProgramIndicatorService programIndicatorService;
 
@@ -154,7 +148,7 @@ public class ProgramIndicatorServiceTest
 
     private ProgramIndicator indicatorI;
 
-    private ProgramIndicator indicatorJ;    
+    private ProgramIndicator indicatorJ;
 
     @Override
     public void setUpTest()
@@ -228,17 +222,17 @@ public class ProgramIndicatorServiceTest
 
         programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, programA, enrollmentDate,
             incidenDate, organisationUnit );
-        
+
         // TODO enroll twice?
 
         // ---------------------------------------------------------------------
         // TrackedEntityAttribute
         // ---------------------------------------------------------------------
 
-        atA = createTrackedEntityAttribute( 'A', TrackedEntityAttribute.TYPE_NUMBER );
-        atB = createTrackedEntityAttribute( 'B', TrackedEntityAttribute.TYPE_NUMBER );
-        atC = createTrackedEntityAttribute( 'C', TrackedEntityAttribute.TYPE_DATE );
-        atD = createTrackedEntityAttribute( 'D', TrackedEntityAttribute.TYPE_DATE );
+        atA = createTrackedEntityAttribute( 'A', ValueType.NUMBER );
+        atB = createTrackedEntityAttribute( 'B', ValueType.NUMBER );
+        atC = createTrackedEntityAttribute( 'C', ValueType.DATE );
+        atD = createTrackedEntityAttribute( 'D', ValueType.DATE );
 
         attributeService.addTrackedEntityAttribute( atA );
         attributeService.addTrackedEntityAttribute( atB );
@@ -247,10 +241,8 @@ public class ProgramIndicatorServiceTest
 
         TrackedEntityAttributeValue attributeValueA = new TrackedEntityAttributeValue( atA, entityInstance, "1" );
         TrackedEntityAttributeValue attributeValueB = new TrackedEntityAttributeValue( atB, entityInstance, "2" );
-        TrackedEntityAttributeValue attributeValueC = new TrackedEntityAttributeValue( atC, entityInstance,
-            "2015-01-01" );
-        TrackedEntityAttributeValue attributeValueD = new TrackedEntityAttributeValue( atD, entityInstance,
-            "2015-01-03" );
+        TrackedEntityAttributeValue attributeValueC = new TrackedEntityAttributeValue( atC, entityInstance, "2015-01-01" );
+        TrackedEntityAttributeValue attributeValueD = new TrackedEntityAttributeValue( atD, entityInstance, "2015-01-03" );
 
         attributeValueService.addTrackedEntityAttributeValue( attributeValueA );
         attributeValueService.addTrackedEntityAttributeValue( attributeValueB );
@@ -504,7 +496,7 @@ public class ProgramIndicatorServiceTest
     public void testGetAnalyticsSQl()
     {
         String expected = COL_QUOTE + deA.getUid() + COL_QUOTE + " + " + COL_QUOTE + atA.getUid() + COL_QUOTE + " > 10";
-        
+
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( indicatorE.getFilter() ) );
     }
 
@@ -515,7 +507,7 @@ public class ProgramIndicatorServiceTest
         String expected = "case when " + col + " < 0 then 0 else " + col + " end";
         String expression = "d2:zing(" + col + ")";
 
-        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
 
     @Test
@@ -525,7 +517,7 @@ public class ProgramIndicatorServiceTest
         String expected = "case when " + col + " >= 0 then 1 else 0 end";
         String expression = "d2:oizp(" + col + ")";
 
-        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
 
     @Test
@@ -536,7 +528,7 @@ public class ProgramIndicatorServiceTest
         String expected = "(cast(" + col2 + " as date) - cast(" + col1 + " as date))";
         String expression = "d2:daysBetween(" + col1 + "," + col2 + ")";
 
-        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
 
     @Test
@@ -546,7 +538,7 @@ public class ProgramIndicatorServiceTest
         String expected = "case when (" + col1 + " > 3) then 10 else 5 end";
         String expression = "d2:condition('" + col1 + " > 3',10,5)";
 
-        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
 
     @Test( expected = IllegalStateException.class )
@@ -556,9 +548,9 @@ public class ProgramIndicatorServiceTest
         String expected = "case when " + col + " >= 0 then 1 else " + col + " end";
         String expression = "d2:xyza(" + col + ")";
 
-        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
-    
+
     @Test
     public void testExpressionIsValid()
     {
@@ -578,10 +570,10 @@ public class ProgramIndicatorServiceTest
         String filterB = KEY_ATTRIBUTE + "{" + atA.getUid() + "} == " + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} - 5";
         String filterC = KEY_ATTRIBUTE + "{invaliduid} == 100";
         String filterD = KEY_ATTRIBUTE + "{" + atA.getUid() + "} + 200";
-        
+
         assertEquals( ProgramIndicator.VALID, programIndicatorService.filterIsValid( filterA ) );
         assertEquals( ProgramIndicator.VALID, programIndicatorService.filterIsValid( filterB ) );
         assertEquals( ProgramIndicator.INVALID_IDENTIFIERS_IN_EXPRESSION, programIndicatorService.filterIsValid( filterC ) );
-        assertEquals( ProgramIndicator.FILTER_NOT_EVALUATING_TO_TRUE_OR_FALSE, programIndicatorService.filterIsValid( filterD ) );        
+        assertEquals( ProgramIndicator.FILTER_NOT_EVALUATING_TO_TRUE_OR_FALSE, programIndicatorService.filterIsValid( filterD ) );
     }
 }

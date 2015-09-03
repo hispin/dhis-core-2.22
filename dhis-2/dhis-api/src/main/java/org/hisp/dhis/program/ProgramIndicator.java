@@ -28,9 +28,12 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Set;
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -42,12 +45,8 @@ import org.hisp.dhis.common.RegexUtils;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.Sets;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Chau Thu Tran
@@ -62,18 +61,18 @@ public class ProgramIndicator
     public static final String KEY_ATTRIBUTE = "A";
     public static final String KEY_PROGRAM_VARIABLE = "V";
     public static final String KEY_CONSTANT = "C";
-    
+
     public static final String VAR_EXECUTION_DATE = "execution_date";
     public static final String VAR_INCIDENT_DATE = "incident_date";
     public static final String VAR_ENROLLMENT_DATE = "enrollment_date";
     public static final String VAR_CURRENT_DATE = "current_date";
     public static final String VAR_VALUE_COUNT = "value_count";
     public static final String VAR_ZERO_POS_VALUE_COUNT = "zero_pos_value_count";
-    
+
     public static final String VALUE_TYPE_DATE = "date";
     public static final String VALUE_TYPE_INT = "int";
-    
-    private static final String EXPRESSION_REGEXP = "(" + KEY_DATAELEMENT + "|" + KEY_ATTRIBUTE + "|" + KEY_PROGRAM_VARIABLE + "|" + KEY_CONSTANT + ")\\{(\\w+|" + 
+
+    private static final String EXPRESSION_REGEXP = "(" + KEY_DATAELEMENT + "|" + KEY_ATTRIBUTE + "|" + KEY_PROGRAM_VARIABLE + "|" + KEY_CONSTANT + ")\\{(\\w+|" +
         VAR_INCIDENT_DATE + "|" + VAR_ENROLLMENT_DATE + "|" + VAR_CURRENT_DATE + ")" + SEPARATOR_ID + "?(\\w*)\\}";
     private static final String SQL_FUNC_REGEXP = "d2:(.+?)\\(([^,]+)\\,?([^,]*)\\,?([^,]*)\\)";
 
@@ -82,31 +81,31 @@ public class ProgramIndicator
     public static final Pattern DATAELEMENT_PATTERN = Pattern.compile( KEY_DATAELEMENT + "\\{(\\w{11})" + SEPARATOR_ID + "(\\w{11})\\}" );
     public static final Pattern ATTRIBUTE_PATTERN = Pattern.compile( KEY_ATTRIBUTE + "\\{(\\w{11})\\}" );
     public static final Pattern VALUECOUNT_PATTERN = Pattern.compile( "V\\{(" + VAR_VALUE_COUNT + "|" + VAR_ZERO_POS_VALUE_COUNT + ")\\}" );
-    
+
     public static final String VALID = "valid";
     public static final String EXPRESSION_NOT_WELL_FORMED = "expression_not_well_formed";
     public static final String INVALID_IDENTIFIERS_IN_EXPRESSION = "invalid_identifiers_in_expression";
     public static final String FILTER_NOT_EVALUATING_TO_TRUE_OR_FALSE = "filter_not_evaluating_to_true_or_false";
 
     private Program program;
-    
+
     private String valueType;
 
     private String expression;
-    
+
     private String filter;
-    
+
     private AggregationType aggregationType;
 
     private EventOutputType eventOutputType;
-        
+
     /**
      * Number of decimals to use for indicator value, null implies default.
      */
     private Integer decimals;
 
     private Boolean displayInForm;
-    
+
     private String rootDate;
 
     // -------------------------------------------------------------------------
@@ -130,7 +129,7 @@ public class ProgramIndicator
     {
         return decimals != null && decimals >= 0;
     }
-    
+
     /**
      * Returns aggregation type, if not exists returns AVERAGE.
      */
@@ -138,21 +137,21 @@ public class ProgramIndicator
     {
         return aggregationType != null ? aggregationType : AggregationType.AVERAGE;
     }
-    
+
     /**
      * Returns a set of data element and attribute identifiers part of the given
      * input expression.
-     * 
+     *
      * @param input the expression.
      * @return a set of UIDs.
      */
     public static Set<String> getDataElementAndAttributeIdentifiers( String input )
     {
-        return Sets.union( 
+        return Sets.union(
             RegexUtils.getMatches( DATAELEMENT_PATTERN, input, 2 ),
             RegexUtils.getMatches( ATTRIBUTE_PATTERN, input, 1 ) );
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters && Setters
     // -------------------------------------------------------------------------
@@ -283,7 +282,7 @@ public class ProgramIndicator
         if ( other.getClass().isInstance( this ) )
         {
             ProgramIndicator programIndicator = (ProgramIndicator) other;
-            
+
             if ( strategy.isReplace() )
             {
                 program = programIndicator.getProgram();

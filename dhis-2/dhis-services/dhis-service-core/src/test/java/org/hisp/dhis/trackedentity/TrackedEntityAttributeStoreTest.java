@@ -28,17 +28,15 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hisp.dhis.DhisSpringTest;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.junit.Assert.*;
 
 /**
  * @author Chau Thu Tran
@@ -65,7 +63,7 @@ public class TrackedEntityAttributeStoreTest
     {
         attributeA = createTrackedEntityAttribute( 'A' );
         attributeB = createTrackedEntityAttribute( 'B' );
-        attributeC = createTrackedEntityAttribute( 'C', TrackedEntityAttribute.TYPE_NUMBER );
+        attributeC = createTrackedEntityAttribute( 'C', ValueType.NUMBER );
 
         List<TrackedEntityAttribute> attributesA = new ArrayList<>();
         attributesA.add( attributeA );

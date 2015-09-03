@@ -41,9 +41,6 @@ import org.hisp.dhis.api.mobile.model.LWUITmodel.LostEvent;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.Notification;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.Patient;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.PatientList;
-import org.hisp.dhis.api.mobile.model.LWUITmodel.Section;
-import org.hisp.dhis.api.mobile.model.OptionSet;
-import org.hisp.dhis.api.mobile.model.PatientAttribute;
 import org.hisp.dhis.api.mobile.model.Task;
 import org.hisp.dhis.api.mobile.model.comparator.ActivityComparator;
 import org.hisp.dhis.api.mobile.model.comparator.TrackedEntityAttributeValueSortOrderComparator;
@@ -55,6 +52,7 @@ import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.event.EventStatus;
@@ -812,11 +810,13 @@ public class ActivityReportingServiceImpl
         {
             if ( value != null )
             {
+                /*
                 org.hisp.dhis.api.mobile.model.PatientAttribute patientAttribute = new org.hisp.dhis.api.mobile.model.PatientAttribute(
                     value.getAttribute().getName(), value.getValue(), value.getAttribute().getValueType(), false, value
                     .getAttribute().getDisplayInListNoProgram(), new OptionSet() );
 
                 patientAtts.add( patientAttribute );
+                */
             }
         }
 
@@ -1416,14 +1416,15 @@ public class ActivityReportingServiceImpl
     {
         List<org.hisp.dhis.api.mobile.model.PatientAttribute> list = new ArrayList<>();
 
+        /*
         for ( TrackedEntityAttribute patientAtt : getPatientAtts( null ) )
         {
             list.add( new PatientAttribute( patientAtt.getName(), null, patientAtt.getValueType(), false, patientAtt
                 .getDisplayInListNoProgram(), new OptionSet() ) );
         }
+        */
 
         return list;
-
     }
 
     @Override
@@ -1431,6 +1432,7 @@ public class ActivityReportingServiceImpl
     {
         List<org.hisp.dhis.api.mobile.model.PatientAttribute> list = new ArrayList<>();
 
+        /*
         for ( TrackedEntityAttribute pa : getPatientAtts( programId ) )
         {
             PatientAttribute patientAttribute = new PatientAttribute();
@@ -1442,6 +1444,7 @@ public class ActivityReportingServiceImpl
 
             list.add( patientAttribute );
         }
+        */
 
         return list;
     }
@@ -1926,7 +1929,7 @@ public class ActivityReportingServiceImpl
                 for ( TrackedEntityAttributeValue attrValue : programStageInstance.getProgramInstance()
                     .getEntityInstance().getAttributeValues() )
                 {
-                    if ( attrValue.getAttribute().getValueType().equals( "phoneNumber" ) )
+                    if ( ValueType.PHONE_NUMBER == attrValue.getAttribute().getValueType() )
                     {
                         User user = new User();
                         user.setPhoneNumber( attrValue.getValue() );
@@ -1934,8 +1937,7 @@ public class ActivityReportingServiceImpl
                     }
 
                 }
-                smsSender.sendMessage( lostEvent.getName(), lostEvent.getSMS(), currentUserService.getCurrentUser(),
-                    recipientsList, false );
+                smsSender.sendMessage( lostEvent.getName(), lostEvent.getSMS(), currentUserService.getCurrentUser(), recipientsList, false );
             }
 
             notification.setMessage( "Success" );
@@ -2440,7 +2442,7 @@ public class ActivityReportingServiceImpl
     {
         I18nFormat format = i18nManager.getI18nFormat();
 
-        Set<String> phoneNumbers = reminderService.getPhonenumbers( reminder, entityInstance );
+        Set<String> phoneNumbers = reminderService.getPhoneNumbers( reminder, entityInstance );
         OutboundSms outboundSms = null;
 
         if ( phoneNumbers.size() > 0 )

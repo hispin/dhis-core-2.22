@@ -82,27 +82,27 @@
 		</td>		
 		<td></td>				
 	</tr>
-	
+
     <tr>
-        <td><label for="valueType">$i18n.getString( "value_type" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
-        <td>
-            <select id="valueType" name="valueType" onchange="typeOnChange();">
-                <option value="number" selected="selected">$i18n.getString( "number" )</option>
-                <option value="string">$i18n.getString( "text" )</option>
-                <option value="letter">$i18n.getString( "letter_only" )</option>
-                <option value="bool">$i18n.getString( "yes_no" )</option>
-				<option value="trueOnly">$i18n.getString( "yes_only" )</option>
-                <option value="date">$i18n.getString( "date" )</option>
-                <option value="phoneNumber">$i18n.getString( "phone_number" )</option>
-                <option value="phoneNumber">$i18n.getString( "email" )</option>
-                <option value="trackerAssociate">$i18n.getString( "tracker_associate" )</option>
-                <option value="users">$i18n.getString( "users" )</option>
-                <option value="optionSet">$i18n.getString( "option_set" )</option>
-            </select>
-        </td>
-        <td></td>
+      <td><label for="valueType">$i18n.getString( "value_type" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+      <td>
+        <select id="valueType" name="valueType" onchange="typeOnChange();">
+          <option value="NUMBER" selected="selected">$i18n.getString( "number" )</option>
+          <option value="TEXT">$i18n.getString( "text" )</option>
+          <option value="LETTER">$i18n.getString( "letter_only" )</option>
+          <option value="BOOLEAN">$i18n.getString( "yes_no" )</option>
+          <option value="TRUE_ONLY">$i18n.getString( "yes_only" )</option>
+          <option value="DATE">$i18n.getString( "date" )</option>
+          <option value="PHONE_NUMBER">$i18n.getString( "phone_number" )</option>
+          <option value="EMAIL">$i18n.getString( "email" )</option>
+          <option value="TRACKER_ASSOCIATE">$i18n.getString( "tracker_associate" )</option>
+          <option value="USERNAME">$i18n.getString( "users" )</option>
+          <option value="OPTION_SET">$i18n.getString( "option_set" )</option>
+        </select>
+      </td>
+      <td></td>
     </tr>
-    
+
     <tr>
         <td><label for="aggregationType">$i18n.getString( "aggregation_type" )</label></td>
         <td>

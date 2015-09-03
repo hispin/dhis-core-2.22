@@ -120,5 +120,4 @@ public class DefaultTrackedEntityService
     {
         return trackedEntityStore.getAllOrderedName( min, max );
     }
-
 }

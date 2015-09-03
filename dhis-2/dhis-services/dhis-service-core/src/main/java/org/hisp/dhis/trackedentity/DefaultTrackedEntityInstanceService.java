@@ -39,6 +39,7 @@ import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -750,9 +751,9 @@ public class DefaultTrackedEntityInstanceService
                 if ( attributeValue.getAttribute().getUid().equals( criteria.getProperty() ) )
                 {
                     String value = attributeValue.getValue();
-                    String type = attributeValue.getAttribute().getValueType();
+                    ValueType valueType = attributeValue.getAttribute().getValueType();
 
-                    if ( type.equals( TrackedEntityAttribute.TYPE_NUMBER ) )
+                    if ( valueType.isNumeric() )
                     {
                         int value1 = Integer.parseInt( value );
                         int value2 = Integer.parseInt( criteria.getValue() );
@@ -764,7 +765,7 @@ public class DefaultTrackedEntityInstanceService
                             return criteria;
                         }
                     }
-                    else if ( type.equals( TrackedEntityAttribute.TYPE_DATE ) )
+                    else if ( valueType.isDate() )
                     {
                         Date value1 = format.parseDate( value );
                         Date value2 = format.parseDate( criteria.getValue() );
@@ -777,14 +778,12 @@ public class DefaultTrackedEntityInstanceService
                     }
                     else
                     {
-                        if ( criteria.getOperator() == ValidationCriteria.OPERATOR_EQUAL_TO
-                            && !value.equals( criteria.getValue() ) )
+                        if ( criteria.getOperator() == ValidationCriteria.OPERATOR_EQUAL_TO && !value.equals( criteria.getValue() ) )
                         {
                             return criteria;
                         }
 
                     }
-
                 }
             }
 
