@@ -44,7 +44,7 @@ import org.hisp.dhis.minmax.MinMaxDataElement;
 import org.hisp.dhis.minmax.MinMaxDataElementService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.system.filter.DataElementTypeFilter;
+import org.hisp.dhis.system.filter.DataElementValueTypesFilter;
 import org.hisp.dhis.system.util.MathUtils;
 import org.joda.time.DateTime;
 
@@ -63,7 +63,7 @@ public class MinMaxOutlierAnalysisService
 {
     private static final Log log = LogFactory.getLog( MinMaxOutlierAnalysisService.class );
 
-    private static final Filter<DataElement> DATALEMENT_INT_FILTER = new DataElementTypeFilter( DataElement.VALUE_TYPE_INT );
+    private static final Filter<DataElement> DE_NUMERIC_FILTER = new DataElementValueTypesFilter( ValueType.NUMERIC_TYPES );
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -100,7 +100,7 @@ public class MinMaxOutlierAnalysisService
     {
         Set<DataElement> elements = new HashSet<>( dataElements );
 
-        FilterUtils.filter( elements, DATALEMENT_INT_FILTER );
+        FilterUtils.filter( elements, DE_NUMERIC_FILTER );
 
         Set<DataElementCategoryOptionCombo> categoryOptionCombos = new HashSet<>();
 

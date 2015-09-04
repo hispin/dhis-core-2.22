@@ -622,6 +622,7 @@ public class DataElement
 
     public void setValueType( ValueType valueType )
     {
+        ValueType.setDataElementTypes( this, valueType );
         this.valueType = valueType;
     }
 

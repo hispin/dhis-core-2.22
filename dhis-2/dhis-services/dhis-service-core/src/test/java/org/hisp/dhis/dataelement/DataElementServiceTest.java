@@ -98,13 +98,13 @@ public class DataElementServiceTest
         assertNotNull( dataElementA.getLastUpdated() );
 
         dataElementA = dataElementService.getDataElement( idA );
-        assertEquals( DataElement.VALUE_TYPE_INT, dataElementA.getType() );
+        assertEquals( ValueType.INTEGER, dataElementA.getValueType() );
 
-        dataElementA.setType( DataElement.VALUE_TYPE_BOOL );
+        dataElementA.setValueType( ValueType.BOOLEAN );
         dataElementService.updateDataElement( dataElementA );
         dataElementA = dataElementService.getDataElement( idA );
-        assertNotNull( dataElementA.getType() );
-        assertEquals( DataElement.VALUE_TYPE_BOOL, dataElementA.getType() );
+        assertNotNull( dataElementA.getValueType() );
+        assertEquals( ValueType.BOOLEAN, dataElementA.getValueType() );
     }
 
     @Test
@@ -256,11 +256,6 @@ public class DataElementServiceTest
         DataElement dataElementB = createDataElement( 'B' );
         DataElement dataElementC = createDataElement( 'C' );
         DataElement dataElementD = createDataElement( 'D' );
-
-        dataElementA.setType( DataElement.VALUE_TYPE_INT );
-        dataElementB.setType( DataElement.VALUE_TYPE_BOOL );
-        dataElementC.setType( DataElement.VALUE_TYPE_STRING );
-        dataElementD.setType( DataElement.VALUE_TYPE_INT );
 
         dataElementA.setValueType( ValueType.INTEGER );
         dataElementB.setValueType( ValueType.BOOLEAN );

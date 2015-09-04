@@ -22,11 +22,11 @@
 
     <property name="formName" length="230" />
 
-    <property name="type" column="valuetype" length="16" not-null="true" />
+    <property name="type" column="valuetype" length="16" not-null="false" />
 
-    <property name="numberType" column="numbertype" length="16" />
+    <property name="numberType" column="numbertype" length="16" not-null="false" />
 
-    <property name="textType" column="textType" length="16" />
+    <property name="textType" column="textType" length="16" not-null="false" />
 
     <property name="valueType" column="vtype" length="36" access="property" not-null="false">
       <type name="org.hibernate.type.EnumType">

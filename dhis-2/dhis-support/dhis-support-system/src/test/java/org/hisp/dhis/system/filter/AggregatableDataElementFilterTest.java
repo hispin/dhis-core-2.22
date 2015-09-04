@@ -28,16 +28,16 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.hisp.dhis.DhisConvenienceTest;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
 
-import com.google.common.collect.Sets;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Lars Helge Overland
@@ -54,29 +54,29 @@ public class AggregatableDataElementFilterTest
         DataElement elD = createDataElement( 'D' );
         DataElement elE = createDataElement( 'E' );
         DataElement elF = createDataElement( 'F' );
-        
-        elA.setType( DataElement.VALUE_TYPE_BOOL );
-        elB.setType( DataElement.VALUE_TYPE_INT );
-        elC.setType( DataElement.VALUE_TYPE_DATE );
-        elD.setType( DataElement.VALUE_TYPE_BOOL );
-        elE.setType( DataElement.VALUE_TYPE_INT );
-        elF.setType( DataElement.VALUE_TYPE_DATE );        
-        
+
+        elA.setValueType( ValueType.BOOLEAN );
+        elB.setValueType( ValueType.INTEGER );
+        elC.setValueType( ValueType.DATE );
+        elD.setValueType( ValueType.BOOLEAN );
+        elE.setValueType( ValueType.INTEGER );
+        elF.setValueType( ValueType.DATE );
+
         Set<DataElement> set = Sets.newHashSet( elA, elB, elC, elD, elE, elF );
-                
+
         Set<DataElement> reference = Sets.newHashSet( elA, elB, elD, elE );
-        
+
         FilterUtils.filter( set, AggregatableDataElementFilter.INSTANCE );
-        
+
         assertEquals( reference.size(), set.size() );
         assertEquals( reference, set );
-        
+
         set = Sets.newHashSet( elA, elB, elC, elD, elE, elF );
 
         Set<DataElement> inverseReference = Sets.newHashSet( elC, elF );
-                
+
         FilterUtils.inverseFilter( set, AggregatableDataElementFilter.INSTANCE );
-        
+
         assertEquals( inverseReference.size(), set.size() );
         assertEquals( inverseReference, set );
     }

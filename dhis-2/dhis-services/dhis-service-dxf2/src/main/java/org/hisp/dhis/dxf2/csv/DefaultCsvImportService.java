@@ -194,9 +194,6 @@ public class DefaultCsvImportService
                 String domainType = getSafe( values, 6, DataElementDomain.AGGREGATE.getValue(), 16 );
                 object.setDomainType( DataElementDomain.fromValue( domainType ) );
 
-                object.setType( getSafe( values, 7, DataElement.VALUE_TYPE_INT, 16 ) );
-                object.setNumberType( getSafe( values, 8, DataElement.VALUE_TYPE_NUMBER, 16 ) );
-                object.setTextType( getSafe( values, 9, null, 16 ) );
                 object.setValueType( ValueType.getFromDataElementTypes(
                     getSafe( values, 7, DataElement.VALUE_TYPE_INT, 16 ),
                     getSafe( values, 8, DataElement.VALUE_TYPE_NUMBER, 16 ),

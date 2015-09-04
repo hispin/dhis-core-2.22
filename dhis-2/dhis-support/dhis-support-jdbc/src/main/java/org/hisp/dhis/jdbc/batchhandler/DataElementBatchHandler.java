@@ -42,7 +42,7 @@ public class DataElementBatchHandler
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
- 
+
     public DataElementBatchHandler( JdbcConfiguration config )
     {
         super( config, false, false );
@@ -72,7 +72,7 @@ public class DataElementBatchHandler
 
     @Override
     protected void setIdentifierValues( DataElement dataElement )
-    {        
+    {
         statementBuilder.setIdentifierValue( dataElement.getId() );
     }
 
@@ -91,7 +91,7 @@ public class DataElementBatchHandler
         statementBuilder.setUniqueValue( dataElement.getShortName() );
         statementBuilder.setUniqueValue( dataElement.getCode() );
     }
-    
+
     @Override
     protected void setColumns()
     {
@@ -106,7 +106,7 @@ public class DataElementBatchHandler
         statementBuilder.setColumn( "categorycomboid" );
         statementBuilder.setColumn( "zeroissignificant" );
     }
-    
+
     @Override
     protected void setValues( DataElement dataElement )
     {
@@ -115,7 +115,7 @@ public class DataElementBatchHandler
         statementBuilder.setValue( dataElement.getShortName() );
         statementBuilder.setValue( dataElement.getCode() );
         statementBuilder.setValue( dataElement.getDescription() );
-        statementBuilder.setValue( dataElement.getType() );
+        statementBuilder.setValue( dataElement.getValueType() );
         statementBuilder.setValue( dataElement.getDomainType().name() );
         statementBuilder.setValue( dataElement.getAggregationOperator() );
         statementBuilder.setValue( dataElement.getCategoryCombo().getId() );

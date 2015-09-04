@@ -71,7 +71,7 @@ public class PDFUtils
 
     /**
      * Creates a document.
-     * 
+     *
      * @param outputStream The output stream to write the document content.
      * @return A Document.
      */
@@ -82,7 +82,7 @@ public class PDFUtils
 
     /**
      * Creates a document.
-     * 
+     *
      * @param outputStream The output stream to write the document content.
      * @param pageSize the page size.
      * @return A Document.
@@ -107,7 +107,7 @@ public class PDFUtils
 
     /**
      * Starts a new page in the document.
-     * 
+     *
      * @param document The document to start a new page in.
      */
     public static void startNewPage( Document document )
@@ -120,16 +120,16 @@ public class PDFUtils
      * Creates a table. Specify the columns and widths by providing one<br>
      * float per column with a percentage value. For instance
      * </p>
-     * 
+     *
      * <p>
      * getPdfPTable( 0.35f, 0.65f )
      * </p>
-     * 
+     *
      * <p>
      * will give you a table with two columns where the first covers 35 %<br>
      * of the page while the second covers 65 %.
      * </p>
-     * 
+     *
      * @param keepTogether Indicates whether the table could be broken across
      *        multiple pages or should be kept at one page.
      * @param columnWidths The column widths.
@@ -147,7 +147,7 @@ public class PDFUtils
 
     /**
      * Adds a table to a document.
-     * 
+     *
      * @param document The document to add the table to.
      * @param table The table to add to the document.
      */
@@ -165,7 +165,7 @@ public class PDFUtils
 
     /**
      * Moves the cursor to the next page in the document.
-     * 
+     *
      * @param document The document.
      */
     public static void moveToNewPage( Document document )
@@ -175,7 +175,7 @@ public class PDFUtils
 
     /**
      * Closes the document if it is open.
-     * 
+     *
      * @param document The document to close.
      */
     public static void closeDocument( Document document )
@@ -188,7 +188,7 @@ public class PDFUtils
 
     /**
      * Creates a cell.
-     * 
+     *
      * @param text The text to include in the cell.
      * @param colspan The column span of the cell.
      * @param font The font of the cell text.
@@ -253,7 +253,7 @@ public class PDFUtils
 
     /**
      * Creates an empty cell.
-     * 
+     *
      * @param colspan The column span of the cell.
      * @param height The height of the column.
      * @return A PdfCell.
@@ -307,11 +307,11 @@ public class PDFUtils
 
     /**
      * Writes a "Data Elements" title in front of page
-     * 
+     *
      * @param dataElementIds the identifier list of Data
      * @param i18n The i18n object
      * @param format The i18nFormat object
-     * 
+     *
      */
     public static void printObjectFrontPage( Document document, Collection<?> objects, I18n i18n, I18nFormat format,
         String frontPageLabel )
@@ -326,11 +326,11 @@ public class PDFUtils
 
     /**
      * Writes a "Data dictionary" title in front of page
-     * 
+     *
      * @param document The document
      * @param i18n The i18n object
      * @param format The i18nFormat object
-     * 
+     *
      */
     public static void printDocumentFrontPage( Document document, I18n i18n, I18nFormat format )
     {
@@ -341,10 +341,10 @@ public class PDFUtils
 
     /**
      * Writes a DHIS 2 title in front of page
-     * 
+     *
      * @param document The document
      * @param exportParams the exporting params
-     * 
+     *
      */
     private static void printFrontPage( Document document, String title, I18n i18n, I18nFormat format )
     {
@@ -369,7 +369,7 @@ public class PDFUtils
 
     /**
      * Creates a table with the given data element
-     * 
+     *
      * @param element The data element
      * @param i18n i18n object
      * @param HEADER3 The header3 font
@@ -401,12 +401,14 @@ public class PDFUtils
             table.addCell( getItalicCell( i18n.getString( "description" ) ) );
             table.addCell( getTextCell( element.getDescription() ) );
         }
-        
+
+        /* TODO fixme
         if ( StringUtils.trimToNull( element.getType() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "value_type" ) ) );
             table.addCell( getTextCell( i18n.getString( getType().get( element.getType() ) ) ) );
         }
+        */
         if ( StringUtils.trimToNull( element.getAggregationOperator() ) != null )
         {
             table.addCell( getItalicCell( i18n.getString( "aggregation_operator" ) ) );
@@ -426,7 +428,7 @@ public class PDFUtils
 
     /**
      * Creates a table with the given indicator
-     * 
+     *
      * @param indicator The indicator
      * @param i18n i18n object
      * @param expressionService The expression service
@@ -491,7 +493,7 @@ public class PDFUtils
 
     /**
      * Creates a table with the given unit
-     * 
+     *
      * @param unit The organization unit
      * @param i18n i18n object
      * @param format
@@ -550,7 +552,7 @@ public class PDFUtils
 
     /**
      * Creates a table with the given validation rule
-     * 
+     *
      * @param user The User
      * @param i18n i18n object
      * @param format I18nFormat object
@@ -618,7 +620,7 @@ public class PDFUtils
             table.addCell( getItalicCell( value.getAttribute().getName() ) );
             table.addCell( getTextCell( value.getValue() ) );
         }
-        
+
         table.addCell( getEmptyCell( 2, 30 ) );
 
         return table;
@@ -626,7 +628,7 @@ public class PDFUtils
 
     /**
      * Creates a table with the given validation rule
-     * 
+     *
      * @param validationRule The validation rule
      * @param i18n i18n object
      * @param expressionService The expression service
