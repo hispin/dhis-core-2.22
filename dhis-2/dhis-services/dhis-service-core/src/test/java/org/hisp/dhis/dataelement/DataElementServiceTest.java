@@ -262,6 +262,11 @@ public class DataElementServiceTest
         dataElementC.setType( DataElement.VALUE_TYPE_STRING );
         dataElementD.setType( DataElement.VALUE_TYPE_INT );
 
+        dataElementA.setValueType( ValueType.INTEGER );
+        dataElementB.setValueType( ValueType.BOOLEAN );
+        dataElementC.setValueType( ValueType.TEXT );
+        dataElementD.setValueType( ValueType.INTEGER );
+
         dataElementService.addDataElement( dataElementA );
         dataElementService.addDataElement( dataElementB );
         dataElementService.addDataElement( dataElementC );
