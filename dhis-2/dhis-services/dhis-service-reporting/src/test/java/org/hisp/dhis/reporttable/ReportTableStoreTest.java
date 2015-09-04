@@ -210,26 +210,17 @@ public class ReportTableStoreTest
         assertEquals( indicators, reportTableA.getIndicators() );
         assertEquals( periods, reportTableA.getPeriods() );
         assertEquals( units, reportTableA.getOrganisationUnits() );
-        assertEquals( true, reportTableA.isDoIndicators() );
-        assertEquals( true, reportTableA.isDoPeriods() );
-        assertEquals( false, reportTableA.isDoUnits() );
         assertEquals( relativesA, reportTableA.getRelatives() );
         
         assertEquals( "Prescriptions", reportTableB.getName() );
         assertEquals( dataElements, reportTableB.getDataElements() );
         assertEquals( periods, reportTableB.getPeriods() );
         assertEquals( units, reportTableB.getOrganisationUnits() );
-        assertEquals( false, reportTableB.isDoIndicators() );
-        assertEquals( false, reportTableB.isDoPeriods() );
-        assertEquals( true, reportTableB.isDoUnits() );
         assertEquals( relativesB, reportTableB.getRelatives() );
 
         assertEquals( "Assualt", reportTableC.getName() );
         assertEquals( periods, reportTableC.getPeriods() );
         assertEquals( units, reportTableC.getOrganisationUnits() );
-        assertEquals( false, reportTableC.isDoIndicators() );
-        assertEquals( false, reportTableC.isDoPeriods() );
-        assertEquals( true, reportTableC.isDoUnits() );
         assertEquals( relativesC, reportTableC.getRelatives() );
     }
 

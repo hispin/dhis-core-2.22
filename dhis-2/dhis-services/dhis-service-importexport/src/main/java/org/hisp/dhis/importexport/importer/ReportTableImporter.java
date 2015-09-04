@@ -90,10 +90,6 @@ public class ReportTableImporter
         match.setName( object.getName() );
         match.setRegression( object.isRegression() );
 
-        match.setDoIndicators( match.isDoIndicators() );
-        match.setDoPeriods( match.isDoPeriods() );
-        match.setDoUnits( match.isDoUnits() );
-
         match.getRelatives().setLastMonth( object.getRelatives().isLastMonth() );
         match.getRelatives().setMonthsThisYear( object.getRelatives().isMonthsThisYear() );
         match.getRelatives().setQuartersThisYear( object.getRelatives().isQuartersThisYear() );
@@ -124,19 +120,6 @@ public class ReportTableImporter
             return false;
         }
         if ( object.isRegression() != existing.isRegression() )
-        {
-            return false;
-        }
-
-        if ( object.isDoIndicators() != existing.isDoIndicators() )
-        {
-            return false;
-        }
-        if ( object.isDoPeriods() != existing.isDoPeriods() )
-        {
-            return false;
-        }
-        if ( object.isDoUnits() != existing.isDoUnits() )
         {
             return false;
         }

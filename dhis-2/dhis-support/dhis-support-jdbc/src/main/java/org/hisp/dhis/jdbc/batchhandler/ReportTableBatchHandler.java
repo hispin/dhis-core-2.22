@@ -95,9 +95,6 @@ public class ReportTableBatchHandler
         statementBuilder.setColumn( "code" );
         statementBuilder.setColumn( "name" );
         statementBuilder.setColumn( "regression" );
-        statementBuilder.setColumn( "doindicators" );
-        statementBuilder.setColumn( "doperiods" );
-        statementBuilder.setColumn( "dounits" );
         
         statementBuilder.setColumn( "reportingmonth" );
         statementBuilder.setColumn( "monthsthisyear" );
@@ -119,9 +116,6 @@ public class ReportTableBatchHandler
         statementBuilder.setValue( reportTable.getCode() );
         statementBuilder.setValue( reportTable.getName() );
         statementBuilder.setValue( reportTable.isRegression() );
-        statementBuilder.setValue( reportTable.isDoIndicators() );
-        statementBuilder.setValue( reportTable.isDoPeriods() );
-        statementBuilder.setValue( reportTable.isDoUnits() );
         
         statementBuilder.setValue( reportTable.getRelatives().isLastMonth() );
         statementBuilder.setValue( reportTable.getRelatives().isMonthsThisYear() );
