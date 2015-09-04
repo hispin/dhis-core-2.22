@@ -1293,10 +1293,8 @@ public abstract class DhisConvenienceTest
         indicator.setCode( "IndicatorCode" + uniqueCharacter );
         indicator.setDescription( "IndicatorDescription" + uniqueCharacter );
         indicator.setProgram( program );
-        indicator.setValueType( ProgramIndicator.VALUE_TYPE_INT );
         indicator.setExpression( expression );
         indicator.setFilter( filter );
-        indicator.setRootDate( ProgramIndicator.VAR_INCIDENT_DATE );
 
         return indicator;
     }

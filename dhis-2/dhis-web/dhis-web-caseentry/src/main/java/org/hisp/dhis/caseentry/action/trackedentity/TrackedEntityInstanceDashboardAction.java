@@ -107,13 +107,13 @@ public class TrackedEntityInstanceDashboardAction
 
     private Collection<Relationship> relationships = new HashSet<>();
 
-    private Map<String, String> programIndicatorsMap = new HashMap<>();
+    private Map<String, Double> programIndicatorsMap = new HashMap<>();
 
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
 
-    public Map<String, String> getProgramIndicatorsMap()
+    public Map<String, Double> getProgramIndicatorsMap()
     {
         return programIndicatorsMap;
     }

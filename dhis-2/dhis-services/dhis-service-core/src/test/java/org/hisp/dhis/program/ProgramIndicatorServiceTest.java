@@ -291,7 +291,7 @@ public class ProgramIndicatorServiceTest
         programA.getProgramIndicators().add( indicatorA );
 
         indicatorB = createProgramIndicator( 'B', programA, "70", null );
-        indicatorB.setValueType( ProgramIndicator.VALUE_TYPE_DATE );
+        //indicatorB.setValueType( ProgramIndicator.VALUE_TYPE_DATE );
         programA.getProgramIndicators().add( indicatorB );
 
         indicatorC = createProgramIndicator( 'C', programA, "0", null );
@@ -325,13 +325,13 @@ public class ProgramIndicatorServiceTest
             + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_DATAELEMENT + "{"
             + psA.getUid() + "." + deA.getUid() + "}";
         indicatorI = createProgramIndicator( 'I', programB, expressionI, null );
-        indicatorI.setValueType( VALUE_TYPE_DATE );
+        //indicatorI.setValueType( VALUE_TYPE_DATE );
 
         String expressionJ = "(" + KEY_ATTRIBUTE + "{" + atC.getUid() + "}  - " + KEY_PROGRAM_VARIABLE + "{"
             + ProgramIndicator.VAR_ENROLLMENT_DATE + "} ) + " + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid()
             + "} * " + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}";
         indicatorJ = createProgramIndicator( 'J', programB, expressionJ, null );
-        indicatorJ.setValueType( VALUE_TYPE_DATE );
+        //indicatorJ.setValueType( VALUE_TYPE_DATE );
     }
 
     // -------------------------------------------------------------------------
@@ -450,20 +450,17 @@ public class ProgramIndicatorServiceTest
         programIndicatorService.addProgramIndicator( indicatorI );
         programIndicatorService.addProgramIndicator( indicatorJ );
 
-        String valueINT = programIndicatorService.getProgramIndicatorValue( indicatorA, programInstance );
-        assertEquals( "10.0", valueINT );
+        Double valueINT = programIndicatorService.getProgramIndicatorValue( indicatorA, programInstance );
+        assertEquals( 10.0, valueINT, 0.01 );
 
-        String valueDATE = programIndicatorService.getProgramIndicatorValue( indicatorB, programInstance );
-        assertEquals( DateUtils.getMediumDateString( enrollmentDate ), valueDATE );
+        Double valueE = programIndicatorService.getProgramIndicatorValue( indicatorE, programInstance );
+        assertEquals( 9.0, valueE, 0.01 );
 
-        String valueE = programIndicatorService.getProgramIndicatorValue( indicatorE, programInstance );
-        assertEquals( "9.0", valueE );
+        Double valueF = programIndicatorService.getProgramIndicatorValue( indicatorF, programInstance );
+        assertEquals( 17.0, valueF, 0.01 );
 
-        String valueF = programIndicatorService.getProgramIndicatorValue( indicatorF, programInstance );
-        assertEquals( "17.0", valueF );
-
-        String valueG = programIndicatorService.getProgramIndicatorValue( indicatorG, programInstance );
-        assertEquals( "29.0", valueG );
+        Double valueG = programIndicatorService.getProgramIndicatorValue( indicatorG, programInstance );
+        assertEquals( 29.0, valueG, 0.01 );
     }
 
     @Test
@@ -471,12 +468,9 @@ public class ProgramIndicatorServiceTest
     {
         programIndicatorService.addProgramIndicator( indicatorA );
         programIndicatorService.addProgramIndicator( indicatorB );
-        programIndicatorService.addProgramIndicator( indicatorC );
 
-        Map<String, String> indicatorMap = programIndicatorService.getProgramIndicatorValues( programInstance );
-        assertEquals( 3, indicatorMap.keySet().size() );
-        assertEquals( "10.0", indicatorMap.get( "IndicatorA" ) );
-        assertEquals( DateUtils.getMediumDateString( enrollmentDate ), indicatorMap.get( "IndicatorB" ) );
+        Map<String, Double> indicatorMap = programIndicatorService.getProgramIndicatorValues( programInstance );
+        assertEquals( 10.0, indicatorMap.get( "IndicatorA" ), 0.01 );
     }
 
     @Test

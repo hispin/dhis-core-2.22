@@ -71,9 +71,6 @@ public class ProgramIndicator
     public static final String VAR_VALUE_COUNT = "value_count";
     public static final String VAR_ZERO_POS_VALUE_COUNT = "zero_pos_value_count";
 
-    public static final String VALUE_TYPE_DATE = "date";
-    public static final String VALUE_TYPE_INT = "int";
-
     private static final String EXPRESSION_REGEXP = "(" + KEY_DATAELEMENT + "|" + KEY_ATTRIBUTE + "|" + KEY_PROGRAM_VARIABLE + "|" + KEY_CONSTANT + ")\\{(\\w+|" +
         VAR_INCIDENT_DATE + "|" + VAR_ENROLLMENT_DATE + "|" + VAR_CURRENT_DATE + ")" + SEPARATOR_ID + "?(\\w*)\\}";
     private static final String SQL_FUNC_REGEXP = "d2:(.+?)\\(([^,]+)\\,?([^,]*)\\,?([^,]*)\\)";
@@ -91,8 +88,6 @@ public class ProgramIndicator
 
     private Program program;
 
-    private String valueType;
-
     private String expression;
 
     private String filter;
@@ -105,8 +100,6 @@ public class ProgramIndicator
     private Integer decimals;
 
     private Boolean displayInForm;
-
-    private String rootDate;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -183,19 +176,6 @@ public class ProgramIndicator
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getValueType()
-    {
-        return valueType;
-    }
-
-    public void setValueType( String valueType )
-    {
-        this.valueType = valueType;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getExpression()
     {
         return expression;
@@ -258,19 +238,6 @@ public class ProgramIndicator
         this.displayInForm = displayInForm;
     }
 
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getRootDate()
-    {
-        return rootDate;
-    }
-
-    public void setRootDate( String rootDate )
-    {
-        this.rootDate = rootDate;
-    }
-
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -283,22 +250,18 @@ public class ProgramIndicator
             if ( strategy.isReplace() )
             {
                 program = programIndicator.getProgram();
-                valueType = programIndicator.getValueType();
                 expression = programIndicator.getExpression();
                 filter = programIndicator.getFilter();
                 decimals = programIndicator.getDecimals();
                 displayInForm = programIndicator.getDisplayInForm();
-                rootDate = programIndicator.getRootDate();
             }
             else if ( strategy.isMerge() )
             {
                 program = programIndicator.getProgram() == null ? program : programIndicator.getProgram();
-                valueType = programIndicator.getValueType() == null ? valueType : programIndicator.getValueType();
                 expression = programIndicator.getExpression() == null ? expression : programIndicator.getExpression();
                 filter = programIndicator.getFilter() == null ? filter : programIndicator.getFilter();
                 decimals = programIndicator.getDecimals() == null ? decimals : programIndicator.getDecimals();
                 displayInForm = programIndicator.getDisplayInForm() == null ? displayInForm : programIndicator.getDisplayInForm();
-                rootDate = programIndicator.getRootDate() == null ? rootDate : programIndicator.getRootDate();
             }
         }
     }
