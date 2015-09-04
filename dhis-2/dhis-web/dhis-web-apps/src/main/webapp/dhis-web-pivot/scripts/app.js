@@ -3665,7 +3665,7 @@ Ext.onReady( function() {
                 data: [
                      {id: 'in', name: NS.i18n.indicators},
                      {id: 'de', name: NS.i18n.data_elements},
-                     {id: 'ds', name: NS.i18n.data_sets},
+                     {id: 'ds', name: NS.i18n.reporting_rates},
                      {id: 'di', name: NS.i18n.event_data_items},
                      {id: 'pi', name: NS.i18n.program_indicators}
                 ]
