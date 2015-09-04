@@ -4404,7 +4404,7 @@ Ext.onReady( function() {
             }
 
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programs.json?paging=false&fields=programTrackedEntityAttributes[trackedEntityAttribute[id,name,valueType]],programStages[programStageDataElements[dataElement[id,name,type]]]&filter=id:eq:' + programId,
+                url: ns.core.init.contextPath + '/api/programs.json?paging=false&fields=programTrackedEntityAttributes[trackedEntityAttribute[id,name,valueType]],programStages[programStageDataElements[dataElement[id,name,valueType]]]&filter=id:eq:' + programId,
                 success: function(r) {
                     r = Ext.decode(r.responseText);
 
@@ -4423,22 +4423,25 @@ Ext.onReady( function() {
                         stage = stages[i];
 
                         if (isA(stage.programStageDataElements) && stage.programStageDataElements.length) {
-                            elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
+                            //elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
+                            dataElements = dataElements.concat(Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || []);
 
-                            for (var j = 0; j < elements.length; j++) {
-                                if (Ext.Array.contains(types, (elements[j].type || '').toLowerCase())) {
-                                    dataElements.push(elements[j]);
-                                }
-                            }
+                            //for (var j = 0; j < elements.length; j++) {
+                                //if (Ext.Array.contains(types, (elements[j].type || '').toLowerCase())) {
+                                    //dataElements.push(elements[j]);
+                                //}
+                            //}
                         }
                     }
 
                     // attributes
-                    for (i = 0; i < teas.length; i++) {
-                        if (Ext.Array.contains(types, (teas[i].valueType || '').toLowerCase())) {
-                            attributes.push(teas[i]);
-                        }
-                    }
+
+                    //for (i = 0; i < teas.length; i++) {
+                        //if (Ext.Array.contains(types, (teas[i].valueType || '').toLowerCase())) {
+                            //attributes.push(teas[i]);
+                        //}
+                    //}
+                    attributes = teas;
 
                     data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(dataElements, attributes))) || [];
 
