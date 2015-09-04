@@ -1464,7 +1464,7 @@ public class DataQueryParams
      * dimension is specified, all category option combos for the first data 
      * element is returned. Returns an empty array if the dimension is not present.
      */
-    public NameableObject[] getDimensionArrayCollapseDxExplodeCoc( String dimension )
+    public NameableObject[] getDimensionArrayExplodeCoc( String dimension )
     {
         List<NameableObject> items = new ArrayList<>();
         
