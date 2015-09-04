@@ -667,7 +667,7 @@ public class DefaultAnalyticsService
             {
                 reportTable.getColumnDimensions().add( dimension );
 
-                tableColumns.add( params.getDimensionArrayCollapseDxExplodeCoc( dimension ) );
+                tableColumns.add( params.getDimensionArrayExplodeCoc( dimension ) );
             }
         }
 
@@ -677,7 +677,7 @@ public class DefaultAnalyticsService
             {
                 reportTable.getRowDimensions().add( dimension );
 
-                tableRows.add( params.getDimensionArrayCollapseDxExplodeCoc( dimension ) );
+                tableRows.add( params.getDimensionArrayExplodeCoc( dimension ) );
             }
         }
 

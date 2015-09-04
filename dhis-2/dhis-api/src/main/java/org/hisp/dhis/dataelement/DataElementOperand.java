@@ -308,6 +308,16 @@ public class DataElementOperand
     {
         return COLUMN_PREFIX + dataElementId + COLUMN_SEPARATOR + optionComboId;
     }
+    
+    /**
+     * Returns an identifier on the format <data element uid>.<category option combo uid>.
+     * 
+     * @return an identifier.
+     */
+    public String getAnalyticsId()
+    {
+        return dataElement.getUid() + SEPARATOR + categoryOptionCombo.getUid();
+    }
 
     /**
      * Returns a pretty-print name based on the given data element and category

@@ -780,8 +780,7 @@ public abstract class BaseAnalyticalObject
         {
             if ( item.getClass().equals( DataElementOperand.class ) )
             {
-                ids.add( ((DataElementOperand) item).getDataElement().getUid() );
-                ids.add( ((DataElementOperand) item).getCategoryOptionCombo().getUid() );
+                ids.add( ((DataElementOperand) item).getAnalyticsId() );
             }
             else
             {
