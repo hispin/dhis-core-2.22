@@ -54,13 +54,13 @@ public class DataElementImporter
         this.batchHandler = batchHandler;
         this.dataElementService = dataElementService;
     }
-    
+
     @Override
     public void importObject( DataElement object, ImportParams params )
     {
         NameMappingUtil.addDataElementMapping( object.getId(), object.getName() );
         NameMappingUtil.addDataElementAggregationOperatorMapping( object.getId(), object.getAggregationOperator() );
-        
+
         read( object, GroupMemberType.NONE, params );
     }
 
@@ -77,7 +77,7 @@ public class DataElementImporter
         match.setShortName( object.getShortName() );
         match.setCode( object.getCode() );
         match.setDescription( object.getDescription() );
-        match.setType( object.getType() );
+        match.setValueType( object.getValueType() );
         match.setDomainType( object.getDomainType() );
         match.setAggregationOperator( object.getAggregationOperator() );
         match.setLastUpdated( object.getLastUpdated() );
@@ -98,7 +98,7 @@ public class DataElementImporter
         {
             match = dataElementService.getDataElementByCode( object.getCode() );
         }
-        
+
         return match;
     }
 
@@ -113,19 +113,19 @@ public class DataElementImporter
         {
             return false;
         }
-        if ( !isSimiliar( object.getCode(), existing.getCode() ) || ( isNotNull( object.getCode(), existing.getCode() ) && !object.getCode().equals( existing.getCode() ) ) )
+        if ( !isSimiliar( object.getCode(), existing.getCode() ) || (isNotNull( object.getCode(), existing.getCode() ) && !object.getCode().equals( existing.getCode() )) )
         {
             return false;
         }
-        if ( !isSimiliar( object.getDescription(), existing.getDescription() ) || ( isNotNull( object.getDescription(), existing.getDescription() ) && !object.getDescription().equals( existing.getDescription() ) ) )
+        if ( !isSimiliar( object.getDescription(), existing.getDescription() ) || (isNotNull( object.getDescription(), existing.getDescription() ) && !object.getDescription().equals( existing.getDescription() )) )
         {
             return false;
         }
-        if ( !object.getType().equals( existing.getType() ) )
+        if ( !(object.getValueType() == existing.getValueType()) )
         {
             return false;
         }
-        if ( !isSimiliar( object.getDomainType(), existing.getDomainType() ) || ( isNotNull( object.getDomainType(), existing.getDomainType() ) && !object.getDomainType().equals( existing.getDomainType() ) ) )
+        if ( !isSimiliar( object.getDomainType(), existing.getDomainType() ) || (isNotNull( object.getDomainType(), existing.getDomainType() ) && !object.getDomainType().equals( existing.getDomainType() )) )
         {
             return false;
         }
