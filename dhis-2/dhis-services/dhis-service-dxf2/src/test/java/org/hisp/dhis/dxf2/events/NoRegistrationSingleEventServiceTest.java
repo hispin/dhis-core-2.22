@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.events;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dxf2.events.event.DataValue;
 import org.hisp.dhis.dxf2.events.event.Event;
@@ -94,7 +95,7 @@ public class NoRegistrationSingleEventServiceTest
         identifiableObjectManager.save( organisationUnitA );
 
         dataElementA = createDataElement( 'A' );
-        dataElementA.setType( DataElement.VALUE_TYPE_INT );
+        dataElementA.setValueType( ValueType.INTEGER );
         identifiableObjectManager.save( dataElementA );
 
         programStageA = createProgramStage( 'A', 0 );

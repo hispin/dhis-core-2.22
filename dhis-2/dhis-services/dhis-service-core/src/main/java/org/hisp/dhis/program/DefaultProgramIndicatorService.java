@@ -608,7 +608,7 @@ public class DefaultProgramIndicatorService
 
                 if ( programStage != null && dataElement != null )
                 {
-                    String sample = dataElement.isNumericType() ? String.valueOf( 1 ) : dataElement.isDateType() ? "'2000-01-01'" : "'A'";
+                    String sample = dataElement.isNumericType() ? String.valueOf( 1 ) : dataElement.getValueType().isDate() ? "'2000-01-01'" : "'A'";
 
                     matcher.appendReplacement( expr, sample );
                 }

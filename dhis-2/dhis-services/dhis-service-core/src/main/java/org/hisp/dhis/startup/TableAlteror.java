@@ -213,7 +213,7 @@ public class TableAlteror
 
         executeSql( "ALTER TABLE organisationunit DROP COLUMN hasPatients" );
 
-        executeSql( "update dataelement set texttype='text' where valuetype='string' and texttype is null" );
+        // executeSql( "update dataelement set texttype='text' where valuetype='string' and texttype is null" );
 
         // categories_categoryoptions
         // set to 0 temporarily
@@ -285,9 +285,9 @@ public class TableAlteror
 
         executeSql( "ALTER TABLE section DROP CONSTRAINT section_name_key" );
         executeSql( "UPDATE patientattribute set inheritable=false where inheritable is null" );
-        executeSql( "UPDATE dataelement SET numbertype='number' where numbertype is null and valuetype='int'" );
-        executeSql( "UPDATE dataelement SET valuetype='posInt' where valuetype='positiveNumber'" );
-        executeSql( "UPDATE dataelement SET valuetype='negInt' where valuetype='negativeNumber'" );
+        // executeSql( "UPDATE dataelement SET numbertype='number' where numbertype is null and valuetype='int'" );
+        // executeSql( "UPDATE dataelement SET valuetype='posInt' where valuetype='positiveNumber'" );
+        // executeSql( "UPDATE dataelement SET valuetype='negInt' where valuetype='negativeNumber'" );
         executeSql( "UPDATE dataelement SET aggregationtype='avg_sum_org_unit' where aggregationtype='average'" );
 
         // revert prepare aggregate*Value tables for offline diffs
@@ -878,22 +878,28 @@ public class TableAlteror
 
     private void updateValueTypes()
     {
-        executeSql( "update dataelement set vtype='NUMBER' where valuetype='int' and numbertype='number' and vtype is null" );
-        executeSql( "update dataelement set vtype='INTEGER' where valuetype='int' and numbertype='int' and vtype is null" );
-        executeSql( "update dataelement set vtype='INTEGER_POSITIVE' where valuetype='int' and numbertype='posInt' and vtype is null" );
-        executeSql( "update dataelement set vtype='INTEGER_NEGATIVE' where valuetype='int' and numbertype='negInt' and vtype is null" );
-        executeSql( "update dataelement set vtype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt' and vtype is null" );
-        executeSql( "update dataelement set vtype='PERCENTAGE' where valuetype='int' and numbertype='percentage' and vtype is null" );
-        executeSql( "update dataelement set vtype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval' and vtype is null" );
+        executeSql( "alter table dataelement alter column valuetype type varchar(50)" );
 
-        executeSql( "update dataelement set vtype='TEXT' where valuetype='string' and texttype='text' and vtype is null" );
-        executeSql( "update dataelement set vtype='LONG_TEXT' where valuetype='string' and texttype='longText' and vtype is null" );
+        executeSql( "update dataelement set vtype='NUMBER' where valuetype='int' and numbertype='number'" );
+        executeSql( "update dataelement set vtype='INTEGER' where valuetype='int' and numbertype='int'" );
+        executeSql( "update dataelement set vtype='INTEGER_POSITIVE' where valuetype='int' and numbertype='posInt'" );
+        executeSql( "update dataelement set vtype='INTEGER_NEGATIVE' where valuetype='int' and numbertype='negInt'" );
+        executeSql( "update dataelement set vtype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt'" );
+        executeSql( "update dataelement set vtype='PERCENTAGE' where valuetype='int' and numbertype='percentage'" );
+        executeSql( "update dataelement set vtype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
 
-        executeSql( "update dataelement set vtype='DATE' where valuetype='date' and vtype is null" );
-        executeSql( "update dataelement set vtype='DATETIME' where valuetype='datetime' and vtype is null" );
-        executeSql( "update dataelement set vtype='BOOLEAN' where valuetype='bool' and vtype is null" );
-        executeSql( "update dataelement set vtype='TRUE_ONLY' where valuetype='trueOnly' and vtype is null" );
-        executeSql( "update dataelement set vtype='USERNAME' where valuetype='username' and vtype is null" );
+        executeSql( "update dataelement set vtype='TEXT' where valuetype='string' and texttype='text'" );
+        executeSql( "update dataelement set vtype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
+
+        executeSql( "update dataelement set vtype='DATE' where valuetype='date'" );
+        executeSql( "update dataelement set vtype='DATETIME' where valuetype='datetime'" );
+        executeSql( "update dataelement set vtype='BOOLEAN' where valuetype='bool'" );
+        executeSql( "update dataelement set vtype='TRUE_ONLY' where valuetype='trueOnly'" );
+        executeSql( "update dataelement set vtype='USERNAME' where valuetype='username'" );
+
+        executeSql( "alter table dataelement drop column valuetype" );
+        executeSql( "alter table dataelement drop column numbertype" );
+        executeSql( "alter table dataelement drop column texttype" );
 
         executeSql( "update trackedentityattribute set valuetype='TEXT' where valuetype='string'" );
         executeSql( "update trackedentityattribute set valuetype='PHONE_NUMBER' where valuetype='phoneNumber'" );

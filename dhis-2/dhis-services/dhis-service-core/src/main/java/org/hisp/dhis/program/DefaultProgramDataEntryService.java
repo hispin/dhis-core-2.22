@@ -188,12 +188,6 @@ public class DefaultProgramDataEntryService
                 }
 
                 // -------------------------------------------------------------
-                // Find type of data element
-                // -------------------------------------------------------------
-
-                String dataElementType = dataElement.getDetailedNumberType();
-
-                // -------------------------------------------------------------
                 // Find existing value of data element in data set
                 // -------------------------------------------------------------
 
@@ -233,12 +227,12 @@ public class DefaultProgramDataEntryService
                 if ( inputHTML.contains( "title=\"\"" ) )
                 {
                     inputHTML = inputHTML.replace( "title=\"\"", "title=\"[ " + dataElement.getUid() + " - "
-                        + dataElement.getName() + " - " + dataElementType + " ]\" " );
+                        + dataElement.getName() + " - " + dataElement.getValueType() + " ]\" " );
                 }
                 else
                 {
                     inputHTML += "title=\"[ " + dataElement.getUid() + " - " + dataElement.getName() + " - "
-                        + dataElementType + " ]\" ";
+                        + dataElement.getValueType() + " ]\" ";
                 }
 
                 // -------------------------------------------------------------
@@ -306,7 +300,7 @@ public class DefaultProgramDataEntryService
                 inputHTML = inputHTML.replace( "$PROGRAMSTAGEID", String.valueOf( programStageUid ) );
                 inputHTML = inputHTML.replace( "$PROGRAMSTAGENAME", programStageName );
                 inputHTML = inputHTML.replace( "$DATAELEMENTNAME", dataElement.getFormNameFallback() );
-                inputHTML = inputHTML.replace( "$DATAELEMENTTYPE", dataElementType );
+                inputHTML = inputHTML.replace( "$DATAELEMENTTYPE", dataElement.getValueType().toString() );
                 inputHTML = inputHTML.replace( "$DISABLED", disabled );
                 inputHTML = inputHTML.replace( "$COMPULSORY", compulsory );
                 inputHTML = inputHTML.replace( "$SAVEMODE", "false" );
@@ -405,12 +399,6 @@ public class DefaultProgramDataEntryService
                 }
 
                 // -------------------------------------------------------------
-                // Find type of data element
-                // -------------------------------------------------------------
-
-                String dataElementType = dataElement.getDetailedNumberType();
-
-                // -------------------------------------------------------------
                 // Find existing value of data element in data set
                 // -------------------------------------------------------------
 
@@ -426,12 +414,12 @@ public class DefaultProgramDataEntryService
                 if ( inputHTML.contains( "title=\"\"" ) )
                 {
                     inputHTML = inputHTML.replace( "title=\"\"", "title=\"[ " + dataElement.getUid() + " - "
-                        + dataElement.getName() + " - " + dataElementType + " ]\" " );
+                        + dataElement.getName() + " - " + dataElement.getValueType() + " ]\" " );
                 }
                 else
                 {
                     inputHTML += "title=\"[ " + dataElement.getUid() + " - " + dataElement.getName() + " - "
-                        + dataElementType + " ]\" ";
+                        + dataElement.getValueType() + " ]\" ";
                 }
 
                 // -------------------------------------------------------------
@@ -489,7 +477,7 @@ public class DefaultProgramDataEntryService
                 inputHTML = inputHTML.replace( "$PROGRAMSTAGEID", String.valueOf( programStageUid ) );
                 inputHTML = inputHTML.replace( "$PROGRAMSTAGENAME", programStageName );
                 inputHTML = inputHTML.replace( "$DATAELEMENTNAME", dataElement.getName() );
-                inputHTML = inputHTML.replace( "$DATAELEMENTTYPE", dataElementType );
+                inputHTML = inputHTML.replace( "$DATAELEMENTTYPE", dataElement.getValueType().toString() );
                 inputHTML = inputHTML.replace( "$DISABLED", disabled );
                 inputHTML = inputHTML.replace( "$COMPULSORY", compulsory );
                 inputHTML = inputHTML.replace( "$SAVEMODE", "false" );
@@ -573,7 +561,7 @@ public class DefaultProgramDataEntryService
             String metaData = "<input class='optionset' id=\'" + id + "\' name=\'" + id + "\' options=\'no\' type=\'radio\' optionset='"
                 + dataElement.getOptionSet().getUid() + "'";
             metaData += " data=\"{compulsory:$COMPULSORY, deName:\'$DATAELEMENTNAME\', deType:\'"
-                + dataElement.getDetailedNumberType() + "\' }\" ";
+                + dataElement.getValueType() + "\' }\" ";
 
             inputHTML = "<table style=\'width:100%\'>";
             inputHTML += "<tr>";
@@ -633,7 +621,7 @@ public class DefaultProgramDataEntryService
                 + "]\" ";
 
             String displayTitle = dataElement.getUid() + " - " + dataElement.getName() + " - "
-                + dataElement.getDetailedNumberType();
+                + dataElement.getValueType();
             inputHTML = inputHTML.contains( EMPTY_TITLE_TAG ) ? inputHTML.replace( EMPTY_TITLE_TAG, "title=\"[ "
                 + displayTitle + " ]\"" ) : inputHTML + " title=\"[ " + displayTitle + " ]\"";
         }
@@ -740,7 +728,7 @@ public class DefaultProgramDataEntryService
                 + "\" data-optionset=\"" + dataElement.getOptionSet().getUid() + "\" ";
         }
 
-        if ( DataElement.VALUE_TYPE_LONG_TEXT.equals( dataElement.getDetailedTextType() ) )
+        if ( ValueType.LONG_TEXT == dataElement.getValueType() )
         {
             inputHTML = inputHTML.replaceFirst( "input", "textarea" );
             inputHTML += " >$VALUE</textarea>";

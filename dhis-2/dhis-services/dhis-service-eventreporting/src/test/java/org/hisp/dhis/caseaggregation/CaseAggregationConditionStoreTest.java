@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -187,11 +188,11 @@ public class CaseAggregationConditionStoreTest
         categoryService.addDataElementCategoryOptionCombo( categoryOptionCombo );
 
         dataElementA = createDataElement( 'A' );
-        dataElementA.setType( DataElement.VALUE_TYPE_STRING );
+        dataElementA.setValueType( ValueType.TEXT );
         dataElementA.setDomainType( DataElementDomain.TRACKER );
 
         dataElementB = createDataElement( 'B' );
-        dataElementB.setType( DataElement.VALUE_TYPE_STRING );
+        dataElementB.setValueType( ValueType.TEXT );
         dataElementB.setDomainType( DataElementDomain.TRACKER );
 
         dataElementC = createDataElement( 'C' );

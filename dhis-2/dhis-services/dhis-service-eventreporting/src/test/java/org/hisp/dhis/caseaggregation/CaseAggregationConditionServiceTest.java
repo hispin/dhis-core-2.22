@@ -29,14 +29,29 @@ package org.hisp.dhis.caseaggregation;
  */
 
 import org.hisp.dhis.DhisSpringTest;
-import org.hisp.dhis.dataelement.*;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementCategory;
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryService;
+import org.hisp.dhis.dataelement.DataElementDomain;
+import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.DailyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.program.*;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramInstance;
+import org.hisp.dhis.program.ProgramInstanceService;
+import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.program.ProgramStageInstance;
+import org.hisp.dhis.program.ProgramStageInstanceService;
+import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
@@ -56,7 +71,6 @@ import static org.junit.Assert.*;
 
 /**
  * @author Chau Thu Tran
- * 
  * @version $ CaseAggregationConditionServiceTest.java Nov 29, 2013 10:01:48 AM
  *          $
  */
@@ -173,11 +187,11 @@ public class CaseAggregationConditionServiceTest
         categoryService.addDataElementCategoryOptionCombo( categoryOptionCombo );
 
         dataElementA = createDataElement( 'A' );
-        dataElementA.setType( DataElement.VALUE_TYPE_STRING );
+        dataElementA.setValueType( ValueType.TEXT );
         dataElementA.setDomainType( DataElementDomain.TRACKER );
 
         dataElementB = createDataElement( 'B' );
-        dataElementB.setType( DataElement.VALUE_TYPE_STRING );
+        dataElementB.setValueType( ValueType.TEXT );
         dataElementB.setDomainType( DataElementDomain.TRACKER );
 
         dataElementC = createDataElement( 'C' );
