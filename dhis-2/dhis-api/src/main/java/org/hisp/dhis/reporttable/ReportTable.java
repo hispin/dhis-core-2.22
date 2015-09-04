@@ -505,51 +505,6 @@ public class ReportTable
         return relativeOrganisationUnit != null ? relativeOrganisationUnit.getName() : EMPTY;
     }
 
-    public boolean isDoIndicators()
-    {
-        return columnDimensions.contains( DATA_X_DIM_ID );
-    }
-
-    public void setDoIndicators( boolean doIndicators )
-    {
-        this.columnDimensions.remove( DATA_X_DIM_ID );
-
-        if ( doIndicators )
-        {
-            this.columnDimensions.add( DATA_X_DIM_ID );
-        }
-    }
-
-    public boolean isDoPeriods()
-    {
-        return columnDimensions.contains( PERIOD_DIM_ID );
-    }
-
-    public void setDoPeriods( boolean doPeriods )
-    {
-        this.columnDimensions.remove( PERIOD_DIM_ID );
-
-        if ( doPeriods )
-        {
-            this.columnDimensions.add( PERIOD_DIM_ID );
-        }
-    }
-
-    public boolean isDoUnits()
-    {
-        return columnDimensions.contains( ORGUNIT_DIM_ID );
-    }
-
-    public void setDoUnits( boolean doUnits )
-    {
-        this.columnDimensions.remove( ORGUNIT_DIM_ID );
-
-        if ( doUnits )
-        {
-            this.columnDimensions.add( ORGUNIT_DIM_ID );
-        }
-    }
-
     /**
      * Adds an empty list of NameableObjects to the given list if empty.
      */
