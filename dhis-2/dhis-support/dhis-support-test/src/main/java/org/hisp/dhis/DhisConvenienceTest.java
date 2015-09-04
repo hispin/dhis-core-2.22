@@ -353,7 +353,7 @@ public abstract class DhisConvenienceTest
         dataElement.setCode( "DataElementCode" + uniqueCharacter );
         dataElement.setDescription( "DataElementDescription" + uniqueCharacter );
         dataElement.setType( DataElement.VALUE_TYPE_INT );
-        dataElement.setValueType( ValueType.NUMBER );
+        dataElement.setValueType( ValueType.INTEGER );
         dataElement.setDomainType( DataElementDomain.AGGREGATE );
         dataElement.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
 

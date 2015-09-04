@@ -44,10 +44,7 @@ import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.dataelement.DataElementStore;
 import org.hisp.dhis.dataset.DataSet;
 import org.springframework.jdbc.BadSqlGrammarException;
-import org.springframework.jdbc.core.RowCallbackHandler;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -79,12 +76,12 @@ public class HibernateDataElementStore
     @SuppressWarnings( "unchecked" )
     public List<DataElement> getAggregateableDataElements()
     {
-        Set<String> types = new HashSet<>();
+        Set<ValueType> valueTypes = new HashSet<>();
 
-        types.add( DataElement.VALUE_TYPE_INT );
-        types.add( DataElement.VALUE_TYPE_BOOL );
+        valueTypes.addAll( ValueType.NUMERIC_TYPES );
+        valueTypes.add( ValueType.BOOLEAN );
 
-        return getCriteria( Restrictions.in( "type", types ) ).list();
+        return getCriteria( Restrictions.in( "valueType", valueTypes ) ).list();
     }
 
     @Override
@@ -173,7 +170,7 @@ public class HibernateDataElementStore
     {
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.eq( "zeroIsSignificant", zeroIsSignificant ) );
-        criteria.add( Restrictions.eq( "type", DataElement.VALUE_TYPE_INT ) );
+        criteria.add( Restrictions.in( "valueType", ValueType.NUMERIC_TYPES ) );
 
         return criteria.list();
     }
@@ -235,17 +232,11 @@ public class HibernateDataElementStore
 
         try
         {
-            jdbcTemplate.query( sql, new RowCallbackHandler()
-            {
-                @Override
-                public void processRow( ResultSet rs )
-                    throws SQLException
-                {
-                    String de = rs.getString( 1 );
-                    String coc = rs.getString( 2 );
+            jdbcTemplate.query( sql, rs -> {
+                String de = rs.getString( 1 );
+                String coc = rs.getString( 2 );
 
-                    map.putValue( de, coc );
-                }
+                map.putValue( de, coc );
             } );
         }
         catch ( BadSqlGrammarException ex )
