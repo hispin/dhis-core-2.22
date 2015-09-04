@@ -870,48 +870,9 @@ public class TableAlteror
         upgradeAggregationType( "chart" );
 
         updateRelativePeriods();
-        updateValueTypes();
         organisationUnitService.updatePaths();
 
         log.info( "Tables updated" );
-    }
-
-    private void updateValueTypes()
-    {
-        executeSql( "alter table dataelement alter column valuetype type varchar(50)" );
-
-        executeSql( "update dataelement set vtype='NUMBER' where valuetype='int' and numbertype='number'" );
-        executeSql( "update dataelement set vtype='INTEGER' where valuetype='int' and numbertype='int'" );
-        executeSql( "update dataelement set vtype='INTEGER_POSITIVE' where valuetype='int' and numbertype='posInt'" );
-        executeSql( "update dataelement set vtype='INTEGER_NEGATIVE' where valuetype='int' and numbertype='negInt'" );
-        executeSql( "update dataelement set vtype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt'" );
-        executeSql( "update dataelement set vtype='PERCENTAGE' where valuetype='int' and numbertype='percentage'" );
-        executeSql( "update dataelement set vtype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
-
-        executeSql( "update dataelement set vtype='TEXT' where valuetype='string' and texttype='text'" );
-        executeSql( "update dataelement set vtype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
-
-        executeSql( "update dataelement set vtype='DATE' where valuetype='date'" );
-        executeSql( "update dataelement set vtype='DATETIME' where valuetype='datetime'" );
-        executeSql( "update dataelement set vtype='BOOLEAN' where valuetype='bool'" );
-        executeSql( "update dataelement set vtype='TRUE_ONLY' where valuetype='trueOnly'" );
-        executeSql( "update dataelement set vtype='USERNAME' where valuetype='username'" );
-
-        executeSql( "alter table dataelement drop column valuetype" );
-        executeSql( "alter table dataelement drop column numbertype" );
-        executeSql( "alter table dataelement drop column texttype" );
-
-        executeSql( "update trackedentityattribute set valuetype='TEXT' where valuetype='string'" );
-        executeSql( "update trackedentityattribute set valuetype='PHONE_NUMBER' where valuetype='phoneNumber'" );
-        executeSql( "update trackedentityattribute set valuetype='EMAIL' where valuetype='email'" );
-        executeSql( "update trackedentityattribute set valuetype='NUMBER' where valuetype='number'" );
-        executeSql( "update trackedentityattribute set valuetype='LETTER' where valuetype='letter'" );
-        executeSql( "update trackedentityattribute set valuetype='BOOLEAN' where valuetype='bool'" );
-        executeSql( "update trackedentityattribute set valuetype='TRUE_ONLY' where valuetype='trueOnly'" );
-        executeSql( "update trackedentityattribute set valuetype='DATE' where valuetype='date'" );
-        executeSql( "update trackedentityattribute set valuetype='OPTION_SET' where valuetype='optionSet'" );
-        executeSql( "update trackedentityattribute set valuetype='TRACKER_ASSOCIATE' where valuetype='trackerAssociate'" );
-        executeSql( "update trackedentityattribute set valuetype='USERNAME' where valuetype='users'" );
     }
 
     public void oauth2()
