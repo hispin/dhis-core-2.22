@@ -51,6 +51,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.BaseDimensionalObject;
@@ -1473,12 +1474,7 @@ public class DataQueryParams
             
             if ( !des.isEmpty() )
             {
-                Set<DataElementCategoryCombo> categoryCombos = new HashSet<>();
-                
-                for ( NameableObject de : des )
-                {
-                    categoryCombos.add( ((DataElement) de).getCategoryCombo() );
-                }
+                Set<DataElementCategoryCombo> categoryCombos = des.stream().map( d -> ((DataElement) d).getCategoryCombo() ).collect( Collectors.toSet() );
                 
                 for ( DataElementCategoryCombo cc : categoryCombos )
                 {
@@ -1707,25 +1703,8 @@ public class DataQueryParams
 
     public List<DimensionalObject> getDataElementGroupSets()
     {
-        List<DimensionalObject> list = new ArrayList<>();
-        
-        for ( DimensionalObject dimension : dimensions )
-        {
-            if ( DimensionType.DATAELEMENT_GROUPSET.equals( dimension.getDimensionType() ) )
-            {
-                list.add( dimension );
-            }
-        }
-        
-        for ( DimensionalObject filter : filters )
-        {
-            if ( DimensionType.DATAELEMENT_GROUPSET.equals( filter.getDimensionType() ) )
-            {
-                list.add( filter );
-            }
-        }
-        
-        return list;
+        return ListUtils.union( dimensions, filters ).stream().
+            filter( d -> DimensionType.DATAELEMENT_GROUPSET.equals( d.getDimensionType() ) ).collect( Collectors.toList() );
     }
     
     public void setDataElementGroupSet( DataElementGroupSet groupSet )

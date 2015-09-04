@@ -78,7 +78,7 @@ public class DataQueryGroupsTest
         deB = createDataElement( 'B', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
         deC = createDataElement( 'C', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
         deD = createDataElement( 'D', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deE = createDataElement( 'E', ValueType.INTEGER.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deE = createDataElement( 'E', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
         deF = createDataElement( 'F', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
         deG = createDataElement( 'G', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
 
