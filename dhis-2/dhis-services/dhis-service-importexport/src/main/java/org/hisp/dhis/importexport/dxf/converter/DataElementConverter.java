@@ -28,12 +28,10 @@ package org.hisp.dhis.importexport.dxf.converter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.staxwax.reader.XMLReader;
 import org.amplecode.staxwax.writer.XMLWriter;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementDomain;
@@ -45,6 +43,9 @@ import org.hisp.dhis.importexport.XMLConverter;
 import org.hisp.dhis.importexport.analysis.ImportAnalyser;
 import org.hisp.dhis.importexport.importer.DataElementImporter;
 import org.hisp.dhis.system.util.DateUtils;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -62,7 +63,7 @@ public class DataElementConverter
     private static final String FIELD_NAME = "name";
     private static final String FIELD_SHORT_NAME = "shortName";
     private static final String FIELD_DESCRIPTION = "description";
-    private static final String FIELD_TYPE = "type";
+    private static final String FIELD_VALUE_TYPE = "valueType";
     private static final String FIELD_DOMAIN_TYPE = "domainType";
     private static final String FIELD_AGGREGATION_OPERATOR = "aggregationOperator";
     private static final String FIELD_CATEGORY_COMBO = "categoryCombo";
@@ -73,7 +74,7 @@ public class DataElementConverter
     // -------------------------------------------------------------------------
 
     private Map<Object, Integer> categoryComboMapping;
-    
+
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
@@ -85,21 +86,21 @@ public class DataElementConverter
     {
         this.dataElementService = dataElementService;
     }
-    
+
     /**
      * Constructor for read operations.
-     * 
-     * @param batchHandler the batchHandler to use.
-     * @param importObjectService the importObjectService to use.
+     *
+     * @param batchHandler         the batchHandler to use.
+     * @param importObjectService  the importObjectService to use.
      * @param categoryComboMapping the categoryComboMapping to use.
-     * @param dataElementService the dataElementService to use.
+     * @param dataElementService   the dataElementService to use.
      */
-    public DataElementConverter( BatchHandler<DataElement> batchHandler, 
+    public DataElementConverter( BatchHandler<DataElement> batchHandler,
         ImportObjectService importObjectService,
         Map<Object, Integer> categoryComboMapping,
         DataElementService dataElementService,
         ImportAnalyser importAnalyser )
-    {        
+    {
         this.batchHandler = batchHandler;
         this.importObjectService = importObjectService;
         this.categoryComboMapping = categoryComboMapping;
@@ -115,68 +116,68 @@ public class DataElementConverter
     public void write( XMLWriter writer, ExportParams params )
     {
         Collection<DataElement> elements = dataElementService.getDataElements( params.getDataElements() );
-        
+
         if ( elements != null && elements.size() > 0 )
         {
             writer.openElement( COLLECTION_NAME );
-            
+
             for ( DataElement element : elements )
             {
                 writer.openElement( ELEMENT_NAME );
-                
+
                 writer.writeElement( FIELD_ID, String.valueOf( element.getId() ) );
                 writer.writeElement( FIELD_UID, element.getUid() );
                 writer.writeElement( FIELD_NAME, element.getName() );
                 writer.writeElement( FIELD_SHORT_NAME, element.getShortName() );
                 writer.writeElement( FIELD_CODE, element.getCode() ); // historic positioning from v1.2
                 writer.writeElement( FIELD_DESCRIPTION, element.getDescription() );
-                writer.writeElement( FIELD_TYPE, element.getType() );
+                writer.writeElement( FIELD_VALUE_TYPE, element.getValueType().toString() );
                 writer.writeElement( FIELD_DOMAIN_TYPE, element.getDomainType().getValue() );
                 writer.writeElement( FIELD_AGGREGATION_OPERATOR, element.getAggregationOperator() );
                 writer.writeElement( FIELD_CATEGORY_COMBO, String.valueOf( element.getCategoryCombo().getId() ) );
                 writer.writeElement( FIELD_LAST_UPDATED, DateUtils.getMediumDateString( element.getLastUpdated(), EMPTY ) );
-                
+
                 writer.closeElement();
             }
-            
+
             writer.closeElement();
         }
     }
-    
+
     @Override
     public void read( XMLReader reader, ImportParams params )
     {
         while ( reader.moveToStartElement( ELEMENT_NAME, COLLECTION_NAME ) )
         {
             final Map<String, String> values = reader.readElements( ELEMENT_NAME );
-            
+
             final DataElement element = new DataElement();
-            
+
             final DataElementCategoryCombo categoryCombo = new DataElementCategoryCombo();
             element.setCategoryCombo( categoryCombo );
-            
+
             element.setId( Integer.parseInt( values.get( FIELD_ID ) ) );
-            
-            if ( params.minorVersionGreaterOrEqual( "1.2" ))
+
+            if ( params.minorVersionGreaterOrEqual( "1.2" ) )
             {
                 element.setUid( values.get( FIELD_UID ) );
             }
 
             element.setName( values.get( FIELD_NAME ) );
             element.setShortName( values.get( FIELD_SHORT_NAME ) );
-            
-            if ( params.minorVersionGreaterOrEqual( "1.2" )) {
-              element.setCode( values.get( FIELD_CODE ) );                
+
+            if ( params.minorVersionGreaterOrEqual( "1.2" ) )
+            {
+                element.setCode( values.get( FIELD_CODE ) );
             }
-            
+
             element.setDescription( values.get( FIELD_DESCRIPTION ) );
-            element.setType( values.get( FIELD_TYPE ) );
-            
-            element.setDomainType( DataElementDomain.fromValue(values.get( FIELD_DOMAIN_TYPE ) ) );
+            element.setValueType( ValueType.valueOf( values.get( FIELD_VALUE_TYPE ) ) );
+            element.setDomainType( DataElementDomain.fromValue( values.get( FIELD_DOMAIN_TYPE ) ) );
             element.setAggregationOperator( values.get( FIELD_AGGREGATION_OPERATOR ) );
             element.getCategoryCombo().setId( categoryComboMapping.get( Integer.parseInt( values.get( FIELD_CATEGORY_COMBO ) ) ) );
-            element.setLastUpdated( DateUtils.getMediumDate( values.get( FIELD_LAST_UPDATED ) ) );            
-            
+            element.setLastUpdated( DateUtils.getMediumDate( values.get( FIELD_LAST_UPDATED ) ) );
+
             importObject( element, params );
         }
     }
