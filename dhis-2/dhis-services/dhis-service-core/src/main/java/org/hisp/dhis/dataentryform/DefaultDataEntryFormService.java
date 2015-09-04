@@ -235,7 +235,7 @@ public class DefaultDataEntryFormService
                 StringBuilder title = dataElement != null ?
                     new StringBuilder( "title=\"" ).append( dataElementId ).append( " - " ).
                         append( escapeHtml3( dataElement.getDisplayName() ) ).append( " - " ).append( optionComboId ).append( " - " ).
-                        append( optionComboName ).append( " - " ).append( dataElement.getType() ).append( "\"" ) : new StringBuilder();
+                        append( optionComboName ).append( " - " ).append( dataElement.getValueType() ).append( "\"" ) : new StringBuilder();
 
                 displayValue = dataElement != null ? "value=\"[ " + escapeHtml3( dataElement.getDisplayName() ) + " " + optionComboName + " ]\"" : "[ " + i18n.getString( "data_element_not_exist" ) + " ]";
                 displayTitle = dataElement != null ? title.toString() : "[ " + i18n.getString( "dataelement_not_exist" ) + " ]";

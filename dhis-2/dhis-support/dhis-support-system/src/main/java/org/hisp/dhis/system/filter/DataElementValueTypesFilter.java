@@ -28,25 +28,28 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.dataelement.DataElement;
+
+import java.util.List;
 
 /**
- * @author Lars Helge Overland
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class DataElementTypeFilter
+public class DataElementValueTypesFilter
     implements Filter<DataElement>
 {
-    private String type;
-    
-    public DataElementTypeFilter( String type )
+    private List<ValueType> valueTypes;
+
+    public DataElementValueTypesFilter( List<ValueType> valueType )
     {
-        this.type = type;
+        this.valueTypes = valueTypes;
     }
-    
+
     @Override
-    public boolean retain( DataElement object )
+    public boolean retain( DataElement dataElement )
     {
-        return object != null && type.equals( object.getType() );
+        return dataElement != null && valueTypes.contains( dataElement.getValueType() );
     }
 }

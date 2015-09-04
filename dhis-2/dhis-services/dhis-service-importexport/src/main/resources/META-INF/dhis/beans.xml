@@ -11,7 +11,6 @@
       <map>
         <entry key="DXF" value-ref="org.hisp.dhis.importexport.DXFExportService" />
         <entry key="DHIS14XML" value-ref="org.hisp.dhis.importexport.Dhis14XMLExportService" />
-        <entry key="XLS" value-ref="org.hisp.dhis.importexport.XLSExportService" />
       </map>
     </property>
   </bean>
@@ -240,18 +239,6 @@
     <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
     <property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
     <property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
-  </bean>
-
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<!-- XLS Export                                                    -->
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-  <bean id="org.hisp.dhis.importexport.XLSExportService" class="org.hisp.dhis.importexport.xls.exporter.DefaultXLSExportService">
-    <property name="sessionFactory" ref="sessionFactory" />
-    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
-    <property name="indicatorService" ref="org.hisp.dhis.indicator.IndicatorService" />
-    <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
-    <property name="expressionService" ref="org.hisp.dhis.expression.ExpressionService" />
   </bean>
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

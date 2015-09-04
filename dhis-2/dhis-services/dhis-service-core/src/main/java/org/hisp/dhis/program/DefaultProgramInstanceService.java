@@ -35,6 +35,7 @@ import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.i18n.I18n;
@@ -879,7 +880,7 @@ public class DefaultProgramInstanceService
                 grid.addRow();
                 grid.addValue( dataElement.getFormNameFallback() );
 
-                if ( dataElement.getType().equals( DataElement.VALUE_TYPE_BOOL ) )
+                if ( ValueType.BOOLEAN == dataElement.getValueType() )
                 {
                     grid.addValue( i18n.getString( entityInstanceDataValue.getValue() ) );
                 }

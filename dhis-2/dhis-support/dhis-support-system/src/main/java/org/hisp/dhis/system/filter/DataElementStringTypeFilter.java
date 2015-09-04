@@ -28,8 +28,8 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.dataelement.DataElement;
 
 /**
  * @author Lars Helge Overland
@@ -40,6 +40,6 @@ public class DataElementStringTypeFilter
     @Override
     public boolean retain( DataElement object )
     {
-        return object != null && object.getType().equals( DataElement.VALUE_TYPE_STRING );
+        return object != null && object.getValueType().isText();
     }
 }

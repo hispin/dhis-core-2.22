@@ -189,7 +189,7 @@ public class ProgramIndicatorServiceTest
 
         deB = createDataElement( 'B' );
         deB.setDomainType( DataElementDomain.TRACKER );
-        deB.setType( DataElement.VALUE_TYPE_DATE );
+        deB.setValueType( ValueType.DATE );
 
         dataElementService.addDataElement( deA );
         dataElementService.addDataElement( deB );

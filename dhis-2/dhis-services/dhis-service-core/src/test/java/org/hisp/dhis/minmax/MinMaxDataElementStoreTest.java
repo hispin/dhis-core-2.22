@@ -28,14 +28,8 @@ package org.hisp.dhis.minmax;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -45,6 +39,11 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Kristian Nordal
@@ -63,8 +62,8 @@ public class MinMaxDataElementStoreTest
     private DataElementCategoryService categoryService;
 
     @Autowired
-    private  MinMaxDataElementStore minMaxDataElementStore;
-    
+    private MinMaxDataElementStore minMaxDataElementStore;
+
     @Test
     public void testBasic()
         throws Exception
@@ -79,49 +78,50 @@ public class MinMaxDataElementStoreTest
         dataElement1.setName( "DE1name" );
         dataElement1.setShortName( "DE1sname" );
         dataElement1.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
-        dataElement1.setType( DataElement.VALUE_TYPE_INT );
+        dataElement1.setValueType( ValueType.INTEGER );
         dataElement1.setDomainType( DataElementDomain.AGGREGATE );
-        
+
         DataElement dataElement2 = new DataElement();
         dataElement2.setName( "DE2name" );
         dataElement2.setShortName( "DE2sname" );
         dataElement2.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
-        dataElement2.setType( DataElement.VALUE_TYPE_INT );
+        dataElement2.setValueType( ValueType.INTEGER );
         dataElement2.setDomainType( DataElementDomain.AGGREGATE );
 
         DataElement dataElement3 = new DataElement();
         dataElement3.setName( "DE3name" );
         dataElement3.setShortName( "DE3sname" );
         dataElement3.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
-        dataElement3.setType( DataElement.VALUE_TYPE_INT );
+        dataElement3.setValueType( ValueType.INTEGER );
         dataElement3.setDomainType( DataElementDomain.AGGREGATE );
-        
+
         DataElement dataElement4 = new DataElement();
         dataElement4.setName( "DE4name" );
         dataElement4.setShortName( "DE4sname" );
         dataElement4.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
-        dataElement4.setType( DataElement.VALUE_TYPE_INT );
+        dataElement4.setValueType( ValueType.INTEGER );
         dataElement4.setDomainType( DataElementDomain.AGGREGATE );
-        
+
         dataElementService.addDataElement( dataElement1 );
         dataElementService.addDataElement( dataElement2 );
         dataElementService.addDataElement( dataElement3 );
         dataElementService.addDataElement( dataElement4 );
-                
-        DataElementCategoryOptionCombo optionCombo1 = new DataElementCategoryOptionCombo();        
+
+        DataElementCategoryOptionCombo optionCombo1 = new DataElementCategoryOptionCombo();
         categoryService.addDataElementCategoryOptionCombo( optionCombo1 );
-        
-        DataElementCategoryOptionCombo optionCombo2 = new DataElementCategoryOptionCombo();        
+
+        DataElementCategoryOptionCombo optionCombo2 = new DataElementCategoryOptionCombo();
         categoryService.addDataElementCategoryOptionCombo( optionCombo2 );
 
         MinMaxDataElement minMaxDataElement1 = new MinMaxDataElement( source1, dataElement1, optionCombo1, 0, 100, false );
         MinMaxDataElement minMaxDataElement2 = new MinMaxDataElement( source2, dataElement2, optionCombo1, 0, 100, false );
         MinMaxDataElement minMaxDataElement3 = new MinMaxDataElement( source2, dataElement3, optionCombo1, 0, 100, false );
         MinMaxDataElement minMaxDataElement4 = new MinMaxDataElement( source2, dataElement4, optionCombo1, 0, 100, false );
-        
+
         MinMaxDataElement minMaxDataElement5 = new MinMaxDataElement( source1, dataElement1, optionCombo2, 0, 100, false );
 
         int mmdeid1 = minMaxDataElementStore.save( minMaxDataElement1 );
+
         minMaxDataElementStore.save( minMaxDataElement2 );
         minMaxDataElementStore.save( minMaxDataElement3 );
         minMaxDataElementStore.save( minMaxDataElement4 );
@@ -147,7 +147,7 @@ public class MinMaxDataElementStoreTest
         assertNull( minMaxDataElementStore.get( source2, dataElement1, optionCombo1 ) );
 
         assertTrue( minMaxDataElementStore.get( source1, dataElements1 ).size() == 2 );
-        assertTrue( minMaxDataElementStore.get( source2, dataElements2 ).size() == 3 );       
+        assertTrue( minMaxDataElementStore.get( source2, dataElements2 ).size() == 3 );
 
         minMaxDataElementStore.delete( minMaxDataElement1 );
 

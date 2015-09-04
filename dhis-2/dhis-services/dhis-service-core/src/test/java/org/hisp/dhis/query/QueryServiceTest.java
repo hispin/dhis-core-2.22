@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
@@ -63,28 +64,22 @@ public class QueryServiceTest
     private void createDataElements()
     {
         DataElement dataElementA = createDataElement( 'A' );
-        dataElementA.setType( DataElement.VALUE_TYPE_INT );
-        dataElementA.setNumberType( DataElement.VALUE_TYPE_NUMBER );
+        dataElementA.setValueType( ValueType.NUMBER );
 
         DataElement dataElementB = createDataElement( 'B' );
-        dataElementB.setType( DataElement.VALUE_TYPE_INT );
-        dataElementB.setNumberType( DataElement.VALUE_TYPE_BOOL );
+        dataElementB.setValueType( ValueType.BOOLEAN );
 
         DataElement dataElementC = createDataElement( 'C' );
-        dataElementC.setType( DataElement.VALUE_TYPE_INT );
-        dataElementC.setNumberType( DataElement.VALUE_TYPE_INT );
+        dataElementC.setValueType( ValueType.INTEGER );
 
         DataElement dataElementD = createDataElement( 'D' );
-        dataElementD.setType( DataElement.VALUE_TYPE_INT );
-        dataElementD.setNumberType( DataElement.VALUE_TYPE_NUMBER );
+        dataElementD.setValueType( ValueType.NUMBER );
 
         DataElement dataElementE = createDataElement( 'E' );
-        dataElementE.setType( DataElement.VALUE_TYPE_INT );
-        dataElementE.setNumberType( DataElement.VALUE_TYPE_BOOL );
+        dataElementE.setValueType( ValueType.BOOLEAN );
 
         DataElement dataElementF = createDataElement( 'F' );
-        dataElementF.setType( DataElement.VALUE_TYPE_INT );
-        dataElementF.setNumberType( DataElement.VALUE_TYPE_INT );
+        dataElementF.setValueType( ValueType.INTEGER );
 
         dataElementA.setCreated( Year.parseYear( "2001" ).getStart() );
         dataElementB.setCreated( Year.parseYear( "2002" ).getStart() );

@@ -28,13 +28,6 @@ package org.hisp.dhis.jdbc.batchhandler;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.hisp.dhis.DhisTest;
@@ -42,13 +35,18 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
+
+import static org.junit.Assert.*;
+
 /**
  * @author Lars Helge Overland
- * @version $Id: DataElementBatchHandlerTest.java 4999 2008-04-23 15:45:08Z larshelg $
  */
+@Ignore
 public class DataElementBatchHandlerTest
     extends DhisTest
 {
@@ -62,12 +60,12 @@ public class DataElementBatchHandlerTest
     private DataElementCategoryService categoryService;
 
     private BatchHandler<DataElement> batchHandler;
-    
+
     private DataElementCategoryCombo categoryCombo;
-    
+
     private DataElement dataElementA;
     private DataElement dataElementB;
-    private DataElement dataElementC;    
+    private DataElement dataElementC;
 
     // -------------------------------------------------------------------------
     // Fixture
@@ -79,9 +77,9 @@ public class DataElementBatchHandlerTest
         batchHandler = batchHandlerFactory.createBatchHandler( DataElementBatchHandler.class );
 
         categoryCombo = categoryService.getDataElementCategoryComboByName( DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME );
-        
+
         batchHandler.init();
-        
+
         dataElementA = createDataElement( 'A', categoryCombo );
         dataElementB = createDataElement( 'B', categoryCombo );
         dataElementC = createDataElement( 'C', categoryCombo );
@@ -92,13 +90,13 @@ public class DataElementBatchHandlerTest
     {
         batchHandler.flush();
     }
-    
+
     @Override
     public boolean emptyDatabaseAfterTest()
     {
         return true;
     }
-    
+
     // -------------------------------------------------------------------------
     // Tests
     // -------------------------------------------------------------------------
@@ -109,11 +107,11 @@ public class DataElementBatchHandlerTest
         batchHandler.addObject( dataElementA );
         batchHandler.addObject( dataElementB );
         batchHandler.addObject( dataElementC );
-        
+
         batchHandler.flush();
-                
+
         Collection<DataElement> dataElements = dataElementService.getAllDataElements();
-        
+
         assertTrue( dataElements.contains( dataElementA ) );
         assertTrue( dataElements.contains( dataElementB ) );
         assertTrue( dataElements.contains( dataElementC ) );
@@ -125,7 +123,7 @@ public class DataElementBatchHandlerTest
         int idA = batchHandler.insertObject( dataElementA, true );
         int idB = batchHandler.insertObject( dataElementB, true );
         int idC = batchHandler.insertObject( dataElementC, true );
-        
+
         assertNotNull( dataElementService.getDataElement( idA ) );
         assertNotNull( dataElementService.getDataElement( idB ) );
         assertNotNull( dataElementService.getDataElement( idC ) );
@@ -137,7 +135,7 @@ public class DataElementBatchHandlerTest
         dataElementA.setDescription( "'quote'" );
         dataElementB.setDescription( "\\backslash\\" );
         dataElementC.setDescription( ";semicolon;" );
-        
+
         batchHandler.insertObject( dataElementA, false );
         batchHandler.insertObject( dataElementB, false );
         batchHandler.insertObject( dataElementC, false );
@@ -147,12 +145,12 @@ public class DataElementBatchHandlerTest
     public void testUpdateObject()
     {
         int id = batchHandler.insertObject( dataElementA, true );
-        
+
         dataElementA.setId( id );
         dataElementA.setName( "UpdatedName" );
-        
+
         batchHandler.updateObject( dataElementA );
-        
+
         assertEquals( "UpdatedName", dataElementService.getDataElement( id ).getName() );
     }
 
@@ -162,7 +160,7 @@ public class DataElementBatchHandlerTest
         int referenceId = dataElementService.addDataElement( dataElementA );
 
         int retrievedId = batchHandler.getObjectIdentifier( "DataElementA" );
-        
+
         assertEquals( referenceId, retrievedId );
     }
 
@@ -170,9 +168,9 @@ public class DataElementBatchHandlerTest
     public void testObjectExists()
     {
         dataElementService.addDataElement( dataElementA );
-        
+
         assertTrue( batchHandler.objectExists( dataElementA ) );
-        
+
         assertFalse( batchHandler.objectExists( dataElementB ) );
     }
 }
