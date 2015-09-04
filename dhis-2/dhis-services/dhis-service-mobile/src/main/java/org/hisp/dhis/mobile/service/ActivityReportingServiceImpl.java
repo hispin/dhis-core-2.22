@@ -503,7 +503,7 @@ public class ActivityReportingServiceImpl
 
                 String value = dataElement1.getValue();
 
-                if ( dataElement.getType().equalsIgnoreCase( "date" ) && !value.trim().equals( "" ) )
+                if ( ValueType.DATE == dataElement.getValueType() && !value.trim().equals( "" ) )
                 {
                     value = PeriodUtil.convertDateFormat( value );
                 }
@@ -545,8 +545,7 @@ public class ActivityReportingServiceImpl
                 String value = dataElement1.getValue();
                 if ( value != null )
                 {
-
-                    if ( dataElement.getType().equalsIgnoreCase( "date" ) && !value.trim().equals( "" ) )
+                    if ( ValueType.DATE == dataElement.getValueType() && !value.trim().equals( "" ) )
                     {
                         value = PeriodUtil.convertDateFormat( value );
                     }
@@ -1055,12 +1054,12 @@ public class ActivityReportingServiceImpl
             }
 
             mobileDataElement.setName( dataElementName );
-            mobileDataElement.setType( programStageDataElement.getDataElement().getType() );
+            // mobileDataElement.setType( programStageDataElement.getDataElement().getType() );
 
             // problem
             mobileDataElement.setCompulsory( programStageDataElement.isCompulsory() );
 
-            mobileDataElement.setNumberType( programStageDataElement.getDataElement().getNumberType() );
+            // mobileDataElement.setNumberType( programStageDataElement.getDataElement().getNumberType() );
 
             // Value
             TrackedEntityDataValue patientDataValue = dataValueService.getTrackedEntityDataValue( programStageInstance,
@@ -1069,8 +1068,7 @@ public class ActivityReportingServiceImpl
             if ( patientDataValue != null )
             {
                 // Convert to standard date format before send to client
-                if ( programStageDataElement.getDataElement().getType().equalsIgnoreCase( "date" )
-                    && !patientDataValue.equals( "" ) )
+                if ( ValueType.DATE == programStageDataElement.getDataElement().getValueType() && !patientDataValue.equals( "" ) )
                 {
                     mobileDataElement.setValue( PeriodUtil.convertDateFormat( patientDataValue.getValue() ) );
                 }
@@ -1302,19 +1300,18 @@ public class ActivityReportingServiceImpl
                 org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement mobileDataElement = new org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement();
                 mobileDataElement.setId( programStageDataElement.getDataElement().getId() );
                 mobileDataElement.setName( programStageDataElement.getDataElement().getName() );
-                mobileDataElement.setType( programStageDataElement.getDataElement().getType() );
+                // mobileDataElement.setType( programStageDataElement.getDataElement().getType() );
 
                 // problem
                 mobileDataElement.setCompulsory( programStageDataElement.isCompulsory() );
 
-                mobileDataElement.setNumberType( programStageDataElement.getDataElement().getNumberType() );
+                // mobileDataElement.setNumberType( programStageDataElement.getDataElement().getNumberType() );
 
                 mobileDataElement.setValue( "" );
 
                 if ( programStageDataElement.getDataElement().getOptionSet() != null )
                 {
-                    mobileDataElement
-                        .setOptionSet( ModelMapping.getOptionSet( programStageDataElement.getDataElement() ) );
+                    mobileDataElement.setOptionSet( ModelMapping.getOptionSet( programStageDataElement.getDataElement() ) );
                 }
                 else
                 {

@@ -28,22 +28,9 @@ package org.hisp.dhis.sms.listener;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -68,10 +55,24 @@ import org.hisp.dhis.sms.incoming.IncomingSmsService;
 import org.hisp.dhis.sms.incoming.SmsMessageStatus;
 import org.hisp.dhis.sms.parse.ParserType;
 import org.hisp.dhis.sms.parse.SMSParserException;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DataValueSMSListener
     implements IncomingSmsListener
@@ -140,7 +141,7 @@ public class DataValueSMSListener
     {
         this.dataElementService = dataElementService;
     }
-    
+
     @Transactional
     @Override
     public boolean accept( IncomingSms sms )
@@ -254,16 +255,16 @@ public class DataValueSMSListener
     {
         HashMap<String, String> output = new HashMap<>();
         Pattern pattern = Pattern.compile( defaultPattern );
-        
+
         if ( !StringUtils.isBlank( smsCommand.getSeparator() ) )
         {
-        	String x = "([^\\s|" +  smsCommand.getSeparator().trim() +"]+)\\s*\\" + smsCommand.getSeparator().trim() + "\\s*([\\w ]+)\\s*(\\"
-                     + smsCommand.getSeparator().trim() + "|$)*\\s*";
+            String x = "([^\\s|" + smsCommand.getSeparator().trim() + "]+)\\s*\\" + smsCommand.getSeparator().trim() + "\\s*([\\w ]+)\\s*(\\"
+                + smsCommand.getSeparator().trim() + "|$)*\\s*";
             pattern = Pattern.compile( x );
         }
-        
+
         Matcher m = pattern.matcher( sms );
-        
+
         while ( m.find() )
         {
             String key = m.group( 1 );
@@ -350,18 +351,18 @@ public class DataValueSMSListener
         if ( orgUnit == null && orgUnits.size() > 1 )
         {
             String messageListingOrgUnits = smsCommand.getMoreThanOneOrgUnitMessage();
-            
+
             for ( Iterator<OrganisationUnit> i = orgUnits.iterator(); i.hasNext(); )
             {
                 OrganisationUnit o = i.next();
                 messageListingOrgUnits += TextUtils.SPACE + o.getName() + ":" + o.getCode();
-                
+
                 if ( i.hasNext() )
                 {
                     messageListingOrgUnits += ",";
                 }
             }
-            
+
             throw new SMSParserException( messageListingOrgUnits );
         }
 
@@ -438,7 +439,7 @@ public class DataValueSMSListener
                 newDataValue = true;
             }
 
-            if ( StringUtils.equals( dv.getDataElement().getType(), DataElement.VALUE_TYPE_BOOL ) )
+            if ( ValueType.BOOLEAN == dv.getDataElement().getValueType() )
             {
                 if ( "Y".equals( value.toUpperCase() ) || "YES".equals( value.toUpperCase() ) )
                 {
@@ -449,7 +450,7 @@ public class DataValueSMSListener
                     value = "false";
                 }
             }
-            else if ( StringUtils.equals( dv.getDataElement().getType(), DataElement.VALUE_TYPE_INT ) )
+            else if ( dv.getDataElement().getValueType().isInteger() )
             {
                 try
                 {
@@ -494,10 +495,10 @@ public class DataValueSMSListener
 
                 DataValue targetDataValue = dataValueService.getDataValue( targetDataElement, period, orgunit,
                     dataElementCategoryService.getDefaultDataElementCategoryOptionCombo() );
-                
+
                 int targetValue = 0;
                 boolean newTargetDataValue = false;
-                
+
                 if ( targetDataValue == null )
                 {
                     targetDataValue = new DataValue();
@@ -527,7 +528,7 @@ public class DataValueSMSListener
                 targetDataValue.setValue( String.valueOf( targetValue ) );
                 targetDataValue.setLastUpdated( new java.util.Date() );
                 targetDataValue.setStoredBy( storedBy );
-                
+
                 if ( newTargetDataValue )
                 {
                     dataValueService.addDataValue( targetDataValue );
@@ -581,10 +582,10 @@ public class DataValueSMSListener
                     }
                 }
             }
-            
+
             user = u;
         }
-        
+
         if ( user == null )
         {
             throw new SMSParserException( "User is not associated with any orgunit. Please contact your supervisor." );
@@ -682,7 +683,8 @@ public class DataValueSMSListener
         {
             DataValue dv = codesWithDataValues.get( key );
             String value = dv.getValue();
-            if ( StringUtils.equals( dv.getDataElement().getType(), DataElement.VALUE_TYPE_BOOL ) )
+
+            if ( ValueType.BOOLEAN == dv.getDataElement().getValueType() )
             {
                 if ( "true".equals( value ) )
                 {
@@ -702,7 +704,7 @@ public class DataValueSMSListener
         {
             notInReport += key + ",";
         }
-        
+
         notInReport = notInReport.substring( 0, notInReport.length() - 1 );
 
         if ( command.getSuccessMessage() != null && !StringUtils.isEmpty( command.getSuccessMessage() ) )

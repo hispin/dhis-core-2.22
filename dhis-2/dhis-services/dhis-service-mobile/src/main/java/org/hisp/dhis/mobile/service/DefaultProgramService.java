@@ -252,7 +252,7 @@ public class DefaultProgramService
                 org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement de = ModelMapping.getDataElementLWUIT( dataElement );
 
                 de.setCompulsory( programStageDataElement.isCompulsory() );
-                de.setNumberType( programStageDataElement.getDataElement().getNumberType() );
+                // de.setNumberType( programStageDataElement.getDataElement().getNumberType() );
 
                 des.add( de );
             }

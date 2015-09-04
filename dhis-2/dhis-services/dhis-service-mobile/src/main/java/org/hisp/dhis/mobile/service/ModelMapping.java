@@ -28,16 +28,16 @@ package org.hisp.dhis.mobile.service;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hisp.dhis.api.mobile.model.DataElement;
+import org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement;
 import org.hisp.dhis.api.mobile.model.Model;
 import org.hisp.dhis.api.mobile.model.ModelList;
 import org.hisp.dhis.api.mobile.model.OptionSet;
-import org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModelMapping
 {
@@ -46,7 +46,7 @@ public class ModelMapping
         DataElement de = new DataElement();
         de.setId( dataElement.getId() );
         de.setName( dataElement.getFormNameFallback() );
-        de.setType( dataElement.getType() );
+        // de.setType( dataElement.getType() );
 
         de.setCategoryOptionCombos( getCategoryOptionCombos( dataElement ) );
 
@@ -54,7 +54,8 @@ public class ModelMapping
         if ( dataElement.getOptionSet() != null && dataElement.getOptionSet().getOptions().size() <= 50 )
         {
             de.setOptionSet( getOptionSet( dataElement ) );
-        }        
+        }
+
         return de;
     }
 
@@ -63,7 +64,7 @@ public class ModelMapping
         ProgramStageDataElement de = new ProgramStageDataElement();
         de.setId( dataElement.getId() );
         de.setName( dataElement.getFormNameFallback() );
-        de.setType( dataElement.getType() );
+        // de.setType( dataElement.getType() );
 
         de.setCategoryOptionCombos( getCategoryOptionCombos( dataElement ) );
 
@@ -71,8 +72,8 @@ public class ModelMapping
         if ( dataElement.getOptionSet() != null && dataElement.getOptionSet().getOptions().size() <= 50 )
         {
             de.setOptionSet( getOptionSet( dataElement ) );
-        }     
-        
+        }
+
         return de;
     }
 
