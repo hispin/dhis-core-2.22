@@ -28,19 +28,9 @@ package org.hisp.dhis.sms.listener;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.CompleteDataSetRegistration;
@@ -64,11 +54,21 @@ import org.hisp.dhis.sms.incoming.IncomingSms;
 import org.hisp.dhis.sms.incoming.IncomingSmsListener;
 import org.hisp.dhis.sms.parse.ParserType;
 import org.hisp.dhis.sms.parse.SMSParserException;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class J2MEDataValueSMSListener
     implements IncomingSmsListener
@@ -91,7 +91,7 @@ public class J2MEDataValueSMSListener
     {
         String message = sms.getText();
         String commandString = null;
-        
+
         if ( message.indexOf( TextUtils.SPACE ) > 0 )
         {
             commandString = message.substring( 0, message.indexOf( " " ) );
@@ -226,7 +226,7 @@ public class J2MEDataValueSMSListener
                 newDataValue = true;
             }
 
-            if ( StringUtils.equals( dv.getDataElement().getType(), DataElement.VALUE_TYPE_BOOL ) )
+            if ( ValueType.BOOLEAN == dv.getDataElement().getValueType() )
             {
                 if ( "Y".equals( value.toUpperCase() ) || "YES".equals( value.toUpperCase() ) )
                 {
@@ -279,7 +279,7 @@ public class J2MEDataValueSMSListener
         if ( orgUnit == null && orgUnits.size() > 1 )
         {
             String messageListingOrgUnits = smsCommand.getMoreThanOneOrgUnitMessage();
-            
+
             for ( Iterator<OrganisationUnit> i = orgUnits.iterator(); i.hasNext(); )
             {
                 OrganisationUnit o = i.next();
@@ -299,7 +299,7 @@ public class J2MEDataValueSMSListener
     {
         Collection<OrganisationUnit> orgUnits = new ArrayList<>();
         Collection<User> users = userService.getUsersByPhoneNumber( sender );
-        
+
         for ( User u : users )
         {
             if ( u.getOrganisationUnits() != null )
@@ -315,7 +315,7 @@ public class J2MEDataValueSMSListener
     {
         OrganisationUnit orgunit = null;
         User user = null;
-        
+
         for ( User u : userService.getUsersByPhoneNumber( sender ) )
         {
             OrganisationUnit ou = u.getOrganisationUnit();
@@ -388,8 +388,8 @@ public class J2MEDataValueSMSListener
             else if ( dv != null )
             {
                 String value = dv.getValue();
-                
-                if ( StringUtils.equals( dv.getDataElement().getType(), DataElement.VALUE_TYPE_BOOL ) )
+
+                if ( ValueType.BOOLEAN == dv.getDataElement().getValueType() )
                 {
                     if ( "true".equals( value ) )
                     {
@@ -400,7 +400,7 @@ public class J2MEDataValueSMSListener
                         value = "No";
                     }
                 }
-                
+
                 reportBack += code.getCode() + "=" + value + " ";
             }
         }
@@ -411,7 +411,7 @@ public class J2MEDataValueSMSListener
         {
             reportBack += notInReport;
         }
-        
+
         if ( command.getSuccessMessage() != null && !StringUtils.isEmpty( command.getSuccessMessage() ) )
         {
             reportBack = command.getSuccessMessage();
@@ -446,7 +446,7 @@ public class J2MEDataValueSMSListener
             String pattern = "yyyy-MM-dd";
             SimpleDateFormat formatter = new SimpleDateFormat( pattern );
             Date date;
-            
+
             try
             {
                 date = formatter.parse( periodName );
@@ -456,7 +456,7 @@ public class J2MEDataValueSMSListener
                 throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName()
                     + " and name " + periodName, e );
             }
-            
+
             return periodType.createPeriod( date );
         }
 
