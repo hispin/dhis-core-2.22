@@ -193,7 +193,7 @@ public class DataValueController
 
         if ( valueValid != null )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( "Invalid value: " + value + ", must match data element type: " + dataElement.getDetailedType() ) );
+            throw new WebMessageException( WebMessageUtils.conflict( "Invalid value: " + value + ", must match data element type: " + dataElement.getValueType() ) );
         }
 
         String commentValid = ValidationUtils.commentIsValid( comment );

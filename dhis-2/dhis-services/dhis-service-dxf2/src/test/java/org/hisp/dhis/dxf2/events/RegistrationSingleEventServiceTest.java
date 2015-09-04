@@ -38,6 +38,7 @@ import org.hamcrest.CoreMatchers;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dxf2.events.enrollment.Enrollment;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentService;
@@ -132,7 +133,7 @@ public class RegistrationSingleEventServiceTest
         trackedEntityInstanceMaleA = trackedEntityInstanceService.getTrackedEntityInstance( maleA );
 
         dataElementA = createDataElement( 'A' );
-        dataElementA.setType( DataElement.VALUE_TYPE_INT );
+        dataElementA.setValueType( ValueType.INTEGER );
         identifiableObjectManager.save( dataElementA );
 
         programStageA = createProgramStage( 'A', 0 );

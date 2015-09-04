@@ -28,22 +28,20 @@ package org.hisp.dhis.analytics;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.NameableObjectUtils.getList;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_SUM;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_INT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hisp.dhis.DhisConvenienceTest;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hisp.dhis.common.NameableObjectUtils.getList;
+import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
+import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_SUM;
+import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
@@ -54,7 +52,7 @@ public class DataQueryGroupsTest
     // -------------------------------------------------------------------------
     // Fixture
     // -------------------------------------------------------------------------
-    
+
     private DataElement deA;
     private DataElement deB;
     private DataElement deC;
@@ -62,7 +60,7 @@ public class DataQueryGroupsTest
     private DataElement deE;
     private DataElement deF;
     private DataElement deG;
-    
+
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
     private OrganisationUnit ouC;
@@ -72,60 +70,60 @@ public class DataQueryGroupsTest
     // -------------------------------------------------------------------------
     // Tests
     // -------------------------------------------------------------------------
-    
+
     @Before
     public void before()
     {
-        deA = createDataElement( 'A', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        deB = createDataElement( 'B', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        deC = createDataElement( 'C', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        deD = createDataElement( 'D', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        deE = createDataElement( 'E', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        deF = createDataElement( 'F', VALUE_TYPE_INT, AGGREGATION_OPERATOR_AVERAGE_SUM );
-        deG = createDataElement( 'G', VALUE_TYPE_INT, AGGREGATION_OPERATOR_AVERAGE_SUM );
-                
+        deA = createDataElement( 'A', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deB = createDataElement( 'B', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deC = createDataElement( 'C', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deD = createDataElement( 'D', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deE = createDataElement( 'E', ValueType.INTEGER.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deF = createDataElement( 'F', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
+        deG = createDataElement( 'G', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
+
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );
         ouC = createOrganisationUnit( 'C' );
         ouD = createOrganisationUnit( 'D' );
         ouE = createOrganisationUnit( 'E' );
     }
-    
+
     @Test
     public void planQueryA()
     {
         DataQueryParams paramsA = new DataQueryParams();
         paramsA.setDataElements( getList( deA, deB ) );
         paramsA.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
-        paramsA.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod(  "2001Q1" ), createPeriod( "2001Q2" ) ) );
+        paramsA.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod( "2001Q1" ), createPeriod( "2001Q2" ) ) );
         paramsA.setAggregationType( AggregationType.SUM );
-        
+
         DataQueryParams paramsB = new DataQueryParams();
         paramsB.setDataElements( getList( deC, deD ) );
         paramsB.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
-        paramsB.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod(  "2001Q1" ), createPeriod( "2001Q2" ) ) );
+        paramsB.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod( "2001Q1" ), createPeriod( "2001Q2" ) ) );
         paramsB.setAggregationType( AggregationType.SUM );
-        
+
         DataQueryParams paramsC = new DataQueryParams();
         paramsC.setDataElements( getList( deE ) );
         paramsC.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
-        paramsC.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod(  "2001Q1" ), createPeriod( "2001Q2" ) ) );
+        paramsC.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod( "2001Q1" ), createPeriod( "2001Q2" ) ) );
         paramsC.setAggregationType( AggregationType.SUM );
-        
+
         DataQueryParams paramsD = new DataQueryParams();
         paramsD.setDataElements( getList( deF, deG ) );
         paramsD.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
-        paramsD.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod(  "2001Q1" ), createPeriod( "2001Q2" ) ) );
+        paramsD.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod( "2001Q1" ), createPeriod( "2001Q2" ) ) );
         paramsD.setAggregationType( AggregationType.AVERAGE_SUM_INT );
-        
+
         List<DataQueryParams> queries = new ArrayList<>();
         queries.add( paramsA );
         queries.add( paramsB );
         queries.add( paramsC );
-        queries.add( paramsD );        
-        
+        queries.add( paramsD );
+
         DataQueryGroups queryGroups = new DataQueryGroups( queries );
-        
+
         assertEquals( 2, queryGroups.getSequentialQueries().size() );
         assertEquals( 4, queryGroups.getAllQueries().size() );
         assertEquals( 3, queryGroups.getLargestGroupSize() );

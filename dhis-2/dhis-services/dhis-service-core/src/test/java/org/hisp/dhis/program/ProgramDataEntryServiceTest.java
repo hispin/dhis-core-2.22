@@ -28,11 +28,6 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -43,6 +38,11 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Chau Thu Tran
@@ -114,11 +114,11 @@ public class ProgramDataEntryServiceTest
 
         dataElementService.addDataElement( dataElementA );
         dataElementService.addDataElement( dataElementB );
-        
+
         ProgramStageDataElement programStageDataElementA = new ProgramStageDataElement( stageA, dataElementA, false, 1 );
         stageA.getProgramStageDataElements().add( programStageDataElementA );
         programStageDataElementService.addProgramStageDataElement( programStageDataElementA );
-        
+
         ProgramStageDataElement programStageDataElementB = new ProgramStageDataElement( stageA, dataElementB, false, 2 );
         stageA.getProgramStageDataElements().add( programStageDataElementB );
         programStageDataElementService.addProgramStageDataElement( programStageDataElementB );
@@ -129,17 +129,17 @@ public class ProgramDataEntryServiceTest
     @Test
     public void testPrepareDataEntryFormForAdd()
     {
-        String expected = "<input id=\"StageA-DeA-val\" style=\"width:4em;text-align:center\" value=\"\" title=\"[ DeA - DataElementA - int ]\"  "
-            + " name=\"entryfield\" tabIndex=\"1\"  data=\"{compulsory:false, deName:\'DataElementA\', deType:\'int\'}\" options=\'false\' "
+        String expected = "<input id=\"StageA-DeA-val\" style=\"width:4em;text-align:center\" value=\"\" title=\"[ DeA - DataElementA - INTEGER ]\"  "
+            + " name=\"entryfield\" tabIndex=\"1\"  data=\"{compulsory:false, deName:\'DataElementA\', deType:\'INTEGER\'}\" options=\'false\' "
             + "maxlength=255  onchange=\"saveVal( \'DeA\', this.value )\" onkeypress=\"return keyPress(event, this)\"  />";
         String actual = programDataEntryService.prepareDataEntryFormForAdd( htmlCode, mockI18n, stageA );
-       assertEquals( expected, actual );
+        assertEquals( expected, actual );
     }
 
     @Test
     public void testPrepareDataEntryFormForEdit()
     {
-        String expected = "<input id=\"StageA-DeA-val\" style=\"width:4em;text-align:center\" value=\"[DataElementA]\" title=\"[ DeA - DataElementA - int ]\" />";
+        String expected = "<input id=\"StageA-DeA-val\" style=\"width:4em;text-align:center\" value=\"[DataElementA]\" title=\"[ DeA - DataElementA - INTEGER ]\" />";
         String actual = programDataEntryService.prepareDataEntryFormForEdit( htmlCode );
         assertEquals( expected, actual );
     }

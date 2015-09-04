@@ -263,7 +263,7 @@ public class JdbcEventAnalyticsTableManager
         {
             ValueType valueType = dataElement.getValueType();
             String dataType = getColumnType( valueType );
-            String dataClause = dataElement.isNumericType() ? numericClause : dataElement.isDateType() ? dateClause : "";
+            String dataClause = dataElement.isNumericType() ? numericClause : dataElement.getValueType().isDate() ? dateClause : "";
             String select = getSelectClause( valueType );
 
             String sql = "(select " + select + " from trackedentitydatavalue where programstageinstanceid=psi.programstageinstanceid " + 

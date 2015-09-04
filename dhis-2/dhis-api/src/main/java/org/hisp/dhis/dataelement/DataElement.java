@@ -35,7 +35,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
-
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
@@ -141,22 +140,6 @@ public class DataElement
      * DataElementDomainType.TRACKER.
      */
     private DataElementDomain domainType;
-
-    /**
-     * The value type of this DataElement; e.g. DataElement.VALUE_TYPE_INT or
-     * DataElement.VALUE_TYPE_BOOL.
-     */
-    private String type;
-
-    /**
-     * The number type. Is relevant when type is VALUE_TYPE_INT.
-     */
-    private String numberType;
-
-    /**
-     * The text type. Is relevant when type is VALUE_TYPE_STRING.
-     */
-    private String textType;
 
     /**
      * The aggregation operator of this DataElement; e.g. DataElement.SUM og
@@ -280,46 +263,6 @@ public class DataElement
     {
         // TODO optimize when using persisted valueType
         return ValueType.DATE == getValueType() || ValueType.DATETIME == getValueType();
-    }
-
-    /**
-     * Returns the value type. If value type is int and the number type exists,
-     * the number type is returned, otherwise the type is returned.
-     */
-    public String getDetailedNumberType()
-    {
-        return (type != null && type.equals( VALUE_TYPE_INT ) && numberType != null) ? numberType : type;
-    }
-
-    /**
-     * Returns the value type. If value type is string and the text type exists,
-     * the text type is returned, if the type is string and the text type does
-     * not exist string is returned.
-     */
-    public String getDetailedTextType()
-    {
-        return (type != null && type.equals( VALUE_TYPE_STRING ) && textType != null) ? textType : type;
-    }
-
-    /**
-     * Returns the detailed data element type. If value type is int, the number
-     * type is returned. If value type is string, the text type is returned.
-     * Otherwise the type is returned.
-     */
-    public String getDetailedType()
-    {
-        if ( VALUE_TYPE_INT.equals( type ) )
-        {
-            return numberType;
-        }
-        else if ( VALUE_TYPE_STRING.equals( type ) )
-        {
-            return textType;
-        }
-        else
-        {
-            return type;
-        }
     }
 
     /**
@@ -596,7 +539,7 @@ public class DataElement
     {
         return DimensionType.PROGRAM_DATAELEMENT;
     }
-    
+
     // -------------------------------------------------------------------------
     // Helper getters
     // -------------------------------------------------------------------------
@@ -617,43 +560,12 @@ public class DataElement
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public ValueType getValueType()
     {
-        return valueType != null ? valueType : ValueType.getFromDataElement( this );
+        return valueType;
     }
 
     public void setValueType( ValueType valueType )
     {
-        ValueType.setDataElementTypes( this, valueType );
         this.valueType = valueType;
-    }
-
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType( String type )
-    {
-        this.type = type;
-    }
-
-    public String getNumberType()
-    {
-        return numberType;
-    }
-
-    public void setNumberType( String numberType )
-    {
-        this.numberType = numberType;
-    }
-
-    public String getTextType()
-    {
-        return textType;
-    }
-
-    public void setTextType( String textType )
-    {
-        this.textType = textType;
     }
 
     @JsonProperty
@@ -835,9 +747,6 @@ public class DataElement
             {
                 formName = dataElement.getFormName();
                 domainType = dataElement.getDomainType();
-                type = dataElement.getType();
-                numberType = dataElement.getNumberType();
-                textType = dataElement.getTextType();
                 valueType = dataElement.getValueType();
                 aggregationOperator = dataElement.getAggregationOperator();
                 categoryCombo = dataElement.getCategoryCombo();
@@ -849,9 +758,6 @@ public class DataElement
             {
                 formName = dataElement.getFormName() == null ? formName : dataElement.getFormName();
                 domainType = dataElement.getDomainType() == null ? domainType : dataElement.getDomainType();
-                type = dataElement.getType() == null ? type : dataElement.getType();
-                numberType = dataElement.getNumberType() == null ? numberType : dataElement.getNumberType();
-                textType = dataElement.getTextType() == null ? textType : dataElement.getTextType();
                 valueType = dataElement.getValueType() == null ? valueType : dataElement.getValueType();
                 aggregationOperator = dataElement.getAggregationOperator() == null ? aggregationOperator : dataElement.getAggregationOperator();
                 categoryCombo = dataElement.getCategoryCombo() == null ? categoryCombo : dataElement.getCategoryCombo();

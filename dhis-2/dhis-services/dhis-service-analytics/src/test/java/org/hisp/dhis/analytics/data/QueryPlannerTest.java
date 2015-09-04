@@ -28,26 +28,6 @@ package org.hisp.dhis.analytics.data;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.analytics.AnalyticsTableManager.ANALYTICS_TABLE_NAME;
-import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
-import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.NameableObjectUtils.getList;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_NONE;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_SUM;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_INT;
-import static org.hisp.dhis.dataelement.DataElement.VALUE_TYPE_STRING;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.DataQueryGroups;
 import org.hisp.dhis.analytics.DataQueryParams;
@@ -58,6 +38,7 @@ import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -79,6 +60,20 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static org.hisp.dhis.analytics.AnalyticsTableManager.ANALYTICS_TABLE_NAME;
+import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
+import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
+import static org.hisp.dhis.common.NameableObjectUtils.getList;
+import static org.hisp.dhis.dataelement.DataElement.*;
+import static org.junit.Assert.*;
+
 /**
  * @author Lars Helge Overland
  */
@@ -87,29 +82,29 @@ public class QueryPlannerTest
 {
     @Autowired
     private QueryPlanner queryPlanner;
-    
+
     @Autowired
     private DataElementService dataElementService;
-    
+
     @Autowired
     private DataSetService dataSetService;
-    
+
     @Autowired
     private DataElementCategoryService categoryService;
-    
+
     @Autowired
     private IndicatorService indicatorService;
-    
+
     @Autowired
     private OrganisationUnitService organisationUnitService;
-    
+
     // -------------------------------------------------------------------------
     // Fixture
     // -------------------------------------------------------------------------
 
     private IndicatorType itA;
     private Indicator inA;
-    
+
     private DataElement deA;
     private DataElement deB;
     private DataElement deC;
@@ -118,14 +113,14 @@ public class QueryPlannerTest
     private DataElement deF;
     private DataElement deG;
     private DataElement deH;
-    
+
     private DataSet dsA;
     private DataSet dsB;
     private DataSet dsC;
     private DataSet dsD;
-        
+
     private DataElementCategoryOptionCombo coc;
-    
+
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
     private OrganisationUnit ouC;
@@ -133,29 +128,29 @@ public class QueryPlannerTest
     private OrganisationUnit ouE;
 
     //TODO test for indicators, periods in filter
-    
+
     @Override
     public void setUpTest()
     {
         PeriodType pt = new MonthlyPeriodType();
-        
+
         itA = createIndicatorType( 'A' );
-        
+
         indicatorService.addIndicatorType( itA );
-        
+
         inA = createIndicator( 'A', itA );
-        
+
         indicatorService.addIndicator( inA );
-        
-        deA = createDataElement( 'A', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        deB = createDataElement( 'B', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        deC = createDataElement( 'C', VALUE_TYPE_INT, AGGREGATION_OPERATOR_AVERAGE_SUM );
-        deD = createDataElement( 'D', VALUE_TYPE_INT, AGGREGATION_OPERATOR_AVERAGE_SUM );
-        deE = createDataElement( 'E', VALUE_TYPE_STRING, AGGREGATION_OPERATOR_NONE );
-        deF = createDataElement( 'F', VALUE_TYPE_STRING, AGGREGATION_OPERATOR_NONE );
-        deG = createDataElement( 'G', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        deH = createDataElement( 'H', VALUE_TYPE_INT, AGGREGATION_OPERATOR_SUM );
-        
+
+        deA = createDataElement( 'A', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deB = createDataElement( 'B', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deC = createDataElement( 'C', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
+        deD = createDataElement( 'D', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
+        deE = createDataElement( 'E', ValueType.TEXT, AGGREGATION_OPERATOR_NONE );
+        deF = createDataElement( 'F', ValueType.TEXT, AGGREGATION_OPERATOR_NONE );
+        deG = createDataElement( 'G', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deH = createDataElement( 'H', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+
         dataElementService.addDataElement( deA );
         dataElementService.addDataElement( deB );
         dataElementService.addDataElement( deC );
@@ -164,25 +159,25 @@ public class QueryPlannerTest
         dataElementService.addDataElement( deF );
         dataElementService.addDataElement( deG );
         dataElementService.addDataElement( deH );
-        
+
         dsA = createDataSet( 'A', pt );
         dsB = createDataSet( 'B', pt );
         dsC = createDataSet( 'C', pt );
         dsD = createDataSet( 'D', pt );
-        
+
         dataSetService.addDataSet( dsA );
         dataSetService.addDataSet( dsB );
         dataSetService.addDataSet( dsC );
         dataSetService.addDataSet( dsD );
-        
+
         coc = categoryService.getDefaultDataElementCategoryOptionCombo();
-        
+
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );
         ouC = createOrganisationUnit( 'C' );
         ouD = createOrganisationUnit( 'D' );
         ouE = createOrganisationUnit( 'E' );
-        
+
         organisationUnitService.addOrganisationUnit( ouA );
         organisationUnitService.addOrganisationUnit( ouB );
         organisationUnitService.addOrganisationUnit( ouC );
@@ -202,25 +197,25 @@ public class QueryPlannerTest
         List<NameableObject> ousB = getList( ouC, ouD );
         List<NameableObject> pesA = getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ) );
         List<NameableObject> pesB = getList( createPeriod( "200001" ), createPeriod( "200002" ) );
-        
+
         DataQueryParams paramsA = new DataQueryParams();
         paramsA.setDataElements( desA );
         paramsA.setOrganisationUnits( ousA );
         paramsA.setPeriods( pesA );
-        
+
         DataQueryParams paramsB = paramsA.instance();
         paramsB.setOrganisationUnits( ousB );
         paramsB.setPeriods( pesB );
-        
+
         assertEquals( desA, paramsA.getDataElements() );
         assertEquals( ousA, paramsA.getOrganisationUnits() );
         assertEquals( pesA, paramsA.getPeriods() );
-        
+
         assertEquals( desA, paramsB.getDataElements() );
         assertEquals( ousB, paramsB.getOrganisationUnits() );
         assertEquals( pesB, paramsB.getPeriods() );
     }
-    
+
     @Test
     public void testGetPermutationOperandValueMapCocEnabled()
     {
@@ -233,31 +228,31 @@ public class QueryPlannerTest
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 6d );
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 7d );
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 8d );
-        
+
         MapMap<String, DataElementOperand, Double> permutationMap = new MapMap<>();
-        
+
         DataQueryParams.putPermutationOperandValueMap( permutationMap, aggregatedDataMap, true );
-        
+
         assertNotNull( permutationMap );
-        
+
         String ouAQ1Key = ouA.getUid() + DIMENSION_SEP + "2000Q1";
         String ouAQ2Key = ouA.getUid() + DIMENSION_SEP + "2000Q2";
         String ouBQ1Key = ouB.getUid() + DIMENSION_SEP + "2000Q1";
         String ouBQ2Key = ouB.getUid() + DIMENSION_SEP + "2000Q2";
-        
+
         Map<DataElementOperand, Double> ouAQ1 = permutationMap.get( ouAQ1Key );
         Map<DataElementOperand, Double> ouAQ2 = permutationMap.get( ouAQ2Key );
         Map<DataElementOperand, Double> ouBQ1 = permutationMap.get( ouBQ1Key );
         Map<DataElementOperand, Double> ouBQ2 = permutationMap.get( ouBQ2Key );
-        
+
         assertEquals( 2, ouAQ1.size() );
         assertEquals( 2, ouAQ2.size() );
         assertEquals( 2, ouBQ1.size() );
         assertEquals( 2, ouBQ2.size() );
-        
+
         DataElementOperand deACoc = new DataElementOperand( deA.getUid(), coc.getUid() );
         DataElementOperand deBCoc = new DataElementOperand( deB.getUid(), coc.getUid() );
-        
+
         Map<DataElementOperand, Double> ouAQ1Expected = new HashMap<>();
         ouAQ1Expected.put( deACoc, 1d );
         ouAQ1Expected.put( deBCoc, 5d );
@@ -273,7 +268,7 @@ public class QueryPlannerTest
         Map<DataElementOperand, Double> ouBQ2Expected = new HashMap<>();
         ouBQ2Expected.put( deACoc, 4d );
         ouBQ2Expected.put( deBCoc, 8d );
-                
+
         assertEquals( ouAQ1Expected, ouAQ1 );
         assertEquals( ouAQ2Expected, ouAQ2 );
         assertEquals( ouBQ1Expected, ouBQ1 );
@@ -292,31 +287,31 @@ public class QueryPlannerTest
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "200102", 6d );
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "200101", 7d );
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "200102", 8d );
-        
+
         MapMap<String, DataElementOperand, Double> permutationMap = new MapMap<>();
-        
+
         DataQueryParams.putPermutationOperandValueMap( permutationMap, aggregatedDataMap, false );
-        
+
         assertNotNull( permutationMap );
-        
+
         String ouAM1Key = ouA.getUid() + DIMENSION_SEP + "200101";
         String ouAM2Key = ouA.getUid() + DIMENSION_SEP + "200102";
         String ouBM1Key = ouB.getUid() + DIMENSION_SEP + "200101";
         String ouBM2Key = ouB.getUid() + DIMENSION_SEP + "200102";
-        
+
         Map<DataElementOperand, Double> ouAM1 = permutationMap.get( ouAM1Key );
         Map<DataElementOperand, Double> ouAM2 = permutationMap.get( ouAM2Key );
         Map<DataElementOperand, Double> ouBM1 = permutationMap.get( ouBM1Key );
         Map<DataElementOperand, Double> ouBM2 = permutationMap.get( ouBM2Key );
-        
+
         assertEquals( 2, ouAM1.size() );
         assertEquals( 2, ouAM2.size() );
         assertEquals( 2, ouBM1.size() );
         assertEquals( 2, ouBM2.size() );
-        
+
         DataElementOperand deACoc = new DataElementOperand( deA.getUid(), null );
         DataElementOperand deBCoc = new DataElementOperand( deB.getUid(), null );
-        
+
         Map<DataElementOperand, Double> ouAM1Expected = new HashMap<>();
         ouAM1Expected.put( deACoc, 1d );
         ouAM1Expected.put( deBCoc, 5d );
@@ -332,7 +327,7 @@ public class QueryPlannerTest
         Map<DataElementOperand, Double> ouBM2Expected = new HashMap<>();
         ouBM2Expected.put( deACoc, 4d );
         ouBM2Expected.put( deBCoc, 8d );
-                
+
         assertEquals( ouAM1Expected, ouAM1 );
         assertEquals( ouAM2Expected, ouAM2 );
         assertEquals( ouBM1Expected, ouBM1 );
@@ -347,38 +342,38 @@ public class QueryPlannerTest
         aggregatedTotalsDataMap.put( deA.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 2d );
         aggregatedTotalsDataMap.put( deA.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 3d );
         aggregatedTotalsDataMap.put( deA.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 4d );
-        
+
         Map<String, Double> aggregatedCocDataMap = new HashMap<>();
         aggregatedCocDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1", 5d );
         aggregatedCocDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 6d );
         aggregatedCocDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 7d );
         aggregatedCocDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 8d );
-        
+
         MapMap<String, DataElementOperand, Double> permutationMap = new MapMap<>();
-        
+
         DataQueryParams.putPermutationOperandValueMap( permutationMap, aggregatedTotalsDataMap, false );
         DataQueryParams.putPermutationOperandValueMap( permutationMap, aggregatedCocDataMap, true );
-        
+
         assertNotNull( permutationMap );
-        
+
         String ouAQ1Key = ouA.getUid() + DIMENSION_SEP + "2000Q1";
         String ouAQ2Key = ouA.getUid() + DIMENSION_SEP + "2000Q2";
         String ouBQ1Key = ouB.getUid() + DIMENSION_SEP + "2000Q1";
         String ouBQ2Key = ouB.getUid() + DIMENSION_SEP + "2000Q2";
-        
+
         Map<DataElementOperand, Double> ouAQ1 = permutationMap.get( ouAQ1Key );
         Map<DataElementOperand, Double> ouAQ2 = permutationMap.get( ouAQ2Key );
         Map<DataElementOperand, Double> ouBQ1 = permutationMap.get( ouBQ1Key );
         Map<DataElementOperand, Double> ouBQ2 = permutationMap.get( ouBQ2Key );
-        
+
         assertEquals( 2, ouAQ1.size() );
         assertEquals( 2, ouAQ2.size() );
         assertEquals( 2, ouBQ1.size() );
         assertEquals( 2, ouBQ2.size() );
-        
+
         DataElementOperand deACoc = new DataElementOperand( deA.getUid(), null );
         DataElementOperand deBCoc = new DataElementOperand( deB.getUid(), coc.getUid() );
-        
+
         Map<DataElementOperand, Double> ouAQ1Expected = new HashMap<>();
         ouAQ1Expected.put( deACoc, 1d );
         ouAQ1Expected.put( deBCoc, 5d );
@@ -394,7 +389,7 @@ public class QueryPlannerTest
         Map<DataElementOperand, Double> ouBQ2Expected = new HashMap<>();
         ouBQ2Expected.put( deACoc, 4d );
         ouBQ2Expected.put( deBCoc, 8d );
-                
+
         assertEquals( ouAQ1Expected, ouAQ1 );
         assertEquals( ouAQ2Expected, ouAQ2 );
         assertEquals( ouBQ1Expected, ouBQ1 );
@@ -412,12 +407,12 @@ public class QueryPlannerTest
         params.setDataElements( getList( deA, deB ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC ) );
         params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ) ) );
-        
+
         List<List<DimensionItem>> permutations = params.getDimensionItemPermutations();
-        
+
         assertNotNull( permutations );
         assertEquals( 6, permutations.size() );
-        
+
         for ( List<DimensionItem> permutation : permutations )
         {
             assertNotNull( permutation );
@@ -426,7 +421,7 @@ public class QueryPlannerTest
             assertEquals( PERIOD_DIM_ID, permutation.get( 1 ).getDimension() );
         }
     }
-    
+
     @Test
     public void testGetDataPeriodAggregationPeriodMap()
     {
@@ -436,17 +431,17 @@ public class QueryPlannerTest
         params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod( "2001Q1" ), createPeriod( "2001Q2" ) ) );
         params.setPeriodType( QuarterlyPeriodType.NAME );
         params.setDataPeriodType( new YearlyPeriodType() );
-        
+
         ListMap<NameableObject, NameableObject> map = params.getDataPeriodAggregationPeriodMap();
-        
+
         assertEquals( 2, map.size() );
-        
+
         assertTrue( map.keySet().contains( createPeriod( "2000" ) ) );
         assertTrue( map.keySet().contains( createPeriod( "2001" ) ) );
-        
+
         assertEquals( 4, map.get( createPeriod( "2000" ) ).size() );
         assertEquals( 2, map.get( createPeriod( "2001" ) ).size() );
-        
+
         assertTrue( map.get( createPeriod( "2000" ) ).contains( createPeriod( "2000Q1" ) ) );
         assertTrue( map.get( createPeriod( "2000" ) ).contains( createPeriod( "2000Q2" ) ) );
         assertTrue( map.get( createPeriod( "2000" ) ).contains( createPeriod( "2000Q3" ) ) );
@@ -455,10 +450,10 @@ public class QueryPlannerTest
         assertTrue( map.get( createPeriod( "2001" ) ).contains( createPeriod( "2001Q1" ) ) );
         assertTrue( map.get( createPeriod( "2001" ) ).contains( createPeriod( "2001Q2" ) ) );
     }
-    
+
     /**
      * Query spans 2 partitions. Splits in 2 queries for each partition, then
-     * splits in 4 queries on data elements to satisfy optimal for a total 
+     * splits in 4 queries on data elements to satisfy optimal for a total
      * of 8 queries, because query has 2 different aggregation types.
      */
     @Test
@@ -467,14 +462,14 @@ public class QueryPlannerTest
         DataQueryParams params = new DataQueryParams();
         params.setDataElements( getList( deA, deB, deC, deD ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
-        params.setPeriods( getList( createPeriod( "200101" ), createPeriod( "200103" ), createPeriod( "200105" ), createPeriod( "200107" ), createPeriod(  "2002Q3" ), createPeriod( "2002Q4" ) ) );
-        
+        params.setPeriods( getList( createPeriod( "200101" ), createPeriod( "200103" ), createPeriod( "200105" ), createPeriod( "200107" ), createPeriod( "2002Q3" ), createPeriod( "2002Q4" ) ) );
+
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
-        
+
         assertEquals( 8, queryGroups.getAllQueries().size() );
         assertEquals( 2, queryGroups.getSequentialQueries().size() );
         assertEquals( 4, queryGroups.getLargestGroupSize() );
-        
+
         for ( DataQueryParams query : queryGroups.getAllQueries() )
         {
             assertTrue( samePeriodType( query.getPeriods() ) );
@@ -482,10 +477,10 @@ public class QueryPlannerTest
             assertDimensionNameNotNull( query );
         }
     }
-    
+
     /**
      * Query spans 3 period types. Splits in 3 queries for each period type, then
-     * splits in 2 queries on organisation units to satisfy optimal for a total 
+     * splits in 2 queries on organisation units to satisfy optimal for a total
      * of 6 queries.
      */
     @Test
@@ -495,13 +490,13 @@ public class QueryPlannerTest
         params.setDataElements( getList( deA ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
         params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000" ), createPeriod( "200002" ), createPeriod( "200003" ), createPeriod( "200004" ) ) );
-        
+
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 6, ANALYTICS_TABLE_NAME );
-        
+
         assertEquals( 6, queryGroups.getAllQueries().size() );
         assertEquals( 1, queryGroups.getSequentialQueries().size() );
         assertEquals( 6, queryGroups.getLargestGroupSize() );
-        
+
         for ( DataQueryParams query : queryGroups.getAllQueries() )
         {
             assertTrue( samePeriodType( query.getPeriods() ) );
@@ -509,10 +504,10 @@ public class QueryPlannerTest
             assertDimensionNameNotNull( query );
         }
     }
-    
+
     /**
      * Query spans 3 organisation unit levels. Splits in 3 queries for each level,
-     * then splits in 2 queries on organisation units to satisfy optimal for a total 
+     * then splits in 2 queries on organisation units to satisfy optimal for a total
      * of 5 queries, as there are only 5 organisation units in total.
      */
     @Test
@@ -531,18 +526,18 @@ public class QueryPlannerTest
         organisationUnitService.updateOrganisationUnit( ouC );
         organisationUnitService.updateOrganisationUnit( ouD );
         organisationUnitService.updateOrganisationUnit( ouE );
-        
+
         DataQueryParams params = new DataQueryParams();
         params.setDataElements( getList( deA ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
         params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ) ) );
-        
+
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 6, ANALYTICS_TABLE_NAME );
-        
+
         assertEquals( 5, queryGroups.getAllQueries().size() );
         assertEquals( 1, queryGroups.getSequentialQueries().size() );
         assertEquals( 5, queryGroups.getLargestGroupSize() );
-        
+
         for ( DataQueryParams query : queryGroups.getAllQueries() )
         {
             assertTrue( samePeriodType( query.getPeriods() ) );
@@ -550,7 +545,7 @@ public class QueryPlannerTest
             assertDimensionNameNotNull( query );
         }
     }
-    
+
     /**
      * Query spans 1 partition. Splits on 2 aggregation types, then splits one
      * query on 3 days in period to satisfy optimal for a total of 4 queries.
@@ -563,13 +558,13 @@ public class QueryPlannerTest
         params.setOrganisationUnits( getList( ouA ) );
         params.setPeriods( getList( createPeriod( "200001" ), createPeriod( "200002" ), createPeriod( "200003" ), createPeriod( "200004" ),
             createPeriod( "200005" ), createPeriod( "200006" ), createPeriod( "200007" ), createPeriod( "200008" ), createPeriod( "200009" ) ) );
-        
+
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
-        
+
         assertEquals( 4, queryGroups.getAllQueries().size() );
         assertEquals( 2, queryGroups.getSequentialQueries().size() );
         assertEquals( 3, queryGroups.getLargestGroupSize() );
-        
+
         for ( DataQueryParams query : queryGroups.getAllQueries() )
         {
             assertTrue( samePeriodType( query.getPeriods() ) );
@@ -577,10 +572,10 @@ public class QueryPlannerTest
             assertDimensionNameNotNull( query );
         }
     }
-    
+
     /**
      * Query spans 1 partition. Splits on 2 aggregation types, then splits one
-     * query on 3 days in period to satisfy optimal for a total of 4 queries. No 
+     * query on 3 days in period to satisfy optimal for a total of 4 queries. No
      * organisation units specified.
      */
     @Test
@@ -588,7 +583,7 @@ public class QueryPlannerTest
     {
         DataQueryParams params = new DataQueryParams();
         params.setDataElements( getList( deA, deB, deC ) );
-        params.setPeriods( getList( createPeriod( "200001" ), createPeriod( "200002" ), createPeriod( "200003" ), createPeriod( "200004" ), 
+        params.setPeriods( getList( createPeriod( "200001" ), createPeriod( "200002" ), createPeriod( "200003" ), createPeriod( "200004" ),
             createPeriod( "200005" ), createPeriod( "200006" ), createPeriod( "200007" ), createPeriod( "200008" ), createPeriod( "200009" ) ) );
 
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
@@ -606,7 +601,7 @@ public class QueryPlannerTest
     }
 
     /**
-     * Splits on 3 queries on organisation units for an optimal of 3 queries. No 
+     * Splits on 3 queries on organisation units for an optimal of 3 queries. No
      * data elements specified.
      */
     @Test
@@ -614,7 +609,7 @@ public class QueryPlannerTest
     {
         DataQueryParams params = new DataQueryParams();
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
-        params.setPeriods( getList( createPeriod( "200001" ), createPeriod( "200002" ), createPeriod( "200003" ), createPeriod( "200004" ), 
+        params.setPeriods( getList( createPeriod( "200001" ), createPeriod( "200002" ), createPeriod( "200003" ), createPeriod( "200004" ),
             createPeriod( "200005" ), createPeriod( "200006" ), createPeriod( "200007" ), createPeriod( "200008" ), createPeriod( "200009" ) ) );
 
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
@@ -630,7 +625,7 @@ public class QueryPlannerTest
             assertDimensionNameNotNull( query );
         }
     }
-    
+
     /**
      * Expected to fail because of no periods specified.
      */
@@ -646,7 +641,7 @@ public class QueryPlannerTest
 
     /**
      * Query filters span 2 partitions. Splits in 2 queries on data elements,
-     * then 2 queries on organisation units to satisfy optimal for a total of 8 
+     * then 2 queries on organisation units to satisfy optimal for a total of 8
      * queries.
      */
     @Test
@@ -656,9 +651,9 @@ public class QueryPlannerTest
         params.setDataElements( getList( deA, deB, deC, deD ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
         params.setFilterPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod( "2001Q1" ), createPeriod( "2001Q2" ) ) );
-        
+
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
-        
+
         assertEquals( 8, queryGroups.getAllQueries().size() );
         assertEquals( 2, queryGroups.getSequentialQueries().size() );
         assertEquals( 4, queryGroups.getLargestGroupSize() );
@@ -674,7 +669,7 @@ public class QueryPlannerTest
     /**
      * Query spans 3 period types. Splits in 3 queries for each period type, then
      * splits in 2 queries on data type, then splits in 2 queries on data elements
-     * to satisfy optimal for a total of 12 queries, because query has 2 different 
+     * to satisfy optimal for a total of 12 queries, because query has 2 different
      * aggregation types.
      */
     @Test
@@ -684,9 +679,9 @@ public class QueryPlannerTest
         params.setDataElements( getList( deA, deB, deE, deF ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
         params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000" ), createPeriod( "200002" ), createPeriod( "200003" ), createPeriod( "200004" ) ) );
-        
+
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 6, ANALYTICS_TABLE_NAME );
-        
+
         assertEquals( 12, queryGroups.getAllQueries().size() );
         assertEquals( 2, queryGroups.getSequentialQueries().size() );
         assertEquals( 6, queryGroups.getLargestGroupSize() );
@@ -702,19 +697,19 @@ public class QueryPlannerTest
     /**
      * No periods specified, illegal query.
      */
-    @Test( expected=IllegalQueryException.class )
+    @Test( expected = IllegalQueryException.class )
     public void planQueryJ()
     {
         DataQueryParams params = new DataQueryParams();
         params.setDataElements( getList( deA, deB, deC, deD ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
-        
+
         queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
     }
 
     /**
      * Query spans 2 partitions. Splits in 2 queries for each partition, then
-     * splits in 2 queries on data sets to satisfy optimal for a total 
+     * splits in 2 queries on data sets to satisfy optimal for a total
      * of 4 queries.
      */
     @Test
@@ -723,12 +718,12 @@ public class QueryPlannerTest
         DataQueryParams params = new DataQueryParams();
         params.setDataSets( getList( dsA, dsB, dsC, dsD ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD, ouE ) );
-        params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod(  "2001Q1" ), createPeriod( "2001Q2" ) ) );
-        
+        params.setPeriods( getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ), createPeriod( "2000Q3" ), createPeriod( "2000Q4" ), createPeriod( "2001Q1" ), createPeriod( "2001Q2" ) ) );
+
         List<DataQueryParams> queries = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME ).getAllQueries();
-        
+
         assertEquals( 4, queries.size() );
-        
+
         for ( DataQueryParams query : queries )
         {
             assertTrue( samePeriodType( query.getPeriods() ) );
@@ -749,9 +744,9 @@ public class QueryPlannerTest
         params.setDataElements( getList( deA, deB, deE, deF ) );
         params.setOrganisationUnits( getList( ouA, ouB, ouC, ouD ) );
         params.setFilterPeriods( getList( createPeriod( "2000Q1" ) ) );
-        
+
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
-        
+
         assertEquals( 8, queryGroups.getAllQueries().size() );
         assertEquals( 2, queryGroups.getSequentialQueries().size() );
         assertEquals( 4, queryGroups.getLargestGroupSize() );
@@ -764,7 +759,7 @@ public class QueryPlannerTest
     }
 
     /**
-     * Query spans 1 partition. Splits on 2 queries for data types, then splits 
+     * Query spans 1 partition. Splits on 2 queries for data types, then splits
      * on 2 queries for data elements to satisfy optimal for a total of 4 queries.
      */
     @Test
@@ -774,13 +769,13 @@ public class QueryPlannerTest
         params.setDataElements( getList( deA, deB, deG, deH ) );
         params.setOrganisationUnits( getList( ouA ) );
         params.setPeriods( getList( createPeriod( "200101" ), createPeriod( "200103" ) ) );
-        
+
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
-        
+
         assertEquals( 4, queryGroups.getAllQueries().size() );
         assertEquals( 1, queryGroups.getSequentialQueries().size() );
         assertEquals( 4, queryGroups.getLargestGroupSize() );
-        
+
         for ( DataQueryParams query : queryGroups.getAllQueries() )
         {
             assertTrue( samePeriodType( query.getPeriods() ) );
@@ -788,7 +783,7 @@ public class QueryPlannerTest
             assertDimensionNameNotNull( query );
         }
     }
-    
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
@@ -796,48 +791,48 @@ public class QueryPlannerTest
     private static boolean samePeriodType( List<NameableObject> isoPeriods )
     {
         Iterator<NameableObject> periods = new ArrayList<>( isoPeriods ).iterator();
-        
+
         PeriodType first = ((Period) periods.next()).getPeriodType();
-        
+
         while ( periods.hasNext() )
         {
             PeriodType next = ((Period) periods.next()).getPeriodType();
-            
+
             if ( !first.equals( next ) )
-            {   
+            {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     private static boolean samePartition( List<NameableObject> isoPeriods )
     {
         Iterator<NameableObject> periods = new ArrayList<>( isoPeriods ).iterator();
-        
+
         int year = new DateTime( ((Period) periods.next()).getStartDate() ).getYear();
-        
+
         while ( periods.hasNext() )
         {
             int next = new DateTime( ((Period) periods.next()).getStartDate() ).getYear();
-            
+
             if ( year != next )
-            {   
+            {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     private static void assertDimensionNameNotNull( DataQueryParams params )
     {
         for ( DimensionalObject dim : params.getDimensions() )
         {
             assertNotNull( dim.getDimensionName() );
         }
-        
+
         for ( DimensionalObject filter : params.getFilters() )
         {
             assertNotNull( filter.getDimensionName() );
