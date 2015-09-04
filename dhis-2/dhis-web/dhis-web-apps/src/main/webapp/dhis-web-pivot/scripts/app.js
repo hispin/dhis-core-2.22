@@ -4415,7 +4415,7 @@ Ext.onReady( function() {
                         teas = isO(program) && isA(program.programTrackedEntityAttributes) ? Ext.Array.pluck(program.programTrackedEntityAttributes, 'trackedEntityAttribute') : [],
                         dataElements = [],
                         attributes = [],
-                        types = ['int', 'string', 'bool', 'trueonly', 'number', 'optionSet'],
+                        types = ns.core.conf.valueType.aggregateTypes,
                         data;
 
                     // data elements
@@ -4423,25 +4423,22 @@ Ext.onReady( function() {
                         stage = stages[i];
 
                         if (isA(stage.programStageDataElements) && stage.programStageDataElements.length) {
-                            //elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
-                            dataElements = dataElements.concat(Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || []);
+                            elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
 
-                            //for (var j = 0; j < elements.length; j++) {
-                                //if (Ext.Array.contains(types, (elements[j].type || '').toLowerCase())) {
-                                    //dataElements.push(elements[j]);
-                                //}
-                            //}
+                            for (var j = 0; j < elements.length; j++) {
+                                if (Ext.Array.contains(types, elements[j].valueType)) {
+                                    dataElements.push(elements[j]);
+                                }
+                            }
                         }
                     }
 
                     // attributes
-
-                    //for (i = 0; i < teas.length; i++) {
-                        //if (Ext.Array.contains(types, (teas[i].valueType || '').toLowerCase())) {
-                            //attributes.push(teas[i]);
-                        //}
-                    //}
-                    attributes = teas;
+                    for (i = 0; i < teas.length; i++) {
+                        if (Ext.Array.contains(types, teas[i].valueType)) {
+                            attributes.push(teas[i]);
+                        }
+                    }
 
                     data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(dataElements, attributes))) || [];
 
