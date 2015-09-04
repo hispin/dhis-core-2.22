@@ -28,9 +28,6 @@ package org.hisp.dhis.trackedentity.action.programindicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.EventOutputType;
@@ -96,13 +93,6 @@ public class UpdateProgramIndicatorAction
         this.description = description;
     }
 
-    private String valueType;
-
-    public void setValueType( String valueType )
-    {
-        this.valueType = valueType;
-    }
-
     private String expression;
 
     public void setExpression( String expression )
@@ -145,13 +135,6 @@ public class UpdateProgramIndicatorAction
         this.displayInForm = displayInForm;
     }
 
-    private String rootDate;
-
-    public void setRootDate( String rootDate )
-    {
-        this.rootDate = rootDate;
-    }
-
     private Integer programId;
 
     public Integer getProgramId()
@@ -167,34 +150,18 @@ public class UpdateProgramIndicatorAction
     public String execute()
         throws Exception
     {
-        code = (code == null && code.trim().length() == 0) ? null : code;
-        expression = expression.trim();
-
-        if ( valueType.equals( ProgramIndicator.VALUE_TYPE_DATE ) )
-        {
-            Pattern pattern = Pattern.compile( "[(+|-|*|\\)]+" );
-            Matcher matcher = pattern.matcher( expression );
-            
-            if ( matcher.find() && matcher.start() != 0 )
-            {
-                expression = "+" + expression;
-            }
-        }
-
         ProgramIndicator indicator = programIndicatorService.getProgramIndicator( id );
 
         indicator.setName( StringUtils.trimToNull( name ) );
         indicator.setShortName( StringUtils.trimToNull( shortName ) );
         indicator.setCode( StringUtils.trimToNull( code ) );
         indicator.setDescription( StringUtils.trimToNull( description ) );
-        indicator.setValueType( StringUtils.trimToNull( valueType ) );
         indicator.setExpression( StringUtils.trimToNull( expression ) );
         indicator.setFilter( StringUtils.trimToNull( filter ) );
         indicator.setAggregationType( AggregationType.valueOf( aggregationType ) );
         indicator.setEventOutputType( EventOutputType.valueOf( eventOutputType ) );
         indicator.setDecimals( decimals );
         indicator.setDisplayInForm( displayInForm );
-        indicator.setRootDate( StringUtils.trimToNull( rootDate ) );
 
         programIndicatorService.updateProgramIndicator( indicator );
 

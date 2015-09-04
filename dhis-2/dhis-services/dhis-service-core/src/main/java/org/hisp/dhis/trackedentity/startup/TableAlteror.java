@@ -306,6 +306,9 @@ public class TableAlteror
 
         executeSql( "ALTER TABLE programindicator ALTER description TYPE text" );
         executeSql( "ALTER TABLE programindicator ALTER expression TYPE text" );
+        executeSql( "alter table programindicator drop column valuetype" );
+        executeSql( "alter table programindicator drop column rootdate" );
+        
         executeSql( "ALTER TABLE programstage ALTER description TYPE text" );
         
         executeSql( "update programindicator set displayinform = false where displayinform is null" );

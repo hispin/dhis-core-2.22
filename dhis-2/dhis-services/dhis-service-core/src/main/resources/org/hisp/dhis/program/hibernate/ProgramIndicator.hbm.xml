@@ -22,8 +22,6 @@
     <many-to-one name="program" class="org.hisp.dhis.program.Program"
       column="programid" foreign-key="fk_programindicator_program" not-null="true" />
 
-    <property name="valueType" />
-
     <property name="expression" type="text" />
 
     <property name="filter" type="text" />
@@ -45,9 +43,7 @@
     <property name="decimals" />
 
     <property name="displayInForm" />
-    
-    <property name="rootDate" />
-    
+        
     <!-- Access properties -->
     <many-to-one name="user" class="org.hisp.dhis.user.User" column="userid" foreign-key="fk_programindicator_userid" />
 

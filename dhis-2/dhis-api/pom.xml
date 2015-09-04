@@ -40,7 +40,7 @@
       <artifactId>jasperreports</artifactId>
     </dependency>
     <dependency>
-      <groupId>net.sf.jasperreports</groupId>
+      <groupId>net.sf.jasperreports</groupIdjar>
       <artifactId>jasperreports-fonts</artifactId>
     </dependency>
     <dependency>

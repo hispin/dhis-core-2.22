@@ -252,9 +252,9 @@ public class LoadDataEntryAction
         return latitude;
     }
 
-    private Map<String, String> programIndicatorsMap = new HashMap<>();
+    private Map<String, Double> programIndicatorsMap = new HashMap<>();
 
-    public Map<String, String> getProgramIndicatorsMap()
+    public Map<String, Double> getProgramIndicatorsMap()
     {
         return programIndicatorsMap;
     }

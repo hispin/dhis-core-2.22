@@ -111,7 +111,7 @@ public interface ProgramIndicatorService
      * @param programInstance  ProgramInstance
      * @return Indicator value
      */
-    String getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramInstance programInstance );
+    Double getProgramIndicatorValue( ProgramIndicator programIndicator, ProgramInstance programInstance );
 
     /**
      * Get indicator values of all program indicators defined for a TrackedEntityInstance
@@ -119,7 +119,7 @@ public interface ProgramIndicatorService
      * @param programInstance ProgramInstance
      * @return a mapping of indicator display name and indicator value.
      */
-    Map<String, String> getProgramIndicatorValues( ProgramInstance programInstance );
+    Map<String, Double> getProgramIndicatorValues( ProgramInstance programInstance );
 
     /**
      * Get description of an indicator expression.
