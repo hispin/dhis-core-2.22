@@ -122,20 +122,6 @@ public class AddDataElementAction
         this.domainType = domainType;
     }
 
-    private String numberType;
-
-    public void setNumberType( String numberType )
-    {
-        this.numberType = numberType;
-    }
-
-    private String textType;
-
-    public void setTextType( String textType )
-    {
-        this.textType = textType;
-    }
-
     private String valueType;
 
     public void setValueType( String valueType )
@@ -222,8 +208,7 @@ public class AddDataElementAction
     {
         DataElement dataElement = new DataElement();
 
-        DataElementCategoryCombo categoryCombo = dataElementCategoryService
-            .getDataElementCategoryCombo( selectedCategoryComboId );
+        DataElementCategoryCombo categoryCombo = dataElementCategoryService.getDataElementCategoryCombo( selectedCategoryComboId );
 
         OptionSet optionSet = optionService.getOptionSet( selectedOptionSetId );
         OptionSet commentOptionSet = optionService.getOptionSet( selectedCommentOptionSetId );
@@ -235,18 +220,7 @@ public class AddDataElementAction
         dataElement.setDescription( StringUtils.trimToNull( description ) );
         dataElement.setFormName( StringUtils.trimToNull( formName ) );
         dataElement.setDomainType( DataElementDomain.fromValue( domainType ) );
-        dataElement.setType( valueType );
-
-        if ( DataElement.VALUE_TYPE_STRING.equalsIgnoreCase( valueType ) )
-        {
-            dataElement.setTextType( textType );
-        }
-        else
-        {
-            dataElement.setNumberType( numberType );
-        }
-
-        dataElement.setValueType( ValueType.getFromDataElement( dataElement ) );
+        dataElement.setValueType( ValueType.valueOf( valueType) );
         dataElement.setAggregationOperator( aggregationOperator );
         dataElement.setUrl( url );
         dataElement.setZeroIsSignificant( zeroIsSignificant );

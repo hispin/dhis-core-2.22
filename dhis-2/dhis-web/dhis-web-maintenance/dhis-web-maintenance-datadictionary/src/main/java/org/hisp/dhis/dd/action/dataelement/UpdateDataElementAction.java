@@ -135,25 +135,11 @@ public class UpdateDataElementAction
         this.domainType = domainType;
     }
 
-    private String numberType;
-
-    public void setNumberType( String numberType )
-    {
-        this.numberType = numberType;
-    }
-
     private String valueType;
 
     public void setValueType( String valueType )
     {
         this.valueType = valueType;
-    }
-
-    private String textType;
-
-    public void setTextType( String textType )
-    {
-        this.textType = textType;
     }
 
     private String aggregationOperator;
@@ -255,20 +241,7 @@ public class UpdateDataElementAction
         dataElement.setDescription( StringUtils.trimToNull( description ) );
         dataElement.setFormName( StringUtils.trimToNull( formName ) );
         dataElement.setDomainType( DataElementDomain.fromValue( domainType ) );
-        dataElement.setType( valueType );
-
-        if ( DataElement.VALUE_TYPE_STRING.equalsIgnoreCase( valueType ) )
-        {
-            dataElement.setTextType( textType );
-            dataElement.setNumberType( null );
-        }
-        else
-        {
-            dataElement.setNumberType( numberType );
-            dataElement.setTextType( null );
-        }
-
-        dataElement.setValueType( ValueType.getFromDataElement( dataElement ) );
+        dataElement.setValueType( ValueType.valueOf( valueType ) );
         dataElement.setAggregationOperator( aggregationOperator );
         dataElement.setUrl( url );
         dataElement.setZeroIsSignificant( zeroIsSignificant );
