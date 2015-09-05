@@ -93,9 +93,11 @@ public class InitTableAlteror
         executeSql( "update dataelement set valuetype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt'" );
         executeSql( "update dataelement set valuetype='PERCENTAGE' where valuetype='int' and numbertype='percentage'" );
         executeSql( "update dataelement set valuetype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
+        executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int'" );
 
         executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype='text'" );
         executeSql( "update dataelement set valuetype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
+        executeSql( "update dataelement set valuetype='TEXT' where valuetype='string'" );
 
         executeSql( "update dataelement set valuetype='DATE' where valuetype='date'" );
         executeSql( "update dataelement set valuetype='DATETIME' where valuetype='datetime'" );
