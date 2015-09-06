@@ -498,7 +498,7 @@ public class ProgramIndicatorServiceTest
     public void testGetAnalyticsSqlWithFunctionsA()
     {
         String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
-        String expected = "case when " + col + " < 0 then 0 else " + col + " end";
+        String expected = "coalesce(case when " + col + " < 0 then 0 else " + col + " end, 0)";
         String expression = "d2:zing(" + col + ")";
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
@@ -508,7 +508,7 @@ public class ProgramIndicatorServiceTest
     public void testGetAnalyticsSqlWithFunctionsB()
     {
         String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
-        String expected = "case when " + col + " >= 0 then 1 else 0 end";
+        String expected = "coalesce(case when " + col + " >= 0 then 1 else 0 end, 0)";
         String expression = "d2:oizp(" + col + ")";
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
