@@ -30,7 +30,7 @@ package org.hisp.dhis.commons.sqlfunc;
 
 /**
  * Function which evaluates numerical values to one if zero or positive, zero
- * otherwise.
+ * if negative or null.
  * 
  * @author Lars Helge Overland
  */
@@ -42,6 +42,6 @@ public class OneIfZeroOrPositiveSqlFunction
     @Override
     public String evaluate( String arg1, String arg2, String arg3 )
     {
-        return "case when " + arg1 + " >= 0 then 1 else 0 end";
+        return "coalesce(case when " + arg1 + " >= 0 then 1 else 0 end, 0)";
     }
 }
