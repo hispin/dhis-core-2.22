@@ -48,17 +48,26 @@ Ext.onReady( function() {
 	PT.isDebug = false;
 	PT.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	PT.getCore = function(ns) {
-        var init = ns.init,
-            conf = {},
+	PT.getCore = function(init, appConfig) {
+        var conf = {},
             api = {},
             support = {},
             service = {},
             web = {},
+            app = {},
+            webAlert,
             dimConf;
 
-        // tmp
-        ns.alert = function() {};
+        appConfig = appConfig || {};
+
+        // alert
+        webAlert = function() {};
+
+        // app
+        app.getViewportWidth = function() {};
+        app.getViewportHeight = function() {};
+        app.getCenterRegionWidth = function() {};
+        app.getCenterRegionHeight = function() {};
 
 		// conf
 		(function() {
@@ -155,10 +164,6 @@ Ext.onReady( function() {
 			dimConf.objectNameMap[dimConf.organisationUnit.objectName] = dimConf.organisationUnit;
 			dimConf.objectNameMap[dimConf.dimension.objectName] = dimConf.dimension;
 
-			dimConf.objectNameMap['ou1'] = dimConf.organisationUnit;
-			dimConf.objectNameMap['ou2'] = dimConf.organisationUnit;
-			dimConf.objectNameMap['ou3'] = dimConf.organisationUnit;
-
 			conf.period = {
 				periodTypes: [
 					{id: 'Daily', name: PT.i18n.daily},
@@ -175,6 +180,14 @@ Ext.onReady( function() {
 				],
                 relativePeriods: []
 			};
+
+            conf.valueType = {
+            	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
+            	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
+            	booleanTypes: ['BOOLEAN','TRUE_ONLY'],
+            	dateTypes: ['DATE','DATETIME'],
+            	aggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            };
 
 			conf.layout = {
 				west_width: 424,
@@ -443,19 +456,19 @@ Ext.onReady( function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(PT.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
+								webAlert(PT.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(PT.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
+								webAlert(PT.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(PT.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
+								webAlert(PT.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter');
 								return;
 							}
 						}
@@ -463,31 +476,31 @@ Ext.onReady( function() {
 
 					// dc and in
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.indicator.objectName]) {
-						ns.alert('Indicators and detailed data elements cannot be specified together');
+						webAlert('Indicators and detailed data elements cannot be specified together');
 						return;
 					}
 
 					// dc and de
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataElement.objectName]) {
-						ns.alert('Detailed data elements and totals cannot be specified together');
+						webAlert('Detailed data elements and totals cannot be specified together');
 						return;
 					}
 
 					// dc and ds
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataSet.objectName]) {
-						ns.alert('Data sets and detailed data elements cannot be specified together');
+						webAlert('Data sets and detailed data elements cannot be specified together');
 						return;
 					}
 
 					// dc and co
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.category.objectName]) {
-						ns.alert('Assigned categories and detailed data elements cannot be specified together');
+						webAlert('Assigned categories and detailed data elements cannot be specified together');
 						return;
 					}
 
                     // in and aggregation type
                     if (objectNameDimensionMap[dimConf.indicator.objectName] && config.aggregationType !== 'DEFAULT') {
-                        ns.alert('Indicators and aggregation types cannot be specified together', true);
+                        webAlert('Indicators and aggregation types cannot be specified together', true);
                         return;
                     }
 
@@ -510,7 +523,7 @@ Ext.onReady( function() {
 
 					// at least one dimension specified as column or row
 					if (!(config.columns || config.rows)) {
-						ns.alert(PT.i18n.at_least_one_dimension_must_be_specified_as_row_or_column);
+						webAlert(PT.i18n.at_least_one_dimension_must_be_specified_as_row_or_column);
 						return;
 					}
 
@@ -525,7 +538,7 @@ Ext.onReady( function() {
 
 					// at least one period
 					if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						ns.alert(PT.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
+						webAlert(PT.i18n.at_least_one_period_must_be_specified_as_column_row_or_filter);
 						return;
 					}
 
@@ -1942,7 +1955,7 @@ Ext.onReady( function() {
 			web.window = web.window || {};
 
 			web.window.setAnchorPosition = function(w, target) {
-				var vpw = ns.app.viewport.getWidth(),
+				var vpw = app.getViewportWidth(),
 					targetx = target ? target.getPosition()[0] : 4,
 					winw = w.getWidth(),
 					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
@@ -2018,7 +2031,7 @@ Ext.onReady( function() {
                 config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
 
                 // bodyStyle
-                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + app.getCenterRegionHeight() / 2 + 'px';
 
                 // destroy handler
                 config.modal = true;
@@ -2139,7 +2152,7 @@ Ext.onReady( function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                ns.alert(msg, 'warning');
+                webAlert(msg, 'warning');
 			};
 
 			// pivot
@@ -3009,7 +3022,6 @@ Ext.onReady( function() {
 					};
 				}();
 			};
-
 		}());
 
 		// extend init
@@ -3042,15 +3054,18 @@ Ext.onReady( function() {
 		}());
 
 		// alert
-		ns.alert = web.message.alert;
+		webAlert = web.message.alert;
 
-		ns.conf = conf;
-		ns.api = api;
-		ns.support = support;
-		ns.service = service;
-		ns.web = web;
-
-		return ns;
+		return {
+            init: init,
+            conf: conf,
+            api: api,
+            support: support,
+            service: service,
+            web: web,
+            app: app,
+            webAlert: webAlert
+        };
 	};
 
 	// PLUGIN
@@ -3072,7 +3087,8 @@ Ext.onReady( function() {
 			requests = [],
 			callbackCount = 0,
             type = config.plugin && config.crossDomain ? 'jsonp' : 'json',
-			fn;
+			fn,
+            ajax;
 
         init.contextPath = config.url;
 
@@ -3087,6 +3103,15 @@ Ext.onReady( function() {
 				configs = [];
 			}
 		};
+
+        ajax = function(requestConfig) {
+            if (config.crossDomain && Ext.isString(config.username) && Ext.isString(config.password)) {
+                requestConfig.headers = Ext.isObject(config.headers) ? config.headers : {};
+                requestConfig.headers['Authorization'] = 'Basic ' + btoa(config.username + ':' + config.password);
+            }
+
+            Ext.Ajax.request(requestConfig);
+        };
 
         // user-account
         requests.push({
@@ -3171,12 +3196,7 @@ Ext.onReady( function() {
         //init.legendSets = [];
 
 		for (var i = 0; i < requests.length; i++) {
-            if (type === 'jsonp') {
-                Ext.data.JsonP.request(requests[i]);
-            }
-            else {
-                Ext.Ajax.request(requests[i]);
-            }
+            ajax(requests[i]);
 		}
 	};
 
@@ -3257,14 +3277,14 @@ Ext.onReady( function() {
 			return true;
 		};
 
-        extendInstance = function(ns) {
+        extendInstance = function(ns, appConfig) {
             var init = ns.core.init,
 				api = ns.core.api,
                 conf = ns.core.conf,
 				support = ns.core.support,
 				service = ns.core.service,
 				web = ns.core.web,
-                type = ns.plugin && ns.crossDomain ? 'jsonp' : 'json',
+                type = appConfig.plugin && appConfig.crossDomain ? 'jsonp' : 'json',
                 headerMap = {
                     json: 'application/json',
                     jsonp: 'application/javascript'
@@ -3402,7 +3422,7 @@ Ext.onReady( function() {
 				paramString = web.analytics.getParamString(xLayout, true);
 
 				// mask
-                if (!ns.skipMask) {
+                if (!appConfig.skipMask) {
                     web.mask.show(ns.app.centerRegion);
                 }
 
@@ -3428,7 +3448,7 @@ Ext.onReady( function() {
                 };
 
                 failure = function(r) {
-                    if (!ns.skipMask) {
+                    if (!appConfig.skipMask) {
                         web.mask.hide(ns.app.centerRegion);
                     }
                 };
@@ -3459,7 +3479,7 @@ Ext.onReady( function() {
 					getXResponse = service.response.getExtendedResponse,
 					getXAxis = service.layout.getExtendedAxis,
                     getTitleHtml = function(title) {
-                        return ns.dashboard && title ? '<div style="height: 19px; line-height: 14px; width: 100%; font: bold 12px LiberationSans; color: #333; text-align: center; letter-spacing: -0.1px"">' + title + '</div>' : '';
+                        return appConfig.dashboard && title ? '<div style="height: 19px; line-height: 14px; width: 100%; font: bold 12px LiberationSans; color: #333; text-align: center; letter-spacing: -0.1px"">' + title + '</div>' : '';
                     };
 
 				getHtml = function(xLayout, xResponse) {
@@ -3565,13 +3585,12 @@ Ext.onReady( function() {
 			//};
 
 			// ns
-            ns.plugin = init.plugin;
-            ns.dashboard = init.dashboard;
-            ns.crossDomain = init.crossDomain;
-            ns.skipMask = init.skipMask;
-            ns.skipFade = init.skipFade;
-
-            ns.alert = web.message.alert;
+            ns.plugin = appConfig.plugin;
+            ns.dashboard = appConfig.dashboard;
+            ns.crossDomain = appConfig.crossDomain;
+            ns.skipMask = appConfig.skipMask;
+            ns.skipFade = appConfig.skipFade;
+            ns.el = appConfig.el;
 
 			init.el = config.el;
 
@@ -3587,30 +3606,33 @@ Ext.onReady( function() {
 		};
 
 		initialize = function() {
-            var el = Ext.get(config.el);
+            var el = Ext.get(config.el),
+                appConfig;
 
 			if (!validateConfig(config)) {
 				return;
 			}
 
+            appConfig = {
+                plugin: true,
+                dashboard: Ext.isBoolean(config.dashboard) ? config.dashboard : false,
+                crossDomain: Ext.isBoolean(config.crossDomain) ? config.crossDomain : true,
+                skipMask: Ext.isBoolean(config.skipMask) ? config.skipMask : false,
+                skipFade: Ext.isBoolean(config.skipFade) ? config.skipFade : false,
+                el: Ext.isString(config.el) ? config.el : null
+            };
+
             // css
             applyCss(config);
 
-            // config
-            init.plugin = true;
-            init.dashboard = Ext.isBoolean(config.dashboard) ? config.dashboard : false;
-            init.crossDomain = Ext.isBoolean(config.crossDomain) ? config.crossDomain : true;
-            init.skipMask = Ext.isBoolean(config.skipMask) ? config.skipMask : false;
-            init.skipFade = Ext.isBoolean(config.skipFade) ? config.skipFade : false;
-
-			// init
-            ns.init = init;
-            PT.instances.push(ns);
-			ns.core = PT.getCore(ns);
-			extendInstance(ns);
+			// core
+			ns.core = PT.getCore(init, appConfig);
+			extendInstance(ns, appConfig);
 
 			ns.app.viewport = createViewport();
 			ns.app.centerRegion = ns.app.viewport.centerRegion;
+
+            PT.instances.push(ns);
 
             if (el) {
                 el.setViewportWidth = function(width) {
