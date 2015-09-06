@@ -71,8 +71,8 @@
                             </span>
                         </div> 
                     </div>
-                    <div ng-if="!prStDe.dataElement.optionSetValue" ng-switch="prStDe.dataElement.type">
-                        <div ng-switch-when="int">
+                    <div ng-if="!prStDe.dataElement.optionSetValue" ng-switch="prStDe.dataElement.valueType">
+                        <div ng-switch-when="NUMBER">
                             <input type="number"                                   
                                    number-type={{prStDe.dataElement.numberType}}
                                    class="form-control"
@@ -83,8 +83,56 @@
                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
                                    ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
-                        </div>                        
-                        <div ng-switch-when="string">
+                        </div> 
+                        <div ng-switch-when="INTEGER">
+                            <input type="number"                                   
+                                   number-type={{prStDe.dataElement.valueType}}
+                                   class="form-control"
+                                   ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
+                                   ng-model="eventRow[prStDe.dataElement.id]"                                    
+                                   d2-number-validator
+                                   ng-required={{prStDe.compulsory}}
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
+                                   name="foo"/>
+                        </div>
+                        <div ng-switch-when="INTEGER_POSITIVE">
+                            <input type="number"                                   
+                                   number-type={{prStDe.dataElement.valueType}}
+                                   class="form-control"
+                                   ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
+                                   ng-model="eventRow[prStDe.dataElement.id]"                                    
+                                   d2-number-validator
+                                   ng-required={{prStDe.compulsory}}
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
+                                   name="foo"/>
+                        </div>
+                        <div ng-switch-when="INTEGER_NEGATIVE">
+                            <input type="number"                                   
+                                   number-type={{prStDe.dataElement.valueType}}
+                                   class="form-control"
+                                   ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
+                                   ng-model="eventRow[prStDe.dataElement.id]"                                    
+                                   d2-number-validator
+                                   ng-required={{prStDe.compulsory}}
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
+                                   name="foo"/>
+                        </div>
+                        <div ng-switch-when="INTEGER_ZERO_OR_POSITIVE">
+                            <input type="number"                                   
+                                   number-type={{prStDe.dataElement.valueType}}
+                                   class="form-control"
+                                   ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
+                                   ng-model="eventRow[prStDe.dataElement.id]"                                    
+                                   d2-number-validator
+                                   ng-required={{prStDe.compulsory}}
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
+                                   name="foo"/>
+                        </div>
+                        <div ng-switch-when="TEXT">
                             <span ng-if="prStDe.dataElement.textType==='longText'">
                                 <textarea rows="3"
                                     ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
@@ -96,6 +144,8 @@
                                     name="foo">
                                 </textarea>
                             </span>
+                        </div>
+                        <div ng-switch-when="LONG_TEXT">
                             <span ng-if="prStDe.dataElement.textType!=='longText'">
                                 <input type="text"
                                     ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
@@ -107,7 +157,7 @@
                                     name="foo"/>                 
                             </span>                            
                         </div>
-                        <div ng-switch-when="bool">
+                        <div ng-switch-when="BOOLEAN">
                             <select ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                     class="form-control"
                                     ng-model="eventRow[prStDe.dataElement.id]" 
@@ -120,7 +170,7 @@
                                 <option value="true">{{'yes'| translate}}</option>
                             </select>
                         </div>
-                        <div ng-switch-when="date">
+                        <div ng-switch-when="DATE">
                             <input type="text" 
                                    placeholder="{{dhis2CalendarFormat.keyDateFormat}}" 
                                    d2-date
@@ -134,7 +184,7 @@
                                    blur-or-change="saveDatavalue(prStDe, innerForm.foo)"
                                    name="foo"/>
                         </div>
-                        <div ng-switch-when="trueOnly">
+                        <div ng-switch-when="TRUE_ONLY">
                             <input type="checkbox"     
                                    class="form-control"
                                    ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
@@ -167,8 +217,8 @@
                     </div>
                 </ng-form>
                 <ng-form ng-if="eventRow !== currentEvent" name="innerform" >
-                    <div ng-switch="prStDe.dataElement.type">
-                         <div ng-switch-when="bool">
+                    <div ng-switch="prStDe.dataElement.valueType">
+                         <div ng-switch-when="BOOLEAN">
                             <select ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                     class="form-control"
                                     ng-model="eventRow[prStDe.dataElement.id]" 
@@ -181,7 +231,7 @@
                                 <option value="true">{{'yes'| translate}}</option>
                             </select>
                         </div>
-                        <div ng-switch-when="trueOnly">
+                        <div ng-switch-when="TRUE_ONLY">
                             <input type="checkbox"     
                                    class="form-control"
                                    ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'

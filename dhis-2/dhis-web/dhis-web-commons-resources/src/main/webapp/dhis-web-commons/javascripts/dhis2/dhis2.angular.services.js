@@ -802,7 +802,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         variableValue = $filter('trimquotes')(variableValue);
 
         //Append single quotation marks in case the variable is of text or date type:
-        if(variableType === 'TEXT' || variableType === 'DATE' || variableType === 'OPTION_SET') {
+        if(variableType === 'LONG_TEXT' || variableType === 'TEXT' || variableType === 'DATE' || variableType === 'OPTION_SET') {
             if(variableValue) {
                 variableValue = "'" + variableValue + "'";
             } else {
@@ -818,7 +818,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 variableValue = false;
             }
         }
-        else if(variableType === "INTEGER" || variableType === "NUMBER" || variableType === "INTEGER_POSITIVE" || variableType === "INTEGER_NEGATIVE" || variableType === "INTEGER_ZERO_OR_POSITIVE") {
+        else if(variableType === "INTEGER" || variableType === "NUMBER" || variableType === "INTEGER_POSITIVE" || variableType === "INTEGER_NEGATIVE" || variableType === "INTEGER_ZERO_OR_POSITIVE" || variableType === "PERCENTAGE") {
             if(variableValue) {
                 variableValue = Number(variableValue);
             } else {
