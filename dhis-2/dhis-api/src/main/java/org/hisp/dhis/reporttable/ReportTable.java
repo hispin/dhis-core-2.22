@@ -91,10 +91,6 @@ public class ReportTable
     public static final String TOTAL_COLUMN_NAME = "total";
     public static final String TOTAL_COLUMN_PRETTY_NAME = "Total";
 
-    public static final String AGGREGATION_TYPE_DEFAULT = "default";
-    public static final String AGGREGATION_TYPE_COUNT = "count";
-    public static final String AGGREGATION_TYPE_SUM = "sum";
-
     public static final String DISPLAY_DENSITY_COMFORTABLE = "comfortable";
     public static final String DISPLAY_DENSITY_NORMAL = "normal";
     public static final String DISPLAY_DENSITY_COMPACT = "compact";
