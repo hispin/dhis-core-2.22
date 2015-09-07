@@ -291,7 +291,6 @@ public class ProgramIndicatorServiceTest
         programA.getProgramIndicators().add( indicatorA );
 
         indicatorB = createProgramIndicator( 'B', programA, "70", null );
-        //indicatorB.setValueType( ProgramIndicator.VALUE_TYPE_DATE );
         programA.getProgramIndicators().add( indicatorB );
 
         indicatorC = createProgramIndicator( 'C', programA, "0", null );
@@ -325,13 +324,11 @@ public class ProgramIndicatorServiceTest
             + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_DATAELEMENT + "{"
             + psA.getUid() + "." + deA.getUid() + "}";
         indicatorI = createProgramIndicator( 'I', programB, expressionI, null );
-        //indicatorI.setValueType( VALUE_TYPE_DATE );
 
         String expressionJ = "(" + KEY_ATTRIBUTE + "{" + atC.getUid() + "}  - " + KEY_PROGRAM_VARIABLE + "{"
             + ProgramIndicator.VAR_ENROLLMENT_DATE + "} ) + " + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid()
             + "} * " + ProgramIndicator.KEY_CONSTANT + "{" + constantA.getUid() + "}";
         indicatorJ = createProgramIndicator( 'J', programB, expressionJ, null );
-        //indicatorJ.setValueType( VALUE_TYPE_DATE );
     }
 
     // -------------------------------------------------------------------------
