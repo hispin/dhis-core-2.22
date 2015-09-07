@@ -197,12 +197,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
 
                     $scope.filterTypes[prStDe.dataElement.id] = prStDe.dataElement.valueType;
 
-                    if(prStDe.dataElement.type === 'DATE' || 
-                            prStDe.dataElement.type === 'NUMBER' ||
-                            prStDe.dataElement.type === 'INTEGER' ||
-                            prStDe.dataElement.type === 'INTEGER_POSITIVE' || 
-                            prStDe.dataElement.type === 'INTEGER_NEGATIVE' ||
-                            prStDe.dataElement.type === 'INTEGER_ZERO_OR_POSITIVE'){
+                    if(prStDe.dataElement.valueType === 'DATE' ||
+                            prStDe.dataElement.valueType === 'NUMBER' ||
+                            prStDe.dataElement.valueType === 'INTEGER' ||
+                            prStDe.dataElement.valueType === 'INTEGER_POSITIVE' ||
+                            prStDe.dataElement.valueType === 'INTEGER_NEGATIVE' ||
+                            prStDe.dataElement.valueType === 'INTEGER_ZERO_OR_POSITIVE'){
                         $scope.filterText[prStDe.dataElement.id]= {};
                     }
                 });
