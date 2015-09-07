@@ -33,21 +33,21 @@
 					#set( $key = "DE${dataElement.id}OC${categoryOptionCombo.id}" )
 
 					<label>$encoder.htmlEncode( $dataElementName ) #if( $categoryOptionCombo.name!="(default)")$encoder.htmlEncode( $categoryOptionCombo.name )#end 
-					#if($dataElement.type=="date") [yyyy-MM-dd] #end
+					#if($dataElement.valueType == "DATE") [yyyy-MM-dd] #end
 					</label>
 					
 					#if( $typeViolations.get( $key ) )
-                		#set( $typeViolation = $typeViolations.get( $key ) )
-            			<br /><span style="color: #990000;">$prevDataValues.get($key) $i18n.getString($typeViolation)</span>
-            		#end
+						#set( $typeViolation = $typeViolations.get( $key ) )
+						<br /><span style="color: #990000;">$prevDataValues.get($key) $i18n.getString($typeViolation)</span>
+					#end
 					
 					<input type=
-					#if($dataElement.type=="string") 
+					#if( $dataElement.valueType.isText() )
 						"text"
-					#elseif ($dataElement.type=="int" ) 
+					#elseif ($dataElement.valueType.isInteger() )
 						"text" 
 					#else 
-						"$dataElement.type" 
+						"$dataElement.valueType"
 					#end 
 					name="$key" value="$!prevDataValues.get($key)" />
 				
@@ -64,12 +64,12 @@
                 	#end
                 
 					<select type=
-					#if($dataElement.type=="string") 
+					#if( $dataElement.valueType.isText() )
 						"text"
-					#elseif($dataElement.type=="int" ) 
+					#elseif($dataElement.valueType.isInteger() )
 						"text"
 					#else 
-						"$dataElement.type"
+						"$dataElement.valueType"
 					#end 
 					name="$key" />
 				

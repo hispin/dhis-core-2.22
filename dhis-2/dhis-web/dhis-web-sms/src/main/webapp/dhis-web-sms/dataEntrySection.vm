@@ -75,25 +75,25 @@
                     <br /><span style="color: #990000;">$typeViolation</span>
                 #end
 
-				#if( $dataElement.type == "string" )
+				#if( $dataElement.valueType.isText() )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.type == "bool" )
+				#elseif( $dataElement.valueType == "BOOLEAN" )
 					<select name="$key" style="width: 100%;">
 						<option value="">[ No Value ]</option>
 						<option value="true" #if($!dataValues.get($key) == "true")selected="selected"#end>Yes</option>
 						<option value="false" #if($!dataValues.get($key) == "false")selected="selected"#end>No</option>
 					</select>
-				#elseif( $dataElement.type == "date" )
+				#elseif( $dataElement.valueType == "DATE" )
 					<input type="date" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.type == "int" && $dataElement.numberType == "number" )
+				#elseif( $dataElement.valueType == "NUMBER" && $dataElement.numberType == "number" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.type == "int" && $dataElement.numberType == "int" )
+				#elseif( $dataElement.valueType == "INTEGER" && $dataElement.numberType == "int" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.type == "int" && $dataElement.numberType == "posInt" )
+				#elseif( $dataElement.valueType == "INTEGER_POSITIVE" && $dataElement.numberType == "posInt" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.type == "int" && $dataElement.numberType == "zeroPositiveInt" )
+				#elseif( $dataElement.valueType == "INTEGER_NEGATIVE" && $dataElement.numberType == "negInt" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.type == "int" && $dataElement.numberType == "negInt" )
+				#elseif( $dataElement.valueType == "INTEGER_ZERO_OR_POSITIVE" && $dataElement.numberType == "zeroPositiveInt" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
 				#end
 				#end
