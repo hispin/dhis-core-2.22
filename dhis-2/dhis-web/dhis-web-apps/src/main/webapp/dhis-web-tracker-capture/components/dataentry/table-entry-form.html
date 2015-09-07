@@ -132,7 +132,7 @@
                                    ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div>
-                        <div ng-switch-when="TEXT">
+                        <div ng-switch-when="LONG_TEXT">
                                 <textarea rows="3"
                                     ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                     class="form-control"
@@ -143,7 +143,7 @@
                                     name="foo">
                                 </textarea>
                         </div>
-                        <div ng-switch-when="LONG_TEXT">
+                        <div ng-switch-when="TEXT">
                                 <input type="text"
                                     ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                     class="form-control"
