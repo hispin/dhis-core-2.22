@@ -202,11 +202,9 @@ public class FormUtils
     private static List<Field> inputFromProgramStageDataElements( List<ProgramStageDataElement> programStageDataElements )
     {
         List<DataElement> dataElements = new ArrayList<>();
-
-        for ( ProgramStageDataElement programStageDataElement : programStageDataElements )
-        {
-            dataElements.add( programStageDataElement.getDataElement() );
-        }
+        programStageDataElements.stream()
+            .filter( programStageDataElement -> programStageDataElement != null && programStageDataElement.getDataElement() != null )
+            .forEach( programStageDataElement -> dataElements.add( programStageDataElement.getDataElement() ) );
 
         return inputFromDataElements( dataElements, new ArrayList<>() );
     }
