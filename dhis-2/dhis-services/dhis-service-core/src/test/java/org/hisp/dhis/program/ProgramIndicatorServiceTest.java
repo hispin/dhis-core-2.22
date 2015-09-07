@@ -557,12 +557,14 @@ public class ProgramIndicatorServiceTest
         String expected = 
             "coalesce(case when \"EZq9VbPWgML\" < 0 then 0 else \"EZq9VbPWgML\" end, 0) + " +
             "(cast(\"kts5J79K9gA\" as date) - cast(\"GCyeKSqlpdk\" as date)) + " +
-            "case when (80 > 70) then 100 else 50 end";        
-            
+            "case when (\"GCyeKSqlpdk\" > 70) then 100 else 50 end + " +
+            "case when (\"HihhUWBeg7I\" < 30) then 20 else 100 end";
+        
         String expression = 
             "d2:zing(#{OXXcwl6aPCQ.EZq9VbPWgML}) + " +
             "d2:daysBetween(#{OXXcwl6aPCQ.GCyeKSqlpdk},#{OXXcwl6aPCQ.kts5J79K9gA}) + " +
-            "d2:condition(80 > 70,100,50)";
+            "d2:condition(\"#{OXXcwl6aPCQ.GCyeKSqlpdk} > 70\",100,50) + " +
+            "d2:condition('#{OXXcwl6aPCQ.HihhUWBeg7I} < 30',20,100)";
         
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
