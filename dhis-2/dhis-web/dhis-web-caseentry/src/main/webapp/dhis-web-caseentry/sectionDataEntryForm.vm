@@ -51,7 +51,7 @@
 									#end        
 								</span>
 								##type        
-								<span id="value[$programStageDataElement.dataElement.id].type" class="hidden">$encoder.htmlEncode( $programStageDataElement.dataElement.type )</span></td>       
+								<span id="value[$programStageDataElement.dataElement.id].valueType" class="hidden">$encoder.htmlEncode( $programStageDataElement.dataElement.valueType )</span></td>
 							</td>        
 							##entry        
 							<td class='input-column'>   
@@ -61,17 +61,17 @@
 								#else
 									#set( $hasOptionSet = 'false')
 								#end
-								#if( $programStageDataElement.dataElement.textType == "longText" )
+								#if( $programStageDataElement.dataElement.valueType == "LONG_TEXT" )
 									<textarea name="entryfield" type="text" data="{compulsory: $programStageDataElement.compulsory }" id="$id" name="entryfield" onchange="saveVal( '$programStageDataElement.dataElement.uid', this.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" maxlength=255 >$!encoder.htmlEncode( $dataValue.value )</textarea>
-								#elseif( $programStageDataElement.dataElement.type == "bool" )
+								#elseif( $programStageDataElement.dataElement.valueType == "BOOLEAN" )
 									<select name="entryfield" data="{compulsory: $programStageDataElement.compulsory }" id="$id" onchange="saveOpt( '$programStageDataElement.dataElement.uid' )" tabindex="$tabIndex">
 										<option value="">[$i18n.getString( "select_value" )]</option>
 										<option value="true" #if( $dataValue.value == "true" ) selected="selected" #end>$i18n.getString( "yes" )</option>
 										<option value="false" #if( $dataValue.value == "false" ) selected="selected" #end>$i18n.getString( "no" )</option>
 									</select>
-								#elseif( $programStageDataElement.dataElement.type == "trueOnly" )
+								#elseif( $programStageDataElement.dataElement.valueType == "TRUE_ONLY" )
 									<input name="entryfield" type="checkbox" data="{compulsory: $programStageDataElement.compulsory, deType:'$programStageDataElement.dataElement.getType()'}" id="$id" name="entryfield" #if($dataValue.value=="true") checked #end onchange="saveVal( '$programStageDataElement.dataElement.uid', this.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" >
-								#elseif( $programStageDataElement.dataElement.type == "date" )
+								#elseif( $programStageDataElement.dataElement.valueType == "DATE" )
 									<input name="entryfield" type="text" data="{compulsory: $programStageDataElement.compulsory, deType:'$programStageDataElement.dataElement.getType()'}" id="$id" name="entryfield" value="$!encoder.htmlEncode( $dataValue.value )" onchange="saveVal( '$programStageDataElement.dataElement.uid', this.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" class="date-field datefield" >
 									<script type="text/javascript">
 										#if($programStageDataElement.allowFutureDate=='true')
@@ -110,7 +110,7 @@
 									#else
 										<input id='$id' name="entryfield" options='$hasOptionSet' optionset="$programStageDataElement.dataElement.optionSet.uid" data="{compulsory: $programStageDataElement.compulsory, deName:'$programStageDataElement.dataElement.name', deType:'$programStageDataElement.dataElement.getDetailedNumberType()' }" type="text" value="$!encoder.htmlEncode( $dataValue.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" class="auto-field optionset" />
 									#end
-								#elseif($programStageDataElement.dataElement.type=='username')
+								#elseif($programStageDataElement.dataElement.valueType=='USERNAME')
 									<input id='$id' name="entryfield" options='$hasOptionSet' optionset="$programStageDataElement.dataElement.optionSet.uid" data="{compulsory: $programStageDataElement.compulsory, deName:'$programStageDataElement.dataElement.name', deType:'$programStageDataElement.dataElement.getDetailedNumberType()' }" type="text" value="$!encoder.htmlEncode( $dataValue.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" class="auto-field optionset" />
 								#else
 									<input name="entryfield" 

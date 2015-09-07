@@ -73,7 +73,7 @@
 												#end        
 											</span>
 											##type        
-											<span id="value[$programStageDataElement.dataElement.id].type" class="hidden">$encoder.htmlEncode( $programStageDataElement.dataElement.type )</span></td>       
+											<span id="value[$programStageDataElement.dataElement.id].valueType" class="hidden">$encoder.htmlEncode( $programStageDataElement.dataElement.valueType )</span></td>
 										</td>        
 										##entry        
 										<td class='input-column'>   
@@ -105,17 +105,17 @@
 												#set($validate=$validate + "required:true")
 											#end
 												
-											#if( $programStageDataElement.dataElement.textType == "longText" )
+											#if( $programStageDataElement.dataElement.valueType == "LONG_TEXT" )
 												<textarea name="entryfield" type="text" id="$id" maxlength=255 class="{validate:{$validate}}" >$!encoder.htmlEncode( $dataValue.value )</textarea>
-											#elseif( $programStageDataElement.dataElement.type == "bool" )
+											#elseif( $programStageDataElement.dataElement.valueType == "BOOLEAN" )
 												<select name="entryfield" id="$id" class="{validate:{$validate}}" >
 													<option value="">[$i18n.getString( "select_value" )]</option>
 													<option value="true" #if( $dataValue.value == "true" ) selected="selected" #end>$i18n.getString( "yes" )</option>
 													<option value="false" #if( $dataValue.value == "false" ) selected="selected" #end>$i18n.getString( "no" )</option>
 												</select>
-											#elseif( $programStageDataElement.dataElement.type == "trueOnly" )
+											#elseif( $programStageDataElement.dataElement.valueType == "TRUE_ONLY" )
 												<input name="entryfield" type="checkbox" id="$id" class="{validate:{$validate}}" >
-											#elseif( $programStageDataElement.dataElement.type == "date" )
+											#elseif( $programStageDataElement.dataElement.valueType == "DATE" )
 												<input name="entryfield" class='datefield' type="text" id="$id" name="entryfield" value="$!encoder.htmlEncode( $dataValue.value )" class="{validate:{$validate}}">
 												<script type="text/javascript">
 													datePicker( '$programStageDataElement.programStage.uid' + '-' + '$programStageDataElement.dataElement.uid' + '-val', false, false);
@@ -149,7 +149,7 @@
 												#else
 													<input optionset='$programStageDataElement.dataElement.optionSet.uid' id='$id' name="entryfield" options='$hasOptionSet' data="{compulsory: $programStageDataElement.compulsory, deName:'$programStageDataElement.dataElement.name', deType:'$programStageDataElement.dataElement.getDetailedNumberType()' }" type="text" value="$!encoder.htmlEncode( $dataValue.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" class="auto-field optionset" />
 												#end
-											#elseif($programStageDataElement.dataElement.type=='username')
+											#elseif($programStageDataElement.dataElement.valueType=='USERNAME')
 												<input name="entryfield" username='true' class="auto-field optionset" data="{compulsory: $programStageDataElement.compulsory, deName:'$programStageDataElement.dataElement.name', deType:'$programStageDataElement.dataElement.getDetailedNumberType()' }" id="$id" type="text" value="$!encoder.htmlEncode( $dataValue.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" />
 											#else
 												<input name="entryfield" id="$id" type="text" value="$!encoder.htmlEncode( $dataValue.value )" class="{validate:{$validate}}" />
@@ -207,7 +207,7 @@
 				#end        
 			</span>
 			##type        
-			<span id="value[$programStageDataElement.dataElement.id].type" class="hidden">$encoder.htmlEncode( $programStageDataElement.dataElement.type )</span></td>       
+			<span id="value[$programStageDataElement.dataElement.id].valueType" class="hidden">$encoder.htmlEncode( $programStageDataElement.dataElement.valueType )</span></td>
 		</td>        
 		##entry        
 		<td class='input-column'>   
@@ -218,17 +218,17 @@
 				#set($hasOptionSet = 'false')
 			#end
 			
-			#set($type=$programStageDataElement.dataElement.getDetailedNumberType())
+			#set($type=$programStageDataElement.dataElement.valueType)
 			#set($validate = '')
-			#if( $type=='number' ) 
+			#if( $type=='NUMBER' )
 				#set($validate="number:true") 
-			#elseif( $type=='positiveNumber' )
+			#elseif( $type=='INTEGER_POSITIVE' )
 				#set($validate="positive_integer:true") 
-			#elseif( $type=='negativeNumber' )
+			#elseif( $type=='INTEGER_NEGATIVE' )
 				#set($validate="negative_integer:true")
-			#elseif( $type=='zeroPositiveInt' )
+			#elseif( $type=='INTEGER_ZERO_OR_POSITIVE' )
 				#set($validate="zeroPositiveInt:true")
-			#elseif( $type=='int' )
+			#elseif( $type=='INTEGER' )
 				#set($validate="integer:true")
 			#end
 			
@@ -239,17 +239,17 @@
 				#set($validate=$validate + "required:true")
 			#end
 				
-			#if( $programStageDataElement.dataElement.textType == "longText" )
+			#if( $programStageDataElement.dataElement.valueType == "LONG_TEXT" )
 				<textarea name="entryfield" type="text" id="$id" maxlength=255 class="{validate:{$validate}}" >$!encoder.htmlEncode( $dataValue.value )</textarea>
-			#elseif( $programStageDataElement.dataElement.type == "bool" )
+			#elseif( $programStageDataElement.dataElement.valueType == "BOOLEAN" )
 				<select name="entryfield" id="$id" class="{validate:{$validate}}" >
 					<option value="">[$i18n.getString( "select_value" )]</option>
 					<option value="true" #if( $dataValue.value == "true" ) selected="selected" #end>$i18n.getString( "yes" )</option>
 					<option value="false" #if( $dataValue.value == "false" ) selected="selected" #end>$i18n.getString( "no" )</option>
 				</select>
-			#elseif( $programStageDataElement.dataElement.type == "trueOnly" )
+			#elseif( $programStageDataElement.dataElement.valueType == "TRUE_ONLY" )
 				<input name="entryfield" type="checkbox" id="$id" class="{validate:{$validate}}" >
-			#elseif( $programStageDataElement.dataElement.type == "date" )
+			#elseif( $programStageDataElement.dataElement.valueType == "DATE" )
 				<input name="entryfield" class='datefield' type="text" id="$id" name="entryfield" value="$!encoder.htmlEncode( $dataValue.value )"class="{validate:{$validate}}">
 				<script type="text/javascript">
 					datePicker( '$programStageDataElement.programStage.uid' + '-' + '$programStageDataElement.dataElement.uid' + '-val', false, false);
@@ -283,7 +283,7 @@
 				#else
 					<input optionset='$programStageDataElement.dataElement.optionSet.uid' id='$id' name="entryfield" options='$hasOptionSet' data="{compulsory: $programStageDataElement.compulsory, deName:'$programStageDataElement.dataElement.name', deType:'$programStageDataElement.dataElement.getDetailedNumberType()' }" type="text" value="$!encoder.htmlEncode( $dataValue.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" class="auto-field optionset" />
 				#end
-			#elseif($programStageDataElement.dataElement.type=='username')
+			#elseif($programStageDataElement.dataElement.valueType=='USERNAME')
 				<input name="entryfield" username='true' class="auto-field optionset" data="{compulsory: $programStageDataElement.compulsory, deName:'$programStageDataElement.dataElement.name', deType:'$programStageDataElement.dataElement.getDetailedNumberType()' }" id="$id" type="text" value="$!encoder.htmlEncode( $dataValue.value )" onkeypress="return keyPress(event, this)" tabindex="$tabIndex" />
 			#else
 				<input name="entryfield" id="$id" type="text" value="$!encoder.htmlEncode( $dataValue.value )" class="{validate:{$validate}}" />
