@@ -691,17 +691,6 @@ public class PDFUtils
         return map;
     }
 
-    private static Map<String, String> getType()
-    {
-        Map<String, String> map = new HashMap<>();
-        map.put( DataElement.VALUE_TYPE_STRING, "text" );
-        map.put( DataElement.VALUE_TYPE_INT, "number" );
-        map.put( DataElement.VALUE_TYPE_BOOL, "yes_no" );
-        map.put( DataElement.VALUE_TYPE_DATE, "date" );
-        map.put( DataElement.VALUE_TYPE_DATETIME, "date_time" );
-        return map;
-    }
-
     private static Map<String, String> getAggregationOperator()
     {
         Map<String, String> map = new HashMap<>();

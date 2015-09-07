@@ -42,7 +42,7 @@ public class DataElementValueTypesFilter
 {
     private List<ValueType> valueTypes;
 
-    public DataElementValueTypesFilter( List<ValueType> valueType )
+    public DataElementValueTypesFilter( List<ValueType> valueTypes )
     {
         this.valueTypes = valueTypes;
     }
