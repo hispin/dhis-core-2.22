@@ -470,9 +470,33 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetAnalyticsSQl()
     {
-        String expected = COL_QUOTE + deA.getUid() + COL_QUOTE + " + " + COL_QUOTE + atA.getUid() + COL_QUOTE + " > 10";
+        String expected = "coalesce(\"" + deA.getUid() + "\",0) + coalesce(\"" + atA.getUid() + "\",0) > 10";
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( indicatorE.getFilter() ) );
+    }
+
+    @Test
+    public void testGetAnalyticsSQlRespectMissingValues()
+    {
+        String expected = "\"" + deA.getUid() + "\" + \"" + atA.getUid() + "\" > 10";
+
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( indicatorE.getFilter(), false ) );
+    }
+    
+    @Test
+    public void testGetAnalyticsWithVariables()
+    {
+        String expected = 
+            "coalesce(case when \"EZq9VbPWgML\" < 0 then 0 else \"EZq9VbPWgML\" end, 0) + " +
+            "coalesce(\"GCyeKSqlpdk\",0) + " +
+            "nullif((case when \"EZq9VbPWgML\" > 0 then 1 else 0 end + case when \"GCyeKSqlpdk\" > 0 then 1 else 0 end),0)";
+        
+        String expression = 
+            "d2:zing(#{OXXcwl6aPCQ.EZq9VbPWgML}) + " +
+            "#{OXXcwl6aPCQ.GCyeKSqlpdk} + " +
+            "V{zero_pos_value_count}";
+        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
 
     @Test
@@ -563,7 +587,7 @@ public class ProgramIndicatorServiceTest
     @Test
     public void testGetAnalyticsSqlWithVariables()
     {
-        String expected = "\"EZq9VbPWgML\" + (executiondate - enrollmentdate)";
+        String expected = "coalesce(\"EZq9VbPWgML\",0) + (executiondate - enrollmentdate)";
         String expression = "#{OXXcwl6aPCQ.EZq9VbPWgML} + (V{execution_date} - V{enrollment_date})";
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
