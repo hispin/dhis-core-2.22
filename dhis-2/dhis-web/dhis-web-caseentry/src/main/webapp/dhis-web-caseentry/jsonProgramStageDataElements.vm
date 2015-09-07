@@ -9,7 +9,7 @@
 		#if( $!programStageDataElement.dataElement.optionSet )
 			"optionset",
 		#else
-			"${programStageDataElement.dataElement.type}",
+			"${programStageDataElement.dataElement.valueType}",
 		#end
 	"compulsory": "${programStageDataElement.compulsory}",
 	"displayInReports": "${programStageDataElement.displayInReports}"

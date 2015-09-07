@@ -48,13 +48,13 @@
 	           
 	        ##value        
 	        <td>        
-	            #if( $dataValue.dataElement.type == "bool" )
+	            #if( $dataValue.dataElement.valueType == "BOOLEAN" )
 	                #if( $dataValue.value == "true" )
 	                    $i18n.getString( "yes" ) 
 	                #elseif( $dataValue.value == "false" )
 	                    $i18n.getString( "no" )
-	                #end                                              
-	            #elseif( $dataValue.dataElement.type == "string"  && $dataValue.dataElement.isMultiDimensional() )                    
+	                #end
+	            #elseif( $dataValue.dataElement.valueType.isText() && $dataValue.dataElement.isMultiDimensional() )
 	                #if( $dataValue.value )                       
 	                    #set( $optionValue = $optionValueMap.get( $dataValue.dataElement.id ) )
 	                    $encoder.htmlEncode( $optionValue )
