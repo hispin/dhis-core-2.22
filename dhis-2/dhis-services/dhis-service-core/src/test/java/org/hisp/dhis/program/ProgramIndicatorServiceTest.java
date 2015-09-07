@@ -577,6 +577,15 @@ public class ProgramIndicatorServiceTest
     }
 
     @Test
+    public void testGetAnalyticsSqlWithVariables()
+    {
+        String expected = "\"EZq9VbPWgML\" + (executiondate - enrollmentdate)";
+        String expression = "#{OXXcwl6aPCQ.EZq9VbPWgML} + (V{execution_date} - V{enrollment_date})";
+
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
+    }
+    
+    @Test
     public void testExpressionIsValid()
     {
         programIndicatorService.addProgramIndicator( indicatorB );
