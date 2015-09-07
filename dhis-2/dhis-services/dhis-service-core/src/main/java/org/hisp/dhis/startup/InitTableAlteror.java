@@ -112,6 +112,7 @@ public class InitTableAlteror
         executeSql( "update trackedentityattribute set valuetype='PHONE_NUMBER' where valuetype='phoneNumber'" );
         executeSql( "update trackedentityattribute set valuetype='EMAIL' where valuetype='email'" );
         executeSql( "update trackedentityattribute set valuetype='NUMBER' where valuetype='number'" );
+        executeSql( "update trackedentityattribute set valuetype='NUMBER' where valuetype='int'" );
         executeSql( "update trackedentityattribute set valuetype='LETTER' where valuetype='letter'" );
         executeSql( "update trackedentityattribute set valuetype='BOOLEAN' where valuetype='bool'" );
         executeSql( "update trackedentityattribute set valuetype='TRUE_ONLY' where valuetype='trueOnly'" );
