@@ -32,7 +32,7 @@ if( dhis2.ec.memoryOnly ) {
 dhis2.ec.store = new dhis2.storage.Store({
     name: 'dhis2ec',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'categories', 'categoryOptions', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants']
+    objectStores: ['programs', 'programStages', 'categories', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants']
 });
 
 (function($) {
@@ -152,7 +152,6 @@ function downloadMetaData(){
     promise = promise.then( getPrograms );     
     promise = promise.then( getProgramStages );
     promise = promise.then( getCategories );
-    promise = promise.then( getCategoryOptions );
     promise = promise.then( getMetaProgramValidations );
     promise = promise.then( getProgramValidations );
     promise = promise.then( getMetaProgramIndicators );
@@ -310,7 +309,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
+            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,categories[id]],organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
         }).done( function( program ){            
             var ou = {};
             _.each(_.values( program.organisationUnits), function(o){
@@ -394,81 +393,8 @@ function getCategories( programs )
     });
     
     if(catigories.length > 0 ){
-        return checkAndGetD2Objects( {programs: programs, self: catigories}, 'categories', '../api/categories', 'fields=id,name,categoryOptions[id]');
+        return checkAndGetD2Objects( {programs: programs, self: catigories}, 'categories', '../api/categories', 'fields=id,name,categoryOptions[id,name]');
     }
-}
-
-function getCategoryOptions( programs )
-{
-    if(!programs){
-        return;
-    }
-    
-    var categoryOptions = [];
-    _.each( _.values( programs ), function ( program ) { 
-        if( program && program.categoryCombo && program.categoryCombo.categories ) {
-            _.each(_.values(program.categoryCombo.categories), function(cat){
-                if(cat.categoryOptions){
-                    _.each(_.values(cat.categoryOptions), function(opt){
-                        categoryOptions.push( opt );
-                    });
-                }
-            });            
-        }
-    });
-    
-    if(categoryOptions.length > 0 ){
-        return checkAndGetD2Objects( {programs: programs, self: categoryOptions}, 'categoryOptions', '../api/categoryOptions', 'fields=id,name');
-    }
-}
-
-function getCategoyOptions( programs )
-{
-    if( !programs ){
-        return;
-    }
-    
-    var mainDef = $.Deferred();
-    var mainPromise = mainDef.promise();
-
-    var def = $.Deferred();
-    var promise = def.promise();
-
-    var builder = $.Deferred();
-    var build = builder.promise();
-
-    _.each( _.values( programs ), function ( program ) {
-        
-        if(program.categoryCombo && program.categoryCombo.id){
-            build = build.then(function() {
-                var d = $.Deferred();
-                var p = d.promise();
-                dhis2.ec.store.get('categoryCombo', program.categoryCombo.id).done(function(obj) {
-                    if(!obj || obj.version !== program.categoryCombo.version) {
-                        promise = promise.then( getD2Object( program.categoryCombo.id, 'categoryCombo', '../api/categoryCombos', 'fields=id,name,categories[id]', 'idb' ) );
-                    }
-
-                    d.resolve();
-                });
-
-                return p;
-            });
-        }              
-    });
-
-    build.done(function() {
-        def.resolve();
-
-        promise = promise.done( function () {
-            mainDef.resolve( programs );
-        } );
-    }).fail(function(){
-        mainDef.resolve( null );
-    });
-
-    builder.resolve();
-
-    return mainPromise;    
 }
 
 function getOptionSets( programs )
