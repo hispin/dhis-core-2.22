@@ -30,10 +30,6 @@ package org.hisp.dhis.program;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.hisp.dhis.constant.Constant;
-import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
  * @author Chau Thu Tran
@@ -128,14 +124,24 @@ public interface ProgramIndicatorService
      * @return The description
      */
     String getExpressionDescription( String expression );
-    
+
     /**
-     * Get the expression as an analytics SQL clause.
+     * Get the expression as an analytics SQL clause. Ignores missing numeric
+     * values for data elements and attributes.
      * 
      * @param expression the expression.
      * @return the SQL string.
      */
     String getAnalyticsSQl( String expression );
+    
+    /**
+     * Get the expression as an analytics SQL clause.
+     * 
+     * @param expression the expression.
+     * @param whether to ignore missing values for data elements and attributes.
+     * @return the SQL string.
+     */
+    String getAnalyticsSQl( String expression, boolean ignoreMissingValues );
 
     /**
      * Indicates whether the given program indicator expression is valid.

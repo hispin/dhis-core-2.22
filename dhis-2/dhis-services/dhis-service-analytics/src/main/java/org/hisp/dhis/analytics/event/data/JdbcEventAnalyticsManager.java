@@ -537,7 +537,7 @@ public class JdbcEventAnalyticsManager
 
         if ( params.hasProgramIndicatorDimension() && params.getProgramIndicator().hasFilter() )
         {
-            String filter = programIndicatorService.getAnalyticsSQl( params.getProgramIndicator().getFilter() );
+            String filter = programIndicatorService.getAnalyticsSQl( params.getProgramIndicator().getFilter(), false );
             
             String sqlFilter = ExpressionUtils.asSql( filter );
             
