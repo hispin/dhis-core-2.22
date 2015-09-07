@@ -37,8 +37,8 @@ public class DaysBetweenSqlFunction
     public static final String KEY = "daysBetween";
     
     @Override
-    public String evaluate( String arg1, String arg2, String arg3 )
+    public String evaluate( String startDate, String endDate, String arg3 )
     {        
-        return "(cast(" + arg2 + " as date) - cast(" + arg1 + " as date))";
+        return "(cast(" + endDate + " as date) - cast(" + startDate + " as date))";
     }
 }

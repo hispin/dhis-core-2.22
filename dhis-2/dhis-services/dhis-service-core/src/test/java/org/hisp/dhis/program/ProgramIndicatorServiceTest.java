@@ -495,7 +495,7 @@ public class ProgramIndicatorServiceTest
     }
 
     @Test
-    public void testGetAnalyticsSqlWithFunctionsA()
+    public void testGetAnalyticsSqlWithFunctionsZingA()
     {
         String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
         String expected = "coalesce(case when " + col + " < 0 then 0 else " + col + " end, 0)";
@@ -503,9 +503,25 @@ public class ProgramIndicatorServiceTest
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
+    
+    @Test
+    public void testGetAnalyticsSqlWithFunctionsZingB()
+    {
+        String expected = 
+            "coalesce(case when \"EZq9VbPWgML\" < 0 then 0 else \"EZq9VbPWgML\" end, 0) + " +
+            "coalesce(case when \"GCyeKSqlpdk\" < 0 then 0 else \"GCyeKSqlpdk\" end, 0) + " +
+            "coalesce(case when \"hsCmEqBcU23\" < 0 then 0 else \"hsCmEqBcU23\" end, 0)";        
+            
+        String expression = 
+            "d2:zing(#{OXXcwl6aPCQ.EZq9VbPWgML}) + " +
+            "d2:zing(#{OXXcwl6aPCQ.GCyeKSqlpdk}) + " +
+            "d2:zing(#{OXXcwl6aPCQ.hsCmEqBcU23})";
+        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
+    }
 
     @Test
-    public void testGetAnalyticsSqlWithFunctionsB()
+    public void testGetAnalyticsSqlWithFunctionsOizp()
     {
         String col = COL_QUOTE + deA.getUid() + COL_QUOTE;
         String expected = "coalesce(case when " + col + " >= 0 then 1 else 0 end, 0)";
@@ -515,7 +531,7 @@ public class ProgramIndicatorServiceTest
     }
 
     @Test
-    public void testGetAnalyticsSqlWithFunctionsC()
+    public void testGetAnalyticsSqlWithFunctionsDaysBetween()
     {
         String col1 = COL_QUOTE + deA.getUid() + COL_QUOTE;
         String col2 = COL_QUOTE + deB.getUid() + COL_QUOTE;
@@ -526,7 +542,7 @@ public class ProgramIndicatorServiceTest
     }
 
     @Test
-    public void testGetAnalyticsSqlWithFunctionsD()
+    public void testGetAnalyticsSqlWithFunctionsCondition()
     {
         String col1 = COL_QUOTE + deA.getUid() + COL_QUOTE;
         String expected = "case when (" + col1 + " > 3) then 10 else 5 end";
@@ -534,7 +550,23 @@ public class ProgramIndicatorServiceTest
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
-
+    
+    @Test
+    public void testGetAnalyticsSqlWithFunctionsComposite()
+    {
+        String expected = 
+            "coalesce(case when \"EZq9VbPWgML\" < 0 then 0 else \"EZq9VbPWgML\" end, 0) + " +
+            "(cast(\"kts5J79K9gA\" as date) - cast(\"GCyeKSqlpdk\" as date)) + " +
+            "case when (80 > 70) then 100 else 50 end";        
+            
+        String expression = 
+            "d2:zing(#{OXXcwl6aPCQ.EZq9VbPWgML}) + " +
+            "d2:daysBetween(#{OXXcwl6aPCQ.GCyeKSqlpdk},#{OXXcwl6aPCQ.kts5J79K9gA}) + " +
+            "d2:condition(80 > 70,100,50)";
+        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
+    }
+    
     @Test( expected = IllegalStateException.class )
     public void testGetAnalyticsSqlWithFunctionsInvalid()
     {
