@@ -8,7 +8,7 @@
 			<name>$encoder.xmlEncode( $dataElement.name )</name>
 			<code>$!encoder.xmlEncode( $dataElement.code )</code>
 			<shortName>$encoder.xmlEncode( $dataElement.shortName )</shortName>
-			<type>$dataElement.type</type>
+			<valueType>$dataElement.valueType</valueType>
 			#set($deJSON = '{' + '"id"' + ":" + $dataElement.id + "," + '"uid"' + ':"' + $dataElement.uid + '",' + '"name"' + ':"' + "$dataElement.name" + '",' + '"shortName"' + ':"' + "$dataElement.shortName" + '",' + '"type"' + ':"' + "$dataElement.getDetailedTextType()"  + '"}' )
 			<json>$deJSON</json>
 			<optionCombos> 

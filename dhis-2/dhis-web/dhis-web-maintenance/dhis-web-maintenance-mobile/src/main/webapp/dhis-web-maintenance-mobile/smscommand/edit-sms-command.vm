@@ -245,7 +245,7 @@
 								<input type="text" id="codeValue$index" name="codeValue$index" class="{validate:{required:true}}" value='$!codes[$str]' onblur="checkDuplicatedCode(this.value, $index)"/>
 						   </td>
 						   <td>
-								#if($dataElement.type == "int" || $dataElement.type == "number")
+								#if( $dataElement.valueType.isNumeric() )
 									#if ($formulas[$str])
 										<input type="button" name="addFormula$index" id="addFormula$index" value="Edit Formula" onclick="openFormulaForm('$dataElement.name $x.name', '$index')"/>
 									#else
@@ -333,7 +333,7 @@ jQuery( document ).ready( function(){
 	<select id="targetDataElement">
 		<option value="">Please select</option>
 		#foreach( $dataElement in $dataElements)
-			#if($dataElement.type == "int" || $dataElement.type == "number")
+			#if($dataElement.valueType.isNumeric() )
 				<option value="$dataElement.id">$dataElement.name</option>
 			#end
 		#end

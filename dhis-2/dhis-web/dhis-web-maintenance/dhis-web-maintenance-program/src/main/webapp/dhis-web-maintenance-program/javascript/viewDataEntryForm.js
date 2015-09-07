@@ -166,7 +166,7 @@ function insertDataElement( source, programStageUid )
 
 	var dataElementUid = dataElement.uid;	
 	var dataElementName = dataElement.name;	
-	var dataElementType = dataElement.type;
+	var dataElementValueType = dataElement.valueType;
 	
 	var htmlCode = "";
 	var id = programStageUid + "-" + dataElementUid + "-val" ;
@@ -174,19 +174,19 @@ function insertDataElement( source, programStageUid )
 	{
 		id = dataElementUid;
 	}	
-	var titleValue = dataElementUid + " - " + dataElementName + " - " + dataElementType;
+	var titleValue = dataElementUid + " - " + dataElementName + " - " + dataElementValueType;
 	
-	if ( dataElementType == "bool" )
+	if ( dataElementValueType == "BOOLEAN" )
 	{
 		var displayName = dataElementName;
 		htmlCode = "<input title=\"" + titleValue + "\" name=\"entryselect\" id=\"" + id + "\" value=\"[" + displayName + "]\" title=\"" + displayName + "\">";
 	} 
-	else if ( dataElementType == "trueOnly" )
+	else if ( dataElementValueType == "TRUE_ONLY" )
 	{
 		var displayName = dataElementName;
 		htmlCode = "<input type=\"checkbox\" title=\"" + titleValue + "\" name=\"entryselect\" id=\"" + id + "\" title=\"" + displayName + "\">";
 	} 
-	else if ( dataElementType == "username" )
+	else if ( dataElementValueType == "USERNAME" )
 	{
 		var displayName = dataElementName;
 		htmlCode = "<input title=\"" + titleValue + "\" value=\"[" + displayName + "]\" name=\"entryfield\" id=\"" + id + "\" username=\"true\" />";
