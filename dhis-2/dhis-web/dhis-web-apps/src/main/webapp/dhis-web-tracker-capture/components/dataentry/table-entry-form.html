@@ -133,7 +133,6 @@
                                    name="foo"/>
                         </div>
                         <div ng-switch-when="TEXT">
-                            <span ng-if="prStDe.dataElement.textType==='longText'">
                                 <textarea rows="3"
                                     ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                     class="form-control"
@@ -143,10 +142,8 @@
                                     ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                     name="foo">
                                 </textarea>
-                            </span>
                         </div>
                         <div ng-switch-when="LONG_TEXT">
-                            <span ng-if="prStDe.dataElement.textType!=='longText'">
                                 <input type="text"
                                     ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                     class="form-control"
@@ -155,7 +152,6 @@
                                     ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
                                     ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                     name="foo"/>                 
-                            </span>                            
                         </div>
                         <div ng-switch-when="BOOLEAN">
                             <select ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
