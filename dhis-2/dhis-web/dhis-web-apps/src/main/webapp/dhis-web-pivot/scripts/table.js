@@ -2033,6 +2033,7 @@ Ext.onReady( function() {
                 type = (obj.status || 'INFO').toLowerCase();
 
 				config.title = obj.status;
+                config.cls = 'ns-window-title-messagebox';
 				config.iconCls = 'ns-window-title-messagebox ' + type;
 
                 // html
@@ -3185,7 +3186,7 @@ Ext.onReady( function() {
 			}
 		});
 
-        // user orgunit
+        // dimensions
 		requests.push({
 			url: init.contextPath + '/api/dimensions.' + type + '?fields=id,name&paging=false',
             disableCaching: false,
@@ -3213,7 +3214,8 @@ Ext.onReady( function() {
 
     applyCss = function(config) {
         var css = '',
-            arrowUrl = config.dashboard ? init.contextPath + '/dhis-web-commons/javascripts/plugin/images/arrowupdown.png' : '//dhis2-cdn.org/v217/plugin/images/arrowupdown.png';
+            arrowUrl = config.dashboard ? init.contextPath + '/dhis-web-commons/javascripts/plugin/images/arrowupdown.png' : '//dhis2-cdn.org/v220/plugin/images/arrowupdown.png',
+            errorUrl = config.dashboard ? init.contextPath + '/dhis-web-commons/javascripts/plugin/images/error_m.png' : '//dhis2-cdn.org/v220/plugin/images/error_m.png';
 
         css += 'table.pivot { font-family: arial,sans-serif,ubuntu,consolas; border-collapse: collapse; border-spacing: 0px; border: 0 none; } \n';
         css += '.td-nobreak { white-space: nowrap; } \n';
@@ -3258,6 +3260,10 @@ Ext.onReady( function() {
 
         // alert
         css += '.ns-plugin-alert { width: 90%; padding: 5%; color: #777 } \n';
+
+        css += '.x-window-body { font-size: 13px; } \n';
+        css += '.ns-window-title-messagebox { padding-left: 16px; background-position-y: 1px; } \n';
+        css += '.ns-window-title-messagebox.error { background-image: url("' + errorUrl + '"); } \n';
 
         Ext.util.CSS.createStyleSheet(css);
     };
