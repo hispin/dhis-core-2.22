@@ -516,17 +516,26 @@ Ext.onReady( function() {
 	NS.isDebug = false;
 	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	NS.getCore = function(ns) {
-        var init = ns.init,
-            conf = {},
+	NS.getCore = function(init, appConfig) {
+        var conf = {},
             api = {},
             support = {},
             service = {},
             web = {},
+            app = {},
+            webAlert,
             dimConf;
 
-        // tmp
-        ns.alert = function() {};
+        appConfig = appConfig || {};
+
+        // alert
+        webAlert = function() {};
+
+        // app
+        app.getViewportWidth = function() {};
+        app.getViewportHeight = function() {};
+        app.getCenterRegionWidth = function() {};
+        app.getCenterRegionHeight = function() {};
 
 		// conf
         (function() {
@@ -1013,19 +1022,19 @@ Ext.onReady( function() {
 
 							// Indicators as filter
 							if (layout.filters[i].dimension === dimConf.indicator.objectName) {
-								ns.alert(NS.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter.');
+								webAlert(NS.i18n.indicators_cannot_be_specified_as_filter || 'Indicators cannot be specified as filter.');
 								return;
 							}
 
 							// Categories as filter
 							if (layout.filters[i].dimension === dimConf.category.objectName) {
-								ns.alert(NS.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter.');
+								webAlert(NS.i18n.categories_cannot_be_specified_as_filter || 'Categories cannot be specified as filter.');
 								return;
 							}
 
 							// Data sets as filter
 							if (layout.filters[i].dimension === dimConf.dataSet.objectName) {
-								ns.alert(NS.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter.');
+								webAlert(NS.i18n.data_sets_cannot_be_specified_as_filter || 'Data sets cannot be specified as filter.');
 								return;
 							}
 						}
@@ -1033,31 +1042,31 @@ Ext.onReady( function() {
 
 					// dc and in
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.indicator.objectName]) {
-						ns.alert('Indicators and detailed data elements cannot be specified together.', true);
+						webAlert('Indicators and detailed data elements cannot be specified together.', true);
 						return;
 					}
 
 					// dc and de
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataElement.objectName]) {
-						ns.alert('Detailed data elements and totals cannot be specified together.', true);
+						webAlert('Detailed data elements and totals cannot be specified together.', true);
 						return;
 					}
 
 					// dc and ds
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.dataSet.objectName]) {
-						ns.alert('Data sets and detailed data elements cannot be specified together.', true);
+						webAlert('Data sets and detailed data elements cannot be specified together.', true);
 						return;
 					}
 
 					// dc and co
 					if (objectNameDimensionMap[dimConf.operand.objectName] && objectNameDimensionMap[dimConf.category.objectName]) {
-						ns.alert('Categories and detailed data elements cannot be specified together.', true);
+						webAlert('Categories and detailed data elements cannot be specified together.', true);
 						return;
 					}
 
                     // in and aggregation type
                     if (objectNameDimensionMap[dimConf.indicator.objectName] && config.aggregationType !== 'DEFAULT') {
-                        ns.alert('Indicators and aggregation types cannot be specified together.', true);
+                        webAlert('Indicators and aggregation types cannot be specified together.', true);
                         return;
                     }
 
@@ -1070,7 +1079,7 @@ Ext.onReady( function() {
 
 					// config must be an object
 					if (!(config && Ext.isObject(config))) {
-						ns.alert('Layout: config is not an object (' + init.el + ')', true);
+						webAlert('Layout: config is not an object (' + init.el + ')', true);
 						return;
 					}
 
@@ -1080,12 +1089,12 @@ Ext.onReady( function() {
 
 					// at least one dimension specified as column and row
 					if (!config.columns) {
-						ns.alert('No series items selected');
+						webAlert('No series items selected');
 						return;
 					}
 
 					if (!config.rows) {
-						ns.alert('No category items selected');
+						webAlert('No category items selected');
 						return;
 					}
 
@@ -1100,7 +1109,7 @@ Ext.onReady( function() {
 
 					// at least one period
 					if (!Ext.Array.contains(objectNames, dimConf.period.objectName)) {
-						ns.alert('At least one period must be specified as series, category or filter');
+						webAlert('At least one period must be specified as series, category or filter');
 						return;
 					}
 
@@ -1463,6 +1472,17 @@ Ext.onReady( function() {
                 return date.getFullYear() + '-' + month + '-' + day;
             };
 
+            // connection
+            support.connection = {};
+
+            support.connection.ajax = function(requestConfig, authConfig) {
+                if (authConfig.crossDomain && Ext.isString(authConfig.username) && Ext.isString(authConfig.password)) {
+                    requestConfig.headers = Ext.isObject(authConfig.headers) ? authConfig.headers : {};
+                    requestConfig.headers['Authorization'] = 'Basic ' + btoa(authConfig.username + ':' + authConfig.password);
+                }
+
+                Ext.Ajax.request(requestConfig);
+            };
         }());
 
 		// service
@@ -2210,7 +2230,7 @@ Ext.onReady( function() {
 			web.window = {};
 
 			web.window.setAnchorPosition = function(w, target) {
-				var vpw = ns.app.viewport.getWidth(),
+				var vpw = app.getViewportWidth(),
 					targetx = target ? target.getPosition()[0] : 4,
 					winw = w.getWidth(),
 					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
@@ -2287,7 +2307,7 @@ Ext.onReady( function() {
                 config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
 
                 // bodyStyle
-                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + app.getCenterRegionHeight() / 2 + 'px';
 
                 // destroy handler
                 config.modal = true;
@@ -2399,7 +2419,7 @@ Ext.onReady( function() {
 
                 msg += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
 
-                ns.alert(msg, 'warning');
+                webAlert(msg, 'warning');
 			};
 
 			// chart
@@ -2563,7 +2583,7 @@ Ext.onReady( function() {
                                 }
 
                                 trendLineFields.push(regressionKey);
-                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
+                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + (appConfig.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
                             }
                         }
                     }
@@ -2886,15 +2906,15 @@ Ext.onReady( function() {
                 };
 
                 getFormatedSeriesTitle = function(titles) {
-                    var itemLength = ns.dashboard ? 23 : 30,
-                        charLength = ns.dashboard ? 5 : 6,
+                    var itemLength = appConfig.dashboard ? 23 : 30,
+                        charLength = appConfig.dashboard ? 5 : 6,
                         numberOfItems = titles.length,
                         numberOfChars,
                         totalItemLength = numberOfItems * itemLength,
                         //minLength = 5,
                         maxLength = support.prototype.array.getMaxLength(titles),
                         fallbackLength = 10,
-                        maxWidth = ns.app.centerRegion.getWidth(),
+                        maxWidth = app.getCenterRegionWidth(),
                         width,
                         validateTitles;
 
@@ -2956,7 +2976,7 @@ Ext.onReady( function() {
                         }
                     }
 
-                    return ns.dashboard ? getFormatedSeriesTitle(a) : a;
+                    return appConfig.dashboard ? getFormatedSeriesTitle(a) : a;
 				};
 
                 getPieSeriesTitle = function(store) {
@@ -2985,7 +3005,7 @@ Ext.onReady( function() {
                         });
                     }
 
-                    return ns.dashboard ? getFormatedSeriesTitle(a) : a;
+                    return appConfig.dashboard ? getFormatedSeriesTitle(a) : a;
 				};
 
                 getDefaultSeries = function(store) {
@@ -3144,8 +3164,8 @@ Ext.onReady( function() {
                 };
 
                 getDefaultLegend = function(store, chartConfig) {
-                    var itemLength = ns.dashboard ? 24 : 30,
-                        charLength = ns.dashboard ? 4 : 6,
+                    var itemLength = appConfig.dashboard ? 24 : 30,
+                        charLength = appConfig.dashboard ? 4 : 6,
                         numberOfItems = 0,
                         numberOfChars = 0,
                         width,
@@ -3174,7 +3194,7 @@ Ext.onReady( function() {
 
                     width = (numberOfItems * itemLength) + (numberOfChars * charLength);
 
-                    if (width > ns.app.centerRegion.getWidth() - 6) {
+                    if (width > app.getCenterRegionWidth() - 6) {
                         position = 'right';
                     }
 
@@ -3250,7 +3270,7 @@ Ext.onReady( function() {
                         text = xLayout.title;
                     }
 
-                    fontSize = (ns.app.centerRegion.getWidth() / text.length) < 11.6 ? 12 : 17;
+                    fontSize = (app.getCenterRegionWidth() / text.length) < 11.6 ? 12 : 17;
                     titleFont = 'normal ' + fontSize + 'px ' + conf.chart.style.fontFamily;
                     titleColor = 'black';
 
@@ -3276,19 +3296,19 @@ Ext.onReady( function() {
                         font: titleFont,
                         fill: titleColor,
                         height: 20,
-                        y: ns.dashboard ? 7 : 20
+                        y: appConfig.dashboard ? 7 : 20
                     });
                 };
 
                 getDefaultChartSizeHandler = function() {
                     return function() {
-                        var width = ns.app.centerRegion.getWidth(),
-                            height = ns.app.centerRegion.getHeight();
+                        var width = app.getCenterRegionWidth(),
+                            height = app.getCenterRegionHeight();
 
 						this.animate = false;
-                        this.setWidth(ns.dashboard ? width : width - 15);
-                        this.setHeight(ns.dashboard ? height : height - 40);
-                        this.animate = !ns.dashboard;
+                        this.setWidth(appConfig.dashboard ? width : width - 15);
+                        this.setHeight(appConfig.dashboard ? height : height - 40);
+                        this.animate = !appConfig.dashboard;
                     };
                 };
 
@@ -3321,22 +3341,22 @@ Ext.onReady( function() {
                 getDefaultChart = function(config) {
                     var chart,
                         store = config.store || {},
-                        width = ns.app.centerRegion.getWidth(),
-                        height = ns.app.centerRegion.getHeight(),
+                        width = app.getCenterRegionWidth(),
+                        height = app.getCenterRegionHeight(),
                         isLineBased = Ext.Array.contains(['line', 'area'], xLayout.type),
                         defaultConfig = {
                             //animate: true,
                             animate: false,
                             shadow: false,
-                            insetPadding: ns.dashboard ? 17 : 35,
+                            insetPadding: appConfig.dashboard ? 17 : 35,
                             insetPaddingObject: {
-                                top: ns.dashboard ? 12 : 32,
-                                right: ns.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
-                                bottom: ns.dashboard ? 2 : 10,
-                                left: ns.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
+                                top: appConfig.dashboard ? 12 : 32,
+                                right: appConfig.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
+                                bottom: appConfig.dashboard ? 2 : 10,
+                                left: appConfig.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
                             },
-                            width: ns.dashboard ? width : width - 15,
-                            height: ns.dashboard ? height : height - 40,
+                            width: appConfig.dashboard ? width : width - 15,
+                            height: appConfig.dashboard ? height : height - 40,
                             theme: 'dv1'
                         };
 
@@ -3345,15 +3365,15 @@ Ext.onReady( function() {
                         defaultConfig.legend = getDefaultLegend(store, config);
 
                         if (defaultConfig.legend.position === 'right') {
-                            defaultConfig.insetPaddingObject.top = ns.dashboard ? 22 : 40;
-                            defaultConfig.insetPaddingObject.right = ns.dashboard ? 5 : 40;
+                            defaultConfig.insetPaddingObject.top = appConfig.dashboard ? 22 : 40;
+                            defaultConfig.insetPaddingObject.right = appConfig.dashboard ? 5 : 40;
                         }
                     }
 
                     // title
                     if (xLayout.hideTitle) {
-                        defaultConfig.insetPadding = ns.dashboard ? 1 : 10;
-                        defaultConfig.insetPaddingObject.top = ns.dashboard ? 3 : 10;
+                        defaultConfig.insetPadding = appConfig.dashboard ? 1 : 10;
+                        defaultConfig.insetPaddingObject.top = appConfig.dashboard ? 3 : 10;
                     }
                     else {
                         defaultConfig.items = [getDefaultChartTitle(store)];
@@ -3532,7 +3552,7 @@ Ext.onReady( function() {
                             },
                             markerConfig: {
                                 type: 'circle',
-                                radius: ns.dashboard ? 3 : 4
+                                radius: appConfig.dashboard ? 3 : 4
                             },
                             tips: getDefaultTips(),
                             title: seriesTitles[i]
@@ -3714,10 +3734,10 @@ Ext.onReady( function() {
                         store: store,
                         series: series,
                         insetPaddingObject: {
-                            top: ns.dashboard ? 15 : 40,
-                            right: ns.dashboard ? 2 : 30,
-                            bottom: ns.dashboard ? 13: 30,
-                            left: ns.dashboard ? 7 : 30
+                            top: appConfig.dashboard ? 15 : 40,
+                            right: appConfig.dashboard ? 2 : 30,
+                            bottom: appConfig.dashboard ? 13: 30,
+                            left: appConfig.dashboard ? 7 : 30
                         }
                     });
 
@@ -3846,10 +3866,10 @@ Ext.onReady( function() {
                     chart = getDefaultChart({
                         axes: [axis],
                         series: [series],
-                        width: ns.app.centerRegion.getWidth(),
-                        height: ns.app.centerRegion.getHeight() * 0.6,
+                        width: app.getCenterRegionWidth(),
+                        height: app.getCenterRegionHeight() * 0.6,
                         store: store,
-                        insetPadding: ns.dashboard ? 50 : 100,
+                        insetPadding: appConfig.dashboard ? 50 : 100,
                         theme: null,
                         //animate: {
                             //easing: 'elasticIn',
@@ -3871,8 +3891,8 @@ Ext.onReady( function() {
 
                     chart.setChartSize = function() {
 						//this.animate = false;
-                        this.setWidth(ns.app.centerRegion.getWidth());
-                        this.setHeight(ns.app.centerRegion.getHeight() * 0.6);
+                        this.setWidth(app.getCenterRegionWidth());
+                        this.setHeight(app.getCenterRegionHeight() * 0.6);
                         //this.animate = true;
                     };
 
@@ -3884,7 +3904,7 @@ Ext.onReady( function() {
 
                             if (title) {
                                 var titleWidth = Ext.isIE ? title.el.dom.scrollWidth : title.el.getWidth(),
-                                    titleX = titleWidth ? (ns.app.centerRegion.getWidth() / 2) - (titleWidth / 2) : titleXFallback;
+                                    titleX = titleWidth ? (app.getCenterRegionWidth() / 2) - (titleWidth / 2) : titleXFallback;
                                 title.setAttributes({
                                     x: titleX
                                 }, true);
@@ -3892,7 +3912,7 @@ Ext.onReady( function() {
 
                             if (subTitle) {
                                 var subTitleWidth = Ext.isIE ? subTitle.el.dom.scrollWidth : subTitle.el.getWidth(),
-                                    subTitleX = subTitleWidth ? (ns.app.centerRegion.getWidth() / 2) - (subTitleWidth / 2) : titleXFallback;
+                                    subTitleX = subTitleWidth ? (app.getCenterRegionWidth() / 2) - (subTitleWidth / 2) : titleXFallback;
                                 subTitle.setAttributes({
                                     x: subTitleX
                                 }, true);
@@ -3931,14 +3951,17 @@ Ext.onReady( function() {
 		}());
 
 		// alert
-        ns.alert = web.message.alert;
+		webAlert = web.message.alert;
 
-		ns.conf = conf;
-		ns.api = api;
-		ns.support = support;
-		ns.service = service;
-		ns.web = web;
-
-		return ns;
+		return {
+            init: init,
+            conf: conf,
+            api: api,
+            support: support,
+            service: service,
+            web: web,
+            app: app,
+            webAlert: webAlert
+        };
     };
 });

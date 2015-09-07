@@ -2116,12 +2116,12 @@ Ext.onReady( function() {
 
 	// core
     extendCore = function(core) {
-        var conf = core.conf,
+        var init = core.init,
+            conf = core.conf,
 			api = core.api,
 			support = core.support,
 			service = core.service,
-			web = core.web,
-			init = core.init;
+			web = core.web;
 
         // init
         (function() {
@@ -7677,6 +7677,8 @@ Ext.onReady( function() {
 			period: period,
 			treePanel: treePanel,
 			setGui: setGui,
+            westRegion: westRegion,
+            centerRegion: centerRegion,
             update: update,
 			items: [
 				westRegion,
@@ -7780,19 +7782,25 @@ Ext.onReady( function() {
 		var requests = [],
 			callbacks = 0,
 			init = {},
+            appConfig,
 			fn;
 
 		fn = function() {
 			if (++callbacks === requests.length) {
 
-				NS.instances.push(ns);
-
-                ns.init = init;
-				ns.core = NS.getCore(ns);
+				ns.core = NS.getCore(init);
+                ns.alert = ns.core.webAlert;
 				extendCore(ns.core);
 
 				dimConf = ns.core.conf.finals.dimension;
 				ns.app.viewport = createViewport();
+
+                ns.core.app.getViewportWidth = function() { return ns.app.viewport.getWidth(); };
+                ns.core.app.getViewportHeight = function() { return ns.app.viewport.getHeight(); };
+                ns.core.app.getCenterRegionWidth = function() { return ns.app.viewport.centerRegion.getWidth(); };
+                ns.core.app.getCenterRegionHeight = function() { return ns.app.viewport.centerRegion.getHeight(); };
+
+                NS.instances.push(ns);
 			}
 		};
 
