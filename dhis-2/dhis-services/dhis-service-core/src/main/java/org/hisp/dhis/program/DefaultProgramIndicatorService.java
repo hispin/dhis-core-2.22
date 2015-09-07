@@ -585,7 +585,29 @@ public class DefaultProgramIndicatorService
 
         return TextUtils.appendTail( matcher, buffer );
     }
-    
+
+    @Override
+    public String getAnyValueExistsClauseAnalyticsSql( String expression )
+    {
+        Set<String> uids = ProgramIndicator.getDataElementAndAttributeIdentifiers( expression );
+        
+        System.out.println(uids);
+        
+        if ( uids.isEmpty() )
+        {
+            return null;
+        }
+        
+        String sql = "";
+        
+        for ( String uid : uids )
+        {
+            sql += statementBuilder.columnQuote( uid ) + " is not null or ";
+        }
+        
+        return TextUtils.removeLastOr( sql ).trim();
+    }
+
     @Override
     @Transactional
     public String expressionIsValid( String expression )

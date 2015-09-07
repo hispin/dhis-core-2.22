@@ -544,6 +544,16 @@ public class JdbcEventAnalyticsManager
             sql += "and (" + sqlFilter + ") ";
         }
         
+        if ( params.hasProgramIndicatorDimension() )
+        {
+            String anyValueFilter = programIndicatorService.getAnyValueExistsClauseAnalyticsSql( params.getProgramIndicator().getExpression() );
+            
+            if ( anyValueFilter != null )
+            {
+                sql += "and (" + anyValueFilter + ") ";
+            }
+        }
+        
         // ---------------------------------------------------------------------
         // Coordinates
         // ---------------------------------------------------------------------
