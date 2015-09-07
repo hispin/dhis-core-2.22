@@ -73,7 +73,7 @@ public class DataElementConverter
 
     private static final String FIELD_META = "MetaDataElement";
 
-    private static final String FIELD_DATA_TYPE = "DataTypeID";
+    //private static final String FIELD_DATA_TYPE = "DataTypeID";
 
     private static final String FIELD_PERIOD_TYPE = "DataPeriodTypeID";
 
