@@ -68,10 +68,9 @@ d2Directives.directive('d2NumberValidator', function() {
                 }
                 var maxDate = $parse(attrs.maxDate)(scope);
                 var convertedDate = DateUtils.format(angular.copy(value));
-                var isValid = value === convertedDate;
-                var calendarSetting = CalendarService.getSetting();
+                var isValid = value === convertedDate;                
                 if(isValid){
-                    isValid = maxDate === 0 ? !moment(convertedDate, calendarSetting.momentFormat).isAfter(DateUtils.getToday()) : isValid;
+                    isValid = maxDate === 0 ? !moment(convertedDate).isAfter(DateUtils.getToday()) : isValid;
                 }
                 return isValid;
             };
