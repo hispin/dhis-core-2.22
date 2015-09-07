@@ -925,7 +925,9 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         if(!valueFound) {
                             if(attribute.attribute === programVariable.trackedEntityAttribute.id) {
                                 valueFound = true;
-                                variables = pushVariable(variables, programVariable.name, attribute.value, attribute.valueType, valueFound, 'A' );
+                                //In registration, the attribute type is found in .type, while in data entry the same data is found in .valueType. 
+                                //Handling here, but planning refactor in registration so it will always be .valueType
+                                variables = pushVariable(variables, programVariable.name, attribute.value, attribute.type ? attribute.type : attribute.valueType, valueFound, 'A' );
                             }
                         }
                     });

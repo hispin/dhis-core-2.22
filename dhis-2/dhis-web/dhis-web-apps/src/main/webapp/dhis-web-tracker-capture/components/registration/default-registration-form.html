@@ -92,7 +92,17 @@
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>                                    
                     </span>
-                </span>                
+                </span>
+                <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                    <div class="alert alert-warning alert-dismissible" role="alert" ng-if="warningMessages[attribute.id]">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{warningMessages[attribute.id]}}
+                    </div>
+                    <div class="alert alert-danger alert-dismissible" role="alert" ng-if="errorMessages[attribute.id]">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{errorMessages[attribute.id]}}
+                    </div>
+                </div>
                 <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
                 </div>
             </ng-form>            
