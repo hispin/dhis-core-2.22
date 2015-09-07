@@ -85,15 +85,15 @@
 					</select>
 				#elseif( $dataElement.valueType == "DATE" )
 					<input type="date" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.valueType == "NUMBER" && $dataElement.numberType == "number" )
+				#elseif( $dataElement.valueType == "NUMBER" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.valueType == "INTEGER" && $dataElement.numberType == "int" )
+				#elseif( $dataElement.valueType == "INTEGER" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.valueType == "INTEGER_POSITIVE" && $dataElement.numberType == "posInt" )
+				#elseif( $dataElement.valueType == "INTEGER_POSITIVE" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.valueType == "INTEGER_NEGATIVE" && $dataElement.numberType == "negInt" )
+				#elseif( $dataElement.valueType == "INTEGER_NEGATIVE" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
-				#elseif( $dataElement.valueType == "INTEGER_ZERO_OR_POSITIVE" && $dataElement.numberType == "zeroPositiveInt" )
+				#elseif( $dataElement.valueType == "INTEGER_ZERO_OR_POSITIVE" )
 					<input type="text" maxlength="255" size="24" name="$key" value="$!dataValues.get($key)" />
 				#end
 				#end
