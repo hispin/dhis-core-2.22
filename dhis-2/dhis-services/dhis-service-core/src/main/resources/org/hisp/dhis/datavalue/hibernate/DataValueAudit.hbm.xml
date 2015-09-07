@@ -31,7 +31,12 @@
 
     <property name="modifiedBy" column="modifiedby" length="100"/>
 
-    <property name="auditType" column="audittype" type="org.hisp.dhis.common.AuditTypeUserType" not-null="true" />
-
+    <property name="auditType" column="audittype" length="100" not-null="true">
+		<type name="org.hibernate.type.EnumType">
+			<param name="enumClass">org.hisp.dhis.common.AuditType</param>
+			<param name="type">12</param>
+		</type> 
+	</property>
+    
   </class>
 </hibernate-mapping>
