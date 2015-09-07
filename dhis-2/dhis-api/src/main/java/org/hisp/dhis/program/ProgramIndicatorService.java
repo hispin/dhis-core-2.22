@@ -142,6 +142,15 @@ public interface ProgramIndicatorService
      * @return the SQL string.
      */
     String getAnalyticsSQl( String expression, boolean ignoreMissingValues );
+    
+    /**
+     * Returns a SQL clause which matches any value for the data elements and
+     * attributes in the given expression.
+     * 
+     * @param expression the expression.
+     * @return the SQL string.
+     */
+    String getAnyValueExistsClauseAnalyticsSql( String expression );
 
     /**
      * Indicates whether the given program indicator expression is valid.

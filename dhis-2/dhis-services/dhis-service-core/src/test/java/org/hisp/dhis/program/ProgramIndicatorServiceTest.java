@@ -468,6 +468,15 @@ public class ProgramIndicatorServiceTest
     }
 
     @Test
+    public void testGetAnyValueExistsFilterAnalyticsSQl()
+    {
+        String expected = "\"GCyeKSqlpdk\" is not null or \"gAyeKSqlpdk\" is not null";
+        String expression = "#{OXXcwl6aPCQ.GCyeKSqlpdk} - A{gAyeKSqlpdk}";
+
+        assertEquals( expected, programIndicatorService.getAnyValueExistsClauseAnalyticsSql( expression ) );
+    }
+    
+    @Test
     public void testGetAnalyticsSQl()
     {
         String expected = "coalesce(\"" + deA.getUid() + "\",0) + coalesce(\"" + atA.getUid() + "\",0) > 10";
