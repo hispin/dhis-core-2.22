@@ -10,7 +10,7 @@
 	"alternativeName": "$!encoder.jsonEncode( ${dataElement.alternativeNamee} )",
 	"shortName": "$!encoder.jsonEncode( ${dataElement.displayShortName} )",
 	"code": "$!encoder.jsonEncode( ${dataElement.code} )",
-	"type": "$!{dataElement.type}",
+	"valueType": "$!{dataElement.valueType}",
 	"optionSet": #if($!dataElement.optionSet) "true"  #else "false" #end,
 	"aggregationOperator": "$!{dataElement.aggregationOperator}",
 	"zeroIsSignificant": "$!{dataElement.zeroIsSignificant}",

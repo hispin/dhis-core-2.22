@@ -6,7 +6,7 @@
     "dataElement": {
     	"id": "$!{operand.dataElement.uid}",
     	"name": "$!encoder.jsonEncode( ${operand.dataElement.name} )",
-    	"type": "$!encoder.jsonEncode( ${operand.dataElement.type} )"
+    	"valueType": "$!encoder.jsonEncode( ${operand.dataElement.valueType} )"
     },
     "categoryOptionCombo": {
     	"id": "$!{operand.categoryOptionCombo.uid}",

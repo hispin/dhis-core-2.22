@@ -7,7 +7,7 @@
 	<code>$!encoder.xmlEncode( $dataElement.code )</code>
 	<description>$!encoder.xmlEncode( $dataElement.displayDescription )</description>
 	<domainType>$dataElement.getDomainTypeNullSafe()</domainType>
-	<valueType>$dataElement.type</valueType>
+	<valueType>$dataElement.valueType</valueType>
 	<aggregationOperator>$dataElement.aggregationOperator</aggregationOperator>
 	<url>$!encoder.xmlEncode( $dataElement.url )</url>
 	<lastUpdated>$!format.formatDate( $dataElement.lastUpdated )</lastUpdated>

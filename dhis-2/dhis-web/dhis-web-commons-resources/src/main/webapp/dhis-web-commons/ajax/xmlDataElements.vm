@@ -9,7 +9,7 @@
 		<code>$!encoder.xmlEncode( $dataElement.code )</code>
 		<description>$!encoder.xmlEncode( $dataElement.displayDescription )</description>
 		<domainType>$dataElement.getDomainTypeNullSafe()</domainType>
-		<type>$dataElement.type</type>
+		<valueType>$dataElement.valueType</valueType>
 		<aggregationOperator>$dataElement.aggregationOperator</aggregationOperator>
 		<categoryCombo>$!encoder.xmlEncode( $dataElement.categoryCombo )</categoryCombo>
 	</dataElement>

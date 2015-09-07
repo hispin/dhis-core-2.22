@@ -144,7 +144,7 @@ $( document ).ready( function() {
 			option.text( item.operandName );
 			option.data( "dataelement-id", item.dataElement.id );
 			option.data( "dataelement-name", item.dataElement.name );
-			option.data( "dataelement-type", item.dataElement.type );
+			option.data( "dataelement-type", item.dataElement.valueType );
 			option.data( "optioncombo-id", item.categoryOptionCombo.id );
 			option.data( "optioncombo-name", item.categoryOptionCombo.name );
 			option.dblclick(insertDataElement);
