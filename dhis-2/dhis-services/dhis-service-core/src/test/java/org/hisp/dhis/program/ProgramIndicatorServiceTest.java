@@ -28,6 +28,20 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.program.ProgramIndicator.KEY_ATTRIBUTE;
+import static org.hisp.dhis.program.ProgramIndicator.KEY_CONSTANT;
+import static org.hisp.dhis.program.ProgramIndicator.KEY_DATAELEMENT;
+import static org.hisp.dhis.program.ProgramIndicator.KEY_PROGRAM_VARIABLE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.constant.Constant;
@@ -48,14 +62,6 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static org.hisp.dhis.program.ProgramIndicator.*;
-import static org.junit.Assert.*;
 
 /**
  * @author Chau Thu Tran
@@ -412,28 +418,6 @@ public class ProgramIndicatorServiceTest
     // -------------------------------------------------------------------------
     // Logic tests
     // -------------------------------------------------------------------------
-
-    @Test
-    public void testGetProgramStageDataElementsInExpression()
-    {
-        Set<ProgramStageDataElement> elements = programIndicatorService
-            .getProgramStageDataElementsInExpression( indicatorE.getExpression() );
-
-        assertEquals( 2, elements.size() );
-
-        assertTrue( elements.contains( new ProgramStageDataElement( psA, deA ) ) );
-        assertTrue( elements.contains( new ProgramStageDataElement( psB, deA ) ) );
-    }
-
-    @Test
-    public void testGetAttributesInExpression()
-    {
-        Set<TrackedEntityAttribute> attributes = programIndicatorService.getAttributesInExpression( indicatorE.getExpression() );
-
-        assertEquals( 2, attributes.size() );
-        assertTrue( attributes.contains( atA ) );
-        assertTrue( attributes.contains( atB ) );
-    }
 
     @Test
     public void testGetProgramIndicatorValue()
