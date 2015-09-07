@@ -81,13 +81,13 @@
                 #set( $dataEntryId = "${organisationUnit.uid}-${dataElement.uid}-${optionCombo.uid}-val" )
                 #set( $greyedField = false )
                 #set( $greyedField = $greyedFields.get( "$dataElement.uid:$optionCombo.uid" ) )
-                #if( $dataElement.type == "bool" )
+                #if( $dataElement.valueType == "BOOLEAN" )
                 <td><select name="entryselect" class="entryselect" id="$dataEntryId" tabindex="$tabIndex"#if( $greyedField || !$hasAccess ) disabled="disabled"#end>
                   <option value="">[$i18n.getString( "no_value" )]</option>
                   <option value="true">$i18n.getString( "yes" )</option>
                   <option value="false">$i18n.getString( "no" )</option>
                 </select></td>
-                #elseif( $dataElement.type == 'trueOnly' )
+                #elseif( $dataElement.valueType == 'TRUE_ONLY' )
                     <td><input name="entrytrueonly" class="entrytrueonly" id="$dataEntryId" type="checkbox" tabindex="$tabIndex"#if( $greyedField || !$hasAccess ) disabled="disabled"#end></td>
                 #else
                     #if( $dataElement.optionSet )
@@ -162,13 +162,13 @@
                     #set( $dataEntryId = "${organisationUnit.uid}-${dataElement.uid}-${optionCombo.uid}-val" )
                     #set( $greyedField = false )
                     #set( $greyedField = $greyedFields.get( "$dataElement.uid:$optionCombo.uid" ) )
-                    #if( $dataElement.type == "bool" )
+                    #if( $dataElement.valueType == "BOOLEAN" )
                     <td><select name="entryselect" class="entryselect" id="$dataEntryId" tabindex="$tabIndex"#if( $greyedField || !$hasAccess ) disabled="disabled"#end>
                       <option value="">[$i18n.getString( "no_value" )]</option>
                       <option value="true">$i18n.getString( "yes" )</option>
                       <option value="false">$i18n.getString( "no" )</option>
                     </select></td>
-                    #elseif( $dataElement.type == 'trueOnly' )
+                    #elseif( $dataElement.valueType == 'TRUE_ONLY' )
                         <td><input name="entrytrueonly" class="entrytrueonly" id="$dataEntryId" type="checkbox" tabindex="$tabIndex"#if( $greyedField || !$hasAccess ) disabled="disabled"#end></td>
                     #else
                         #if( $dataElement.optionSet )
@@ -211,13 +211,13 @@
                 #set( $dataEntryId = "${organisationUnit.uid}-${dataElement.uid}-${optionCombo.uid}-val" )
                 #set( $greyedField = false )
                 #set( $greyedField = $greyedFields.get( "$dataElement.uid:$optionCombo.uid" ) )
-                #if( $dataElement.type == "bool" )
+                #if( $dataElement.valueType == "BOOLEAN" )
                 <td><select name="entryselect" class="entryselect" id="$dataEntryId" tabindex="$tabIndex"#if( $greyedField || !$hasAccess ) disabled="disabled"#end>
                   <option value="">[$i18n.getString( "no_value" )]</option>
                   <option value="true">$i18n.getString( "yes" )</option>
                   <option value="false">$i18n.getString( "no" )</option>
                 </select></td>
-                #elseif( $dataElement.type == 'trueOnly' )
+                #elseif( $dataElement.valueType == 'TRUE_ONLY' )
                     <td><input name="entrytrueonly" class="entrytrueonly" id="$dataEntryId" type="checkbox" tabindex="$tabIndex"#if( $greyedField || !$hasAccess ) disabled="disabled"#end></td>
                 #else
                     #if( $dataElement.optionSet )
