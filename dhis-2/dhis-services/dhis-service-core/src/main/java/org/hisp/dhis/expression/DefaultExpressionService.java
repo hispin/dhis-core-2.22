@@ -887,7 +887,7 @@ public class DefaultExpressionService
         
         int matchCount = 0;
         int valueCount = 0;
-                
+        
         while ( matcher.find() )
         {
             matchCount++;
