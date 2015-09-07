@@ -39,10 +39,10 @@ public class ConditionalSqlFunction
     public static final String KEY = "condition";
 
     @Override
-    public String evaluate( String arg1, String arg2, String arg3 )
+    public String evaluate( String condition, String trueValue, String falseValue )
     {
-        String conditional = arg1.replaceAll( "^\"|^'|\"$|'$", "" );
+        String conditional = condition.replaceAll( "^\"|^'|\"$|'$", "" );
         
-        return "case when (" + conditional + ") then " + arg2 + " else " + arg3 + " end";
+        return "case when (" + conditional + ") then " + trueValue + " else " + falseValue + " end";
     }
 }

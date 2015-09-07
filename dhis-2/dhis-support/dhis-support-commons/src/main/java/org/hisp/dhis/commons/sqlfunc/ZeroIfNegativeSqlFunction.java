@@ -40,8 +40,8 @@ public class ZeroIfNegativeSqlFunction
     public static final String KEY = "zing";
     
     @Override
-    public String evaluate( String arg1, String arg2, String arg3 )
+    public String evaluate( String value, String arg2, String arg3 )
     {
-        return "coalesce(case when " + arg1 + " < 0 then 0 else " + arg1 + " end, 0)";
+        return "coalesce(case when " + value + " < 0 then 0 else " + value + " end, 0)";
     }
 }
