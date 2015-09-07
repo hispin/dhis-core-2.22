@@ -94,7 +94,6 @@ angular.module('trackerCaptureServices')
                     }
                     RegistrationService.registerOrUpdate(tei,optionSets,attributesById).then(function(response){
                         if (response.response.status == "SUCCESS"){
-
                             alert("Beneficiary Id : " + customId);
                         }
                         def.resolve(response.data);

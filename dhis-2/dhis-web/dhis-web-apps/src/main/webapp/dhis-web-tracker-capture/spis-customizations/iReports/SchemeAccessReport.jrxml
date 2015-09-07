@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Scheme_Access_Report" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6b81d499-43bb-41dc-804d-68a5ef9007ef">
 	<property name="ireport.zoom" value="1.7715610000000044"/>
-	<property name="ireport.x" value="244"/>
-	<property name="ireport.y" value="92"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="429"/>
 	<parameter name="organisationunits_uid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["K9mSNCOH0PJ"]]></defaultValueExpression>
 	</parameter>
@@ -141,6 +141,15 @@ group by sagFinal.scheme]]>
 	<variable name="startdate" class="java.lang.String">
 		<initialValueExpression><![CDATA[$P{periods_iso}.substring(0,4)+"-"+$P{periods_iso}.substring(4,6)]]></initialValueExpression>
 	</variable>
+	<group name="test">
+		<groupExpression><![CDATA[$F{scheme}]]></groupExpression>
+		<groupHeader>
+			<band height="50"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
