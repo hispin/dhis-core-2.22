@@ -486,7 +486,7 @@ trackerCapture.controller('DataEntryController',
 
         if (oldValue !== value) {
             if (value) {
-                if (prStDe.dataElement.type === 'date') {
+                if (prStDe.dataElement.valueType === 'DATE') {
                     value = DateUtils.formatFromUserToApi(value);
                 }
                 if (prStDe.dataElement.optionSetValue) {
