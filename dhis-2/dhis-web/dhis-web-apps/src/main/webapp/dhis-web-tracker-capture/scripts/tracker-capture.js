@@ -177,11 +177,7 @@ function getUserRoles()
 }
 
 function getCalendarSetting()
-{
-    if(localStorage['CALENDAR_SETTING']){
-       return; 
-    }
-    
+{   
     var def = $.Deferred();
     var promise = def.promise();
     promise = promise.then( getD2Object(null, 'CALENDAR_SETTING', '../api/systemSettings', 'key=keyCalendar&key=keyDateFormat', 'localStorage') );
