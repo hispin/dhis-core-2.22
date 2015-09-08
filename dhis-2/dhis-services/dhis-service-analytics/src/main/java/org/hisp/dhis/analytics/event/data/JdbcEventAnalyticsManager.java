@@ -555,12 +555,17 @@ public class JdbcEventAnalyticsManager
         }
         
         // ---------------------------------------------------------------------
-        // Coordinates
+        // Various filters
         // ---------------------------------------------------------------------
 
         if ( params.isCoordinatesOnly() )
         {
             sql += "and (longitude is not null and latitude is not null) ";
+        }
+        
+        if ( params.isCompletedOnly() )
+        {
+            sql += "and completeddate is not null ";
         }
 
         return sql;

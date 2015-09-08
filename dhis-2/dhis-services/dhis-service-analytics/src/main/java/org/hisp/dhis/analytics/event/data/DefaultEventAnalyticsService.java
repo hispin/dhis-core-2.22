@@ -384,11 +384,11 @@ public class DefaultEventAnalyticsService
     @Override
     public EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate,
         Set<String> dimension, Set<String> filter, String value, AggregationType aggregationType, boolean skipMeta, boolean skipData, boolean skipRounding, 
-        boolean hierarchyMeta, boolean showHierarchy, SortOrder sortOrder, Integer limit, EventOutputType outputType, boolean collapseDataDimensions, 
+        boolean completedOnly, boolean hierarchyMeta, boolean showHierarchy, SortOrder sortOrder, Integer limit, EventOutputType outputType, boolean collapseDataDimensions, 
         boolean aggregateData, DisplayProperty displayProperty, I18nFormat format )
     {
         EventQueryParams params = getFromUrl( program, stage, startDate, endDate, dimension, filter, null, null, null,
-            skipMeta, skipData, hierarchyMeta, false, displayProperty, null, null, format );
+            skipMeta, skipData, completedOnly, hierarchyMeta, false, displayProperty, null, null, format );
                 
         params.setValue( getValueDimension( value ) );
         params.setAggregationType( aggregationType );
@@ -406,7 +406,8 @@ public class DefaultEventAnalyticsService
     @Override
     public EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate,
         Set<String> dimension, Set<String> filter, String ouMode, Set<String> asc, Set<String> desc,
-        boolean skipMeta, boolean skipData, boolean hierarchyMeta, boolean coordinatesOnly, DisplayProperty displayProperty, Integer page, Integer pageSize, I18nFormat format )
+        boolean skipMeta, boolean skipData, boolean completedOnly, boolean hierarchyMeta, boolean coordinatesOnly, 
+        DisplayProperty displayProperty, Integer page, Integer pageSize, I18nFormat format )
     {
         EventQueryParams params = new EventQueryParams();
 
@@ -501,6 +502,7 @@ public class DefaultEventAnalyticsService
         params.setOrganisationUnitMode( ouMode );
         params.setSkipMeta( skipMeta );
         params.setSkipData( skipData );
+        params.setCompletedOnly( completedOnly );
         params.setHierarchyMeta( hierarchyMeta );
         params.setCoordinatesOnly( coordinatesOnly );
         params.setDisplayProperty( displayProperty );

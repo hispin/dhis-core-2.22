@@ -156,6 +156,7 @@ public interface AnalyticsService
      * @param skipData whether to skip the data part of the response.
      * @param skipRounding whether to skip rounding and provide full precision 
      *        for values.
+     * @param completedOnly whether to only include completed events.
      * @param hierarchyMeta whether to include meta data about the organisation 
      *        units in the hierarchy.
      * @param ignoreLimit whether to ignore the max number of cells limit.
@@ -174,9 +175,9 @@ public interface AnalyticsService
      * @return a data query parameter object created based on the given URL info.
      */
     DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, String measureCriteria, 
-        boolean skipMeta, boolean skipData, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, boolean showHierarchy, 
-        DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, Date relativePeriodDate, String userOrgUnit, 
-        String program, String stage, I18nFormat format );
+        boolean skipMeta, boolean skipData, boolean skipRounding, boolean completedOnly, boolean hierarchyMeta, boolean ignoreLimit, 
+        boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, 
+        Date relativePeriodDate, String userOrgUnit, String program, String stage, I18nFormat format );
     
     /**
      * Creates a data query parameter object from the given BaseAnalyticalObject.
