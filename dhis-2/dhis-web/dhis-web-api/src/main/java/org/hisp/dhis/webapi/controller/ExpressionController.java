@@ -1,4 +1,4 @@
-package org.hisp.dhis.commons.action;
+package org.hisp.dhis.webapi.controller;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,76 +28,56 @@ package org.hisp.dhis.commons.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.hisp.dhis.dxf2.webmessage.DescriptiveWebMessage;
+import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.i18n.I18n;
+import org.hisp.dhis.i18n.I18nManager;
+import org.hisp.dhis.webapi.service.WebMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.opensymphony.xwork2.Action;
-
-public class GetExpressionTextAction
-    implements Action
+/**
+ * @author Lars Helge Overland
+ */
+@Controller
+@RequestMapping( value = "/expressions" )
+public class ExpressionController
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
+    @Autowired
+    protected WebMessageService webMessageService;
 
+    @Autowired
     private ExpressionService expressionService;
 
-    public void setExpressionService( ExpressionService expressionService )
+    @Autowired
+    private I18nManager i18nManager;
+
+    @RequestMapping( value = "/description", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
+    public void getExpressionDescription( @RequestParam String expression, HttpServletResponse response )
+        throws IOException
     {
-        this.expressionService = expressionService;
-    }
+        I18n i18n = i18nManager.getI18n();
 
-    private I18n i18n;
-
-    public void setI18n( I18n i18n )
-    {
-        this.i18n = i18n;
-    }
-
-    // -------------------------------------------------------------------------
-    // Input
-    // -------------------------------------------------------------------------
-
-    private String expression;
-
-    public void setExpression( String expression )
-    {
-        this.expression = expression;
-    }
-
-    // -------------------------------------------------------------------------
-    // Output
-    // -------------------------------------------------------------------------
-
-    private String message;
-
-    public String getMessage()
-    {
-        return message;
-    }
-
-    // -------------------------------------------------------------------------
-    // Action implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    public String execute()
-        throws Exception
-    {
         String result = expressionService.expressionIsValid( expression );
-
+        
+        DescriptiveWebMessage message = new DescriptiveWebMessage();
+        message.setStatus( ExpressionService.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
+        message.setMessage( i18n.getString( result ) );
+        
         if ( result.equals( ExpressionService.VALID ) )
         {
-            message = expressionService.getExpressionDescription( expression );
-
-            return SUCCESS;
+            message.setDescription( expressionService.getExpressionDescription( expression ) );
         }
-        else
-        {
-            message = i18n.getString( result );
-
-            return ERROR;
-        }
-
+        
+        webMessageService.sendJson( message, response );
     }
 }
