@@ -1140,7 +1140,9 @@ public class DefaultAnalyticsService
 
             for ( Period period : periods )
             {
-                period.setName( format != null ? format.formatPeriod( period ) : null );
+                String name = format != null ? format.formatPeriod( period ) : null;
+                period.setName( name );
+                period.setShortName( name );
 
                 if ( !calendar.isIso8601() )
                 {
