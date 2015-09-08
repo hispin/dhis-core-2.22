@@ -146,9 +146,6 @@ public interface OrganisationUnitStore
      */
     Map<String, Set<String>> getOrganisationUnitDataSetAssocationMap();
 
-    Set<Integer> getOrganisationUnitIdsWithoutData();
-
-
     /**
      * Retrieves the objects determined by the given first result and max result
      * which status is like the current status.

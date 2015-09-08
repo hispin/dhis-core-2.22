@@ -417,8 +417,6 @@ public interface OrganisationUnitService
 
     OrganisationUnitDataSetAssociationSet getOrganisationUnitDataSetAssociationSet( Integer maxlevels );
 
-    void filterOrganisationUnitsWithoutData( Collection<OrganisationUnit> organisationUnits );
-
     List<OrganisationUnit> getOrganisationUnitsBetween( int first, int max );
 
     List<OrganisationUnit> getOrganisationUnitsBetweenByName( String name, int first, int max );

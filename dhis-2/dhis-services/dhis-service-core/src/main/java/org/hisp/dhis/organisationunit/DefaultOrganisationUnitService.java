@@ -718,21 +718,6 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public void filterOrganisationUnitsWithoutData( Collection<OrganisationUnit> organisationUnits )
-    {
-        final Set<Integer> unitsWithoutData = organisationUnitStore.getOrganisationUnitIdsWithoutData();
-
-        FilterUtils.filter( organisationUnits, new Filter<OrganisationUnit>()
-        {
-            @Override
-            public boolean retain( OrganisationUnit unit )
-            {
-                return unit != null && (!unitsWithoutData.contains( unit.getId() ) || unit.hasChild());
-            }
-        } );
-    }
-
-    @Override
     public List<OrganisationUnit> getOrganisationUnitsBetween( int first, int max )
     {
         return i18n( i18nService, organisationUnitStore.getAllOrderedName( first, max ) );
