@@ -105,6 +105,8 @@ public class DataElementCategoryCombo
     // Logic
     // -------------------------------------------------------------------------
 
+    @JsonProperty( "isDefault" )
+    @JsonView( { DetailedView.class } )
     public boolean isDefault()
     {
         return name.equals( DEFAULT_CATEGORY_COMBO_NAME );
