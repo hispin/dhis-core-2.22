@@ -244,7 +244,7 @@ function getMetaPrograms()
     $.ajax({
         url: '../api/programs.json',
         type: 'GET',
-        data:'filter=programType:eq:WITHOUT_REGISTRATION&paging=false&fields=id,name,version,categoryCombo[id,categories[id,categoryOptions[id]]],programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]]'
+        data:'filter=programType:eq:WITHOUT_REGISTRATION&paging=false&fields=id,name,version,categoryCombo[id,isDefault,categories[id,categoryOptions[id]]],programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]]'
     }).done( function(response) {        
         def.resolve( response.programs ? response.programs: [] );
     }).fail(function(){
@@ -309,7 +309,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,categories[id]],organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
+            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,isDefault,categories[id]],organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
         }).done( function( program ){            
             var ou = {};
             _.each(_.values( program.organisationUnits), function(o){
@@ -384,8 +384,8 @@ function getCategories( programs )
     }
     
     var catigories = [];
-    _.each( _.values( programs ), function ( program ) { 
-        if( program && program.categoryCombo && program.categoryCombo.categories ) {
+    _.each( _.values( programs ), function ( program ) {
+        if( program && program.categoryCombo && !program.categoryCombo.isDefault && program.categoryCombo.categories ) {
             _.each(_.values(program.categoryCombo.categories), function(cat){
                 catigories.push( cat );
             });            

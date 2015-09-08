@@ -83,8 +83,8 @@
                                            name="foo" 
                                            input-field-id={{eventGridColumn.id}} 
                                            on-select={{saveDatavalue()}} 
-                                           class='form-control'>
-                                    <ui-select-match allow-clear="true" class="form-control" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name  || $select.selected}}</ui-select-match>
+                                           style="width:100%;">
+                                    <ui-select-match allow-clear="true" style="width:100%; height:34px; line-height:1.0; padding: 2px 6px; margin-top:5px" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name  || $select.selected}}</ui-select-match>
                                     <ui-select-choices  repeat="option.name as option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter: $select.search | limitTo:30">
                                       <span ng-bind-html="option.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -346,8 +346,8 @@
                                                name="foo" 
                                                input-field-id={{de.dataElement.id}} 
                                                on-select={{saveDatavalue()}} 
-                                               class='form-control'>
-                                        <ui-select-match allow-clear="true" class="form-control" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name || $select.selected}}</ui-select-match>
+                                               style="width:100%;">
+                                        <ui-select-match allow-clear="true"style="width:100%; height:34px; line-height:1.0; padding: 2px 6px; margin-top:5px" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name || $select.selected}}</ui-select-match>
                                         <ui-select-choices  repeat="option.name as option in optionSets[prStDes[de.dataElement.id].dataElement.optionSet.id].options | filter: $select.search | limitTo:30">
                                           <span ng-bind-html="option.name | highlight: $select.search"></span>
                                         </ui-select-choices>

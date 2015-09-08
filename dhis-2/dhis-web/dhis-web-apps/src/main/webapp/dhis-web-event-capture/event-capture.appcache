@@ -30,6 +30,7 @@ CACHE:
 ../dhis-web-commons/javascripts/jQuery/calendars/css/ui.calendars.picker.css
 
 ../dhis-web-commons/bootstrap/js/bootstrap.min.js
+../dhis-web-commons/bootstrap/css/bootstrap.min.css
 
 ../dhis-web-commons/javascripts/angular/angular.js
 ../dhis-web-commons/javascripts/angular/angular-resource.js
