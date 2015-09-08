@@ -590,9 +590,7 @@ public class DefaultProgramIndicatorService
     public String getAnyValueExistsClauseAnalyticsSql( String expression )
     {
         Set<String> uids = ProgramIndicator.getDataElementAndAttributeIdentifiers( expression );
-        
-        System.out.println(uids);
-        
+                
         if ( uids.isEmpty() )
         {
             return null;
