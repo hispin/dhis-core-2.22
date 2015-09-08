@@ -28,6 +28,8 @@ package org.hisp.dhis.organisationunit.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -49,10 +51,13 @@ import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.AuditLogUtil;
 import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.commons.util.SqlHelper;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitHierarchy;
+import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.organisationunit.OrganisationUnitStore;
 import org.hisp.dhis.system.objectmapper.OrganisationUnitRelationshipRowMapper;
@@ -165,6 +170,75 @@ public class HibernateOrganisationUnitStore
     public List<OrganisationUnit> getOrganisationUnitsWithoutGroups()
     {
         return getQuery( "from OrganisationUnit o where o.groups.size = 0" ).list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<OrganisationUnit> getOrganisationUnits( OrganisationUnitQueryParams params )
+    {
+        SqlHelper hlp = new SqlHelper();
+        
+        String hql = "select distinct o from OrganisationUnit o ";
+        
+        if ( params.hasGroups() )
+        {
+            hql += "left join o.groups g ";
+        }
+
+        if ( params.getQuery() != null )
+        {
+            hql += hlp.whereAnd() + " (lower(o.name) like :expression or o.code = :query or o.uid = :query)" ;
+        }
+
+        if ( params.hasGroups() )
+        {
+            hql += hlp.whereAnd() + " g.id in (:groupIds) ";
+        }
+        
+        if ( params.hasParents() )
+        {
+            hql += hlp.whereAnd() + " (";
+            
+            for ( OrganisationUnit parent : params.getParents() )
+            {
+                hql += "o.parent like :" + parent.getUid() + " or ";
+            }
+            
+            hql = TextUtils.removeLastOr( hql ) + ")";
+        }
+        
+        Query query = getQuery( hql );
+        
+        if ( params.getQuery() != null )
+        {
+            query.setString( "expression", "%" + params.getQuery().toLowerCase() + "%" );
+            query.setString( "query", params.getQuery() );
+        }
+        
+        if ( params.hasGroups() )
+        {
+            query.setParameterList( "groupIds", getIdentifiers( params.getGroups() ) );
+        }
+        
+        if ( params.hasParents() )
+        {
+            for ( OrganisationUnit parent : params.getParents() )
+            {
+                query.setString( parent.getUid(), "%" + parent.getUid() + "%" );
+            }
+        }
+
+        if ( params.getFirst() != null )
+        {
+            query.setFirstResult( params.getFirst() );
+        }
+        
+        if ( params.getMax() != null )
+        {
+            query.setMaxResults( params.getMax() ).list();
+        }
+        
+        return query.list();
     }
 
     @Override

@@ -126,6 +126,8 @@ public interface OrganisationUnitStore
      * @return all OrganisationUnits which are not a member of any OrganisationUnitGroups.
      */
     List<OrganisationUnit> getOrganisationUnitsWithoutGroups();
+    
+    List<OrganisationUnit> getOrganisationUnits( OrganisationUnitQueryParams params );
 
     /**
      * Returns all OrganisationUnit which names are like the given name, or which
