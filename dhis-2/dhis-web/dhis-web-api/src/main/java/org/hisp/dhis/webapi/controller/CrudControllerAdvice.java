@@ -28,11 +28,13 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.fasterxml.jackson.core.JsonParseException;
 import org.hisp.dhis.common.DeleteNotAllowedException;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MaintenanceModeException;
 import org.hisp.dhis.dataapproval.exceptions.DataApprovalException;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.webapi.controller.exception.NotAuthenticatedException;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
@@ -44,11 +46,13 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import java.beans.PropertyEditorSupport;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -119,5 +123,23 @@ public class CrudControllerAdvice
     public void webMessageExceptionHandler( WebMessageException ex, HttpServletResponse response, HttpServletRequest request )
     {
         webMessageService.send( ex.getWebMessage(), response, request );
+    }
+
+    @ExceptionHandler( JsonParseException.class )
+    public void jsonParseExceptionHandler( JsonParseException ex, HttpServletResponse response, HttpServletRequest request )
+    {
+        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
+    }
+
+    @ExceptionHandler( IOException.class )
+    public void ioExceptionHandler( IOException ex, HttpServletResponse response, HttpServletRequest request )
+    {
+        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
+    }
+
+    @ExceptionHandler( HttpStatusCodeException.class )
+    public void httpStatusCodeExceptionHandler( HttpStatusCodeException ex, HttpServletResponse response, HttpServletRequest request )
+    {
+        webMessageService.send( WebMessageUtils.createWebMessage( ex.getMessage(), WebMessageStatus.ERROR, ex.getStatusCode() ), response, request );
     }
 }
