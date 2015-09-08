@@ -44,9 +44,9 @@ import java.util.concurrent.Future;
 import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.analytics.AnalyticsTable;
 import org.hisp.dhis.analytics.DataQueryParams;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
@@ -54,6 +54,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.scheduling.annotation.Async;
 
 import com.google.common.collect.Lists;
@@ -173,21 +174,19 @@ public class JdbcAnalyticsTableManager
                 "and ( dv.value != '0' or de.aggregationtype in ('" + AGGREGATION_OPERATOR_AVERAGE + ',' + AGGREGATION_OPERATOR_AVERAGE_SUM + "') " +
                 "or de.zeroissignificant = true ) ";
             
-            populateTable( table, "cast(dv.value as " + dbl + ")", "null", DataElement.VALUE_TYPE_INT, intClause, approvalClause );
+            populateTable( table, "cast(dv.value as " + dbl + ")", "null", ValueType.NUMERIC_TYPES, intClause, approvalClause );
             
-            populateTable( table, "1", "null", DataElement.VALUE_TYPE_BOOL, "dv.value = 'true'", approvalClause );
+            populateTable( table, "1", "null", Lists.newArrayList( ValueType.BOOLEAN ), "dv.value = 'true'", approvalClause );
     
-            populateTable( table, "0", "null", DataElement.VALUE_TYPE_BOOL, "dv.value = 'false'", approvalClause );
+            populateTable( table, "0", "null", Lists.newArrayList( ValueType.BOOLEAN ), "dv.value = 'false'", approvalClause );
             
-            populateTable( table, "1", "null", DataElement.VALUE_TYPE_TRUE_ONLY, "dv.value = 'true'", approvalClause );
+            populateTable( table, "1", "null", Lists.newArrayList( ValueType.TRUE_ONLY ), "dv.value = 'true'", approvalClause );
             
-            populateTable( table, "null", "dv.value", DataElement.VALUE_TYPE_STRING, null, approvalClause );
+            populateTable( table, "null", "dv.value", ValueType.TEXT_TYPES, null, approvalClause );
         }
     
         return null;
     }
-    
-    // TODO join categoryoptiongroupsetstructure on both categoryoptioncomboid and attributeoptioncomboid
     
     /**
      * Populates the given analytics table.
@@ -198,11 +197,13 @@ public class JdbcAnalyticsTableManager
      * @param valueType data element value type to include data for.
      * @param whereClause where clause to constrain data query.
      */
-    private void populateTable( AnalyticsTable table, String valueExpression, String textValueExpression, String valueType, String whereClause, String approvalClause )
+    private void populateTable( AnalyticsTable table, String valueExpression, 
+        String textValueExpression, List<ValueType> valueTypes, String whereClause, String approvalClause )
     {
         final String start = DateUtils.getMediumDateString( table.getPeriod().getStartDate() );
         final String end = DateUtils.getMediumDateString( table.getPeriod().getEndDate() );
         final String tableName = table.getTempTableName();
+        final String valTypes = TextUtils.getQuotedCommaDelimitedString( ObjectUtils.asStringList( valueTypes ) );
 
         String sql = "insert into " + table.getTempTableName() + " (";
 
@@ -244,7 +245,7 @@ public class JdbcAnalyticsTableManager
             "inner join _periodstructure ps on dv.periodid=ps.periodid " +
             "inner join organisationunit ou on dv.sourceid=ou.organisationunitid " +
             approvalClause +
-            "where de.valuetype = '" + valueType + "' " +
+            "where de.valuetype in (" + valTypes + ") " +
             "and de.domaintype = 'AGGREGATE' " +
             "and pe.startdate >= '" + start + "' " +
             "and pe.startdate <= '" + end + "' " +
@@ -255,7 +256,7 @@ public class JdbcAnalyticsTableManager
             sql += "and " + whereClause;
         }
 
-        populateAndLog( sql, tableName + ", " + valueType );
+        populateAndLog( sql, tableName + ", " + valueTypes );
     }
 
     /**

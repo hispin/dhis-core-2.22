@@ -70,7 +70,7 @@ public enum ValueType
 
     public static final List<ValueType> TEXT_TYPES = Lists.newArrayList( 
         TEXT, LONG_TEXT, LETTER );
-
+        
     public static final List<String> INTEGER_TYPE_STRINGS = ObjectUtils.asStringList( INTEGER_TYPES );
     public static final List<String> NUMERIC_TYPE_STRINGS = ObjectUtils.asStringList( NUMERIC_TYPES );
     public static final List<String> TEXT_TYPE_STRINGS = ObjectUtils.asStringList( TEXT_TYPES );
