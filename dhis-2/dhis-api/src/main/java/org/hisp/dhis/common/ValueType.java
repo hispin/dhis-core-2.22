@@ -72,7 +72,7 @@ public enum ValueType
         TEXT, LONG_TEXT, LETTER );
 
     public static final List<String> INTEGER_TYPE_STRINGS = ObjectUtils.asStringList( INTEGER_TYPES );
-    public static final List<String> NUMERIC_TYPE_STRINGS = ObjectUtils.asStringList( INTEGER_TYPES );
+    public static final List<String> NUMERIC_TYPE_STRINGS = ObjectUtils.asStringList( NUMERIC_TYPES );
     public static final List<String> TEXT_TYPE_STRINGS = ObjectUtils.asStringList( TEXT_TYPES );
 
     private final Class<?> javaClass;
