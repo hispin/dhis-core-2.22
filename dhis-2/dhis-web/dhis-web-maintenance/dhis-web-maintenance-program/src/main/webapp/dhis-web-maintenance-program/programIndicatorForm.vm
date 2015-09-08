@@ -79,6 +79,7 @@
 					<td>
 						<select multiple id="expression-variables" name="expression-variables" size="7" style="width:100%" ondblclick="insertVariable('expression');" >
 							<option value="execution_date">$i18n.getString( "execution_date" )</option>
+							<option value="due_date">$i18n.getString( "due_date" )</option>
 							<option value="incident_date">$i18n.getString( "incident_date" )</option>
 							<option value="enrollment_date">$i18n.getString( "enrollment_date" )</option>
 							<option value="current_date">$i18n.getString( "current_date" )</option>
@@ -223,6 +224,7 @@
 					<td>
 						<select multiple id="filter-variables" name="filter-variables" size="7" style="width:100%" ondblclick="insertVariable('filter');" >
 							<option value="execution_date">$i18n.getString( "execution_date" )</option>
+							<option value="due_date">$i18n.getString( "due_date" )</option>
 							<option value="incident_date">$i18n.getString( "incident_date" )</option>
 							<option value="enrollment_date">$i18n.getString( "enrollment_date" )</option>
 							<option value="current_date">$i18n.getString( "current_date" )</option>

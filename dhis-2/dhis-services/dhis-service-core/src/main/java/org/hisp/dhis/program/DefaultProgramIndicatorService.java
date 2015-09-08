@@ -334,7 +334,7 @@ public class DefaultProgramIndicatorService
                     date = currentDate;
                 }
 
-                // TODO ProgramIndicator.VAR_EXECUTION_DATE;
+                // TODO ProgramIndicator.VAR_EXECUTION_DATE, DUE_DATE
 
                 if ( date != null )
                 {
@@ -729,7 +729,7 @@ public class DefaultProgramIndicatorService
      * based on the given expression. Wraps the count variables with
      * <code>nullif</code> to avoid potential division by zero.
      *
-     * @param var        the program indicator variable.
+     * @param var the program indicator variable.
      * @param expression the program indicator expression.
      * @return a SQL select clause.
      */
@@ -738,6 +738,10 @@ public class DefaultProgramIndicatorService
         if ( ProgramIndicator.VAR_EXECUTION_DATE.equals( var ) )
         {
             return "executiondate";
+        }
+        else if ( ProgramIndicator.VAR_DUE_DATE.equals( var ) )
+        {
+            return "duedate";
         }
         else if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( var ) )
         {
