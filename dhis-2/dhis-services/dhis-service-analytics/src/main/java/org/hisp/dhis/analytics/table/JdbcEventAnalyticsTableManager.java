@@ -319,13 +319,14 @@ public class JdbcEventAnalyticsTableManager
         String[] ps = { quote( "ps" ), "character(11) not null", "ps.uid" };
         String[] erd = { quote( "enrollmentdate" ), "timestamp", "pi.enrollmentdate" };
         String[] ed = { quote( "executiondate" ), "timestamp", "psi.executiondate" };
+        String[] dd = { quote( "duedate" ), "timestamp", "psi.duedate" };
         String[] longitude = { quote( "longitude" ), dbl, "psi.longitude" };
         String[] latitude = { quote( "latitude" ), dbl, "psi.latitude" };
         String[] ou = { quote( "ou" ), "character(11) not null", "ou.uid" };
         String[] oun = { quote( "ouname" ), "character varying(230) not null", "ou.name" };
         String[] ouc = { quote( "oucode" ), "character varying(50)", "ou.code" };
 
-        columns.addAll( Lists.newArrayList( psi, pi, ps, erd, ed, longitude, latitude, ou, oun, ouc ) );
+        columns.addAll( Lists.newArrayList( psi, pi, ps, erd, ed, dd, longitude, latitude, ou, oun, ouc ) );
 
         if ( table.hasProgram() && table.getProgram().isRegistration() )
         {
