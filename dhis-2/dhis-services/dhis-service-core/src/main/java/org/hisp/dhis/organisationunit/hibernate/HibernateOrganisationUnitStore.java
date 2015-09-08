@@ -130,26 +130,9 @@ public class HibernateOrganisationUnitStore
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    public List<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean active )
-    {
-        Query query = getQuery( "from OrganisationUnit o where o.active is :active" );
-        query.setParameter( "active", active );
-
-        return query.list();
-    }
-
-    @Override
     public List<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated )
     {
         return getAllGeLastUpdated( lastUpdated );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean active, Date lastUpdated )
-    {
-        return getCriteria().add( Restrictions.ge( "lastUpdated", lastUpdated ) ).add( Restrictions.eq( "active", active ) ).list();
     }
 
     @Override
@@ -323,31 +306,9 @@ public class HibernateOrganisationUnitStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<OrganisationUnit> getBetweenByStatus( boolean status, int first, int max )
-    {
-        Criteria criteria = getCriteria().add( Restrictions.eq( "active", status ) );
-        criteria.setFirstResult( first );
-        criteria.setMaxResults( max );
-
-        return criteria.list();
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
     public List<OrganisationUnit> getBetweenByLastUpdated( Date lastUpdated, int first, int max )
     {
         Criteria criteria = getCriteria().add( Restrictions.ge( "lastUpdated", lastUpdated ) );
-        criteria.setFirstResult( first );
-        criteria.setMaxResults( max );
-
-        return criteria.list();
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<OrganisationUnit> getBetweenByStatusLastUpdated( boolean status, Date lastUpdated, int first, int max )
-    {
-        Criteria criteria = getCriteria().add( Restrictions.ge( "lastUpdated", lastUpdated ) ).add( Restrictions.eq( "active", status ) );
         criteria.setFirstResult( first );
         criteria.setMaxResults( max );
 
