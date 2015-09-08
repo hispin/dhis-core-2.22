@@ -46,6 +46,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author Lars Helge Overland
+ */
 @Controller
 @RequestMapping( value = ProgramIndicatorSchemaDescriptor.API_ENDPOINT )
 public class ProgramIndicatorController
