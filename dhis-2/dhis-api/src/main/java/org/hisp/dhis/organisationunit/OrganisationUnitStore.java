@@ -76,15 +76,6 @@ public interface OrganisationUnitStore
     List<OrganisationUnit> getByCodes( Collection<String> codes );
 
     /**
-     * Returns all OrganisationUnits by status.
-     *
-     * @param active Get active or inactive
-     * @return a list of all OrganisationUnits, or an empty list if
-     *         there are no OrganisationUnits.
-     */
-    List<OrganisationUnit> getAllOrganisationUnitsByStatus( boolean active );
-
-    /**
      * Returns all OrganisationUnits by lastUpdated.
      *
      * @param lastUpdated OrganisationUnits from this date
@@ -92,16 +83,6 @@ public interface OrganisationUnitStore
      *         there are no OrganisationUnits.
      */
     List<OrganisationUnit> getAllOrganisationUnitsByLastUpdated( Date lastUpdated );
-
-    /**
-     * Returns all OrganisationUnits by status and lastUpdated.
-     *
-     * @param active      Get active or inactive
-     * @param lastUpdated OrganisationUnits from this date
-     * @return a list of all OrganisationUnits, or an empty list if
-     *         there are no OrganisationUnits.
-     */
-    List<OrganisationUnit> getAllOrganisationUnitsByStatusLastUpdated( boolean active, Date lastUpdated );
 
     /**
      * Returns an OrganisationUnit with a given name. Case is ignored.
@@ -150,17 +131,6 @@ public interface OrganisationUnitStore
 
     /**
      * Retrieves the objects determined by the given first result and max result
-     * which status is like the current status.
-     *
-     * @param status the name which result object names must be like.
-     * @param first  the first result object to return.
-     * @param max    the max number of result objects to return.
-     * @return a list of objects.
-     */
-    List<OrganisationUnit> getBetweenByStatus( boolean status, int first, int max );
-
-    /**
-     * Retrieves the objects determined by the given first result and max result
      * which lastUpdated is larger or equal.
      *
      * @param lastUpdated the name which result object names must be like.
@@ -169,20 +139,6 @@ public interface OrganisationUnitStore
      * @return a list of objects.
      */
     List<OrganisationUnit> getBetweenByLastUpdated( Date lastUpdated, int first, int max );
-
-
-    /**
-     * Retrieves the objects determined by the given first result and max result
-     * which status is like the current status, and lastUpdated is larger or equal.
-     *
-     * @param status      the name which result object names must be like.
-     * @param lastUpdated the name which result object names must be like.
-     * @param first       the first result object to return.
-     * @param max         the max number of result objects to return.
-     * @return a list of objects.
-     */
-    List<OrganisationUnit> getBetweenByStatusLastUpdated( boolean status, Date lastUpdated, int first, int max );
-
 
     /**
      * Retrieves the objects where its coordinate is within the 4 area points.
