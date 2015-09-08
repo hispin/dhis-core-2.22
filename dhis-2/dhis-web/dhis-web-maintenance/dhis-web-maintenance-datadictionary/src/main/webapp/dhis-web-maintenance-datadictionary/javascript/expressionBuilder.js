@@ -79,18 +79,21 @@ function clearSearchText()
 function getExpressionText()
 {
 	if ( hasText('expression') ){
-		jQuery.postJSON( '../dhis-web-commons-ajax-json/getExpressionText.action', {
-			expression: getFieldValue('expression')
-		}, function( json ) {
-			if( json.response == 'success' || json.response == 'error' )
-			{
-				jQuery( "#formulaText").html( json.message );
-			}
-			else {
-				jQuery( "#formulaText").html( '' );
+		jQuery.ajax({
+			url: '../api/expressions/description',
+			data: {
+				expression: getFieldValue('expression')
+			},
+			success: function( json, status, xhr ) {
+				if ( 'OK' == json.status ) {
+					jQuery( "#formulaText").html( json.description );
+				}
+				else {
+					jQuery( "#formulaText").html( json.message );
+				}
 			}
 		});
-	} 
+	}
 	else {
 		jQuery( "#formulaText").html( '' );
 	}
@@ -118,16 +121,21 @@ function insertExpression()
 	var expression = getFieldValue( 'indicator-expression-container textarea[id=expression]' );
 	var description = getFieldValue( 'indicator-expression-container input[id=description]' );
 	
-	jQuery.postJSON( '../dhis-web-commons-ajax-json/getExpressionText.action',
-		{expression: expression},
-		function( json ) {
-			if ( json.response == 'error') markInvalid( 'indicator-expression-container textarea[id=expression]', json.message );
+	jQuery.ajax({
+		url: '../api/expressions/description',
+		data: {
+			expression: getFieldValue('expression')
+		},
+		success: function( json, status, xhr ) {
+			if ( json.status == 'ERROR') {
+				markInvalid( 'indicator-expression-container textarea[id=expression]', json.message );
+			}
 			else {
 				if ( numerator ){
 					setFieldValue( 'numerator', expression );
 					setFieldValue( 'numeratorDescription', description );
 				}
-				else{
+				else {
 					setFieldValue( 'denominator', expression );
 					setFieldValue( 'denominatorDescription', description );
 				}
@@ -135,5 +143,5 @@ function insertExpression()
 				closeExpressionBuilder();
 			}
 		}
-	);
+	});
 }

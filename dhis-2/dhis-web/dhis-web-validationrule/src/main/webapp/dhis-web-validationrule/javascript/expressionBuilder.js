@@ -88,25 +88,23 @@ function clearSearchText()
 
 function getExpressionText()
 {
-	if( hasText('expression') )
-	{
-		jQuery.postJSON( '../dhis-web-commons-ajax-json/getExpressionText.action', 
-		{
-			expression: $( '#expression' ).val()
-		}, 
-		function( json )
-		{
-			if( json.response == 'success' || json.response == 'error' )
-			{
-				jQuery( "#formulaText").html( json.message );
-			}
-			else {
-				jQuery( "#formulaText").html( '' );
+	if ( hasText('expression') ){
+		jQuery.ajax({
+			url: '../api/expressions/description',
+			data: {
+				expression: $( '#expression' ).val()
+			},
+			success: function( json, status, xhr ) {
+				if ( 'OK' == json.status ) {
+					jQuery( "#formulaText").html( json.description );
+				}
+				else {
+					jQuery( "#formulaText").html( json.message );
+				}
 			}
 		});
 	}
-	else
-	{
+	else {
 		jQuery( "#formulaText").html( '' );
 	}
 }
@@ -125,34 +123,35 @@ function insertExpression()
 		formulaText = $( '#formulaText' ).text(),
 		missingValueStrategy = $( 'input[name="missingValueStrategy"]:checked' ).val();
 	
-	jQuery.postJSON( '../dhis-web-commons-ajax-json/getExpressionText.action', 
-	{
-		expression: expression
-	},
-	function( json )
-	{
-		if ( json.response == 'error' )
-		{
-			markInvalid( 'expression-container textarea[id=expression]', json.message );
-		}
-		else 
-		{								
-			if ( left )
+	jQuery.ajax({
+		url: '../api/expressions/description',
+		data: {
+			expression: expression
+		},
+		success: function( json, status, xhr ) {
+			if ( json.status == 'ERROR' )
 			{
-				$( '#leftSideExpression' ).val( expression );
-				$( '#leftSideDescription' ).val( description );
-				$( '#leftSideTextualExpression' ).val( formulaText );
-				$( '#leftSideMissingValueStrategy' ).val( missingValueStrategy );
+				markInvalid( 'expression-container textarea[id=expression]', json.message );
 			}
-			else
-			{
-				$( '#rightSideExpression' ).val( expression );
-				$( '#rightSideDescription' ).val( description );
-				$( '#rightSideTextualExpression' ).val( formulaText );
-				$( '#rightSideMissingValueStrategy' ).val( missingValueStrategy );
+			else 
+			{								
+				if ( left )
+				{
+					$( '#leftSideExpression' ).val( expression );
+					$( '#leftSideDescription' ).val( description );
+					$( '#leftSideTextualExpression' ).val( formulaText );
+					$( '#leftSideMissingValueStrategy' ).val( missingValueStrategy );
+				}
+				else
+				{
+					$( '#rightSideExpression' ).val( expression );
+					$( '#rightSideDescription' ).val( description );
+					$( '#rightSideTextualExpression' ).val( formulaText );
+					$( '#rightSideMissingValueStrategy' ).val( missingValueStrategy );
+				}
+				
+				dialog.dialog( "close" );
 			}
-			
-			dialog.dialog( "close" );
 		}
 	});
 }
