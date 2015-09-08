@@ -28,14 +28,13 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
+import java.util.Date;
+import java.util.List;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
-import org.hisp.dhis.util.ObjectUtils;
 
-import java.util.Date;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -70,11 +69,7 @@ public enum ValueType
 
     public static final List<ValueType> TEXT_TYPES = Lists.newArrayList( 
         TEXT, LONG_TEXT, LETTER );
-        
-    public static final List<String> INTEGER_TYPE_STRINGS = ObjectUtils.asStringList( INTEGER_TYPES );
-    public static final List<String> NUMERIC_TYPE_STRINGS = ObjectUtils.asStringList( NUMERIC_TYPES );
-    public static final List<String> TEXT_TYPE_STRINGS = ObjectUtils.asStringList( TEXT_TYPES );
-
+    
     private final Class<?> javaClass;
 
     ValueType()
