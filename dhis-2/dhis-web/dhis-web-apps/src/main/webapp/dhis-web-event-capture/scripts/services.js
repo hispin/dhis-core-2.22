@@ -200,9 +200,27 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
             var objs = [];
             
             ECStorageService.currentStore.open().done(function(){
-                ECStorageService.currentStore.getAll(store, program).done(function(data){   
+                ECStorageService.currentStore.getAll(store).done(function(data){   
                     angular.forEach(data, function(o){
                         if(o.program.id === program){                            
+                            objs.push(o);                               
+                        }                        
+                    });
+                    $rootScope.$apply(function(){
+                        def.resolve(objs);
+                    });
+                });                
+            });            
+            return def.promise;
+        },
+        getByIds: function(store, ids){
+            var def = $q.defer();
+            var objs = [];
+            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.getAll(store).done(function(data){   
+                    angular.forEach(data, function(o){
+                        if(ids.indexOf(o.id) !== -1){                            
                             objs.push(o);                               
                         }                        
                     });

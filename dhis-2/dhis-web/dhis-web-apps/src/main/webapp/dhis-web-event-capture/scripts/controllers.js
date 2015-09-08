@@ -212,11 +212,25 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 if($scope.selectedProgramStage.captureCoordinates){
                     $scope.newDhis2Event.coordinate = {};
                 }
+                
                 $scope.newDhis2Event.eventDate = '';
                 
-                TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-                    $scope.allProgramRules = rules;
-                    $scope.loadEvents();
+                var categoryIds = [];
+                if($scope.selectedProgram.categoryCombo && 
+                        !$scope.selectedProgram.categoryCombo.isDefault &&
+                        $scope.selectedProgram.categoryCombo.categories){
+                    
+                    angular.forEach($scope.selectedProgram.categoryCombo.categories, function(cat){
+                        categoryIds.push(cat.id);
+                    });
+                }
+                
+                MetaDataFactory.getByIds('categories', categoryIds).then(function(categories){
+                    $scope.selectedCategories = categories;                    
+                    TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+                        $scope.allProgramRules = rules;
+                        $scope.loadEvents();
+                    });
                 });
             });
         }
@@ -326,7 +340,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             return;
         }        
         $scope.sortHeader = gridHeader;
-        if($scope.sortHeader.type === 'date'){
+        if($scope.sortHeader.type === 'DATE'){
             $scope.reverse = true;
         }
         else{
@@ -335,7 +349,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     $scope.d2Sort = function(dhis2Event){        
-        if($scope.sortHeader && $scope.sortHeader.type === 'date'){            
+        if($scope.sortHeader && $scope.sortHeader.type === 'DATE'){            
             var d = dhis2Event[$scope.sortHeader.id];         
             return DateUtils.getDate(d);
         }

@@ -1,4 +1,4 @@
-<div ng-if="selectedProgramStage && !eventRegistration && !editingEventInFull">
+<div ng-if="selectedProgramStage && !eventRegistration && !editingEventInFull" class="small-vertical-spacing">
     <i ng-if="!eventFetched" class="fa fa-spinner fa-spin fa-2x"></i>
     <div ng-if="eventFetched" ng-switch="dhis2Events.length">                        
         <div ng-switch-when="undefined">
@@ -11,16 +11,25 @@
                 {{'empty_event_list'| translate}}
             </h4>
         </div>
-        <div ng-switch-default>
-            <h4>
-                {{'registered_events'| translate}}<span class="small-horizonal-spacing" ng-if="pager.total">({{'total' | translate}}:  {{pager.total}})</span>
-                <button class="button button-std pull-right hideInPrint"
-                        ng-show="dhis2Events.length"
-                        ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid"                                        
-                        ng-click="showHideColumns()">
-                    {{'show_hide_columns'| translate}}
-                </button>
-            </h4>
+        <div ng-switch-default>           
+            <div class="row small-vertical-spacing small-vertical-spacing">
+                <div class="col-sm-12">
+                    <span>
+                        {{'registered_events'| translate}}<span class="small-horizonal-spacing" ng-if="pager.total">({{'total' | translate}}:  {{pager.total}})</span>                        
+                    </span>
+                    
+                    <div class="pull-right hideInPrint">
+                        <button class="btn btn-info pull-right hideInPrint"
+                                ng-show="dhis2Events.length"
+                                type="button"
+                                ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid"                                        
+                                ng-click="showHideColumns()">
+                            {{'show_hide_columns'| translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
 
             <!-- context menu for event grid -->
             <div id="contextMenu" class="contextMenu" style="width: 180px;">
@@ -33,7 +42,8 @@
             <!-- context menu ends -->                            
 
             <!-- grid begins -->
-            <form name="outerForm" novalidate>                              
+            <div class="small-vertical-spacing">
+                <form name="outerForm" novalidate>                              
 
                 <table class="listTable dhis2-table-striped-border dhis2-table-hover">
                     <thead>                        
@@ -357,6 +367,8 @@
                 
                 <serverside-paginator></serverside-paginator>
             </form>
+            </div>
+            
             <!-- grid ends -->
         </div>
     </div>
