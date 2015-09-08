@@ -28,6 +28,16 @@ package org.hisp.dhis.organisationunit.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -50,17 +60,6 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.security.access.AccessDeniedException;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Kristian Nordal
@@ -249,26 +248,6 @@ public class HibernateOrganisationUnitStore
     }
 
     @Override
-    public Set<Integer> getOrganisationUnitIdsWithoutData()
-    {
-        final String sql = "select organisationunitid from organisationunit ou where not exists (" +
-            "select sourceid from datavalue where sourceid=ou.organisationunitid)";
-
-        final Set<Integer> units = new HashSet<>();
-
-        jdbcTemplate.query( sql, new RowCallbackHandler()
-        {
-            @Override
-            public void processRow( ResultSet rs ) throws SQLException
-            {
-                units.add( rs.getInt( 1 ) );
-            }
-        } );
-
-        return units;
-    }
-
-    @Override
     @SuppressWarnings( "unchecked" )
     public List<OrganisationUnit> getBetweenByStatus( boolean status, int first, int max )
     {
@@ -305,13 +284,13 @@ public class HibernateOrganisationUnitStore
     @SuppressWarnings( "unchecked" )
     public List<OrganisationUnit> getWithinCoordinateArea( double[] box )
     {
-        return getQuery( "from OrganisationUnit o"
-                + " where o.featureType='Point'"
-                + " and o.coordinates is not null"
-                + " and CAST( SUBSTRING(o.coordinates, 2, LOCATE(',', o.coordinates) - 2) AS big_decimal ) >= " + box[3]
-                + " and CAST( SUBSTRING(o.coordinates, 2, LOCATE(',', o.coordinates) - 2) AS big_decimal ) <= " + box[1]
-                + " and CAST( SUBSTRING(coordinates, LOCATE(',', o.coordinates) + 1, LOCATE(']', o.coordinates) - LOCATE(',', o.coordinates) - 1 ) AS big_decimal ) >= " + box[2]
-                + " and CAST( SUBSTRING(coordinates, LOCATE(',', o.coordinates) + 1, LOCATE(']', o.coordinates) - LOCATE(',', o.coordinates) - 1 ) AS big_decimal ) <= " + box[0]
+        return getQuery( "from OrganisationUnit o " +
+            "where o.featureType='Point' " +
+            "and o.coordinates is not null " +
+            "and cast( substring(o.coordinates, 2, locate(',', o.coordinates) - 2) AS big_decimal ) >= " + box[3] + " " +
+            "and cast( substring(o.coordinates, 2, locate(',', o.coordinates) - 2) AS big_decimal ) <= " + box[1] + " " +
+            "and cast( substring(coordinates, locate(',', o.coordinates) + 1, locate(']', o.coordinates) - locate(',', o.coordinates) - 1 ) AS big_decimal ) >= " + box[2] + " " +
+            "and cast( substring(coordinates, locate(',', o.coordinates) + 1, locate(']', o.coordinates) - locate(',', o.coordinates) - 1 ) AS big_decimal ) <= " + box[0]
         ).list();
     }
 
@@ -346,7 +325,8 @@ public class HibernateOrganisationUnitStore
         Session session = sessionFactory.getCurrentSession();
         int counter = 0;
 
-        // use SF directly since we don't need to check for access etc here, just a simple update with no changes (so that path gets re-generated)
+        // Use session directly since we don't need to check for access
+        
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
             session.update( organisationUnit );
@@ -368,7 +348,8 @@ public class HibernateOrganisationUnitStore
         Session session = sessionFactory.getCurrentSession();
         int counter = 0;
 
-        // use SF directly since we don't need to check for access etc here, just a simple update with no changes (so that path gets re-generated)
+        // Use session directly since we don't need to check for access
+        
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
             session.update( organisationUnit );
