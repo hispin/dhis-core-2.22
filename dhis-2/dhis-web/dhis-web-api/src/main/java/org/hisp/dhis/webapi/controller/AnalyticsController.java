@@ -84,6 +84,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) boolean skipData,
         @RequestParam( required = false ) boolean skipRounding,
+        @RequestParam( required = false ) boolean completedOnly,
         @RequestParam( required = false ) boolean hierarchyMeta,
         @RequestParam( required = false ) boolean ignoreLimit,
         @RequestParam( required = false ) boolean tableLayout,
@@ -101,7 +102,7 @@ public class AnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, hierarchyMeta, 
+        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, completedOnly, hierarchyMeta, 
             ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, relativePeriodDate, userOrgUnit, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON, CacheStrategy.RESPECT_SYSTEM_SETTING );
@@ -120,6 +121,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) boolean skipData,
         @RequestParam( required = false ) boolean skipRounding,
+        @RequestParam( required = false ) boolean completedOnly,
         @RequestParam( required = false ) boolean hierarchyMeta,
         @RequestParam( required = false ) boolean ignoreLimit,
         @RequestParam( required = false ) boolean tableLayout,
@@ -137,7 +139,7 @@ public class AnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, hierarchyMeta, 
+        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, completedOnly, hierarchyMeta, 
             ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, relativePeriodDate, userOrgUnit, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.RESPECT_SYSTEM_SETTING );
@@ -154,6 +156,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) boolean skipData,
         @RequestParam( required = false ) boolean skipRounding,
+        @RequestParam( required = false ) boolean completedOnly,
         @RequestParam( required = false ) boolean hierarchyMeta,
         @RequestParam( required = false ) boolean ignoreLimit,
         @RequestParam( required = false ) boolean tableLayout,
@@ -171,7 +174,7 @@ public class AnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, hierarchyMeta, 
+        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, completedOnly, hierarchyMeta, 
             ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, relativePeriodDate, userOrgUnit, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
@@ -188,6 +191,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) boolean skipData,
         @RequestParam( required = false ) boolean skipRounding,
+        @RequestParam( required = false ) boolean completedOnly,
         @RequestParam( required = false ) boolean hierarchyMeta,
         @RequestParam( required = false ) boolean ignoreLimit,
         @RequestParam( required = false ) boolean tableLayout,
@@ -205,7 +209,7 @@ public class AnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, hierarchyMeta, 
+        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, completedOnly, hierarchyMeta, 
             ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, relativePeriodDate, userOrgUnit, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING );
@@ -222,6 +226,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) boolean skipData,
         @RequestParam( required = false ) boolean skipRounding,
+        @RequestParam( required = false ) boolean completedOnly,
         @RequestParam( required = false ) boolean hierarchyMeta,
         @RequestParam( required = false ) boolean ignoreLimit,
         @RequestParam( required = false ) boolean tableLayout,
@@ -239,7 +244,7 @@ public class AnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, hierarchyMeta, 
+        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, completedOnly, hierarchyMeta, 
             ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, relativePeriodDate, userOrgUnit, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSV, CacheStrategy.RESPECT_SYSTEM_SETTING, "data.csv", true );
@@ -256,6 +261,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) boolean skipData,
         @RequestParam( required = false ) boolean skipRounding,
+        @RequestParam( required = false ) boolean completedOnly,
         @RequestParam( required = false ) boolean hierarchyMeta,
         @RequestParam( required = false ) boolean ignoreLimit,
         @RequestParam( required = false ) boolean tableLayout,
@@ -273,7 +279,7 @@ public class AnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, hierarchyMeta, 
+        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, completedOnly, hierarchyMeta, 
             ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, relativePeriodDate, userOrgUnit, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL, CacheStrategy.RESPECT_SYSTEM_SETTING, "data.xls", true );
@@ -290,6 +296,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) boolean skipData,
         @RequestParam( required = false ) boolean skipRounding,
+        @RequestParam( required = false ) boolean completedOnly,
         @RequestParam( required = false ) boolean hierarchyMeta,
         @RequestParam( required = false ) boolean ignoreLimit,
         @RequestParam( required = false ) boolean tableLayout,
@@ -308,7 +315,7 @@ public class AnalyticsController
         HttpServletResponse response ) throws Exception
     {
         DataQueryParams params = analyticsService.getFromUrl( dimension, filter, null, null,
-            true, false, false, false, false, false, false, null, null, null, null, null, null, null, i18nManager.getI18nFormat() );
+            true, false, false, false, false, false, false, false, null, null, null, null, null, null, null, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_XML, CacheStrategy.RESPECT_SYSTEM_SETTING, "data.jrxml", false );
         Grid grid = analyticsService.getAggregatedDataValues( params );
@@ -325,6 +332,7 @@ public class AnalyticsController
         @RequestParam( required = false ) boolean skipMeta,
         @RequestParam( required = false ) boolean skipData,
         @RequestParam( required = false ) boolean skipRounding,
+        @RequestParam( required = false ) boolean completedOnly,
         @RequestParam( required = false ) boolean hierarchyMeta,
         @RequestParam( required = false ) boolean ignoreLimit,
         @RequestParam( required = false ) boolean tableLayout,
@@ -342,7 +350,7 @@ public class AnalyticsController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, hierarchyMeta, 
+        DataQueryParams params = analyticsService.getFromUrl( dimension, filter, aggregationType, measureCriteria, skipMeta, skipData, skipRounding, completedOnly, hierarchyMeta, 
             ignoreLimit, hideEmptyRows, showHierarchy, displayProperty, outputIdScheme, approvalLevel, relativePeriodDate, userOrgUnit, program, stage, i18nManager.getI18nFormat() );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_TEXT, CacheStrategy.NO_CACHE, "debug.sql", false );

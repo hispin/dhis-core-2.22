@@ -79,7 +79,7 @@ public class EventQueryParams
     private List<String> asc = new ArrayList<>();
 
     private List<String> desc = new ArrayList<>();
-
+    
     private String organisationUnitMode;
 
     private Integer page;
@@ -131,6 +131,7 @@ public class EventQueryParams
         params.programIndicator = this.programIndicator;
         params.asc = new ArrayList<>( this.asc );
         params.desc = new ArrayList<>( this.desc );
+        params.completedOnly = this.completedOnly;
         params.organisationUnitMode = this.organisationUnitMode;
         params.page = this.page;
         params.pageSize = this.pageSize;

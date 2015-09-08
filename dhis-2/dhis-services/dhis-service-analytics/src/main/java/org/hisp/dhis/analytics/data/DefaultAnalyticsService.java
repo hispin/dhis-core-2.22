@@ -908,7 +908,7 @@ public class DefaultAnalyticsService
 
     @Override
     public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType,
-        String measureCriteria, boolean skipMeta, boolean skipData, boolean skipRounding, boolean hierarchyMeta, boolean ignoreLimit,
+        String measureCriteria, boolean skipMeta, boolean skipData, boolean skipRounding, boolean completedOnly, boolean hierarchyMeta, boolean ignoreLimit,
         boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, 
         String approvalLevel, Date relativePeriodDate, String userOrgUnit, String program, String stage, I18nFormat format )
     {
@@ -935,6 +935,7 @@ public class DefaultAnalyticsService
         params.setSkipMeta( skipMeta );
         params.setSkipData( skipData );
         params.setSkipRounding( skipRounding );
+        params.setCompletedOnly( completedOnly );
         params.setHierarchyMeta( hierarchyMeta );
         params.setHideEmptyRows( hideEmptyRows );
         params.setShowHierarchy( showHierarchy );

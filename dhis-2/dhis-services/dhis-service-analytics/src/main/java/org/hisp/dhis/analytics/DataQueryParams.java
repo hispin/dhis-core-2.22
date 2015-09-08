@@ -155,6 +155,11 @@ public class DataQueryParams
      * Indicates that full precision should be provided for values.
      */
     protected boolean skipRounding;
+
+    /**
+     * Indicates whether to include completed events only.
+     */
+    protected boolean completedOnly;
     
     /**
      * Indicates i) if the names of all ancestors of the organisation units part
@@ -267,6 +272,7 @@ public class DataQueryParams
         params.skipMeta = this.skipMeta;
         params.skipData = this.skipData;
         params.skipRounding = this.skipRounding;
+        params.completedOnly = this.completedOnly;
         params.hierarchyMeta = this.hierarchyMeta;
         params.ignoreLimit = this.ignoreLimit;
         params.hideEmptyRows = this.hideEmptyRows;
@@ -1290,6 +1296,16 @@ public class DataQueryParams
         this.skipRounding = skipRounding;
     }
 
+    public boolean isCompletedOnly()
+    {
+        return completedOnly;
+    }
+
+    public void setCompletedOnly( boolean completedOnly )
+    {
+        this.completedOnly = completedOnly;
+    }
+    
     public boolean isHierarchyMeta()
     {
         return hierarchyMeta;
