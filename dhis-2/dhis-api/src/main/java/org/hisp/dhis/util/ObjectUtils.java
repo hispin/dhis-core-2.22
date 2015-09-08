@@ -1,5 +1,9 @@
 package org.hisp.dhis.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -52,5 +56,24 @@ public class ObjectUtils
         }
         
         return null;
+    }
+    
+    /**
+     * Returns a list of strings, where the strings are the result of calling
+     * String.valueOf( Object ) of each object in the given collection.
+     * 
+     * @param objects the collection of objects.
+     * @return a list of strings.
+     */
+    public static List<String> asStringList( Collection<? extends Object> objects )
+    {
+        List<String> list = new ArrayList<>();
+        
+        for ( Object object : objects )
+        {
+            list.add( String.valueOf( object ) );
+        }
+        
+        return list;
     }
 }

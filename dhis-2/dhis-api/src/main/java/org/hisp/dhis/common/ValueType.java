@@ -29,8 +29,10 @@ package org.hisp.dhis.common;
  */
 
 import com.google.common.collect.Lists;
+
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
+import org.hisp.dhis.util.ObjectUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -60,26 +62,18 @@ public enum ValueType
     OPTION_SET( String.class ),
     USERNAME( String.class );
 
-    public static List<ValueType> INTEGER_TYPES = Lists.newArrayList(
-        INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE
-    );
+    public static final List<ValueType> INTEGER_TYPES = Lists.newArrayList(
+        INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE );
 
-    public static List<ValueType> NUMERIC_TYPES = Lists.newArrayList(
-        INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE, NUMBER, UNIT_INTERVAL, PERCENTAGE
-    );
+    public static final List<ValueType> NUMERIC_TYPES = Lists.newArrayList(
+        INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE, NUMBER, UNIT_INTERVAL, PERCENTAGE );
 
-    public static List<ValueType> TEXT_TYPES = Lists.newArrayList( TEXT, LONG_TEXT, LETTER );
+    public static final List<ValueType> TEXT_TYPES = Lists.newArrayList( 
+        TEXT, LONG_TEXT, LETTER );
 
-    public static List<String> INTEGER_TYPE_STRINGS = Lists.newArrayList(
-        INTEGER.toString(), INTEGER_POSITIVE.toString(), INTEGER_NEGATIVE.toString(), INTEGER_ZERO_OR_POSITIVE.toString()
-    );
-
-    public static List<String> NUMERIC_TYPE_STRINGS = Lists.newArrayList(
-        INTEGER.toString(), INTEGER_POSITIVE.toString(), INTEGER_NEGATIVE.toString(), INTEGER_ZERO_OR_POSITIVE.toString(),
-        NUMBER.toString(), UNIT_INTERVAL.toString(), PERCENTAGE.toString()
-    );
-
-    public static List<String> TEXT_TYPE_STRINGS = Lists.newArrayList( TEXT.toString(), LONG_TEXT.toString(), LETTER.toString() );
+    public static final List<String> INTEGER_TYPE_STRINGS = ObjectUtils.asStringList( INTEGER_TYPES );
+    public static final List<String> NUMERIC_TYPE_STRINGS = ObjectUtils.asStringList( INTEGER_TYPES );
+    public static final List<String> TEXT_TYPE_STRINGS = ObjectUtils.asStringList( TEXT_TYPES );
 
     private final Class<?> javaClass;
 
