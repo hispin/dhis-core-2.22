@@ -1138,3 +1138,31 @@ input, button, select, textarea {
 .inactive-tei{
     color: #ff4000;
 }
+
+/* independently scrolling divs */
+.box {
+    bottom: 0; /* increase for footer use */
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 110px;
+}
+
+.row-fluid {
+    height: 100%;
+}
+
+.column {
+    height: 100%;
+    overflow: auto;
+}
+
+.column:before, .column:after {
+    content: "";
+    display: table;
+}
+
+.column:after {
+    clear: both;
+}
+

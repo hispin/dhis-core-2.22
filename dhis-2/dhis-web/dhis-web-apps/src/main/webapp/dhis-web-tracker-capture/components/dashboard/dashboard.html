@@ -1,6 +1,8 @@
-<div class="container-1-1">    
+<div class="container-1-1">
+    <!-- dashboard top menu begins-->
     <div class="col-sm-12 vertical-spacing  hideInPrint">
-
+        
+        <!-- dashboard buttons begin -->
         <button type="button" class="btn btn-default" ng-click="back()">{{'back'| translate}}</button>
         
         <button ng-disabled="!previousTeiExists" type="button" class="btn btn-default small-horizonal-spacing" ng-click="fetchTei('PREV')" title="{{'previous'| translate}}"><i class="fa fa-caret-left"></i></button>
@@ -14,7 +16,9 @@
                 ng-change="applySelectedProgram()">
             <option value="">{{programs.length > 0 ? 'please_select_a_program' : 'no_program_exists' | translate}}</option>
         </select>
-
+        <!-- dashboard buttons end -->
+        
+        <!-- dashboard setting begins -->
         <div class="pull-right">
             <div class="btn-group trim" dropdown is-open="status.isopen">
                 <button type="button" title="{{'settings'| translate}}" class="btn btn-default dropdown-toggle" dropdown-toggle>                    
@@ -27,13 +31,17 @@
                 </ul>
             </div>
         </div>
+        <!-- dashboard setting ends -->
+        
     </div>
-
-    <div class='separator'></div>
+    <!-- dashboard top menu ends-->
     
-    <div class="col-sm-12">
-        <div class="row">            
-            <div ng-class="widgetSize.bigger">
+    <!-- dashboard widgets begin -->
+    <!--<div class="row col-sm-12">-->
+    <div class="box">
+        <div class="row-fluid">
+            <!-- dashboard bigger widgets begin -->
+            <div ng-class="widgetSize.bigger" class="column">
                 <div id="biggerWidget"
                     d2-sortable  
                     bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
@@ -43,8 +51,11 @@
                         <div ng-show="biggerWidget.show" ng-include="biggerWidget.view" ng-class="{true: 'hideInPrint'} [biggerWidget.title != 'report']"></div>
                     </div>                                       
                 </div>                
-            </div>            
-            <div ng-class="widgetSize.smaller">
+            </div>
+            <!-- dashboard bigger widgets end -->
+
+            <!-- dashboard smaller widgets begin -->
+            <div ng-class="widgetSize.smaller" class="column">
                 <div id="smallerWidget" 
                     d2-sortable 
                     bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
@@ -55,7 +66,13 @@
                     </div>                   
                 </div>
             </div>
+            <!-- dashboard smaller widgets end -->   
         </div>
-    </div>    
+            
+                 
+        
+    </div>
+    <!-- dashboard widgets end -->
+    
 </div>
 
