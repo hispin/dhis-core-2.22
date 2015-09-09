@@ -33,12 +33,15 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.synch.AvailabilityStatus;
 import org.hisp.dhis.dxf2.synch.SynchronizationManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
@@ -51,23 +54,35 @@ import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
 public class SynchronizationController
 {
     public static final String RESOURCE_PATH = "/synchronization";
-
+    
     @Autowired
     private SynchronizationManager synchronizationManager;
 
-    @RequestMapping( method = RequestMethod.POST )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_EXPORT_DATA')" )
+    @RequestMapping( value = "/dataPush", method = RequestMethod.POST )
     public void execute( HttpServletResponse response )
         throws IOException
     {
-        ImportSummary summary = synchronizationManager.executeDataSynch();
+        ImportSummary summary = synchronizationManager.executeDataPush();
 
         response.setContentType( CONTENT_TYPE_JSON );
         JacksonUtils.toJson( response.getOutputStream(), summary );
+    }
+    
+    @PreAuthorize( "hasRole('ALL')" )
+    @RequestMapping( value = "/metadataPull", method = RequestMethod.POST )
+    public void importMetaData( @RequestParam String url, HttpServletResponse response )
+        throws IOException
+    {
+        org.hisp.dhis.dxf2.metadata.ImportSummary summary = synchronizationManager.executeMetadataPull( url );
+        
+        response.setContentType( CONTENT_TYPE_JSON );
+        JacksonUtils.toJson( response.getOutputStream(), summary );        
     }
 
     @RequestMapping( value = "/availability", method = RequestMethod.GET, produces = "application/json" )
     public @ResponseBody AvailabilityStatus isRemoteServerAvailable()
     {
         return synchronizationManager.isRemoteServerAvailable();
-    }
+    }    
 }

@@ -60,7 +60,7 @@ public class DataSynchronizationTask
     {
         try
         {
-            synchronizationManager.executeDataSynch();
+            synchronizationManager.executeDataPush();
         }
         catch ( RuntimeException ex )
         {

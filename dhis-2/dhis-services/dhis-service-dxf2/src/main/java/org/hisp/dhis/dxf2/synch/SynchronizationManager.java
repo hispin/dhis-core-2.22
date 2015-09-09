@@ -37,9 +37,11 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
  */
 public interface SynchronizationManager
 {
-    AvailabilityStatus isRemoteServerAvailable();
-    
-    ImportSummary executeDataSynch();
+    ImportSummary executeDataPush();
     
     Date getLastSynchSuccess();
+    
+    org.hisp.dhis.dxf2.metadata.ImportSummary executeMetadataPull( String url );
+    
+    AvailabilityStatus isRemoteServerAvailable();    
 }
