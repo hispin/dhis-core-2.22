@@ -3205,8 +3205,6 @@ Ext.onReady( function() {
             }
         });
 
-        //init.legendSets = [];
-
 		for (var i = 0; i < requests.length; i++) {
             ajax(requests[i], config);
 		}
