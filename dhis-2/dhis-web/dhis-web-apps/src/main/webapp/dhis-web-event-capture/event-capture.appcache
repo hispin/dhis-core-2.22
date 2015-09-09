@@ -47,17 +47,8 @@ CACHE:
 ../dhis-web-commons/javascripts/dhis2/dhis2.util.js
 ../dhis-web-commons/javascripts/commons.js
 ../dhis-web-commons/javascripts/commons.ajax.js
-../dhis-web-commons/javascripts/lists.js
-../dhis-web-commons/javascripts/periodType.js
-../dhis-web-commons/javascripts/date.js
-../dhis-web-commons/javascripts/json2.js
-../dhis-web-commons/javascripts/validationRules.js
-../dhis-web-commons/javascripts/dhis2/dhis2.array.js
-../dhis-web-commons/javascripts/dhis2/dhis2.select.js
-../dhis-web-commons/javascripts/dhis2/dhis2.comparator.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.availability.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.trigger.js
-../dhis-web-commons/javascripts/dhis2/dhis2.sharing.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.validation.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.storage.ss.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.storage.ls.js
@@ -72,8 +63,6 @@ scripts/event-capture.js
 ../dhis-web-commons/javascripts/angular/plugins/angularLocalStorage.js
 ../dhis-web-commons/javascripts/angular/plugins/angular-translate.min.js
 ../dhis-web-commons/javascripts/angular/plugins/select.js
-../dhis-web-commons/javascripts/angular/plugins/select2.js
-../dhis-web-commons/javascripts/angular/plugins/ng-infinite-scroll.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.directives.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.validations.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.filters.js

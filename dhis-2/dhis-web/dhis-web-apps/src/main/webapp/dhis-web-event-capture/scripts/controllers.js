@@ -10,7 +10,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         function($rootScope,
                 $scope,
                 $modal,
-                $timeout,
                 $translate,
                 $anchorScroll,
                 orderByFilter,
@@ -597,12 +596,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.outerForm.submitted = false;
                 $scope.outerForm.$setPristine();
                 $scope.disableSaveAndAddNew = false;
-                
-                //this is to hide typeAheadPopUps - shouldn't be an issue in 
-                //the first place.                
-                $timeout(function() {
-                    angular.element('#hideTypeAheadPopUp').trigger('click');
-                }, 10);
                 
                 //decide whether to stay in the current screen or not.
                 if(addingAnotherEvent){
