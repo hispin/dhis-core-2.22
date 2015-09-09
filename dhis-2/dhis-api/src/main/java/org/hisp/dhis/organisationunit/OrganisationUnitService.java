@@ -152,9 +152,17 @@ public interface OrganisationUnitService
      * Returns all OrganisationUnits with corresponding identifiers.
      *
      * @param uids the collection of uids.
-     * @return a collection of OrganisationUnits.
+     * @return a list of OrganisationUnits.
      */
     List<OrganisationUnit> getOrganisationUnitsByUid( Collection<String> uids );
+    
+    /**
+     * Returns a list of OrganisationUnits based on the given params.
+     * 
+     * @param params the params.
+     * @return a list of OrganisationUnits.
+     */
+    List<OrganisationUnit> getOrganisationUnitsByQuery( OrganisationUnitQueryParams params );
 
     /**
      * Returns an OrganisationUnit with a given name.

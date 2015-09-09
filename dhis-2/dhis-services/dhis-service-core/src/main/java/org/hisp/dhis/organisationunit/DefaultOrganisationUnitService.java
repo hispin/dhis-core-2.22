@@ -217,6 +217,12 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
+    public List<OrganisationUnit> getOrganisationUnitsByQuery( OrganisationUnitQueryParams params )
+    {
+        return organisationUnitStore.getOrganisationUnits( params );
+    }
+
+    @Override
     public OrganisationUnit getOrganisationUnit( String uid )
     {
         return i18n( i18nService, organisationUnitStore.getByUid( uid ) );

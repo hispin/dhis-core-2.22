@@ -132,7 +132,7 @@ public abstract class DhisConvenienceTest
 {
     protected static final Log log = LogFactory.getLog( DhisConvenienceTest.class );
 
-    protected static final String BASE_UID = "123456789a";
+    protected static final String BASE_UID = "abcdefghij";
 
     protected static final String BASE_IN_UID = "inabcdefgh";
 
