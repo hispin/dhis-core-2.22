@@ -96,59 +96,9 @@
                     <span ng-if="editingEventInFull">{{'print_details'| translate}}</span>
                 </button>
             </div>
-        </div>
-        <!--<table>
-            <tr>
-                <td><label>{{registeringUnitLabel}}</label></td>
-                <td><input type="text" class="form-control" selected-org-unit ng-model="selectedOrgUnit.name" value="{{selectedOrgUnit.name|| pleaseSelectLabel}}" disabled=""></td>                        	                            
-            </tr>
-            <tr>
-                <td><label>{{programLabel}}</label></td>
-                <td>
-                    <select id="programId" 
-                            class="form-control"
-                            name="programId" 
-                            ng-model="selectedProgram" 
-                            ng-options="program as program.name for program in programs | orderBy: 'name'" 
-                            ng-change="getProgramDetails()"
-                            ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid">
-                        <option value="">{{pleaseSelectLabel}}</option>
-                    </select>      
-                </td>
-                <td style='padding-left: 10px;'>
-                    <button class="btn btn-success hideInPrint"
-                            type="button"
-                            ng-show="selectedProgramStage" 
-                            ng-click="showEventRegistration()" 
-                            ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid">
-                        {{'register_event'| translate}}
-                    </button>                    
-                </td>
-                <td ng-if="dhis2Events.length > 0 || eventRegistration || editingEventInFull" style='padding-left: 10px;'>
-                    <button class="btn btn-info hideInPrint" 
-                            type="button" 
-                            onclick="javascript:window.print()">
-                        <span ng-if="!eventRegistration && !editingEventInFull">{{'print_list'| translate}}</span>
-                        <span ng-if="eventRegistration">{{'print_form'| translate}}</span>
-                        <span ng-if="editingEventInFull">{{'print_details'| translate}}</span>
-                    </button>
-                </td> 
-            </tr>
-            <tr ng-if="selectedProgramStage && selectedProgramStage.programStageSections.length  && eventRegistration || editingEventInFull">
-                <td><label>{{'section'| translate}}</label></td>
-                <td>
-                    <select class="form-control"
-                            name="section"                             
-                            ng-model="selectedSection.id">
-                        <option value="ALL">{{'show_all'| translate}}</option>
-                        <option ng-repeat="section in selectedProgramStage.programStageSections" value={{section.id}}>{{section.name}}</option>
-                    </select>
-                </td>
-            </tr>
-        </table>-->        
-        <!-- selection ends -->
+        </div>        
+        <!-- selection ends -->        
         
-        <div id="hideTypeAheadPopUp" ng-hide="true"></div>
         <!-- event grid begins -->
         <div ng-include="'views/eventList.html'"></div>
         <!-- event grid ends -->
