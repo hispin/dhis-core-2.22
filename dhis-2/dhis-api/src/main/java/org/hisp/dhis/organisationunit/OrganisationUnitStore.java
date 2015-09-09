@@ -107,19 +107,14 @@ public interface OrganisationUnitStore
      * @return all OrganisationUnits which are not a member of any OrganisationUnitGroups.
      */
     List<OrganisationUnit> getOrganisationUnitsWithoutGroups();
-    
-    List<OrganisationUnit> getOrganisationUnits( OrganisationUnitQueryParams params );
 
     /**
-     * Returns all OrganisationUnit which names are like the given name, or which
-     * code or uid are equal the given name, and are within the given groups.
-     *
-     * @param query  the query to match on name, code or uid.
-     * @param groups the organisation unit groups.
-     * @param limit  the limit of returned objects.
+     * Returns a list of OrganisationUnits based on the given params.
+     * 
+     * @param params the params.
      * @return a list of OrganisationUnits.
      */
-    List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query, Collection<OrganisationUnitGroup> groups, boolean limit );
+    List<OrganisationUnit> getOrganisationUnits( OrganisationUnitQueryParams params );
 
     /**
      * Creates a mapping between organisation unit UID and set of data set UIDs

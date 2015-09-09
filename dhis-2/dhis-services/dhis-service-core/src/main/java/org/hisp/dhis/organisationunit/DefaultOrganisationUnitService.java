@@ -60,7 +60,6 @@ import org.hisp.dhis.version.VersionService;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -608,38 +607,6 @@ public class DefaultOrganisationUnitService
     public List<OrganisationUnit> getOrganisationUnitsWithoutGroups()
     {
         return i18n( i18nService, organisationUnitStore.getOrganisationUnitsWithoutGroups() );
-    }
-
-    @Override
-    public List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query,
-        Collection<OrganisationUnitGroup> groups, boolean limit )
-    {
-        return i18n( i18nService, organisationUnitStore.getOrganisationUnitsByNameAndGroups( query, groups, limit ) );
-    }
-
-    @Override
-    public List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String name,
-        Collection<OrganisationUnitGroup> groups, OrganisationUnit parent, boolean limit )
-    {
-        // Can only limit in query if parent is not set and we get all units
-
-        boolean _limit = limit && parent == null;
-
-        final Set<OrganisationUnit> result = new HashSet<>( organisationUnitStore.getOrganisationUnitsByNameAndGroups( name,
-            groups, _limit ) );
-
-        if ( parent == null )
-        {
-            return new ArrayList<>( result );
-        }
-
-        final Set<OrganisationUnit> subTree = new HashSet<>( getOrganisationUnitWithChildren( parent.getId() ) );
-
-        List<OrganisationUnit> intersection = new ArrayList<>( Sets.intersection( subTree,
-            result ) );
-
-        return limit && intersection.size() > MAX_LIMIT ? intersection.subList( 0, MAX_LIMIT )
-            : intersection;
     }
 
     @Override

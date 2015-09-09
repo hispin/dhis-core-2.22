@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -56,7 +54,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitHierarchy;
 import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.organisationunit.OrganisationUnitStore;
 import org.hisp.dhis.system.objectmapper.OrganisationUnitRelationshipRowMapper;
 import org.hisp.dhis.user.CurrentUserService;
@@ -221,63 +218,6 @@ public class HibernateOrganisationUnitStore
         }
         
         return query.list();
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<OrganisationUnit> getOrganisationUnitsByNameAndGroups( String query,
-        Collection<OrganisationUnitGroup> groups, boolean limit )
-    {
-        boolean first = true;
-
-        query = StringUtils.trimToNull( query );
-        groups = CollectionUtils.isEmpty( groups ) ? null : groups;
-
-        StringBuilder hql = new StringBuilder( "from OrganisationUnit o" );
-
-        if ( query != null )
-        {
-            hql.append( " where ( lower(o.name) like :expression or o.code = :query or o.uid = :query )" );
-
-            first = false;
-        }
-
-        if ( groups != null )
-        {
-            for ( int i = 0; i < groups.size(); i++ )
-            {
-                String clause = first ? " where" : " and";
-
-                hql.append( clause ).append( " :g" ).append( i ).append( " in elements( o.groups )" );
-
-                first = false;
-            }
-        }
-
-        Query q = sessionFactory.getCurrentSession().createQuery( hql.toString() );
-
-        if ( query != null )
-        {
-            q.setString( "expression", "%" + query.toLowerCase() + "%" );
-            q.setString( "query", query );
-        }
-
-        if ( groups != null )
-        {
-            int i = 0;
-
-            for ( OrganisationUnitGroup group : groups )
-            {
-                q.setEntity( "g" + i++, group );
-            }
-        }
-
-        if ( limit )
-        {
-            q.setMaxResults( OrganisationUnitService.MAX_LIMIT );
-        }
-
-        return q.list();
     }
 
     @Override
