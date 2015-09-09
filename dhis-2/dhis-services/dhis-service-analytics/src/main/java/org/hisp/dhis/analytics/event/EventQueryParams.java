@@ -244,6 +244,14 @@ public class EventQueryParams
 
         return duplicates;
     }
+    
+    /**
+     * Returns a list of items and item filters.
+     */
+    public List<QueryItem> getItemsAndItemFilters()
+    {
+        return ListUtils.union( items, itemFilters );
+    }
 
     /**
      * Get nameable objects part of items and item filters.
