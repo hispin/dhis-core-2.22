@@ -533,62 +533,6 @@ public class OrganisationUnitServiceTest
         assertEquals( 4, unitK.getLevel() );
     }
 
-    @Test
-    public void testGetOrganisationUnitsByNameAndGroups()
-    {
-        OrganisationUnit unitA = createOrganisationUnit( 'A' );
-        OrganisationUnit unitB = createOrganisationUnit( 'B', unitA );
-        unitA.getChildren().add( unitB );
-        OrganisationUnit unitC = createOrganisationUnit( 'C' );
-        organisationUnitService.addOrganisationUnit( unitA );
-        organisationUnitService.addOrganisationUnit( unitB );
-        organisationUnitService.addOrganisationUnit( unitC );
-
-        OrganisationUnitGroup groupA = createOrganisationUnitGroup( 'A' );
-        OrganisationUnitGroup groupB = createOrganisationUnitGroup( 'B' );
-        OrganisationUnitGroup groupC = createOrganisationUnitGroup( 'C' );
-
-        groupA.getMembers().add( unitA );
-        groupA.getMembers().add( unitB );
-        groupA.getMembers().add( unitC );
-        groupB.getMembers().add( unitA );
-        groupB.getMembers().add( unitB );
-        groupC.getMembers().add( unitA );
-
-        organisationUnitGroupService.addOrganisationUnitGroup( groupA );
-        organisationUnitGroupService.addOrganisationUnitGroup( groupB );
-        organisationUnitGroupService.addOrganisationUnitGroup( groupC );
-
-        List<OrganisationUnitGroup> groups = Arrays.asList( groupA );
-        List<OrganisationUnit> units = organisationUnitService.getOrganisationUnitsByNameAndGroups( null, groups, false );
-        assertEquals( 3, units.size() );
-        units = organisationUnitService.getOrganisationUnitsByNameAndGroups( unitA.getName().toLowerCase(), groups, false );
-        assertEquals( 1, units.size() );
-        assertTrue( units.contains( unitA ) );
-        units = organisationUnitService.getOrganisationUnitsByNameAndGroups( unitA.getName(), null, false );
-        assertEquals( 1, units.size() );
-        assertEquals( unitA, units.iterator().next() );
-        units = organisationUnitService.getOrganisationUnitsByNameAndGroups( null, groups, unitA, false );
-        assertEquals( 2, units.size() );
-        assertFalse( units.contains( unitC ) );
-
-        groups = Arrays.asList( groupA, groupB );
-        units = organisationUnitService.getOrganisationUnitsByNameAndGroups( null, groups, false );
-        assertEquals( 2, units.size() );
-        units = organisationUnitService.getOrganisationUnitsByNameAndGroups( unitB.getName().toUpperCase(), groups, false );
-        assertEquals( 1, units.size() );
-        assertEquals( unitB, units.iterator().next() );
-        units = organisationUnitService.getOrganisationUnitsByNameAndGroups( unitB.getName(), null, false );
-        assertEquals( 1, units.size() );
-        assertEquals( unitB, units.iterator().next() );
-        units = organisationUnitService.getOrganisationUnitsByNameAndGroups( null, groups, unitA, false );
-        assertEquals( 2, units.size() );
-
-        groups = Arrays.asList( groupA, groupB, groupC );
-        units = organisationUnitService.getOrganisationUnitsByNameAndGroups( null, groups, false );
-        assertEquals( 1, units.size() );
-    }
-
     // -------------------------------------------------------------------------
     // OrganisationUnitGroup
     // -------------------------------------------------------------------------
