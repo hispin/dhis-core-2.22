@@ -33,8 +33,11 @@ import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,6 +67,9 @@ public class UpdateRoleAction
         this.dataSetService = dataSetService;
     }
 
+    @Autowired
+    private ProgramService programService;
+    
     private String message;
 
     public String getMessage()
@@ -109,6 +115,12 @@ public class UpdateRoleAction
     {
         this.selectedListAuthority = selectedListAuthority;
     }
+    
+    private Collection<String> selectedProgramList = new ArrayList<>();
+
+	public void setSelectedProgramList(Collection<String> selectedProgramList) {
+		this.selectedProgramList = selectedProgramList;
+	}
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -124,6 +136,7 @@ public class UpdateRoleAction
         group.setDescription( StringUtils.trimToNull( description ) );
 
         group.getDataSets().clear();
+        group.getPrograms().clear();
         group.getAuthorities().clear();
 
         for ( String id : selectedList )
@@ -132,6 +145,12 @@ public class UpdateRoleAction
             group.getDataSets().add( dataSet );
         }
 
+        for ( String id : selectedProgramList )
+        {
+            Program program = programService.getProgram( id );
+            group.getPrograms().add( program );
+        }
+        
         group.getAuthorities().addAll( selectedListAuthority );
 
         userService.updateUserAuthorityGroup( group );
