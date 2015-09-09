@@ -1137,7 +1137,7 @@
                         }
 
                         return {
-                            userStyleUrl: getStylesheetUrl(userStyle),
+                            userStyleUrl: userStyle,
                             logo: logo,
                             title: title,
                             link: link
