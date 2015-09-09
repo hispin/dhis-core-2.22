@@ -28,8 +28,6 @@ package org.hisp.dhis.organisationunit.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getIdentifiers;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -161,21 +159,19 @@ public class HibernateOrganisationUnitStore
     {
         SqlHelper hlp = new SqlHelper();
         
-        String hql = "select distinct o from OrganisationUnit o ";
+        String hql = "select o from OrganisationUnit o ";
         
-        if ( params.hasGroups() )
-        {
-            hql += "left join o.groups g ";
-        }
-
         if ( params.getQuery() != null )
         {
-            hql += hlp.whereAnd() + " (lower(o.name) like :expression or o.code = :query or o.uid = :query)" ;
+            hql += hlp.whereAnd() + " (lower(o.name) like :queryLower or o.code = :query or o.uid = :query)" ;
         }
 
         if ( params.hasGroups() )
         {
-            hql += hlp.whereAnd() + " g.id in (:groupIds) ";
+            for ( OrganisationUnitGroup group : params.getGroups() )
+            {
+                hql += hlp.whereAnd() + " :" + group.getUid() + " in elements(o.groups) ";
+            }
         }
         
         if ( params.hasParents() )
@@ -184,7 +180,7 @@ public class HibernateOrganisationUnitStore
             
             for ( OrganisationUnit parent : params.getParents() )
             {
-                hql += "o.parent like :" + parent.getUid() + " or ";
+                hql += "o.path like :" + parent.getUid() + " or ";
             }
             
             hql = TextUtils.removeLastOr( hql ) + ")";
@@ -194,13 +190,16 @@ public class HibernateOrganisationUnitStore
         
         if ( params.getQuery() != null )
         {
-            query.setString( "expression", "%" + params.getQuery().toLowerCase() + "%" );
+            query.setString( "queryLower", "%" + params.getQuery().toLowerCase() + "%" );
             query.setString( "query", params.getQuery() );
         }
         
         if ( params.hasGroups() )
         {
-            query.setParameterList( "groupIds", getIdentifiers( params.getGroups() ) );
+            for ( OrganisationUnitGroup group : params.getGroups() )
+            {
+                query.setEntity( group.getUid(), group );
+            }
         }
         
         if ( params.hasParents() )

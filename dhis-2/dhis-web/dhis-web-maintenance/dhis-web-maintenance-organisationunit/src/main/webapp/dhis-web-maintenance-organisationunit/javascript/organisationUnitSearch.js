@@ -41,15 +41,6 @@ function showOrgUnitDetails( id )
 
 function download( type )
 {
-    if ( type != null && type != "" )
-    {
-        setHeaderWaitDelayMessage( i18n_please_wait_while_downloading );
-    }
-    else
-    {
-        setWaitMessage( i18n_please_wait_while_searching );
-    }
-
     $( "#type" ).val( type );
 
     document.getElementById( "searchForm" ).submit();

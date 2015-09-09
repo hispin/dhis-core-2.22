@@ -75,7 +75,7 @@
 
 #if ( $organisationUnits )
 
-<h4>$i18n.getString( "found" ) $organisationUnits.size() $i18n.getString( "organisation_units" ) #if( $limited )($i18n.getString( "limited" ))#end</h4>
+<h4>$i18n.getString( "found" ) $organisationUnits.size() $i18n.getString( "organisation_units" ) (max 500)</h4>
 
 <table class="listTable" style="width:95%">
 	<thead>

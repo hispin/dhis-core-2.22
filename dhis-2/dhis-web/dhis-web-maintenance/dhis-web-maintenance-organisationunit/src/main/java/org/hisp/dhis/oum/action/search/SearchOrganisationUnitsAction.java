@@ -28,26 +28,27 @@ package org.hisp.dhis.oum.action.search;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
+import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
 import org.hisp.dhis.system.grid.ListGrid;
 
+import com.google.common.collect.Sets;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -62,7 +63,7 @@ public class SearchOrganisationUnitsAction
     private static final String DEFAULT_TYPE = "html";
     
     // -------------------------------------------------------------------------
-    // Depdencies
+    // Dependencies
     // -------------------------------------------------------------------------
 
     private OrganisationUnitGroupService organisationUnitGroupService;
@@ -145,14 +146,7 @@ public class SearchOrganisationUnitsAction
     {
         return selectedOrganisationUnit;
     }
-    
-    boolean limited = false;
-
-    public boolean isLimited()
-    {
-        return limited;
-    }
-    
+        
     private String type;
     
     public void setType( String type )
@@ -177,33 +171,17 @@ public class SearchOrganisationUnitsAction
     {
         type = StringUtils.trimToNull( type );
         
-        // ---------------------------------------------------------------------
-        // Get group sets
-        // ---------------------------------------------------------------------
-
-        groupSets = new ArrayList<>( organisationUnitGroupService.getCompulsoryOrganisationUnitGroupSets() );
+        groupSets = organisationUnitGroupService.getCompulsoryOrganisationUnitGroupSets();
         
-        Collections.sort( groupSets, IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( groupSets );
         
-        // ---------------------------------------------------------------------
-        // Assemble groups and get search result
-        // ---------------------------------------------------------------------
-
         if ( !skipSearch )
         {
             name = StringUtils.trimToNull( name );
             
             selectedOrganisationUnit = selectionManager.getSelectedOrganisationUnit();
 
-            log.debug( "Name: " + name + ", Orgunit: " + selectedOrganisationUnit + ", type: " + type );
-
-            // -----------------------------------------------------------------
-            // Set orgunit to null if root to avoid subquery and improve perf
-            // -----------------------------------------------------------------
-
-            selectedOrganisationUnit = selectedOrganisationUnit != null && selectedOrganisationUnit.getParent() == null ? null : selectedOrganisationUnit;
-            
-            Collection<OrganisationUnitGroup> groups = new HashSet<>();
+            Set<OrganisationUnitGroup> groups = new HashSet<>();
             
             for ( Integer id : groupId )
             {
@@ -214,13 +192,21 @@ public class SearchOrganisationUnitsAction
                 }
             }
             
-            boolean limit = type == null; // Only limit for HTML view since browser is memory constrained
+            OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+            params.setQuery( name );
+            params.setGroups( groups );
+            params.setMax( 500 );
+                        
+            if ( selectedOrganisationUnit != null )
+            {
+                params.setParents( Sets.newHashSet( selectedOrganisationUnit ) );
+            }
             
-            organisationUnits = new ArrayList<>( organisationUnitService.getOrganisationUnitsByNameAndGroups( name, groups, selectedOrganisationUnit, limit ) );
+            log.debug( "Org unit query params: " + params );
             
-            limited = organisationUnits != null && organisationUnits.size() == OrganisationUnitService.MAX_LIMIT;
+            organisationUnits = organisationUnitService.getOrganisationUnitsByQuery( params );
             
-            Collections.sort( organisationUnits, IdentifiableObjectNameComparator.INSTANCE );
+            Collections.sort( organisationUnits );
             
             if ( type != null && !type.equalsIgnoreCase( DEFAULT_TYPE ) )
             {
