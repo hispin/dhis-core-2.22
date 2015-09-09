@@ -56,7 +56,7 @@
 
     <property name="ignoreOverdueEvents" />
 
-    <set name="userRoles" table="program_userroles">
+    <set name="userRoles" table="program_userroles" inverse="true">
       <key column="programid" />
       <many-to-many class="org.hisp.dhis.user.UserAuthorityGroup"
         column="userroleid" foreign-key="fk_program_userroles" />

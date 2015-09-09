@@ -251,20 +251,6 @@
       <param name="onExceptionReturn">plainTextError</param>
     </action>
 
-    <action name="showProgramUserroleForm"
-      class="org.hisp.dhis.trackedentity.action.program.GetProgramAction">
-      <result name="success" type="velocity">/main.vm</result>
-      <param name="page">/dhis-web-maintenance-program/programUserrole.vm</param>
-      <param name="javascripts">javascript/program.js</param>
-      <param name="stylesheets">style/basic.css</param>
-      <param name="anyAuthorities">F_PROGRAM_PUBLIC_ADD,F_PROGRAM_PRIVATE_ADD</param>
-    </action>
-
-    <action name="defineProgramUserrole"
-      class="org.hisp.dhis.trackedentity.action.program.DefineProgramUserroleAction">
-      <result name="success" type="redirect">program.action</result>
-    </action>
-
     <!-- Program_OrganisationUnit Association -->
 
     <action name="defineProgramAssociationsForm"

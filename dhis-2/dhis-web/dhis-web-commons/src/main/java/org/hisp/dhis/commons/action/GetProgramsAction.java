@@ -1,5 +1,3 @@
-package org.hisp.dhis.trackedentity.action.program;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -27,25 +25,28 @@ package org.hisp.dhis.trackedentity.action.program;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.hisp.dhis.commons.action;
 
-import com.opensymphony.xwork2.Action;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.paging.ActionPagingSupport;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.user.UserAuthorityGroup;
-import org.hisp.dhis.user.UserService;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Chau Thu Tran
- * @version DefineProgramUserroleAction.java 12:43:40 PM Feb 19, 2013 $
+ *
+ * $version GetProgramsAction.java Sep 8, 2015 3:44:27 PM $
  */
-public class DefineProgramUserroleAction
-    implements Action
-{// -------------------------------------------------------------------------
-    // Dependency
+public class GetProgramsAction extends ActionPagingSupport<Program>
+{
+    // -------------------------------------------------------------------------
+    // Dependencies
     // -------------------------------------------------------------------------
 
     private ProgramService programService;
@@ -55,29 +56,27 @@ public class DefineProgramUserroleAction
         this.programService = programService;
     }
 
-    private UserService userService;
-
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-
     // -------------------------------------------------------------------------
-    // Input
+    // Input/Output
     // -------------------------------------------------------------------------
 
-    private Integer id;
+    private List<Program> programs = new ArrayList<>();
 
-    public void setId( Integer id )
+    public List<Program> getPrograms()
     {
-        this.id = id;
+        return programs;
     }
 
-    private Collection<String> urSelected = new HashSet<>();
+    private String key;
 
-    public void setUrSelected( Collection<String> urSelected )
+    public String getKey()
     {
-        this.urSelected = urSelected;
+        return key;
+    }
+
+    public void setKey( String key )
+    {
+        this.key = key;
     }
 
     // -------------------------------------------------------------------------
@@ -88,20 +87,23 @@ public class DefineProgramUserroleAction
     public String execute()
         throws Exception
     {
-        Program program = programService.getProgram( id );
-
-        Set<UserAuthorityGroup> userAuthorities = new HashSet<>();
-
-        for ( String id : urSelected )
+        if ( isNotBlank( key ) )
         {
-            userAuthorities.add( userService.getUserAuthorityGroup( id ) );
+            this.paging = createPaging( programService.getProgramCountByName( key ) );
+
+            programs = programService.getProgramBetweenByName( key, paging.getStartPos(),
+                paging.getPageSize() );
+        }
+        else
+        {
+            this.paging = createPaging( programService.getProgramCount() );
+            
+            programs = programService.getProgramsBetween( paging.getStartPos(),
+                paging.getPageSize() );
         }
 
-        program.setUserRoles( userAuthorities );
-
-        programService.updateProgram( program );
+        Collections.sort( programs, IdentifiableObjectNameComparator.INSTANCE );
 
         return SUCCESS;
     }
-
 }

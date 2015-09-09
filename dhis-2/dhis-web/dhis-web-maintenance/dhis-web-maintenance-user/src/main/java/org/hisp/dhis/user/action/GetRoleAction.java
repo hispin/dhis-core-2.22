@@ -35,9 +35,12 @@ import java.util.List;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.security.authority.SystemAuthoritiesProvider;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
@@ -72,6 +75,9 @@ public class GetRoleAction
     {
         this.authoritiesProvider = authoritiesProvider;
     }
+
+    @Autowired
+    private ProgramService programService;
     
     // -------------------------------------------------------------------------
     // Input
@@ -101,15 +107,28 @@ public class GetRoleAction
     {
         return availableDataSets;
     }
-
-    private List<DataSet> roleDataSets;
+    
+	private List<DataSet> roleDataSets;
 
     public List<DataSet> getRoleDataSets()
     {
         return roleDataSets;
     }
 
-    private List<String> availableAuthorities;
+    private List<Program> availablePrograms;
+
+    public List<Program> getAvailablePrograms() 
+    {
+		return availablePrograms;
+	}
+
+    private List<Program> rolePrograms;
+    
+    public List<Program> getRolePrograms() {
+		return rolePrograms;
+	}
+
+	private List<String> availableAuthorities;
 
     public List<String> getAvailableAuthorities()
     {
@@ -146,6 +165,18 @@ public class GetRoleAction
         roleDataSets = new ArrayList<>( userAuthorityGroup.getDataSets() );
 
         Collections.sort( roleDataSets, IdentifiableObjectNameComparator.INSTANCE );
+
+        
+        availablePrograms = new ArrayList<>( programService.getAllPrograms() );
+
+        availablePrograms.removeAll( userAuthorityGroup.getPrograms() );
+
+        Collections.sort( availablePrograms, IdentifiableObjectNameComparator.INSTANCE );
+        
+        
+        rolePrograms = new ArrayList<>( userAuthorityGroup.getPrograms() );
+
+        Collections.sort( rolePrograms, IdentifiableObjectNameComparator.INSTANCE );
 
         // ---------------------------------------------------------------------
         // Authorities
