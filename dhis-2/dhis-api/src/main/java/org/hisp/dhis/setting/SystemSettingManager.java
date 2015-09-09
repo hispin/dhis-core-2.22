@@ -132,6 +132,7 @@ public interface SystemSettingManager
     final int DEFAULT_DATABASE_SERVER_CPUS = 0; // Detect automatically
     final String DEFAULT_HELP_PAGE_LINK = "../dhis-web-commons-about/help.action";
     final String DEFAULT_ANALYSIS_RELATIVE_PERIOD = "LAST_12_MONTHS";
+    final String DEFAULT_METADATA_REPO_URL = "http://metadata.dhis2.org";
 	
     final Map<String, Serializable> DEFAULT_SETTINGS_VALUES = new HashMap<String, Serializable>()
     {
