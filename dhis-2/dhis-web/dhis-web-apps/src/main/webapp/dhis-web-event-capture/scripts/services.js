@@ -306,7 +306,7 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
                 dhis2Event.id = dhis2.util.uid();  
                 dhis2Event.event = dhis2Event.id;
                 dhis2.ec.store.set( 'events', dhis2Event );                
-                return {importSummaries: [{status: 'SUCCESS', reference: dhis2Event.id}]};
+                return {response: {importSummaries: [{status: 'SUCCESS', reference: dhis2Event.id}]}};
             });
             return promise;            
         },        
