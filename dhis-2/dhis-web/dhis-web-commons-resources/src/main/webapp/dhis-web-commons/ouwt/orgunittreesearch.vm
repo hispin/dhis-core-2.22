@@ -20,7 +20,7 @@
 <img id="searchIcon" src="../images/search.png" style="cursor: pointer" title="$i18n.getString( 'locate_organisation_unit_by_name' )">
 
 <span id="searchSpan" style="width:100%;display:none;">
-	<input type="text" id="searchField" name="key" style="width:160px" />
+	<input type="text" id="searchField" name="key" style="width:155px" />
 	<input type="button" value="Find" onclick="selection.findByName()" />
 </span>
 

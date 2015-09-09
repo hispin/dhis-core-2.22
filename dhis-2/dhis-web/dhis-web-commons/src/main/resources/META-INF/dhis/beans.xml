@@ -190,9 +190,7 @@
   </bean>
 
   <bean id="org.hisp.dhis.ouwt.action.GetOrganisationUnitsByNameAction" class="org.hisp.dhis.ouwt.action.GetOrganisationUnitsByNameAction"
-    scope="prototype">
-    <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
-  </bean>
+    scope="prototype" />
 
   <!-- Organisation Unit Selection Tree -->
 

@@ -160,7 +160,7 @@ public class HibernateOrganisationUnitStore
         
         if ( params.getQuery() != null )
         {
-            hql += hlp.whereAnd() + " (lower(o.name) like :queryLower or o.code = :query or o.uid = :query)" ;
+            hql += hlp.whereAnd() + " (lower(o.name) like :queryLower or o.code = :query or o.uid = :query) " ;
         }
 
         if ( params.hasGroups() )
@@ -180,8 +180,10 @@ public class HibernateOrganisationUnitStore
                 hql += "o.path like :" + parent.getUid() + " or ";
             }
             
-            hql = TextUtils.removeLastOr( hql ) + ")";
+            hql = TextUtils.removeLastOr( hql ) + ") ";
         }
+        
+        hql += "order by o.name";
         
         Query query = getQuery( hql );
         

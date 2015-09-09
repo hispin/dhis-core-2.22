@@ -28,17 +28,18 @@ package org.hisp.dhis.ouwt.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.user.CurrentUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
@@ -52,20 +53,11 @@ public class GetOrganisationUnitsByNameAction
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private OrganisationUnitService organisationUnitService;
-
-    public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
-    {
-        this.organisationUnitService = organisationUnitService;
-    }
-
     @Autowired
-    private CurrentUserService currentUserService;
-
-    public void setCurrentUserService( CurrentUserService currentUserService )
-    {
-        this.currentUserService = currentUserService;
-    }
+    private OrganisationUnitService organisationUnitService;
+    
+    @Autowired
+    private OrganisationUnitSelectionManager selectionManager;
 
     // -------------------------------------------------------------------------
     // Input
@@ -99,23 +91,15 @@ public class GetOrganisationUnitsByNameAction
     {
         term = term.toLowerCase();
 
-        Set<OrganisationUnit> userOrganisationUnits = new HashSet<>( currentUserService.getCurrentUser().getOrganisationUnits() );
-
-        userOrganisationUnits.addAll( organisationUnitService.getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( userOrganisationUnits ) ) );
-
-        for ( OrganisationUnit organisationUnit : userOrganisationUnits )
-        {
-            if ( organisationUnits.size() >= MAX )
-            {
-                return SUCCESS;
-            }
-
-            if ( organisationUnit.getName().toLowerCase().contains( term ) )
-            {
-                organisationUnits.add( organisationUnit );
-            }
-        }
-
+        Set<OrganisationUnit> parents = new HashSet<OrganisationUnit>( selectionManager.getSelectedOrganisationUnits() );
+        
+        OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+        params.setQuery( term );
+        params.setParents( parents );
+        params.setMax( MAX );
+        
+        organisationUnits = organisationUnitService.getOrganisationUnitsByQuery( params );
+        
         return SUCCESS;
     }
 }
