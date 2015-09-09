@@ -28,11 +28,25 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.bouncycastle.ocsp.Req;
 import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
+import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
+import org.hisp.dhis.indicator.IndicatorGroup;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
+import org.hisp.dhis.period.PeriodService;
+import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.user.UserAuthorityGroup;
+import org.hisp.dhis.user.UserGroup;
+import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -48,6 +62,12 @@ public class ConfigurationController
     @Autowired
     private ConfigurationService configurationService;
 
+    @Autowired
+    private IdentifiableObjectManager identifiableObjectManager;
+
+    @Autowired
+    private PeriodService periodService;
+
     @RequestMapping( value = "/systemId", method = RequestMethod.GET )
     private String getSystemId( Model model, HttpServletRequest request )
     {
@@ -60,10 +80,46 @@ public class ConfigurationController
         return setModel( model, configurationService.getConfiguration().getFeedbackRecipients() );
     }
 
+    @RequestMapping( value = "/feedbackRecipients/{uid}", method = RequestMethod.POST )
+    private void setFeedbackRecipients( @PathVariable( "uid" ) String uid )
+        throws NotFoundException
+    {
+        UserGroup group = identifiableObjectManager.get( UserGroup.class, uid );
+
+        if ( group == null )
+        {
+            throw new NotFoundException( "User group", uid );
+        }
+
+        Configuration config = configurationService.getConfiguration();
+
+        config.setFeedbackRecipients( group );
+
+        configurationService.setConfiguration( config );
+    }
+
     @RequestMapping( value = "/offlineOrganisationUnitLevel", method = RequestMethod.GET )
     private String getOfflineOrganisationUnitLevel( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getOfflineOrganisationUnitLevel() );
+    }
+
+    @RequestMapping( value = "/offlineOrganisationUnitLevel/{uid}", method = RequestMethod.POST )
+    private void setOfflineOrganisationUnitLevels( @PathVariable( "uid" ) String uid )
+        throws NotFoundException
+    {
+        OrganisationUnitLevel organisationUnitLevel = identifiableObjectManager.get( OrganisationUnitLevel.class, uid );
+
+        if ( organisationUnitLevel == null )
+        {
+            throw new NotFoundException( "Organisation unit level", uid );
+        }
+
+        Configuration config = configurationService.getConfiguration();
+
+        config.setOfflineOrganisationUnitLevel( organisationUnitLevel );
+
+        configurationService.setConfiguration( config );
     }
 
     @RequestMapping( value = "/infrastructuralIndicators", method = RequestMethod.GET )
@@ -72,10 +128,46 @@ public class ConfigurationController
         return setModel( model, configurationService.getConfiguration().getInfrastructuralIndicators() );
     }
 
+    @RequestMapping( value = "/infrastructuralIndicators/{uid}", method = RequestMethod.POST )
+    private void setInfrastructuralIndicators( @PathVariable( "uid" ) String uid )
+        throws NotFoundException
+    {
+        IndicatorGroup group = identifiableObjectManager.get( IndicatorGroup.class, uid );
+
+        if ( group == null )
+        {
+            throw new NotFoundException( "Indicator group", uid );
+        }
+
+        Configuration config = configurationService.getConfiguration();
+
+        config.setInfrastructuralIndicators( group );
+
+        configurationService.setConfiguration( config );
+    }
+
     @RequestMapping( value = "/infrastructuralDataElements", method = RequestMethod.GET )
     private String getInfrastructuralDataElements( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getInfrastructuralDataElements() );
+    }
+
+    @RequestMapping( value = "/infrastructuralDataElements/{uid}", method = RequestMethod.POST )
+    private void setInfrastructuralDataElements( @PathVariable("uid") String uid )
+        throws NotFoundException
+    {
+        DataElementGroup group = identifiableObjectManager.get( DataElementGroup.class, uid );
+
+        if ( group == null )
+        {
+            throw new NotFoundException( "Data element group", uid );
+        }
+
+        Configuration config = configurationService.getConfiguration();
+
+        config.setInfrastructuralDataElements( group );
+
+        configurationService.setConfiguration( config );
     }
 
     @RequestMapping( value = "/infrastructuralPeriodType", method = RequestMethod.GET )
@@ -87,16 +179,70 @@ public class ConfigurationController
         return setModel( model, entity );
     }
 
+    @RequestMapping( value = "/infrastructuralPeriodType/{name}", method = RequestMethod.POST )
+    private void setInfrastructuralPeriodType( @PathVariable( "name" ) String name )
+        throws NotFoundException
+    {
+        PeriodType periodType = PeriodType.getPeriodTypeByName( name );
+
+        if ( periodType == null )
+        {
+            throw new NotFoundException( "Period type", name );
+        }
+
+        Configuration config = configurationService.getConfiguration();
+
+        config.setInfrastructuralPeriodType( periodService.reloadPeriodType( periodType ) );
+
+        configurationService.setConfiguration( config );
+    }
+
     @RequestMapping( value = "/selfRegistrationRole", method = RequestMethod.GET )
     private String getSelfRegistrationRole( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getSelfRegistrationRole() );
     }
 
+    @RequestMapping( value = "/selfRegistrationRole/{uid}", method = RequestMethod.POST )
+    private void setSelfRegistrationRole( @PathVariable( "uid" ) String uid )
+        throws NotFoundException
+    {
+        UserAuthorityGroup userGroup = identifiableObjectManager.get( UserAuthorityGroup.class, uid );
+
+        if ( userGroup == null )
+        {
+            throw new NotFoundException( "User authority group", uid );
+        }
+
+        Configuration config = configurationService.getConfiguration();
+
+        config.setSelfRegistrationRole( userGroup );
+
+        configurationService.setConfiguration( config );
+    }
+
     @RequestMapping( value = "/selfRegistrationOrgUnit", method = RequestMethod.GET )
     private String getSelfRegistrationOrgUnit( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getSelfRegistrationOrgUnit() );
+    }
+
+    @RequestMapping( value = "/selfRegistrationOrgUnit/{uid}", method = RequestMethod.POST )
+    private void setSelfRegistrationOrgUnit( @PathVariable( "uid" ) String uid )
+        throws NotFoundException
+    {
+        OrganisationUnit orgunit = identifiableObjectManager.get( OrganisationUnit.class, uid );
+
+        if ( orgunit == null )
+        {
+            throw new NotFoundException( "Organisation unit", uid );
+        }
+
+        Configuration config = configurationService.getConfiguration();
+
+        config.setSelfRegistrationOrgUnit( orgunit );
+
+        configurationService.setConfiguration( config );
     }
 
     private String setModel( Model model, Object entity )
