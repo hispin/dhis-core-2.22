@@ -131,6 +131,8 @@ views/eventList.html
 views/home.html
 views/modal.html
 views/notes.html
+views/buttons-section.html
+views/indicators-section.html
 
 ../dhis-web-commons/fonts/LiberationSans-Regular-webfont.eot
 ../dhis-web-commons/fonts/LiberationSans-Regular-webfont.woff
