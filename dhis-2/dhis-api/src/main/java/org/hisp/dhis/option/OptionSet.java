@@ -28,24 +28,25 @@ package org.hisp.dhis.option;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.VersionedObject;
-import org.hisp.dhis.common.annotation.Scanned;
-import org.hisp.dhis.common.view.DetailedView;
-import org.hisp.dhis.common.view.ExportView;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.common.VersionedObject;
+import org.hisp.dhis.common.annotation.Scanned;
+import org.hisp.dhis.common.view.DetailedView;
+import org.hisp.dhis.common.view.ExportView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Lars Helge Overland
@@ -57,6 +58,8 @@ public class OptionSet
 {
     @Scanned
     private List<Option> options = new ArrayList<>();
+
+    private ValueType valueType;
 
     private int version;
 
@@ -90,28 +93,14 @@ public class OptionSet
 
     public List<String> getOptionValues()
     {
-        List<String> result = new ArrayList<>();
-
-        for ( Option option : options )
-        {
-            result.add( option.getName() );
-        }
-
-        return result;
+        return options.stream().map( Option::getName ).collect( Collectors.toList() );
     }
 
     public List<String> getOptionCodes()
     {
-        List<String> codes = new ArrayList<>();
-        
-        for ( Option option : options )
-        {
-            codes.add( option.getCode() );
-        }
-        
-        return codes;
+        return options.stream().map( Option::getCode ).collect( Collectors.toList() );
     }
-    
+
     public Option getOptionByCode( String code )
     {
         for ( Option option : options )
@@ -121,10 +110,10 @@ public class OptionSet
                 return option;
             }
         }
-        
+
         return null;
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -142,6 +131,18 @@ public class OptionSet
     public void setOptions( List<Option> options )
     {
         this.options = options;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public ValueType getValueType()
+    {
+        return valueType;
+    }
+
+    public void setValueType( ValueType valueType )
+    {
+        this.valueType = valueType;
     }
 
     @Override
@@ -171,8 +172,17 @@ public class OptionSet
         {
             OptionSet optionSet = (OptionSet) other;
 
+            if ( strategy.isReplace() )
+            {
+                valueType = optionSet.getValueType();
+            }
+            else if ( strategy.isMerge() )
+            {
+                valueType = optionSet.getValueType() == null ? valueType : optionSet.getValueType();
+            }
+
             version = optionSet.getVersion();
-            
+
             removeAllOptions();
             options.addAll( optionSet.getOptions() );
         }
