@@ -263,7 +263,7 @@ public class DefaultEventQueryPlanner
         
         if ( params.isAggregateData() )
         {
-            for ( QueryItem item : params.getItems() )
+            for ( QueryItem item : params.getItemsAndItemFilters() )
             {
                 EventQueryParams query = params.instance();
                 query.getItems().clear();
