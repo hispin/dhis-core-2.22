@@ -28,10 +28,17 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.synch.AvailabilityStatus;
 import org.hisp.dhis.dxf2.synch.SynchronizationManager;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -39,12 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-
-import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Lars Helge Overland
@@ -57,6 +59,9 @@ public class SynchronizationController
     
     @Autowired
     private SynchronizationManager synchronizationManager;
+    
+    @Autowired
+    private RestTemplate restTemplate;
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_EXPORT_DATA')" )
     @RequestMapping( value = "/dataPush", method = RequestMethod.POST )
@@ -84,5 +89,11 @@ public class SynchronizationController
     public @ResponseBody AvailabilityStatus isRemoteServerAvailable()
     {
         return synchronizationManager.isRemoteServerAvailable();
-    }    
+    }
+    
+    @RequestMapping( value = "/metadataRepo", method = RequestMethod.GET, produces = "application/json" )
+    public @ResponseBody String getMetadataRepoIndex()
+    {
+        return restTemplate.getForObject( SystemSettingManager.DEFAULT_METADATA_REPO_URL, String.class );
+    }
 }
