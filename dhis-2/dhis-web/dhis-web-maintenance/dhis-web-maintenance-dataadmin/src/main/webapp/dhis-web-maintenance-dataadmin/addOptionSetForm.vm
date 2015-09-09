@@ -34,6 +34,26 @@
       <td><label>$i18n.getString( "code" )</label></td>
       <td colspan="3"><input type="text" id="code" name="code" class="{validate:{minlength:2}}"></td>
     </tr>
+    <tr>
+   		<td><label for="valueType">$i18n.getString( "value_type" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+   		<td>
+         <select id="valueType" name="valueType">
+           <option value="INTEGER">$i18n.getString( "int" )</option>
+           <option value="INTEGER_POSITIVE">$i18n.getString( "positive_integer" )</option>
+           <option value="INTEGER_NEGATIVE">$i18n.getString( "negative_integer" )</option>
+           <option value="INTEGER_ZERO_OR_POSITIVE">$i18n.getString( "zero_positive_int" )</option>
+           <option value="NUMBER">$i18n.getString( "number" )</option>
+           <option value="UNIT_INTERVAL">$i18n.getString( "unit_interval" )</option>
+           <option value="PERCENTAGE">$i18n.getString( "percentage" )</option>
+           <option value="TEXT">$i18n.getString( "text" )</option>
+           <option value="LONG_TEXT">$i18n.getString( "long_text" )</option>
+           <option value="DATE">$i18n.getString( "date" )</option>
+           <option value="USERNAME">$i18n.getString( "user_name" )</option>
+           <option value="BOOLEAN">$i18n.getString( "yes_no" )</option>
+           <option value="TRUE_ONLY">$i18n.getString( "yes_only" )</option>
+         </select>
+   		</td>
+   	</tr>
 	<tr>
 	  <td></td>
 	  <td colspan="3">
