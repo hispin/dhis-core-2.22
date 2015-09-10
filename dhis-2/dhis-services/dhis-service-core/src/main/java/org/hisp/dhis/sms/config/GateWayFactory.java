@@ -29,12 +29,6 @@ package org.hisp.dhis.sms.config;
  */
 
 import org.hisp.dhis.sms.SmsServiceException;
-import org.hisp.dhis.sms.config.BulkSmsGatewayConfig;
-import org.hisp.dhis.sms.config.ClickatellGatewayConfig;
-import org.hisp.dhis.sms.config.GenericHttpGatewayConfig;
-import org.hisp.dhis.sms.config.ModemGatewayConfig;
-import org.hisp.dhis.sms.config.SMPPGatewayConfig;
-import org.hisp.dhis.sms.config.SmsGatewayConfig;
 import org.smslib.AGateway;
 import org.smslib.AGateway.Protocols;
 import org.smslib.http.BulkSmsHTTPGateway;

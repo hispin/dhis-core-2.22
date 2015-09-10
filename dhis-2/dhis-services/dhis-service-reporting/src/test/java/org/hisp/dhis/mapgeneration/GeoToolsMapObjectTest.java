@@ -33,7 +33,6 @@ import static org.junit.Assert.assertEquals;
 import java.awt.Color;
 
 import org.hisp.dhis.DhisSpringTest;
-import org.hisp.dhis.mapgeneration.InternalMapObject;
 import org.junit.Ignore;
 import org.junit.Test;
 

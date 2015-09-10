@@ -28,6 +28,7 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.math3.util.MathUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
@@ -157,11 +158,11 @@ public class DefaultProgramValidationService
                 {
                     double leftSide = Double.parseDouble( leftSideValue );
                     double rightSide = Double.parseDouble( rightSideValue );
-                    if ( !((operator.equals( "==" ) && leftSide == rightSide)
+                    if ( !((operator.equals( "==" ) && MathUtils.equals( leftSide, rightSide ) )
                         || (operator.equals( "<" ) && leftSide < rightSide)
                         || (operator.equals( "<=" ) && leftSide <= rightSide)
                         || (operator.equals( ">" ) && leftSide > rightSide)
-                        || (operator.equals( ">=" ) && leftSide >= rightSide) || (operator.equals( "!=" ) && leftSide != rightSide)) )
+                        || (operator.equals( ">=" ) && leftSide >= rightSide) || (operator.equals( "!=" ) && !MathUtils.equals( leftSide, rightSide ) )) )
                     {
                         ProgramValidationResult validationResult = new ProgramValidationResult( programStageInstance,
                             validate, leftSideValue, rightSideValue );

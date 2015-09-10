@@ -32,9 +32,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.hisp.dhis.system.deletion.DeletionHandler;
-import org.hisp.dhis.trackedentity.TrackedEntityInstance;
-import org.hisp.dhis.trackedentity.TrackedEntityAudit;
-import org.hisp.dhis.trackedentity.TrackedEntityAuditService;
 
 /**
  * @author Chau Thu Tran

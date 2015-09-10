@@ -248,7 +248,7 @@ public class DefaultPdfDataEntryFormService
         // Add Section Name and Section Spacing
         insertTable_TextRow( writer, mainTable, TEXT_BLANK );
 
-        if ( sectionName != "" )
+        if ( sectionName != null && !sectionName.isEmpty() )
         {
             insertTable_TextRow( writer, mainTable, sectionName,
                 pdfFormFontSettings.getFont( PdfFormFontSettings.FONTTYPE_SECTIONHEADER ) );
@@ -752,7 +752,7 @@ public class DefaultPdfDataEntryFormService
         // add weekly date range info here.
         SimpleDateFormat simpleDateFormat_Weekly = null;
 
-        if ( periods.size() > 1 && periods.get( 0 ).getPeriodType().getName() == WeeklyPeriodType.NAME )
+        if ( periods.size() > 1 && periods.get( 0 ).getPeriodType().getName().equals( WeeklyPeriodType.NAME ) )
         {
             simpleDateFormat_Weekly = new SimpleDateFormat( Period.DEFAULT_DATE_FORMAT );
         }
@@ -785,13 +785,13 @@ public class DefaultPdfDataEntryFormService
         int startYear = currYear - PERIODRANGE_PREVYEARS;
         int endYear = currYear + PERIODRANGE_FUTUREYEARS;
 
-        if ( periodType.getName() == QuarterlyPeriodType.NAME
-            || periodType.getName() == SixMonthlyPeriodType.NAME
-            || periodType.getName() == SixMonthlyAprilPeriodType.NAME
-            || periodType.getName() == YearlyPeriodType.NAME
-            || periodType.getName() == FinancialAprilPeriodType.NAME
-            || periodType.getName() == FinancialJulyPeriodType.NAME
-            || periodType.getName() == FinancialOctoberPeriodType.NAME )
+        if ( periodType.getName().equals( QuarterlyPeriodType.NAME )
+            || periodType.getName().equals( SixMonthlyPeriodType.NAME )
+            || periodType.getName().equals( SixMonthlyAprilPeriodType.NAME )
+            || periodType.getName().equals( YearlyPeriodType.NAME )
+            || periodType.getName().equals( FinancialAprilPeriodType.NAME )
+            || periodType.getName().equals( FinancialJulyPeriodType.NAME )
+            || periodType.getName().equals( FinancialOctoberPeriodType.NAME ) )
         {
             startYear = currYear - PERIODRANGE_PREVYEARS_YEARLY;
             endYear = currYear + PERIODRANGE_FUTUREYEARS_YEARLY;

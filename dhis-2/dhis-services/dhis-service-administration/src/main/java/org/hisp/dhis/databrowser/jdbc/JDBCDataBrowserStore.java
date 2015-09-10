@@ -421,7 +421,7 @@ public class JDBCDataBrowserStore
         List<Integer> headerIds = new ArrayList<>();
         setHeaderStructure( grid, rs, headerIds, isZeroAdded );
 
-        if ( rs.first() != true )
+        if ( !rs.first() )
         {
             return countRows;
         }

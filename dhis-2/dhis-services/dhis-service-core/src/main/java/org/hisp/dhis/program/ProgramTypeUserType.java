@@ -1,3 +1,5 @@
+package org.hisp.dhis.program;
+
 /*
  * Copyright (c) 2004-2014, University of Oslo
  * All rights reserved.
@@ -25,10 +27,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.program;
 
 import org.hisp.dhis.hibernate.EnumUserType;
-import org.hisp.dhis.program.ProgramType;
 
 /**
  * @author Chau Thu Tran

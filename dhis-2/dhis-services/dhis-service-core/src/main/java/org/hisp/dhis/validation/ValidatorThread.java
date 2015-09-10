@@ -268,7 +268,7 @@ public class ValidatorThread
                     Collection<DataElementOperand> deos = context.getExpressionService().getOperandsInExpression(
                         rule.getLeftSide().getExpression() );
                     
-                    if ( ValidationRule.RULE_TYPE_VALIDATION == rule.getRuleType() )
+                    if ( ValidationRule.RULE_TYPE_VALIDATION.equals( rule.getRuleType() ) )
                     {
                         // Make a copy so we can add to it.
                         deos = new HashSet<>( deos );

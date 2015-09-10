@@ -31,8 +31,6 @@ package org.hisp.dhis.setting;
 import java.io.File;
 import java.util.SortedMap;
 
-import org.hisp.dhis.setting.StyleManager;
-import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.UserSettingService;
 
 /**

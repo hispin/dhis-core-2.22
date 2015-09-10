@@ -44,7 +44,6 @@ import org.hisp.dhis.sms.config.GenericHttpGatewayConfig;
 import org.hisp.dhis.sms.config.SMPPGatewayConfig;
 import org.hisp.dhis.sms.config.SmsConfiguration;
 import org.hisp.dhis.sms.config.SmsGatewayConfig;
-import org.hisp.dhis.sms.outbound.OutboundSmsTransportService;
 import org.smslib.AGateway;
 import org.smslib.GatewayException;
 import org.smslib.IInboundMessageNotification;
