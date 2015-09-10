@@ -28,10 +28,9 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.security.SecurityContextRunnable;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.scheduling.TaskId;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ import java.util.List;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class ImportEventsTask
-    implements Runnable
+    extends SecurityContextRunnable
 {
     private final List<Event> events;
 
@@ -49,21 +48,18 @@ public class ImportEventsTask
 
     private final TaskId taskId;
 
-    private final Authentication authentication;
-
     public ImportEventsTask( List<Event> events, EventService eventService, ImportOptions importOptions, TaskId taskId )
     {
+        super();
         this.events = events;
         this.eventService = eventService;
         this.importOptions = importOptions;
         this.taskId = taskId;
-        this.authentication = SecurityContextHolder.getContext().getAuthentication();
     }
 
     @Override
-    public void run()
+    public void call()
     {
-        SecurityContextHolder.getContext().setAuthentication( authentication );
         eventService.addEvents( events, importOptions, taskId );
     }
 }

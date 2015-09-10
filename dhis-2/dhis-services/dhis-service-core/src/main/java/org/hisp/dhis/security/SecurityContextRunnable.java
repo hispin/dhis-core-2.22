@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.metadata.tasks;
+package org.hisp.dhis.security;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,41 +28,38 @@ package org.hisp.dhis.dxf2.metadata.tasks;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.security.SecurityContextRunnable;
-import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.metadata.ImportService;
-import org.hisp.dhis.dxf2.metadata.MetaData;
-import org.hisp.dhis.scheduling.TaskId;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
+ * Implementation of a runnable that makes sure the thread is run in the same
+ * security context as the creator, you must implement the call method.
+ *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class ImportMetaDataTask
-    extends SecurityContextRunnable
+public abstract class SecurityContextRunnable
+    implements Runnable
 {
-    private String userUid;
+    private final SecurityContext securityContext;
 
-    private final ImportService importService;
-
-    private final ImportOptions importOptions;
-
-    private final TaskId taskId;
-
-    private final MetaData metaData;
-
-    public ImportMetaDataTask( String userUid, ImportService importService, ImportOptions importOptions, TaskId taskId, MetaData metaData )
+    public SecurityContextRunnable()
     {
-        super();
-        this.userUid = userUid;
-        this.importService = importService;
-        this.importOptions = importOptions;
-        this.taskId = taskId;
-        this.metaData = metaData;
+        this.securityContext = SecurityContextHolder.getContext();
     }
 
     @Override
-    public void call()
+    final public void run()
     {
-        importService.importMetaData( userUid, metaData, importOptions, taskId );
+        try
+        {
+            SecurityContextHolder.setContext( securityContext );
+            call();
+        }
+        finally
+        {
+            SecurityContextHolder.clearContext();
+        }
     }
+
+    public abstract void call();
 }

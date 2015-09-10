@@ -28,30 +28,31 @@ package org.hisp.dhis.importexport.action.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.dxf2.csv.CsvImportService;
+import org.hisp.dhis.security.SecurityContextRunnable;
 import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.csv.CsvImportService;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
 import org.hisp.dhis.scheduling.TaskId;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class ImportMetaDataCsvTask
-    implements Runnable
+    extends SecurityContextRunnable
 {
     private static final Log log = LogFactory.getLog( ImportMetaDataTask.class );
 
     private ImportService importService;
-    
+
     private CsvImportService csvImportService;
-    
+
     private ImportOptions importOptions;
 
     private InputStream inputStream;
@@ -59,14 +60,15 @@ public class ImportMetaDataCsvTask
     private TaskId taskId;
 
     private String userUid;
-    
+
     private Class<? extends IdentifiableObject> clazz;
 
-    public ImportMetaDataCsvTask( String userUid, ImportService importService, 
+    public ImportMetaDataCsvTask( String userUid, ImportService importService,
         CsvImportService csvImportService,
         ImportOptions importOptions, InputStream inputStream,
         TaskId taskId, Class<? extends IdentifiableObject> clazz )
     {
+        super();
         this.userUid = userUid;
         this.importService = importService;
         this.csvImportService = csvImportService;
@@ -81,9 +83,9 @@ public class ImportMetaDataCsvTask
     // -------------------------------------------------------------------------
 
     @Override
-    public void run()
+    public void call()
     {
-        MetaData metaData = null;
+        MetaData metaData;
 
         try
         {

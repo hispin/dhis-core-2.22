@@ -28,6 +28,7 @@ package org.hisp.dhis.importexport.action.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.security.SecurityContextRunnable;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.gml.GmlImportService;
 import org.hisp.dhis.importexport.ImportStrategy;
@@ -39,7 +40,7 @@ import java.io.InputStream;
  * @author Halvdan Hoem Grelland
  */
 public class ImportMetaDataGmlTask
-    implements Runnable
+    extends SecurityContextRunnable
 {
     private TaskId taskId;
 
@@ -62,6 +63,7 @@ public class ImportMetaDataGmlTask
     public ImportMetaDataGmlTask( String userUid, GmlImportService gmlImportService,
         ImportOptions importOptions, InputStream inputStream, TaskId taskId )
     {
+        super();
         this.userUid = userUid;
         this.gmlImportService = gmlImportService;
         this.importOptions = importOptions;
@@ -74,7 +76,7 @@ public class ImportMetaDataGmlTask
     // -------------------------------------------------------------------------
 
     @Override
-    public void run()
+    public void call()
     {
         importOptions.setImportStrategy( ImportStrategy.UPDATE );
         gmlImportService.importGml( inputStream, userUid, importOptions, taskId );
