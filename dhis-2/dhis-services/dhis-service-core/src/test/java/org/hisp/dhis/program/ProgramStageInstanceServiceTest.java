@@ -447,18 +447,6 @@ public class ProgramStageInstanceServiceTest
     }
 
     @Test
-    public void testSetExecutionDate()
-    {
-        int idA = programStageInstanceService.addProgramStageInstance( programStageInstanceA );
-
-        programStageInstanceService.setExecutionDate( programStageInstanceA, enrollmentDate, organisationUnitA );
-
-        ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( idA );
-        assertEquals( enrollmentDate, programStageInstance.getExecutionDate() );
-        assertEquals( organisationUnitA, programStageInstance.getOrganisationUnit() );
-    }
-
-    @Test
     public void testCreateProgramStageInstance()
     {
         programA.setProgramType( ProgramType.WITHOUT_REGISTRATION );

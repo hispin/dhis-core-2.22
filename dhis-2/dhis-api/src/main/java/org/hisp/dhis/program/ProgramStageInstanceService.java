@@ -32,9 +32,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -134,33 +132,6 @@ public interface ProgramStageInstanceService
     Collection<SchedulingProgramObject> getSendMesssageEvents();
 
     /**
-     * Get/export statistical report of a program
-     *
-     * @param program Program needs to report
-     * @param orgunitIds The ids of orgunits where the events happened
-     * @param startDate Optional date the instance should be on or after.
-     * @param endDate Optional date the instance should be on or before.
-     * @param i18n I18n object
-     * @param format I18nFormat
-     * @return Program report
-     */
-    Grid getStatisticalReport( Program program, Collection<Integer> orgunitIds, Date startDate, Date endDate,
-        I18n i18n, I18nFormat format );
-
-    /**
-     * Get/Export a report about the number of events of a program completed on
-     * a orgunit
-     *
-     * @param orgunits The ids of orgunits where the events happened
-     * @param program The program needs for reporting
-     * @param startDate Optional date the instance should be on or after.
-     * @param endDate Optional date the instance should be on or before.
-     * @return Grid
-     */
-    Grid getCompletenessProgramStageInstance( Collection<Integer> orgunits, Program program, String startDate,
-        String endDate, I18n i18n );
-
-    /**
      * Complete an event. Besides, program template messages will be send if it
      * was defined to send when to complete this program
      *
@@ -168,16 +139,6 @@ public interface ProgramStageInstanceService
      * @param format I18nFormat
      */
     void completeProgramStageInstance( ProgramStageInstance programStageInstance, I18nFormat format );
-
-    /**
-     * Set report date and orgunit where an event happened for the event
-     *
-     * @param programStageInstance ProgramStageInstance
-     * @param executionDate Report date
-     * @param organisationUnit Orgunit where the event happens
-     */
-    void setExecutionDate( ProgramStageInstance programStageInstance, Date executionDate,
-        OrganisationUnit organisationUnit );
 
     /**
      * Creates a program stage instance. Will create a program instance in case
