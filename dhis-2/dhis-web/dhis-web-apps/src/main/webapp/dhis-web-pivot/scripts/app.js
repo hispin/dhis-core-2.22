@@ -516,6 +516,7 @@ Ext.onReady( function() {
             aggregationType,
             dataApprovalLevel,
 			showHierarchy,
+            completedOnly,
 			digitGroupSeparator,
 			displayDensity,
 			fontSize,
@@ -524,6 +525,8 @@ Ext.onReady( function() {
 			parentOrganisationUnit,
 
 			data,
+            organisationUnits,
+            events,
 			style,
 			parameters,
 
@@ -630,7 +633,7 @@ Ext.onReady( function() {
 		});
 
 		completedOnly = Ext.create('Ext.form.field.Checkbox', {
-			boxLabel: NS.i18n.include_completed_events_only,
+			boxLabel: NS.i18n.include_only_completed_events_only,
 			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
 		});
 
@@ -1007,6 +1010,7 @@ Ext.onReady( function() {
                     w.aggregationType = aggregationType;
                     w.dataApprovalLevel = dataApprovalLevel;
 					w.showHierarchy = showHierarchy;
+                    w.completedOnly = completedOnly;
 					w.displayDensity = displayDensity;
 					w.fontSize = fontSize;
 					w.digitGroupSeparator = digitGroupSeparator;

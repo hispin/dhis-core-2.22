@@ -628,9 +628,12 @@ Ext.onReady( function() {
 			hideTitle,
 			title,
 
+            completedOnly,
+
 			data,
 			axes,
 			general,
+            events,
 			window,
 
             comboBottomMargin = 1,
@@ -782,6 +785,26 @@ Ext.onReady( function() {
 			minValue: 0
 		});
 
+		rangeAxisTitle = Ext.create('Ext.form.field.Text', {
+			width: cmpWidth,
+			fieldLabel: NS.i18n.range_axis_label,
+			labelStyle: 'color:#333',
+			labelWidth: 125,
+			maxLength: 100,
+			enforceMaxLength: true,
+			style: 'margin-bottom:1px'
+		});
+
+		domainAxisTitle = Ext.create('Ext.form.field.Text', {
+			width: cmpWidth,
+			fieldLabel: NS.i18n.domain_axis_label,
+			labelStyle: 'color:#333',
+			labelWidth: 125,
+			maxLength: 100,
+			enforceMaxLength: true,
+			style: 'margin-bottom:1px'
+		});
+
         // general
 		hideLegend = Ext.create('Ext.form.field.Checkbox', {
 			boxLabel: NS.i18n.hide_legend,
@@ -811,24 +834,10 @@ Ext.onReady( function() {
 			}
 		});
 
-		rangeAxisTitle = Ext.create('Ext.form.field.Text', {
-			width: cmpWidth,
-			fieldLabel: NS.i18n.range_axis_label,
-			labelStyle: 'color:#333',
-			labelWidth: 125,
-			maxLength: 100,
-			enforceMaxLength: true,
-			style: 'margin-bottom:1px'
-		});
-
-		domainAxisTitle = Ext.create('Ext.form.field.Text', {
-			width: cmpWidth,
-			fieldLabel: NS.i18n.domain_axis_label,
-			labelStyle: 'color:#333',
-			labelWidth: 125,
-			maxLength: 100,
-			enforceMaxLength: true,
-			style: 'margin-bottom:1px'
+        // events
+		completedOnly = Ext.create('Ext.form.field.Checkbox', {
+			boxLabel: NS.i18n.include_only_completed_events_only,
+			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
 		});
 
         data = {
@@ -907,6 +916,14 @@ Ext.onReady( function() {
 			]
 		};
 
+		events = {
+			bodyStyle: 'border:0 none',
+			style: 'margin-left:14px',
+			items: [
+				completedOnly
+			]
+		};
+
 		window = Ext.create('Ext.window.Window', {
 			title: NS.i18n.chart_options,
 			bodyStyle: 'background-color:#fff; padding:3px',
@@ -920,6 +937,7 @@ Ext.onReady( function() {
 					showValues: showValues.getValue(),
                     hideEmptyRows: hideEmptyRows.getValue(),
 					showTrendLine: showTrendLine.getValue(),
+					completedOnly: completedOnly.getValue(),
 					targetLineValue: targetLineValue.getValue(),
 					targetLineTitle: targetLineTitle.getValue(),
 					baseLineValue: baseLineValue.getValue(),
@@ -941,6 +959,8 @@ Ext.onReady( function() {
 				showValues.setValue(Ext.isBoolean(layout.showValues) ? layout.showValues : false);
 				hideEmptyRows.setValue(Ext.isBoolean(layout.hideEmptyRows) ? layout.hideEmptyRows : false);
 				showTrendLine.setValue(Ext.isBoolean(layout.showTrendLine) ? layout.showTrendLine : false);
+
+                completedOnly.setValue(Ext.isBoolean(layout.completedOnly) ? layout.completedOnly : false);
 
 				// target line
 				if (Ext.isNumber(layout.targetLineValue)) {
@@ -1047,6 +1067,15 @@ Ext.onReady( function() {
 				{
 					bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
 					style: 'margin-bottom:6px; margin-left:2px',
+					html: NS.i18n.events
+				},
+				events,
+				{
+					bodyStyle: 'border:0 none; padding:5px'
+				},
+				{
+					bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
+					style: 'margin-bottom:6px; margin-left:2px',
 					html: NS.i18n.axes
 				},
 				axes,
@@ -1091,20 +1120,19 @@ Ext.onReady( function() {
 					w.showValues = showValues;
                     w.hideEmptyRows = hideEmptyRows;
 					w.showTrendLine = showTrendLine;
+                    w.completedOnly = completedOnly;
 					w.targetLineValue = targetLineValue;
 					w.targetLineTitle = targetLineTitle;
 					w.baseLineValue = baseLineValue;
 					w.baseLineTitle = baseLineTitle;
                     w.sortOrder = sortOrder;
                     w.aggregationType = aggregationType;
-
 					w.rangeAxisMaxValue = rangeAxisMaxValue;
 					w.rangeAxisMinValue = rangeAxisMinValue;
 					w.rangeAxisSteps = rangeAxisSteps;
 					w.rangeAxisDecimals = rangeAxisDecimals;
 					w.rangeAxisTitle = rangeAxisTitle;
 					w.domainAxisTitle = domainAxisTitle;
-
 					w.hideLegend = hideLegend;
 					w.hideTitle = hideTitle;
 					w.title = title;
