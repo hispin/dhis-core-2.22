@@ -28,17 +28,15 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.common.IllegalQueryException;
-import org.hisp.dhis.common.OrganisationUnitSelectionMode;
-import org.hisp.dhis.i18n.I18n;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.trackedentity.TrackedEntityInstance;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import org.hisp.dhis.common.IllegalQueryException;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 /**
  * @author Abyot Asalefew
@@ -275,25 +273,6 @@ public interface ProgramInstanceService
      * @return ProgramInstance list
      */
     int countProgramInstances( Program program, Collection<Integer> orgunitIds, Date startDate, Date endDate );
-
-    /**
-     * Retrieve history of a TrackedEntityInstance
-     *
-     * @param entityInstance TrackedEntityInstance
-     * @param i18n           I18n object
-     * @return Grid list in which each grid is the program information details
-     * of the TrackedEntityInstance
-     */
-    List<Grid> getProgramInstanceReport( TrackedEntityInstance entityInstance, I18n i18n );
-
-    /**
-     * Export a program information details report
-     *
-     * @param programInstance ProgramInstance
-     * @param i18n            I18n object
-     * @return Grid object
-     */
-    Grid getProgramInstanceReport( ProgramInstance programInstance, I18n i18n );
 
     /**
      * Retrieve program instances with a certain status on a program and an
