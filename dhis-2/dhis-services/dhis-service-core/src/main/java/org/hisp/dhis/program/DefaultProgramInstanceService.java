@@ -28,17 +28,24 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ACCESSIBLE;
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ALL;
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.CHILDREN;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.CodeGenerator;
-import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
-import org.hisp.dhis.common.ValueType;
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.message.MessageConversation;
@@ -49,34 +56,18 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.sms.SmsSender;
 import org.hisp.dhis.sms.SmsServiceException;
 import org.hisp.dhis.sms.outbound.OutboundSms;
-import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.trackedentity.TrackedEntity;
-import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
-import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
-import org.hisp.dhis.trackedentitycomment.TrackedEntityComment;
-import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.*;
 
 /**
  * @author Abyot Asalefew
@@ -444,171 +435,6 @@ public class DefaultProgramInstanceService
     }
 
     @Override
-    public List<Grid> getProgramInstanceReport( TrackedEntityInstance instance, I18n i18n )
-    {
-        List<Grid> grids = new ArrayList<>();
-
-        // ---------------------------------------------------------------------
-        // Dynamic attributes
-        // ---------------------------------------------------------------------
-
-        Collection<Program> programs = programService.getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION );
-        programs.addAll( programService.getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION ) );
-
-        Collection<TrackedEntityAttributeValue> attributeValues = attributeValueService.getTrackedEntityAttributeValues( instance );
-        Iterator<TrackedEntityAttributeValue> iterAttribute = attributeValues.iterator();
-
-        for ( Program program : programs )
-        {
-            List<TrackedEntityAttribute> attributes = program.getTrackedEntityAttributes();
-
-            while ( iterAttribute.hasNext() )
-            {
-                TrackedEntityAttributeValue attributeValue = iterAttribute.next();
-
-                if ( !attributes.contains( attributeValue.getAttribute() ) )
-                {
-                    iterAttribute.remove();
-                }
-            }
-        }
-
-        if ( attributeValues.size() > 0 )
-        {
-            Grid attrGrid = new ListGrid();
-
-            for ( TrackedEntityAttributeValue attributeValue : attributeValues )
-            {
-                attrGrid.addRow();
-                attrGrid.addValue( attributeValue.getAttribute().getDisplayName() );
-                String value = attributeValue.getValue();
-                attrGrid.addValue( value );
-            }
-
-            grids.add( attrGrid );
-        }
-
-        // ---------------------------------------------------------------------
-        // Get all program data registered
-        // ---------------------------------------------------------------------
-
-        Collection<ProgramInstance> programInstances = instance.getProgramInstances();
-
-        if ( programInstances.size() > 0 )
-        {
-            for ( ProgramInstance programInstance : programInstances )
-            {
-                if ( programs.contains( programInstance.getProgram() ) )
-                {
-                    Grid gridProgram = getProgramInstanceReport( programInstance, i18n );
-
-                    grids.add( gridProgram );
-                }
-            }
-        }
-
-        return grids;
-    }
-
-    @Override
-    public Grid getProgramInstanceReport( ProgramInstance programInstance, I18n i18n )
-    {
-        I18nFormat format = i18nManager.getI18nFormat();
-
-        Grid grid = new ListGrid();
-
-        // ---------------------------------------------------------------------
-        // Get all program data registered
-        // ---------------------------------------------------------------------
-
-        grid.setTitle( programInstance.getProgram().getName() );
-        grid.setSubtitle( "" );
-
-        // ---------------------------------------------------------------------
-        // Headers
-        // ---------------------------------------------------------------------
-
-        grid.addHeader( new GridHeader( "", false, false ) );
-        grid.addHeader( new GridHeader( "", false, false ) );
-
-        // ---------------------------------------------------------------------
-        // Grids for program-stage-instance
-        // ---------------------------------------------------------------------
-
-        grid.addRow();
-        grid.addValue( programInstance.getProgram().getDateOfEnrollmentDescription() );
-        grid.addValue( format.formatDate( programInstance.getEnrollmentDate() ) );
-
-        // Get attribute-values which belong to the program
-
-        TrackedEntityInstance instance = programInstance.getEntityInstance();
-
-        Collection<TrackedEntityAttribute> atttributes = programInstance.getProgram().getTrackedEntityAttributes();
-
-        for ( TrackedEntityAttribute attrtibute : atttributes )
-        {
-            TrackedEntityAttributeValue attributeValue = attributeValueService.getTrackedEntityAttributeValue(
-                instance, attrtibute );
-            if ( attributeValue != null )
-            {
-                grid.addRow();
-                grid.addValue( attrtibute.getDisplayName() );
-                grid.addValue( attributeValue.getValue() );
-            }
-        }
-
-        // Get entityInstance comments for the program instance
-
-        List<TrackedEntityComment> comments = programInstance.getComments();
-
-        for ( TrackedEntityComment comment : comments )
-        {
-            grid.addRow();
-            grid.addValue( i18n.getString( "comment" ) + " " + i18n.getString( "on" ) + " "
-                + format.formatDateTime( comment.getCreatedDate() ) );
-            grid.addValue( comment.getCommentText() );
-        }
-
-        // Get sms of the program-instance
-
-        List<OutboundSms> messasges = programInstance.getOutboundSms();
-
-        for ( OutboundSms messasge : messasges )
-        {
-            grid.addRow();
-            grid.addValue( i18n.getString( "message" ) + " " + i18n.getString( "on" ) + " "
-                + format.formatDateTime( messasge.getDate() ) );
-            grid.addValue( messasge.getMessage() );
-        }
-
-        // Get message conversations of the program-instance
-
-        List<MessageConversation> conversations = programInstance.getMessageConversations();
-
-        for ( MessageConversation conversation : conversations )
-        {
-            grid.addRow();
-            grid.addValue( i18n.getString( "message" ) + " " + i18n.getString( "on" ) + " "
-                + format.formatDateTime( conversation.getLastUpdated() ) );
-            grid.addValue( conversation.getMessages().get( 0 ) );
-        }
-
-        // Program-instance attributes
-
-        if ( programInstance.getProgram().getDisplayIncidentDate() != null
-            && programInstance.getProgram().getDisplayIncidentDate() )
-        {
-            grid.addRow();
-            grid.addValue( programInstance.getProgram().getDateOfIncidentDescription() );
-            grid.addValue( format.formatDate( programInstance.getDateOfIncident() ) );
-        }
-
-        getProgramStageInstancesReport( grid, programInstance, i18n );
-
-        return grid;
-    }
-
-    @Override
     public int countProgramInstancesByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate )
     {
@@ -824,73 +650,6 @@ public class DefaultProgramInstanceService
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
-
-    private void getProgramStageInstancesReport( Grid grid, ProgramInstance programInstance, I18n i18n )
-    {
-        I18nFormat format = i18nManager.getI18nFormat();
-
-        Collection<ProgramStageInstance> programStageInstances = programInstance.getProgramStageInstances();
-
-        for ( ProgramStageInstance programStageInstance : programStageInstances )
-        {
-            grid.addRow().addEmptyValues( 2 );
-
-            grid.addRow();
-            grid.addValue( programStageInstance.getProgramStage().getName() );
-            grid.addEmptyValues( 1 );
-
-            // -----------------------------------------------------------------
-            // due-date && report-date
-            // -----------------------------------------------------------------
-
-            grid.addRow();
-            grid.addValue( i18n.getString( "due_date" ) );
-            grid.addValue( format.formatDate( programStageInstance.getDueDate() ) );
-
-            if ( programStageInstance.getExecutionDate() != null )
-            {
-                grid.addRow();
-                grid.addValue( programStageInstance.getProgramStage().getReportDateDescription() );
-                grid.addValue( format.formatDate( programStageInstance.getExecutionDate() ) );
-            }
-
-            // SMS messages
-
-            List<OutboundSms> messasges = programStageInstance.getOutboundSms();
-
-            for ( OutboundSms messasge : messasges )
-            {
-                grid.addRow();
-                grid.addValue( i18n.getString( "messsage" ) + " " + i18n.getString( "on" ) + " "
-                    + format.formatDateTime( messasge.getDate() ) );
-                grid.addValue( messasge.getMessage() );
-            }
-
-            // -----------------------------------------------------------------
-            // Values
-            // -----------------------------------------------------------------
-
-            Collection<TrackedEntityDataValue> entityDataValues = dataValueService
-                .getTrackedEntityDataValues( programStageInstance );
-
-            for ( TrackedEntityDataValue entityInstanceDataValue : entityDataValues )
-            {
-                DataElement dataElement = entityInstanceDataValue.getDataElement();
-
-                grid.addRow();
-                grid.addValue( dataElement.getFormNameFallback() );
-
-                if ( ValueType.BOOLEAN == dataElement.getValueType() )
-                {
-                    grid.addValue( i18n.getString( entityInstanceDataValue.getValue() ) );
-                }
-                else
-                {
-                    grid.addValue( entityInstanceDataValue.getValue() );
-                }
-            }
-        }
-    }
 
     private OutboundSms sendProgramMessage( TrackedEntityInstanceReminder reminder, ProgramInstance programInstance,
         TrackedEntityInstance entityInstance )
