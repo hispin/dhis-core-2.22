@@ -350,6 +350,10 @@ Ext.onReady( function() {
 
 				// hideEmptyRows: boolean (false)
 
+				// hideNaData: boolean (false)
+
+				// completedOnly: boolean (false)
+
                 // collapseDataDimensions: boolean (false)
 
                 // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_INSTANCE', 'ENROLLMENT'
@@ -535,8 +539,9 @@ Ext.onReady( function() {
                     layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
                     layout.hideNaData = Ext.isBoolean(config.hideNaData) ? config.hideNaData : false;
                     layout.collapseDataDimensions = Ext.isBoolean(config.collapseDataDimensions) ? config.collapseDataDimensions : false;
-
 					layout.outputType = Ext.isString(config.outputType) && !Ext.isEmpty(config.outputType) ? config.outputType : 'EVENT';
+                    layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
+
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
 					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : 'normal';
 					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : 'normal';
@@ -2493,6 +2498,11 @@ Ext.onReady( function() {
                     paramString += '&outputType=' + view.outputType;
                 }
 
+                // completed only
+				if (view.completedOnly) {
+					paramString += '&completedOnly=true';
+				}
+                
                 // sorting
                 if (view.dataType === 'individual_cases' && view.sorting) {
                     if (view.sorting.id && view.sorting.direction) {
