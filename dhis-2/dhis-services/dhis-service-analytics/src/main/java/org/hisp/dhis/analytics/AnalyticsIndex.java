@@ -80,10 +80,12 @@ public class AnalyticsIndex
         {
             return true;
         }
+        
         if ( object == null )
         {
             return false;
         }
+        
         if ( getClass() != object.getClass() )
         {
             return false;

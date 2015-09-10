@@ -369,7 +369,7 @@ public class DefaultDataSetService
 
         boolean expired = dataSet.getExpiryDays() != DataSet.NO_EXPIRY && new DateTime( period.getEndDate() ).plusDays( dataSet.getExpiryDays() ).isBefore( new DateTime( now ) );
 
-        boolean exception = lockExceptionStore.getCount( dataSet, period, organisationUnit ) > 0l;
+        boolean exception = lockExceptionStore.getCount( dataSet, period, organisationUnit ) > 0L;
         
         if ( expired && !exception )
         {
@@ -415,7 +415,7 @@ public class DefaultDataSetService
 
         boolean expired = expiryDays != DataSet.NO_EXPIRY && new DateTime( period.getEndDate() ).plusDays( expiryDays ).isBefore( new DateTime( now ) );
 
-        return expired && lockExceptionStore.getCount( dataElement, period, organisationUnit ) == 0l;
+        return expired && lockExceptionStore.getCount( dataElement, period, organisationUnit ) == 0L;
     }
 
     @Override

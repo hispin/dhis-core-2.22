@@ -28,8 +28,6 @@ package org.hisp.dhis.dxf2.webmessage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dxf2.webmessage.WebMessage;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

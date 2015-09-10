@@ -57,15 +57,15 @@ public class SystemSettingStoreTest
     {
         settingA = new SystemSetting();
         settingA.setName( "Setting1" );
-        settingA.setValue( new String( "Value1" ) );
+        settingA.setValue( "Value1" );
 
         settingB = new SystemSetting();
         settingB.setName( "Setting2" );
-        settingB.setValue( new String( "Value2" ) );
+        settingB.setValue( "Value2" );
 
         settingC = new SystemSetting();
         settingC.setName( "Setting3" );
-        settingC.setValue( new String( "Value3" ) );
+        settingC.setValue( "Value3" );
     }
 
     @Test
@@ -80,7 +80,7 @@ public class SystemSettingStoreTest
         assertEquals( "Setting1", settingA.getName() );
         assertEquals( "Value1", settingA.getValue() );
 
-        settingA.setValue( new String( "Value1.1" ) );
+        settingA.setValue( "Value1.1" );
         systemSettingStore.update( settingA );
 
         settingA = systemSettingStore.get( idA );
@@ -98,7 +98,7 @@ public class SystemSettingStoreTest
         
         assertEquals( "Value1", settingA.getValue() );
         
-        settingA.setValue( new String( "Value2" ) );
+        settingA.setValue( "Value2" );
         
         systemSettingStore.update( settingA );
 

@@ -54,8 +54,8 @@ public class SystemSettingManagerTest
     @Test
     public void testSaveGetSystemSetting()
     {
-        systemSettingManager.saveSystemSetting( "settingA", new String( "valueA" ) );
-        systemSettingManager.saveSystemSetting( "settingB", new String( "valueB" ) );
+        systemSettingManager.saveSystemSetting( "settingA", "valueA" );
+        systemSettingManager.saveSystemSetting( "settingB", "valueB" );
 
         assertEquals( new String( "valueA" ), systemSettingManager.getSystemSetting( "settingA" ) );
         assertEquals( new String( "valueB" ), systemSettingManager.getSystemSetting( "settingB" ) );
@@ -64,16 +64,16 @@ public class SystemSettingManagerTest
     @Test
     public void testGetDefaultSystemSetting()
     {
-        assertEquals( new String( "valueA" ), systemSettingManager.getSystemSetting( "settingA", new String( "valueA" ) ) );
-        assertEquals( new String( "valueB" ), systemSettingManager.getSystemSetting( "settingB", new String( "valueB" ) ) );
+        assertEquals( new String( "valueA" ), systemSettingManager.getSystemSetting( "settingA", "valueA" ) );
+        assertEquals( new String( "valueB" ), systemSettingManager.getSystemSetting( "settingB", "valueB" ) );
     }
 
     @Test
     public void testGetAllSystemSettings()
     {
-        systemSettingManager.saveSystemSetting( "settingA", new String( "valueA" ) );
-        systemSettingManager.saveSystemSetting( "settingB", new String( "valueB" ) );
-        systemSettingManager.saveSystemSetting( "settingC", new String( "valueC" ) );
+        systemSettingManager.saveSystemSetting( "settingA", "valueA" );
+        systemSettingManager.saveSystemSetting( "settingB", "valueB" );
+        systemSettingManager.saveSystemSetting( "settingC", "valueC" );
         
         List<SystemSetting> settings = systemSettingManager.getAllSystemSettings();
         
@@ -84,9 +84,9 @@ public class SystemSettingManagerTest
     @Test
     public void testGetSystemSettingsAsMap()
     {
-        systemSettingManager.saveSystemSetting( "settingA", new String( "valueA" ) );
-        systemSettingManager.saveSystemSetting( "settingB", new String( "valueB" ) );
-        systemSettingManager.saveSystemSetting( "settingC", new String( "valueC" ) );
+        systemSettingManager.saveSystemSetting( "settingA", "valueA" );
+        systemSettingManager.saveSystemSetting( "settingB", "valueB" );
+        systemSettingManager.saveSystemSetting( "settingC", "valueC" );
 
         Map<String, Serializable> settingsMap = systemSettingManager.getSystemSettingsAsMap();
 

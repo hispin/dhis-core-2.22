@@ -93,7 +93,7 @@ public class MathUtils
         final JEP parser = getJep();
         parser.parseExpression( expression );
         
-        return ( parser.getValue() == 1.0 );
+        return isEqual( parser.getValue(), 1.0 );
     }
     
     /** 
@@ -258,7 +258,7 @@ public class MathUtils
      */
     public static double roundToSignificantDigits( double value, int n )
     {
-        if( value == 0.0 )
+        if ( isEqual( value, 0.0 ) )
         {
             return 0.0;
         }

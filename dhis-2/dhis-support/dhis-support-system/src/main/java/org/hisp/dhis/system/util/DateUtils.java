@@ -580,14 +580,7 @@ public class DateUtils
             return false; // The user hasn't specified any dates
         }
 
-        if ( !date1.before( date2 ) )
-        {
-            return true; // Return true if date2 is earlier than date1
-        }
-        else
-        {
-            return false;
-        }
+        return !date1.before( date2 );
     }
 
     /**

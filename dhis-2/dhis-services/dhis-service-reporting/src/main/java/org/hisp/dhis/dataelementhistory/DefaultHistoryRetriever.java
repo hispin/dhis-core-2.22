@@ -28,6 +28,7 @@ package org.hisp.dhis.dataelementhistory;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.math3.util.MathUtils;
 import org.apache.commons.math3.util.Precision;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -141,7 +142,7 @@ public class DefaultHistoryRetriever
 
         double maxValue = getMaxValue( history );
 
-        if ( maxValue != Double.NEGATIVE_INFINITY )
+        if ( !MathUtils.equals( maxValue, Double.NEGATIVE_INFINITY ) )
         {
             history.setMaxValue( maxValue );
 

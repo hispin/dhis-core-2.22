@@ -228,7 +228,7 @@ public class JDBCDataSetCompletenessStore
         }
         catch ( Exception ex )
         {
-            log.debug( "Index already exists" );
+            log.debug( "Index already exists", ex );
         }
     }
     
@@ -242,7 +242,7 @@ public class JDBCDataSetCompletenessStore
         }
         catch ( Exception ex )
         {
-            log.debug( "Index does not exist" );
+            log.debug( "Index does not exist", ex );
         }
     }
 }
