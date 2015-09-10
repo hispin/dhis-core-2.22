@@ -24,7 +24,6 @@
     <module>dhis-web-validationrule</module>
     <module>dhis-web-reporting</module>
     <module>dhis-web-dashboard-integration</module>
-    <module>dhis-web-caseentry</module>
     <module>dhis-web-light</module>
     <module>dhis-web-mobile</module>
     <module>dhis-web-sms</module>
