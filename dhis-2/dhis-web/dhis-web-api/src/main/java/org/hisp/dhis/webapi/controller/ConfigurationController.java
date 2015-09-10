@@ -28,13 +28,13 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.bouncycastle.ocsp.Req;
+import javax.servlet.http.HttpServletRequest;
+
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.dataelement.DataElementGroup;
-import org.hisp.dhis.hibernate.exception.CreateAccessDeniedException;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
@@ -44,13 +44,14 @@ import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * @author Lars Helge Overland
@@ -68,6 +69,8 @@ public class ConfigurationController
     @Autowired
     private PeriodService periodService;
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/systemId", method = RequestMethod.GET )
     private String getSystemId( Model model, HttpServletRequest request )
     {
@@ -80,6 +83,8 @@ public class ConfigurationController
         return setModel( model, configurationService.getConfiguration().getFeedbackRecipients() );
     }
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/feedbackRecipients/{uid}", method = RequestMethod.POST )
     private void setFeedbackRecipients( @PathVariable( "uid" ) String uid )
         throws NotFoundException
@@ -104,6 +109,8 @@ public class ConfigurationController
         return setModel( model, configurationService.getConfiguration().getOfflineOrganisationUnitLevel() );
     }
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/offlineOrganisationUnitLevel/{uid}", method = RequestMethod.POST )
     private void setOfflineOrganisationUnitLevels( @PathVariable( "uid" ) String uid )
         throws NotFoundException
@@ -128,6 +135,8 @@ public class ConfigurationController
         return setModel( model, configurationService.getConfiguration().getInfrastructuralIndicators() );
     }
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/infrastructuralIndicators/{uid}", method = RequestMethod.POST )
     private void setInfrastructuralIndicators( @PathVariable( "uid" ) String uid )
         throws NotFoundException
@@ -152,6 +161,8 @@ public class ConfigurationController
         return setModel( model, configurationService.getConfiguration().getInfrastructuralDataElements() );
     }
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/infrastructuralDataElements/{uid}", method = RequestMethod.POST )
     private void setInfrastructuralDataElements( @PathVariable("uid") String uid )
         throws NotFoundException
@@ -179,6 +190,8 @@ public class ConfigurationController
         return setModel( model, entity );
     }
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/infrastructuralPeriodType/{name}", method = RequestMethod.POST )
     private void setInfrastructuralPeriodType( @PathVariable( "name" ) String name )
         throws NotFoundException
@@ -191,8 +204,10 @@ public class ConfigurationController
         }
 
         Configuration config = configurationService.getConfiguration();
+        
+        periodType = periodService.reloadPeriodType( periodType );
 
-        config.setInfrastructuralPeriodType( periodService.reloadPeriodType( periodType ) );
+        config.setInfrastructuralPeriodType( periodType );
 
         configurationService.setConfiguration( config );
     }
@@ -203,6 +218,8 @@ public class ConfigurationController
         return setModel( model, configurationService.getConfiguration().getSelfRegistrationRole() );
     }
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/selfRegistrationRole/{uid}", method = RequestMethod.POST )
     private void setSelfRegistrationRole( @PathVariable( "uid" ) String uid )
         throws NotFoundException
@@ -221,12 +238,14 @@ public class ConfigurationController
         configurationService.setConfiguration( config );
     }
 
+    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/selfRegistrationOrgUnit", method = RequestMethod.GET )
     private String getSelfRegistrationOrgUnit( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getSelfRegistrationOrgUnit() );
     }
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @RequestMapping( value = "/selfRegistrationOrgUnit/{uid}", method = RequestMethod.POST )
     private void setSelfRegistrationOrgUnit( @PathVariable( "uid" ) String uid )
         throws NotFoundException
