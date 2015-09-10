@@ -28,10 +28,9 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.security.SecurityContextRunnable;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.scheduling.TaskId;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +39,7 @@ import java.io.InputStream;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class ImportEventTask
-    implements Runnable
+    extends SecurityContextRunnable
 {
     private final InputStream inputStream;
 
@@ -52,8 +51,6 @@ public class ImportEventTask
 
     private final boolean jsonInput;
 
-    private final Authentication authentication;
-
     public ImportEventTask( InputStream inputStream, EventService eventService, ImportOptions importOptions, TaskId taskId, boolean jsonInput )
     {
         this.inputStream = inputStream;
@@ -61,14 +58,11 @@ public class ImportEventTask
         this.importOptions = importOptions;
         this.taskId = taskId;
         this.jsonInput = jsonInput;
-        this.authentication = SecurityContextHolder.getContext().getAuthentication();
     }
 
     @Override
-    public void run()
+    public void call()
     {
-        SecurityContextHolder.getContext().setAuthentication( authentication );
-
         if ( jsonInput )
         {
             try

@@ -28,73 +28,77 @@ package org.hisp.dhis.analytics.table.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE;
-import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
-import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_TITLE;
-import java.util.Date;
-import javax.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsTableService;
 import org.hisp.dhis.commons.util.Clock;
 import org.hisp.dhis.commons.util.DebugUtils;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.security.NoSecurityContextRunnable;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.commons.util.TextUtils;
+import org.hisp.dhis.user.CurrentUserService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Resource;
+import java.util.Date;
+
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_TITLE;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE;
+import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
+import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 
 /**
  * @author Lars Helge Overland
  */
 public class AnalyticsTableTask
-    implements Runnable
+    extends NoSecurityContextRunnable
 {
     private static final Log log = LogFactory.getLog( AnalyticsTableTask.class );
-    
-    @Resource(name="org.hisp.dhis.analytics.AnalyticsTableService")
+
+    @Resource( name = "org.hisp.dhis.analytics.AnalyticsTableService" )
     private AnalyticsTableService analyticsTableService;
 
-    @Resource(name="org.hisp.dhis.analytics.CompletenessTableService")
+    @Resource( name = "org.hisp.dhis.analytics.CompletenessTableService" )
     private AnalyticsTableService completenessTableService;
-    
-    @Resource(name="org.hisp.dhis.analytics.CompletenessTargetTableService")
+
+    @Resource( name = "org.hisp.dhis.analytics.CompletenessTargetTableService" )
     private AnalyticsTableService completenessTargetTableService;
-    
-    @Resource(name="org.hisp.dhis.analytics.OrgUnitTargetTableService")
+
+    @Resource( name = "org.hisp.dhis.analytics.OrgUnitTargetTableService" )
     private AnalyticsTableService orgUnitTargetTableService;
-    
-    @Resource(name="org.hisp.dhis.analytics.EventAnalyticsTableService")
+
+    @Resource( name = "org.hisp.dhis.analytics.EventAnalyticsTableService" )
     private AnalyticsTableService eventAnalyticsTableService;
-    
+
     @Autowired
     private Notifier notifier;
-    
+
     @Autowired
     private MessageService messageService;
 
     @Autowired
     private SystemSettingManager systemSettingManager;
-    
+
     private Integer lastYears;
 
     public void setLastYears( Integer lastYears )
     {
         this.lastYears = lastYears;
     }
-    
+
     private boolean skipResourceTables = false;
 
     public void setSkipResourceTables( boolean skipResourceTables )
     {
         this.skipResourceTables = skipResourceTables;
     }
-    
+
     private boolean skipAggregate = false;
-    
+
     public void setSkipAggregate( boolean skipAggregate )
     {
         this.skipAggregate = skipAggregate;
@@ -119,11 +123,11 @@ public class AnalyticsTableTask
     // -------------------------------------------------------------------------
 
     @Override
-    public void run()
+    public void call()
     {
         final Date startTime = new Date();
         final Clock clock = new Clock( log ).startClock();
-        
+
         notifier.clear( taskId ).notify( taskId, "Analytics table update process started" );
 
         try
@@ -131,49 +135,49 @@ public class AnalyticsTableTask
             if ( !skipResourceTables )
             {
                 notifier.notify( taskId, "Updating resource tables" );
-                analyticsTableService.generateResourceTables();    
+                analyticsTableService.generateResourceTables();
             }
-            
+
             if ( !skipAggregate )
             {
                 notifier.notify( taskId, "Updating analytics tables" );
                 analyticsTableService.update( lastYears, taskId );
 
                 notifier.notify( taskId, "Updating completeness table" );
-                completenessTableService.update( lastYears, taskId );    
+                completenessTableService.update( lastYears, taskId );
 
                 notifier.notify( taskId, "Updating completeness target table" );
-                completenessTargetTableService.update( lastYears, taskId );      
+                completenessTargetTableService.update( lastYears, taskId );
 
-                notifier.notify( taskId, "Updating organisation unit target table" );                
-                orgUnitTargetTableService.update( lastYears, taskId );        
+                notifier.notify( taskId, "Updating organisation unit target table" );
+                orgUnitTargetTableService.update( lastYears, taskId );
             }
-            
+
             if ( !skipEvents )
             {
-                notifier.notify( taskId, "Updating event analytics table" );  
+                notifier.notify( taskId, "Updating event analytics table" );
                 eventAnalyticsTableService.update( lastYears, taskId );
             }
-            
+
             clock.logTime( "Analytics tables updated" );
             notifier.notify( taskId, INFO, "Analytics tables updated: " + clock.time(), true );
         }
         catch ( RuntimeException ex )
         {
             String appTitle = (String) systemSettingManager.getSystemSetting( KEY_APPLICATION_TITLE, TextUtils.EMPTY );
-            
+
             notifier.notify( taskId, ERROR, "Process failed: " + ex.getMessage(), true );
-            
-            messageService.sendSystemNotification( 
+
+            messageService.sendSystemNotification(
                 "Analytics table process failed",
                 "Analytics table process failed, please check the logs. Time: " + new DateTime().toString() + ". " +
-                "Application title: " + appTitle + " " +
-                "Message: " + ex.getMessage() + " " +
-                "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
-            
+                    "Application title: " + appTitle + " " +
+                    "Message: " + ex.getMessage() + " " +
+                    "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
+
             throw ex;
         }
-        
+
         systemSettingManager.saveSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE, startTime );
     }
 }

@@ -28,11 +28,10 @@ package org.hisp.dhis.importexport.action.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
+import org.hisp.dhis.security.SecurityContextRunnable;
 import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.scheduling.TaskId;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.InputStream;
 
@@ -40,7 +39,7 @@ import java.io.InputStream;
  * @author Lars Helge Overland
  */
 public class ImportDataValueTask
-    implements Runnable
+    extends SecurityContextRunnable
 {
     public static final String FORMAT_XML = "xml";
     public static final String FORMAT_JSON = "json";
@@ -57,8 +56,6 @@ public class ImportDataValueTask
 
     private final String format;
 
-    private final Authentication authentication;
-
     public ImportDataValueTask( DataValueSetService dataValueSetService, InputStream inputStream, ImportOptions options, TaskId taskId, String format )
     {
         this.dataValueSetService = dataValueSetService;
@@ -66,14 +63,11 @@ public class ImportDataValueTask
         this.options = options;
         this.taskId = taskId;
         this.format = format;
-        this.authentication = SecurityContextHolder.getContext().getAuthentication();
     }
 
     @Override
-    public void run()
+    public void call()
     {
-        SecurityContextHolder.getContext().setAuthentication( authentication );
-
         if ( FORMAT_JSON.equals( format ) )
         {
             dataValueSetService.saveDataValueSetJson( inputStream, options, taskId );

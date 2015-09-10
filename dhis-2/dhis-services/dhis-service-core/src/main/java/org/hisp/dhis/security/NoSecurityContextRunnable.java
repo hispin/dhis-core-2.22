@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.metadata.tasks;
+package org.hisp.dhis.security;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,41 +28,24 @@ package org.hisp.dhis.dxf2.metadata.tasks;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.security.SecurityContextRunnable;
-import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.metadata.ImportService;
-import org.hisp.dhis.dxf2.metadata.MetaData;
-import org.hisp.dhis.scheduling.TaskId;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
+ * Implementation of a runnable that makes sure the thread is run without
+ * any security context (user = null). Useful for cases where you want to have
+ * access to all objects without the user flag interfering.
+ *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class ImportMetaDataTask
-    extends SecurityContextRunnable
+public abstract class NoSecurityContextRunnable
+    implements Runnable
 {
-    private String userUid;
-
-    private final ImportService importService;
-
-    private final ImportOptions importOptions;
-
-    private final TaskId taskId;
-
-    private final MetaData metaData;
-
-    public ImportMetaDataTask( String userUid, ImportService importService, ImportOptions importOptions, TaskId taskId, MetaData metaData )
-    {
-        super();
-        this.userUid = userUid;
-        this.importService = importService;
-        this.importOptions = importOptions;
-        this.taskId = taskId;
-        this.metaData = metaData;
-    }
-
     @Override
-    public void call()
+    final public void run()
     {
-        importService.importMetaData( userUid, metaData, importOptions, taskId );
+        SecurityContextHolder.clearContext();
+        call();
     }
+
+    public abstract void call();
 }
