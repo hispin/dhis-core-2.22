@@ -766,7 +766,7 @@ public class DefaultProgramIndicatorService
 
             for ( String uid : ProgramIndicator.getDataElementAndAttributeIdentifiers( expression ) )
             {
-                sql += "case when " + statementBuilder.columnQuote( uid ) + " > 0 then 1 else 0 end + ";
+                sql += "case when " + statementBuilder.columnQuote( uid ) + " >= 0 then 1 else 0 end + ";
             }
 
             return TextUtils.removeLast( sql, "+" ).trim() + "),0)";

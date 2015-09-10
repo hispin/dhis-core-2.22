@@ -498,7 +498,7 @@ public class ProgramIndicatorServiceTest
         String expected = 
             "coalesce(case when \"EZq9VbPWgML\" < 0 then 0 else \"EZq9VbPWgML\" end, 0) + " +
             "coalesce(\"GCyeKSqlpdk\",0) + " +
-            "nullif((case when \"EZq9VbPWgML\" > 0 then 1 else 0 end + case when \"GCyeKSqlpdk\" > 0 then 1 else 0 end),0)";
+            "nullif((case when \"EZq9VbPWgML\" >= 0 then 1 else 0 end + case when \"GCyeKSqlpdk\" >= 0 then 1 else 0 end),0)";
         
         String expression = 
             "d2:zing(#{OXXcwl6aPCQ.EZq9VbPWgML}) + " +
