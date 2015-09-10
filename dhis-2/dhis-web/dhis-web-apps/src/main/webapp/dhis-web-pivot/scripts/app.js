@@ -629,6 +629,11 @@ Ext.onReady( function() {
 			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
 		});
 
+		completedOnly = Ext.create('Ext.form.field.Checkbox', {
+			boxLabel: NS.i18n.include_completed_events_only,
+			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
+		});
+
 		displayDensity = Ext.create('Ext.form.field.ComboBox', {
 			cls: 'ns-combo',
 			style: 'margin-bottom:' + comboBottomMargin + 'px',
@@ -799,6 +804,14 @@ Ext.onReady( function() {
 			]
 		};
 
+		events = {
+			bodyStyle: 'border:0 none',
+			style: 'margin-left:14px',
+			items: [
+				completedOnly
+			]
+		};
+
 		style = {
 			bodyStyle: 'border:0 none',
 			style: 'margin-left:14px',
@@ -844,6 +857,7 @@ Ext.onReady( function() {
                     aggregationType: aggregationType.getValue(),
                     dataApprovalLevel: {id: dataApprovalLevel.getValue()},
 					showHierarchy: showHierarchy.getValue(),
+					completedOnly: completedOnly.getValue(),
 					displayDensity: displayDensity.getValue(),
 					fontSize: fontSize.getValue(),
 					digitGroupSeparator: digitGroupSeparator.getValue(),
@@ -867,6 +881,7 @@ Ext.onReady( function() {
                 aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'DEFAULT');
 				dataApprovalLevel.setValue(Ext.isObject(layout.dataApprovalLevel) && Ext.isString(layout.dataApprovalLevel.id) ? layout.dataApprovalLevel.id : 'DEFAULT');
 				showHierarchy.setValue(Ext.isBoolean(layout.showHierarchy) ? layout.showHierarchy : false);
+                completedOnly.setValue(Ext.isBoolean(layout.completedOnly) ? layout.completedOnly : false);
 				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : 'normal');
 				fontSize.setValue(Ext.isString(layout.fontSize) ? layout.fontSize : 'normal');
 				digitGroupSeparator.setValue(Ext.isString(layout.digitGroupSeparator) ? layout.digitGroupSeparator : 'space');
@@ -895,6 +910,15 @@ Ext.onReady( function() {
 					html: NS.i18n.organisation_units
 				},
 				organisationUnits,
+				{
+					bodyStyle: 'border:0 none; padding:7px'
+				},
+				{
+					bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
+					style: 'margin-bottom:6px; margin-left:5px',
+					html: NS.i18n.events
+				},
+				events,
 				{
 					bodyStyle: 'border:0 none; padding:7px'
 				},
