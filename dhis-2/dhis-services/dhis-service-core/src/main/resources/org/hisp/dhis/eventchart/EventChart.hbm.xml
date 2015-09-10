@@ -102,6 +102,8 @@
 		</type> 
 	</property>
 
+    <property name="completedOnly" column="completedonly" />
+	
     <property name="type" not-null="true" />
 
     <list name="columnDimensions" table="eventchart_columns">

@@ -142,6 +142,8 @@
 		</type> 
 	</property>
 	
+    <property name="completedOnly" column="completedonly" />
+	
     <property name="showData" />
 
     <property name="hideEmptyRows" />
