@@ -121,15 +121,6 @@ public interface TrackedEntityInstanceService
     List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
 
     /**
-     * Returns the number of tracked entity instance matches based on the given
-     * TrackedEntityInstanceQueryParams.
-     *
-     * @param params the TrackedEntityInstanceQueryParams.
-     * @return Number of TEIs matching the params
-     */
-    int countTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
-
-    /**
      * Returns a TrackedEntityInstanceQueryParams based on the given input.
      *
      * @param query            the query string.
