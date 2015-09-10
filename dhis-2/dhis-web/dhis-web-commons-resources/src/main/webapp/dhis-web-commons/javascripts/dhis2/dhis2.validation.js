@@ -46,9 +46,9 @@ dhis2.validation.isValidZeroNumber = function(value) {
 dhis2.validation.isInt = function(value) {
   var regex = /^(0|-?[1-9]\d*)$/;
   var patternTest = regex.test(value);
-  var rangeTest = value && 
-  	parseInt(value) < dhis2.validation.INT_MAX_VALUE &&
-  	parseInt(value) > ( dhis2.validation.INT_MAX_VALUE * -1 );
+  var rangeTest = value &&
+    parseInt(value) < dhis2.validation.INT_MAX_VALUE &&
+    parseInt(value) > ( dhis2.validation.INT_MAX_VALUE * -1 );
   return patternTest && rangeTest;
 };
 
@@ -100,7 +100,7 @@ dhis2.validation.isNegativeNumber = function(value) {
 };
 
 /**
- * Allow only integers inclusive between 0 and 100. 
+ * Allow only integers inclusive between 0 and 100.
  */
 dhis2.validation.isPercentage = function(value) {
   return dhis2.validation.isInt(value) && parseInt(value) >= 0 && parseInt(value) <= 100;
@@ -119,4 +119,88 @@ dhis2.validation.isUnitInterval = function(value) {
   var f = parseFloat(value);
 
   return f >= 0 && f <= 1;
+};
+
+/**
+ * Validate value type. To have proper message displayed, requires the following vars to be available:
+ * i18n_value_must_integer
+ * i18n_value_must_number
+ * i18n_value_must_positive_integer
+ * i18n_value_must_zero_or_positive_integer
+ * i18n_value_must_negative_integer
+ * i18n_value_must_unit_interval
+ * i18n_value_must_percentage
+ *
+ * @param value Value to check against
+ * @param valueType Value type (from data element, option set, etc)
+ */
+dhis2.validation.isValidValueType = function(value, valueType) {
+  switch( valueType ) {
+    case 'TEXT':
+    case 'LONG_TEXT':
+    case 'USERNAME':
+    case 'DATE':
+    case 'DATETIME':
+    {
+      break;
+    }
+    case 'INTEGER':
+    {
+      if( !dhis2.validation.isInt(value) ) {
+        setHeaderDelayMessage(i18n_value_must_integer);
+        return false;
+      }
+      break;
+    }
+    case 'INTEGER_POSITIVE':
+    {
+      if( !dhis2.validation.isPositiveInt(value) ) {
+        setHeaderDelayMessage(i18n_value_must_positive_integer);
+        return false;
+      }
+      break;
+    }
+    case 'INTEGER_NEGATIVE':
+    {
+      if( !dhis2.validation.isNegativeInt(value) ) {
+        setHeaderDelayMessage(i18n_value_must_negative_integer);
+        return false;
+      }
+      break;
+    }
+    case 'INTEGER_ZERO_OR_POSITIVE':
+    {
+      if( !dhis2.validation.isZeroOrPositiveInt(value) ) {
+        setHeaderDelayMessage(i18n_value_must_zero_or_positive_integer);
+        return false;
+      }
+      break;
+    }
+    case 'NUMBER':
+    {
+      if( !dhis2.validation.isNumber(value) ) {
+        setHeaderDelayMessage(i18n_value_must_number);
+        return false;
+      }
+      break;
+    }
+    case 'UNIT_INTERVAL':
+    {
+      if( !dhis2.validation.isUnitInterval(value) ) {
+        setHeaderDelayMessage(i18n_value_must_unit_interval);
+        return false;
+      }
+      break;
+    }
+    case 'PERCENTAGE':
+    {
+      if( !dhis2.validation.isPercentage(value) ) {
+        setHeaderDelayMessage(i18n_value_must_percentage);
+        return false;
+      }
+      break;
+    }
+  }
+
+  return true;
 };
