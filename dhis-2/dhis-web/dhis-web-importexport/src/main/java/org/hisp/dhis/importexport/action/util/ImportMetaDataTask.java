@@ -30,12 +30,14 @@ package org.hisp.dhis.importexport.action.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.scheduling.TaskId;
-import org.hisp.dhis.commons.util.DebugUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +62,9 @@ public class ImportMetaDataTask
 
     private String format;
 
-    public ImportMetaDataTask( String userUid, ImportService importService, ImportOptions importOptions, 
+    private final Authentication authentication;
+
+    public ImportMetaDataTask( String userUid, ImportService importService, ImportOptions importOptions,
         InputStream inputStream, TaskId taskId, String format )
     {
         this.userUid = userUid;
@@ -69,11 +73,13 @@ public class ImportMetaDataTask
         this.inputStream = inputStream;
         this.taskId = taskId;
         this.format = format;
+        this.authentication = SecurityContextHolder.getContext().getAuthentication();
     }
 
     @Override
     public void run()
     {
+        SecurityContextHolder.getContext().setAuthentication( authentication );
         MetaData metaData = null;
 
         try
@@ -90,7 +96,7 @@ public class ImportMetaDataTask
         catch ( IOException ex )
         {
             log.error( DebugUtils.getStackTrace( ex ) );
-            
+
             throw new RuntimeException( "Failed to parse meta data input stream", ex );
         }
 
