@@ -30,7 +30,6 @@ package org.hisp.dhis.dataadmin.action.option;
 
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 
@@ -77,13 +76,6 @@ public class UpdateOptionSetAction
         this.code = code;
     }
 
-    private String valueType;
-
-    public void setValueType( String valueType )
-    {
-        this.valueType = valueType;
-    }
-
     // -------------------------------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------------------------------
@@ -95,7 +87,6 @@ public class UpdateOptionSetAction
         OptionSet optionSet = optionService.getOptionSet( id );
         optionSet.setName( StringUtils.trimToNull( name ) );
         optionSet.setCode( StringUtils.trimToNull( code ) );
-        optionSet.setValueType( ValueType.valueOf( valueType ) );
 
         optionService.updateOptionSet( optionSet );
 
