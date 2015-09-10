@@ -2393,6 +2393,7 @@ Ext.onReady( function() {
 			showDimensionLabels,
 			hideEmptyRows,
             hideNaData,
+            completedOnly,
             limit,
             outputType,
             aggregationType,
@@ -2451,6 +2452,11 @@ Ext.onReady( function() {
 
 		hideNaData = Ext.create('Ext.form.field.Checkbox', {
 			boxLabel: NS.i18n.hide_na_data,
+			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
+		});
+
+		completedOnly = Ext.create('Ext.form.field.Checkbox', {
+			boxLabel: NS.i18n.include_only_completed_events_only,
 			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
 		});
 
@@ -2563,6 +2569,7 @@ Ext.onReady( function() {
                 showDimensionLabels,
 				hideEmptyRows,
                 hideNaData,
+                completedOnly,
                 limit,
                 outputType
                 //aggregationType
@@ -2605,9 +2612,10 @@ Ext.onReady( function() {
                     showDimensionLabels: showDimensionLabels.getValue(),
 					hideEmptyRows: hideEmptyRows.getValue(),
                     hideNaData: hideNaData.getValue(),
+					completedOnly: completedOnly.getValue(),
+					outputType: outputType.getValue(),
                     sortOrder: limit.getSortOrder(),
                     topLimit: limit.getTopLimit(),
-					outputType: outputType.getValue(),
 					showHierarchy: showHierarchy.getValue(),
                     showDimensionLabels: showDimensionLabels.getValue(),
 					displayDensity: displayDensity.getValue(),
@@ -2624,8 +2632,9 @@ Ext.onReady( function() {
 				showDimensionLabels.setValue(Ext.isBoolean(layout.showDimensionLabels) ? layout.showDimensionLabels : true);
 				hideEmptyRows.setValue(Ext.isBoolean(layout.hideEmptyRows) ? layout.hideEmptyRows : false);
 				hideNaData.setValue(Ext.isBoolean(layout.hideNaData) ? layout.hideNaData : false);
-				limit.setValues(layout.sortOrder, layout.topLimit);
+                completedOnly.setValue(Ext.isBoolean(layout.completedOnly) ? layout.completedOnly : false);
 				outputType.setValue(Ext.isString(layout.outputType) ? layout.outputType : 'EVENT');
+				limit.setValues(layout.sortOrder, layout.topLimit);
                 //aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'default');
 				showHierarchy.setValue(Ext.isBoolean(layout.showHierarchy) ? layout.showHierarchy : false);
 				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : 'normal');
@@ -2712,6 +2721,7 @@ Ext.onReady( function() {
                     w.showDimensionLabels = showDimensionLabels;
 					w.hideEmptyRows = hideEmptyRows;
                     w.hideNaData = hideNaData;
+                    w.completedOnly = completedOnly;
                     w.limit = limit;
 					w.outputType = outputType;
 					w.showHierarchy = showHierarchy;
@@ -2726,13 +2736,10 @@ Ext.onReady( function() {
 	};
 
     QueryOptionsWindow = function() {
-		var showHierarchy,
+		var completedOnly,
 			digitGroupSeparator,
 			displayDensity,
 			fontSize,
-			reportingPeriod,
-			organisationUnit,
-			parentOrganisationUnit,
 
 			data,
 			style,
@@ -2743,10 +2750,10 @@ Ext.onReady( function() {
             checkboxBottomMargin = 2,
 			window;
 
-		//showHierarchy = Ext.create('Ext.form.field.Checkbox', {
-			//boxLabel: NS.i18n.show_hierarchy,
-			//style: 'margin-bottom:4px'
-		//});
+		completedOnly = Ext.create('Ext.form.field.Checkbox', {
+			boxLabel: NS.i18n.include_only_completed_events_only,
+			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
+		});
 
 		displayDensity = Ext.create('Ext.form.field.ComboBox', {
 			cls: 'ns-combo',
@@ -2811,26 +2818,13 @@ Ext.onReady( function() {
 			})
 		});
 
-		//legendSet = Ext.create('Ext.form.field.ComboBox', {
-			//cls: 'ns-combo',
-			//style: 'margin-bottom:3px',
-			//width: comboboxWidth,
-			//labelWidth: 130,
-			//fieldLabel: NS.i18n.legend_set,
-			//valueField: 'id',
-			//displayField: 'name',
-			//editable: false,
-			//value: 0,
-			//store: ns.app.stores.legendSet
-		//});
-
-		//organisationUnits = {
-			//bodyStyle: 'border:0 none',
-			//style: 'margin-left:14px',
-			//items: [
-				//showHierarchy
-			//]
-		//};
+		data = {
+			bodyStyle: 'border:0 none',
+			style: 'margin-left:14px',
+			items: [
+                completedOnly
+			]
+		};
 
 		style = {
 			bodyStyle: 'border:0 none',
@@ -2839,7 +2833,6 @@ Ext.onReady( function() {
 				displayDensity,
 				fontSize,
 				digitGroupSeparator
-				//legendSet
 			]
 		};
 
@@ -2858,6 +2851,7 @@ Ext.onReady( function() {
 					showSubTotals: false,
 					hideEmptyRows: false,
                     hideNaData: false,
+					completedOnly: completedOnly.getValue(),
                     sortOrder: 0,
                     topLimit: 0,
 					showHierarchy: false,
@@ -2868,22 +2862,21 @@ Ext.onReady( function() {
 				};
 			},
 			setOptions: function(layout) {
-				//showHierarchy.setValue(Ext.isBoolean(layout.showHierarchy) ? layout.showHierarchy : false);
+                completedOnly.setValue(Ext.isBoolean(layout.completedOnly) ? layout.completedOnly : false);
 				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : 'normal');
 				fontSize.setValue(Ext.isString(layout.fontSize) ? layout.fontSize : 'normal');
 				digitGroupSeparator.setValue(Ext.isString(layout.digitGroupSeparator) ? layout.digitGroupSeparator : 'space');
-				//legendSet.setValue(Ext.isObject(layout.legendSet) && Ext.isString(layout.legendSet.id) ? layout.legendSet.id : 0);
 			},
 			items: [
-				//{
-					//bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
-					//style: 'margin-bottom:6px; margin-left:2px',
-					//html: NS.i18n.organisation_units
-				//},
-				//organisationUnits,
-				//{
-					//bodyStyle: 'border:0 none; padding:5px'
-				//},
+				{
+					bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
+					style: 'margin-top:4px; margin-bottom:6px; margin-left:5px',
+					html: NS.i18n.data
+				},
+				data,
+				{
+					bodyStyle: 'border:0 none; padding:7px'
+				},
 				{
 					bodyStyle: 'border:0 none; color:#222; font-size:12px; font-weight:bold',
 					style: 'margin-top:2px; margin-bottom:6px; margin-left:3px',
@@ -2930,12 +2923,8 @@ Ext.onReady( function() {
 						}
 					}
 
-					//if (!legendSet.store.isLoaded) {
-						//legendSet.store.load();
-					//}
-
 					// cmp
-					//w.showHierarchy = showHierarchy;
+                    w.completedOnly = completedOnly;
 					w.displayDensity = displayDensity;
 					w.fontSize = fontSize;
 					w.digitGroupSeparator = digitGroupSeparator;
