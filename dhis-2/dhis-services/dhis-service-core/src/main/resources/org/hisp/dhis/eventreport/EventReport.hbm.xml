@@ -102,6 +102,8 @@
 		</type> 
 	</property>
 
+    <property name="completedOnly" column="completedonly" />
+	
     <property name="dataType" not-null="true" />
 
     <list name="columnDimensions" table="eventreport_columns">

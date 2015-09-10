@@ -147,6 +147,8 @@
 		</type> 
 	</property>
 
+    <property name="completedOnly" column="completedonly" />
+	
     <property name="digitGroupSeparator" />
 
     <property name="displayDensity" />

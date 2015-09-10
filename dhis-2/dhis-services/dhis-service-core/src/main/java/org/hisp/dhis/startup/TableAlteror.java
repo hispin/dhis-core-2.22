@@ -843,6 +843,11 @@ public class TableAlteror
         executeSql( "update categoryoptiongroupset set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
         executeSql( "update categoryoptiongroup set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
 
+        executeSql( "update reporttable set completedonly = false where completedonly is null" );
+        executeSql( "update chart set completedonly = false where completedonly is null" );
+        executeSql( "update eventreport set completedonly = false where completedonly is null" );
+        executeSql( "update eventchart set completedonly = false where completedonly is null" );
+        
         // Remove data mart
         executeSql( "drop table aggregateddatasetcompleteness" );
         executeSql( "drop table aggregateddatasetcompleteness_temp" );

@@ -165,6 +165,8 @@ public abstract class BaseAnalyticalObject
 
     protected AggregationType aggregationType;
     
+    protected boolean completedOnly;
+    
     // -------------------------------------------------------------------------
     // Analytical properties
     // -------------------------------------------------------------------------
@@ -882,6 +884,7 @@ public abstract class BaseAnalyticalObject
             userOrganisationUnit = object.isUserOrganisationUnit();
             sortOrder = object.getSortOrder();
             topLimit = object.getTopLimit();
+            completedOnly = object.isCompletedOnly();
         }
     }
 
@@ -1162,6 +1165,19 @@ public abstract class BaseAnalyticalObject
     public void setAggregationType( AggregationType aggregationType )
     {
         this.aggregationType = aggregationType;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isCompletedOnly()
+    {
+        return completedOnly;
+    }
+
+    public void setCompletedOnly( boolean completedOnly )
+    {
+        this.completedOnly = completedOnly;
     }
 
     // -------------------------------------------------------------------------
