@@ -48,7 +48,7 @@ public class DefaultSelectionTreeManager
     private static final String SESSION_KEY_SELECTED_ORG_UNITS = "dhis-oust-selected-org-units";
     private static final String SESSION_KEY_ROOT_ORG_UNITS = "dhis-oust-root-org-units";
 
-    private static final double PERCENTAGE_OF_MULTIPLE_RELOADING_ORG_UNITS = 0.2;
+    private static final double PERCENTAGE_OF_MULTIPLE_RELOADING_ORG_UNITS = 0.1;
 
     // -------------------------------------------------------------------------
     // Dependencies
