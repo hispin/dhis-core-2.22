@@ -306,7 +306,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,isDefault,categories[id]],organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
+            data: 'fields=id,name,programType,version,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,isDefault,categories[id]],organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
         }).done( function( program ){            
             var ou = {};
             _.each(_.values( program.organisationUnits), function(o){
