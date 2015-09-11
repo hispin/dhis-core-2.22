@@ -259,7 +259,7 @@ public class DefaultProgramStageInstanceService
                 // Add a new program instance if it doesn't exist
                 programInstance = new ProgramInstance();
                 programInstance.setEnrollmentDate( executionDate );
-                programInstance.setDateOfIncident( executionDate );
+                programInstance.setIncidentDate( executionDate );
                 programInstance.setProgram( program );
                 programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
                 programInstanceService.addProgramInstance( programInstance );
@@ -285,7 +285,7 @@ public class DefaultProgramStageInstanceService
 
     @Override
     public ProgramStageInstance createProgramStageInstance( ProgramInstance programInstance, ProgramStage programStage,
-        Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit )
+        Date enrollmentDate, Date incidentDate, OrganisationUnit organisationUnit )
     {
         ProgramStageInstance programStageInstance = null;
         Date currentDate = new Date();
@@ -297,7 +297,7 @@ public class DefaultProgramStageInstanceService
         }
         else
         {
-            dateCreatedEvent = dateOfIncident;
+            dateCreatedEvent = incidentDate;
         }
 
         Date dueDate = DateUtils.getDateAfterAddition( dateCreatedEvent, programStage.getMinDaysFromStart() );

@@ -327,7 +327,7 @@ public class DefaultProgramIndicatorService
                 }
                 else if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( uid ) )
                 {
-                    date = programInstance.getDateOfIncident();
+                    date = programInstance.getIncidentDate();
                 }
                 else if ( ProgramIndicator.VAR_CURRENT_DATE.equals( uid ) )
                 {

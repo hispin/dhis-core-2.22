@@ -232,10 +232,10 @@ public class ProgramInstanceServiceTest
 
         assertNotNull( programInstanceService.getProgramInstance( idA ) );
 
-        programInstanceA.setDateOfIncident( enrollmentDate );
+        programInstanceA.setIncidentDate( enrollmentDate );
         programInstanceService.updateProgramInstance( programInstanceA );
 
-        assertEquals( enrollmentDate, programInstanceService.getProgramInstance( idA ).getDateOfIncident() );
+        assertEquals( enrollmentDate, programInstanceService.getProgramInstance( idA ).getIncidentDate() );
     }
 
     @Test

@@ -1165,8 +1165,8 @@ public abstract class DhisConvenienceTest
 
         program.setName( "Program" + uniqueCharacter );
         program.setDescription( "Description" + uniqueCharacter );
-        program.setDateOfEnrollmentDescription( "DateOfEnrollmentDescription" );
-        program.setDateOfIncidentDescription( "DateOfIncidentDescription" );
+        program.setEnrollmentDateLabel( "DateOfEnrollmentDescription" );
+        program.setIncidentDateLabel( "DateOfIncidentDescription" );
         program.setProgramStages( programStages );
         program.setProgramType( ProgramType.WITH_REGISTRATION );
 

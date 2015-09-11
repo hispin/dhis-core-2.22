@@ -135,7 +135,7 @@
 				<td>
 					<select id="programProperty" name="programProperty" size="10" ondblclick="insertInfo(this, false);" disabled>
 						<option value="enrollmentDate">$i18n.getString( "date_of_enrollment" )</option>
-						<option value="dateOfIncident">$i18n.getString( "date_of_incident" )</option>
+						<option value="incidentDate">$i18n.getString( "date_of_incident" )</option>
 						<option value="[PG:*]">$i18n.getString( "program_enrollment" )</option>
 					</select>
 				</td>

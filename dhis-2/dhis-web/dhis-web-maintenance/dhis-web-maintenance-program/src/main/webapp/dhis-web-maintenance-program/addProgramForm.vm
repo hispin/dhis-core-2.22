@@ -5,8 +5,8 @@
 	{	
 		validation2( 'addProgramForm', function( form )
 		{
-			enable('dateOfEnrollmentDescription');
-			enable('dateOfIncidentDescription');
+			enable('enrollmentDateLabel');
+			enable('incidentDateLabel');
 			form.submit();
 		},{
 			'beforeValidateHandler' : function()
@@ -160,14 +160,14 @@
         </tr>
 
 		<tr name='nonAnonymous'>
-			<td><label for="dateOfIncidentDescription">$i18n.getString( "date_of_incident_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-			<td><input type="text" id="dateOfIncidentDescription" name="dateOfIncidentDescription" value="$i18n.getString('incident_date')"></td>
+			<td><label for="incidentDateLabel">$i18n.getString( "date_of_incident_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+			<td><input type="text" id="incidentDateLabel" name="incidentDateLabel" value="$i18n.getString('incident_date')"></td>
 			<td></td>
 		</tr>
 		
 		<tr name='nonAnonymous'>
-			<td><label for="dateOfEnrollmentDescription">$i18n.getString( "date_of_enrollment_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-			<td><input type="text" id="dateOfEnrollmentDescription" name="dateOfEnrollmentDescription" value="$i18n.getString('enrollment_date')"></td>
+			<td><label for="enrollmentDateLabel">$i18n.getString( "date_of_enrollment_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+			<td><input type="text" id="enrollmentDateLabel" name="enrollmentDateLabel" value="$i18n.getString('enrollment_date')"></td>
 			<td></td>
 		</tr>
 		

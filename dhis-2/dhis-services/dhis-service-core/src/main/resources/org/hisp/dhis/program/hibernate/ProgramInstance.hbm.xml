@@ -16,7 +16,7 @@
 
     <property name="lastUpdated" type="timestamp" />
 
-    <property name="dateOfIncident" column="dateofincident" not-null="true" />
+    <property name="incidentDate" column="incidentDate" not-null="true" />
 
     <property name="enrollmentDate" column="enrollmentdate" not-null="true" />
 

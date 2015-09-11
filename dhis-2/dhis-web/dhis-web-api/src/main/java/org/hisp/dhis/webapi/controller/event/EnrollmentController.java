@@ -121,7 +121,7 @@ public class EnrollmentController
 
         if ( fields.isEmpty() )
         {
-            fields.add( "enrollment,created,lastUpdated,trackedEntity,trackedEntityInstance,program,status,orgUnit,dateOfEnrollment,dateOfIncident,followup" );
+            fields.add( "enrollment,created,lastUpdated,trackedEntity,trackedEntityInstance,program,status,orgUnit,enrollmentDate,incidentDate,followup" );
         }
 
         Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );

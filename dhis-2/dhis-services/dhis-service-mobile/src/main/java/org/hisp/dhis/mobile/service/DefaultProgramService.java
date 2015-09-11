@@ -200,8 +200,8 @@ public class DefaultProgramService
         pr.setName( program.getName() );
         pr.setType( program.getProgramType().getValue() );
         pr.setVersion( program.getVersion() );
-        pr.setDateOfEnrollmentDescription( program.getDateOfEnrollmentDescription() );
-        pr.setDateOfIncidentDescription( program.getDateOfIncidentDescription() );
+        pr.setDateOfEnrollmentDescription( program.getEnrollmentDateLabel() );
+        pr.setDateOfIncidentDescription( program.getIncidentDateLabel() );
         if ( program.getTrackedEntity() != null && program.getTrackedEntity().getName() != null )
         {
             pr.setTrackedEntityName( program.getTrackedEntity().getName() );
