@@ -899,6 +899,8 @@ Ext.onReady( function() {
 
                 // hideNaData: boolean (false)
 
+				// completedOnly: boolean (false)
+
                 // aggregationType: string ('default') - 'default', 'count', 'sum'
 
                 // showHierarchy: boolean (false)
@@ -1101,9 +1103,10 @@ Ext.onReady( function() {
 
 					// properties
                     layout.showValues = Ext.isBoolean(config.showData) ? config.showData : (Ext.isBoolean(config.showValues) ? config.showValues : true);
+                    layout.showTrendLine = Ext.isBoolean(config.regression) ? config.regression : (Ext.isBoolean(config.showTrendLine) ? config.showTrendLine : false);
                     layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : (Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : true);
                     layout.hideNaData = Ext.isBoolean(config.hideNaData) ? config.hideNaData : false;
-                    layout.showTrendLine = Ext.isBoolean(config.regression) ? config.regression : (Ext.isBoolean(config.showTrendLine) ? config.showTrendLine : false);
+                    layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
                     layout.targetLineValue = Ext.isNumber(config.targetLineValue) ? config.targetLineValue : null;
                     layout.targetLineTitle = Ext.isString(config.targetLineLabel) && !Ext.isEmpty(config.targetLineLabel) ? config.targetLineLabel :
                         (Ext.isString(config.targetLineTitle) && !Ext.isEmpty(config.targetLineTitle) ? config.targetLineTitle : null);
@@ -3056,6 +3059,11 @@ Ext.onReady( function() {
                     paramString += '&outputType=' + layout.outputType;
                 }
 
+                // completed only
+				if (layout.completedOnly) {
+					paramString += '&completedOnly=true';
+				}
+                
                 // display property
                 paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
