@@ -3330,7 +3330,7 @@ Ext.onReady( function() {
                                 }
 
                                 trendLineFields.push(regressionKey);
-                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
+                                xResponse.metaData.names[regressionKey] = NS.i18n.trend + (appConfig.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
                             }
                         }
                     }
@@ -3654,8 +3654,8 @@ Ext.onReady( function() {
                 };
 
                 getFormatedSeriesTitle = function(titles) {
-                    var itemLength = ns.dashboard ? 23 : 30,
-                        charLength = ns.dashboard ? 5 : 6,
+                    var itemLength = appConfig.dashboard ? 23 : 30,
+                        charLength = appConfig.dashboard ? 5 : 6,
                         numberOfItems = titles.length,
                         numberOfChars,
                         totalItemLength = numberOfItems * itemLength,
@@ -3912,8 +3912,8 @@ Ext.onReady( function() {
                 };
 
                 getDefaultLegend = function(store, chartConfig) {
-                    var itemLength = ns.dashboard ? 24 : 30,
-                        charLength = ns.dashboard ? 4 : 6,
+                    var itemLength = appConfig.dashboard ? 24 : 30,
+                        charLength = appConfig.dashboard ? 4 : 6,
                         numberOfItems = 0,
                         numberOfChars = 0,
                         width,
@@ -4010,7 +4010,7 @@ Ext.onReady( function() {
                         text = xLayout.startDate + ' - ' + xLayout.endDate;
                     }
 
-                    if (ns.dashboard && Ext.isString(xLayout.name)) {
+                    if (appConfig.dashboard && Ext.isString(xLayout.name)) {
                         text = xLayout.name;
                     }
                     else if (xLayout.title) {
@@ -4097,7 +4097,7 @@ Ext.onReady( function() {
                     }
 
                     // aggregation type
-                    if (!ns.dashboard && Ext.isObject(layout.value) && layout.value.id && layout.aggregationType) {
+                    if (!appConfig.dashboard && Ext.isObject(layout.value) && layout.value.id && layout.aggregationType) {
                         var value = layout.value.id;
 
                         text += text.length ? ', ' : '';
@@ -4130,7 +4130,7 @@ Ext.onReady( function() {
                         font: titleFont,
                         fill: titleColor,
                         height: 20,
-                        y: ns.dashboard ? 7 : 20
+                        y: appConfig.dashboard ? 7 : 20
                     });
                 };
 
@@ -4140,9 +4140,9 @@ Ext.onReady( function() {
                             height = ns.app.centerRegion.getHeight();
                             
 						this.animate = false;
-                        this.setWidth(ns.dashboard ? width : width - 15);
-                        this.setHeight(ns.dashboard ? height : height - 40);
-                        this.animate = !ns.dashboard;
+                        this.setWidth(appConfig.dashboard ? width : width - 15);
+                        this.setHeight(appConfig.dashboard ? height : height - 40);
+                        this.animate = !appConfig.dashboard;
                     };
                 };
 
@@ -4182,15 +4182,15 @@ Ext.onReady( function() {
                             //animate: true,
                             animate: false,
                             shadow: false,
-                            insetPadding: ns.dashboard ? 17 : 35,
+                            insetPadding: appConfig.dashboard ? 17 : 35,
                             insetPaddingObject: {
-                                top: ns.dashboard ? 12 : 32,
-                                right: ns.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
-                                bottom: ns.dashboard ? 2 : 10,
-                                left: ns.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
+                                top: appConfig.dashboard ? 12 : 32,
+                                right: appConfig.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
+                                bottom: appConfig.dashboard ? 2 : 10,
+                                left: appConfig.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
                             },
-                            width: ns.dashboard ? width : width - 15,
-                            height: ns.dashboard ? height : height - 40,
+                            width: appConfig.dashboard ? width : width - 15,
+                            height: appConfig.dashboard ? height : height - 40,
                             theme: 'dv1'
                         };
 
@@ -4199,15 +4199,15 @@ Ext.onReady( function() {
                         defaultConfig.legend = getDefaultLegend(store, config);
 
                         if (defaultConfig.legend.position === 'right') {
-                            defaultConfig.insetPaddingObject.top = ns.dashboard ? 22 : 40;
-                            defaultConfig.insetPaddingObject.right = ns.dashboard ? 5 : 40;
+                            defaultConfig.insetPaddingObject.top = appConfig.dashboard ? 22 : 40;
+                            defaultConfig.insetPaddingObject.right = appConfig.dashboard ? 5 : 40;
                         }
                     }
 
                     // title
                     if (xLayout.hideTitle) {
-                        defaultConfig.insetPadding = ns.dashboard ? 1 : 10;
-                        defaultConfig.insetPaddingObject.top = ns.dashboard ? 3 : 10;
+                        defaultConfig.insetPadding = appConfig.dashboard ? 1 : 10;
+                        defaultConfig.insetPaddingObject.top = appConfig.dashboard ? 3 : 10;
                     }
                     else {
                         defaultConfig.items = [getDefaultChartTitle(store)];
@@ -4386,7 +4386,7 @@ Ext.onReady( function() {
                             },
                             markerConfig: {
                                 type: 'circle',
-                                radius: ns.dashboard ? 3 : 4
+                                radius: appConfig.dashboard ? 3 : 4
                             },
                             tips: getDefaultTips(),
                             title: seriesTitles[i]
@@ -4568,10 +4568,10 @@ Ext.onReady( function() {
                         store: store,
                         series: series,
                         insetPaddingObject: {
-                            top: ns.dashboard ? 15 : 40,
-                            right: ns.dashboard ? 2 : 30,
-                            bottom: ns.dashboard ? 13: 30,
-                            left: ns.dashboard ? 7 : 30
+                            top: appConfig.dashboard ? 15 : 40,
+                            right: appConfig.dashboard ? 2 : 30,
+                            bottom: appConfig.dashboard ? 13: 30,
+                            left: appConfig.dashboard ? 7 : 30
                         }
                     });
 

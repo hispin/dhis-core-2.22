@@ -7997,6 +7997,7 @@ Ext.onReady( function() {
 		var requests = [],
 			callbacks = 0,
 			init = {},
+            appConfig,
             fn;
 
 		fn = function() {
