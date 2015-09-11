@@ -216,7 +216,7 @@ public class RegistrationSingleEventServiceTest
         enrollment.setOrgUnit( organisationUnitA.getUid() );
         enrollment.setProgram( program );
         enrollment.setTrackedEntityInstance( person );
-        enrollment.setDateOfEnrollment( new Date() );
+        enrollment.setEnrollmentDate( new Date() );
         enrollment.setIncidentDate( new Date() );
 
         return enrollment;

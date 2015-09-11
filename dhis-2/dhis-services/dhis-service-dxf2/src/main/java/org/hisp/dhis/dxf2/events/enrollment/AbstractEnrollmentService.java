@@ -171,7 +171,7 @@ public abstract class AbstractEnrollmentService
         enrollment.setLastUpdated( programInstance.getLastUpdated() );
         enrollment.setProgram( programInstance.getProgram().getUid() );
         enrollment.setStatus( EnrollmentStatus.fromInt( programInstance.getStatus() ) );
-        enrollment.setDateOfEnrollment( programInstance.getEnrollmentDate() );
+        enrollment.setEnrollmentDate( programInstance.getEnrollmentDate() );
         enrollment.setIncidentDate( programInstance.getIncidentDate() );
         enrollment.setFollowup( programInstance.getFollowup() );
 
@@ -283,7 +283,7 @@ public abstract class AbstractEnrollmentService
         OrganisationUnit organisationUnit = getOrganisationUnit( enrollment.getOrgUnit() );
 
         ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program,
-            enrollment.getDateOfEnrollment(), enrollment.getIncidentDate(), organisationUnit, enrollment.getEnrollment() );
+            enrollment.getEnrollmentDate(), enrollment.getIncidentDate(), organisationUnit, enrollment.getEnrollment() );
 
         if ( programInstance == null )
         {
@@ -373,7 +373,7 @@ public abstract class AbstractEnrollmentService
         programInstance.setProgram( program );
         programInstance.setEntityInstance( entityInstance );
         programInstance.setIncidentDate( enrollment.getIncidentDate() );
-        programInstance.setEnrollmentDate( enrollment.getDateOfEnrollment() );
+        programInstance.setEnrollmentDate( enrollment.getEnrollmentDate() );
         programInstance.setFollowup( enrollment.getFollowup() );
 
         if ( programInstance.getStatus() != enrollment.getStatus().getValue() )
