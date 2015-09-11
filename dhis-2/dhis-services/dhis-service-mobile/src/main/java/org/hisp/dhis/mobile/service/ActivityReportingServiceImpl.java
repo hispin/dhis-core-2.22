@@ -468,7 +468,7 @@ public class ActivityReportingServiceImpl
             // ---------------------------------------------------------------------
             ProgramInstance programInstance = new ProgramInstance();
             programInstance.setEnrollmentDate( new Date() );
-            programInstance.setDateOfIncident( new Date() );
+            programInstance.setIncidentDate( new Date() );
             programInstance.setProgram( programStage.getProgram() );
             programInstance.setStatus( ProgramInstance.STATUS_COMPLETED );
             programInstance.setEntityInstance( patient );
@@ -655,7 +655,7 @@ public class ActivityReportingServiceImpl
 
         ProgramInstance programInstance = new ProgramInstance();
         programInstance.setEnrollmentDate( new Date() );
-        programInstance.setDateOfIncident( incidentDate );
+        programInstance.setIncidentDate( incidentDate );
         programInstance.setProgram( program );
         programInstance.setEntityInstance( patient );
         programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
@@ -914,7 +914,7 @@ public class ActivityReportingServiceImpl
         mobileProgramInstance.setName( programInstance.getProgram().getName() );
         mobileProgramInstance.setStatus( programInstance.getStatus() );
         mobileProgramInstance.setDateOfEnrollment( PeriodUtil.dateToString( programInstance.getEnrollmentDate() ) );
-        mobileProgramInstance.setDateOfIncident( PeriodUtil.dateToString( programInstance.getDateOfIncident() ) );
+        mobileProgramInstance.setDateOfIncident( PeriodUtil.dateToString( programInstance.getIncidentDate() ) );
         mobileProgramInstance.setPatientId( programInstance.getEntityInstance().getId() );
         mobileProgramInstance.setProgramId( programInstance.getProgram().getId() );
         mobileProgramInstance.setProgramStageInstances( getMobileProgramStages( programInstance ) );
@@ -2027,7 +2027,7 @@ public class ActivityReportingServiceImpl
 
         programInstance.setEnrollmentDate( new Date() );
 
-        programInstance.setDateOfIncident( new Date() );
+        programInstance.setIncidentDate( new Date() );
 
         programInstance.setProgram( program );
 

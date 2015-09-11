@@ -68,7 +68,7 @@ public class ProgramController
         {
             ProgramInstance programInstance = new ProgramInstance();
             programInstance.setEnrollmentDate( new Date() );
-            programInstance.setDateOfIncident( new Date() );
+            programInstance.setIncidentDate( new Date() );
             programInstance.setProgram( program );
             programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
 

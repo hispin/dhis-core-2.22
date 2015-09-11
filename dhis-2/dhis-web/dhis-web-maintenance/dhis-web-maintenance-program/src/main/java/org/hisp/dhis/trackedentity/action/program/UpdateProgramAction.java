@@ -104,18 +104,18 @@ public class UpdateProgramAction
         this.description = description;
     }
 
-    private String dateOfEnrollmentDescription;
+    private String enrollmentDateLabel;
 
-    public void setDateOfEnrollmentDescription( String dateOfEnrollmentDescription )
+    public void setEnrollmentDateLabel( String enrollmentDateLabel )
     {
-        this.dateOfEnrollmentDescription = dateOfEnrollmentDescription;
+        this.enrollmentDateLabel = enrollmentDateLabel;
     }
 
-    private String dateOfIncidentDescription;
+    private String incidentDateLabel;
 
-    public void setDateOfIncidentDescription( String dateOfIncidentDescription )
+    public void setIncidentDateLabel( String incidentDateLabel )
     {
-        this.dateOfIncidentDescription = dateOfIncidentDescription;
+        this.incidentDateLabel = incidentDateLabel;
     }
 
     private ProgramType programType;
@@ -293,8 +293,8 @@ public class UpdateProgramAction
         Program program = programService.getProgram( id );
         program.setName( StringUtils.trimToNull( name ) );
         program.setDescription( StringUtils.trimToNull( description ) );
-        program.setDateOfEnrollmentDescription( StringUtils.trimToNull( dateOfEnrollmentDescription ) );
-        program.setDateOfIncidentDescription( StringUtils.trimToNull( dateOfIncidentDescription ) );
+        program.setEnrollmentDateLabel( StringUtils.trimToNull( enrollmentDateLabel ) );
+        program.setIncidentDateLabel( StringUtils.trimToNull( incidentDateLabel ) );
         program.setProgramType( programType );
         program.setDisplayIncidentDate( displayIncidentDate );
         program.setOnlyEnrollOnce( onlyEnrollOnce );

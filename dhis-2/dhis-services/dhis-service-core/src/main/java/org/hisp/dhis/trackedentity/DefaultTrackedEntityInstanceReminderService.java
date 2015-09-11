@@ -100,8 +100,8 @@ public class DefaultTrackedEntityInstanceReminderService
         String organisationunitName = entityInstance.getOrganisationUnit().getName();
         String programName = programInstance.getProgram().getName();
         String daysSinceEnrollementDate = DateUtils.daysBetween( new Date(), programInstance.getEnrollmentDate() ) + "";
-        String daysSinceIncidentDate = DateUtils.daysBetween( new Date(), programInstance.getDateOfIncident() ) + "";
-        String incidentDate = format.formatDate( programInstance.getDateOfIncident() );
+        String daysSinceIncidentDate = DateUtils.daysBetween( new Date(), programInstance.getIncidentDate() ) + "";
+        String incidentDate = format.formatDate( programInstance.getIncidentDate() );
         String erollmentDate = format.formatDate( programInstance.getEnrollmentDate() );
 
         templateMessage = templateMessage.replace( TrackedEntityInstanceReminder.TEMPLATE_MESSSAGE_PROGRAM_NAME,

@@ -189,7 +189,7 @@
 			<td>
 				<select id="reportDateToUse" name="reportDateToUse" disabled>
 					<option value=''>[$i18n.getString('please_select')]</option>
-					<option value='dateOfIncident'>$i18n.getString("date_of_incident")</option>
+					<option value='incidentDate'>$i18n.getString("date_of_incident")</option>
 					<option value='enrollmentDate'>$i18n.getString("date_of_enrollment")</option>
 				</select>
 			</td>

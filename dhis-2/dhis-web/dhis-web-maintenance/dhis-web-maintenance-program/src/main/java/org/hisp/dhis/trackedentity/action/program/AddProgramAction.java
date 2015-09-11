@@ -110,18 +110,18 @@ public class AddProgramAction
         this.description = description;
     }
 
-    private String dateOfEnrollmentDescription;
+    private String enrollmentDateLabel;
 
-    public void setDateOfEnrollmentDescription( String dateOfEnrollmentDescription )
+    public void setEnrollmentDateLabel( String enrollmentDateLabel )
     {
-        this.dateOfEnrollmentDescription = dateOfEnrollmentDescription;
+        this.enrollmentDateLabel = enrollmentDateLabel;
     }
 
-    private String dateOfIncidentDescription;
+    private String incidentDateLabel;
 
-    public void setDateOfIncidentDescription( String dateOfIncidentDescription )
+    public void setIncidentDateDescription( String incidentDateLabel )
     {
-        this.dateOfIncidentDescription = dateOfIncidentDescription;
+        this.incidentDateLabel = incidentDateLabel;
     }
 
     private ProgramType programType;
@@ -270,8 +270,8 @@ public class AddProgramAction
         program.setName( StringUtils.trimToNull( name ) );
         program.setDescription( StringUtils.trimToNull( description ) );
         program.setVersion( 1 );
-        program.setDateOfEnrollmentDescription( StringUtils.trimToNull( dateOfEnrollmentDescription ) );
-        program.setDateOfIncidentDescription( StringUtils.trimToNull( dateOfIncidentDescription ) );
+        program.setEnrollmentDateLabel( StringUtils.trimToNull( enrollmentDateLabel ) );
+        program.setIncidentDateLabel( StringUtils.trimToNull( incidentDateLabel ) );
         program.setProgramType( programType );
         program.setDisplayIncidentDate( displayIncidentDate );
         program.setOnlyEnrollOnce( onlyEnrollOnce );
@@ -368,7 +368,7 @@ public class AddProgramAction
             // Add a new program-instance
             ProgramInstance programInstance = new ProgramInstance();
             programInstance.setEnrollmentDate( new Date() );
-            programInstance.setDateOfIncident( new Date() );
+            programInstance.setIncidentDate( new Date() );
             programInstance.setProgram( program );
             programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
 

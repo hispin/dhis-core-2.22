@@ -68,35 +68,65 @@ public class InitTableAlteror
         executeSql( "UPDATE programstageinstance SET status='ACTIVE' WHERE status='0';" );
         executeSql( "UPDATE programstageinstance SET status='COMPLETED' WHERE status='1';" );
         executeSql( "UPDATE programstageinstance SET status='SKIPPED' WHERE status='5';" );
-        executeSql( "ALTER TABLE program DROP COLUMN displayonallorgunit" );
-
+        
+        if( columnExists( "program", "displayonallorgunit" ) )
+        {
+            executeSql( "ALTER TABLE program DROP COLUMN displayonallorgunit" );
+        }
+        
         upgradeProgramStageDataElements();
         updateValueTypes();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
         executeSql( "update program set \"type\"='WITHOUT_REGISTRATION' where type='3'" );
+
+        renameColumn( "program", "dateofenrollmentdescription", "enrollmentDateLabel" );
+        renameColumn( "program", "dateofincidentdescription", "incidentDateLabel" );
+        renameColumn( "programinstance", "dateofincident", "incidentDate" );
+
     }
 
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
+    private void renameColumn( String table, String oldColumn, String newColumn )
+    {
+        if ( columnExists( table, oldColumn ) )
+        {
+            executeSql( "update " + table + " set " + newColumn + " = " + oldColumn );
+            executeSql( "alter table " + table + " drop column " + oldColumn );
+        }
+    }
+
     private void updateValueTypes()
     {
         executeSql( "alter table dataelement alter column valuetype type varchar(50)" );
 
-        executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int' and numbertype='number'" );
-        executeSql( "update dataelement set valuetype='INTEGER' where valuetype='int' and numbertype='int'" );
-        executeSql( "update dataelement set valuetype='INTEGER_POSITIVE' where valuetype='int' and numbertype='posInt'" );
-        executeSql( "update dataelement set valuetype='INTEGER_NEGATIVE' where valuetype='int' and numbertype='negInt'" );
-        executeSql( "update dataelement set valuetype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt'" );
-        executeSql( "update dataelement set valuetype='PERCENTAGE' where valuetype='int' and numbertype='percentage'" );
-        executeSql( "update dataelement set valuetype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
+        if ( columnExists( "dataelement", "numbertype" ) )
+        {
+            executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int' and numbertype='number'" );
+            executeSql( "update dataelement set valuetype='INTEGER' where valuetype='int' and numbertype='int'" );
+            executeSql( "update dataelement set valuetype='INTEGER_POSITIVE' where valuetype='int' and numbertype='posInt'" );
+            executeSql( "update dataelement set valuetype='INTEGER_NEGATIVE' where valuetype='int' and numbertype='negInt'" );
+            executeSql( "update dataelement set valuetype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt'" );
+            executeSql( "update dataelement set valuetype='PERCENTAGE' where valuetype='int' and numbertype='percentage'" );
+            executeSql( "update dataelement set valuetype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
+
+            executeSql( "alter table dataelement drop column numbertype" );
+        }
+
         executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int'" );
 
-        executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype='text'" );
-        executeSql( "update dataelement set valuetype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
+        if ( columnExists( "dataelement", "texttype" ) )
+        {
+            executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype='text'" );
+            executeSql( "update dataelement set valuetype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
+
+            executeSql( "alter table dataelement drop column texttype" );
+        }
+
         executeSql( "update dataelement set valuetype='TEXT' where valuetype='string'" );
 
         executeSql( "update dataelement set valuetype='DATE' where valuetype='date'" );
@@ -104,9 +134,6 @@ public class InitTableAlteror
         executeSql( "update dataelement set valuetype='BOOLEAN' where valuetype='bool'" );
         executeSql( "update dataelement set valuetype='TRUE_ONLY' where valuetype='trueOnly'" );
         executeSql( "update dataelement set valuetype='USERNAME' where valuetype='username'" );
-
-        executeSql( "alter table dataelement drop column numbertype" );
-        executeSql( "alter table dataelement drop column texttype" );
 
         executeSql( "update trackedentityattribute set valuetype='TEXT' where valuetype='string'" );
         executeSql( "update trackedentityattribute set valuetype='PHONE_NUMBER' where valuetype='phoneNumber'" );
@@ -128,10 +155,11 @@ public class InitTableAlteror
         {
             String autoIncr = statementBuilder.getAutoIncrementValue();
 
-            String insertSql =
-                "insert into programstagedataelement(programstagedataelementid,programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order) " +
-                    "select " + autoIncr + ",programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order " +
-                    "from programstage_dataelements";
+            String insertSql = "insert into programstagedataelement(programstagedataelementid,programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order) "
+                + "select "
+                + autoIncr
+                + ",programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order "
+                + "from programstage_dataelements";
 
             executeSql( insertSql );
 
@@ -151,6 +179,7 @@ public class InitTableAlteror
         }
         catch ( Exception ex )
         {
+            ex.printStackTrace();
             log.debug( ex );
 
             return -1;
@@ -163,6 +192,20 @@ public class InitTableAlteror
         {
             statementManager.getHolder().queryForInteger( "select 1 from " + table );
             return true;
+        }
+        catch ( Exception ex )
+        {
+            return false;
+        }
+    }
+
+    private boolean columnExists( String table, String column )
+    {
+        try
+        {
+            return statementManager.getHolder().queryForString(
+                "select column_name from information_schema.columns where table_name='" + table + "' and column_name='"
+                    + column + "'" ) == null ? false : true;
         }
         catch ( Exception ex )
         {

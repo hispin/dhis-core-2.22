@@ -462,15 +462,15 @@ public class DefaultProgramInstanceService
 
     @Override
     public ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, Program program,
-        Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit )
+        Date enrollmentDate, Date incidentDate, OrganisationUnit organisationUnit )
     {
         return enrollTrackedEntityInstance( trackedEntityInstance, program, enrollmentDate,
-            dateOfIncident, organisationUnit, CodeGenerator.generateCode() );
+            incidentDate, organisationUnit, CodeGenerator.generateCode() );
     }
 
     @Override
     public ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance,
-        Program program, Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit, String uid )
+        Program program, Date enrollmentDate, Date incidentDate, OrganisationUnit organisationUnit, String uid )
     {
         // ---------------------------------------------------------------------
         // Add program instance
@@ -490,13 +490,13 @@ public class DefaultProgramInstanceService
             programInstance.setEnrollmentDate( new Date() );
         }
 
-        if ( dateOfIncident != null )
+        if ( incidentDate != null )
         {
-            programInstance.setDateOfIncident( dateOfIncident );
+            programInstance.setIncidentDate( incidentDate );
         }
         else
         {
-            programInstance.setDateOfIncident( new Date() );
+            programInstance.setIncidentDate( new Date() );
         }
 
         programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
@@ -510,7 +510,7 @@ public class DefaultProgramInstanceService
         {
             ProgramStage programStage = program.getProgramStages().iterator().next();
             programStageInstanceService.createProgramStageInstance( programInstance, programStage, enrollmentDate,
-                dateOfIncident, organisationUnit );
+                incidentDate, organisationUnit );
         }
 
         // -----------------------------------------------------------------

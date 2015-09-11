@@ -3,8 +3,8 @@
 	{
 		validation2( 'updateProgramForm', function( form )
 		{	
-			enable('dateOfEnrollmentDescription');
-			enable('dateOfIncidentDescription');
+			enable('enrollmentDateLabel');
+			enable('incidentDateLabel');
 			form.submit();
 		},{
 			'beforeValidateHandler' : function()
@@ -170,14 +170,14 @@
 		</tr>
 		
 		<tr name='nonAnonymous'>
-			<td><label for="dateOfIncidentDescription">$i18n.getString( "date_of_incident_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-			<td><input type="text" id="dateOfIncidentDescription" name="dateOfIncidentDescription" value="$!program.dateOfIncidentDescription" class="{validate:{required:true,minlength:4}}" #if( $program.programType.value=="without_registration") disabled #end ></td>
+			<td><label for="incidentDateLabel">$i18n.getString( "date_of_incident_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+			<td><input type="text" id="incidentDateLabel" name="incidentDateLabel" value="$!program.incidentDateLabel" class="{validate:{required:true,minlength:4}}" #if( $program.programType.value=="without_registration") disabled #end ></td>
 			<td></td>
 		</tr name='nonAnonymous'>
 		
 		<tr name='nonAnonymous'>
-			<td><label for="dateOfEnrollmentDescription">$i18n.getString( "date_of_enrollment_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
-			<td><input type="text" id="dateOfEnrollmentDescription" name="dateOfEnrollmentDescription"  value="$!program.dateOfEnrollmentDescription" class="{validate:{required:true,minlength:4}}" #if( $program.programType.value=="without_registration" ) disabled #end></td>
+			<td><label for="enrollmentDateLabel">$i18n.getString( "date_of_enrollment_description" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
+			<td><input type="text" id="enrollmentDateLabel" name="enrollmentDateLabel"  value="$!program.enrollmentDateLabel" class="{validate:{required:true,minlength:4}}" #if( $program.programType.value=="without_registration" ) disabled #end></td>
 			<td></td>
 		</tr>
 

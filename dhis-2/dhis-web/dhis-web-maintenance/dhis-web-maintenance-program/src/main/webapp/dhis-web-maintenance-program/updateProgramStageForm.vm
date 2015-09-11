@@ -218,7 +218,7 @@
 						<select id="reportDateToUse" name="reportDateToUse"  
 							#if($openAfterEnrollment!='' || $programStage.autoGenerateEvent=='false' ) disabled #elseif($programStage.openAfterEnrollment=='false') disabled #end >
 							<option value=''>[$i18n.getString('please_select')]</option>
-							<option value='dateOfIncident' #if($programStage.reportDateToUse=='dateOfIncident') selected #end >$i18n.getString("date_of_incident")</option>
+							<option value='incidentDate' #if($programStage.reportDateToUse=='incidentDate') selected #end >$i18n.getString("date_of_incident")</option>
 							<option value='enrollmentDate' #if($programStage.reportDateToUse=='enrollmentDate') selected #end >$i18n.getString("date_of_enrollment")</option>
 						</select>
 					</td>

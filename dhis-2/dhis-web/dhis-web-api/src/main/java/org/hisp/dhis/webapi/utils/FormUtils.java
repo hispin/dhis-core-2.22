@@ -143,14 +143,14 @@ public class FormUtils
             form.getOptions().put( "description", program.getDescription() );
         }
 
-        if ( !StringUtils.isEmpty( program.getDateOfEnrollmentDescription() ) )
+        if ( !StringUtils.isEmpty( program.getEnrollmentDateLabel() ) )
         {
-            form.getOptions().put( "dateOfEnrollmentDescription", program.getDateOfEnrollmentDescription() );
+            form.getOptions().put( "dateOfEnrollmentDescription", program.getEnrollmentDateLabel() );
         }
 
-        if ( !StringUtils.isEmpty( program.getDateOfIncidentDescription() ) )
+        if ( !StringUtils.isEmpty( program.getIncidentDateLabel() ) )
         {
-            form.getOptions().put( "dateOfIncidentDescription", program.getDateOfIncidentDescription() );
+            form.getOptions().put( "dateOfIncidentDescription", program.getIncidentDateLabel() );
         }
 
         form.getOptions().put( "type", program.getProgramType().getValue() );

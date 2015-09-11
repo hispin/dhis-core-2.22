@@ -119,7 +119,7 @@ public class NoRegistrationSingleEventServiceTest
 
         ProgramInstance programInstance = new ProgramInstance();
         programInstance.setProgram( programA );
-        programInstance.setDateOfIncident( new Date() );
+        programInstance.setIncidentDate( new Date() );
         programInstance.setEnrollmentDate( new Date() );
 
         programInstanceService.addProgramInstance( programInstance );
