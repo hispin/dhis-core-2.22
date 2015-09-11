@@ -573,14 +573,26 @@ Ext.onReady( function() {
 	EV.isDebug = false;
 	EV.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	EV.getCore = function(ns) {
-        var init = ns.core.init,
-            conf = {},
+	EV.getCore = function(init, appConfig) {
+        var conf = {},
             api = {},
             support = {},
             service = {},
             web = {},
+            app = {},
+            webAlert,
             dimConf;
+
+        appConfig = appConfig || {};
+
+        // alert
+        webAlert = function() {};
+
+        // app
+        app.getViewportWidth = function() {};
+        app.getViewportHeight = function() {};
+        app.getCenterRegionWidth = function() {};
+        app.getCenterRegionHeight = function() {};
 
 		// conf
 		(function() {
@@ -1684,6 +1696,17 @@ Ext.onReady( function() {
 				} : null;
 			};
 
+            // connection
+            support.connection = {};
+
+            support.connection.ajax = function(requestConfig, authConfig) {
+                if (authConfig.crossDomain && Ext.isString(authConfig.username) && Ext.isString(authConfig.password)) {
+                    requestConfig.headers = Ext.isObject(authConfig.headers) ? authConfig.headers : {};
+                    requestConfig.headers['Authorization'] = 'Basic ' + btoa(authConfig.username + ':' + authConfig.password);
+                }
+
+                Ext.Ajax.request(requestConfig);
+            };
 		}());
 
 		// service
@@ -4728,15 +4751,18 @@ Ext.onReady( function() {
 		}());
 
 		// alert
-		ns.alert = web.message.alert;
+		webAlert = web.message.alert;
 
-		ns.core.conf = conf;
-		ns.core.api = api;
-		ns.core.support = support;
-		ns.core.service = service;
-		ns.core.web = web;
-
-		return ns;
+		return {
+            init: init,
+            conf: conf,
+            api: api,
+            support: support,
+            service: service,
+            web: web,
+            app: app,
+            webAlert: webAlert
+        };
 	};
 
 	// PLUGIN
@@ -4765,7 +4791,8 @@ Ext.onReady( function() {
 		var isInit = false,
 			requests = [],
 			callbackCount = 0,
-            type = config.plugin && config.crossDomain ? 'jsonp' : 'json',
+            type = 'json',
+            ajax,
 			fn;
 
         init.contextPath = config.url;
@@ -4781,6 +4808,17 @@ Ext.onReady( function() {
 				configs = [];
 			}
 		};
+
+        ajax = function(requestConfig, authConfig) {
+            authConfig = authConfig || config;
+            
+            if (authConfig.crossDomain && Ext.isString(authConfig.username) && Ext.isString(authConfig.password)) {
+                requestConfig.headers = Ext.isObject(authConfig.headers) ? authConfig.headers : {};
+                requestConfig.headers['Authorization'] = 'Basic ' + btoa(authConfig.username + ':' + authConfig.password);
+            }
+
+            Ext.Ajax.request(requestConfig);
+        };
 
         // dhis2
         requests.push({
@@ -4863,12 +4901,7 @@ Ext.onReady( function() {
                                                 url += '&filter=id:eq:' + ids[i];
                                             }
 
-                                            if (type === 'jsonp') {
-                                                Ext.data.JsonP.request(optionSetConfig);
-                                            }
-                                            else {
-                                                Ext.Ajax.request(optionSetConfig);
-                                            }
+                                            ajax(optionSetConfig);
                                         }
                                     };
 
@@ -4891,12 +4924,7 @@ Ext.onReady( function() {
                             };
 
                             // option sets
-                            if (type === 'jsonp') {
-                                Ext.data.JsonP.request(optionSetVersionConfig);
-                            }
-                            else {
-                                Ext.Ajax.request(optionSetVersionConfig);
-                            }
+                            ajax(optionSetVersionConfig);
                         };
 
                         // init
@@ -4921,12 +4949,7 @@ Ext.onReady( function() {
                     }
                 };
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(userAccountConfig);
-                }
-                else {
-                    Ext.Ajax.request(userAccountConfig);
-                }
+                ajax(userAccountConfig);
             }
         });
 
@@ -4982,12 +5005,7 @@ Ext.onReady( function() {
         });
 
 		for (var i = 0; i < requests.length; i++) {
-            if (type === 'jsonp') {
-                Ext.data.JsonP.request(requests[i]);
-            }
-            else {
-                Ext.Ajax.request(requests[i]);
-            }
+            ajax(requests[i]);
 		}
 	};
 
@@ -5037,24 +5055,36 @@ Ext.onReady( function() {
 			return true;
 		};
 
-        extendInstance = function(ns) {
+        extendInstance = function(ns, appConfig) {
             var init = ns.core.init,
-                conf = ns.core.conf,
 				api = ns.core.api,
+                conf = ns.core.conf,
 				support = ns.core.support,
 				service = ns.core.service,
 				web = ns.core.web,
-                dimConf = conf.finals.dimension,
-                type = ns.plugin && ns.crossDomain ? 'jsonp' : 'json',
+                type = 'json',
                 headerMap = {
-                    json: 'application/json',
-                    jsonp: 'application/javascript'
+                    json: 'application/json'
                 },
                 headers = {
                     'Content-Type': headerMap[type],
                     'Accepts': headerMap[type]
                 },
-                el = Ext.get(config.el);
+                el = Ext.get(init.el),
+                dimConf = conf.finals.dimension;
+
+			init.el = config.el;
+
+			// ns
+            ns.plugin = appConfig.plugin;
+            ns.dashboard = appConfig.dashboard;
+            ns.crossDomain = appConfig.crossDomain;
+            ns.skipMask = appConfig.skipMask;
+            ns.skipFade = appConfig.skipFade;
+            ns.el = appConfig.el;
+            ns.username = appConfig.username;
+            ns.password = appConfig.password;
+            ns.ajax = support.connection.ajax;
 
 			// message
 			web.message = web.message || {};
@@ -5097,12 +5127,7 @@ Ext.onReady( function() {
                 config.success = success;
                 config.failure = failure;
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+                ns.ajax(config, ns);
 			};
 
 			web.report.getData = function(layout, isUpdateGui) {
@@ -5165,12 +5190,7 @@ Ext.onReady( function() {
                 config.success = success;
                 config.failure = failure;
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+                ns.ajax(config, ns);
 			};
 
 			web.report.createReport = function(layout, response, isUpdateGui) {
@@ -5307,17 +5327,6 @@ Ext.onReady( function() {
                     getXResponse();
                 }
 			};
-
-            // ns
-            ns.plugin = init.plugin;
-            ns.dashboard = init.dashboard;
-            ns.crossDomain = init.crossDomain;
-            ns.skipMask = init.skipMask;
-            ns.skipFade = init.skipFade;
-
-            ns.alert = web.message.alert;
-
-			init.el = config.el;
         };
 
 		createViewport = function() {
@@ -5353,30 +5362,35 @@ Ext.onReady( function() {
         };
 
 		initialize = function() {
-            var el = Ext.get(config.el);
+            var el = Ext.get(config.el),
+                appConfig;
 
 			if (!validateConfig(config)) {
 				return;
 			}
 
+            appConfig = {
+                plugin: true,
+                dashboard: Ext.isBoolean(config.dashboard) ? config.dashboard : false,
+                crossDomain: Ext.isBoolean(config.crossDomain) ? config.crossDomain : true,
+                skipMask: Ext.isBoolean(config.skipMask) ? config.skipMask : false,
+                skipFade: Ext.isBoolean(config.skipFade) ? config.skipFade : false,
+                el: Ext.isString(config.el) ? config.el : null,
+                username: Ext.isString(config.username) ? config.username : null,
+                password: Ext.isString(config.password) ? config.password : null
+            };
+
             // css
             applyCss();
 
-            // config
-            init.plugin = true;
-            init.dashboard = Ext.isBoolean(config.dashboard) ? config.dashboard : false;
-            init.crossDomain = Ext.isBoolean(config.crossDomain) ? config.crossDomain : true;
-            init.skipMask = Ext.isBoolean(config.skipMask) ? config.skipMask : false;
-            init.skipFade = Ext.isBoolean(config.skipFade) ? config.skipFade : false;
-
-            // init
-            EV.instances.push(ns);
-            ns.core.init = init;
-			EV.getCore(ns);
-			extendInstance(ns);
+			// core
+			ns.core = ER.getCore(init, appConfig);
+			extendInstance(ns, appConfig);
 
 			ns.app.viewport = createViewport();
 			ns.app.centerRegion = ns.app.viewport.centerRegion;
+
+            ER.instances.push(ns);
 
             if (el) {
                 el.setViewportWidth = function(width) {
