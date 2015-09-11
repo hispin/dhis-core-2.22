@@ -3968,8 +3968,7 @@ Ext.onReady( function() {
 				web = ns.core.web,
                 type = 'json',
                 headerMap = {
-                    json: 'application/json',
-                    jsonp: 'application/javascript'
+                    json: 'application/json'
                 },
                 headers = {
                     'Content-Type': headerMap[type],
@@ -4099,12 +4098,7 @@ Ext.onReady( function() {
                 config.success = success;
                 config.failure = failure;
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+                ns.ajax(config, ns);
 			};
 
 			web.report.getData = function(layout, isUpdateGui) {
@@ -4168,12 +4162,7 @@ Ext.onReady( function() {
                 config.success = success;
                 config.failure = failure;
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+                ns.ajax(config, ns);
 			};
 
 			web.report.createReport = function(layout, response, isUpdateGui) {

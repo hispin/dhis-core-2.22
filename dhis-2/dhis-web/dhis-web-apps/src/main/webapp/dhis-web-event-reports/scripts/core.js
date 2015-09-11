@@ -1026,6 +1026,17 @@ Ext.onReady( function() {
 				} : null;
 			};
 
+            // connection
+            support.connection = {};
+
+            support.connection.ajax = function(requestConfig, authConfig) {
+                if (authConfig.crossDomain && Ext.isString(authConfig.username) && Ext.isString(authConfig.password)) {
+                    requestConfig.headers = Ext.isObject(authConfig.headers) ? authConfig.headers : {};
+                    requestConfig.headers['Authorization'] = 'Basic ' + btoa(authConfig.username + ':' + authConfig.password);
+                }
+
+                Ext.Ajax.request(requestConfig);
+            };
 		}());
 
 		// service
