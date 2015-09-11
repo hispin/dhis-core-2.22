@@ -81,9 +81,9 @@ public class InitTableAlteror
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
         executeSql( "update program set \"type\"='WITHOUT_REGISTRATION' where type='3'" );
 
-        renameColumn( "program", "dateofenrollmentdescription", "enrollmentDateLabel" );
-        renameColumn( "program", "dateofincidentdescription", "incidentDateLabel" );
-        renameColumn( "programinstance", "dateofincident", "incidentDate" );
+        renameColumn( "program", "dateofenrollmentdescription", "enrollmentdatelabel" );
+        renameColumn( "program", "dateofincidentdescription", "incidentdatelabel" );
+        renameColumn( "programinstance", "dateofincident", "incidentdate" );
 
     }
 
