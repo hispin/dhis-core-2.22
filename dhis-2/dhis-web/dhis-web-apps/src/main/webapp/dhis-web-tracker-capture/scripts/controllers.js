@@ -311,7 +311,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.showSearchDiv = false;
             $timeout(function() { 
                 $rootScope.$broadcast('registrationWidget', {registrationMode: 'REGISTRATION'});
-            }, 1000);
+            }, 200);
         }
         else{
             $scope.doSearch = true;

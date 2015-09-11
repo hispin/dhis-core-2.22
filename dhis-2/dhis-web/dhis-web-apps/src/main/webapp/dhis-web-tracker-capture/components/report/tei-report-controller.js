@@ -149,8 +149,8 @@ trackerCapture.controller('TeiReportController',
 
                 //get enrollment details
                 EnrollmentService.get(enr).then(function(enrollment){
-                    enrollment.dateOfEnrollment = DateUtils.formatFromApiToUser(enrollment.dateOfEnrollment);
-                    enrollment.dateOfIncident = DateUtils.formatFromApiToUser(enrollment.dateOfIncident);            
+                    enrollment.enrollmentDate = DateUtils.formatFromApiToUser(enrollment.enrollmentDate);
+                    enrollment.incidentDate = DateUtils.formatFromApiToUser(enrollment.incidentDate);            
                     angular.forEach(enrollment.notes, function(note){
                         note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
                     });            

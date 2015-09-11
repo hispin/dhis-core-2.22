@@ -102,7 +102,7 @@ trackerCapture.controller('EnrollmentController',
         
         $timeout(function() { 
             $rootScope.$broadcast('enrollmentEditing', {enrollmentEditing: $scope.showEnrollmentDiv});
-        }, 100);
+        }, 200);
             
         if($scope.showEnrollmentDiv){
             
@@ -114,7 +114,7 @@ trackerCapture.controller('EnrollmentController',
             
             $timeout(function() { 
                 $rootScope.$broadcast('registrationWidget', {registrationMode: 'ENROLLMENT', selectedTei: $scope.selectedTei});
-            }, 100);
+            }, 200);
         }
         else{
             hideEnrollmentDiv();
@@ -140,7 +140,7 @@ trackerCapture.controller('EnrollmentController',
         CurrentSelection.set({tei: tei, te: $scope.selectedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: $scope.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: $scope.optionSets});
         $timeout(function() { 
             $rootScope.$broadcast(listeners, {});
-        }, 100);
+        }, 200);
     };
     
     var processSelectedTei = function(){

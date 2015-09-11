@@ -39,7 +39,7 @@
                         {{selectedProgram.enrollmentDateLabel}}
                     </td>
                     <td class="col-md-6">
-                        <input type="text" placeholder="{{dhis2CalendarFormat.keyDateFormat}}" class="form-control" d2-date ng-model="selectedEnrollment.dateOfEnrollment" ng-disabled="true"/>
+                        <input type="text" placeholder="{{dhis2CalendarFormat.keyDateFormat}}" class="form-control" d2-date ng-model="selectedEnrollment.enrollmentDate" ng-disabled="true"/>
                     </td>
                 </tr>
                 <tr class="col-md-12" ng-if="selectedProgram.displayIncidentDate">                    
@@ -47,7 +47,7 @@
                         {{selectedProgram.incidentDateLabel}}
                     </td>
                     <td class="col-md-6">
-                        <input type="text" placeholder="{{dhis2CalendarFormat.keyDateFormat}}" class="form-control" d2-date ng-model="selectedEnrollment.dateOfIncident" ng-disabled="true"/>
+                        <input type="text" placeholder="{{dhis2CalendarFormat.keyDateFormat}}" class="form-control" d2-date ng-model="selectedEnrollment.incidentDate" ng-disabled="true"/>
                     </td>
                 </tr>                
             </table>
@@ -107,10 +107,10 @@
                     </tr>
                     <tr ng-click="loadEnrollmentDetails(en)" ng-repeat="en in historicalEnrollments" title="{{'details'| translate}}">
                         <td>
-                            {{en.dateOfEnrollment}}
+                            {{en.enrollmentDate}}
                         </td>
                         <td ng-if="selectedProgram.displayIncidentDate">
-                            {{en.dateOfIncident}}
+                            {{en.incidentDate}}
                         </td>
                     </tr>
                 </table>

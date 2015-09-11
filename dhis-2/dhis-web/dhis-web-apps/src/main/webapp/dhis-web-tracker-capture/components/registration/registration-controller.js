@@ -56,7 +56,7 @@ trackerCapture.controller('RegistrationController',
     }
     
     $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
-    $scope.selectedEnrollment = {dateOfEnrollment: $scope.today, dateOfIncident: $scope.today, orgUnitName: $scope.selectedOrgUnit.name};   
+    $scope.selectedEnrollment = {enrollmentDate: $scope.today, incidentDate: $scope.today, orgUnitName: $scope.selectedOrgUnit.name};   
             
     $scope.trackedEntities = {available: []};
     TEService.getAll().then(function(entities){
@@ -136,7 +136,7 @@ trackerCapture.controller('RegistrationController',
         CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});        
         $timeout(function() { 
             $rootScope.$broadcast('profileWidget', {});            
-        }, 100);
+        }, 200);
     };
     
     var notifyRegistrtaionCompletion = function(destination, teiId){
@@ -161,8 +161,8 @@ trackerCapture.controller('RegistrationController',
                         enrollment.program = $scope.selectedProgram.id;
                         enrollment.status = 'ACTIVE';
                         enrollment.orgUnit = $scope.selectedOrgUnit.id;
-                        enrollment.dateOfEnrollment = $scope.selectedEnrollment.dateOfEnrollment;
-                        enrollment.dateOfIncident = $scope.selectedEnrollment.dateOfIncident === '' ? $scope.selectedEnrollment.dateOfEnrollment : $scope.selectedEnrollment.dateOfIncident;
+                        enrollment.enrollmentDate = $scope.selectedEnrollment.enrollmentDate;
+                        enrollment.incidentDate = $scope.selectedEnrollment.incidentDate === '' ? $scope.selectedEnrollment.enrollmentDate : $scope.selectedEnrollment.incidentDate;
 
                         EnrollmentService.enroll(enrollment).then(function(enrollmentResponse){
                             var en = enrollmentResponse.response && enrollmentResponse.response.importSummaries && enrollmentResponse.response.importSummaries[0] ? enrollmentResponse.response.importSummaries[0] : {};
@@ -271,7 +271,7 @@ trackerCapture.controller('RegistrationController',
         CurrentSelection.setRelationshipInfo({tei: $scope.tei, src: $scope.selectedRelationshipSource});
         $timeout(function() { 
             $rootScope.$broadcast('relationship', {});
-        }, 100);
+        }, 200);
     };
     
     var processRuleEffect = function(){
