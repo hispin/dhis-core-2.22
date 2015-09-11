@@ -1475,87 +1475,161 @@ Ext.onReady(function() {
 		logg: []
 	};
 
-	GIS.core.getOLMap = function(gis) {
-		var olmap,
-			addControl;
+	GIS.core.getOLMap = function(gis, appConfig) {
+        var olmap,
+            addControl,
+            logoName = appConfig.dashboard ? 'google-logo-small' : 'google-logo',
+            legendControl,
+            isAddLegendListener = true;
 
-		addControl = function(name, fn) {
-			var button,
-				panel;
+        addControl = function(name, fn) {
+            var button,
+                panel;
 
-			button = new OpenLayers.Control.Button({
-				displayClass: 'olControlButton',
-				trigger: function() {
-					fn.call(gis.olmap);
-				}
-			});
+            button = new OpenLayers.Control.Button({
+                displayClass: 'olControlButton',
+                trigger: function() {
+                    fn.call(gis.olmap);
+                }
+            });
 
-			panel = new OpenLayers.Control.Panel({
-				defaultControl: button
-			});
+            panel = new OpenLayers.Control.Panel({
+                defaultControl: button
+            });
 
-			panel.addControls([button]);
+            panel.addControls([button]);
 
-			olmap.addControl(panel);
+            olmap.addControl(panel);
 
-			panel.div.className += ' ' + name;
-			panel.div.childNodes[0].className += ' ' + name + 'Button';
-		};
+            panel.div.className += ' ' + name;
+            panel.div.childNodes[0].className += ' ' + name + 'Button';
 
-		olmap = new OpenLayers.Map({
-			controls: [
-				new OpenLayers.Control.Navigation({
-					zoomWheelEnabled: true,
-					documentDrag: true
-				}),
-				new OpenLayers.Control.MousePosition({
-					prefix: '<span id="mouseposition" class="el-fontsize-10"><span class="text-mouseposition-lonlat">LON </span>',
-					separator: '<span class="text-mouseposition-lonlat">,&nbsp;LAT </span>',
-					suffix: '<div id="google-logo" name="http://www.google.com/intl/en-US_US/help/terms_maps.html" onclick="window.open(Ext.get(this).dom.attributes.name.nodeValue);"></div></span>'
-				}),
-				new OpenLayers.Control.Permalink(),
-				new OpenLayers.Control.ScaleLine({
-					geodesic: true,
-					maxWidth: 170,
-					minWidth: 100
-				})
-			],
-			displayProjection: new OpenLayers.Projection('EPSG:4326'),
-			//maxExtent: new OpenLayers.Bounds(-1160037508, -1160037508, 1160037508, 1160037508),
-			mouseMove: {}, // Track all mouse moves
-			relocate: {} // Relocate organisation units
-		});
+            return panel;
+        };
 
-		// Map events
-		olmap.events.register('mousemove', null, function(e) {
-			gis.olmap.mouseMove.x = e.clientX;
-			gis.olmap.mouseMove.y = e.clientY;
-		});
+        olmap = new OpenLayers.Map({
+            controls: [
+                new OpenLayers.Control.Navigation({
+                    zoomWheelEnabled: appConfig.dashboard ? false : true,
+                    documentDrag: true
+                }),
+                new OpenLayers.Control.MousePosition({
+                    prefix: '<span id="mouseposition" class="el-fontsize-10"><span class="text-mouseposition-lonlat">LON </span>',
+                    separator: '<span class="text-mouseposition-lonlat">,&nbsp;LAT </span>',
+                    suffix: '<div class="' + logoName + '" name="http://www.google.com/intl/en-US_US/help/terms_maps.html" onclick="window.open(Ext.get(this).dom.attributes.name.nodeValue);"></div></span>'
+                }),
+                new OpenLayers.Control.Permalink(),
+                new OpenLayers.Control.ScaleLine({
+                    geodesic: true,
+                    maxWidth: 170,
+                    minWidth: 100
+                })
+            ],
+            displayProjection: new OpenLayers.Projection('EPSG:4326'),
+            //maxExtent: new OpenLayers.Bounds(-1160037508, -1160037508, 1160037508, 1160037508),
+            mouseMove: {}, // Track all mouse moves
+            relocate: {} // Relocate organisation units
+        });
 
-		olmap.zoomToVisibleExtent = function() {
-			gis.util.map.zoomToVisibleExtent(this);
-		};
+        // Map events
+        olmap.events.register('mousemove', null, function(e) {
 
-		olmap.closeAllLayers = function() {
-			gis.layer.event.core.reset();
-			gis.layer.facility.core.reset();
-			gis.layer.thematic1.core.reset();
-			gis.layer.thematic2.core.reset();
-			gis.layer.thematic3.core.reset();
-			gis.layer.thematic4.core.reset();
-			gis.layer.boundary.core.reset();
-		};
+            // track mouse
+            gis.olmap.mouseMove.x = e.clientX;
+            gis.olmap.mouseMove.y = e.clientY;
 
-		addControl('zoomIn', olmap.zoomIn);
-		addControl('zoomOut', olmap.zoomOut);
-		addControl('zoomVisible', olmap.zoomToVisibleExtent);
-		addControl('measure', function() {
-			GIS.core.MeasureWindow(gis).show();
-		});
+            // legend listener
+            if (isAddLegendListener && appConfig.dashboard) {
+                isAddLegendListener = false;
 
-		return olmap;
-	};
+                var el = Ext.get(legendControl.div),
+                    img = el.first().first(),
+                    window;
 
+                img.on('mousemove', function() {
+                    if (window && !window.isVisible()) {
+                        window.show();
+                    }
+                    else if (!window) {
+                        var layers = gis.util.map.getRenderedVectorLayers().reverse(),
+                            html = '<div id="legendWrapper">';
+
+                        for (var i = 0, layer, innerHTML; i < layers.length; i++) {
+                            layer = layers[i];
+                            innerHTML = layer.core.updateLegend().innerHTML;
+
+                            if (innerHTML) {
+                                html += '<div style="font-size:10px; font-weight:bold">' + layer.name + '</div>' + innerHTML + (i < layers.length - 1 ? '<div style="padding:5px"></div>' : '');
+                            }
+                        }
+
+                        html += '</div>';
+
+                        window = Ext.create('Ext.window.Window', {
+                            title: 'Legend',
+                            cls: 'gis-plugin',
+                            bodyStyle: 'background-color: #fff; padding: 3px',
+                            width: 100,
+                            height: 100,
+                            html: html,
+                            preventHeader: true,
+                            shadow: false,
+                            listeners: {
+                                show: function() {
+                                    var el = this.getEl(),
+                                        legendEl = el.first().first(),
+                                        xy = Ext.get(olmap.buttonControls[0].div).getAnchorXY();
+
+                                    el.setStyle('opacity', 0.92);
+
+                                    this.setHeight(legendEl.getHeight() + 8 + 9);
+
+                                    this.setPosition(xy[0] - this.getWidth(), xy[1] - 1);
+                                }
+                            }
+                        });
+                    }
+                });
+
+                img.on('mouseleave', function() {
+                    if (window && window.hide) {
+                        window.hide();
+                    }
+                });
+            }
+        });
+
+        olmap.zoomToVisibleExtent = function() {
+            gis.util.map.zoomToVisibleExtent(this);
+        };
+
+        olmap.closeAllLayers = function() {
+            gis.layer.event.core.reset();
+            gis.layer.facility.core.reset();
+            gis.layer.boundary.core.reset();
+            gis.layer.thematic1.core.reset();
+            gis.layer.thematic2.core.reset();
+            gis.layer.thematic3.core.reset();
+            gis.layer.thematic4.core.reset();
+        };
+
+        olmap.buttonControls = [];
+
+        olmap.buttonControls.push(addControl('zoomIn' + (appConfig.dashboard ? '-vertical' : ''), olmap.zoomIn));
+        olmap.buttonControls.push(addControl('zoomOut' + (appConfig.dashboard ? '-vertical' : ''), olmap.zoomOut));
+        olmap.buttonControls.push(addControl('zoomVisible' + (appConfig.dashboard ? '-vertical' : ''), olmap.zoomToVisibleExtent));
+        //olmap.buttonControls.push(addControl('measure' + (appConfig.dashboard ? '-vertical' : ''), function() {
+            //GIS.core.MeasureWindow(gis).show();
+        //}));
+
+        legendControl = addControl('legend' + (appConfig.dashboard ? '-vertical' : ''), function() {});
+        olmap.buttonControls.push(legendControl);
+
+        olmap.addButtonControl = addControl;
+
+        return olmap;
+    };
+    
 	GIS.core.getLayers = function(gis) {
 		var layers = {},
 			createSelectionHandlers,
@@ -3948,7 +4022,7 @@ Ext.onReady(function() {
 		return layer;
 	};
 
-	GIS.core.getInstance = function(init, authConfig) {
+	GIS.core.getInstance = function(init, appConfig) {
 		var conf = {},
 			util = {},
 			api = {},
@@ -4621,7 +4695,7 @@ Ext.onReady(function() {
             util.connection = {};
 
             util.connection.ajax = function(requestConfig, config) {
-                var auth = authConfig || config || {};
+                var auth = config || appConfig || {};
                 
                 if (auth.crossDomain && Ext.isString(auth.username) && Ext.isString(auth.password)) {
                     requestConfig.headers = Ext.isObject(auth.headers) ? auth.headers : {};
@@ -5023,7 +5097,7 @@ Ext.onReady(function() {
 		gis.api = api;
 		gis.store = store;
 
-		gis.olmap = GIS.core.getOLMap(gis);
+		gis.olmap = GIS.core.getOLMap(gis, appConfig);
 		gis.layer = GIS.core.getLayers(gis);
 		gis.thematicLayers = [gis.layer.thematic1, gis.layer.thematic2, gis.layer.thematic3, gis.layer.thematic4];
 
@@ -7046,18 +7120,18 @@ Ext.onReady(function() {
 			});
         };
 
-        createViewport = function() {
+        createViewport = function(appConfig) {
             var viewport,
                 items = [],
                 northRegion,
                 centerRegion,
                 eastRegion,
                 el = Ext.get(gis.el),
-                eastWidth = gis.map.hideLegend ? 0 : (gis.plugin ? 120 : 200),
+                eastWidth = gis.map.hideLegend ? 0 : (appConfig.plugin ? 120 : 200),
                 trash = [];
 
             // north
-            if (gis.dashboard) {
+            if (appConfig.dashboard) {
                 items.push(northRegion = Ext.create('Ext.panel.Panel', {
                     region: 'north',
                     width: el.getWidth(),
@@ -7076,7 +7150,7 @@ Ext.onReady(function() {
             }));
 
             // east
-            if (gis.dashboard) {
+            if (appConfig.dashboard) {
                 items.push(eastRegion = Ext.create('Ext.panel.Panel', {
                     width: 0,
                     height: 0
@@ -7309,7 +7383,7 @@ Ext.onReady(function() {
             GIS.core.createSelectHandlers(gis, gis.layer.facility);
 
             gis.map = config;
-            gis.viewport = createViewport();
+            gis.viewport = createViewport(appConfig);
 
             // dashboard element
             if (el) {
