@@ -31,6 +31,8 @@ package org.hisp.dhis.organisationunit;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hisp.dhis.common.CodeGenerator;
+
 import com.google.common.base.MoreObjects;
 
 /**
@@ -38,15 +40,40 @@ import com.google.common.base.MoreObjects;
  */
 public class OrganisationUnitQueryParams
 {
+    /**
+     * Query string to match like name and exactly on UID and code.
+     */
     private String query;
     
+    /**
+     * The parent organisation units for which to include all children.
+     */
     private Set<OrganisationUnit> parents = new HashSet<>();
     
+    /**
+     * The groups for which members to include.
+     */
     private Set<OrganisationUnitGroup> groups = new HashSet<>();
 
+    /**
+     * The maximum number of organisation unit levels to fetch, relative to the
+     * real root of the hierarchy.
+     */
+    private Integer maxLevels;
+    
+    /**
+     * The first result to include.
+     */
     private Integer first;
     
+    /**
+     * The max number of results to include.
+     */
     private Integer max;
+
+    // -------------------------------------------------------------------------
+    // Constructor
+    // -------------------------------------------------------------------------
 
     public OrganisationUnitQueryParams()
     {
@@ -60,10 +87,15 @@ public class OrganisationUnitQueryParams
     {
         return parents != null && !parents.isEmpty();
     }
-    
+        
     public boolean hasGroups()
     {
         return groups != null && !groups.isEmpty();
+    }
+    
+    public int getMaxLevelsPathLength()
+    {
+        return maxLevels != null ? ( ( CodeGenerator.CODESIZE + 1 ) * maxLevels ) : -1;
     }
     
     @Override
@@ -73,6 +105,7 @@ public class OrganisationUnitQueryParams
             add( "query", query ).
             add( "parents", parents ).
             add( "groups", groups ).
+            add( "maxLevels", maxLevels ).
             add( "first", first ).
             add( "max", max ).toString();
     }
@@ -109,6 +142,16 @@ public class OrganisationUnitQueryParams
     public void setGroups( Set<OrganisationUnitGroup> groups )
     {
         this.groups = groups;
+    }
+
+    public Integer getMaxLevels()
+    {
+        return maxLevels;
+    }
+
+    public void setMaxLevels( Integer maxLevels )
+    {
+        this.maxLevels = maxLevels;
     }
 
     public Integer getFirst()
