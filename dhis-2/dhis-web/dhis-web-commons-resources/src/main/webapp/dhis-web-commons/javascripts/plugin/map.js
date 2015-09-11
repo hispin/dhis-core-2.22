@@ -3876,6 +3876,11 @@ Ext.onReady(function() {
                     elementUrl = elementMap[view.columns[0].objectName],
                     id = view.columns[0].items[0].id;
 
+                if (!elementUrl) {
+                    fn();
+                    return;
+                }
+
                 gis.ajax({
                     url: gis.init.contextPath + '/api/' + elementUrl + '.json?fields=legendSet[id,name]&paging=false&filter=id:eq:' + id,
                     success: function(r) {
