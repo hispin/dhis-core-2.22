@@ -37,10 +37,10 @@
     <!-- dashboard top menu ends-->
     
     <!-- dashboard widgets begin -->
-    <div class="box">
-        <div class="row-fluid">
+    <div class="col-sm-12">
+        <div class="row">
             <!-- dashboard bigger widgets begin -->
-            <div ng-class="widgetSize.bigger" class="column">
+            <div ng-class="widgetSize.bigger">
                 <div id="biggerWidget"
                     d2-sortable  
                     bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
@@ -54,7 +54,7 @@
             <!-- dashboard bigger widgets end -->
 
             <!-- dashboard smaller widgets begin -->
-            <div ng-class="widgetSize.smaller" class="column">
+            <div ng-class="widgetSize.smaller">
                 <div id="smallerWidget" 
                     d2-sortable 
                     bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
