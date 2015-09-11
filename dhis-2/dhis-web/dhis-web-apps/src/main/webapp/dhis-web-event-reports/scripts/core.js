@@ -17,17 +17,26 @@ Ext.onReady( function() {
 	NS.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
     // core
-	NS.getCore = function(ns) {
-        var init = ns.core.init,
-            conf = {},
+	NS.getCore = function(init, appConfig) {
+        var conf = {},
             api = {},
             support = {},
             service = {},
             web = {},
+            app = {},
+            webAlert,
             dimConf;
 
-        // tmp
-        ns.alert = function() {};
+        appConfig = appConfig || {};
+
+        // alert
+        webAlert = function() {};
+
+        // app
+        app.getViewportWidth = function() {};
+        app.getViewportHeight = function() {};
+        app.getCenterRegionWidth = function() {};
+        app.getCenterRegionHeight = function() {};
 
 		// conf
 		(function() {
@@ -3578,14 +3587,17 @@ Ext.onReady( function() {
 		}());
 
 		// alert
-		ns.alert = web.message.alert;
+		webAlert = web.message.alert;
 
-		ns.core.conf = conf;
-		ns.core.api = api;
-		ns.core.support = support;
-		ns.core.service = service;
-		ns.core.web = web;
-
-		return ns;
+		return {
+            init: init,
+            conf: conf,
+            api: api,
+            support: support,
+            service: service,
+            web: web,
+            app: app,
+            webAlert: webAlert
+        };
 	};
 });

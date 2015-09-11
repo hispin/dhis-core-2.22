@@ -6704,13 +6704,13 @@ Ext.onReady( function() {
 	};
 
 	// core
-	extendCore = function(ns) {
-        var conf = ns.core.conf,
-			api = ns.core.api,
-			support = ns.core.support,
-			service = ns.core.service,
-			web = ns.core.web,
-			init = ns.core.init;
+	extendCore = function(core) {
+        var init = core.init,
+            conf = core.conf,
+			api = core.api,
+			support = core.support,
+			service = core.service,
+			web = core.web;
 
         // init
         (function() {
@@ -8299,14 +8299,19 @@ Ext.onReady( function() {
 		fn = function() {
 			if (++callbacks === requests.length) {
 
-				NS.instances.push(ns);
-
-                ns.core.init = init;
-				NS.getCore(ns);
-				extendCore(ns);
+				ns.core = NS.getCore(init);
+                ns.alert = ns.core.webAlert;
+				extendCore(ns.core);
 
 				dimConf = ns.core.conf.finals.dimension;
 				ns.app.viewport = createViewport();
+
+                ns.core.app.getViewportWidth = function() { return ns.app.viewport.getWidth(); };
+                ns.core.app.getViewportHeight = function() { return ns.app.viewport.getHeight(); };
+                ns.core.app.getCenterRegionWidth = function() { return ns.app.viewport.centerRegion.getWidth(); };
+                ns.core.app.getCenterRegionHeight = function() { return ns.app.viewport.centerRegion.getHeight(); };
+
+                NS.instances.push(ns);
 			}
 		};
 
