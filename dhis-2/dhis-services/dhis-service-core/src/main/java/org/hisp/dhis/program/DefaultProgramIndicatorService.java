@@ -733,6 +733,8 @@ public class DefaultProgramIndicatorService
      */
     private String getVariableAsSql( String var, String expression )
     {
+        final String dbl = statementBuilder.getDoubleColumnType();
+        
         if ( ProgramIndicator.VAR_EXECUTION_DATE.equals( var ) )
         {
             return "executiondate";
@@ -751,25 +753,25 @@ public class DefaultProgramIndicatorService
         }
         else if ( ProgramIndicator.VAR_VALUE_COUNT.equals( var ) )
         {
-            String sql = "nullif((";
+            String sql = "nullif(cast((";
 
             for ( String uid : ProgramIndicator.getDataElementAndAttributeIdentifiers( expression ) )
             {
                 sql += "case when " + statementBuilder.columnQuote( uid ) + " is not null then 1 else 0 end + ";
             }
 
-            return TextUtils.removeLast( sql, "+" ).trim() + "),0)";
+            return TextUtils.removeLast( sql, "+" ).trim() + ") as " + dbl + "),0)";
         }
         else if ( ProgramIndicator.VAR_ZERO_POS_VALUE_COUNT.equals( var ) )
         {
-            String sql = "nullif((";
+            String sql = "nullif(cast((";
 
             for ( String uid : ProgramIndicator.getDataElementAndAttributeIdentifiers( expression ) )
             {
                 sql += "case when " + statementBuilder.columnQuote( uid ) + " >= 0 then 1 else 0 end + ";
             }
 
-            return TextUtils.removeLast( sql, "+" ).trim() + "),0)";
+            return TextUtils.removeLast( sql, "+" ).trim() + ") as " + dbl + "),0)";
         }
 
         return null;
