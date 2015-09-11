@@ -21,9 +21,9 @@
 
     <property name="version" />
 
-    <property name="enrollmentDateLabel" type="text" />
+    <property name="enrollmentDateLabel" column="enrollmentdatelabel" type="text" />
 
-    <property name="incidentDateLabel" type="text" />
+    <property name="incidentDateLabel" column="incidentdatelabel" type="text" />
 
     <set name="programStages" order-by="sortOrder" cascade="all">
       <key column="programid" />

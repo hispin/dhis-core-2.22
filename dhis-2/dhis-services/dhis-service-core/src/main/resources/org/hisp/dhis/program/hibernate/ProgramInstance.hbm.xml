@@ -16,7 +16,7 @@
 
     <property name="lastUpdated" type="timestamp" />
 
-    <property name="incidentDate" column="incidentDate" not-null="true" />
+    <property name="incidentDate" column="incidentDate" />
 
     <property name="enrollmentDate" column="enrollmentdate" not-null="true" />
 
@@ -60,10 +60,6 @@
 
     <many-to-one name="organisationUnit" class="org.hisp.dhis.organisationunit.OrganisationUnit" column="organisationunitid"
       foreign-key="fk_programinstance_organisationunitid" not-null="false" lazy="false" />
-
-    <!--<many-to-one name="comment" cascade="all"
-      class="org.hisp.dhis.trackedentitycomment.TrackedEntityComment"
-      column="trackedentitycommentid" foreign-key="fk_programinstance_commentid" />-->
 
   </class>
 </hibernate-mapping>
