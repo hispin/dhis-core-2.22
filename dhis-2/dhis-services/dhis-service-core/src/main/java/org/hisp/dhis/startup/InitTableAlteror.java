@@ -179,7 +179,6 @@ public class InitTableAlteror
         }
         catch ( Exception ex )
         {
-            ex.printStackTrace();
             log.debug( ex );
 
             return -1;
