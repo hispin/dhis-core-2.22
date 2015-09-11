@@ -933,6 +933,8 @@ Ext.onReady(function() {
 
                 // showTrendLine: boolean (false)
 
+				// completedOnly: boolean (false)
+
                 // targetLineValue: number
 
                 // targetLineTitle: string
@@ -1194,6 +1196,9 @@ Ext.onReady(function() {
                     layout.showValues = Ext.isBoolean(config.showData) ? config.showData : (Ext.isBoolean(config.showValues) ? config.showValues : true);
                     layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : (Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : true);
                     layout.showTrendLine = Ext.isBoolean(config.regression) ? config.regression : (Ext.isBoolean(config.showTrendLine) ? config.showTrendLine : false);
+
+                    layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
+
                     layout.targetLineValue = Ext.isNumber(config.targetLineValue) ? config.targetLineValue : null;
                     layout.targetLineTitle = Ext.isString(config.targetLineLabel) && !Ext.isEmpty(config.targetLineLabel) ? config.targetLineLabel :
                         (Ext.isString(config.targetLineTitle) && !Ext.isEmpty(config.targetLineTitle) ? config.targetLineTitle : null);
@@ -1986,6 +1991,10 @@ Ext.onReady(function() {
 					delete layout.showTrendLine;
 				}
 
+				if (!layout.completedOnly) {
+					delete layout.completedOnly;
+				}
+
 				if (!layout.targetLineValue) {
 					delete layout.targetLineValue;
 				}
@@ -2433,6 +2442,10 @@ Ext.onReady(function() {
                         paramString += '&filter=' + dim.dimensionName + ':' + dim.ids.join(';');
                     }
                 }
+
+				if (xLayout.completedOnly) {
+					paramString += '&completedOnly=true';
+				}
 
 				// aggregation type
 				if (Ext.Array.contains(aggTypes, xLayout.aggregationType)) {

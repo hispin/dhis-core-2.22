@@ -734,6 +734,14 @@ Ext.onReady( function() {
                 idNameMap: {}
             };
 
+            conf.valueType = {
+            	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
+            	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
+            	booleanTypes: ['BOOLEAN','TRUE_ONLY'],
+            	dateTypes: ['DATE','DATETIME'],
+            	aggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            }
+
             for (var i = 0, obj; i < conf.aggregationType.data.length; i++) {
                 obj = conf.aggregationType.data[i];
                 conf.aggregationType.idNameMap[obj.id] = obj.text;
@@ -948,6 +956,8 @@ Ext.onReady( function() {
 
                 // hideNaData: boolean (false)
 
+				// completedOnly: boolean (false)
+
                 // aggregationType: string ('default') - 'default', 'count', 'sum'
 
                 // showHierarchy: boolean (false)
@@ -1150,9 +1160,10 @@ Ext.onReady( function() {
 
 					// properties
                     layout.showValues = Ext.isBoolean(config.showData) ? config.showData : (Ext.isBoolean(config.showValues) ? config.showValues : true);
+                    layout.showTrendLine = Ext.isBoolean(config.regression) ? config.regression : (Ext.isBoolean(config.showTrendLine) ? config.showTrendLine : false);
                     layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : (Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : true);
                     layout.hideNaData = Ext.isBoolean(config.hideNaData) ? config.hideNaData : false;
-                    layout.showTrendLine = Ext.isBoolean(config.regression) ? config.regression : (Ext.isBoolean(config.showTrendLine) ? config.showTrendLine : false);
+                    layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
                     layout.targetLineValue = Ext.isNumber(config.targetLineValue) ? config.targetLineValue : null;
                     layout.targetLineTitle = Ext.isString(config.targetLineLabel) && !Ext.isEmpty(config.targetLineLabel) ? config.targetLineLabel :
                         (Ext.isString(config.targetLineTitle) && !Ext.isEmpty(config.targetLineTitle) ? config.targetLineTitle : null);
@@ -3105,6 +3116,11 @@ Ext.onReady( function() {
                     paramString += '&outputType=' + layout.outputType;
                 }
 
+                // completed only
+				if (layout.completedOnly) {
+					paramString += '&completedOnly=true';
+				}
+                
                 // display property
                 paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 

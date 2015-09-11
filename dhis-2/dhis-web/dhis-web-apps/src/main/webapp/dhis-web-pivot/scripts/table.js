@@ -390,6 +390,8 @@ Ext.onReady( function() {
 
 				// showHierarchy: boolean (false)
 
+				// completedOnly: boolean (false)
+
 				// displayDensity: string ('normal') - 'compact', 'normal', 'comfortable'
 
 				// fontSize: string ('normal') - 'small', 'normal', 'large'
@@ -567,6 +569,8 @@ Ext.onReady( function() {
 					layout.dataApprovalLevel = Ext.isObject(config.dataApprovalLevel) && Ext.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
 
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
+
+                    layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
 
 					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : 'normal';
 					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : 'normal';
@@ -1725,6 +1729,10 @@ Ext.onReady( function() {
 					delete layout.showHierarchy;
 				}
 
+				if (!layout.completedOnly) {
+					delete layout.completedOnly;
+				}
+
 				if (layout.displayDensity === 'normal') {
 					delete layout.displayDensity;
 				}
@@ -2033,7 +2041,6 @@ Ext.onReady( function() {
                 type = (obj.status || 'INFO').toLowerCase();
 
 				config.title = obj.status;
-                config.cls = 'ns-window-title-messagebox';
 				config.iconCls = 'ns-window-title-messagebox ' + type;
 
                 // html
@@ -2114,6 +2121,10 @@ Ext.onReady( function() {
 
 				if (xLayout.showHierarchy) {
 					paramString += '&hierarchyMeta=true';
+				}
+
+				if (xLayout.completedOnly) {
+					paramString += '&completedOnly=true';
 				}
 
 				// aggregation type

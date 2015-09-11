@@ -5064,27 +5064,27 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('THIS_WEEK') - 1],
+                    relativePeriodId: 'THIS_WEEK',
                     boxLabel: NS.i18n.this_week
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_WEEK') - 1],
+                    relativePeriodId: 'LAST_WEEK',
                     boxLabel: NS.i18n.last_week
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_4_WEEKS') - 1],
+                    relativePeriodId: 'LAST_4_WEEKS',
                     boxLabel: NS.i18n.last_4_weeks
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_12_WEEKS') - 1],
+                    relativePeriodId: 'LAST_12_WEEKS',
                     boxLabel: NS.i18n.last_12_weeks
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_52_WEEKS') - 1],
+                    relativePeriodId: 'LAST_52_WEEKS',
                     boxLabel: NS.i18n.last_52_weeks
                 }
             ]
@@ -5104,27 +5104,27 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('THIS_MONTH') - 1],
+                    relativePeriodId: 'THIS_MONTH',
                     boxLabel: NS.i18n.this_month
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_MONTH') - 1],
+                    relativePeriodId: 'LAST_MONTH',
                     boxLabel: NS.i18n.last_month
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_3_MONTHS') - 1],
+                    relativePeriodId: 'LAST_3_MONTHS',
                     boxLabel: NS.i18n.last_3_months
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_6_MONTHS') - 1],
+                    relativePeriodId: 'LAST_6_MONTHS',
                     boxLabel: NS.i18n.last_6_months
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_12_MONTHS') - 1],
+                    relativePeriodId: 'LAST_12_MONTHS',
                     boxLabel: NS.i18n.last_12_months,
                     checked: true
                 }
@@ -5145,17 +5145,17 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('THIS_BIMONTH') - 1],
+                    relativePeriodId: 'THIS_BIMONTH',
                     boxLabel: NS.i18n.this_bimonth
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_BIMONTH') - 1],
+                    relativePeriodId: 'LAST_BIMONTH',
                     boxLabel: NS.i18n.last_bimonth
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_6_BIMONTHS') - 1],
+                    relativePeriodId: 'LAST_6_BIMONTHS',
                     boxLabel: NS.i18n.last_6_bimonths
                 }
             ]
@@ -5175,17 +5175,17 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('THIS_QUARTER') - 1],
+                    relativePeriodId: 'THIS_QUARTER',
                     boxLabel: NS.i18n.this_quarter
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_QUARTER') - 1],
+                    relativePeriodId: 'LAST_QUARTER',
                     boxLabel: NS.i18n.last_quarter
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_4_QUARTERS') - 1],
+                    relativePeriodId: 'LAST_4_QUARTERS',
                     boxLabel: NS.i18n.last_4_quarters
                 }
             ]
@@ -5205,17 +5205,17 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('THIS_SIX_MONTH') - 1],
+                    relativePeriodId: 'THIS_SIX_MONTH',
                     boxLabel: NS.i18n.this_sixmonth
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_SIX_MONTH') - 1],
+                    relativePeriodId: 'LAST_SIX_MONTH',
                     boxLabel: NS.i18n.last_sixmonth
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_2_SIXMONTHS') - 1],
+                    relativePeriodId: 'LAST_2_SIXMONTHS',
                     boxLabel: NS.i18n.last_2_sixmonths
                 }
             ]
@@ -5236,17 +5236,17 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('THIS_FINANCIAL_YEAR') - 1],
+                    relativePeriodId: 'THIS_FINANCIAL_YEAR',
                     boxLabel: NS.i18n.this_financial_year
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_FINANCIAL_YEAR') - 1],
+                    relativePeriodId: 'LAST_FINANCIAL_YEAR',
                     boxLabel: NS.i18n.last_financial_year
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_5_FINANCIAL_YEARS') - 1],
+                    relativePeriodId: 'LAST_5_FINANCIAL_YEARS',
                     boxLabel: NS.i18n.last_5_financial_years
                 }
             ]
@@ -5266,17 +5266,17 @@ Ext.onReady( function() {
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('THIS_YEAR') - 1],
+                    relativePeriodId: 'THIS_YEAR',
                     boxLabel: NS.i18n.this_year
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_YEAR') - 1],
+                    relativePeriodId: 'LAST_YEAR',
                     boxLabel: NS.i18n.last_year
                 },
                 {
                     xtype: 'checkbox',
-                    relativePeriodId: rp[rp.push('LAST_5_YEARS') - 1],
+                    relativePeriodId: 'LAST_5_YEARS',
                     boxLabel: NS.i18n.last_5_years
                 }
             ]
