@@ -29,9 +29,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     w.selectedWidget = {title: 'current_selections', view: "components/selected/selected.html", show: false, expand: true, parent: 'smallerWidget', order: 0};
     w.feedbackWidget = {title: 'feedback', view: "components/rulebound/rulebound.html", show: true, expand: true, parent: 'smallerWidget', order: 1};
     w.profileWidget = {title: 'profile', view: "components/profile/profile.html", show: true, expand: true, parent: 'smallerWidget', order: 2};
-    w.relationshipWidget = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true, parent: 'smallerWidget', order: 3};
-    w.notesWidget = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true, parent: 'smallerWidget', order: 4};            
+    w.activeProgramsWidget = {title: 'activePrograms', view: "components/activeprograms/active-programs.html", show: false, expand: true, parent: 'smallerWidget', order: 3};
+    w.relationshipWidget = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true, parent: 'smallerWidget', order: 4};
+    w.notesWidget = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true, parent: 'smallerWidget', order: 5};            
     var defaultLayout = new Object();
+    
     defaultLayout['DEFAULT'] = {widgets: w, program: 'DEFAULT'};
     
     var getDefaultLayout = function(customLayout){
@@ -107,11 +109,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return;
         }
         
-        var referenceDate = enrollment.dateOfIncident ? enrollment.dateOfIncident : enrollment.dateOfEnrollment;
+        var referenceDate = enrollment.incidentDate ? enrollment.incidentDate : enrollment.enrollmentDate;
         var offset = stage.minDaysFromStart;
         
         if(stage.generatedByEnrollmentDate){
-            referenceDate = enrollment.dateOfEnrollment;
+            referenceDate = enrollment.enrollmentDate;
         }        
                
         var occupiedPeriods = [];
@@ -590,20 +592,20 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     var convertFromApiToUser = function(enrollment){
         if(enrollment.enrollments){
             angular.forEach(enrollment.enrollments, function(enrollment){
-                enrollment.dateOfIncident = DateUtils.formatFromApiToUser(enrollment.dateOfIncident);
-                enrollment.dateOfEnrollment = DateUtils.formatFromApiToUser(enrollment.dateOfEnrollment);                
+                enrollment.incidentDate = DateUtils.formatFromApiToUser(enrollment.incidentDate);
+                enrollment.enrollmentDate = DateUtils.formatFromApiToUser(enrollment.enrollmentDate);                
             });
         }
         else{
-            enrollment.dateOfIncident = DateUtils.formatFromApiToUser(enrollment.dateOfIncident);
-            enrollment.dateOfEnrollment = DateUtils.formatFromApiToUser(enrollment.dateOfEnrollment);
+            enrollment.incidentDate = DateUtils.formatFromApiToUser(enrollment.incidentDate);
+            enrollment.enrollmentDate = DateUtils.formatFromApiToUser(enrollment.enrollmentDate);
         }
         
         return enrollment;
     };
     var convertFromUserToApi = function(enrollment){
-        enrollment.dateOfIncident = DateUtils.formatFromUserToApi(enrollment.dateOfIncident);
-        enrollment.dateOfEnrollment = DateUtils.formatFromUserToApi(enrollment.dateOfEnrollment);
+        enrollment.incidentDate = DateUtils.formatFromUserToApi(enrollment.incidentDate);
+        enrollment.enrollmentDate = DateUtils.formatFromUserToApi(enrollment.enrollmentDate);
         return enrollment;
     };
     return {        
@@ -1376,8 +1378,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
 /* current selections */
 .service('CurrentSelection', function(){
-    this.currentSelection = '';
-    this.relationshipInfo = '';
+    this.currentSelection = {};
+    this.relationshipInfo = {};
     this.optionSets = null;
     this.attributesById = null;
     this.ouLevels = null;
@@ -1564,13 +1566,13 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     
     var getEventDueDate = function(eventsByStage, programStage, enrollment){       
         
-        var referenceDate = enrollment.dateOfIncident ? enrollment.dateOfIncident : enrollment.dateOfEnrollment,
+        var referenceDate = enrollment.incidentDate ? enrollment.incidentDate : enrollment.enrollmentDate,
             offset = programStage.minDaysFromStart,
             calendarSetting = CalendarService.getSetting(),
             dueDate;
 
         if(programStage.generatedByEnrollmentDate){
-            referenceDate = enrollment.dateOfEnrollment;
+            referenceDate = enrollment.enrollmentDate;
         }
 
         if(programStage.repeatable){
@@ -1706,11 +1708,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                         }
                         
                         if(stage.openAfterEnrollment){
-                            if(stage.reportDateToUse === 'dateOfIncident'){
-                                newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.dateOfIncident);
+                            if(stage.reportDateToUse === 'incidentDate'){
+                                newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.incidentDate);
                             }
                             else{
-                                newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.dateOfEnrollment);
+                                newEvent.eventDate = DateUtils.formatFromUserToApi(enrollment.enrollmentDate);
                             }
                         }
 

@@ -77,52 +77,16 @@ trackerCapture.controller('DashboardController',
             selectedLayout = !selectedLayout ?  defaultLayout : selectedLayout;
 
             angular.forEach(selectedLayout.widgets, function(widget){
-                switch(widget.title){
-                    case 'enrollment':
-                        $rootScope.enrollmentWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.enrollmentWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;
-                    case 'indicators':
-                        $rootScope.indicatorWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.indicatorWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;
-                    case 'feedback':
-                        $rootScope.feedbackWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.feedbackWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;
-                    case 'dataentry':
-                        $rootScope.dataentryWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.dataentryWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;
-                    case 'report':
-                        $rootScope.reportWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.reportWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;
-                    case 'current_selections':
-                        $rootScope.selectedWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.selectedWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;
-                    case 'profile':
-                        $rootScope.profileWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.profileWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;
-                    case 'relationships':
-                        $rootScope.relationshipWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.relationshipWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;    
-                    case 'notes':
-                        $rootScope.notesWidget = widget;
-                        $rootScope.dashboardWidgets.push($rootScope.notesWidget);
-                        $scope.dashboardStatus[widget.title] = angular.copy(widget);
-                        break;    
+                $rootScope[widget.title +'Widget'] = widget;
+                $rootScope.dashboardWidgets.push( $rootScope[widget.title +'Widget'] );
+                $scope.dashboardStatus[widget.title] = angular.copy(widget);
+            });
+            
+            angular.forEach(defaultLayout.widgets, function(w){
+                if(!$scope.dashboardStatus[w.title]){
+                    $rootScope[w.title +'Widget'] = w;
+                    $rootScope.dashboardWidgets.push( $rootScope[w.title +'Widget'] );
+                    $scope.dashboardStatus[w.title] = angular.copy(w);
                 }
             });
 
@@ -213,9 +177,9 @@ trackerCapture.controller('DashboardController',
                                     if( program.trackedEntity.id === $scope.selectedTei.trackedEntity ){
                                         $scope.programs.push(program);
                                         $scope.programNames[program.id] = {id: program.id, name: program.name};
-										angular.forEach(program.programStages, function(stage){                
-											$scope.programStageNames[stage.id] = {id: stage.id, name: stage.name};
-										});
+                                        angular.forEach(program.programStages, function(stage){                
+                                                $scope.programStageNames[stage.id] = {id: stage.id, name: stage.name};
+                                        });
 
                                         if($scope.selectedProgramId && program.id === $scope.selectedProgramId || selectedEnrollment && selectedEnrollment.program === program.id){
                                             $scope.selectedProgram = program;
@@ -235,7 +199,7 @@ trackerCapture.controller('DashboardController',
                 });  
             });
         });
-    }    
+    }
     
     
     //listen for any change to program selection
@@ -344,7 +308,7 @@ trackerCapture.controller('DashboardController',
         CurrentSelection.set({tei: $scope.selectedTei, te: $scope.trackedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: selections.enrollments, selectedEnrollment: null, optionSets: $scope.optionSets});        
         $timeout(function() { 
             $rootScope.$broadcast('selectedItems', {programExists: $scope.programs.length > 0});            
-        }, 100);
+        }, 200);
     };     
     
     $scope.activiateTEI = function(){
@@ -407,6 +371,7 @@ trackerCapture.controller('DashboardController',
             return;
         });
     };
+    
     $scope.showHideWidgets = function(){
         var modalInstance = $modal.open({
             templateUrl: "components/dashboard/dashboard-widgets.html",

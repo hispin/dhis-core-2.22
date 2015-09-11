@@ -642,8 +642,8 @@ trackerCapture.controller('RelationshipController',
                     var enrollment = {trackedEntityInstance: teiId,
                                 program: $scope.selectedProgramForRelative.id,
                                 status: 'ACTIVE',
-                                dateOfEnrollment: DateUtils.formatFromUserToApi($scope.enrollment.enrollmentDate),
-                                dateOfIncident: $scope.enrollment.incidentDate === '' ? DateUtils.formatFromUserToApi($scope.enrollment.enrollmentDate) : DateUtils.formatFromUserToApi($scope.enrollment.incidentDate)
+                                enrollmentDate: DateUtils.formatFromUserToApi($scope.enrollment.enrollmentDate),
+                                incidentDate: $scope.enrollment.incidentDate === '' ? DateUtils.formatFromUserToApi($scope.enrollment.enrollmentDate) : DateUtils.formatFromUserToApi($scope.enrollment.incidentDate)
                             };
                     EnrollmentService.enroll(enrollment).then(function(enrollmentResponse){
                         var en = enrollmentResponse.response && enrollmentResponse.response.importSummaries && enrollmentResponse.response.importSummaries[0] ? enrollmentResponse.response.importSummaries[0] : {};
@@ -682,7 +682,7 @@ trackerCapture.controller('RelationshipController',
                 $scope.tei.id = teiId;
                 $scope.broadCastSelections();
                 
-            }, 100);        
+            }, 200);        
             
         });
     };
@@ -700,7 +700,7 @@ trackerCapture.controller('RelationshipController',
             
             $timeout(function() { 
                 $rootScope.$broadcast('relationship', {});
-            }, 100);
+            }, 200);
         }        
     };
 });

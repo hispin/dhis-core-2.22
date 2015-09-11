@@ -1,0 +1,24 @@
+<div class="panel panel-info" ng-controller="ActiveProgramsController">
+    <div class="panel-heading handle bold">
+        {{activeProgramsWidget.title| translate}}
+        <span class="pull-right widget-link">
+            <a class="small-horizonal-spacing" href ng-click="expandCollapse(activeProgramsWidget)">
+                <span ng-show="activeProgramsWidget.expand"><i class="fa fa-chevron-up" title="{{'collapse'| translate}}"></i></span>
+                <span ng-show="!activeProgramsWidget.expand"><i class="fa fa-chevron-down" title="{{'expand'| translate}}"></i></span>
+            </a>
+            <a class="small-horizonal-spacing" href ng-click="removeWidget(activeProgramsWidget)" title="{{'remove'| translate}}"><i class="fa fa-times-circle"></i></a>            
+        </span>        
+    </div>    
+    <div ng-show="activeProgramsWidget.expand && activeEnrollments.length > 0" class="panel-body dashboard-element-container">
+        
+        <div class="row">
+            <table class="table table-striped dhis2-table-hover">
+                <tr ng-repeat="activeEnrollment in activeEnrollments" ng-click="changeProgram(activeEnrollment.program)">
+                    <td>
+                        {{programNames[activeEnrollment.program].name}}
+                    </td>
+                </tr>
+            </table> 
+        </div>        
+    </div>
+</div>

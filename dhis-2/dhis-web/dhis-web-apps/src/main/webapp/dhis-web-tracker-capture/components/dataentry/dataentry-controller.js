@@ -1017,7 +1017,7 @@ trackerCapture.controller('DataEntryController',
 
             $timeout(function () {
                 $rootScope.$broadcast('tei-report-widget', {});
-            }, 100);
+            }, 200);
         }
         
         $scope.allEventsSorted = orderByFilter($scope.allEventsSorted, '-sortingDate').reverse();

@@ -1,6 +1,6 @@
 <div class="panel panel-info" ng-controller="RelationshipController">
     <div class="panel-heading handle bold">
-        {{relationshipWidget.title| translate}}
+        {{relationshipsWidget.title| translate}}
         <span class="nav-pills" ng-if="selectedTei && selectedProgram.relationshipText  && !selectedTei.inactive">
             | <a href ng-click="showAddRelationship(true)" title="{{'add_relationship'| translate}}"><span ng-class="{true: 'widget-link-active', false: 'widget-link'} [showAddRelationshipDiv]">{{selectedProgram.relationshipText}}</span></a>
         </span>        
@@ -10,14 +10,14 @@
         </span>
         
         <span class="pull-right widget-link">
-            <a class="small-horizonal-spacing" href ng-click="expandCollapse(relationshipWidget)">
-                <span ng-show="relationshipWidget.expand"><i class="fa fa-chevron-up" title="{{'collapse'| translate}}"></i></span>
-                <span ng-show="!relationshipWidget.expand"><i class="fa fa-chevron-down" title="{{'expand'| translate}}"></i></span>
+            <a class="small-horizonal-spacing" href ng-click="expandCollapse(relationshipsWidget)">
+                <span ng-show="relationshipsWidget.expand"><i class="fa fa-chevron-up" title="{{'collapse'| translate}}"></i></span>
+                <span ng-show="!relationshipsWidget.expand"><i class="fa fa-chevron-down" title="{{'expand'| translate}}"></i></span>
             </a>
-            <a class="small-horizonal-spacing" href ng-click="removeWidget(relationshipWidget)" title="{{'remove'| translate}}"><i class="fa fa-times-circle"></i></a>            
+            <a class="small-horizonal-spacing" href ng-click="removeWidget(relationshipsWidget)" title="{{'remove'| translate}}"><i class="fa fa-times-circle"></i></a>            
         </span>        
     </div>
-    <div ng-show="relationshipWidget.expand" class="panel-body dashboard-widget-container">
+    <div ng-show="relationshipsWidget.expand" class="panel-body dashboard-widget-container">
         <div ng-show="selectedTei && !selectedTei.relationships || selectedTei.relationships.length < 1" class="alert alert-warning">{{'no_relationship'| translate}}</div> 
         <div ng-show="!selectedTei" class="alert alert-danger">{{'relationship_not_possible'| translate}}</div> 
         
