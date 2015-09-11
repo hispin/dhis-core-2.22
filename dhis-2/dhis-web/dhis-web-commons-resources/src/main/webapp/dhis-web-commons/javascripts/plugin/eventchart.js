@@ -573,14 +573,26 @@ Ext.onReady( function() {
 	EV.isDebug = false;
 	EV.isSessionStorage = ('sessionStorage' in window && window['sessionStorage'] !== null);
 
-	EV.getCore = function(ns) {
-        var init = ns.core.init,
-            conf = {},
+	EV.getCore = function(init, appConfig) {
+        var conf = {},
             api = {},
             support = {},
             service = {},
             web = {},
+            app = {},
+            webAlert,
             dimConf;
+
+        appConfig = appConfig || {};
+
+        // alert
+        webAlert = function() {};
+
+        // app
+        app.getViewportWidth = function() {};
+        app.getViewportHeight = function() {};
+        app.getCenterRegionWidth = function() {};
+        app.getCenterRegionHeight = function() {};
 
 		// conf
 		(function() {
@@ -733,6 +745,14 @@ Ext.onReady( function() {
                 ],
                 idNameMap: {}
             };
+
+            conf.valueType = {
+            	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
+            	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
+            	booleanTypes: ['BOOLEAN','TRUE_ONLY'],
+            	dateTypes: ['DATE','DATETIME'],
+            	aggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            }
 
             for (var i = 0, obj; i < conf.aggregationType.data.length; i++) {
                 obj = conf.aggregationType.data[i];
@@ -928,7 +948,7 @@ Ext.onReady( function() {
 
                 // sortOrder: number
 
-                // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_IEVTANCE', 'ENROLLMENT'
+                // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_INSTANCE', 'ENROLLMENT'
 
                 // rangeAxisMaxValue: number
 
@@ -947,6 +967,8 @@ Ext.onReady( function() {
 				// hideEmptyRows: boolean (false)
 
                 // hideNaData: boolean (false)
+
+				// completedOnly: boolean (false)
 
                 // aggregationType: string ('default') - 'default', 'count', 'sum'
 
@@ -1150,9 +1172,10 @@ Ext.onReady( function() {
 
 					// properties
                     layout.showValues = Ext.isBoolean(config.showData) ? config.showData : (Ext.isBoolean(config.showValues) ? config.showValues : true);
+                    layout.showTrendLine = Ext.isBoolean(config.regression) ? config.regression : (Ext.isBoolean(config.showTrendLine) ? config.showTrendLine : false);
                     layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : (Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : true);
                     layout.hideNaData = Ext.isBoolean(config.hideNaData) ? config.hideNaData : false;
-                    layout.showTrendLine = Ext.isBoolean(config.regression) ? config.regression : (Ext.isBoolean(config.showTrendLine) ? config.showTrendLine : false);
+                    layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
                     layout.targetLineValue = Ext.isNumber(config.targetLineValue) ? config.targetLineValue : null;
                     layout.targetLineTitle = Ext.isString(config.targetLineLabel) && !Ext.isEmpty(config.targetLineLabel) ? config.targetLineLabel :
                         (Ext.isString(config.targetLineTitle) && !Ext.isEmpty(config.targetLineTitle) ? config.targetLineTitle : null);
@@ -1673,6 +1696,17 @@ Ext.onReady( function() {
 				} : null;
 			};
 
+            // connection
+            support.connection = {};
+
+            support.connection.ajax = function(requestConfig, authConfig) {
+                if (authConfig.crossDomain && Ext.isString(authConfig.username) && Ext.isString(authConfig.password)) {
+                    requestConfig.headers = Ext.isObject(authConfig.headers) ? authConfig.headers : {};
+                    requestConfig.headers['Authorization'] = 'Basic ' + btoa(authConfig.username + ':' + authConfig.password);
+                }
+
+                Ext.Ajax.request(requestConfig);
+            };
 		}());
 
 		// service
@@ -2982,7 +3016,7 @@ Ext.onReady( function() {
                 config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
 
                 // bodyStyle
-                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + app.getCenterRegionHeight() / 2 + 'px';
 
                 // destroy handler
                 config.modal = true;
@@ -3105,6 +3139,11 @@ Ext.onReady( function() {
                     paramString += '&outputType=' + layout.outputType;
                 }
 
+                // completed only
+				if (layout.completedOnly) {
+					paramString += '&completedOnly=true';
+				}
+                
                 // display property
                 paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
 
@@ -3348,7 +3387,7 @@ Ext.onReady( function() {
                                 }
 
                                 trendLineFields.push(regressionKey);
-                                xResponse.metaData.names[regressionKey] = EV.i18n.trend + (ns.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
+                                xResponse.metaData.names[regressionKey] = EV.i18n.trend + (appConfig.dashboard ? '' : ' (' + xResponse.metaData.names[failSafeColumnIds[i]] + ')');
                             }
                         }
                     }
@@ -3672,15 +3711,15 @@ Ext.onReady( function() {
                 };
 
                 getFormatedSeriesTitle = function(titles) {
-                    var itemLength = ns.dashboard ? 23 : 30,
-                        charLength = ns.dashboard ? 5 : 6,
+                    var itemLength = appConfig.dashboard ? 23 : 30,
+                        charLength = appConfig.dashboard ? 5 : 6,
                         numberOfItems = titles.length,
                         numberOfChars,
                         totalItemLength = numberOfItems * itemLength,
                         //minLength = 5,
                         maxLength = support.prototype.array.getMaxLength(titles),
                         fallbackLength = 10,
-                        maxWidth = ns.app.centerRegion.getWidth(),
+                        maxWidth = app.getCenterRegionWidth(),
                         width,
                         validateTitles;
 
@@ -3930,8 +3969,8 @@ Ext.onReady( function() {
                 };
 
                 getDefaultLegend = function(store, chartConfig) {
-                    var itemLength = ns.dashboard ? 24 : 30,
-                        charLength = ns.dashboard ? 4 : 6,
+                    var itemLength = appConfig.dashboard ? 24 : 30,
+                        charLength = appConfig.dashboard ? 4 : 6,
                         numberOfItems = 0,
                         numberOfChars = 0,
                         width,
@@ -3960,7 +3999,7 @@ Ext.onReady( function() {
 
                     width = (numberOfItems * itemLength) + (numberOfChars * charLength);
 
-                    if (width > ns.app.centerRegion.getWidth() - 6) {
+                    if (width > app.getCenterRegionWidth() - 6) {
                         position = 'right';
                     }
 
@@ -4028,7 +4067,7 @@ Ext.onReady( function() {
                         text = xLayout.startDate + ' - ' + xLayout.endDate;
                     }
 
-                    if (ns.dashboard && Ext.isString(xLayout.name)) {
+                    if (appConfig.dashboard && Ext.isString(xLayout.name)) {
                         text = xLayout.name;
                     }
                     else if (xLayout.title) {
@@ -4115,7 +4154,7 @@ Ext.onReady( function() {
                     }
 
                     // aggregation type
-                    if (!ns.dashboard && Ext.isObject(layout.value) && layout.value.id && layout.aggregationType) {
+                    if (!appConfig.dashboard && Ext.isObject(layout.value) && layout.value.id && layout.aggregationType) {
                         var value = layout.value.id;
 
                         text += text.length ? ', ' : '';
@@ -4148,19 +4187,19 @@ Ext.onReady( function() {
                         font: titleFont,
                         fill: titleColor,
                         height: 20,
-                        y: ns.dashboard ? 7 : 20
+                        y: appConfig.dashboard ? 7 : 20
                     });
                 };
 
                 getDefaultChartSizeHandler = function() {
                     return function() {
-                        var width = ns.app.centerRegion.getWidth(),
-                            height = ns.app.centerRegion.getHeight();
+                        var width = app.getCenterRegionWidth(),
+                            height = app.getCenterRegionHeight();
                             
 						this.animate = false;
-                        this.setWidth(ns.dashboard ? width : width - 15);
-                        this.setHeight(ns.dashboard ? height : height - 40);
-                        this.animate = !ns.dashboard;
+                        this.setWidth(appConfig.dashboard ? width : width - 15);
+                        this.setHeight(appConfig.dashboard ? height : height - 40);
+                        this.animate = !appConfig.dashboard;
                     };
                 };
 
@@ -4193,22 +4232,22 @@ Ext.onReady( function() {
                 getDefaultChart = function(config) {
                     var chart,
                         store = config.store || {},
-                        width = ns.app.centerRegion.getWidth(),
-                        height = ns.app.centerRegion.getHeight(),
+                        width = app.getCenterRegionWidth(),
+                        height = app.getCenterRegionHeight(),
                         isLineBased = Ext.Array.contains(['line', 'area'], xLayout.type),
                         defaultConfig = {
                             //animate: true,
                             animate: false,
                             shadow: false,
-                            insetPadding: ns.dashboard ? 17 : 35,
+                            insetPadding: appConfig.dashboard ? 17 : 35,
                             insetPaddingObject: {
-                                top: ns.dashboard ? 12 : 32,
-                                right: ns.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
-                                bottom: ns.dashboard ? 2 : 10,
-                                left: ns.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
+                                top: appConfig.dashboard ? 12 : 32,
+                                right: appConfig.dashboard ? (isLineBased ? 5 : 3) : (isLineBased ? 25 : 15),
+                                bottom: appConfig.dashboard ? 2 : 10,
+                                left: appConfig.dashboard ? (isLineBased ? 15 : 7) : (isLineBased ? 70 : 50)
                             },
-                            width: ns.dashboard ? width : width - 15,
-                            height: ns.dashboard ? height : height - 40,
+                            width: appConfig.dashboard ? width : width - 15,
+                            height: appConfig.dashboard ? height : height - 40,
                             theme: 'dv1'
                         };
 
@@ -4217,15 +4256,15 @@ Ext.onReady( function() {
                         defaultConfig.legend = getDefaultLegend(store, config);
 
                         if (defaultConfig.legend.position === 'right') {
-                            defaultConfig.insetPaddingObject.top = ns.dashboard ? 22 : 40;
-                            defaultConfig.insetPaddingObject.right = ns.dashboard ? 5 : 40;
+                            defaultConfig.insetPaddingObject.top = appConfig.dashboard ? 22 : 40;
+                            defaultConfig.insetPaddingObject.right = appConfig.dashboard ? 5 : 40;
                         }
                     }
 
                     // title
                     if (xLayout.hideTitle) {
-                        defaultConfig.insetPadding = ns.dashboard ? 1 : 10;
-                        defaultConfig.insetPaddingObject.top = ns.dashboard ? 3 : 10;
+                        defaultConfig.insetPadding = appConfig.dashboard ? 1 : 10;
+                        defaultConfig.insetPaddingObject.top = appConfig.dashboard ? 3 : 10;
                     }
                     else {
                         defaultConfig.items = [getDefaultChartTitle(store)];
@@ -4404,7 +4443,7 @@ Ext.onReady( function() {
                             },
                             markerConfig: {
                                 type: 'circle',
-                                radius: ns.dashboard ? 3 : 4
+                                radius: appConfig.dashboard ? 3 : 4
                             },
                             tips: getDefaultTips(),
                             title: seriesTitles[i]
@@ -4586,10 +4625,10 @@ Ext.onReady( function() {
                         store: store,
                         series: series,
                         insetPaddingObject: {
-                            top: ns.dashboard ? 15 : 40,
-                            right: ns.dashboard ? 2 : 30,
-                            bottom: ns.dashboard ? 13: 30,
-                            left: ns.dashboard ? 7 : 30
+                            top: appConfig.dashboard ? 15 : 40,
+                            right: appConfig.dashboard ? 2 : 30,
+                            bottom: appConfig.dashboard ? 13: 30,
+                            left: appConfig.dashboard ? 7 : 30
                         }
                     });
 
@@ -4712,15 +4751,18 @@ Ext.onReady( function() {
 		}());
 
 		// alert
-		ns.alert = web.message.alert;
+		webAlert = web.message.alert;
 
-		ns.core.conf = conf;
-		ns.core.api = api;
-		ns.core.support = support;
-		ns.core.service = service;
-		ns.core.web = web;
-
-		return ns;
+		return {
+            init: init,
+            conf: conf,
+            api: api,
+            support: support,
+            service: service,
+            web: web,
+            app: app,
+            webAlert: webAlert
+        };
 	};
 
 	// PLUGIN
@@ -4749,7 +4791,8 @@ Ext.onReady( function() {
 		var isInit = false,
 			requests = [],
 			callbackCount = 0,
-            type = config.plugin && config.crossDomain ? 'jsonp' : 'json',
+            type = 'json',
+            ajax,
 			fn;
 
         init.contextPath = config.url;
@@ -4765,6 +4808,17 @@ Ext.onReady( function() {
 				configs = [];
 			}
 		};
+
+        ajax = function(requestConfig, authConfig) {
+            authConfig = authConfig || config;
+            
+            if (authConfig.crossDomain && Ext.isString(authConfig.username) && Ext.isString(authConfig.password)) {
+                requestConfig.headers = Ext.isObject(authConfig.headers) ? authConfig.headers : {};
+                requestConfig.headers['Authorization'] = 'Basic ' + btoa(authConfig.username + ':' + authConfig.password);
+            }
+
+            Ext.Ajax.request(requestConfig);
+        };
 
         // dhis2
         requests.push({
@@ -4847,12 +4901,7 @@ Ext.onReady( function() {
                                                 url += '&filter=id:eq:' + ids[i];
                                             }
 
-                                            if (type === 'jsonp') {
-                                                Ext.data.JsonP.request(optionSetConfig);
-                                            }
-                                            else {
-                                                Ext.Ajax.request(optionSetConfig);
-                                            }
+                                            ajax(optionSetConfig);
                                         }
                                     };
 
@@ -4875,12 +4924,7 @@ Ext.onReady( function() {
                             };
 
                             // option sets
-                            if (type === 'jsonp') {
-                                Ext.data.JsonP.request(optionSetVersionConfig);
-                            }
-                            else {
-                                Ext.Ajax.request(optionSetVersionConfig);
-                            }
+                            ajax(optionSetVersionConfig);
                         };
 
                         // init
@@ -4905,12 +4949,7 @@ Ext.onReady( function() {
                     }
                 };
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(userAccountConfig);
-                }
-                else {
-                    Ext.Ajax.request(userAccountConfig);
-                }
+                ajax(userAccountConfig);
             }
         });
 
@@ -4966,12 +5005,7 @@ Ext.onReady( function() {
         });
 
 		for (var i = 0; i < requests.length; i++) {
-            if (type === 'jsonp') {
-                Ext.data.JsonP.request(requests[i]);
-            }
-            else {
-                Ext.Ajax.request(requests[i]);
-            }
+            ajax(requests[i]);
 		}
 	};
 
@@ -5021,24 +5055,36 @@ Ext.onReady( function() {
 			return true;
 		};
 
-        extendInstance = function(ns) {
+        extendInstance = function(ns, appConfig) {
             var init = ns.core.init,
-                conf = ns.core.conf,
 				api = ns.core.api,
+                conf = ns.core.conf,
 				support = ns.core.support,
 				service = ns.core.service,
 				web = ns.core.web,
-                dimConf = conf.finals.dimension,
-                type = ns.plugin && ns.crossDomain ? 'jsonp' : 'json',
+                type = 'json',
                 headerMap = {
-                    json: 'application/json',
-                    jsonp: 'application/javascript'
+                    json: 'application/json'
                 },
                 headers = {
                     'Content-Type': headerMap[type],
                     'Accepts': headerMap[type]
                 },
-                el = Ext.get(config.el);
+                el = Ext.get(init.el),
+                dimConf = conf.finals.dimension;
+
+			init.el = config.el;
+
+			// ns
+            ns.plugin = appConfig.plugin;
+            ns.dashboard = appConfig.dashboard;
+            ns.crossDomain = appConfig.crossDomain;
+            ns.skipMask = appConfig.skipMask;
+            ns.skipFade = appConfig.skipFade;
+            ns.el = appConfig.el;
+            ns.username = appConfig.username;
+            ns.password = appConfig.password;
+            ns.ajax = support.connection.ajax;
 
 			// message
 			web.message = web.message || {};
@@ -5081,12 +5127,7 @@ Ext.onReady( function() {
                 config.success = success;
                 config.failure = failure;
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+                ns.ajax(config, ns);
 			};
 
 			web.report.getData = function(layout, isUpdateGui) {
@@ -5149,12 +5190,7 @@ Ext.onReady( function() {
                 config.success = success;
                 config.failure = failure;
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+                ns.ajax(config, ns);
 			};
 
 			web.report.createReport = function(layout, response, isUpdateGui) {
@@ -5291,17 +5327,6 @@ Ext.onReady( function() {
                     getXResponse();
                 }
 			};
-
-            // ns
-            ns.plugin = init.plugin;
-            ns.dashboard = init.dashboard;
-            ns.crossDomain = init.crossDomain;
-            ns.skipMask = init.skipMask;
-            ns.skipFade = init.skipFade;
-
-            ns.alert = web.message.alert;
-
-			init.el = config.el;
         };
 
 		createViewport = function() {
@@ -5332,35 +5357,51 @@ Ext.onReady( function() {
 			});
 
 			return {
+                getWidth: function() {
+                    return el.getWidth();
+                },
+                getHeight: function() {
+                    return el.getHeight();
+                },
 				centerRegion: centerRegion
 			};
         };
 
 		initialize = function() {
-            var el = Ext.get(config.el);
+            var el = Ext.get(config.el),
+                appConfig;
 
 			if (!validateConfig(config)) {
 				return;
 			}
 
+            appConfig = {
+                plugin: true,
+                dashboard: Ext.isBoolean(config.dashboard) ? config.dashboard : false,
+                crossDomain: Ext.isBoolean(config.crossDomain) ? config.crossDomain : true,
+                skipMask: Ext.isBoolean(config.skipMask) ? config.skipMask : false,
+                skipFade: Ext.isBoolean(config.skipFade) ? config.skipFade : false,
+                el: Ext.isString(config.el) ? config.el : null,
+                username: Ext.isString(config.username) ? config.username : null,
+                password: Ext.isString(config.password) ? config.password : null
+            };
+
             // css
             applyCss();
 
-            // config
-            init.plugin = true;
-            init.dashboard = Ext.isBoolean(config.dashboard) ? config.dashboard : false;
-            init.crossDomain = Ext.isBoolean(config.crossDomain) ? config.crossDomain : true;
-            init.skipMask = Ext.isBoolean(config.skipMask) ? config.skipMask : false;
-            init.skipFade = Ext.isBoolean(config.skipFade) ? config.skipFade : false;
-
-            // init
-            EV.instances.push(ns);
-            ns.core.init = init;
-			EV.getCore(ns);
-			extendInstance(ns);
+			// core
+			ns.core = EV.getCore(init, appConfig);
+			extendInstance(ns, appConfig);
 
 			ns.app.viewport = createViewport();
 			ns.app.centerRegion = ns.app.viewport.centerRegion;
+
+            ns.core.app.getViewportWidth = function() { return ns.app.viewport.getWidth(); };
+            ns.core.app.getViewportHeight = function() { return ns.app.viewport.getHeight(); };
+            ns.core.app.getCenterRegionWidth = function() { return ns.app.viewport.centerRegion.getWidth(); };
+            ns.core.app.getCenterRegionHeight = function() { return ns.app.viewport.centerRegion.getHeight(); };
+
+            EV.instances.push(ns);
 
             if (el) {
                 el.setViewportWidth = function(width) {

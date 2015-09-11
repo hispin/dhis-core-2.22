@@ -5357,6 +5357,12 @@ Ext.onReady( function() {
 			});
 
 			return {
+                getWidth: function() {
+                    return el.getWidth();
+                },
+                getHeight: function() {
+                    return el.getHeight();
+                },
 				centerRegion: centerRegion
 			};
         };
@@ -5389,6 +5395,11 @@ Ext.onReady( function() {
 
 			ns.app.viewport = createViewport();
 			ns.app.centerRegion = ns.app.viewport.centerRegion;
+
+            ns.core.app.getViewportWidth = function() { return ns.app.viewport.getWidth(); };
+            ns.core.app.getViewportHeight = function() { return ns.app.viewport.getHeight(); };
+            ns.core.app.getCenterRegionWidth = function() { return ns.app.viewport.centerRegion.getWidth(); };
+            ns.core.app.getCenterRegionHeight = function() { return ns.app.viewport.centerRegion.getHeight(); };
 
             EV.instances.push(ns);
 

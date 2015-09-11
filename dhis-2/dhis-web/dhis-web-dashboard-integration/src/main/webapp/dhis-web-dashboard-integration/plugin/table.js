@@ -390,6 +390,8 @@ Ext.onReady( function() {
 
 				// showHierarchy: boolean (false)
 
+				// completedOnly: boolean (false)
+
 				// displayDensity: string ('normal') - 'compact', 'normal', 'comfortable'
 
 				// fontSize: string ('normal') - 'small', 'normal', 'large'
@@ -567,6 +569,8 @@ Ext.onReady( function() {
 					layout.dataApprovalLevel = Ext.isObject(config.dataApprovalLevel) && Ext.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
 
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
+
+                    layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
 
 					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : 'normal';
 					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : 'normal';
@@ -1725,6 +1729,10 @@ Ext.onReady( function() {
 					delete layout.showHierarchy;
 				}
 
+				if (!layout.completedOnly) {
+					delete layout.completedOnly;
+				}
+
 				if (layout.displayDensity === 'normal') {
 					delete layout.displayDensity;
 				}
@@ -2113,6 +2121,10 @@ Ext.onReady( function() {
 
 				if (xLayout.showHierarchy) {
 					paramString += '&hierarchyMeta=true';
+				}
+
+				if (xLayout.completedOnly) {
+					paramString += '&completedOnly=true';
 				}
 
 				// aggregation type
@@ -3185,7 +3197,7 @@ Ext.onReady( function() {
 			}
 		});
 
-        // user orgunit
+        // dimensions
 		requests.push({
 			url: init.contextPath + '/api/dimensions.' + type + '?fields=id,name&paging=false',
             disableCaching: false,
@@ -3204,8 +3216,6 @@ Ext.onReady( function() {
             }
         });
 
-        //init.legendSets = [];
-
 		for (var i = 0; i < requests.length; i++) {
             ajax(requests[i], config);
 		}
@@ -3213,7 +3223,8 @@ Ext.onReady( function() {
 
     applyCss = function(config) {
         var css = '',
-            arrowUrl = config.dashboard ? init.contextPath + '/dhis-web-commons/javascripts/plugin/images/arrowupdown.png' : '//dhis2-cdn.org/v217/plugin/images/arrowupdown.png';
+            arrowUrl = config.dashboard ? init.contextPath + '/dhis-web-commons/javascripts/plugin/images/arrowupdown.png' : '//dhis2-cdn.org/v220/plugin/images/arrowupdown.png',
+            errorUrl = config.dashboard ? init.contextPath + '/dhis-web-commons/javascripts/plugin/images/error_m.png' : '//dhis2-cdn.org/v220/plugin/images/error_m.png';
 
         css += 'table.pivot { font-family: arial,sans-serif,ubuntu,consolas; border-collapse: collapse; border-spacing: 0px; border: 0 none; } \n';
         css += '.td-nobreak { white-space: nowrap; } \n';
@@ -3258,6 +3269,10 @@ Ext.onReady( function() {
 
         // alert
         css += '.ns-plugin-alert { width: 90%; padding: 5%; color: #777 } \n';
+
+        css += '.x-window-body { font-size: 13px; } \n';
+        css += '.ns-window-title-messagebox { padding-left: 16px; background-position-y: 1px; } \n';
+        css += '.ns-window-title-messagebox.error { background-image: url("' + errorUrl + '"); } \n';
 
         Ext.util.CSS.createStyleSheet(css);
     };
