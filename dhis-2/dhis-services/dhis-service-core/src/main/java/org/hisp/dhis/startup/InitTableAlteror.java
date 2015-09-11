@@ -58,8 +58,6 @@ public class InitTableAlteror
     @Transactional
     public void execute()
     {
-        // domain type
-
         executeSql( "update dataelement set domaintype='AGGREGATE' where domaintype='aggregate' or domaintype is null;" );
         executeSql( "update dataelement set domaintype='TRACKER' where domaintype='patient';" );
         executeSql( "update users set invitation = false where invitation is null" );
@@ -69,10 +67,7 @@ public class InitTableAlteror
         executeSql( "UPDATE programstageinstance SET status='COMPLETED' WHERE status='1';" );
         executeSql( "UPDATE programstageinstance SET status='SKIPPED' WHERE status='5';" );
         
-        if( columnExists( "program", "displayonallorgunit" ) )
-        {
-            executeSql( "ALTER TABLE program DROP COLUMN displayonallorgunit" );
-        }
+        executeSql( "ALTER TABLE program DROP COLUMN displayonallorgunit" );
         
         upgradeProgramStageDataElements();
         updateValueTypes();
@@ -80,52 +75,32 @@ public class InitTableAlteror
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
         executeSql( "update program set \"type\"='WITHOUT_REGISTRATION' where type='3'" );
-
-        renameColumn( "program", "dateofenrollmentdescription", "enrollmentdatelabel" );
-        renameColumn( "program", "dateofincidentdescription", "incidentdatelabel" );
-        renameColumn( "programinstance", "dateofincident", "incidentdate" );
-
     }
 
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void renameColumn( String table, String oldColumn, String newColumn )
-    {
-        if ( columnExists( table, oldColumn ) )
-        {
-            executeSql( "update " + table + " set " + newColumn + " = " + oldColumn );
-            executeSql( "alter table " + table + " drop column " + oldColumn );
-        }
-    }
-
     private void updateValueTypes()
     {
         executeSql( "alter table dataelement alter column valuetype type varchar(50)" );
 
-        if ( columnExists( "dataelement", "numbertype" ) )
-        {
-            executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int' and numbertype='number'" );
-            executeSql( "update dataelement set valuetype='INTEGER' where valuetype='int' and numbertype='int'" );
-            executeSql( "update dataelement set valuetype='INTEGER_POSITIVE' where valuetype='int' and numbertype='posInt'" );
-            executeSql( "update dataelement set valuetype='INTEGER_NEGATIVE' where valuetype='int' and numbertype='negInt'" );
-            executeSql( "update dataelement set valuetype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt'" );
-            executeSql( "update dataelement set valuetype='PERCENTAGE' where valuetype='int' and numbertype='percentage'" );
-            executeSql( "update dataelement set valuetype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
+        executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int' and numbertype='number'" );
+        executeSql( "update dataelement set valuetype='INTEGER' where valuetype='int' and numbertype='int'" );
+        executeSql( "update dataelement set valuetype='INTEGER_POSITIVE' where valuetype='int' and numbertype='posInt'" );
+        executeSql( "update dataelement set valuetype='INTEGER_NEGATIVE' where valuetype='int' and numbertype='negInt'" );
+        executeSql( "update dataelement set valuetype='INTEGER_ZERO_OR_POSITIVE' where valuetype='int' and numbertype='zeroPositiveInt'" );
+        executeSql( "update dataelement set valuetype='PERCENTAGE' where valuetype='int' and numbertype='percentage'" );
+        executeSql( "update dataelement set valuetype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
 
-            executeSql( "alter table dataelement drop column numbertype" );
-        }
+        executeSql( "alter table dataelement drop column numbertype" );
 
         executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int'" );
 
-        if ( columnExists( "dataelement", "texttype" ) )
-        {
-            executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype='text'" );
-            executeSql( "update dataelement set valuetype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
+        executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype='text'" );
+        executeSql( "update dataelement set valuetype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
 
-            executeSql( "alter table dataelement drop column texttype" );
-        }
+        executeSql( "alter table dataelement drop column texttype" );
 
         executeSql( "update dataelement set valuetype='TEXT' where valuetype='string'" );
 
@@ -191,20 +166,6 @@ public class InitTableAlteror
         {
             statementManager.getHolder().queryForInteger( "select 1 from " + table );
             return true;
-        }
-        catch ( Exception ex )
-        {
-            return false;
-        }
-    }
-
-    private boolean columnExists( String table, String column )
-    {
-        try
-        {
-            return statementManager.getHolder().queryForString(
-                "select column_name from information_schema.columns where table_name='" + table + "' and column_name='"
-                    + column + "'" ) == null ? false : true;
         }
         catch ( Exception ex )
         {
