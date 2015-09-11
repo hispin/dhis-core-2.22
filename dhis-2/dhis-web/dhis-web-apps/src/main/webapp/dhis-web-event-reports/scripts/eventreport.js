@@ -167,7 +167,33 @@ Ext.onReady( function() {
 					{id: 'FinancialJuly', name: ER.i18n.financial_july},
 					{id: 'FinancialApril', name: ER.i18n.financial_april}
 				],
-                relativePeriods: []
+                relativePeriods: [
+                    'THIS_WEEK',
+                    'LAST_WEEK',
+                    'LAST_4_WEEKS',
+                    'LAST_12_WEEKS',
+                    'LAST_52_WEEKS',
+                    'THIS_MONTH',
+                    'LAST_MONTH',
+                    'LAST_3_MONTHS',
+                    'LAST_6_MONTHS',
+                    'LAST_12_MONTHS',
+                    'THIS_BIMONTH',
+                    'LAST_BIMONTH',
+                    'LAST_6_BIMONTHS',
+                    'THIS_QUARTER',
+                    'LAST_QUARTER',
+                    'LAST_4_QUARTERS',
+                    'THIS_SIX_MONTH',
+                    'LAST_SIX_MONTH',
+                    'LAST_2_SIXMONTHS',
+                    'THIS_FINANCIAL_YEAR',
+                    'LAST_FINANCIAL_YEAR',
+                    'LAST_5_FINANCIAL_YEARS',
+                    'THIS_YEAR',
+                    'LAST_YEAR',
+                    'LAST_5_YEARS'
+                ]
 			};
 
                 // aggregation type
@@ -182,6 +208,14 @@ Ext.onReady( function() {
 					{id: 'MAX', name: ER.i18n.max, text: ER.i18n.max}
                 ],
                 idNameMap: {}
+            };
+            
+            conf.valueType = {
+            	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
+            	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
+            	booleanTypes: ['BOOLEAN','TRUE_ONLY'],
+            	dateTypes: ['DATE','DATETIME'],
+            	aggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
             };
 
             for (var i = 0, obj; i < conf.aggregationType.data.length; i++) {
@@ -373,6 +407,10 @@ Ext.onReady( function() {
 
 				// hideEmptyRows: boolean (false)
 
+				// hideNaData: boolean (false)
+
+				// completedOnly: boolean (false)
+
                 // collapseDataDimensions: boolean (false)
 
                 // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_IERTANCE', 'ENROLLMENT'
@@ -558,8 +596,9 @@ Ext.onReady( function() {
                     layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
                     layout.hideNaData = Ext.isBoolean(config.hideNaData) ? config.hideNaData : false;
                     layout.collapseDataDimensions = Ext.isBoolean(config.collapseDataDimensions) ? config.collapseDataDimensions : false;
-
 					layout.outputType = Ext.isString(config.outputType) && !Ext.isEmpty(config.outputType) ? config.outputType : 'EVENT';
+                    layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
+
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
 					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : 'normal';
 					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : 'normal';
@@ -2516,6 +2555,11 @@ Ext.onReady( function() {
                     paramString += '&outputType=' + view.outputType;
                 }
 
+                // completed only
+				if (view.completedOnly) {
+					paramString += '&completedOnly=true';
+				}
+                
                 // sorting
                 if (view.dataType === 'individual_cases' && view.sorting) {
                     if (view.sorting.id && view.sorting.direction) {
