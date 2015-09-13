@@ -72,6 +72,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 
 /**
  * @author Kristian Nordal
@@ -274,18 +275,21 @@ public class OrganisationUnit
 
     public void updateDataSets( Set<DataSet> updates )
     {
-        for ( DataSet dataSet : new HashSet<>( dataSets ) )
+        Set<DataSet> toRemove = Sets.difference( dataSets, updates );
+        Set<DataSet> toAdd = Sets.difference( updates, dataSets );
+        
+        for ( DataSet dataSet : toRemove )
         {
-            if ( !updates.contains( dataSet ) )
-            {
-                removeDataSet( dataSet );
-            }
+            dataSet.getSources().remove( this );
         }
-
-        for ( DataSet dataSet : updates )
+        
+        for ( DataSet dataSet : toAdd )
         {
-            addDataSet( dataSet );
+            dataSet.getSources().add( this );
         }
+        
+        dataSets.clear();
+        dataSets.addAll( updates );
     }
 
     public void addUser( User user )
