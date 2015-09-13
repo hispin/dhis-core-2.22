@@ -64,7 +64,7 @@ public enum RestoreOptions
     // Constructor
     // -------------------------------------------------------------------------
 
-    RestoreOptions( String tokenPrefix, RestoreType restoreType, boolean usernameChoice )
+    private RestoreOptions( String tokenPrefix, RestoreType restoreType, boolean usernameChoice )
     {
         this.tokenPrefix = tokenPrefix;
         this.restoreType = restoreType;

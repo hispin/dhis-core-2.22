@@ -93,7 +93,7 @@ class DataApprovalPermissionsEvaluator
      * @param dataApprovalLevelService Data approval level service
      * @return context for determining user permissions
      */
-    static DataApprovalPermissionsEvaluator makePermissionsEvaluator( CurrentUserService currentUserService,
+    public static DataApprovalPermissionsEvaluator makePermissionsEvaluator( CurrentUserService currentUserService,
             OrganisationUnitService organisationUnitService, SystemSettingManager systemSettingManager,
             DataApprovalLevelService dataApprovalLevelService )
     {
@@ -131,7 +131,7 @@ class DataApprovalPermissionsEvaluator
      * @param status the data approval status (if any)
      * @return the data approval permissions for the object
      */
-    DataApprovalPermissions getPermissions( DataApprovalStatus status, OrganisationUnit orgUnit )
+    public DataApprovalPermissions getPermissions( DataApprovalStatus status, OrganisationUnit orgUnit )
     {
         DataApproval da = status.getDataApproval();
 

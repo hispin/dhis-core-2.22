@@ -40,7 +40,7 @@ public class ProgramRuleActionDeletionHandler
     // Dependencies
     // -------------------------------------------------------------------------
 
-    ProgramRuleActionService programRuleActionService;
+    private ProgramRuleActionService programRuleActionService;
 
     public void setProgramRuleActionService( ProgramRuleActionService programRuleActionService )
     {

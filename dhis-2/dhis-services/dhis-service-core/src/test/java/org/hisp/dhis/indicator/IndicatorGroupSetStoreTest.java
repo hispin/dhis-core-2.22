@@ -36,15 +36,15 @@ import org.hisp.dhis.GenericDhisSpringTest;
  */
 public class IndicatorGroupSetStoreTest
     extends GenericDhisSpringTest<IndicatorGroupSet>
-{
-    private IndicatorGroupSet[] objects = { 
-        new IndicatorGroupSet( "GroupSetA" ), 
-        new IndicatorGroupSet( "GroupSetB" ),
-        new IndicatorGroupSet( "GroupSetC" ) };
-    
+{    
     @Override
     protected IndicatorGroupSet[] getObjects()
     {
+        IndicatorGroupSet[] objects = { 
+            new IndicatorGroupSet( "GroupSetA" ), 
+            new IndicatorGroupSet( "GroupSetB" ),
+            new IndicatorGroupSet( "GroupSetC" ) };
+        
         return objects;
     }
 

@@ -44,17 +44,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ProgramRuleStoreTest
     extends DhisSpringTest
 {
-    private Program programA;    
+    private Program programA;
+    
     private ProgramStage programStageA;
     
     @Autowired
-    public ProgramStore programStore;
+    private ProgramStore programStore;
     
     @Autowired
-    public ProgramStageStore programStageStore;
+    private ProgramStageStore programStageStore;
     
     @Autowired
-    public ProgramRuleStore variableStore;
+    private ProgramRuleStore variableStore;
     
     @Override
     public void setUpTest()
@@ -63,8 +64,7 @@ public class ProgramRuleStoreTest
         programStageA = createProgramStage( 'A', 0 );
         
         programStore.save( programA );
-        programStageStore.save( programStageA );
-        
+        programStageStore.save( programStageA );        
     }
     
     @Test

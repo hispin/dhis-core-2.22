@@ -52,7 +52,6 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueServ
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * @author Chau Thu Tran
@@ -109,9 +108,6 @@ public class ProgramInstanceServiceTest
     private TrackedEntityInstance entityInstanceA;
 
     private Collection<Integer> orgunitIds;
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
 
     @Override
     public void setUpTest()

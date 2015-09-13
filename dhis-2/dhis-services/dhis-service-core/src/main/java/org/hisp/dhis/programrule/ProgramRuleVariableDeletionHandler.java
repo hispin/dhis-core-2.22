@@ -41,7 +41,7 @@ public class ProgramRuleVariableDeletionHandler
     // Dependencies
     // -------------------------------------------------------------------------
 
-    ProgramRuleVariableService programRuleVariableService;
+    private ProgramRuleVariableService programRuleVariableService;
 
     public void setProgramRuleVariableService( ProgramRuleVariableService programRuleVariableService )
     {

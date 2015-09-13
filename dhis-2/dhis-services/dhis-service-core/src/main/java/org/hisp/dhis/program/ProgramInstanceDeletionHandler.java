@@ -60,7 +60,7 @@ public class ProgramInstanceDeletionHandler
         this.commentService = commentService;
     }
 
-    public ProgramStageDataElementService programStageDEService;
+    private ProgramStageDataElementService programStageDEService;
 
     public void setProgramStageDEService( ProgramStageDataElementService programStageDEService )
     {

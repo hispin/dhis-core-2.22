@@ -37,14 +37,14 @@ import org.hisp.dhis.GenericDhisSpringTest;
 public class OrganisationUnitGroupStoreTest
     extends GenericDhisSpringTest<OrganisationUnitGroup>
 {
-    private OrganisationUnitGroup[] objects = {
-        new OrganisationUnitGroup( "GroupA" ),
-        new OrganisationUnitGroup( "GroupB" ),
-        new OrganisationUnitGroup( "GroupC" ) };
-
     @Override
     protected OrganisationUnitGroup[] getObjects()
     {
+        OrganisationUnitGroup[] objects = {
+            new OrganisationUnitGroup( "GroupA" ),
+            new OrganisationUnitGroup( "GroupB" ),
+            new OrganisationUnitGroup( "GroupC" ) };
+        
         return objects;
     }    
 
