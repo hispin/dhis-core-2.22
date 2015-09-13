@@ -108,7 +108,7 @@ public class StAXNodeSerializer extends AbstractNodeSerializer
     @Override
     protected void startWriteSimpleNode( SimpleNode simpleNode ) throws Exception
     {
-        String value;
+        String value = null;
 
         if ( simpleNode.getValue() != null && Date.class.isAssignableFrom( simpleNode.getValue().getClass() ) )
         {

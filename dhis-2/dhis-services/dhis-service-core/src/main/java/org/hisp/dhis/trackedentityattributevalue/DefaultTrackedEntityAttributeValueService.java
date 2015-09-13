@@ -127,10 +127,10 @@ public class DefaultTrackedEntityAttributeValueService
 
         for ( TrackedEntityAttributeValue attributeValue : getTrackedEntityAttributeValues( source ) )
         {
-            TrackedEntityAttributeValue _attributeValue = new TrackedEntityAttributeValue(
+            TrackedEntityAttributeValue value = new TrackedEntityAttributeValue(
                 attributeValue.getAttribute(), destination, attributeValue.getValue() );
 
-            addTrackedEntityAttributeValue( _attributeValue );
+            addTrackedEntityAttributeValue( value );
         }
     }
 }

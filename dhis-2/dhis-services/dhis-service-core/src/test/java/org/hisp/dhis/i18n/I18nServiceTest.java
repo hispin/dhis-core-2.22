@@ -63,7 +63,6 @@ public class I18nServiceTest
     
     @Test
     public void testUpdateTranslation()
-        throws Exception
     {
         Locale locale = Locale.FRANCE;
         String className = DataElement.class.getSimpleName();

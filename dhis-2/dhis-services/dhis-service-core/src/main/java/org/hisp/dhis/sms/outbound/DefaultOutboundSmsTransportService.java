@@ -288,7 +288,7 @@ public class DefaultOutboundSmsTransportService
             return null;
         }
 
-        String gatewayId;
+        String gatewayId = null;
 
         if ( gatewayConfig instanceof BulkSmsGatewayConfig )
         {

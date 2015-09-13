@@ -170,7 +170,7 @@ public class DataApprovalStoreTest
         DataApproval dataApprovalB = new DataApproval( level2, dataSetA, periodA, sourceB, categoryOptionCombo, false, date, userA );
         DataApproval dataApprovalC = new DataApproval( level1, dataSetA, periodB, sourceA, categoryOptionCombo, false, date, userA );
         DataApproval dataApprovalD = new DataApproval( level1, dataSetB, periodA, sourceA, categoryOptionCombo, false, date, userA );
-        DataApproval dataApprovalE;
+        DataApproval dataApprovalE = null;
 
         dataApprovalStore.addDataApproval( dataApprovalA );
         dataApprovalStore.addDataApproval( dataApprovalB );

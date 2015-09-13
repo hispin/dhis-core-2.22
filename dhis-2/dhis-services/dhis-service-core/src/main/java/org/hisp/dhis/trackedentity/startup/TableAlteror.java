@@ -63,10 +63,6 @@ public class TableAlteror
 {
     private static final Log log = LogFactory.getLog( TableAlteror.class );
 
-    final Pattern INPUT_PATTERN = Pattern.compile( "(<input.*?)[/]?>", Pattern.DOTALL );
-
-    final Pattern IDENTIFIER_PATTERN_FIELD = Pattern.compile( "id=\"(\\d+)-(\\d+)-val\"" );
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------

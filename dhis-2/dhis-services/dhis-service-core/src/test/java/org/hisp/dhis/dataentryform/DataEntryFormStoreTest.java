@@ -128,9 +128,7 @@ public class DataEntryFormStoreTest
 
     @Test
     public void testGetDataEntryFormByName()
-        throws Exception
     {
-
         DataEntryForm dataEntryForm = new DataEntryForm( "DataEntryForm-A" );
 
         int id = dataEntryFormStore.save( dataEntryForm );

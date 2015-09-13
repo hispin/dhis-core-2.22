@@ -138,15 +138,15 @@ public class SystemSettingStoreTest
     @Test
     public void testGetAllSystemSettings()
     {
-        List<SystemSetting> m = systemSettingStore.getAll();
-        assertNotNull( m );
-        assertEquals( 0, m.size() );
+        List<SystemSetting> settings = systemSettingStore.getAll();
+        assertNotNull( settings );
+        assertEquals( 0, settings.size() );
 
         systemSettingStore.save( settingA );
         systemSettingStore.save( settingB );
 
-        m = systemSettingStore.getAll();
-        assertNotNull( m );
-        assertEquals( 2, m.size() );
+        settings = systemSettingStore.getAll();
+        assertNotNull( settings );
+        assertEquals( 2, settings.size() );
     }
 }

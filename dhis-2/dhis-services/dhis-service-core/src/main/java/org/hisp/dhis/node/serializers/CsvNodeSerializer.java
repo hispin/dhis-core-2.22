@@ -57,9 +57,9 @@ public class CsvNodeSerializer extends AbstractNodeSerializer
 {
     private static final String[] CONTENT_TYPES = { "application/csv", "text/csv" };
 
-    private static CsvMapper csvMapper = new CsvMapper();
+    private static final CsvMapper CSV_MAPPER = new CsvMapper();
 
-    private static CsvFactory csvFactory = csvMapper.getFactory();
+    private static final CsvFactory CSV_FACTORY = CSV_MAPPER.getFactory();
 
     private CsvGenerator csvGenerator;
 
@@ -72,7 +72,7 @@ public class CsvNodeSerializer extends AbstractNodeSerializer
     @Override
     protected void startSerialize( RootNode rootNode, OutputStream outputStream ) throws Exception
     {
-        csvGenerator = csvFactory.createGenerator( outputStream );
+        csvGenerator = CSV_FACTORY.createGenerator( outputStream );
 
         CsvSchema.Builder schemaBuilder = CsvSchema.builder()
             .setUseHeader( true );

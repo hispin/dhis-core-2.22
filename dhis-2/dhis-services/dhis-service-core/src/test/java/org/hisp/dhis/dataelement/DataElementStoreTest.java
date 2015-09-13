@@ -103,7 +103,6 @@ public class DataElementStoreTest
 
     @Test
     public void testDeleteAndGetDataElement()
-        throws Exception
     {
         DataElement dataElementA = createDataElement( 'A' );
         DataElement dataElementB = createDataElement( 'B' );

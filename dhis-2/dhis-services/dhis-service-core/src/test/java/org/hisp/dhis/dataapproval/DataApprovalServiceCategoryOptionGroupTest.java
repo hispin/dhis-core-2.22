@@ -539,20 +539,20 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
     private String getStatusString( DataApprovalStatus status )
     {
-        DataApproval a = status.getDataApproval();
-        String approval = a == null ? "approval=null" :
-                "ou=" + ( a.getOrganisationUnit() == null ? "(null)" : a.getOrganisationUnit().getName() )
-                        + " mechanism=" + ( a.getAttributeOptionCombo() == null ? "(null)" : getOptionNamesFromCombo( a.getAttributeOptionCombo() ) )
-                        + " level=" + ( a.getDataApprovalLevel() == null ? "(null)" : a.getDataApprovalLevel().getLevel() );
+        DataApproval da = status.getDataApproval();
+        String approval = da == null ? "approval=null" :
+                "ou=" + ( da.getOrganisationUnit() == null ? "(null)" : da.getOrganisationUnit().getName() )
+                        + " mechanism=" + ( da.getAttributeOptionCombo() == null ? "(null)" : getOptionNamesFromCombo( da.getAttributeOptionCombo() ) )
+                        + " level=" + ( da.getDataApprovalLevel() == null ? "(null)" : da.getDataApprovalLevel().getLevel() );
 
-        DataApprovalPermissions p = status.getPermissions();
+        DataApprovalPermissions permissions = status.getPermissions();
 
         return approval + " " + status.getState().toString()
-                + " approve=" + ( p.isMayApprove() ? "T" : "F" )
-                + " unapprove=" + ( p.isMayUnapprove() ? "T" : "F" )
-                + " accept=" + ( p.isMayAccept() ? "T" : "F" )
-                + " unaccept=" + ( p.isMayUnaccept() ? "T" : "F" )
-                + " read=" + ( p.isMayReadData() ? "T" : "F" );
+                + " approve=" + ( permissions.isMayApprove() ? "T" : "F" )
+                + " unapprove=" + ( permissions.isMayUnapprove() ? "T" : "F" )
+                + " accept=" + ( permissions.isMayAccept() ? "T" : "F" )
+                + " unaccept=" + ( permissions.isMayUnaccept() ? "T" : "F" )
+                + " read=" + ( permissions.isMayReadData() ? "T" : "F" );
     }
     
     private String[] getUserApprovalsAndPermissions( CurrentUserService mockUserService, DataSet dataSet, Period period, OrganisationUnit orgUnit )

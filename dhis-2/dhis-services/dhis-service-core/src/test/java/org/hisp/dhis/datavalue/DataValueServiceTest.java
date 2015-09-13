@@ -147,7 +147,6 @@ public class DataValueServiceTest
 
     @Test
     public void testAddDataValue()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -187,7 +186,6 @@ public class DataValueServiceTest
 
     @Test
     public void testUpdataDataValue()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -214,7 +212,6 @@ public class DataValueServiceTest
 
     @Test
     public void testDeleteAndGetDataValue()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -262,7 +259,6 @@ public class DataValueServiceTest
 
     @Test
     public void testDeleteDataValuesBySource()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -310,7 +306,6 @@ public class DataValueServiceTest
 
     @Test
     public void testDeleteDataValuesByDataElement()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -362,7 +357,6 @@ public class DataValueServiceTest
 
     @Test
     public void testGetAllDataValues()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -385,7 +379,6 @@ public class DataValueServiceTest
 
     @Test
     public void testGetDataValuesSourcePeriod()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -416,7 +409,6 @@ public class DataValueServiceTest
 
     @Test
     public void testGetDataValuesSourceDataElement()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -447,7 +439,6 @@ public class DataValueServiceTest
 
     @Test
     public void testGetDataValuesSourcesDataElement()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -482,7 +473,6 @@ public class DataValueServiceTest
 
     @Test
     public void testGetDataValuesSourcePeriodDataElements()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceA, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -517,7 +507,6 @@ public class DataValueServiceTest
 
     @Test
     public void testGetDataValuesDataElementPeriodsSources()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceB, optionCombo, optionCombo );
         dataValueA.setValue( "1" );
@@ -550,7 +539,6 @@ public class DataValueServiceTest
 
     @Test
     public void testGetDataValuesOptionComboDataElementPeriodsSources()
-        throws Exception
     {
         DataValue dataValueA = new DataValue( dataElementA, periodA, sourceB, optionCombo, optionCombo );
         dataValueA.setValue( "1" );

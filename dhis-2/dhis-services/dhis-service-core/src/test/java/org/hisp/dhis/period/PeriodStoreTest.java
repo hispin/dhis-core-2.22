@@ -58,7 +58,6 @@ public class PeriodStoreTest
 
     @Test
     public void testAddPeriod()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
@@ -96,7 +95,6 @@ public class PeriodStoreTest
 
     @Test
     public void testDeleteAndGetPeriod()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
@@ -144,7 +142,6 @@ public class PeriodStoreTest
 
     @Test
     public void testGetPeriod()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
@@ -206,7 +203,6 @@ public class PeriodStoreTest
 
     @Test
     public void testGetAllPeriods()
-        throws Exception
     {
         PeriodType periodType = periodStore.getAllPeriodTypes().iterator().next();
 
@@ -229,7 +225,6 @@ public class PeriodStoreTest
 
     @Test
     public void testGetPeriodsBetweenDates()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
@@ -272,7 +267,6 @@ public class PeriodStoreTest
 
     @Test
     public void testGetPeriodsBetweenOrSpanningDates()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
@@ -320,7 +314,6 @@ public class PeriodStoreTest
 
     @Test
     public void testGetIntersectingPeriodsByPeriodType()
-        throws Exception
     {
     	PeriodType ypt = PeriodType.getPeriodTypeByName( YearlyPeriodType.NAME );
     	
@@ -398,7 +391,6 @@ public class PeriodStoreTest
 
     @Test
     public void testGetIntersectingPeriods()
-        throws Exception
     {
         PeriodType type = periodStore.getAllPeriodTypes().iterator().next();
         
@@ -440,7 +432,6 @@ public class PeriodStoreTest
 
     @Test
     public void testGetPeriodsByPeriodType()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();

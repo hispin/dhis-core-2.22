@@ -217,7 +217,7 @@ public class HibernateDataApprovalStore
 
         PeriodType dataSetPeriodType = validDataSets.iterator().next().getPeriodType();
 
-        List<Period> periods;
+        List<Period> periods = Lists.newArrayList();
 
         if ( period.getPeriodType().equals( dataSetPeriodType ) )
         {
@@ -250,7 +250,7 @@ public class HibernateDataApprovalStore
 
         boolean isDefaultCombo = categoryService.getDefaultDataElementCategoryOptionCombo().equals( attributeOptionCombo );
 
-        final String categoryComboIds;
+        String categoryComboIds = null;
 
         if ( isDefaultCombo )
         {
@@ -287,9 +287,9 @@ public class HibernateDataApprovalStore
             return new ArrayList<>(); // Unapprovable.
         }
 
-        int orgUnitLevel;
-        String orgUnitJoinOn;
-        String highestApprovedOrgUnitCompare;
+        int orgUnitLevel = 0;
+        String orgUnitJoinOn = null;
+        String highestApprovedOrgUnitCompare = null;
 
         if ( orgUnit != null )
         {

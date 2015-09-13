@@ -1037,7 +1037,7 @@ public class TableAlteror
 
             while ( rs.next() )
             {
-                RelativePeriods r = new RelativePeriods( false, rs.getBoolean( "reportingmonth" ), false, false,
+                RelativePeriods rps = new RelativePeriods( false, rs.getBoolean( "reportingmonth" ), false, false,
                     rs.getBoolean( "reportingquarter" ), false, rs.getBoolean( "lastsixmonth" ), false,
                     rs.getBoolean( "monthsthisyear" ), rs.getBoolean( "quartersthisyear" ),
                     rs.getBoolean( "thisyear" ), false, false, rs.getBoolean( "lastyear" ),
@@ -1047,9 +1047,9 @@ public class TableAlteror
 
                 int chartId = rs.getInt( "chartid" );
 
-                if ( !r.isEmpty() )
+                if ( !rps.isEmpty() )
                 {
-                    int relativePeriodsId = batchHandler.insertObject( r, true );
+                    int relativePeriodsId = batchHandler.insertObject( rps, true );
 
                     String update = "update chart set relativeperiodsid=" + relativePeriodsId + " where chartid="
                         + chartId;
@@ -1096,7 +1096,7 @@ public class TableAlteror
 
             while ( rs.next() )
             {
-                RelativePeriods r = new RelativePeriods( false, rs.getBoolean( "reportingmonth" ), false, false,
+                RelativePeriods rps = new RelativePeriods( false, rs.getBoolean( "reportingmonth" ), false, false,
                     rs.getBoolean( "reportingbimonth" ), false, rs.getBoolean( "reportingquarter" ),
                     rs.getBoolean( "lastsixmonth" ), rs.getBoolean( "monthsthisyear" ),
                     rs.getBoolean( "quartersthisyear" ), rs.getBoolean( "thisyear" ),
@@ -1109,9 +1109,9 @@ public class TableAlteror
 
                 int reportTableId = rs.getInt( "reporttableid" );
 
-                if ( !r.isEmpty() )
+                if ( !rps.isEmpty() )
                 {
-                    int relativePeriodsId = batchHandler.insertObject( r, true );
+                    int relativePeriodsId = batchHandler.insertObject( rps, true );
 
                     String update = "update reporttable set relativeperiodsid=" + relativePeriodsId
                         + " where reporttableid=" + reportTableId;

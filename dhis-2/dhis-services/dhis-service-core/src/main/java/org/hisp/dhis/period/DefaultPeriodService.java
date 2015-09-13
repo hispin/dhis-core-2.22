@@ -241,9 +241,9 @@ public class DefaultPeriodService
 
         for ( int i = 0; i < historyLength; ++i )
         {
-            Period p = getPeriodFromDates( lastPeriod.getStartDate(), lastPeriod.getEndDate(), periodType );
+            Period pe = getPeriodFromDates( lastPeriod.getStartDate(), lastPeriod.getEndDate(), periodType );
 
-            periods.add( p != null ? p : lastPeriod );
+            periods.add( pe != null ? pe : lastPeriod );
 
             lastPeriod = periodType.getPreviousPeriod( lastPeriod );
         }

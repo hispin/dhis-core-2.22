@@ -432,8 +432,8 @@ public class ExpressionServiceTest
     public void testGenerateExpressionMap()
     {
         Map<DataElementOperand, Double> valueMap = new HashMap<>();
-        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), new Double( 12 ) );
-        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), new Double( 34 ) );
+        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), 12d );
+        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), 34d );
         
         Map<String, Double> constantMap = new HashMap<>();
         constantMap.put( constantA.getUid(), 2.0 );
@@ -468,8 +468,8 @@ public class ExpressionServiceTest
         Expression expH = createExpression( 'H', expressionH, null, null );
         
         Map<DataElementOperand, Double> valueMap = new HashMap<>();
-        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), new Double( 12 ) );
-        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), new Double( 34 ) );
+        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), 12d );
+        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), 34d );
         
         Map<String, Double> constantMap = new HashMap<>();
         constantMap.put( constantA.getUid(), 2.0 );
@@ -492,8 +492,8 @@ public class ExpressionServiceTest
         indicatorA.setDenominator( expressionF );
 
         Map<DataElementOperand, Double> valueMap = new HashMap<>();
-        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), new Double( 12 ) );
-        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), new Double( 34 ) );
+        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), 12d );
+        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), 34d );
         
         Map<String, Double> constantMap = new HashMap<>();
         constantMap.put( constantA.getUid(), 2.0 );

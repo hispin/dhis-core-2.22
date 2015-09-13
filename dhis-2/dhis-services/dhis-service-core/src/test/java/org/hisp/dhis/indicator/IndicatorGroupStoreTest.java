@@ -53,7 +53,6 @@ public class IndicatorGroupStoreTest
 
     @Test
     public void testAddIndicatorGroup()
-        throws Exception
     {
         IndicatorGroup groupA = new IndicatorGroup( "IndicatorGroupA" );
         IndicatorGroup groupB = new IndicatorGroup( "IndicatorGroupB" );
@@ -72,7 +71,6 @@ public class IndicatorGroupStoreTest
 
     @Test
     public void testUpdateIndicatorGroup()
-        throws Exception
     {
         IndicatorGroup groupA = new IndicatorGroup( "IndicatorGroupA" );
         int idA = indicatorGroupStore.save( groupA );
@@ -88,7 +86,6 @@ public class IndicatorGroupStoreTest
 
     @Test
     public void testGetAndDeleteIndicatorGroup()
-        throws Exception
     {
         IndicatorGroup groupA = new IndicatorGroup( "IndicatorGroupA" );
         IndicatorGroup groupB = new IndicatorGroup( "IndicatorGroupB" );
@@ -112,7 +109,6 @@ public class IndicatorGroupStoreTest
 
     @Test
     public void testGetAllIndicatorGroups()
-        throws Exception
     {
         IndicatorGroup groupA = new IndicatorGroup( "IndicatorGroupA" );
         IndicatorGroup groupB = new IndicatorGroup( "IndicatorGroupB" );
@@ -129,7 +125,6 @@ public class IndicatorGroupStoreTest
 
     @Test
     public void testGetIndicatorGroupByName()
-        throws Exception
     {
         IndicatorGroup groupA = new IndicatorGroup( "IndicatorGroupA" );
         IndicatorGroup groupB = new IndicatorGroup( "IndicatorGroupB" );
