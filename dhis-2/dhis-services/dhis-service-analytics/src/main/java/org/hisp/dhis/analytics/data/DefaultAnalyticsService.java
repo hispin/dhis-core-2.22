@@ -859,11 +859,11 @@ public class DefaultAnalyticsService
 
         int maxLimit = getMaxLimit();
         
-        Timer t = new Timer().start().disablePrint();
+        Timer timer = new Timer().start().disablePrint();
 
         DataQueryGroups queryGroups = queryPlanner.planQuery( params, optimalQueries, tableName );
 
-        t.getSplitTime( "Planned analytics query, got: " + queryGroups.getLargestGroupSize() + " for optimal: " + optimalQueries );
+        timer.getSplitTime( "Planned analytics query, got: " + queryGroups.getLargestGroupSize() + " for optimal: " + optimalQueries );
 
         Map<String, Object> map = new HashMap<>();
 
@@ -897,7 +897,7 @@ public class DefaultAnalyticsService
             }
         }
 
-        t.getTime( "Got analytics values" );
+        timer.getTime( "Got analytics values" );
 
         return map;
     }

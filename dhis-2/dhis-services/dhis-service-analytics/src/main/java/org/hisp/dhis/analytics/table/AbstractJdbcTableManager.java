@@ -331,10 +331,10 @@ public abstract class AbstractJdbcTableManager
     {
         log.debug( "Populate table: " + tableName + " SQL: " + sql );
 
-        Timer t = new SystemTimer().start();
+        Timer timer = new SystemTimer().start();
         
         jdbcTemplate.execute( sql );
         
-        log.info( "Populated " + tableName + ": " + t.stop().toString() );
+        log.info( "Populated " + tableName + ": " + timer.stop().toString() );
     }
 }

@@ -803,7 +803,7 @@ public class DefaultQueryPlanner
     private AggregationType getAggregationType( ValueType valueType, String aggregationOperator,
         PeriodType aggregationPeriodType, PeriodType dataPeriodType )
     {
-        AggregationType aggregationType;
+        AggregationType aggregationType = null;
 
         boolean disaggregation = isDisaggregation( aggregationOperator, aggregationPeriodType, dataPeriodType );
         boolean number = valueType.isNumeric();
