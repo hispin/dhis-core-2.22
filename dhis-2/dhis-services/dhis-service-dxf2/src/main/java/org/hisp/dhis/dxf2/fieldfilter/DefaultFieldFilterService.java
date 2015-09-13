@@ -315,11 +315,11 @@ public class DefaultFieldFilterService implements FieldFilterService
     private void updateFields( FieldMap fieldMap, Class<?> klass )
     {
         // we need two run this (at least) two times, since some of the presets might contain other presets
-        _updateFields( fieldMap, klass, true );
-        _updateFields( fieldMap, klass, false );
+        updateFields( fieldMap, klass, true );
+        updateFields( fieldMap, klass, false );
     }
 
-    private void _updateFields( FieldMap fieldMap, Class<?> klass, boolean expandOnly )
+    private void updateFields( FieldMap fieldMap, Class<?> klass, boolean expandOnly )
     {
         Schema schema = schemaService.getDynamicSchema( klass );
         List<String> cleanupFields = Lists.newArrayList();

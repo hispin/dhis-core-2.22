@@ -52,19 +52,19 @@ import java.util.List;
  */
 public class DefaultCsvEventService implements CsvEventService
 {
-    private static CsvMapper csvMapper = new CsvMapper();
+    private static CsvMapper CSV_MAPPER = new CsvMapper();
 
-    private static CsvSchema csvSchema = csvMapper.schemaFor( CsvEventDataValue.class ).withLineSeparator( "\n" );
+    private static CsvSchema CSV_SCHEMA = CSV_MAPPER.schemaFor( CsvEventDataValue.class ).withLineSeparator( "\n" );
 
     static
     {
-        csvMapper.enable( CsvParser.Feature.WRAP_AS_ARRAY );
+        CSV_MAPPER.enable( CsvParser.Feature.WRAP_AS_ARRAY );
     }
 
     @Override
     public void writeEvents( OutputStream outputStream, Events events, boolean withHeader ) throws IOException
     {
-        ObjectWriter writer = csvMapper.writer( csvSchema.withUseHeader( withHeader ) );
+        ObjectWriter writer = CSV_MAPPER.writer( CSV_SCHEMA.withUseHeader( withHeader ) );
 
         List<CsvEventDataValue> dataValues = new ArrayList<>();
 
@@ -111,8 +111,8 @@ public class DefaultCsvEventService implements CsvEventService
     {
         Events events = new Events();
 
-        ObjectReader reader = csvMapper.reader( CsvEventDataValue.class )
-            .with( csvSchema.withSkipFirstDataRow( skipFirst ) );
+        ObjectReader reader = CSV_MAPPER.reader( CsvEventDataValue.class )
+            .with( CSV_SCHEMA.withSkipFirstDataRow( skipFirst ) );
 
         MappingIterator<CsvEventDataValue> iterator = reader.readValues( inputStream );
         Event event = new Event();

@@ -57,12 +57,12 @@ public class GmlConversionUtils
 
         StringBuilder sb = new StringBuilder();
 
-        for ( String c : coordinates.trim().split( "\\s" ) )
+        for ( String coordinate : coordinates.trim().split( "\\s" ) )
         {
-            String[] p = c.split( "," );
+            String[] point = coordinate.split( "," );
 
-            String lat = parseCoordinate( p[0], nDecimals, NF ),
-                   lon = parseCoordinate( p[1], nDecimals, NF );
+            String lat = parseCoordinate( point[0], nDecimals, NF ),
+                   lon = parseCoordinate( point[1], nDecimals, NF );
 
             sb.append( "[" ).append( lat ).append( "," ).append( lon ).append( "]," );
         }

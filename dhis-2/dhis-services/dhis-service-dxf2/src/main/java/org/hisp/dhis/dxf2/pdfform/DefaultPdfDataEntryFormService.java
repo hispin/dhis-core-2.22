@@ -28,24 +28,14 @@ package org.hisp.dhis.dxf2.pdfform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.lowagie.text.Chunk;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfAnnotation;
-import com.lowagie.text.pdf.PdfAppearance;
-import com.lowagie.text.pdf.PdfBorderDictionary;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfFormField;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.pdf.RadioCheckField;
-import com.lowagie.text.pdf.TextField;
+import java.awt.Color;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -74,18 +64,28 @@ import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramStageService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.*;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
+import com.lowagie.text.Chunk;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfAnnotation;
+import com.lowagie.text.pdf.PdfAppearance;
+import com.lowagie.text.pdf.PdfBorderDictionary;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfFormField;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.RadioCheckField;
+import com.lowagie.text.pdf.TextField;
 
 /**
  * @author James Chang
  */
-
 public class DefaultPdfDataEntryFormService
     implements PdfDataEntryFormService
 {
@@ -125,14 +125,13 @@ public class DefaultPdfDataEntryFormService
     private OptionService optionService;
 
     // -------------------------------------------------------------------------
-    // METHODS / CLASSES
+    // PdfDataEntryFormService implementation
     // -------------------------------------------------------------------------
 
     @Override
     public void generatePDFDataEntryForm( Document document, PdfWriter writer, String dataSetUid, int typeId,
         Rectangle pageSize, PdfFormFontSettings pdfFormFontSettings, I18nFormat format )
     {
-
         try
         {
             this.pdfFormFontSettings = pdfFormFontSettings;
@@ -150,13 +149,14 @@ public class DefaultPdfDataEntryFormService
             {
                 setProgramStage_DocumentContent( document, writer, dataSetUid );
             }
-
-            document.close();
-
         }
         catch ( Exception ex )
         {
-            ex.printStackTrace();
+            throw new RuntimeException( ex );
+        }
+        finally
+        {
+            document.close();
         }
     }
 
@@ -167,7 +167,7 @@ public class DefaultPdfDataEntryFormService
 
         if ( dataSet == null )
         {
-            throw new Exception( "Error - DataSet not found for UID " + dataSetUid );
+            throw new RuntimeException( "Error - DataSet not found for UID " + dataSetUid );
         }
 
         // Get I18n locale language translated version of DataSet
@@ -324,7 +324,7 @@ public class DefaultPdfDataEntryFormService
 
         if ( programStage == null )
         {
-            throw new Exception( "Error - ProgramStage not found for UID " + programStageUid );
+            throw new RuntimeException( "Error - ProgramStage not found for UID " + programStageUid );
         }
         else
         {

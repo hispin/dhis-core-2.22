@@ -188,11 +188,11 @@ public class MapUtils
         // Create an image and get the graphics context from it
         
         BufferedImage image = new BufferedImage( imageBounds.width, imageBounds.height, BufferedImage.TYPE_INT_ARGB );
-        Graphics2D g = (Graphics2D) image.getGraphics();
+        Graphics2D graphics = (Graphics2D) image.getGraphics();
 
-        g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+        graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
         
-        renderer.paint( g, imageBounds, mapBounds );
+        renderer.paint( graphics, imageBounds, mapBounds );
 
         mapContent.dispose();
         
@@ -293,13 +293,13 @@ public class MapUtils
     {
         String str = "Error creating map image: " + error;
         BufferedImage image = new BufferedImage( 500, 25, BufferedImage.TYPE_INT_RGB );
-        Graphics2D g = image.createGraphics();
+        Graphics2D graphics = image.createGraphics();
 
-        g.setColor( Color.WHITE );
-        g.fill( new Rectangle( 500, 25 ) );
+        graphics.setColor( Color.WHITE );
+        graphics.fill( new Rectangle( 500, 25 ) );
 
-        g.setColor( Color.RED );
-        g.drawString( str, 1, 12 );
+        graphics.setColor( Color.RED );
+        graphics.drawString( str, 1, 12 );
 
         return image;
     }  

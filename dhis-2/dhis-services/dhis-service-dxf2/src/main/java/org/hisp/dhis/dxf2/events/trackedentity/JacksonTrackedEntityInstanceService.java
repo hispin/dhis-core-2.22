@@ -55,42 +55,42 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
     // Implementation
     // -------------------------------------------------------------------------
 
-    private final static ObjectMapper xmlMapper = new XmlMapper();
+    private static final ObjectMapper XML_MAPPER = new XmlMapper();
 
-    private final static ObjectMapper jsonMapper = new ObjectMapper();
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
     @SuppressWarnings( "unchecked" )
     private static <T> T fromXml( InputStream inputStream, Class<?> clazz ) throws IOException
     {
-        return (T) xmlMapper.readValue( inputStream, clazz );
+        return (T) XML_MAPPER.readValue( inputStream, clazz );
     }
 
     @SuppressWarnings( "unchecked" )
     private static <T> T fromXml( String input, Class<?> clazz ) throws IOException
     {
-        return (T) xmlMapper.readValue( input, clazz );
+        return (T) XML_MAPPER.readValue( input, clazz );
     }
 
     @SuppressWarnings( "unchecked" )
     private static <T> T fromJson( InputStream inputStream, Class<?> clazz ) throws IOException
     {
-        return (T) jsonMapper.readValue( inputStream, clazz );
+        return (T) JSON_MAPPER.readValue( inputStream, clazz );
     }
 
     @SuppressWarnings( "unchecked" )
     private static <T> T fromJson( String input, Class<?> clazz ) throws IOException
     {
-        return (T) jsonMapper.readValue( input, clazz );
+        return (T) JSON_MAPPER.readValue( input, clazz );
     }
 
     static
     {
-        xmlMapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true );
-        xmlMapper.configure( DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true );
-        xmlMapper.configure( DeserializationFeature.WRAP_EXCEPTIONS, true );
-        jsonMapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true );
-        jsonMapper.configure( DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true );
-        jsonMapper.configure( DeserializationFeature.WRAP_EXCEPTIONS, true );
+        XML_MAPPER.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true );
+        XML_MAPPER.configure( DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true );
+        XML_MAPPER.configure( DeserializationFeature.WRAP_EXCEPTIONS, true );
+        JSON_MAPPER.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true );
+        JSON_MAPPER.configure( DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true );
+        JSON_MAPPER.configure( DeserializationFeature.WRAP_EXCEPTIONS, true );
     }
 
     // -------------------------------------------------------------------------

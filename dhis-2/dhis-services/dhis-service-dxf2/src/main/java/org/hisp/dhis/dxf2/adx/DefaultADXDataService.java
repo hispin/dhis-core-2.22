@@ -125,7 +125,6 @@ public class DefaultADXDataService
 
     @Override
     public ImportSummaries postData( InputStream in, ImportOptions importOptions )
-        throws IOException
     {
         XMLReader adxReader = XMLFactory.getXMLReader( in );
 
@@ -284,7 +283,7 @@ public class DefaultADXDataService
 
         DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,dvAttributes.get( ADXConstants.DATAELEMENT));
         
-        if (dataElement == null)
+        if ( dataElement == null )
         {
             throw new ADXException(dvAttributes.get( ADXConstants.DATAELEMENT), "No matching dataelement");
         }
@@ -400,11 +399,12 @@ public class DefaultADXDataService
     {
         log.debug( "adx attributes: " + attributes );
 
-        if ( catCombo == categoryService.getDefaultDataElementCategoryCombo() )
+        if ( catCombo.isDefault() )
         {
             // nothing to do
             return;
         }
+        
         Map<String, DataElementCategory> categoryMap = createCategoryMap( catCombo );
 
         Map<String, String> attributeOptions = new HashMap<>();
@@ -430,7 +430,6 @@ public class DefaultADXDataService
 
     // TODO this should be part of staxwax library
     protected Map<String, String> readAttributes( XMLReader staxWaxReader )
-        throws XMLStreamException
     {
         Map<String, String> attributes = new HashMap<>();
 

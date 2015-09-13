@@ -84,15 +84,15 @@ public class PdfDataEntryFormUtil
 
     private static final Color COLOR_CELLBORDER = Color.getHSBColor( 0.0f, 0.0f, 0.863f);
 
-    public final static float CELL_MIN_HEIGHT_DEFAULT = 14;
+    public static final float CELL_MIN_HEIGHT_DEFAULT = 14;
 
-    public final static float CONTENT_HEIGHT_DEFAULT = 12;
+    public static final float CONTENT_HEIGHT_DEFAULT = 12;
 
-    public final static int CELL_COLUMN_TYPE_LABEL = 0;
+    public static final int CELL_COLUMN_TYPE_LABEL = 0;
 
-    public final static int CELL_COLUMN_TYPE_ENTRYFIELD = 1;
+    public static final int CELL_COLUMN_TYPE_ENTRYFIELD = 1;
 
-    public final static int CELL_COLUMN_TYPE_HEADER = 2;
+    public static final int CELL_COLUMN_TYPE_HEADER = 2;
 
     private static final String DATAVALUE_IMPORT_STOREBY = "admin";
 
@@ -193,7 +193,7 @@ public class PdfDataEntryFormUtil
     }
 
     /**
-	 * Creates data value set from Input Stream (PDF) for PDF data import
+     * Creates data value set from Input Stream (PDF) for PDF data import
      */
     public static DataValueSet getDataValueSet( InputStream in )
     {
@@ -211,27 +211,26 @@ public class PdfDataEntryFormUtil
 
             if ( form != null )
             {
-
                 // Process OrgUnitUID and PeriodID from the PDF Form
 
-                String orgUnitUID = form.getField( PdfDataEntryFormUtil.LABELCODE_ORGID ).trim();
-                String periodID = form.getField( PdfDataEntryFormUtil.LABELCODE_PERIODID ).trim();
+                String orgUnitUid = form.getField( PdfDataEntryFormUtil.LABELCODE_ORGID ).trim();
+                String periodId = form.getField( PdfDataEntryFormUtil.LABELCODE_PERIODID ).trim();
 
-                if ( periodID == "" )
+                if ( periodId == null || periodId.isEmpty() )
                 {
                     throw new IllegalArgumentException( ERROR_EMPTY_PERIOD );
                 }
 
-                if ( orgUnitUID == "" )
+                if ( orgUnitUid == null || orgUnitUid.isEmpty() )
                 {
                     throw new IllegalArgumentException( ERROR_EMPTY_ORG_UNIT );
                 }
 
-                Period period = PeriodType.getPeriodFromIsoString( periodID );
+                Period period = PeriodType.getPeriodFromIsoString( periodId );
                 
                 if ( period == null )
                 {
-                    throw new IllegalArgumentException( ERROR_INVALID_PERIOD + periodID );
+                    throw new IllegalArgumentException( ERROR_INVALID_PERIOD + periodId );
                 }
                 
                 // Loop Through the Fields and get data.
@@ -250,7 +249,7 @@ public class PdfDataEntryFormUtil
 
                         dataValue.setDataElement( strArrFldName[1] );
                         dataValue.setCategoryOptionCombo( strArrFldName[2] );
-                        dataValue.setOrgUnit( orgUnitUID );
+                        dataValue.setOrgUnit( orgUnitUid );
                         dataValue.setPeriod( period.getIsoDate() );
                         
                         dataValue.setValue( fieldValueFormat( strArrFldName, form.getField( fldName ) ) );     

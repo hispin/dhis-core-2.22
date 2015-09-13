@@ -137,15 +137,29 @@ public class Attribute
         Attribute attribute1 = (Attribute) o;
 
         if ( attribute != null ? !attribute.equals( attribute1.attribute ) : attribute1.attribute != null )
+        {
             return false;
+        }
+        
         if ( displayName != null ? !displayName.equals( attribute1.displayName ) : attribute1.displayName != null )
+        {
             return false;
+        }
+        
         if ( valueType != null ? !valueType.equals( attribute1.valueType ) : attribute1.valueType != null )
+        {
             return false;
+        }
+        
         if ( code != null ? !code.equals( attribute1.code ) : attribute1.code != null )
+        {
             return false;
+        }
+        
         if ( value != null ? !value.equals( attribute1.value ) : attribute1.value != null )
+        {
             return false;
+        }
 
         return true;
     }

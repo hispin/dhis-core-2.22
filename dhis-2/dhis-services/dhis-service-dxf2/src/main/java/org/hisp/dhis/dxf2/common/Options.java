@@ -39,6 +39,9 @@ import java.util.Map;
  */
 public class Options
 {
+    private static final String[] DATE_PATTERNS = new String[] {
+        "yyyy-MM-dd", "yyyy-MM", "yyyyMMdd", "yyyyMM", "yyyy" };
+    
     //--------------------------------------------------------------------------
     // Static helpers
     //--------------------------------------------------------------------------
@@ -47,7 +50,7 @@ public class Options
     {
         if ( str == null )
         {
-            str = defaultValue;
+            return defaultValue;
         }
 
         return str;
@@ -60,15 +63,7 @@ public class Options
             return null;
         }
 
-        String patterns[] = new String[]{
-            "yyyy-MM-dd",
-            "yyyy-MM",
-            "yyyyMMdd",
-            "yyyyMM",
-            "yyyy"
-        };
-
-        for ( String pattern : patterns )
+        for ( String pattern : DATE_PATTERNS )
         {
             Date date = getDateByPattern( str, pattern );
 

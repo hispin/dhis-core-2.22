@@ -191,7 +191,7 @@ public class DefaultInterpretationService
     {
         User user = currentUserService.getCurrentUser();
 
-        long count;
+        long count = 0;
 
         if ( user != null && user.getLastCheckedInterpretations() != null )
         {

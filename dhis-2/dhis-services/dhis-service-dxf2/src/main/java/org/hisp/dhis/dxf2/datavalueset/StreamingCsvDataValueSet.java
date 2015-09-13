@@ -74,7 +74,7 @@ public class StreamingCsvDataValueSet
         }
         catch ( IOException ex )
         {
-            throw new RuntimeException( ex );
+            throw new RuntimeException( "Failed to read record", ex );
         }
     }
 

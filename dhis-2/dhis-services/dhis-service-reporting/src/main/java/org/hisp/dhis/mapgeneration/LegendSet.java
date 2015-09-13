@@ -87,16 +87,16 @@ public class LegendSet
         int imageWidth = LEGEND_TOTAL_WIDTH;
         int imageHeight = calculateImageHeight();
         BufferedImage image = new BufferedImage( imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB );
-        Graphics2D g = (Graphics2D) image.getGraphics();
+        Graphics2D graphics = (Graphics2D) image.getGraphics();
 
-        g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-        g.translate( LEGEND_MARGIN_LEFT, 0 );
+        graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+        graphics.translate( LEGEND_MARGIN_LEFT, 0 );
 
         // Draw legends
         for ( Legend legend : legends )
         {
-            legend.draw( g, format );
-            g.translate( 0, LEGEND_MARGIN_BOTTOM );
+            legend.draw( graphics, format );
+            graphics.translate( 0, LEGEND_MARGIN_BOTTOM );
         }
 
         return image;

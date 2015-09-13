@@ -33,6 +33,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.concurrent.Callable;
 
+import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
@@ -58,8 +59,7 @@ public class PipedImporter
     private final Authentication authentication;
 
     public PipedImporter( DataValueSetService dataValueSetService, ImportOptions importOptions,
-        PipedOutputStream pipeOut )
-        throws IOException
+        PipedOutputStream pipeOut ) throws IOException
     {
         this.dataValueSetService = dataValueSetService;
         pipeIn = new PipedInputStream( pipeOut, PIPE_BUFFER_SIZE );
@@ -69,7 +69,6 @@ public class PipedImporter
 
     @Override
     public ImportSummary call()
-        throws Exception
     {
         ImportSummary result = null;
         SecurityContextHolder.getContext().setAuthentication( authentication );
@@ -84,8 +83,12 @@ public class PipedImporter
             result.setStatus( ImportStatus.ERROR );
             result.setDescription( "Exception: " + ex.getMessage() );
         }
+        finally
+        {
+            IOUtils.closeQuietly( pipeIn );
+        }
         
-        pipeIn.close();
+        
         return result;
     }
 }

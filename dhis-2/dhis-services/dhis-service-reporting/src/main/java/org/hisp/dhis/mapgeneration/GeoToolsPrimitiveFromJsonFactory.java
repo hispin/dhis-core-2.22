@@ -48,7 +48,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public class GeoToolsPrimitiveFromJsonFactory
 {
     // Factory creating GeoTools geometric primitives
-    private static final GeometryFactory factory = JTSFactoryFinder.getGeometryFactory( null );
+    private static final GeometryFactory FACTORY = JTSFactoryFinder.getGeometryFactory( null );
 
     /**
      * Create a GeoTools geometric point primitive from coordinates in json.
@@ -58,7 +58,7 @@ public class GeoToolsPrimitiveFromJsonFactory
      */
     public static Point createPointFromJson( JsonNode json )
     {
-        return factory.createPoint( createCoordinateFromJson( json ) );
+        return FACTORY.createPoint( createCoordinateFromJson( json ) );
     }
 
     /**
@@ -99,7 +99,7 @@ public class GeoToolsPrimitiveFromJsonFactory
         }
 
         // Create the multi-polygon from factory
-        return factory.createMultiPolygon( polygons );
+        return FACTORY.createMultiPolygon( polygons );
     }
 
     /**
@@ -137,7 +137,7 @@ public class GeoToolsPrimitiveFromJsonFactory
         }
 
         // Create the polygon from factory
-        return factory.createPolygon( sh, holes );
+        return FACTORY.createPolygon( sh, holes );
     }
 
     /**
@@ -163,6 +163,6 @@ public class GeoToolsPrimitiveFromJsonFactory
         }
 
         // Create the linear-ring from factory
-        return factory.createLinearRing( coords );
+        return FACTORY.createLinearRing( coords );
     }
 }

@@ -55,29 +55,29 @@ import com.lowagie.text.pdf.RadioCheckField;
 public class PdfFieldCell
     implements PdfPCellEvent
 {
-    public final static int TYPE_DEFAULT = 0;
+    public static final int TYPE_DEFAULT = 0;
 
-    public final static int TYPE_BUTTON = 1;
+    public static final int TYPE_BUTTON = 1;
 
-    public final static int TYPE_TEXT_ORGUNIT = 2;
+    public static final int TYPE_TEXT_ORGUNIT = 2;
 
-    public final static int TYPE_TEXT_NUMBER = 3;
+    public static final int TYPE_TEXT_NUMBER = 3;
 
-    public final static int TYPE_CHECKBOX = 4;
+    public static final int TYPE_CHECKBOX = 4;
 
-    public final static int TYPE_RADIOBUTTON = 5;
+    public static final int TYPE_RADIOBUTTON = 5;
 
-    public final static int TPYE_LABEL = 6;
+    public static final int TPYE_LABEL = 6;
 
-    public final static String TPYEDEFINE_NAME = "T";    
+    public static final String TPYEDEFINE_NAME = "T";    
     
-    private final static float RADIOBUTTON_WIDTH = 10.0f;
+    private static final float RADIOBUTTON_WIDTH = 10.0f;
 
-    private final static float RADIOBUTTON_TEXTOFFSET = 3.0f;
+    private static final float RADIOBUTTON_TEXTOFFSET = 3.0f;
 
-    private final static float offSetTop = 0.5f;
+    private static final float OFFSET_TOP = 0.5f;
 
-    private final static float offSetLeft = 3.0f;
+    private static final float OFFSET_LEFT = 3.0f;
     
     private PdfFormField parent;
 
@@ -222,10 +222,10 @@ public class PdfFieldCell
                 float extraCheckBoxOffset_Top = 1.5f;
                 
                 formField.setWidget(
-                    new Rectangle( rect.getLeft() + offSetLeft + extraCheckBoxOffset_Left
-                        , rect.getTop() - height - offSetTop - extraCheckBoxOffset_Top
-                        , rect.getLeft() + width + offSetLeft + extraCheckBoxOffset_Left
-                        , rect.getTop() - offSetTop - extraCheckBoxOffset_Top ),
+                    new Rectangle( rect.getLeft() + OFFSET_LEFT + extraCheckBoxOffset_Left
+                        , rect.getTop() - height - OFFSET_TOP - extraCheckBoxOffset_Top
+                        , rect.getLeft() + width + OFFSET_LEFT + extraCheckBoxOffset_Left
+                        , rect.getTop() - OFFSET_TOP - extraCheckBoxOffset_Top ),
                     PdfAnnotation.HIGHLIGHT_NONE );
             }            
             else
@@ -240,7 +240,7 @@ public class PdfFieldCell
                 // TYPE_TEXT_NUMBER and TYPE_CHECKBOX cases included as well here
                 
                 formField.setWidget(
-                    new Rectangle( rect.getLeft() + offSetLeft, rect.getTop() - height - offSetTop, rect.getLeft() + width + offSetLeft, rect.getTop() - offSetTop ),
+                    new Rectangle( rect.getLeft() + OFFSET_LEFT, rect.getTop() - height - OFFSET_TOP, rect.getLeft() + width + OFFSET_LEFT, rect.getTop() - OFFSET_TOP ),
                     PdfAnnotation.HIGHLIGHT_NONE );
 
             }

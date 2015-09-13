@@ -38,13 +38,9 @@ import javax.xml.xpath.XPathExpressionException;
 import org.hisp.dhis.DhisConvenienceTest;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
-import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.datavalue.DataValueService;
-import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.common.Options;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -68,9 +64,6 @@ public class DefaultExportServiceTest
     private DataElementService dataElementService;
 
     @Autowired
-    private DataElementCategoryService categoryService;
-
-    @Autowired
     private DataSetService dataSetService;
 
     @Autowired
@@ -78,15 +71,6 @@ public class DefaultExportServiceTest
 
     @Autowired
     private PeriodService periodService;
-
-    @Autowired
-    private DataValueSetService dataValueSetService;
-
-    @Autowired
-    private DataValueService dataValueService;
-
-    @Autowired
-    private CompleteDataSetRegistrationService registrationService;
 
     private DataElement deA;
 

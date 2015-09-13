@@ -30,11 +30,13 @@ package org.hisp.dhis.dxf2.datavalueset;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
+import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.dxf2.datavalue.DataValue;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
 import org.hisp.dhis.dxf2.datavalue.StreamingJsonDataValue;
 
 /**
@@ -55,7 +57,6 @@ public class StreamingJsonDataValueSet extends DataValueSet
         }
         catch ( IOException ignored )
         {
-            ignored.printStackTrace();
         }
     }
 
@@ -134,11 +135,14 @@ public class StreamingJsonDataValueSet extends DataValueSet
                 generator.writeEndArray();
             }
 
-            generator.writeEndObject();
-            generator.close();
+            generator.writeEndObject();            
         }
         catch ( IOException ignored )
         {
+        }
+        finally
+        {
+            IOUtils.closeQuietly( generator );
         }
     }
 

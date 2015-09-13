@@ -38,31 +38,31 @@ public interface ADXConstants
     // These are defined in the ADX standard
     //--------------------------------------------------------------------------
 
-    final String NAMESPACE = "urn:ihe:qrph:adx:2015";
+    String NAMESPACE = "urn:ihe:qrph:adx:2015";
     
-    final String ROOT = "adx";
+    String ROOT = "adx";
 
-    final String GROUP = "group";
+    String GROUP = "group";
 
-    final String DATASET = "dataSet";
+    String DATASET = "dataSet";
     
-    final String PERIOD = "period";
+    String PERIOD = "period";
     
-    final String ORGUNIT = "orgUnit";
+    String ORGUNIT = "orgUnit";
     
-    final String DATAELEMENT = "dataElement";
+    String DATAELEMENT = "dataElement";
 
-    final String DATAVALUE = "dataValue";
+    String DATAVALUE = "dataValue";
 
-    final String VALUE = "value";
+    String VALUE = "value";
 
-    final String ANNOTATION = "annotation";
+    String ANNOTATION = "annotation";
     
     //--------------------------------------------------------------------------
-    // DHIS2 specific
+    // DHIS 2 specific
     //--------------------------------------------------------------------------
 
-    final String CATOPTCOMBO = "categoryOptionCombo";
+    String CATOPTCOMBO = "categoryOptionCombo";
     
-    final String ATTOPTCOMBO = "attributeOptionCombo";
+    String ATTOPTCOMBO = "attributeOptionCombo";
 }

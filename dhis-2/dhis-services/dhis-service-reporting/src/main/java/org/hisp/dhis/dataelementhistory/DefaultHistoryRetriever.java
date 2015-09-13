@@ -183,13 +183,13 @@ public class DefaultHistoryRetriever
         double value = Double.MAX_VALUE;
         List<DataElementHistoryPoint> historyPoints = history.getHistoryPoints();
 
-        for ( DataElementHistoryPoint DEPoint : historyPoints )
+        for ( DataElementHistoryPoint point : historyPoints )
         {
-            if ( DEPoint.getValue() != null )
+            if ( point.getValue() != null )
             {
-                if ( DEPoint.getValue() < value )
+                if ( point.getValue() < value )
                 {
-                    value = DEPoint.getValue();
+                    value = point.getValue();
                 }
             }
         }
@@ -210,13 +210,13 @@ public class DefaultHistoryRetriever
         double value = Double.NEGATIVE_INFINITY;
         List<DataElementHistoryPoint> historyPoints = history.getHistoryPoints();
 
-        for ( DataElementHistoryPoint DEPoint : historyPoints )
+        for ( DataElementHistoryPoint point : historyPoints )
         {
-            if ( DEPoint.getValue() != null )
+            if ( point.getValue() != null )
             {
-                if ( DEPoint.getValue() > value )
+                if ( point.getValue() > value )
                 {
-                    value = DEPoint.getValue();
+                    value = point.getValue();
                 }
             }
         }
