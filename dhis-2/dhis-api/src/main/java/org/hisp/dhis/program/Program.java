@@ -171,15 +171,8 @@ public class Program
         Set<OrganisationUnit> toRemove = Sets.difference( organisationUnits, updates );
         Set<OrganisationUnit> toAdd = Sets.difference( updates, organisationUnits );
         
-        for ( OrganisationUnit unit : toRemove )
-        {
-            unit.getPrograms().remove( this );
-        }
-
-        for ( OrganisationUnit unit : toAdd )
-        {
-            unit.getPrograms().add( this );
-        }
+        toRemove.parallelStream().forEach( u -> u.getPrograms().remove( this ) );
+        toAdd.parallelStream().forEach( u -> u.getPrograms().add( this ) );
         
         organisationUnits.clear();
         organisationUnits.addAll( updates );
