@@ -28,7 +28,14 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Sets;
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.ValueType;
@@ -53,15 +60,7 @@ import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
+import com.google.common.collect.Sets;
 
 /**
  * @author Abyot Asalefew
@@ -322,18 +321,18 @@ public class DefaultProgramService
     @Override
     public void mergeWithCurrentUserOrganisationUnits( Program program, Collection<OrganisationUnit> mergeOrganisationUnits )
     {
-        Set<OrganisationUnit> selectedOrgUnits = new HashSet<>( program.getOrganisationUnits() );
-
+        Set<OrganisationUnit> selectedOrgUnits = Sets.newHashSet( program.getOrganisationUnits() );
+        
         OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
         params.setParents( currentUserService.getCurrentUser().getOrganisationUnits() );
 
-        List<OrganisationUnit> userOrganisationUnits = organisationUnitService.getOrganisationUnitsByQuery( params );
+        Set<OrganisationUnit> userOrganisationUnits = Sets.newHashSet( organisationUnitService.getOrganisationUnitsByQuery( params ) );
 
-        selectedOrgUnits.removeAll( userOrganisationUnits );
+        selectedOrgUnits.removeAll( userOrganisationUnits );        
         selectedOrgUnits.addAll( mergeOrganisationUnits );
-        
+
         program.updateOrganisationUnits( selectedOrgUnits );
-        
+
         updateProgram( program );
     }
 
