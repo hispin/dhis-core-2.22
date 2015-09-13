@@ -28,8 +28,11 @@ package org.hisp.dhis.dataset.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Collection;
+
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
 
 import com.opensymphony.xwork2.Action;
@@ -78,7 +81,10 @@ public class DefineDataSetAssociationsAction
         throws Exception
     {
         DataSet dataSet = dataSetService.getDataSet( dataSetId );
-        dataSetService.mergeWithCurrentUserOrganisationUnits( dataSet, selectionTreeManager.getReloadedSelectedOrganisationUnits() );
+
+        Collection<OrganisationUnit> units = selectionTreeManager.getReloadedSelectedOrganisationUnits();
+
+        dataSetService.mergeWithCurrentUserOrganisationUnits( dataSet, units );
 
         return SUCCESS;
     }
