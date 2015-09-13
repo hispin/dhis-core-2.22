@@ -167,7 +167,7 @@ public class OrganisationUnit
 
     public OrganisationUnit()
     {
-        setAutoFields(); // to have getPath working properly, we need to set auto fields (for uid etc)
+        setAutoFields(); // Must be set to get UID and have getPath work properly
     }
 
     public OrganisationUnit( String name )
