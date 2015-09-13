@@ -39,27 +39,27 @@ import java.util.Map;
 
 public class PdfFormFontSettings
 {
-    public final static int FONTTYPE_BODY = 0;
+    public static final int FONTTYPE_BODY = 0;
 
-    public final static int FONTTYPE_TITLE = 1;
+    public static final int FONTTYPE_TITLE = 1;
 
-    public final static int FONTTYPE_DESCRIPTION = 2;
+    public static final int FONTTYPE_DESCRIPTION = 2;
 
-    public final static int FONTTYPE_SECTIONHEADER = 3;
+    public static final int FONTTYPE_SECTIONHEADER = 3;
 
-    public final static int FONTTYPE_FOOTER = 4;
+    public static final int FONTTYPE_FOOTER = 4;
 
-    private final static float FONTSIZE_BODY = 10;
+    private static final float FONTSIZE_BODY = 10;
 
-    private final static float FONTSIZE_TITLE = 16;
+    private static final float FONTSIZE_TITLE = 16;
 
-    private final static float FONTSIZE_DESCRIPTION = 11;
+    private static final float FONTSIZE_DESCRIPTION = 11;
 
-    private final static float FONTSIZE_SECTIONHEADER = 14;
+    private static final float FONTSIZE_SECTIONHEADER = 14;
 
-    private final static float FONTSIZE_FOOTER = 8;
+    private static final float FONTSIZE_FOOTER = 8;
 
-    private final static String FONTFAMILY = "HELVETICA";
+    private static final String FONTFAMILY = "HELVETICA";
 
     private final Map<Integer, Font> fontTypeMap = new HashMap<>();
 

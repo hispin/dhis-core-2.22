@@ -940,7 +940,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
         private User user;
 
-        public NonIdentifiableObjects( User user )
+        private NonIdentifiableObjects( User user )
         {
             this.user = user;
         }

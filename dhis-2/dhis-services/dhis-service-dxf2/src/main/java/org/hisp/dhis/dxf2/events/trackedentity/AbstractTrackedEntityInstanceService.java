@@ -361,10 +361,6 @@ public abstract class AbstractTrackedEntityInstanceService
         {
             teiService.deleteTrackedEntityInstance( entityInstance );
         }
-        else
-        {
-            throw new IllegalArgumentException();
-        }
     }
 
     // -------------------------------------------------------------------------

@@ -42,6 +42,10 @@ public class FilterOptions
     // Constructors
     //--------------------------------------------------------------------------
 
+    public FilterOptions()
+    {
+    }
+    
     public FilterOptions( JSONObject restrictionsJson )
     {
         this.restrictionsJson = restrictionsJson;

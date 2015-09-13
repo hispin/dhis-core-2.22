@@ -52,7 +52,7 @@ import java.util.Map;
  */
 public class OpFactory
 {
-    protected static Map<String, Class<? extends Op>> register = Maps.newHashMap();
+    protected static Map<String, Class<? extends Op>> REGISTER = Maps.newHashMap();
 
     static
     {
@@ -78,17 +78,17 @@ public class OpFactory
 
     public static void register( String type, Class<? extends Op> opClass )
     {
-        register.put( type.toLowerCase(), opClass );
+        REGISTER.put( type.toLowerCase(), opClass );
     }
 
     public static boolean canCreate( String type )
     {
-        return register.containsKey( type.toLowerCase() );
+        return REGISTER.containsKey( type.toLowerCase() );
     }
 
     public static Op create( String type )
     {
-        Class<? extends Op> opClass = register.get( type.toLowerCase() );
+        Class<? extends Op> opClass = REGISTER.get( type.toLowerCase() );
 
         try
         {

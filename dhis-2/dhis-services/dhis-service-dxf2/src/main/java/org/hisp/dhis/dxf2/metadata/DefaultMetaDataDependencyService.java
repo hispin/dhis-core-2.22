@@ -58,7 +58,6 @@ import org.hisp.dhis.expression.Expression;
 import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.system.util.ReflectionUtils;
@@ -95,9 +94,6 @@ public class DefaultMetaDataDependencyService
 
     @Autowired
     private ConstantService constantService;
-
-    @Autowired
-    private OrganisationUnitService organisationUnitService;
 
     @Autowired
     private SchemaService schemaService;

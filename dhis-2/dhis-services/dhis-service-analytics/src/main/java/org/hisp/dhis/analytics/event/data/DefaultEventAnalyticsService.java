@@ -135,7 +135,7 @@ public class DefaultEventAnalyticsService
     private TrackedEntityAttributeService attributeService;
     
     @Autowired
-    ProgramIndicatorService programIndicatorService;
+    private ProgramIndicatorService programIndicatorService;
     
     @Autowired
     private OrganisationUnitService organisationUnitService;

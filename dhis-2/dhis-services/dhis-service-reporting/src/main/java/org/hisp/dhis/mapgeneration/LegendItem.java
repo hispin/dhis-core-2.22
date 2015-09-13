@@ -59,13 +59,13 @@ public class LegendItem
         String label = String.format( "%.2f - %.2f (%d)", interval.getValueLow(), interval.getValueHigh(), interval
             .getMembers().size() );
         Stroke s = new BasicStroke( 1.0f );
-        Rectangle r = new Rectangle( 0, 0, WIDTH, HEIGHT );
+        Rectangle rect = new Rectangle( 0, 0, WIDTH, HEIGHT );
 
         g.setColor( interval.getColor() );
-        g.fill( r );
+        g.fill( rect );
         g.setPaint( Color.BLACK );
         g.setStroke( s );
-        g.draw( r );
+        g.draw( rect );
 
         g.setColor( Color.BLACK );
         g.setFont( Legend.PLAIN_FONT );

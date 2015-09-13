@@ -372,7 +372,7 @@ public class DefaultObjectBridge
     @Override
     public <T> T getObject( T object )
     {
-        Set<T> objects = _findMatches( object );
+        Set<T> objects = findMatches( object );
 
         if ( objects.size() == 1 )
         {
@@ -409,7 +409,7 @@ public class DefaultObjectBridge
     @Override
     public <T> Set<T> getObjects( T object )
     {
-        return _findMatches( object );
+        return findMatches( object );
     }
 
     @Override
@@ -448,7 +448,7 @@ public class DefaultObjectBridge
     //-------------------------------------------------------------------------------------------------------
 
     @SuppressWarnings( "unchecked" )
-    private <T> Set<T> _findMatches( T object )
+    private <T> Set<T> findMatches( T object )
     {
         Set<T> objects = new HashSet<>();
 

@@ -67,7 +67,7 @@ public class JdbcEventStore
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
     public List<Event> getEvents( EventSearchParams params, List<OrganisationUnit> organisationUnits )
@@ -135,7 +135,7 @@ public class JdbcEventStore
 
                         try
                         {
-                            List<Double> list = objectMapper.readValue( coordinate.getCoordinateString(),
+                            List<Double> list = OBJECT_MAPPER.readValue( coordinate.getCoordinateString(),
                                 new TypeReference<List<Double>>()
                                 {
                                 } );

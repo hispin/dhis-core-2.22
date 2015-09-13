@@ -57,6 +57,6 @@ public enum EnrollmentStatus
             }
         }
 
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException( "Enum value not found: " + status );
     }
 }

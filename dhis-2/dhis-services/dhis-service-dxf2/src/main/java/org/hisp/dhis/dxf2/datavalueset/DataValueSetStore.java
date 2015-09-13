@@ -39,11 +39,11 @@ import org.hisp.dhis.dxf2.common.IdSchemes;
  */
 public interface DataValueSetStore
 {
-    public void writeDataValueSetXml( DataExportParams params, Date completeDate, OutputStream out );
+    void writeDataValueSetXml( DataExportParams params, Date completeDate, OutputStream out );
 
-    public void writeDataValueSetJson( DataExportParams params, Date completeDate, OutputStream out );
+    void writeDataValueSetJson( DataExportParams params, Date completeDate, OutputStream out );
 
-    public void writeDataValueSetCsv( DataExportParams params, Date completeDate, Writer writer );
+    void writeDataValueSetCsv( DataExportParams params, Date completeDate, Writer writer );
 
     void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes );
 }

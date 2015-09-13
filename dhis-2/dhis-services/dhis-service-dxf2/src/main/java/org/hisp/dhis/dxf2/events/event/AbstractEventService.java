@@ -157,9 +157,9 @@ public abstract class AbstractEventService
     @Autowired
     protected IdentifiableObjectManager manager;
 
-    protected final int FLUSH_FREQUENCY = 20;
+    protected static final int FLUSH_FREQUENCY = 20;
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private CachingMap<String, OrganisationUnit> organisationUnitCache = new CachingMap<>();
 
@@ -816,7 +816,7 @@ public abstract class AbstractEventService
 
                 try
                 {
-                    List<Double> list = objectMapper.readValue( coordinate.getCoordinateString(),
+                    List<Double> list = OBJECT_MAPPER.readValue( coordinate.getCoordinateString(),
                         new TypeReference<List<Double>>()
                         {
                         } );

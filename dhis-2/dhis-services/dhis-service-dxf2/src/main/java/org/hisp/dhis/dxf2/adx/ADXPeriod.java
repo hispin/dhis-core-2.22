@@ -68,7 +68,7 @@ public class ADXPeriod
         P1Y  // yearly, financialApril, financialJuly, financialOctober
     }
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd" );
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd" );
 
     public static Period parse( String periodString ) throws ADXException
     {
@@ -83,7 +83,7 @@ public class ADXPeriod
         {
             Period period = null;
             PeriodType periodType = null;
-            Date startDate = dateFormat.parse( tokens[0] );
+            Date startDate = DATE_FORMAT.parse( tokens[0] );
             Calendar cal = Calendar.getInstance();
             cal.setTime( startDate );
             Duration duration = Duration.valueOf( tokens[1] );
@@ -161,7 +161,7 @@ public class ADXPeriod
 
     public static String serialize( Period period )
     {
-        return dateFormat.format( period.getStartDate() ) + "/"
+        return DATE_FORMAT.format( period.getStartDate() ) + "/"
             + period.getPeriodType().getIso8601Duration();
     }
 }

@@ -28,11 +28,8 @@ package org.hisp.dhis.dxf2.events.report;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dxf2.events.event.EventSearchParams;
 import org.hisp.dhis.dxf2.events.event.EventService;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -47,12 +44,6 @@ public class AbstractEventRowService
 
     @Autowired
     private EventService eventService;
-
-    @Autowired
-    private IdentifiableObjectManager manager;
-
-    @Autowired
-    private TrackedEntityInstanceService trackedEntityInstanceService;
 
     @Override
     public EventRows getEventRows( EventSearchParams params )

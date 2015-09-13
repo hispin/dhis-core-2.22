@@ -51,15 +51,15 @@ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
  */
 public class JacksonUtils
 {
-    private final static ObjectMapper jsonMapper = new ObjectMapper();
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
-    private final static XmlMapper xmlMapper = new XmlMapper();
+    private static final XmlMapper XML_MAPPER = new XmlMapper();
 
-    private final static Map<String, Class<?>> viewClasses = new HashMap<>();
+    private static final Map<String, Class<?>> VIEW_CLASSES = new HashMap<>();
 
     static
     {
-        ObjectMapper[] objectMappers = new ObjectMapper[]{ jsonMapper, xmlMapper };
+        ObjectMapper[] objectMappers = new ObjectMapper[]{ JSON_MAPPER, XML_MAPPER };
         // DateFormat format = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ" );
 
         for ( ObjectMapper objectMapper : objectMappers )
@@ -82,13 +82,13 @@ public class JacksonUtils
             objectMapper.disable( MapperFeature.AUTO_DETECT_IS_GETTERS );
         }
 
-        jsonMapper.getFactory().enable( JsonGenerator.Feature.QUOTE_FIELD_NAMES );
-        xmlMapper.configure( ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true );
+        JSON_MAPPER.getFactory().enable( JsonGenerator.Feature.QUOTE_FIELD_NAMES );
+        XML_MAPPER.configure( ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true );
 
         // Register view classes
 
-        viewClasses.put( "default", ExportView.class );
-        viewClasses.put( "export", ExportView.class );
+        VIEW_CLASSES.put( "default", ExportView.class );
+        VIEW_CLASSES.put( "export", ExportView.class );
     }
 
     /**
@@ -98,10 +98,10 @@ public class JacksonUtils
     {
         if ( viewName == null || !(viewName instanceof String && ((String) viewName).length() != 0) )
         {
-            return viewClasses.get( "default" );
+            return VIEW_CLASSES.get( "default" );
         }
 
-        return viewClasses.get( viewName );
+        return VIEW_CLASSES.get( viewName );
     }
 
     //--------------------------------------------------------------------------
@@ -110,12 +110,12 @@ public class JacksonUtils
 
     public static ObjectMapper getJsonMapper()
     {
-        return jsonMapper;
+        return JSON_MAPPER;
     }
 
     public static XmlMapper getXmlMapper()
     {
-        return xmlMapper;
+        return XML_MAPPER;
     }
 
     //--------------------------------------------------------------------------
@@ -124,12 +124,12 @@ public class JacksonUtils
 
     public static void toJson( OutputStream output, Object value ) throws IOException
     {
-        jsonMapper.writeValue( output, value );
+        JSON_MAPPER.writeValue( output, value );
     }
 
     public static String toJsonAsString( Object value ) throws IOException
     {
-        return jsonMapper.writeValueAsString( value );
+        return JSON_MAPPER.writeValueAsString( value );
     }
 
     /**
@@ -137,7 +137,7 @@ public class JacksonUtils
      */
     public static void toJsonWithView( OutputStream output, Object value, Class<?> viewClass ) throws IOException
     {
-        jsonMapper.writerWithView( viewClass ).writeValue( output, value );
+        JSON_MAPPER.writerWithView( viewClass ).writeValue( output, value );
     }
 
     /**
@@ -145,19 +145,19 @@ public class JacksonUtils
      */
     public static String toJsonWithViewAsString( Object value, Class<?> viewClass ) throws IOException
     {
-        return jsonMapper.writerWithView( viewClass ).writeValueAsString( value );
+        return JSON_MAPPER.writerWithView( viewClass ).writeValueAsString( value );
     }
 
     @SuppressWarnings( "unchecked" )
     public static <T> T fromJson( InputStream input, Class<?> clazz ) throws IOException
     {
-        return (T) jsonMapper.readValue( input, clazz );
+        return (T) JSON_MAPPER.readValue( input, clazz );
     }
 
     @SuppressWarnings( "unchecked" )
     public static <T> T fromJson( String input, Class<?> clazz ) throws IOException
     {
-        return (T) jsonMapper.readValue( input, clazz );
+        return (T) JSON_MAPPER.readValue( input, clazz );
     }
 
     //--------------------------------------------------------------------------
@@ -166,12 +166,12 @@ public class JacksonUtils
 
     public static void toXml( OutputStream output, Object value ) throws IOException
     {
-        xmlMapper.writeValue( output, value );
+        XML_MAPPER.writeValue( output, value );
     }
 
     public static String toXmlAsString( Object value ) throws IOException
     {
-        return xmlMapper.writeValueAsString( value );
+        return XML_MAPPER.writeValueAsString( value );
     }
 
     /**
@@ -179,7 +179,7 @@ public class JacksonUtils
      */
     public static void toXmlWithView( OutputStream output, Object value, Class<?> viewClass ) throws IOException
     {
-        xmlMapper.writerWithView( viewClass ).writeValue( output, value );
+        XML_MAPPER.writerWithView( viewClass ).writeValue( output, value );
     }
 
     /**
@@ -187,24 +187,24 @@ public class JacksonUtils
      */
     public static String toXmlWithViewAsString( Object value, Class<?> viewClass ) throws IOException
     {
-        return xmlMapper.writerWithView( viewClass ).writeValueAsString( value );
+        return XML_MAPPER.writerWithView( viewClass ).writeValueAsString( value );
     }
 
     @SuppressWarnings( "unchecked" )
     public static <T> T fromXml( InputStream input, Class<?> clazz ) throws IOException
     {
-        return (T) xmlMapper.readValue( input, clazz );
+        return (T) XML_MAPPER.readValue( input, clazz );
     }
 
     @SuppressWarnings( "unchecked" )
     public static <T> T fromXml( String input, Class<?> clazz ) throws IOException
     {
-        return (T) xmlMapper.readValue( input, clazz );
+        return (T) XML_MAPPER.readValue( input, clazz );
     }
 
     @SuppressWarnings( "unchecked" )
     public static <T> T fromJson( InputStream inputStream, TypeReference<?> typeReference ) throws IOException
     {
-        return (T) jsonMapper.readValue( inputStream, typeReference );
+        return (T) JSON_MAPPER.readValue( inputStream, typeReference );
     }
 }

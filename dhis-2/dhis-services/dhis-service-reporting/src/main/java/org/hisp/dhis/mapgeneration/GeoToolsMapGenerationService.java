@@ -363,10 +363,10 @@ public class GeoToolsMapGenerationService
 
         // Draw the two images onto the final image with the legend to the left
         // and the map to the right
-        Graphics g = finalImage.getGraphics();
-        g.drawImage( titleImage, 0, 0, null );
-        g.drawImage( legendImage, 0, MapUtils.TITLE_HEIGHT, null );
-        g.drawImage( mapImage, legendImage.getWidth(), MapUtils.TITLE_HEIGHT, null );
+        Graphics graphics = finalImage.getGraphics();
+        graphics.drawImage( titleImage, 0, 0, null );
+        graphics.drawImage( legendImage, 0, MapUtils.TITLE_HEIGHT, null );
+        graphics.drawImage( mapImage, legendImage.getWidth(), MapUtils.TITLE_HEIGHT, null );
 
         return finalImage;
     }
