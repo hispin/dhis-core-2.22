@@ -48,6 +48,7 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
@@ -421,19 +422,17 @@ public class DefaultDataSetService
     @Override
     public void mergeWithCurrentUserOrganisationUnits( DataSet dataSet, Collection<OrganisationUnit> mergeOrganisationUnits )
     {
-        Set<OrganisationUnit> organisationUnits = new HashSet<>( dataSet.getSources() );
+        Set<OrganisationUnit> dataSetOrgUnits = new HashSet<>( dataSet.getSources() );
+        
+        OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+        params.setParents( currentUserService.getCurrentUser().getOrganisationUnits() );
 
-        Set<OrganisationUnit> userOrganisationUnits = new HashSet<>();
+        List<OrganisationUnit> userOrganisationUnits = organisationUnitService.getOrganisationUnitsByQuery( params );
 
-        for ( OrganisationUnit organisationUnit : currentUserService.getCurrentUser().getOrganisationUnits() )
-        {
-            userOrganisationUnits.addAll( organisationUnitService.getOrganisationUnitWithChildren( organisationUnit.getUid() ) );
-        }
+        dataSetOrgUnits.removeAll( userOrganisationUnits );
+        dataSetOrgUnits.addAll( mergeOrganisationUnits );
 
-        organisationUnits.removeAll( userOrganisationUnits );
-        organisationUnits.addAll( mergeOrganisationUnits );
-
-        dataSet.updateOrganisationUnits( organisationUnits );
+        dataSet.updateOrganisationUnits( dataSetOrgUnits );
 
         updateDataSet( dataSet );
     }

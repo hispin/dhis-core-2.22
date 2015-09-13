@@ -47,8 +47,8 @@ public class DefaultSelectionTreeManager
 {
     private static final String SESSION_KEY_SELECTED_ORG_UNITS = "dhis-oust-selected-org-units";
     private static final String SESSION_KEY_ROOT_ORG_UNITS = "dhis-oust-root-org-units";
-
-    private static final double PERCENTAGE_OF_MULTIPLE_RELOADING_ORG_UNITS = 0.1;
+    
+    private static final int LIMIT_SELECT_ALL_ORG_UNITS = 200;
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -246,11 +246,9 @@ public class DefaultSelectionTreeManager
     {
         Set<OrganisationUnit> reloadedUnits = new HashSet<>();
 
-        int noTotal = organisationUnitService.getNumberOfOrganisationUnits();
-
         int noSelected = units.size();
 
-        if ( (double) noSelected / noTotal > PERCENTAGE_OF_MULTIPLE_RELOADING_ORG_UNITS ) // Select all at once
+        if ( noSelected > LIMIT_SELECT_ALL_ORG_UNITS ) // Select all at once
         {
             Collection<OrganisationUnit> allOrgUnits = organisationUnitService.getAllOrganisationUnits();
 
