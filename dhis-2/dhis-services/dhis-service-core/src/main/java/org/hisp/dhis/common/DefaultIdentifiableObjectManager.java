@@ -48,7 +48,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.user.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 /**
  * Note that it is required for nameable object stores to have concrete implementation
@@ -674,40 +673,8 @@ public class DefaultIdentifiableObjectManager
         }
 
         List<T> objects = store.getAll();
-
-        for ( T object : objects )
-        {
-            if ( IdentifiableProperty.ID.equals( property ) )
-            {
-                if ( object.getId() > 0 )
-                {
-                    map.put( String.valueOf( object.getId() ), object );
-                }
-            }
-            else if ( IdentifiableProperty.UID.equals( property ) )
-            {
-                if ( object.getUid() != null )
-                {
-                    map.put( object.getUid(), object );
-                }
-            }
-            else if ( IdentifiableProperty.CODE.equals( property ) )
-            {
-                if ( object.getCode() != null )
-                {
-                    map.put( object.getCode(), object );
-                }
-            }
-            else if ( IdentifiableProperty.NAME.equals( property ) )
-            {
-                if ( object.getName() != null )
-                {
-                    map.put( object.getName(), object );
-                }
-            }
-        }
-
-        return map;
+        
+        return IdentifiableObjectUtils.getMap( objects, property );
     }
 
     @Override
@@ -725,48 +692,7 @@ public class DefaultIdentifiableObjectManager
 
         List<T> objects = store.getAllNoAcl();
 
-        for ( T object : objects )
-        {
-            if ( IdentifiableProperty.ID.equals( property ) )
-            {
-                if ( object.getId() > 0 )
-                {
-                    map.put( String.valueOf( object.getId() ), object );
-                }
-            }
-            else if ( IdentifiableProperty.UID.equals( property ) )
-            {
-                if ( object.getUid() != null )
-                {
-                    map.put( object.getUid(), object );
-                }
-            }
-            else if ( IdentifiableProperty.CODE.equals( property ) )
-            {
-                if ( object.getCode() != null )
-                {
-                    map.put( object.getCode(), object );
-                }
-            }
-            else if ( IdentifiableProperty.NAME.equals( property ) )
-            {
-                if ( object.getName() != null )
-                {
-                    map.put( object.getName(), object );
-                }
-            }
-            else if ( IdentifiableProperty.UUID.equals( property ) && OrganisationUnit.class.isAssignableFrom( clazz ) )
-            {
-                OrganisationUnit organisationUnit = (OrganisationUnit) object;
-
-                if ( !StringUtils.isEmpty( organisationUnit.getUuid() ) )
-                {
-                    map.put( organisationUnit.getUuid(), (T) organisationUnit );
-                }
-            }
-        }
-
-        return map;
+        return IdentifiableObjectUtils.getMap( objects, property );
     }
 
     @Override

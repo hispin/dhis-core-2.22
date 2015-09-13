@@ -39,11 +39,13 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 
@@ -396,6 +398,62 @@ public class IdentifiableObjectUtils
             }
         }
 
+        return map;
+    }
+
+    /**
+     * Returns a map of identifiable properties and objects.
+     * 
+     * @param objects the objects.
+     * @param property the identifiable property.
+     * @return a map.
+     */
+    @SuppressWarnings( "unchecked" )
+    public static <T extends IdentifiableObject> Map<String, T> getMap( List<T> objects, IdentifiableProperty property )
+    {
+        Map<String, T> map = new HashMap<>();
+        
+        for ( T object : objects )
+        {
+            if ( IdentifiableProperty.ID.equals( property ) )
+            {
+                if ( object.getId() > 0 )
+                {
+                    map.put( String.valueOf( object.getId() ), object );
+                }
+            }
+            else if ( IdentifiableProperty.UID.equals( property ) )
+            {
+                if ( object.getUid() != null )
+                {
+                    map.put( object.getUid(), object );
+                }
+            }
+            else if ( IdentifiableProperty.CODE.equals( property ) )
+            {
+                if ( object.getCode() != null )
+                {
+                    map.put( object.getCode(), object );
+                }
+            }
+            else if ( IdentifiableProperty.NAME.equals( property ) )
+            {
+                if ( object.getName() != null )
+                {
+                    map.put( object.getName(), object );
+                }
+            }
+            else if ( IdentifiableProperty.UUID.equals( property ) && OrganisationUnit.class.isAssignableFrom( object.getClass() ) )
+            {
+                OrganisationUnit organisationUnit = (OrganisationUnit) object;
+
+                if ( !StringUtils.isEmpty( organisationUnit.getUuid() ) )
+                {
+                    map.put( organisationUnit.getUuid(), (T) organisationUnit );
+                }
+            }
+        }
+        
         return map;
     }
 }
