@@ -81,9 +81,9 @@ public abstract class AbstractPropertyIntrospectorService
         .put( AnalyticalObject.class, BaseAnalyticalObject.class )
         .build();
 
-    protected Map<Class<?>, Map<String, Property>> classMapCache = new HashMap<>();
+    protected final Map<Class<?>, Map<String, Property>> classMapCache = new HashMap<>();
 
-    protected Map<String, String> roleToRole = new HashMap<>();
+    protected final Map<String, String> roleToRole = new HashMap<>();
 
     @Autowired
     protected ApplicationContext context;

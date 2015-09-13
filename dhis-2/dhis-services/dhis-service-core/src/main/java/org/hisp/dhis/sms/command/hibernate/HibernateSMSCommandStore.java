@@ -48,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HibernateSMSCommandStore
     implements SMSCommandStore
 {
-    protected SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     @Required
     public void setSessionFactory( SessionFactory sessionFactory )

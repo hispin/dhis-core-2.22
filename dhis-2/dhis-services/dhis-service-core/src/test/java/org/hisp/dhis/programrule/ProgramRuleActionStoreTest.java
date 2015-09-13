@@ -49,13 +49,13 @@ public class ProgramRuleActionStoreTest
     private Program programA;
     
     @Autowired
-    public ProgramRuleStore programRuleStore;
+    private ProgramRuleStore programRuleStore;
     
     @Autowired
-    public DataElementService dataElementService;
+    private DataElementService dataElementService;
     
     @Autowired
-    public ProgramRuleActionStore actionStore;
+    private ProgramRuleActionStore actionStore;
 
     @Autowired
     private ProgramService programService;

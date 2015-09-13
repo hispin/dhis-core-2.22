@@ -45,7 +45,7 @@ public class CompleteDataSetRegistrationDeletionHandler
     // Dependencies
     // -------------------------------------------------------------------------
 
-    public CompleteDataSetRegistrationService completeDataSetRegistrationService;
+    private CompleteDataSetRegistrationService completeDataSetRegistrationService;
 
     public void setCompleteDataSetRegistrationService( CompleteDataSetRegistrationService completeDataSetRegistrationService )
     {

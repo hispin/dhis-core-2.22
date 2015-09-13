@@ -36,15 +36,15 @@ import org.hisp.dhis.GenericDhisSpringTest;
  */
 public class DataElementGroupSetStoreTest
     extends GenericDhisSpringTest<DataElementGroupSet>
-{
-    private DataElementGroupSet[] objects = {
-        new DataElementGroupSet( "GroupSetA" ),
-        new DataElementGroupSet( "GroupSetB" ),
-        new DataElementGroupSet( "GroupSetC" ) };
-    
+{    
     @Override
     protected DataElementGroupSet[] getObjects()
     {
+        DataElementGroupSet[] objects = {
+            new DataElementGroupSet( "GroupSetA" ),
+            new DataElementGroupSet( "GroupSetB" ),
+            new DataElementGroupSet( "GroupSetC" ) };
+        
         return objects;
     }    
 

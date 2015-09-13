@@ -70,7 +70,7 @@ public enum RestoreType
     // Constructor
     // -------------------------------------------------------------------------
 
-    RestoreType( int expiryIntervalType, int expiryIntervalCount,
+    private RestoreType( int expiryIntervalType, int expiryIntervalCount,
                  String emailTemplate, String emailSubject, String action )
     {
         this.expiryIntervalType = expiryIntervalType;
