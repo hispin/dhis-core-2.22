@@ -29,8 +29,6 @@ package org.hisp.dhis.trackedentity.action.program;
  */
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
@@ -40,9 +38,7 @@ import org.hisp.dhis.program.ProgramService;
 import com.opensymphony.xwork2.Action;
 
 /**
- * @author Kristian
- * @version $Id: DefineDataSetAssociationsAction.java 3648 2007-10-15 22:47:45Z
- *          larshelg $
+ * @author Lars Helge Overland
  */
 public class DefineProgramAssociationsAction
     implements Action
@@ -84,49 +80,12 @@ public class DefineProgramAssociationsAction
     public String execute()
         throws Exception
     {
-        Collection<OrganisationUnit> rootUnits = selectionTreeManager.getRootOrganisationUnits();
-
-        Set<OrganisationUnit> unitsInTheTree = new HashSet<>();
-
-        getUnitsInTheTree( rootUnits, unitsInTheTree );
-
         Program program = programService.getProgram( id );
 
-        Set<OrganisationUnit> assignedUnits = program.getOrganisationUnits();
-
-        assignedUnits.removeAll( convert( unitsInTheTree ) );
-
-        Collection<OrganisationUnit> selectedOrganisationUnits = selectionTreeManager
-            .getReloadedSelectedOrganisationUnits();
-
-        assignedUnits.addAll( convert( selectedOrganisationUnits ) );
-
-        program.setOrganisationUnits( assignedUnits );
-
-        programService.updateProgram( program );
+        Collection<OrganisationUnit> units = selectionTreeManager.getReloadedSelectedOrganisationUnits();
+        
+        programService.mergeWithCurrentUserOrganisationUnits( program, units );
 
         return SUCCESS;
-    }
-
-    // -------------------------------------------------------------------------
-    // Supporting methods
-    // -------------------------------------------------------------------------
-
-    private Set<OrganisationUnit> convert( Collection<OrganisationUnit> organisationUnits )
-    {
-        Set<OrganisationUnit> units = new HashSet<>();
-
-        units.addAll( organisationUnits );
-
-        return units;
-    }
-
-    private void getUnitsInTheTree( Collection<OrganisationUnit> rootUnits, Set<OrganisationUnit> unitsInTheTree )
-    {
-        for ( OrganisationUnit root : rootUnits )
-        {
-            unitsInTheTree.add( root );
-            getUnitsInTheTree( root.getChildren(), unitsInTheTree );
-        }
     }
 }

@@ -247,6 +247,8 @@ public interface ProgramService
      */
     List<Program> getByCurrentUser( ProgramType type );
 
+    void mergeWithCurrentUserOrganisationUnits( Program program, Collection<OrganisationUnit> mergeOrganisationUnits );
+    
     /**
      * @param htmlCode
      * @param program
