@@ -46,7 +46,7 @@ public class DefaultClientDetailsService implements ClientDetailsService
     @Autowired
     private OAuth2ClientService oAuth2ClientService;
 
-    private final Set<String> SCOPES = Sets.newHashSet( "ALL" );
+    private static final Set<String> SCOPES = Sets.newHashSet( "ALL" );
 
     @Override
     public ClientDetails loadClientByClientId( String clientId ) throws ClientRegistrationException

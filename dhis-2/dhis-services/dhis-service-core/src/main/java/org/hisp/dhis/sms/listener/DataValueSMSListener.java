@@ -263,12 +263,12 @@ public class DataValueSMSListener
             pattern = Pattern.compile( x );
         }
 
-        Matcher m = pattern.matcher( sms );
+        Matcher matcher = pattern.matcher( sms );
 
-        while ( m.find() )
+        while ( matcher.find() )
         {
-            String key = m.group( 1 );
-            String value = m.group( 2 );
+            String key = matcher.group( 1 );
+            String value = matcher.group( 2 );
 
             if ( !StringUtils.isEmpty( key ) && !StringUtils.isEmpty( value ) )
             {
@@ -371,7 +371,7 @@ public class DataValueSMSListener
 
     private Period getPeriod( SMSCommand command, Date date )
     {
-        Period period;
+        Period period = null;
         period = command.getDataset().getPeriodType().createPeriod();
         CalendarPeriodType cpt = (CalendarPeriodType) period.getPeriodType();
 

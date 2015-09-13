@@ -73,7 +73,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testAddIndicatorType()
-        throws Exception
     {
         IndicatorType typeA = new IndicatorType( "IndicatorTypeA", 100, false );
         IndicatorType typeB = new IndicatorType( "IndicatorTypeB", 1, false );
@@ -92,7 +91,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testUpdateIndicatorType()
-        throws Exception
     {
         IndicatorType typeA = new IndicatorType( "IndicatorTypeA", 100, false );
         int idA = indicatorTypeStore.save( typeA );
@@ -108,7 +106,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testGetAndDeleteIndicatorType()
-        throws Exception
     {
         IndicatorType typeA = new IndicatorType( "IndicatorTypeA", 100, false );
         IndicatorType typeB = new IndicatorType( "IndicatorTypeB", 1, false );
@@ -132,7 +129,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testGetAllIndicatorTypes()
-        throws Exception
     {
         IndicatorType typeA = new IndicatorType( "IndicatorTypeA", 100, false );
         IndicatorType typeB = new IndicatorType( "IndicatorTypeB", 1, false );
@@ -149,7 +145,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testGetIndicatorTypeByName()
-        throws Exception
     {
         IndicatorType typeA = new IndicatorType( "IndicatorTypeA", 100, false );
         IndicatorType typeB = new IndicatorType( "IndicatorTypeB", 1, false );
@@ -175,7 +170,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testAddIndicator()
-        throws Exception
     {
         IndicatorType type = new IndicatorType( "IndicatorType", 100, false );
 
@@ -198,7 +192,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testUpdateIndicator()
-        throws Exception
     {
         IndicatorType type = new IndicatorType( "IndicatorType", 100, false );
 
@@ -218,7 +211,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testGetAndDeleteIndicator()
-        throws Exception
     {
         IndicatorType type = new IndicatorType( "IndicatorType", 100, false );
 
@@ -246,7 +238,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testGetAllIndicators()
-        throws Exception
     {
         IndicatorType type = new IndicatorType( "IndicatorType", 100, false );
 
@@ -267,7 +258,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testGetIndicatorByName()
-        throws Exception
     {
         IndicatorType type = new IndicatorType( "IndicatorType", 100, false );
 
@@ -292,7 +282,6 @@ public class IndicatorStoreTest
 
     @Test
     public void testGetIndicatorByShortName()
-        throws Exception
     {
         IndicatorType type = new IndicatorType( "IndicatorType", 100, false );
 

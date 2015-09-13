@@ -242,7 +242,7 @@ public class Jackson2PropertyIntrospectorService
 
     private String getFieldName( Method method )
     {
-        String name;
+        String name = null;
 
         String[] getters = new String[]{
             "is", "has", "get"

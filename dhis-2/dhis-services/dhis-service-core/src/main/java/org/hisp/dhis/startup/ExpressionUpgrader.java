@@ -65,8 +65,8 @@ public class ExpressionUpgrader
     private static final String OLD_OPERAND_EXPRESSION = "\\[(\\d+)\\.?(\\d*)\\]";
     private static final String OLD_CONSTANT_EXPRESSION = "\\[C(\\d+?)\\]";
 
-    private final Pattern OLD_OPERAND_PATTERN = Pattern.compile( OLD_OPERAND_EXPRESSION );
-    private final Pattern OLD_CONSTANT_PATTERN = Pattern.compile( OLD_CONSTANT_EXPRESSION );
+    private static final Pattern OLD_OPERAND_PATTERN = Pattern.compile( OLD_OPERAND_EXPRESSION );
+    private static final Pattern OLD_CONSTANT_PATTERN = Pattern.compile( OLD_CONSTANT_EXPRESSION );
 
     private static final Log log = LogFactory.getLog( ExpressionUpgrader.class );
     

@@ -163,7 +163,7 @@ public class SMSCommand
         this.separator = separator;
         this.dataset = dataset;
         this.codes = codes;
-        this.setCodeSeparator( codeSeparator );
+        this.codeSeparator = codeSeparator;
     }
 
     public SMSCommand( String name, String parser, String separator, DataSet dataset, Set<SMSCode> codes )

@@ -191,7 +191,7 @@ public class DataApprovalServiceTest
     // -------------------------------------------------------------------------
     
     @Override
-    public void setUpTest() throws Exception
+    public void setUpTest()
     {
         userService = _userService;
         
@@ -323,7 +323,7 @@ public class DataApprovalServiceTest
     // Set Up Categories
     // ---------------------------------------------------------------------
 
-    private void setUpCategories() throws Exception
+    private void setUpCategories()
     {
         optionA = new DataElementCategoryOption( "CategoryOptionA" );
         optionB = new DataElementCategoryOption( "CategoryOptionB" );
@@ -430,7 +430,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testAddAllAndGetDataApproval() throws Exception
+    public void testAddAllAndGetDataApproval()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1, 1 );
         dataApprovalLevelService.addDataApprovalLevel( level2, 2 );
@@ -457,20 +457,16 @@ public class DataApprovalServiceTest
         dataApprovalService.approveData( newArrayList(dataApprovalB, dataApprovalC, dataApprovalD) ); // Must be approved before A.
         dataApprovalService.approveData( newArrayList(dataApprovalA) );
 
-        DataApprovalStatus status;
-        DataApproval da;
-        DataApprovalLevel level;
-
-        status = dataApprovalService.getDataApprovalStatus( dataSetA, periodA, organisationUnitA, defaultCombo );
+        DataApprovalStatus status = dataApprovalService.getDataApprovalStatus( dataSetA, periodA, organisationUnitA, defaultCombo );
         assertEquals( DataApprovalState.APPROVED_HERE, status.getState() );
-        da = status.getDataApproval();
+        DataApproval da = status.getDataApproval();
         assertNotNull( da );
         assertEquals( dataSetA, da.getDataSet() );
         assertEquals( periodA, da.getPeriod() );
         assertEquals( organisationUnitA.getId(), da.getOrganisationUnit().getId() );
         assertEquals( date, da.getCreated() );
         assertEquals( userA.getId(), da.getCreator().getId() );
-        level = status.getDataApprovalLevel();
+        DataApprovalLevel level = status.getDataApprovalLevel();
         assertNotNull( level );
         assertEquals( level1, level );
 
@@ -522,7 +518,7 @@ public class DataApprovalServiceTest
 
     @Ignore //TODO Fails with DataMayNotBeApproved
     @Test
-    public void testAddDuplicateDataApproval() throws Exception
+    public void testAddDuplicateDataApproval()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
 
@@ -546,7 +542,7 @@ public class DataApprovalServiceTest
 
     @Test
     @Ignore
-    public void testDeleteDataApproval() throws Exception
+    public void testDeleteDataApproval()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -586,7 +582,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testGetDataApprovalState() throws Exception
+    public void testGetDataApprovalState()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -703,7 +699,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testGetDataApprovalStateAbove() throws Exception
+    public void testGetDataApprovalStateAbove()
     {
         dataApprovalLevelService.addDataApprovalLevel( level3 );
 
@@ -729,7 +725,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testGetDataApprovalStateWithMultipleChildren() throws Exception
+    public void testGetDataApprovalStateWithMultipleChildren()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -789,7 +785,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testGetDataApprovalStateOtherPeriodTypes() throws Exception
+    public void testGetDataApprovalStateOtherPeriodTypes()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -817,7 +813,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testMayApproveSameLevel() throws Exception
+    public void testMayApproveSameLevel()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -928,7 +924,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testMayApproveLowerLevels() throws Exception
+    public void testMayApproveLowerLevels()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -1008,7 +1004,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testMayApproveSameAndLowerLevels() throws Exception
+    public void testMayApproveSameAndLowerLevels()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -1078,7 +1074,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testMayApproveNoAuthority() throws Exception
+    public void testMayApproveNoAuthority()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -1115,7 +1111,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testMayUnapproveSameLevel() throws Exception
+    public void testMayUnapproveSameLevel()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -1187,7 +1183,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testMayUnapproveLowerLevels() throws Exception
+    public void testMayUnapproveLowerLevels()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -1259,7 +1255,7 @@ public class DataApprovalServiceTest
 
     @Ignore //TODO Fails
     @Test
-    public void testMayUnapproveWithAcceptAuthority() throws Exception
+    public void testMayUnapproveWithAcceptAuthority()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -1330,7 +1326,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testMayUnapproveNoAuthority() throws Exception
+    public void testMayUnapproveNoAuthority()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1 );
         dataApprovalLevelService.addDataApprovalLevel( level2 );
@@ -1405,7 +1401,7 @@ public class DataApprovalServiceTest
 
     @Ignore //TODO Get this test working
     @Test
-    public void testApprovalStateWithCategories() throws Exception
+    public void testApprovalStateWithCategories()
     {
         setUpCategories();
 
@@ -1545,7 +1541,7 @@ public class DataApprovalServiceTest
 
     @Ignore //TODO get this test working
     @Test
-    public void testApprovalLevelWithCategories() throws Exception
+    public void testApprovalLevelWithCategories()
     {
         setUpCategories();
 
@@ -1690,7 +1686,7 @@ public class DataApprovalServiceTest
 
     @Ignore //TODO get this test working
     @Test
-    public void testCategoriesWithOrgUnitLevels() throws Exception
+    public void testCategoriesWithOrgUnitLevels()
     {
         setUpCategories();
 
@@ -1771,14 +1767,14 @@ public class DataApprovalServiceTest
     {
         DataApprovalStatus status = dataApprovalService.getDataApprovalStatusAndPermissions( dataSet, period, organisationUnit, attributeOptionCombo );
 
-        DataApprovalPermissions p = status.getPermissions();
+        DataApprovalPermissions permissions = status.getPermissions();
 
         return status.getState().toString()
                 + " level=" + ( status.getDataApprovalLevel() == null ? "null" : status.getDataApprovalLevel().getLevel() )
-                + " approve=" + ( p.isMayApprove() ? "T" : "F" )
-                + " unapprove=" + ( p.isMayUnapprove() ? "T" : "F" )
-                + " accept=" + ( p.isMayAccept() ? "T" : "F" )
-                + " unaccept=" + ( p.isMayUnaccept() ? "T" : "F" )
-                + " read=" + ( p.isMayReadData() ? "T" : "F" );
+                + " approve=" + ( permissions.isMayApprove() ? "T" : "F" )
+                + " unapprove=" + ( permissions.isMayUnapprove() ? "T" : "F" )
+                + " accept=" + ( permissions.isMayAccept() ? "T" : "F" )
+                + " unaccept=" + ( permissions.isMayUnaccept() ? "T" : "F" )
+                + " read=" + ( permissions.isMayReadData() ? "T" : "F" );
     }
 }

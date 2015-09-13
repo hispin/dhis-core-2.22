@@ -68,7 +68,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testBasicOrganisationUnitCoarseGrained()
-        throws Exception
     {
         OrganisationUnit organisationUnit1 = createOrganisationUnit( 'A' );
 
@@ -92,7 +91,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testUpdateOrganisationUnit()
-        throws Exception
     {
         String updatedName = "updatedName";
         String updatedShortName = "updatedShortName";
@@ -194,7 +192,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetOrganisationUnitWithChildrenWithCorrectLevel()
-        throws Exception
     {
         OrganisationUnit unit1 = createOrganisationUnit( 'A' );
         OrganisationUnit unit2 = createOrganisationUnit( 'B', unit1 );
@@ -218,7 +215,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetOrganisationUnitsByFields()
-        throws Exception
     {
         String oU1Name = "OU1name";
         String oU2Name = "OU2name";
@@ -241,8 +237,8 @@ public class OrganisationUnitServiceTest
         OrganisationUnit unit1 = organisationUnitService.getOrganisationUnitByName( oU1Name ).get( 0 );
         assertEquals( unit1.getName(), oU1Name );
 
-        List<OrganisationUnit> foo = organisationUnitService.getOrganisationUnitByName( "foo" );
-        assertTrue( foo.isEmpty() );
+        List<OrganisationUnit> units = organisationUnitService.getOrganisationUnitByName( "foo" );
+        assertTrue( units.isEmpty() );
 
         unit1 = organisationUnitService.getOrganisationUnitByCode( oU1Code );
         assertEquals( unit1.getName(), oU1Name );
@@ -253,7 +249,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetOrganisationUnitGraph()
-        throws Exception
     {
         OrganisationUnit organisationUnit1 = createOrganisationUnit( 'A' );
         OrganisationUnit organisationUnit2 = createOrganisationUnit( 'B', organisationUnit1 );
@@ -276,7 +271,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetAllOrganisationUnitsAndGetRootOrganisationUnit()
-        throws Exception
     {
         // creating a tree with two roots ( id1 and id4 )
 
@@ -312,7 +306,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetOrganisationUnitsAtLevel()
-        throws Exception
     {
         OrganisationUnit unit1 = createOrganisationUnit( '1' );
         organisationUnitService.addOrganisationUnit( unit1 );
@@ -465,7 +458,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetOrganisationUnitAtLevelAndBranches()
-        throws Exception
     {
         OrganisationUnit unitA = createOrganisationUnit( 'A' );
         OrganisationUnit unitB = createOrganisationUnit( 'B', unitA );
@@ -539,7 +531,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testAddAndDelOrganisationUnitGroup()
-        throws Exception
     {
         OrganisationUnitGroup organisationUnitGroup1 = new OrganisationUnitGroup( "OUGname" );
 
@@ -560,7 +551,6 @@ public class OrganisationUnitServiceTest
     @Test
     @Ignore
     public void testUpdateOrganisationUnitGroup()
-        throws Exception
     {
         OrganisationUnitGroup organisationUnitGroup = new OrganisationUnitGroup( "OUGname" );
 
@@ -586,7 +576,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetAllOrganisationUnitGroups()
-        throws Exception
     {
         OrganisationUnitGroup group1 = new OrganisationUnitGroup( "organisationUnitGroupName1" );
         OrganisationUnitGroup group2 = new OrganisationUnitGroup( "organisationUnitGroupName2" );
@@ -624,7 +613,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetOrganisationUnitGroupByName()
-        throws Exception
     {
         String oUG1Name = "OUG1Name";
         String oUG2Name = "OUG2Name";
@@ -648,7 +636,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testAddGetOrganisationUnitHierarchy()
-        throws Exception
     {
         // creates a tree
         OrganisationUnit unit1 = new OrganisationUnit( "orgUnitName1", "shortName1", "organisationUnitCode1",
@@ -704,7 +691,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testOrganisationUnitGroupSetsBasic()
-        throws Exception
     {
         OrganisationUnitGroup organisationUnitGroup1 = new OrganisationUnitGroup();
         organisationUnitGroup1.setName( "oug1" );
@@ -762,7 +748,6 @@ public class OrganisationUnitServiceTest
 
     @Test
     public void testGetOrganisationUnitGroupSetsByName()
-        throws Exception
     {
         OrganisationUnitGroup organisationUnitGroup1 = new OrganisationUnitGroup();
         organisationUnitGroup1.setName( "oug1" );

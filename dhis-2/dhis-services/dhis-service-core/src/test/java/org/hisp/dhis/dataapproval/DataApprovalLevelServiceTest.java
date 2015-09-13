@@ -115,7 +115,7 @@ public class DataApprovalLevelServiceTest
     // -------------------------------------------------------------------------
 
     @Override
-    public void setUpTest() throws Exception
+    public void setUpTest()
     {
         // ---------------------------------------------------------------------
         // Add supporting data
@@ -197,7 +197,7 @@ public class DataApprovalLevelServiceTest
     // -------------------------------------------------------------------------
 
     @Test
-    public void testAddDataApprovalLevel() throws Exception
+    public void testAddDataApprovalLevel()
     {
         dataApprovalLevelService.addDataApprovalLevel( level2C, 1 );
         dataApprovalLevelService.addDataApprovalLevel( level3, 2 );
@@ -225,7 +225,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testDeleteDataApprovalLevel() throws Exception
+    public void testDeleteDataApprovalLevel()
     {
         int id1 = dataApprovalLevelService.addDataApprovalLevel( level1A, 1 );
         int id2 = dataApprovalLevelService.addDataApprovalLevel( level2B, 2 );
@@ -245,7 +245,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testExists() throws Exception
+    public void testExists()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1, 1 );
         dataApprovalLevelService.addDataApprovalLevel( level2, 2 );
@@ -270,7 +270,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testCanMoveDown() throws Exception
+    public void testCanMoveDown()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1, 1 );
         dataApprovalLevelService.addDataApprovalLevel( level1A, 2 );
@@ -298,7 +298,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testCanMoveUp() throws Exception
+    public void testCanMoveUp()
     {
         dataApprovalLevelService.addDataApprovalLevel( level1, 1 );
         dataApprovalLevelService.addDataApprovalLevel( level1A, 2 );
@@ -326,7 +326,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testMoveDown() throws Exception
+    public void testMoveDown()
     {
         int id1 = dataApprovalLevelService.addDataApprovalLevel( level1, 1 );
         int id2 = dataApprovalLevelService.addDataApprovalLevel( level1A, 2 );
@@ -350,7 +350,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testMoveUp() throws Exception
+    public void testMoveUp()
     {
         int id1 = dataApprovalLevelService.addDataApprovalLevel( level1, 1 );
         int id2 = dataApprovalLevelService.addDataApprovalLevel( level1A, 2 );
@@ -374,7 +374,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testGetUserReadApprovalLevels_1A() throws Exception
+    public void testGetUserReadApprovalLevels_1A()
     {
         //
         // Test 1: Like when a user may capture data within their own district
@@ -410,7 +410,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testGetUserReadApprovalLevels_1B() throws Exception
+    public void testGetUserReadApprovalLevels_1B()
     {
         //
         // Test 1: Like when a user may capture data within their own district
@@ -446,7 +446,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testGetUserReadApprovalLevels_1C() throws Exception
+    public void testGetUserReadApprovalLevels_1C()
     {
         //
         // Test 1: Like when a user may capture data within their own district
@@ -481,7 +481,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testGetUserReadApprovalLevels_1D() throws Exception
+    public void testGetUserReadApprovalLevels_1D()
     {
         //
         // Test 1: Like when a user may capture data within their own district
@@ -524,7 +524,7 @@ public class DataApprovalLevelServiceTest
     //TODO: add tests for getUserDataApprovalLevels where the user can access the CategoryOptionGroupSets
 
     @Test
-    public void testGetUserDataApprovalLevelsApproveHere() throws Exception
+    public void testGetUserDataApprovalLevelsApproveHere()
     {
         dataApprovalLevelService.addDataApprovalLevel( level4B );
         dataApprovalLevelService.addDataApprovalLevel( level4A );
@@ -554,7 +554,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testGetUserDataApprovalLevelsApproveLower() throws Exception
+    public void testGetUserDataApprovalLevelsApproveLower()
     {
         dataApprovalLevelService.addDataApprovalLevel( level4B );
         dataApprovalLevelService.addDataApprovalLevel( level4A );
@@ -584,7 +584,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testGetUserDataApprovalLevelsApproveHereAndLower() throws Exception
+    public void testGetUserDataApprovalLevelsApproveHereAndLower()
     {
         dataApprovalLevelService.addDataApprovalLevel( level4B );
         dataApprovalLevelService.addDataApprovalLevel( level4A );
@@ -614,7 +614,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testGetUserDataApprovalLevelsAcceptLower() throws Exception
+    public void testGetUserDataApprovalLevelsAcceptLower()
     {
         dataApprovalLevelService.addDataApprovalLevel( level4B );
         dataApprovalLevelService.addDataApprovalLevel( level4A );
@@ -644,7 +644,7 @@ public class DataApprovalLevelServiceTest
     }
 
     @Test
-    public void testGetUserDataApprovalLevelsAcceptMuchLower() throws Exception
+    public void testGetUserDataApprovalLevelsAcceptMuchLower()
     {
         dataApprovalLevelService.addDataApprovalLevel( level4 );
 

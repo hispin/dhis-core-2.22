@@ -218,7 +218,7 @@ class DataApprovalPermissionsEvaluator
 
     private DataApprovalLevel getUserApprovalLevelWithCache( DataApproval da )
     {
-        DataApprovalLevel userApprovalLevel;
+        DataApprovalLevel userApprovalLevel = null;
 
         final DataApproval dataApproval = da;
 

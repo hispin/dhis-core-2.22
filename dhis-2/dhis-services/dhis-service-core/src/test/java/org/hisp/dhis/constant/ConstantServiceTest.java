@@ -127,7 +127,6 @@ public class ConstantServiceTest
 
     @Test
     public void testGetConstantByName()
-        throws Exception
     {
         Constant constantA = createConstant( 'A', 1.23 );
         Constant constantB = createConstant( 'B', 3.21 );

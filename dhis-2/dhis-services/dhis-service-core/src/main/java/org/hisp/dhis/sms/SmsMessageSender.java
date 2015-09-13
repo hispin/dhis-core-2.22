@@ -254,7 +254,7 @@ public class SmsMessageSender
     {
         String firstTempString = null;
         String secondTempString = null;
-        int indexToCut;
+        int indexToCut = 0;
 
         firstTempString = message.substring( 0, MAX_CHAR );
 

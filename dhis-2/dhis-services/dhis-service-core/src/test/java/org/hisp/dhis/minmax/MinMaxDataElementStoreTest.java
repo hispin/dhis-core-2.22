@@ -66,7 +66,6 @@ public class MinMaxDataElementStoreTest
 
     @Test
     public void testBasic()
-        throws Exception
     {
         OrganisationUnit source1 = createOrganisationUnit( 'A' );
         OrganisationUnit source2 = createOrganisationUnit( 'B' );

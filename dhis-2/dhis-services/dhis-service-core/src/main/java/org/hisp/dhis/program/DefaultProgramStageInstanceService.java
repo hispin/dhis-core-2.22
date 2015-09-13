@@ -289,7 +289,7 @@ public class DefaultProgramStageInstanceService
     {
         ProgramStageInstance programStageInstance = null;
         Date currentDate = new Date();
-        Date dateCreatedEvent;
+        Date dateCreatedEvent = null;
 
         if ( programStage.getGeneratedByEnrollmentDate() )
         {

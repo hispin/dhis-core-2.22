@@ -35,9 +35,12 @@ import org.springframework.core.io.ClassPathResource;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
 
@@ -102,7 +105,7 @@ public class DefaultHelpManager
     // -------------------------------------------------------------------------
 
     private Transformer getTransformer( String stylesheetName )
-        throws Exception
+        throws IOException, TransformerConfigurationException
     {
         Source stylesheet = new StreamSource( new ClassPathResource( stylesheetName ).getInputStream(), ENCODING_UTF8 );
 
@@ -111,9 +114,9 @@ public class DefaultHelpManager
 
     private ClassPathResource resolveHelpFileResource( Locale locale )
     {
-        String helpFile;
+        String helpFile = null;
         
-        ClassPathResource classPathResource;
+        ClassPathResource classPathResource = null;
 
         if ( locale != null && locale.getDisplayLanguage() != null )
         {

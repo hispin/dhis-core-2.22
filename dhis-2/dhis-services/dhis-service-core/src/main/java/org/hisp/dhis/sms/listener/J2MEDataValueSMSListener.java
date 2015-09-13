@@ -427,7 +427,8 @@ public class J2MEDataValueSMSListener
         {
             String pattern = "yyyy-MM-dd";
             SimpleDateFormat formatter = new SimpleDateFormat( pattern );
-            Date date;
+            Date date = null;
+            
             try
             {
                 date = formatter.parse( periodName );
@@ -437,15 +438,15 @@ public class J2MEDataValueSMSListener
                 throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName()
                     + " and name " + periodName, e );
             }
+            
             return periodType.createPeriod( date );
-
         }
 
         if ( periodType instanceof WeeklyPeriodType )
         {
             String pattern = "yyyy-MM-dd";
             SimpleDateFormat formatter = new SimpleDateFormat( pattern );
-            Date date;
+            Date date = null;
 
             try
             {

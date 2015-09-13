@@ -566,7 +566,7 @@ public class DefaultOrganisationUnitService
     public int getNumberOfOrganisationalLevels()
     {
         int maxDepth = 0;
-        int depth;
+        int depth = 0;
 
         for ( OrganisationUnit root : getRootOrganisationUnits() )
         {
@@ -588,7 +588,7 @@ public class DefaultOrganisationUnitService
     private int getDepth( OrganisationUnit parent, int currentLevel )
     {
         int maxDepth = currentLevel;
-        int depth;
+        int depth = 0;
 
         for ( OrganisationUnit child : parent.getChildren() )
         {

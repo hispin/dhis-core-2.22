@@ -35,7 +35,7 @@ package org.hisp.dhis.hierarchy;
  * @version $Id: HierarchyViolationException.java 2869 2007-02-20 14:26:09Z andegje $
  */
 public class HierarchyViolationException
-    extends Exception
+    extends RuntimeException
 {
     /**
      * Determines if a de-serialized file is compatible with this class.

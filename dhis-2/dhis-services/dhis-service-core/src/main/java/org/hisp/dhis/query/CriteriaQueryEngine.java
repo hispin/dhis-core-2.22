@@ -289,7 +289,7 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
             return null;
         }
 
-        org.hibernate.criterion.Order criteriaOrder;
+        org.hibernate.criterion.Order criteriaOrder = null;
 
         if ( order.isAscending() )
         {

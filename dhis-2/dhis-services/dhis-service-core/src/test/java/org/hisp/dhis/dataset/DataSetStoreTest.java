@@ -186,7 +186,6 @@ public class DataSetStoreTest
 
     @Test
     public void testGetDataSetByName()
-        throws Exception
     {
         DataSet dataSetA = createDataSet( 'A', periodType );
         DataSet dataSetB = createDataSet( 'B', periodType );
@@ -201,7 +200,6 @@ public class DataSetStoreTest
 
     @Test
     public void testGetDataSetByShortName()
-        throws Exception
     {
         DataSet dataSetA = createDataSet( 'A', periodType );
         DataSet dataSetB = createDataSet( 'B', periodType );

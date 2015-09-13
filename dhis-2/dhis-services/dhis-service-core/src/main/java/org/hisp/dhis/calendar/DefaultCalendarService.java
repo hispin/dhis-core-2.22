@@ -109,7 +109,7 @@ public class DefaultCalendarService
         String calendarKey = getSystemCalendarKey();
         String dateFormat = getSystemDateFormatKey();
 
-        Calendar calendar;
+        Calendar calendar = null;
 
         if ( calendarMap.containsKey( calendarKey ) )
         {

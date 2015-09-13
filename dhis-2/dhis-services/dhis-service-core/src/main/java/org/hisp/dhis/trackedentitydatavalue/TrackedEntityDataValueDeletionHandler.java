@@ -33,7 +33,6 @@ import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.system.deletion.DeletionHandler;
-import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**

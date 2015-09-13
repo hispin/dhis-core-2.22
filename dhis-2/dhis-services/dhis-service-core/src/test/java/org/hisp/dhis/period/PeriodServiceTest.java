@@ -267,7 +267,6 @@ public class PeriodServiceTest
 
     @Test
     public void testGetIntersectingPeriodsByPeriodType()
-        throws Exception
     {
         PeriodType ypt = PeriodType.getPeriodTypeByName( YearlyPeriodType.NAME );
         
@@ -518,7 +517,6 @@ public class PeriodServiceTest
 
     @Test
     public void testGetAndGetAllPeriodTypes()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
@@ -535,7 +533,6 @@ public class PeriodServiceTest
 
     @Test
     public void testGetPeriodTypeByName()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
@@ -553,7 +550,6 @@ public class PeriodServiceTest
 
     @Test
     public void testDeleteAndGetPeriodType()
-        throws Exception
     {
         List<PeriodType> periodTypes = periodService.getAllPeriodTypes();
         Iterator<PeriodType> it = periodTypes.iterator();
