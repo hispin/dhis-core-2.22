@@ -36,7 +36,6 @@ import static org.hisp.dhis.i18n.I18nUtils.i18n;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +54,8 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.CurrentUserService;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -422,12 +423,12 @@ public class DefaultDataSetService
     @Override
     public void mergeWithCurrentUserOrganisationUnits( DataSet dataSet, Collection<OrganisationUnit> mergeOrganisationUnits )
     {
-        Set<OrganisationUnit> selectedOrgUnits = new HashSet<>( dataSet.getSources() );
+        Set<OrganisationUnit> selectedOrgUnits = Sets.newHashSet( dataSet.getSources() );
         
         OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
         params.setParents( currentUserService.getCurrentUser().getOrganisationUnits() );
 
-        List<OrganisationUnit> userOrganisationUnits = organisationUnitService.getOrganisationUnitsByQuery( params );
+        Set<OrganisationUnit> userOrganisationUnits = Sets.newHashSet( organisationUnitService.getOrganisationUnitsByQuery( params ) );
 
         selectedOrgUnits.removeAll( userOrganisationUnits );
         selectedOrgUnits.addAll( mergeOrganisationUnits );
