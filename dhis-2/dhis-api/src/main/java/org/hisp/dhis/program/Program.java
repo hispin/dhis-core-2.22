@@ -60,6 +60,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 
 /**
  * @author Abyot Asalefew
@@ -167,18 +168,21 @@ public class Program
     
     public void updateOrganisationUnits( Set<OrganisationUnit> updates )
     {
-        for ( OrganisationUnit unit : new HashSet<>( organisationUnits ) )
+        Set<OrganisationUnit> toRemove = Sets.difference( organisationUnits, updates );
+        Set<OrganisationUnit> toAdd = Sets.difference( updates, organisationUnits );
+        
+        for ( OrganisationUnit unit : toRemove )
         {
-            if ( !updates.contains( unit ) )
-            {
-                removeOrganisationUnit( unit );
-            }
+            unit.getPrograms().remove( this );
+        }
+
+        for ( OrganisationUnit unit : toAdd )
+        {
+            unit.getPrograms().add( this );
         }
         
-        for ( OrganisationUnit unit : updates )
-        {
-            addOrganisationUnit( unit );
-        }
+        organisationUnits.clear();
+        organisationUnits.addAll( updates );
     }
     
     /**

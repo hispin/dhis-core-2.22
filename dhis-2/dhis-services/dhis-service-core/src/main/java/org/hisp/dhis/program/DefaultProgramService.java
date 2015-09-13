@@ -328,7 +328,7 @@ public class DefaultProgramService
 
         Set<OrganisationUnit> userOrganisationUnits = Sets.newHashSet( organisationUnitService.getOrganisationUnitsByQuery( params ) );
 
-        selectedOrgUnits.removeAll( userOrganisationUnits );        
+        selectedOrgUnits.removeAll( userOrganisationUnits );
         selectedOrgUnits.addAll( mergeOrganisationUnits );
 
         program.updateOrganisationUnits( selectedOrgUnits );
