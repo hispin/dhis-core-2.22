@@ -297,7 +297,7 @@ public class DefaultDataIntegrityService
 
         Collection<DataSet> dataSets = dataSetService.getAllDataSets();
         
-        dataSetLoop: for ( DataSet dataSet : dataSets )
+        for ( DataSet dataSet : dataSets )
         {
             if ( dataSet.hasDataEntryForm() )
             {
@@ -308,7 +308,7 @@ public class DefaultDataIntegrityService
                     if ( operands.size() > 2000 )
                     {
                         log.warn( "Skipped integrity check for data set: " + dataSet.getName() + ", too many operands: " + operands.size() );
-                        continue dataSetLoop;
+                        continue;
                     }
                     
                     for ( DataElementOperand operand : operands )

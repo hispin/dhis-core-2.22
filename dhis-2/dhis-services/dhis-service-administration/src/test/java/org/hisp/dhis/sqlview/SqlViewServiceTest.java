@@ -140,7 +140,6 @@ public class SqlViewServiceTest
 
     @Test
     public void testGetSqlViewByName()
-        throws Exception
     {
         SqlView sqlViewA = createSqlView( 'A', SQL1 );
         SqlView sqlViewB = createSqlView( 'B', SQL2 );
