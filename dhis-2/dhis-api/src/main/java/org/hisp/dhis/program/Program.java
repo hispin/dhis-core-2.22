@@ -153,6 +153,34 @@ public class Program
     // Logic methods
     // -------------------------------------------------------------------------
 
+    public void addOrganisationUnit( OrganisationUnit organisationUnit )
+    {
+        organisationUnits.add( organisationUnit );
+        organisationUnit.getPrograms().add( this );
+    }
+    
+    public void removeOrganisationUnit( OrganisationUnit organisationUnit )
+    {
+        organisationUnits.remove( organisationUnit );
+        organisationUnit.getPrograms().remove( this );
+    }
+    
+    public void updateOrganisationUnits( Set<OrganisationUnit> updates )
+    {
+        for ( OrganisationUnit unit : new HashSet<>( organisationUnits ) )
+        {
+            if ( !updates.contains( unit ) )
+            {
+                removeOrganisationUnit( unit );
+            }
+        }
+        
+        for ( OrganisationUnit unit : updates )
+        {
+            addOrganisationUnit( unit );
+        }
+    }
+    
     /**
      * Returns the ProgramTrackedEntityAttribute of this Program which contains
      * the given TrackedEntityAttribute.

@@ -422,17 +422,17 @@ public class DefaultDataSetService
     @Override
     public void mergeWithCurrentUserOrganisationUnits( DataSet dataSet, Collection<OrganisationUnit> mergeOrganisationUnits )
     {
-        Set<OrganisationUnit> dataSetOrgUnits = new HashSet<>( dataSet.getSources() );
+        Set<OrganisationUnit> selectedOrgUnits = new HashSet<>( dataSet.getSources() );
         
         OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
         params.setParents( currentUserService.getCurrentUser().getOrganisationUnits() );
 
         List<OrganisationUnit> userOrganisationUnits = organisationUnitService.getOrganisationUnitsByQuery( params );
 
-        dataSetOrgUnits.removeAll( userOrganisationUnits );
-        dataSetOrgUnits.addAll( mergeOrganisationUnits );
+        selectedOrgUnits.removeAll( userOrganisationUnits );
+        selectedOrgUnits.addAll( mergeOrganisationUnits );
 
-        dataSet.updateOrganisationUnits( dataSetOrgUnits );
+        dataSet.updateOrganisationUnits( selectedOrgUnits );
 
         updateDataSet( dataSet );
     }

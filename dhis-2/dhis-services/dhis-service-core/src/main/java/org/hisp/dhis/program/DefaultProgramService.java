@@ -29,6 +29,7 @@ package org.hisp.dhis.program;
  */
 
 import com.google.common.collect.Sets;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.i18n.I18n;
@@ -36,6 +37,8 @@ import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -53,6 +56,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -106,6 +110,13 @@ public class DefaultProgramService
     public void setUserService( UserService userService )
     {
         this.userService = userService;
+    }
+    
+    private OrganisationUnitService organisationUnitService;
+
+    public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
+    {
+        this.organisationUnitService = organisationUnitService;
     }
 
     @Autowired
@@ -308,6 +319,23 @@ public class DefaultProgramService
         return programs;
     }
 
+    @Override
+    public void mergeWithCurrentUserOrganisationUnits( Program program, Collection<OrganisationUnit> mergeOrganisationUnits )
+    {
+        Set<OrganisationUnit> selectedOrgUnits = new HashSet<>( program.getOrganisationUnits() );
+
+        OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+        params.setParents( currentUserService.getCurrentUser().getOrganisationUnits() );
+
+        List<OrganisationUnit> userOrganisationUnits = organisationUnitService.getOrganisationUnitsByQuery( params );
+
+        selectedOrgUnits.removeAll( userOrganisationUnits );
+        selectedOrgUnits.addAll( mergeOrganisationUnits );
+        
+        program.updateOrganisationUnits( selectedOrgUnits );
+        
+        updateProgram( program );
+    }
 
     @Override
     public String prepareDataEntryFormForAdd( String htmlCode, Program program, Collection<User> healthWorkers,
