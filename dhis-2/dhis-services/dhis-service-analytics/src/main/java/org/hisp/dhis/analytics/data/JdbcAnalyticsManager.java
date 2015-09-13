@@ -136,7 +136,7 @@ public class JdbcAnalyticsManager
 
             log.debug( sql );
 
-            Map<String, Object> map;
+            Map<String, Object> map = null;
 
             try
             {

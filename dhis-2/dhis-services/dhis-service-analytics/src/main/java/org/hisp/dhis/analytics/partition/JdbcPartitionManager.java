@@ -47,8 +47,8 @@ public class JdbcPartitionManager
 {
     private static final Log log = LogFactory.getLog( JdbcPartitionManager.class );
     
-    private Set<String> ANALYTICS_PARTITIONS = null;
-    private Set<String> ANALYTICS_EVENT_PARTITIONS = null;
+    private Set<String> analyticsPartitions = null;
+    private Set<String> analyticsEventPartitions = null;
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -56,9 +56,9 @@ public class JdbcPartitionManager
     @Override
     public Set<String> getAnalyticsPartitions()
     {
-        if ( ANALYTICS_PARTITIONS != null )
+        if ( analyticsPartitions != null )
         {
-            return ANALYTICS_PARTITIONS;
+            return analyticsPartitions;
         }
                 
         final String sql =
@@ -69,16 +69,16 @@ public class JdbcPartitionManager
         log.info( "Information schema analytics SQL: " + sql );
 
         Set<String> partitions = new HashSet<>( jdbcTemplate.queryForList( sql, String.class ) );
-        ANALYTICS_PARTITIONS = partitions;
+        analyticsPartitions = partitions;
         return partitions;
     }
     
     @Override
     public Set<String> getEventAnalyticsPartitions()
     {
-        if ( ANALYTICS_EVENT_PARTITIONS != null )
+        if ( analyticsEventPartitions != null )
         {
-            return ANALYTICS_EVENT_PARTITIONS;
+            return analyticsEventPartitions;
         }
         
         final String sql = 
@@ -89,14 +89,14 @@ public class JdbcPartitionManager
         log.info( "Information schema event analytics SQL: " + sql );
         
         Set<String> partitions = new HashSet<>( jdbcTemplate.queryForList( sql, String.class ) );
-        ANALYTICS_EVENT_PARTITIONS = partitions;
+        analyticsEventPartitions = partitions;
         return partitions;
     }
     
     @Override
     public void clearCaches()
     {
-        ANALYTICS_PARTITIONS = null;
-        ANALYTICS_EVENT_PARTITIONS = null;
+        analyticsPartitions = null;
+        analyticsEventPartitions = null;
     }
 }
