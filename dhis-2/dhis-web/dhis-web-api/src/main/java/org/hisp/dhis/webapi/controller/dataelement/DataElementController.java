@@ -61,16 +61,16 @@ public class DataElementController
     {
         List<DataElement> entityList;
 
-        String KEY_DOMAIN_TYPE = "domainType";
+        String keyDomainType = "domainType";
 
         if ( options.getOptions().containsKey( "query" ) )
         {
             entityList = Lists.newArrayList( manager.filter( getEntityClass(), options.getOptions().get( "query" ) ) );
         }
-        else if ( DataElementDomain.AGGREGATE.equals( options.getOptions().get( KEY_DOMAIN_TYPE ) )
-            || DataElementDomain.TRACKER.equals( options.getOptions().get( KEY_DOMAIN_TYPE ) ) )
+        else if ( DataElementDomain.AGGREGATE.equals( options.getOptions().get( keyDomainType ) )
+            || DataElementDomain.TRACKER.equals( options.getOptions().get( keyDomainType ) ) )
         {
-            String domainType = options.getOptions().get( KEY_DOMAIN_TYPE );
+            String domainType = options.getOptions().get( keyDomainType );
 
             if ( options.hasPaging() )
             {

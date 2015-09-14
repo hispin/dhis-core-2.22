@@ -72,13 +72,13 @@ public class ConfigurationController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/systemId", method = RequestMethod.GET )
-    private String getSystemId( Model model, HttpServletRequest request )
+    public String getSystemId( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getSystemId() );
     }
 
     @RequestMapping( value = "/feedbackRecipients", method = RequestMethod.GET )
-    private String getFeedbackRecipients( Model model, HttpServletRequest request )
+    public String getFeedbackRecipients( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getFeedbackRecipients() );
     }
@@ -86,7 +86,7 @@ public class ConfigurationController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/feedbackRecipients/{uid}", method = RequestMethod.POST )
-    private void setFeedbackRecipients( @PathVariable( "uid" ) String uid )
+    public void setFeedbackRecipients( @PathVariable( "uid" ) String uid )
         throws NotFoundException
     {
         UserGroup group = identifiableObjectManager.get( UserGroup.class, uid );
@@ -104,7 +104,7 @@ public class ConfigurationController
     }
 
     @RequestMapping( value = "/offlineOrganisationUnitLevel", method = RequestMethod.GET )
-    private String getOfflineOrganisationUnitLevel( Model model, HttpServletRequest request )
+    public String getOfflineOrganisationUnitLevel( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getOfflineOrganisationUnitLevel() );
     }
@@ -112,7 +112,7 @@ public class ConfigurationController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/offlineOrganisationUnitLevel/{uid}", method = RequestMethod.POST )
-    private void setOfflineOrganisationUnitLevels( @PathVariable( "uid" ) String uid )
+    public void setOfflineOrganisationUnitLevels( @PathVariable( "uid" ) String uid )
         throws NotFoundException
     {
         OrganisationUnitLevel organisationUnitLevel = identifiableObjectManager.get( OrganisationUnitLevel.class, uid );
@@ -130,7 +130,7 @@ public class ConfigurationController
     }
 
     @RequestMapping( value = "/infrastructuralIndicators", method = RequestMethod.GET )
-    private String getInfrastructuralIndicators( Model model, HttpServletRequest request )
+    public String getInfrastructuralIndicators( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getInfrastructuralIndicators() );
     }
@@ -138,7 +138,7 @@ public class ConfigurationController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/infrastructuralIndicators/{uid}", method = RequestMethod.POST )
-    private void setInfrastructuralIndicators( @PathVariable( "uid" ) String uid )
+    public void setInfrastructuralIndicators( @PathVariable( "uid" ) String uid )
         throws NotFoundException
     {
         IndicatorGroup group = identifiableObjectManager.get( IndicatorGroup.class, uid );
@@ -156,7 +156,7 @@ public class ConfigurationController
     }
 
     @RequestMapping( value = "/infrastructuralDataElements", method = RequestMethod.GET )
-    private String getInfrastructuralDataElements( Model model, HttpServletRequest request )
+    public String getInfrastructuralDataElements( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getInfrastructuralDataElements() );
     }
@@ -164,7 +164,7 @@ public class ConfigurationController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/infrastructuralDataElements/{uid}", method = RequestMethod.POST )
-    private void setInfrastructuralDataElements( @PathVariable("uid") String uid )
+    public void setInfrastructuralDataElements( @PathVariable("uid") String uid )
         throws NotFoundException
     {
         DataElementGroup group = identifiableObjectManager.get( DataElementGroup.class, uid );
@@ -182,7 +182,7 @@ public class ConfigurationController
     }
 
     @RequestMapping( value = "/infrastructuralPeriodType", method = RequestMethod.GET )
-    private String getInfrastructuralPeriodType( Model model, HttpServletRequest request )
+    public String getInfrastructuralPeriodType( Model model, HttpServletRequest request )
     {
         String name = configurationService.getConfiguration().getInfrastructuralPeriodTypeDefaultIfNull().getName();
         BaseIdentifiableObject entity = new BaseIdentifiableObject( name, name, name );
@@ -193,7 +193,7 @@ public class ConfigurationController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/infrastructuralPeriodType/{name}", method = RequestMethod.POST )
-    private void setInfrastructuralPeriodType( @PathVariable( "name" ) String name )
+    public void setInfrastructuralPeriodType( @PathVariable( "name" ) String name )
         throws NotFoundException
     {
         PeriodType periodType = PeriodType.getPeriodTypeByName( name );
@@ -213,7 +213,7 @@ public class ConfigurationController
     }
 
     @RequestMapping( value = "/selfRegistrationRole", method = RequestMethod.GET )
-    private String getSelfRegistrationRole( Model model, HttpServletRequest request )
+    public String getSelfRegistrationRole( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getSelfRegistrationRole() );
     }
@@ -221,7 +221,7 @@ public class ConfigurationController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/selfRegistrationRole/{uid}", method = RequestMethod.POST )
-    private void setSelfRegistrationRole( @PathVariable( "uid" ) String uid )
+    public void setSelfRegistrationRole( @PathVariable( "uid" ) String uid )
         throws NotFoundException
     {
         UserAuthorityGroup userGroup = identifiableObjectManager.get( UserAuthorityGroup.class, uid );
@@ -240,14 +240,14 @@ public class ConfigurationController
 
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/selfRegistrationOrgUnit", method = RequestMethod.GET )
-    private String getSelfRegistrationOrgUnit( Model model, HttpServletRequest request )
+    public String getSelfRegistrationOrgUnit( Model model, HttpServletRequest request )
     {
         return setModel( model, configurationService.getConfiguration().getSelfRegistrationOrgUnit() );
     }
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @RequestMapping( value = "/selfRegistrationOrgUnit/{uid}", method = RequestMethod.POST )
-    private void setSelfRegistrationOrgUnit( @PathVariable( "uid" ) String uid )
+    public void setSelfRegistrationOrgUnit( @PathVariable( "uid" ) String uid )
         throws NotFoundException
     {
         OrganisationUnit orgunit = identifiableObjectManager.get( OrganisationUnit.class, uid );

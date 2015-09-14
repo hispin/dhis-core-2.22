@@ -88,15 +88,15 @@ public class SvgConversionController
     {
         svg = replaceUnsafeSvgText( svg );
 
-        PNGTranscoder t = new PNGTranscoder();
+        PNGTranscoder transcoder = new PNGTranscoder();
 
-        t.addTranscodingHint( ImageTranscoder.KEY_BACKGROUND_COLOR, Color.WHITE );
+        transcoder.addTranscodingHint( ImageTranscoder.KEY_BACKGROUND_COLOR, Color.WHITE );
 
         TranscoderInput input = new TranscoderInput( new StringReader( svg ) );
 
         TranscoderOutput output = new TranscoderOutput( out );
 
-        t.transcode( input, output );
+        transcoder.transcode( input, output );
     }
 
     private void convertToPdf( String svg, OutputStream out )
@@ -104,12 +104,12 @@ public class SvgConversionController
     {
         svg = replaceUnsafeSvgText( svg );
 
-        PDFTranscoder t = new PDFTranscoder();
+        PDFTranscoder transcoder = new PDFTranscoder();
 
         TranscoderInput input = new TranscoderInput( new StringReader( svg ) );
 
         TranscoderOutput output = new TranscoderOutput( out );
 
-        t.transcode( input, output );
+        transcoder.transcode( input, output );
     }
 }

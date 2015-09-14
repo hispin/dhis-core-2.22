@@ -161,7 +161,7 @@ public class FormUtils
         {
             if ( program.isWithoutRegistration() )
             {
-                throw new NullPointerException();
+                throw new IllegalStateException( "Program is without registration" );
             }
             else
             {

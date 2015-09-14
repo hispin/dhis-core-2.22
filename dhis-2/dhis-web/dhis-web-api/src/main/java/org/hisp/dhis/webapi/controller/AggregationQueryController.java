@@ -55,7 +55,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping( value = AggregationQueryController.RESOURCE_PATH )
 public class AggregationQueryController
 {
-    private final static Log log = LogFactory.getLog( AggregationQueryController.class );
+    private static final Log log = LogFactory.getLog( AggregationQueryController.class );
 
     public static final String RESOURCE_PATH = "/aggregationQueries";
 
@@ -133,16 +133,16 @@ public class AggregationQueryController
 
     private String convertDataElementExpression( String expression )
     {
-        String UID_PATTERN = "[A-Za-z0-9]+";
-        String UID_TOKEN_PATTERN = "(#\\{(" + UID_PATTERN + ")})";
+        String uidPattern = "[A-Za-z0-9]+";
+        String uidTokenPattern = "(#\\{(" + uidPattern + ")})";
 
         StringBuffer replacedExpressionBuffer = new StringBuffer();
 
         Pattern dePattern = Pattern.compile( "(?<=\\[" + CaseAggregationCondition.OBJECT_PROGRAM_STAGE_DATAELEMENT
             + CaseAggregationCondition.SEPARATOR_OBJECT + ")"
-            + UID_TOKEN_PATTERN + CaseAggregationCondition.SEPARATOR_ID
-            + UID_TOKEN_PATTERN + CaseAggregationCondition.SEPARATOR_ID
-            + UID_TOKEN_PATTERN
+            + uidTokenPattern + CaseAggregationCondition.SEPARATOR_ID
+            + uidTokenPattern + CaseAggregationCondition.SEPARATOR_ID
+            + uidTokenPattern
             + "(?=\\])" );
 
         Matcher matcher = dePattern.matcher( expression );

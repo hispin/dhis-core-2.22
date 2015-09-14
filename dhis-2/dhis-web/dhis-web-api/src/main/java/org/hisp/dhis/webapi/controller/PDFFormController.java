@@ -194,7 +194,7 @@ public class PdfFormController
 
         PdfDataEntryFormImportUtil pdfDataEntryFormImportUtil = new PdfDataEntryFormImportUtil();
 
-        pdfDataEntryFormImportUtil.ImportProgramStage( in, i18nManager.getI18nFormat() );
+        pdfDataEntryFormImportUtil.importProgramStage( in, i18nManager.getI18nFormat() );
 
         webMessageService.send( WebMessageUtils.ok( "Import successful." ), response, request );
     }
