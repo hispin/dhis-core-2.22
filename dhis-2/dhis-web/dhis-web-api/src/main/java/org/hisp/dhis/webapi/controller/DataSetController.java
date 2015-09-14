@@ -179,9 +179,9 @@ public class DataSetController
             throw new WebMessageException( WebMessageUtils.notFound( "DataSet not found for uid: " + uid ) );
         }
 
-        OrganisationUnit ou = null;
+        OrganisationUnit ou = manager.get( OrganisationUnit.class, orgUnit );
 
-        if ( orgUnit != null && (ou = manager.get( OrganisationUnit.class, orgUnit )) == null )
+        if ( ou == null )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Organisation unit does not exist: " + orgUnit ) );
         }
@@ -207,9 +207,9 @@ public class DataSetController
             throw new WebMessageException( WebMessageUtils.notFound( "DataSet not found for uid: " + uid ) );
         }
 
-        OrganisationUnit ou = null;
+        OrganisationUnit ou = manager.get( OrganisationUnit.class, orgUnit );
 
-        if ( orgUnit != null && (ou = manager.get( OrganisationUnit.class, orgUnit )) == null )
+        if ( ou == null )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Organisation unit does not exist: " + orgUnit ) );
         }
