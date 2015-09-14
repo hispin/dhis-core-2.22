@@ -75,9 +75,6 @@ public class DefaultModuleManager
     @Autowired
     private AppManager appManager;
 
-    @Autowired
-    private CurrentUserService currentUserService;
-
     private ActionAccessResolver actionAccessResolver;
 
     public void setActionAccessResolver( ActionAccessResolver actionAccessResolver )

@@ -47,8 +47,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -98,7 +98,7 @@ public class DefaultAppManager
     public App getApp( String key )
     {
         List<App> apps = getApps();
-        
+
         for ( App app : apps )
         {
             if ( key.equals( app.getKey() ) )
@@ -106,27 +106,14 @@ public class DefaultAppManager
                 return app;
             }
         }
-        
+
         return null;
     }
 
     @Override
     public List<App> getAccessibleApps()
     {
-        List<App> applications = new ArrayList<>( getApps() );
-        Iterator<App> iterator = applications.iterator();
-
-        while ( iterator.hasNext() )
-        {
-            App app = iterator.next();
-
-            if ( !isAccessible( app ) )
-            {
-                iterator.remove();
-            }
-        }
-
-        return applications;
+        return getApps().stream().filter( this::isAccessible ).collect( Collectors.toList() );
     }
 
     @Override
