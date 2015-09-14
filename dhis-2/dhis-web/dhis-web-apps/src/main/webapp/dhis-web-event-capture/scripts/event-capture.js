@@ -392,6 +392,10 @@ function getCategories( programs )
     if(catigories.length > 0 ){
         return checkAndGetD2Objects( {programs: programs, self: catigories}, 'categories', '../api/categories', 'fields=id,name,categoryOptions[id,name]');
     }
+    else
+    {
+        return programs;
+    }
 }
 
 function getOptionSets( programs )

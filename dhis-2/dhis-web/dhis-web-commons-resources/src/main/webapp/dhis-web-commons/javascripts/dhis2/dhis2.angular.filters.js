@@ -115,6 +115,19 @@ var d2Filters = angular.module('d2Filters', [])
     };
 })
 
+/* trim away the qualifiers before and after a variable name */
+.filter('trimvariablequalifiers', function() {
+    return function(input) {
+        if (!input || (typeof input !== 'string' && !(input instanceof String))) {
+            return input;
+        }
+        
+        var trimmed = input.replace(/^[#VCAvca]{/,"").replace(/}$/,"");
+        
+        return trimmed;
+    };
+})
+
 .filter('forLoop', function() {
     return function(input, start, end) {
         input = new Array(end - start);

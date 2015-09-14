@@ -146,8 +146,17 @@ trackerCapture.controller('DataEntryController',
         }
     };
 
-    $scope.executeRules = function () {        
-        var evs = {all: $scope.allEventsSorted, byStage: $scope.eventsByStageAsc};
+    $scope.executeRules = function () {
+        //$scope.allEventsSorted cannot be used, as it is not reflecting updates that happened within the current session
+        var allSorted = [];
+        for(var ps = 0; ps < $scope.programStages.length; ps++ ) {
+            for(var e = 0; e < $scope.eventsByStageAsc[$scope.programStages[ps].id].length; e++) {
+                allSorted.push($scope.eventsByStageAsc[$scope.programStages[ps].id][e]);
+            }
+        }
+        allSorted = orderByFilter(allSorted, '-sortingDate').reverse();
+        
+        var evs = {all: allSorted, byStage: $scope.eventsByStageAsc};
         var flag = {debug: true, verbose: false};
         //If the events is displayed in a table, it is necessary to run the rules for all visible events.
         if ($scope.currentStage.displayEventsInTable) {
