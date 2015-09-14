@@ -193,21 +193,14 @@ public class DefaultCsvImportService
 
                 String domainType = getSafe( values, 6, DataElementDomain.AGGREGATE.getValue(), 16 );
                 object.setDomainType( DataElementDomain.fromValue( domainType ) );
+                object.setValueType( ValueType.valueOf( getSafe( values, 7, ValueType.TEXT.toString(), 50 ) ) );
 
-                /* TODO fixme
-                object.setValueType( ValueType.getFromDataElementTypes(
-                    getSafe( values, 7, DataElement.VALUE_TYPE_INT, 16 ),
-                    getSafe( values, 8, DataElement.VALUE_TYPE_NUMBER, 16 ),
-                    getSafe( values, 9, null, 16 )
-                ) );
-                */
-
-                object.setAggregationOperator( getSafe( values, 10, DataElement.AGGREGATION_OPERATOR_SUM, 16 ) );
-                String categoryComboUid = getSafe( values, 11, null, 11 );
-                object.setUrl( getSafe( values, 12, null, 255 ) );
-                object.setZeroIsSignificant( Boolean.valueOf( getSafe( values, 13, "false", null ) ) );
-                String optionSetUid = getSafe( values, 14, null, 11 );
-                String commentOptionSetUid = getSafe( values, 15, null, 11 );
+                object.setAggregationOperator( getSafe( values, 8, DataElement.AGGREGATION_OPERATOR_SUM, 16 ) );
+                String categoryComboUid = getSafe( values, 9, null, 11 );
+                object.setUrl( getSafe( values, 10, null, 255 ) );
+                object.setZeroIsSignificant( Boolean.valueOf( getSafe( values, 11, "false", null ) ) );
+                String optionSetUid = getSafe( values, 12, null, 11 );
+                String commentOptionSetUid = getSafe( values, 13, null, 11 );
 
                 if ( categoryComboUid != null )
                 {
