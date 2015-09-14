@@ -53,15 +53,15 @@ public class SqlViewServiceTest
     @Autowired
     private SqlViewService sqlViewService;
 
-    protected static final String SQL1 = "SELECT   *  FROM     _categorystructure;;  ; ;;;  ;; ; ";
+    private String sqlA = "SELECT   *  FROM     _categorystructure;;  ; ;;;  ;; ; ";
 
-    protected static final String SQL2 = "SELECT COUNT(_ous.*) AS so_dem FROM _orgunitstructure AS _ous";
+    private String sqlB = "SELECT COUNT(_ous.*) AS so_dem FROM _orgunitstructure AS _ous";
 
-    protected static final String SQL3 = "SELECT COUNT(_cocn.*) AS so_dem, _icgss.indicatorid AS in_id"
+    private String sqlC = "SELECT COUNT(_cocn.*) AS so_dem, _icgss.indicatorid AS in_id"
         + "FROM _indicatorgroupsetstructure AS _icgss, _categoryoptioncomboname AS _cocn "
         + "GROUP BY _icgss.indicatorid;";
 
-    protected static final String SQL4 = "SELECT de.name, dv.sourceid, dv.value, p.startdate "
+    private String sqlD = "SELECT de.name, dv.sourceid, dv.value, p.startdate "
         + "FROM dataelement AS de, datavalue AS dv, period AS p " + "WHERE de.dataelementid=dv.dataelementid "
         + "AND dv.periodid=p.periodid LIMIT 10";
     
@@ -83,8 +83,8 @@ public class SqlViewServiceTest
     @Test
     public void testAddSqlView()
     {
-        SqlView sqlViewA = createSqlView( 'A', SQL1 );
-        SqlView sqlViewB = createSqlView( 'B', SQL2 );
+        SqlView sqlViewA = createSqlView( 'A', sqlA );
+        SqlView sqlViewB = createSqlView( 'B', sqlB );
 
         int idA = sqlViewService.saveSqlView( sqlViewA );
         int idB = sqlViewService.saveSqlView( sqlViewB );
@@ -93,22 +93,22 @@ public class SqlViewServiceTest
         sqlViewB = sqlViewService.getSqlView( idB );
 
         assertEquals( idA, sqlViewA.getId() );
-        assertEq( 'A', sqlViewA, SQL1 );
+        assertEq( 'A', sqlViewA, sqlA );
 
         assertEquals( idB, sqlViewB.getId() );
-        assertEq( 'B', sqlViewB, SQL2 );
+        assertEq( 'B', sqlViewB, sqlB );
     }
 
     @Test
     public void testUpdateSqlView()
     {
-        SqlView sqlView = createSqlView( 'A', SQL1 );
+        SqlView sqlView = createSqlView( 'A', sqlA );
 
         int id = sqlViewService.saveSqlView( sqlView );
 
         sqlView = sqlViewService.getSqlView( id );
 
-        assertEq( 'A', sqlView, SQL1 );
+        assertEq( 'A', sqlView, sqlA );
 
         sqlView.setName( "SqlViewC" );
 
@@ -118,8 +118,8 @@ public class SqlViewServiceTest
     @Test
     public void testGetAndDeleteSqlView()
     {
-        SqlView sqlViewA = createSqlView( 'A', SQL3 );
-        SqlView sqlViewB = createSqlView( 'B', SQL4 );
+        SqlView sqlViewA = createSqlView( 'A', sqlC );
+        SqlView sqlViewB = createSqlView( 'B', sqlD );
 
         int idA = sqlViewService.saveSqlView( sqlViewA );
         int idB = sqlViewService.saveSqlView( sqlViewB );
@@ -141,8 +141,8 @@ public class SqlViewServiceTest
     @Test
     public void testGetSqlViewByName()
     {
-        SqlView sqlViewA = createSqlView( 'A', SQL1 );
-        SqlView sqlViewB = createSqlView( 'B', SQL2 );
+        SqlView sqlViewA = createSqlView( 'A', sqlA );
+        SqlView sqlViewB = createSqlView( 'B', sqlB );
 
         int idA = sqlViewService.saveSqlView( sqlViewA );
         int idB = sqlViewService.saveSqlView( sqlViewB );
@@ -155,7 +155,7 @@ public class SqlViewServiceTest
     @Test
     public void testCleanSqlQuery()
     {
-        SqlView sqlViewA = createSqlView( 'A', SQL1 );
+        SqlView sqlViewA = createSqlView( 'A', sqlA );
 
         sqlViewA.cleanSqlQuery();
         
@@ -171,8 +171,8 @@ public class SqlViewServiceTest
     @Test
     public void testSetUpViewTableName()
     {
-        SqlView sqlViewC = createSqlView( 'C', SQL3 );
-        SqlView sqlViewD = createSqlView( 'D', SQL4 );
+        SqlView sqlViewC = createSqlView( 'C', sqlC );
+        SqlView sqlViewD = createSqlView( 'D', sqlD );
 
         assertEquals( "_view_sqlviewc", sqlViewC.getViewName() );
         assertNotSame( "_view_sqlviewc", sqlViewD.getViewName() );
