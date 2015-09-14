@@ -28,17 +28,15 @@ package org.hisp.dhis.webportal.interceptor;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import org.hisp.dhis.user.CurrentUserService;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hisp.dhis.user.CurrentUserService;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.Interceptor;
-
 /**
  * @author Torgeir Lorange Ostby
- * @version $Id: WebWorkPortalUserInterceptor.java 2869 2007-02-20 14:26:09Z andegje $
  */
 public class XWorkPortalUserInterceptor
     implements Interceptor
@@ -66,15 +64,11 @@ public class XWorkPortalUserInterceptor
     @Override
     public void destroy()
     {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void init()
     {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
@@ -87,7 +81,7 @@ public class XWorkPortalUserInterceptor
         map.put( "currentUser", currentUserService.getCurrentUser() );
 
         invocation.getStack().push( map );
-        
+
         return invocation.invoke();
     }
 }

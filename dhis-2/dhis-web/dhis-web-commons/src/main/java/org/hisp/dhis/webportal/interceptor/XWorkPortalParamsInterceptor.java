@@ -42,7 +42,6 @@ import java.util.Set;
 
 /**
  * @author Torgeir Lorange Ostby
- * @version $Id: WebWorkPortalParamsInterceptor.java 4559 2008-02-09 18:47:24Z torgeilo $
  */
 public class XWorkPortalParamsInterceptor
     implements Interceptor
