@@ -119,7 +119,7 @@ public class ExcelUtils
         sheet.addCell( new Label( column++, row, indicator.getCode(), FORMAT_TEXT ) );
         sheet.addCell( new Label( column++, row, indicator.getDescription(), FORMAT_TEXT ) );
         sheet.addCell( new Label( column++, row, getBoolean().get( indicator.isAnnualized() ), FORMAT_TEXT ) );
-        sheet.addCell( new Label( column++, row, getType().get( indicator.getIndicatorType().getName() ), FORMAT_TEXT ) );
+        // sheet.addCell( new Label( column++, row, getType().get( indicator.getIndicatorType().getName() ), FORMAT_TEXT ) );
         sheet.addCell( new Label( column++, row, indicator.getNumeratorDescription(), FORMAT_TEXT ) );
         sheet.addCell( new Label( column++, row, expressionService.getExpressionDescription( indicator.getNumerator() ), FORMAT_TEXT ) );
         sheet.addCell( new Label( column++, row, indicator.getDenominatorDescription(), FORMAT_TEXT ) );
@@ -348,6 +348,7 @@ public class ExcelUtils
         return map;
     }
 
+    /*
     private static Map<String, String> getType()
     {
         Map<String, String> map = new HashMap<>();
@@ -356,6 +357,7 @@ public class ExcelUtils
         map.put( DataElement.VALUE_TYPE_BOOL, "Yes/No" );
         return map;
     }
+    */
 
     private static Map<String, String> getAggregationOperator()
     {
