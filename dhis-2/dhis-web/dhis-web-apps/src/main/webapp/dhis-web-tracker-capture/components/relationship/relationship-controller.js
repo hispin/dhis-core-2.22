@@ -465,9 +465,6 @@ trackerCapture.controller('RelationshipController',
         
         if($scope.showRegistrationDiv){
             $scope.showTrackedEntityDiv = false;
-            /*$timeout(function() { 
-                $rootScope.$broadcast('registrationWidget', {registrationMode: 'RELATIONSHIP'});
-            }, 100);*/
         }
         else{
             $scope.showTrackedEntityDiv = true;            
@@ -562,20 +559,22 @@ trackerCapture.controller('RelationshipController',
     
     var selections = CurrentSelection.get();
     $scope.optionSets = selections.optionSets;
-    $scope.programs = selections.prs;    
+    $scope.programs = selections.prs;
+    
+    var getProgramAttributes = function(program){
+        AttributesFactory.getByProgram(program).then(function(atts){
+            $scope.attributes = atts;
+        });
+    };
   
     if(angular.isObject($scope.programs) && $scope.programs.length === 1){
         $scope.selectedProgramForRelative = $scope.programs[0];
-        AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
-            $scope.attributes = atts;
-        });
+        getProgramAttributes($scope.selectedProgramForRelative);
     }  
     
     //watch for selection of program
-    $scope.$watch('selectedProgramForRelative', function() {        
-        AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
-            $scope.attributes = atts;
-        });
+    $scope.$watch('selectedProgramForRelative', function() {
+        getProgramAttributes($scope.selectedProgramForRelative);
     }); 
             
     $scope.trackedEntities = {available: []};
