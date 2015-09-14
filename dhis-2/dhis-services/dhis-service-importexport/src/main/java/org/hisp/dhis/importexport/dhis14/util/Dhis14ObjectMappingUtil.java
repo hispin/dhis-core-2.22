@@ -31,7 +31,6 @@ package org.hisp.dhis.importexport.dhis14.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.period.DailyPeriodType;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.PeriodType;

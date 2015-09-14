@@ -31,7 +31,6 @@ package org.hisp.dhis.common;
 import java.util.Date;
 import java.util.List;
 
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 import com.google.common.collect.Lists;
@@ -72,12 +71,12 @@ public enum ValueType
     
     private final Class<?> javaClass;
 
-    ValueType()
+    private ValueType()
     {
         this.javaClass = null;
     }
 
-    ValueType( Class<?> javaClass )
+    private ValueType( Class<?> javaClass )
     {
         this.javaClass = javaClass;
     }

@@ -63,11 +63,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 @JacksonXmlRootElement( localName = "baseChart", namespace = DxfNamespaces.DXF_2_0 )
 public abstract class BaseChart
     extends BaseAnalyticalObject
-{
-    public static final String SIZE_NORMAL = "normal";
-    public static final String SIZE_WIDE = "wide";
-    public static final String SIZE_TALL = "tall";
-    
+{    
     public static final String TYPE_COLUMN = "column";
     public static final String TYPE_STACKED_COLUMN = "stackedcolumn";
     public static final String TYPE_BAR = "bar";
