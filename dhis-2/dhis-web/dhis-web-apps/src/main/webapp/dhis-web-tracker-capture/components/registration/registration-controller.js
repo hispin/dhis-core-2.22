@@ -86,7 +86,6 @@ trackerCapture.controller('RegistrationController',
         $scope.selectedTei = {};
         $scope.tei = {};
         $scope.registrationMode = args.registrationMode;
-        $scope.getAttributes($scope.registrationMode);
         
         if($scope.registrationMode !== 'REGISTRATION'){
             $scope.selectedTei = args.selectedTei;            
@@ -96,6 +95,15 @@ trackerCapture.controller('RegistrationController',
         if($scope.registrationMode === 'PROFILE'){
             $scope.selectedEnrollment = args.enrollment;
         }
+        
+        if($scope.registrationMode === 'RELATIONSHIP'){
+            $scope.mainTei = args.mainTei;
+            $scope.selectedTei = {};
+            $scope.tei = {};
+            $scope.selectedProgram = args.relativeProgram;
+        }
+        
+        $scope.getAttributes($scope.registrationMode);
     });
         
     $scope.getAttributes = function(_mode){        
@@ -112,6 +120,14 @@ trackerCapture.controller('RegistrationController',
                 $scope.trackedEntityForm.displayIncidentDate = $scope.selectedProgram.displayIncidentDate;
                 $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
             }
+            
+            if(mode === 'RELATIONSHIP'){
+                angular.forEach($scope.attributes, function(att){
+                    if(att.inherit && $scope.mainTei[att.id]){
+                        $scope.selectedTei[att.id] = $scope.mainTei[att.id];
+                    }
+                });
+            }
         });
     }; 
     
@@ -126,8 +142,20 @@ trackerCapture.controller('RegistrationController',
                                     program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
         }            
         else if(destination === 'RELATIONSHIP' ){
-            $scope.tei.trackedEntityInstance = teiId;
-            $scope.broadCastSelections();
+            if($scope.tei){
+                angular.forEach($scope.tei.attributes, function(att){
+                    $scope.tei[att.attribute] = att.value;
+                });
+
+                $scope.tei.orgUnitName = $scope.selectedOrgUnit.name;
+                $scope.tei.created = DateUtils.formatFromApiToUser(new Date());
+
+                CurrentSelection.setRelationshipInfo({tei: $scope.tei});
+
+                $timeout(function() { 
+                    $rootScope.$broadcast('relationship', {result: 'SUCCESS'});
+                }, 200);
+            }
         }
     };
     
@@ -260,19 +288,12 @@ trackerCapture.controller('RegistrationController',
         }        
     };
     
-    
-    $scope.broadCastSelections = function(){
-        angular.forEach($scope.tei.attributes, function(att){
-            $scope.tei[att.attribute] = att.value;
-        });
-        
-        $scope.tei.orgUnitName = $scope.selectedOrgUnit.name;
-        $scope.tei.created = DateUtils.formatFromApiToUser(new Date());
-        CurrentSelection.setRelationshipInfo({tei: $scope.tei, src: $scope.selectedRelationshipSource});
+    $scope.cancelRelativeRegistration = function(){
         $timeout(function() { 
-            $rootScope.$broadcast('relationship', {});
+            $rootScope.$broadcast('relationship', {result: 'CANCEL'});
         }, 200);
-    };
+    };   
+   
     
     var processRuleEffect = function(){
 
