@@ -151,8 +151,12 @@ public class UserSettingController
     private String getStringValue( String key, Serializable value )
     {
         if ( key.equals( UserSettingService.KEY_UI_LOCALE ) || key.equals( UserSettingService.KEY_DB_LOCALE ) )
+        {
             return ((Locale) value).getLanguage();
+        }
         else
+        {
             return (String) value;
+        }
     }
 }

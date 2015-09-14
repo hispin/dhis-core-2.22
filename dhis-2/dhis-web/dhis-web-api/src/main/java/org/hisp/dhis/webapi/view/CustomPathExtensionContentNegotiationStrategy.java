@@ -49,11 +49,11 @@ import java.util.Map;
  */
 public class CustomPathExtensionContentNegotiationStrategy extends PathExtensionContentNegotiationStrategy
 {
-    private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
+    private static final UrlPathHelper URL_PATH_HELPER = new UrlPathHelper();
 
     static
     {
-        urlPathHelper.setUrlDecode( false );
+        URL_PATH_HELPER.setUrlDecode( false );
     }
 
     public CustomPathExtensionContentNegotiationStrategy( Map<String, MediaType> mediaTypes )
@@ -71,7 +71,7 @@ public class CustomPathExtensionContentNegotiationStrategy extends PathExtension
             return null;
         }
 
-        String path = urlPathHelper.getLookupPathForRequest( servletRequest );
+        String path = URL_PATH_HELPER.getLookupPathForRequest( servletRequest );
         String filename = WebUtils.extractFullFilenameFromUrlPath( path );
         String extension = getFilenameExtension( filename );
         return (StringUtils.hasText( extension )) ? extension.toLowerCase( Locale.ENGLISH ) : null;
