@@ -30,9 +30,9 @@
         <td><label for="type">$i18n.getString( "type" )</label></td>
         <td>
             <select id="type" name="type" onchange="setReportType()">
-                <option value="jasperReportTable"#if( ${report.type} == "jasperReportTable" ) selected="selected"#end>$i18n.getString( "jasper_report_report_table_data_source" )</option>
-                <option value="jasperJdbc"#if( ${report.type} == "jasperJdbc" ) selected="selected"#end>$i18n.getString( "jasper_report_jdbc_data_source" )</option>
-                <option value="html"#if( ${report.type} == "html" ) selected="selected"#end>$i18n.getString( "html_report" )</option>
+                <option value="JASPER_REPORT_TABLE"#if( ${report.type} == "JASPER_REPORT_TABLE" ) selected="selected"#end>$i18n.getString( "jasper_report_report_table_data_source" )</option>
+                <option value="JASPER_JDBC"#if( ${report.type} == "JASPER_JDBC" ) selected="selected"#end>$i18n.getString( "jasper_report_jdbc_data_source" )</option>
+                <option value="HTML"#if( ${report.type} == "HTML" ) selected="selected"#end>$i18n.getString( "html_report" )</option>
             </select>
         </td>
     </tr>

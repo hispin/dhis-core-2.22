@@ -29,6 +29,7 @@ package org.hisp.dhis.reporting.tablecreator.action;
  */
 
 import com.opensymphony.xwork2.Action;
+
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -40,6 +41,7 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.report.Report;
 import org.hisp.dhis.report.ReportService;
+import org.hisp.dhis.report.ReportType;
 import org.hisp.dhis.reporttable.ReportParams;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
@@ -113,14 +115,14 @@ public class GetReportParamsAction
         this.mode = mode;
     }
 
-    private String type;
+    private ReportType type;
 
-    public String getType()
+    public ReportType getType()
     {
         return type;
     }
 
-    public void setType( String type )
+    public void setType( ReportType type )
     {
         this.type = type;
     }

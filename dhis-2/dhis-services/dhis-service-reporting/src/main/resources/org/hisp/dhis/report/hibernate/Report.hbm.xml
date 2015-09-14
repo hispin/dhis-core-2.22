@@ -17,7 +17,12 @@
 
     <property name="name" column="name" not-null="true" unique="false" length="230" />
 
-    <property name="type" />
+    <property name="type" length="50">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.report.ReportType</param>
+        <param name="type">12</param>
+      </type>
+    </property>
 
     <property name="designContent" type="text" />
 

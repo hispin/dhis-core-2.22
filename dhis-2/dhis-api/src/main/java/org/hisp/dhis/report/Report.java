@@ -57,11 +57,7 @@ public class Report
 
     public static final String TEMPLATE_DIR = "templates";
 
-    public static final String TYPE_JASPER_REPORT_TABLE = "jasperReportTable";
-    public static final String TYPE_JASPER_JDBC = "jasperJdbc";
-    public static final String TYPE_HTML = "html";
-
-    private String type;
+    private ReportType type;
 
     private String designContent;
 
@@ -81,16 +77,18 @@ public class Report
     {
     }
 
-    public Report( String name, String type, String designContent, ReportTable reportTable )
+    public Report( String name, ReportType type, String designContent, ReportTable reportTable )
     {
         this.name = name;
+        this.type = type;
         this.designContent = designContent;
         this.reportTable = reportTable;
     }
 
-    public Report( String name, String type, String designContent, RelativePeriods relatives, ReportParams reportParams )
+    public Report( String name, ReportType type, String designContent, RelativePeriods relatives, ReportParams reportParams )
     {
         this.name = name;
+        this.type = type;
         this.designContent = designContent;
         this.relatives = relatives;
         this.reportParams = reportParams;
@@ -102,17 +100,17 @@ public class Report
 
     public boolean isTypeReportTable()
     {
-        return type != null && TYPE_JASPER_REPORT_TABLE.equals( type );
+        return type != null && ReportType.JASPER_REPORT_TABLE.equals( type );
     }
 
     public boolean isTypeJdbc()
     {
-        return type != null && TYPE_JASPER_JDBC.equals( type );
+        return type != null && ReportType.JASPER_JDBC.equals( type );
     }
 
     public boolean isTypeHtml()
     {
-        return type != null && TYPE_HTML.equals( type );
+        return type != null && ReportType.HTML.equals( type );
     }
 
     public boolean hasReportTable()
@@ -149,12 +147,12 @@ public class Report
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getType()
+    public ReportType getType()
     {
         return type;
     }
 
-    public void setType( String type )
+    public void setType( ReportType type )
     {
         this.type = type;
     }

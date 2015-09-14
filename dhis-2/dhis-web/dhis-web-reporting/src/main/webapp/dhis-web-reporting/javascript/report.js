@@ -15,17 +15,17 @@ function addReport() {
 function setReportType() {
   var type = $("#type :selected").val();
 
-  if( "jasperReportTable" == type ) {
+  if( "JASPER_REPORT_TABLE" == type ) {
     $(".jasperJdbcDataSource").hide();
     $(".htmlDataSource").hide();
     $(".jasperReportTableDataSource").show();
   }
-  else if( "jasperJdbc" == type ) {
+  else if( "JASPER_JDBC" == type ) {
     $(".jasperReportTableDataSource").hide();
     $(".htmlDataSource").hide();
     $(".jasperJdbcDataSource").show();
   }
-  else if( "html" == type ) {
+  else if( "HTML" == type ) {
     $(".jasperReportTableDataSource").hide();
     $(".jasperJdbcDataSource").hide();
     $(".htmlDataSource").show();
