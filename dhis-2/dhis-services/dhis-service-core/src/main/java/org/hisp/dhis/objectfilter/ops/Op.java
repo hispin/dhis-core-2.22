@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter;
+package org.hisp.dhis.objectfilter.ops;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,35 +28,39 @@ package org.hisp.dhis.dxf2.objectfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dxf2.objectfilter.ops.Op;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.hisp.dhis.query.QueryUtils;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class FilterOps
+public abstract class Op
 {
-    private List<Op> filters = new ArrayList<>();
+    private String value;
 
-    FilterOps()
+    public boolean wantValue()
     {
+        return true;
     }
 
-    public List<Op> getFilters()
+    public void setValue( String value )
     {
-        return filters;
+        this.value = value;
     }
 
-    public void setFilters( List<Op> filters )
+    public String getValue()
     {
-        this.filters = filters;
+        return value;
     }
 
-    @Override
-    public String toString()
+    public <T> T getValue( Class<T> klass )
     {
-        return filters.toString();
+        return QueryUtils.getValue( klass, value );
     }
+
+    public <T> T getValue( Class<T> klass, Object value )
+    {
+        return QueryUtils.getValue( klass, value );
+    }
+
+    public abstract OpStatus evaluate( Object object );
 }

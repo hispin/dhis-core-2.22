@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter.ops;
+package org.hisp.dhis.fieldfilter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,58 +28,58 @@ package org.hisp.dhis.dxf2.objectfilter.ops;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.Map;
+
+import org.hisp.dhis.node.LinearNodePipeline;
+import org.hisp.dhis.node.NodePropertyConverter;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ForwardingMap;
+import com.google.common.collect.Maps;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class LtOp extends Op
+public class FieldMap extends ForwardingMap<String, FieldMap>
 {
+    private final Map<String, FieldMap> delegate = Maps.newHashMap();
+
+    private NodePropertyConverter nodePropertyConverter;
+
+    private final LinearNodePipeline pipeline = new LinearNodePipeline();
+
     @Override
-    public OpStatus evaluate( Object object )
+    protected Map<String, FieldMap> delegate()
     {
-        if ( getValue() == null || object == null )
-        {
-            return OpStatus.EXCLUDE;
-        }
+        return delegate;
+    }
 
-        if ( Integer.class.isInstance( object ) )
-        {
-            Integer s1 = getValue( Integer.class );
-            Integer s2 = (Integer) object;
+    public NodePropertyConverter getNodePropertyConverter()
+    {
+        return nodePropertyConverter;
+    }
 
-            return (s1 != null && s2 < s1) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
-        }
-        else if ( Float.class.isInstance( object ) )
-        {
-            Float s1 = getValue( Float.class );
-            Float s2 = (Float) object;
+    public void setNodePropertyConverter( NodePropertyConverter nodePropertyConverter )
+    {
+        this.nodePropertyConverter = nodePropertyConverter;
+    }
 
-            return (s1 != null && s2 < s1) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
-        }
-        else if ( Collection.class.isInstance( object ) )
-        {
-            Collection<?> collection = (Collection<?>) object;
-            Integer size = getValue( Integer.class );
+    public boolean haveNodePropertyConverter()
+    {
+        return nodePropertyConverter != null;
+    }
 
-            if ( size != null && collection.size() < size )
-            {
-                return OpStatus.INCLUDE;
-            }
-            else
-            {
-                return OpStatus.EXCLUDE;
-            }
-        }
-        else if ( Date.class.isInstance( object ) )
-        {
-            Date s1 = getValue( Date.class );
-            Date s2 = (Date) object;
+    public LinearNodePipeline getPipeline()
+    {
+        return pipeline;
+    }
 
-            return (s1 != null && (s2.before( s1 ))) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
-        }
-
-        return OpStatus.EXCLUDE;
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper( this )
+            .add( "map", standardToString() )
+            .add( "nodePropertyConverter", nodePropertyConverter )
+            .toString();
     }
 }

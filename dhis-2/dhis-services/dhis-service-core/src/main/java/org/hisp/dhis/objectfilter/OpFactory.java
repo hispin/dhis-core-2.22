@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter;
+package org.hisp.dhis.objectfilter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,21 +29,21 @@ package org.hisp.dhis.dxf2.objectfilter;
  */
 
 import com.google.common.collect.Maps;
-import org.hisp.dhis.dxf2.objectfilter.ops.EmptyCollectionOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.EndsWithOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.EqOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.GtOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.GteOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.InOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.LikeOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.LtOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.LteOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.NLikeOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.NeqOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.NnullOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.NullOp;
-import org.hisp.dhis.dxf2.objectfilter.ops.Op;
-import org.hisp.dhis.dxf2.objectfilter.ops.StartsWithOp;
+import org.hisp.dhis.objectfilter.ops.EmptyCollectionOp;
+import org.hisp.dhis.objectfilter.ops.EndsWithOp;
+import org.hisp.dhis.objectfilter.ops.EqOp;
+import org.hisp.dhis.objectfilter.ops.GtOp;
+import org.hisp.dhis.objectfilter.ops.GteOp;
+import org.hisp.dhis.objectfilter.ops.InOp;
+import org.hisp.dhis.objectfilter.ops.LikeOp;
+import org.hisp.dhis.objectfilter.ops.LtOp;
+import org.hisp.dhis.objectfilter.ops.LteOp;
+import org.hisp.dhis.objectfilter.ops.NLikeOp;
+import org.hisp.dhis.objectfilter.ops.NeqOp;
+import org.hisp.dhis.objectfilter.ops.NnullOp;
+import org.hisp.dhis.objectfilter.ops.NullOp;
+import org.hisp.dhis.objectfilter.ops.Op;
+import org.hisp.dhis.objectfilter.ops.StartsWithOp;
 
 import java.util.Map;
 

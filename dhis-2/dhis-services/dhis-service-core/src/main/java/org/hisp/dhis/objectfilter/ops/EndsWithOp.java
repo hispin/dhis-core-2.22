@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.fieldfilter;
+package org.hisp.dhis.objectfilter.ops;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,58 +28,27 @@ package org.hisp.dhis.dxf2.fieldfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Map;
-
-import org.hisp.dhis.node.LinearNodePipeline;
-import org.hisp.dhis.node.NodePropertyConverter;
-
-import com.google.common.base.MoreObjects;
-import com.google.common.collect.ForwardingMap;
-import com.google.common.collect.Maps;
-
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class FieldMap extends ForwardingMap<String, FieldMap>
+public class EndsWithOp extends Op
 {
-    private final Map<String, FieldMap> delegate = Maps.newHashMap();
-
-    private NodePropertyConverter nodePropertyConverter;
-
-    private final LinearNodePipeline pipeline = new LinearNodePipeline();
-
     @Override
-    protected Map<String, FieldMap> delegate()
+    public OpStatus evaluate( Object object )
     {
-        return delegate;
-    }
+        if ( getValue() == null || object == null )
+        {
+            return OpStatus.IGNORE;
+        }
 
-    public NodePropertyConverter getNodePropertyConverter()
-    {
-        return nodePropertyConverter;
-    }
+        if ( String.class.isInstance( object ) )
+        {
+            String s1 = getValue( String.class );
+            String s2 = (String) object;
 
-    public void setNodePropertyConverter( NodePropertyConverter nodePropertyConverter )
-    {
-        this.nodePropertyConverter = nodePropertyConverter;
-    }
+            return (s1 != null && s2.toLowerCase().endsWith( s1.toLowerCase() )) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
+        }
 
-    public boolean haveNodePropertyConverter()
-    {
-        return nodePropertyConverter != null;
-    }
-
-    public LinearNodePipeline getPipeline()
-    {
-        return pipeline;
-    }
-
-    @Override
-    public String toString()
-    {
-        return MoreObjects.toStringHelper( this )
-            .add( "map", standardToString() )
-            .add( "nodePropertyConverter", nodePropertyConverter )
-            .toString();
+        return OpStatus.IGNORE;
     }
 }

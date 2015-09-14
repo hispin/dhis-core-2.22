@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter.ops;
+package org.hisp.dhis.objectfilter.ops;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,39 +28,10 @@ package org.hisp.dhis.dxf2.objectfilter.ops;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.query.QueryUtils;
-
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
- */
-public abstract class Op
+* @author Morten Olav Hansen <mortenoh@gmail.com>
+*/
+public enum OpStatus
 {
-    private String value;
-
-    public boolean wantValue()
-    {
-        return true;
-    }
-
-    public void setValue( String value )
-    {
-        this.value = value;
-    }
-
-    public String getValue()
-    {
-        return value;
-    }
-
-    public <T> T getValue( Class<T> klass )
-    {
-        return QueryUtils.getValue( klass, value );
-    }
-
-    public <T> T getValue( Class<T> klass, Object value )
-    {
-        return QueryUtils.getValue( klass, value );
-    }
-
-    public abstract OpStatus evaluate( Object object );
+    INCLUDE, EXCLUDE, IGNORE
 }

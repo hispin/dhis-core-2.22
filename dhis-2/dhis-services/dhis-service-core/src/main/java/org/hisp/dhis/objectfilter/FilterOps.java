@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter.ops;
+package org.hisp.dhis.objectfilter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,27 +28,35 @@ package org.hisp.dhis.dxf2.objectfilter.ops;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.objectfilter.ops.Op;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class StartsWithOp extends Op
+public class FilterOps
 {
-    @Override
-    public OpStatus evaluate( Object object )
+    private List<Op> filters = new ArrayList<>();
+
+    FilterOps()
     {
-        if ( getValue() == null || object == null )
-        {
-            return OpStatus.EXCLUDE;
-        }
+    }
 
-        if ( String.class.isInstance( object ) )
-        {
-            String s1 = getValue( String.class );
-            String s2 = (String) object;
+    public List<Op> getFilters()
+    {
+        return filters;
+    }
 
-            return (s1 != null && s2.toLowerCase().startsWith( s1.toLowerCase() )) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
-        }
+    public void setFilters( List<Op> filters )
+    {
+        this.filters = filters;
+    }
 
-        return OpStatus.EXCLUDE;
+    @Override
+    public String toString()
+    {
+        return filters.toString();
     }
 }
