@@ -28,17 +28,6 @@ package org.hisp.dhis.webportal.module;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.hisp.dhis.appmanager.App;
-import org.hisp.dhis.appmanager.AppManager;
-import org.hisp.dhis.security.ActionAccessResolver;
-import org.hisp.dhis.user.CurrentUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +38,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.hisp.dhis.appmanager.App;
+import org.hisp.dhis.appmanager.AppManager;
+import org.hisp.dhis.security.ActionAccessResolver;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 /**
  * @author Torgeir Lorange Ostby
