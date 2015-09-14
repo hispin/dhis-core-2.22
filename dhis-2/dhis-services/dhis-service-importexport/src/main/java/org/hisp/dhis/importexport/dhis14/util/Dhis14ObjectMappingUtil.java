@@ -70,12 +70,14 @@ public class Dhis14ObjectMappingUtil
     {
         dataElementTypeMap = new HashMap<>();
 
+        /*
         dataElementTypeMap.put( 1, DataElement.VALUE_TYPE_STRING ); // Should be Date
         dataElementTypeMap.put( 2, DataElement.VALUE_TYPE_STRING );
         dataElementTypeMap.put( 3, DataElement.VALUE_TYPE_INT );
         dataElementTypeMap.put( 4, DataElement.VALUE_TYPE_STRING );
         dataElementTypeMap.put( 5, DataElement.VALUE_TYPE_BOOL );
         dataElementTypeMap.put( 6, DataElement.VALUE_TYPE_STRING ); // Should be Object
+        */
     }
 
     public static Map<Integer, PeriodType> getPeriodTypeMap()
