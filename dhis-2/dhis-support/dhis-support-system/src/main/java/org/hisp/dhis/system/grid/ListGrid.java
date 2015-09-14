@@ -516,7 +516,7 @@ public class ListGrid
             return this; // No sorting
         }
 
-        columnIndex = columnIndex - 1;
+        columnIndex--;
 
         if ( columnIndex < 0 || columnIndex >= getWidth() )
         {

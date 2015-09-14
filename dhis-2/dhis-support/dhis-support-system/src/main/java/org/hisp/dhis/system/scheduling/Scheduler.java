@@ -35,16 +35,16 @@ package org.hisp.dhis.system.scheduling;
  */
 public interface Scheduler
 {
-    final String CRON_DAILY_0AM = "0 0 0 * * ?";
-    final String CRON_DAILY_11PM = "0 0 23 * * ?";
-    final String CRON_EVERY_MIN = "0 0/1 * * * ?";
-    final String CRON_EVERY_15MIN = "0 0/15 * * * ?";
-    final String CRON_TEST = "0 * * * * ?";
+    String CRON_DAILY_0AM = "0 0 0 * * ?";
+    String CRON_DAILY_11PM = "0 0 23 * * ?";
+    String CRON_EVERY_MIN = "0 0/1 * * * ?";
+    String CRON_EVERY_15MIN = "0 0/15 * * * ?";
+    String CRON_TEST = "0 * * * * ?";
     
-    final String STATUS_RUNNING = "running";
-    final String STATUS_DONE = "done";
-    final String STATUS_STOPPED  = "stopped";
-    final String STATUS_NOT_STARTED = "not_started";
+    String STATUS_RUNNING = "running";
+    String STATUS_DONE = "done";
+    String STATUS_STOPPED  = "stopped";
+    String STATUS_NOT_STARTED = "not_started";
     
     /**
      * Execute the given task immediately.

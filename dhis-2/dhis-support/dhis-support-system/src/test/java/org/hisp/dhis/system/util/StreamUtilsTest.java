@@ -46,11 +46,11 @@ import org.junit.Test;
  */
 public class StreamUtilsTest
 {
-    public static BufferedInputStream zipStream;
+    private BufferedInputStream zipStream;
 
-    public static BufferedInputStream gzipStream;
+    private BufferedInputStream gzipStream;
 
-    public static BufferedInputStream plainStream;
+    private BufferedInputStream plainStream;
 
     @Before
     public void setUp()

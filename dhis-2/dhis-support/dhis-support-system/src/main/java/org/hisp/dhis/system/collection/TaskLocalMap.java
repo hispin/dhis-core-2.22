@@ -38,7 +38,7 @@ import org.hisp.dhis.scheduling.TaskId;
  */
 public class TaskLocalMap<T, V>
 {
-    private Map<TaskId, Map<T, V>> internalMap;
+    private final Map<TaskId, Map<T, V>> internalMap;
     
     public TaskLocalMap()
     {

@@ -57,9 +57,9 @@ public class AnnotationUtils
         
         for ( Method method : target.getClass().getMethods() )
         {
-            Annotation a = org.springframework.core.annotation.AnnotationUtils.findAnnotation( method, annotationType );
+            Annotation annotation = org.springframework.core.annotation.AnnotationUtils.findAnnotation( method, annotationType );
             
-            if ( a != null )
+            if ( annotation != null )
             {
                 methods.add( method );
             }

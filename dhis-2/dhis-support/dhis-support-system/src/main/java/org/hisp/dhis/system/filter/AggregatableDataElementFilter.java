@@ -44,7 +44,7 @@ public class AggregatableDataElementFilter
 {
     public static final AggregatableDataElementFilter INSTANCE = new AggregatableDataElementFilter();
 
-    private static Set<ValueType> VALUE_TYPES = Sets.newHashSet(
+    private static final Set<ValueType> VALUE_TYPES = Sets.newHashSet(
         ValueType.BOOLEAN, ValueType.TEXT, ValueType.LONG_TEXT, ValueType.LETTER,
         ValueType.INTEGER, ValueType.INTEGER_POSITIVE, ValueType.INTEGER_NEGATIVE, ValueType.INTEGER_ZERO_OR_POSITIVE,
         ValueType.NUMBER, ValueType.UNIT_INTERVAL, ValueType.PERCENTAGE
