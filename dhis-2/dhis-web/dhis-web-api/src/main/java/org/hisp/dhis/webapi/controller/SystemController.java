@@ -88,10 +88,7 @@ public class SystemController
     public @ResponseBody RootNode getUid( @RequestParam( required = false, defaultValue = "1" ) Integer n, HttpServletResponse response )
         throws IOException, InvalidTypeException
     {
-        if ( n > 10000 )
-        {
-            n = 10000;
-        }
+        n = Math.min( n, 10000 );
 
         RootNode rootNode = new RootNode( "codes" );
         CollectionNode collectionNode = rootNode.addChild( new CollectionNode( "codes" ) );
@@ -109,10 +106,7 @@ public class SystemController
     public @ResponseBody RootNode getUuid( @RequestParam( required = false, defaultValue = "1" ) Integer n, HttpServletResponse response )
         throws IOException, InvalidTypeException
     {
-        if ( n > 10000 )
-        {
-            n = 10000;
-        }
+        n = Math.min( n, 10000 );
 
         RootNode rootNode = new RootNode( "codes" );
         CollectionNode collectionNode = rootNode.addChild( new CollectionNode( "codes" ) );

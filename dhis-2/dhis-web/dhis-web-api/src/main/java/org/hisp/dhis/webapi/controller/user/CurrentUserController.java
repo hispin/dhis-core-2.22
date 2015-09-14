@@ -112,7 +112,7 @@ public class CurrentUserController
 
     private static final int MAX_OBJECTS = 50;
 
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "yyyy-MM-dd" );
+    private static SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd" );
 
     @Autowired
     private CurrentUserService currentUserService;
@@ -349,7 +349,7 @@ public class CurrentUserController
 
         if ( currentUser.getBirthday() != null )
         {
-            userAccount.setBirthday( simpleDateFormat.format( currentUser.getBirthday() ) );
+            userAccount.setBirthday( SIMPLE_DATE_FORMAT.format( currentUser.getBirthday() ) );
         }
 
         userAccount.setNationality( currentUser.getNationality() );
@@ -390,7 +390,7 @@ public class CurrentUserController
 
         if ( userAccount.getBirthday() != null && !userAccount.getBirthday().isEmpty() )
         {
-            currentUser.setBirthday( simpleDateFormat.parse( userAccount.getBirthday() ) );
+            currentUser.setBirthday( SIMPLE_DATE_FORMAT.parse( userAccount.getBirthday() ) );
         }
 
         currentUser.setNationality( userAccount.getNationality() );

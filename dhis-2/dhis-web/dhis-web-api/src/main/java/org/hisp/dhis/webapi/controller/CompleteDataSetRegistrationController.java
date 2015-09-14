@@ -332,7 +332,9 @@ public class CompleteDataSetRegistrationController
                         orgUnit, attributeOptionCombo, storedBy, completionDate );
 
                     if ( completeDataSetRegistration != null )
+                    {
                         registrations.add( completeDataSetRegistration );
+                    }
                 }
             }
         }

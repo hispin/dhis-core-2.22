@@ -28,17 +28,18 @@ package org.hisp.dhis.webapi.view;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.view.AbstractView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.springframework.web.servlet.view.AbstractView;
+
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -46,13 +47,10 @@ import java.util.zip.GZIPOutputStream;
 public class JacksonJsonView
     extends AbstractView
 {
-    private static String CONTENT_TYPE_APPLICATION_JSON = "application/json";
-
-    private static String CONTENT_TYPE_APPLICATION_JSON_GZIP = "application/json+gzip";
-
-    private static String CONTENT_TYPE_APPLICATION_JAVASCRIPT = "application/javascript";
-
-    private static String CONTENT_TYPE_APPLICATION_JAVASCRIPT_GZIP = "application/javascript+gzip";
+    private static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
+    private static final String CONTENT_TYPE_APPLICATION_JSON_GZIP = "application/json+gzip";
+    private static final String CONTENT_TYPE_APPLICATION_JAVASCRIPT = "application/javascript";
+    private static final String CONTENT_TYPE_APPLICATION_JAVASCRIPT_GZIP = "application/javascript+gzip";
 
     private boolean withPadding = false;
 
@@ -61,9 +59,6 @@ public class JacksonJsonView
     private String callbackParameter = "callback";
 
     private String paddingFunction = "callback";
-
-    @Autowired
-    private ContextUtils contextUtils;
 
     public JacksonJsonView()
     {

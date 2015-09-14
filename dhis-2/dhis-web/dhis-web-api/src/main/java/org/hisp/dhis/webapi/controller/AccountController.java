@@ -88,6 +88,7 @@ public class AccountController
     private static final String TRUE = "true";
     private static final String SPLIT = "\n";
     private static final int MAX_LENGTH = 80;
+    private static final int MAX_PHONE_NO_LENGTH = 30;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -298,7 +299,7 @@ public class AccountController
             throw new WebMessageException( WebMessageUtils.badRequest( "Email is not specified or invalid" ) );
         }
 
-        if ( phoneNumber == null || phoneNumber.trim().length() > 30 )
+        if ( phoneNumber == null || phoneNumber.trim().length() > MAX_PHONE_NO_LENGTH )
         {
             throw new WebMessageException( WebMessageUtils.badRequest( "Phone number is not specified or invalid" ) );
         }

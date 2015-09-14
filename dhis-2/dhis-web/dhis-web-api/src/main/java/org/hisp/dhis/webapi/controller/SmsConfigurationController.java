@@ -99,7 +99,7 @@ public class SmsConfigurationController
     {
         if ( smsConfiguration == null )
         {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException( "SMS configuration not set" );
         }
 
         smsConfigurationManager.updateSmsConfiguration( smsConfiguration );

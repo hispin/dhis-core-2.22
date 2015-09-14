@@ -29,16 +29,16 @@ package org.hisp.dhis.webapi.view;
  */
 
 
-import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.view.AbstractView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.webapi.utils.ContextUtils;
+import org.springframework.web.servlet.view.AbstractView;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -46,14 +46,10 @@ import java.util.zip.GZIPOutputStream;
 public class JacksonXmlView
     extends AbstractView
 {
-    private static String CONTENT_TYPE_APPLICATION_XML = "application/xml";
-
-    private static String CONTENT_TYPE_APPLICATION_XML_GZIP = "application/xml+gzip";
+    private static final String CONTENT_TYPE_APPLICATION_XML = "application/xml";
+    private static final String CONTENT_TYPE_APPLICATION_XML_GZIP = "application/xml+gzip";
 
     private boolean withCompression = false;
-
-    @Autowired
-    private ContextUtils contextUtils;
 
     public JacksonXmlView()
     {
