@@ -60,13 +60,6 @@ public class ProgramInstanceDeletionHandler
         this.commentService = commentService;
     }
 
-    private ProgramStageDataElementService programStageDEService;
-
-    public void setProgramStageDEService( ProgramStageDataElementService programStageDEService )
-    {
-        this.programStageDEService = programStageDEService;
-    }
-
     // -------------------------------------------------------------------------
     // Implementation methods
     // -------------------------------------------------------------------------
