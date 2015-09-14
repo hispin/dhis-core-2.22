@@ -172,6 +172,7 @@ trackerCapture.controller('RelationshipController',
     function($scope, 
             $rootScope,
             $translate,
+            $timeout,
             DateUtils,
             CurrentSelection,
             OperatorFactory,
@@ -271,9 +272,15 @@ trackerCapture.controller('RelationshipController',
     }
     
     //listen for selections
-    $scope.$on('relationship', function() { 
-        var relationshipInfo = CurrentSelection.getRelationshipInfo();
-        $scope.teiForRelationship = relationshipInfo.tei;
+    $scope.$on('relationship', function(event, args){
+        if(args.result === 'SUCCESS'){
+            var relationshipInfo = CurrentSelection.getRelationshipInfo();
+            $scope.teiForRelationship = relationshipInfo.tei;
+        }
+        
+        if(args.result === 'CANCEL'){
+            $scope.showRegistration();
+        }        
     });
     
     //sortGrid
@@ -465,6 +472,13 @@ trackerCapture.controller('RelationshipController',
         
         if($scope.showRegistrationDiv){
             $scope.showTrackedEntityDiv = false;
+            $timeout(function() {
+                var mainTei = angular.copy($scope.selectedTei); 
+                angular.forEach(mainTei.attributes, function(att){
+                    mainTei[att.attribute] = att.value;
+                });
+                $rootScope.$broadcast('registrationWidget', {registrationMode: 'RELATIONSHIP', mainTei: mainTei, relativeProgram: $scope.selectedProgramForRelative});
+            }, 200);
         }
         else{
             $scope.showTrackedEntityDiv = true;            
@@ -557,13 +571,22 @@ trackerCapture.controller('RelationshipController',
     $scope.enrollment = {enrollmentDate: '', incidentDate: ''};    
     $scope.attributesById = CurrentSelection.getAttributesById();
     
-    var selections = CurrentSelection.get();
+    var selections = CurrentSelection.get();    
     $scope.optionSets = selections.optionSets;
     $scope.programs = selections.prs;
     
+    var mainTei = angular.copy(selections.tei);    
+    angular.forEach(mainTei.attributes, function(att){
+        mainTei[att.attribute] = att.value;
+    });
     var getProgramAttributes = function(program){
         AttributesFactory.getByProgram(program).then(function(atts){
-            $scope.attributes = atts;
+            $scope.attributes = atts;            
+            angular.forEach($scope.attributes, function(att){
+                if(att.inherit && mainTei[att.id]){
+                    att.value = mainTei[att.id];
+                }
+            });
         });
     };
   
