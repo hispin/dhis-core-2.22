@@ -39,6 +39,7 @@ import org.hisp.dhis.commons.action.AbstractRelativePeriodsAction;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.report.Report;
 import org.hisp.dhis.report.ReportService;
+import org.hisp.dhis.report.ReportType;
 import org.hisp.dhis.reporttable.ReportParams;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
@@ -98,9 +99,9 @@ public class AddReportAction
         this.name = name;
     }
     
-    private String type;
+    private ReportType type;
 
-    public void setType( String type )
+    public void setType( ReportType type )
     {
         this.type = type;
     }

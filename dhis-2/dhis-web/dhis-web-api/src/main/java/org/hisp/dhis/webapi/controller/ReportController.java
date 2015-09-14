@@ -118,7 +118,7 @@ public class ReportController
             throw new WebMessageException( WebMessageUtils.conflict( "Report has no design content: " + uid ) );
         }
 
-        if ( Report.TYPE_HTML.equals( report.getType() ) )
+        if ( report.isTypeHtml() )
         {
             contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.NO_CACHE, filenameEncode( report.getName() ) + ".html", true );
         }

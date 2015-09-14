@@ -869,6 +869,10 @@ public class TableAlteror
         executeSql( "drop table aggregatedorgunitdatavalue_temp" );
         executeSql( "drop table aggregatedorgunitindicatorvalue" );
         executeSql( "drop table aggregatedorgunitindicatorvalue_temp" );
+        
+        executeSql( "update report set type='JASPER_REPORT_TABLE' where type='jasperReportTable'" );
+        executeSql( "update report set type='JASPER_JDBC' where type='jasperJdbc'" );
+        executeSql( "update report set type='HTML' where type='html'" );
 
         oauth2();
 
@@ -1337,22 +1341,6 @@ public class TableAlteror
         }
     }
 
-    private int executeSql( String sql )
-    {
-        try
-        {
-            // TODO use jdbcTemplate
-
-            return statementManager.getHolder().executeUpdate( sql );
-        }
-        catch ( Exception ex )
-        {
-            log.debug( ex );
-
-            return -1;
-        }
-    }
-
     private Integer getDefaultOptionCombo()
     {
         String sql = "select coc.categoryoptioncomboid from categoryoptioncombo coc "
@@ -1380,6 +1368,22 @@ public class TableAlteror
         if ( result != -1 )
         {
             executeSql( "drop table optionsetmembers" );
+        }
+    }
+
+    private int executeSql( String sql )
+    {
+        try
+        {
+            // TODO use jdbcTemplate
+
+            return statementManager.getHolder().executeUpdate( sql );
+        }
+        catch ( Exception ex )
+        {
+            log.debug( ex );
+
+            return -1;
         }
     }
 }
