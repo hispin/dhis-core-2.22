@@ -197,6 +197,7 @@
                         </div>
                     </div>
                     <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                    </div>
                         <div class="alert alert-warning alert-dismissible" role="alert" ng-if="warningMessages[prStDe.dataElement.id]">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             {{warningMessages[prStDe.dataElement.id]}}
@@ -205,7 +206,6 @@
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             {{errorMessages[prStDe.dataElement.id]}}
                         </div>
-                    </div>
                 </ng-form>                
             </td>
             <td ng-if="allowProvidedElsewhereExists">                
