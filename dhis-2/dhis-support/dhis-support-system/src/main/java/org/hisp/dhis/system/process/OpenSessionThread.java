@@ -40,7 +40,7 @@ public abstract class OpenSessionThread
 {
     private SessionFactory sessionFactory;
 
-    public OpenSessionThread( SessionFactory sessionFactory )
+    protected OpenSessionThread( SessionFactory sessionFactory )
     {
         this.sessionFactory = sessionFactory;
     }

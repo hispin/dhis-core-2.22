@@ -119,7 +119,7 @@ import org.hisp.dhis.validation.ValidationRuleGroup;
  */
 public abstract class DeletionHandler
 {
-    protected final String ERROR = "";
+    protected static final String ERROR = "";
 
     // -------------------------------------------------------------------------
     // Abstract methods

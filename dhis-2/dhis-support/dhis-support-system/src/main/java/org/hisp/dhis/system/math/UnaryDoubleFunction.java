@@ -41,7 +41,7 @@ import java.util.Stack;
 public abstract class UnaryDoubleFunction
     extends PostfixMathCommand
 {
-    public UnaryDoubleFunction()
+    protected UnaryDoubleFunction()
     {
         super();
 
