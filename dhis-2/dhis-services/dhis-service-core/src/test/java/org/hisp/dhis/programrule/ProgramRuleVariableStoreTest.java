@@ -72,7 +72,7 @@ public class ProgramRuleVariableStoreTest
     {
         ProgramRuleVariable varA = new ProgramRuleVariable( "VarA", programA, ProgramRuleVariableSourceType.DATAELEMENT_CURRENT_EVENT, null, dataelementA, null);
         ProgramRuleVariable varB = new ProgramRuleVariable( "VarB", programA, ProgramRuleVariableSourceType.DATAELEMENT_NEWEST_EVENT_PROGRAM, null, dataelementA, null);
-        ProgramRuleVariable varC = new ProgramRuleVariable( "VarC", programA, ProgramRuleVariableSourceType.CALCULATED_VALUE, null, null, null);
+        ProgramRuleVariable varC = new ProgramRuleVariable( "VarC", programA, ProgramRuleVariableSourceType.TEI_ATTRIBUTE, null, dataelementA, null);
         
         variableStore.save( varA );
         variableStore.save( varB );
