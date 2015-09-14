@@ -28,18 +28,16 @@ package org.hisp.dhis.webportal.interceptor;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.hisp.dhis.webportal.menu.MenuState;
 import org.hisp.dhis.webportal.menu.MenuStateManager;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Torgeir Lorange Ostby
- * @version $Id: WebWorkPortalMenuInterceptor.java 2869 2007-02-20 14:26:09Z andegje $
  */
 public class XWorkPortalMenuInterceptor
     implements Interceptor
@@ -69,15 +67,11 @@ public class XWorkPortalMenuInterceptor
     @Override
     public void destroy()
     {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void init()
     {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
@@ -96,7 +90,7 @@ public class XWorkPortalMenuInterceptor
         menuStateMap.put( KEY_MENU_STATE, menuState );
 
         invocation.getStack().push( menuStateMap );
-        
+
         return invocation.invoke();
     }
 }
