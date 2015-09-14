@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter.ops;
+package org.hisp.dhis.fieldfilter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,27 +28,31 @@ package org.hisp.dhis.dxf2.objectfilter.ops;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.node.types.CollectionNode;
+import org.hisp.dhis.node.types.ComplexNode;
+
+import java.util.List;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class NLikeOp extends Op
+public interface FieldFilterService
 {
-    @Override
-    public OpStatus evaluate( Object object )
-    {
-        if ( getValue() == null || object == null )
-        {
-            return OpStatus.EXCLUDE;
-        }
+    /**
+     * Perform inclusion/exclusion on a list of objects.
+     *
+     * @param object    Object to filter on
+     * @param fieldList Field filter
+     * @return List of objects with only wanted properties
+     */
+    ComplexNode filter( Object object, List<String> fieldList );
 
-        if ( String.class.isInstance( object ) )
-        {
-            String s1 = getValue( String.class );
-            String s2 = (String) object;
-
-            return (s1 != null && s2.toLowerCase().contains( s1.toLowerCase() )) ? OpStatus.EXCLUDE : OpStatus.INCLUDE;
-        }
-
-        return OpStatus.EXCLUDE;
-    }
+    /**
+     * Perform inclusion/exclusion on a list of objects.
+     *
+     * @param objects   List to filter
+     * @param fieldList Field filter
+     * @return List of objects with only wanted properties
+     */
+    CollectionNode filter( Class<?> klass, List<?> objects, List<String> fieldList );
 }

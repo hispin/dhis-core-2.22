@@ -25,6 +25,12 @@
 
   <bean id="org.hisp.dhis.node.NodeService" class="org.hisp.dhis.node.DefaultNodeService" />
 
+  <bean id="org.hisp.dhis.parser.ParserService" class="org.hisp.dhis.parser.DefaultParserService" />
+
+  <bean id="org.hisp.dhis.objectfilter.ObjectFilterService" class="org.hisp.dhis.objectfilter.DefaultObjectFilterService" />
+
+  <bean id="org.hisp.dhis.fieldfilter.FieldFilterService" class="org.hisp.dhis.fieldfilter.DefaultFieldFilterService" />
+
   <!-- Store definitions -->
 
   <bean id="org.hisp.dhis.dataentryform.DataEntryFormStore" class="org.hisp.dhis.dataentryform.hibernate.HibernateDataEntryFormStore">
@@ -1206,7 +1212,7 @@
   </bean>
 
   <bean id="org.hisp.dhis.eventreport.EventReportService" class="org.hisp.dhis.eventreport.DefaultEventReportService">
-      <property name="eventReportStore" ref="org.hisp.dhis.eventreport.EventReportStore" />
+    <property name="eventReportStore" ref="org.hisp.dhis.eventreport.EventReportStore" />
   </bean>
 
   <bean id="org.hisp.dhis.eventchart.EventChartService" class="org.hisp.dhis.eventchart.DefaultEventChartService">

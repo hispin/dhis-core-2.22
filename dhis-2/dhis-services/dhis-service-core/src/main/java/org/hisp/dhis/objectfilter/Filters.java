@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter;
+package org.hisp.dhis.objectfilter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,7 +29,7 @@ package org.hisp.dhis.dxf2.objectfilter;
  */
 
 import com.google.common.collect.Maps;
-import org.hisp.dhis.dxf2.objectfilter.ops.Op;
+import org.hisp.dhis.objectfilter.ops.Op;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter.ops;
+package org.hisp.dhis.objectfilter.ops;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,41 +29,79 @@ package org.hisp.dhis.dxf2.objectfilter.ops;
  */
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class EmptyCollectionOp extends Op
+public class InOp extends Op
 {
     @Override
-    public boolean wantValue()
-    {
-        return false;
-    }
-
-    @Override
+    @SuppressWarnings( "unchecked" )
     public OpStatus evaluate( Object object )
     {
-        if ( object == null )
+        Collection<String> items = getValue( Collection.class );
+
+        if ( items == null || object == null )
         {
-            // TODO: ignore or include here?
             return OpStatus.IGNORE;
         }
 
-        if ( Collection.class.isInstance( object ) )
+        for ( String item : items )
         {
-            Collection<?> c = (Collection<?>) object;
-
-            if ( c.isEmpty() )
+            if ( compare( item, object ) )
             {
                 return OpStatus.INCLUDE;
             }
-            else
-            {
-                return OpStatus.EXCLUDE;
-            }
         }
 
-        return OpStatus.IGNORE;
+        return OpStatus.EXCLUDE;
+    }
+
+    private boolean compare( String item, Object object )
+    {
+        if ( String.class.isInstance( object ) )
+        {
+            String s1 = getValue( String.class, item );
+            String s2 = (String) object;
+
+            return s1 != null && s2.equals( s1 );
+        }
+        else if ( Boolean.class.isInstance( object ) )
+        {
+            Boolean s1 = getValue( Boolean.class, item );
+            Boolean s2 = (Boolean) object;
+
+            return s1 != null && s2.equals( s1 );
+        }
+        else if ( Integer.class.isInstance( object ) )
+        {
+            Integer s1 = getValue( Integer.class, item );
+            Integer s2 = (Integer) object;
+
+            return s1 != null && s2.equals( s1 );
+        }
+        else if ( Float.class.isInstance( object ) )
+        {
+            Float s1 = getValue( Float.class, item );
+            Float s2 = (Float) object;
+
+            return s1 != null && s2.equals( s1 );
+        }
+        else if ( Date.class.isInstance( object ) )
+        {
+            Date s1 = getValue( Date.class, item );
+            Date s2 = (Date) object;
+
+            return s1 != null && s2.equals( s1 );
+        }
+        else if ( Enum.class.isInstance( object ) )
+        {
+            String s2 = String.valueOf( object );
+
+            return item != null && s2.equals( item );
+        }
+
+        return false;
     }
 }

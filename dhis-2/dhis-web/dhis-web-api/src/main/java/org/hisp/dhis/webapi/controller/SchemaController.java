@@ -29,7 +29,7 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import com.google.common.collect.Lists;
-import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
+import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.schema.SchemaValidator;
 import org.hisp.dhis.dxf2.schema.ValidationViolation;

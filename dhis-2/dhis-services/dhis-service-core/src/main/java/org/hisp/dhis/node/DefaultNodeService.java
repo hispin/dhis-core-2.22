@@ -30,12 +30,17 @@ package org.hisp.dhis.node;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.hisp.dhis.fieldfilter.FieldFilterService;
+import org.hisp.dhis.node.types.CollectionNode;
+import org.hisp.dhis.node.types.ComplexNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +58,9 @@ public class DefaultNodeService implements NodeService
     private Map<String, NodeSerializer> nodeSerializerMap = Maps.newHashMap();
 
     private Map<String, NodeDeserializer> nodeDeserializerMap = Maps.newHashMap();
+
+    @Autowired
+    private FieldFilterService fieldFilterService;
 
     @PostConstruct
     private void init()
@@ -136,5 +144,21 @@ public class DefaultNodeService implements NodeService
         }
 
         return null;
+    }
+
+    @Override
+    public ComplexNode toNode( Object object )
+    {
+        Assert.notNull( object, "object can not be null" );
+        return fieldFilterService.filter( object, new ArrayList<>() );
+    }
+
+    @Override
+    public CollectionNode toNode( List<Object> objects )
+    {
+        Assert.notNull( objects, "objects can not be null" );
+        Assert.isTrue( objects.size() > 0, "objects list must be larger than 0" );
+
+        return fieldFilterService.filter( objects.get( 0 ).getClass(), objects, new ArrayList<>() );
     }
 }

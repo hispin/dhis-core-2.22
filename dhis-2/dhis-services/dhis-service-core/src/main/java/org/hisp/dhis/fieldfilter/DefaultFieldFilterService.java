@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.fieldfilter;
+package org.hisp.dhis.fieldfilter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -33,7 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.hisp.dhis.common.PresetProvider;
-import org.hisp.dhis.dxf2.parser.ParserService;
+import org.hisp.dhis.parser.ParserService;
 import org.hisp.dhis.node.AbstractNode;
 import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodePropertyConverter;
@@ -47,6 +47,7 @@ import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.system.util.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -113,6 +114,21 @@ public class DefaultFieldFilterService implements FieldFilterService
         }
 
         transformers = transformerBuilder.build();
+    }
+
+    @Override
+    public ComplexNode filter( Object object, List<String> fieldList )
+    {
+        Assert.notNull( object );
+
+        CollectionNode collectionNode = filter( object.getClass(), Lists.newArrayList( object ), fieldList );
+
+        if ( collectionNode.getChildren().size() > 0 )
+        {
+            return (ComplexNode) collectionNode.getChildren().get( 0 );
+        }
+
+        return null;
     }
 
     @Override

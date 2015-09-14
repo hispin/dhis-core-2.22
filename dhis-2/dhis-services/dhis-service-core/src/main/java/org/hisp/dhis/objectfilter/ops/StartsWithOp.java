@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.objectfilter;
+package org.hisp.dhis.objectfilter.ops;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,20 +28,27 @@ package org.hisp.dhis.dxf2.objectfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface ObjectFilterService
+public class StartsWithOp extends Op
 {
-    /**
-     * Filter a list of objects based on un-parsed filter string.
-     * In-memory filter
-     *
-     * @param objects List to filter
-     * @param filters Filter string
-     * @return Filtered object list
-     */
-    <T extends Object> List<T> filter( List<T> objects, List<String> filters );
+    @Override
+    public OpStatus evaluate( Object object )
+    {
+        if ( getValue() == null || object == null )
+        {
+            return OpStatus.EXCLUDE;
+        }
+
+        if ( String.class.isInstance( object ) )
+        {
+            String s1 = getValue( String.class );
+            String s2 = (String) object;
+
+            return (s1 != null && s2.toLowerCase().startsWith( s1.toLowerCase() )) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
+        }
+
+        return OpStatus.EXCLUDE;
+    }
 }

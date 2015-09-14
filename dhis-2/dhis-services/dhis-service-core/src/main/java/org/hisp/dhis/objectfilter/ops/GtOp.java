@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.fieldfilter;
+package org.hisp.dhis.objectfilter.ops;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,21 +28,58 @@ package org.hisp.dhis.dxf2.fieldfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.node.types.CollectionNode;
-
-import java.util.List;
+import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface FieldFilterService
+public class GtOp extends Op
 {
-    /**
-     * Perform inclusion/exclusion on a list of objects.
-     *
-     * @param objects   List to filter
-     * @param fieldList Field filter
-     * @return List of objects with only wanted properties
-     */
-    CollectionNode filter( Class<?> klass, List<?> objects, List<String> fieldList );
+    @Override
+    public OpStatus evaluate( Object object )
+    {
+        if ( getValue() == null || object == null )
+        {
+            return OpStatus.IGNORE;
+        }
+
+        if ( Integer.class.isInstance( object ) )
+        {
+            Integer s1 = getValue( Integer.class );
+            Integer s2 = (Integer) object;
+
+            return (s1 != null && s2 > s1) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
+        }
+        else if ( Float.class.isInstance( object ) )
+        {
+            Float s1 = getValue( Float.class );
+            Float s2 = (Float) object;
+
+            return (s1 != null && s2 > s1) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
+        }
+        else if ( Collection.class.isInstance( object ) )
+        {
+            Collection<?> collection = (Collection<?>) object;
+            Integer size = getValue( Integer.class );
+
+            if ( size != null && collection.size() > size )
+            {
+                return OpStatus.INCLUDE;
+            }
+            else
+            {
+                return OpStatus.EXCLUDE;
+            }
+        }
+        else if ( Date.class.isInstance( object ) )
+        {
+            Date s1 = getValue( Date.class );
+            Date s2 = (Date) object;
+
+            return (s1 != null && s2.after( s1 )) ? OpStatus.INCLUDE : OpStatus.EXCLUDE;
+        }
+
+        return OpStatus.IGNORE;
+    }
 }

@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.parser;
+package org.hisp.dhis.parser;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -30,8 +30,8 @@ package org.hisp.dhis.dxf2.parser;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.dxf2.fieldfilter.FieldMap;
-import org.hisp.dhis.dxf2.objectfilter.Filters;
+import org.hisp.dhis.fieldfilter.FieldMap;
+import org.hisp.dhis.objectfilter.Filters;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.parser;
+package org.hisp.dhis.objectfilter.ops;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,30 +28,25 @@ package org.hisp.dhis.dxf2.parser;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dxf2.fieldfilter.FieldMap;
-import org.hisp.dhis.dxf2.objectfilter.Filters;
-
-import java.util.List;
-
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
- */
-public interface ParserService
+* @author Morten Olav Hansen <mortenoh@gmail.com>
+*/
+public class NullOp extends Op
 {
-    /**
-     * Parses and generates Ops based on filter string, used for object filtering.
-     *
-     * @param filters One or more filter strings to parse
-     * @return Filters object
-     */
-    Filters parseObjectFilter( List<String> filters );
+    @Override
+    public boolean wantValue()
+    {
+        return false;
+    }
 
-    /**
-     * Parses and writes out fieldMap with included/excluded properties.
-     *
-     * @param filter String to parse, can be used for both inclusion/exclusion
-     * @return FieldMap with property name as key, and another FieldMap as value (recursive)
-     * @see org.hisp.dhis.dxf2.fieldfilter.FieldMap
-     */
-    FieldMap parseFieldFilter( String filter );
+    @Override
+    public OpStatus evaluate( Object object )
+    {
+        if ( object == null )
+        {
+            return OpStatus.INCLUDE;
+        }
+
+        return OpStatus.EXCLUDE;
+    }
 }

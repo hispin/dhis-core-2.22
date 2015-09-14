@@ -28,10 +28,13 @@ package org.hisp.dhis.node;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.node.types.CollectionNode;
+import org.hisp.dhis.node.types.ComplexNode;
 import org.hisp.dhis.node.types.RootNode;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -71,4 +74,20 @@ public interface NodeService
      * @return RootNode deserialized from inputStream
      */
     RootNode deserialize( String contentType, InputStream inputStream );
+
+    /**
+     * Convert a single object to a complex node instance.
+     *
+     * @param object Object to convert
+     * @return Instance of complex node, or null if any issues
+     */
+    ComplexNode toNode( Object object );
+
+    /**
+     * Convert a list of objects to a collection node of complex nodes.
+     *
+     * @param objects List of objects to convert
+     * @return {@link CollectionNode} instance with converted objects
+     */
+    CollectionNode toNode( List<Object> objects );
 }

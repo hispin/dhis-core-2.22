@@ -41,7 +41,7 @@ import org.hisp.dhis.dataapproval.DataApprovalLevelService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.dxf2.fieldfilter.FieldFilterService;
+import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.i18n.I18nService;
