@@ -196,11 +196,11 @@
     </property>
   </bean>
 
-  <!-- Scheduled tasks -->
+  <!-- Startup routine definitions -->
 
   <bean id="org.hisp.dhis.common.ReportingIdentityPopulator" class="org.hisp.dhis.common.IdentityPopulator">
     <property name="name" value="ReportingIdentityPopulator" />
-    <property name="runlevel" value="3" />
+    <property name="runlevel" value="4" />
     <property name="skipInTests" value="true" />
     <property name="tables">
       <list>

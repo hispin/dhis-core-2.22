@@ -543,7 +543,9 @@ public class DataElement
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public ValueType getValueType()
     {
-        return optionSet != null ? optionSet.getValueType() : valueType;
+        //TODO
+        //return optionSet != null ? optionSet.getValueType() : valueType;
+        return valueType;
     }
 
     public void setValueType( ValueType valueType )
