@@ -840,8 +840,9 @@ public class TableAlteror
         executeSql( "update dataelementcategory set datadimensiontype = 'ATTRIBUTE' where dimensiontype = 'attribute'" );
         executeSql( "update dataelementcategory set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
         executeSql( "alter table dataelementcategory drop column dimensiontype" );
-        executeSql( "update categoryoptiongroupset set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
-        executeSql( "update categoryoptiongroup set datadimensiontype = 'DISAGGREGATION' where datadimensiontype is null" );
+        
+        executeSql( "update categoryoptiongroupset set datadimensiontype = 'ATTRIBUTE' where datadimensiontype is null" );
+        executeSql( "update categoryoptiongroup set datadimensiontype = 'ATTRIBUTE' where datadimensiontype is null" );
 
         executeSql( "update reporttable set completedonly = false where completedonly is null" );
         executeSql( "update chart set completedonly = false where completedonly is null" );
