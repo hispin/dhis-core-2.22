@@ -219,8 +219,6 @@ public class EventController
         }
 
         csvEventService.writeEvents( outputStream, events, !skipHeader );
-        response.getOutputStream().flush();
-        response.getOutputStream().close();
     }
 
     @RequestMapping( value = "/eventRows", method = RequestMethod.GET )
