@@ -45,7 +45,6 @@ public class Option
 {
     public Option()
     {
-
     }
 
     public Option( String name, String code )

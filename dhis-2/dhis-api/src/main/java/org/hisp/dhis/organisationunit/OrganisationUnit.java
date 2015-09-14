@@ -89,7 +89,7 @@ public class OrganisationUnit
     public static final String FEATURETYPE_MULTIPOLYGON = "MultiPolygon";
     public static final String FEATURETYPE_POLYGON = "Polygon";
     public static final String FEATURETYPE_POINT = "Point";
-    public static final String RESULTTYPE_SYMBOL = "Symbol";
+    public static final String FEATURETYPE_SYMBOL = "Symbol";
 
     public static final String KEY_USER_ORGUNIT = "USER_ORGUNIT";
     public static final String KEY_USER_ORGUNIT_CHILDREN = "USER_ORGUNIT_CHILDREN";
