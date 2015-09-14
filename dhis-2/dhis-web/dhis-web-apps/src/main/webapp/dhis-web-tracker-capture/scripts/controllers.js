@@ -257,7 +257,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             }
             
             //process tei grid
-            $scope.trackedEntityList = TEIGridService.format(data,false, $scope.optionSets);
+            $scope.trackedEntityList = TEIGridService.format(data,false, $scope.optionSets, null);
             $scope.showTrackedEntityDiv = true;
             $scope.teiFetched = true;  
             $scope.doSearch = true;

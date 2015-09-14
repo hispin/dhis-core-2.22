@@ -1495,7 +1495,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 .service('TEIGridService', function(OrgUnitService, OptionSetService, DateUtils, $translate, AttributesFactory){
     
     return {
-        format: function(grid, map, optionSets){
+        format: function(grid, map, optionSets, invalidTeis){
+            invalidTeis = !invalidTeis ? [] : invalidTeis;
             if(!grid || !grid.rows){
                 return;
             }
@@ -1519,47 +1520,49 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 OrgUnitService.open().then(function(){
 
                     angular.forEach(grid.rows, function(row){
-                        var entity = {};
-                        var isEmpty = true;
+                        if(invalidTeis.indexOf(row[0]) === -1 ){
+                            var entity = {};
+                            var isEmpty = true;
 
-                        entity.id = row[0];
-                        entity.created = DateUtils.formatFromApiToUser( row[1] );
-                        entity.orgUnit = row[3];                              
-                        entity.type = row[4];
-                        entity.inactive = row[5] !== "" ? row[5] : false;
+                            entity.id = row[0];
+                            entity.created = DateUtils.formatFromApiToUser( row[1] );
+                            entity.orgUnit = row[3];                              
+                            entity.type = row[4];
+                            entity.inactive = row[5] !== "" ? row[5] : false;
 
-                        OrgUnitService.get(row[3]).then(function(ou){
-                            if(ou){
-                                entity.orgUnitName = ou.n;
-                            }                                                       
-                        });
+                            OrgUnitService.get(row[3]).then(function(ou){
+                                if(ou){
+                                    entity.orgUnitName = ou.n;
+                                }                                                       
+                            });
 
-                        for(var i=6; i<row.length; i++){
-                            if(row[i] && row[i] !== ''){
-                                isEmpty = false;
-                                var val = row[i];
-                                
-                                if(attributes[grid.headers[i].name] && 
-                                        attributes[grid.headers[i].name].optionSetValue && 
-                                        optionSets &&    
-                                        attributes[grid.headers[i].name].optionSet &&
-                                        optionSets[attributes[grid.headers[i].name].optionSet.id] ){
-                                    val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
+                            for(var i=6; i<row.length; i++){
+                                if(row[i] && row[i] !== ''){
+                                    isEmpty = false;
+                                    var val = row[i];
+
+                                    if(attributes[grid.headers[i].name] && 
+                                            attributes[grid.headers[i].name].optionSetValue && 
+                                            optionSets &&    
+                                            attributes[grid.headers[i].name].optionSet &&
+                                            optionSets[attributes[grid.headers[i].name].optionSet.id] ){
+                                        val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
+                                    }
+                                    if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
+                                        val = DateUtils.formatFromApiToUser( val );
+                                    }
+
+                                    entity[grid.headers[i].name] = val;
                                 }
-                                if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
-                                    val = DateUtils.formatFromApiToUser( val );
-                                }
-                                
-                                entity[grid.headers[i].name] = val;
                             }
-                        }
 
-                        if(!isEmpty){
-                            if(map){
-                                entityList[entity.id] = entity;
-                            }
-                            else{
-                                entityList.push(entity);
+                            if(!isEmpty){
+                                if(map){
+                                    entityList[entity.id] = entity;
+                                }
+                                else{
+                                    entityList.push(entity);
+                                }
                             }
                         }
                     });                
