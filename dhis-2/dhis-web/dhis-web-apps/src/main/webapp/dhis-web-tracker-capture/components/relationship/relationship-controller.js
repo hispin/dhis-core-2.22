@@ -203,6 +203,12 @@ trackerCapture.controller('RelationshipController',
     
     $scope.selectedRelationship = {};
     $scope.relationship = {};
+    
+    var invalidTeis = [];
+    invalidTeis.push($scope.selectedTei.trackedEntityInstance);
+    angular.forEach($scope.selectedTei.relationships, function(rel){
+        invalidTeis.push(rel.trackedEntityInstanceB);
+    });
 
     //Selections
     $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
@@ -374,7 +380,7 @@ trackerCapture.controller('RelationshipController',
             }
             
             //process tei grid
-            $scope.trackedEntityList = TEIGridService.format(data,false, $scope.optionSets);
+            $scope.trackedEntityList = TEIGridService.format(data,false, $scope.optionSets, invalidTeis);
             $scope.showTrackedEntityDiv = true;
             $scope.teiFetched = true;
             
