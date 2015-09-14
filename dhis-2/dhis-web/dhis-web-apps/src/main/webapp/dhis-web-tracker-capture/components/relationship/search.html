@@ -43,7 +43,7 @@
                         </select>
                     </div>
                     <div ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
-                        <div ng-switch-when="number">
+                        <div ng-switch-when="NUMBER">
                             <div class="dataelement-filter">                                                
                                 <div class="filter-operator">
                                     <select ng-model="attribute.operator" class="form-control-select2" ng-options="operator | translate for operator in defaultOperators">
@@ -62,7 +62,7 @@
                                 </div>                            
                             </div>                        
                         </div>
-                        <div ng-switch-when="date">
+                        <div ng-switch-when="DATE">
                             <div class="dataelement-filter">
                                 <div class="filter-operator">
                                     <select ng-model="attribute.operator" class="form-control-select2" ng-options="operator | translate for operator in defaultOperators">
@@ -81,7 +81,7 @@
                                 </div>                            
                             </div> 
                         </div>                        
-                        <div ng-switch-when="bool">
+                        <div ng-switch-when="BOOLEAN">
                             <select multiple ui-select2  ng-model="attribute.value" data-placeholder="{{'please_select'| translate}}" style="width:100%;">
                                 <option ng-repeat="option in boolOperators" value="{{option}}">{{option| translate}}</option>
                             </select>

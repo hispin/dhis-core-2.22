@@ -103,7 +103,11 @@ trackerCapture.controller('RelationshipController',
 
             if( index !== -1 ){
                 $scope.selectedTei.relationships.splice(index,1);
-                TEIService.update($scope.selectedTei, $scope.optionSets, $scope.attributesById).then(function(response){
+                var trimmedTei = angular.copy($scope.selectedTei);
+                angular.forEach(trimmedTei.relationships, function(rel){
+                    delete rel.relative;
+                });
+                TEIService.update(trimmedTei, $scope.optionSets, $scope.attributesById).then(function(response){
                     if(response.response && response.response.status !== 'SUCCESS'){//update has failed
                         var dialogOptions = {
                                 headerText: 'update_error',
@@ -431,8 +435,8 @@ trackerCapture.controller('RelationshipController',
         var columns = attributes ? angular.copy(attributes) : [];
        
         //also add extra columns which are not part of attributes (orgunit for example)
-        columns.push({id: 'orgUnitName', name: 'Organisation unit', type: 'string', displayInListNoProgram: false});
-        columns.push({id: 'created', name: 'Registration date', type: 'string', displayInListNoProgram: false});
+        columns.push({id: 'orgUnitName', name: 'Organisation unit', type: 'TEXT', displayInListNoProgram: false});
+        columns.push({id: 'created', name: 'Registration date', type: 'TEXT', displayInListNoProgram: false});
         
         //generate grid column for the selected program/attributes
         angular.forEach(columns, function(column){
