@@ -28,7 +28,6 @@ package org.hisp.dhis.analytics.data;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AggregationType;
@@ -71,8 +70,6 @@ import static org.hisp.dhis.analytics.DataQueryParams.LEVEL_PREFIX;
 import static org.hisp.dhis.common.DimensionalObject.*;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.common.NameableObjectUtils.asTypedList;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
 
 /**
  * @author Lars Helge Overland
@@ -81,8 +78,6 @@ public class DefaultQueryPlanner
     implements QueryPlanner
 {
     private static final Log log = LogFactory.getLog( DefaultQueryPlanner.class );
-
-    private static final List<String> AVERAGE_AGG_OPERATORS = Lists.newArrayList( AGGREGATION_OPERATOR_AVERAGE_SUM, AGGREGATION_OPERATOR_AVERAGE );
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
