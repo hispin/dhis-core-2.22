@@ -45,7 +45,9 @@ import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.CombinationGenerator;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
+import org.hisp.dhis.common.DisplayDensity;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.FontSize;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -90,14 +92,6 @@ public class ReportTable
 
     public static final String TOTAL_COLUMN_NAME = "total";
     public static final String TOTAL_COLUMN_PRETTY_NAME = "Total";
-
-    public static final String DISPLAY_DENSITY_COMFORTABLE = "comfortable";
-    public static final String DISPLAY_DENSITY_NORMAL = "normal";
-    public static final String DISPLAY_DENSITY_COMPACT = "compact";
-
-    public static final String FONT_SIZE_LARGE = "large";
-    public static final String FONT_SIZE_NORMAL = "normal";
-    public static final String FONT_SIZE_SMALL = "small";
 
     public static final NameableObject[] IRT = new NameableObject[0];
     public static final NameableObject[][] IRT2D = new NameableObject[0][];
@@ -175,12 +169,12 @@ public class ReportTable
     /**
      * The display density of the text in the table.
      */
-    private String displayDensity;
+    private DisplayDensity displayDensity;
 
     /**
      * The font size of the text in the table.
      */
-    private String fontSize;
+    private FontSize fontSize;
 
     /**
      * The legend set in the table.
@@ -903,12 +897,12 @@ public class ReportTable
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDisplayDensity()
+    public DisplayDensity getDisplayDensity()
     {
         return displayDensity;
     }
 
-    public void setDisplayDensity( String displayDensity )
+    public void setDisplayDensity( DisplayDensity displayDensity )
     {
         this.displayDensity = displayDensity;
     }
@@ -916,12 +910,12 @@ public class ReportTable
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getFontSize()
+    public FontSize getFontSize()
     {
         return fontSize;
     }
 
-    public void setFontSize( String fontSize )
+    public void setFontSize( FontSize fontSize )
     {
         this.fontSize = fontSize;
     }

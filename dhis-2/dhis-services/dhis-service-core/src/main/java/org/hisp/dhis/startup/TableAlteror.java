@@ -878,6 +878,22 @@ public class TableAlteror
         executeSql( "update dashboarditem set shape='NORMAL' where shape ='normal'" );
         executeSql( "update dashboarditem set shape='DOUBLE_WIDTH' where shape ='double_width'" );
         executeSql( "update dashboarditem set shape='FULL_WIDTH' where shape ='full_width'" );
+        
+        executeSql( "update reporttable set displaydensity='COMFORTABLE' where displaydensity='comfortable'" );
+        executeSql( "update reporttable set displaydensity='NORMAL' where displaydensity='normal'" );
+        executeSql( "update reporttable set displaydensity='COMPACT' where displaydensity='compact'" );
+
+        executeSql( "update eventreport set displaydensity='COMFORTABLE' where displaydensity='comfortable'" );
+        executeSql( "update eventreport set displaydensity='NORMAL' where displaydensity='normal'" );
+        executeSql( "update eventreport set displaydensity='COMPACT' where displaydensity='compact'" );
+
+        executeSql( "update reporttable set fontsize='LARGE' where displaydensity='large'" );
+        executeSql( "update reporttable set fontsize='NORMAL' where displaydensity='normal'" );
+        executeSql( "update reporttable set fontsize='SMALL' where displaydensity='small'" );
+
+        executeSql( "update eventreport set fontsize='LARGE' where displaydensity='large'" );
+        executeSql( "update eventreport set fontsize='NORMAL' where displaydensity='normal'" );
+        executeSql( "update eventreport set fontsize='SMALL' where displaydensity='small'" );
 
         oauth2();
 
