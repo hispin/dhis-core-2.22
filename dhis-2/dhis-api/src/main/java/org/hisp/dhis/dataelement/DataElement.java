@@ -97,10 +97,6 @@ public class DataElement
     public static final String AGGREGATION_OPERATOR_AVERAGE_SUM = "avg_sum_org_unit"; // Sum in organisation unit
     public static final String AGGREGATION_OPERATOR_AVERAGE = "avg";
     public static final String AGGREGATION_OPERATOR_COUNT = "count";
-    public static final String AGGREGATION_OPERATOR_STDDEV = "stddev";
-    public static final String AGGREGATION_OPERATOR_VARIANCE = "variance";
-    public static final String AGGREGATION_OPERATOR_MIN = "min";
-    public static final String AGGREGATION_OPERATOR_MAX = "max";
     public static final String AGGREGATION_OPERATOR_NONE = "none";
 
     /**
