@@ -42,6 +42,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.hisp.dhis.common.DisplayDensity;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
@@ -257,7 +258,7 @@ public class DataSetController
 
         if ( form == null )
         {
-            form = new DataEntryForm( dataSet.getName(), DataEntryForm.STYLE_REGULAR, formContent );
+            form = new DataEntryForm( dataSet.getName(), DisplayDensity.NORMAL, formContent );
             dataEntryFormService.addDataEntryForm( form );
             dataSet.setDataEntryForm( form );
         }

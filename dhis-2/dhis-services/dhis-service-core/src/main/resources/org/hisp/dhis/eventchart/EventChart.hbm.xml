@@ -108,7 +108,7 @@
       <type name="org.hibernate.type.EnumType">
         <param name="enumClass">org.hisp.dhis.chart.ChartType</param>
         <param name="type">12</param>
-      </type> 
+      </type>
 	</property>
 	
     <list name="columnDimensions" table="eventchart_columns">

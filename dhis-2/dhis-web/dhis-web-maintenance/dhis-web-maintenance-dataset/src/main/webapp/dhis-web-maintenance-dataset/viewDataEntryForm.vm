@@ -67,10 +67,10 @@
         <td><label>$i18n.getString( "style" )</label></td>
         <td>
         <select id="style" name="style" style="width:30em">
-          <option value="regular"#if( !$dataEntryForm.style || "regular" == $dataEntryForm.style ) selected=selected#end>$i18n.getString( "regular" )</option>
-          <option value="comfortable"#if( "comfortable" == $dataEntryForm.style ) selected=selected#end>$i18n.getString( "comfortable" )</option>
-          <option value="compact"#if( "compact" == $dataEntryForm.style ) selected=selected#end>$i18n.getString( "compact" )</option>
-          <option value="none"#if( "none" == $dataEntryForm.style ) selected=selected#end>$i18n.getString( "none" )</option>
+          <option value="NORMAL"#if( "NORMAL" == $dataEntryForm.style ) selected=selected#end>$i18n.getString( "normal" )</option>
+          <option value="COMFORTABLE"#if( "COMFORTABLE" == $dataEntryForm.style ) selected=selected#end>$i18n.getString( "comfortable" )</option>
+          <option value="COMPACT"#if( "COMPACT" == $dataEntryForm.style ) selected=selected#end>$i18n.getString( "compact" )</option>
+          <option value="NONE"#if( "NONE" == $dataEntryForm.style ) selected=selected#end>$i18n.getString( "none" )</option>
         </select>
         </td>
       </tr>

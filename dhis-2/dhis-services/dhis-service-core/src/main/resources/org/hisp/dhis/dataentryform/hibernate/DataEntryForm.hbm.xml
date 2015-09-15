@@ -14,8 +14,13 @@
 
     <property name="name" not-null="true" unique="true" length="160" />
 
-    <property name="style" length="40" />
-
+    <property name="style" length="40">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.common.DisplayDensity</param>
+        <param name="type">12</param>
+      </type>
+	</property>
+	
     <property name="htmlCode" column="htmlcode" type="text" />
     
     <property name="format" />
