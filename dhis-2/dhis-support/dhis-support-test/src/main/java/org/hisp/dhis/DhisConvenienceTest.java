@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.chart.Chart;
+import org.hisp.dhis.chart.ChartType;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.ValueType;
@@ -111,6 +112,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -1075,14 +1077,23 @@ public abstract class DhisConvenienceTest
 
         return legendSet;
     }
+    
+    public static Chart createChart( char uniqueCharacter )
+    {
+        Chart chart = new Chart();
+        chart.setAutoFields();
+        chart.setName( "Chart" + uniqueCharacter );
+        chart.setType( ChartType.COLUMN );
+        
+        return chart;
+        
+    }
 
     public static Chart createChart( char uniqueCharacter, List<Indicator> indicators, List<Period> periods,
         List<OrganisationUnit> units )
     {
-        Chart chart = new Chart();
-        chart.setAutoFields();
+        Chart chart = createChart( uniqueCharacter );
 
-        chart.setName( "Chart" + uniqueCharacter );
         chart.addAllDataDimensionItems( indicators );
         chart.setPeriods( periods );
         chart.setOrganisationUnits( units );
