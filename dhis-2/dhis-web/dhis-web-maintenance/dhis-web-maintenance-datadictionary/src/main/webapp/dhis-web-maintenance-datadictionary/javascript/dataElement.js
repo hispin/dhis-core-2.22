@@ -1,6 +1,6 @@
 $(function() {
-  $('#aggregationOperatorSelect').change(updateZeroIsSignificant);
-  $('#aggregationOperatorSelect').change();
+  $('#aggregationTypeSelect').change(updateZeroIsSignificant);
+  $('#aggregationTypeSelect').change();
 
   dhis2.contextmenu.makeContextMenu({
     menuId: 'contextMenu',
@@ -9,12 +9,12 @@ $(function() {
 });
 
 function updateZeroIsSignificant() {
-  var $this = $('#aggregationOperatorSelect');
+  var $this = $('#aggregationTypeSelect');
 
-  if( $this.val() == 'sum' ) {
+  if( $this.val() == 'SUM' ) {
     $('#zeroIsSignificant').removeAttr('disabled');
   }
-  else if( $this.val() == 'average' ) {
+  else if( $this.val() == 'AVERAGE' ) {
     $('#zeroIsSignificant').attr('disabled', true);
   }
 }
@@ -99,11 +99,11 @@ function showDataElementDetails( context ) {
       var domainType = json.dataElement.domainType;
       setInnerHTML('domainTypeField', domainTypeMap[domainType]);
 
-      var aggregationOperator = json.dataElement.aggregationOperator;
+      var aggregationOperator = json.dataElement.aggregationType;
       var aggregationOperatorText = i18n_none;
-      if( aggregationOperator == 'sum' ) {
+      if( aggregationOperator == 'SUM' ) {
         aggregationOperatorText = i18n_sum;
-      } else if( aggregationOperator == 'average' ) {
+      } else if( aggregationOperator == 'AVERAGE' ) {
         aggregationOperatorText = i18n_average;
       }
       setInnerHTML('aggregationOperatorField', aggregationOperatorText);

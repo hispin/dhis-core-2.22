@@ -28,6 +28,7 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.GenericDimensionalObjectStore;
 import org.hisp.dhis.common.GenericNameableObjectStore;
 import org.hisp.dhis.common.ListMap;
@@ -204,9 +205,9 @@ public class DefaultDataElementService
     }
 
     @Override
-    public List<DataElement> getDataElementsByAggregationOperator( String aggregationOperator )
+    public List<DataElement> getDataElementsByAggregationType( AggregationType aggregationType )
     {
-        return i18n( i18nService, dataElementStore.getDataElementsByAggregationOperator( aggregationOperator ) );
+        return i18n( i18nService, dataElementStore.getDataElementsByAggregationType( aggregationType ) );
     }
 
     @Override

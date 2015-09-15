@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hisp.dhis.common.NameableObjectUtils.getList;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_SUM;
 import static org.junit.Assert.*;
 
 /**
@@ -74,13 +72,13 @@ public class DataQueryGroupsTest
     @Before
     public void before()
     {
-        deA = createDataElement( 'A', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deB = createDataElement( 'B', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deC = createDataElement( 'C', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deD = createDataElement( 'D', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deE = createDataElement( 'E', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deF = createDataElement( 'F', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
-        deG = createDataElement( 'G', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
+        deA = createDataElement( 'A', ValueType.INTEGER, AggregationType.SUM );
+        deB = createDataElement( 'B', ValueType.INTEGER, AggregationType.SUM );
+        deC = createDataElement( 'C', ValueType.INTEGER, AggregationType.SUM );
+        deD = createDataElement( 'D', ValueType.INTEGER, AggregationType.SUM );
+        deE = createDataElement( 'E', ValueType.INTEGER, AggregationType.SUM );
+        deF = createDataElement( 'F', ValueType.INTEGER, AggregationType.AVERAGE_SUM_ORG_UNIT );
+        deG = createDataElement( 'G', ValueType.INTEGER, AggregationType.AVERAGE_SUM_ORG_UNIT );
 
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );

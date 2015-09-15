@@ -28,24 +28,18 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.hisp.dhis.system.util.ReflectionUtils.getClassName;
-import static org.hisp.dhis.system.util.ReflectionUtils.getId;
-import static org.hisp.dhis.system.util.ReflectionUtils.getProperty;
-import static org.hisp.dhis.system.util.ReflectionUtils.isCollection;
-import static org.hisp.dhis.system.util.ReflectionUtils.setProperty;
+import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.dataelement.DataElement;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.hisp.dhis.dataelement.DataElement;
-import org.junit.Before;
-import org.junit.Test;
+import static org.hisp.dhis.system.util.ReflectionUtils.*;
+import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
@@ -53,57 +47,56 @@ import org.junit.Test;
 public class ReflectionUtilsTest
 {
     private DataElement dataElementA;
-    
+
     @Before
     public void before()
     {
         dataElementA = new DataElement();
         dataElementA.setId( 8 );
         dataElementA.setName( "NameA" );
-        dataElementA.setAggregationOperator( "Sum" );
+        dataElementA.setAggregationType( AggregationType.SUM );
     }
-    
-    
+
     @Test
     public void testGetId()
     {
         assertEquals( 8, getId( dataElementA ) );
     }
-    
+
     @Test
     public void testGetProperty()
     {
         assertEquals( "NameA", getProperty( dataElementA, "name" ) );
         assertNull( getProperty( dataElementA, "color" ) );
     }
-    
+
     @Test
     public void testSetProperty()
     {
         setProperty( dataElementA, "shortName", "ShortNameA" );
-        
+
         assertEquals( "ShortNameA", dataElementA.getShortName() );
     }
-    
-    @Test( expected=UnsupportedOperationException.class )
+
+    @Test( expected = UnsupportedOperationException.class )
     public void testSetPropertyException()
     {
         setProperty( dataElementA, "color", "Blue" );
     }
-    
+
     @Test
     public void testGetClassName()
     {
         assertEquals( "DataElement", getClassName( dataElementA ) );
     }
-    
+
     @Test
     public void testIsCollection()
     {
         List<Object> colA = new ArrayList<>();
         Collection<DataElement> colB = new HashSet<>();
         Collection<DataElement> colC = new ArrayList<>();
-        
+
         assertTrue( isCollection( colA ) );
         assertTrue( isCollection( colB ) );
         assertTrue( isCollection( colC ) );

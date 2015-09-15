@@ -34,6 +34,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
@@ -86,9 +87,9 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<DataElement> getDataElementsByAggregationOperator( String aggregationOperator )
+    public List<DataElement> getDataElementsByAggregationType( AggregationType aggregationType )
     {
-        return getCriteria( Restrictions.eq( "aggregationOperator", aggregationOperator ) ).list();
+        return getCriteria( Restrictions.eq( "aggregationType", aggregationType ) ).list();
     }
 
     @Override

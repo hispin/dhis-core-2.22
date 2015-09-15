@@ -59,7 +59,7 @@ public class DataElementImporter
     public void importObject( DataElement object, ImportParams params )
     {
         NameMappingUtil.addDataElementMapping( object.getId(), object.getName() );
-        NameMappingUtil.addDataElementAggregationOperatorMapping( object.getId(), object.getAggregationOperator() );
+        // NameMappingUtil.addDataElementAggregationOperatorMapping( object.getId(), object.getAggregationOperator() );
 
         read( object, GroupMemberType.NONE, params );
     }
@@ -79,7 +79,7 @@ public class DataElementImporter
         match.setDescription( object.getDescription() );
         match.setValueType( object.getValueType() );
         match.setDomainType( object.getDomainType() );
-        match.setAggregationOperator( object.getAggregationOperator() );
+        match.setAggregationType( object.getAggregationType() );
         match.setLastUpdated( object.getLastUpdated() );
 
         dataElementService.updateDataElement( match );
@@ -129,7 +129,7 @@ public class DataElementImporter
         {
             return false;
         }
-        if ( !object.getAggregationOperator().equals( existing.getAggregationOperator() ) )
+        if ( !object.getAggregationType().equals( existing.getAggregationType() ) )
         {
             return false;
         }

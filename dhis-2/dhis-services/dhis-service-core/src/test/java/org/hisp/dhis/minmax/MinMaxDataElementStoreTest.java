@@ -29,6 +29,7 @@ package org.hisp.dhis.minmax;
  */
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -76,28 +77,28 @@ public class MinMaxDataElementStoreTest
         DataElement dataElement1 = new DataElement();
         dataElement1.setName( "DE1name" );
         dataElement1.setShortName( "DE1sname" );
-        dataElement1.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElement1.setAggregationType( AggregationType.SUM );
         dataElement1.setValueType( ValueType.INTEGER );
         dataElement1.setDomainType( DataElementDomain.AGGREGATE );
 
         DataElement dataElement2 = new DataElement();
         dataElement2.setName( "DE2name" );
         dataElement2.setShortName( "DE2sname" );
-        dataElement2.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElement2.setAggregationType( AggregationType.SUM );
         dataElement2.setValueType( ValueType.INTEGER );
         dataElement2.setDomainType( DataElementDomain.AGGREGATE );
 
         DataElement dataElement3 = new DataElement();
         dataElement3.setName( "DE3name" );
         dataElement3.setShortName( "DE3sname" );
-        dataElement3.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElement3.setAggregationType( AggregationType.SUM );
         dataElement3.setValueType( ValueType.INTEGER );
         dataElement3.setDomainType( DataElementDomain.AGGREGATE );
 
         DataElement dataElement4 = new DataElement();
         dataElement4.setName( "DE4name" );
         dataElement4.setShortName( "DE4sname" );
-        dataElement4.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElement4.setAggregationType( AggregationType.SUM );
         dataElement4.setValueType( ValueType.INTEGER );
         dataElement4.setDomainType( DataElementDomain.AGGREGATE );
 

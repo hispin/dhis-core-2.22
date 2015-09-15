@@ -117,7 +117,7 @@ public class DataElementBatchHandler
         statementBuilder.setValue( dataElement.getDescription() );
         statementBuilder.setValue( dataElement.getValueType() );
         statementBuilder.setValue( dataElement.getDomainType().name() );
-        statementBuilder.setValue( dataElement.getAggregationOperator() );
+        // statementBuilder.setValue( dataElement.getAggregationOperator() );
         statementBuilder.setValue( dataElement.getCategoryCombo().getId() );
         statementBuilder.setValue( dataElement.isZeroIsSignificant() );
     }

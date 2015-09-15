@@ -28,6 +28,7 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataset.DataSet;
@@ -164,13 +165,13 @@ public interface DataElementService
     /**
      * Returns all DataElements with a given aggregation operator.
      *
-     * @param aggregationOperator the aggregation operator of the DataElements
-     *                            to return.
+     * @param aggregationType the aggregation type of the DataElements
+     *                        to return.
      * @return a list of all DataElements with the given aggregation
      * operator, or an empty collection if no DataElements have the
      * aggregation operator.
      */
-    List<DataElement> getDataElementsByAggregationOperator( String aggregationOperator );
+    List<DataElement> getDataElementsByAggregationType( AggregationType aggregationType );
 
     /**
      * Returns all DataElements with the given domain type.

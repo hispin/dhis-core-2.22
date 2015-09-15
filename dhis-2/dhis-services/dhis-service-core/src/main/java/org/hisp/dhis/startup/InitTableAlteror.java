@@ -66,11 +66,12 @@ public class InitTableAlteror
         executeSql( "UPDATE programstageinstance SET status='ACTIVE' WHERE status='0';" );
         executeSql( "UPDATE programstageinstance SET status='COMPLETED' WHERE status='1';" );
         executeSql( "UPDATE programstageinstance SET status='SKIPPED' WHERE status='5';" );
-        
+
         executeSql( "ALTER TABLE program DROP COLUMN displayonallorgunit" );
-        
+
         upgradeProgramStageDataElements();
         updateValueTypes();
+        updateAggregationTypes();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
@@ -80,6 +81,23 @@ public class InitTableAlteror
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
+
+    private void updateAggregationTypes()
+    {
+        executeSql( "alter table dataelement alter column aggregationtype type varchar(50)" );
+
+        executeSql( "update dataelement set aggregationtype='SUM' where aggregationtype='sum'" );
+        executeSql( "update dataelement set aggregationtype='AVERAGE' where aggregationtype='avg'" );
+        executeSql( "update dataelement set aggregationtype='AVERAGE_SUM_ORG_UNIT' where aggregationtype='avg_sum_org_unit'" );
+        executeSql( "update dataelement set aggregationtype='COUNT' where aggregationtype='count'" );
+        executeSql( "update dataelement set aggregationtype='STDDEV' where aggregationtype='stddev'" );
+        executeSql( "update dataelement set aggregationtype='VARIANCE' where aggregationtype='variance'" );
+        executeSql( "update dataelement set aggregationtype='MIN' where aggregationtype='min'" );
+        executeSql( "update dataelement set aggregationtype='MAX' where aggregationtype='max'" );
+        executeSql( "update dataelement set aggregationtype='NONE' where aggregationtype='none'" );
+        executeSql( "update dataelement set aggregationtype='DEFAULT' where aggregationtype='default'" );
+        executeSql( "update dataelement set aggregationtype='CUSTOM' where aggregationtype='custom'" );
+    }
 
     private void updateValueTypes()
     {

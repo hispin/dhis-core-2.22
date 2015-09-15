@@ -29,6 +29,7 @@ package org.hisp.dhis.analytics.data;
  */
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.DataQueryGroups;
 import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.analytics.DimensionItem;
@@ -67,11 +68,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hisp.dhis.analytics.AnalyticsTableManager.ANALYTICS_TABLE_NAME;
-import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
-import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.*;
 import static org.hisp.dhis.common.NameableObjectUtils.getList;
-import static org.hisp.dhis.dataelement.DataElement.*;
 import static org.junit.Assert.*;
 
 /**
@@ -142,14 +140,14 @@ public class QueryPlannerTest
 
         indicatorService.addIndicator( inA );
 
-        deA = createDataElement( 'A', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deB = createDataElement( 'B', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deC = createDataElement( 'C', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
-        deD = createDataElement( 'D', ValueType.INTEGER, AGGREGATION_OPERATOR_AVERAGE_SUM );
-        deE = createDataElement( 'E', ValueType.TEXT, AGGREGATION_OPERATOR_NONE );
-        deF = createDataElement( 'F', ValueType.TEXT, AGGREGATION_OPERATOR_NONE );
-        deG = createDataElement( 'G', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
-        deH = createDataElement( 'H', ValueType.INTEGER, AGGREGATION_OPERATOR_SUM );
+        deA = createDataElement( 'A', ValueType.INTEGER, AggregationType.SUM );
+        deB = createDataElement( 'B', ValueType.INTEGER, AggregationType.SUM );
+        deC = createDataElement( 'C', ValueType.INTEGER, AggregationType.AVERAGE_SUM_ORG_UNIT );
+        deD = createDataElement( 'D', ValueType.INTEGER, AggregationType.AVERAGE_SUM_ORG_UNIT );
+        deE = createDataElement( 'E', ValueType.TEXT, AggregationType.NONE );
+        deF = createDataElement( 'F', ValueType.TEXT, AggregationType.NONE );
+        deG = createDataElement( 'G', ValueType.INTEGER, AggregationType.SUM );
+        deH = createDataElement( 'H', ValueType.INTEGER, AggregationType.SUM );
 
         dataElementService.addDataElement( deA );
         dataElementService.addDataElement( deB );

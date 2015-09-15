@@ -29,6 +29,7 @@ package org.hisp.dhis.dataelement;
  */
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.ValueType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -279,27 +280,27 @@ public class DataElementServiceTest
     }
 
     @Test
-    public void testGetDataElementsByAggregationOperator()
+    public void testGetDataElementsByAggregationType()
     {
-        assertEquals( 0, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM ).size() );
-        assertEquals( 0, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM ).size() );
+        assertEquals( 0, dataElementService.getDataElementsByAggregationType( AggregationType.AVERAGE_SUM_ORG_UNIT ).size() );
+        assertEquals( 0, dataElementService.getDataElementsByAggregationType( AggregationType.SUM ).size() );
 
         DataElement dataElementA = createDataElement( 'A' );
-        dataElementA.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM );
+        dataElementA.setAggregationType( AggregationType.AVERAGE_SUM_ORG_UNIT );
         DataElement dataElementB = createDataElement( 'B' );
-        dataElementB.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElementB.setAggregationType( AggregationType.SUM );
         DataElement dataElementC = createDataElement( 'C' );
-        dataElementC.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElementC.setAggregationType( AggregationType.SUM );
         DataElement dataElementD = createDataElement( 'D' );
-        dataElementD.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElementD.setAggregationType( AggregationType.SUM );
 
         dataElementService.addDataElement( dataElementA );
         dataElementService.addDataElement( dataElementB );
         dataElementService.addDataElement( dataElementC );
         dataElementService.addDataElement( dataElementD );
 
-        assertEquals( 1, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM ).size() );
-        assertEquals( 3, dataElementService.getDataElementsByAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM ).size() );
+        assertEquals( 1, dataElementService.getDataElementsByAggregationType( AggregationType.AVERAGE_SUM_ORG_UNIT ).size() );
+        assertEquals( 3, dataElementService.getDataElementsByAggregationType( AggregationType.SUM ).size() );
     }
 
     @Test

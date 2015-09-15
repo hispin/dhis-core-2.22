@@ -250,8 +250,10 @@ public class DataElementConverter
 
                 writer.closeElement();
 
+                /*
                 NameMappingUtil.addDataElementAggregationOperatorMapping( object.getId(),
                     object.getAggregationOperator() );
+                    */
             }
         }
     }

@@ -35,6 +35,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -93,7 +94,7 @@ public class DataElementOperand
 
     private String operandName;
 
-    private String aggregationOperator;
+    private AggregationType aggregationType;
 
     private List<Integer> aggregationLevels = new ArrayList<>();
 
@@ -133,13 +134,13 @@ public class DataElementOperand
     }
 
     public DataElementOperand( String dataElementId, String optionComboId, String operandName,
-        String aggregationOperator, List<Integer> aggregationLevels, int frequencyOrder )
+        AggregationType aggregationType, List<Integer> aggregationLevels, int frequencyOrder )
     {
         this.dataElementId = dataElementId;
         this.optionComboId = optionComboId;
         this.operandId = dataElementId + SEPARATOR + optionComboId;
         this.operandName = operandName;
-        this.aggregationOperator = aggregationOperator;
+        this.aggregationType = aggregationType;
         this.aggregationLevels = aggregationLevels;
         this.frequencyOrder = frequencyOrder;
     }
@@ -308,10 +309,10 @@ public class DataElementOperand
     {
         return COLUMN_PREFIX + dataElementId + COLUMN_SEPARATOR + optionComboId;
     }
-    
+
     /**
      * Returns an identifier on the format <data element uid>.<category option combo uid>.
-     * 
+     *
      * @return an identifier.
      */
     public String getAnalyticsId()
@@ -374,7 +375,7 @@ public class DataElementOperand
         this.optionComboId = categoryOptionCombo.getUid();
         this.operandId = dataElementId + SEPARATOR + optionComboId;
         this.operandName = getPrettyName( dataElement, categoryOptionCombo );
-        this.aggregationOperator = dataElement.getAggregationOperator();
+        this.aggregationType = dataElement.getAggregationType();
         this.frequencyOrder = dataElement.getFrequencyOrder();
         this.aggregationLevels = new ArrayList<>( dataElement.getAggregationLevels() );
 
@@ -392,7 +393,7 @@ public class DataElementOperand
         this.dataElementId = dataElement.getUid();
         this.operandId = String.valueOf( dataElementId );
         this.operandName = getPrettyName( dataElement, null );
-        this.aggregationOperator = dataElement.getAggregationOperator();
+        this.aggregationType = dataElement.getAggregationType();
         this.frequencyOrder = dataElement.getFrequencyOrder();
         this.aggregationLevels = new ArrayList<>( dataElement.getAggregationLevels() );
 
@@ -508,14 +509,14 @@ public class DataElementOperand
     @JsonProperty
     @JsonView( { DetailedView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getAggregationOperator()
+    public AggregationType getAggregationType()
     {
-        return aggregationOperator;
+        return aggregationType;
     }
 
-    public void setAggregationOperator( String aggregationOperator )
+    public void setAggregationType( AggregationType aggregationType )
     {
-        this.aggregationOperator = aggregationOperator;
+        this.aggregationType = aggregationType;
     }
 
     @JsonProperty
@@ -587,7 +588,7 @@ public class DataElementOperand
             ", optionComboId=" + optionComboId +
             ", operandId='" + operandId + '\'' +
             ", operandName='" + operandName + '\'' +
-            ", aggregationOperator='" + aggregationOperator + '\'' +
+            ", aggregationType='" + aggregationType + '\'' +
             ", aggregationLevels=" + aggregationLevels +
             ", frequencyOrder=" + frequencyOrder +
             ", operandType='" + operandType + '\'' +

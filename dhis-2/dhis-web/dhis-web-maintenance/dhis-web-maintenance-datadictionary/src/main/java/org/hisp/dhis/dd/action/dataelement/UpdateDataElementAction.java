@@ -30,6 +30,7 @@ package org.hisp.dhis.dd.action.dataelement;
 
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
@@ -142,11 +143,11 @@ public class UpdateDataElementAction
         this.valueType = valueType;
     }
 
-    private String aggregationOperator;
+    private String aggregationType;
 
-    public void setAggregationOperator( String aggregationOperator )
+    public void setAggregationType( String aggregationType )
     {
-        this.aggregationOperator = aggregationOperator;
+        this.aggregationType = aggregationType;
     }
 
     private String url;
@@ -242,7 +243,7 @@ public class UpdateDataElementAction
         dataElement.setFormName( StringUtils.trimToNull( formName ) );
         dataElement.setDomainType( DataElementDomain.fromValue( domainType ) );
         dataElement.setValueType( ValueType.valueOf( valueType ) );
-        dataElement.setAggregationOperator( aggregationOperator );
+        dataElement.setAggregationType( AggregationType.valueOf( aggregationType ) );
         dataElement.setUrl( url );
         dataElement.setZeroIsSignificant( zeroIsSignificant );
         dataElement.setCategoryCombo( categoryCombo );

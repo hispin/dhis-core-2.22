@@ -28,15 +28,14 @@ package org.hisp.dhis.importexport.dhis14.file.typehandler;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.sql.SQLException;
-
+import com.ibatis.sqlmap.client.extensions.ParameterSetter;
+import com.ibatis.sqlmap.client.extensions.ResultGetter;
+import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dataelement.DataElement;
 
-import com.ibatis.sqlmap.client.extensions.ParameterSetter;
-import com.ibatis.sqlmap.client.extensions.ResultGetter;
-import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
+import java.sql.SQLException;
 
 /**
  * @author Lars Helge Overland
@@ -48,11 +47,11 @@ public class AggregationOperatorTypeHandler
     private static final String JDBC_SUM = "Sum";
     private static final String JDBC_AVERAGE = "Avg";
     private static final String JDBC_COUNT = "Count";
-    
+
     private static final Integer NON_EXISTING = -1;
-    
+
     private static final Log log = LogFactory.getLog( AggregationOperatorTypeHandler.class );
-    
+
     // -------------------------------------------------------------------------
     // TypeHandlerCallback implementation
     // -------------------------------------------------------------------------
@@ -60,9 +59,12 @@ public class AggregationOperatorTypeHandler
     @Override
     public Object getResult( ResultGetter getter )
         throws SQLException
-    {   
+    {
+        return null;
+
+        /*
         String result = getter.getString();
-        
+
         if ( result != null )
         {
             if ( result.equalsIgnoreCase( JDBC_SUM ) )
@@ -90,22 +92,25 @@ public class AggregationOperatorTypeHandler
             
             return DataElement.AGGREGATION_OPERATOR_SUM;
         }
+        */
     }
-    
+
     @Override
     public void setParameter( ParameterSetter setter, Object parameter )
         throws SQLException
     {
         // Not in use
     }
-    
+
     @Override
     public Object valueOf( String result )
     {
+        return result;
+        /*
         if ( result == null )
         {
             return NON_EXISTING;
-        }        
+        }
         else if ( result.equalsIgnoreCase( JDBC_SUM ) )
         {
             return DataElement.AGGREGATION_OPERATOR_SUM;
@@ -122,5 +127,6 @@ public class AggregationOperatorTypeHandler
         {
             throw new RuntimeException( "Illegal aggregation operator: " + result );
         }
+        */
     }
 }
