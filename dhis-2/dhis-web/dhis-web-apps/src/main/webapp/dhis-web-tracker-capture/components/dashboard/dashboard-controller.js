@@ -161,14 +161,28 @@ trackerCapture.controller('DashboardController',
                         //get enrollments for the selected tei
                         EnrollmentService.getByEntity($scope.selectedTeiId).then(function(response){                    
                             var enrollments = angular.isObject(response) && response.enrollments ? response.enrollments : [];
-                            var selectedEnrollment = null;
-                            if(enrollments.length === 1 && enrollments[0].status === 'ACTIVE'){
-                                selectedEnrollment = enrollments[0];
+                            var selectedEnrollment = null, backupSelectedEnrollment = null;                            
+                            if(enrollments.length === 1 ){
+                                selectedEnrollment = enrollments[0];                               
                             }
-
+                            else{
+                                if( $scope.selectedProgramId ){
+                                    angular.forEach(enrollments, function(en){
+                                        if( en.program === $scope.selectedProgramId ){
+                                            if( en.status === 'ACTIVE'){
+                                                selectedEnrollment = en;
+                                            }
+                                            else{
+                                                backupSelectedEnrollment = en;
+                                            }
+                                        }
+                                    });
+                                }                                
+                            }                            
+                            selectedEnrollment = selectedEnrollment ? selectedEnrollment : backupSelectedEnrollment;
+                            
                             ProgramFactory.getAll().then(function(programs){
                                 $scope.programs = [];
-
                                 $scope.programNames = [];  
                                 $scope.programStageNames = [];        
 
