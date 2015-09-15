@@ -967,6 +967,11 @@ public class TableAlteror
         executeSql( "update eventchart set type='PIE' where type='pie'" );
         executeSql( "update eventchart set type='RADAR' where type='radar'" );
         executeSql( "update eventchart set type='GAUGE' where type='gauge'" );
+        
+        executeSql( "update dataentryform set style='COMFORTABLE' where style='comfortable'" );
+        executeSql( "update dataentryform set style='NORMAL' where style='regular'" );
+        executeSql( "update dataentryform set style='COMPACT' where style='compact'" );
+        executeSql( "update dataentryform set style='NONE' where style='none'" );
     }
     
     private void upgradeAggregationType( String table )

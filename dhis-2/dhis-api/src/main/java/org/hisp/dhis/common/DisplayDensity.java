@@ -33,5 +33,5 @@ package org.hisp.dhis.common;
  */
 public enum DisplayDensity
 {
-    COMFORTABLE, NORMAL, COMPACT;
+    COMFORTABLE, NORMAL, COMPACT, NONE;
 }

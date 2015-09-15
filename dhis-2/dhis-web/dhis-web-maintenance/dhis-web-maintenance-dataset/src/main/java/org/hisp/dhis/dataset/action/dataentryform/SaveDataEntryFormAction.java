@@ -28,6 +28,7 @@ package org.hisp.dhis.dataset.action.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.DisplayDensity;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
 import org.hisp.dhis.dataset.DataSet;
@@ -78,9 +79,9 @@ public class SaveDataEntryFormAction
         this.nameField = nameField;
     }
 
-    private String style;
+    private DisplayDensity style;
     
-    public void setStyle( String style )
+    public void setStyle( DisplayDensity style )
     {
         this.style = style;
     }

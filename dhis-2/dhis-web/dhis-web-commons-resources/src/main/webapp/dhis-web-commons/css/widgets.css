@@ -676,25 +676,25 @@ ul.pageSizeSelection input
   background-color: #e0e0e0;
 }
 
-.cde-regular td, .cde-regular th 
+.cde-NORMAL td, .cde-NORMAL th 
 {
   padding: 12px;
   border: 1px solid #c0c0c0;
 }
 
-.cde-comfortable td, .cde-comfortable th 
+.cde-COMFORTABLE td, .cde-COMFORTABLE th 
 {
   padding: 18px;
   border: 1px solid #c0c0c0;
 }
 
-.cde-compact td, .cde-compact th 
+.cde-COMPACT td, .cde-COMPACT th 
 {
   padding: 5px;
   border: 1px solid #c0c0c0;
 }
 
-.cde-none
+.cde-NONE
 {
 }
 

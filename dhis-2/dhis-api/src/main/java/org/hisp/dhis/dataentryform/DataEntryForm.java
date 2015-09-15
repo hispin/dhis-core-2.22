@@ -31,6 +31,7 @@ package org.hisp.dhis.dataentryform;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
+import org.hisp.dhis.common.DisplayDensity;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.ImportableObject;
 import org.hisp.dhis.common.view.DetailedView;
@@ -48,11 +49,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 public class DataEntryForm
     implements Serializable, ImportableObject
 {
-    public static final String STYLE_COMFORTABLE = "comfortable";
-    public static final String STYLE_REGULAR = "regular";
-    public static final String STYLE_COMPACT = "compact";
-    public static final String STYLE_NONE = "none";
-
     public static final int CURRENT_FORMAT = 2;
 
     /**
@@ -77,7 +73,7 @@ public class DataEntryForm
     /**
      * The display style to use to render the form.
      */
-    private String style;
+    private DisplayDensity style;
 
     /**
      * HTML Code of DataEntryForm
@@ -108,7 +104,7 @@ public class DataEntryForm
         this.htmlCode = htmlCode;
     }
 
-    public DataEntryForm( String name, String style, String htmlCode )
+    public DataEntryForm( String name, DisplayDensity style, String htmlCode )
     {
         this.name = name;
         this.style = style;
@@ -197,12 +193,12 @@ public class DataEntryForm
     @JsonProperty
     @JsonView({ DetailedView.class, ExportView.class })
     @JacksonXmlProperty(namespace = DxfNamespaces.DXF_2_0)
-    public String getStyle()
+    public DisplayDensity getStyle()
     {
         return style;
     }
 
-    public void setStyle( String style )
+    public void setStyle( DisplayDensity style )
     {
         this.style = style;
     }
