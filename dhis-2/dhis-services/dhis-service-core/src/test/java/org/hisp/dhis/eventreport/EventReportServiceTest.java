@@ -31,6 +31,7 @@ package org.hisp.dhis.eventreport;
 import static org.junit.Assert.*;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.analytics.EventDataType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.junit.Test;
@@ -62,13 +63,13 @@ public class EventReportServiceTest
     {
         EventReport erA = new EventReport( "erA" );
         erA.setProgram( prA );
-        erA.setDataType( EventReport.DATA_TYPE_AGGREGATED_VALUES );
+        erA.setDataType( EventDataType.AGGREGATED_VALUES );
         EventReport erB = new EventReport( "erB" );
         erB.setProgram( prA );
-        erB.setDataType( EventReport.DATA_TYPE_AGGREGATED_VALUES );
+        erB.setDataType( EventDataType.AGGREGATED_VALUES );
         EventReport erC = new EventReport( "erC" );
         erC.setProgram( prA );
-        erC.setDataType( EventReport.DATA_TYPE_AGGREGATED_VALUES );
+        erC.setDataType( EventDataType.AGGREGATED_VALUES );
 
         int idA = eventReportService.saveEventReport( erA );
         int idB = eventReportService.saveEventReport( erB );
@@ -84,13 +85,13 @@ public class EventReportServiceTest
     {
         EventReport erA = new EventReport( "erA" );
         erA.setProgram( prA );
-        erA.setDataType( EventReport.DATA_TYPE_AGGREGATED_VALUES );
+        erA.setDataType( EventDataType.AGGREGATED_VALUES );
         EventReport erB = new EventReport( "erB" );
         erB.setProgram( prA );
-        erB.setDataType( EventReport.DATA_TYPE_AGGREGATED_VALUES );
+        erB.setDataType( EventDataType.AGGREGATED_VALUES );
         EventReport erC = new EventReport( "erC" );
         erC.setProgram( prA );
-        erC.setDataType( EventReport.DATA_TYPE_AGGREGATED_VALUES );
+        erC.setDataType( EventDataType.AGGREGATED_VALUES );
 
         int idA = eventReportService.saveEventReport( erA );
         int idB = eventReportService.saveEventReport( erB );

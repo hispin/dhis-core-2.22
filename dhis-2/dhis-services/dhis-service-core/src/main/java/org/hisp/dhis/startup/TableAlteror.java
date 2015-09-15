@@ -887,13 +887,16 @@ public class TableAlteror
         executeSql( "update eventreport set displaydensity='NORMAL' where displaydensity='normal'" );
         executeSql( "update eventreport set displaydensity='COMPACT' where displaydensity='compact'" );
 
-        executeSql( "update reporttable set fontsize='LARGE' where displaydensity='large'" );
-        executeSql( "update reporttable set fontsize='NORMAL' where displaydensity='normal'" );
-        executeSql( "update reporttable set fontsize='SMALL' where displaydensity='small'" );
+        executeSql( "update reporttable set fontsize='LARGE' where fontsize='large'" );
+        executeSql( "update reporttable set fontsize='NORMAL' where fontsize='normal'" );
+        executeSql( "update reporttable set fontsize='SMALL' where fontsize='small'" );
 
-        executeSql( "update eventreport set fontsize='LARGE' where displaydensity='large'" );
-        executeSql( "update eventreport set fontsize='NORMAL' where displaydensity='normal'" );
-        executeSql( "update eventreport set fontsize='SMALL' where displaydensity='small'" );
+        executeSql( "update eventreport set fontsize='LARGE' where fontsize='large'" );
+        executeSql( "update eventreport set fontsize='NORMAL' where fontsize='normal'" );
+        executeSql( "update eventreport set fontsize='SMALL' where fontsize='small'" );
+
+        executeSql( "update eventreport set datatype='AGGREGATED_VALUES' where datatype='aggregated_values'" );
+        executeSql( "update eventreport set datatype='EVENTS' where datatype='individual_cases'" );
 
         oauth2();
 

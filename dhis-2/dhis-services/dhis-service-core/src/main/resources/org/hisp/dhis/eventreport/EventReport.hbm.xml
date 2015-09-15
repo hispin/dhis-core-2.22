@@ -104,7 +104,12 @@
 
     <property name="completedOnly" column="completedonly" />
 	
-    <property name="dataType" not-null="true" />
+    <property name="dataType" length="40">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.analytics.EventDataType</param>
+        <param name="type">12</param>
+      </type> 
+    </property>
 
     <list name="columnDimensions" table="eventreport_columns">
       <cache usage="read-write" />
@@ -142,10 +147,10 @@
     <property name="showHierarchy" />
 
     <property name="outputType" length="30">
-		<type name="org.hibernate.type.EnumType">
-			<param name="enumClass">org.hisp.dhis.analytics.EventOutputType</param>
-			<param name="type">12</param>
-		</type> 
+	  <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.analytics.EventOutputType</param>
+        <param name="type">12</param>
+      </type> 
 	</property>
 
 	<property name="collapseDataDimensions" />
@@ -155,18 +160,18 @@
     <property name="digitGroupSeparator" />
 
     <property name="displayDensity" length="40">
-		<type name="org.hibernate.type.EnumType">
-			<param name="enumClass">org.hisp.dhis.common.DisplayDensity</param>
-			<param name="type">12</param>
-		</type> 
-	</property>
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.common.DisplayDensity</param>
+        <param name="type">12</param>
+      </type> 
+    </property>
 
     <property name="fontSize" length="40">
-		<type name="org.hibernate.type.EnumType">
-			<param name="enumClass">org.hisp.dhis.common.FontSize</param>
-			<param name="type">12</param>
-		</type> 
-	</property>
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.common.FontSize</param>
+        <param name="type">12</param>
+      </type> 
+    </property>
 
     <property name="sortOrder" />
 
