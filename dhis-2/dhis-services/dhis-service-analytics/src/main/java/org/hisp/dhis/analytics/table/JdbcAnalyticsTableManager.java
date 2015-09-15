@@ -194,7 +194,7 @@ public class JdbcAnalyticsTableManager
      * @param table analytics table to populate.
      * @param valueExpression numeric value expression.
      * @param textValueExpression textual value expression.
-     * @param valueType data element value type to include data for.
+     * @param valueTypes data element value types to include data for.
      * @param whereClause where clause to constrain data query.
      */
     private void populateTable( AnalyticsTable table, String valueExpression, 
