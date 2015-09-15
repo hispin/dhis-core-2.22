@@ -940,6 +940,14 @@ public class TableAlteror
         executeSql( "update eventreport set fontsize='LARGE' where fontsize='large'" );
         executeSql( "update eventreport set fontsize='NORMAL' where fontsize='normal'" );
         executeSql( "update eventreport set fontsize='SMALL' where fontsize='small'" );
+        
+        executeSql( "update reporttable set digitgroupseparator='NONE' where displaydensity='none'" );
+        executeSql( "update reporttable set digitgroupseparator='SPACE' where displaydensity='space'" );
+        executeSql( "update reporttable set digitgroupseparator='COMMA' where displaydensity='comma'" );
+
+        executeSql( "update eventreport set digitgroupseparator='NONE' where displaydensity='none'" );
+        executeSql( "update eventreport set digitgroupseparator='SPACE' where displaydensity='space'" );
+        executeSql( "update eventreport set digitgroupseparator='COMMA' where displaydensity='comma'" );
 
         executeSql( "update eventreport set datatype='AGGREGATED_VALUES' where datatype='aggregated_values'" );
         executeSql( "update eventreport set datatype='EVENTS' where datatype='individual_cases'" );
