@@ -800,9 +800,9 @@ public class DefaultQueryPlanner
     private AggregationType getAggregationType( ValueType valueType, String aggregationOperator,
         PeriodType aggregationPeriodType, PeriodType dataPeriodType )
     {
-        AggregationType aggregationType = null;
+        AggregationType aggregationType;
 
-        boolean disaggregation = isDisaggregation( aggregationOperator, aggregationPeriodType, dataPeriodType );
+        boolean disaggregation = isDisaggregation( aggregationPeriodType, dataPeriodType );
         boolean number = valueType.isNumeric();
 
         if ( AVERAGE_AGG_OPERATORS.contains( aggregationOperator ) && ValueType.BOOLEAN == valueType )
@@ -836,7 +836,7 @@ public class DefaultQueryPlanner
     /**
      * Indicates whether disaggregation is allowed for the given input.
      */
-    private boolean isDisaggregation( String aggregationOperator, PeriodType aggregationPeriodType, PeriodType dataPeriodType )
+    private boolean isDisaggregation( PeriodType aggregationPeriodType, PeriodType dataPeriodType )
     {
         return dataPeriodType != null && aggregationPeriodType != null && aggregationPeriodType.getFrequencyOrder() < dataPeriodType.getFrequencyOrder();
     }
