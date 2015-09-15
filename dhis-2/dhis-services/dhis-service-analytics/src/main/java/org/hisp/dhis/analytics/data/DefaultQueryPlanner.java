@@ -94,9 +94,6 @@ public class DefaultQueryPlanner
     @Autowired
     private SystemSettingManager systemSettingManager;
 
-    @Autowired
-    private ProgramIndicatorService programIndicatorService;
-
     // -------------------------------------------------------------------------
     // DefaultQueryPlanner implementation
     // -------------------------------------------------------------------------
