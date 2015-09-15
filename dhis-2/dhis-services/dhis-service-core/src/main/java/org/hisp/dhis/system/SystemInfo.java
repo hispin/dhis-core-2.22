@@ -65,6 +65,8 @@ public class SystemInfo
     private Date lastAnalyticsTableSuccess;
     
     private String intervalSinceLastAnalyticsTableSuccess;
+    
+    private String lastAnalyticsTableRuntime;
 
     // -------------------------------------------------------------------------
     // Stable properties
@@ -218,6 +220,18 @@ public class SystemInfo
     public void setIntervalSinceLastAnalyticsTableSuccess( String intervalSinceLastAnalyticsTableSuccess )
     {
         this.intervalSinceLastAnalyticsTableSuccess = intervalSinceLastAnalyticsTableSuccess;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getLastAnalyticsTableRuntime()
+    {
+        return lastAnalyticsTableRuntime;
+    }
+
+    public void setLastAnalyticsTableRuntime( String lastAnalyticsTableRuntime )
+    {
+        this.lastAnalyticsTableRuntime = lastAnalyticsTableRuntime;
     }
 
     @JsonProperty
