@@ -145,9 +145,9 @@ public class DefaultAnalyticsTableService
         clock.logTime( "Vacuumed tables" );
         notifier.notify( taskId, "Swapping analytics tables" );
         
-        swapTables( tables );
+        swapTables( tables, clock, taskId );
         
-        clock.logTime( "Partition tables: " + tables + ", last years: " + lastYears );
+        clock.logTime( "Swapped tables" );
         notifier.notify( taskId, "Clearing caches" );
 
         partitionManager.clearCaches();
@@ -285,14 +285,20 @@ public class DefaultAnalyticsTableService
         ConcurrentUtils.waitForCompletion( futures );        
     }
     
-    private void swapTables( List<AnalyticsTable> tables )
+    private void swapTables( List<AnalyticsTable> tables, Clock clock, TaskId taskId )
     {
         resourceTableService.dropAllSqlViews();
+        
+        clock.logTime( "Dropped SQL views"  );
+        notifier.notify( taskId, "Swapping tables" );
         
         for ( AnalyticsTable table : tables )
         {
             tableManager.swapTable( table );
         }
+
+        clock.logTime( "Swapped tables"  );
+        notifier.notify( taskId, "Creating SQL views" );
         
         resourceTableService.createAllSqlViews();
     }
