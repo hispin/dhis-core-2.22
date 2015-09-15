@@ -2,7 +2,7 @@
     <accordion>
         <accordion-group is-open="searchOuTree.open">
             <accordion-heading>
-                {{'org_unit'| translate}} <i class="pull-right" ng-class="{'fa fa-chevron-up vertical-center': searchOuTree.open, 'fa fa-chevron-down vertical-center': !searchOuTree.open}"></i>
+                {{orgUnitLabel}} <i class="pull-right" ng-class="{'fa fa-chevron-up vertical-center': searchOuTree.open, 'fa fa-chevron-down vertical-center': !searchOuTree.open}"></i>
             </accordion-heading>
             <div class="org-unit-tree row" data-stop-propagation="true">
                 <script type="text/ng-template" id="orgUnitTree.html">
