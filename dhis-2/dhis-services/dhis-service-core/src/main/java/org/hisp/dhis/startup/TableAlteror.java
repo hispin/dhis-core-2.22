@@ -874,6 +874,10 @@ public class TableAlteror
         executeSql( "update report set type='JASPER_REPORT_TABLE' where type='jasperReportTable'" );
         executeSql( "update report set type='JASPER_JDBC' where type='jasperJdbc'" );
         executeSql( "update report set type='HTML' where type='html'" );
+        
+        executeSql( "update dashboarditem set shape='NORMAL' where shape ='normal'" );
+        executeSql( "update dashboarditem set shape='DOUBLE_WIDTH' where shape ='double_width'" );
+        executeSql( "update dashboarditem set shape='FULL_WIDTH' where shape ='full_width'" );
 
         oauth2();
 

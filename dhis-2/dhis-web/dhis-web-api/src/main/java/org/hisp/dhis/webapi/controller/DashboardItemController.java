@@ -29,8 +29,10 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import com.google.common.collect.Lists;
+
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dashboard.DashboardItem;
+import org.hisp.dhis.dashboard.DashboardItemShape;
 import org.hisp.dhis.dashboard.DashboardService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.query.Order;
@@ -46,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.List;
 
 /**
@@ -82,7 +85,7 @@ public class DashboardItemController
     }
 
     @RequestMapping( value = "/{uid}/shape/{shape}", method = RequestMethod.PUT )
-    public void putDashboardItemShape( @PathVariable String uid, @PathVariable String shape,
+    public void putDashboardItemShape( @PathVariable String uid, @PathVariable DashboardItemShape shape,
         HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         DashboardItem item = dashboardService.getDashboardItem( uid );
