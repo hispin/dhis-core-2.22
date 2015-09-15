@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hisp.dhis.analytics.EventDataType;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
@@ -107,7 +108,7 @@ public class EventReport
     /**
      * Type of data, can be aggregated values and individual cases.
      */
-    private String dataType;
+    private EventDataType dataType;
 
     /**
      * Dimensions to crosstabulate / use as columns.
@@ -335,12 +336,12 @@ public class EventReport
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDataType()
+    public EventDataType getDataType()
     {
         return dataType;
     }
 
-    public void setDataType( String dataType )
+    public void setDataType( EventDataType dataType )
     {
         this.dataType = dataType;
     }
