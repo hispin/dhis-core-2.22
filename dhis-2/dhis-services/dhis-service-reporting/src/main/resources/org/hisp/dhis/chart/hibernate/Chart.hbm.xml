@@ -21,8 +21,13 @@
 
     <property name="rangeAxisLabel" />
 
-    <property name="type" />
-
+    <property name="type" length="40" not-null="true">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.chart.ChartType</param>
+        <param name="type">12</param>
+      </type> 
+	</property>
+	
     <property name="series" />
 
     <property name="category" />
@@ -136,10 +141,10 @@
     <property name="userOrganisationUnitGrandChildren" />
 
     <property name="aggregationType" length="40">
-		<type name="org.hibernate.type.EnumType">
-			<param name="enumClass">org.hisp.dhis.analytics.AggregationType</param>
-			<param name="type">12</param>
-		</type> 
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.analytics.AggregationType</param>
+        <param name="type">12</param>
+      </type> 
 	</property>
 	
     <property name="completedOnly" column="completedonly" />
