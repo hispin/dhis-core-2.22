@@ -66,7 +66,7 @@
                         <span class="bold">{{'name'| translate}}:</span>    {{dhis2Event.name}}                
                     </div>
                     <div class="col-sm-3">
-                        <span class="bold">{{'org_unit'| translate}}:</span> {{dhis2Event.orgUnitName}}                
+                        <span class="bold">{{orgUnitLabel}}:</span> {{dhis2Event.orgUnitName}}                
                     </div>
                     <div class="col-sm-3">
                         <span class="bold">{{dhis2Event.eventDate ? 'event_date' : 'due_date'| translate}}:</span>    {{dhis2Event.eventDate ? dhis2Event.eventDate : dhis2Event.dueDate}}

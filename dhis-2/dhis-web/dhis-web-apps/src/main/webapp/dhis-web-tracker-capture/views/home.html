@@ -31,8 +31,8 @@
 
     <div class="left-bar-menu" ng-controller="LeftBarMenuController">
         <ul class="nav nav-pills nav-stacked">
-            <li><a href ng-click="showHome()">{{'registration_and_data_entry'| translate}}</a></li>
-            <li><a href ng-click="showReportTypes()">{{'reports'| translate}}</a></li>
+            <li><a href ng-click="showHome()">{{'registration_and_data_entry' | translate}}</a></li>
+            <li><a href ng-click="showReportTypes()">{{'reports' | translate}}</a></li>
         </ul>
     </div>    
 
@@ -61,12 +61,12 @@
         <div class="row top-bar">        
             <div class="col-sm-12">            
                 <span ng-if='!showRegistrationDiv'>
-                    {{selectedProgram.trackedEntity.name}} {{'search'| translate}}                    
+                    {{selectedProgram.trackedEntity.name}} {{searchLabel}}                    
                     <span class="btn-group horizonal-spacing" ng-show="selectedProgram">
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ALL'" title="{{'all_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("ALL")'><i class="fa fa-list mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ACTIVE'" title="{{'active_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("ACTIVE")'><i class="fa fa-circle-o mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{'completed_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-check mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'CANCELLED'" title="{{'cancelled_enrollment'| translate}}" ng-click='filterByEnrollmentStatus("CANCELLED")'><i class="fa fa-times mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ALL'" title="{{allEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ALL")'><i class="fa fa-list mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ACTIVE'" title="{{activeEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ACTIVE")'><i class="fa fa-circle-o mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{completedEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-check mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'CANCELLED'" title="{{cancelledEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("CANCELLED")'><i class="fa fa-times mouse-pointer"></i></label>
                     </span>
                     <span class="small-horizonal-spacing" ng-if="pager.total">
                         ({{'total'| translate}}:  {{pager.total}})
@@ -78,10 +78,10 @@
                 <div class="pull-right hideInPrint">
                     <div class="btn-group" dropdown is-open="status.isopen">
                         <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="trackedEntityList.rows.length <= 0">
-                            <i class="fa fa-cog" title="{{'settings'| translate}}"></i>
+                            <i class="fa fa-cog" title="{{settingsLabel}}"></i>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li ng-show="trackedEntityList.rows.length > 0"><a href ng-click="showHideColumns()">{{'show_hide_columns'| translate}}</a></li>
+                            <li ng-show="trackedEntityList.rows.length > 0"><a href ng-click="showHideColumns()">{{showHideLabel}}</a></li>
                         </ul>
                     </div>
                 </div>            
@@ -96,7 +96,7 @@
         <!--- search and registration menu begins -->
         <div class="row vertical-spacing not-for-screen">
             <div class="col-md-4">
-                <h4>{{'org_unit'| translate}}</h4>
+                <h4>{{orgUnitLabel}}</h4>
             </div>
             <div class="col-md-4">
                 <input type="text" class="form-control" ng-disabled='true' value="{{selectedOrgUnit.name}}">
@@ -109,10 +109,10 @@
                 <button type="button" class="select-dropdown-button form-control" ng-show="programs.length > 0">{{selectedProgram ? selectedProgram.name : 'please_select_a_program'| translate}}</button>
                 <button type="button" class="select-dropdown-button form-control" ng-show="programs.length < 1" ng-disabled="true">{{programs.length > 0 ? 'please_select_a_program' : 'no_program_exists'| translate}}</button>
                 <div class="input-group-btn program-drop-down">
-                    <button class="btn btn-default select-dropdown-caret" type="button" title="{{'list_programs'| translate}}" data-toggle="dropdown" ng-disabled="programs.length < 1"><i class="fa fa-caret-down"></i></button>
+                    <button class="btn btn-default select-dropdown-caret" type="button" title="{{listProgramsLabel}}" data-toggle="dropdown" ng-disabled="programs.length < 1"><i class="fa fa-caret-down"></i></button>
                     <ul id="selectDropDown" class="dropdown-menu dropdown-menu-right">
                         <li>
-                            <a href ng-click="getProgramAttributes(null)">{{'please_select_a_program'| translate}}</a>
+                            <a href ng-click="getProgramAttributes(null)">{{programSelectLabel}}</a>
                         </li>
                         <li ng-repeat="program in programs| orderBy: 'name'">
                             <a href ng-click="getProgramAttributes(program)">{{program.name}}</a>
@@ -125,13 +125,13 @@
 
             <!-- simple/advanced search begins -->
             <div id="searchDropDownParent" class="input-group col-md-4 hideInPrint">
-                <input type="text" placeholder="{{'type_your_search_criteria_here'| translate}}" ng-model="searchText" class="form-control expanded" d2-enter="search(searchMode.freeText)" ng-class="{true: 'invalid - input'} [!searchText && emptySearchText]" ng-focus="showHideSearch()" ng-disabled="showRegistrationDiv">
+                <input type="text" placeholder="{{searchCriteriaLabel}}" ng-model="searchText" class="form-control expanded" d2-enter="search(searchMode.freeText)" ng-class="{true: 'invalid - input'} [!searchText && emptySearchText]" ng-focus="showHideSearch()" ng-disabled="showRegistrationDiv">
                 <div class="input-group-btn">
-                    <button class="btn btn-default search-dropdown-button trim" type="button" title="{{'advanced_search'| translate}}" data-toggle="dropdown" ng-click="showHideSearch()" ng-disabled="showRegistrationDiv"><i class="fa fa-caret-down"></i></button>
-                    <button class="btn btn-primary trim" type="button" title="{{'search'| translate}}" ng-disabled="showRegistrationDiv" ng-click="search(searchMode.freeText)"><i class="fa fa-search"></i></button>
+                    <button class="btn btn-default search-dropdown-button trim" type="button" title="{{advancedSearchLabel}}" data-toggle="dropdown" ng-click="showHideSearch()" ng-disabled="showRegistrationDiv"><i class="fa fa-caret-down"></i></button>
+                    <button class="btn btn-primary trim" type="button" title="{{searchLabel}}" ng-disabled="showRegistrationDiv" ng-click="search(searchMode.freeText)"><i class="fa fa-search"></i></button>
                     <div id="searchDropDown" class="dropdown-menu dropdown-menu-right">
                         <form name="searchForm">
-                            <div ng-include="'views/advanced-search.html'"></div>
+                            <div ng-if="showSearchDiv" ng-include="'views/advanced-search.html'"></div>
                         </form>
                     </div>
                 </div>                
@@ -144,18 +144,18 @@
                         class="btn btn-success"
                         ng-disabled="showRegistrationDiv"
                         ng-click="search(searchMode.listAll)">
-                    {{'list_all'| translate}}
+                    {{listAllLabel}}
                 </button>
                 <button type="button" 
                         class="btn btn-primary"
                         ng-click="showRegistration()">                    
-                    {{'register'| translate}}
+                    {{registerLabel}}
                 </button>
                 <button type="button" 
                         class="btn btn-info"
                         ng-if="teiCount > 0"
                         onclick="javascript:window.print()">                    
-                    {{'print'| translate}}
+                    {{printLabel}}
                 </button>
             </div>
             <!--search/registration buttons end-->
