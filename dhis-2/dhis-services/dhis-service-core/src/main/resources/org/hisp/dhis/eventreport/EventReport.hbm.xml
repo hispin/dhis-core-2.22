@@ -154,9 +154,19 @@
 
     <property name="digitGroupSeparator" />
 
-    <property name="displayDensity" />
+    <property name="displayDensity" length="40">
+		<type name="org.hibernate.type.EnumType">
+			<param name="enumClass">org.hisp.dhis.common.DisplayDensity</param>
+			<param name="type">12</param>
+		</type> 
+	</property>
 
-    <property name="fontSize" />
+    <property name="fontSize" length="40">
+		<type name="org.hibernate.type.EnumType">
+			<param name="enumClass">org.hisp.dhis.common.FontSize</param>
+			<param name="type">12</param>
+		</type> 
+	</property>
 
     <property name="sortOrder" />
 

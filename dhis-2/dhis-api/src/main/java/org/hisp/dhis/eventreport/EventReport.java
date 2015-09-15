@@ -37,8 +37,10 @@ import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.DisplayDensity;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.EventAnalyticalObject;
+import org.hisp.dhis.common.FontSize;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
@@ -170,12 +172,12 @@ public class EventReport
     /**
      * The display density of the text in the table.
      */
-    private String displayDensity;
+    private DisplayDensity displayDensity;
 
     /**
      * The font size of the text in the table.
      */
-    private String fontSize;
+    private FontSize fontSize;
 
     /**
      * The font size of the text in the table.
@@ -507,12 +509,12 @@ public class EventReport
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDisplayDensity()
+    public DisplayDensity getDisplayDensity()
     {
         return displayDensity;
     }
 
-    public void setDisplayDensity( String displayDensity )
+    public void setDisplayDensity( DisplayDensity displayDensity )
     {
         this.displayDensity = displayDensity;
     }
@@ -520,12 +522,12 @@ public class EventReport
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getFontSize()
+    public FontSize getFontSize()
     {
         return fontSize;
     }
 
-    public void setFontSize( String fontSize )
+    public void setFontSize( FontSize fontSize )
     {
         this.fontSize = fontSize;
     }
