@@ -125,9 +125,9 @@ public class DashboardTest
         dashboard.getItems().add( diB );
         dashboard.getItems().add( diC );
         
-        assertEquals( diB, dashboard.getAvailableItemByType( DashboardItem.TYPE_REPORTS ) );
-        assertEquals( diC, dashboard.getAvailableItemByType( DashboardItem.TYPE_RESOURCES ) );
-        assertNull( dashboard.getAvailableItemByType( DashboardItem.TYPE_REPORT_TABLES ) );
+        assertEquals( diB, dashboard.getAvailableItemByType( DashboardItemType.REPORTS ) );
+        assertEquals( diC, dashboard.getAvailableItemByType( DashboardItemType.RESOURCES ) );
+        assertNull( dashboard.getAvailableItemByType( DashboardItemType.MAP ) );
     }
     
     @Test

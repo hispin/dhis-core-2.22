@@ -162,7 +162,7 @@ public class DashboardServiceTest
         dashboardService.saveDashboard( dA );
         dashboardService.saveDashboard( dB );
 
-        DashboardItem itemA = dashboardService.addItemContent( dA.getUid(), DashboardItem.TYPE_CHART, chartA.getUid() );
+        DashboardItem itemA = dashboardService.addItemContent( dA.getUid(), DashboardItemType.CHART, chartA.getUid() );
 
         assertNotNull( itemA );
         assertNotNull( itemA.getUid() );

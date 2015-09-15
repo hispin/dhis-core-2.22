@@ -66,17 +66,6 @@ public class DashboardItem
 {
     public static final int MAX_CONTENT = 8;
 
-    public static final String TYPE_CHART = "chart"; //TODO use enum
-    public static final String TYPE_EVENT_CHART = "eventChart"; //TODO use enum
-    public static final String TYPE_MAP = "map";
-    public static final String TYPE_REPORT_TABLE = "reportTable";
-    public static final String TYPE_EVENT_REPORT = "eventReport";
-    public static final String TYPE_USERS = "users";
-    public static final String TYPE_REPORT_TABLES = "reportTables";
-    public static final String TYPE_REPORTS = "reports";
-    public static final String TYPE_RESOURCES = "resources";
-    public static final String TYPE_MESSAGES = "messages";
-
     public static final String SHAPE_NORMAL = "normal";
     public static final String SHAPE_DOUBLE_WIDTH = "double_width";
     public static final String SHAPE_FULL_WIDTH = "full_width";
@@ -124,43 +113,43 @@ public class DashboardItem
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getType()
+    public DashboardItemType getType()
     {
         if ( chart != null )
         {
-            return TYPE_CHART;
+            return DashboardItemType.CHART;
         }
         else if ( eventChart != null )
         {
-            return TYPE_EVENT_CHART;
+            return DashboardItemType.EVENT_CHART;
         }
         else if ( map != null )
         {
-            return TYPE_MAP;
+            return DashboardItemType.MAP;
         }
         else if ( reportTable != null )
         {
-            return TYPE_REPORT_TABLE;
+            return DashboardItemType.REPORT_TABLE;
         }
         else if ( eventReport != null )
         {
-            return TYPE_EVENT_REPORT;
+            return DashboardItemType.EVENT_REPORT;
         }
         else if ( !users.isEmpty() )
         {
-            return TYPE_USERS;
+            return DashboardItemType.USERS;
         }
         else if ( !reports.isEmpty() )
         {
-            return TYPE_REPORTS;
+            return DashboardItemType.REPORTS;
         }
         else if ( !resources.isEmpty() )
         {
-            return TYPE_RESOURCES;
+            return DashboardItemType.RESOURCES;
         }
         else if ( messages != null )
         {
-            return TYPE_MESSAGES;
+            return DashboardItemType.MESSAGES;
         }
 
         return null;

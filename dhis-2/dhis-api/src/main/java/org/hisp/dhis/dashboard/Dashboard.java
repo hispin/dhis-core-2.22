@@ -130,7 +130,7 @@ public class Dashboard
      * @param type the type of content to return.
      * @return an item.
      */
-    public DashboardItem getAvailableItemByType( String type )
+    public DashboardItem getAvailableItemByType( DashboardItemType type )
     {
         for ( DashboardItem item : items )
         {
