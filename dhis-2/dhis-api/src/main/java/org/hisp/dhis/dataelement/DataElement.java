@@ -529,6 +529,7 @@ public class DataElement
 
     @JsonProperty
     @JsonView( { DetailedView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public boolean isOptionSetValue()
     {
         return optionSet != null;
