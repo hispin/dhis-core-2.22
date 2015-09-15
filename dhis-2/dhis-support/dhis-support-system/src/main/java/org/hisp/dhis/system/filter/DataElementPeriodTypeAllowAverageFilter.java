@@ -28,15 +28,16 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.commons.filter.Filter;
 
 public class DataElementPeriodTypeAllowAverageFilter
     implements Filter<DataElement>
 {
     private String periodType;
-    
+
     public DataElementPeriodTypeAllowAverageFilter( String periodType )
     {
         this.periodType = periodType;
@@ -49,20 +50,20 @@ public class DataElementPeriodTypeAllowAverageFilter
         {
             return false;
         }
-        
+
         final PeriodType type = PeriodType.getPeriodTypeByName( periodType );
-        
+
         if ( dataElement.getPeriodType().equals( type ) )
         {
             return true;
         }
-        
-        if ( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM.equals( dataElement.getAggregationOperator() ) && 
+
+        if ( AggregationType.AVERAGE_SUM_ORG_UNIT == dataElement.getAggregationType() &&
             dataElement.getPeriodType().getFrequencyOrder() >= type.getFrequencyOrder() )
         {
             return true;
         }
-        
+
         return false;
     }
 }
