@@ -55,7 +55,7 @@ public enum AggregationType
 
     private final String value;
 
-    private AggregationType( String value )
+    AggregationType( String value )
     {
         this.value = value;
     }

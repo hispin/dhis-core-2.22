@@ -32,6 +32,7 @@ import com.google.common.collect.Sets;
 import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -42,8 +43,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.hisp.dhis.dataelement.DataElement.*;
 
 /**
  * @author Lars Helge Overland
@@ -388,10 +387,10 @@ public class ValidationUtils
      */
     public static boolean dataValueIsZeroAndInsignificant( String value, DataElement dataElement )
     {
-        String aggOperator = dataElement.getAggregationOperator();
+        AggregationType aggregationType = dataElement.getAggregationType();
 
         return dataElement.getValueType().isNumeric() && MathUtils.isZero( value ) && !dataElement.isZeroIsSignificant() &&
-            !(AGGREGATION_OPERATOR_AVERAGE_SUM.equals( aggOperator ) || AGGREGATION_OPERATOR_AVERAGE.equals( aggOperator ));
+            !(aggregationType == AggregationType.AVERAGE_SUM_ORG_UNIT || aggregationType == AggregationType.AVERAGE);
     }
 
     /**
