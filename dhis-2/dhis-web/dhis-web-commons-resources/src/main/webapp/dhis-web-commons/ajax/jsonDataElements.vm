@@ -12,7 +12,7 @@
 	"code": "$!encoder.jsonEncode( ${dataElement.code} )",
 	"valueType": "$!{dataElement.valueType}",
 	"optionSet": #if($!dataElement.optionSet) "true"  #else "false" #end,
-	"aggregationOperator": "$!{dataElement.aggregationOperator}",
+	"aggregationType": "$!{dataElement.aggregationType}",
 	"zeroIsSignificant": "$!{dataElement.zeroIsSignificant}",
 	"dataSets": [ #foreach( $dataSet in $dataSets )${dataSet.id}#if( $velocityCount < $dataSets.size() ),#end#end ],
 	"groups": [ #foreach( $group in $groups )${group.id}#if( $velocityCount < $groups.size() ),#end#end ]

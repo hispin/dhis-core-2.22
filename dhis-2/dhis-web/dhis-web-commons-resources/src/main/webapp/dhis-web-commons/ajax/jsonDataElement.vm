@@ -9,7 +9,7 @@
     "description": "$!encoder.jsonEncode( ${dataElement.displayDescription} )",
     "valueType": "$!{dataElement.valueType}",
     "domainType": "${dataElement.getDomainTypeNullSafe()}",
-    "aggregationOperator": "$!{dataElement.aggregationOperator}",
+    "aggregationType": "$!{dataElement.aggregationType}",
     "categoryCombo": "$!encoder.xmlEncode( ${dataElement.categoryCombo.name} )",
     "url": "$!encoder.xmlEncode( ${dataElement.url} )",
     "lastUpdated": "$!format.formatDate( ${dataElement.lastUpdated} )",

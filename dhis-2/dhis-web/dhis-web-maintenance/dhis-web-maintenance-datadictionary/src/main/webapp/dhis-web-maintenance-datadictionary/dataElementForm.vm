@@ -13,7 +13,7 @@
         'beforeValidateHandler': function() {
           setFieldValue('submitCategoryComboId', getFieldValue('selectedCategoryComboId'));
           setFieldValue('submitValueType', getFieldValue('valueType'));
-          enable('aggregationOperatorSelect');
+          enable('aggregationTypeSelect');
 					#tblDynamicAttributesJavascript()
         },
         'rules': getValidationRules("dataElement")
@@ -105,17 +105,17 @@
 		</td>
 	</tr>
 	<tr>
-		<td><label for="aggregationOperatorSelect" id="lblOperator">$i18n.getString( "aggregation_operator" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+		<td><label for="aggregationTypeSelect" id="lblOperator">$i18n.getString( "aggregation_operator" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
 		<td>
-			<select id="aggregationOperatorSelect" name="aggregationOperator">
-        <option value="sum" #if( $!dataElement.aggregationOperator == 'sum' ) selected="selected" #end>$i18n.getString( "sum" )</option>
-        <option value="avg_sum_org_unit" #if( $!dataElement.aggregationOperator == 'avg_sum_org_unit' ) selected="selected" #end>$i18n.getString( "average_sum_in_org_unit_hierarchy" )</option>
-        <option value="avg" #if( $!dataElement.aggregationOperator == 'avg' ) selected="selected" #end>$i18n.getString( "average" )</option>
-        <option value="count" #if( $!dataElement.aggregationOperator == 'count' ) selected="selected" #end>$i18n.getString( "count" )</option>
-        <option value="stddev" #if( $!dataElement.aggregationOperator == 'stddev' ) selected="selected" #end>$i18n.getString( "stddev" )</option>
-        <option value="variance" #if( $!dataElement.aggregationOperator == 'variance' ) selected="selected" #end>$i18n.getString( "variance" )</option>
-        <option value="min" #if( $!dataElement.aggregationOperator == 'min' ) selected="selected" #end>$i18n.getString( "min" )</option>
-        <option value="max" #if( $!dataElement.aggregationOperator == 'max' ) selected="selected" #end>$i18n.getString( "max" )</option>
+			<select id="aggregationTypeSelect" name="aggregationType">
+        <option value="SUM" #if( $!dataElement.aggregationType == 'SUM' ) selected="selected" #end>$i18n.getString( "sum" )</option>
+        <option value="AVERAGE_SUM_ORG_UNIT" #if( $!dataElement.aggregationType == 'AVERAGE_SUM_ORG_UNIT' ) selected="selected" #end>$i18n.getString( "average_sum_in_org_unit_hierarchy" )</option>
+        <option value="AVERAGE" #if( $!dataElement.aggregationType == 'AVERAGE' ) selected="selected" #end>$i18n.getString( "average" )</option>
+        <option value="COUNT" #if( $!dataElement.aggregationType == 'COUNT' ) selected="selected" #end>$i18n.getString( "count" )</option>
+        <option value="STDDEV" #if( $!dataElement.aggregationType == 'STDDEV' ) selected="selected" #end>$i18n.getString( "stddev" )</option>
+        <option value="VARIANCE" #if( $!dataElement.aggregationType == 'VARIANCE' ) selected="selected" #end>$i18n.getString( "variance" )</option>
+        <option value="MIN" #if( $!dataElement.aggregationType == 'MIN' ) selected="selected" #end>$i18n.getString( "min" )</option>
+        <option value="MAX" #if( $!dataElement.aggregationType == 'MAX' ) selected="selected" #end>$i18n.getString( "max" )</option>
 			</select>
 		</td>
 	</tr>

@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.csv;
 
 import com.csvreader.CsvReader;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -195,7 +196,7 @@ public class DefaultCsvImportService
                 object.setDomainType( DataElementDomain.fromValue( domainType ) );
                 object.setValueType( ValueType.valueOf( getSafe( values, 7, ValueType.TEXT.toString(), 50 ) ) );
 
-                object.setAggregationOperator( getSafe( values, 8, DataElement.AGGREGATION_OPERATOR_SUM, 16 ) );
+                object.setAggregationType( AggregationType.valueOf( getSafe( values, 8, AggregationType.SUM.toString(), 50 ) ) );
                 String categoryComboUid = getSafe( values, 9, null, 11 );
                 object.setUrl( getSafe( values, 10, null, 255 ) );
                 object.setZeroIsSignificant( Boolean.valueOf( getSafe( values, 11, "false", null ) ) );

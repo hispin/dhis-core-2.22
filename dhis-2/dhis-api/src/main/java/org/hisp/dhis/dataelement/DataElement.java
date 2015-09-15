@@ -35,7 +35,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
-import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -93,12 +92,6 @@ public class DataElement
      */
     private static final long serialVersionUID = -7131541880444446669L;
 
-    public static final String AGGREGATION_OPERATOR_SUM = "sum";
-    public static final String AGGREGATION_OPERATOR_AVERAGE_SUM = "avg_sum_org_unit"; // Sum in organisation unit
-    public static final String AGGREGATION_OPERATOR_AVERAGE = "avg";
-    public static final String AGGREGATION_OPERATOR_COUNT = "count";
-    public static final String AGGREGATION_OPERATOR_NONE = "none";
-
     /**
      * Data element value type (int, boolean, etc)
      */
@@ -119,12 +112,6 @@ public class DataElement
      * DataElementDomainType.TRACKER.
      */
     private DataElementDomain domainType;
-
-    /**
-     * The aggregation operator of this DataElement; e.g. DataElement.SUM og
-     * DataElement.AVERAGE.
-     */
-    private String aggregationOperator;
 
     /**
      * A combination of categories to capture data.
@@ -503,12 +490,6 @@ public class DataElement
         return legendSet != null;
     }
 
-    @Override
-    public AggregationType getAggregationType()
-    {
-        return aggregationOperator != null ? AggregationType.fromValue( aggregationOperator ) : null;
-    }
-
     // -------------------------------------------------------------------------
     // DimensionalObject
     // -------------------------------------------------------------------------
@@ -575,19 +556,6 @@ public class DataElement
     public void setDomainType( DataElementDomain domainType )
     {
         this.domainType = domainType;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getAggregationOperator()
-    {
-        return aggregationOperator;
-    }
-
-    public void setAggregationOperator( String aggregationOperator )
-    {
-        this.aggregationOperator = aggregationOperator;
     }
 
     @JsonProperty
@@ -730,7 +698,6 @@ public class DataElement
                 formName = dataElement.getFormName();
                 domainType = dataElement.getDomainType();
                 valueType = dataElement.getValueType();
-                aggregationOperator = dataElement.getAggregationOperator();
                 categoryCombo = dataElement.getCategoryCombo();
                 url = dataElement.getUrl();
                 optionSet = dataElement.getOptionSet();
@@ -741,7 +708,6 @@ public class DataElement
                 formName = dataElement.getFormName() == null ? formName : dataElement.getFormName();
                 domainType = dataElement.getDomainType() == null ? domainType : dataElement.getDomainType();
                 valueType = dataElement.getValueType() == null ? valueType : dataElement.getValueType();
-                aggregationOperator = dataElement.getAggregationOperator() == null ? aggregationOperator : dataElement.getAggregationOperator();
                 categoryCombo = dataElement.getCategoryCombo() == null ? categoryCombo : dataElement.getCategoryCombo();
                 url = dataElement.getUrl() == null ? url : dataElement.getUrl();
                 optionSet = dataElement.getOptionSet() == null ? optionSet : dataElement.getOptionSet();

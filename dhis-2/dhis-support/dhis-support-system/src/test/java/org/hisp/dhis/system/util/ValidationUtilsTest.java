@@ -28,6 +28,7 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
@@ -106,12 +107,11 @@ public class ValidationUtilsTest
     {
         DataElement de = new DataElement( "DEA" );
         de.setValueType( ValueType.INTEGER );
-        de.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        de.setAggregationType( AggregationType.SUM );
 
         assertTrue( dataValueIsZeroAndInsignificant( "0", de ) );
 
-        de.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM );
-
+        de.setAggregationType( AggregationType.AVERAGE_SUM_ORG_UNIT );
         assertFalse( dataValueIsZeroAndInsignificant( "0", de ) );
     }
 
@@ -186,13 +186,13 @@ public class ValidationUtilsTest
         assertTrue( isValidHexColor( "#4a6" ) );
         assertTrue( isValidHexColor( "abc" ) );
     }
-    
+
     @Test
     public void testExpressionIsValidSQl()
     {
         assertFalse( expressionIsValidSQl( "10 == 10; delete from table" ) );
         assertFalse( expressionIsValidSQl( "select from table" ) );
-        
+
         assertTrue( expressionIsValidSQl( "\"abcdef12345\" < 30" ) );
         assertTrue( expressionIsValidSQl( "\"abcdef12345\" >= \"bcdefg23456\"" ) );
         assertTrue( expressionIsValidSQl( "\"DO0v7fkhUNd\" > -30000 and \"DO0v7fkhUNd\" < 30000" ) );

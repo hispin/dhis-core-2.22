@@ -133,7 +133,7 @@ public class DataElementConverter
                 writer.writeElement( FIELD_DESCRIPTION, element.getDescription() );
                 writer.writeElement( FIELD_VALUE_TYPE, element.getValueType().toString() );
                 writer.writeElement( FIELD_DOMAIN_TYPE, element.getDomainType().getValue() );
-                writer.writeElement( FIELD_AGGREGATION_OPERATOR, element.getAggregationOperator() );
+                // writer.writeElement( FIELD_AGGREGATION_OPERATOR, element.getAggregationOperator() );
                 writer.writeElement( FIELD_CATEGORY_COMBO, String.valueOf( element.getCategoryCombo().getId() ) );
                 writer.writeElement( FIELD_LAST_UPDATED, DateUtils.getMediumDateString( element.getLastUpdated(), EMPTY ) );
 
@@ -174,7 +174,7 @@ public class DataElementConverter
             element.setDescription( values.get( FIELD_DESCRIPTION ) );
             element.setValueType( ValueType.valueOf( values.get( FIELD_VALUE_TYPE ) ) );
             element.setDomainType( DataElementDomain.fromValue( values.get( FIELD_DOMAIN_TYPE ) ) );
-            element.setAggregationOperator( values.get( FIELD_AGGREGATION_OPERATOR ) );
+            // element.setAggregationOperator( values.get( FIELD_AGGREGATION_OPERATOR ) );
             element.getCategoryCombo().setId( categoryComboMapping.get( Integer.parseInt( values.get( FIELD_CATEGORY_COMBO ) ) ) );
             element.setLastUpdated( DateUtils.getMediumDate( values.get( FIELD_LAST_UPDATED ) ) );
 

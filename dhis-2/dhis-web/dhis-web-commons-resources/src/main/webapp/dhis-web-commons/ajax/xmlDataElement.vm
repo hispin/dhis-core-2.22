@@ -8,7 +8,7 @@
 	<description>$!encoder.xmlEncode( $dataElement.displayDescription )</description>
 	<domainType>$dataElement.getDomainTypeNullSafe()</domainType>
 	<valueType>$dataElement.valueType</valueType>
-	<aggregationOperator>$dataElement.aggregationOperator</aggregationOperator>
+	<aggregationType>$dataElement.aggregationType</aggregationType>
 	<url>$!encoder.xmlEncode( $dataElement.url )</url>
 	<lastUpdated>$!format.formatDate( $dataElement.lastUpdated )</lastUpdated>
 	<categoryCombo>$!encoder.xmlEncode( $dataElement.categoryCombo.name )</categoryCombo>

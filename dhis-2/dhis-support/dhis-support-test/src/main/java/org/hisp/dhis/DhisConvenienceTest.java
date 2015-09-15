@@ -30,6 +30,7 @@ package org.hisp.dhis;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.DimensionalObject;
@@ -354,7 +355,7 @@ public abstract class DhisConvenienceTest
         dataElement.setDescription( "DataElementDescription" + uniqueCharacter );
         dataElement.setValueType( ValueType.INTEGER );
         dataElement.setDomainType( DataElementDomain.AGGREGATE );
-        dataElement.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElement.setAggregationType( AggregationType.SUM );
 
         return dataElement;
     }
@@ -374,7 +375,7 @@ public abstract class DhisConvenienceTest
         dataElement.setDescription( "DataElementDescription" + uniqueCharacter );
         dataElement.setValueType( valueType );
         dataElement.setDomainType( DataElementDomain.AGGREGATE );
-        dataElement.setAggregationOperator( DataElement.AGGREGATION_OPERATOR_SUM );
+        dataElement.setAggregationType( AggregationType.SUM );
 
         return dataElement;
     }
@@ -394,33 +395,33 @@ public abstract class DhisConvenienceTest
     }
 
     /**
-     * @param uniqueCharacter     A unique character to identify the object.
-     * @param valueType           The value type.
-     * @param aggregationOperator The aggregation operator.
+     * @param uniqueCharacter A unique character to identify the object.
+     * @param valueType       The value type.
+     * @param aggregationType The aggregation type.
      */
-    public static DataElement createDataElement( char uniqueCharacter, ValueType valueType, String aggregationOperator )
+    public static DataElement createDataElement( char uniqueCharacter, ValueType valueType, AggregationType aggregationType )
     {
         DataElement dataElement = createDataElement( uniqueCharacter );
         dataElement.setValueType( valueType );
         dataElement.setDomainType( DataElementDomain.AGGREGATE );
-        dataElement.setAggregationOperator( aggregationOperator );
+        dataElement.setAggregationType( aggregationType );
 
         return dataElement;
     }
 
     /**
-     * @param uniqueCharacter     A unique character to identify the object.
-     * @param valueType           The value type.
-     * @param aggregationOperator The aggregation operator.
-     * @param categoryCombo       The category combo.
+     * @param uniqueCharacter A unique character to identify the object.
+     * @param valueType       The value type.
+     * @param aggregationType The aggregation type.
+     * @param categoryCombo   The category combo.
      */
-    public static DataElement createDataElement( char uniqueCharacter, ValueType valueType, String aggregationOperator,
+    public static DataElement createDataElement( char uniqueCharacter, ValueType valueType, AggregationType aggregationType,
         DataElementCategoryCombo categoryCombo )
     {
         DataElement dataElement = createDataElement( uniqueCharacter );
         dataElement.setValueType( valueType );
         dataElement.setDomainType( DataElementDomain.AGGREGATE );
-        dataElement.setAggregationOperator( aggregationOperator );
+        dataElement.setAggregationType( aggregationType );
         dataElement.setCategoryCombo( categoryCombo );
 
         return dataElement;
@@ -433,8 +434,7 @@ public abstract class DhisConvenienceTest
      *                                      category options.
      * @return DataElementCategoryOptionCombo
      */
-    public static DataElementCategoryCombo createCategoryCombo( char categoryComboUniqueIdentifier,
-        DataElementCategory... categories )
+    public static DataElementCategoryCombo createCategoryCombo( char categoryComboUniqueIdentifier, DataElementCategory... categories )
     {
         DataElementCategoryCombo categoryCombo = new DataElementCategoryCombo( "CategoryCombo" + categoryComboUniqueIdentifier, new ArrayList<>() );
         categoryCombo.setAutoFields();
