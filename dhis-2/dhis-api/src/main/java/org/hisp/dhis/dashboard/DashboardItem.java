@@ -66,10 +66,6 @@ public class DashboardItem
 {
     public static final int MAX_CONTENT = 8;
 
-    public static final String SHAPE_NORMAL = "normal";
-    public static final String SHAPE_DOUBLE_WIDTH = "double_width";
-    public static final String SHAPE_FULL_WIDTH = "full_width";
-
     private Chart chart;
 
     private EventChart eventChart;
@@ -91,7 +87,7 @@ public class DashboardItem
 
     private Boolean messages;
 
-    private String shape;
+    private DashboardItemShape shape;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -398,12 +394,12 @@ public class DashboardItem
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getShape()
+    public DashboardItemShape getShape()
     {
         return shape;
     }
 
-    public void setShape( String shape )
+    public void setShape( DashboardItemShape shape )
     {
         this.shape = shape;
     }
