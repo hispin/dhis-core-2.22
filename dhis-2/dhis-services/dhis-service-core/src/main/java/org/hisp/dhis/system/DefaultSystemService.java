@@ -29,6 +29,7 @@ package org.hisp.dhis.system;
  */
 
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_RUNTIME;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +96,8 @@ public class DefaultSystemService
         // ---------------------------------------------------------------------
 
         Date lastAnalyticsTableSuccess = (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE );
+        String lastAnalyticsTableRuntime = (String) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_RUNTIME );
+        
         Date now = new Date();
         
         SystemInfo info = systemInfo.instance();
@@ -104,6 +107,7 @@ public class DefaultSystemService
         info.setServerDate( new Date() );
         info.setLastAnalyticsTableSuccess( lastAnalyticsTableSuccess );
         info.setIntervalSinceLastAnalyticsTableSuccess( DateUtils.getPrettyInterval( lastAnalyticsTableSuccess, now ) );
+        info.setLastAnalyticsTableRuntime( lastAnalyticsTableRuntime );
         
         return info;
     }

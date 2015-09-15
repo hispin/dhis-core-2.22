@@ -30,6 +30,7 @@ package org.hisp.dhis.analytics.table.scheduling;
 
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_TITLE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_RUNTIME;
 import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 
@@ -48,6 +49,7 @@ import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.security.NoSecurityContextRunnable;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
+import org.hisp.dhis.system.util.DateUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -179,5 +181,6 @@ public class AnalyticsTableTask
         }
 
         systemSettingManager.saveSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE, startTime );
+        systemSettingManager.saveSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_RUNTIME, DateUtils.getPrettyInterval( clock.getSplitTime() ) );
     }
 }
