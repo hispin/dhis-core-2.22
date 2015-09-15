@@ -56,7 +56,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
 import org.hisp.dhis.system.util.MathUtils;
@@ -616,7 +615,7 @@ public class DefaultQueryPlanner
             if ( deg != null && !deg.getMembers().isEmpty() )
             {
                 PeriodType periodType = PeriodType.getPeriodTypeByName( params.getPeriodType() );
-                query.setAggregationType( getAggregationType( deg.getValueType(), deg.getAggregationOperator(), periodType, deg.getPeriodType() ) );
+                query.setAggregationType( getAggregationType( deg.getValueType(), deg.getAggregationType(), periodType, deg.getPeriodType() ) );
             }
             else
             {
@@ -765,7 +764,7 @@ public class DefaultQueryPlanner
         {
             DataElement de = (DataElement) element;
 
-            AggregationType aggregationType = getAggregationType( de.getValueType(), de.getAggregationOperator(), aggregationPeriodType, de.getPeriodType() );
+            AggregationType aggregationType = getAggregationType( de.getValueType(), de.getAggregationType(), aggregationPeriodType, de.getPeriodType() );
 
             map.putValue( aggregationType, de );
         }
@@ -797,7 +796,7 @@ public class DefaultQueryPlanner
      * Puts the given element into the map according to the value type, aggregation
      * operator, aggregation period type and data period type.
      */
-    private AggregationType getAggregationType( ValueType valueType, String aggregationOperator,
+    private AggregationType getAggregationType( ValueType valueType, AggregationType aggregationOperator,
         PeriodType aggregationPeriodType, PeriodType dataPeriodType )
     {
         AggregationType aggregationType;
@@ -805,29 +804,29 @@ public class DefaultQueryPlanner
         boolean disaggregation = isDisaggregation( aggregationPeriodType, dataPeriodType );
         boolean number = valueType.isNumeric();
 
-        if ( AVERAGE_AGG_OPERATORS.contains( aggregationOperator ) && ValueType.BOOLEAN == valueType )
+        if ( aggregationOperator.isAverage() && ValueType.BOOLEAN == valueType )
         {
             aggregationType = AggregationType.AVERAGE_BOOL;
         }
-        else if ( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM.equals( aggregationOperator ) && number && disaggregation )
+        else if ( AggregationType.AVERAGE_SUM_ORG_UNIT == aggregationOperator && number && disaggregation )
         {
             aggregationType = AggregationType.AVERAGE_SUM_INT_DISAGGREGATION;
         }
-        else if ( DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM.equals( aggregationOperator ) && number )
+        else if ( AggregationType.AVERAGE_SUM_ORG_UNIT == aggregationOperator && number )
         {
             aggregationType = AggregationType.AVERAGE_SUM_INT;
         }
-        else if ( DataElement.AGGREGATION_OPERATOR_AVERAGE.equals( aggregationOperator ) && number && disaggregation )
+        else if ( AggregationType.AVERAGE == aggregationOperator && number && disaggregation )
         {
             aggregationType = AggregationType.AVERAGE_INT_DISAGGREGATION;
         }
-        else if ( DataElement.AGGREGATION_OPERATOR_AVERAGE.equals( aggregationOperator ) && number )
+        else if ( AggregationType.AVERAGE == aggregationOperator && number )
         {
             aggregationType = AggregationType.AVERAGE_INT;
         }
         else
         {
-            aggregationType = AggregationType.fromValue( aggregationOperator );
+            aggregationType = aggregationOperator;
         }
 
         return aggregationType;
