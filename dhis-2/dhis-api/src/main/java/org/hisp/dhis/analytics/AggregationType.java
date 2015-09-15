@@ -33,11 +33,11 @@ package org.hisp.dhis.analytics;
  */
 public enum AggregationType
 {
-    SUM( "sum" ), 
+    SUM( "sum" ),
     AVERAGE( "avg" ),
     AVERAGE_SUM_ORG_UNIT( "avg_sum_org_unit" ),
-    COUNT( "count" ), 
-    STDDEV( "stddev" ), 
+    COUNT( "count" ),
+    STDDEV( "stddev" ),
     VARIANCE( "variance" ),
     MIN( "min" ),
     MAX( "max" ),
@@ -46,7 +46,7 @@ public enum AggregationType
     CUSTOM( "custom" ),
 
     // Internal types
-    
+
     AVERAGE_SUM_INT( "avg_sum_int" ), // Sum in organisation unit hierarchy
     AVERAGE_SUM_INT_DISAGGREGATION( "avg_sum_int_disaggregation" ), // Sum in organisation unit hierarchy
     AVERAGE_INT( "avg_int" ),
@@ -64,7 +64,12 @@ public enum AggregationType
     {
         return value;
     }
-    
+
+    public boolean isAverage()
+    {
+        return this == AVERAGE_SUM_ORG_UNIT || this == AVERAGE;
+    }
+
     public static AggregationType fromValue( String value )
     {
         for ( AggregationType type : AggregationType.values() )
