@@ -28,11 +28,13 @@ package org.hisp.dhis.sqlview;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -44,10 +46,11 @@ import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 
 /**
  * @author Dang Duy Hieu
@@ -67,6 +70,8 @@ public class SqlView
 
     private static final String CRITERIA_SEP = ":";
     private static final String REGEX_SEP = "|";
+    
+    private static final String QUERY_VALUE_REGEX = "^[\\w\\s\\-]*$";
     
     // -------------------------------------------------------------------------
     // Properties
@@ -130,11 +135,8 @@ public class SqlView
                     String[] criteria = param.split( CRITERIA_SEP );
                     String filter = criteria[0];
                     String value = criteria[1];
-
-                    if ( StringUtils.isAlphanumericSpace( filter ) && StringUtils.isAlphanumericSpace( value ) )
-                    {
-                        map.put( filter, value );
-                    }
+                    
+                    map.put( filter, value );
                 }
             }
         }
@@ -142,6 +144,52 @@ public class SqlView
         return map;
     }
 
+    public static Set<String> getInvalidQueryParams( Set<String> params )
+    {
+        Set<String> invalid = new HashSet<>();
+        
+        for ( String param : params )
+        {
+            if ( !isValidQueryParam( param ) )
+            {
+                invalid.add( param );
+            }
+        }
+        
+        return invalid;
+    }
+
+    /**
+     * Indicates whether the given query parameter is valid.
+     */
+    public static final boolean isValidQueryParam( String param )
+    {
+        return StringUtils.isAlphanumeric( param );
+    }
+    
+    public static Set<String> getInvalidQueryValues( Collection<String> values )
+    {
+        Set<String> invalid = new HashSet<>();
+        
+        for ( String value : values )
+        {
+            if ( !isValidQueryValue( value ) )
+            {
+                invalid.add( value );
+            }
+        }
+        
+        return invalid;
+    }
+
+    /**
+     * Indicates whether the given query value is valid.
+     */
+    public static final boolean isValidQueryValue( String value )
+    {
+        return value != null && value.matches( QUERY_VALUE_REGEX );
+    }
+    
     public static String getProtectedTablesRegex()
     {
         StringBuffer regex = new StringBuffer( "^.*?(\"|'|`|\\s|^)(" );
