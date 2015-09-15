@@ -16,6 +16,7 @@
         <input type="hidden" id="id" name="id" value="$!sqlViewObject.id" />
         <input type="hidden" id="name" name="name" value="$!encoder.htmlEncode( $!sqlViewObject.name )" />
         <input type="hidden" id="query" name="query" value="$!encoder.htmlEncode( $!sqlViewObject.query )" />
+        <input type="hidden" id="type" name="query" value="$sqlViewObject.type" />
     </div>
 
     <table>

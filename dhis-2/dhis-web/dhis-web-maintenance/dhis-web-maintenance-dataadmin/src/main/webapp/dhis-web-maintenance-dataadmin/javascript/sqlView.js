@@ -3,7 +3,7 @@ isAjax = true;
 function validateAddUpdateSqlView( mode ) {
   var name = $("#name").val();
   var sqlquery = $("#sqlquery").val();
-  var query = $("#query").val();
+  var query = !!( $("#type").val() == "QUERY" );
 
   $.ajax( {
     url: "validateAddUpdateSqlView.action",
