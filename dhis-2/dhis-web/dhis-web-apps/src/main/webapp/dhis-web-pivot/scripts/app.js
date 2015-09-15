@@ -11,6 +11,8 @@ Ext.onReady( function() {
 		extendCore,
 		createViewport,
 		dimConf,
+        styleConf,
+        finalsStyleConf,
 
 		ns = {
 			core: {},
@@ -647,13 +649,13 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'normal',
+            value: finalsStyleConf.normal,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'comfortable', text: NS.i18n.comfortable},
-					{id: 'normal', text: NS.i18n.normal},
-					{id: 'compact', text: NS.i18n.compact}
+					{id: finalsStyleConf.compact, text: NS.i18n.compact},
+					{id: finalsStyleConf.normal, text: NS.i18n.normal},
+					{id: finalsStyleConf.comfortable, text: NS.i18n.comfortable}
 				]
 			})
 		});
@@ -668,13 +670,13 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'normal',
+			value: finalsStyleConf.normal,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'large', text: NS.i18n.large},
-					{id: 'normal', text: NS.i18n.normal},
-					{id: 'small', text: NS.i18n.small_}
+					{id: finalsStyleConf.large, text: NS.i18n.large},
+					{id: finalsStyleConf.normal, text: NS.i18n.normal},
+					{id: finalsStyleConf.small, text: NS.i18n.small_}
 				]
 			})
 		});
@@ -689,13 +691,13 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'space',
+			value: finalsStyleConf.space,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'comma', text: 'Comma'},
-					{id: 'space', text: 'Space'},
-					{id: 'none', text: 'None'}
+					{id: finalsStyleConf.none, text: NS.i18n.none},
+					{id: finalsStyleConf.space, text: NS.i18n.space},
+					{id: finalsStyleConf.comma, text: NS.i18n.comma}
 				]
 			})
 		});
@@ -881,13 +883,13 @@ Ext.onReady( function() {
 				showRowSubTotals.setValue(Ext.isBoolean(layout.showRowSubTotals) ? layout.showRowSubTotals : true);
 				showDimensionLabels.setValue(Ext.isBoolean(layout.showDimensionLabels) ? layout.showDimensionLabels : true);
 				hideEmptyRows.setValue(Ext.isBoolean(layout.hideEmptyRows) ? layout.hideEmptyRows : false);
-                aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'DEFAULT');
-				dataApprovalLevel.setValue(Ext.isObject(layout.dataApprovalLevel) && Ext.isString(layout.dataApprovalLevel.id) ? layout.dataApprovalLevel.id : 'DEFAULT');
+                aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : finalsStyleConf.default_);
+				dataApprovalLevel.setValue(Ext.isObject(layout.dataApprovalLevel) && Ext.isString(layout.dataApprovalLevel.id) ? layout.dataApprovalLevel.id : finalsStyleConf.default_);
 				showHierarchy.setValue(Ext.isBoolean(layout.showHierarchy) ? layout.showHierarchy : false);
                 completedOnly.setValue(Ext.isBoolean(layout.completedOnly) ? layout.completedOnly : false);
-				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : 'normal');
-				fontSize.setValue(Ext.isString(layout.fontSize) ? layout.fontSize : 'normal');
-				digitGroupSeparator.setValue(Ext.isString(layout.digitGroupSeparator) ? layout.digitGroupSeparator : 'space');
+				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : finalsStyleConf.normal);
+				fontSize.setValue(Ext.isString(layout.fontSize) ? layout.fontSize : finalsStyleConf.normal);
+				digitGroupSeparator.setValue(Ext.isString(layout.digitGroupSeparator) ? layout.digitGroupSeparator : finalsStyleConf.space);
 				legendSet.setValue(Ext.isObject(layout.legendSet) && Ext.isString(layout.legendSet.id) ? layout.legendSet.id : 0);
 				reportingPeriod.setValue(Ext.isBoolean(layout.reportingPeriod) ? layout.reportingPeriod : false);
 				organisationUnit.setValue(Ext.isBoolean(layout.organisationUnit) ? layout.organisationUnit : false);
@@ -2833,9 +2835,7 @@ Ext.onReady( function() {
             setGui,
             viewport,
 
-			accordionPanels = [],
-
-            dimConf = ns.core.conf.finals.dimension;
+			accordionPanels = [];
 
 		ns.app.stores = ns.app.stores || {};
 
@@ -6897,9 +6897,9 @@ Ext.onReady( function() {
                     version = 'v' + parseFloat(ns.core.init.systemInfo.version.split('.').join(''));
 
 				text += '<html>\n<head>\n';
-				text += '<link rel="stylesheet" href="http://dhis2-cdn.org/' + version + '/ext/resources/css/ext-plugin-gray.css" />\n';
-				text += '<script src="http://dhis2-cdn.org/' + version + '/ext/ext-all.js"></script>\n';
-				text += '<script src="http://dhis2-cdn.org/' + version + '/plugin/table.js"></script>\n';
+				text += '<link rel="stylesheet" href="//dhis2-cdn.org/' + version + '/ext/resources/css/ext-plugin-gray.css" />\n';
+				text += '<script src="//dhis2-cdn.org/' + version + '/ext/ext-all.js"></script>\n';
+				text += '<script src="//dhis2-cdn.org/' + version + '/plugin/table.js"></script>\n';
 				text += '</head>\n\n<body>\n';
 				text += '<div id="table1"></div>\n\n';
 				text += '<script>\n\n';
@@ -7775,6 +7775,9 @@ Ext.onReady( function() {
 				extendCore(ns.core);
 
 				dimConf = ns.core.conf.finals.dimension;
+                finalsStyleConf = ns.core.conf.finals.style;
+                styleConf = ns.core.conf.style;
+
 				ns.app.viewport = createViewport();
 
                 ns.core.app.getViewportWidth = function() { return ns.app.viewport.getWidth(); };

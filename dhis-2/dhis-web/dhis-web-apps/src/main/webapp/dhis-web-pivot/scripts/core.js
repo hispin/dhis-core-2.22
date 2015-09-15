@@ -146,21 +146,38 @@ Ext.onReady( function() {
 				},
 				root: {
 					id: 'root'
-				}
+				},
+                style: {
+                    'normal': 'NORMAL',
+                    'compact': 'COMPACT',
+                    'xcompact': 'XCOMPACT',
+                    'comfortable': 'COMFORTABLE',
+                    'xcomfortable': 'XCOMFORTABLE',
+                    'small': 'SMALL',
+                    'xsmall': 'XSMALL',
+                    'large': 'LARGE',
+                    'xlarge': 'XLARGE',
+                    'space': 'SPACE',
+                    'comma': 'COMMA',
+                    'none': 'NONE',
+                    'default': 'DEFAULT'
+                }
 			};
 
-			dimConf = conf.finals.dimension;
+            (function() {
+                dimConf = conf.finals.dimension;
 
-			dimConf.objectNameMap = {};
-			dimConf.objectNameMap[dimConf.data.objectName] = dimConf.data;
-			dimConf.objectNameMap[dimConf.indicator.objectName] = dimConf.indicator;
-			dimConf.objectNameMap[dimConf.dataElement.objectName] = dimConf.dataElement;
-			dimConf.objectNameMap[dimConf.operand.objectName] = dimConf.operand;
-			dimConf.objectNameMap[dimConf.dataSet.objectName] = dimConf.dataSet;
-			dimConf.objectNameMap[dimConf.category.objectName] = dimConf.category;
-			dimConf.objectNameMap[dimConf.period.objectName] = dimConf.period;
-			dimConf.objectNameMap[dimConf.organisationUnit.objectName] = dimConf.organisationUnit;
-			dimConf.objectNameMap[dimConf.dimension.objectName] = dimConf.dimension;
+                dimConf.objectNameMap = {};
+                dimConf.objectNameMap[dimConf.data.objectName] = dimConf.data;
+                dimConf.objectNameMap[dimConf.indicator.objectName] = dimConf.indicator;
+                dimConf.objectNameMap[dimConf.dataElement.objectName] = dimConf.dataElement;
+                dimConf.objectNameMap[dimConf.operand.objectName] = dimConf.operand;
+                dimConf.objectNameMap[dimConf.dataSet.objectName] = dimConf.dataSet;
+                dimConf.objectNameMap[dimConf.category.objectName] = dimConf.category;
+                dimConf.objectNameMap[dimConf.period.objectName] = dimConf.period;
+                dimConf.objectNameMap[dimConf.organisationUnit.objectName] = dimConf.organisationUnit;
+                dimConf.objectNameMap[dimConf.dimension.objectName] = dimConf.dimension;
+            })();
 
 			conf.period = {
 				periodTypes: [
@@ -232,26 +249,34 @@ Ext.onReady( function() {
 				multiselect_fill_reportingrates: 315
 			};
 
-			conf.report = {
-				digitGroupSeparator: {
-					'comma': ',',
-					'space': '&nbsp;'
-				},
-				displayDensity: {
-                    'xcompact': '2px',
-					'compact': '4px',
-					'normal': '6px',
-					'comfortable': '8px',
-                    'xcomfortable': '10px'
-				},
-				fontSize: {
-					'xsmall': '9px',
-					'small': '10px',
-					'normal': '11px',
-					'large': '12px',
-					'xlarge': '14px'
-				}
-			};
+			conf.style = {
+				displayDensity: {},
+				fontSize: {},
+				digitGroupSeparator: {}
+            };
+
+            (function() {
+                var map = conf.finals.style,
+                    displayDensity = conf.style.displayDensity,
+                    fontSize = conf.style.fontSize,
+                    digitGroupSeparator = conf.style.digitGroupSeparator;
+
+                displayDensity[map.xcompact] = '2px';
+                displayDensity[map.compact] = '4px';
+                displayDensity[map.normal] = '6px';
+                displayDensity[map.comfortable] = '8px';
+                displayDensity[map.xcomfortable] = '10px';
+
+                fontSize[map.xsmall] = '9px';
+                fontSize[map.small] = '10px';
+                fontSize[map.normal] = '11px';
+                fontSize[map.large] = '12px';
+                fontSize[map.xlarge] = '14px';
+
+                digitGroupSeparator[map.space] = '&nbsp;';
+                digitGroupSeparator[map.comma] = ',';
+                digitGroupSeparator[map.none] = '';
+            })();
 
             conf.url = {
                 analysisFields: [
@@ -390,11 +415,11 @@ Ext.onReady( function() {
 
 				// completedOnly: boolean (false)
 
-				// displayDensity: string ('normal') - 'compact', 'normal', 'comfortable'
+				// displayDensity: string ('NORMAL') - 'COMPACT', 'NORMAL', 'COMFORTABLE'
 
-				// fontSize: string ('normal') - 'small', 'normal', 'large'
+				// fontSize: string ('NORMAL') - 'SMALL', 'NORMAL', 'LARGE'
 
-				// digitGroupSeparator: string ('space') - 'none', 'comma', 'space'
+				// digitGroupSeparator: string ('SPACE') - 'NONE', 'COMMA', 'SPACE'
 
 				// legendSet: object
 
@@ -838,7 +863,7 @@ Ext.onReady( function() {
 					return number;
 				}
 
-				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.report.digitGroupSeparator[separator]);
+				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.style.digitGroupSeparator[separator]);
 			};
 
                 // date
@@ -1731,15 +1756,15 @@ Ext.onReady( function() {
 					delete layout.completedOnly;
 				}
 
-				if (layout.displayDensity === 'normal') {
+				if (layout.displayDensity === conf.finals.style.normal) {
 					delete layout.displayDensity;
 				}
 
-				if (layout.fontSize === 'normal') {
+				if (layout.fontSize === conf.finals.style.normal) {
 					delete layout.fontSize;
 				}
 
-				if (layout.digitGroupSeparator === 'space') {
+				if (layout.digitGroupSeparator === conf.finals.style.space) {
 					delete layout.digitGroupSeparator;
 				}
 
@@ -1751,11 +1776,11 @@ Ext.onReady( function() {
 					delete layout.sorting;
 				}
 
-				if (layout.aggregationType === 'DEFAULT') {
+				if (layout.aggregationType === conf.finals.style.default_) {
 					delete layout.aggregationType;
 				}
 
-				if (layout.dataApprovalLevel && layout.dataApprovalLevel.id === 'DEFAULT') {
+				if (layout.dataApprovalLevel && layout.dataApprovalLevel.id === conf.finals.style.default_) {
 					delete layout.dataApprovalLevel;
 				}
 
@@ -3018,8 +3043,8 @@ Ext.onReady( function() {
                     var cls = 'pivot',
                         table;
 
-                    cls += xLayout.displayDensity && xLayout.displayDensity !== 'normal' ? ' displaydensity-' + xLayout.displayDensity : '';
-                    cls += xLayout.fontSize && xLayout.fontSize !== 'normal' ? ' fontsize-' + xLayout.fontSize : '';
+                    cls += xLayout.displayDensity && xLayout.displayDensity !== conf.finals.style.normal ? ' displaydensity-' + xLayout.displayDensity : '';
+                    cls += xLayout.fontSize && xLayout.fontSize !== conf.finals.style.normal ? ' fontsize-' + xLayout.fontSize : '';
 
 					table = '<table id="' + xLayout.tableUuid + '" class="' + cls + '">';
 
