@@ -33,7 +33,7 @@ dhis2.db.shapeDoubleWidth = "double_width";
 dhis2.db.shapeFullWidth = "full_width";
 dhis2.db.widthNormal = 408;
 dhis2.db.widthDouble = 847;
-dhis2.db.visualItemTypes = ["chart", "eventChart", "map", "reportTable", "eventReport"];
+dhis2.db.visualItemTypes = ["CHART", "EVENT_CHART", "MAP", "REPORT_TABLE", "EVENT_REPORT"];
 dhis2.db.itemContentHeight = 308;
 dhis2.db.itemScrollbarWidth = /\bchrome\b/.test(navigator.userAgent.toLowerCase()) ? 8 : 17;
 
@@ -591,7 +591,7 @@ dhis2.db.renderItems = function( $d, dashboardItem, width, prepend )
 	var tableStyle = "width:" + width + "px;";
 	var userOrgUnit = dhis2.db.currentUserOrgUnit || [];
 
-	if ( "chart" == dashboardItem.type )
+	if ( "CHART" == dashboardItem.type )
 	{
 	    var content = $.tmpl( dhis2.db.tmpl.chartItem, { "itemId": dashboardItem.id, "id": dashboardItem.chart.id, "name": dashboardItem.chart.name, "style": graphStyle,
 	    	"i18n_remove": i18n_remove, "i18n_get_as_image": i18n_get_as_image, "i18n_share": i18n_share_interpretation,
@@ -629,7 +629,7 @@ dhis2.db.renderItems = function( $d, dashboardItem, width, prepend )
             }
 	    });
 	}
-	else if ( "eventChart" == dashboardItem.type )
+	else if ( "EVENT_CHART" == dashboardItem.type )
 	{
 		var content = $.tmpl( dhis2.db.tmpl.eventChartItem, { "itemId": dashboardItem.id, "id": dashboardItem.eventChart.id,
 	    	"name": dashboardItem.eventChart.name, "style": graphStyle, "i18n_remove": i18n_remove, "i18n_get_as_image": i18n_get_as_image,
@@ -667,7 +667,7 @@ dhis2.db.renderItems = function( $d, dashboardItem, width, prepend )
             }
 	    });
 	}
-	else if ( "map" == dashboardItem.type )
+	else if ( "MAP" == dashboardItem.type )
 	{
 		var content = $.tmpl( dhis2.db.tmpl.mapItem, { "itemId": dashboardItem.id, "id": dashboardItem.map.id, "name": dashboardItem.map.name,
 			"style": graphStyle, "height": dhis2.db.itemContentHeight, "i18n_remove": i18n_remove, "i18n_get_as_image": i18n_get_as_image,
@@ -687,7 +687,7 @@ dhis2.db.renderItems = function( $d, dashboardItem, width, prepend )
             }]
 	    });
 	}
-	else if ( "reportTable" == dashboardItem.type )
+	else if ( "REPORT_TABLE" == dashboardItem.type )
 	{
 		var content = $.tmpl( dhis2.db.tmpl.reportTableItem, { "itemId": dashboardItem.id, "id": dashboardItem.reportTable.id, "name": dashboardItem.reportTable.name, "style": tableStyle,
 			"i18n_remove": i18n_remove, "i18n_share": i18n_share_interpretation, "i18n_click_and_drag_to_new_position": i18n_click_and_drag_to_new_position } );
@@ -705,7 +705,7 @@ dhis2.db.renderItems = function( $d, dashboardItem, width, prepend )
             userOrgUnit: userOrgUnit
 	    });
 	}
-	else if ( "eventReport" == dashboardItem.type )
+	else if ( "EVENT_REPORT" == dashboardItem.type )
 	{
 		var content = $.tmpl( dhis2.db.tmpl.eventReportItem, { "itemId": dashboardItem.id, "id": dashboardItem.eventReport.id, "name": dashboardItem.eventReport.name, "style": tableStyle,
 			"i18n_remove": i18n_remove, "i18n_share": i18n_share_interpretation, "i18n_click_and_drag_to_new_position": i18n_click_and_drag_to_new_position } );
@@ -723,23 +723,19 @@ dhis2.db.renderItems = function( $d, dashboardItem, width, prepend )
             userOrgUnit: userOrgUnit
 	    });
 	}
-	else if ( "users" == dashboardItem.type )
+	else if ( "USERS" == dashboardItem.type )
 	{
 	    dhis2.db.renderLinkItem( $d, dashboardItem.id, dashboardItem.users, "Users", "../dhis-web-dashboard-integration/profile.action?id=", "" );
 	}
-	else if ( "reportTables" == dashboardItem.type )
-	{
-	    dhis2.db.renderLinkItem( $d, dashboardItem.id, dashboardItem.reportTables, "Pivot tables", "../dhis-web-pivot/index.html?id=", "" );
-	}
-	else if ( "reports" == dashboardItem.type )
+	else if ( "REPORTS" == dashboardItem.type )
 	{
 	    dhis2.db.renderLinkItem( $d, dashboardItem.id, dashboardItem.reports, "Reports", "../dhis-web-reporting/getReportParams.action?mode=report&uid=", "" );
 	}
-	else if ( "resources" == dashboardItem.type )
+	else if ( "RESOURCES" == dashboardItem.type )
 	{
 	    dhis2.db.renderLinkItem( $d, dashboardItem.id, dashboardItem.resources, "Resources", "../api/documents/", "/data" );
 	}
-	else if ( "messages" == dashboardItem.type )
+	else if ( "MESSAGES" == dashboardItem.type )
 	{
 	    dhis2.db.renderMessagesItem( $d, dashboardItem.id );
 	}
@@ -1018,89 +1014,89 @@ dhis2.db.renderSearch = function( data, $h )
 	{
 		if ( data.userCount > 0 )
 		{
-			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Users", "type": "users", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
+			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Users", "type": "USERS", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
 
 			for ( var i in data.users )
 			{
 				var o = data.users[i];
-				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "profile.action?id=" + o.id, "img": "user_small", "name": o.name, "type": "users", "id": o.id, "i18n_add": i18n_add } ) );
+				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "profile.action?id=" + o.id, "img": "user_small", "name": o.name, "type": "USERS", "id": o.id, "i18n_add": i18n_add } ) );
 			}
 		}
 
 		if ( data.chartCount > 0 )
 		{
-			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Charts", "type": "chart", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
+			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Charts", "type": "CHART", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
 
 			for ( var i in data.charts )
 			{
 				var o = data.charts[i];
-				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-visualizer/index.html?id=" + o.id, "img": "chart_small", "name": o.name, "type": "chart", "id": o.id, "i18n_add": i18n_add } ) );
+				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-visualizer/index.html?id=" + o.id, "img": "chart_small", "name": o.name, "type": "CHART", "id": o.id, "i18n_add": i18n_add } ) );
 			}
 		}
 
 		if ( data.eventChartCount > 0 )
 		{
-			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Event charts", "type": "eventChart", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
+			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Event charts", "type": "EVENT_CHART", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
 
 			for ( var i in data.eventCharts )
 			{
 				var o = data.eventCharts[i];
-				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-event-visualizer/index.html?id=" + o.id, "img": "chart_small", "name": o.name, "type": "eventChart", "id": o.id, "i18n_add": i18n_add } ) );
+				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-event-visualizer/index.html?id=" + o.id, "img": "chart_small", "name": o.name, "type": "EVENT_CHART", "id": o.id, "i18n_add": i18n_add } ) );
 			}
 		}
 
 		if ( data.mapCount > 0 )
 		{
-			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Maps", "type": "map", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
+			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Maps", "type": "MAP", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
 
 			for ( var i in data.maps )
 			{
 				var o = data.maps[i];
-				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-mapping/index.html?id=" + o.id, "img": "map_small", "name": o.name, "type": "map", "id": o.id, "i18n_add": i18n_add } ) );
+				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-mapping/index.html?id=" + o.id, "img": "map_small", "name": o.name, "type": "MAP", "id": o.id, "i18n_add": i18n_add } ) );
 			}
 		}
 
 		if ( data.reportTableCount > 0 )
 		{
-			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Pivot tables", "type": "reportTable", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
+			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Pivot tables", "type": "REPORT_TABLE", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
 
 			for ( var i in data.reportTables )
 			{
 				var o = data.reportTables[i];
-				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-pivot/index.html?id=" + o.id, "img": "table_small", "name": o.name, "type": "reportTable", "id": o.id, "i18n_add": i18n_add } ) );
+				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-pivot/index.html?id=" + o.id, "img": "table_small", "name": o.name, "type": "REPORT_TABLE", "id": o.id, "i18n_add": i18n_add } ) );
 			}
 		}
 
 		if ( data.eventReportCount > 0 )
 		{
-			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Event reports", "type": "eventReport", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
+			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Event reports", "type": "EVENT_REPORT", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
 
 			for ( var i in data.eventReports )
 			{
 				var o = data.eventReports[i];
-				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-event-reports/index.html?id=" + o.id, "img": "table_small", "name": o.name, "type": "eventReport", "id": o.id, "i18n_add": i18n_add } ) );
+				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-event-reports/index.html?id=" + o.id, "img": "table_small", "name": o.name, "type": "EVENT_REPORT", "id": o.id, "i18n_add": i18n_add } ) );
 			}
 		}
 
 		if ( data.reportCount > 0 )
 		{
-			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Standard reports", "type": "reports", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
+			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Standard reports", "type": "REPORTS", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
 
 			for ( var i in data.reports )
 			{
 				var o = data.reports[i];
-				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-reporting/getReportParams.action?uid=" + o.id, "img": "standard_report_small", "name": o.name, "type": "reports", "id": o.id, "i18n_add": i18n_add } ) );
+				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../dhis-web-reporting/getReportParams.action?uid=" + o.id, "img": "standard_report_small", "name": o.name, "type": "REPORTS", "id": o.id, "i18n_add": i18n_add } ) );
 			}
 		}
 
 		if ( data.resourceCount > 0 )
 		{
-			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Resources", "type": "resources", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
+			$h.append( $.tmpl( dhis2.db.tmpl.hitHeader, { "title": "Resources", "type": "RESOURCES", "i18n_see_more_hits": i18n_see_more_hits, "i18n_see_fewer_hits": i18n_see_fewer_hits } ) );
 
 			for ( var i in data.resources )
 			{
 				var o = data.resources[i];
-				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../api/documents/" + o.id, "img": "document_small", "name": o.name, "type": "resources", "id": o.id, "i18n_add": i18n_add } ) );
+				$h.append( $.tmpl( dhis2.db.tmpl.hitItem, { "canManage": canManage, "link": "../api/documents/" + o.id, "img": "document_small", "name": o.name, "type": "RESOURCES", "id": o.id, "i18n_add": i18n_add } ) );
 			}
 		}
 	}

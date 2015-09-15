@@ -31,6 +31,7 @@ package org.hisp.dhis.webapi.controller;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.dashboard.Dashboard;
 import org.hisp.dhis.dashboard.DashboardItem;
+import org.hisp.dhis.dashboard.DashboardItemType;
 import org.hisp.dhis.dashboard.DashboardSearchResult;
 import org.hisp.dhis.dashboard.DashboardService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -53,6 +54,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +77,7 @@ public class DashboardController
     // -------------------------------------------------------------------------
 
     @RequestMapping( value = "/q/{query}", method = RequestMethod.GET )
-    public String search( @PathVariable String query, @RequestParam( required = false ) Set<String> max,
+    public String search( @PathVariable String query, @RequestParam( required = false ) Set<DashboardItemType> max,
         Model model, HttpServletResponse response ) throws Exception
     {
         DashboardSearchResult result = dashboardService.search( query, max );
@@ -173,7 +175,7 @@ public class DashboardController
 
     @RequestMapping( value = "/{dashboardUid}/items/content", method = RequestMethod.POST )
     public void postJsonItemContent( HttpServletResponse response, HttpServletRequest request,
-        @PathVariable String dashboardUid, @RequestParam String type, @RequestParam( "id" ) String contentUid ) throws Exception
+        @PathVariable String dashboardUid, @RequestParam DashboardItemType type, @RequestParam( "id" ) String contentUid ) throws Exception
     {
         Dashboard dashboard = dashboardService.getDashboard( dashboardUid );
 
