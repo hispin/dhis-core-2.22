@@ -31,6 +31,7 @@ package org.hisp.dhis.eventchart;
 import static org.junit.Assert.*;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.chart.ChartType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
 import org.junit.Test;
@@ -62,13 +63,13 @@ public class EventChartServiceTest
     {
         EventChart ecA = new EventChart( "ecA" );
         ecA.setProgram( prA );
-        ecA.setType( EventChart.TYPE_COLUMN );
+        ecA.setType( ChartType.COLUMN );
         EventChart ecB = new EventChart( "ecB" );
         ecB.setProgram( prA );
-        ecB.setType( EventChart.TYPE_COLUMN );
+        ecB.setType( ChartType.COLUMN );
         EventChart ecC = new EventChart( "ecC" );
         ecC.setProgram( prA );
-        ecC.setType( EventChart.TYPE_COLUMN );
+        ecC.setType( ChartType.COLUMN );
 
         int idA = eventChartService.saveEventChart( ecA );
         int idB = eventChartService.saveEventChart( ecB );
@@ -84,13 +85,13 @@ public class EventChartServiceTest
     {
         EventChart ecA = new EventChart( "ecA" );
         ecA.setProgram( prA );
-        ecA.setType( EventChart.TYPE_COLUMN );
+        ecA.setType( ChartType.COLUMN );
         EventChart ecB = new EventChart( "ecB" );
         ecB.setProgram( prA );
-        ecB.setType( EventChart.TYPE_COLUMN );
+        ecB.setType( ChartType.COLUMN );
         EventChart ecC = new EventChart( "ecC" );
         ecC.setProgram( prA );
-        ecC.setType( EventChart.TYPE_COLUMN );
+        ecC.setType( ChartType.COLUMN );
 
         int idA = eventChartService.saveEventChart( ecA );
         int idB = eventChartService.saveEventChart( ecB );

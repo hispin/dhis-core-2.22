@@ -104,8 +104,13 @@
 
     <property name="completedOnly" column="completedonly" />
 	
-    <property name="type" not-null="true" />
-
+    <property name="type" length="40" not-null="true">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.chart.ChartType</param>
+        <param name="type">12</param>
+      </type> 
+	</property>
+	
     <list name="columnDimensions" table="eventchart_columns">
       <cache usage="read-write" />
       <key column="eventchartid" foreign-key="fk_eventchart_columns_eventchartid" />

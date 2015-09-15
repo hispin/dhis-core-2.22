@@ -871,33 +871,8 @@ public class TableAlteror
         executeSql( "drop table aggregatedorgunitindicatorvalue" );
         executeSql( "drop table aggregatedorgunitindicatorvalue_temp" );
         
-        executeSql( "update report set type='JASPER_REPORT_TABLE' where type='jasperReportTable'" );
-        executeSql( "update report set type='JASPER_JDBC' where type='jasperJdbc'" );
-        executeSql( "update report set type='HTML' where type='html'" );
+        updateEnums();
         
-        executeSql( "update dashboarditem set shape='NORMAL' where shape ='normal'" );
-        executeSql( "update dashboarditem set shape='DOUBLE_WIDTH' where shape ='double_width'" );
-        executeSql( "update dashboarditem set shape='FULL_WIDTH' where shape ='full_width'" );
-        
-        executeSql( "update reporttable set displaydensity='COMFORTABLE' where displaydensity='comfortable'" );
-        executeSql( "update reporttable set displaydensity='NORMAL' where displaydensity='normal'" );
-        executeSql( "update reporttable set displaydensity='COMPACT' where displaydensity='compact'" );
-
-        executeSql( "update eventreport set displaydensity='COMFORTABLE' where displaydensity='comfortable'" );
-        executeSql( "update eventreport set displaydensity='NORMAL' where displaydensity='normal'" );
-        executeSql( "update eventreport set displaydensity='COMPACT' where displaydensity='compact'" );
-
-        executeSql( "update reporttable set fontsize='LARGE' where fontsize='large'" );
-        executeSql( "update reporttable set fontsize='NORMAL' where fontsize='normal'" );
-        executeSql( "update reporttable set fontsize='SMALL' where fontsize='small'" );
-
-        executeSql( "update eventreport set fontsize='LARGE' where fontsize='large'" );
-        executeSql( "update eventreport set fontsize='NORMAL' where fontsize='normal'" );
-        executeSql( "update eventreport set fontsize='SMALL' where fontsize='small'" );
-
-        executeSql( "update eventreport set datatype='AGGREGATED_VALUES' where datatype='aggregated_values'" );
-        executeSql( "update eventreport set datatype='EVENTS' where datatype='individual_cases'" );
-
         oauth2();
 
         upgradeDataValuesWithAttributeOptionCombo();
@@ -940,6 +915,60 @@ public class TableAlteror
             ")" );
     }
 
+    private void updateEnums()
+    {
+        executeSql( "update report set type='JASPER_REPORT_TABLE' where type='jasperReportTable'" );
+        executeSql( "update report set type='JASPER_JDBC' where type='jasperJdbc'" );
+        executeSql( "update report set type='HTML' where type='html'" );
+        
+        executeSql( "update dashboarditem set shape='NORMAL' where shape ='normal'" );
+        executeSql( "update dashboarditem set shape='DOUBLE_WIDTH' where shape ='double_width'" );
+        executeSql( "update dashboarditem set shape='FULL_WIDTH' where shape ='full_width'" );
+        
+        executeSql( "update reporttable set displaydensity='COMFORTABLE' where displaydensity='comfortable'" );
+        executeSql( "update reporttable set displaydensity='NORMAL' where displaydensity='normal'" );
+        executeSql( "update reporttable set displaydensity='COMPACT' where displaydensity='compact'" );
+
+        executeSql( "update eventreport set displaydensity='COMFORTABLE' where displaydensity='comfortable'" );
+        executeSql( "update eventreport set displaydensity='NORMAL' where displaydensity='normal'" );
+        executeSql( "update eventreport set displaydensity='COMPACT' where displaydensity='compact'" );
+
+        executeSql( "update reporttable set fontsize='LARGE' where fontsize='large'" );
+        executeSql( "update reporttable set fontsize='NORMAL' where fontsize='normal'" );
+        executeSql( "update reporttable set fontsize='SMALL' where fontsize='small'" );
+
+        executeSql( "update eventreport set fontsize='LARGE' where fontsize='large'" );
+        executeSql( "update eventreport set fontsize='NORMAL' where fontsize='normal'" );
+        executeSql( "update eventreport set fontsize='SMALL' where fontsize='small'" );
+
+        executeSql( "update eventreport set datatype='AGGREGATED_VALUES' where datatype='aggregated_values'" );
+        executeSql( "update eventreport set datatype='EVENTS' where datatype='individual_cases'" );
+
+        executeSql( "update chart set type='COLUMN' where type='column'" );
+        executeSql( "update chart set type='STACKED_COLUMN' where type='stackedcolumn'" );
+        executeSql( "update chart set type='STACKED_COLUMN' where type='stackedColumn'" );
+        executeSql( "update chart set type='BAR' where type='bar'" );
+        executeSql( "update chart set type='STACKED_BAR' where type='stackedbar'" );
+        executeSql( "update chart set type='STACKED_BAR' where type='stackedBar'" );
+        executeSql( "update chart set type='LINE' where type='line'" );
+        executeSql( "update chart set type='AREA' where type='area'" );
+        executeSql( "update chart set type='PIE' where type='pie'" );
+        executeSql( "update chart set type='RADAR' where type='radar'" );
+        executeSql( "update chart set type='GAUGE' where type='gauge'" );
+
+        executeSql( "update eventchart set type='COLUMN' where type='column'" );
+        executeSql( "update eventchart set type='STACKED_COLUMN' where type='stackedcolumn'" );
+        executeSql( "update eventchart set type='STACKED_COLUMN' where type='stackedColumn'" );
+        executeSql( "update eventchart set type='BAR' where type='bar'" );
+        executeSql( "update eventchart set type='STACKED_BAR' where type='stackedbar'" );
+        executeSql( "update eventchart set type='STACKED_BAR' where type='stackedBar'" );
+        executeSql( "update eventchart set type='LINE' where type='line'" );
+        executeSql( "update eventchart set type='AREA' where type='area'" );
+        executeSql( "update eventchart set type='PIE' where type='pie'" );
+        executeSql( "update eventchart set type='RADAR' where type='radar'" );
+        executeSql( "update eventchart set type='GAUGE' where type='gauge'" );
+    }
+    
     private void upgradeAggregationType( String table )
     {
         executeSql( "update " + table + " set aggregationtype='SUM' where aggregationtype='sum'" );

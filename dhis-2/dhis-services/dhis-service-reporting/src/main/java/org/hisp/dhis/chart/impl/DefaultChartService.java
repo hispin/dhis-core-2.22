@@ -28,15 +28,6 @@ package org.hisp.dhis.chart.impl;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.chart.BaseChart.TYPE_AREA;
-import static org.hisp.dhis.chart.BaseChart.TYPE_BAR;
-import static org.hisp.dhis.chart.BaseChart.TYPE_COLUMN;
-import static org.hisp.dhis.chart.BaseChart.TYPE_LINE;
-import static org.hisp.dhis.chart.BaseChart.TYPE_PIE;
-import static org.hisp.dhis.chart.BaseChart.TYPE_RADAR;
-import static org.hisp.dhis.chart.BaseChart.TYPE_STACKED_BAR;
-import static org.hisp.dhis.chart.BaseChart.TYPE_STACKED_COLUMN;
-import static org.hisp.dhis.chart.BaseChart.TYPE_METER;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.commons.collection.ListUtils.getArray;
 
@@ -62,6 +53,7 @@ import org.hisp.dhis.analytics.event.EventAnalyticsService;
 import org.hisp.dhis.chart.BaseChart;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.chart.ChartService;
+import org.hisp.dhis.chart.ChartType;
 import org.hisp.dhis.common.AnalyticalObjectStore;
 import org.hisp.dhis.common.AnalyticsType;
 import org.hisp.dhis.common.BaseAnalyticalObject;
@@ -271,7 +263,7 @@ public class DefaultChartService
             chart.setName( indicator.getName() );
         }
 
-        chart.setType( TYPE_LINE );
+        chart.setType( ChartType.LINE );
         chart.setDimensions( DimensionalObject.DATA_X_DIM_ID, DimensionalObject.PERIOD_DIM_ID, DimensionalObject.ORGUNIT_DIM_ID );
         chart.setHideLegend( true );
         chart.addDataDimensionItem( indicator );
@@ -297,7 +289,7 @@ public class DefaultChartService
             chart.setName( indicator.getName() );
         }
 
-        chart.setType( TYPE_COLUMN );
+        chart.setType( ChartType.COLUMN );
         chart.setDimensions( DimensionalObject.DATA_X_DIM_ID, DimensionalObject.ORGUNIT_DIM_ID, DimensionalObject.PERIOD_DIM_ID );
         chart.setHideLegend( true );
         chart.addDataDimensionItem( indicator );
@@ -557,47 +549,47 @@ public class DefaultChartService
 
         CategoryPlot plot = null;
 
-        if ( chart.isType( TYPE_LINE ) )
+        if ( chart.isType( ChartType.LINE ) )
         {
             plot = new CategoryPlot( dataSet, new CategoryAxis(), new NumberAxis(), lineRenderer );
             plot.setOrientation( PlotOrientation.VERTICAL );
         }
-        else if ( chart.isType( TYPE_COLUMN ) )
+        else if ( chart.isType( ChartType.COLUMN ) )
         {
             plot = new CategoryPlot( dataSet, new CategoryAxis(), new NumberAxis(), barRenderer );
             plot.setOrientation( PlotOrientation.VERTICAL );
         }
-        else if ( chart.isType( TYPE_BAR ) )
+        else if ( chart.isType( ChartType.BAR ) )
         {
             plot = new CategoryPlot( dataSet, new CategoryAxis(), new NumberAxis(), barRenderer );
             plot.setOrientation( PlotOrientation.HORIZONTAL );
         }
-        else if ( chart.isType( TYPE_AREA ) )
+        else if ( chart.isType( ChartType.AREA ) )
         {
             return getStackedAreaChart( chart, dataSet );
         }
-        else if ( chart.isType( TYPE_PIE ) )
+        else if ( chart.isType( ChartType.PIE ) )
         {
             return getMultiplePieChart( chart, dataSets );
         }
-        else if ( chart.isType( TYPE_STACKED_COLUMN ) )
+        else if ( chart.isType( ChartType.STACKED_COLUMN ) )
         {
             return getStackedBarChart( chart, dataSet, false );
         }
-        else if ( chart.isType( TYPE_STACKED_BAR ) )
+        else if ( chart.isType( ChartType.STACKED_BAR ) )
         {
             return getStackedBarChart( chart, dataSet, true );
         }
-        else if ( chart.isType( TYPE_RADAR ) )
+        else if ( chart.isType( ChartType.RADAR ) )
         {
             return getRadarChart( chart, dataSet );
         }
-        else if ( chart.isType( TYPE_METER ) )
+        else if ( chart.isType( ChartType.GAUGE ) )
         {
             Number number = dataSet.getValue( 0, 0 );
             ValueDataset valueDataSet = new DefaultValueDataset( number );
             
-            return getMeterChart( chart, valueDataSet );
+            return getGaugeChart( chart, valueDataSet );
         }
         else
         {
@@ -728,7 +720,7 @@ public class DefaultChartService
         return multiplePieChart;
     }
     
-    private JFreeChart getMeterChart( BaseChart chart, ValueDataset dataSet )
+    private JFreeChart getGaugeChart( BaseChart chart, ValueDataset dataSet )
     {
         MeterPlot meterPlot = new MeterPlot( dataSet );
 
