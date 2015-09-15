@@ -16,6 +16,7 @@
         </thead>
         <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements" ng-if="!isHidden(prStDe.dataElement.id)">
             <td>
+                <!--<span ng-bind="prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name"></span>-->
                 {{prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name}}
                 <a ng-if="prStDe.dataElement.description" Title="{{prStDe.dataElement.description}}" ng-init="showHelpText[prStDe.dataElement.id] = false;" ng-click="showHelpText[prStDe.dataElement.id] = !showHelpText[prStDe.dataElement.id]">
                     <span class="glyphicon glyphicon-info-sign" ></span>
@@ -240,6 +241,7 @@
                     <tbody id="list">       
                         <tr ng-repeat="de in section.programStageDataElements" ng-if="!isHidden(de.dataElement.id)">
                             <td>
+                                <!--<span ng-bind="prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name"></span>-->
                                 {{prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name}}
                                 <a ng-if="prStDes[de.dataElement.id].dataElement.description" Title="{{prStDes[de.dataElement.id].dataElement.description}}" ng-init="showHelpText[de.dataElement.id] = false;" ng-click="showHelpText[de.dataElement.id] = !showHelpText[de.dataElement.id]">
                                     <span class="glyphicon glyphicon-info-sign" ></span>

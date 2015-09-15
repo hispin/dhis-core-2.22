@@ -31,6 +31,16 @@ trackerCapture.controller('DashboardController',
     $scope.userAuthority = AuthorityService.getUserAuthorities(SessionStorageService.get('USER_ROLES'));
     $scope.sortedTeiIds = CurrentSelection.getSortedTeiIds();    
     
+    //Labels
+    $scope.removeLabel = $translate.instant('remove');
+    $scope.expandLabel = $translate.instant('expand');
+    $scope.collapseLabel = $translate.instant('collapse');
+    $scope.noDataReportLabel = $translate.instant('no_data_report');
+    $scope.noRelationshipLabel = $translate.instant('no_relationship');
+    $scope.settingsLabel = $translate.instant('settings');
+    $scope.showHideWidgetsLabel = $translate.instant('show_hide_widgets');
+    $scope.notEnrolledLabel = $translate.instant('not_yet_enrolled_data_entry');
+    
     $scope.previousTeiExists = false;
     $scope.nextTeiExists = false;
     
