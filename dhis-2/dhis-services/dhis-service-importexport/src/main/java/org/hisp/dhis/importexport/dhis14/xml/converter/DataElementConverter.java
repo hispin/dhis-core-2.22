@@ -224,8 +224,11 @@ public class DataElementConverter
                 writer.writeElement( FIELD_CALCULATED_VALID_TO, "" );
                 writer.writeElement( FIELD_SAVE_CALCULATED, convertBooleanToDhis14( false ) );
                 writer.writeElement( FIELD_AGGREGATION_START_LEVEL, String.valueOf( AGG_START_LEVEL ) );
+
+                /*
                 writer.writeElement( FIELD_AGGREGATION_OPERATOR,
                     convertAggregationOperatorToDhis14( object.getAggregationOperator() ) );
+                */
                 writer.writeElement( FIELD_SELECTED, String.valueOf( 0 ) );
                 writer.writeElement( FIELD_LAST_USER, String.valueOf( 1 ) );
                 writer.writeElement( FIELD_LAST_UPDATED, Dhis14DateUtil.getDateString( object.getLastUpdated() ) );
@@ -273,7 +276,7 @@ public class DataElementConverter
         element.setDomainType( DataElementDomain.AGGREGATE );
         element.setZeroIsSignificant( false );
         // element.setType( Dhis14ObjectMappingUtil.getDataElementTypeMap().get(Integer.parseInt( values.get( FIELD_DATA_TYPE ) ) ) );
-        element.setAggregationOperator( convertAggregationOperatorFromDhis14( values.get( FIELD_AGGREGATION_OPERATOR ) ) );
+        // element.setAggregationOperator( convertAggregationOperatorFromDhis14( values.get( FIELD_AGGREGATION_OPERATOR ) ) );
         element.setLastUpdated( Dhis14DateUtil.getDate( values.get( FIELD_LAST_UPDATED ) ) );
 
         if ( values.get( FIELD_CALCULATED ).equals( "0" ) ) // Ignore calculated
