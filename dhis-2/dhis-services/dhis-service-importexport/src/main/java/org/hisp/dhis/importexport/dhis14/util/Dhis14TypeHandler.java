@@ -28,10 +28,6 @@ package org.hisp.dhis.importexport.dhis14.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_COUNT;
-import static org.hisp.dhis.dataelement.DataElement.AGGREGATION_OPERATOR_SUM;
-
 import org.hisp.dhis.datavalue.DataValue;
 
 /**
@@ -43,11 +39,11 @@ public class Dhis14TypeHandler
     private static final String DHIS14_TRUE = "1";
     private static final String DHIS14_FALSE = "0";
 
+    /*
     private static final String DHIS14_AGGREGATION_OPERATOR_SUM = "Sum";
     private static final String DHIS14_AGGREGATION_OPERATOR_AVERAGE = "Avg";
     private static final String DHIS14_AGGREGATION_OPERATOR_COUNT = "Count";
 
-    /*
     private static final String DHIS14_TYPE_INT = "3";
     private static final String DHIS14_TYPE_STRING = "4";
     private static final String DHIS14_TYPE_BOOL = "5";
@@ -86,6 +82,7 @@ public class Dhis14TypeHandler
     // Aggregation operator
     // -------------------------------------------------------------------------
 
+    /*
     public static String convertAggregationOperatorToDhis14( String value )
     {
         if ( value == null || value.equals( AGGREGATION_OPERATOR_SUM ) )
@@ -103,7 +100,9 @@ public class Dhis14TypeHandler
 
         return DHIS14_AGGREGATION_OPERATOR_SUM;
     }
+    */
 
+    /*
     public static String convertAggregationOperatorFromDhis14( String value )
     {
         if ( value == null || value.equals( DHIS14_AGGREGATION_OPERATOR_SUM ) )
@@ -121,6 +120,7 @@ public class Dhis14TypeHandler
 
         return AGGREGATION_OPERATOR_SUM;
     }
+    */
 
     // -------------------------------------------------------------------------
     // Type
