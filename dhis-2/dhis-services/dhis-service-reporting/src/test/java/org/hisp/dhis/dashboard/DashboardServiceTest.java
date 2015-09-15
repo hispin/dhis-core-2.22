@@ -64,8 +64,8 @@ public class DashboardServiceTest
     @Override
     public void setUpTest()
     {
-        chartA = new Chart( "A" );
-        chartB = new Chart( "B" );
+        chartA = createChart( 'A' );
+        chartB = createChart( 'B' );
 
         chartService.addChart( chartA );
         chartService.addChart( chartB );
