@@ -7,6 +7,7 @@ trackerCapture.controller('DataEntryController',
                 $filter,
                 $log,
                 $timeout,
+                $translate,
                 Paginator,
                 DateUtils,
                 EventUtils,
@@ -39,6 +40,11 @@ trackerCapture.controller('DataEntryController',
     $scope.errorMessages = {};
     $scope.warningMessages = {};
     $scope.tableMaxNumberOfDataElements = 10;
+    
+    //Labels
+    $scope.dataElementLabel = $translate.instant('data_element');
+    $scope.valueLabel = $translate.instant('value');
+    $scope.providedElsewhereLabel = $translate.instant('provided_elsewhere');
     
 
     var userProfile = SessionStorageService.get('USER_PROFILE');

@@ -49,7 +49,7 @@
                     <div class="col-sm-12" id={{biggerWidget.title}} ng-repeat="biggerWidget in dashboardWidgets | orderBy:'order' | filter: {parent: 'biggerWidget'}"">
                         <div ng-show="biggerWidget.show" ng-include="biggerWidget.view" ng-class="{true: 'hideInPrint'} [biggerWidget.title != 'report']"></div>
                     </div>                                       
-                </div>                
+                </div>
             </div>
             <!-- dashboard bigger widgets end -->
 
