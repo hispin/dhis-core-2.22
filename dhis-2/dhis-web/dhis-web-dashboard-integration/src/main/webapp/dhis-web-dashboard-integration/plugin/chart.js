@@ -4299,62 +4299,116 @@ Ext.onReady(function() {
 			web.chart.getData = function(layout, isUpdateGui) {
 				var xLayout,
 					paramString,
-                    success,
-                    failure,
-                    config = {};
+                    sortedParamString,
+                    onFailure;
 
 				if (!layout) {
 					return;
 				}
 
+                onFailure = function(r) {
+                    if (!ns.skipMask) {
+                        web.mask.hide(ns.app.centerRegion);
+                    }
+                };
+
 				xLayout = service.layout.getExtendedLayout(layout);
-				paramString = web.analytics.getParamString(xLayout, true);
+				paramString = web.analytics.getParamString(xLayout) + '&skipData=true';
+				sortedParamString = web.analytics.getParamString(xLayout, true) + '&skipMeta=true';
 
 				// mask
                 if (!ns.skipMask) {
                     web.mask.show(ns.app.centerRegion);
                 }
 
-                success = function(r) {
-                    var response = api.response.Response((r.responseText ? Ext.decode(r.responseText) : r));
+                ns.ajax({
+					url: init.contextPath + '/api/analytics.json' + paramString,
+					timeout: 60000,
+					headers: {
+						'Content-Type': 'application/json',
+						'Accepts': 'application/json'
+					},
+					disableCaching: false,
+					failure: function(r) {
+                        onFailure(r);
+					},
+					success: function(r) {
+                        var metaData = Ext.decode(r.responseText).metaData;
 
-                    if (!response) {
-                        web.mask.hide(ns.app.centerRegion);
-                        return;
-                    }
+                        ns.ajax({
+                            url: init.contextPath + '/api/analytics.json' + sortedParamString,
+                            timeout: 60000,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accepts': 'application/json'
+                            },
+                            disableCaching: false,
+                            failure: function(r) {
+                                onFailure(r);
+                            },
+                            success: function(r) {
+                                var response = api.response.Response(Ext.decode(r.responseText));
 
-                    // sync xLayout with response
-                    xLayout = service.layout.getSyncronizedXLayout(xLayout, response);
+                                if (!response) {
+                                    onFailure();
+                                    return;
+                                }
 
-                    if (!xLayout) {
-                        web.mask.hide(ns.app.centerRegion);
-                        return;
-                    }
+                                response.metaData = metaData;
 
-                    ns.app.paramString = paramString;
+                                // sync xLayout with response
+                                xLayout = service.layout.getSyncronizedXLayout(xLayout, response);
 
-                    web.chart.getChart(layout, xLayout, response, isUpdateGui);
-                };
+                                if (!xLayout) {
+                                    return;
+                                }
 
-                failure = function(r) {
-                    if (!ns.skipMask) {
-                        web.mask.hide(ns.app.centerRegion);
-                    }
-                };
+                                ns.app.paramString = sortedParamString;
 
-                config.url = init.contextPath + '/api/analytics.' + type + paramString;
-                config.disableCaching = false;
-                config.timeout = 60000;
-                config.headers = headers;
-                config.success = success;
-                config.failure = failure;
+                                web.chart.getChart(layout, xLayout, response, isUpdateGui);
+                            }
+                        }, ns);
+					}
+				}, ns);
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+
+
+
+
+                //success = function(r) {
+                    //var response = api.response.Response((r.responseText ? Ext.decode(r.responseText) : r));
+
+                    //if (!response) {
+                        //web.mask.hide(ns.app.centerRegion);
+                        //return;
+                    //}
+
+                    //// sync xLayout with response
+                    //xLayout = service.layout.getSyncronizedXLayout(xLayout, response);
+
+                    //if (!xLayout) {
+                        //web.mask.hide(ns.app.centerRegion);
+                        //return;
+                    //}
+
+                    //ns.app.paramString = paramString;
+
+                    //web.chart.getChart(layout, xLayout, response, isUpdateGui);
+                //};
+
+                //config.url = init.contextPath + '/api/analytics.' + type + paramString;
+                //config.disableCaching = false;
+                //config.timeout = 60000;
+                //config.headers = headers;
+                //config.success = success;
+                //config.failure = failure;
+
+                //if (type === 'jsonp') {
+                    //Ext.data.JsonP.request(config);
+                //}
+                //else {
+                    //Ext.Ajax.request(config);
+                //}
 			};
 
 			web.chart.getChart = function(layout, xLayout, response, isUpdateGui) {
