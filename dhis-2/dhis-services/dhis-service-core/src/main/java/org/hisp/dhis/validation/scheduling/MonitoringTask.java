@@ -28,11 +28,15 @@ package org.hisp.dhis.validation.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_MONITORING;
 import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 
+import java.util.Date;
+
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.validation.ValidationRuleService;
@@ -54,6 +58,9 @@ public class MonitoringTask
 
     @Autowired
     private MessageService messageService;
+    
+    @Autowired
+    private SystemSettingManager systemSettingManager;
 
     private TaskId taskId;
 
@@ -69,6 +76,8 @@ public class MonitoringTask
     @Override
     public void run()
     {
+        final Date startTime = new Date();
+        
         notifier.clear( taskId ).notify( taskId, "Monitoring data" );
         
         try
@@ -89,5 +98,7 @@ public class MonitoringTask
             
             throw ex;
         }
+        
+        systemSettingManager.saveSystemSetting( KEY_LAST_SUCCESSFUL_MONITORING, startTime );
     }
 }
