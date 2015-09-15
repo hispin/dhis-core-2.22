@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.Grid;
@@ -189,16 +188,16 @@ public class DefaultSqlViewService
      
         if ( variables != null )
         {
-            for ( String key : variables.keySet() )
+            for ( String param : variables.keySet() )
             {
-                if ( key != null && StringUtils.isAlphanumericSpace( key ) )
+                if ( param != null && SqlView.isValidQueryParam( param ) )
                 {
-                    final String regex = "\\$\\{(" + key + ")\\}";
-                    final String var = variables.get( key );
+                    final String regex = "\\$\\{(" + param + ")\\}";
+                    final String value = variables.get( param );
                     
-                    if ( var != null && StringUtils.isAlphanumericSpace( var ) )
+                    if ( value != null && SqlView.isValidQueryValue( value ) )
                     {
-                        sqlQuery = sqlQuery.replaceAll( regex, var );
+                        sqlQuery = sqlQuery.replaceAll( regex, value );
                     }
                 }
             }
@@ -255,12 +254,32 @@ public class DefaultSqlViewService
         {
             violation = "Variables contains null value";
         }
-        
-        if ( sqlView.isQuery() && !sqlVars.isEmpty() && ( variables == null || !variables.keySet().containsAll( sqlVars ) ) )
+
+        if ( variables != null && !SqlView.getInvalidQueryParams( variables.keySet() ).isEmpty() )
         {
-            violation = "SQL query contains variables which were not supplied in request: " + sqlVars;
+            violation = "Variable params are invalid: " + SqlView.getInvalidQueryParams( variables.keySet() );
         }
         
+        if ( variables != null && !SqlView.getInvalidQueryValues( variables.values() ).isEmpty() )
+        {
+            violation = "Variables are invalid: " + SqlView.getInvalidQueryValues( variables.values() );
+        }
+
+        if ( sqlView.isQuery() && !sqlVars.isEmpty() && ( variables == null || !variables.keySet().containsAll( sqlVars ) ) )
+        {
+            violation = "SQL query contains variables which were not provided in request: " + sqlVars;
+        }
+
+        if ( criteria != null && !SqlView.getInvalidQueryParams( criteria.keySet() ).isEmpty() )
+        {
+            violation = "Criteria params are invalid: " + SqlView.getInvalidQueryParams( criteria.keySet() );
+        }
+        
+        if ( criteria != null && !SqlView.getInvalidQueryValues( criteria.values() ).isEmpty() )
+        {
+            violation = "Criteria values are invalid: " + SqlView.getInvalidQueryValues( criteria.values() );
+        }
+
         if ( sql.matches( SqlView.getProtectedTablesRegex() ) )
         {
             violation = "SQL query contains references to protected tables";
