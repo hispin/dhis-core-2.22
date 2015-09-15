@@ -2,7 +2,7 @@
 <table class="dhis2-list-table-striped dhis2-table-hover">
     <tr ng-repeat="attribute in attributes" ng-if="!hiddenFields[attribute.id]">
         <td>
-            {{attribute.name}}<span ng-if="attribute.mandatory || attribute.unique" class="required">*</span>
+            <span ng-bind="attribute.name"></span><span ng-if="attribute.mandatory || attribute.unique" class="required">*</span>
         </td>
         <td>
             <ng-form name="innerForm">

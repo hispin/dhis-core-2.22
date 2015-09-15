@@ -2,6 +2,7 @@ trackerCapture.controller('RuleBoundController',
         function(
                 $rootScope,
                 $scope,
+                $translate,
                 $log) {
 
     
@@ -9,7 +10,7 @@ trackerCapture.controller('RuleBoundController',
     : $scope.$parent.$parent.smallerWidget ? $scope.$parent.$parent.smallerWidget : null;
     $scope.widgetTitle = $scope.widget.title;
     
-    
+    $scope.widgetTitleLabel = $translate.instant($scope.widgetTitle);
     
     $scope.displayTextEffects = {};
     $scope.displayKeyDataEffects = {};

@@ -8,10 +8,10 @@
             <a href ng-click="filterEvents = !filterEvents" title="{{filterEvents ? 'list_events' : 'filter_events'| translate}}" ng-show="eventFilteringRequired"><span ng-if="!filterEvents"><i class="fa fa-filter vertical-center"></i></span><span ng-if="filterEvents"><i class="fa fa-list vertical-center"></i></span></a>
             <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}" class="small-horizonal-spacing"><i class="fa fa-info-circle vertical-center"></i></a>
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(dataentryWidget)">
-                <span ng-show="dataentryWidget.expand"><i class="fa fa-chevron-up vertical-center" title="{{'collapse'| translate}}"></i></span>
-                <span ng-show="!dataentryWidget.expand"><i class="fa fa-chevron-down vertical-center" title="{{'expand'| translate}}"></i></span>
+                <span ng-show="dataentryWidget.expand"><i class="fa fa-chevron-up vertical-center" title="{{collapseLabel}}"></i></span>
+                <span ng-show="!dataentryWidget.expand"><i class="fa fa-chevron-down vertical-center" title="{{expandLabel}}"></i></span>
             </a>
-            <a class="small-horizonal-spacing" href ng-click="removeWidget(dataentryWidget)" title="{{'remove'| translate}}"><i class="fa fa-times-circle vertical-center"></i></a>            
+            <a class="small-horizonal-spacing" href ng-click="removeWidget(dataentryWidget)" title="{{removeLabel}}"><i class="fa fa-times-circle vertical-center"></i></a>            
         </span>        
     </div>
 
@@ -31,7 +31,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="active" style="vertical-align:middle" ng-repeat="stage in programStages | orderBy:'sortOrder':reverse">                            
+                        <th class="active" style="vertical-align:middle" ng-repeat="stage in programStages">                            
                             {{stage.name}}  
                             
                             <!-- event add/filter icon begins -->
@@ -73,7 +73,7 @@
             </table>
         </div>
 
-        <div ng-if="!selectedEnrollment || !selectedEnrollment.enrollment" class="alert alert-danger">{{'not_yet_enrolled_data_entry'| translate}}</div>
+        <div ng-if="!selectedEnrollment || !selectedEnrollment.enrollment" class="alert alert-danger">{{notEnrolledLabel}}</div>
 
         <form name="outerForm" novalidate>
             <div ng-if="currentEvent">
