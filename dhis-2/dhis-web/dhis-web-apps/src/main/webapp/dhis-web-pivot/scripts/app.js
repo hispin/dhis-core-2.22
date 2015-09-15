@@ -583,11 +583,11 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'DEFAULT',
+			value: finalsStyleConf.default_,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'DEFAULT', text: NS.i18n.by_data_element},
+					{id: finalsStyleConf.default_, text: NS.i18n.by_data_element},
 					{id: 'COUNT', text: NS.i18n.count},
 					{id: 'SUM', text: NS.i18n.sum},
 					{id: 'STDDEV', text: NS.i18n.stddev},
@@ -610,11 +610,11 @@ Ext.onReady( function() {
 			displayField: 'name',
 			editable: false,
 			hidden: !(ns.core.init.systemInfo.hideUnapprovedDataInAnalytics && ns.core.init.user.viewUnapprovedData),
-			value: 'DEFAULT',
+			value: finalsStyleConf.default_,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'name'],
 				data: function() {
-					var data = [{id: 'DEFAULT', name: NS.i18n.show_all_data}],
+					var data = [{id: finalsStyleConf.default_, name: NS.i18n.show_all_data}],
 						levels = ns.core.init.dataApprovalLevels;
 
 					for (var i = 0; i < levels.length; i++) {

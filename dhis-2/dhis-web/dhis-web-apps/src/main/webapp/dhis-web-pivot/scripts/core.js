@@ -160,7 +160,7 @@ Ext.onReady( function() {
                     'space': 'SPACE',
                     'comma': 'COMMA',
                     'none': 'NONE',
-                    'default': 'DEFAULT'
+                    'default_': 'DEFAULT'
                 }
 			};
 
@@ -524,7 +524,7 @@ Ext.onReady( function() {
 					}
 
                     // in and aggregation type
-                    if (objectNameDimensionMap[dimConf.indicator.objectName] && config.aggregationType !== 'DEFAULT') {
+                    if (objectNameDimensionMap[dimConf.indicator.objectName] && config.aggregationType !== conf.finals.style.default_) {
                         webAlert('Indicators and aggregation types cannot be specified together', true);
                         return;
                     }
@@ -588,16 +588,16 @@ Ext.onReady( function() {
 					layout.showRowSubTotals = Ext.isBoolean(config.rowSubTotals) ? config.rowSubTotals : (Ext.isBoolean(config.showRowSubTotals) ? config.showRowSubTotals : true);
 					layout.showDimensionLabels = Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
 					layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
-                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : 'DEFAULT';
+                    layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : conf.finals.style.default_;
 					layout.dataApprovalLevel = Ext.isObject(config.dataApprovalLevel) && Ext.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
 
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
 
                     layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
 
-					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : 'normal';
-					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : 'normal';
-					layout.digitGroupSeparator = Ext.isString(config.digitGroupSeparator) && !Ext.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : 'space';
+					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : conf.finals.style.normal;
+					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : conf.finals.style.normal;
+					layout.digitGroupSeparator = Ext.isString(config.digitGroupSeparator) && !Ext.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : conf.finals.style.space;
 					layout.legendSet = Ext.isObject(config.legendSet) && Ext.isString(config.legendSet.id) ? config.legendSet : null;
 
 					layout.parentGraphMap = Ext.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
@@ -857,9 +857,9 @@ Ext.onReady( function() {
 			};
 
 			support.prototype.number.prettyPrint = function(number, separator) {
-				separator = separator || 'space';
+				separator = separator || conf.finals.style.space;
 
-				if (separator === 'none') {
+				if (separator === conf.finals.style.space.none) {
 					return number;
 				}
 
@@ -2168,7 +2168,7 @@ Ext.onReady( function() {
 				}
 
 				// data approval level
-				if (Ext.isObject(xLayout.dataApprovalLevel) && Ext.isString(xLayout.dataApprovalLevel.id) && xLayout.dataApprovalLevel.id !== 'DEFAULT') {
+				if (Ext.isObject(xLayout.dataApprovalLevel) && Ext.isString(xLayout.dataApprovalLevel.id) && xLayout.dataApprovalLevel.id !== conf.finals.style.default_) {
 					paramString += '&approvalLevel=' + xLayout.dataApprovalLevel.id;
 				}
 
