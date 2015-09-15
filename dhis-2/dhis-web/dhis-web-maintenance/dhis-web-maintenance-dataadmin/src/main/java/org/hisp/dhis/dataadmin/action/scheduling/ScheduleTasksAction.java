@@ -36,6 +36,7 @@ import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE_15_MINS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_MONITORING;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_DAILY_0AM;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_15MIN;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_MIN;
@@ -185,6 +186,13 @@ public class ScheduleTasksAction
         return lastAnalyticsTableSuccess;
     }
 
+    private Date lastMonitoringSuccess;
+    
+    public Date getLastMonitoringSuccess()
+    {
+        return lastMonitoringSuccess;
+    }
+
     private Date lastDataSyncSuccess;
 
     public Date getLastDataSyncSuccess()
@@ -312,6 +320,7 @@ public class ScheduleTasksAction
 
         lastResourceTableSuccess = (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE );
         lastAnalyticsTableSuccess = (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE );
+        lastMonitoringSuccess = (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_MONITORING );
         lastDataSyncSuccess = synchronizationManager.getLastSynchSuccess();
 
         log.info( "Status: " + status );

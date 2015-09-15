@@ -54,7 +54,7 @@ public class ExpressionUtils
 
     private static final Pattern NUMERIC_PATTERN = Pattern.compile( "^(-?0|-?[1-9]\\d*)(\\.\\d+)?(E(-)?\\d+)?$" );
     
-    static 
+    static
     {
         Map<String, Object> functions = new HashMap<>();
         functions.put( ExpressionFunctions.NAMESPACE, ExpressionFunctions.class );
