@@ -125,7 +125,7 @@
 
             <!-- simple/advanced search begins -->
             <div id="searchDropDownParent" class="input-group col-md-4 hideInPrint">
-                <input type="text" placeholder="{{searchCriteriaLabel}}" ng-model="searchText" class="form-control expanded" d2-enter="search(searchMode.freeText)" ng-class="{true: 'invalid - input'} [!searchText && emptySearchText]" ng-focus="showHideSearch()" ng-disabled="showRegistrationDiv">
+                <input type="text" placeholder="{{searchCriteriaLabel}}" ng-model="searchText" class="form-control expanded" d2-enter="search(searchMode.freeText)" ng-class="{true: 'invalid - input'} [!searchText && emptySearchText]" ng-focus="showHideSearch()" ng-disabled="showRegistrationDiv" d2-set-focus={{doSearch}}>
                 <div class="input-group-btn">
                     <button class="btn btn-default search-dropdown-button trim" type="button" title="{{advancedSearchLabel}}" data-toggle="dropdown" ng-click="showHideSearch()" ng-disabled="showRegistrationDiv"><i class="fa fa-caret-down"></i></button>
                     <button class="btn btn-primary trim" type="button" title="{{searchLabel}}" ng-disabled="showRegistrationDiv" ng-click="search(searchMode.freeText)"><i class="fa fa-search"></i></button>

@@ -7,6 +7,22 @@
 var d2Directives = angular.module('d2Directives', [])
 
 
+.directive('d2SetFocus', function ($timeout) {
+
+    return {        
+        scope: { trigger: '@d2SetFocus' },
+        link: function(scope, element) {
+            scope.$watch('trigger', function(value) {
+                if(value === "true") { 
+                    $timeout(function() {
+                        element[0].focus(); 
+                    });
+                }
+            });
+        }
+    };
+})
+
 .directive('d2OuSearch', function () {
 
     return {
