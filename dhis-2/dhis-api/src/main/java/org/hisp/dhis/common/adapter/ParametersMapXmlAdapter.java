@@ -39,7 +39,6 @@ public class ParametersMapXmlAdapter
 {
     @Override
     public Parameters marshal( Map<String, String> v )
-        throws Exception
     {
         ArrayList<Parameter> list = new ArrayList<>();
 
@@ -53,7 +52,6 @@ public class ParametersMapXmlAdapter
 
     @Override
     public Map<String, String> unmarshal( Parameters v )
-        throws Exception
     {
         Map<String, String> map = new HashMap<>();
         

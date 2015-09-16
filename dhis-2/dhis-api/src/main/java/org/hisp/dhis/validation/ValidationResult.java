@@ -292,7 +292,7 @@ public class ValidationResult
 
     private int validationImportanceOrder( String importance )
     {
-        return ( importance.equals( "high" ) ? 0 : importance.equals( "medium" ) ? 1 : 2 );
+        return importance.equals( "high" ) ? 0 : importance.equals( "medium" ) ? 1 : 2;
     }
 
     @Override

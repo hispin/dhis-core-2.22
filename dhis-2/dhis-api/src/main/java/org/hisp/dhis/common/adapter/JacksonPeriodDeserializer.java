@@ -78,8 +78,8 @@ public class JacksonPeriodDeserializer
     public Period deserialize( JsonParser jp, DeserializationContext ctxt )
         throws IOException
     {
-        LocalPeriod p = jp.readValueAs( LocalPeriod.class );
+        LocalPeriod period = jp.readValueAs( LocalPeriod.class );
 
-        return p.getId() == null ? null : PeriodType.getPeriodFromIsoString( p.getId() );
+        return period.getId() == null ? null : PeriodType.getPeriodFromIsoString( period.getId() );
     }
 }

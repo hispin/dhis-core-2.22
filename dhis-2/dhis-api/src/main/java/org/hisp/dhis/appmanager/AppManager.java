@@ -39,7 +39,7 @@ import java.util.List;
  */
 public interface AppManager
 {
-    final String ID = AppManager.class.getName();
+    String ID = AppManager.class.getName();
 
     String KEY_APP_FOLDER_PATH = "appFolderPath";
     String KEY_APP_BASE_URL = "appBaseUrl";

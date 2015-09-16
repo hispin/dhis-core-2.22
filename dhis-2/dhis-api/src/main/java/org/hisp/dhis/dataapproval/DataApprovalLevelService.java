@@ -185,7 +185,7 @@ public interface DataApprovalLevelService
      * @param level Data approval level to test for existence.
      * @return true if it exists, otherwise false.
      */
-    public boolean dataApprovalLevelExists ( DataApprovalLevel level );
+    boolean dataApprovalLevelExists ( DataApprovalLevel level );
 
     /**
      * Adds a new data approval level. Adds the new level at the highest

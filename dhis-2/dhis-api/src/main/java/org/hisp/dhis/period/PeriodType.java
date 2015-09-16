@@ -61,7 +61,7 @@ public abstract class PeriodType
     implements Serializable
 {
     // Cache for period lookup, uses calendar.name() + periodType.getName() + date.getTime() as key
-    private static Cache<String, Period> periodCache = CacheBuilder.newBuilder()
+    private static Cache<String, Period> PERIOD_CACHE = CacheBuilder.newBuilder()
         .expireAfterAccess( 5, TimeUnit.MINUTES )
         .initialCapacity( 10000 )
         .maximumSize( 30000 )
@@ -243,7 +243,7 @@ public abstract class PeriodType
     {
         try
         {
-            return periodCache.get( getCacheKey( date ), () -> createPeriod( createCalendarInstance( date ) ) );
+            return PERIOD_CACHE.get( getCacheKey( date ), () -> createPeriod( createCalendarInstance( date ) ) );
         }
         catch ( ExecutionException ignored )
         {
@@ -273,7 +273,7 @@ public abstract class PeriodType
     {
         try
         {
-            return periodCache.get( getCacheKey( calendar, date ), () -> createPeriod( calendar.fromIso( DateTimeUnit.fromJdkDate( date ) ), calendar ) );
+            return PERIOD_CACHE.get( getCacheKey( calendar, date ), () -> createPeriod( calendar.fromIso( DateTimeUnit.fromJdkDate( date ) ), calendar ) );
         }
         catch ( ExecutionException ignored )
         {

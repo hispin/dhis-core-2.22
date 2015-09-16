@@ -107,7 +107,7 @@ public class DashboardSearchResult
     }
     
     @JsonProperty
-    private int getEventChartCount()
+    public int getEventChartCount()
     {
         return eventCharts.size();
     }

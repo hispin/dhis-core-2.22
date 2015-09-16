@@ -39,9 +39,9 @@ import org.hisp.dhis.user.User;
  */
 public interface MessageService
 {
-    final String ID = MessageService.class.getName();
+    String ID = MessageService.class.getName();
 
-    final String META_USER_AGENT = "User-agent: ";
+    String META_USER_AGENT = "User-agent: ";
 
     /**
      * Sends a message to the in-box of the given recipients.

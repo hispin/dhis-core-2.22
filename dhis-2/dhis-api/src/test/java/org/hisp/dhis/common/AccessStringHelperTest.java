@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class AccessStringHelperTest
 {
     @Test
-    public void testCanRead() throws Exception
+    public void testCanRead()
     {
         String access = "r-------";
         String access_will_fail = "--------";
@@ -50,7 +50,7 @@ public class AccessStringHelperTest
     }
 
     @Test
-    public void testCanWrite() throws Exception
+    public void testCanWrite()
     {
         String access1 = "rw------";
         String access2 = "-w------";

@@ -38,13 +38,13 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 public class BaseIdentifiableObjectXmlAdapter extends XmlAdapter<BaseIdentifiableObject, BaseIdentifiableObject>
 {
     @Override
-    public BaseIdentifiableObject unmarshal( BaseIdentifiableObject baseIdentifiableObject ) throws Exception
+    public BaseIdentifiableObject unmarshal( BaseIdentifiableObject baseIdentifiableObject )
     {
         return baseIdentifiableObject;
     }
 
     @Override
-    public BaseIdentifiableObject marshal( BaseIdentifiableObject baseIdentifiableObject ) throws Exception
+    public BaseIdentifiableObject marshal( BaseIdentifiableObject baseIdentifiableObject )
     {
         if ( baseIdentifiableObject != null )
         {
