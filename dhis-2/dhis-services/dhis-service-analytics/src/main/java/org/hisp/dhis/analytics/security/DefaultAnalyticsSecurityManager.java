@@ -144,11 +144,6 @@ public class DefaultAnalyticsSecurityManager
             
             if ( approvalLevels != null && !approvalLevels.isEmpty() )
             {
-                for ( OrganisationUnit unit : approvalLevels.keySet() )
-                {
-                    unit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( unit.getId() ) );
-                }
-                
                 params.setDataApprovalLevels( approvalLevels );
                 
                 log.debug( "User: " + user.getUsername() + " constrained by data approval levels: " + approvalLevels.values() );

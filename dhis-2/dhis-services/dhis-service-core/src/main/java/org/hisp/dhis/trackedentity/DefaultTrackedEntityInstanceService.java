@@ -154,14 +154,6 @@ public class DefaultTrackedEntityInstanceService
             params.setOrganisationUnits( organisationUnits );
         }
 
-        for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
-        {
-            if ( !organisationUnit.hasLevel() )
-            {
-                organisationUnit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( organisationUnit.getId() ) );
-            }
-        }
-
         if ( !params.isPaging() && !params.isSkipPaging() )
         {
             params.setDefaultPaging();
@@ -187,14 +179,6 @@ public class DefaultTrackedEntityInstanceService
         {
             params.setOrganisationUnits( user.getDataViewOrganisationUnitsWithFallback() );
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
-        }
-
-        for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
-        {
-            if ( !organisationUnit.hasLevel() )
-            {
-                organisationUnit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( organisationUnit.getId() ) );
-            }
         }
 
         if ( !params.isPaging() && !params.isSkipPaging() )

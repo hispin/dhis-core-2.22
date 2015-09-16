@@ -175,11 +175,7 @@ public class DefaultMappingService
     @Override
     public MapView getMapView( int id )
     {
-        MapView mapView = mapViewStore.get( id );
-
-        setMapViewLevel( mapView );
-
-        return mapView;
+        return mapViewStore.get( id );
     }
 
     @Override
@@ -187,20 +183,7 @@ public class DefaultMappingService
     {
         MapView mapView = mapViewStore.getByUid( uid );
 
-        setMapViewLevel( mapView );
-
         return mapView;
-    }
-
-    private void setMapViewLevel( MapView mapView )
-    {
-        if ( mapView != null )
-        {
-            for ( OrganisationUnit unit : mapView.getOrganisationUnits() )
-            {
-                unit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( unit.getId() ) );
-            }
-        }
     }
 
     @Override
@@ -232,22 +215,7 @@ public class DefaultMappingService
     @Override
     public List<MapView> getAllMapViews()
     {
-        List<MapView> mapViews = mapViewStore.getAll();
-
-        if ( mapViews.size() > 0 )
-        {
-            for ( MapView mapView : mapViews )
-            {
-                //TODO poor performance, fix
-
-                for ( OrganisationUnit unit : mapView.getOrganisationUnits() )
-                {
-                    unit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( unit.getId() ) );
-                }
-            }
-        }
-
-        return mapViews;
+        return mapViewStore.getAll();
     }
 
     @Override

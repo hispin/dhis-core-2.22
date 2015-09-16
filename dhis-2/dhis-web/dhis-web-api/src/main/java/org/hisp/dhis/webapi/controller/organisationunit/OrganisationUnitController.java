@@ -210,7 +210,7 @@ public class OrganisationUnitController
         {
             options.getOptions().put( "useWrapper", "true" );
             int level = options.getInt( "level" );
-            int ouLevel = organisationUnitService.getLevelOfOrganisationUnit( organisationUnit.getId() );
+            int ouLevel = organisationUnit.getLevel();
             int targetLevel = ouLevel + level;
             organisationUnits.addAll( organisationUnitService.getOrganisationUnitsAtLevel( targetLevel, organisationUnit ) );
         }

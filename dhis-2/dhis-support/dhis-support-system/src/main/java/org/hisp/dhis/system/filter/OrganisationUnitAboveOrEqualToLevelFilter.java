@@ -33,8 +33,7 @@ import org.hisp.dhis.commons.filter.Filter;
 
 /**
  * Retains organisation units which are above or at the same level as the level
- * given in the constructor. This filter must be invoked inside a transactional
- * context in order to work.
+ * given in the constructor.
  * 
  * @author Lars Helge Overland
  */
@@ -51,6 +50,6 @@ public class OrganisationUnitAboveOrEqualToLevelFilter
     @Override
     public boolean retain( OrganisationUnit object )
     {
-        return object != null && object.getOrganisationUnitLevel() <= level;
+        return object != null && object.getLevel() <= level;
     }
 }

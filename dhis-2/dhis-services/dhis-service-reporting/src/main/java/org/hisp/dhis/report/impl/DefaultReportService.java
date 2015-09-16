@@ -160,7 +160,7 @@ public class DefaultReportService
 
         if ( orgUnit != null )
         {
-            int level = organisationUnitService.getLevelOfOrganisationUnit( orgUnit.getId() );
+            int level = orgUnit.getLevel();
 
             params.put( PARAM_ORGANISATIONUNIT_COLUMN_NAME, orgUnit.getName() );
             params.put( PARAM_ORGANISATIONUNIT_LEVEL, level );

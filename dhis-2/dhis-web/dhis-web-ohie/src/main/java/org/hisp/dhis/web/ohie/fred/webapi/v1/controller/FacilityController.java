@@ -361,7 +361,7 @@ public class FacilityController
                 {
                     int l = Integer.parseInt( level );
 
-                    if ( organisationUnit.getOrganisationUnitLevel() == l )
+                    if ( organisationUnit.getLevel() == l )
                     {
                         shouldRemove = false;
                         break;

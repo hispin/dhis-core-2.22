@@ -60,7 +60,7 @@ public class OrganisationUnitExtended
         this.source = source;
         this.toBeValidated = toBeValidated;
         children = new HashSet<>( source.getChildren() );
-        level = source.getOrganisationUnitLevel();
+        level = source.getLevel();
     }
 
     public String toString()

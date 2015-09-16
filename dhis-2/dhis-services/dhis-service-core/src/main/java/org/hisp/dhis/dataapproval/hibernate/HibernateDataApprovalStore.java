@@ -293,7 +293,7 @@ public class HibernateDataApprovalStore
 
         if ( orgUnit != null )
         {
-            orgUnitLevel = organisationUnitService.getLevelOfOrganisationUnit( orgUnit );
+            orgUnitLevel = orgUnit.getLevel();
             orgUnitJoinOn = "o.organisationunitid = " + orgUnit.getId();
             highestApprovedOrgUnitCompare = "da.organisationunitid = o.organisationunitid ";
         }

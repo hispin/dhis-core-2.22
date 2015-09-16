@@ -110,18 +110,6 @@ public class OrganisationUnitToFacilityConverterTest
     }
 
     @Test
-    public void testLevel()
-    {
-        OrganisationUnit organisationUnit = new OrganisationUnit( "OrgUnit1" );
-
-        Facility facility = converter.convert( organisationUnit );
-
-        Integer level = (Integer) facility.getProperties().get( "level" );
-
-        Assert.assertTrue( level.equals( organisationUnit.getOrganisationUnitLevel() ) );
-    }
-
-    @Test
     @SuppressWarnings("unchecked")
     public void testDataSets()
     {

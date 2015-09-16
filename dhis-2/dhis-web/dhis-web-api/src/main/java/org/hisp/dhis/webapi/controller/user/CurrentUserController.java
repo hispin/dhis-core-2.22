@@ -591,7 +591,7 @@ public class CurrentUserController
             FormOrganisationUnit formOrganisationUnit = new FormOrganisationUnit();
             formOrganisationUnit.setId( organisationUnit.getUid() );
             formOrganisationUnit.setLabel( organisationUnit.getDisplayName() );
-            formOrganisationUnit.setLevel( organisationUnit.getOrganisationUnitLevel() );
+            formOrganisationUnit.setLevel( organisationUnit.getLevel() );
 
             if ( organisationUnit.getParent() != null )
             {
@@ -690,7 +690,7 @@ public class CurrentUserController
             FormOrganisationUnit formOrganisationUnit = new FormOrganisationUnit();
             formOrganisationUnit.setId( organisationUnit.getUid() );
             formOrganisationUnit.setLabel( organisationUnit.getDisplayName() );
-            formOrganisationUnit.setLevel( organisationUnit.getOrganisationUnitLevel() );
+            formOrganisationUnit.setLevel( organisationUnit.getLevel() );
 
             if ( organisationUnit.getParent() != null )
             {

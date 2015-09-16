@@ -287,13 +287,6 @@ public class DataApprovalServiceCategoryOptionGroupTest
         china = createOrganisationUnit( "China", asia );
         india = createOrganisationUnit( "India", asia );
 
-        global.setLevel( 1 );
-        americas.setLevel( 2 );
-        asia.setLevel( 2 );
-        brazil.setLevel( 3 );
-        china.setLevel( 3 );
-        india.setLevel( 3 );
-
         organisationUnitService.addOrganisationUnit( global );
         organisationUnitService.addOrganisationUnit( americas );
         organisationUnitService.addOrganisationUnit( asia );
@@ -664,8 +657,6 @@ public class DataApprovalServiceCategoryOptionGroupTest
     private void generateUserApprovalsAndPermissions( CurrentUserService mockUserService, DataSet dataSet, Period period, OrganisationUnit orgUnit )
     {
         String[] approvalStrings = getUserApprovalsAndPermissions( mockUserService, dataSet, period, orgUnit );
-
-        System.out.println( "assertArrayEquals( new String[] {" );
 
         int count = 0;
 

@@ -258,7 +258,7 @@ public class JdbcDataAnalysisStore
     @Override
     public List<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit )
     {
-        final String idLevelColumn = "idlevel" + organisationUnit.getOrganisationUnitLevel();
+        final String idLevelColumn = "idlevel" + organisationUnit.getLevel();
 
         String sql =
             "select dv.dataelementid, dv.periodid, dv.sourceid, dv.categoryoptioncomboid, dv.value, " +

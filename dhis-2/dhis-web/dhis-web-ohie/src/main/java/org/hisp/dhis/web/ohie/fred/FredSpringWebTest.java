@@ -150,7 +150,6 @@ public abstract class FredSpringWebTest
         organisationUnit.setShortName( organisationUnit.getName() );
         organisationUnit.setCreated( new Date() );
         organisationUnit.setLastUpdated( organisationUnit.getCreated() );
-        organisationUnit.setLevel( 1 );
 
         return organisationUnit;
     }

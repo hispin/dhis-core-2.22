@@ -152,7 +152,7 @@ public class DefaultDataApprovalLevelService
     @Override
     public DataApprovalLevel getHighestDataApprovalLevel( OrganisationUnit orgUnit )
     {
-        int orgUnitLevel = organisationUnitService.getLevelOfOrganisationUnit( orgUnit );
+        int orgUnitLevel = orgUnit.getLevel();
 
         DataApprovalLevel levelAbove = null;
 
@@ -197,7 +197,7 @@ public class DefaultDataApprovalLevelService
             }
         }
 
-        int orgUnitLevel = organisationUnitService.getLevelOfOrganisationUnit( orgUnit );
+        int orgUnitLevel = orgUnit.getLevel();
 
         List<DataApprovalLevel> approvalLevels = getDataApprovalLevelsByOrgUnitLevel( orgUnitLevel );
         
@@ -272,8 +272,7 @@ public class DefaultDataApprovalLevelService
 
             for ( OrganisationUnit orgUnit : user.getOrganisationUnits() )
             {
-                int orgUnitLevel = orgUnit.hasLevel() ?
-                    orgUnit.getLevel() : organisationUnitService.getLevelOfOrganisationUnit( orgUnit.getId() );
+                int orgUnitLevel = orgUnit.getLevel();
 
                 userOrgUnitLevels.add( orgUnitLevel );
 
@@ -721,7 +720,7 @@ public class DefaultDataApprovalLevelService
      */
     private DataApprovalLevel getUserApprovalLevel( OrganisationUnit orgUnit, User user, List<DataApprovalLevel> approvalLevels )
     {
-        int userOrgUnitLevel = organisationUnitService.getLevelOfOrganisationUnit( orgUnit );
+        int userOrgUnitLevel = orgUnit.getLevel();
 
         DataApprovalLevel userLevel = null;
 
