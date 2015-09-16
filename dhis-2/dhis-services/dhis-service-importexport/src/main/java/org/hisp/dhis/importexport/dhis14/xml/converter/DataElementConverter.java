@@ -28,6 +28,12 @@ package org.hisp.dhis.importexport.dhis14.xml.converter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.dataelement.DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME;
+import static org.hisp.dhis.importexport.dhis14.util.Dhis14TypeHandler.convertBooleanToDhis14;
+
+import java.util.Collection;
+import java.util.Map;
+
 import org.amplecode.staxwax.reader.XMLReader;
 import org.amplecode.staxwax.writer.XMLWriter;
 import org.hisp.dhis.dataelement.DataElement;
@@ -43,13 +49,6 @@ import org.hisp.dhis.importexport.analysis.ImportAnalyser;
 import org.hisp.dhis.importexport.dhis14.util.Dhis14DateUtil;
 import org.hisp.dhis.importexport.dhis14.util.Dhis14ParsingUtils;
 import org.hisp.dhis.importexport.importer.DataElementImporter;
-import org.hisp.dhis.importexport.mapping.NameMappingUtil;
-
-import java.util.Collection;
-import java.util.Map;
-
-import static org.hisp.dhis.dataelement.DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME;
-import static org.hisp.dhis.importexport.dhis14.util.Dhis14TypeHandler.*;
 
 /**
  * @author Lars Helge Overland
@@ -97,7 +96,7 @@ public class DataElementConverter
 
     private static final String FIELD_AGGREGATION_START_LEVEL = "AggregateStartLevel";
 
-    private static final String FIELD_AGGREGATION_OPERATOR = "AggregateOperator";
+    //private static final String FIELD_AGGREGATION_OPERATOR = "AggregateOperator";
 
     private static final String FIELD_SELECTED = "Selected";
 

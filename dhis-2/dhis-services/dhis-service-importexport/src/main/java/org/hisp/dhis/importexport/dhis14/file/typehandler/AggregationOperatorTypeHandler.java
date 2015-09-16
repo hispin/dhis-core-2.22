@@ -28,14 +28,15 @@ package org.hisp.dhis.importexport.dhis14.file.typehandler;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.sql.SQLException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.analytics.AggregationType;
+
 import com.ibatis.sqlmap.client.extensions.ParameterSetter;
 import com.ibatis.sqlmap.client.extensions.ResultGetter;
 import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.dataelement.DataElement;
-
-import java.sql.SQLException;
 
 /**
  * @author Lars Helge Overland
@@ -48,7 +49,7 @@ public class AggregationOperatorTypeHandler
     private static final String JDBC_AVERAGE = "Avg";
     private static final String JDBC_COUNT = "Count";
 
-    private static final Integer NON_EXISTING = -1;
+    //private static final Integer NON_EXISTING = -1;
 
     private static final Log log = LogFactory.getLog( AggregationOperatorTypeHandler.class );
 
@@ -59,40 +60,36 @@ public class AggregationOperatorTypeHandler
     @Override
     public Object getResult( ResultGetter getter )
         throws SQLException
-    {
-        return null;
-
-        /*
+    {        
         String result = getter.getString();
 
         if ( result != null )
         {
             if ( result.equalsIgnoreCase( JDBC_SUM ) )
             {
-                return DataElement.AGGREGATION_OPERATOR_SUM;
+                return AggregationType.SUM;
             }
             else if ( result.equalsIgnoreCase( JDBC_AVERAGE ) )
             {
-                return DataElement.AGGREGATION_OPERATOR_AVERAGE_SUM;
+                return AggregationType.AVERAGE;
             }
             else if ( result.equalsIgnoreCase( JDBC_COUNT ) )
             {
-                return DataElement.AGGREGATION_OPERATOR_COUNT;
+                return AggregationType.COUNT;
             }
             else
             {
                 log.warn( "Unknow aggregation operator, returning sum " + result );
                 
-                return DataElement.AGGREGATION_OPERATOR_SUM;
+                return AggregationType.SUM;
             }
         }
         else
         {
             log.warn( "Aggregation operator is null, returning sum " + result );
             
-            return DataElement.AGGREGATION_OPERATOR_SUM;
+            return AggregationType.SUM;
         }
-        */
     }
 
     @Override
