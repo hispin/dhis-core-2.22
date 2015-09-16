@@ -46,7 +46,7 @@ import java.text.SimpleDateFormat;
  */
 public class JacksonOrganisationUnitGroupSymbolSerializer extends JsonSerializer<OrganisationUnitGroup>
 {
-    private static DateFormat format = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ" );
+    private static DateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ" );
 
     @Override
     public void serialize( OrganisationUnitGroup value, JsonGenerator jgen, SerializerProvider provider ) throws IOException
@@ -62,8 +62,8 @@ public class JacksonOrganisationUnitGroupSymbolSerializer extends JsonSerializer
                 staxWriter.writeStartElement( DxfNamespaces.DXF_2_0, "organisationUnitGroup" );
                 staxWriter.writeAttribute( "id", value.getUid() );
                 staxWriter.writeAttribute( "name", value.getName() );
-                staxWriter.writeAttribute( "created", format.format( value.getCreated() ) );
-                staxWriter.writeAttribute( "lastUpdated", format.format( value.getLastUpdated() ) );
+                staxWriter.writeAttribute( "created", DATE_FORMAT.format( value.getCreated() ) );
+                staxWriter.writeAttribute( "lastUpdated", DATE_FORMAT.format( value.getLastUpdated() ) );
 
                 if ( value.getHref() != null )
                 {

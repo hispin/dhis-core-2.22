@@ -122,7 +122,7 @@ public class DataApprovalLevel
      */
     public String getCategoryOptionGroupSetName()
     {
-        return ( categoryOptionGroupSet == null ? "" : categoryOptionGroupSet.getName() );
+        return categoryOptionGroupSet == null ? "" : categoryOptionGroupSet.getName();
     }
     
     /**

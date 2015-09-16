@@ -44,7 +44,7 @@ import org.hisp.dhis.period.Period;
  */
 public interface ReportService
 {
-    final String ID = ReportService.class.getName();
+    String ID = ReportService.class.getName();
 
     String REPORTTYPE_PDF = "pdf";
     String REPORTTYPE_XLS = "xls";
