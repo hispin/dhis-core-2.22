@@ -65,7 +65,7 @@ public class DataElementConverter
     private static final String FIELD_DESCRIPTION = "description";
     private static final String FIELD_VALUE_TYPE = "valueType";
     private static final String FIELD_DOMAIN_TYPE = "domainType";
-    private static final String FIELD_AGGREGATION_OPERATOR = "aggregationOperator";
+    //private static final String FIELD_AGGREGATION_OPERATOR = "aggregationOperator";
     private static final String FIELD_CATEGORY_COMBO = "categoryCombo";
     private static final String FIELD_LAST_UPDATED = "lastUpdated";
 
