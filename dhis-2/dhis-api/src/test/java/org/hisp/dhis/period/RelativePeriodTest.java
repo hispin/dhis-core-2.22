@@ -46,7 +46,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class RelativePeriodTest
 {
-    private static final I18nFormat i18nFormat = new MockI18nFormat();
+    private static final I18nFormat I18N_FORMAT = new MockI18nFormat();
 
     private static Date getDate( int year, int month, int day )
     {
@@ -58,7 +58,7 @@ public class RelativePeriodTest
     {
         RelativePeriods periods = new RelativePeriods( true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true );
 
-        List<Period> relatives = periods.getRelativePeriods( getDate( 2001, 1, 1 ), i18nFormat, false );
+        List<Period> relatives = periods.getRelativePeriods( getDate( 2001, 1, 1 ), I18N_FORMAT, false );
 
         assertEquals( 157, relatives.size() );
         assertTrue( relatives.contains( new Period( new MonthlyPeriodType(), getDate( 2001, 1, 1 ), getDate( 2001, 1, 31 ) ) ) );
@@ -134,7 +134,7 @@ public class RelativePeriodTest
     {
         RelativePeriods periods = new RelativePeriods().setLast12Months( true );
 
-        List<Period> relatives = periods.getRewindedRelativePeriods( 1, getDate( 2001, 7, 15 ), i18nFormat, false );
+        List<Period> relatives = periods.getRewindedRelativePeriods( 1, getDate( 2001, 7, 15 ), I18N_FORMAT, false );
 
         assertEquals( 12, relatives.size() );
         assertTrue( relatives.contains( new Period( new MonthlyPeriodType(), getDate( 2000, 7, 1 ), getDate( 2000, 7, 31 ) ) ) );
@@ -314,7 +314,7 @@ public class RelativePeriodTest
 
         assertEquals( 12, relatives.size() );
 
-        relatives = new RelativePeriods().setLast4Quarters( true ).getRelativePeriods( i18nFormat, true );
+        relatives = new RelativePeriods().setLast4Quarters( true ).getRelativePeriods( I18N_FORMAT, true );
 
         assertEquals( 4, relatives.size() );
     }

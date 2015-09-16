@@ -113,7 +113,9 @@ public class CoordinatesTuple
             return false;
         }
         
-        for ( int i = 0; i < coordinatesTuple.size(); i++ )
+        int size = coordinatesTuple.size();
+        
+        for ( int i = 0; i < size; i++ )
         {
             if ( !coordinatesTuple.get( i ).equals( other.getCoordinatesTuple().get( i ) ) )
             {

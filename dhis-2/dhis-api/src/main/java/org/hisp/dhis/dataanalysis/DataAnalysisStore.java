@@ -45,7 +45,7 @@ import org.hisp.dhis.period.Period;
  */
 public interface DataAnalysisStore
 {
-    final String ID = DataAnalysisStore.class.getName();
+    String ID = DataAnalysisStore.class.getName();
     
     /**
      * Calculates the standard deviation of the DataValues registered for the given

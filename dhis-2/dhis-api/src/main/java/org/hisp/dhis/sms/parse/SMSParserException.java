@@ -33,8 +33,6 @@ public class SMSParserException
 {
     private String reason;
 
-    private static final long serialVersionUID = -8088120989819092567L;
-
     public static final String NO_VALUE = "no_value";
 
     public static final String WRONG_FORMAT = "wrong_format";

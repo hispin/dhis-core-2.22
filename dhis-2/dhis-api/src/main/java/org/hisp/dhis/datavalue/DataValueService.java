@@ -53,11 +53,6 @@ public interface DataValueService
 {
     String ID = DataValueService.class.getName();
 
-    /**
-     * @deprecated To be removed
-     */
-    public static final String FLAG = "RoutineData";
-
     // -------------------------------------------------------------------------
     // Basic DataValue
     // -------------------------------------------------------------------------

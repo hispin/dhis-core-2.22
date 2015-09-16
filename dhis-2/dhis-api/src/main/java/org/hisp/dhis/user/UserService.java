@@ -113,7 +113,7 @@ public interface UserService
      * @param userCredentials User credentials to check restrictions for.
      * @return Set of CategoryOptionGroups if constrained, else null.
      */
-    public Set<CategoryOptionGroup> getCogDimensionConstraints( UserCredentials userCredentials );
+    Set<CategoryOptionGroup> getCogDimensionConstraints( UserCredentials userCredentials );
 
     /**
      * Returns a set of CategoryOptions that may be seen by the current
@@ -122,7 +122,7 @@ public interface UserService
      * @param userCredentials User credentials to check restrictions for.
      * @return Set of CategoryOptions if constrained, else null.
      */
-    public Set<DataElementCategoryOption> getCoDimensionConstraints( UserCredentials userCredentials );
+    Set<DataElementCategoryOption> getCoDimensionConstraints( UserCredentials userCredentials );
 
     boolean isLastSuperUser( UserCredentials userCredentials );
 

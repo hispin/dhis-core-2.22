@@ -131,15 +131,11 @@ public class ImportDataValue
 
     public int hashCode()
     {
-        final int PRIME = 31;
-        
-        int result = 1;
-        
-        result = PRIME * result + dataElementId;
-        
-        result = PRIME * result + periodId;
-        
-        result = PRIME * result + sourceId;
+        final int prime = 31;        
+        int result = 1;        
+        result = prime * result + dataElementId;        
+        result = prime * result + periodId;        
+        result = prime * result + sourceId;
         
         return result;
     }

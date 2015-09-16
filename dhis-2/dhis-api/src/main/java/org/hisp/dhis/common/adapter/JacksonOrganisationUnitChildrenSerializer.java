@@ -77,7 +77,7 @@ public class JacksonOrganisationUnitChildrenSerializer extends JsonSerializer<Or
             }
             catch ( XMLStreamException e )
             {
-                e.printStackTrace();
+                e.printStackTrace(); //TODO fix
             }
         }
         else

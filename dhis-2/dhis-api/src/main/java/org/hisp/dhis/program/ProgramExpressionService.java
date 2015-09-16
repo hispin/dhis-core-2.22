@@ -53,7 +53,7 @@ public interface ProgramExpressionService
 {
     String ID = ProgramExpressionService.class.getName();
 
-    public static final String INVALID_CONDITION = "Expression is not well-formed";
+    String INVALID_CONDITION = "Expression is not well-formed";
     
     /**
      * Adds an {@link ProgramExpression}

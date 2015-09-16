@@ -49,7 +49,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
  */
 public interface MapGenerationService
 {
-    public final String ID = MapGenerationService.class.getName();
+    String ID = MapGenerationService.class.getName();
     
     /**
      * Generate an image that represents this map.

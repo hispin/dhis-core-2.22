@@ -37,11 +37,11 @@ import java.util.List;
  */
 public interface CalendarService
 {
-    final String KEY_CALENDAR = "keyCalendar";
-    final String KEY_DATE_FORMAT = "keyDateFormat";
+    String KEY_CALENDAR = "keyCalendar";
+    String KEY_DATE_FORMAT = "keyDateFormat";
 
-    final String DEFAULT_CALENDAR = "iso8601";
-    final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd"; // ISO 8601
+    String DEFAULT_CALENDAR = "iso8601";
+    String DEFAULT_DATE_FORMAT = "yyyy-MM-dd"; // ISO 8601
     
     /**
      * Gets all available calendars as a sorted list.

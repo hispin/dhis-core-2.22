@@ -36,7 +36,7 @@ import java.util.Locale;
  */
 public interface HelpManager
 {
-    final String ID = HelpManager.class.getName();
+    String ID = HelpManager.class.getName();
 
     void getHelpContent( OutputStream out, String id, Locale locale );
 

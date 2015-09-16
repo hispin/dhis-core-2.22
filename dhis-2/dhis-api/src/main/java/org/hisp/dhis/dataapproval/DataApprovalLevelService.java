@@ -48,12 +48,12 @@ public interface DataApprovalLevelService
      * Constant that can be used in place of approval level
      * for data that has not been approved at any level.
      */
-    public static final int APPROVAL_LEVEL_UNAPPROVED = 999;
+    int APPROVAL_LEVEL_UNAPPROVED = 999;
     
     /**
      * Constant representing the highest possible level of approval.
      */
-    public static final int APPROVAL_LEVEL_HIGHEST = 0;
+    int APPROVAL_LEVEL_HIGHEST = 0;
 
     /**
      * Gets the data approval level with the given id.

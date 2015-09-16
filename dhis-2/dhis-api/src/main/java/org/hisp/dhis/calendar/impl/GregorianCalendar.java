@@ -40,11 +40,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class GregorianCalendar extends ChronologyBasedCalendar
 {
-    private static final Calendar self = new GregorianCalendar();
+    private static final Calendar SELF = new GregorianCalendar();
 
     public static Calendar getInstance()
     {
-        return self;
+        return SELF;
     }
 
     protected GregorianCalendar()

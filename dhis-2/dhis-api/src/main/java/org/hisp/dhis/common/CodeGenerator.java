@@ -39,9 +39,9 @@ public class CodeGenerator
     public static final String letters = "abcdefghijklmnopqrstuvwxyz"
         + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     
-    public static final String allowedChars = "0123456789" + letters;
+    public static final String ALLOWED_CHARS = "0123456789" + letters;
 
-    public static final int NUMBER_OF_CODEPOINTS = allowedChars.length();
+    public static final int NUMBER_OF_CODEPOINTS = ALLOWED_CHARS.length();
     public static final int CODESIZE = 11;
 
     private static final Pattern CODE_PATTERN = Pattern.compile( "^[a-zA-Z]{1}[a-zA-Z0-9]{10}$" );
@@ -76,7 +76,7 @@ public class CodeGenerator
         
         for ( int i = 1; i < codeSize; ++i )
         {
-            randomChars[i] = allowedChars.charAt( sr.nextInt( NUMBER_OF_CODEPOINTS ) );
+            randomChars[i] = ALLOWED_CHARS.charAt( sr.nextInt( NUMBER_OF_CODEPOINTS ) );
         }
         
         return new String( randomChars );

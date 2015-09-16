@@ -121,8 +121,9 @@ public class CategoryComboMap
                     }
 
                     if ( identifier == null )
-                        throw new CategoryComboMapException( "No " + idScheme.toString()
-                            + " identifier for CategoryOption: " + catopt.getName() );
+                    {
+                        throw new CategoryComboMapException( "No " + idScheme.toString() + " identifier for CategoryOption: " + catopt.getName() );
+                    }
 
                     compositeIdentifier += "\"" + identifier + "\"";
                 }

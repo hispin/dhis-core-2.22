@@ -63,7 +63,7 @@ public interface IncomingSmsService
     
     void save ( IncomingSms sms );
     
-    public void setIncomingSmsQueue( MessageQueue incomingSmsQueue );
+    void setIncomingSmsQueue( MessageQueue incomingSmsQueue );
     
     List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword );
     

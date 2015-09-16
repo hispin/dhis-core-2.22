@@ -43,11 +43,11 @@ import java.util.Date;
 @Component
 public class EthiopianCalendar extends ChronologyBasedCalendar
 {
-    private static final Calendar self = new EthiopianCalendar();
+    private static final Calendar SELF = new EthiopianCalendar();
 
     public static Calendar getInstance()
     {
-        return self;
+        return SELF;
     }
 
     protected EthiopianCalendar()

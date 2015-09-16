@@ -35,7 +35,7 @@ import java.util.List;
  */
 public interface OptionService
 {
-    final String ID = OptionService.class.getName();
+    String ID = OptionService.class.getName();
    
     // -------------------------------------------------------------------------
     // OptionSet

@@ -40,11 +40,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Iso8601Calendar extends ChronologyBasedCalendar
 {
-    private static final Calendar self = new Iso8601Calendar();
+    private static final Calendar SELF = new Iso8601Calendar();
 
     public static Calendar getInstance()
     {
-        return self;
+        return SELF;
     }
 
     protected Iso8601Calendar()

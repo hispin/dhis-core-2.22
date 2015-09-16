@@ -38,5 +38,5 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
  */
 public interface FollowupAnalysisService
 {
-    public List<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit );
+    List<DeflatedDataValue> getFollowupDataValues( OrganisationUnit organisationUnit, int limit );
 }

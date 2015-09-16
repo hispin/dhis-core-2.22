@@ -85,13 +85,10 @@ public class MinMaxDataElement
     @Override
     public int hashCode()
     {
-        final int PRIME = 31;
-        
+        final int prime = 31;
         int result = 1;
-        
-        result = PRIME * result + max;
-        
-        result = PRIME * result + min;
+        result = prime * result + max;        
+        result = prime * result + min;
         
         return result;
     }

@@ -265,6 +265,7 @@ public abstract class AbstractNode implements Node
         {
             return true;
         }
+        
         if ( obj == null || getClass() != obj.getClass() )
         {
             return false;

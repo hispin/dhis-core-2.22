@@ -40,11 +40,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThaiCalendar extends ChronologyBasedCalendar
 {
-    private static final Calendar self = new ThaiCalendar();
+    private static final Calendar SELF = new ThaiCalendar();
 
     public static Calendar getInstance()
     {
-        return self;
+        return SELF;
     }
 
     protected ThaiCalendar()

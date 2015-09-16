@@ -60,35 +60,35 @@ public interface ExpressionService
 {
     String ID = ExpressionService.class.getName();
     
-    final String VALID = "valid";
-    final String EXPRESSION_IS_EMPTY = "expression_is_empty";
-    final String DATAELEMENT_DOES_NOT_EXIST = "data_element_does_not_exist";
-    final String CATEGORYOPTIONCOMBO_DOES_NOT_EXIST = "category_option_combo_does_not_exist";
-    final String CONSTANT_DOES_NOT_EXIST = "constant_does_not_exist";
-    final String OU_GROUP_DOES_NOT_EXIST = "org_unit_group_does_not_exist";
-    final String EXPRESSION_NOT_WELL_FORMED = "expression_not_well_formed";
+    String VALID = "valid";
+    String EXPRESSION_IS_EMPTY = "expression_is_empty";
+    String DATAELEMENT_DOES_NOT_EXIST = "data_element_does_not_exist";
+    String CATEGORYOPTIONCOMBO_DOES_NOT_EXIST = "category_option_combo_does_not_exist";
+    String CONSTANT_DOES_NOT_EXIST = "constant_does_not_exist";
+    String OU_GROUP_DOES_NOT_EXIST = "org_unit_group_does_not_exist";
+    String EXPRESSION_NOT_WELL_FORMED = "expression_not_well_formed";
 
-    final String DAYS_DESCRIPTION = "[Number of days]";
-    final String NULL_REPLACEMENT = "0";
-    final String SPACE = " ";
+    String DAYS_DESCRIPTION = "[Number of days]";
+    String NULL_REPLACEMENT = "0";
+    String SPACE = " ";
 
-    final String OPERAND_EXPRESSION = "#\\{(\\w+)\\.?(\\w*)\\}";
-    final String OPERAND_UID_EXPRESSION = "(\\w+)\\.?(\\w*)";
-    final String DATA_ELEMENT_TOTAL_EXPRESSION = "#\\{(\\w+)\\}";
-    final String OPTION_COMBO_OPERAND_EXPRESSION = "#\\{(\\w+)\\.(\\w+)\\}";
-    final String CONSTANT_EXPRESSION = "C\\{(\\w+)\\}";
-    final String OU_GROUP_EXPRESSION = "OUG\\{(\\w+)\\}";
-    final String DAYS_EXPRESSION = "\\[days\\]";
+    String OPERAND_EXPRESSION = "#\\{(\\w+)\\.?(\\w*)\\}";
+    String OPERAND_UID_EXPRESSION = "(\\w+)\\.?(\\w*)";
+    String DATA_ELEMENT_TOTAL_EXPRESSION = "#\\{(\\w+)\\}";
+    String OPTION_COMBO_OPERAND_EXPRESSION = "#\\{(\\w+)\\.(\\w+)\\}";
+    String CONSTANT_EXPRESSION = "C\\{(\\w+)\\}";
+    String OU_GROUP_EXPRESSION = "OUG\\{(\\w+)\\}";
+    String DAYS_EXPRESSION = "\\[days\\]";
 
-    final Pattern OPERAND_PATTERN = Pattern.compile( OPERAND_EXPRESSION );
-    final Pattern OPERAND_UID_PATTERN = Pattern.compile( OPERAND_UID_EXPRESSION );
-    final Pattern DATA_ELEMENT_TOTAL_PATTERN = Pattern.compile( DATA_ELEMENT_TOTAL_EXPRESSION );
-    final Pattern OPTION_COMBO_OPERAND_PATTERN = Pattern.compile( OPTION_COMBO_OPERAND_EXPRESSION );
-    final Pattern CONSTANT_PATTERN = Pattern.compile( CONSTANT_EXPRESSION );
-    final Pattern OU_GROUP_PATTERN = Pattern.compile( OU_GROUP_EXPRESSION );
-    final Pattern DAYS_PATTERN = Pattern.compile( DAYS_EXPRESSION );
+    Pattern OPERAND_PATTERN = Pattern.compile( OPERAND_EXPRESSION );
+    Pattern OPERAND_UID_PATTERN = Pattern.compile( OPERAND_UID_EXPRESSION );
+    Pattern DATA_ELEMENT_TOTAL_PATTERN = Pattern.compile( DATA_ELEMENT_TOTAL_EXPRESSION );
+    Pattern OPTION_COMBO_OPERAND_PATTERN = Pattern.compile( OPTION_COMBO_OPERAND_EXPRESSION );
+    Pattern CONSTANT_PATTERN = Pattern.compile( CONSTANT_EXPRESSION );
+    Pattern OU_GROUP_PATTERN = Pattern.compile( OU_GROUP_EXPRESSION );
+    Pattern DAYS_PATTERN = Pattern.compile( DAYS_EXPRESSION );
 
-    final String DAYS_SYMBOL = "[days]";
+    String DAYS_SYMBOL = "[days]";
     
     /**
      * Adds a new Expression to the database.

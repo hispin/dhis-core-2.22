@@ -204,10 +204,10 @@ public class Expression
     @Override
     public int hashCode()
     {
-        final int PRIME = 31;
+        final int prime = 31;
         int result = 1;
-        result = PRIME * result + ( ( description == null ) ? 0 : description.hashCode() );
-        result = PRIME * result + ( ( expression == null ) ? 0 : expression.hashCode() );
+        result = prime * result + ( ( description == null ) ? 0 : description.hashCode() );
+        result = prime * result + ( ( expression == null ) ? 0 : expression.hashCode() );
 
         return result;
     }

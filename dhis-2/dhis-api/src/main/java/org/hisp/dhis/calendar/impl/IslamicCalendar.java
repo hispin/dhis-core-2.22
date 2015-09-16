@@ -40,11 +40,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class IslamicCalendar extends ChronologyBasedCalendar
 {
-    private static final Calendar self = new IslamicCalendar();
+    private static final Calendar SELF = new IslamicCalendar();
 
     public static Calendar getInstance()
     {
-        return self;
+        return SELF;
     }
 
     protected IslamicCalendar()

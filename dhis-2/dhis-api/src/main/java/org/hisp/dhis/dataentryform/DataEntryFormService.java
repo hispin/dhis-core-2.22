@@ -45,12 +45,12 @@ public interface DataEntryFormService
 {
     String ID = DataEntryFormService.class.getName();
 
-    final Pattern INPUT_PATTERN = Pattern.compile( "(<input.*?/>)", Pattern.DOTALL );
-    final Pattern IDENTIFIER_PATTERN = Pattern.compile( "id=\"(\\w+)-(\\w+)-val\"" );
-    final Pattern DATAELEMENT_TOTAL_PATTERN = Pattern.compile( "dataelementid=\"(\\w+?)\"" );
-    final Pattern INDICATOR_PATTERN = Pattern.compile( "indicatorid=\"(\\w+)\"" );
-    final Pattern VALUE_TAG_PATTERN = Pattern.compile( "value=\"(.*?)\"", Pattern.DOTALL );
-    final Pattern TITLE_TAG_PATTERN = Pattern.compile( "title=\"(.*?)\"", Pattern.DOTALL );
+    Pattern INPUT_PATTERN = Pattern.compile( "(<input.*?/>)", Pattern.DOTALL );
+    Pattern IDENTIFIER_PATTERN = Pattern.compile( "id=\"(\\w+)-(\\w+)-val\"" );
+    Pattern DATAELEMENT_TOTAL_PATTERN = Pattern.compile( "dataelementid=\"(\\w+?)\"" );
+    Pattern INDICATOR_PATTERN = Pattern.compile( "indicatorid=\"(\\w+)\"" );
+    Pattern VALUE_TAG_PATTERN = Pattern.compile( "value=\"(.*?)\"", Pattern.DOTALL );
+    Pattern TITLE_TAG_PATTERN = Pattern.compile( "title=\"(.*?)\"", Pattern.DOTALL );
     
     // -------------------------------------------------------------------------
     // DataEntryForm
@@ -108,7 +108,7 @@ public interface DataEntryFormService
      * @param identifiers the collection of identifiers.
      * @return a collection of DataEntryForms.
      */
-    List<DataEntryForm> getDataEntryForms( final Collection<Integer> identifiers );
+    List<DataEntryForm> getDataEntryForms( Collection<Integer> identifiers );
     
     /**
      * Prepare DataEntryForm code for save by reversing the effects of

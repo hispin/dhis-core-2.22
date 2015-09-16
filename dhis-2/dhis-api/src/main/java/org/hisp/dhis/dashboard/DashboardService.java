@@ -41,7 +41,7 @@ import org.hisp.dhis.reporttable.ReportTable;
  */
 public interface DashboardService
 {
-    final String ID = DashboardService.class.getName();
+    String ID = DashboardService.class.getName();
 
     // -------------------------------------------------------------------------
     // Dashboard

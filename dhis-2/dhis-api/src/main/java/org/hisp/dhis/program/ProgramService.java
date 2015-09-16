@@ -46,24 +46,16 @@ import org.hisp.dhis.validation.ValidationCriteria;
  */
 public interface ProgramService
 {
-
     String ID = ProgramService.class.getName();
 
-    final Pattern INPUT_PATTERN = Pattern.compile( "(<input.*?/>)", Pattern.DOTALL );
-
-    final Pattern DYNAMIC_ATTRIBUTE_PATTERN = Pattern.compile( "attributeid=\"(\\w+)\"" );
-
-    final Pattern PROGRAM_PATTERN = Pattern.compile( "programid=\"(\\w+)\"" );
-
-    final Pattern VALUE_TAG_PATTERN = Pattern.compile( "value=\"(.*?)\"", Pattern.DOTALL );
-
-    final Pattern TITLE_TAG_PATTERN = Pattern.compile( "title=\"(.*?)\"", Pattern.DOTALL );
-
-    final Pattern SUGGESTED_VALUE_PATTERN = Pattern.compile( "suggested=('|\")(\\w*)('|\")" );
-
-    final Pattern CLASS_PATTERN = Pattern.compile( "class=('|\")(\\w*)('|\")" );
-
-    final Pattern STYLE_PATTERN = Pattern.compile( "style=('|\")([\\w|\\d\\:\\;]+)('|\")" );
+    Pattern INPUT_PATTERN = Pattern.compile( "(<input.*?/>)", Pattern.DOTALL );
+    Pattern DYNAMIC_ATTRIBUTE_PATTERN = Pattern.compile( "attributeid=\"(\\w+)\"" );
+    Pattern PROGRAM_PATTERN = Pattern.compile( "programid=\"(\\w+)\"" );
+    Pattern VALUE_TAG_PATTERN = Pattern.compile( "value=\"(.*?)\"", Pattern.DOTALL );
+    Pattern TITLE_TAG_PATTERN = Pattern.compile( "title=\"(.*?)\"", Pattern.DOTALL );
+    Pattern SUGGESTED_VALUE_PATTERN = Pattern.compile( "suggested=('|\")(\\w*)('|\")" );
+    Pattern CLASS_PATTERN = Pattern.compile( "class=('|\")(\\w*)('|\")" );
+    Pattern STYLE_PATTERN = Pattern.compile( "style=('|\")([\\w|\\d\\:\\;]+)('|\")" );
 
     /**
      * Adds an {@link Program}
