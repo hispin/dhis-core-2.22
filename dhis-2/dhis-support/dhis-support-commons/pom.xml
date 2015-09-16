@@ -14,13 +14,13 @@
   <packaging>jar</packaging>
   <name>DHIS Support Commons</name>
 
-  <!--
+  <description>
     DHIS Support Commons is intended to be a lightweight library with very few and
     no heavy dependencies, as well as no internal dependencies (DHIS modules).
     This includes not depending on the dhis-support-test package, meaning any unit
     tests must be added to an external package (dhis-support-system is a reasonable
-    choice). Please be wary of this when adding new dependencies.
-  -->
+    choice).
+  </description>
 
   <dependencies>
     <dependency>
