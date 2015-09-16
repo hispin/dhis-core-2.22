@@ -53,6 +53,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.enrollment = {programStartDate: '', programEndDate: '', operator: $scope.defaultOperators[0]};
     $scope.searchMode = { listAll: 'LIST_ALL', freeText: 'FREE_TEXT', attributeBased: 'ATTRIBUTE_BASED' };    
     $scope.optionSets = null;
+    $scope.doSearch = true;
     
     //Registration
     $scope.showRegistrationDiv = false;
@@ -97,7 +98,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.showHideLabel = $translate.instant('show_hide_columns');
             $scope.listProgramsLabel = $translate.instant('list_programs');
             $scope.settingsLabel = $translate.instant('settings');
-    
+            
             $scope.loadPrograms($scope.selectedOrgUnit);
         }
     });
@@ -247,6 +248,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.searchingOrgUnit = $scope.selectedOrgUnit;
         }
         
+        $scope.doSearch = false;
         $scope.fetchTeis();
     };
     
