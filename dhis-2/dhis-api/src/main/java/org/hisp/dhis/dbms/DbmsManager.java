@@ -34,7 +34,7 @@ package org.hisp.dhis.dbms;
  */
 public interface DbmsManager
 {
-    final String ID = DbmsManager.class.getName();
+    String ID = DbmsManager.class.getName();
     
     void emptyDatabase();
     

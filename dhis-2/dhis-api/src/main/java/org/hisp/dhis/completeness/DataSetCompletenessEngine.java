@@ -37,7 +37,7 @@ import org.hisp.dhis.scheduling.TaskId;
  */
 public interface DataSetCompletenessEngine
 {
-    final String ID = DataSetCompletenessEngine.class.getName();
+    String ID = DataSetCompletenessEngine.class.getName();
     
     void exportDataSetCompleteness( Collection<Integer> periodIds, TaskId id );
     

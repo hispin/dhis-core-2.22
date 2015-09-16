@@ -33,7 +33,6 @@ import java.util.Map;
 
 /**
  * @author Dang Duy Hieu
- * @version $Id ConstantService.java June 29, 2011$
  */
 public interface ConstantService
 {
@@ -51,7 +50,7 @@ public interface ConstantService
 
     Constant getConstant( int constantId );
 
-    public Constant getConstant( String uid );
+    Constant getConstant( String uid );
 
     Constant getConstantByName( String constantName );
 

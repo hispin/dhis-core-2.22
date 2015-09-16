@@ -31,7 +31,6 @@ package org.hisp.dhis.common;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.junit.Test;
 

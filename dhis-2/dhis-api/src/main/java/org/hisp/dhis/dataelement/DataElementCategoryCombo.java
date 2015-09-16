@@ -197,7 +197,6 @@ public class DataElementCategoryCombo
         CombinationGenerator<DataElementCategoryOption> generator =
             new CombinationGenerator<>( getCategoryOptionsAsArray() );
 
-        sortLoop:
         while ( generator.hasNext() )
         {
             List<DataElementCategoryOption> categoryOptions = generator.getNext();
@@ -210,7 +209,7 @@ public class DataElementCategoryCombo
                 {
                     optionCombo.setName( getNameFromCategoryOptions( categoryOptions ) );
                     list.add( optionCombo );
-                    continue sortLoop;
+                    continue;
                 }
             }
         }

@@ -38,7 +38,7 @@ import org.jfree.chart.JFreeChart;
  */
 public interface OrgUnitDistributionService
 {
-    final String ID = OrgUnitDistributionService.class.getName();
+    String ID = OrgUnitDistributionService.class.getName();
     
     JFreeChart getOrganisationUnitDistributionChart( OrganisationUnitGroupSet groupSet, OrganisationUnit organisationUnit );
     

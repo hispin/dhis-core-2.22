@@ -31,141 +31,118 @@ package org.hisp.dhis.importexport;
 import java.io.Serializable;
 import java.util.Date;
 
-
-/**
- * @author Lars Helge Overland
- * @version $Id$
- */
 public class ImportDataDailyPeriod
     implements Serializable
-{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -5777420243045995151L;
-
-	/**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    
+{ 
     private int periodId;
-    
+
     private int periodTypeId;
-    
+
     private Date startDate;
-    
+
     private Date endDate;
 
     public ImportDataDailyPeriod()
     {
     }
-    
-	public ImportDataDailyPeriod(int periodId, int periodTypeId,
-			Date startDate, Date endDate) {
-		super();
-		this.periodId = periodId;
-		this.periodTypeId = periodTypeId;
-		this.startDate = startDate;
-		this.endDate = endDate;
-	}
 
-	public int getPeriodId() {
-		return periodId;
-	}
+    public ImportDataDailyPeriod( int periodId, int periodTypeId, Date startDate, Date endDate )
+    {
+        super();
+        this.periodId = periodId;
+        this.periodTypeId = periodTypeId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
-	public void setPeriodId(int periodId) {
-		this.periodId = periodId;
-	}
+    public int getPeriodId()
+    {
+        return periodId;
+    }
 
-	public int getPeriodTypeId() {
-		return periodTypeId;
-	}
+    public void setPeriodId( int periodId )
+    {
+        this.periodId = periodId;
+    }
 
-	public void setPeriodTypeId(int periodTypeId) {
-		this.periodTypeId = periodTypeId;
-	}
+    public int getPeriodTypeId()
+    {
+        return periodTypeId;
+    }
 
-	public Date getStartDate() {
-		return startDate;
-	}
+    public void setPeriodTypeId( int periodTypeId )
+    {
+        this.periodTypeId = periodTypeId;
+    }
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+    public Date getStartDate()
+    {
+        return startDate;
+    }
 
-	public Date getEndDate() {
-		return endDate;
-	}
+    public void setStartDate( Date startDate )
+    {
+        this.startDate = startDate;
+    }
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+    public Date getEndDate()
+    {
+        return endDate;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
-		result = prime * result + periodId;
-		result = prime * result + periodTypeId;
-		result = prime * result
-				+ ((startDate == null) ? 0 : startDate.hashCode());
-		return result;
-	}
+    public void setEndDate( Date endDate )
+    {
+        this.endDate = endDate;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ImportDataDailyPeriod other = (ImportDataDailyPeriod) obj;
-		if (endDate == null) {
-			if (other.endDate != null)
-				return false;
-		} else if (!endDate.equals(other.endDate))
-			return false;
-		if (periodId != other.periodId)
-			return false;
-		if (periodTypeId != other.periodTypeId)
-			return false;
-		if (startDate == null) {
-			if (other.startDate != null)
-				return false;
-		} else if (!startDate.equals(other.startDate))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
+        result = prime * result + periodId;
+        result = prime * result + periodTypeId;
+        result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "ImportDataDailyPeriod [periodId=" + periodId
-				+ ", periodTypeId=" + periodTypeId + ", startDate=" + startDate
-				+ ", endDate=" + endDate + "]";
-	}
-    
+    @Override
+    public boolean equals( Object obj )
+    {
+        if ( this == obj )
+            return true;
+        if ( obj == null )
+            return false;
+        if ( getClass() != obj.getClass() )
+            return false;
+        ImportDataDailyPeriod other = (ImportDataDailyPeriod) obj;
+        if ( endDate == null )
+        {
+            if ( other.endDate != null )
+                return false;
+        }
+        else if ( !endDate.equals( other.endDate ) )
+            return false;
+        if ( periodId != other.periodId )
+            return false;
+        if ( periodTypeId != other.periodTypeId )
+            return false;
+        if ( startDate == null )
+        {
+            if ( other.startDate != null )
+                return false;
+        }
+        else if ( !startDate.equals( other.startDate ) )
+            return false;
+        return true;
+    }
 
-    
-    // -------------------------------------------------------------------------
-    // Constructors
-    // -------------------------------------------------------------------------
-
-
-    // -------------------------------------------------------------------------
-    // Logic
-    // -------------------------------------------------------------------------
-
-    
-    // -------------------------------------------------------------------------
-    // Equals & hashCode
-    // -------------------------------------------------------------------------
-
-
-
-    // -------------------------------------------------------------------------
-    // Getters & setters
-    // -------------------------------------------------------------------------
+    @Override
+    public String toString()
+    {
+        return "ImportDataDailyPeriod [periodId=" + periodId + ", periodTypeId=" + periodTypeId + ", startDate="
+            + startDate + ", endDate=" + endDate + "]";
+    }
 
 }

@@ -75,7 +75,7 @@ public class JacksonOrganisationUnitGroupSymbolSerializer extends JsonSerializer
             }
             catch ( XMLStreamException e )
             {
-                e.printStackTrace();
+                e.printStackTrace(); //TODO fix
             }
         }
         else

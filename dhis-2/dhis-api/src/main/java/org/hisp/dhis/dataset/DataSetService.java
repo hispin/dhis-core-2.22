@@ -292,7 +292,7 @@ public interface DataSetService
      *
      * @return A list of all unique combinations (only dataSet and period is set)
      */
-    public List<LockException> getLockExceptionCombinations();
+    List<LockException> getLockExceptionCombinations();
 
     /**
      * Delete a dataSet + period combination, used for batch removal, e.g. when you

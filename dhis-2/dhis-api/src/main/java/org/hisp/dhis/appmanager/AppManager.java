@@ -41,12 +41,12 @@ public interface AppManager
 {
     final String ID = AppManager.class.getName();
 
-    final String KEY_APP_FOLDER_PATH = "appFolderPath";
-    final String KEY_APP_BASE_URL = "appBaseUrl";
-    final String KEY_APP_STORE_URL = "appStoreUrl";
-    final String DEFAULT_APP_STORE_URL = "http://www.dhis2.org/appstore";
-    final String APPS_DIR = "/apps";
-    final String APPS_API_PATH = "/api/apps";
+    String KEY_APP_FOLDER_PATH = "appFolderPath";
+    String KEY_APP_BASE_URL = "appBaseUrl";
+    String KEY_APP_STORE_URL = "appStoreUrl";
+    String DEFAULT_APP_STORE_URL = "http://www.dhis2.org/appstore";
+    String APPS_DIR = "/apps";
+    String APPS_API_PATH = "/api/apps";
 
     /**
      * Returns a list of all the installed apps at @see getAppFolderPath

@@ -92,13 +92,11 @@ public class ValidationResult
     @Override
     public int hashCode()
     {
-        final int PRIME = 31;
-
-        int result = 1;
-
-        result = PRIME * result + ((period == null) ? 0 : period.hashCode());
-        result = PRIME * result + ((orgUnit == null) ? 0 : orgUnit.hashCode());
-        result = PRIME * result + ((validationRule == null) ? 0 : validationRule.hashCode());
+        final int prime = 31;
+        int result = 1;        
+        result = prime * result + ((period == null) ? 0 : period.hashCode());
+        result = prime * result + ((orgUnit == null) ? 0 : orgUnit.hashCode());
+        result = prime * result + ((validationRule == null) ? 0 : validationRule.hashCode());
 
         return result;
     }

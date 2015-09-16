@@ -46,7 +46,7 @@ public interface OrganisationUnitService
 {
     String ID = OrganisationUnitService.class.getName();
 
-    final int MAX_LIMIT = 500;
+    int MAX_LIMIT = 500;
 
     // -------------------------------------------------------------------------
     // OrganisationUnit

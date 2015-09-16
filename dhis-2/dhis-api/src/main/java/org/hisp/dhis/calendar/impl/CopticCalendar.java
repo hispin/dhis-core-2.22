@@ -40,11 +40,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CopticCalendar extends ChronologyBasedCalendar
 {
-    private static final Calendar self = new CopticCalendar();
+    private static final Calendar SELF = new CopticCalendar();
 
     public static Calendar getInstance()
     {
-        return self;
+        return SELF;
     }
 
     protected CopticCalendar()

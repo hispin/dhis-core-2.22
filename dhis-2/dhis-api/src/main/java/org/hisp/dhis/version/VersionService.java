@@ -35,7 +35,7 @@ import java.util.List;
  */
 public interface VersionService
 {
-    public final String ORGANISATIONUNIT_VERSION = "organisationUnit";
+    String ORGANISATIONUNIT_VERSION = "organisationUnit";
 
     String ID = VersionService.class.getName();
 

@@ -40,7 +40,7 @@ import org.hisp.dhis.period.Period;
  */
 public interface DataSetReportStore
 {
-    final String SEPARATOR = "-";
+    String SEPARATOR = "-";
     
     Map<String, Object> getAggregatedValues( DataSet dataSet, Period period, OrganisationUnit unit, Set<String> dimensions, boolean rawData );
 

@@ -32,11 +32,11 @@ import org.hisp.dhis.sms.incoming.IncomingSms;
 
 public interface MessageQueue
 {
-    public void put( IncomingSms message );
+    void put( IncomingSms message );
 
-    public IncomingSms get();
+    IncomingSms get();
 
-    public void remove( IncomingSms message );
+    void remove( IncomingSms message );
 
-    public void initialize();
+    void initialize();
 }

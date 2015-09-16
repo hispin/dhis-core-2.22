@@ -42,9 +42,9 @@ import java.util.Map;
 public interface TrackedEntityInstanceStore
     extends GenericIdentifiableObjectStore<TrackedEntityInstance>
 {
-    final String ID = TrackedEntityInstanceStore.class.getName();
+    String ID = TrackedEntityInstanceStore.class.getName();
 
-    final int MAX_RESULTS = 50000;
+    int MAX_RESULTS = 50000;
 
     int countTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
 

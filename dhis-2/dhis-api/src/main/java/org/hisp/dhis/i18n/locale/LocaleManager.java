@@ -37,9 +37,9 @@ import java.util.Locale;
  */
 public interface LocaleManager
 {
-    final String ID = LocaleManager.class.getName();
+    String ID = LocaleManager.class.getName();
 
-    final Locale DHIS_STANDARD_LOCALE = new Locale( "en" );
+    Locale DHIS_STANDARD_LOCALE = new Locale( "en" );
 
     Locale getCurrentLocale();
 

@@ -33,7 +33,7 @@ package org.hisp.dhis.configuration;
  */
 public interface ConfigurationService
 {
-    final String ID = ConfigurationService.class.getName();
+    String ID = ConfigurationService.class.getName();
     
     void setConfiguration( Configuration configuration );
     

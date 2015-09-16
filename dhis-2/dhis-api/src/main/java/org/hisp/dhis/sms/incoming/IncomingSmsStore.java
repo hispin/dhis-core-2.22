@@ -35,7 +35,7 @@ import java.util.List;
  */
 public interface IncomingSmsStore
 {
-    static final String ID = IncomingSmsStore.class.getName();
+    String ID = IncomingSmsStore.class.getName();
     
     int save( IncomingSms incomingSms );
     

@@ -47,7 +47,7 @@ public interface TrackedEntityAttributeGroupService
      * @return A generated unique id of the added
      *         {@link TrackedEntityAttributeGroup}.
      */
-    int addTrackedEntityAttributeGroup( TrackedEntityAttributeGroup TrackedEntityAttributeGroup );
+    int addTrackedEntityAttributeGroup( TrackedEntityAttributeGroup trackedEntityAttributeGroup );
 
     /**
      * Deletes a {@link TrackedEntityAttributeGroup}.
@@ -55,7 +55,7 @@ public interface TrackedEntityAttributeGroupService
      * @param TrackedEntityAttributeGroup the TrackedEntityAttributeGroup to
      *        delete.
      */
-    void deleteTrackedEntityAttributeGroup( TrackedEntityAttributeGroup TrackedEntityAttributeGroup );
+    void deleteTrackedEntityAttributeGroup( TrackedEntityAttributeGroup trackedEntityAttributeGroup );
 
     /**
      * Updates a {@link TrackedEntityAttributeGroup}.
@@ -63,7 +63,7 @@ public interface TrackedEntityAttributeGroupService
      * @param TrackedEntityAttributeGroup the TrackedEntityAttributeGroup to
      *        update.
      */
-    void updateTrackedEntityAttributeGroup( TrackedEntityAttributeGroup TrackedEntityAttributeGroup );
+    void updateTrackedEntityAttributeGroup( TrackedEntityAttributeGroup trackedEntityAttributeGroup );
 
     /**
      * Returns a {@link TrackedEntityAttributeGroup}.

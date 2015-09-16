@@ -53,35 +53,35 @@ import com.google.common.collect.ImmutableMap;
 public interface DimensionalObject
     extends NameableObject
 {
-    final String DATA_X_DIM_ID = "dx"; // in, de, ds, do
-    final String DATA_COLLAPSED_DIM_ID = "dy"; // Collapsed event data dimensions
-    final String CATEGORYOPTIONCOMBO_DIM_ID = "co";
-    final String ATTRIBUTEOPTIONCOMBO_DIM_ID = "ao";
-    final String PERIOD_DIM_ID = "pe";
-    final String ORGUNIT_DIM_ID = "ou";
-    final String ORGUNIT_GROUP_DIM_ID = "oug"; // Used for org unit target
-    final String ITEM_DIM_ID = "item";
+    String DATA_X_DIM_ID = "dx"; // in, de, ds, do
+    String DATA_COLLAPSED_DIM_ID = "dy"; // Collapsed event data dimensions
+    String CATEGORYOPTIONCOMBO_DIM_ID = "co";
+    String ATTRIBUTEOPTIONCOMBO_DIM_ID = "ao";
+    String PERIOD_DIM_ID = "pe";
+    String ORGUNIT_DIM_ID = "ou";
+    String ORGUNIT_GROUP_DIM_ID = "oug"; // Used for org unit target
+    String ITEM_DIM_ID = "item";
 
-    final String OU_MODE_SELECTED = "selected"; //TODO replace with OrganisationUnitSelectionMode
-    final String OU_MODE_CHILDREN = "children";
-    final String OU_MODE_DESCENDANTS = "descendants";
-    final String OU_MODE_ALL = "all";
+    String OU_MODE_SELECTED = "selected"; //TODO replace with OrganisationUnitSelectionMode
+    String OU_MODE_CHILDREN = "children";
+    String OU_MODE_DESCENDANTS = "descendants";
+    String OU_MODE_ALL = "all";
     
-    final String DIMENSION_SEP = "-";
+    String DIMENSION_SEP = "-";
 
-    final String LONGITUDE_DIM_ID = "longitude";
-    final String LATITUDE_DIM_ID = "latitude";
+    String LONGITUDE_DIM_ID = "longitude";
+    String LATITUDE_DIM_ID = "latitude";
    
-    final List<String> STATIC_DIMS = Arrays.asList( 
+    List<String> STATIC_DIMS = Arrays.asList( 
         LONGITUDE_DIM_ID, LATITUDE_DIM_ID );
     
-    final Map<String, String> PRETTY_NAMES = DimensionalObjectUtils.asMap( 
+    Map<String, String> PRETTY_NAMES = DimensionalObjectUtils.asMap( 
         DATA_X_DIM_ID, "Data",
         CATEGORYOPTIONCOMBO_DIM_ID, "Data details",
         PERIOD_DIM_ID, "Period",
         ORGUNIT_DIM_ID, "Organisation unit" );
     
-    final Map<DimensionType, Class<? extends DimensionalObject>> DYNAMIC_DIMENSION_TYPE_CLASS_MAP = ImmutableMap.<DimensionType, Class<? extends DimensionalObject>>builder().
+    Map<DimensionType, Class<? extends DimensionalObject>> DYNAMIC_DIMENSION_TYPE_CLASS_MAP = ImmutableMap.<DimensionType, Class<? extends DimensionalObject>>builder().
         put( DimensionType.CATEGORY, DataElementCategory.class ).
         put( DimensionType.DATAELEMENT_GROUPSET, DataElementGroupSet.class ).
         put( DimensionType.ORGANISATIONUNIT_GROUPSET, OrganisationUnitGroupSet.class ).
@@ -89,7 +89,7 @@ public interface DimensionalObject
         put( DimensionType.PROGRAM_ATTRIBUTE, TrackedEntityAttribute.class ).
         put( DimensionType.PROGRAM_DATAELEMENT, DataElement.class ).build();              
 
-    final Map<Class<? extends DimensionalObject>, Class<? extends NameableObject>> DIMENSION_CLASS_ITEM_CLASS_MAP = ImmutableMap.<Class<? extends DimensionalObject>, Class<? extends NameableObject>>builder().
+    Map<Class<? extends DimensionalObject>, Class<? extends NameableObject>> DIMENSION_CLASS_ITEM_CLASS_MAP = ImmutableMap.<Class<? extends DimensionalObject>, Class<? extends NameableObject>>builder().
         put( DataElementCategory.class, DataElementCategoryOption.class ).
         put( DataElementGroupSet.class, DataElementGroup.class ).
         put( OrganisationUnitGroupSet.class, OrganisationUnitGroup.class ).

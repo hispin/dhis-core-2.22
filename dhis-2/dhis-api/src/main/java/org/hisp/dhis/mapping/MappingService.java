@@ -42,23 +42,23 @@ import org.hisp.dhis.period.Period;
  */
 public interface MappingService
 {
-    final String ID = MappingService.class.getName();
+    String ID = MappingService.class.getName();
 
-    final String GEOJSON_DIR = "geojson";
+    String GEOJSON_DIR = "geojson";
 
-    final String MAP_LEGEND_SYMBOLIZER_COLOR = "color";
-    final String MAP_LEGEND_SYMBOLIZER_IMAGE = "image";
+    String MAP_LEGEND_SYMBOLIZER_COLOR = "color";
+    String MAP_LEGEND_SYMBOLIZER_IMAGE = "image";
 
-    final String KEY_MAP_DATE_TYPE = "dateType";
+    String KEY_MAP_DATE_TYPE = "dateType";
 
-    final String MAP_DATE_TYPE_FIXED = "fixed";
-    final String MAP_DATE_TYPE_START_END = "start-end";
+    String MAP_DATE_TYPE_FIXED = "fixed";
+    String MAP_DATE_TYPE_START_END = "start-end";
 
-    final String ORGANISATION_UNIT_SELECTION_TYPE_PARENT = "parent";
-    final String ORGANISATION_UNIT_SELECTION_TYPE_LEVEL = "level";
+    String ORGANISATION_UNIT_SELECTION_TYPE_PARENT = "parent";
+    String ORGANISATION_UNIT_SELECTION_TYPE_LEVEL = "level";
 
-    final String MAP_LAYER_TYPE_BASELAYER = "baselayer";
-    final String MAP_LAYER_TYPE_OVERLAY = "overlay";
+    String MAP_LAYER_TYPE_BASELAYER = "baselayer";
+    String MAP_LAYER_TYPE_OVERLAY = "overlay";
 
     // -------------------------------------------------------------------------
     // Map

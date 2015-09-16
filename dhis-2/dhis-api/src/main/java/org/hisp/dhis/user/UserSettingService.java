@@ -29,7 +29,6 @@ package org.hisp.dhis.user;
  */
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -44,22 +43,20 @@ public interface UserSettingService
 {
     String ID = UserSettingService.class.getName();
 
-    final String AUTO_SAVE_DATA_ENTRY_FORM = "autoSaveDataEntryForm";
-    final String KEY_CURRENT_DOMAIN_TYPE = "currentDomainType";
-    final String KEY_STYLE = "stylesheet";
-    final String KEY_STYLE_DIRECTORY = "stylesheetDirectory";
-    final String KEY_MESSAGE_EMAIL_NOTIFICATION = "keyMessageEmailNotification";
-    final String KEY_MESSAGE_SMS_NOTIFICATION = "keyMessageSmsNotification";
-    final String KEY_UI_LOCALE = "keyUiLocale";
-    final String KEY_DB_LOCALE = "keyDbLocale";
-    final String KEY_GENERATE_REPORT_INTERFACE = "keyGenerateReportInterface";
-    final String KEY_ANALYSIS_DISPLAY_PROPERTY = "keyAnalysisDisplayProperty";
-    final String AUTO_SAVE_CASE_ENTRY_FORM = "autoSaveCaseEntryForm";
-    final String AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM = "autoSavetTrackedEntityForm";
-    final String DEFAULT_ANALYSIS_DISPLAY_PROPERTY = "name";
+    String AUTO_SAVE_DATA_ENTRY_FORM = "autoSaveDataEntryForm";
+    String KEY_CURRENT_DOMAIN_TYPE = "currentDomainType";
+    String KEY_STYLE = "stylesheet";
+    String KEY_STYLE_DIRECTORY = "stylesheetDirectory";
+    String KEY_MESSAGE_EMAIL_NOTIFICATION = "keyMessageEmailNotification";
+    String KEY_MESSAGE_SMS_NOTIFICATION = "keyMessageSmsNotification";
+    String KEY_UI_LOCALE = "keyUiLocale";
+    String KEY_DB_LOCALE = "keyDbLocale";
+    String KEY_GENERATE_REPORT_INTERFACE = "keyGenerateReportInterface";
+    String KEY_ANALYSIS_DISPLAY_PROPERTY = "keyAnalysisDisplayProperty";
+    String AUTO_SAVE_CASE_ENTRY_FORM = "autoSaveCaseEntryForm";
+    String AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM = "autoSavetTrackedEntityForm";
+    String DEFAULT_ANALYSIS_DISPLAY_PROPERTY = "name";
     
-    final List<Integer> DASHBOARD_CHARTS_TO_DISPLAY = Arrays.asList( 4, 6, 8 );
-
     // -------------------------------------------------------------------------
     // UserSettings
     // -------------------------------------------------------------------------

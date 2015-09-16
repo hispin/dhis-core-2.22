@@ -34,8 +34,6 @@ package org.hisp.dhis.sms;
 public class SmsServiceException
     extends RuntimeException
 {
-    private static final long serialVersionUID = -7927288362330380301L;
-
     public SmsServiceException( String message )
     {
         super( message );

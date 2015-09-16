@@ -32,6 +32,6 @@ import org.hisp.dhis.sms.incoming.IncomingSms;
 
 public interface ParserManager
 {
-    public void parse( IncomingSms sms )
+    void parse( IncomingSms sms )
         throws SMSParserException;
 }

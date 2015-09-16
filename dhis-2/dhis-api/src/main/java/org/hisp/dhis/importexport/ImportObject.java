@@ -107,13 +107,10 @@ public class ImportObject
     @Override
     public int hashCode()
     {
-        final int PRIME = 31;
-        
-        int result = 1;
-        
-        result = PRIME * result + className.hashCode();
-        
-        result = PRIME * result + object.hashCode();
+        final int prime = 31;        
+        int result = 1;        
+        result = prime * result + className.hashCode();        
+        result = prime * result + object.hashCode();
         
         return result;
     }
