@@ -104,8 +104,7 @@ public class MapViewController
         if ( level == null )
         {
             OrganisationUnit unit = organisationUnitService.getOrganisationUnit( organisationUnitUid );
-
-            level = organisationUnitService.getLevelOfOrganisationUnit( unit.getId() );
+            level = unit.getLevel();
             level++;
         }
 

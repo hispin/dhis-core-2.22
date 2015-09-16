@@ -43,12 +43,9 @@ import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.analytics.event.EventQueryPlanner;
 import org.hisp.dhis.analytics.partition.PartitionManager;
 import org.hisp.dhis.analytics.table.PartitionUtils;
-import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MaintenanceModeException;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.QueryItem;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramIndicator;
@@ -194,16 +191,7 @@ public class DefaultEventQueryPlanner
             queryPeriod.setEndDate( params.getEndDate() );            
             params.setPartitions( PartitionUtils.getPartitions( queryPeriod, EVENT_ANALYTICS_TABLE_NAME, tableSuffix, validPartitions ) );
         }
-        
-        if ( params.hasDimensionOrFilter( DimensionalObject.ORGUNIT_DIM_ID ) )
-        {
-            for ( NameableObject object : params.getDimensionOrFilterItems( DimensionalObject.ORGUNIT_DIM_ID ) )
-            {
-                OrganisationUnit unit = (OrganisationUnit) object; 
-                unit.setLevel( organisationUnitService.getLevelOfOrganisationUnit( unit.getId() ) );
-            }
-        }
-        
+                
         //TODO periods, convert to start/end dates
         
         return params;

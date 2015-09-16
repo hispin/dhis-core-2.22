@@ -83,7 +83,8 @@ public class OrganisationUnit
 {
     private static final long serialVersionUID = 1228298379303894619L;
 
-    private static final Joiner PATH_JOINER = Joiner.on( "/" );
+    private static final String PATH_SEP = "/";
+    private static final Joiner PATH_JOINER = Joiner.on( PATH_SEP );
 
     public static final String FEATURETYPE_NONE = "None";
     public static final String FEATURETYPE_MULTIPOLYGON = "MultiPolygon";
@@ -152,8 +153,6 @@ public class OrganisationUnit
     private Set<OrganisationUnit> children = new HashSet<>();
 
     private transient boolean currentParent;
-
-    private transient int level;
 
     private transient String type;
 
@@ -703,22 +702,9 @@ public class OrganisationUnit
 
     @JsonProperty( "level" )
     @JacksonXmlProperty( localName = "level", isAttribute = true )
-    public int getOrganisationUnitLevel()
+    public int getLevel()
     {
-        int currentLevel = 1;
-
-        OrganisationUnit thisParent = this.parent;
-
-        while ( thisParent != null )
-        {
-            ++currentLevel;
-
-            thisParent = thisParent.getParent();
-        }
-
-        this.level = currentLevel;
-
-        return currentLevel;
+        return StringUtils.countMatches( path, PATH_SEP );
     }
 
     public boolean isPolygon()
@@ -809,11 +795,6 @@ public class OrganisationUnit
         return map;
     }
     
-    public boolean hasLevel()
-    {
-        return level > 0;
-    }
-
     @Override
     public boolean haveUniqueNames()
     {
@@ -1142,16 +1123,6 @@ public class OrganisationUnit
     // -------------------------------------------------------------------------
     // Getters and setters for transient fields
     // -------------------------------------------------------------------------
-
-    public int getLevel()
-    {
-        return level;
-    }
-
-    public void setLevel( int level )
-    {
-        this.level = level;
-    }
 
     public List<String> getGroupNames()
     {

@@ -251,13 +251,6 @@ public class DataApprovalServiceTest
         organisationUnitE = createOrganisationUnit( 'E', organisationUnitB );
         organisationUnitF = createOrganisationUnit( 'F', organisationUnitE );
 
-        organisationUnitA.setLevel( 1 );
-        organisationUnitB.setLevel( 2 );
-        organisationUnitC.setLevel( 3 );
-        organisationUnitD.setLevel( 4 );
-        organisationUnitE.setLevel( 3 );
-        organisationUnitF.setLevel( 4 );
-
         organisationUnitService.addOrganisationUnit( organisationUnitA );
         organisationUnitService.addOrganisationUnit( organisationUnitB );
         organisationUnitService.addOrganisationUnit( organisationUnitC );

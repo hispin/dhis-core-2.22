@@ -126,7 +126,7 @@ public class OrganisationUnitToFacilityConverter implements Converter<Organisati
             facility.getProperties().put( "dataSets", dataSets );
         }
 
-        facility.getProperties().put( "level", organisationUnit.getOrganisationUnitLevel() );
+        facility.getProperties().put( "level", organisationUnit.getLevel() );
 
         for ( OrganisationUnitGroup group : organisationUnit.getGroups() )
         {

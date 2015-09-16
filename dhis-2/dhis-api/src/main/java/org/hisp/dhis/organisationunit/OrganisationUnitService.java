@@ -206,20 +206,6 @@ public interface OrganisationUnitService
     List<OrganisationUnit> getRootOrganisationUnits();
 
     /**
-     * Returns the level of the organisation unit with the given identifier.
-     *
-     * @return the level of the organisation unit with the given identifier.
-     */
-    int getLevelOfOrganisationUnit( int id );
-
-    /**
-     * Returns the level of the organisation unit (whether loaded or not.)
-     *
-     * @return the level of the organisation unit with the given identifier.
-     */
-    int getLevelOfOrganisationUnit( OrganisationUnit unit );
-
-    /**
      * Returns the intersection of the members of the given OrganisationUnitGroups
      * and the OrganisationUnits which are children of the given collection of
      * parents in the hierarchy. If the given parent collection is null or empty,
@@ -435,14 +421,6 @@ public interface OrganisationUnitService
      */
     boolean isInUserHierarchy( String uid, Set<OrganisationUnit> organisationUnits );
     
-    /**
-     * Sets the transient level property of each organisation unit in the given
-     * list. Fetches the organisation unit from the database.
-     * 
-     * @param organisationUnits the collection of organisation units.
-     */
-    void setOrganisationUnitLevel( Collection<OrganisationUnit> organisationUnits );
-
     // -------------------------------------------------------------------------
     // OrganisationUnitHierarchy
     // -------------------------------------------------------------------------

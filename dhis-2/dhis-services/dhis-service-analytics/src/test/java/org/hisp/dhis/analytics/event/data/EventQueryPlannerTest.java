@@ -68,13 +68,10 @@ public class EventQueryPlannerTest
         prA.setUid( "programuida" );
         
         ouA = createOrganisationUnit( 'A' );
-        ouB = createOrganisationUnit( 'B' );
+        ouB = createOrganisationUnit( 'B', ouA );
         
         organisationUnitService.addOrganisationUnit( ouA );
         organisationUnitService.addOrganisationUnit( ouB );
-        
-        ouA.setLevel( 1 );
-        ouB.setLevel( 2 );        
     }
     
     @Test

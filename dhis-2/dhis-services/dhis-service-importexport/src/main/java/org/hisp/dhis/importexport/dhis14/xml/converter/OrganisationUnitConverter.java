@@ -154,7 +154,7 @@ public class OrganisationUnitConverter
         {
             for ( OrganisationUnit unit : units )
             {
-                int level = unit.getOrganisationUnitLevel();
+                int level = unit.getLevel();
 
                 writer.openElement( ELEMENT_NAME );
 

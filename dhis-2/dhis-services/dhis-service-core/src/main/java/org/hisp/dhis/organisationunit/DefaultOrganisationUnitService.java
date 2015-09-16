@@ -60,6 +60,7 @@ import org.hisp.dhis.version.VersionService;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -270,18 +271,6 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public int getLevelOfOrganisationUnit( OrganisationUnit unit )
-    {
-        return unit.getLevel() != 0 ? unit.getLevel() : unit.getOrganisationUnitLevel();
-    }
-
-    @Override
-    public int getLevelOfOrganisationUnit( int id )
-    {
-        return getOrganisationUnit( id ).getOrganisationUnitLevel();
-    }
-
-    @Override
     public List<OrganisationUnit> getOrganisationUnits( Collection<OrganisationUnitGroup> groups, Collection<OrganisationUnit> parents )
     {
         List<OrganisationUnit> members = new ArrayList<>();
@@ -395,45 +384,15 @@ public class DefaultOrganisationUnitService
             return new ArrayList<>();
         }
 
-        List<OrganisationUnit> result = new ArrayList<>();
+        int rootLevel = organisationUnit.getLevel();
+        
+        Integer levels = maxLevels != null ? ( rootLevel + maxLevels - 1 ) : null;
 
-        int rootLevel = organisationUnit.getOrganisationUnitLevel();
-
-        organisationUnit.setLevel( rootLevel );
-        result.add( organisationUnit );
-
-        final Integer maxLevel = maxLevels != null ? (rootLevel + maxLevels - 1) : null;
-
-        addOrganisationUnitChildren( organisationUnit, result, rootLevel, maxLevel );
-
-        return result;
-    }
-
-    /**
-     * Support method for getOrganisationUnitWithChildren(). Adds all
-     * OrganisationUnit children to a result collection.
-     */
-    private void addOrganisationUnitChildren( OrganisationUnit parent, List<OrganisationUnit> result, int level, final Integer maxLevel )
-    {
-        if ( parent.getChildren() != null && parent.getChildren().size() > 0 )
-        {
-            level++;
-        }
-
-        if ( maxLevel != null && level > maxLevel )
-        {
-            return;
-        }
-
-        List<OrganisationUnit> childList = parent.getSortedChildren();
-
-        for ( OrganisationUnit child : childList )
-        {
-            child.setLevel( level );
-            result.add( child );
-
-            addOrganisationUnitChildren( child, result, level, maxLevel );
-        }
+        OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+        params.setParents( Sets.newHashSet( organisationUnit ) );
+        params.setMaxLevels( levels );
+        
+        return organisationUnitStore.getOrganisationUnits( params );
     }
 
     @Override
@@ -495,6 +454,7 @@ public class DefaultOrganisationUnitService
         return getOrganisationUnitsAtLevels( levels, parents );
     }
 
+    //TODO rewrite using path
     @Override
     public List<OrganisationUnit> getOrganisationUnitsAtLevels( Collection<Integer> levels, Collection<OrganisationUnit> parents )
     {
@@ -514,7 +474,7 @@ public class DefaultOrganisationUnitService
 
             for ( OrganisationUnit parent : parents )
             {
-                int parentLevel = parent.getOrganisationUnitLevel();
+                int parentLevel = parent.getLevel();
 
                 if ( level < parentLevel )
                 {
@@ -524,7 +484,6 @@ public class DefaultOrganisationUnitService
 
                 if ( level == parentLevel )
                 {
-                    parent.setLevel( level );
                     result.add( parent );
                 }
                 else
@@ -547,11 +506,7 @@ public class DefaultOrganisationUnitService
     {
         if ( currentLevel == targetLevel )
         {
-            for ( OrganisationUnit child : parent.getChildren() )
-            {
-                child.setLevel( currentLevel );
-                result.add( child );
-            }
+            result.addAll( parent.getChildren() );
         }
         else
         {
@@ -731,18 +686,6 @@ public class DefaultOrganisationUnitService
         OrganisationUnit organisationUnit = organisationUnitStore.getByUid( uid );
         
         return organisationUnit != null ? organisationUnit.isDescendant( organisationUnits ) : false;
-    }
-
-    @Override
-    public void setOrganisationUnitLevel( Collection<OrganisationUnit> organisationUnits )
-    {
-        for ( OrganisationUnit unit : organisationUnits )
-        {
-            if ( unit != null && !unit.hasLevel() )
-            {
-                unit.setLevel( getLevelOfOrganisationUnit( unit.getId() ) );
-            }
-        }
     }
 
     // -------------------------------------------------------------------------
@@ -927,7 +870,7 @@ public class DefaultOrganisationUnitService
         {
             OrganisationUnit organisationUnit = user.getOrganisationUnit();
 
-            int level = getLevelOfOrganisationUnit( organisationUnit.getId() );
+            int level = organisationUnit.getLevel();
 
             OrganisationUnitLevel orgUnitLevel = getOrganisationUnitLevelByLevel( level );
 

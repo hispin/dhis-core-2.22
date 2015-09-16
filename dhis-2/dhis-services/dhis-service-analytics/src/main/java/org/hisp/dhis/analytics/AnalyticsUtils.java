@@ -96,7 +96,7 @@ public class AnalyticsUtils
         for ( NameableObject orgUnit : orgUnits )
         {
             OrganisationUnit ou = (OrganisationUnit) orgUnit;
-            int level = ou.getOrganisationUnitLevel();
+            int level = ou.getLevel();
             sql += "(dv.sourceid in (select organisationunitid from _orgunitstructure where idlevel" + level + " = " + ou.getId() + ")) or ";            
         }
 

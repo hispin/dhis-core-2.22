@@ -157,10 +157,10 @@ public class DefaultDataApprovalService
                 throw new DataMayNotBeApprovedException();
             }
 
-            if ( organisationUnitService.getLevelOfOrganisationUnit( da.getOrganisationUnit() ) != da.getDataApprovalLevel().getOrgUnitLevel() )
+            if ( da.getOrganisationUnit().getLevel() != da.getDataApprovalLevel().getOrgUnitLevel() )
             {
                 log.warn( "approveData: org unit " + da.getOrganisationUnit().getUid() + " '" + da.getOrganisationUnit().getName() +
-                    "' has wrong org unit level " + organisationUnitService.getLevelOfOrganisationUnit( da.getOrganisationUnit() ) +
+                    "' has wrong org unit level " + da.getOrganisationUnit().getLevel() +
                     " for approval level " + da.getDataApprovalLevel().getLevel());
 
                 throw new DataMayNotBeApprovedException();

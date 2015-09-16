@@ -1210,13 +1210,6 @@ public class DefaultAnalyticsService
                 }
             }
 
-            // -----------------------------------------------------------------
-            // Set level property
-            // -----------------------------------------------------------------
-
-            Collection<OrganisationUnit> typedOus = NameableObjectUtils.asTypedList( ous );
-            organisationUnitService.setOrganisationUnitLevel( typedOus );
-            
             List<NameableObject> orgUnits = new UniqueArrayList<>();
             List<OrganisationUnit> ousList = NameableObjectUtils.asTypedList( ous );
 
