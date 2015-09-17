@@ -18,7 +18,7 @@
     </tr>
     <tr>
     	<td>$i18n.getString( "rule_type" )</td>
-    	<td>$encoder.htmlEncode( $i18n.getString( $!validationRule.ruleType ) )</td>
+    	<td>$encoder.htmlEncode( $i18n.getString( "$!validationRule.ruleType" ) )</td>
     </tr>
 </table>
 
