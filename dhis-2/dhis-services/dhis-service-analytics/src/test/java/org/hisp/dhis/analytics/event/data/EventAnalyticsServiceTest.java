@@ -181,7 +181,8 @@ public class EventAnalyticsServiceTest
         filterParams.add( "pe:201401;201402" );
 
         EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
-            null, null, dimensionParams, filterParams, null, null, false, false, false, false, false, false, null, null, null, false, false, null, null );
+            null, null, dimensionParams, filterParams, null, null, false, false, 
+            false, false, false, false, null, null, null, false, false, null, null, null );
 
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getOrganisationUnits().size() );
@@ -200,7 +201,8 @@ public class EventAnalyticsServiceTest
         filterParams.add( "pe:201401" );
 
         EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
-            null, null, dimensionParams, filterParams, deA.getUid(), AggregationType.AVERAGE, false, false, false, false, false, false, null, null, null, false, false, null, null );
+            null, null, dimensionParams, filterParams, deA.getUid(), AggregationType.AVERAGE, 
+            false, false, false, false, false, false, null, null, null, false, false, null, null, null );
 
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getOrganisationUnits().size() );
@@ -339,7 +341,8 @@ public class EventAnalyticsServiceTest
         filterParams.add( atA.getUid() + ":LE:5" );
 
         EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
-            null, null, dimensionParams, filterParams, null, null, false, false, false, false, false, false, null, null, null, false, false, null, null );
+            null, null, dimensionParams, filterParams, null, null, false, false, 
+            false, false, false, false, null, null, null, false, false, null, null, null );
 
         assertEquals( prA, params.getProgram() );
         assertEquals( 1, params.getItems().size() );
