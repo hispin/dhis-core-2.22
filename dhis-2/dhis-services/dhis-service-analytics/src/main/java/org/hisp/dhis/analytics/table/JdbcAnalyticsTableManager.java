@@ -309,7 +309,7 @@ public class JdbcAnalyticsTableManager
             categoryService.getAttributeDataDimensionCategoriesNoAcl();
 
         List<OrganisationUnitLevel> levels =
-            organisationUnitService.getOrganisationUnitLevels();
+            organisationUnitService.getFilledOrganisationUnitLevels();
 
         for ( DataElementGroupSet groupSet : dataElementGroupSets )
         {

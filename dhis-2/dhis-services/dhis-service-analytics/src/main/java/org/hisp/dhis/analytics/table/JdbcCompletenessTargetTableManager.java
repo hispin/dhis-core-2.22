@@ -160,7 +160,7 @@ public class JdbcCompletenessTargetTableManager
             idObjectManager.getDataDimensionsNoAcl( OrganisationUnitGroupSet.class );
         
         Collection<OrganisationUnitLevel> levels =
-            organisationUnitService.getOrganisationUnitLevels();
+            organisationUnitService.getFilledOrganisationUnitLevels();
         
         for ( OrganisationUnitGroupSet groupSet : orgUnitGroupSets )
         {

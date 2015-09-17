@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.commons.filter.Filter;
@@ -700,9 +701,11 @@ public class DefaultOrganisationUnitService
         for ( int i = 0; i < levelNo; i++ )
         {
             int level = i + 1;
-
-            levels.add( levelMap.get( level ) != null ? levelMap.get( level ) : new OrganisationUnitLevel( level,
-                LEVEL_PREFIX + level ) );
+            
+            OrganisationUnitLevel filledLevel = ObjectUtils.firstNonNull( 
+                levelMap.get( level ), new OrganisationUnitLevel( level, LEVEL_PREFIX + level ) );
+            
+            levels.add( filledLevel );
         }
 
         return levels;
