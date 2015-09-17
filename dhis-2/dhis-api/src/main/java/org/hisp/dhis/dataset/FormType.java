@@ -33,7 +33,7 @@ package org.hisp.dhis.dataset;
  */
 public enum FormType
 {
-    STANDARD,
+    DEFAULT,
     SECTION,
     CUSTOM,
     SECTION_MULTIORG;
