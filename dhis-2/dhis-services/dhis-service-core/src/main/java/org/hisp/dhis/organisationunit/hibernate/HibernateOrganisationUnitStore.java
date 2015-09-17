@@ -345,7 +345,7 @@ public class HibernateOrganisationUnitStore
             counter++;
         }
     }
-
+    
     @Override
     @SuppressWarnings( "unchecked" )
     public void forceUpdatePaths()

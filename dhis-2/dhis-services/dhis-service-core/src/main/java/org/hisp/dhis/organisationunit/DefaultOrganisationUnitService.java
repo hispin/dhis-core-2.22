@@ -398,88 +398,37 @@ public class DefaultOrganisationUnitService
     @Override
     public List<OrganisationUnit> getOrganisationUnitsAtLevel( int level )
     {
-        List<OrganisationUnit> roots = getRootOrganisationUnits();
-
-        if ( level == 1 )
-        {
-            return roots;
-        }
-
-        return getOrganisationUnitsAtLevels( Sets.newHashSet( level ), roots );
+        OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+        params.setLevels( Sets.newHashSet( level ) );
+        
+        return organisationUnitStore.getOrganisationUnits( params );
     }
 
     @Override
     public List<OrganisationUnit> getOrganisationUnitsAtLevel( int level, OrganisationUnit parent )
     {
-        List<OrganisationUnit> parents = new ArrayList<>();
-        parents.add( parent );
-
-        return getOrganisationUnitsAtLevels( Sets.newHashSet( level ), parent != null ? parents : null );
+        OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+        params.setLevels( Sets.newHashSet( level ) );
+        
+        if ( parent != null )
+        {
+            params.setParents( Sets.newHashSet( parent ) );
+        }
+        
+        return organisationUnitStore.getOrganisationUnits( params );
     }
 
-    //TODO rewrite using path
     @Override
     public List<OrganisationUnit> getOrganisationUnitsAtLevels( Collection<Integer> levels, Collection<OrganisationUnit> parents )
     {
-        if ( parents == null || parents.isEmpty() )
-        {
-            parents = new HashSet<>( getRootOrganisationUnits() );
-        }
-
-        List<OrganisationUnit> result = new ArrayList<>();
-
-        for ( Integer level : levels )
-        {
-            if ( level < 1 )
-            {
-                throw new IllegalArgumentException( "Level must be greater than zero" );
-            }
-
-            for ( OrganisationUnit parent : parents )
-            {
-                int parentLevel = parent.getLevel();
-
-                if ( level < parentLevel )
-                {
-                    throw new IllegalArgumentException(
-                        "Level must be greater than or equal to level of parent organisation unit" );
-                }
-
-                if ( level == parentLevel )
-                {
-                    result.add( parent );
-                }
-                else
-                {
-                    addOrganisationUnitChildrenAtLevel( parent, parentLevel + 1, level, result );
-                }
-            }
-        }
-
-        return result;
+        OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+        params.setLevels( Sets.newHashSet( levels ) );
+        params.setParents( Sets.newHashSet( parents ) );
+        
+        return organisationUnitStore.getOrganisationUnits( params );
     }
 
-    /**
-     * Support method for getOrganisationUnitsAtLevel(). Adds all children at a
-     * given targetLevel to a result collection. The parent's children are at
-     * the current level.
-     */
-    private void addOrganisationUnitChildrenAtLevel( OrganisationUnit parent, int currentLevel, int targetLevel,
-        List<OrganisationUnit> result )
-    {
-        if ( currentLevel == targetLevel )
-        {
-            result.addAll( parent.getChildren() );
-        }
-        else
-        {
-            for ( OrganisationUnit child : parent.getChildren() )
-            {
-                addOrganisationUnitChildrenAtLevel( child, currentLevel + 1, targetLevel, result );
-            }
-        }
-    }
-
+    //Rewrite using path
     @Override
     public int getNumberOfOrganisationalLevels()
     {
