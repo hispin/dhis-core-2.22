@@ -28,18 +28,12 @@ package org.hisp.dhis.webapi.controller.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dxf2.common.TranslateParams;
+import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.organisationunit.comparator.OrganisationUnitByLevelComparator;
@@ -59,9 +53,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -303,12 +302,12 @@ public class OrganisationUnitController
             return;
         }
 
-        String featureType = organisationUnit.getFeatureType();
+        FeatureType featureType = organisationUnit.getFeatureType();
 
         // if featureType is anything other than Point, just assume MultiPolygon
-        if ( !OrganisationUnit.FEATURETYPE_POINT.equals( featureType ) )
+        if ( !(featureType == FeatureType.POINT) )
         {
-            featureType = OrganisationUnit.FEATURETYPE_MULTIPOLYGON;
+            featureType = FeatureType.MULTI_POLYGON;
         }
 
         generator.writeStartObject();
@@ -317,7 +316,7 @@ public class OrganisationUnitController
         generator.writeStringField( "id", organisationUnit.getUid() );
 
         generator.writeObjectFieldStart( "geometry" );
-        generator.writeStringField( "type", featureType );
+        generator.writeObjectField( "featureType", featureType );
 
         generator.writeFieldName( "coordinates" );
         generator.writeRawValue( organisationUnit.getCoordinates() );

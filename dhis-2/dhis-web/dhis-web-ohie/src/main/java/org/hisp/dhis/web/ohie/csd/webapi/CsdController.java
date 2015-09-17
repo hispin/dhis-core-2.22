@@ -28,23 +28,12 @@ package org.hisp.dhis.web.ohie.csd.webapi;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.attribute.comparator.AttributeValueSortOrderComparator;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -78,15 +67,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @Controller
-@RequestMapping(value = "/csd")
+@RequestMapping( value = "/csd" )
 public class CsdController
 {
     private static final String SOAP_CONTENT_TYPE = "application/soap+xml";
@@ -121,16 +120,17 @@ public class CsdController
         try
         {
             Class<?>[] classes = new Class<?>[]
-            {
-                Envelope.class
-            };
+                {
+                    Envelope.class
+                };
 
             // TODO: switch Eclipse MOXy?
             JAXBContext jaxbContext = JAXBContext.newInstance( classes );
 
             marshaller = jaxbContext.createMarshaller();
             unmarshaller = jaxbContext.createUnmarshaller();
-        } catch ( JAXBException ex )
+        }
+        catch ( JAXBException ex )
         {
             ex.printStackTrace();
         }
@@ -139,7 +139,7 @@ public class CsdController
     // -------------------------------------------------------------------------
     // POST
     // -------------------------------------------------------------------------
-    @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
+    @RequestMapping( value = "", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE )
     public void careServicesRequest( HttpServletRequest request, HttpServletResponse response ) throws IOException, JAXBException
     {
         Object o = unmarshaller.unmarshal( new BufferedInputStream( request.getInputStream() ) );
@@ -181,7 +181,8 @@ public class CsdController
             {
                 throw new MissingGetDirectoryModificationsRequestException();
             }
-        } catch ( NullPointerException ex )
+        }
+        catch ( NullPointerException ex )
         {
             throw new SoapException();
         }
@@ -192,7 +193,8 @@ public class CsdController
             {
                 throw new MissingGetModificationsRequestException();
             }
-        } catch ( NullPointerException ex )
+        }
+        catch ( NullPointerException ex )
         {
             throw new SoapException();
         }
@@ -203,7 +205,8 @@ public class CsdController
             {
                 throw new MissingLastModifiedException();
             }
-        } catch ( NullPointerException ex )
+        }
+        catch ( NullPointerException ex )
         {
             throw new SoapException();
         }
@@ -354,7 +357,7 @@ public class CsdController
 
             }
 
-            if ( OrganisationUnit.FEATURETYPE_POINT.equals( organisationUnit.getFeatureType() ) )
+            if ( organisationUnit.getFeatureType() == FeatureType.POINT )
             {
                 Geocode geocode = new Geocode();
 
@@ -366,7 +369,8 @@ public class CsdController
                     geocode.setLatitude( coordinates.lat );
 
                     facility.setGeocode( geocode );
-                } catch ( NumberFormatException ignored )
+                }
+                catch ( NumberFormatException ignored )
                 {
                 }
             }

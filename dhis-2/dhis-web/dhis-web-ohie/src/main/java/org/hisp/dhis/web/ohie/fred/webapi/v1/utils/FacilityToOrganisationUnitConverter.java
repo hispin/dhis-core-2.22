@@ -30,6 +30,7 @@ package org.hisp.dhis.web.ohie.fred.webapi.v1.utils;
 
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.web.ohie.fred.webapi.v1.domain.Facility;
@@ -48,15 +49,15 @@ import java.util.Collection;
 public class FacilityToOrganisationUnitConverter implements Converter<Facility, OrganisationUnit>
 {
     @Autowired
-    @Qualifier("org.hisp.dhis.organisationunit.OrganisationUnitService")
+    @Qualifier( "org.hisp.dhis.organisationunit.OrganisationUnitService" )
     private OrganisationUnitService organisationUnitService;
 
     @Autowired
-    @Qualifier("org.hisp.dhis.dataset.DataSetService")
+    @Qualifier( "org.hisp.dhis.dataset.DataSetService" )
     private DataSetService dataSetService;
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public OrganisationUnit convert( Facility facility )
     {
         OrganisationUnit organisationUnit = new OrganisationUnit();
@@ -90,7 +91,7 @@ public class FacilityToOrganisationUnitConverter implements Converter<Facility, 
             }
         }
 
-        organisationUnit.setFeatureType( OrganisationUnit.FEATURETYPE_POINT );
+        organisationUnit.setFeatureType( FeatureType.POINT );
 
         try
         {

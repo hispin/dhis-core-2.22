@@ -28,12 +28,6 @@ package org.hisp.dhis.importexport.dxf.converter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.importexport.dxf.converter.DXFConverter.MINOR_VERSION_11;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.staxwax.reader.XMLReader;
 import org.amplecode.staxwax.writer.XMLWriter;
@@ -44,9 +38,16 @@ import org.hisp.dhis.importexport.XMLConverter;
 import org.hisp.dhis.importexport.analysis.ImportAnalyser;
 import org.hisp.dhis.importexport.importer.OrganisationUnitImporter;
 import org.hisp.dhis.organisationunit.CoordinatesTuple;
+import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.system.util.DateUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.hisp.dhis.importexport.dxf.converter.DXFConverter.MINOR_VERSION_11;
 
 /**
  * @author Lars Helge Overland
@@ -57,7 +58,7 @@ public class OrganisationUnitConverter
 {
     public static final String COLLECTION_NAME = "organisationUnits";
     public static final String ELEMENT_NAME = "organisationUnit";
-    
+
     private static final String FIELD_ID = "id";
     private static final String FIELD_UID = "uid";
     private static final String FIELD_NAME = "name";
@@ -71,7 +72,7 @@ public class OrganisationUnitConverter
     private static final String FIELD_FEATURE = "feature";
     private static final String FIELD_LAST_UPDATED = "lastUpdated";
     private static final String ATTRIBUTE_TYPE = "type";
-    
+
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
@@ -83,16 +84,16 @@ public class OrganisationUnitConverter
     {
         this.organisationUnitService = organisationUnitService;
     }
-    
+
     /**
      * Constructor for read operations.
-     * 
-     * @param batchHandler the batchHandler to use.
+     *
+     * @param batchHandler            the batchHandler to use.
      * @param organisationUnitService the organisationUnitService to use.
-     * @param importObjectService the importObjectService to use.
+     * @param importObjectService     the importObjectService to use.
      */
-    public OrganisationUnitConverter( BatchHandler<OrganisationUnit> batchHandler, 
-        ImportObjectService importObjectService, 
+    public OrganisationUnitConverter( BatchHandler<OrganisationUnit> batchHandler,
+        ImportObjectService importObjectService,
         OrganisationUnitService organisationUnitService,
         ImportAnalyser importAnalyser )
     {
@@ -101,7 +102,7 @@ public class OrganisationUnitConverter
         this.organisationUnitService = organisationUnitService;
         this.importAnalyser = importAnalyser;
     }
-    
+
     // -------------------------------------------------------------------------
     // XMLConverter implementation
     // -------------------------------------------------------------------------
@@ -110,15 +111,15 @@ public class OrganisationUnitConverter
     public void write( XMLWriter writer, ExportParams params )
     {
         Collection<OrganisationUnit> units = organisationUnitService.getOrganisationUnits( params.getOrganisationUnits() );
-        
+
         if ( units != null && units.size() > 0 )
         {
             writer.openElement( COLLECTION_NAME );
-            
+
             for ( OrganisationUnit unit : units )
             {
                 writer.openElement( ELEMENT_NAME );
-                
+
                 writer.writeElement( FIELD_ID, String.valueOf( unit.getId() ) );
                 writer.writeElement( FIELD_UID, unit.getUid() );
                 writer.writeElement( FIELD_NAME, unit.getName() );
@@ -128,34 +129,34 @@ public class OrganisationUnitConverter
                 writer.writeElement( FIELD_CLOSED_DATE, DateUtils.getMediumDateString( unit.getClosedDate() ) );
                 writer.writeElement( FIELD_COMMENT, unit.getComment() );
 
-                writer.openElement( FIELD_FEATURE, ATTRIBUTE_TYPE, unit.getFeatureType() );
-                
+                writer.openElement( FIELD_FEATURE, ATTRIBUTE_TYPE, unit.getFeatureType().toString() );
+
                 for ( CoordinatesTuple tuple : unit.getCoordinatesAsList() )
                 {
                     if ( tuple.hasCoordinates() )
                     {
                         writer.openElement( FIELD_COORDINATES_TUPLE );
-                        
+
                         for ( String coordinates : tuple.getCoordinatesTuple() )
                         {
                             writer.writeElement( FIELD_COORDINATES, coordinates );
                         }
-                        
+
                         writer.closeElement();
                     }
                 }
 
                 writer.closeElement();
-                
+
                 writer.writeElement( FIELD_LAST_UPDATED, DateUtils.getMediumDateString( unit.getLastUpdated(), EMPTY ) );
-                
+
                 writer.closeElement();
             }
-            
+
             writer.closeElement();
         }
     }
-    
+
     @Override
     public void read( XMLReader reader, ImportParams params )
     {
@@ -165,8 +166,8 @@ public class OrganisationUnitConverter
 
             reader.moveToStartElement( FIELD_ID );
             unit.setId( Integer.parseInt( reader.getElementValue() ) );
-            
-            if ( params.minorVersionGreaterOrEqual( "1.3") )
+
+            if ( params.minorVersionGreaterOrEqual( "1.3" ) )
             {
                 reader.moveToStartElement( FIELD_UID );
                 unit.setUid( reader.getElementValue() );
@@ -174,61 +175,61 @@ public class OrganisationUnitConverter
 
 
             reader.moveToStartElement( FIELD_NAME );
-            unit.setName(reader.getElementValue() );
-            
+            unit.setName( reader.getElementValue() );
+
             reader.moveToStartElement( FIELD_SHORT_NAME );
             unit.setShortName( reader.getElementValue() );
-            
-            if ( params.minorVersionGreaterOrEqual( "1.2") )
+
+            if ( params.minorVersionGreaterOrEqual( "1.2" ) )
             {
-              reader.moveToStartElement( FIELD_CODE );
-              unit.setCode( reader.getElementValue() );
+                reader.moveToStartElement( FIELD_CODE );
+                unit.setCode( reader.getElementValue() );
             }
-            
+
             reader.moveToStartElement( FIELD_OPENING_DATE );
             unit.setOpeningDate( DateUtils.getMediumDate( reader.getElementValue() ) );
 
             reader.moveToStartElement( FIELD_CLOSED_DATE );
             unit.setClosedDate( DateUtils.getMediumDate( reader.getElementValue() ) );
-                        
+
             reader.moveToStartElement( FIELD_COMMENT );
             unit.setComment( reader.getElementValue() );
-            
+
             if ( params.minorVersionGreaterOrEqual( MINOR_VERSION_11 ) )
-            {                
+            {
                 reader.moveToStartElement( FIELD_FEATURE );
-                unit.setFeatureType( reader.getAttributeValue( ATTRIBUTE_TYPE ) );
-                
+                unit.setFeatureType( FeatureType.valueOf( reader.getAttributeValue( ATTRIBUTE_TYPE ) ) );
+
                 if ( unit.getFeatureType() != null )
                 {
                     List<CoordinatesTuple> list = new ArrayList<>();
-                    
+
                     while ( reader.moveToStartElement( FIELD_COORDINATES_TUPLE, FIELD_FEATURE ) )
                     {
                         CoordinatesTuple tuple = new CoordinatesTuple();
-                        
+
                         while ( reader.moveToStartElement( FIELD_COORDINATES, FIELD_COORDINATES_TUPLE ) )
                         {
                             tuple.addCoordinates( reader.getElementValue() );
                         }
-                        
+
                         list.add( tuple );
                     }
-                    
-                    if ( unit.getFeatureType().equals( OrganisationUnit.FEATURETYPE_POINT ) )
+
+                    if ( unit.getFeatureType() == FeatureType.POINT )
                     {
                         unit.setPointCoordinatesFromList( list );
-                    }                
+                    }
                     else
                     {
                         unit.setMultiPolygonCoordinatesFromList( list );
                     }
                 }
-                
+
                 reader.moveToStartElement( FIELD_LAST_UPDATED );
                 unit.setLastUpdated( DateUtils.getMediumDate( reader.getElementValue() ) );
             }
-            
+
             importObject( unit, params );
         }
     }

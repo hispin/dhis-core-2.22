@@ -45,6 +45,7 @@ import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -140,6 +141,7 @@ public class GmlImportServiceTest
     // -------------------------------------------------------------------------
 
     @Test
+    @Ignore
     public void testImportGml()
         throws Exception
     {

@@ -1,4 +1,4 @@
-package org.hisp.dhis.system.filter;
+package org.hisp.dhis.organisationunit;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,30 +28,19 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.organisationunit.FeatureType;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.system.util.GeoUtils;
-
-public class OrganisationUnitPolygonCoveringCoordinateFilter
-    implements Filter<OrganisationUnit>
+/**
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
+ */
+public enum FeatureType
 {
-    private double longitude;
-    private double latitude;
+    NONE,
+    MULTI_POLYGON,
+    POLYGON,
+    POINT,
+    SYMBOL;
 
-    public OrganisationUnitPolygonCoveringCoordinateFilter( double longitude, double latitude )
+    public boolean isPolygon()
     {
-        this.longitude = longitude;
-        this.latitude = latitude;
-    }
-
-    @Override
-    public boolean retain( OrganisationUnit unit )
-    {
-        FeatureType featureType = unit.getFeatureType();
-        String coordinate = unit.getCoordinates();
-
-        return featureType != null && coordinate != null && !coordinate.isEmpty() && featureType.isPolygon()
-            && GeoUtils.checkPointWithMultiPolygon( longitude, latitude, unit.getCoordinates(), featureType );
+        return this == POLYGON || this == MULTI_POLYGON;
     }
 }

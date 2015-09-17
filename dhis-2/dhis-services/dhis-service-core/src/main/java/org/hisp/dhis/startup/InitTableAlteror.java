@@ -72,6 +72,7 @@ public class InitTableAlteror
         upgradeProgramStageDataElements();
         updateValueTypes();
         updateAggregationTypes();
+        updateFeatureTypes();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
@@ -81,6 +82,16 @@ public class InitTableAlteror
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
+
+    private void updateFeatureTypes()
+    {
+        executeSql( "update organisationunit set featuretype='NONE' where featuretype='None'" );
+        executeSql( "update organisationunit set featuretype='MULTI_POLYGON' where featuretype='MultiPolygon'" );
+        executeSql( "update organisationunit set featuretype='POLYGON' where featuretype='Polygon'" );
+        executeSql( "update organisationunit set featuretype='POINT' where featuretype='Point'" );
+        executeSql( "update organisationunit set featuretype='SYMBOL' where featuretype='Symbol'" );
+        executeSql( "update organisationunit set featuretype='NONE' where featuretype is null" );
+    }
 
     private void updateAggregationTypes()
     {
