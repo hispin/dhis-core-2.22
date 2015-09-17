@@ -342,19 +342,6 @@ public interface OrganisationUnitService
     List<OrganisationUnit> getOrganisationUnitsAtLevels( Collection<Integer> levels, Collection<OrganisationUnit> parents );
 
     /**
-     * Returns all OrganisationUnits which are children of the given units and are
-     * at the given hierarchical level. The root OrganisationUnits are at level 1.
-     * If parents is null, then all OrganisationUnits at the given level are returned.
-     *
-     * @param level  the hierarchical level.
-     * @param parent the parent units.
-     * @return all OrganisationUnits which are children of the given units and are
-     * at the given hierarchical level.
-     * @throws IllegalArgumentException if the level is illegal.
-     */
-    List<OrganisationUnit> getOrganisationUnitsAtLevel( int level, Collection<OrganisationUnit> parents );
-
-    /**
      * Returns the number of levels in the OrganisationUnit hierarchy.
      *
      * @return the number of hierarchical levels.
