@@ -69,8 +69,8 @@ public class OrganisationUnitStoreTest
         OrganisationUnit ouC = createOrganisationUnit( 'C', ouA ); // 2
         OrganisationUnit ouD = createOrganisationUnit( 'D', ouB ); // 3
         OrganisationUnit ouE = createOrganisationUnit( 'E', ouB ); // 3
-        OrganisationUnit ouF = createOrganisationUnit( 'F', ouC ); // 4
-        OrganisationUnit ouG = createOrganisationUnit( 'G', ouC ); // 4
+        OrganisationUnit ouF = createOrganisationUnit( 'F', ouC ); // 3
+        OrganisationUnit ouG = createOrganisationUnit( 'G', ouC ); // 3
         
         orgUnitStore.save( ouA );
         orgUnitStore.save( ouB );
@@ -271,4 +271,34 @@ public class OrganisationUnitStoreTest
         assertNull( orgUnitLevelStore.get( idA ) );
         assertNull( orgUnitLevelStore.get( idB ) );
     }
+
+    @Test
+    public void testGetMaxLevel()
+    {
+        OrganisationUnit ouA = createOrganisationUnit( 'A' ); // 1
+        OrganisationUnit ouB = createOrganisationUnit( 'B', ouA ); // 2
+        OrganisationUnit ouC = createOrganisationUnit( 'C', ouA ); // 2
+        OrganisationUnit ouD = createOrganisationUnit( 'D', ouB ); // 3
+        OrganisationUnit ouE = createOrganisationUnit( 'E', ouB ); // 3
+        OrganisationUnit ouF = createOrganisationUnit( 'F', ouC ); // 3
+        OrganisationUnit ouG = createOrganisationUnit( 'G', ouC ); // 3
+        
+        assertEquals( 0, orgUnitStore.getMaxLevel() );
+        
+        orgUnitStore.save( ouA );
+        
+        assertEquals( 1, orgUnitStore.getMaxLevel() );
+        
+        orgUnitStore.save( ouB );
+        orgUnitStore.save( ouC );
+        
+        assertEquals( 2, orgUnitStore.getMaxLevel() );
+
+        orgUnitStore.save( ouD );
+        orgUnitStore.save( ouE );
+        orgUnitStore.save( ouF );
+        orgUnitStore.save( ouG );
+        
+        assertEquals( 3, orgUnitStore.getMaxLevel() );
+    }        
 }

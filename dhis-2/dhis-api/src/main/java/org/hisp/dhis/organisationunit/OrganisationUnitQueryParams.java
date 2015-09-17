@@ -40,7 +40,7 @@ import com.google.common.base.MoreObjects;
  */
 public class OrganisationUnitQueryParams
 {
-    private static final int CODE_SEP_LENGTH = CodeGenerator.CODESIZE + 1;
+    public static final int CODE_SEP_LENGTH = CodeGenerator.CODESIZE + 1;
     
     /**
      * Query string to match like name and exactly on UID and code.

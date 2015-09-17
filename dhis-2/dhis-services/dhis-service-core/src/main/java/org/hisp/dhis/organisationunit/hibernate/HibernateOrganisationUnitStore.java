@@ -345,7 +345,7 @@ public class HibernateOrganisationUnitStore
             counter++;
         }
     }
-    
+
     @Override
     @SuppressWarnings( "unchecked" )
     public void forceUpdatePaths()
@@ -367,5 +367,22 @@ public class HibernateOrganisationUnitStore
 
             counter++;
         }
+    }
+
+    @Override
+    public int getMaxLevel()
+    {
+        String hql = "select max(length(ou.path)) from OrganisationUnit ou";
+
+        Integer maxLength = (Integer) getQuery( hql ).uniqueResult();
+        
+        if ( maxLength != null )
+        {        
+            int level = maxLength / OrganisationUnitQueryParams.CODE_SEP_LENGTH;
+        
+            return level;
+        }
+        
+        return 0;
     }
 }
