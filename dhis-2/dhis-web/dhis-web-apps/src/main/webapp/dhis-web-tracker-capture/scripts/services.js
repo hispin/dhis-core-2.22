@@ -10,7 +10,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     var store = new dhis2.storage.Store({
         name: "dhis2tc",
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'trackedEntities', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules','constants']
+        objectStores: ['programs', 'programStages', 'trackedEntities', 'attributes', 'relationshipTypes', 'optionSets', 'programValidations', 'ouLevels', 'programRuleVariables', 'programRules', 'programIndicators', 'constants']
     });
     return{
         currentStore: store
@@ -1434,10 +1434,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
 })
 
-.service('TEIGridService', function(OrgUnitService, OptionSetService, DateUtils, $translate, AttributesFactory){
+.service('TEIGridService', function(OrgUnitService, OptionSetService, CurrentSelection, DateUtils, $translate){
     
     return {
         format: function(grid, map, optionSets, invalidTeis){
+            
             invalidTeis = !invalidTeis ? [] : invalidTeis;
             if(!grid || !grid.rows){
                 return;
@@ -1452,62 +1453,58 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
             var entityList = [];
             
-            AttributesFactory.getAll().then(function(atts){
-                
-                var attributes = [];
-                angular.forEach(atts, function(att){
-                    attributes[att.id] = att;
-                });
-                
-                angular.forEach(grid.rows, function(row){
-                    if(invalidTeis.indexOf(row[0]) === -1 ){
-                        var entity = {};
-                        var isEmpty = true;
+            var attributes = CurrentSelection.getAttributesById();
 
-                        entity.id = row[0];
-                        entity.created = DateUtils.formatFromApiToUser( row[1] );
-                        entity.orgUnit = row[3];                              
-                        entity.type = row[4];
-                        entity.inactive = row[5] !== "" ? row[5] : false;
+            angular.forEach(grid.rows, function(row){
+                if(invalidTeis.indexOf(row[0]) === -1 ){
+                    var entity = {};
+                    var isEmpty = true;
 
-                        OrgUnitService.get(row[3]).then(function(ou){
-                            if(ou && ou.name){
-                                entity.orgUnitName = ou.name;
-                            }                                                       
-                        });
+                    entity.id = row[0];
+                    entity.created = DateUtils.formatFromApiToUser( row[1] );
+                    entity.orgUnit = row[3];                              
+                    entity.type = row[4];
+                    entity.inactive = row[5] !== "" ? row[5] : false;
 
-                        for(var i=6; i<row.length; i++){
-                            if(row[i] && row[i] !== ''){
-                                isEmpty = false;
-                                var val = row[i];
+                    OrgUnitService.get(row[3]).then(function(ou){
+                        if(ou && ou.name){
+                            entity.orgUnitName = ou.name;
+                        }                                                       
+                    });
 
-                                if(attributes[grid.headers[i].name] && 
-                                        attributes[grid.headers[i].name].optionSetValue && 
-                                        optionSets &&    
-                                        attributes[grid.headers[i].name].optionSet &&
-                                        optionSets[attributes[grid.headers[i].name].optionSet.id] ){
-                                    val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
-                                }
-                                if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
-                                    val = DateUtils.formatFromApiToUser( val );
-                                }
+                    for(var i=6; i<row.length; i++){
+                        if(row[i] && row[i] !== ''){
+                            isEmpty = false;
+                            var val = row[i];
 
-                                entity[grid.headers[i].name] = val;
+                            if(attributes[grid.headers[i].name] && 
+                                    attributes[grid.headers[i].name].optionSetValue && 
+                                    optionSets &&    
+                                    attributes[grid.headers[i].name].optionSet &&
+                                    optionSets[attributes[grid.headers[i].name].optionSet.id] ){
+                                val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
                             }
-                        }
+                            if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
+                                val = DateUtils.formatFromApiToUser( val );
+                            }
 
-                        if(!isEmpty){
-                            if(map){
-                                entityList[entity.id] = entity;
-                            }
-                            else{
-                                entityList.push(entity);
-                            }
+                            entity[grid.headers[i].name] = val;
                         }
                     }
-                });
-            }); 
-            return {headers: attributes, rows: entityList, pager: grid.metaData.pager};                                    
+
+                    if(!isEmpty){
+                        if(map){
+                            entityList[entity.id] = entity;
+                        }
+                        else{
+                            entityList.push(entity);
+                        }
+                    }
+                }
+            });
+
+            return {headers: attributes, rows: entityList, pager: grid.metaData.pager};
+            
         },
         generateGridColumns: function(attributes, ouMode){
             
