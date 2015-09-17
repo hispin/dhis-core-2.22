@@ -218,47 +218,6 @@
       <param name="requiredAuthorities">F_ELIMINATE_DUPLICATE_DATA_ELEMENTS</param>
     </action>
 
-    <!-- Data archive -->
-
-    <action name="displayDataArchiveForm" class="org.hisp.dhis.dataadmin.action.NoAction">
-      <result name="success" type="velocity">/main.vm</result>
-      <param name="page">
-        /dhis-web-maintenance-dataadmin/dataArchiveForm.vm
-      </param>
-      <param name="menu">/dhis-web-maintenance-dataadmin/menu.vm</param>
-      <param name="javascripts">javascript/dataArchive.js</param>
-      <param name="requiredAuthorities">F_ARCHIVE_DATA</param>
-    </action>
-
-    <action name="archiveData" class="org.hisp.dhis.dataadmin.action.dataarchive.ArchiveDataAction">
-      <result name="success" type="velocity-json">/dhis-web-maintenance-dataadmin/responseNumber.vm</result>
-      <param name="requiredAuthorities">F_ARCHIVE_DATA</param>
-    </action>
-
-    <action name="getNumberOfOverlaps" class="org.hisp.dhis.dataadmin.action.dataarchive.GetNumberOfOverlapsAction">
-      <result name="success" type="velocity-json">/dhis-web-maintenance-dataadmin/responseNumber.vm</result>
-      <param name="requiredAuthorities">F_ARCHIVE_DATA</param>
-    </action>
-
-    <action name="displayPatientDataArchiveForm" class="org.hisp.dhis.dataadmin.action.NoAction">
-      <result name="success" type="velocity">/main.vm</result>
-      <param name="page">/dhis-web-maintenance-dataadmin/patientDataArchiveForm.vm</param>
-      <param name="menu">/dhis-web-maintenance-dataadmin/menu.vm</param>
-      <param name="javascripts">javascript/dataArchive.js</param>
-      <param name="requiredAuthorities">F_ARCHIVE_DATA</param>
-    </action>
-
-    <action name="archivePatientData" class="org.hisp.dhis.dataadmin.action.dataarchive.ArchivePatientDataAction">
-      <result name="success" type="velocity-json">/dhis-web-maintenance-dataadmin/responseNumber.vm</result>
-      <param name="requiredAuthorities">F_ARCHIVE_DATA</param>
-    </action>
-
-    <action name="getNumberOfOverlapingPatientValues"
-      class="org.hisp.dhis.dataadmin.action.dataarchive.GetNumberOfOverlapingPatientValuesAction">
-      <result name="success" type="velocity-json">/dhis-web-maintenance-dataadmin/responseNumber.vm</result>
-      <param name="requiredAuthorities">F_ARCHIVE_DATA</param>
-    </action>
-
     <!-- Min/Max validation -->
 
     <action name="generateMinMaxValue" class="org.hisp.dhis.dataadmin.action.minmaxvalidation.GenerateMinMaxValuesAction">
