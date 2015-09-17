@@ -222,4 +222,14 @@ public interface AnalyticsService
      */
     DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate, 
         List<OrganisationUnit> userOrgUnits, I18nFormat format, boolean allowNull );
+    
+    /**
+     * Returns a list of user organisation units, looking first at the given user 
+     * org unit parameter, second at the organisation units associated with the
+     * current user. Returns an empty list if no organisation units are found.
+     * 
+     * @param userOrgUnit the user org unit parameter string.
+     * @return a list of organisation units.
+     */
+    List<OrganisationUnit> getUserOrgUnits( String userOrgUnit );
 }

@@ -32,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -56,6 +57,8 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.inject.internal.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -463,5 +466,15 @@ public class AnalyticsServiceTest
         assertEquals( 2, params.getDimensions().size() );
         assertEquals( 1, params.getFilters().size() );
         assertEquals( 3, params.getDimensionOptions( ouGroupSetA.getUid() ).size() );
+    }
+    
+    @Test
+    public void testGetUserOrgUnits()
+    {
+        String ouParam = ouA.getUid() + ";" + ouB.getUid();
+        
+        List<OrganisationUnit> expected = Lists.newArrayList( ouA, ouB );
+        
+        assertEquals( expected, analyticsService.getUserOrgUnits( ouParam ) );
     }
 }
