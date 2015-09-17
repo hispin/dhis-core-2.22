@@ -22,7 +22,7 @@
 
     <property name="formName" length="230" />
 
-    <property name="valueType" length="50" access="property">
+    <property name="valueType" length="50">
       <type name="org.hibernate.type.EnumType">
         <param name="enumClass">org.hisp.dhis.common.ValueType</param>
         <param name="useNamed">true</param>
