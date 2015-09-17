@@ -28,23 +28,24 @@ package org.hisp.dhis.validationrule.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.expression.MissingValueStrategy.SKIP_IF_ANY_VALUE_MISSING;
-import static org.hisp.dhis.expression.MissingValueStrategy.safeValueOf;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.expression.Expression;
 import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.expression.Operator;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.validation.Importance;
+import org.hisp.dhis.validation.RuleType;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
 
-import com.opensymphony.xwork2.Action;
+import static org.hisp.dhis.expression.MissingValueStrategy.SKIP_IF_ANY_VALUE_MISSING;
+import static org.hisp.dhis.expression.MissingValueStrategy.safeValueOf;
 
 /**
  * Adds a new validation rule to the database.
- * 
+ *
  * @author Margrethe Store
  * @author Lars Helge Overland
  * @version $Id: AddValidationRuleAction.java 3868 2007-11-08 15:11:12Z larshelg $
@@ -62,25 +63,25 @@ public class AddValidationRuleAction
     {
         this.validationRuleService = validationRuleService;
     }
-    
+
     private ExpressionService expressionService;
-    
+
     public void setExpressionService( ExpressionService expressionService )
     {
         this.expressionService = expressionService;
     }
-    
+
     private PeriodService periodService;
 
     public void setPeriodService( PeriodService periodService )
     {
         this.periodService = periodService;
     }
-    
+
     // -------------------------------------------------------------------------
     // Input
     // -------------------------------------------------------------------------
-    
+
     private String name;
 
     public void setName( String name )
@@ -96,7 +97,7 @@ public class AddValidationRuleAction
     }
 
     private String instruction;
-    
+
     public void setInstruction( String instruction )
     {
         this.instruction = instruction;
@@ -138,7 +139,7 @@ public class AddValidationRuleAction
     }
 
     private String leftSideMissingValueStrategy;
-    
+
     public void setLeftSideMissingValueStrategy( String leftSideMissingValueStrategy )
     {
         this.leftSideMissingValueStrategy = leftSideMissingValueStrategy;
@@ -150,14 +151,14 @@ public class AddValidationRuleAction
     {
         this.rightSideExpression = rightSideExpression;
     }
-    
+
     private String rightSideDescription;
 
     public void setRightSideDescription( String rightSideDescription )
     {
         this.rightSideDescription = rightSideDescription;
     }
-    
+
     private String rightSideMissingValueStrategy;
 
     public void setRightSideMissingValueStrategy( String rightSideMissingValueStrategy )
@@ -166,43 +167,43 @@ public class AddValidationRuleAction
     }
 
     private Integer organisationUnitLevel;
-    
+
     public void setOrganisationUnitLevel( Integer organisationUnitLevel )
     {
         this.organisationUnitLevel = organisationUnitLevel;
     }
 
     private String periodTypeName;
-    
-    public void setPeriodTypeName(String periodTypeName) 
+
+    public void setPeriodTypeName( String periodTypeName )
     {
         this.periodTypeName = periodTypeName;
     }
-    
+
     private Integer sequentialSampleCount;
-    
-    public void setSequentialSampleCount(Integer sequentialSampleCount) 
+
+    public void setSequentialSampleCount( Integer sequentialSampleCount )
     {
         this.sequentialSampleCount = sequentialSampleCount;
     }
 
     private Integer annualSampleCount;
-    
-    public void setAnnualSampleCount(Integer annualSampleCount) 
+
+    public void setAnnualSampleCount( Integer annualSampleCount )
     {
         this.annualSampleCount = annualSampleCount;
     }
 
     private Integer highOutliers;
-    
-    public void setHighOutliers(Integer highOutliers) 
+
+    public void setHighOutliers( Integer highOutliers )
     {
         this.highOutliers = highOutliers;
     }
 
     private Integer lowOutliers;
-    
-    public void setLowOutliers(Integer lowOutliers) 
+
+    public void setLowOutliers( Integer lowOutliers )
     {
         this.lowOutliers = lowOutliers;
     }
@@ -210,45 +211,45 @@ public class AddValidationRuleAction
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
-    
+
     @Override
     public String execute()
     {
         Expression leftSide = new Expression();
-        
+
         leftSide.setExpression( leftSideExpression );
         leftSide.setDescription( leftSideDescription );
         leftSide.setMissingValueStrategy( safeValueOf( leftSideMissingValueStrategy, SKIP_IF_ANY_VALUE_MISSING ) );
         leftSide.setDataElementsInExpression( expressionService.getDataElementsInExpression( leftSideExpression ) );
-        
+
         Expression rightSide = new Expression();
-        
+
         rightSide.setExpression( rightSideExpression );
         rightSide.setDescription( rightSideDescription );
         rightSide.setMissingValueStrategy( safeValueOf( rightSideMissingValueStrategy, SKIP_IF_ANY_VALUE_MISSING ) );
         rightSide.setDataElementsInExpression( expressionService.getDataElementsInExpression( rightSideExpression ) );
-        
+
         ValidationRule validationRule = new ValidationRule();
-        
+
         validationRule.setName( StringUtils.trimToNull( name ) );
         validationRule.setDescription( StringUtils.trimToNull( description ) );
         validationRule.setInstruction( StringUtils.trimToNull( instruction ) );
-        validationRule.setImportance( StringUtils.trimToNull( importance ) );
-        validationRule.setRuleType( StringUtils.trimToNull( ruleType ) );
+        validationRule.setImportance( Importance.valueOf( StringUtils.trimToNull( importance ) ) );
+        validationRule.setRuleType( RuleType.valueOf( StringUtils.trimToNull( ruleType ) ) );
         validationRule.setOperator( Operator.valueOf( operator ) );
         validationRule.setLeftSide( leftSide );
         validationRule.setRightSide( rightSide );
         validationRule.setOrganisationUnitLevel( organisationUnitLevel );
 
-        PeriodType periodType = periodService.getPeriodTypeByName(periodTypeName);
-        validationRule.setPeriodType(periodType);
+        PeriodType periodType = periodService.getPeriodTypeByName( periodTypeName );
+        validationRule.setPeriodType( periodType );
 
         validationRule.setSequentialSampleCount( sequentialSampleCount );
         validationRule.setAnnualSampleCount( annualSampleCount );
         validationRule.setHighOutliers( highOutliers );
         validationRule.setLowOutliers( lowOutliers );
         validationRuleService.saveValidationRule( validationRule );
-        
+
         return SUCCESS;
     }
 }

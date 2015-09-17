@@ -28,9 +28,21 @@ package org.hisp.dhis.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.MathUtils.expressionIsTrue;
-import static org.hisp.dhis.system.util.MathUtils.roundSignificant;
-import static org.hisp.dhis.system.util.MathUtils.zeroIfNull;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.common.MapMap;
+import org.hisp.dhis.common.SetMap;
+import org.hisp.dhis.commons.util.DebugUtils;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementOperand;
+import org.hisp.dhis.expression.Expression;
+import org.hisp.dhis.expression.Operator;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.period.CalendarPeriodType;
+import org.hisp.dhis.period.Period;
+import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.system.util.MathUtils;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -43,25 +55,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.common.MapMap;
-import org.hisp.dhis.common.SetMap;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementOperand;
-import org.hisp.dhis.expression.Expression;
-import org.hisp.dhis.expression.Operator;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.period.CalendarPeriodType;
-import org.hisp.dhis.period.Period;
-import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.commons.util.DebugUtils;
-import org.hisp.dhis.system.util.MathUtils;
+import static org.hisp.dhis.system.util.MathUtils.*;
 
 /**
  * Runs a validation task on a thread within a multi-threaded validation run.
- * 
+ * <p>
  * Each task looks for validation results in a different organisation unit.
  *
  * @author Jim Grace
@@ -95,26 +93,26 @@ public class ValidatorThread
         catch ( RuntimeException ex )
         {
             log.error( DebugUtils.getStackTrace( ex ) );
-            
+
             throw ex;
         }
     }
-    
+
     private void runInternal()
     {
-        if ( context.getValidationResults().size() < ( ValidationRunType.INTERACTIVE == context.getRunType() ?
+        if ( context.getValidationResults().size() < (ValidationRunType.INTERACTIVE == context.getRunType() ?
             ValidationRuleService.MAX_INTERACTIVE_ALERTS : ValidationRuleService.MAX_SCHEDULED_ALERTS) )
         {
             for ( PeriodTypeExtended periodTypeX : context.getPeriodTypeExtendedMap().values() )
             {
                 Collection<DataElement> sourceDataElements = periodTypeX.getSourceDataElements().get( sourceX.getSource() );
-                Set<ValidationRule> rules = getRulesBySourceAndPeriodType( sourceX, periodTypeX, sourceDataElements );                
+                Set<ValidationRule> rules = getRulesBySourceAndPeriodType( sourceX, periodTypeX, sourceDataElements );
                 context.getExpressionService().explodeValidationRuleExpressions( rules );
 
                 if ( !rules.isEmpty() )
                 {
                     Set<DataElement> recursiveCurrentDataElements = getRecursiveCurrentDataElements( rules );
-                    
+
                     for ( Period period : periodTypeX.getPeriods() )
                     {
                         MapMap<Integer, DataElementOperand, Date> lastUpdatedMap = new MapMap<>();
@@ -122,7 +120,7 @@ public class ValidatorThread
                         MapMap<Integer, DataElementOperand, Double> currentValueMap = getValueMap( periodTypeX,
                             periodTypeX.getDataElements(), sourceDataElements, recursiveCurrentDataElements,
                             periodTypeX.getAllowedPeriodTypes(), period, sourceX.getSource(), lastUpdatedMap, incompleteValuesMap );
-                        
+
                         log.trace( "Source " + sourceX.getSource().getName()
                             + " [" + period.getStartDate() + " - " + period.getEndDate() + "]"
                             + " currentValueMap[" + currentValueMap.size() + "]" );
@@ -132,7 +130,7 @@ public class ValidatorThread
                             if ( evaluateValidationCheck( currentValueMap, lastUpdatedMap, rule ) )
                             {
                                 Map<Integer, Double> leftSideValues = getExpressionValueMap( rule.getLeftSide(),
-                                        currentValueMap, incompleteValuesMap );
+                                    currentValueMap, incompleteValuesMap );
 
                                 if ( !leftSideValues.isEmpty() || Operator.compulsory_pair.equals( rule.getOperator() ) )
                                 {
@@ -142,7 +140,7 @@ public class ValidatorThread
                                     if ( !rightSideValues.isEmpty() || Operator.compulsory_pair.equals( rule.getOperator() ) )
                                     {
                                         Set<Integer> attributeOptionCombos = leftSideValues.keySet();
-                                        
+
                                         if ( Operator.compulsory_pair.equals( rule.getOperator() ) )
                                         {
                                             attributeOptionCombos = new HashSet<>( attributeOptionCombos );
@@ -157,8 +155,8 @@ public class ValidatorThread
 
                                             if ( Operator.compulsory_pair.equals( rule.getOperator() ) )
                                             {
-                                                violation = ( leftSide != null && rightSide == null )
-                                                    || ( leftSide == null && rightSide != null );
+                                                violation = (leftSide != null && rightSide == null)
+                                                    || (leftSide == null && rightSide != null);
                                             }
                                             else if ( leftSide != null && rightSide != null )
                                             {
@@ -176,8 +174,8 @@ public class ValidatorThread
 
                                             log.trace( "Evaluated " + rule.getName()
                                                 + ", combo id " + optionCombo + ": "
-                                                + (violation ? "violation" : "OK") + " " + ( leftSide == null ? "(null)" : leftSide.toString() )
-                                                + " " + rule.getOperator() + " " + ( rightSide == null ? "(null)" : rightSide.toString() )
+                                                + (violation ? "violation" : "OK") + " " + (leftSide == null ? "(null)" : leftSide.toString())
+                                                + " " + rule.getOperator() + " " + (rightSide == null ? "(null)" : rightSide.toString())
                                                 + " (" + context.getValidationResults().size() + " results)" );
                                         }
                                     }
@@ -193,11 +191,11 @@ public class ValidatorThread
     /**
      * Gets the rules that should be evaluated for a given organisation unit and
      * period type.
-     * 
-     * @param sourceX the organisation unit extended information
-     * @param periodTypeX the period type extended information
+     *
+     * @param sourceX            the organisation unit extended information
+     * @param periodTypeX        the period type extended information
      * @param sourceDataElements all data elements collected for this
-     *        organisation unit
+     *                           organisation unit
      * @return set of rules for this org unit and period type
      */
     private Set<ValidationRule> getRulesBySourceAndPeriodType( OrganisationUnitExtended sourceX,
@@ -207,14 +205,14 @@ public class ValidatorThread
 
         for ( ValidationRule rule : periodTypeX.getRules() )
         {
-            if ( ( ValidationRule.RULE_TYPE_VALIDATION.equals( rule.getRuleType() ) ) )
+            if ( rule.getRuleType() == RuleType.VALIDATION )
             {
                 // For validation-type rules, include only rules where the
                 // organisation collects all the data elements in the rule.
                 // But if this is some funny kind of rule with no elements
                 // (like for testing), include it also.
                 Collection<DataElement> elements = rule.getCurrentDataElements();
-                
+
                 if ( elements == null || elements.size() == 0 || sourceDataElements.containsAll( elements ) )
                 {
                     periodTypeRules.add( rule );
@@ -232,7 +230,7 @@ public class ValidatorThread
                 }
             }
         }
-        
+
         return periodTypeRules;
     }
 
@@ -243,12 +241,12 @@ public class ValidatorThread
      * SCHEDULED runs, we go further only if something has changed since the
      * last successful scheduled run -- either the rule definition or one of
      * the "current" data element / option values on the left or right sides.
-     *
+     * <p>
      * For scheduled runs, remove all values for any attribute option combos
      * where nothing has changed since the last run.
      *
      * @param lastUpdatedMapMap when each data value was last updated
-     * @param rule the rule that may be evaluated
+     * @param rule              the rule that may be evaluated
      * @return true if the rule should be evaluated with this data, false if not
      */
     private boolean evaluateValidationCheck( MapMap<Integer, DataElementOperand, Double> currentValueMapMap,
@@ -267,8 +265,8 @@ public class ValidatorThread
                     // SURVEILLANCE.
                     Collection<DataElementOperand> deos = context.getExpressionService().getOperandsInExpression(
                         rule.getLeftSide().getExpression() );
-                    
-                    if ( ValidationRule.RULE_TYPE_VALIDATION.equals( rule.getRuleType() ) )
+
+                    if ( rule.getRuleType() == RuleType.VALIDATION )
                     {
                         // Make a copy so we can add to it.
                         deos = new HashSet<>( deos );
@@ -286,7 +284,7 @@ public class ValidatorThread
                         for ( DataElementOperand deo : deos )
                         {
                             Date lastUpdated = entry.getValue().get( deo );
-                            
+
                             if ( lastUpdated != null && lastUpdated.after( context.getLastScheduledRun() ) )
                             {
                                 saveThisCombo = true; // True if new/updated data.
@@ -309,7 +307,7 @@ public class ValidatorThread
     /**
      * Gets the data elements for which values should be fetched recursively if
      * they are not collected for an organisation unit.
-     * 
+     *
      * @param rules ValidationRules to be evaluated
      * @return the data elements to fetch recursively
      */
@@ -319,26 +317,25 @@ public class ValidatorThread
 
         for ( ValidationRule rule : rules )
         {
-            if ( ValidationRule.RULE_TYPE_SURVEILLANCE.equals( rule.getRuleType() )
-                && rule.getCurrentDataElements() != null )
+            if ( rule.getRuleType() == RuleType.SURVEILLANCE && rule.getCurrentDataElements() != null )
             {
                 recursiveCurrentDataElements.addAll( rule.getCurrentDataElements() );
             }
         }
-        
+
         return recursiveCurrentDataElements;
     }
 
     /**
      * Returns the right-side evaluated value of the validation rule.
-     * 
-     * @param source organisation unit being evaluated
-     * @param periodTypeX period type being evaluated
-     * @param period period being evaluated
-     * @param rule ValidationRule being evaluated
-     * @param currentValueMap current values already fetched
+     *
+     * @param source             organisation unit being evaluated
+     * @param periodTypeX        period type being evaluated
+     * @param period             period being evaluated
+     * @param rule               ValidationRule being evaluated
+     * @param currentValueMap    current values already fetched
      * @param sourceDataElements the data elements collected by the organisation
-     *        unit
+     *                           unit
      * @return the right-side values, map by attribute category combo
      */
     private Map<Integer, Double> getRightSideValue( OrganisationUnit source, PeriodTypeExtended periodTypeX, Period period,
@@ -353,16 +350,15 @@ public class ValidatorThread
         // values we use, so just supply the current data values in order to
         // evaluate the (constant) expression.
 
-        if ( ValidationRule.RULE_TYPE_VALIDATION.equals( rule.getRuleType() )
-            || rule.getRightSide().getDataElementsInExpression().isEmpty() )
+        if ( rule.getRuleType() == RuleType.VALIDATION || rule.getRightSide().getDataElementsInExpression().isEmpty() )
         {
-            rightSideValues = getExpressionValueMap( rule.getRightSide(), currentValueMap, new SetMap<Integer, DataElementOperand>() );
+            rightSideValues = getExpressionValueMap( rule.getRightSide(), currentValueMap, new SetMap<>() );
         }
         else
         // ruleType equals SURVEILLANCE, and there are some data elements in the
         // right side expression
         {
-            CalendarPeriodType calendarPeriodType = ( CalendarPeriodType ) period.getPeriodType();
+            CalendarPeriodType calendarPeriodType = (CalendarPeriodType) period.getPeriodType();
             Collection<PeriodType> rightSidePeriodTypes = context.getRuleXMap().get( rule ).getAllowedPastPeriodTypes();
             ListMap<Integer, Double> sampleValuesMap = new ListMap<>();
             Calendar yearlyCalendar = PeriodType.createCalendarInstance( period.getStartDate() );
@@ -374,7 +370,7 @@ public class ValidatorThread
             {
                 // Defensive copy because createPeriod mutates Calendar.
                 Calendar calCopy = PeriodType.createCalendarInstance( yearlyCalendar.getTime() );
-                
+
                 // To track the period at the same time in preceding years.
                 Period yearlyPeriod = calendarPeriodType.createPeriod( calCopy );
 
@@ -393,7 +389,7 @@ public class ValidatorThread
                     // Fetch the sequential periods after this prior-year
                     // period.
                     Period sequentialPeriod = new Period( yearlyPeriod );
-                    
+
                     for ( int sequentialCount = 0; sequentialCount < sequentialSampleCount; sequentialCount++ )
                     {
                         sequentialPeriod = calendarPeriodType.getNextPeriod( sequentialPeriod );
@@ -405,7 +401,7 @@ public class ValidatorThread
                 // Fetch the sequential periods before this period (both this
                 // year and past years).
                 Period sequentialPeriod = new Period( yearlyPeriod );
-                
+
                 for ( int sequentialCount = 0; sequentialCount < sequentialSampleCount; sequentialCount++ )
                 {
                     sequentialPeriod = calendarPeriodType.getPreviousPeriod( sequentialPeriod );
@@ -418,10 +414,10 @@ public class ValidatorThread
             }
 
             rightSideValues = new HashMap<>();
-            
+
             for ( Map.Entry<Integer, List<Double>> e : sampleValuesMap.entrySet() )
             {
-                rightSideValues.put( e.getKey(), rightSideAverage( rule, e.getValue(), annualSampleCount, sequentialSampleCount) );
+                rightSideValues.put( e.getKey(), rightSideAverage( rule, e.getValue(), annualSampleCount, sequentialSampleCount ) );
             }
 
         }
@@ -432,19 +428,19 @@ public class ValidatorThread
      * Evaluates the right side of a surveillance-type validation rule for
      * a given organisation unit and period, and adds the value to a list
      * of sample values.
-     * 
+     * <p>
      * Note that for a surveillance-type rule, evaluating the right side
      * expression can result in sampling multiple periods and/or child
      * organisation units.
-     * 
-     * @param periodTypeX the period type extended information
-     * @param sampleValuesMap the lists of sample values to add to
-     * @param source the organisation unit
+     *
+     * @param periodTypeX        the period type extended information
+     * @param sampleValuesMap    the lists of sample values to add to
+     * @param source             the organisation unit
      * @param allowedPeriodTypes the period types in which the data may exist
-     * @param period the main period for the validation rule evaluation
-     * @param rule the surveillance-type rule being evaluated
+     * @param period             the main period for the validation rule evaluation
+     * @param rule               the surveillance-type rule being evaluated
      * @param sourceDataElements the data elements configured for this
-     *        organisation unit
+     *                           organisation unit
      */
     private void evaluateRightSidePeriod( PeriodTypeExtended periodTypeX, ListMap<Integer, Double> sampleValuesMap,
         OrganisationUnit source, Collection<PeriodType> allowedPeriodTypes, Period period, ValidationRule rule,
@@ -452,7 +448,7 @@ public class ValidatorThread
     {
         Period periodInstance = context.getPeriodService().getPeriod( period.getStartDate(), period.getEndDate(),
             period.getPeriodType() );
-        
+
         if ( periodInstance != null )
         {
             Set<DataElement> dataElements = rule.getRightSide().getDataElementsInExpression();
@@ -467,13 +463,13 @@ public class ValidatorThread
      * Evaluates an expression, returning a map of values by attribute option
      * combo.
      *
-     * @param expression expression to evaluate.
-     * @param valueMap Map of value maps, by attribute option combo.
+     * @param expression          expression to evaluate.
+     * @param valueMap            Map of value maps, by attribute option combo.
      * @param incompleteValuesMap map of values that were incomplete.
      * @return map of values.
      */
     private Map<Integer, Double> getExpressionValueMap( Expression expression,
-        MapMap<Integer, DataElementOperand, Double> valueMap, 
+        MapMap<Integer, DataElementOperand, Double> valueMap,
         SetMap<Integer, DataElementOperand> incompleteValuesMap )
     {
         Map<Integer, Double> expressionValueMap = new HashMap<>();
@@ -481,9 +477,9 @@ public class ValidatorThread
         for ( Map.Entry<Integer, Map<DataElementOperand, Double>> entry : valueMap.entrySet() )
         {
             Double value = context.getExpressionService().getExpressionValue( expression,
-                entry.getValue(), context.getConstantMap(), null, null, 
+                entry.getValue(), context.getConstantMap(), null, null,
                 incompleteValuesMap.getSet( entry.getKey() ) );
-            
+
             if ( MathUtils.isValidDouble( value ) )
             {
                 expressionValueMap.put( entry.getKey(), value );
@@ -496,14 +492,14 @@ public class ValidatorThread
     /**
      * Finds the average right-side sample value. This is used as the right-side
      * expression value to evaluate a surveillance-type rule.
-     * 
-     * @param rule surveillance-type rule being evaluated
-     * @param sampleValues sample values actually collected
-     * @param annualSampleCount number of annual samples tried for
+     *
+     * @param rule                  surveillance-type rule being evaluated
+     * @param sampleValues          sample values actually collected
+     * @param annualSampleCount     number of annual samples tried for
      * @param sequentialSampleCount number of sequential samples tried for
      * @return average right-side sample value
      */
-    private Double rightSideAverage( ValidationRule rule, List<Double> sampleValues, 
+    private Double rightSideAverage( ValidationRule rule, List<Double> sampleValues,
         int annualSampleCount, int sequentialSampleCount )
     {
         // Find the expected sample count for the last period of its type in the
@@ -511,7 +507,7 @@ public class ValidatorThread
         // in this year and for every past year: one sample for the same period 
         // in that year, plus sequentialSampleCounts before and after.
         Double average = null;
-        
+
         if ( !sampleValues.isEmpty() )
         {
             int expectedSampleCount = sequentialSampleCount + annualSampleCount * (1 + 2 * sequentialSampleCount);
@@ -535,37 +531,37 @@ public class ValidatorThread
                 sampleValues = sampleValues.subList( lowOutliers, sampleValues.size() - highOutliers );
                 log.trace( "Result: " + Arrays.toString( sampleValues.toArray() ) );
             }
-            
+
             Double sum = 0.0;
-            
+
             for ( Double sample : sampleValues )
             {
                 sum += sample;
             }
-            
+
             average = sum / sampleValues.size();
         }
-        
+
         return average;
     }
 
     /**
      * Gets data values for a given organisation unit and period, recursing if
      * necessary to sum the values from child organisation units.
-     * 
-     * @param periodTypeX period type which we are evaluating
-     * @param ruleDataElements data elements configured for the rule
-     * @param sourceDataElements data elements configured for the organisation
-     *        unit
+     *
+     * @param periodTypeX           period type which we are evaluating
+     * @param ruleDataElements      data elements configured for the rule
+     * @param sourceDataElements    data elements configured for the organisation
+     *                              unit
      * @param recursiveDataElements data elements for which we will recurse if
-     *        necessary
-     * @param allowedPeriodTypes all the periods in which we might find the data
-     *        values
-     * @param period period in which we are looking for values
-     * @param source organisation unit for which we are looking for values
-     * @param lastUpdatedMap map showing when each data values was last updated
-     * @param incompleteValuesMap ongoing set showing which values were found
-     *        but not from all children, mapped by attribute option combo.
+     *                              necessary
+     * @param allowedPeriodTypes    all the periods in which we might find the data
+     *                              values
+     * @param period                period in which we are looking for values
+     * @param source                organisation unit for which we are looking for values
+     * @param lastUpdatedMap        map showing when each data values was last updated
+     * @param incompleteValuesMap   ongoing set showing which values were found
+     *                              but not from all children, mapped by attribute option combo.
      * @return map of attribute option combo to map of values found.
      */
     private MapMap<Integer, DataElementOperand, Double> getValueMap( PeriodTypeExtended periodTypeX,
@@ -576,7 +572,7 @@ public class ValidatorThread
     {
         Set<DataElement> dataElementsToGet = new HashSet<>( ruleDataElements );
         dataElementsToGet.retainAll( sourceDataElements );
-        
+
         log.trace( "getDataValueMapRecursive: source:" + source.getName()
             + " ruleDataElements[" + ruleDataElements.size()
             + "] sourceDataElements[" + sourceDataElements.size()
@@ -585,7 +581,7 @@ public class ValidatorThread
             + "] allowedPeriodTypes[" + allowedPeriodTypes.size() + "]" );
 
         MapMap<Integer, DataElementOperand, Double> dataValueMap = null;
-        
+
         if ( dataElementsToGet.isEmpty() )
         {
             // We still might get something recursively
@@ -597,16 +593,16 @@ public class ValidatorThread
                 period.getStartDate(), source, allowedPeriodTypes, context.getAttributeCombo(),
                 context.getCogDimensionConstraints(), context.getCoDimensionConstraints(), lastUpdatedMap );
         }
-        
+
         // See if there are any data elements we need to get recursively:
         Set<DataElement> recursiveDataElementsNeeded = new HashSet<>( recursiveDataElements );
         recursiveDataElementsNeeded.removeAll( dataElementsToGet );
-        
+
         if ( !recursiveDataElementsNeeded.isEmpty() )
         {
             int childCount = 0;
             MapMap<Integer, DataElementOperand, Integer> childValueCounts = new MapMap<>();
-            
+
             for ( OrganisationUnit child : source.getChildren() )
             {
                 Collection<DataElement> childDataElements = periodTypeX.getSourceDataElements().get( child );

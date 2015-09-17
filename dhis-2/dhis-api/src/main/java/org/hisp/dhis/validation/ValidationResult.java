@@ -28,18 +28,17 @@ package org.hisp.dhis.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.Serializable;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.io.Serializable;
 
 /**
  * @author Margrethe Store
@@ -93,7 +92,7 @@ public class ValidationResult
     public int hashCode()
     {
         final int prime = 31;
-        int result = 1;        
+        int result = 1;
         result = prime * result + ((period == null) ? 0 : period.hashCode());
         result = prime * result + ((orgUnit == null) ? 0 : orgUnit.hashCode());
         result = prime * result + ((validationRule == null) ? 0 : validationRule.hashCode());
@@ -173,7 +172,7 @@ public class ValidationResult
         {
             return false;
         }
-        
+
         if ( leftsideValue == null )
         {
             if ( other.leftsideValue != null )
@@ -217,26 +216,26 @@ public class ValidationResult
     @Override
     public int compareTo( ValidationResult other )
     {
-    	int result = orgUnit.getName().compareTo( other.orgUnit.getName() );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
-    	
-    	result = period.getStartDate().compareTo( other.period.getStartDate() );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
+        int result = orgUnit.getName().compareTo( other.orgUnit.getName() );
 
-    	result = period.getEndDate().compareTo( other.period.getEndDate() );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
+        if ( result != 0 )
+        {
+            return result;
+        }
+
+        result = period.getStartDate().compareTo( other.period.getStartDate() );
+
+        if ( result != 0 )
+        {
+            return result;
+        }
+
+        result = period.getEndDate().compareTo( other.period.getEndDate() );
+
+        if ( result != 0 )
+        {
+            return result;
+        }
 
         result = attributeOptionCombo.getId() - other.attributeOptionCombo.getId();
 
@@ -245,63 +244,63 @@ public class ValidationResult
             return result;
         }
 
-    	result = validationImportanceOrder( validationRule.getImportance() ) - validationImportanceOrder( other.validationRule.getImportance() );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
+        result = validationImportanceOrder( validationRule.getImportance() ) - validationImportanceOrder( other.validationRule.getImportance() );
 
-    	result = validationRule.getLeftSide().getDescription().compareTo( other.validationRule.getLeftSide().getDescription() );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
+        if ( result != 0 )
+        {
+            return result;
+        }
 
-    	result = validationRule.getOperator().compareTo( other.validationRule.getOperator() );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
+        result = validationRule.getLeftSide().getDescription().compareTo( other.validationRule.getLeftSide().getDescription() );
 
-    	result = validationRule.getRightSide().getDescription().compareTo( other.validationRule.getRightSide().getDescription() );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
+        if ( result != 0 )
+        {
+            return result;
+        }
 
-    	result = (int) Math.signum( Math.round( 100.0 * leftsideValue ) - Math.round( 100.0 * other.leftsideValue ) );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
-    	
-    	result = (int) Math.signum( Math.round( 100.0 * rightsideValue ) - Math.round( 100.0 * other.rightsideValue ) );
-    	
-    	if ( result != 0 )
-    	{
-    	    return result;
-    	}
-    	
-    	return 0;
+        result = validationRule.getOperator().compareTo( other.validationRule.getOperator() );
+
+        if ( result != 0 )
+        {
+            return result;
+        }
+
+        result = validationRule.getRightSide().getDescription().compareTo( other.validationRule.getRightSide().getDescription() );
+
+        if ( result != 0 )
+        {
+            return result;
+        }
+
+        result = (int) Math.signum( Math.round( 100.0 * leftsideValue ) - Math.round( 100.0 * other.leftsideValue ) );
+
+        if ( result != 0 )
+        {
+            return result;
+        }
+
+        result = (int) Math.signum( Math.round( 100.0 * rightsideValue ) - Math.round( 100.0 * other.rightsideValue ) );
+
+        if ( result != 0 )
+        {
+            return result;
+        }
+
+        return 0;
     }
 
-    private int validationImportanceOrder( String importance )
+    private int validationImportanceOrder( Importance importance )
     {
-        return importance.equals( "high" ) ? 0 : importance.equals( "medium" ) ? 1 : 2;
+        return importance == Importance.HIGH ? 0 : importance == Importance.MEDIUM ? 1 : 2;
     }
 
     @Override
     public String toString()
     {
-        return "[Org unit: " + orgUnit + 
-            ", period: " + period + 
-            ", validation rule: " + validationRule + 
-            ", left side value: " + leftsideValue + 
+        return "[Org unit: " + orgUnit +
+            ", period: " + period +
+            ", validation rule: " + validationRule +
+            ", left side value: " + leftsideValue +
             ", right side value: " + rightsideValue + "]";
     }
 

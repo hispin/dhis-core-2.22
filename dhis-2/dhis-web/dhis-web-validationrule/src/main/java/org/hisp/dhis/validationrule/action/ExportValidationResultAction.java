@@ -122,7 +122,7 @@ public class ExportValidationResultAction
         return type;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private Grid generateGrid()
     {
         List<ValidationResult> results = (List<ValidationResult>) SessionUtils.
@@ -159,8 +159,8 @@ public class ExportValidationResultAction
             grid.addValue( unit.getName() );
             grid.addValue( format.formatPeriod( period ) );
             grid.addValue( validationResult.getValidationRule().getName() );
-            grid.addValue( i18n.getString( validationResult.getValidationRule().getImportance() ) );
-            grid.addValue( i18n.getString( validationResult.getValidationRule().getRuleType() ) );
+            grid.addValue( i18n.getString( validationResult.getValidationRule().getImportance().toString().toLowerCase() ) );
+            grid.addValue( i18n.getString( validationResult.getValidationRule().getRuleType().toString().toLowerCase() ) );
             grid.addValue( validationResult.getValidationRule().getLeftSide().getDescription() ); //TODO lazy prone
             grid.addValue( String.valueOf( validationResult.getLeftsideValue() ) );
             grid.addValue( i18n.getString( validationResult.getValidationRule().getOperator().toString() ) );
