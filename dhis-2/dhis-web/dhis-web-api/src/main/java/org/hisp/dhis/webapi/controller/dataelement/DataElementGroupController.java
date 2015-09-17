@@ -75,7 +75,7 @@ public class DataElementGroupController
         Model model, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
         WebOptions options = new WebOptions( parameters );
-        List<DataElementGroup> dataElementGroups = getEntity( uid );
+        List<DataElementGroup> dataElementGroups = getEntity( uid, NO_WEB_OPTIONS );
         translate( dataElementGroups, translateParams );
 
         if ( dataElementGroups.isEmpty() )
@@ -121,7 +121,7 @@ public class DataElementGroupController
         HttpServletResponse response ) throws Exception
     {
         WebOptions options = new WebOptions( parameters );
-        List<DataElementGroup> dataElementGroups = getEntity( uid );
+        List<DataElementGroup> dataElementGroups = getEntity( uid, NO_WEB_OPTIONS );
         translate( dataElementGroups, translateParams );
 
         if ( dataElementGroups.isEmpty() )

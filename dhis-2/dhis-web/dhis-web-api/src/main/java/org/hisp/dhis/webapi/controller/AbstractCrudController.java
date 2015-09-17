@@ -109,6 +109,8 @@ import com.google.common.collect.Lists;
  */
 public abstract class AbstractCrudController<T extends IdentifiableObject>
 {
+    protected static final WebOptions NO_WEB_OPTIONS = new WebOptions( new HashMap<>() );
+    
     //--------------------------------------------------------------------------
     // Dependencies
     //--------------------------------------------------------------------------
@@ -912,10 +914,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         return entityList;
     }
 
-    /**
-     * Should not be overridden, instead override {@link getEntity(String, WebOptions}.
-     */
-    protected final List<T> getEntity( String uid )
+    private final List<T> getEntity( String uid )
     {
         return getEntity( uid, new WebOptions( new HashMap<>() ) );
     }

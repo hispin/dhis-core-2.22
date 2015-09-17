@@ -152,7 +152,7 @@ public class DataSetController
         @RequestParam( value = "comment", defaultValue = "true", required = false ) boolean comment,
         HttpServletResponse response ) throws IOException, WebMessageException
     {
-        List<DataSet> dataSets = getEntity( uid );
+        List<DataSet> dataSets = getEntity( uid, NO_WEB_OPTIONS );
 
         if ( dataSets.isEmpty() )
         {
@@ -170,7 +170,7 @@ public class DataSetController
         @RequestParam( value = "pe", required = false ) String period,
         @RequestParam( required = false ) boolean metaData, HttpServletResponse response ) throws IOException, WebMessageException
     {
-        List<DataSet> dataSets = getEntity( uid );
+        List<DataSet> dataSets = getEntity( uid, NO_WEB_OPTIONS );
 
         if ( dataSets.isEmpty() )
         {
@@ -198,7 +198,7 @@ public class DataSetController
         @RequestParam( value = "pe", required = false ) String period,
         @RequestParam( required = false ) boolean metaData, HttpServletResponse response ) throws IOException, WebMessageException
     {
-        List<DataSet> dataSets = getEntity( uid );
+        List<DataSet> dataSets = getEntity( uid, NO_WEB_OPTIONS );
 
         if ( dataSets.isEmpty() )
         {
