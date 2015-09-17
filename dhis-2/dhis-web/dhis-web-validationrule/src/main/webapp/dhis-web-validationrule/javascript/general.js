@@ -18,7 +18,7 @@ function showValidationRuleDetails( context )
 		var ruleType = json.validationRule.ruleType;
 		setText( 'ruleTypeField', i18nalizeRuleType( ruleType ) );
 		
-		if ( ruleType == 'surveillance' ) 
+		if ( ruleType == 'SURVEILLANCE' )
 		{
 			var organisationUnitLevel = string( json.validationRule.organisationUnitLevel );
 			setText( 'organisationUnitLevelField', organisationUnitLevel ? organisationUnitLevel : '[' + i18n_none + ']' );
@@ -65,15 +65,15 @@ function showValidationRuleDetails( context )
 
 function i18nalizeImportance ( importance )
 {
-	if ( importance == "high" )
+	if ( importance == "HIGH" )
 	{
 		return i18n_high;
 	}
-	else if ( importance == "medium" )
+	else if ( importance == "MEDIUM" )
 	{
 		return i18n_medium;
 	}
-	if ( importance == "low" )
+	if ( importance == "LOW" )
 	{
 		return i18n_low;
 	}
@@ -83,11 +83,11 @@ function i18nalizeImportance ( importance )
 
 function i18nalizeRuleType ( ruleType )
 {
-	if ( ruleType == "validation" )
+	if ( ruleType == "VALIDATION" )
 	{
 		return i18n_validation;
 	}
-	else if ( ruleType == "surveillance" )
+	else if ( ruleType == "SURVEILLANCE" )
 	{
 		return i18n_surveillance;
 	}
