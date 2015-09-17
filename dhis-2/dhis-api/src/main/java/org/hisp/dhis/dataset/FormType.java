@@ -34,9 +34,19 @@ package org.hisp.dhis.dataset;
 public enum FormType
 {
     DEFAULT,
-    SECTION,
     CUSTOM,
+    SECTION,
     SECTION_MULTIORG;
+
+    public boolean isDefault()
+    {
+        return this == DEFAULT;
+    }
+
+    public boolean isCustom()
+    {
+        return this == CUSTOM;
+    }
 
     public boolean isSection()
     {

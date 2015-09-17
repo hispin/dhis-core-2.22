@@ -43,10 +43,14 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * @author mortenoh
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class GetSectionFormAction
     implements Action
@@ -218,7 +222,7 @@ public class GetSectionFormAction
 
         validationRuleViolations = formUtils.getValidationRuleViolations( organisationUnit, dataSet, period );
 
-        if ( dataSet.getDataSetType().equals( DataSet.TYPE_SECTION ) )
+        if ( dataSet.getFormType().isSection() )
         {
             setGreyedFields();
         }

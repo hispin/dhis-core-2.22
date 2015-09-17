@@ -31,9 +31,9 @@
     </action>
 
     <action name="loadForm" class="org.hisp.dhis.de.action.LoadFormAction">
-      <result name="custom" type="velocity">/dhis-web-dataentry/customForm.vm</result>
-      <result name="section" type="velocity">/dhis-web-dataentry/sectionForm.vm</result>
-      <result name="multiorg_section" type="velocity">/dhis-web-dataentry/multiOrgSectionForm.vm</result>
+      <result name="CUSTOM" type="velocity">/dhis-web-dataentry/customForm.vm</result>
+      <result name="SECTION" type="velocity">/dhis-web-dataentry/sectionForm.vm</result>
+      <result name="SECTION_MULTIORG" type="velocity">/dhis-web-dataentry/multiOrgSectionForm.vm</result>
       <result name="input" type="velocity">/dhis-web-dataentry/responseVoid.vm</result>
     </action>
 

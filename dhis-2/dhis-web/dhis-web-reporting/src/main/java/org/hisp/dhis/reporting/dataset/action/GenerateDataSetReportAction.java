@@ -28,23 +28,17 @@ package org.hisp.dhis.reporting.dataset.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.dataset.DataSet.TYPE_CUSTOM;
-import static org.hisp.dhis.dataset.DataSet.TYPE_SECTION;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.common.Grid;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.CompleteDataSetRegistration;
 import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.dataset.FormType;
 import org.hisp.dhis.datasetreport.DataSetReportService;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nFormat;
@@ -54,10 +48,12 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.common.cache.CacheStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Chau Thu Tran
@@ -65,7 +61,7 @@ import com.opensymphony.xwork2.Action;
  */
 public class GenerateDataSetReportAction
     implements Action
-{    
+{
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -83,7 +79,7 @@ public class GenerateDataSetReportAction
     {
         this.dataSetService = dataSetService;
     }
-    
+
     private CompleteDataSetRegistrationService registrationService;
 
     public void setRegistrationService( CompleteDataSetRegistrationService registrationService )
@@ -92,21 +88,21 @@ public class GenerateDataSetReportAction
     }
 
     private OrganisationUnitService organisationUnitService;
-    
+
     public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
     {
         this.organisationUnitService = organisationUnitService;
     }
-    
+
     private PeriodService periodService;
-    
+
     public void setPeriodService( PeriodService periodService )
     {
         this.periodService = periodService;
     }
-    
+
     private DataElementCategoryService categoryService;
-    
+
     public void setCategoryService( DataElementCategoryService categoryService )
     {
         this.categoryService = categoryService;
@@ -125,7 +121,7 @@ public class GenerateDataSetReportAction
     {
         this.i18n = i18n;
     }
-    
+
     @Autowired
     private ContextUtils contextUtils;
 
@@ -148,12 +144,12 @@ public class GenerateDataSetReportAction
     }
 
     private String ou;
-    
+
     public void setOu( String ou )
     {
         this.ou = ou;
     }
-        
+
     private Set<String> dimension;
 
     public void setDimension( Set<String> dimension )
@@ -172,14 +168,14 @@ public class GenerateDataSetReportAction
     {
         this.selectedUnitOnly = selectedUnitOnly;
     }
-    
+
     private String type;
 
     public void setType( String type )
     {
         this.type = type;
     }
-    
+
     // -------------------------------------------------------------------------
     // Output
     // -------------------------------------------------------------------------
@@ -204,9 +200,9 @@ public class GenerateDataSetReportAction
     {
         return selectedPeriod;
     }
-    
+
     private CompleteDataSetRegistration registration;
-    
+
     public CompleteDataSetRegistration getRegistration()
     {
         return registration;
@@ -239,7 +235,7 @@ public class GenerateDataSetReportAction
         // ---------------------------------------------------------------------
 
         HttpServletResponse response = ServletActionContext.getResponse();
-        
+
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_HTML, CacheStrategy.RESPECT_SYSTEM_SETTING, null, false );
 
         // ---------------------------------------------------------------------
@@ -253,16 +249,16 @@ public class GenerateDataSetReportAction
             selectedPeriod = PeriodType.getPeriodFromIsoString( pe );
             selectedPeriod = periodService.reloadPeriod( selectedPeriod );
         }
-     
+
         selectedOrgunit = organisationUnitService.getOrganisationUnit( ou );
 
-        String dataSetType = selectedDataSet.getDataSetType();
+        FormType formType = selectedDataSet.getFormType();
 
         DataElementCategoryOptionCombo attributeOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
 
         registration = registrationService.getCompleteDataSetRegistration( selectedDataSet, selectedPeriod, selectedOrgunit, attributeOptionCombo );
-        
-        if ( TYPE_CUSTOM.equals( dataSetType ) )
+
+        if ( formType.isCustom() )
         {
             if ( type != null )
             {
@@ -273,7 +269,7 @@ public class GenerateDataSetReportAction
                 customDataEntryFormCode = dataSetReportService.getCustomDataSetReport( selectedDataSet, selectedPeriod, selectedOrgunit, dimension, selectedUnitOnly, format );
             }
         }
-        else if ( TYPE_SECTION.equals( dataSetType ) )
+        else if ( formType.isSection() )
         {
             grids = dataSetReportService.getSectionDataSetReport( selectedDataSet, selectedPeriod, selectedOrgunit, dimension, selectedUnitOnly, format, i18n );
         }
@@ -281,7 +277,7 @@ public class GenerateDataSetReportAction
         {
             grids = dataSetReportService.getDefaultDataSetReport( selectedDataSet, selectedPeriod, selectedOrgunit, dimension, selectedUnitOnly, format, i18n );
         }
-                
-        return type != null ? type : dataSetType;
+
+        return type != null ? type : formType.toString();
     }
 }

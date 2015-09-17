@@ -29,7 +29,6 @@ package org.hisp.dhis.de.action;
  */
 
 import com.opensymphony.xwork2.Action;
-
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElement;
@@ -44,6 +43,7 @@ import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.dataset.FormType;
 import org.hisp.dhis.dataset.Section;
 import org.hisp.dhis.dataset.comparator.SectionOrderComparator;
 import org.hisp.dhis.i18n.I18n;
@@ -96,7 +96,7 @@ public class LoadFormAction
     }
 
     private DataElementCategoryService categoryService;
-    
+
     public void setCategoryService( DataElementCategoryService categoryService )
     {
         this.categoryService = categoryService;
@@ -244,17 +244,17 @@ public class LoadFormAction
             return INPUT;
         }
 
-        String dataSetType = dataSet.getDataSetType();
+        FormType formType = dataSet.getFormType();
 
         // ---------------------------------------------------------------------
         // Custom form
         // ---------------------------------------------------------------------
 
-        if ( DataSet.TYPE_CUSTOM.equals( dataSetType ) && dataSet.hasDataEntryForm() )
+        if ( formType.isCustom() && dataSet.hasDataEntryForm() )
         {
-            dataEntryForm = dataSet.getDataEntryForm();            
+            dataEntryForm = dataSet.getDataEntryForm();
             customDataEntryFormCode = dataEntryFormService.prepareDataEntryFormForEntry( dataEntryForm, dataSet, i18n );
-            return dataSetType;
+            return formType.toString();
         }
 
         // ---------------------------------------------------------------------
@@ -296,7 +296,7 @@ public class LoadFormAction
             for ( DataElementCategory dec : categoryCombo.getCategories() )
             {
                 DataElementCategory category = categoryService.getDataElementCategory( dec.getId(), true );
-                
+
                 optionsMap.put( category.getId(), category.getCategoryOptions() );
             }
 
@@ -342,7 +342,7 @@ public class LoadFormAction
 
         DataSet dsOriginal = dataSet;
 
-        if ( dataSetType.equals( DataSet.TYPE_DEFAULT ) )
+        if ( dataSet.getFormType().isDefault() )
         {
             DataSet dataSetCopy = new DataSet();
             dataSetCopy.setName( dataSet.getName() );
@@ -356,7 +356,7 @@ public class LoadFormAction
             {
                 DataElementCategoryCombo categoryCombo = orderedCategoryCombos.get( i );
                 String name = !categoryCombo.isDefault() ? categoryCombo.getName() : dataSetCopy.getName();
-                
+
                 Section section = new Section();
                 section.setUid( CodeGenerator.generateCode() );
                 section.setId( i );
@@ -369,7 +369,7 @@ public class LoadFormAction
                 section.setIndicators( new ArrayList<>( dataSet.getIndicators() ) );
             }
 
-            dataSetType = DataSet.TYPE_SECTION;
+            formType = FormType.SECTION;
         }
 
         // ---------------------------------------------------------------------
@@ -400,12 +400,12 @@ public class LoadFormAction
 
             getSectionForm( dataElements, dataSet );
 
-            dataSetType = DataSet.TYPE_SECTION_MULTIORG;
+            formType = FormType.SECTION_MULTIORG;
         }
 
         getSectionForm( dataElements, dataSet );
 
-        return dataSetType;
+        return formType.toString();
     }
 
     // -------------------------------------------------------------------------

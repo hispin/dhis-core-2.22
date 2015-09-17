@@ -106,10 +106,10 @@ dhis2.de.cst.colorBorder = '#aaa';
 
 // Form types
 
-dhis2.de.cst.formTypeCustom = 'custom';
-dhis2.de.cst.formTypeSection = 'section';
-dhis2.de.cst.formTypeMultiOrgSection = 'multiorg_section';
-dhis2.de.cst.formTypeDefault = 'default';
+dhis2.de.cst.formTypeCustom = 'CUSTOM';
+dhis2.de.cst.formTypeSection = 'SECTION';
+dhis2.de.cst.formTypeMultiOrgSection = 'SECTION_MULTIORG';
+dhis2.de.cst.formTypeDefault = 'DEFAULT';
 
 // Events
 
