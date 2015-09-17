@@ -127,7 +127,7 @@ public class DashboardController
     public void deleteObject( @PathVariable( "uid" ) String uid, HttpServletRequest request, HttpServletResponse response )
         throws Exception
     {
-        List<Dashboard> objects = getEntity( uid );
+        List<Dashboard> objects = getEntity( uid, NO_WEB_OPTIONS );
 
         if ( objects.isEmpty() )
         {

@@ -362,7 +362,7 @@ public class UserController
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = { "application/xml", "text/xml" } )
     public void putXmlObject( ImportOptions importOptions, @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        List<User> users = getEntity( pvUid );
+        List<User> users = getEntity( pvUid, NO_WEB_OPTIONS );
 
         if ( users.isEmpty() )
         {
@@ -399,7 +399,7 @@ public class UserController
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = "application/json" )
     public void putJsonObject( ImportOptions importOptions, @PathVariable( "uid" ) String pvUid, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        List<User> users = getEntity( pvUid );
+        List<User> users = getEntity( pvUid, NO_WEB_OPTIONS );
 
         if ( users.isEmpty() )
         {
