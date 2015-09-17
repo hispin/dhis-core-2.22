@@ -42,7 +42,7 @@ import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.inject.internal.Lists;
+import com.google.common.collect.Lists;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -1026,7 +1026,8 @@ public class TableAlteror
         List<String> tables = Lists.newArrayList( "user", "usergroup", "organisationunit", "orgunitgroup", "orgunitgroupset", 
             "section", "dataset", "sqlview", "dataelement", "dataelementgroup", "dataelementgroupset", "categorycombo", 
             "dataelementcategory", "indicator", "indicatorgroup", "indicatorgroupset", "indicatortype", 
-            "validationrule", "validationrulegroup", "constant", "attribute", "attributegroup" );
+            "validationrule", "validationrulegroup", "constant", "attribute", "attributegroup",
+            "program", "programstage", "programindicator", "trackedentity", "trackedentityattribute" );
         
         for ( String table : tables )
         {
