@@ -282,7 +282,7 @@ public class DefaultOrganisationUnitService
 
         if ( parents != null && !parents.isEmpty() )
         {
-            Collection<OrganisationUnit> children = getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( parents ) );
+            List<OrganisationUnit> children = getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( parents ) );
 
             members.retainAll( children );
         }
@@ -428,46 +428,10 @@ public class DefaultOrganisationUnitService
         return organisationUnitStore.getOrganisationUnits( params );
     }
 
-    //Rewrite using path
     @Override
     public int getNumberOfOrganisationalLevels()
     {
-        int maxDepth = 0;
-        int depth = 0;
-
-        for ( OrganisationUnit root : getRootOrganisationUnits() )
-        {
-            depth = getDepth( root, 1 );
-
-            if ( depth > maxDepth )
-            {
-                maxDepth = depth;
-            }
-        }
-
-        return maxDepth;
-    }
-
-    /**
-     * Support method for getNumberOfOrganisationalLevels(). Finds the depth of
-     * a given subtree. The parent is at the current level.
-     */
-    private int getDepth( OrganisationUnit parent, int currentLevel )
-    {
-        int maxDepth = currentLevel;
-        int depth = 0;
-
-        for ( OrganisationUnit child : parent.getChildren() )
-        {
-            depth = getDepth( child, currentLevel + 1 );
-
-            if ( depth > maxDepth )
-            {
-                maxDepth = depth;
-            }
-        }
-
-        return maxDepth;
+        return organisationUnitStore.getMaxLevel();
     }
 
     @Override
@@ -514,7 +478,7 @@ public class DefaultOrganisationUnitService
 
         if ( currentUser != null && !currentUser.getUserCredentials().isSuper() )
         {
-            Collection<String> userDataSets = IdentifiableObjectUtils.getUids( currentUser.getUserCredentials().getAllDataSets() );
+            List<String> userDataSets = IdentifiableObjectUtils.getUids( currentUser.getUserCredentials().getAllDataSets() );
 
             for ( Set<String> dataSets : associationMap.values() )
             {
@@ -536,11 +500,11 @@ public class DefaultOrganisationUnitService
 
         if ( currentUser != null && currentUser.getOrganisationUnits() != null )
         {
-            Collection<String> parentIds = getUids( currentUser.getOrganisationUnits() );
+            List<String> parentIds = getUids( currentUser.getOrganisationUnits() );
 
-            Collection<OrganisationUnit> organisationUnitsWithChildren = getOrganisationUnitsWithChildren( parentIds, maxLevels );
+            List<OrganisationUnit> organisationUnitsWithChildren = getOrganisationUnitsWithChildren( parentIds, maxLevels );
 
-            Collection<String> children = getUids( organisationUnitsWithChildren );
+            List<String> children = getUids( organisationUnitsWithChildren );
 
             associationMap.keySet().retainAll( children );
         }
@@ -569,7 +533,7 @@ public class DefaultOrganisationUnitService
     {
         Map<String, OrganisationUnit> map = new HashMap<>();
 
-        Collection<OrganisationUnit> organisationUnits = getAllOrganisationUnits();
+        List<OrganisationUnit> organisationUnits = getAllOrganisationUnits();
 
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
@@ -731,7 +695,9 @@ public class DefaultOrganisationUnitService
 
         List<OrganisationUnitLevel> levels = new ArrayList<>();
 
-        for ( int i = 0; i < getNumberOfOrganisationalLevels(); i++ )
+        int levelNo = getNumberOfOrganisationalLevels();
+        
+        for ( int i = 0; i < levelNo; i++ )
         {
             int level = i + 1;
 
@@ -747,7 +713,7 @@ public class DefaultOrganisationUnitService
     {
         Map<Integer, OrganisationUnitLevel> levelMap = new HashMap<>();
 
-        Collection<OrganisationUnitLevel> levels = getOrganisationUnitLevels();
+        List<OrganisationUnitLevel> levels = getOrganisationUnitLevels();
 
         for ( OrganisationUnitLevel level : levels )
         {
@@ -891,7 +857,7 @@ public class DefaultOrganisationUnitService
             {
                 // Get top search point through top level org unit which contains coordinate
 
-                Collection<OrganisationUnit> orgUnitsTopLevel = getTopLevelOrgUnitWithPoint( longitude, latitude, 1,
+                List<OrganisationUnit> orgUnitsTopLevel = getTopLevelOrgUnitWithPoint( longitude, latitude, 1,
                     getNumberOfOrganisationalLevels() - 1 );
 
                 if ( orgUnitsTopLevel.size() == 1 )
@@ -904,7 +870,7 @@ public class DefaultOrganisationUnitService
 
             if ( topOrgUnit != null )
             {
-                Collection<OrganisationUnit> orgUnitChildren = new ArrayList<>();
+                List<OrganisationUnit> orgUnitChildren = new ArrayList<>();
 
                 if ( targetLevel != null )
                 {
