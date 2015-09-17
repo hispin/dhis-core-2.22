@@ -157,7 +157,7 @@ public abstract class BaseAnalyticalObject
     @Scanned
     protected List<OrganisationUnitGroup> itemOrganisationUnitGroups = new ArrayList<>();
 
-    protected String digitGroupSeparator;
+    protected DigitGroupSeparator digitGroupSeparator;
 
     protected int sortOrder;
 
@@ -1118,12 +1118,12 @@ public abstract class BaseAnalyticalObject
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDigitGroupSeparator()
+    public DigitGroupSeparator getDigitGroupSeparator()
     {
         return digitGroupSeparator;
     }
 
-    public void setDigitGroupSeparator( String digitGroupSeparator )
+    public void setDigitGroupSeparator( DigitGroupSeparator digitGroupSeparator )
     {
         this.digitGroupSeparator = digitGroupSeparator;
     }
