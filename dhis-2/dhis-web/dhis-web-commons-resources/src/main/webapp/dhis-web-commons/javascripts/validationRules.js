@@ -64,7 +64,7 @@ var validationRules = {
     "userGroup" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 210 ],
+            "rangelength" : [ 2, 230 ],
             "alphanumericwithbasicpuncspaces" : true
         },
         "usersSelected" : {
@@ -74,7 +74,7 @@ var validationRules = {
     "organisationUnit" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "shortName" : {
             "required" : true,
@@ -119,7 +119,7 @@ var validationRules = {
     "organisationUnitGroup" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "shortName" : {
             "required" : true,
@@ -135,7 +135,7 @@ var validationRules = {
     "organisationUnitGroupSet" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         }
     },
     "dataEntry" : {
@@ -147,14 +147,14 @@ var validationRules = {
     "section" : {
         "sectionName" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         }
     },
     "dataSet" : {
         "name" : {
             "required" : true,
             "alphanumericwithbasicpuncspaces" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "shortName" : {
             "required" : true,
@@ -176,7 +176,7 @@ var validationRules = {
     "sqlView" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 50 ]
+            "rangelength" : [ 2, 230 ]
         },
         "sqlquery" : {
             "required" : true
@@ -212,7 +212,7 @@ var validationRules = {
     "dataElement" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ],
+            "rangelength" : [ 2, 230 ],
             "alphanumericwithbasicpuncspaces" : true,
             "notOnlyDigits" : true
         },
@@ -240,7 +240,7 @@ var validationRules = {
     "dateElementCategoryCombo" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "selectedList" : {
             "required" : true
@@ -249,7 +249,7 @@ var validationRules = {
     "dateElementCategory" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "memberValidator" : {
             "required" : true
@@ -260,7 +260,7 @@ var validationRules = {
             "required" : true,
             "alphanumericwithbasicpuncspaces" : true,
             "notOnlyDigits" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "shortName" : {
             "required" : true,
@@ -277,13 +277,13 @@ var validationRules = {
     "dataElementGroupSet" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         }
     },
     "indicator" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ],
+            "rangelength" : [ 2, 230 ],
             "alphanumericwithbasicpuncspaces" : true,
             "nostartwhitespace" : true
         },
@@ -311,20 +311,20 @@ var validationRules = {
     "indicatorGroup" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ],
+            "rangelength" : [ 2, 230 ],
             "alphanumericwithbasicpuncspaces" : true
         }
     },
     "indicatorGroupSet" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         }
     },
     "indicatorType" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ],
+            "rangelength" : [ 2, 230 ],
             "alphanumericwithbasicpuncspaces" : true
         },
         "factor" : {
@@ -336,7 +336,7 @@ var validationRules = {
     "validationRule" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "importance" : {
             "required" : true
@@ -385,7 +385,7 @@ var validationRules = {
     "validationRuleGroup" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2, 230 ]
         }
     },
     "constant" : {
@@ -414,7 +414,7 @@ var validationRules = {
     "trackedEntityAttribute" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2,160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "shortName" : {
             "required" : true,
@@ -424,7 +424,7 @@ var validationRules = {
     "trackedEntityAttributeGroup" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2,160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "attributeList" : {
             "required" : true
@@ -433,7 +433,7 @@ var validationRules = {
     "relationshipType" : {
         "aIsToB" : {
             "required" : true,
-            "rangelength" : [ 2,160 ]
+            "rangelength" : [ 2, 160 ]
         },
         "bIsToA" : {
             "required" : true,
@@ -453,7 +453,7 @@ var validationRules = {
     "program" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2,160 ]
+            "rangelength" : [ 2, 230 ]
         },
         "trackedEntityId" : {
             "required" : true
@@ -477,7 +477,7 @@ var validationRules = {
     "programStage" : {
         "name" : {
             "required" : true,
-            "rangelength" : [2,160]
+            "rangelength" : [2,230]
         },
         "description" : {
             "required" : true
@@ -500,21 +500,21 @@ var validationRules = {
     "programRule" : {
         "name" : {
             "required" : true,
-            "rangelength" : [ 2,160 ]
+            "rangelength" : [ 2,230 ]
         },
         "description" : {
             "required" : true,
-            "rangelength" : [ 2, 160 ]
+            "rangelength" : [ 2,160 ]
         },
         "condition" : {
             "required" : true,
-            "rangelength" : [ 2, 255 ]
+            "rangelength" : [ 2,255 ]
         }
     },
 	"trackedEntityInstanceReminder" : {
         "name" : {
             "required" : true,
-            "rangelength" : [2,160]
+            "rangelength" : [2,230]
         },
         "days" : {
             "required": true,
@@ -534,7 +534,7 @@ var validationRules = {
     "programIndicator" : {
         "name" : {
             "required" : true,
-            "rangelength" : [2,160]
+            "rangelength" : [2,230]
         },
         "shortName" : {
             "required" : true,
@@ -556,7 +556,7 @@ var validationRules = {
     "caseAggregation" : {
         "name" : {
             "required" : true,
-            "rangelength" : [2,160]
+            "rangelength" : [2,230]
         },
         "aggregationDataElementId" : {
             "required" : true
@@ -572,7 +572,7 @@ var validationRules = {
     "programStageSection" : {
         "name" : {
             "required" : true,
-            "rangelength" : [2,160]
+            "rangelength" : [2,230]
         },
         "dataElementList" : {
             "required" : true
@@ -581,7 +581,7 @@ var validationRules = {
     "programValidation" : {
         "name" : {
             "required" : true,
-            "rangelength" : [2,160]
+            "rangelength" : [2,230]
         },
         "operator" : {
             "required" : true
@@ -596,7 +596,7 @@ var validationRules = {
     "validationCriteria" : {
         "name" : {
             "required" : true,
-            "rangelength" : [2,160]
+            "rangelength" : [2,230]
         },
         "description" : {
             "required" : true,
