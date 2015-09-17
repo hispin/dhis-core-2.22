@@ -21,9 +21,9 @@
 		<td><label for="importance">$i18n.getString( "importance" )<em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td>
 			<select type="text" id="importance" name="importance">
-				<option value="low">$i18n.getString( "low" )</option>
-				<option value="medium" selected="selected">$i18n.getString( "medium" )</option>
-				<option value="high">$i18n.getString( "high" )</option>
+				<option value="LOW">$i18n.getString( "low" )</option>
+				<option value="MEDIUM" selected="selected">$i18n.getString( "medium" )</option>
+				<option value="HIGH">$i18n.getString( "high" )</option>
 			</select>
 		</td>
 	</tr>
@@ -31,8 +31,8 @@
 		<td><label for="ruleType">$i18n.getString( "rule_type" )<em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td>
 			<select type="text" id="ruleType" name="ruleType" onchange="changeRuleType()">
-				<option value="validation" selected="selected">$i18n.getString( "validation" )</option>
-				<option value="surveillance">$i18n.getString( "surveillance" )</option>
+				<option value="VALIDATION" selected="selected">$i18n.getString( "validation" )</option>
+				<option value="SURVEILLANCE">$i18n.getString( "surveillance" )</option>
 			</select>
 		</td>
 	</tr>

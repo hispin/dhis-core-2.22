@@ -64,13 +64,6 @@ public class ValidationRule
      */
     private static final long serialVersionUID = -9058559806538024350L;
 
-    public static final String IMPORTANCE_HIGH = "high";
-    public static final String IMPORTANCE_MEDIUM = "medium";
-    public static final String IMPORTANCE_LOW = "low";
-
-    public static final String RULE_TYPE_VALIDATION = "validation";
-    public static final String RULE_TYPE_SURVEILLANCE = "surveillance";
-
     /**
      * A description of the ValidationRule.
      */
@@ -84,12 +77,12 @@ public class ValidationRule
     /**
      * The user-assigned importance of this rule (e.g. high, medium or low).
      */
-    private String importance;
+    private Importance importance = Importance.MEDIUM;
 
     /**
      * Whether this is a VALIDATION or MONITORING type rule.
      */
-    private String ruleType;
+    private RuleType ruleType = RuleType.VALIDATION;
 
     /**
      * The comparison operator to compare left and right expressions in the rule.
@@ -224,7 +217,7 @@ public class ValidationRule
     {
         Set<DataElement> currentDataElements = leftSide.getDataElementsInExpression();
 
-        if ( RULE_TYPE_VALIDATION.equals( ruleType ) )
+        if ( ruleType == RuleType.VALIDATION )
         {
             currentDataElements = new HashSet<>( currentDataElements );
             currentDataElements.addAll( rightSide.getDataElementsInExpression() );
@@ -242,7 +235,7 @@ public class ValidationRule
      */
     public Set<DataElement> getPastDataElements()
     {
-        return RULE_TYPE_VALIDATION.equals( ruleType ) ? null : rightSide.getDataElementsInExpression();
+        return ruleType == RuleType.VALIDATION ? null : rightSide.getDataElementsInExpression();
     }
 
     /**
@@ -316,12 +309,12 @@ public class ValidationRule
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getImportance()
+    public Importance getImportance()
     {
-        return importance != null && !importance.isEmpty() ? importance : IMPORTANCE_MEDIUM;
+        return importance;
     }
 
-    public void setImportance( String importance )
+    public void setImportance( Importance importance )
     {
         this.importance = importance;
     }
@@ -343,12 +336,12 @@ public class ValidationRule
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getRuleType()
+    public RuleType getRuleType()
     {
-        return ruleType != null && !ruleType.isEmpty() ? ruleType : RULE_TYPE_VALIDATION;
+        return ruleType;
     }
 
-    public void setRuleType( String ruleType )
+    public void setRuleType( RuleType ruleType )
     {
         this.ruleType = ruleType;
     }

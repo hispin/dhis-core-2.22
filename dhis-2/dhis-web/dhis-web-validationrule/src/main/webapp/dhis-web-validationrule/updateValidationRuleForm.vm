@@ -31,9 +31,9 @@
 		<td><label for="importance">$i18n.getString( "importance" )<em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td>
 			<select type="text" id="importance" name="importance">
-				<option value="low" #if( $validationRule.importance == 'low' ) selected #end>$encoder.htmlEncode( $i18n.getString( "low" ) )</option>
-				<option value="medium" #if( $validationRule.importance == 'medium' ) selected #end>$encoder.htmlEncode( $i18n.getString( "medium" ) )</option>
-				<option value="high" #if( $validationRule.importance == 'high' ) selected #end>$encoder.htmlEncode( $i18n.getString( "high" ) )</option>
+				<option value="LOW" #if( $validationRule.importance == 'LOW' ) selected #end>$encoder.htmlEncode( $i18n.getString( "low" ) )</option>
+				<option value="MEDIUM" #if( $validationRule.importance == 'MEDIUM' ) selected #end>$encoder.htmlEncode( $i18n.getString( "medium" ) )</option>
+				<option value="HIGH" #if( $validationRule.importance == 'HIGH' ) selected #end>$encoder.htmlEncode( $i18n.getString( "high" ) )</option>
 			</select>
 		</td>
 	</tr>
@@ -41,8 +41,8 @@
 		<td><label for="ruleType">$i18n.getString( "rule_type" )<em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td>
 			<select type="text" id="ruleType" name="ruleType" onchange="changeRuleType()" disabled="disabled">
-				<option value="validation" #if( $validationRule.ruleType == 'validation' ) selected #end>$encoder.htmlEncode( $i18n.getString( "validation" ) )</option>
-				<option value="surveillance" #if( $validationRule.ruleType == 'surveillance' ) selected #end>$encoder.htmlEncode( $i18n.getString( "surveillance" ) )</option>
+				<option value="VALIDATION" #if( $validationRule.ruleType == 'VALIDATION' ) selected #end>$encoder.htmlEncode( $i18n.getString( "validation" ) )</option>
+				<option value="SURVEILLANCE" #if( $validationRule.ruleType == 'SURVEILLANCE' ) selected #end>$encoder.htmlEncode( $i18n.getString( "surveillance" ) )</option>
 			</select>
 			<img title="$i18n.getString( 'clear_expression' )" onclick="clearRuleExpression()" src="../images/edit-clear.png" style="width: 20px; cursor:pointer;" />
 		</td>

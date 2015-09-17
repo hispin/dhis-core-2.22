@@ -92,6 +92,7 @@ import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserService;
+import org.hisp.dhis.validation.RuleType;
 import org.hisp.dhis.validation.ValidationCriteria;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleGroup;
@@ -982,7 +983,7 @@ public abstract class DhisConvenienceTest
 
         validationRule.setName( "MonitoringRule" + uniqueCharacter );
         validationRule.setDescription( "Description" + uniqueCharacter );
-        validationRule.setRuleType( ValidationRule.RULE_TYPE_SURVEILLANCE );
+        validationRule.setRuleType( RuleType.SURVEILLANCE );
         validationRule.setOperator( operator );
         validationRule.setLeftSide( leftSide );
         validationRule.setRightSide( rightSide );

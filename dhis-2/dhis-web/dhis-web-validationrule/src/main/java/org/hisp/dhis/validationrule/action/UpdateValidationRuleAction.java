@@ -28,18 +28,19 @@ package org.hisp.dhis.validationrule.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.expression.MissingValueStrategy.SKIP_IF_ANY_VALUE_MISSING;
-import static org.hisp.dhis.expression.MissingValueStrategy.safeValueOf;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.expression.Operator;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.validation.Importance;
+import org.hisp.dhis.validation.RuleType;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
 
-import com.opensymphony.xwork2.Action;
+import static org.hisp.dhis.expression.MissingValueStrategy.SKIP_IF_ANY_VALUE_MISSING;
+import static org.hisp.dhis.expression.MissingValueStrategy.safeValueOf;
 
 /**
  * @author Margrethe Store
@@ -97,7 +98,7 @@ public class UpdateValidationRuleAction
     {
         this.description = description;
     }
-    
+
     private String instruction;
 
     public void setInstruction( String instruction )
@@ -111,7 +112,7 @@ public class UpdateValidationRuleAction
     {
         this.importance = importance;
     }
-    
+
     private String ruleType;
 
     public void setRuleType( String ruleType )
@@ -141,7 +142,7 @@ public class UpdateValidationRuleAction
     }
 
     private String leftSideMissingValueStrategy;
-    
+
     public void setLeftSideMissingValueStrategy( String leftSideMissingValueStrategy )
     {
         this.leftSideMissingValueStrategy = leftSideMissingValueStrategy;
@@ -169,7 +170,7 @@ public class UpdateValidationRuleAction
     }
 
     private Integer organisationUnitLevel;
-    
+
     public void setOrganisationUnitLevel( Integer organisationUnitLevel )
     {
         this.organisationUnitLevel = organisationUnitLevel;
@@ -222,8 +223,8 @@ public class UpdateValidationRuleAction
         validationRule.setName( StringUtils.trimToNull( name ) );
         validationRule.setDescription( StringUtils.trimToNull( description ) );
         validationRule.setInstruction( StringUtils.trimToNull( instruction ) );
-        validationRule.setImportance( StringUtils.trimToNull( importance ) );
-        validationRule.setRuleType( StringUtils.trimToNull( ruleType ) );
+        validationRule.setImportance( Importance.valueOf( StringUtils.trimToNull( importance ) ) );
+        validationRule.setRuleType( RuleType.valueOf( StringUtils.trimToNull( ruleType ) ) );
         validationRule.setOperator( Operator.valueOf( operator ) );
 
         validationRule.getLeftSide().setExpression( leftSideExpression );
@@ -236,7 +237,7 @@ public class UpdateValidationRuleAction
         validationRule.getRightSide().setMissingValueStrategy( safeValueOf( rightSideMissingValueStrategy, SKIP_IF_ANY_VALUE_MISSING ) );
         validationRule.getRightSide().setDataElementsInExpression( expressionService.getDataElementsInExpression( rightSideExpression ) );
         validationRule.setOrganisationUnitLevel( organisationUnitLevel );
-        
+
         PeriodType periodType = periodService.getPeriodTypeByName( periodTypeName );
         validationRule.setPeriodType( periodType == null ? null : periodService.getPeriodTypeByClass( periodType.getClass() ) );
 

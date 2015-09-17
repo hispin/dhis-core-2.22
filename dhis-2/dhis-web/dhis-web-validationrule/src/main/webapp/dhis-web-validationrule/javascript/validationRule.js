@@ -1,7 +1,7 @@
 function changeRuleType() {
   var ruleType = $('#ruleType').val();
 
-  if( ruleType == 'validation' ) {
+  if( ruleType == 'VALIDATION' ) {
     hideById('organisationUnitLevelTR');
     hideById('sequentialSampleCountTR');
     hideById('annualSampleCountTR');

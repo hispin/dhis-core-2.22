@@ -28,15 +28,6 @@ package org.hisp.dhis.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.logging.Log;
@@ -57,20 +48,29 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 /**
  * Holds common values that are used during a validation run (either interactive
  * or scheduled.) These values don't change during the multi-threaded tasks
  * (except that results entries are added in a threadsafe way.)
- * 
+ * <p>
  * Some of the values are precalculated collections, to save CPU time during the
  * run. All of these values are stored in this single "context" object to allow
  * a single object reference for each of the scheduled tasks. (This also reduces
  * the amount of memory needed to queue all the multi-threaded tasks.)
- * 
+ * <p>
  * For some of these properties this is also important because they should be
  * copied from Hibernate lazy collections before the multithreaded part of the
  * run starts, otherwise the threads may not be able to access these values.
- * 
+ *
  * @author Jim Grace
  */
 public class ValidationRunContext
@@ -90,7 +90,7 @@ public class ValidationRunContext
     private Collection<OrganisationUnitExtended> sourceXs;
 
     private DataElementCategoryOptionCombo attributeCombo;
-    
+
     private int countOfSourcesToValidate;
 
     private Set<CategoryOptionGroup> cogDimensionConstraints;
@@ -114,7 +114,7 @@ public class ValidationRunContext
     public String toString()
     {
         return new ToStringBuilder( this, ToStringStyle.SHORT_PREFIX_STYLE )
-            .append( "\n PeriodTypeExtendedMap", ( Arrays.toString( periodTypeExtendedMap.entrySet().toArray() ) ) )
+            .append( "\n PeriodTypeExtendedMap", (Arrays.toString( periodTypeExtendedMap.entrySet().toArray() )) )
             .append( "\n runType", runType )
             .append( "\n lastScheduledRun", lastScheduledRun )
             .append( "\n constantMap", "[" + constantMap.size() + "]" )
@@ -125,20 +125,19 @@ public class ValidationRunContext
 
     /**
      * Creates and fills a new context object for a validation run.
-     * 
-     * @param sources organisation units for validation
-     * @param periods periods for validation
-     * @param attributeCombo the attribute combo to check (if restricted)
-     * @param rules validation rules for validation
-     * @param runType whether this is an INTERACTIVE or SCHEDULED run
-     * @param lastScheduledRun (for SCHEDULED runs) date/time of previous run
-     * @param expressionService expression service
-     * @param periodService period service
-     * @param dataValueService data value service
-     * @param dataElementCategoryService data element category service
-     * @param userService user service
-     * @param currentUserService current user service
      *
+     * @param sources                    organisation units for validation
+     * @param periods                    periods for validation
+     * @param attributeCombo             the attribute combo to check (if restricted)
+     * @param rules                      validation rules for validation
+     * @param runType                    whether this is an INTERACTIVE or SCHEDULED run
+     * @param lastScheduledRun           (for SCHEDULED runs) date/time of previous run
+     * @param expressionService          expression service
+     * @param periodService              period service
+     * @param dataValueService           data value service
+     * @param dataElementCategoryService data element category service
+     * @param userService                user service
+     * @param currentUserService         current user service
      * @return context object for this run
      */
     public static ValidationRunContext getNewContext( Collection<OrganisationUnit> sources,
@@ -166,30 +165,30 @@ public class ValidationRunContext
         context.cogDimensionConstraints = userService.getCogDimensionConstraints( currentUserCredentials );
         context.coDimensionConstraints = userService.getCoDimensionConstraints( currentUserCredentials );
         context.initialize( sources, periods, rules );
-        
+
         return context;
     }
 
     /**
      * Initializes context values based on sources, periods and rules
-     * 
+     *
      * @param sources organisation units to evaluate for rules
      * @param periods periods for validation
-     * @param rules validation rules for validation
+     * @param rules   validation rules for validation
      */
     private void initialize( Collection<OrganisationUnit> sources, Collection<Period> periods,
         Collection<ValidationRule> rules )
     {
         addPeriodsToContext( periods );
-        
+
         boolean surveillanceRulesPresent = addRulesToContext( rules );
-        
+
         removeAnyUnneededPeriodTypes();
-        
+
         addSourcesToContext( sources, true );
-        
+
         countOfSourcesToValidate = sources.size();
-        
+
         if ( surveillanceRulesPresent )
         {
             Set<OrganisationUnit> otherDescendants = getAllOtherDescendants( sources );
@@ -199,31 +198,31 @@ public class ValidationRunContext
 
     /**
      * Adds Periods to the context, grouped by period type.
-     * 
+     *
      * @param periods Periods to group and add
      */
-    private void addPeriodsToContext ( Collection<Period> periods )
+    private void addPeriodsToContext( Collection<Period> periods )
     {
         for ( Period period : periods )
-	{
-	    PeriodTypeExtended periodTypeX = getOrCreatePeriodTypeExtended( period.getPeriodType() );
-	    periodTypeX.getPeriods().add( period );
-	}
+        {
+            PeriodTypeExtended periodTypeX = getOrCreatePeriodTypeExtended( period.getPeriodType() );
+            periodTypeX.getPeriods().add( period );
+        }
     }
 
     /**
      * Adds validation rules to the context.
-     * 
+     *
      * @param rules validation rules to add
      * @return true if there were some surveillance-type rules, false otherwise.
      */
-    private boolean addRulesToContext ( Collection<ValidationRule> rules )
+    private boolean addRulesToContext( Collection<ValidationRule> rules )
     {
-    	boolean surveillanceRulesPresent = false;
-    	
+        boolean surveillanceRulesPresent = false;
+
         for ( ValidationRule rule : rules )
         {
-            if ( ValidationRule.RULE_TYPE_SURVEILLANCE.equals( rule.getRuleType() ) )
+            if ( rule.getRuleType() == RuleType.SURVEILLANCE )
             {
                 if ( rule.getOrganisationUnitLevel() == null )
                 {
@@ -231,7 +230,7 @@ public class ValidationRunContext
                         + "' has no organisationUnitLevel." );
                     continue; // Ignore rule, avoid null reference later.
                 }
-                
+
                 surveillanceRulesPresent = true;
             }
 
@@ -244,7 +243,7 @@ public class ValidationRunContext
                 // Add this rule's data elements to the period extended.
                 periodTypeX.getDataElements().addAll( rule.getCurrentDataElements() );
             }
-            
+
             // Add the allowed period types for rule's current data elements:
             periodTypeX.getAllowedPeriodTypes().addAll(
                 getAllowedPeriodTypesForDataElements( rule.getCurrentDataElements(), rule.getPeriodType() ) );
@@ -255,7 +254,7 @@ public class ValidationRunContext
             ValidationRuleExtended ruleX = new ValidationRuleExtended( rule, allowedPastPeriodTypes );
             ruleXMap.put( rule, ruleX );
         }
-        
+
         return surveillanceRulesPresent;
     }
 
@@ -265,7 +264,7 @@ public class ValidationRunContext
     private void removeAnyUnneededPeriodTypes()
     {
         Set<PeriodTypeExtended> periodTypeXs = new HashSet<>( periodTypeExtendedMap.values() );
-        
+
         for ( PeriodTypeExtended periodTypeX : periodTypeXs )
         {
             if ( periodTypeX.getRules().isEmpty() )
@@ -280,7 +279,7 @@ public class ValidationRunContext
      * collection of organisation units. This is needed for surveillance-type
      * rules, because the data values for the rules may need to be aggregated
      * from the organisation unit's descendants.
-     * 
+     * <p>
      * The descendants will likely be there anyway for a run including
      * surveillance-type rules, because an interactive run containing
      * surveillance-type rules should select an entire subtree, and a
@@ -288,31 +287,31 @@ public class ValidationRunContext
      * just to be sure, and find any that may be missing. This makes sure
      * that some of the tests will work, and may be required for some
      * future features to work.
-     * 
+     *
      * @param sources organisation units whose descendants to check
      * @return all other descendants who need to be added who were not
      * in the original list
      */
     private Set<OrganisationUnit> getAllOtherDescendants( Collection<OrganisationUnit> sources )
     {
-    	Set<OrganisationUnit> allOtherDescendants = new HashSet<>();
-    	
+        Set<OrganisationUnit> allOtherDescendants = new HashSet<>();
+
         for ( OrganisationUnit source : sources )
         {
             getOtherDescendantsRecursive( source, sources, allOtherDescendants );
         }
-        
+
         return allOtherDescendants;
     }
 
     /**
      * If the children of this organisation unit are not in the collection, then
      * add them and all their descendants if needed.
-     * 
-     * @param source organisation unit whose children to check
-     * @param sources organisation units in the initial list
+     *
+     * @param source              organisation unit whose children to check
+     * @param sources             organisation units in the initial list
      * @param allOtherDescendants list of organisation unit descendants we
-     * need to add
+     *                            need to add
      */
     private void getOtherDescendantsRecursive( OrganisationUnit source, Collection<OrganisationUnit> sources,
         Set<OrganisationUnit> allOtherDescendants )
@@ -321,7 +320,7 @@ public class ValidationRunContext
         {
             if ( !sources.contains( child ) && !allOtherDescendants.contains( child ) )
             {
-            	allOtherDescendants.add( child );
+                allOtherDescendants.add( child );
                 getOtherDescendantsRecursive( child, sources, allOtherDescendants );
             }
         }
@@ -329,15 +328,15 @@ public class ValidationRunContext
 
     /**
      * Adds a collection of organisation units to the validation run context.
-     * 
-     * @param sources organisation units to add
+     *
+     * @param sources             organisation units to add
      * @param ruleCheckThisSource true if these organisation units should be
-     * evaluated with validation rules, false if not. (This is false when
-     * adding descendants of organisation units for the purpose of getting
-     * aggregated expression values from descendants, but these organisation
-     * units are not in the main list to be evaluated.)
+     *                            evaluated with validation rules, false if not. (This is false when
+     *                            adding descendants of organisation units for the purpose of getting
+     *                            aggregated expression values from descendants, but these organisation
+     *                            units are not in the main list to be evaluated.)
      */
-    private void addSourcesToContext ( Collection<OrganisationUnit> sources, boolean ruleCheckThisSource )
+    private void addSourcesToContext( Collection<OrganisationUnit> sources, boolean ruleCheckThisSource )
     {
         for ( OrganisationUnit source : sources )
         {
@@ -345,15 +344,15 @@ public class ValidationRunContext
             sourceXs.add( sourceX );
 
             Map<PeriodType, Set<DataElement>> sourceElementsMap = source.getDataElementsInDataSetsByPeriodType();
-            
+
             for ( PeriodTypeExtended periodTypeX : periodTypeExtendedMap.values() )
             {
-                periodTypeX.getSourceDataElements().put( source, new HashSet<DataElement>() );
-                
+                periodTypeX.getSourceDataElements().put( source, new HashSet<>() );
+
                 for ( PeriodType allowedType : periodTypeX.getAllowedPeriodTypes() )
                 {
                     Collection<DataElement> sourceDataElements = sourceElementsMap.get( allowedType );
-                    
+
                     if ( sourceDataElements != null )
                     {
                         periodTypeX.getSourceDataElements().get( source ).addAll( sourceDataElements );
@@ -362,41 +361,41 @@ public class ValidationRunContext
             }
         }
     }
-    
+
     /**
      * Gets the PeriodTypeExtended from the context object. If not found,
      * creates a new PeriodTypeExtended object, puts it into the context object,
      * and returns it.
-     * 
+     *
      * @param periodType period type to search for
      * @return period type extended from the context object
      */
     private PeriodTypeExtended getOrCreatePeriodTypeExtended( PeriodType periodType )
     {
         PeriodTypeExtended periodTypeX = periodTypeExtendedMap.get( periodType );
-        
+
         if ( periodTypeX == null )
         {
             periodTypeX = new PeriodTypeExtended( periodType );
             periodTypeExtendedMap.put( periodType, periodTypeX );
         }
-        
+
         return periodTypeX;
     }
 
     /**
      * Finds all period types that may contain given data elements, whose period
      * type interval is at least as long as the given period type.
-     * 
+     *
      * @param dataElements data elements to look for
-     * @param periodType the minimum-length period type
+     * @param periodType   the minimum-length period type
      * @return all period types that are allowed for these data elements
      */
     private static Collection<PeriodType> getAllowedPeriodTypesForDataElements( Collection<DataElement> dataElements,
         PeriodType periodType )
     {
         Collection<PeriodType> allowedPeriodTypes = new HashSet<>();
-        
+
         if ( dataElements != null )
         {
             for ( DataElement dataElement : dataElements )
@@ -410,7 +409,7 @@ public class ValidationRunContext
                 }
             }
         }
-        
+
         return allowedPeriodTypes;
     }
 

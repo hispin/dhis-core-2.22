@@ -73,6 +73,7 @@ public class InitTableAlteror
         updateValueTypes();
         updateAggregationTypes();
         updateFeatureTypes();
+        updateValidationRuleEnums();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
@@ -82,6 +83,21 @@ public class InitTableAlteror
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
+
+    private void updateValidationRuleEnums()
+    {
+        executeSql( "alter table validationrule alter column ruletype type varchar(50)" );
+        executeSql( "alter table validationrule alter column importance type varchar(50)" );
+
+        executeSql( "update validationrule set ruletype='VALIDATION' where ruletype='validation'" );
+        executeSql( "update validationrule set ruletype='SURVEILLANCE' where ruletype='surveillance'" );
+        executeSql( "update validationrule set ruletype='VALIDATION' where ruletype='' or ruletype is null" );
+
+        executeSql( "update validationrule set importance='HIGH' where importance='high'" );
+        executeSql( "update validationrule set importance='MEDIUM' where importance='medium'" );
+        executeSql( "update validationrule set importance='LOW' where importance='low'" );
+        executeSql( "update validationrule set importance='MEDIUM' where importance='' or importance is null" );
+    }
 
     private void updateFeatureTypes()
     {
