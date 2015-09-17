@@ -39,6 +39,7 @@ import static org.hisp.dhis.system.util.PDFUtils.getTitleCell;
 import static org.hisp.dhis.system.util.PDFUtils.openDocument;
 import static org.hisp.dhis.system.util.PDFUtils.resetPaddings;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -49,6 +50,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.write.Label;
 import jxl.write.Number;
 import jxl.write.WritableCellFormat;
@@ -76,7 +79,6 @@ import org.hisp.dhis.commons.util.CodecUtils;
 import org.hisp.dhis.commons.util.Encoder;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.ExcelUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.htmlparser.Node;
@@ -233,7 +235,7 @@ public class GridUtils
     public static void toXls( List<Grid> grids, OutputStream out )
         throws Exception
     {
-        WritableWorkbook workbook = ExcelUtils.openWorkbook( out );
+        WritableWorkbook workbook = openWorkbook( out );
         
         for ( int i = 0; i < grids.size(); i++ )
         {
@@ -254,7 +256,7 @@ public class GridUtils
     public static void toXls( Grid grid, OutputStream out )
         throws Exception
     {
-        WritableWorkbook workbook = ExcelUtils.openWorkbook( out );
+        WritableWorkbook workbook = openWorkbook( out );
         
         String sheetName = CodecUtils.filenameEncode( StringUtils.defaultIfEmpty( grid.getTitle(), XLS_SHEET_PREFIX + 1 ) );
 
@@ -697,5 +699,17 @@ public class GridUtils
     private static boolean isNonEmptyGrid( Grid grid )
     {
         return grid != null && grid.getVisibleWidth() > 0;
+    }
+    
+    /**
+     * Opens a workbook with UTF-8 encoding.
+     */
+    private static WritableWorkbook openWorkbook( OutputStream outputStream )
+        throws IOException
+    {
+        WorkbookSettings ws = new WorkbookSettings();
+        ws.setEncoding( "UTF-8" );
+        
+        return Workbook.createWorkbook( outputStream, ws );
     }
 }
