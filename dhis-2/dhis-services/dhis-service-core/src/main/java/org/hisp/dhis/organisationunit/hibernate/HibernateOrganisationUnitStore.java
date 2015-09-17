@@ -230,7 +230,7 @@ public class HibernateOrganisationUnitStore
         {
             for ( Integer level : params.getLevels() )
             {
-                query.setInteger( "levelPathLength" + level, level );
+                query.setInteger( "levelPathLength" + level, params.getLevelPathLength( level ) );
             }
         }
         
