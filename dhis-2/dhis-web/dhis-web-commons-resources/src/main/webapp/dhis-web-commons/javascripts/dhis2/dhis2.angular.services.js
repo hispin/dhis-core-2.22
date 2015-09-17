@@ -1133,194 +1133,219 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 {name:"d2:count",parameters:1},
                                 {name:"d2:countifzeropos",parameters:1},
                                 {name:"d2:countifvalue",parameters:2}];
+            var continueLooping = true;
+            //Safety harness on 10 loops, in case of unanticipated syntax causing unintencontinued looping
+            for(var i = 0; i < 10 && continueLooping; i++ ) { 
+                var successfulExecution = false;
+                angular.forEach(dhisFunctions, function(dhisFunction){
+                    //Select the function call, with any number of parameters inside single quotations, or number parameters witout quotations
+                    var regularExFunctionCall = new RegExp(dhisFunction.name + "\\( *(([\\d/\\*\\+\\-%]+)|( *'[^']*'))*( *, *(([\\d/\\*\\+\\-%]+)|'[^']*'))* *\\)",'g');
+                    var callsToThisFunction = expression.match(regularExFunctionCall);
+                    angular.forEach(callsToThisFunction, function(callToThisFunction){
+                        //Remove the function name and paranthesis:
+                        var justparameters = callToThisFunction.replace(/(^[^\(]+\()|\)$/g,"");
+                        //Then split into single parameters:
+                        var parameters = justparameters.match(/(('[^']+')|([^,]+))/g);
 
-            angular.forEach(dhisFunctions, function(dhisFunction){
-                //Select the function call, with any number of parameters inside single quotations, or number parameters witout quotations
-                var regularExFunctionCall = new RegExp(dhisFunction.name + "\\( *((\d+)|( *'[^']*'))*( *, *((\d+)|'[^']*'))* *\\)",'g');
-                var callsToThisFunction = expression.match(regularExFunctionCall);
-                angular.forEach(callsToThisFunction, function(callToThisFunction){
-                    //Remove the function name and paranthesis:
-                    var justparameters = callToThisFunction.replace(/(^[^\(]+\()|\)$/g,"");
-                    //Then split into single parameters:
-                    var parameters = justparameters.match(/(('[^']+')|([^,]+))/g);
-
-                    //Show error if no parameters is given and the function requires parameters,
-                    //or if the number of parameters is wrong.
-                    if(angular.isDefined(dhisFunction.parameters)){
-                        //But we are only checking parameters where the dhisFunction actually has a defined set of parameters(concatenate, for example, does not have a fixed number);
-                        if((!angular.isDefined(parameters) && dhisFunction.parameters > 0)
-                                || parameters.length !== dhisFunction.parameters){
-                            $log.warn(dhisFunction.name + " was called with the incorrect number of parameters");
-                        }
-                    }
-
-                    //In case the function call is nested, the parameter itself contains an expression, run the expression.
-                    if(angular.isDefined(parameters)) {
-                        for (var i = 0; i < parameters.length; i++) {
-                            parameters[i] = runExpression(parameters[i],dhisFunction.name,"parameter:" + i, flag, variablesHash);
-                        }
-                    }
-
-                    //Special block for d2:weeksBetween(*,*) - add such a block for all other dhis functions.
-                    if(dhisFunction.name === "d2:daysbetween") {
-                        var firstdate = $filter('trimquotes')(parameters[0]);
-                        var seconddate = $filter('trimquotes')(parameters[1]);
-                        firstdate = moment(firstdate);
-                        seconddate = moment(seconddate);
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'days'));
-                    } 
-                    else if(dhisFunction.name === "d2:yearsbetween") {
-                        var firstdate = $filter('trimquotes')(parameters[0]);
-                        var seconddate = $filter('trimquotes')(parameters[1]);
-                        firstdate = moment(firstdate);
-                        seconddate = moment(seconddate);
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'years'));
-                    } 
-                    else if(dhisFunction.name === "d2:floor") {
-                        var floored = Math.floor(parameters[0]);
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, floored);
-                    } 
-                    else if(dhisFunction.name === "d2:modulus") {
-                        var dividend = Number(parameters[0]);
-                        var divisor = Number(parameters[1]);
-                        var rest = dividend % divisor;
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, rest);
-                    } 
-                    else if(dhisFunction.name === "d2:concatenate") {
-                        var returnString = "'";
-                        for (var i = 0; i < parameters.length; i++) {
-                            returnString += parameters[i];
-                        }
-                        returnString += "'";
-                        expression = expression.replace(callToThisFunction, returnString);
-                    } 
-                    else if(dhisFunction.name === "d2:adddays") {
-                        var date = $filter('trimquotes')(parameters[0]);
-                        var daystoadd = $filter('trimquotes')(parameters[1]);
-                        var newdate = DateUtils.format( moment(date, CalendarService.getSetting().momentFormat).add(daystoadd, 'days') );
-                        var newdatestring = "'" + newdate + "'";
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, newdatestring);
-                    } 
-                    else if(dhisFunction.name === "d2:zing") {
-                        var number = parameters[0];
-                        if( number < 0 ) {
-                            number = 0;
-                        }
-                        
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, number);
-                    } 
-                    else if(dhisFunction.name === "d2:oizp") {
-                        var number = parameters[0];
-                        var output = 1;
-                        if( number < 0 ) {
-                            output = 0;
-                        }
-                        
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, output);
-                    }
-                    else if(dhisFunction.name === "d2:count") {
-                        var variableName = parameters[0];
-                        var variableObject = variablesHash[variableName];
-                        var count = 0;
-                        if(variableObject)
-                        {
-                            if(variableObject.hasValue){
-                                if(variableObject.allValues)
-                                {
-                                    count = variableObject.allValues.length;
-                                } else {
-                                    //If there is a value found for the variable, the count is 1 even if there is no list of alternate values
-                                    //This happens for variables of "DATAELEMENT_CURRENT_STAGE" and "TEI_ATTRIBUTE"
-                                    count = 1;
-                                }
+                        //Show error if no parameters is given and the function requires parameters,
+                        //or if the number of parameters is wrong.
+                        if(angular.isDefined(dhisFunction.parameters)){
+                            //But we are only checking parameters where the dhisFunction actually has a defined set of parameters(concatenate, for example, does not have a fixed number);
+                            if((!angular.isDefined(parameters) && dhisFunction.parameters > 0)
+                                    || parameters.length !== dhisFunction.parameters){
+                                $log.warn(dhisFunction.name + " was called with the incorrect number of parameters");
                             }
                         }
-                        else
-                        {
-                            $log.warn("could not find variable to count: " + variableName);
-                        }
-                        
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, count);
-                    }
-                    else if(dhisFunction.name === "d2:countifzeropos") {
-                        var variableName = $filter('trimvariablequalifiers') (parameters[0]);
-                        var variableObject = variablesHash[variableName];
-                        
-                        var count = 0;
-                        if(variableObject)
-                        {
-                            if( variableObject.hasValue ) {
-                                if(variableObject.allValues && variableObject.allValues.length > 0)
-                                {
-                                    for(var i = 0; i < variableObject.allValues.length; i++)
-                                    {
-                                        if(variableObject.allValues[i] >= 0) {
-                                            count++;
-                                        }
-                                    }
-                                }
-                                else {
-                                    //The variable has a value, but no list of alternates. This means we only compare the elements real value
-                                    if(variableObject.variableValue >= 0) {
-                                        count = 1;
-                                    }
-                                }
+
+                        //In case the function call is nested, the parameter itself contains an expression, run the expression.
+                        if(angular.isDefined(parameters)) {
+                            for (var i = 0; i < parameters.length; i++) {
+                                parameters[i] = runExpression(parameters[i],dhisFunction.name,"parameter:" + i, flag, variablesHash);
                             }
                         }
-                        else
-                        {
-                            $log.warn("could not find variable to countifzeropos: " + variableName);
+
+                        //Special block for d2:weeksBetween(*,*) - add such a block for all other dhis functions.
+                        if(dhisFunction.name === "d2:daysbetween") {
+                            var firstdate = $filter('trimquotes')(parameters[0]);
+                            var seconddate = $filter('trimquotes')(parameters[1]);
+                            firstdate = moment(firstdate);
+                            seconddate = moment(seconddate);
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'days'));
+                            successfulExecution = true;
+                        } 
+                        else if(dhisFunction.name === "d2:yearsbetween") {
+                            var firstdate = $filter('trimquotes')(parameters[0]);
+                            var seconddate = $filter('trimquotes')(parameters[1]);
+                            firstdate = moment(firstdate);
+                            seconddate = moment(seconddate);
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'years'));
+                            successfulExecution = true;
+                        } 
+                        else if(dhisFunction.name === "d2:floor") {
+                            var floored = Math.floor(parameters[0]);
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, floored);
+                            successfulExecution = true;
+                        } 
+                        else if(dhisFunction.name === "d2:modulus") {
+                            var dividend = Number(parameters[0]);
+                            var divisor = Number(parameters[1]);
+                            var rest = dividend % divisor;
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, rest);
+                            successfulExecution = true;
+                        } 
+                        else if(dhisFunction.name === "d2:concatenate") {
+                            var returnString = "'";
+                            for (var i = 0; i < parameters.length; i++) {
+                                returnString += parameters[i];
+                            }
+                            returnString += "'";
+                            expression = expression.replace(callToThisFunction, returnString);
+                            successfulExecution = true;
+                        } 
+                        else if(dhisFunction.name === "d2:adddays") {
+                            var date = $filter('trimquotes')(parameters[0]);
+                            var daystoadd = $filter('trimquotes')(parameters[1]);
+                            var newdate = DateUtils.format( moment(date, CalendarService.getSetting().momentFormat).add(daystoadd, 'days') );
+                            var newdatestring = "'" + newdate + "'";
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, newdatestring);
+                            successfulExecution = true;
+                        } 
+                        else if(dhisFunction.name === "d2:zing") {
+                            var number = parameters[0];
+                            if( number < 0 ) {
+                                number = 0;
+                            }
+
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, number);
+                            successfulExecution = true;
+                        } 
+                        else if(dhisFunction.name === "d2:oizp") {
+                            var number = parameters[0];
+                            var output = 1;
+                            if( number < 0 ) {
+                                output = 0;
+                            }
+
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, output);
+                            successfulExecution = true;
                         }
-                        
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, count);
-                    }
-                    else if(dhisFunction.name === "d2:countifvalue") {
-                        var variableName = parameters[0];
-                        var variableObject = variablesHash[variableName];
-                        
-                        var valueToCompare = VariableService.processValue(parameters[1],variableObject.variableType);
-                                
-                        var count = 0;
-                        if(variableObject)
-                        {
-                            if( variableObject.hasValue )
+                        else if(dhisFunction.name === "d2:count") {
+                            var variableName = parameters[0];
+                            var variableObject = variablesHash[variableName];
+                            var count = 0;
+                            if(variableObject)
                             {
-                                if( variableObject.allValues )
-                                {
-                                    for(var i = 0; i < variableObject.allValues.length; i++)
+                                if(variableObject.hasValue){
+                                    if(variableObject.allValues)
                                     {
-                                        if(valueToCompare === variableObject.allValues[i]) {
-                                            count++;
-                                        }
-                                    }
-                                } else {
-                                    //The variable has a value, but no list of alternates. This means we compare the standard variablevalue
-                                    if(valueToCompare === variableObject.variableValue) {
+                                        count = variableObject.allValues.length;
+                                    } else {
+                                        //If there is a value found for the variable, the count is 1 even if there is no list of alternate values
+                                        //This happens for variables of "DATAELEMENT_CURRENT_STAGE" and "TEI_ATTRIBUTE"
                                         count = 1;
                                     }
                                 }
-                                
                             }
+                            else
+                            {
+                                $log.warn("could not find variable to count: " + variableName);
+                            }
+
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, count);
+                            successfulExecution = true;
                         }
-                        else
-                        {
-                            $log.warn("could not find variable to countifvalue: " + variableName);
+                        else if(dhisFunction.name === "d2:countifzeropos") {
+                            var variableName = $filter('trimvariablequalifiers') (parameters[0]);
+                            var variableObject = variablesHash[variableName];
+
+                            var count = 0;
+                            if(variableObject)
+                            {
+                                if( variableObject.hasValue ) {
+                                    if(variableObject.allValues && variableObject.allValues.length > 0)
+                                    {
+                                        for(var i = 0; i < variableObject.allValues.length; i++)
+                                        {
+                                            if(variableObject.allValues[i] >= 0) {
+                                                count++;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        //The variable has a value, but no list of alternates. This means we only compare the elements real value
+                                        if(variableObject.variableValue >= 0) {
+                                            count = 1;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                $log.warn("could not find variable to countifzeropos: " + variableName);
+                            }
+
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, count);
+                            successfulExecution = true;
                         }
-                        
-                        //Replace the end evaluation of the dhis function:
-                        expression = expression.replace(callToThisFunction, count);
-                    }
+                        else if(dhisFunction.name === "d2:countifvalue") {
+                            var variableName = parameters[0];
+                            var variableObject = variablesHash[variableName];
+
+                            var valueToCompare = VariableService.processValue(parameters[1],variableObject.variableType);
+
+                            var count = 0;
+                            if(variableObject)
+                            {
+                                if( variableObject.hasValue )
+                                {
+                                    if( variableObject.allValues )
+                                    {
+                                        for(var i = 0; i < variableObject.allValues.length; i++)
+                                        {
+                                            if(valueToCompare === variableObject.allValues[i]) {
+                                                count++;
+                                            }
+                                        }
+                                    } else {
+                                        //The variable has a value, but no list of alternates. This means we compare the standard variablevalue
+                                        if(valueToCompare === variableObject.variableValue) {
+                                            count = 1;
+                                        }
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                $log.warn("could not find variable to countifvalue: " + variableName);
+                            }
+
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, count);
+                            successfulExecution = true;
+                        }
+                    });
                 });
-            });
+                //We only want to continue looping until we made a successful replacement,
+                //and there is still occurrences of "d2:" in the code. In cases where d2: occur outside
+                //the expected d2: function calls, one unneccesary iteration will be done and the 
+                //successfulExecution will be false coming back here, ending the loop. The last iteration
+                //should be zero to marginal performancewise.
+                if(successfulExecution && expression.indexOf("d2:") !== -1) {
+                    continueLooping = true;
+                } else {
+                    continueLooping = false;
+                }
+            }
         }
 
         return expression;
