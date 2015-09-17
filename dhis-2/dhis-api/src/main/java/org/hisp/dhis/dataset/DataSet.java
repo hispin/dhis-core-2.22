@@ -28,9 +28,14 @@ package org.hisp.dhis.dataset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
@@ -57,14 +62,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.UserGroup;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class is used for defining the standardized DataSets. A DataSet consists
@@ -77,11 +76,6 @@ public class DataSet
     extends BaseNameableObject
     implements VersionedObject
 {
-    public static final String TYPE_DEFAULT = "default";
-    public static final String TYPE_SECTION = "section";
-    public static final String TYPE_CUSTOM = "custom";
-    public static final String TYPE_SECTION_MULTIORG = "multiorg_section";
-
     public static final int NO_EXPIRY = 0;
 
     /**
@@ -186,7 +180,7 @@ public class DataSet
      * not allowed for current period.
      */
     private int openFuturePeriods;
-    
+
     /**
      * Property indicating that all fields for a data element must be filled.
      */
@@ -292,10 +286,10 @@ public class DataSet
     {
         Set<OrganisationUnit> toRemove = Sets.difference( sources, updates );
         Set<OrganisationUnit> toAdd = Sets.difference( updates, sources );
-        
+
         toRemove.parallelStream().forEach( u -> u.getDataSets().remove( this ) );
         toAdd.parallelStream().forEach( u -> u.getDataSets().add( this ) );
-        
+
         sources.clear();
         sources.addAll( updates );
     }
@@ -316,10 +310,10 @@ public class DataSet
     {
         Set<DataElement> toRemove = Sets.difference( dataElements, updates );
         Set<DataElement> toAdd = Sets.difference( updates, dataElements );
-        
+
         toRemove.parallelStream().forEach( d -> d.getDataSets().remove( this ) );
         toAdd.parallelStream().forEach( d -> d.getDataSets().add( this ) );
-        
+
         dataElements.clear();
         dataElements.addAll( updates );
     }
@@ -360,19 +354,19 @@ public class DataSet
     @JsonProperty
     @JsonView( { DetailedView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getDataSetType()
+    public FormType getFormType()
     {
         if ( hasDataEntryForm() )
         {
-            return TYPE_CUSTOM;
+            return FormType.CUSTOM;
         }
 
         if ( hasSections() )
         {
-            return TYPE_SECTION;
+            return FormType.SECTION;
         }
 
-        return TYPE_DEFAULT;
+        return FormType.DEFAULT;
     }
 
     public Set<DataElement> getDataElementsInSections()
@@ -390,7 +384,7 @@ public class DataSet
     public Set<DataElementCategoryOptionCombo> getDataElementOptionCombos()
     {
         Set<DataElementCategoryOptionCombo> optionCombos = new HashSet<>();
-        
+
         for ( DataElement element : dataElements )
         {
             if ( element.hasCategoryCombo() )
@@ -398,7 +392,7 @@ public class DataSet
                 optionCombos.addAll( element.getCategoryCombo().getOptionCombos() );
             }
         }
-        
+
         return optionCombos;
     }
 
@@ -438,7 +432,7 @@ public class DataSet
     {
         return categoryCombo != null && !DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME.equals( categoryCombo.getName() );
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------

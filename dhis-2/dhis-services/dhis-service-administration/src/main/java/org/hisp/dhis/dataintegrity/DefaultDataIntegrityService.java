@@ -28,18 +28,6 @@ package org.hisp.dhis.dataintegrity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-import static org.hisp.dhis.commons.collection.ListUtils.getDuplicates;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.ListMap;
@@ -78,6 +66,18 @@ import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
+import static org.hisp.dhis.commons.collection.ListUtils.getDuplicates;
+
 /**
  * @author Lars Helge Overland
  */
@@ -86,9 +86,9 @@ public class DefaultDataIntegrityService
     implements DataIntegrityService
 {
     private static final Log log = LogFactory.getLog( DefaultDataIntegrityService.class );
-    
+
     private static final String FORMULA_SEPARATOR = "#";
-    
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -113,7 +113,7 @@ public class DefaultDataIntegrityService
     {
         this.dataSetService = dataSetService;
     }
-    
+
     private SectionService sectionService;
 
     public void setSectionService( SectionService sectionService )
@@ -148,21 +148,21 @@ public class DefaultDataIntegrityService
     {
         this.expressionService = expressionService;
     }
-    
+
     private DataEntryFormService dataEntryFormService;
 
     public void setDataEntryFormService( DataEntryFormService dataEntryFormService )
     {
         this.dataEntryFormService = dataEntryFormService;
     }
-    
+
     private DataElementCategoryService categoryService;
 
     public void setCategoryService( DataElementCategoryService categoryService )
     {
         this.categoryService = categoryService;
     }
-    
+
     private ConstantService constantService;
 
     public void setConstantService( ConstantService constantService )
@@ -175,8 +175,8 @@ public class DefaultDataIntegrityService
     public void setPeriodService( PeriodService periodService )
     {
         this.periodService = periodService;
-    }    
-    
+    }
+
     // -------------------------------------------------------------------------
     // DataIntegrityService implementation
     // -------------------------------------------------------------------------
@@ -238,9 +238,9 @@ public class DefaultDataIntegrityService
 
         for ( DataElementGroupSet groupSet : groupSets )
         {
-            Collection<DataElement> duplicates = getDuplicates(  
+            Collection<DataElement> duplicates = getDuplicates(
                 new ArrayList<>( groupSet.getDataElements() ), IdentifiableObjectNameComparator.INSTANCE );
-            
+
             for ( DataElement duplicate : duplicates )
             {
                 targets.put( duplicate, duplicate.getGroups() );
@@ -254,15 +254,15 @@ public class DefaultDataIntegrityService
     public SortedMap<DataSet, Collection<DataElement>> getDataElementsInDataSetNotInForm()
     {
         SortedMap<DataSet, Collection<DataElement>> map = new TreeMap<>( IdentifiableObjectNameComparator.INSTANCE );
-        
+
         Collection<DataSet> dataSets = dataSetService.getAllDataSets();
-        
+
         for ( DataSet dataSet : dataSets )
         {
-            if ( !DataSet.TYPE_DEFAULT.equals( dataSet.getDataSetType() ) )
+            if ( !dataSet.getFormType().isDefault() )
             {
                 Set<DataElement> formElements = new HashSet<>();
-                
+
                 if ( dataSet.hasDataEntryForm() )
                 {
                     formElements.addAll( dataEntryFormService.getDataElementsInDataEntryForm( dataSet ) );
@@ -271,18 +271,18 @@ public class DefaultDataIntegrityService
                 {
                     formElements.addAll( dataSet.getDataElementsInSections() );
                 }
-                
+
                 Set<DataElement> dataSetElements = new HashSet<>( dataSet.getDataElements() );
-                
+
                 dataSetElements.removeAll( formElements );
-                
+
                 if ( dataSetElements.size() > 0 )
                 {
                     map.put( dataSet, dataSetElements );
                 }
             }
         }
-        
+
         return map;
     }
 
@@ -296,13 +296,13 @@ public class DefaultDataIntegrityService
         SetMap<DataSet, DataElementOperand> map = new SetMap<>();
 
         Collection<DataSet> dataSets = dataSetService.getAllDataSets();
-        
+
         for ( DataSet dataSet : dataSets )
         {
             if ( dataSet.hasDataEntryForm() )
             {
                 Set<DataElementOperand> operands = dataEntryFormService.getOperandsInDataEntryForm( dataSet );
-                
+
                 if ( operands != null )
                 {
                     if ( operands.size() > 2000 )
@@ -310,13 +310,13 @@ public class DefaultDataIntegrityService
                         log.warn( "Skipped integrity check for data set: " + dataSet.getName() + ", too many operands: " + operands.size() );
                         continue;
                     }
-                    
+
                     for ( DataElementOperand operand : operands )
                     {
                         DataElement dataElement = dataElementService.getDataElement( operand.getDataElementId() );
                         DataElementCategoryOptionCombo optionCombo = categoryService.getDataElementCategoryOptionCombo( operand.getOptionComboId() );
                         Set<DataElementCategoryOptionCombo> optionCombos = dataElement.getCategoryCombo() != null ? dataElement.getCategoryCombo().getOptionCombos() : null;
-                        
+
                         if ( optionCombos == null || !optionCombos.contains( optionCombo ) )
                         {
                             DataElementOperand persistedOperand = new DataElementOperand( dataElement, optionCombo );
@@ -326,10 +326,10 @@ public class DefaultDataIntegrityService
                 }
             }
         }
-        
+
         return map;
     }
-    
+
     @Override
     public Collection<DataSet> getDataSetsNotAssignedToOrganisationUnits()
     {
@@ -353,7 +353,7 @@ public class DefaultDataIntegrityService
     public Collection<Section> getSectionsWithInvalidCategoryCombinations()
     {
         Collection<Section> sections = new HashSet<>();
-        
+
         for ( Section section : sectionService.getAllSections() )
         {
             if ( section != null && section.categorComboIsInvalid() )
@@ -361,10 +361,10 @@ public class DefaultDataIntegrityService
                 sections.add( section );
             }
         }
-        
+
         return sections;
     }
-    
+
     // -------------------------------------------------------------------------
     // Indicator
     // -------------------------------------------------------------------------
@@ -423,7 +423,7 @@ public class DefaultDataIntegrityService
         Set<String> categoryOptionCombos = new HashSet<>( getUids( categoryService.getAllDataElementCategoryOptionCombos() ) );
         Set<String> constants = new HashSet<>( getUids( constantService.getAllConstants() ) );
         Set<String> orgUnitGroups = new HashSet<>( getUids( organisationUnitGroupService.getAllOrganisationUnitGroups() ) );
-        
+
         for ( Indicator indicator : indicatorService.getAllIndicators() )
         {
             String result = expressionService.expressionIsValid( indicator.getNumerator(), dataElements, categoryOptionCombos, constants, orgUnitGroups );
@@ -446,7 +446,7 @@ public class DefaultDataIntegrityService
         Set<String> categoryOptionCombos = new HashSet<>( getUids( categoryService.getAllDataElementCategoryOptionCombos() ) );
         Set<String> constants = new HashSet<>( getUids( constantService.getAllConstants() ) );
         Set<String> orgUnitGroups = new HashSet<>( getUids( organisationUnitGroupService.getAllOrganisationUnitGroups() ) );
-        
+
         for ( Indicator indicator : indicatorService.getAllIndicators() )
         {
             String result = expressionService.expressionIsValid( indicator.getDenominator(), dataElements, categoryOptionCombos, constants, orgUnitGroups );
@@ -469,9 +469,9 @@ public class DefaultDataIntegrityService
 
         for ( IndicatorGroupSet groupSet : groupSets )
         {
-            Collection<Indicator> duplicates = getDuplicates( 
+            Collection<Indicator> duplicates = getDuplicates(
                 new ArrayList<>( groupSet.getIndicators() ), IdentifiableObjectNameComparator.INSTANCE );
-            
+
             for ( Indicator duplicate : duplicates )
             {
                 targets.put( duplicate, duplicate.getGroups() );
@@ -489,33 +489,33 @@ public class DefaultDataIntegrityService
     public List<Period> getDuplicatePeriods()
     {
         Collection<Period> periods = periodService.getAllPeriods();
-        
+
         List<Period> duplicates = new ArrayList<>();
-        
+
         ListMap<String, Period> map = new ListMap<>();
-        
+
         for ( Period period : periods )
         {
             String key = period.getPeriodType().getName() + period.getStartDate().toString();
-            
+
             period.setName( period.toString() );
-            
+
             map.putValue( key, period );
         }
-        
+
         for ( String key : map.keySet() )
         {
             List<Period> values = map.get( key );
-            
+
             if ( values != null && values.size() > 1 )
             {
                 duplicates.addAll( values );
             }
         }
-        
+
         return duplicates;
     }
-    
+
     // -------------------------------------------------------------------------
     // OrganisationUnit
     // -------------------------------------------------------------------------
@@ -535,7 +535,7 @@ public class DefaultDataIntegrityService
         {
             parent = unit;
 
-            while ( ( parent = parent.getParent() ) != null )
+            while ( (parent = parent.getParent()) != null )
             {
                 if ( parent.equals( unit ) ) // Cyclic reference
                 {
@@ -585,14 +585,14 @@ public class DefaultDataIntegrityService
     {
         Collection<OrganisationUnitGroupSet> groupSets = organisationUnitGroupService.getAllOrganisationUnitGroupSets();
 
-        TreeMap<OrganisationUnit, Collection<OrganisationUnitGroup>> targets = 
+        TreeMap<OrganisationUnit, Collection<OrganisationUnitGroup>> targets =
             new TreeMap<>( IdentifiableObjectNameComparator.INSTANCE );
 
         for ( OrganisationUnitGroupSet groupSet : groupSets )
         {
-            Collection<OrganisationUnit> duplicates = getDuplicates( 
+            Collection<OrganisationUnit> duplicates = getDuplicates(
                 new ArrayList<>( groupSet.getOrganisationUnits() ), IdentifiableObjectNameComparator.INSTANCE );
-            
+
             for ( OrganisationUnit duplicate : duplicates )
             {
                 targets.put( duplicate, new HashSet<>( duplicate.getGroups() ) );
@@ -639,7 +639,7 @@ public class DefaultDataIntegrityService
         Set<String> categoryOptionCombos = new HashSet<>( getUids( categoryService.getAllDataElementCategoryOptionCombos() ) );
         Set<String> constants = new HashSet<>( getUids( constantService.getAllConstants() ) );
         Set<String> orgUnitGroups = new HashSet<>( getUids( organisationUnitGroupService.getAllOrganisationUnitGroups() ) );
-        
+
         for ( ValidationRule rule : validationRuleService.getAllValidationRules() )
         {
             String result = expressionService.expressionIsValid( rule.getLeftSide().getExpression(), dataElements, categoryOptionCombos, constants, orgUnitGroups );
@@ -663,7 +663,7 @@ public class DefaultDataIntegrityService
         Set<String> categoryOptionCombos = new HashSet<>( getUids( categoryService.getAllDataElementCategoryOptionCombos() ) );
         Set<String> constants = new HashSet<>( getUids( constantService.getAllConstants() ) );
         Set<String> orgUnitGroups = new HashSet<>( getUids( organisationUnitGroupService.getAllOrganisationUnitGroups() ) );
-        
+
         for ( ValidationRule rule : validationRuleService.getAllValidationRules() )
         {
             String result = expressionService.expressionIsValid( rule.getRightSide().getExpression(), dataElements, categoryOptionCombos, constants, orgUnitGroups );
