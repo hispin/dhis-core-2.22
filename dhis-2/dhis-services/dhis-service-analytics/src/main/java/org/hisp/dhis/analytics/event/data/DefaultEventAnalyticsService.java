@@ -410,6 +410,8 @@ public class DefaultEventAnalyticsService
         DisplayProperty displayProperty, Integer page, Integer pageSize, I18nFormat format )
     {
         EventQueryParams params = new EventQueryParams();
+        
+        List<OrganisationUnit> userOrgUnits = analyticsService.getUserOrgUnits( null );
 
         Program pr = programService.getProgram( program );
 
@@ -447,7 +449,7 @@ public class DefaultEventAnalyticsService
             {
                 String dimensionId = getDimensionFromParam( dim );
                 List<String> items = getDimensionItemsFromParam( dim );                
-                DimensionalObject dimObj = analyticsService.getDimension( dimensionId, items, null, null, format, true );
+                DimensionalObject dimObj = analyticsService.getDimension( dimensionId, items, null, userOrgUnits, format, true );
                 
                 if ( dimObj != null )
                 {
@@ -466,7 +468,7 @@ public class DefaultEventAnalyticsService
             {
                 String dimensionId = getDimensionFromParam( dim );
                 List<String> items = getDimensionItemsFromParam( dim );                
-                DimensionalObject dimObj = analyticsService.getDimension( dimensionId, items, null, null, format, true );
+                DimensionalObject dimObj = analyticsService.getDimension( dimensionId, items, null, userOrgUnits, format, true );
                 
                 if ( dimObj != null )
                 {

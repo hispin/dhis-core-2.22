@@ -109,4 +109,10 @@ public class MockAnalyticsService
     {
         throw new NotImplementedException( "" );
     }
+
+    @Override
+    public List<OrganisationUnit> getUserOrgUnits( String userOrgUnit )
+    {
+        return null;
+    }
 }
