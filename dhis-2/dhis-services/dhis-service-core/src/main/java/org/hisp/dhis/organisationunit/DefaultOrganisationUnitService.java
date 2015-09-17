@@ -396,34 +396,6 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public List<OrganisationUnit> getOrganisationUnitBranch( int id )
-    {
-        OrganisationUnit organisationUnit = getOrganisationUnit( id );
-
-        if ( organisationUnit == null )
-        {
-            return Collections.emptyList();
-        }
-
-        ArrayList<OrganisationUnit> result = new ArrayList<>();
-
-        result.add( organisationUnit );
-
-        OrganisationUnit parent = organisationUnit.getParent();
-
-        while ( parent != null )
-        {
-            result.add( parent );
-
-            parent = parent.getParent();
-        }
-
-        Collections.reverse( result ); // From root to target
-
-        return result;
-    }
-
-    @Override
     public List<OrganisationUnit> getOrganisationUnitsAtLevel( int level )
     {
         List<OrganisationUnit> roots = getRootOrganisationUnits();
