@@ -235,7 +235,7 @@ public class JdbcEventAnalyticsTableManager
             idObjectManager.getDataDimensionsNoAcl( OrganisationUnitGroupSet.class );
         
         Collection<OrganisationUnitLevel> levels = 
-            organisationUnitService.getOrganisationUnitLevels();
+            organisationUnitService.getFilledOrganisationUnitLevels();
 
         List<PeriodType> periodTypes = PeriodType.getAvailablePeriodTypes();
 
