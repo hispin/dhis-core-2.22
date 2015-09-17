@@ -42,6 +42,8 @@ import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.inject.internal.Lists;
+
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -886,6 +888,8 @@ public class TableAlteror
         upgradeAggregationType( "chart" );
 
         updateRelativePeriods();
+        updateNameColumnLengths();
+        
         organisationUnitService.updatePaths();
 
         log.info( "Tables updated" );
@@ -1015,6 +1019,19 @@ public class TableAlteror
         executeSql( "update relativeperiods set lastquarter = false where lastquarter is null" );
         executeSql( "update relativeperiods set lastsixmonth = false where lastsixmonth is null" );
         executeSql( "update relativeperiods set lastweek = false where lastweek is null" );
+    }
+    
+    private void updateNameColumnLengths()
+    {
+        List<String> tables = Lists.newArrayList( "user", "usergroup", "organisationunit", "orgunitgroup", "orgunitgroupset", 
+            "section", "dataset", "sqlview", "dataelement", "dataelementgroup", "dataelementgroupset", "categorycombo", 
+            "dataelementcategory", "indicator", "indicatorgroup", "indicatorgroupset", "indicatortype", 
+            "validationrule", "validationrulegroup", "constant", "attribute", "attributegroup" );
+        
+        for ( String table : tables )
+        {
+            executeSql( "alter table " + table + " alter column name type character varying(230)" );
+        }
     }
 
     private void upgradeDataValuesWithAttributeOptionCombo()
