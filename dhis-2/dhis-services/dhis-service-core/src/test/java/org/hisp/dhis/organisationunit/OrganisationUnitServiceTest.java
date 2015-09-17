@@ -276,28 +276,6 @@ public class OrganisationUnitServiceTest
     }
 
     @Test
-    public void testGetOrganisationUnitGraph()
-    {
-        OrganisationUnit organisationUnit1 = createOrganisationUnit( 'A' );
-        OrganisationUnit organisationUnit2 = createOrganisationUnit( 'B', organisationUnit1 );
-        OrganisationUnit organisationUnit3 = createOrganisationUnit( 'C', organisationUnit2 );
-
-        int orgId1 = organisationUnitService.addOrganisationUnit( organisationUnit1 );
-        int orgId2 = organisationUnitService.addOrganisationUnit( organisationUnit2 );
-        int orgId3 = organisationUnitService.addOrganisationUnit( organisationUnit3 );
-
-        List<OrganisationUnit> graph = organisationUnitService.getOrganisationUnitBranch( orgId3 );
-        assertNotNull( graph );
-        assertEquals( 3, graph.size() );
-        OrganisationUnit orgUnit = graph.get( 0 );
-        assertEquals( orgId1, orgUnit.getId() );
-        orgUnit = graph.get( 1 );
-        assertEquals( orgId2, orgUnit.getId() );
-        orgUnit = graph.get( 2 );
-        assertEquals( orgId3, orgUnit.getId() );
-    }
-
-    @Test
     public void testGetAllOrganisationUnitsAndGetRootOrganisationUnit()
     {
         // creating a tree with two roots ( id1 and id4 )
