@@ -34,6 +34,7 @@ import com.vividsolutions.jts.geom.Polygon;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.referencing.GeodeticCalculator;
+import org.hisp.dhis.organisationunit.FeatureType;
 
 import java.awt.geom.Point2D;
 import java.io.IOException;
@@ -50,10 +51,6 @@ public class GeoUtils
     
     private static final String SVG_FONT_REGEX = "(\\s+)font=\"(.*?)\"";
 
-    private static final String FEATURETYPE_POLYGON = "Polygon";
-
-    private static final String FEATURETYPE_MULTIPOLYGON = "MultiPolygon";
-    
     /**
      * Returns boundaries of a box shape which centre is the point defined by the 
      * given longitude and latitude. The distance between the center point and the
@@ -164,7 +161,7 @@ public class GeoUtils
      * @param featureType the featureType of the MultiPolygon.
      */
     public static boolean checkPointWithMultiPolygon( double longitude, double latitude, 
-        String multiPolygonJson, String featureType )
+        String multiPolygonJson, FeatureType featureType )
     {
         try
         {
@@ -176,14 +173,14 @@ public class GeoUtils
 
             if ( point != null && point.isValid() )
             {
-                if ( featureType.compareTo( FEATURETYPE_POLYGON ) == 0 )
+                if ( featureType == FeatureType.POLYGON )
                 {
                     Polygon polygon = gtjson.readPolygon( new StringReader(
                         "{\"type\":\"Polygon\", \"coordinates\":" + multiPolygonJson + "}" ) );
 
                     contains = polygon.contains( point );
                 }
-                else if ( featureType.compareTo( FEATURETYPE_MULTIPOLYGON ) == 0 )
+                else if ( featureType == FeatureType.MULTI_POLYGON )
                 {
                     MultiPolygon multiPolygon = gtjson.readMultiPolygon( new StringReader(
                         "{\"type\":\"MultiPolygon\", \"coordinates\":" + multiPolygonJson + "}" ) );

@@ -28,10 +28,6 @@ package org.hisp.dhis.importexport.importer;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-
-import java.util.List;
-
 import org.amplecode.quick.BatchHandler;
 import org.hisp.dhis.importexport.GroupMemberType;
 import org.hisp.dhis.importexport.ImportParams;
@@ -39,6 +35,10 @@ import org.hisp.dhis.importexport.Importer;
 import org.hisp.dhis.importexport.mapping.NameMappingUtil;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
+
+import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * @author Lars Helge Overland
@@ -82,7 +82,7 @@ public class OrganisationUnitImporter
         match.setOpeningDate( object.getOpeningDate() );
         match.setClosedDate( object.getClosedDate() );
         match.setComment( defaultIfEmpty( object.getComment(), match.getComment() ) );
-        match.setFeatureType( defaultIfEmpty( object.getFeatureType(), match.getFeatureType() ) );
+        match.setFeatureType( object.getFeatureType() );
         match.setCoordinates( defaultIfEmpty( object.getCoordinates(), match.getCoordinates() ) );
         match.setLastUpdated( object.getLastUpdated() );
 

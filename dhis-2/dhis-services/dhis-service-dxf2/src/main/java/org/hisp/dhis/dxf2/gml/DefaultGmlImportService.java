@@ -28,7 +28,6 @@ package org.hisp.dhis.dxf2.gml;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
@@ -45,6 +44,7 @@ import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.importexport.ImportStrategy;
+import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.scheduling.TaskId;
@@ -72,23 +72,23 @@ import java.util.Map;
 
 /**
  * Import geospatial data from GML documents and merge into OrganisationUnits.
- *
+ * <p>
  * The implementation is a pre-processing stage, using the general MetaDataImporter
  * as the import backend.
- *
+ * <p>
  * The process of importing GML, in short, entails the following:
  * <ol>
- *     <li>Parse the GML payload and transform it into DXF2 format</li>
- *     <li>Get the given identifiers (uid, code or name) from the parsed payload and fetch
- *     the corresponding entities from the DB</li>
- *     <li>Merge the geospatial data given in the input GML into DB entities</li>
- *     <li>Serialize the MetaData payload containing the changes into DXF2, avoiding any magic
- *     deletion managers, AOP, Hibernate object cache or transaction scope messing with the payload.
- *     It is now essentially a perfect copy of the DB contents.</li>
- *     <li>Deserialize the DXF2 payload into a MetaData object, which is now completely detached, and
- *     feed this object into the MetaData importer.</li>
+ * <li>Parse the GML payload and transform it into DXF2 format</li>
+ * <li>Get the given identifiers (uid, code or name) from the parsed payload and fetch
+ * the corresponding entities from the DB</li>
+ * <li>Merge the geospatial data given in the input GML into DB entities</li>
+ * <li>Serialize the MetaData payload containing the changes into DXF2, avoiding any magic
+ * deletion managers, AOP, Hibernate object cache or transaction scope messing with the payload.
+ * It is now essentially a perfect copy of the DB contents.</li>
+ * <li>Deserialize the DXF2 payload into a MetaData object, which is now completely detached, and
+ * feed this object into the MetaData importer.</li>
  * </ol>
- *
+ * <p>
  * Any failure during this process will be reported using the {@link Notifier}.
  *
  * @author Halvdan Hoem Grelland
@@ -172,11 +172,11 @@ public class DefaultGmlImportService
             IOUtils.closeQuietly( dxfStream );
         }
 
-        Map<String, OrganisationUnit> uidMap  = Maps.newHashMap(), codeMap = Maps.newHashMap(), nameMap = Maps.newHashMap();
+        Map<String, OrganisationUnit> uidMap = Maps.newHashMap(), codeMap = Maps.newHashMap(), nameMap = Maps.newHashMap();
 
         matchAndFilterOnIdentifiers( metaData.getOrganisationUnits(), uidMap, codeMap, nameMap );
 
-        Map<String, OrganisationUnit> persistedUidMap  = getMatchingPersistedOrgUnits( uidMap.keySet(),  IdentifiableProperty.UID );
+        Map<String, OrganisationUnit> persistedUidMap = getMatchingPersistedOrgUnits( uidMap.keySet(), IdentifiableProperty.UID );
         Map<String, OrganisationUnit> persistedCodeMap = getMatchingPersistedOrgUnits( codeMap.keySet(), IdentifiableProperty.CODE );
         Map<String, OrganisationUnit> persistedNameMap = getMatchingPersistedOrgUnits( nameMap.keySet(), IdentifiableProperty.NAME );
 
@@ -212,7 +212,7 @@ public class DefaultGmlImportService
 
         if ( dxf2MetaData == null )
         {
-            return  PreProcessingResult.failure( new Exception( "GML import failed during pre-processing stage." ) );
+            return PreProcessingResult.failure( new Exception( "GML import failed during pre-processing stage." ) );
         }
 
         return PreProcessingResult.success( dxf2MetaData );
@@ -285,28 +285,21 @@ public class DefaultGmlImportService
     {
         Collection<OrganisationUnit> orgUnits =
             idProperty == IdentifiableProperty.UID ? organisationUnitService.getOrganisationUnitsByUid( identifiers ) :
-            idProperty == IdentifiableProperty.CODE ? organisationUnitService.getOrganisationUnitsByCodes( identifiers ) :
-            idProperty == IdentifiableProperty.NAME ? organisationUnitService.getOrganisationUnitsByNames( identifiers ) :
-                new HashSet<>();
+                idProperty == IdentifiableProperty.CODE ? organisationUnitService.getOrganisationUnitsByCodes( identifiers ) :
+                    idProperty == IdentifiableProperty.NAME ? organisationUnitService.getOrganisationUnitsByNames( identifiers ) :
+                        new HashSet<>();
 
         return Maps.uniqueIndex( orgUnits,
-            new Function<OrganisationUnit, String>()
-            {
-                @Override
-                public String apply( OrganisationUnit organisationUnit )
-                {
-                    return idProperty == IdentifiableProperty.UID ? organisationUnit.getUid() :
-                           idProperty == IdentifiableProperty.CODE ? organisationUnit.getCode() :
-                           idProperty == IdentifiableProperty.NAME ? organisationUnit.getName() : null;
-                }
-            }
+            organisationUnit -> idProperty == IdentifiableProperty.UID ? organisationUnit.getUid() :
+                idProperty == IdentifiableProperty.CODE ? organisationUnit.getCode() :
+                    idProperty == IdentifiableProperty.NAME ? organisationUnit.getName() : null
         );
     }
 
     private void mergeNonGeoData( OrganisationUnit source, OrganisationUnit target )
     {
-        String coordinates = target.getCoordinates(),
-               featureType = target.getFeatureType();
+        String coordinates = target.getCoordinates();
+        FeatureType featureType = target.getFeatureType();
 
         target.mergeWith( source, MergeStrategy.MERGE );
 

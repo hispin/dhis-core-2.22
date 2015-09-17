@@ -38,6 +38,7 @@ import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -262,7 +263,7 @@ public class AddOrganisationUnitAction
             if ( ValidationUtils.coordinateIsValid( coordinates ) )
             {
                 organisationUnit.setCoordinates( coordinates );
-                organisationUnit.setFeatureType( OrganisationUnit.FEATURETYPE_POINT );
+                organisationUnit.setFeatureType( FeatureType.POINT );
             }
         }
 

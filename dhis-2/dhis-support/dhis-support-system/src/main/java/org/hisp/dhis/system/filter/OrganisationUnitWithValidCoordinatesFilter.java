@@ -28,11 +28,10 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.commons.filter.Filter;
+import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.system.util.ValidationUtils;
-import org.hisp.dhis.commons.filter.Filter;
-
-import static org.hisp.dhis.organisationunit.OrganisationUnit.*;
 
 public class OrganisationUnitWithValidCoordinatesFilter
     implements Filter<OrganisationUnit>
@@ -41,6 +40,6 @@ public class OrganisationUnitWithValidCoordinatesFilter
     public boolean retain( OrganisationUnit object )
     {
         return object != null && object.getFeatureType() != null && object.hasCoordinates() &&
-            ( object.getFeatureType().equals( FEATURETYPE_POINT ) ? ValidationUtils.coordinateIsValid( object.getCoordinates() ) : true );
+            (object.getFeatureType() != FeatureType.POINT || ValidationUtils.coordinateIsValid( object.getCoordinates() ));
     }
 }

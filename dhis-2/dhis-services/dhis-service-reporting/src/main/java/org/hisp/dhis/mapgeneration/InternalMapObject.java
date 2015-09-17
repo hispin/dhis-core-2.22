@@ -28,16 +28,6 @@ package org.hisp.dhis.mapgeneration;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.awt.Color;
-import java.io.IOException;
-
-import org.geotools.data.DataUtilities;
-import org.geotools.feature.SchemaException;
-import org.geotools.styling.SLD;
-import org.geotools.styling.Style;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.opengis.feature.simple.SimpleFeatureType;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,35 +35,45 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import org.geotools.data.DataUtilities;
+import org.geotools.feature.SchemaException;
+import org.geotools.styling.SLD;
+import org.geotools.styling.Style;
+import org.hisp.dhis.organisationunit.FeatureType;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.opengis.feature.simple.SimpleFeatureType;
+
+import java.awt.*;
+import java.io.IOException;
 
 /**
  * An internal representation of a map object (feature) in a map layer.
- * 
+ * <p>
  * It encapsulates all the information of an atomic object on a map, i.e. its
  * name, value, fill color, fill opacity, stroke color, stroke width, and
  * potentially its radius should it be represented as a point.
- * 
+ * <p>
  * It may be the associated with an interval of an interval set and should be
  * associated with a map layer.
- * 
+ * <p>
  * Finally, one should extend this class with an implementation that uses a
  * specific platform, e.g. GeoTools to draw the map.
- * 
+ *
  * @author Olai Solheim <olais@ifi.uio.no>
  */
 public class InternalMapObject
 {
     private static final float LINE_STROKE_WIDTH = 0.1f;
-    
+
     private static final String CIRCLE = "Circle";
     private static final String POINT = "Point";
     private static final String POLYGON = "Polygon";
     private static final String MULTI_POLYGON = "MultiPolygon";
     private static final String GEOMETRIES = "geometries";
-    
+
     public static final String TYPE_THEMATIC = "thematic";
     public static final String TYPE_BOUNDARY = "boundary";
-        
+
     protected String name;
 
     protected double value;
@@ -89,9 +89,9 @@ public class InternalMapObject
     protected InternalMapLayer mapLayer;
 
     protected Interval interval;
-    
+
     private Geometry geometry;
-    
+
     private MapLayerType mapLayerType;
 
     // -------------------------------------------------------------------------
@@ -109,38 +109,38 @@ public class InternalMapObject
     /**
      * Builds the GeoTools geometric primitive for a given organisation unit and
      * sets it for this map object.
-     * 
+     * <p>
      * Quick guide to how geometry is stored in DHIS:
-     * 
+     * <p>
      * Geometry for org units is stored in the DB as [[[[0.32, -33.87], [23.99,
      * -43.02], ...]]], and may be retrieved by calling the getCoordinates
      * method of OrganisationUnit.
-     * 
+     * <p>
      * The coordinates vary according to feature type, which can be found with a
      * call to getFeatureType of OrganisationUnit. It varies between the
      * following structures (names are omitted in the actual coordinates
      * string):
-     * 
+     * <p>
      * multipolygon = [ polygon0 = [ shell0 = [ point0 = [0.32, -33.87], point1
      * = [23.99, -43.02], point2 = [...]], hole0 = [...], hole1 = [...]],
      * polygon1 = [...] polygon2 = [...]] polygon = [ shell0 = [ point0 = [0.32,
      * -33.87], point1 = [23.99, -43.02]], hole0 = [...], hole1 = [...]]
-     * 
+     * <p>
      * point = [0.32, -33.87]
-     * 
+     * <p>
      * Multi-polygons are stored as an array of polygons. Polygons are stored as
      * an array of linear-rings, where the first linear-ring is the shell, and
      * remaining linear-rings are the holes in the polygon. Linear-rings are
      * stored as an array of points, which in turn is stored as an array of
      * (two) components as a floating point type.
-     * 
+     * <p>
      * There are three types of geometry that may be stored in a DHIS org unit:
      * point, polygon, and multi-polygon. This method supports all three.
-     * 
+     * <p>
      * NOTE However, as of writing, there is a bug in DHIS OrganisationUnit
      * where when getFeatureType reports type Polygon, getCoordinates really
      * returns coordinates in the format of type MultiPolygon.
-     * 
+     *
      * @param orgUnit the organisation unit
      */
     public void buildGeometryForOrganisationUnit( OrganisationUnit orgUnit )
@@ -167,15 +167,15 @@ public class InternalMapObject
 
         // Use the factory to build the correct type based on the feature type
         // Polygon is treated similarly as MultiPolygon        
-        if ( OrganisationUnit.FEATURETYPE_POINT.equals( orgUnit.getFeatureType() ) )
+        if ( orgUnit.getFeatureType() == FeatureType.POINT )
         {
             primitive = GeoToolsPrimitiveFromJsonFactory.createPointFromJson( root );
         }
-        else if ( OrganisationUnit.FEATURETYPE_POLYGON.equals( orgUnit.getFeatureType() ) )
+        else if ( orgUnit.getFeatureType() == FeatureType.POLYGON )
         {
-            primitive = GeoToolsPrimitiveFromJsonFactory.createMultiPolygonFromJson( root ); 
+            primitive = GeoToolsPrimitiveFromJsonFactory.createMultiPolygonFromJson( root );
         }
-        else if ( OrganisationUnit.FEATURETYPE_MULTIPOLYGON.equals( orgUnit.getFeatureType() ) )
+        else if ( orgUnit.getFeatureType() == FeatureType.MULTI_POLYGON )
         {
             primitive = GeoToolsPrimitiveFromJsonFactory.createMultiPolygonFromJson( root );
         }
@@ -211,9 +211,9 @@ public class InternalMapObject
         {
             style = SLD.createSimpleStyle( getFeatureType() );
         }
-        
+
         return style;
-    }    
+    }
 
     /**
      * Creates a feature type for a GeoTools geometric primitive.
@@ -249,7 +249,7 @@ public class InternalMapObject
         }
     }
 
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -313,7 +313,7 @@ public class InternalMapObject
     {
         this.strokeColor = strokeColor;
     }
-    
+
     public InternalMapLayer getMapLayer()
     {
         return this.mapLayer;
@@ -344,22 +344,22 @@ public class InternalMapObject
     {
         this.geometry = geometry;
     }
-    
+
     public MapLayerType getMapLayerType()
     {
         return mapLayerType;
     }
-    
+
     public void setMapLayerType( MapLayerType mapLayerType )
     {
         this.mapLayerType = mapLayerType;
     }
-    
+
     @Override
     public String toString()
     {
         return String.format( "InternalMapObject {" + " name: \"%s\"," + " value: %.2f," + " radius: %d,"
-            + " fillColor: %s," + " fillOpacity: %.2f" + " strokeColor: %s," + " strokeWidth: %d" + " }", name, value,
+                + " fillColor: %s," + " fillOpacity: %.2f" + " strokeColor: %s," + " strokeWidth: %d" + " }", name, value,
             radius, fillColor, fillOpacity, strokeColor );
     }
 }

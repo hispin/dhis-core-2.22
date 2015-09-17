@@ -52,9 +52,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @Component
 public class OrganisationUnitToFacilityConverter implements Converter<OrganisationUnit, Facility>
 {
-    @Autowired
-    private OrganisationUnitService organisationUnitService;
-
     @Override
     public Facility convert( OrganisationUnit organisationUnit )
     {
@@ -72,8 +69,7 @@ public class OrganisationUnitToFacilityConverter implements Converter<Organisati
         {
         }
 
-        if ( organisationUnit.getFeatureType() != null && organisationUnit.getFeatureType().equalsIgnoreCase( "POINT" )
-            && organisationUnit.getCoordinates() != null )
+        if ( organisationUnit.getFeatureType() != null && organisationUnit.isPoint() && organisationUnit.getCoordinates() != null )
         {
             try
             {

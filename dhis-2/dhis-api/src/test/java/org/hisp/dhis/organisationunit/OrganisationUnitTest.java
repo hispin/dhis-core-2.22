@@ -180,7 +180,7 @@ public class OrganisationUnitTest
     {   
         OrganisationUnit unit = new OrganisationUnit();
         unit.setCoordinates( multiPolygonCoordinates );
-        unit.setFeatureType( "MultiPolygon" );
+        unit.setFeatureType( FeatureType.MULTI_POLYGON );
         
         assertEquals( 3, unit.getCoordinatesAsList().size() );
         
