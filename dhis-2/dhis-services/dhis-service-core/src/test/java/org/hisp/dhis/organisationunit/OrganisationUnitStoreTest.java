@@ -145,19 +145,19 @@ public class OrganisationUnitStoreTest
 
         ous = orgUnitStore.getOrganisationUnits( params );
 
-        assertEquals( 4, ous.size() );
-        assertTrue( ous.containsAll( Sets.newHashSet( ouB, ouC, ouD, ouE ) ) );
+        assertEquals( 6, ous.size() );
+        assertTrue( ous.containsAll( Sets.newHashSet( ouB, ouC, ouD, ouE, ouF, ouG ) ) );
 
         // Levels and groups
         
         params = new OrganisationUnitQueryParams();
-        params.setLevels( Sets.newHashSet( 4 ) );
+        params.setLevels( Sets.newHashSet( 3 ) );
         params.setGroups( Sets.newHashSet( ogA ) );
 
         ous = orgUnitStore.getOrganisationUnits( params );
 
-        assertEquals( 1, ous.size() );
-        assertTrue( ous.containsAll( Sets.newHashSet( ouF ) ) );
+        assertEquals( 2, ous.size() );
+        assertTrue( ous.containsAll( Sets.newHashSet( ouD, ouF ) ) );
 
         // Parents and groups
         
