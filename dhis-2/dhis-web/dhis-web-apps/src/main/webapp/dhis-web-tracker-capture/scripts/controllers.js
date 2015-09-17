@@ -53,10 +53,11 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.enrollment = {programStartDate: '', programEndDate: '', operator: $scope.defaultOperators[0]};
     $scope.searchMode = { listAll: 'LIST_ALL', freeText: 'FREE_TEXT', attributeBased: 'ATTRIBUTE_BASED' };    
     $scope.optionSets = null;
+    $scope.attributesById = null;
     $scope.doSearch = true;
     
     //Registration
-    $scope.showRegistrationDiv = false;
+    $scope.showRegistrationDiv = false;    
     
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {           
@@ -65,9 +66,21 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             
             SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);
             
-            $scope.trackedEntityList = [];
+            $scope.trackedEntityList = null;
             
             $scope.optionSets = CurrentSelection.getOptionSets();
+            
+            $scope.attributesById = CurrentSelection.getAttributesById();
+            
+            if(!$scope.attributesById){
+                $scope.attributesById = [];
+                MetaDataFactory.getAll('attributes').then(function(atts){                    
+                    angular.forEach(atts, function(att){
+                        $scope.attributesById[att.id] = att;
+                    });
+                    CurrentSelection.setAttributesById($scope.attributesById);
+                });
+            }
             
             if(!$scope.optionSets){
                 $scope.optionSets = [];
@@ -143,12 +156,12 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.getProgramAttributes = function(program){ 
         $scope.selectedProgram = program;
         
-        if($scope.selectedProgram){
+        /*if($scope.selectedProgram){
             $location.path('/').search({program: $scope.selectedProgram.id});
         }
         else{
             $location.path('/').search({});
-        }
+        }*/
 
         $scope.trackedEntityList = null;        
         
@@ -216,8 +229,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
 
             if(!$scope.searchText){                
                 $scope.emptySearchText = true;
-                $scope.teiFetched = false;   
-                $scope.teiCount = null;
+                $scope.teiFetched = false;
                 return;
             }       
             
@@ -234,8 +246,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             
             if(!$scope.attributeUrl.hasValue){
                 $scope.emptySearchAttribute = true;
-                $scope.teiFetched = false;   
-                $scope.teiCount = null;
+                $scope.teiFetched = false;
                 return;
             }
             
@@ -255,8 +266,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.fetchTeis = function(){
         
         $scope.teiFetched = false;
-        $scope.trackedEntityList = null; 
-        $scope.teiCount = null;
+        $scope.trackedEntityList = null;
         
         //get events for the specified parameters        
         TEIService.search($scope.searchingOrgUnit.id, 
@@ -266,10 +276,6 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                                             $scope.attributeUrl.url,
                                             $scope.pager,
                                             true).then(function(data){            
-            if(data.rows){
-                $scope.teiCount = data.rows.length;
-            }                    
-            
             if( data.metaData && data.metaData.pager ){
                 $scope.pager = data.metaData.pager;
                 $scope.pager.toolBarDisplay = 5;
@@ -282,11 +288,12 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             
             //process tei grid
             $scope.trackedEntityList = TEIGridService.format(data,false, $scope.optionSets, null);
+
             $scope.showTrackedEntityDiv = true;
             $scope.showSearchDiv = false;
             $scope.teiFetched = true;  
             $scope.doSearch = true;
-            
+
             if(!$scope.sortColumn.id){                                      
                 $scope.sortGrid({id: 'created', name: 'registration_date', valueType: 'date', displayInListNoProgram: false, showFilter: false, show: false});
             }
