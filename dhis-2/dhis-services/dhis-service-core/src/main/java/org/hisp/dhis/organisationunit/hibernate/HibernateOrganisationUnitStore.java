@@ -163,6 +163,18 @@ public class HibernateOrganisationUnitStore
             hql += hlp.whereAnd() + " (lower(o.name) like :queryLower or o.code = :query or o.uid = :query) " ;
         }
 
+        if ( params.hasParents() )
+        {
+            hql += hlp.whereAnd() + " (";
+            
+            for ( OrganisationUnit parent : params.getParents() )
+            {
+                hql += "o.path like :" + parent.getUid() + " or ";
+            }
+            
+            hql = TextUtils.removeLastOr( hql ) + ") ";
+        }
+        
         if ( params.hasGroups() )
         {
             for ( OrganisationUnitGroup group : params.getGroups() )
@@ -171,13 +183,13 @@ public class HibernateOrganisationUnitStore
             }
         }
         
-        if ( params.hasParents() )
+        if ( params.hasLevels() )
         {
             hql += hlp.whereAnd() + " (";
             
-            for ( OrganisationUnit parent : params.getParents() )
+            for ( Integer level : params.getLevels() )
             {
-                hql += "o.path like :" + parent.getUid() + " or ";
+                hql += " length(o.path) = :levelPathLength" + level + " or ";
             }
             
             hql = TextUtils.removeLastOr( hql ) + ") ";
@@ -197,6 +209,14 @@ public class HibernateOrganisationUnitStore
             query.setString( "queryLower", "%" + params.getQuery().toLowerCase() + "%" );
             query.setString( "query", params.getQuery() );
         }
+
+        if ( params.hasParents() )
+        {
+            for ( OrganisationUnit parent : params.getParents() )
+            {
+                query.setString( parent.getUid(), "%" + parent.getUid() + "%" );
+            }
+        }
         
         if ( params.hasGroups() )
         {
@@ -206,11 +226,11 @@ public class HibernateOrganisationUnitStore
             }
         }
         
-        if ( params.hasParents() )
+        if ( params.hasLevels() )
         {
-            for ( OrganisationUnit parent : params.getParents() )
+            for ( Integer level : params.getLevels() )
             {
-                query.setString( parent.getUid(), "%" + parent.getUid() + "%" );
+                query.setInteger( "levelPathLength" + level, level );
             }
         }
         
