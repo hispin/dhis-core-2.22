@@ -190,7 +190,7 @@ public class DefaultValidationRuleService
     {
         log.info( "Validate start:" + startDate + " end: " + endDate + " sources: " + sources.size() + " group: " + group );
 
-        Collection<Period> periods = periodService.getPeriodsBetweenDates( startDate, endDate );
+        List<Period> periods = periodService.getPeriodsBetweenDates( startDate, endDate );
         Collection<ValidationRule> rules = group != null ? group.getMembers() : getAllValidationRules();
 
         Collection<ValidationResult> results = Validator.validate( sources, periods, rules, attributeCombo, null,

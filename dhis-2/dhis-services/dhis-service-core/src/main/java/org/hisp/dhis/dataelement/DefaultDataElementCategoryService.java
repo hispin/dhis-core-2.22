@@ -770,7 +770,7 @@ public class DefaultDataElementCategoryService
     @Override
     public List<DataElementOperand> getOperandsLikeName( String name )
     {
-        Collection<DataElement> dataElements = dataElementService.getDataElementsLikeName( name );
+        List<DataElement> dataElements = dataElementService.getDataElementsLikeName( name );
 
         return getOperands( dataElements );
     }
@@ -853,7 +853,7 @@ public class DefaultDataElementCategoryService
     @Override
     public void updateAllOptionCombos()
     {
-        Collection<DataElementCategoryCombo> categoryCombos = getAllDataElementCategoryCombos();
+        List<DataElementCategoryCombo> categoryCombos = getAllDataElementCategoryCombos();
 
         for ( DataElementCategoryCombo categoryCombo : categoryCombos )
         {

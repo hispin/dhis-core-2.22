@@ -87,7 +87,7 @@ public class ValidationRunContext
 
     private Map<ValidationRule, ValidationRuleExtended> ruleXMap;
 
-    private Collection<OrganisationUnitExtended> sourceXs;
+    private Set<OrganisationUnitExtended> sourceXs;
 
     private DataElementCategoryOptionCombo attributeCombo;
 
