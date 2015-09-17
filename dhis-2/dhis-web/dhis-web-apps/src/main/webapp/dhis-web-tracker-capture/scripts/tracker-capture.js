@@ -18,6 +18,7 @@ var optionSetsInPromise = [];
 var attributesInPromise = [];
 
 dhis2.tc.store = null;
+dhis2.tc.metaDataCached = false;
 dhis2.tc.memoryOnly = $('html').hasClass('ie7') || $('html').hasClass('ie8');
 var adapters = [];    
 if( dhis2.tc.memoryOnly ) {
@@ -154,7 +155,8 @@ function downloadMetaData()
     promise = promise.then( getTrackedEntityAttributeGroups );
     promise.done(function() {        
         //Enable ou selection after meta-data has downloaded
-        $( "#orgUnitTree" ).removeClass( "disable-clicks" );        
+        $( "#orgUnitTree" ).removeClass( "disable-clicks" );
+        dhis2.tc.metaDataCached = true;
         console.log( 'Finished loading meta-data' );        
         selection.responseReceived(); 
     });

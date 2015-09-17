@@ -79,6 +79,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             $scope.eventCaptureLabel = $translate.instant('event_capture');
             $scope.programLabel = $translate.instant('program');
             $scope.searchLabel = $translate.instant('search');
+            $scope.findLabel = $translate.instant('find');
+            $scope.searchOusLabel = $translate.instant('locate_organisation_unit_by_name');
             $scope.yesLabel = $translate.instant('yes');
             $scope.noLabel = $translate.instant('no');
             

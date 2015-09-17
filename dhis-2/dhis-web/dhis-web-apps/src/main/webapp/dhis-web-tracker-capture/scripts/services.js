@@ -427,64 +427,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };        
 })
 
-/*Orgunit service for local db */
-.service('OrgUnitService', function($window, $q){
-    
-    var indexedDB = $window.indexedDB;
-    var db = null;
-    
-    var open = function(){
-        var deferred = $q.defer();
-        
-        var request = indexedDB.open("dhis2ou");
-        
-        request.onsuccess = function(e) {
-          db = e.target.result;
-          deferred.resolve();
-        };
-
-        request.onerror = function(){
-          deferred.reject();
-        };
-
-        return deferred.promise;
-    };
-    
-    var get = function(uid){
-        
-        var deferred = $q.defer();
-        
-        if( db === null){
-            deferred.reject("DB not opened");
-        }
-        else{
-            var tx = db.transaction(["ou"]);
-            var store = tx.objectStore("ou");
-            var query = store.get(uid);
-                
-            query.onsuccess = function(e){
-                if(e.target.result){
-                    deferred.resolve(e.target.result);
-                }
-                else{
-                    var t = db.transaction(["ouPartial"]);
-                    var s = t.objectStore("ouPartial");
-                    var q = s.get(uid);
-                    q.onsuccess = function(e){
-                        deferred.resolve(e.target.result);
-                    };
-                }            
-            };
-        }
-        return deferred.promise;
-    };
-    
-    return {
-        open: open,
-        get: get
-    };    
-})
-
 /* Factory for fetching OrgUnit */
 .factory('OrgUnitFactory', function($http, SessionStorageService) {    
     var orgUnit, orgUnitPromise, rootOrgUnitPromise;
@@ -1516,56 +1458,53 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 angular.forEach(atts, function(att){
                     attributes[att.id] = att;
                 });
-            
-                OrgUnitService.open().then(function(){
+                
+                angular.forEach(grid.rows, function(row){
+                    if(invalidTeis.indexOf(row[0]) === -1 ){
+                        var entity = {};
+                        var isEmpty = true;
 
-                    angular.forEach(grid.rows, function(row){
-                        if(invalidTeis.indexOf(row[0]) === -1 ){
-                            var entity = {};
-                            var isEmpty = true;
+                        entity.id = row[0];
+                        entity.created = DateUtils.formatFromApiToUser( row[1] );
+                        entity.orgUnit = row[3];                              
+                        entity.type = row[4];
+                        entity.inactive = row[5] !== "" ? row[5] : false;
 
-                            entity.id = row[0];
-                            entity.created = DateUtils.formatFromApiToUser( row[1] );
-                            entity.orgUnit = row[3];                              
-                            entity.type = row[4];
-                            entity.inactive = row[5] !== "" ? row[5] : false;
+                        OrgUnitService.get(row[3]).then(function(ou){
+                            if(ou && ou.name){
+                                entity.orgUnitName = ou.name;
+                            }                                                       
+                        });
 
-                            OrgUnitService.get(row[3]).then(function(ou){
-                                if(ou){
-                                    entity.orgUnitName = ou.n;
-                                }                                                       
-                            });
+                        for(var i=6; i<row.length; i++){
+                            if(row[i] && row[i] !== ''){
+                                isEmpty = false;
+                                var val = row[i];
 
-                            for(var i=6; i<row.length; i++){
-                                if(row[i] && row[i] !== ''){
-                                    isEmpty = false;
-                                    var val = row[i];
-
-                                    if(attributes[grid.headers[i].name] && 
-                                            attributes[grid.headers[i].name].optionSetValue && 
-                                            optionSets &&    
-                                            attributes[grid.headers[i].name].optionSet &&
-                                            optionSets[attributes[grid.headers[i].name].optionSet.id] ){
-                                        val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
-                                    }
-                                    if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
-                                        val = DateUtils.formatFromApiToUser( val );
-                                    }
-
-                                    entity[grid.headers[i].name] = val;
+                                if(attributes[grid.headers[i].name] && 
+                                        attributes[grid.headers[i].name].optionSetValue && 
+                                        optionSets &&    
+                                        attributes[grid.headers[i].name].optionSet &&
+                                        optionSets[attributes[grid.headers[i].name].optionSet.id] ){
+                                    val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
                                 }
-                            }
+                                if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
+                                    val = DateUtils.formatFromApiToUser( val );
+                                }
 
-                            if(!isEmpty){
-                                if(map){
-                                    entityList[entity.id] = entity;
-                                }
-                                else{
-                                    entityList.push(entity);
-                                }
+                                entity[grid.headers[i].name] = val;
                             }
                         }
-                    });                
+
+                        if(!isEmpty){
+                            if(map){
+                                entityList[entity.id] = entity;
+                            }
+                            else{
+                                entityList.push(entity);
+                            }
+                        }
+                    }
                 });
             }); 
             return {headers: attributes, rows: entityList, pager: grid.metaData.pager};                                    
