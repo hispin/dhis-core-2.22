@@ -170,4 +170,12 @@ public interface OrganisationUnitStore
     void updatePaths();
 
     void forceUpdatePaths();
+    
+    /**
+     * Returns the number of organsiation unit levels in the database based on
+     * the organisation unit hierarchy.
+     * 
+     * @return number of levels, 0 if no organisation units are present.
+     */
+    int getMaxLevel();
 }
