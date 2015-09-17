@@ -250,26 +250,6 @@ public class DataElementCategoryOptionCombo
         return names1.equals( names2 );
     }
 
-    /**
-     * Tests if this object equals to an object in the given Collection on a
-     * name basis.
-     *
-     * @param categoryOptionCombos the Collection.
-     * @return true if the Collection contains this object, false otherwise.
-     */
-    public DataElementCategoryOptionCombo get( Collection<DataElementCategoryOptionCombo> categoryOptionCombos )
-    {
-        for ( DataElementCategoryOptionCombo combo : categoryOptionCombos )
-        {
-            if ( combo.equalsOnName( this ) )
-            {
-                return combo;
-            }
-        }
-
-        return null;
-    }
-
     public boolean isDefault()
     {
         return categoryCombo != null && categoryCombo.getName().equals( DEFAULT_NAME );
