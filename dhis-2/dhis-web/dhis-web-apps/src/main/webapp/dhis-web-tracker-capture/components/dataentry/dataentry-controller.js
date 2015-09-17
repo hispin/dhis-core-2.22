@@ -453,12 +453,12 @@ trackerCapture.controller('DataEntryController',
         });
 
         $scope.customForm = CustomFormService.getForProgramStage($scope.currentStage, $scope.prStDes);
-        $scope.displayCustomForm = "default";
+        $scope.displayCustomForm = "DEFAULT";
         if ($scope.customForm) {
-            $scope.displayCustomForm = "custom";
+            $scope.displayCustomForm = "CUSTOM";
         }
         else if ($scope.currentStage.displayEventsInTable) {
-            $scope.displayCustomForm = "table";
+            $scope.displayCustomForm = "TABLE";
         }
 
         $scope.currentEventOriginal = angular.copy($scope.currentEvent);
