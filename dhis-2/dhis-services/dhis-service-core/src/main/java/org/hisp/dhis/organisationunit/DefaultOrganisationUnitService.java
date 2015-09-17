@@ -433,7 +433,7 @@ public class DefaultOrganisationUnitService
             return roots;
         }
 
-        return getOrganisationUnitsAtLevel( level, roots );
+        return getOrganisationUnitsAtLevels( Sets.newHashSet( level ), roots );
     }
 
     @Override
@@ -442,16 +442,7 @@ public class DefaultOrganisationUnitService
         List<OrganisationUnit> parents = new ArrayList<>();
         parents.add( parent );
 
-        return getOrganisationUnitsAtLevel( level, parent != null ? parents : null );
-    }
-
-    @Override
-    public List<OrganisationUnit> getOrganisationUnitsAtLevel( int level, Collection<OrganisationUnit> parents )
-    {
-        Set<Integer> levels = new HashSet<>();
-        levels.add( level );
-
-        return getOrganisationUnitsAtLevels( levels, parents );
+        return getOrganisationUnitsAtLevels( Sets.newHashSet( level ), parent != null ? parents : null );
     }
 
     //TODO rewrite using path

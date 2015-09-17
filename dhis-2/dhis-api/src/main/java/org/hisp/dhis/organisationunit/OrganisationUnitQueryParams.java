@@ -54,7 +54,7 @@ public class OrganisationUnitQueryParams
      * The groups for which members to include.
      */
     private Set<OrganisationUnitGroup> groups = new HashSet<>();
-
+    
     /**
      * The maximum number of organisation unit levels to fetch, relative to the
      * real root of the hierarchy.

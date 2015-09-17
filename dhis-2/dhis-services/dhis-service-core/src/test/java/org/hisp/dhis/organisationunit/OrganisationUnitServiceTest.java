@@ -537,12 +537,9 @@ public class OrganisationUnitServiceTest
         List<OrganisationUnit> unitsA = new ArrayList<>( Arrays.asList( unitB, unitC ) );
         List<OrganisationUnit> unitsB = new ArrayList<>( Arrays.asList( unitD, unitE ) );
 
-        OrganisationUnit nill = null;
-
-        assertTrue( equals( organisationUnitService.getOrganisationUnitsAtLevel( 3, unitsA ), unitD, unitE, unitF, unitG ) );
-        assertTrue( equals( organisationUnitService.getOrganisationUnitsAtLevel( 4, unitsA ), unitH, unitI, unitJ, unitK, unitL, unitM, unitN, unitO ) );
-        assertTrue( equals( organisationUnitService.getOrganisationUnitsAtLevel( 4, unitsB ), unitH, unitI, unitJ, unitK ) );
-        assertTrue( equals( organisationUnitService.getOrganisationUnitsAtLevel( 2, nill ), unitB, unitC ) );
+        assertTrue( equals( organisationUnitService.getOrganisationUnitsAtLevels( Sets.newHashSet( 3 ), unitsA ), unitD, unitE, unitF, unitG ) );
+        assertTrue( equals( organisationUnitService.getOrganisationUnitsAtLevels( Sets.newHashSet( 4 ), unitsA ), unitH, unitI, unitJ, unitK, unitL, unitM, unitN, unitO ) );
+        assertTrue( equals( organisationUnitService.getOrganisationUnitsAtLevels( Sets.newHashSet( 4 ), unitsB ), unitH, unitI, unitJ, unitK ) );
 
         assertEquals( 2, unitB.getLevel() );
         assertEquals( 3, unitD.getLevel() );
