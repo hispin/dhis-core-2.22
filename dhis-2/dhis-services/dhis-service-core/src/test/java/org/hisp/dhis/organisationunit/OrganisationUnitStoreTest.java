@@ -64,13 +64,13 @@ public class OrganisationUnitStoreTest
     @Test
     public void testGetOrganisationUnits()
     {
-        OrganisationUnit ouA = createOrganisationUnit( 'A' );
-        OrganisationUnit ouB = createOrganisationUnit( 'B', ouA );
-        OrganisationUnit ouC = createOrganisationUnit( 'C', ouA );
-        OrganisationUnit ouD = createOrganisationUnit( 'D', ouB );
-        OrganisationUnit ouE = createOrganisationUnit( 'E', ouB );
-        OrganisationUnit ouF = createOrganisationUnit( 'F', ouC );
-        OrganisationUnit ouG = createOrganisationUnit( 'G', ouC );
+        OrganisationUnit ouA = createOrganisationUnit( 'A' ); // 1
+        OrganisationUnit ouB = createOrganisationUnit( 'B', ouA ); // 2
+        OrganisationUnit ouC = createOrganisationUnit( 'C', ouA ); // 2
+        OrganisationUnit ouD = createOrganisationUnit( 'D', ouB ); // 3
+        OrganisationUnit ouE = createOrganisationUnit( 'E', ouB ); // 3
+        OrganisationUnit ouF = createOrganisationUnit( 'F', ouC ); // 4
+        OrganisationUnit ouG = createOrganisationUnit( 'G', ouC ); // 4
         
         orgUnitStore.save( ouA );
         orgUnitStore.save( ouB );
@@ -88,6 +88,8 @@ public class OrganisationUnitStoreTest
         orgUnitGroupStore.save( ogA );
         orgUnitGroupStore.save( ogB );
         
+        // Query
+        
         OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
         params.setQuery( "UnitC" );
         
@@ -95,6 +97,8 @@ public class OrganisationUnitStoreTest
 
         assertEquals( 1, ous.size() );
         assertTrue( ous.contains( ouC ) );
+
+        // Query
         
         params = new OrganisationUnitQueryParams();
         params.setQuery( "OrganisationUnitCodeA" );
@@ -104,6 +108,8 @@ public class OrganisationUnitStoreTest
         assertTrue( ous.contains( ouA ) );
         assertEquals( 1, ous.size() );
 
+        // Parents
+        
         params = new OrganisationUnitQueryParams();
         params.setParents( Sets.newHashSet( ouC, ouF ) );
 
@@ -112,6 +118,8 @@ public class OrganisationUnitStoreTest
         assertEquals( 3, ous.size() );
         assertTrue( ous.containsAll( Sets.newHashSet( ouC, ouF, ouG ) ) );
 
+        // Groups
+        
         params = new OrganisationUnitQueryParams();
         params.setGroups( Sets.newHashSet( ogA ) );
 
@@ -120,6 +128,39 @@ public class OrganisationUnitStoreTest
         assertEquals( 2, ous.size() );
         assertTrue( ous.containsAll( Sets.newHashSet( ouD, ouF ) ) );
 
+        // Levels
+        
+        params = new OrganisationUnitQueryParams();
+        params.setLevels( Sets.newHashSet( 2 ) );
+
+        ous = orgUnitStore.getOrganisationUnits( params );
+
+        assertEquals( 2, ous.size() );
+        assertTrue( ous.containsAll( Sets.newHashSet( ouB, ouC ) ) );
+
+        // Levels
+        
+        params = new OrganisationUnitQueryParams();
+        params.setLevels( Sets.newHashSet( 2, 3 ) );
+
+        ous = orgUnitStore.getOrganisationUnits( params );
+
+        assertEquals( 4, ous.size() );
+        assertTrue( ous.containsAll( Sets.newHashSet( ouB, ouC, ouD, ouE ) ) );
+
+        // Levels and groups
+        
+        params = new OrganisationUnitQueryParams();
+        params.setLevels( Sets.newHashSet( 4 ) );
+        params.setGroups( Sets.newHashSet( ogA ) );
+
+        ous = orgUnitStore.getOrganisationUnits( params );
+
+        assertEquals( 1, ous.size() );
+        assertTrue( ous.containsAll( Sets.newHashSet( ouF ) ) );
+
+        // Parents and groups
+        
         params = new OrganisationUnitQueryParams();
         params.setParents( Sets.newHashSet( ouC ) );        
         params.setGroups( Sets.newHashSet( ogB ) );
@@ -128,6 +169,8 @@ public class OrganisationUnitStoreTest
 
         assertEquals( 1, ous.size() );
         assertTrue( ous.containsAll( Sets.newHashSet( ouG ) ) );
+
+        // Parents and max levels
         
         params = new OrganisationUnitQueryParams();
         params.setParents( Sets.newHashSet( ouA ) );
@@ -138,6 +181,8 @@ public class OrganisationUnitStoreTest
         assertEquals( 3, ous.size() );
         assertTrue( ous.containsAll( Sets.newHashSet( ouA, ouB, ouC ) ) );
 
+        // Parents and max levels
+        
         params = new OrganisationUnitQueryParams();
         params.setParents( Sets.newHashSet( ouA ) );
         params.setMaxLevels( 3 );
@@ -147,6 +192,8 @@ public class OrganisationUnitStoreTest
         assertEquals( 7, ous.size() );
         assertTrue( ous.containsAll( Sets.newHashSet( ouA, ouB, ouC, ouD, ouE, ouF, ouG ) ) );
 
+        // Parents and max levels
+        
         params = new OrganisationUnitQueryParams();
         params.setParents( Sets.newHashSet( ouA ) );
         params.setMaxLevels( 1 );
@@ -156,6 +203,8 @@ public class OrganisationUnitStoreTest
         assertEquals( 1, ous.size() );
         assertTrue( ous.containsAll( Sets.newHashSet( ouA ) ) );
 
+        // Parents and max levels
+        
         params = new OrganisationUnitQueryParams();
         params.setParents( Sets.newHashSet( ouB ) );
         params.setMaxLevels( 3 );

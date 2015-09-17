@@ -40,6 +40,8 @@ import com.google.common.base.MoreObjects;
  */
 public class OrganisationUnitQueryParams
 {
+    private static final int CODE_SEP_LENGTH = CodeGenerator.CODESIZE + 1;
+    
     /**
      * Query string to match like name and exactly on UID and code.
      */
@@ -56,7 +58,12 @@ public class OrganisationUnitQueryParams
     private Set<OrganisationUnitGroup> groups = new HashSet<>();
     
     /**
-     * The maximum number of organisation unit levels to fetch, relative to the
+     * The levels of organisation units to include.
+     */
+    private Set<Integer> levels = new HashSet<>();
+    
+    /**
+     * The maximum number of organisation unit levels to include, relative to the
      * real root of the hierarchy.
      */
     private Integer maxLevels;
@@ -93,9 +100,19 @@ public class OrganisationUnitQueryParams
         return groups != null && !groups.isEmpty();
     }
     
+    public boolean hasLevels()
+    {
+        return levels != null && !levels.isEmpty();
+    }
+    
     public int getMaxLevelsPathLength()
     {
-        return maxLevels != null ? ( ( CodeGenerator.CODESIZE + 1 ) * maxLevels ) : -1;
+        return maxLevels != null ? ( CODE_SEP_LENGTH * maxLevels ) : -1;
+    }
+    
+    public int getLevelPathLength( int level )
+    {
+        return CODE_SEP_LENGTH * level;
     }
     
     @Override
@@ -105,6 +122,7 @@ public class OrganisationUnitQueryParams
             add( "query", query ).
             add( "parents", parents ).
             add( "groups", groups ).
+            add( "levels", levels ).
             add( "maxLevels", maxLevels ).
             add( "first", first ).
             add( "max", max ).toString();
@@ -142,6 +160,16 @@ public class OrganisationUnitQueryParams
     public void setGroups( Set<OrganisationUnitGroup> groups )
     {
         this.groups = groups;
+    }
+
+    public Set<Integer> getLevels()
+    {
+        return levels;
+    }
+
+    public void setLevels( Set<Integer> levels )
+    {
+        this.levels = levels;
     }
 
     public Integer getMaxLevels()
