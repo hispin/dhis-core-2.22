@@ -23,17 +23,36 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('d2OuSearch', function () {
+.directive('d2LeftBar', function () {
 
     return {
         restrict: 'E',
-        template: '<div style="margin-top:20px">\n\
-            <img id="searchIcon" src="../images/search.png" style="cursor: pointer" title="{{ searchOusLabel}}">\n\
+        template: '<span id="showLeftBar">\n\
+        <a href="javascript:dhis2.leftBar.showAnimated()" title="$i18n.getString(\'show_menu\' )">\n\
+        <i class="fa fa-arrow-right leftBarIcon"></i></a>\n\
+    </span>\n\
+    <div id="leftBar">\n\
+        <div id="hideLeftBar">\n\
+                <a href="index.action" title="{{\'show_main_menu\' | translate}}" id="showMainMenuLink"><i class="fa fa-home leftBarIcon"></i></a>\n\
+                <a href="javascript:dhis2.leftBar.hideAnimated()" title="{{\'hide_menu\' | translate}}" id="hideMainMenuLink"><i class="fa fa-arrow-left leftBarIcon"></i></a>\n\
+                <a href="javascript:dhis2.leftBar.extendAnimated()" title="{{\'extend_menu\' | translate}}" id="extendMainMenuLink"><i class="fa fa-arrow-right leftBarIcon"></i></a>\n\
+        </div>\n\
+        <div style="margin-top:20px">\n\
+            <img id="searchIcon" src="../images/search.png" style="cursor: pointer" title="{{searchOusLabel}}">\n\
             <span id="searchSpan" style="width:100%;display:none;">\n\
-                <input type="text" id="searchField" name="key"/>\n\
-                <input type="button" value="{{findLabel}}" onclick="selection.findByName()"/>\n\
+                    <input type="text" id="searchField" name="key"/>\n\
+                    <input type="button" value="{{findLabel}}" onclick="selection.findByName()"/>\n\
             </span>\n\
-          </div>',
+        </div>\n\
+        <div id="orgUnitTree">\n\
+            <ul>\n\
+            </ul>\n\
+        </div>\n\
+        <img id="ouwt_loader" src="../images/ajax-loader-bar.gif"/>\n\
+        <div class="small-horizonal-spacing" ng-if="!treeLoaded">\n\
+            {{\'loading_tree\'| translate}}\n\
+        </div>\n\
+    </div>',
         link: function (scope, element, attrs) {
 
             $("#searchIcon").click(function () {
@@ -52,35 +71,45 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('selectedOrgUnit', function ($timeout) {
-
+.directive('selectedOrgUnit', function ($timeout, OrgUnitService, SessionStorageService) {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-
             //once ou tree is loaded, start meta-data download
             $(function () {
                 dhis2.ou.store.open().done(function () {
-                    selection.load();
-                    $("#orgUnitTree").one("ouwtLoaded", function (event, ids, names) {
-                        console.log('Finished loading orgunit tree');
-
-                        //Disable ou selection until meta-data has downloaded
-                        $("#orgUnitTree").addClass("disable-clicks");
-
-                        $timeout(function () {
-                            scope.treeLoaded = true;
-                            scope.$apply();
+                    selection.load();                    
+                    if(dhis2.tc && dhis2.tc.metaDataCached){                        
+                        var ouId = SessionStorageService.get('ouSelected');
+                        OrgUnitService.get(ouId).then(function(ou){
+                            if(ou && ou.id && ou.name){                                    
+                                $timeout(function () {
+                                    scope.selectedOrgUnit = ou;
+                                    scope.treeLoaded = true;
+                                    scope.$apply();
+                                });
+                            }                                                       
                         });
+                    }
+                    else{
+                        $("#orgUnitTree").one("ouwtLoaded", function (event, ids, names) {
+                            console.log('Finished loading orgunit tree');
+                            //Disable ou selection until meta-data has downloaded
+                            $("#orgUnitTree").addClass("disable-clicks");
 
-                        downloadMetaData();
-                    });
+                            $timeout(function () {
+                                scope.treeLoaded = true;
+                                scope.$apply();
+                            });
+
+                            downloadMetaData();
+                        });
+                    }
                 });
             });
 
             //listen to user selection, and inform angular         
             selection.setListenerFunction(setSelectedOu, true);
-
             function setSelectedOu(ids, names) {
                 var ou = {id: ids[0], name: names[0]};
                 $timeout(function () {

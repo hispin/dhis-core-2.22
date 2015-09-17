@@ -242,6 +242,25 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     };
 })
 
+/*Orgunit service for local db */
+.service('OrgUnitService', function($rootScope, $q){
+    
+    return {        
+        get: function(uid){            
+            var def = $q.defer();
+            selection.getOrganisationUnit(uid).then(function(response){
+                var ou = response && response[uid] && response[uid].n ? {id: uid, name: response[uid].n} : null;
+                $rootScope.$apply(function(){
+                    def.resolve(ou);
+                });
+            }, function(){
+                def.resolve(null);
+            });
+            return def.promise;
+        }
+    };
+})
+
 /* service for common utils */
 .service('CommonUtils', function(DateUtils, OptionSetService){    
     

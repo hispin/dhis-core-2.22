@@ -58,6 +58,7 @@ CACHE:
 ../dhis-web-commons/javascripts/dhis2/dhis2.contextmenu.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.appcache.js
 ../dhis-web-commons/ouwt/ouwt.js
+../main.js
 scripts/event-capture.js
 
 ../dhis-web-commons/javascripts/angular/plugins/angularLocalStorage.js
