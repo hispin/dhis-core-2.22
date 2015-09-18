@@ -30,7 +30,6 @@ package org.hisp.dhis.trackedentity.action.programindicator;
 
 import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
-import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 
@@ -114,13 +113,6 @@ public class UpdateProgramIndicatorAction
         this.aggregationType = aggregationType;
     }
 
-    private String eventOutputType;
-    
-    public void setEventOutputType( String eventOutputType )
-    {
-        this.eventOutputType = eventOutputType;
-    }
-
     private Integer decimals;
 
     public void setDecimals( Integer decimals )
@@ -159,7 +151,6 @@ public class UpdateProgramIndicatorAction
         indicator.setExpression( StringUtils.trimToNull( expression ) );
         indicator.setFilter( StringUtils.trimToNull( filter ) );
         indicator.setAggregationType( AggregationType.valueOf( aggregationType ) );
-        indicator.setEventOutputType( EventOutputType.valueOf( eventOutputType ) );
         indicator.setDecimals( decimals );
         indicator.setDisplayInForm( displayInForm );
 

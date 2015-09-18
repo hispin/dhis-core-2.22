@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hisp.dhis.analytics.AggregationType;
-import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionType;
@@ -93,8 +92,6 @@ public class ProgramIndicator
     private String expression;
 
     private String filter;
-
-    private EventOutputType eventOutputType;
 
     /**
      * Number of decimals to use for indicator value, null implies default.
@@ -199,19 +196,6 @@ public class ProgramIndicator
     public void setFilter( String filter )
     {
         this.filter = filter;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public EventOutputType getEventOutputType()
-    {
-        return eventOutputType;
-    }
-
-    public void setEventOutputType( EventOutputType eventOutputType )
-    {
-        this.eventOutputType = eventOutputType;
     }
 
     @JsonProperty
