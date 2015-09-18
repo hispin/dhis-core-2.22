@@ -153,3 +153,19 @@ function programIndicatorOnChange() {
     enable('rootDate');
   }
 }
+
+function setExpressionCount(type) {
+	$('#aggregationType').val('COUNT');
+	
+	if ('psi' == type) {
+		$('#expression').val('V{event_count}');
+	}
+	else if ('pi' == type) {
+		$('#expression').val('V{enrollment_count}');
+	}
+	else if ('tei' == type) {
+		$('.#expression').val('V{tei_count}');
+	}
+}
+
+

@@ -35,22 +35,32 @@ jQuery( document ).ready( function()
 	<tr>
 		<td style="width:140px"><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td><input type="text" id="name" name="name" value='$encoder.htmlEncode($programIndicator.name)'></td>
-		<td></td>
 	</tr>	
 	<tr>
 		<td><label for="shortName">$i18n.getString( "short_name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td><input type="text" id="shortName" name="shortName" value='$encoder.htmlEncode($programIndicator.shortName)'></td>
-		<td></td>
 	</tr>	
 	<tr>
 		<td><label for="code">$i18n.getString( "code" )</label></td>
 		<td><input type="text" id="code" name="code" value='$!encoder.htmlEncode($programIndicator.code)'></td>
-		<td></td>
 	</tr>	
 	<tr>
 		<td><label for="description">$i18n.getString( "description" ) </label></td>
 		<td><textarea type="text" id="description" name="description">$!encoder.htmlEncode($programIndicator.description)</textarea></td>
-		<td></td>
+	</tr>
+	<tr>
+		<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
+		<td>
+			<select id="decimals" name="decimals">
+				<option>[$i18n.getString( "default" )]</option>
+				<option value="0"#if( $programIndicator.decimals == 0 ) selected="selected"#end>0</option>
+				<option value="1"#if( $programIndicator.decimals == 1 ) selected="selected"#end>1</option>
+				<option value="2"#if( $programIndicator.decimals == 2 ) selected="selected"#end>2</option>
+				<option value="3"#if( $programIndicator.decimals == 3 ) selected="selected"#end>3</option>
+				<option value="4"#if( $programIndicator.decimals == 4 ) selected="selected"#end>4</option>
+				<option value="5"#if( $programIndicator.decimals == 5 ) selected="selected"#end>5</option>
+			</select>
+		</td>
 	</tr>
 	<tr>
         <td><label for="aggregationType">$i18n.getString( "aggregation_type" )</label></td>
@@ -68,24 +78,8 @@ jQuery( document ).ready( function()
 		</td>
     </tr>
 	<tr>
-		<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
-		<td>
-			<select id="decimals" name="decimals">
-				<option>[$i18n.getString( "default" )]</option>
-				<option value="0"#if( $programIndicator.decimals == 0 ) selected="selected"#end>0</option>
-				<option value="1"#if( $programIndicator.decimals == 1 ) selected="selected"#end>1</option>
-				<option value="2"#if( $programIndicator.decimals == 2 ) selected="selected"#end>2</option>
-				<option value="3"#if( $programIndicator.decimals == 3 ) selected="selected"#end>3</option>
-				<option value="4"#if( $programIndicator.decimals == 4 ) selected="selected"#end>4</option>
-				<option value="5"#if( $programIndicator.decimals == 5 ) selected="selected"#end>5</option>
-			</select>
-		</td>
-		<td></td>
-	</tr>
-	<tr>
 		<td><label for="displayInForm">$i18n.getString( "display_in_form" )</label></td>
 		<td><input type="checkbox" id="displayInForm" name="displayInForm" value="true"#if( $programIndicator.displayInForm ) checked="checked"#end></td>
-		<td></td>
 	</tr>
 </table>
 <br>

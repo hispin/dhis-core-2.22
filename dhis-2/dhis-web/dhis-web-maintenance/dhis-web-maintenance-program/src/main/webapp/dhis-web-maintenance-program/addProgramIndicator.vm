@@ -35,22 +35,32 @@ jQuery( document ).ready( function()
 		<tr>
 			<td style="width:140px"><label for="name">$i18n.getString( "name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 			<td><input type="text" id="name" name="name" ></td>
-			<td></td>
 		</tr>	
 		<tr>
 			<td><label for="shortName">$i18n.getString( "short_name" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 			<td><input type="text" id="shortName" name="shortName" ></td>
-			<td></td>
 		</tr>	
 		<tr>
 			<td><label for="code">$i18n.getString( "code" ) </label></td>
 			<td><input type="text" id="code" name="code" ></td>
-			<td></td>
 		</tr>	
 		<tr>
 			<td><label for="description">$i18n.getString( "description" ) </label></td>
 			<td><textarea type="text" id="description" name="description" ></textarea></td>
-			<td></td>
+		</tr>
+		<tr>
+			<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
+			<td>
+				<select id="decimals" name="decimals">
+					<option>[$i18n.getString( "default" )]</option>
+					<option value="0">0</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</td>
 		</tr>
 		<tr>
 	        <td><label for="aggregationType">$i18n.getString( "aggregation_type" )</label></td>
@@ -66,26 +76,11 @@ jQuery( document ).ready( function()
 	                <option value="CUSTOM">$i18n.getString( "custom" )</option>
 	            </select>
 	        </td>
-	    </tr>
-		<tr>
-			<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
-			<td>
-				<select id="decimals" name="decimals">
-					<option>[$i18n.getString( "default" )]</option>
-					<option value="0">0</option>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-				</select>
-			</td>
 			<td></td>
-		</tr>
+	    </tr>
 		<tr>
 			<td><label for="displayInForm">$i18n.getString( "display_in_form" )</label></td>
 			<td><input type="checkbox" id="displayInForm" name="displayInForm" value="true"></td>
-			<td></td>
 		</tr>
 </table>
 <br>

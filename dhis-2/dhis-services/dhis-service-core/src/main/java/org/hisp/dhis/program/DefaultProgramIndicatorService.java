@@ -773,6 +773,18 @@ public class DefaultProgramIndicatorService
 
             return TextUtils.removeLast( sql, "+" ).trim() + ") as " + dbl + "),0)";
         }
+        else if ( ProgramIndicator.VAR_EVENT_COUNT.equals( var ) )
+        {
+            return "distinct psi";
+        }
+        else if ( ProgramIndicator.VAR_ENROLLMENT_COUNT.equals( var ) )
+        {
+            return "distinct pi";
+        }
+        else if ( ProgramIndicator.VAR_TEI_COUNT.equals( var ) )
+        {
+            return "distinct tei";
+        }
 
         return null;
     }
