@@ -232,6 +232,14 @@ public class DataElement
     }
 
     /**
+     * Indicates whether the value type of this data element is a file (externally stored resource)
+     */
+    public boolean isFileType()
+    {
+        return getValueType().isFile();
+    }
+
+    /**
      * Returns the data set of this data element. If this data element has
      * multiple data sets, the data set with the highest collection frequency is
      * returned.

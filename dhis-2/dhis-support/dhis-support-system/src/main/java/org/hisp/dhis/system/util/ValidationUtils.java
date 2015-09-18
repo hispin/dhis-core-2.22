@@ -32,6 +32,7 @@ import com.google.common.collect.Sets;
 import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.util.TextUtils;
@@ -373,6 +374,11 @@ public class ValidationUtils
         if ( ValueType.DATETIME == valueType && !DateUtils.dateTimeIsValid( value ) )
         {
             return "value_not_valid_datetime";
+        }
+
+        if ( ValueType.FILE_RESOURCE == valueType && !CodeGenerator.isValidCode( value ) )
+        {
+            return "value_not_valid_file_resource_uid";
         }
 
         return null;

@@ -563,7 +563,23 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
+  <bean id="org.hisp.dhis.fileresource.FileResourceStore" class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
+    <property name="clazz" value="org.hisp.dhis.fileresource.FileResource" />
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
+  <bean id="org.hisp.dhis.fileresource.FileResourceContentStore" class="org.hisp.dhis.fileresource.DefaultFileResourceContentStore"
+    init-method="init" destroy-method="cleanUp">
+    <property name="configurationProvider" ref="hibernateConfigurationProvider" />
+    <property name="locationManager" ref="locationManager" />
+  </bean>
+
   <!-- Service definitions -->
+
+  <bean id="org.hisp.dhis.fileresource.FileResourceService" class="org.hisp.dhis.fileresource.DefaultFileResourceService">
+    <property name="fileResourceStore" ref="org.hisp.dhis.fileresource.FileResourceStore" />
+    <property name="fileResourceContentStore" ref="org.hisp.dhis.fileresource.FileResourceContentStore" />
+  </bean>
 
   <bean id="org.hisp.dhis.dataelement.DataElementOperandService" class="org.hisp.dhis.dataelement.DefaultDataElementOperandService">
     <property name="dataElementOperandStore" ref="org.hisp.dhis.dataelement.DataElementOperandStore" />
@@ -576,6 +592,7 @@
     <property name="dataValueAuditService" ref="org.hisp.dhis.datavalue.DataValueAuditService" />
     <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
+    <property name="fileResourceService" ref="org.hisp.dhis.fileresource.FileResourceService" />
   </bean>
 
   <bean id="org.hisp.dhis.datavalue.DataValueAuditService" class="org.hisp.dhis.datavalue.DefaultDataValueAuditService">
