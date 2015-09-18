@@ -123,19 +123,17 @@
                                 <!-- Visible when event is not under editing -->                                
                                 <div d2-context-menu 
                                     ng-click="showEventList(dhis2Event)"
-                                    ng-show="currentEvent.event !== dhis2Event.event && eventGridColumn.id !== 'comment'">                                    
+                                    ng-show="currentEvent.event !== dhis2Event.event && eventGridColumn.id !== 'comment'">
                                     <span ng-switch="eventGridColumn.valueType">
                                         <span ng-switch-when="BOOLEAN">
                                             <span ng-if="dhis2Event[eventGridColumn.id] == 'false'">{{noLabel}}</span>
                                             <span ng-if="dhis2Event[eventGridColumn.id] == 'true'">{{yesLabel}}</span>
                                         </span>
+                                        <span ng-switch-when="TRUE_ONLY">
+                                            <span ng-if="dhis2Event[eventGridColumn.id]"><i class="fa fa-check"></i></span>
+                                        </span>
                                         <span ng-switch-default>
-                                            <span ng-if="dhis2Event[eventGridColumn.id]">
-                                                {{dhis2Event[eventGridColumn.id]}}
-                                            </span>
-                                            <span ng-if="!dhis2Event[eventGridColumn.id]">
-                                                &nbsp;
-                                            </span>
+                                            {{dhis2Event[eventGridColumn.id]}}
                                         </span>
                                     </span>
                                 </div>
