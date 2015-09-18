@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.DataQueryParams;
@@ -63,8 +64,6 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.google.inject.internal.Lists;
 
 /**
  * @author Lars Helge Overland
