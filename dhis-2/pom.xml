@@ -489,6 +489,12 @@
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-openid</artifactId>
         <version>${spring.security.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- OAuth 2.0 -->
@@ -791,6 +797,23 @@
         <version>9.3-1102-jdbc41</version>
       </dependency>
 
+      <!-- Apache jClouds -->
+      <dependency>
+        <groupId>org.apache.jclouds</groupId>
+        <artifactId>jclouds-all</artifactId>
+        <version>${jclouds.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jclouds.api</groupId>
+        <artifactId>filesystem</artifactId>
+        <version>${jclouds.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jclouds.provider</groupId>
+        <artifactId>aws-s3</artifactId>
+        <version>${jclouds.version}</version>
+      </dependency>
+
       <!--Reporting -->
       <dependency>
         <groupId>net.sf.jasperreports</groupId>
@@ -997,6 +1020,12 @@
         <groupId>org.openid4java</groupId>
         <artifactId>openid4java</artifactId>
         <version>0.9.8</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>xml-apis</groupId>
@@ -1021,6 +1050,7 @@
     <struts.version>2.3.16.3</struts.version>
     <hibernate.version>4.2.20.Final</hibernate.version>
     <hibernate-validator.version>4.3.2.Final</hibernate-validator.version>
+    <jclouds.version>1.9.1</jclouds.version>
     <javassist.version>3.18.1-GA</javassist.version> <!-- Keep in sync with Hibernate -->
     <jackson.version>2.5.3</jackson.version>
     <slf4j.version>1.6.6</slf4j.version>

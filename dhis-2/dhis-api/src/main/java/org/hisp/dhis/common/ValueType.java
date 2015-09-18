@@ -58,7 +58,8 @@ public enum ValueType
     INTEGER_ZERO_OR_POSITIVE( Integer.class ),
     TRACKER_ASSOCIATE( TrackedEntityInstance.class ),
     OPTION_SET( String.class ),
-    USERNAME( String.class );
+    USERNAME( String.class ),
+    FILE_RESOURCE( String.class );
 
     public static final List<ValueType> INTEGER_TYPES = Lists.newArrayList(
         INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE );
@@ -104,5 +105,10 @@ public enum ValueType
     public boolean isDate()
     {
         return this == DATE || this == DATETIME;
+    }
+
+    public boolean isFile()
+    {
+        return this == FILE_RESOURCE;
     }
 }
