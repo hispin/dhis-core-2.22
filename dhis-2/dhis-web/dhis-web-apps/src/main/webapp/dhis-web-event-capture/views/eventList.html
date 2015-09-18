@@ -19,7 +19,13 @@
                     </span>
                     
                     <div class="pull-right hideInPrint">
-                        <button class="btn btn-info pull-right hideInPrint"
+                        <button class="btn btn-primary hideInPrint"
+                                type="button"
+                                ng-if="editingEventInGrid""                                        
+                                ng-click="showEventList()">
+                            {{'close_editing'| translate}}
+                        </button>
+                        <button class="btn btn-info hideInPrint small-horizonal-spacing"
                                 ng-show="dhis2Events.length"
                                 type="button"
                                 ng-disabled="eventRegistration || editingEventInFull || editingEventInGrid"                                        
