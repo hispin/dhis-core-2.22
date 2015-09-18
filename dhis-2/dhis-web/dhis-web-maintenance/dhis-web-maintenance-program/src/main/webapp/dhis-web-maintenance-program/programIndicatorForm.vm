@@ -85,6 +85,9 @@
 							<option value="current_date">$i18n.getString( "current_date" )</option>
 							<option value="value_count">$i18n.getString( "value_count" )</option>
 							<option value="zero_pos_value_count">$i18n.getString( "zero_pos_value_count" )</option>
+							<option value="event_count">$i18n.getString( "event_count" )</option>
+							<option value="enrollment_count">$i18n.getString( "enrollment_count" )</option>
+							<option value="tei_count">$i18n.getString( "tei_count" )</option>
 						</select>
 					</td>
 				</tr>
@@ -130,7 +133,12 @@
 			<a class="greyButtonLink" href="javascript:insertOperator( 'expression', '*' )" title="$i18n.getString( 'multiply' )">&#42;</a>
 			<a class="greyButtonLink" href="javascript:insertOperator( 'expression', '/' )" title="$i18n.getString( 'divide' )">&#47;</a>
 			<a class="greyButtonLink" href="javascript:insertOperator( 'expression', '+' )" title="$i18n.getString( 'plus' )">&#43;</a>
-			<a class="greyButtonLink" href="javascript:insertOperator( 'expression', '-' )" title="$i18n.getString( 'minus' )">&#45;</a><br><br>
+			<a class="greyButtonLink" href="javascript:insertOperator( 'expression', '-' )" title="$i18n.getString( 'minus' )">&#45;</a>
+			<span class="tipText" style="margin-left:10px">Count of</span>
+			<a href="javascript:setExpressionCount('psi')" title="Set expression to count of events">events</a>&nbsp;<span class="tipText">&#124;</span>&nbsp;
+			<a href="javascript:setExpressionCount('pi')" title="Set expression to count of enrollments">enrollments</a>&nbsp;<span class="tipText">&#124;</span>&nbsp;
+			<a href="javascript:setExpressionCount('tei')" title="Set expression to count of tracked entity instances">tracked entity instances</a>
+			<br><br>
 		</td>
 	</tr>
 	<tr>
