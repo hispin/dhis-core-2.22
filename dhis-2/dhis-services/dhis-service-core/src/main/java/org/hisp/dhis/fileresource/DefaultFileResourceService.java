@@ -102,6 +102,11 @@ public class DefaultFileResourceService
     @Override
     public void deleteFileResource( String uid )
     {
+        if ( uid == null )
+        {
+            return;
+        }
+
         FileResource fileResource = fileResourceStore.getByUid( uid );
 
         if ( fileResource == null )
